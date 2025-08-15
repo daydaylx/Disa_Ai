@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+.vite/
+*.log
+.env
+.env.*
+*.local
+.DS_Store
+Thumbs.db
+.vercel
+.netlify
+.vscode/
+.idea/
