@@ -1,0 +1,27 @@
+export type PersonaPreset = {
+  id: string;
+  label: string;
+  description: string;
+  system: string;
+};
+
+export const PRESETS: PersonaPreset[] = [
+  {
+    id: "neutral",
+    label: "Neutral & Präzise",
+    description: "Klar, sachlich, ohne Schnörkel.",
+    system: "You are a concise, neutral assistant. Use plain German, be precise and helpful."
+  },
+  {
+    id: "friendly",
+    label: "Locker & Freundlich",
+    description: "Hilfsbereit, nahbar, kurze Sätze.",
+    system: "Be friendly, encouraging, and approachable. Prefer short sentences in German."
+  },
+  {
+    id: "expert",
+    label: "Senior Expert",
+    description: "Kuratiert Antworten wie ein Senior.",
+    system: "You are a senior expert. Provide structured, well-argued answers in German."
+  }
+];
