@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import Header from "@/components/Header";
-import SettingsDrawer from "@/features/settings/SettingsDrawer";
-import ChatPanel from "@/features/chat/ChatPanel";
-import PersonaPicker from "@/features/settings/PersonaPicker";
-import ChatSheet from "@/features/chats/ChatSheet";
-import { OpenRouterClient } from "@/lib/openrouter";
-import type { Persona, ModelInfo } from "@/lib/types";
-import { useChatStore } from "@/entities/chat/store";
+import Header from "./components/Header";
+import SettingsDrawer from "./features/settings/SettingsDrawer";
+import ChatPanel from "./features/chat/ChatPanel";
+import PersonaPicker from "./features/settings/PersonaPicker";
+import ChatSheet from "./features/chats/ChatSheet";
+import { OpenRouterClient } from "./lib/openrouter";
+import { PRESETS } from "./lib/presets";
+import { useChatStore } from "./entities/chat/store";
 
 const LS_MODEL = "model_id";
 const LS_PERSONA = "persona_id";
@@ -19,59 +19,44 @@ export default function App() {
   const [personaOpen, setPersonaOpen] = useState(false);
   const [chatsOpen, setChatsOpen] = useState(false);
 
-  const [personas, setPersonas] = useState<Persona[]>([]);
-  const [models, setModels] = useState<ModelInfo[]>([]);
-
-  const [modelId, setModelId] = useState<string>(() => localStorage.getItem(LS_MODEL) || "openrouter/auto");
+  const [modelId, setModelId] = useState<string>(() => localStorage.getItem(LS_MODEL) || "");
   const [personaId, setPersonaId] = useState<string>(() => localStorage.getItem(LS_PERSONA) || "neutral");
   const [apiKeyPresent, setApiKeyPresent] = useState<boolean>(() => !!client.getApiKey());
-  const [theme, setTheme] = useState<"dark" | "light">(() => (localStorage.getItem(LS_THEME) as "dark" | "light") || "dark");
+  const [theme, setTheme] = useState<"dark" | "light">(
+    () => (localStorage.getItem(LS_THEME) as "dark" | "light") || "dark"
+  );
 
   const currentChat = useChatStore((s) => s.currentChat());
   const setCurrentChat = useChatStore((s) => s.setCurrentChat);
   const chats = useChatStore((s) => s.chats);
 
   // ensure a current chat exists
-  useEffect(() => { if (!currentChat && chats[0]) setCurrentChat(chats[0].id); }, [currentChat, chats, setCurrentChat]);
+  useEffect(() => {
+    if (!currentChat && chats[0]) setCurrentChat(chats[0].id);
+  }, [currentChat, chats, setCurrentChat]);
 
   useEffect(() => { localStorage.setItem(LS_MODEL, modelId || ""); }, [modelId]);
   useEffect(() => { localStorage.setItem(LS_PERSONA, personaId || ""); }, [personaId]);
-
   useEffect(() => {
     localStorage.setItem(LS_THEME, theme);
     document.documentElement.className = theme;
   }, [theme]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const p = await fetch("/personas.json").then((r) => r.json());
-        setPersonas(p);
-      } catch { /* fallback no-op */ }
-      try {
-        const m = await fetch("/models.json").then((r) => r.json());
-        setModels(m);
-      } catch { /* fallback no-op */ }
-    })();
-  }, []);
-
-  const persona = personas.find((p) => p.id === personaId);
-  const personaLabel = persona?.label;
-  const systemPrompt = persona?.system;
+  const currentPreset = PRESETS.find((p) => p.id === personaId);
+  const personaLabel = currentPreset ? currentPreset.label : undefined;
 
   const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
 
   return (
     <div className="flex min-h-0 h-[100dvh] flex-col bg-gradient-to-br from-background via-background to-secondary/20">
       <Header
-        title="Disa AI"
+        title="AI Chat"
         keySet={apiKeyPresent}
         modelLabel={modelId || undefined}
         onOpenSettings={() => setSettingsOpen(true)}
         theme={theme}
         onToggleTheme={toggleTheme}
         onOpenChats={() => setChatsOpen(true)}
-        currentChatTitle={currentChat?.title}
       />
 
       <main className="relative flex-1 min-h-0 overflow-hidden">
@@ -81,8 +66,7 @@ export default function App() {
           modelId={modelId}
           apiKeyPresent={apiKeyPresent}
           onOpenSettings={() => setSettingsOpen(true)}
-          systemPrompt={systemPrompt}
-          onOpenChats={() => setChatsOpen(true)}
+          personaId={personaId}
         />
       </main>
 
@@ -100,7 +84,7 @@ export default function App() {
               setSettingsOpen(false);
               setPersonaOpen(true);
             }}
-            models={models}
+            personaId={personaId}
           />
         )}
       </AnimatePresence>
@@ -110,7 +94,6 @@ export default function App() {
           <PersonaPicker
             visible={personaOpen}
             currentId={personaId}
-            items={personas}
             onPick={(id: string) => setPersonaId(id)}
             onClose={() => setPersonaOpen(false)}
           />

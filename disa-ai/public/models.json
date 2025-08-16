@@ -1,6 +1,6 @@
 [
-  { "id": "openrouter/auto", "label": "Auto (OpenRouter)", "provider": "OpenRouter" },
-  { "id": "anthropic/claude-3.5-sonnet", "label": "Claude 3.5 Sonnet", "provider": "Anthropic" },
-  { "id": "openai/gpt-4o-mini", "label": "GPT-4o mini", "provider": "OpenAI" },
-  { "id": "google/gemini-1.5-pro", "label": "Gemini 1.5 Pro", "provider": "Google" }
+  { "id": "openrouter/llama-3.1-8b-instruct:free", "label": "Llama 3.1 8B (free)", "provider": "OpenRouter", "context": 8192 },
+  { "id": "openrouter/mistral-nemo:free", "label": "Mistral Nemo (free)", "provider": "OpenRouter", "context": 8192 },
+  { "id": "openrouter/nous-hermes-2-mixtral-8x7b-dpo:free", "label": "Nous Hermes 2 (Mixtral)", "provider": "OpenRouter", "context": 8192 },
+  { "id": "openrouter/gemma-7b-it:free", "label": "Gemma 7B IT (free)", "provider": "OpenRouter", "context": 8192 }
 ]

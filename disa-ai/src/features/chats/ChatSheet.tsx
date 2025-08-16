@@ -1,12 +1,21 @@
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { useChatStore } from "@/entities/chat/store";
+import { useChatStore } from "../../entities/chat/store";
 import clsx from "clsx";
 
-type Props = { open: boolean; onClose: () => void };
+type Props = { open: boolean; onClose: () => void; };
 
 export default function ChatSheet({ open, onClose }: Props) {
-  const { chats, currentChatId, setCurrentChat, createChat, deleteChat, renameChat, duplicateChat } = useChatStore();
+  const {
+    chats,
+    currentChatId,
+    setCurrentChat,
+    createChat,
+    deleteChat,
+    renameChat,
+    duplicateChat,
+  } = useChatStore();
+
   const [q, setQ] = useState("");
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -18,7 +27,12 @@ export default function ChatSheet({ open, onClose }: Props) {
 
   return (
     <>
-      <motion.div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={onClose} />
+      <motion.div
+        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        onClick={onClose}
+      />
       <motion.div
         className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl border border-border bg-background p-4 pb-[max(16px,env(safe-area-inset-bottom))] shadow-2xl"
         initial={{ y: "100%" }}
@@ -33,7 +47,10 @@ export default function ChatSheet({ open, onClose }: Props) {
               placeholder="Chats durchsuchen…"
               className="flex-1 rounded-xl border border-border/60 bg-secondary/60 px-3 py-2 outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/30"
             />
-            <button onClick={() => setQ("")} className="rounded-lg border border-border/60 px-3 py-2 text-sm text-muted-foreground hover:bg-secondary/60">
+            <button
+              onClick={() => setQ("")}
+              className="rounded-lg border border-border/60 px-3 py-2 text-sm text-muted-foreground hover:bg-secondary/60"
+            >
               Löschen
             </button>
             <button
@@ -65,7 +82,9 @@ export default function ChatSheet({ open, onClose }: Props) {
                   className="flex-1 text-left"
                 >
                   <div className="line-clamp-1 font-medium">{c.title}</div>
-                  <div className="mt-0.5 text-xs text-muted-foreground">{new Date(c.updatedAt).toLocaleString()}</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">
+                    {new Date(c.updatedAt).toLocaleString()}
+                  </div>
                 </button>
                 <div className="flex items-center gap-1">
                   <button
@@ -98,7 +117,9 @@ export default function ChatSheet({ open, onClose }: Props) {
               </li>
             ))}
             {filtered.length === 0 && (
-              <li className="rounded-xl border border-border bg-secondary/40 p-4 text-center text-sm text-muted-foreground">Keine Treffer.</li>
+              <li className="rounded-xl border border-border bg-secondary/40 p-4 text-center text-sm text-muted-foreground">
+                Keine Treffer.
+              </li>
             )}
           </ul>
         </div>

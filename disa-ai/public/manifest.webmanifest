@@ -1,13 +1,15 @@
 {
-  "name": "Disa AI",
-  "short_name": "Disa AI",
+  "name": "AI Chat Mobile PWA",
+  "short_name": "AI Chat",
+  "description": "Private, mobile-first AI chat PWA.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#1D1B20",
-  "theme_color": "#1D1B20",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "lang": "de",
   "icons": [
-    { "src": "/icons/disa-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/disa-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/icons/disa-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
