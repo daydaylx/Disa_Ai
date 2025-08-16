@@ -1,0 +1,51 @@
+/* ===== Design Tokens (HSL) + Legacy Bridge ===== */
+:root {
+  --background: 220 40% 3%;
+  --foreground: 210 40% 98%;
+  --card: 220 40% 7%;
+  --card-foreground: 210 40% 98%;
+
+  --primary: 14 100% 56%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 217 33% 40%;
+  --muted-foreground: 215 20% 70%;
+  --accent: 200 90% 55%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: var(--primary);
+
+  --radius: 14px; --radius-lg: 18px; --radius-xl: 24px;
+  --glow-blue: 0 0 14px rgba(0,163,255,.22), 0 0 28px rgba(0,115,230,.12);
+  --glow-red:  0 0 14px rgba(255,77,46,.22),  0 0 28px rgba(210,54,28,.12);
+
+  --bg: hsl(var(--background));
+  --surface: hsl(var(--card));
+  --text: hsl(var(--foreground));
+}
+
+.light {
+  --background: 0 0% 100%;
+  --foreground: 220 40% 3%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 40% 3%;
+  --primary: 263 70% 50%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 220 40% 10%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 263 70% 50%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 263 70% 50%;
+}
