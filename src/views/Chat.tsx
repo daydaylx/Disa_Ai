@@ -7,6 +7,7 @@ import { Button } from "../components/Button";
 import { KeyGuard } from "../components/KeyGuard";
 import { chatStream, type Msg } from "../api/openrouter";
 import { useModel } from "../hooks/useModel";
+import { usePersonaSelection } from "../config/personas";
 
 export default function Chat() {
   const [msg, setMsg] = React.useState("");
@@ -16,6 +17,7 @@ export default function Chat() {
   ]);
   const abortRef = React.useRef<AbortController | null>(null);
   const { current } = useModel();
+  const { active: activePersona } = usePersonaSelection();
 
   async function send() {
     if (!msg.trim() || busy) return;
@@ -24,7 +26,13 @@ export default function Chat() {
     setItems((a) => [...a, { role: "user", text: userText }, { role: "assistant", text: "" }]);
     setBusy(true);
 
-    const history: Msg[] = items.map(m => ({ role: m.role, content: m.text }));
+    const history: Msg[] = [];
+    if (activePersona?.prompt) {
+      history.push({ role: "system", content: activePersona.prompt });
+    }
+    for (const m of items) {
+      history.push({ role: m.role, content: m.text });
+    }
     history.push({ role: "user", content: userText });
 
     const aborter = new AbortController();
@@ -41,10 +49,7 @@ export default function Chat() {
             return c;
           });
         },
-        {
-          signal: aborter.signal,
-          onDone: () => setBusy(false),
-        }
+        { signal: aborter.signal, onDone: () => setBusy(false) }
       );
     } catch (e: any) {
       setBusy(false);
@@ -90,7 +95,9 @@ export default function Chat() {
               )}
             </div>
             <div className="text-xs text-zinc-500 mt-2">
-              Modell: <code>{current.label}</code> · Streaming aktiv
+              Modell: <code>{current.label}</code>
+              {activePersona ? <> · Stil: <code>{activePersona.label}</code></> : null}
+              {" "}· Streaming aktiv
             </div>
           </div>
         </Card>
