@@ -1,25 +1,25 @@
-import * as React from "react";
+import React from "react";
+import { MODELS, DEFAULT_MODEL_ID } from "../config/models";
 
-import { DEFAULT_MODEL_ID, MODEL_KEY,MODELS } from "../config/models";
+const MODEL_KEY = "disa_model";
 
 export function useModel() {
   const [model, setModel] = React.useState<string>(() => {
     try {
-      const raw = localStorage.getItem(MODEL_KEY);
-      return raw || DEFAULT_MODEL_ID;
+      return localStorage.getItem(MODEL_KEY) || DEFAULT_MODEL_ID;
     } catch {
       return DEFAULT_MODEL_ID;
     }
   });
 
   React.useEffect(() => {
-    try { localStorage.setItem(MODEL_KEY, model); } catch { void 0; }
+    try {
+      localStorage.setItem(MODEL_KEY, model);
+    } catch {}
   }, [model]);
 
-  const current = React.useMemo(
-    () => MODELS.find(m => m.id === model) ?? MODELS[0],
-    [model]
-  );
+  const list = MODELS;
+  const current = list.find((m) => m.id === model) ?? list[0];
 
-  return { model, setModel, current, list: MODELS };
+  return { model, setModel, list, current };
 }
