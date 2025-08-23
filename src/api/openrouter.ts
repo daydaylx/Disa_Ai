@@ -1,7 +1,7 @@
 export type Role = "system" | "user" | "assistant" | "tool";
 export interface Msg { role: Role; content: string; }
 
-const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"\;
+const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const KEY_NAME = "disa_api_key";
 const MODEL_KEY = "disa_model";
 
@@ -39,7 +39,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: false }),
-    signal: opts?.signal
+    signal: opts?.signal ?? null
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
   const data = await res.json();
@@ -58,7 +58,7 @@ export async function chatStream(
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: true }),
-    signal: opts?.signal
+    signal: opts?.signal ?? null
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
 

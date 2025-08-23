@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 
 import { afterAll, afterEach, beforeAll, vi } from "vitest";
 
@@ -9,8 +9,8 @@ beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-// Hardening: localStorage in Tests isolieren
-const store = new Map<string,string>();
+// Isolierte localStorage-Stub
+const store = new Map<string, string>();
 vi.stubGlobal("localStorage", {
   getItem: (k: string) => (store.has(k) ? store.get(k)! : null),
   setItem: (k: string, v: string) => { store.set(k, v); },
@@ -18,5 +18,5 @@ vi.stubGlobal("localStorage", {
   clear: () => { store.clear(); },
 });
 
-// location.origin in JSDOM
+// location.origin in Tests
 vi.stubGlobal("location", { origin: "http://localhost" } as any);

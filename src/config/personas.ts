@@ -113,9 +113,7 @@ export function usePersonaSelection() {
   });
 
   React.useEffect(() => {
-    if (!loading && personas.length && !personaId) {
-      setPersonaId(personas[0].id);
-    }
+    const first = personas[0]; if (!loading && personas.length > 0 && !personaId && first) { setPersonaId(first.id); }
   }, [loading, personas, personaId]);
 
   React.useEffect(() => {

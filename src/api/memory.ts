@@ -1,10 +1,5 @@
 import { chatOnce, getModelFallback,type Msg } from "./openrouter";
 
-/**
- * Verdichtet Chatverlauf + bisheriges Memory zu einer kurzen Merkliste.
- * Fokus: stabile Fakten/Präferenzen/Regeln (keine Einmalfragen).
- * Output: kurze Bullet-Liste (max. 12 Punkte), Deutsch.
- */
 export async function updateMemorySummary(params: {
   previousMemory: string;
   recentWindow: Array<{ role: "user" | "assistant"; content: string }>;
@@ -37,18 +32,14 @@ ${recentWindow.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n")}
 Aktualisiere die Merkliste.`
   };
 
-  const { text } = await chatOnce([sys, user], { model: chosen, signal });
+  const opts = signal ? { model: chosen, signal } : { model: chosen };
+  const { text } = await chatOnce([sys, user], opts);
   return (text || "").trim();
 }
 
-/**
- * Explizites Merken: Nutzer markiert Text, der in die Memory-Liste soll.
- * - Deduplication & Kürzung auf max. 12 Bullet-Punkte
- * - Deutsch, 1 Zeile pro Punkt
- */
 export async function addExplicitMemory(params: {
   previousMemory: string;
-  note: string;             // der zu merkende Text
+  note: string;
   signal?: AbortSignal;
   model?: string;
 }) {
@@ -63,7 +54,7 @@ Aufgabe: Integriere den neuen Hinweis in die bestehende Liste.
 Regeln:
 - Nur stabile, wiederverwendbare Fakten/Präferenzen/Regeln behalten.
 - Keine Einmalaufgaben, keine temporären Details.
-- Entferne Dubletten, fasse redundant Kram zusammen.
+- Entferne Dubletten, fasse redundanten Inhalt zusammen.
 - Maximal 12 Bullet-Punkte, jeweils 1 kurze Zeile.`
   };
 
@@ -79,6 +70,7 @@ ${note}
 Gib NUR die aktualisierte Bullet-Liste aus.`
   };
 
-  const { text } = await chatOnce([sys, user], { model: chosen, signal });
+  const opts = signal ? { model: chosen, signal } : { model: chosen };
+  const { text } = await chatOnce([sys, user], opts);
   return (text || "").trim();
 }
