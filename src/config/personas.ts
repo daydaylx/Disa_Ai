@@ -18,43 +18,27 @@ const FALLBACK_PERSONAS: Persona[] = [
   { id: "creative_direct", label: "Kreativ Direkt", prompt: "Schreibe lebendig, aber klar. Keine Floskeln, kein Marketing. Fasse dich nicht unnötig kurz, aber werde nie schwafelig." }
 ];
 
-// versucht mehrere bekannte Pfade
 const CANDIDATE_URLS = ["/persona.json", "/personas.json"];
 
 function coerceToPersonas(raw: any): Persona[] | null {
   try {
     if (!raw) return null;
-
-    // Fall A: { personas: [...] }
     if (Array.isArray(raw?.personas)) {
-      const list = raw.personas as any[];
-      const mapped = list
-        .map((p) => normalizeItem(p))
-        .filter(Boolean) as Persona[];
+      const mapped = (raw.personas as any[]).map(normalizeItem).filter(Boolean) as Persona[];
       return mapped.length ? mapped : null;
     }
-
-    // Fall B: { templates: [...] }
     if (Array.isArray(raw?.templates)) {
-      const list = raw.templates as any[];
-      const mapped = list
-        .map((p) => normalizeItem(p))
-        .filter(Boolean) as Persona[];
+      const mapped = (raw.templates as any[]).map(normalizeItem).filter(Boolean) as Persona[];
       return mapped.length ? mapped : null;
     }
-
-    // Fall C: Array direkt
     if (Array.isArray(raw)) {
-      const mapped = raw.map((p) => normalizeItem(p)).filter(Boolean) as Persona[];
+      const mapped = raw.map(normalizeItem).filter(Boolean) as Persona[];
       return mapped.length ? mapped : null;
     }
-
-    // Fall D: Schlüssel auf oberster Ebene (objekt → ein Eintrag)
     if (raw && typeof raw === "object") {
       const single = normalizeItem(raw);
       if (single) return [single];
     }
-
     return null;
   } catch {
     return null;
@@ -63,10 +47,8 @@ function coerceToPersonas(raw: any): Persona[] | null {
 
 function normalizeItem(p: any): Persona | null {
   if (!p || typeof p !== "object") return null;
-
   const label = p.label || p.name || p.title || p.id || "Unbenannt";
   const id = (p.id || slugify(label)).toString();
-
   const prompt =
     p.prompt ||
     p.system ||
@@ -74,10 +56,8 @@ function normalizeItem(p: any): Persona | null {
     p.systemPrompt ||
     p.content ||
     (Array.isArray(p.messages)
-      ? // manche definieren messages = [{role:'system', content:'...'}, ...]
-        (p.messages.find((m: any) => m?.role === "system")?.content ?? "")
+      ? (p.messages.find((m: any) => m?.role === "system")?.content ?? "")
       : "");
-
   if (!prompt || typeof prompt !== "string") return null;
   return { id, label, prompt: prompt.trim() };
 }
@@ -94,14 +74,10 @@ export async function loadPersonas(): Promise<Persona[]> {
       const json = await res.json();
       const personas = coerceToPersonas(json);
       if (personas && personas.length) return personas;
-    } catch {
-      // weiter zum nächsten Kandidaten
-    }
+    } catch { /* next */ }
   }
   return FALLBACK_PERSONAS;
 }
-
-// --- Hooks ---
 
 import * as React from "react";
 
@@ -137,7 +113,6 @@ export function usePersonaSelection() {
   });
 
   React.useEffect(() => {
-    // wenn noch nichts gewählt und wir haben geladene Personas, standard auf erstes
     if (!loading && personas.length && !personaId) {
       setPersonaId(personas[0].id);
     }

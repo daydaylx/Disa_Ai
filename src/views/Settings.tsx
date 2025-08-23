@@ -8,6 +8,7 @@ import { Badge } from "../components/Badge";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useModel } from "../hooks/useModel";
 import { MODELS } from "../config/models";
+import { usePersonaSelection } from "../config/personas";
 
 export default function Settings() {
   const [apiKey, setApiKey] = useLocalStorage<string>("disa_api_key", "");
@@ -21,6 +22,8 @@ export default function Settings() {
   const filtered = React.useMemo(() => {
     return MODELS.filter(m => (onlyFree ? m.free : true) && (onlyOpen ? m.open : true));
   }, [onlyFree, onlyOpen]);
+
+  const { personas, personaId, setPersonaId, active, loading: personasLoading } = usePersonaSelection();
 
   function save() {
     try {
@@ -71,8 +74,33 @@ export default function Settings() {
               <Badge tone="purple">open (uncensored)</Badge>
             </div>
             <p className="text-xs text-zinc-500">
-              Tipp: Wenn ein freies Modell gerade Rate-Limits hat, wähle ein anderes aus oder teste später erneut.
+              Tipp: Wenn ein freies Modell Rate-Limits hat, nimm ein anderes oder teste später.
             </p>
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader title="Stil (Systemprompt-Vorlage)" subtitle={personasLoading ? "Lade Vorlagen…" : "Wird als system vor jede Konversation gesendet"} />
+          <div className="space-y-3">
+            {personasLoading ? (
+              <div className="text-sm text-zinc-400">Lade…</div>
+            ) : personas.length === 0 ? (
+              <div className="text-sm text-zinc-400">Keine Personas gefunden (es wird ein neutraler Fallback genutzt).</div>
+            ) : (
+              <>
+                <Select value={personaId} onChange={(e)=>setPersonaId(e.target.value)}>
+                  {personas.map(p => (
+                    <option key={p.id} value={p.id}>{p.label}</option>
+                  ))}
+                </Select>
+                {active && (
+                  <div className="rounded-2xl bg-[#0f0f16] border border-white/10 p-3 max-h-56 overflow-auto">
+                    <div className="text-xs text-zinc-400 mb-2">Vorschau</div>
+                    <pre className="text-sm whitespace-pre-wrap text-zinc-200">{active.prompt}</pre>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </Card>
 
