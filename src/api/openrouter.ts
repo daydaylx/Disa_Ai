@@ -1,11 +1,3 @@
-/**
- * OpenRouter Browser-Client
- * - chatStream: Streaming via SSE
- * - chatOnce: Einmal-Antwort (z. B. für Summaries)
- * - Liest API-Key aus localStorage ("disa_api_key")
- * - Liest gewähltes Modell aus localStorage ("disa_model"), wenn nicht explizit übergeben
- * - Setzt Attribution-Header (HTTP-Referer, X-Title)
- */
 export type Role = "system" | "user" | "assistant" | "tool";
 export interface Msg { role: Role; content: string; }
 
@@ -17,7 +9,7 @@ function getHeaders() {
   const apiKey = localStorage.getItem(KEY_NAME)?.replace(/^"+|"+$/g, "");
   if (!apiKey) throw new Error("NO_API_KEY");
   return {
-    "Authorization": `Bearer ${apiKey}`,
+    Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
     "HTTP-Referer": location.origin,
     "X-Title": "Disa AI",
@@ -25,8 +17,19 @@ function getHeaders() {
 }
 
 export function getModelFallback() {
-  try { return localStorage.getItem(MODEL_KEY) || "meta-llama/llama-3.3-70b-instruct:free"; }
-  catch { return "meta-llama/llama-3.3-70b-instruct:free"; }
+  try {
+    return localStorage.getItem(MODEL_KEY) || "meta-llama/llama-3.3-70b-instruct:free";
+  } catch {
+    return "meta-llama/llama-3.3-70b-instruct:free";
+  }
+}
+
+function mapHttpError(status: number): string {
+  if (status === 401) return "API-Key fehlt oder ist ungültig (401).";
+  if (status === 403) return "Zugriff verweigert/Modell blockiert (403).";
+  if (status === 429) return "Rate-Limit/Quota erreicht (429).";
+  if (status >= 500) return "Anbieterfehler (5xx). Bitte später erneut.";
+  return `HTTP_${status}`;
 }
 
 export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?: AbortSignal }) {
@@ -38,7 +41,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
     body: JSON.stringify({ model, messages, stream: false }),
     signal: opts?.signal,
   });
-  if (!res.ok) throw new Error(`HTTP_${res.status}`);
+  if (!res.ok) throw new Error(mapHttpError(res.status));
   const data = await res.json();
   const text = data?.choices?.[0]?.message?.content ?? "";
   return { text, raw: data };
@@ -46,7 +49,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
 
 export async function chatStream(
   messages: Msg[],
-  onToken: (t: string) => void,
+  onDelta: (textDelta: string) => void,
   opts?: { model?: string; signal?: AbortSignal; onStart?: () => void; onDone?: (full: string) => void }
 ) {
   const headers = getHeaders();
@@ -57,46 +60,70 @@ export async function chatStream(
     body: JSON.stringify({ model, messages, stream: true }),
     signal: opts?.signal,
   });
-  if (!res.ok || !res.body) throw new Error(`HTTP_${res.status}`);
+  if (!res.ok) throw new Error(mapHttpError(res.status));
 
-  opts?.onStart?.();
-
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder("utf-8");
+  const reader = res.body?.getReader();
+  if (!reader) return;
+  const decoder = new TextDecoder();
   let buffer = "";
+  let started = false;
   let full = "";
 
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
+  try {
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
 
-    const events = buffer.split("\n\n");
-    buffer = events.pop() ?? "";
+      // Frames per blank line; ein Chunk kann mehrere Frames enthalten
+      const parts = buffer.split("\n\n");
+      buffer = parts.pop() ?? "";
+      for (const raw of parts) {
+        const frameLines = raw.split("\n").map((l) => l.trim());
+        const dataLines = frameLines
+          .filter((l) => l.startsWith("data:"))
+          .map((l) => l.slice(5).trim())
+          .filter(Boolean);
 
-    for (const evt of events) {
-      const lines = evt.split("\n").filter(l => l.trim().length > 0 && !l.startsWith(":"));
-      for (const line of lines) {
-        if (!line.startsWith("data:")) continue;
-        const jsonStr = line.slice(5).trim();
-        if (jsonStr === "[DONE]") {
-          opts?.onDone?.(full);
-          return;
-        }
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const delta = parsed?.choices?.[0]?.delta?.content
-                     ?? parsed?.choices?.[0]?.message?.content
-                     ?? "";
-          if (delta) {
-            full += delta;
-            onToken(delta);
+        for (const payload of dataLines) {
+          if (payload === "[DONE]") {
+            opts?.onDone?.(full);
+            return;
           }
-        } catch {
-          // ignore
+          if (payload.startsWith("{")) {
+            try {
+              const json = JSON.parse(payload);
+              if (json?.error) throw new Error(json.error?.message || "Unbekannter API-Fehler");
+              const delta =
+                json?.choices?.[0]?.delta?.content ??
+                json?.choices?.[0]?.message?.content ??
+                "";
+              if (!started) {
+                started = true;
+                opts?.onStart?.();
+              }
+              if (delta) {
+                onDelta(delta);
+                full += delta;
+              }
+            } catch (e: any) {
+              throw e instanceof Error ? e : new Error("Stream-Parsefehler");
+            }
+          } else {
+            // selten: Plain-Text-Token
+            if (!started) {
+              started = true;
+              opts?.onStart?.();
+            }
+            onDelta(payload);
+            full += payload;
+          }
         }
       }
     }
+    opts?.onDone?.(full);
+  } finally {
+    try { reader.releaseLock(); } catch {}
+    try { await res.body?.cancel(); } catch {}
   }
-  opts?.onDone?.(full);
 }
