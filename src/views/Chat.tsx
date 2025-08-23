@@ -18,21 +18,21 @@ function normalizeStyles(data: PersonaFile): StyleItem[] {
     (data as any).personas,
   ].filter(Boolean);
 
-  let arr: any[] = [];
+  let arr: unknown[] = [];
   for (const c of candidates) {
-    if (Array.isArray(c) && c.length) { arr = c as any[]; break; }
+    if (Array.isArray(c) && c.length) { arr = c; break; }
   }
   if (!Array.isArray(arr)) return [];
 
   const out = arr.map<StyleItem>((raw, i) => {
-    const r: any = raw || {};
-    const name: string = r.name ?? r.title ?? r.label ?? `Style ${i + 1}`;
-    const id: string = (r.id ?? r.key ?? slug(name)) || `style-${i + 1}`;
+    const r = (raw as Record<string, unknown>) || {};
+    const name: string = (r.name as string) ?? (r.title as string) ?? (r.label as string) ?? `Style ${i + 1}`;
+    const id: string = ((r.id as string) ?? (r.key as string) ?? slug(name)) || `style-${i + 1}`;
     const sys = r.system ?? r.prompt ?? r.systemPrompt ?? r.sys;
     const desc = r.description ?? r.desc ?? r.about;
     const obj: StyleItem = { id: String(id), name: String(name) } as StyleItem;
-    if (typeof sys === "string") (obj as any).system = sys;
-    if (typeof desc === "string") (obj as any).description = desc;
+    if (typeof sys === "string") (obj as StyleItem & {system: string}).system = sys;
+    if (typeof desc === "string") (obj as StyleItem & {description: string}).description = desc;
     return obj;
   }).filter(s => s.name);
 
@@ -55,7 +55,7 @@ function usePersonaStyles() {
         `persona.json?v=${bust}`,
       ];
 
-      let lastErr: any = null;
+      let lastErr: Error | null = null;
 
       for (const url of urls) {
         try {
@@ -93,8 +93,8 @@ function usePersonaStyles() {
           console.warn("[persona] loaded from", url, "styles:", list.length);
           lastErr = null;
           break; // success
-        } catch (e) {
-          lastErr = e;
+        } catch (e: unknown) {
+          lastErr = e as Error;
           console.warn("[persona] failed", url, e);
           continue; // try next
         }

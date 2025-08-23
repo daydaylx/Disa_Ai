@@ -10,18 +10,19 @@ function slug(s: string): string {
 }
 
 function normalizeStyles(json: unknown): StyleItem[] {
-  const src: any = json ?? {};
-  const candidates: unknown[] = [src.styles, src?.persona?.styles, src.stile, src.templates, src.personas].filter(Boolean);
+  const src = (json as Record<string, unknown>) ?? {};
+  const candidates: unknown[] = [src.styles, (src.persona as any)?.styles, src.stile, src.templates, src.personas].filter(Boolean);
 
-  let arr: any[] = [];
-  for (const c of candidates) if (Array.isArray(c) && c.length) { arr = c as any[]; break; }
+  let arr: unknown[] = [];
+  for (const c of candidates) if (Array.isArray(c) && c.length) { arr = c; break; }
   if (!Array.isArray(arr)) return [];
 
-  const mapped = arr.map<StyleItem>((raw: any, i: number) => {
-    const name: string = raw?.name ?? raw?.title ?? raw?.label ?? `Style ${i + 1}`;
-    const id: string = (raw?.id ?? raw?.key ?? slug(name)) || `style-${i + 1}`;
-    const sys = raw?.system ?? raw?.prompt ?? raw?.systemPrompt ?? raw?.sys;
-    const desc = raw?.description ?? raw?.desc ?? raw?.about;
+  const mapped = arr.map<StyleItem>((raw: unknown, i: number) => {
+    const r = raw as Record<string, unknown>;
+    const name: string = r?.name as string ?? r?.title as string ?? r?.label as string ?? `Style ${i + 1}`;
+    const id: string = (r?.id as string ?? r?.key as string ?? slug(name)) || `style-${i + 1}`;
+    const sys = r?.system ?? r?.prompt ?? r?.systemPrompt ?? r?.sys;
+    const desc = r?.description ?? r?.desc ?? r?.about;
 
     const o = { id: String(id), name: String(name) } as StyleItem;
     if (typeof sys === "string" && sys.trim()) o.system = sys;
