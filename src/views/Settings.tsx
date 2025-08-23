@@ -5,7 +5,6 @@ import { Button } from "../components/Button";
 import { Card, CardFooter,CardHeader } from "../components/Card";
 import { Input, Textarea } from "../components/Input";
 import { Select } from "../components/Select";
-import { Shell } from "../components/Shell";
 import { MODELS } from "../config/models";
 import { usePersonaSelection } from "../config/personas";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -37,8 +36,7 @@ export default function Settings() {
   }
 
   return (
-    <Shell>
-      <div className="grid md:grid-cols-2 gap-6">
+    <div className="grid md:grid-cols-2 gap-6">
         <Card>
           <CardHeader title="OpenRouter API-Key" subtitle="Lokal im Browser gespeichert" />
           <div className="space-y-3">
@@ -109,7 +107,5 @@ export default function Settings() {
           <CardHeader title="Notizen" subtitle="Einfacher lokaler Speicher" />
           <Textarea placeholder="Optional: kurze Notiz…" value={note} onChange={(e) => setNote(e.target.value)} />
         </Card>
-      </div>
-    </Shell>
-  );
+      </div>);
 }
