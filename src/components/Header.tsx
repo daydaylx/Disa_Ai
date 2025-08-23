@@ -1,48 +1,48 @@
-import React from "react";
 import { Link, NavLink } from "react-router-dom";
+import Logo from "./Logo";
 
-import { features } from "../config/features";
-import { usePersonaSelection } from "../config/personas";
-import { Badge } from "./Badge";
-import { Button } from "./Button";
-import { Logo } from "./Logo";
-
-export function Header() {
-  const { active } = usePersonaSelection();
-
+export default function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-[rgba(11,11,14,0.75)] backdrop-blur-xs">
-      <div className="container-page h-16 flex items-center justify-between">
-        <Link to="/" aria-label="Disa AI – Start" className="flex items-center gap-3">
-          <Logo size="md" withWordmark />
-          {/* Aktive Persona kurz anzeigen (nicht klickbar, nur Info) */}
-          {active && (
-            <span className="hidden sm:inline-block">
-              <Badge tone="purple">
-                <span className="max-w-[220px] inline-block truncate align-middle" title={active.label}>
-                  {active.label}
-                </span>
-              </Badge>
-            </span>
-          )}
-        </Link>
-
-        <nav className="flex items-center gap-2">
-          {features.chat && (
-            <NavLink to="/chat">
-              {({ isActive }) => (
-                <Button variant={isActive ? "primary" : "ghost"}>Chat</Button>
-              )}
+    <header className="sticky top-0 z-40">
+      <div className="backdrop-blur bg-black/30 border-b border-white/10">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+          <Link to="/" className="flex items-center gap-2">
+            <Logo className="h-6 w-6" />
+            <span className="font-semibold tracking-tight">Disa AI</span>
+          </Link>
+          <nav className="flex items-center gap-4 text-sm">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `hover:text-white ${isActive ? "text-white" : "text-zinc-400"}`
+              }
+            >
+              Home
             </NavLink>
-          )}
-          {features.settings && (
-            <NavLink to="/settings" title="Einstellungen (API-Key, Modell, Persona)">
-              {({ isActive }) => (
-                <Button variant={isActive ? "primary" : "ghost"}>Einstellungen</Button>
-              )}
+            <NavLink
+              to="/chat"
+              className={({ isActive }) =>
+                `hover:text-white ${isActive ? "text-white" : "text-zinc-400"}`
+              }
+            >
+              Chat
             </NavLink>
-          )}
-        </nav>
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                `hover:text-white ${isActive ? "text-white" : "text-zinc-400"}`
+              }
+            >
+              Einstellungen
+            </NavLink>
+            <Link
+              to="/chat"
+              className="rounded-xl bg-violet-600/90 px-3 py-1.5 font-medium text-white shadow-sm hover:bg-violet-500 active:scale-[0.99] transition"
+            >
+              Loslegen
+            </Link>
+          </nav>
+        </div>
       </div>
     </header>
   );
