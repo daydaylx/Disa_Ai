@@ -1,112 +1,125 @@
 import React from "react";
-
-import { Badge } from "../components/Badge";
-import { Button } from "../components/Button";
-import { Card, CardFooter,CardHeader } from "../components/Card";
-import { Input, Textarea } from "../components/Input";
-import { Select } from "../components/Select";
-import { MODELS } from "../config/models";
 import { usePersonaSelection } from "../config/personas";
-import type { StyleItem } from "../config/personas";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { useModel } from "../hooks/useModel";
+import { loadModelCatalog, chooseDefaultModel, labelForModel, type ModelInfo } from "../config/models";
+
+const KEY_NAME = "disa_api_key";
+const MODEL_KEY = "disa_model";
 
 export default function Settings() {
-  const [apiKey, setApiKey] = useLocalStorage<string>("disa_api_key", "");
-  const [note, setNote] = useLocalStorage<string>("disa_note", "");
-  const [saved, setSaved] = React.useState<null | "ok" | "err">(null);
+  const { styles, styleId, setStyleId, current, loading: stylesLoading, error: stylesError } = usePersonaSelection();
 
-  const { model, setModel } = useModel();
-  const [onlyFree, setOnlyFree] = useLocalStorage<boolean>("disa_filter_free", true);
-  const [onlyOpen, setOnlyOpen] = useLocalStorage<boolean>("disa_filter_open", false);
+  const [apiKey, setApiKey] = React.useState<string | null>(() => {
+    try { return localStorage.getItem(KEY_NAME); } catch { return null; }
+  });
+  const [models, setModels] = React.useState<ModelInfo[]>([]);
+  const [freeOnly, setFreeOnly] = React.useState<boolean>(false);
+  const [modelId, setModelId] = React.useState<string>(() => {
+    try { return localStorage.getItem(MODEL_KEY) ?? ""; } catch { return ""; }
+  });
 
-  const filtered = React.useMemo(() => {
-    return MODELS.filter(m => (onlyFree ? m.free : true) && (onlyOpen ? m.open : true));
-  }, [onlyFree, onlyOpen]);
+  // Lade Model-Katalog (abhängig von Stil, weil allow[] Filter)
+  React.useEffect(() => {
+    let alive = true;
+    (async () => {
+      const allow = current?.allow ?? null;
+      const list = await loadModelCatalog({ allow }).catch(() => []);
+      if (!alive) return;
+      setModels(list);
+      if (!modelId) {
+        const chosen = chooseDefaultModel(list);
+        setModelId(chosen);
+        try { localStorage.setItem(MODEL_KEY, chosen); } catch {}
+      } else {
+        // falls gespeichertes Modell nicht (mehr) existiert, fallback
+        if (!list.some(m => m.id === modelId)) {
+          const chosen = chooseDefaultModel(list);
+          setModelId(chosen);
+          try { localStorage.setItem(MODEL_KEY, chosen); } catch {}
+        }
+      }
+    })();
+    return () => { alive = false; };
+  }, [current?.allow]); // nur neu laden, wenn allow des Stils sich ändert
 
-  const { styles: personas, styleId: personaId, setStyleId: setPersonaId, current: active, loading: personasLoading } = usePersonaSelection();
-
-  function save() {
+  // Persist API-Key
+  React.useEffect(() => {
     try {
-      setSaved("ok");
-      setTimeout(() => setSaved(null), 1500);
-    } catch {
-      setSaved("err");
-      setTimeout(() => setSaved(null), 2000);
-    }
-  }
+      if (apiKey && apiKey.trim()) localStorage.setItem(KEY_NAME, apiKey.trim());
+      else localStorage.removeItem(KEY_NAME);
+    } catch {}
+  }, [apiKey]);
+
+  // Persist Modell
+  React.useEffect(() => {
+    try {
+      if (modelId) localStorage.setItem(MODEL_KEY, modelId);
+      else localStorage.removeItem(MODEL_KEY);
+    } catch {}
+  }, [modelId]);
+
+  const visibleModels = React.useMemo(
+    () => models.filter(m => (freeOnly ? m.free : true)),
+    [models, freeOnly]
+  );
 
   return (
-    <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader title="OpenRouter API-Key" subtitle="Lokal im Browser gespeichert" />
-          <div className="space-y-3">
-            <Input placeholder="sk-or-…" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
-            <p className="text-sm text-zinc-400">Der Key wird nur lokal gespeichert. Kein Server.</p>
-          </div>
-          <CardFooter>
-            <Button onClick={save}>Speichern</Button>
-            {saved === "ok" && <span className="ml-3 text-sm text-green-400">Gespeichert.</span>}
-            {saved === "err" && <span className="ml-3 text-sm text-red-400">Fehler beim Speichern.</span>}
-          </CardFooter>
-        </Card>
+    <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
+      <header>
+        <h1 className="text-2xl font-semibold">Einstellungen</h1>
+        <p className="text-sm text-zinc-400">API-Key, Stil & Modell auswählen.</p>
+      </header>
 
-        <Card>
-          <CardHeader title="Modell-Auswahl" subtitle="Wir nutzen genau das hier gewählte Modell" />
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <label className="flex items-center gap-2 text-sm text-zinc-300 select-none">
-                <input type="checkbox" className="accent-fuchsia-500" checked={onlyFree} onChange={(e)=>setOnlyFree(e.target.checked)} />
-                Nur kostenlose Modelle
-              </label>
-              <label className="flex items-center gap-2 text-sm text-zinc-300 select-none">
-                <input type="checkbox" className="accent-fuchsia-500" checked={onlyOpen} onChange={(e)=>setOnlyOpen(e.target.checked)} />
-                Offene Richtlinien
-              </label>
-            </div>
-            <Select value={model} onChange={(e)=>setModel(e.target.value)}>
-              {filtered.map(m => (
-                <option key={m.id} value={m.id}>{m.label}</option>
-              ))}
-            </Select>
-            <div className="flex flex-wrap gap-2">
-              <Badge tone="green">free</Badge>
-              <Badge tone="purple">open (uncensored)</Badge>
-            </div>
-            <p className="text-xs text-zinc-500">
-              Tipp: Wenn ein freies Modell Rate-Limits hat, nimm ein anderes oder teste später.
-            </p>
-          </div>
-        </Card>
+      <section className="space-y-3">
+        <label className="block text-sm font-medium">OpenRouter API Key</label>
+        <input
+          className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500"
+          placeholder="sk-or-v1-…"
+          value={apiKey ?? ""}
+          onChange={e => setApiKey(e.target.value || null)}
+          aria-label="OpenRouter API Key"
+        />
+        <p className="text-xs text-zinc-500">Wird lokal gespeichert (kein Server-Speicher).</p>
+      </section>
 
-        <Card>
-          <CardHeader title="Stil (Systemprompt-Vorlage)" subtitle={personasLoading ? "Lade Vorlagen…" : "Wird als system vor jede Konversation gesendet"} />
-          <div className="space-y-3">
-            {personasLoading ? (
-              <div className="text-sm text-zinc-400">Lade…</div>
-            ) : personas.length === 0 ? (
-              <div className="text-sm text-zinc-400">Keine Personas gefunden (es wird ein neutraler Fallback genutzt).</div>
-            ) : (
-              <>
-                <Select value={(personaId ?? "")} onChange={(e)=>setPersonaId(e.target.value)}>
-                  {personas.map((p: StyleItem) => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                  ))}
-                </Select>
-                {active && (
-                  <div className="rounded-2xl bg-[#0f0f16] border border-white/10 p-3 max-h-56 overflow-auto">
-                    <div className="text-xs text-zinc-400 mb-2">Vorschau</div>
-                    <pre className="text-sm whitespace-pre-wrap text-zinc-200">{active.system ?? ""}</pre>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </Card>
+      <section className="space-y-3">
+        <label className="block text-sm font-medium">Stil</label>
+        <select
+          className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2"
+          value={styleId ?? ""}
+          onChange={(e) => setStyleId(e.target.value || null)}
+        >
+          {styles.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+        </select>
+        {stylesError && <p className="text-xs text-red-400">{stylesError}</p>}
+        {stylesLoading && <p className="text-xs text-zinc-500">Stile werden geladen…</p>}
+        {current?.description && <p className="text-xs text-zinc-400">{current.description}</p>}
+      </section>
 
-        <Card>
-          <CardHeader title="Notizen" subtitle="Einfacher lokaler Speicher" />
-          <Textarea placeholder="Optional: kurze Notiz…" value={note} onChange={(e) => setNote(e.target.value)} />
-        </Card>
-      </div>);
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium">Modell</label>
+          <label className="text-xs flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" checked={freeOnly} onChange={(e)=>setFreeOnly(e.target.checked)} />
+            nur Free
+          </label>
+        </div>
+        <select
+          className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2"
+          value={modelId}
+          onChange={(e) => setModelId(e.target.value)}
+        >
+          {visibleModels.map(m => (
+            <option key={m.id} value={m.id}>
+              {labelForModel(m.id)}
+            </option>
+          ))}
+        </select>
+        {!visibleModels.length && (
+          <p className="text-xs text-zinc-500">
+            Keine Modelle für diesen Filter. Schalte „nur Free“ aus oder entferne <code>allow[]</code> im Stil.
+          </p>
+        )}
+      </section>
+    </div>
+  );
 }
