@@ -1,3 +1,2 @@
-export function cn(...parts: Array<string | false | null | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
+export * from "../../lib/cn";
+export { cn as default } from "../../lib/cn";

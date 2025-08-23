@@ -28,7 +28,11 @@ function normalizeStyles(data: PersonaFile): StyleItem[] {
   const out: StyleItem[] = arr.map((raw, i) => {
     const r: any = raw || {};
     const name: string = r.name ?? r.title ?? r.label ?? `Style ${i + 1}`;
+<<<<<<< HEAD
     const id: string = r.id ?? r.key ?? slug(name) || `style-${i + 1}`;
+=======
+    const id: string = (r.id ?? r.key ?? slug(name)) || `style-${i + 1}`;
+>>>>>>> 1b03054 (fix(build): parenthesize nullish-coalescing before logical OR in Chat.tsx)
     const system: string | undefined = r.system ?? r.prompt ?? r.systemPrompt ?? r.sys;
     const description: string | undefined = r.description ?? r.desc ?? r.about;
     return { id: String(id), name: String(name), system, description };
@@ -59,11 +63,16 @@ function usePersonaStyles() {
           const data = (await res.json()) as PersonaFile;
           const list = normalizeStyles(data);
           if (!list.length) throw new Error(`Keine gültigen Stile in ${url}`);
+<<<<<<< HEAD
           if (alive) setStyles(list);
+=======
+          setStyles(list);
+>>>>>>> 1b03054 (fix(build): parenthesize nullish-coalescing before logical OR in Chat.tsx)
           lastErr = null;
           break;
         } catch (e) {
           lastErr = e;
+<<<<<<< HEAD
           // try next candidate
         }
       }
@@ -72,6 +81,15 @@ function usePersonaStyles() {
         console.warn("[persona.json] Laden fehlgeschlagen:", lastErr);
       }
       if (alive) setLoading(false);
+=======
+        }
+      }
+      if (lastErr) {
+        setError(lastErr instanceof Error ? lastErr.message : String(lastErr));
+        console.warn("[persona.json] Laden fehlgeschlagen:", lastErr);
+      }
+      setLoading(false);
+>>>>>>> 1b03054 (fix(build): parenthesize nullish-coalescing before logical OR in Chat.tsx)
     })();
     return () => { alive = false; };
   }, []);
