@@ -1,23 +1,16 @@
-import React from "react";
-type Props = { size?: "sm" | "md" | "lg"; withWordmark?: boolean; };
-const sizes = { sm: "h-7 w-7", md: "h-9 w-9", lg: "h-12 w-12" };
-export function Logo({ size="md", withWordmark=true }: Props) {
+export default function Logo({ className = "h-6 w-6" }: { className?: string }) {
   return (
-    <div className="flex items-center gap-3 select-none">
-      <div className={`${sizes[size]} rounded-2xl bg-gradient-to-br from-primary to-indigo-500 shadow-glow relative`} aria-hidden>
-        <div className="absolute inset-0 rounded-2xl blur-[12px] opacity-30 bg-gradient-to-br from-primary to-indigo-500" />
-        <svg viewBox="0 0 24 24" className="absolute inset-0 m-auto h-5 w-5 text-white">
-          <path fill="currentColor" d="M12 3l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.9 7.2 18l.9-5.4L4.2 8.7l5.4-.8L12 3z"/>
-        </svg>
-      </div>
-      {withWordmark && (
-        <div className="leading-none">
-          <div className="text-white font-bold tracking-tight text-lg">
-            Disa <span className="text-primary">AI</span>
-          </div>
-          <div className="text-xs text-zinc-400">Private Assistant</div>
-        </div>
-      )}
-    </div>
+    <svg viewBox="0 0 64 64" className={className}>
+      <defs>
+        <radialGradient id="g" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stopColor="#a855f7" stopOpacity="1" />
+          <stop offset="60%" stopColor="#22d3ee" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#111827" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="32" cy="32" r="28" fill="url(#g)" />
+      <circle cx="28" cy="24" r="6" fill="#fff" fillOpacity="0.7" />
+      <circle cx="40" cy="36" r="4" fill="#fff" fillOpacity="0.35" />
+    </svg>
   );
 }
