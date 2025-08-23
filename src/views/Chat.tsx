@@ -1,7 +1,8 @@
 import * as React from "react";
-import { MessageBubble } from "../components/MessageBubble";
-import { chatStream, chatOnce, type Msg, getModelFallback } from "../api/openrouter";
+
 import { addExplicitMemory, updateMemorySummary } from "../api/memory";
+import { chatOnce, chatStream, getModelFallback, type Msg } from "../api/openrouter";
+import { MessageBubble } from "../components/MessageBubble";
 import { useChatSession } from "../hooks/useChatSession";
 
 type StyleItem = { id: string; name: string; system?: string; description?: string };
@@ -19,25 +20,37 @@ function usePersonaStyles() {
         const res = await fetch("/persona.json", { cache: "no-store" });
         const data = (await res.json()) as PersonaFile;
         const arr = Array.isArray(data?.styles) ? data.styles! : [];
-        if (alive) setStyles(arr.filter(s => s && s.id && s.name));
+        if (alive) setStyles(arr.filter((s) => s && s.id && s.name));
       } catch (e) {
         if (alive) setError(e instanceof Error ? e.message : String(e));
       } finally {
         if (alive) setLoading(false);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
   return { styles, loading, error };
 }
 
-function QuickChip({ active, children, onClick }: { active?: boolean; children: React.ReactNode; onClick?: () => void }) {
+function QuickChip({
+  active,
+  children,
+  onClick,
+}: {
+  active?: boolean;
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
   return (
     <button
       onClick={onClick}
       className={[
         "rounded-xl px-3 py-1.5 text-sm transition border",
-        active ? "bg-violet-600 text-white border-violet-500" : "bg-white/5 text-zinc-200 border-white/10 hover:bg-white/10"
+        active
+          ? "bg-violet-600 text-white border-violet-500"
+          : "bg-white/5 text-zinc-200 border-white/10 hover:bg-white/10",
       ].join(" ")}
     >
       {children}
@@ -46,7 +59,8 @@ function QuickChip({ active, children, onClick }: { active?: boolean; children: 
 }
 
 export default function Chat() {
-  const { session, append, appendAssistantPlaceholder, appendAssistantDelta, setMemory, lastWindow } = useChatSession();
+  const { session, append, appendAssistantPlaceholder, appendAssistantDelta, setMemory, lastWindow } =
+    useChatSession();
   const [draft, setDraft] = React.useState("");
   const [sending, setSending] = React.useState(false);
   const [ab, setAb] = React.useState<AbortController | null>(null);
@@ -55,20 +69,32 @@ export default function Chat() {
 
   const { styles, loading: stylesLoading } = usePersonaStyles();
   const [styleId, setStyleId] = React.useState<string | null>(() => {
-    try { return localStorage.getItem("disa_style_id"); } catch { return null; }
+    try {
+      return localStorage.getItem("disa_style_id");
+    } catch {
+      return null;
+    }
   });
 
   React.useEffect(() => {
-    try { styleId ? localStorage.setItem("disa_style_id", styleId) : localStorage.removeItem("disa_style_id"); } catch { 
+    try {
+      styleId
+        ? localStorage.setItem("disa_style_id", styleId)
+        : localStorage.removeItem("disa_style_id");
+    } catch {
+      /* noop */ void 0;
+    }
   }, [styleId]);
 
   const currentStyle = React.useMemo<StyleItem | null>(
-    () => styles.find(s => s.id === styleId) ?? null,
-    [styles, styleId]
+    () => styles.find((s) => s.id === styleId) ?? null,
+    [styles, styleId],
   );
 
   const listRef = React.useRef<HTMLDivElement | null>(null);
-  React.useEffect(() => { listRef.current?.scrollTo({ top: listRef.current.scrollHeight }); }, [session.messages.length]);
+  React.useEffect(() => {
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
+  }, [session.messages.length]);
 
   async function runSend() {
     if (!draft.trim() || sending) return;
@@ -91,25 +117,22 @@ export default function Chat() {
     appendAssistantPlaceholder();
 
     try {
-      await chatStream(
-        msgs,
-        (delta) => appendAssistantDelta(delta),
-        {
-          model,
-          signal: controller.signal,
-          onDone: async () => {
-            // Memory zusammenfassen (nicht blockierend)
-            try {
-              const updated = await updateMemorySummary({
-                previousMemory: session.memory,
-                recentWindow: lastWindow(24).map(m => ({ role: m.role, content: m.text })),
-              });
-              setMemory(updated);
-            } catch { /* silent */ }
+      await chatStream(msgs, (delta) => appendAssistantDelta(delta), {
+        model,
+        signal: controller.signal,
+        onDone: async () => {
+          try {
+            const updated = await updateMemorySummary({
+              previousMemory: session.memory,
+              recentWindow: lastWindow(24).map((m) => ({ role: m.role, content: m.text })),
+            });
+            setMemory(updated);
+          } catch {
+            /* noop */ void 0;
           }
-        }
-      );
-    } catch (e) {
+        },
+      });
+    } catch {
       // Fallback: non-stream
       try {
         const { text } = await chatOnce(msgs, { model, signal: controller.signal });
@@ -124,26 +147,39 @@ export default function Chat() {
   }
 
   function stop() {
-    try { ab?.abort(); } catch {}
+    try {
+      ab?.abort();
+    } catch {
+      /* noop */ void 0;
+    }
     setSending(false);
   }
 
   async function saveNote() {
     const note = noteText.trim();
-    if (!note) return setNoteOpen(false);
+    if (!note) {
+      setNoteOpen(false);
+      return;
+    }
     try {
       const updated = await addExplicitMemory({
         previousMemory: session.memory,
-        note
+        note,
       });
       setMemory(updated);
-    } catch { /* ignore */ }
+    } catch {
+      /* noop */ void 0;
+    }
     setNoteText("");
     setNoteOpen(false);
   }
 
   const model = React.useMemo(() => {
-    try { return localStorage.getItem("disa_model") ?? getModelFallback(); } catch { return getModelFallback(); }
+    try {
+      return localStorage.getItem("disa_model") ?? getModelFallback();
+    } catch {
+      return getModelFallback();
+    }
   }, []);
 
   return (
@@ -157,7 +193,9 @@ export default function Chat() {
             <span>Modell:</span>
             <code className="text-zinc-100">{model}</code>
             {currentStyle ? (
-              <span className="ml-3 text-zinc-400">Stil: <b className="text-zinc-100">{currentStyle.name}</b></span>
+              <span className="ml-3 text-zinc-400">
+                Stil: <b className="text-zinc-100">{currentStyle.name}</b>
+              </span>
             ) : null}
           </div>
           <div className="flex items-center gap-2">
@@ -184,7 +222,8 @@ export default function Chat() {
         <div ref={listRef} className="h-[60vh] overflow-y-auto px-4 py-4 space-y-3">
           {session.messages.length === 0 && (
             <div className="text-sm text-zinc-400">
-              Starte mit einer Frage. Du kannst oben rechts jederzeit Notizen per „Merken“ in die Memory übernehmen.
+              Starte mit einer Frage. Du kannst oben rechts jederzeit Notizen per „Merken“ in die
+              Memory übernehmen.
             </div>
           )}
           {session.messages.map((m, i) => (
@@ -228,18 +267,24 @@ export default function Chat() {
           {stylesLoading ? (
             <div className="text-sm text-zinc-400">Lade…</div>
           ) : styles.length === 0 ? (
-            <div className="text-sm text-zinc-400">Keine Stile in <code>/persona.json</code> gefunden.</div>
+            <div className="text-sm text-zinc-400">
+              Keine Stile in <code>/persona.json</code> gefunden.
+            </div>
           ) : (
             <div className="flex flex-wrap gap-2">
-              <QuickChip active={!styleId} onClick={() => setStyleId(null)}>Neutral</QuickChip>
-              {styles.map(s => (
+              <QuickChip active={!styleId} onClick={() => setStyleId(null)}>
+                Neutral
+              </QuickChip>
+              {styles.map((s) => (
                 <QuickChip key={s.id} active={styleId === s.id} onClick={() => setStyleId(s.id)}>
                   {s.name}
                 </QuickChip>
               ))}
             </div>
           )}
-          <p className="mt-3 text-xs text-zinc-500">Systemprompt aus dem gewählten Stil wird automatisch vorangestellt.</p>
+          <p className="mt-3 text-xs text-zinc-500">
+            Systemprompt aus dem gewählten Stil wird automatisch vorangestellt.
+          </p>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -247,7 +292,9 @@ export default function Chat() {
           <pre className="max-h-[240px] overflow-auto whitespace-pre-wrap rounded-lg bg-black/30 p-3 text-xs text-zinc-300">
 {session.memory || "— leer —"}
           </pre>
-          <p className="mt-2 text-xs text-zinc-500">Wird nach Antworten automatisch verdichtet. „Merken“ fügt manuell etwas hinzu.</p>
+          <p className="mt-2 text-xs text-zinc-500">
+            Wird nach Antworten automatisch verdichtet. „Merken“ fügt manuell etwas hinzu.
+          </p>
         </div>
       </aside>
 
@@ -264,8 +311,18 @@ export default function Chat() {
               className="mt-3 w-full rounded-xl bg-black/30 px-3 py-2 text-zinc-100 placeholder:text-zinc-500 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
             <div className="mt-3 flex justify-end gap-2">
-              <button className="rounded-lg px-3 py-1.5 text-sm bg-white/10 hover:bg-white/15" onClick={()=>setNoteOpen(false)}>Abbrechen</button>
-              <button className="rounded-lg px-3 py-1.5 text-sm bg-violet-600 text-white hover:bg-violet-500" onClick={saveNote}>Speichern</button>
+              <button
+                className="rounded-lg px-3 py-1.5 text-sm bg-white/10 hover:bg-white/15"
+                onClick={() => setNoteOpen(false)}
+              >
+                Abbrechen
+              </button>
+              <button
+                className="rounded-lg px-3 py-1.5 text-sm bg-violet-600 text-white hover:bg-violet-500"
+                onClick={saveNote}
+              >
+                Speichern
+              </button>
             </div>
           </div>
         </div>
