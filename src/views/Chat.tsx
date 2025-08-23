@@ -161,7 +161,7 @@ export default function Chat() {
             </div>
 
             <div className="text-xs text-zinc-500 mt-2 flex flex-wrap gap-x-3 gap-y-1">
-              <span>Modell: <code>{current.label}</code></span>
+              <span>Modell: <code>{current ? current.label : "?"}</code></span>
               {activePersona ? <span>Stil: <code>{activePersona.label}</code></span> : null}
               {session.memory ? <span>Memory: <code>{Math.min(session.memory.length, 200)} Zeichen</code></span> : null}
               <span>Streaming aktiv</span>

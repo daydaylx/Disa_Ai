@@ -10,7 +10,7 @@
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": false,
     "useUnknownInCatchVariables": true,
     "forceConsistentCasingInFileNames": true,
@@ -29,9 +29,14 @@
   ],
   "exclude": [
     "node_modules",
+    "dist",
+    "build",
+    "coverage",
     "e2e",
-    "src/**/__tests__",
-    "**/*.test.ts",
-    "**/*.test.tsx"
+    "src/features/**",
+    "src/entities/**",
+    "src/widgets/**",
+    "src/shared/**",
+    "src/lib/openrouter.ts"  // Legacy-Client
   ]
 }

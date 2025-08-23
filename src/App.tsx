@@ -1,18 +1,18 @@
-import React from "react";
+import { BrowserRouter, Navigate,Route, Routes } from "react-router-dom";
 
-import ChatPanel from "@/features/chat/ChatPanel";
-import SettingsSheet from "@/features/settings/SettingsSheet";
-import { AppShell, SettingsContext } from "@/widgets/shell/AppShell";
+import Chat from "./views/Chat";
+import Home from "./views/Home";
+import Settings from "./views/Settings";
 
 export default function App() {
-  const [openTab, setOpenTab] = React.useState<null | "api" | "model" | "style">(null);
-
   return (
-    <SettingsContext.Provider value={(t)=>setOpenTab(t)}>
-      <AppShell>
-        <ChatPanel />
-      </AppShell>
-      {openTab && <SettingsSheet initial={openTab} onClose={()=>setOpenTab(null)} />}
-    </SettingsContext.Provider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/chat" element={<Chat/>} />
+        <Route path="/settings" element={<Settings/>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
