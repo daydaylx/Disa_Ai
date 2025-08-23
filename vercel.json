@@ -1,6 +1,8 @@
 {
-  "version": 2,
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/(.*)\\.(js|css|map|png|jpg|jpeg|svg|ico|txt|json|webmanifest|woff|woff2)", "destination": "/$1.$2" },
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
