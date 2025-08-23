@@ -1,39 +1,28 @@
-import { PersonaProvider } from "./config/personas";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./styles/globals.css";
+import { PersonaProvider } from "./config/personas";
 
-const rootEl = document.getElementById("root");
-if (!rootEl) throw new Error("Root element #root nicht gefunden");
-
-ReactDOM.createRoot(rootEl).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <PersonaProvider>
-      <PersonaProvider>
-    <App />
-  </PersonaProvider>
+      <App />
     </PersonaProvider>
   </React.StrictMode>
 );
 
-// Einmalige Bereinigung alter Service-Worker/Caches in Produktion
-if (import.meta.env.PROD && typeof window !== "undefined") {
+if (import.meta?.env?.PROD && "serviceWorker" in navigator) {
+  // SW-Bereinigung (nur wenn du mal PWA aktiv hast)
   (async () => {
     try {
-      if ("serviceWorker" in navigator) {
-        const regs = await navigator.serviceWorker.getRegistrations();
-        for (const r of regs) {
-          try { await r.unregister(); } catch (e) { /* noop */ void 0; }
-        }
-      }
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const r of regs) await r.unregister();
       if ("caches" in window) {
         const keys = await caches.keys();
-        for (const k of keys) {
-          try { await caches.delete(k); } catch (e) { /* noop */ void 0; }
-        }
+        await Promise.all(keys.map(k => caches.delete(k)));
       }
-      console.warn("[DisaAI] SW & Caches bereinigt");
-    } catch (e) { /* noop */ void 0; }
+      // eslint-disable-next-line no-empty
+    } catch {}
   })();
 }
