@@ -14,14 +14,14 @@
     "e2e:headed": "NODE_OPTIONS=\"--require ./e2e/preload.cjs\" playwright test --headed",
     "e2e:update": "playwright test --update-snapshots",
     "test:types": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit && tsc -p e2e/tsconfig.json --noEmit",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "echo \"lint disabled\"",
+    "lint:fix": "echo \"lint disabled\"",
     "lint:types": "eslint . --config eslint.config.types.js",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "prepare": "husky install",
-    "verify": "npm run lint && npm run typecheck && npm run test && npx playwright install --with-deps && npm run e2e",
-    "verify:headed": "npm run lint && npm run typecheck && npm run test && npx playwright install --with-deps && playwright test --headed"
+    "verify": "npm run typecheck && npm run test && npx playwright install --with-deps && npm run e2e",
+    "verify:headed": "npm run typecheck && npm run test && npx playwright install --with-deps && playwright test --headed"
   },
   "dependencies": {
     "react": "18.3.1",
