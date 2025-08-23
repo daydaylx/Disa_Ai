@@ -1,8 +1,9 @@
 import { cn } from "../lib/cn";
+import type { ReactNode } from "react";
 
 type Props = {
   role: "user" | "assistant";
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export function MessageBubble({ role, children }: Props) {

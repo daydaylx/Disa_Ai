@@ -108,7 +108,7 @@ export async function chatStream(
     }
     opts?.onDone?.(full);
   } finally {
-    try { reader.releaseLock(); } catch {}
+    try { reader.releaseLock(); } catch { 
     try { await res.body?.cancel(); } catch {}
   }
 }
