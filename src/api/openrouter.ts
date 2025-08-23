@@ -85,18 +85,14 @@ export async function chatStream(
           .filter(Boolean);
 
         for (const payload of dataLines) {
-          if (payload === "[DONE]") {
-            opts?.onDone?.(full);
-            return;
-          }
+          if (payload === "[DONE]") { opts?.onDone?.(full); return; }
           if (payload.startsWith("{")) {
             try {
               const json = JSON.parse(payload);
               if (json?.error) throw new Error(json.error?.message || "Unbekannter API-Fehler");
               const delta =
                 json?.choices?.[0]?.delta?.content ??
-                json?.choices?.[0]?.message?.content ??
-                "";
+                json?.choices?.[0]?.message?.content ?? "";
               if (!started) { started = true; opts?.onStart?.(); }
               if (delta) { onDelta(delta); full += delta; }
             } catch (e) {
