@@ -1,3 +1,4 @@
+import { PersonaProvider } from "./config/personas";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
@@ -8,7 +9,9 @@ if (!rootEl) throw new Error("Root element #root nicht gefunden");
 
 ReactDOM.createRoot(rootEl).render(
   <React.StrictMode>
-    <App />
+    <PersonaProvider>
+      <App />
+    </PersonaProvider>
   </React.StrictMode>
 );
 
