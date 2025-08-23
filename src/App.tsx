@@ -1,7 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
 import Shell from "./components/Shell";
-import Home from "./views/Home";
 import Chat from "./views/Chat";
+import Home from "./views/Home";
 import Settings from "./views/Settings";
 
 export default function App() {

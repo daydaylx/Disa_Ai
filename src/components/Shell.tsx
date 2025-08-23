@@ -1,5 +1,6 @@
-import Header from "./Header";
 import type { ReactNode } from "react";
+
+import Header from "./Header";
 
 export default function Shell({ children }: { children: ReactNode }) {
   return (
