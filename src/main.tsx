@@ -1,23 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./styles/globals.css";
 
-import { PersonaProvider } from "./entities/PersonaProvider";
-import { ClientProvider } from "./lib/client";
-import { ToastProvider } from "./shared/ui/Toast";
+const Home = React.lazy(() => import("./views/Home"));
+const Chat = React.lazy(() => import("./views/Chat"));
 
-const root = document.getElementById("root");
-if (!root) throw new Error("ROOT element #root fehlt in index.html");
+const router = createBrowserRouter([
+  { path: "/", element: <React.Suspense fallback={<div className="p-6">Lade…</div>}><Home /></React.Suspense> },
+  { path: "/chat", element: <React.Suspense fallback={<div className="p-6">Lade…</div>}><Chat /></React.Suspense> },
+]);
 
-ReactDOM.createRoot(root).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <PersonaProvider>
-      <ClientProvider>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
-      </ClientProvider>
-    </PersonaProvider>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
