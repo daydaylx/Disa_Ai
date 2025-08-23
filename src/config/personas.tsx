@@ -1,17 +1,23 @@
-import React from "react";
+import * as React from "react";
 import { loadStyles, type StyleItem } from "../lib/configLoader";
 
-type PersonaCtx = {
+const STYLE_KEY = "disa_style_id";
+
+export const PersonaContext = React.createContext<{
   styles: StyleItem[];
   loading: boolean;
   error: string | null;
   styleId: string | null;
   setStyleId: React.Dispatch<React.SetStateAction<string | null>>;
   current: StyleItem | null;
-};
-
-const PersonaContext = React.createContext<PersonaCtx | undefined>(undefined);
-const STYLE_KEY = "disa_style_id";
+}>({
+  styles: [],
+  loading: true,
+  error: null,
+  styleId: null,
+  setStyleId: () => {},
+  current: null,
+});
 
 export function PersonaProvider({ children }: { children: React.ReactNode }) {
   const [styles, setStyles] = React.useState<StyleItem[]>([]);
@@ -25,41 +31,37 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
     let alive = true;
     (async () => {
       try {
-        const { styles } = await loadStyles();
+        const items = await loadStyles();
         if (!alive) return;
-        setStyles(styles);
-        if (!styleId && styles[0]) {
-          try { localStorage.setItem(STYLE_KEY, styles[0].id); } catch {}
-          setStyleId(styles[0].id);
+        setStyles(items);
+        if (!styleId && items[0]?.id) {
+          try { localStorage.setItem(STYLE_KEY, items[0].id); } catch {}
+          setStyleId(items[0].id);
         }
       } catch (e: any) {
         if (!alive) return;
-        setError("Stile konnten nicht geladen werden.");
+        setError(e?.message ?? "Konnte Stile nicht laden");
       } finally {
         if (alive) setLoading(false);
       }
     })();
     return () => { alive = false; };
-  }, []); // initial load
-
-  React.useEffect(() => {
-    try {
-      if (styleId) localStorage.setItem(STYLE_KEY, styleId);
-      else localStorage.removeItem(STYLE_KEY);
-    } catch {}
-  }, [styleId]);
+  }, []);
 
   const current = React.useMemo<StyleItem | null>(
-    () => styles.find(s => s.id === styleId) ?? null,
+    () => styles.find(s => s.id === styleId) ?? styles[0] ?? null,
     [styles, styleId]
   );
 
-  const value: PersonaCtx = { styles, loading, error, styleId, setStyleId, current };
+  const value = React.useMemo(() => ({
+    styles, loading, error, styleId, setStyleId, current
+  }), [styles, loading, error, styleId, setStyleId, current]);
+
   return <PersonaContext.Provider value={value}>{children}</PersonaContext.Provider>;
 }
 
 export function usePersonaSelection() {
-  const ctx = React.useContext(PersonaContext);
-  if (!ctx) throw new Error("usePersonaSelection must be used within PersonaProvider");
-  return ctx;
+  return React.useContext(PersonaContext);
 }
+
+export type { StyleItem } from "../lib/configLoader";

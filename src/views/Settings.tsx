@@ -1,6 +1,6 @@
 import React from "react";
 import { usePersonaSelection } from "../config/personas";
-import { loadModelCatalog, chooseDefaultModel, labelForModel, type ModelInfo } from "../config/models";
+import { loadModelCatalog, chooseDefaultModel, labelForModel, type ModelEntry } from "../config/models";
 
 const KEY_NAME = "disa_api_key";
 const MODEL_KEY = "disa_model";
@@ -11,7 +11,7 @@ export default function Settings() {
   const [apiKey, setApiKey] = React.useState<string | null>(() => {
     try { return localStorage.getItem(KEY_NAME); } catch { return null; }
   });
-  const [models, setModels] = React.useState<ModelInfo[]>([]);
+  const [models, setModels] = React.useState<ModelEntry[]>([]);
   const [freeOnly, setFreeOnly] = React.useState<boolean>(false);
   const [modelId, setModelId] = React.useState<string>(() => {
     try { return localStorage.getItem(MODEL_KEY) ?? ""; } catch { return ""; }
