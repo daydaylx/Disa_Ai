@@ -1,46 +1,34 @@
+import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <section className="relative">
-      <div className="mx-auto max-w-3xl text-center space-y-6 py-12">
-        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
-          Willkommen bei <span className="bg-gradient-to-r from-violet-400 to-cyan-300 bg-clip-text text-transparent">Disa AI</span>
+    <main className="min-h-screen bg-[#0a0a0b] text-zinc-100">
+      <section className="mx-auto max-w-4xl px-6 py-16">
+        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+          Willkommen bei <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">Disa AI</span>
         </h1>
-        <p className="text-zinc-400">
-          Schneller, sauberer Chat – mit speicherbarem Kontext („Merke dir das“)
-          und Stil-Vorlagen aus deiner <code>persona.json</code>.
+        <p className="mt-5 text-zinc-300 max-w-2xl">
+          Schneller, sauberer Chat – mit speicherbarem Kontext („Merke dir das“) und wählbaren Stilen in den Einstellungen.
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Link
-            to="/chat"
-            className="rounded-xl bg-violet-600 px-4 py-2 font-medium text-white shadow hover:bg-violet-500"
-          >
+        <div className="mt-8 flex gap-4">
+          <Link to="/chat" className="px-5 py-3 rounded-2xl bg-violet-600 hover:bg-violet-500 transition">
             Zum Chat
           </Link>
-          <Link
-            to="/settings"
-            className="rounded-xl bg-white/10 px-4 py-2 font-medium text-zinc-100 ring-1 ring-white/10 hover:bg-white/15"
-          >
+          <Link to="/settings" className="px-5 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 transition">
             Einstellungen
           </Link>
         </div>
-      </div>
+      </section>
 
-      <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h3 className="font-medium">Stile (Systemprompts)</h3>
-          <p className="mt-2 text-sm text-zinc-400">
-            Schnellzugriff auf deine Templates aus <code>public/persona.json</code>.
+      <section className="mx-auto max-w-4xl px-6 pb-24 grid gap-6">
+        <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-6">
+          <h2 className="text-xl font-semibold">„Merke dir das“</h2>
+          <p className="mt-2 text-zinc-400">
+            Explizit markierte Notizen landen in deiner lokalen Chat-Memory. Du bestimmst, was gespeichert wird – nichts wird hochgeladen.
           </p>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <h3 className="font-medium">„Merke dir das“</h3>
-          <p className="mt-2 text-sm text-zinc-400">
-            Explizit markierte Notizen gehen in die Chat-Memory (lokal gespeichert).
-          </p>
-        </div>
-      </div>
-    </section>
+      </section>
+    </main>
   );
 }
