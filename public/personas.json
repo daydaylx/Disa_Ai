@@ -1,42 +1,4 @@
 {
-  "models": [
-    {
-      "id": "meta-llama/llama-3.3-70b-instruct:free",
-      "label": "Llama 3.3 70B (Free)"
-    },
-    {
-      "id": "meta-llama/llama-3.1-405b-instruct:free",
-      "label": "Llama 3.1 405B (Free Premium)"
-    },
-    {
-      "id": "qwen/qwen-2.5-72b-instruct:free",
-      "label": "Qwen 2.5 72B (Free)"
-    },
-    {
-      "id": "mistralai/mistral-nemo:free",
-      "label": "Mistral Nemo (Free)"
-    },
-    {
-      "id": "mistralai/mistral-small-3.2-24b-instruct:free",
-      "label": "Mistral Small 3.2 24B (Free)"
-    },
-    {
-      "id": "google/gemini-2.0-flash-exp:free",
-      "label": "Google Gemini 2.0 Flash (Free)"
-    },
-    {
-      "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
-      "label": "Venice Uncensored (Free)"
-    },
-    {
-      "id": "cognitivecomputations/dolphin3.0-mistral-24b:free",
-      "label": "Dolphin 3.0 Mistral 24B (Free)"
-    },
-    {
-      "id": "deepseek/deepseek-r1:free",
-      "label": "DeepSeek R1 (Free)"
-    }
-  ],
   "styles": [
     {
       "id": "neutral",
