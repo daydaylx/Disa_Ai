@@ -1,20 +1,15 @@
 import React from "react";
-import { usePersonaSelection } from "@/config/personas";
-import { cn } from "@/lib/cn";
+import { usePersonaSelection, type StyleItem } from "../config/personas";
+import { cn } from "../lib/cn";
 
-/**
- * Minimaler QuickBar-Streifen: listet Styles aus persona.json
- * Nutzt die neue Selection-API (styles/styleId/setStyleId).
- * Wird in der App nicht mehr angezeigt, bleibt aber für Unit-Tests bestehen.
- */
+/** Nur für Tests behalten – UI bindet die QuickBar nicht mehr ein. */
 const PersonaQuickBar: React.FC = () => {
   const { styles, styleId, setStyleId, loading } = usePersonaSelection();
-
-  if (loading || !styles || styles.length === 0) return null;
+  if (loading || !styles?.length) return null;
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {styles.map((s) => (
+    <div className="flex flex-wrap gap-2" data-testid="persona-quickbar">
+      {styles.map((s: StyleItem) => (
         <button
           key={s.id}
           type="button"
