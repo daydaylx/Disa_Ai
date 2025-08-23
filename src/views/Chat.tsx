@@ -57,12 +57,13 @@ function usePersonaStyles() {
       let lastErr: any = null;
       for (const url of urls) {
         try {
-          const res = await fetch(url, { cache: "no-store" });
+          const res = await fetch(url, { cache: "no-store", headers: { "cache-control": "no-cache", "pragma": "no-cache" } });
           if (!res.ok) throw new Error(`HTTP ${res.status} für ${url}`);
           const data = (await res.json()) as PersonaFile;
           const list = normalizeStyles(data);
           if (!list.length) throw new Error(`Keine gültigen Stile in ${url}`);
           setStyles(list);
+          console.warn("[persona] loaded from", url);
           lastErr = null;
           break;
         } catch (e) {
