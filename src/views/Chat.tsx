@@ -59,7 +59,7 @@ export default function Chat() {
   });
 
   React.useEffect(() => {
-    try { styleId ? localStorage.setItem("disa_style_id", styleId) : localStorage.removeItem("disa_style_id"); } catch {}
+    try { styleId ? localStorage.setItem("disa_style_id", styleId) : localStorage.removeItem("disa_style_id"); } catch { 
   }, [styleId]);
 
   const currentStyle = React.useMemo<StyleItem | null>(
