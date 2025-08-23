@@ -3,7 +3,6 @@ import { chatOnce, chatStream, getModelFallback, type Msg } from "../api/openrou
 import { addExplicitMemory, updateMemorySummary } from "../api/memory";
 import { useChatSession } from "../hooks/useChatSession";
 import { MessageBubble } from "../components/MessageBubble";
-import { publicAsset } from "../lib/publicAsset";
 
 type StyleItem = { id: string; name: string; system?: string; description?: string };
 type PersonaFile = Record<string, unknown>;
@@ -27,8 +26,8 @@ function normalizeStyles(data: PersonaFile): StyleItem[] {
 
   const out = arr.map<StyleItem>((raw, i) => {
     const r: any = raw || {};
-    const name: string = r.name ?? r.title ?? r.label ?? `Style `;
-    const id: string = (r.id ?? r.key ?? slug(name)) || `style-`;
+    const name: string = r.name ?? r.title ?? r.label ?? `Style ${i + 1}`;
+    const id: string = (r.id ?? r.key ?? slug(name)) || `style-${i + 1}`;
     const sys = r.system ?? r.prompt ?? r.systemPrompt ?? r.sys;
     const desc = r.description ?? r.desc ?? r.about;
     const obj: StyleItem = { id: String(id), name: String(name) } as StyleItem;
@@ -49,35 +48,67 @@ function usePersonaStyles() {
   React.useEffect(() => {
     let alive = true;
     (async () => {
+      const bust = String(((import.meta as any)?.env?.VITE_BUILD_ID) ?? Date.now());
+      // Wichtig: relative Pfade, damit keine Cross-Origin/SW-Scope-Späße passieren
       const urls = [
-        publicAsset("persona.json"),
-        "/persona.json",
-        "persona.json",
+        `/persona.json?v=${bust}`,
+        `persona.json?v=${bust}`,
       ];
+
       let lastErr: any = null;
+
       for (const url of urls) {
         try {
-          const res = await fetch(url, { cache: "no-store", headers: { "cache-control": "no-cache", "pragma": "no-cache" } });
-          if (!res.ok) throw new Error(`HTTP ${res.status} für ${url}`);
-          const data = (await res.json()) as PersonaFile;
+          const res = await fetch(url, {
+            cache: "no-store",
+            headers: {
+              "accept": "application/json",
+              "cache-control": "no-cache",
+              "pragma": "no-cache",
+            },
+          });
+
+          const ct = res.headers.get("content-type") || "";
+          const body = await res.text();
+
+          if (!res.ok) throw new Error(`HTTP ${res.status} (${url})`);
+
+          // Häufiger Fehler: Vercel SPA-Rewrite liefert index.html -> Content-Type text/html oder HTML-Text
+          if (!ct.includes("application/json") && /^\s*</.test(body)) {
+            throw new Error(`Got HTML instead of JSON (${url})`);
+          }
+
+          let data: PersonaFile;
+          try {
+            data = ct.includes("application/json") ? JSON.parse(body) : JSON.parse(body);
+          } catch (e) {
+            throw new Error(`Invalid JSON in ${url}`);
+          }
+
           const list = normalizeStyles(data);
           if (!list.length) throw new Error(`Keine gültigen Stile in ${url}`);
+
+          if (!alive) return;
           setStyles(list);
-          console.warn("[persona] loaded from", url);
+          console.warn("[persona] loaded from", url, "styles:", list.length);
           lastErr = null;
-          break;
+          break; // success
         } catch (e) {
           lastErr = e;
+          console.warn("[persona] failed", url, e);
+          continue; // try next
         }
       }
+
       if (lastErr) {
+        if (!alive) return;
         setError(lastErr instanceof Error ? lastErr.message : String(lastErr));
-        console.warn("[persona.json] Laden fehlgeschlagen:", lastErr);
       }
       setLoading(false);
     })();
     return () => { alive = false; };
   }, []);
+
   return { styles, loading, error };
 }
 
@@ -277,7 +308,7 @@ export default function Chat() {
             />
             <div className="mt-3 flex justify-end gap-2">
               <button className="rounded-lg px-3 py-1.5 text-sm bg-white/10 hover:bg-white/15" onClick={()=>setNoteOpen(false)}>Abbrechen</button>
-              <button className="rounded-lg px-3 py-1.5 text-sm bg-violet-600 text-white hover:bg-violet-500" onClick={saveNote}>Speichern</button>
+              <button className="rounded-lg px-3 py-1.5 text-sm bg-violet-600 text-white hover:bg-violet-500" onClick={async ()=>{ await saveNote(); }}>Speichern</button>
             </div>
           </div>
         </div>
