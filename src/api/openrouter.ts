@@ -13,7 +13,7 @@ function getHeaders() {
     "Content-Type": "application/json",
     "HTTP-Referer": location.origin,
     "X-Title": "Disa AI"
-  } as Record<string, string>;
+  } satisfies Record<string, string>;
 }
 
 export function getModelFallback() {
@@ -39,6 +39,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: false }),
+    // wegen exactOptionalPropertyTypes darf 'signal' nicht undefined sein:
     signal: opts?.signal ?? null
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
@@ -64,19 +65,21 @@ export async function chatStream(
 
   const reader = res.body?.getReader();
   if (!reader) return;
+
   const decoder = new TextDecoder();
   let buffer = "";
   let started = false;
   let full = "";
 
   try {
-    for (;;) {
+    while (true) {
       const { value, done } = await reader.read();
       if (done) break;
-      buffer += decoder.decode(value, { stream: true });
 
+      buffer += decoder.decode(value, { stream: true });
       const parts = buffer.split("\n\n");
       buffer = parts.pop() ?? "";
+
       for (const raw of parts) {
         const frameLines = raw.split("\n").map((l) => l.trim());
         const dataLines = frameLines
@@ -85,21 +88,41 @@ export async function chatStream(
           .filter(Boolean);
 
         for (const payload of dataLines) {
-          if (payload === "[DONE]") { opts?.onDone?.(full); return; }
+          if (payload === "[DONE]") {
+            opts?.onDone?.(full);
+            return;
+          }
           if (payload.startsWith("{")) {
+            // JSON-Delta oder Fehlerobjekt
+            let delta = "";
             try {
               const json = JSON.parse(payload);
-              if (json?.error) throw new Error(json.error?.message || "Unbekannter API-Fehler");
-              const delta =
+              if (json?.error) {
+                const msg = json.error?.message || "Unbekannter API-Fehler";
+                throw new Error(msg);
+              }
+              delta =
                 json?.choices?.[0]?.delta?.content ??
-                json?.choices?.[0]?.message?.content ?? "";
-              if (!started) { started = true; opts?.onStart?.(); }
-              if (delta) { onDelta(delta); full += delta; }
-            } catch (e) {
-              throw e instanceof Error ? e : new Error("Stream-Parsefehler");
+                json?.choices?.[0]?.message?.content ??
+                "";
+            } catch (err) {
+              const m = err instanceof Error ? err.message : String(err);
+              throw new Error(m);
+            }
+            if (!started) {
+              started = true;
+              opts?.onStart?.();
+            }
+            if (delta) {
+              onDelta(delta);
+              full += delta;
             }
           } else {
-            if (!started) { started = true; opts?.onStart?.(); }
+            // selten: Plain-Text-Token
+            if (!started) {
+              started = true;
+              opts?.onStart?.();
+            }
             onDelta(payload);
             full += payload;
           }
@@ -108,7 +131,15 @@ export async function chatStream(
     }
     opts?.onDone?.(full);
   } finally {
-    try { reader.releaseLock(); } catch { 
-    try { await res.body?.cancel(); } catch {}
+    try {
+      reader.releaseLock();
+    } catch {
+      /* noop */
+    }
+    try {
+      await res.body?.cancel();
+    } catch {
+      /* noop */
+    }
   }
 }
