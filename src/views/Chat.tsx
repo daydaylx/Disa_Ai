@@ -25,13 +25,16 @@ function normalizeStyles(data: PersonaFile): StyleItem[] {
   }
   if (!Array.isArray(arr)) return [];
 
-  const out: StyleItem[] = arr.map((raw, i) => {
+  const out = arr.map<StyleItem>((raw, i) => {
     const r: any = raw || {};
-    const name: string = r.name ?? r.title ?? r.label ?? `Style ${i + 1}`;
-    const id: string = (r.id ?? r.key ?? slug(name)) || `style-${i + 1}`;
-    const system: string | undefined = r.system ?? r.prompt ?? r.systemPrompt ?? r.sys;
-    const description: string | undefined = r.description ?? r.desc ?? r.about;
-    return { id: String(id), name: String(name), system, description };
+    const name: string = r.name ?? r.title ?? r.label ?? `Style `;
+    const id: string = (r.id ?? r.key ?? slug(name)) || `style-`;
+    const sys = r.system ?? r.prompt ?? r.systemPrompt ?? r.sys;
+    const desc = r.description ?? r.desc ?? r.about;
+    const obj: StyleItem = { id: String(id), name: String(name) } as StyleItem;
+    if (typeof sys === "string") (obj as any).system = sys;
+    if (typeof desc === "string") (obj as any).description = desc;
+    return obj;
   }).filter(s => s.name);
 
   const seen = new Set<string>();
