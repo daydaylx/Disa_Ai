@@ -22,9 +22,12 @@
     "verify": "npm run typecheck && npm run test"
   },
   "dependencies": {
+    "js-yaml": "^4.1.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router-dom": "^7.8.2",
+    "strip-json-comments": "^5.0.3",
+    "zod": "^4.1.0",
     "zustand": "4.5.5"
   },
   "devDependencies": {
