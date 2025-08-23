@@ -1,24 +1,25 @@
 import React from "react";
-import { usePersonaSelection, type StyleItem } from "../config/personas";
+import { usePersonaSelection } from "../config/personas";
 import { cn } from "../lib/cn";
 
-/** Nur für Tests behalten – UI bindet die QuickBar nicht mehr ein. */
+/** QuickBar (falls genutzt) */
 const PersonaQuickBar: React.FC = () => {
   const { styles, styleId, setStyleId, loading } = usePersonaSelection();
-  if (loading || !styles?.length) return null;
+  if (loading || !styles.length) return null;
 
   return (
-    <div className="flex flex-wrap gap-2" data-testid="persona-quickbar">
-      {styles.map((s: StyleItem) => (
+    <div className="flex flex-wrap gap-2">
+      {styles.map((s) => (
         <button
           key={s.id}
-          type="button"
           onClick={() => setStyleId(s.id)}
-          aria-pressed={styleId === s.id}
           className={cn(
-            "px-3 py-1 rounded-full text-sm border border-zinc-700 bg-zinc-800/60 hover:bg-zinc-700 transition",
-            styleId === s.id && "bg-violet-600 text-white border-transparent"
+            "px-3 py-1 rounded-full text-sm border transition",
+            styleId === s.id
+              ? "bg-violet-600/20 border-violet-500 text-violet-200"
+              : "bg-zinc-800/40 border-zinc-700 hover:border-violet-500/60"
           )}
+          aria-pressed={styleId === s.id}
         >
           {s.name}
         </button>
@@ -28,4 +29,3 @@ const PersonaQuickBar: React.FC = () => {
 };
 
 export default PersonaQuickBar;
-export { PersonaQuickBar };

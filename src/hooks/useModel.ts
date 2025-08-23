@@ -1,25 +1,40 @@
 import * as React from "react";
-import { MODELS, DEFAULT_MODEL_ID } from "../config/models";
+import { DEFAULT_MODEL_ID, loadModelCatalog, type ModelEntry } from "../config/models";
 
 const MODEL_KEY = "disa_model";
 
-export function useModel() {
+export function useModel(allow?: string[] | null) {
   const [model, setModel] = React.useState<string>(() => {
-    try {
-      return localStorage.getItem(MODEL_KEY) || DEFAULT_MODEL_ID;
-    } catch {
-      return DEFAULT_MODEL_ID;
-    }
+    try { return localStorage.getItem(MODEL_KEY) || DEFAULT_MODEL_ID; } catch { return DEFAULT_MODEL_ID; }
   });
+  const [list, setList] = React.useState<ModelEntry[]>([]);
 
   React.useEffect(() => {
-    try {
-      localStorage.setItem(MODEL_KEY, model);
-    } catch {}
-  }, [model]);
+    let alive = true;
+    (async () => {
+      const apiKeyRaw = typeof localStorage !== "undefined" ? localStorage.getItem("disa_api_key") ?? undefined : undefined;
+      const opts: { allow?: string[] | null; preferFree?: boolean; apiKey?: string } = { allow, preferFree: true };
+      if (apiKeyRaw) opts.apiKey = apiKeyRaw;
 
-  const list = MODELS;
-  const current = list.find((m) => m.id === model) ?? list[0];
+      const catalog = await loadModelCatalog(opts);
+      if (!alive) return;
+      setList(catalog);
 
-  return { model, setModel, list, current };
+      if (!catalog.find((m: ModelEntry) => m.id === model)) {
+        const fallback = catalog[0]?.id ?? DEFAULT_MODEL_ID;
+        setModel(fallback);
+        try { localStorage.setItem(MODEL_KEY, fallback); } catch {}
+      }
+    })();
+    return () => { alive = false; };
+  }, [allow]);
+
+  const current = list.find((m: ModelEntry) => m.id === model) ?? list[0];
+
+  const save = React.useCallback((next: string) => {
+    setModel(next);
+    try { localStorage.setItem(MODEL_KEY, next); } catch {}
+  }, []);
+
+  return { model, setModel: save, list, current };
 }
