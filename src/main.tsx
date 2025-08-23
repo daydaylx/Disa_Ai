@@ -10,7 +10,9 @@ if (!rootEl) throw new Error("Root element #root nicht gefunden");
 ReactDOM.createRoot(rootEl).render(
   <React.StrictMode>
     <PersonaProvider>
-      <App />
+      <PersonaProvider>
+    <App />
+  </PersonaProvider>
     </PersonaProvider>
   </React.StrictMode>
 );

@@ -1,12 +1,6 @@
 import * as React from "react";
 
-export type StyleItem = {
-  id: string;
-  name: string;
-  system?: string;
-  description?: string;
-};
-
+export type StyleItem = { id: string; name: string; system?: string; description?: string; };
 export type PersonaData = { styles: StyleItem[] };
 
 const STYLE_KEY = "disa_style_id";
@@ -17,13 +11,7 @@ function slug(s: string): string {
 
 function normalizeStyles(json: unknown): StyleItem[] {
   const src: any = json ?? {};
-  const candidates: unknown[] = [
-    src.styles,
-    src?.persona?.styles,
-    src.stile,
-    src.templates,
-    src.personas,
-  ].filter(Boolean);
+  const candidates: unknown[] = [src.styles, src?.persona?.styles, src.stile, src.templates, src.personas].filter(Boolean);
 
   let arr: any[] = [];
   for (const c of candidates) if (Array.isArray(c) && c.length) { arr = c as any[]; break; }
@@ -50,11 +38,13 @@ async function fetchPersonaJson(): Promise<PersonaData> {
   const base = String((import.meta as any)?.env?.BASE_URL ?? (import.meta as any)?.env?.VITE_BASE_URL ?? "/").replace(/\/+$/, "/");
   const origin = (typeof location !== "undefined" && location.origin) ? location.origin : "";
 
-  // Kandidaten in sinnvoller Reihenfolge (root-relative, Base-URL, absolute)
   const urls = [
     `/persona.json`,
+    `/personas.json`,
     `${base}persona.json`,
+    `${base}personas.json`,
     origin ? new URL("persona.json", origin).toString() : null,
+    origin ? new URL("personas.json", origin).toString() : null,
   ].filter(Boolean).map(u => `${u}?v=${bust}`) as string[];
 
   let lastErr: unknown = null;
@@ -65,7 +55,6 @@ async function fetchPersonaJson(): Promise<PersonaData> {
         cache: "no-store",
         headers: { accept: "application/json", "cache-control": "no-cache", pragma: "no-cache" },
       });
-
       const ct = res.headers.get("content-type") ?? "";
       const text = await res.text();
 
@@ -75,6 +64,7 @@ async function fetchPersonaJson(): Promise<PersonaData> {
       const data = JSON.parse(text);
       const styles = normalizeStyles(data);
       if (!styles.length) throw new Error(`Keine gültigen Stile in ${url}`);
+
       console.warn("[persona] loaded styles:", styles.length, "from", url);
       return { styles };
     } catch (e) {
@@ -88,11 +78,9 @@ async function fetchPersonaJson(): Promise<PersonaData> {
   throw new Error(`persona.json laden fehlgeschlagen: ${msg}`);
 }
 
-export const PersonaContext = React.createContext<{
-  data: PersonaData;
-  loading: boolean;
-  error: string | null;
-}>({ data: { styles: [] }, loading: true, error: null });
+export const PersonaContext = React.createContext<{ data: PersonaData; loading: boolean; error: string | null; }>({
+  data: { styles: [] }, loading: true, error: null
+});
 
 export function PersonaProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = React.useState<PersonaData>({ styles: [] });
@@ -116,11 +104,7 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
     return () => { alive = false; };
   }, []);
 
-  return (
-    <PersonaContext.Provider value={{ data, loading, error }}>
-      {children}
-    </PersonaContext.Provider>
-  );
+  return <PersonaContext.Provider value={{ data, loading, error }}>{children}</PersonaContext.Provider>;
 }
 
 export function usePersonaSelection() {
