@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DEFAULT_MODEL_ID, loadModelCatalog, type ModelEntry } from "../config/models";
+import { MODELS, DEFAULT_MODEL_ID } from "../config/models";
 
 const MODEL_KEY = "disa_model";
 
