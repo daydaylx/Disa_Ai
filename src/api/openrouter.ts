@@ -12,7 +12,7 @@ function getHeaders() {
     Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
     "HTTP-Referer": location.origin,
-    "X-Title": "Disa AI",
+    "X-Title": "Disa AI"
   } as Record<string, string>;
 }
 
@@ -39,7 +39,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: false }),
-    signal: opts?.signal,
+    signal: opts?.signal
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
   const data = await res.json();
@@ -58,7 +58,7 @@ export async function chatStream(
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: true }),
-    signal: opts?.signal,
+    signal: opts?.signal
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
 
@@ -75,7 +75,6 @@ export async function chatStream(
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
 
-      // Frames per blank line; ein Chunk kann mehrere Frames enthalten
       const parts = buffer.split("\n\n");
       buffer = parts.pop() ?? "";
       for (const raw of parts) {
@@ -98,23 +97,13 @@ export async function chatStream(
                 json?.choices?.[0]?.delta?.content ??
                 json?.choices?.[0]?.message?.content ??
                 "";
-              if (!started) {
-                started = true;
-                opts?.onStart?.();
-              }
-              if (delta) {
-                onDelta(delta);
-                full += delta;
-              }
-            } catch (e: any) {
+              if (!started) { started = true; opts?.onStart?.(); }
+              if (delta) { onDelta(delta); full += delta; }
+            } catch (e) {
               throw e instanceof Error ? e : new Error("Stream-Parsefehler");
             }
           } else {
-            // selten: Plain-Text-Token
-            if (!started) {
-              started = true;
-              opts?.onStart?.();
-            }
+            if (!started) { started = true; opts?.onStart?.(); }
             onDelta(payload);
             full += payload;
           }

@@ -1,7 +1,8 @@
+import "./styles/globals.css";
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./styles/globals.css";
 
 const Home = React.lazy(() => import("./views/Home"));
 const Chat = React.lazy(() => import("./views/Chat"));

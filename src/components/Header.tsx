@@ -1,10 +1,11 @@
 import React from "react";
-import { Logo } from "./Logo";
-import { Button } from "./Button";
 import { Link, NavLink } from "react-router-dom";
+
 import { features } from "../config/features";
 import { usePersonaSelection } from "../config/personas";
 import { Badge } from "./Badge";
+import { Button } from "./Button";
+import { Logo } from "./Logo";
 
 export function Header() {
   const { active } = usePersonaSelection();

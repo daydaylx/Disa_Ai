@@ -1,7 +1,8 @@
 import React from "react";
+
 import ChatPanel from "@/features/chat/ChatPanel";
-import { AppShell, SettingsContext } from "@/widgets/shell/AppShell";
 import SettingsSheet from "@/features/settings/SettingsSheet";
+import { AppShell, SettingsContext } from "@/widgets/shell/AppShell";
 
 export default function App() {
   const [openTab, setOpenTab] = React.useState<null | "api" | "model" | "style">(null);

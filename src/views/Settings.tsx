@@ -1,14 +1,15 @@
 import React from "react";
-import { Shell } from "../components/Shell";
-import { Card, CardHeader, CardFooter } from "../components/Card";
-import { Input, Textarea } from "../components/Input";
-import { Button } from "../components/Button";
-import { Select } from "../components/Select";
+
 import { Badge } from "../components/Badge";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { useModel } from "../hooks/useModel";
+import { Button } from "../components/Button";
+import { Card, CardFooter,CardHeader } from "../components/Card";
+import { Input, Textarea } from "../components/Input";
+import { Select } from "../components/Select";
+import { Shell } from "../components/Shell";
 import { MODELS } from "../config/models";
 import { usePersonaSelection } from "../config/personas";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useModel } from "../hooks/useModel";
 
 export default function Settings() {
   const [apiKey, setApiKey] = useLocalStorage<string>("disa_api_key", "");
