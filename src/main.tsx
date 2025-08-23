@@ -5,10 +5,12 @@ import "./styles/globals.css";
 
 const Home = React.lazy(() => import("./views/Home"));
 const Chat = React.lazy(() => import("./views/Chat"));
+const Settings = React.lazy(() => import("./views/Settings"));
 
 const router = createBrowserRouter([
   { path: "/", element: <React.Suspense fallback={<div className="p-6">Lade…</div>}><Home /></React.Suspense> },
   { path: "/chat", element: <React.Suspense fallback={<div className="p-6">Lade…</div>}><Chat /></React.Suspense> },
+  { path: "/settings", element: <React.Suspense fallback={<div className="p-6">Lade…</div>}><Settings /></React.Suspense> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
