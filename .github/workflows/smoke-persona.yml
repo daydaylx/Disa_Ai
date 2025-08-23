@@ -1,0 +1,39 @@
+name: smoke-persona
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Serve dist and probe persona.json
+        run: |
+          cd dist
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
+          srv_pid=$!
+          for i in $(seq 1 40); do curl -sfI http://127.0.0.1:4173/ >/dev/null && break || sleep 0.25; done
+          echo "== HEAD /persona.json =="
+          curl -i http://127.0.0.1:4173/persona.json | sed -n '1,20p'
+          # Status muss 200 sein
+          curl -sfI http://127.0.0.1:4173/persona.json | grep -Eiq '^HTTP/.* 200 ' || (echo "Persona nicht 200" && exit 1)
+          # Content-Type muss JSON enthalten
+          curl -sI http://127.0.0.1:4173/persona.json | grep -iq 'content-type: .*application/json' || (echo "Persona Content-Type falsch" && exit 1)
+          # Body muss valides JSON sein
+          curl -s http://127.0.0.1:4173/persona.json | jq -e . >/dev/null
+          kill $srv_pid
+          wait $srv_pid || true
