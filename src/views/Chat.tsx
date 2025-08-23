@@ -3,6 +3,7 @@ import { chatOnce, chatStream, getModelFallback, type Msg } from "../api/openrou
 import { addExplicitMemory, updateMemorySummary } from "../api/memory";
 import { useChatSession } from "../hooks/useChatSession";
 import { MessageBubble } from "../components/MessageBubble";
+import { publicAsset } from "../lib/publicAsset";
 
 type StyleItem = { id: string; name: string; system?: string; description?: string };
 type PersonaFile = Record<string, unknown>;
@@ -10,7 +11,6 @@ type PersonaFile = Record<string, unknown>;
 function slug(s: string) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
 
 function normalizeStyles(data: PersonaFile): StyleItem[] {
-  // mögliche Plätze/Keys für die Stile
   const candidates: unknown[] = [
     (data as any).styles,
     (data as any)?.persona?.styles,
@@ -25,21 +25,15 @@ function normalizeStyles(data: PersonaFile): StyleItem[] {
   }
   if (!Array.isArray(arr)) return [];
 
-  // auf ein einheitliches Schema mappen
   const out: StyleItem[] = arr.map((raw, i) => {
     const r: any = raw || {};
-    const name: string =
-      r.name ?? r.title ?? r.label ?? `Style ${i + 1}`;
-    const id: string =
-      r.id ?? r.key ?? slug(name) || `style-${i + 1}`;
-    const system: string | undefined =
-      r.system ?? r.prompt ?? r.systemPrompt ?? r.sys;
-    const description: string | undefined =
-      r.description ?? r.desc ?? r.about;
+    const name: string = r.name ?? r.title ?? r.label ?? `Style ${i + 1}`;
+    const id: string = r.id ?? r.key ?? slug(name) || `style-${i + 1}`;
+    const system: string | undefined = r.system ?? r.prompt ?? r.systemPrompt ?? r.sys;
+    const description: string | undefined = r.description ?? r.desc ?? r.about;
     return { id: String(id), name: String(name), system, description };
   }).filter(s => s.name);
 
-  // Duplikate anhand id weg
   const seen = new Set<string>();
   return out.filter(s => (seen.has(s.id) ? false : (seen.add(s.id), true)));
 }
@@ -52,21 +46,32 @@ function usePersonaStyles() {
   React.useEffect(() => {
     let alive = true;
     (async () => {
-      try {
-        const res = await fetch("/persona.json", { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = (await res.json()) as PersonaFile;
-        const list = normalizeStyles(data);
-        if (!list.length) {
-          throw new Error("Keine gültigen Stile in persona.json gefunden");
+      const urls = [
+        publicAsset("persona.json"),
+        "/persona.json",
+        "persona.json",
+      ];
+      let lastErr: any = null;
+      for (const url of urls) {
+        try {
+          const res = await fetch(url, { cache: "no-store" });
+          if (!res.ok) throw new Error(`HTTP ${res.status} für ${url}`);
+          const data = (await res.json()) as PersonaFile;
+          const list = normalizeStyles(data);
+          if (!list.length) throw new Error(`Keine gültigen Stile in ${url}`);
+          if (alive) setStyles(list);
+          lastErr = null;
+          break;
+        } catch (e) {
+          lastErr = e;
+          // try next candidate
         }
-        if (alive) setStyles(list);
-      } catch (e) {
-        if (alive) setError(e instanceof Error ? e.message : String(e));
-        console.warn("[persona.json]", e);
-      } finally {
-        if (alive) setLoading(false);
       }
+      if (lastErr && alive) {
+        setError(lastErr instanceof Error ? lastErr.message : String(lastErr));
+        console.warn("[persona.json] Laden fehlgeschlagen:", lastErr);
+      }
+      if (alive) setLoading(false);
     })();
     return () => { alive = false; };
   }, []);
@@ -277,3 +282,4 @@ export default function Chat() {
     </section>
   );
 }
+```0
