@@ -1,17 +1,6 @@
 {
-  "headers": [
-    {
-      "source": "/persona.json",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" },
-        { "key": "Pragma", "value": "no-cache" },
-        { "key": "Expires", "value": "0" },
-        { "key": "Content-Type", "value": "application/json; charset=utf-8" }
-      ]
-    }
-  ],
-  "rewrites": [
-    { "source": "/persona.json", "destination": "/persona.json" },
-    { "source": "/(.*)", "destination": "/" }
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/" }
   ]
 }
