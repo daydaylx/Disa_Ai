@@ -13,7 +13,13 @@
     "e2e": "playwright test",
     "e2e:headed": "playwright test --headed",
     "e2e:update": "playwright test --update-snapshots",
-    "test:types": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit && tsc -p e2e/tsconfig.json --noEmit"
+    "test:types": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit && tsc -p e2e/tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:types": "eslint . --config eslint.config.types.js",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "react": "18.3.1",
@@ -22,22 +28,46 @@
     "zustand": "4.5.5"
   },
   "devDependencies": {
+    "@eslint/js": "^9.34.0",
     "@playwright/test": "^1.55.0",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.40.0",
+    "@typescript-eslint/parser": "^8.40.0",
     "@vitejs/plugin-react": "4.3.4",
     "autoprefixer": "^10.4.20",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.2.0",
     "happy-dom": "^18.0.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
     "msw": "^2.10.5",
     "playwright": "^1.55.0",
     "postcss": "^8.4.49",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^3.4.14",
     "typescript": "5.6.2",
     "vite": "5.4.9",
     "vite-plugin-pwa": "0.20.5",
     "vitest": "^3.2.4"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ],
+    "*.{json,md,css,html}": [
+      "prettier --write"
+    ]
   }
 }
