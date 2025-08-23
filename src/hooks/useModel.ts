@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { MODELS, DEFAULT_MODEL_ID } from "../config/models";
 
 const MODEL_KEY = "disa_model";
