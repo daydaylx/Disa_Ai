@@ -2,14 +2,5 @@
   "rewrites": [
     { "source": "/(.*)\\.(css|js|mjs|png|jpg|jpeg|svg|gif|ico|txt|json|webmanifest|woff|woff2|ttf|map)", "destination": "/$1.$2" },
     { "source": "/(.*)", "destination": "/" }
-  ],
-  "headers": [
-    {
-      "source": "/persona.json",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store" },
-        { "key": "Content-Type", "value": "application/json; charset=utf-8" }
-      ]
-    }
   ]
 }
