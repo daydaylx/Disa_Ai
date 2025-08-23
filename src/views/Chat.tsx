@@ -6,6 +6,7 @@ import { Textarea } from "../components/Input";
 import { Button } from "../components/Button";
 import { KeyGuard } from "../components/KeyGuard";
 import { chatStream, type Msg } from "../api/openrouter";
+import { useModel } from "../hooks/useModel";
 
 export default function Chat() {
   const [msg, setMsg] = React.useState("");
@@ -14,6 +15,7 @@ export default function Chat() {
     { role: "assistant", text: "Hi, ich bin Disa AI. Stelle deine Frage – Antworten werden live gestreamt." }
   ]);
   const abortRef = React.useRef<AbortController | null>(null);
+  const { current } = useModel();
 
   async function send() {
     if (!msg.trim() || busy) return;
@@ -28,20 +30,13 @@ export default function Chat() {
     const aborter = new AbortController();
     abortRef.current = aborter;
 
-    let assistantIndex = -1;
-    setItems((a) => {
-      assistantIndex = a.length; // index des leeren assistant-bubbles (nach push oben)
-      return a;
-    });
-
     try {
       await chatStream(
         history,
         (delta) => {
-          // token anhängen
           setItems((a) => {
             const c = [...a];
-            const i = c.length - 1; // letzter ist assistant
+            const i = c.length - 1;
             c[i] = { ...c[i], text: c[i].text + delta };
             return c;
           });
@@ -95,7 +90,7 @@ export default function Chat() {
               )}
             </div>
             <div className="text-xs text-zinc-500 mt-2">
-              Modell: <code>llama-3.3-70b (free)</code> · Streaming aktiv
+              Modell: <code>{current.label}</code> · Streaming aktiv
             </div>
           </div>
         </Card>
