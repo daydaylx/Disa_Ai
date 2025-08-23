@@ -1,51 +1,47 @@
 import React from "react";
-import type { ChatMessage } from "./openrouter";
-import { sendChat } from "./openrouter";
-import type { PersonaStyle } from "@/entities/persona/types";
+import { sendChat, type ChatMessage, type SendOptions } from "./openrouter";
 
 type ClientCtx = {
   apiKey: string | null;
   setApiKey: (k: string | null) => void;
-  client: { send: (o: Omit<Parameters<typeof sendChat>[0], "apiKey">) => Promise<string> };
-  getSystemFor: (style: PersonaStyle | null) => ChatMessage;
+  client: { send: (o: Omit<SendOptions, "apiKey">) => Promise<string> };
+  getSystemFor: (style: { system: string } | null) => ChatMessage;
 };
-
-const KEY = "openrouter:apiKey";
-const C = React.createContext<ClientCtx | null>(null);
+const ClientContext = React.createContext<ClientCtx | null>(null);
 
 export function ClientProvider({ children }: { children: React.ReactNode }) {
-  const [apiKey, setApiKeyState] = React.useState<string | null>(() => {
-    try { return localStorage.getItem(KEY); } catch { return null; }
+  const [apiKey, setApiKey] = React.useState<string | null>(() => {
+    try { return localStorage.getItem("settings:apiKey"); } catch { return null; }
   });
 
-  const setApiKey = React.useCallback((k: string | null) => {
+  const setKey = React.useCallback((k: string | null) => {
     try {
-      if (!k) localStorage.removeItem(KEY);
-      else localStorage.setItem(KEY, k);
+      if (k) localStorage.setItem("settings:apiKey", k);
+      else localStorage.removeItem("settings:apiKey");
     } catch {}
-    setApiKeyState(k);
+    setApiKey(k);
   }, []);
 
   const client = React.useMemo(() => ({
-    send: async (o: Omit<Parameters<typeof sendChat>[0], "apiKey">) => {
+    send: async (o: Omit<SendOptions,"apiKey">) => {
       if (!apiKey) throw new Error("API-Key fehlt");
-      return await sendChat({ apiKey, ...o });
+      return await sendChat({ ...o, apiKey });
     }
   }), [apiKey]);
 
-  const getSystemFor = React.useCallback((style: PersonaStyle | null): ChatMessage => {
-    return { role: "system", content: style?.system ?? "Antworte kurz, präzise, auf Deutsch." };
+  const getSystemFor = React.useCallback((style: { system: string } | null) => {
+    return { role: "system", content: style?.system ?? "Du bist hilfreich, präzise und antwortest auf Deutsch." } as const;
   }, []);
 
   return (
-    <C.Provider value={{ apiKey, setApiKey, client, getSystemFor }}>
+    <ClientContext.Provider value={{ apiKey, setApiKey: setKey, client, getSystemFor }}>
       {children}
-    </C.Provider>
+    </ClientContext.Provider>
   );
 }
 
 export function useClient() {
-  const ctx = React.useContext(C);
-  if (!ctx) throw new Error("ClientProvider fehlt");
+  const ctx = React.useContext(ClientContext);
+  if (!ctx) throw new Error("ClientContext fehlt");
   return ctx;
 }

@@ -2,29 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fokus klar sichtbar (WCAG) */
-:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
+/* Light/Dark Token-Set – simpel, zuverlässig */
+:root {
+  --bg: #ffffff;
+  --fg: #111827;
+  --muted-fg: rgba(17,24,39,0.6);
+  --card: #ffffff;
+  --ring: #111827;
 }
 
-/* Helferklassen, die wir nutzen */
-.text-muted {
-  @apply text-neutral-500 dark:text-neutral-400;
+.dark {
+  --bg: #0b0f17;
+  --fg: #e5e7eb;
+  --muted-fg: rgba(229,231,235,0.7);
+  --card: #0f172a;
+  --ring: #e5e7eb;
 }
-.card {
-  @apply bg-white dark:bg-neutral-900 border border-black/10 dark:border-white/10 rounded-2xl;
+
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
 }
-.btn-base {
-  @apply inline-flex items-center justify-center rounded-xl px-3 h-10 text-sm font-medium transition-colors select-none;
-}
-.btn-default {
-  @apply btn-base bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90;
-}
-.btn-outline {
-  @apply btn-base border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/10;
-}
-.input-base {
-  @apply w-full h-11 rounded-xl px-3 border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900
-         text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 caret-black dark:caret-white;
-}
+
+/* Fokus klar sichtbar */
+:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }

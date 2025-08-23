@@ -1,13 +1,12 @@
 import React from "react";
-import { PersonaContext } from "@/entities/persona";
+import { PersonaContext, type PersonaModel } from "@/entities/persona";
 import { useSettings } from "@/entities/settings/store";
 import { cn } from "@/shared/lib/cn";
 
 export default function ModelPicker() {
   const { data } = React.useContext(PersonaContext);
   const settings = useSettings();
-
-  const models = data.models ?? [];
+  const models: PersonaModel[] = data.models ?? [];
   const active = settings.modelId;
 
   return (
@@ -29,7 +28,7 @@ export default function ModelPicker() {
           >
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium truncate">{m.label}</div>
-              <div className="text-xs text-muted truncate">{m.id}</div>
+              <div className="text-xs text-muted-foreground truncate">{m.id}</div>
             </div>
             {selected && <span className="text-xs opacity-70">Aktiv</span>}
           </button>
