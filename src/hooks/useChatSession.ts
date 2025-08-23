@@ -9,18 +9,12 @@ function load(): ChatSession {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) return JSON.parse(raw) as ChatSession;
-  } catch {
-    /* ignore */
-  }
+  } catch { /* ignore */ }
   return { id: `s-${Date.now()}`, createdAt: Date.now(), messages: [], memory: "" };
 }
 
 function save(s: ChatSession) {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(s));
-  } catch {
-    /* ignore */
-  }
+  try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ }
 }
 
 export function useChatSession() {
@@ -33,25 +27,19 @@ export function useChatSession() {
   }, [session, dirty]);
 
   function append(role: "user" | "assistant", text: string) {
-    setSession((s) => ({
-      ...s,
-      messages: [...s.messages, { role, text, ts: Date.now() }],
-    }));
+    setSession((s) => ({ ...s, messages: [...s.messages, { role, text, ts: Date.now() }] }));
   }
 
   function appendAssistantPlaceholder() {
-    setSession((s) => ({
-      ...s,
-      messages: [...s.messages, { role: "assistant", text: "", ts: Date.now() }],
-    }));
+    setSession((s) => ({ ...s, messages: [...s.messages, { role: "assistant", text: "", ts: Date.now() }] }));
   }
 
   function appendAssistantDelta(delta: string) {
     setSession((s) => {
       const idx = s.messages.length - 1;
       if (idx < 0) return s;
-      const last = s.messages[idx];
-      if (last.role !== "assistant") return s;
+      const last: ChatMsg | undefined = s.messages[idx];
+      if (!last || last.role !== "assistant") return s;
       const updated: ChatMsg = { role: "assistant", ts: last.ts, text: (last.text ?? "") + delta };
       const msgs = s.messages.slice();
       msgs[idx] = updated;
@@ -60,9 +48,7 @@ export function useChatSession() {
     setDirty((x) => x + 1);
   }
 
-  function setMemory(mem: string) {
-    setSession((s) => ({ ...s, memory: mem }));
-  }
+  function setMemory(mem: string) { setSession((s) => ({ ...s, memory: mem })); }
 
   function reset() {
     const fresh: ChatSession = { id: `s-${Date.now()}`, createdAt: Date.now(), messages: [], memory: "" };
