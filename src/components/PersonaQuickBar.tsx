@@ -4,12 +4,12 @@ import { usePersonaSelection } from "../config/personas";
 import { cn } from "../lib/cn";
 
 export function PersonaQuickBar() {
-  const { personas, personaId, setPersonaId, loading } = usePersonaSelection();
+  const { styles: personas, styleId: personaId, setStyleId: setPersonaId, loading } = usePersonaSelection();
   if (loading || personas.length <= 1) return null;
 
   return (
     <div className="flex gap-2 overflow-x-auto pb-2 -mb-1">
-      {personas.map(p => {
+      {personas.map((p: any) => {
         const active = p.id === personaId;
         return (
           <button

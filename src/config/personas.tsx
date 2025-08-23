@@ -30,10 +30,7 @@ function normalizeStyles(json: unknown): StyleItem[] {
 
   let rawArr: any[] = [];
   for (const c of candidates) {
-    if (Array.isArray(c) && c.length) {
-      rawArr = c as any[];
-      break;
-    }
+    if (Array.isArray(c) && c.length) { rawArr = c as any[]; break; }
   }
   if (!Array.isArray(rawArr)) return [];
 
@@ -51,7 +48,6 @@ function normalizeStyles(json: unknown): StyleItem[] {
     })
     .filter(s => !!s.name);
 
-  // Duplikate nach id entfernen
   const seen = new Set<string>();
   return mapped.filter(s => (seen.has(s.id) ? false : (seen.add(s.id), true)));
 }
@@ -81,8 +77,6 @@ async function fetchPersonaJson(): Promise<PersonaData> {
       const text = await res.text();
 
       if (!res.ok) throw new Error(`HTTP ${res.status} (${url})`);
-
-      // SPA-Rewrite-Falle: index.html statt JSON
       if (!ct.includes("application/json") && /^\s*</.test(text)) {
         throw new Error(`Got HTML instead of JSON (${url})`);
       }
@@ -142,24 +136,22 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Hook für Auswahl/Wechsel eines Stils inkl. Persistenz in localStorage. */
 export function usePersonaSelection() {
   const { data, loading, error } = React.useContext(PersonaContext);
   const [styleId, setStyleId] = React.useState<string | null>(() => {
     try { return localStorage.getItem(STYLE_KEY); } catch { return null; }
   });
 
-  // Default wählen, sobald geladen
   React.useEffect(() => {
     if (loading) return;
-    if (!styleId && data.styles.length > 0) {
-      try { localStorage.setItem(STYLE_KEY, data.styles[0].id); } catch {}
-      setStyleId(data.styles[0].id);
+    const first = data.styles[0];
+    if (!styleId && first) {
+      try { localStorage.setItem(STYLE_KEY, first.id); } catch {}
+      setStyleId(first.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, data.styles.length]);
 
-  // Persistenz
   React.useEffect(() => {
     try {
       if (styleId) localStorage.setItem(STYLE_KEY, styleId);

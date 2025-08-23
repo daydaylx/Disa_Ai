@@ -23,7 +23,7 @@ export default function Settings() {
     return MODELS.filter(m => (onlyFree ? m.free : true) && (onlyOpen ? m.open : true));
   }, [onlyFree, onlyOpen]);
 
-  const { personas, personaId, setPersonaId, active, loading: personasLoading } = usePersonaSelection();
+  const { styles: personas, styleId: personaId, setStyleId: setPersonaId, current: active, loading: personasLoading } = usePersonaSelection();
 
   function save() {
     try {
@@ -88,7 +88,7 @@ export default function Settings() {
             ) : (
               <>
                 <Select value={personaId} onChange={(e)=>setPersonaId(e.target.value)}>
-                  {personas.map(p => (
+                  {personas.map((p: any) => (
                     <option key={p.id} value={p.id}>{p.label}</option>
                   ))}
                 </Select>
