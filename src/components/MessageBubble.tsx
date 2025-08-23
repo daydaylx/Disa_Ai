@@ -8,7 +8,7 @@ export function MessageBubble({ role, children }: { role: "user" | "assistant"; 
       <div
         className={cn(
           "max-w-[85%] rounded-2xl px-3 py-2 text-[15px] leading-relaxed",
-          mine ? "bg-black text-white" : "bg-black/[0.04] dark:bg-white/10"
+          mine ? "bg-black text-white" : "bg-black/[0.05] dark:bg-white/10"
         )}
       >
         {children}

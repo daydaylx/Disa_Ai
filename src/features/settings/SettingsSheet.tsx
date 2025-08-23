@@ -29,7 +29,7 @@ export default function SettingsSheet({ onClose, initial }: { onClose: () => voi
             <div className="space-y-3">
               <label className="text-sm">OpenRouter API-Key</label>
               <Input placeholder="sk-or-v1-…" value={apiKey ?? ""} onChange={(e)=>setApiKey((e.target as HTMLInputElement).value || null)} aria-label="OpenRouter API Key" />
-              <div className="text-xs text-muted">Wird lokal im Browser gespeichert. Keine Telemetrie.</div>
+              <div className="text-xs opacity-70">Wird nur lokal im Browser gespeichert.</div>
             </div>
           )}
           {tab === "model" && <ModelPicker />}
@@ -42,7 +42,7 @@ export default function SettingsSheet({ onClose, initial }: { onClose: () => voi
                     onClick={()=>settings.setPersonaId(s.id)}
                     className={"min-h-[48px] px-3 py-2 rounded-xl text-left border " + (selected ? "border-black bg-black/5" : "border-black/10 hover:bg-black/5") + " dark:border-white/10 dark:hover:bg-white/10"}>
                     <div className="text-sm font-medium truncate">{s.name}</div>
-                    <div className="text-xs text-muted truncate">{s.id}</div>
+                    <div className="text-xs text-muted-foreground truncate">{s.id}</div>
                   </button>
                 );
               })}

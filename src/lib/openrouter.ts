@@ -5,86 +5,91 @@ export type SendOptions = {
   model: string;
   messages: ChatMessage[];
   signal?: AbortSignal;
-  timeoutMs?: number;
   onToken?: (delta: string) => void;
+  timeoutMs?: number;
 };
 
-/**
- * Streamt Antworten von OpenRouter (SSE). Liefert den vollständigen Text zurück
- * und ruft onToken bei jedem Chunk auf.
- */
 export async function sendChat(opts: SendOptions): Promise<string> {
-  const { apiKey, model, messages, signal, timeoutMs = 60_000, onToken } = opts;
+  const { apiKey, model, messages, signal, onToken, timeoutMs = 60_000 } = opts;
+  if (!apiKey) throw new Error("API-Key fehlt");
+  if (!model) throw new Error("Modell fehlt");
+  if (!messages?.length) throw new Error("Leere Messages");
 
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  const link = new AbortController();
-
-  // wenn Nutzer abbricht, brich hier auch ab
-  signal?.addEventListener("abort", () => link.abort(), { once: true });
-
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
-      "HTTP-Referer": "https://local.app",
-      "X-Title": "Disa AI"
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      stream: true
-    }),
-    signal: ctrl.signal
-  });
-
-  if (!res.ok || !res.body) {
-    clearTimeout(timer);
-    const text = await safeText(res);
-    if (res.status === 401) throw new Error("API-Key ungültig (401).");
-    if (res.status === 429) throw new Error("Rate-Limit/Überlastung (429).");
-    throw new Error(`OpenRouter Fehler ${res.status}: ${text || res.statusText}`);
-  }
-
-  let out = "";
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), timeoutMs);
+  const linked = linkSignals(signal, ac.signal);
 
   try {
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": location.origin,
+        "X-Title": "Disa AI",
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        stream: true,
+        // für OpenRouter konform
+      }),
+      signal: linked,
+    });
+
+    if (!res.ok) {
+      if (res.status === 401) throw new Error("API-Key ungültig (401)");
+      if (res.status === 429) throw new Error("Zu viele Anfragen (429) – kurz warten");
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    // SSE-ähnlicher Stream (data: {json})
+    const reader = res.body?.getReader();
+    if (!reader) throw new Error("Kein Stream verfügbar");
+
+    const decoder = new TextDecoder("utf-8");
+    let buf = "";
+    let final = "";
+
     while (true) {
-      if (link.signal.aborted) { ctrl.abort(); throw new DOMException("aborted", "AbortError"); }
       const { done, value } = await reader.read();
       if (done) break;
-      const chunk = decoder.decode(value, { stream: true });
-      for (const line of chunk.split("\n")) {
-        const s = line.trim();
-        if (!s.startsWith("data:")) continue;
-        const payload = s.slice(5).trim();
-        if (!payload || payload === "[DONE]") continue;
+      buf += decoder.decode(value, { stream: true });
+
+      const parts = buf.split("\n\n");
+      buf = parts.pop() ?? "";
+      for (const chunk of parts) {
+        const line = chunk.trim();
+        if (!line) continue;
+
+        // Formate: "data: [DONE]" oder "data: {json}"
+        const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
+        if (payload === "[DONE]") continue;
+
         try {
           const json = JSON.parse(payload);
-          const delta: string = json?.choices?.[0]?.delta?.content ?? "";
+          const delta = json?.choices?.[0]?.delta?.content ?? "";
           if (delta) {
-            out += delta;
+            final += delta;
             onToken?.(delta);
           }
         } catch {
-          // ignoriere JSON-Fehler auf einzelnen SSE-Zeilen
+          // Ignorieren von Nicht-JSON-Zwischenzeilen
         }
       }
     }
-  } catch (e: any) {
-    if (e?.name === "AbortError") throw new Error("⏹️ abgebrochen");
-    throw e;
+    return final;
   } finally {
     clearTimeout(timer);
-    try { reader.releaseLock(); } catch {}
   }
-
-  return out;
 }
 
-async function safeText(r: Response): Promise<string> {
-  try { return await r.text(); } catch { return ""; }
+function linkSignals(a?: AbortSignal, b?: AbortSignal): AbortSignal | undefined {
+  if (!a && !b) return undefined;
+  const ctl = new AbortController();
+  const onAbort = () => ctl.abort();
+  a?.addEventListener("abort", onAbort);
+  b?.addEventListener("abort", onAbort);
+  if (a?.aborted || b?.aborted) ctl.abort();
+  return ctl.signal;
 }

@@ -5,30 +5,35 @@ export type SettingsState = {
   personaId: string | null;
   setModelId: (id: string | null) => void;
   setPersonaId: (id: string | null) => void;
-  reset: () => void;
 };
 
 const KEY_MODEL = "settings:modelId";
-const KEY_STYLE = "settings:personaId";
+const KEY_PERSONA = "settings:personaId";
 
-function read(key: string): string | null {
+function readLS(key: string): string | null {
   try { return localStorage.getItem(key); } catch { return null; }
 }
-function write(key: string, v: string | null) {
+function writeLS(key: string, v: string | null) {
   try {
-    if (!v) localStorage.removeItem(key);
+    if (v == null || v === "") localStorage.removeItem(key);
     else localStorage.setItem(key, v);
   } catch {}
 }
 
+const initialModel = readLS(KEY_MODEL);
+const initialPersona = readLS(KEY_PERSONA) ?? "neutral";
+
 export const useSettings = create<SettingsState>((set, get) => ({
-  modelId: read(KEY_MODEL),
-  personaId: read(KEY_STYLE) ?? "neutral",
-  setModelId: (id) => { write(KEY_MODEL, id); set({ modelId: id }); },
-  setPersonaId: (id) => { write(KEY_STYLE, id); set({ personaId: id }); },
-  reset: () => {
-    write(KEY_MODEL, null);
-    write(KEY_STYLE, null);
-    set({ modelId: null, personaId: null });
-  }
+  modelId: initialModel ?? null,
+  personaId: initialPersona,
+  setModelId: (id) => {
+    writeLS(KEY_MODEL, id ?? null);
+    set({ ...get(), modelId: id ?? null });
+  },
+  setPersonaId: (id) => {
+    writeLS(KEY_PERSONA, id ?? null);
+    set({ ...get(), personaId: id ?? null });
+  },
 }));
+
+export default useSettings;

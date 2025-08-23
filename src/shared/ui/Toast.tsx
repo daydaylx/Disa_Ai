@@ -1,38 +1,31 @@
 import React from "react";
 
-type ToastItem = { id: string; text: string; type?: "info" | "error" | "success" };
-type Ctx = { show: (text: string, type?: ToastItem["type"]) => void; };
-
-const C = React.createContext<Ctx | null>(null);
-const uid = () => Math.random().toString(36).slice(2, 9);
+type ToastT = { id: string; text: string; kind?: "info" | "error" };
+type Ctx = { show: (text: string, kind?: ToastT["kind"]) => void };
+const ToastCtx = React.createContext<Ctx | null>(null);
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = React.useState<ToastItem[]>([]);
-  const show = (text: string, type: ToastItem["type"] = "info") => {
-    const id = uid();
-    setItems((a) => [...a, { id, text, type }]);
-    window.setTimeout(() => setItems((a) => a.filter((x) => x.id !== id)), 3000);
+  const [items, setItems] = React.useState<ToastT[]>([]);
+  const show = (text: string, kind?: ToastT["kind"]) => {
+    const t: ToastT = { id: crypto.randomUUID?.() ?? String(Math.random()), text, kind };
+    setItems((p) => [...p, t]);
+    setTimeout(() => setItems((p) => p.filter((x) => x.id !== t.id)), 3500);
   };
   return (
-    <C.Provider value={{ show }}>
+    <ToastCtx.Provider value={{ show }}>
       {children}
-      <div className="fixed right-3 bottom-3 z-[60] flex flex-col gap-2">
+      <div className="fixed left-0 right-0 bottom-3 flex flex-col items-center gap-2 z-50 px-3">
         {items.map((t) => (
-          <div key={t.id} className={"px-3 py-2 rounded-xl shadow text-sm " + (
-            t.type === "error" ? "bg-red-600 text-white" :
-            t.type === "success" ? "bg-emerald-600 text-white" :
-            "bg-black text-white"
-          )}>
+          <div key={t.id} className={`px-3 py-2 rounded-xl text-sm shadow ${t.kind==="error"?"bg-red-600 text-white":"bg-black text-white dark:bg-white dark:text-black"}`}>
             {t.text}
           </div>
         ))}
       </div>
-    </C.Provider>
+    </ToastCtx.Provider>
   );
 }
-
 export function useToast() {
-  const ctx = React.useContext(C);
+  const ctx = React.useContext(ToastCtx);
   if (!ctx) throw new Error("ToastProvider fehlt");
   return ctx;
 }
