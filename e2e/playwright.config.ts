@@ -3,7 +3,6 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./",
   globalSetup: "./global-setup.ts",
-  fullyParallel: false,
   workers: 1,
   use: {
     baseURL: "http://localhost:4173",
