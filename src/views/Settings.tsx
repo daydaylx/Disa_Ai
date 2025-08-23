@@ -3,16 +3,27 @@ import { Shell } from "../components/Shell";
 import { Card, CardHeader, CardFooter } from "../components/Card";
 import { Input, Textarea } from "../components/Input";
 import { Button } from "../components/Button";
+import { Select } from "../components/Select";
+import { Badge } from "../components/Badge";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useModel } from "../hooks/useModel";
+import { MODELS } from "../config/models";
 
 export default function Settings() {
   const [apiKey, setApiKey] = useLocalStorage<string>("disa_api_key", "");
-  const [note, setNote] = useLocalStorage<string>("disa_note", ""); // kleiner Notizblock – harmlos & lokal
+  const [note, setNote] = useLocalStorage<string>("disa_note", "");
   const [saved, setSaved] = React.useState<null | "ok" | "err">(null);
+
+  const { model, setModel } = useModel();
+  const [onlyFree, setOnlyFree] = useLocalStorage<boolean>("disa_filter_free", true);
+  const [onlyOpen, setOnlyOpen] = useLocalStorage<boolean>("disa_filter_open", false);
+
+  const filtered = React.useMemo(() => {
+    return MODELS.filter(m => (onlyFree ? m.free : true) && (onlyOpen ? m.open : true));
+  }, [onlyFree, onlyOpen]);
 
   function save() {
     try {
-      // useLocalStorage speichert automatisch – Button dient nur für Feedback
       setSaved("ok");
       setTimeout(() => setSaved(null), 1500);
     } catch {
@@ -27,20 +38,42 @@ export default function Settings() {
         <Card>
           <CardHeader title="OpenRouter API-Key" subtitle="Lokal im Browser gespeichert" />
           <div className="space-y-3">
-            <Input
-              placeholder="sk-or-…"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-            />
-            <p className="text-sm text-zinc-400">
-              Der Key wird nur lokal im Browser gespeichert. Kein Server, kein Sync.
-            </p>
+            <Input placeholder="sk-or-…" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
+            <p className="text-sm text-zinc-400">Der Key wird nur lokal gespeichert. Kein Server.</p>
           </div>
           <CardFooter>
             <Button onClick={save}>Speichern</Button>
             {saved === "ok" && <span className="ml-3 text-sm text-green-400">Gespeichert.</span>}
             {saved === "err" && <span className="ml-3 text-sm text-red-400">Fehler beim Speichern.</span>}
           </CardFooter>
+        </Card>
+
+        <Card>
+          <CardHeader title="Modell-Auswahl" subtitle="Wir nutzen genau das hier gewählte Modell" />
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 text-sm text-zinc-300 select-none">
+                <input type="checkbox" className="accent-fuchsia-500" checked={onlyFree} onChange={(e)=>setOnlyFree(e.target.checked)} />
+                Nur kostenlose Modelle
+              </label>
+              <label className="flex items-center gap-2 text-sm text-zinc-300 select-none">
+                <input type="checkbox" className="accent-fuchsia-500" checked={onlyOpen} onChange={(e)=>setOnlyOpen(e.target.checked)} />
+                Offene Richtlinien
+              </label>
+            </div>
+            <Select value={model} onChange={(e)=>setModel(e.target.value)}>
+              {filtered.map(m => (
+                <option key={m.id} value={m.id}>{m.label}</option>
+              ))}
+            </Select>
+            <div className="flex flex-wrap gap-2">
+              <Badge tone="green">free</Badge>
+              <Badge tone="purple">open (uncensored)</Badge>
+            </div>
+            <p className="text-xs text-zinc-500">
+              Tipp: Wenn ein freies Modell gerade Rate-Limits hat, wähle ein anderes aus oder teste später erneut.
+            </p>
+          </div>
         </Card>
 
         <Card>
