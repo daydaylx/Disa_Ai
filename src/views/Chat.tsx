@@ -1,17 +1,18 @@
 import React from "react";
-import { Shell } from "../components/Shell";
+
+import { addExplicitMemory,updateMemorySummary } from "../api/memory";
+import { chatStream, type Msg } from "../api/openrouter";
+import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { ChatBubble } from "../components/ChatBubble";
+import { InlineNote } from "../components/InlineNote";
 import { Textarea } from "../components/Input";
-import { Button } from "../components/Button";
 import { KeyGuard } from "../components/KeyGuard";
-import { chatStream, type Msg } from "../api/openrouter";
-import { useModel } from "../hooks/useModel";
+import { PersonaQuickBar } from "../components/PersonaQuickBar";
+import { Shell } from "../components/Shell";
 import { usePersonaSelection } from "../config/personas";
 import { useChatSession } from "../hooks/useChatSession";
-import { updateMemorySummary, addExplicitMemory } from "../api/memory";
-import { PersonaQuickBar } from "../components/PersonaQuickBar";
-import { InlineNote } from "../components/InlineNote";
+import { useModel } from "../hooks/useModel";
 
 export default function Chat() {
   const [msg, setMsg] = React.useState("");

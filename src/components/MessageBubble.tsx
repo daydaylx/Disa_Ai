@@ -1,4 +1,5 @@
 import React from "react";
+
 import { cn } from "@/shared/lib/cn";
 
 export function MessageBubble({ role, children }: { role: "user" | "assistant"; children: React.ReactNode }) {

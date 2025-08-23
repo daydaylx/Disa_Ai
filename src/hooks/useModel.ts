@@ -1,5 +1,6 @@
 import * as React from "react";
-import { MODELS, DEFAULT_MODEL_ID, MODEL_KEY } from "../config/models";
+
+import { DEFAULT_MODEL_ID, MODEL_KEY,MODELS } from "../config/models";
 
 export function useModel() {
   const [model, setModel] = React.useState<string>(() => {

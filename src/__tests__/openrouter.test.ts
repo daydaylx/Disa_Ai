@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
-import { chatStream, chatOnce } from "../api/openrouter";
+import { describe, expect, it, vi } from "vitest";
+
+import { chatOnce,chatStream } from "../api/openrouter";
 
 function sseBody(parts: string[]) {
   // Simuliere einen Responsekörper mit SSE Frames

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { cn } from "../lib/cn";
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";

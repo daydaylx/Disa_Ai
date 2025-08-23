@@ -1,3 +1,5 @@
+import * as React from "react";
+
 export type Persona = {
   id: string;
   label: string;
@@ -78,8 +80,6 @@ export async function loadPersonas(): Promise<Persona[]> {
   }
   return FALLBACK_PERSONAS;
 }
-
-import * as React from "react";
 
 export function usePersonas(): PersonaState {
   const [state, setState] = React.useState<PersonaState>({

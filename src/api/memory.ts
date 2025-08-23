@@ -1,4 +1,4 @@
-import { chatOnce, type Msg, getModelFallback } from "./openrouter";
+import { chatOnce, getModelFallback,type Msg } from "./openrouter";
 
 /**
  * Verdichtet Chatverlauf + bisheriges Memory zu einer kurzen Merkliste.

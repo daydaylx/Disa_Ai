@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useOnline } from "../hooks/useOnline";
 
 export function NetworkBanner() {

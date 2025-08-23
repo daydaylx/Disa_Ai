@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
 import * as memory from "../api/memory";
 
 // chatOnce wird im Modul memory importiert → wir mocken Rückgabe

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { cn } from "../lib/cn";
 export function ChatBubble({ role, children }:{ role:"user"|"assistant"; children:React.ReactNode; }) {
   const mine = role === "user";

@@ -1,9 +1,10 @@
 import React from "react";
-import { Shell } from "../components/Shell";
-import { Card, CardHeader } from "../components/Card";
-import { Button } from "../components/Button";
-import { Input } from "../components/Input";
 import { useNavigate } from "react-router-dom";
+
+import { Button } from "../components/Button";
+import { Card, CardHeader } from "../components/Card";
+import { Input } from "../components/Input";
+import { Shell } from "../components/Shell";
 import { features } from "../config/features";
 
 export default function Home() {
