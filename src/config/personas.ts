@@ -119,7 +119,7 @@ export function usePersonaSelection() {
   }, [loading, personas, personaId]);
 
   React.useEffect(() => {
-    try { if (personaId) localStorage.setItem(PERSONA_KEY, personaId); } catch {}
+    try { if (personaId) localStorage.setItem(PERSONA_KEY, personaId); } catch { void 0; }
   }, [personaId]);
 
   const active = React.useMemo(

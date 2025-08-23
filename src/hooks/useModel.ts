@@ -13,7 +13,7 @@ export function useModel() {
   });
 
   React.useEffect(() => {
-    try { localStorage.setItem(MODEL_KEY, model); } catch {}
+    try { localStorage.setItem(MODEL_KEY, model); } catch { void 0; }
   }, [model]);
 
   const current = React.useMemo(
