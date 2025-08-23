@@ -87,7 +87,7 @@ export default function Settings() {
               <div className="text-sm text-zinc-400">Keine Personas gefunden (es wird ein neutraler Fallback genutzt).</div>
             ) : (
               <>
-                <Select value={personaId} onChange={(e)=>setPersonaId(e.target.value)}>
+                <Select value={(personaId ?? "")} onChange={(e)=>setPersonaId(e.target.value)}>
                   {personas.map((p: any) => (
                     <option key={p.id} value={p.id}>{p.label}</option>
                   ))}
@@ -95,7 +95,7 @@ export default function Settings() {
                 {active && (
                   <div className="rounded-2xl bg-[#0f0f16] border border-white/10 p-3 max-h-56 overflow-auto">
                     <div className="text-xs text-zinc-400 mb-2">Vorschau</div>
-                    <pre className="text-sm whitespace-pre-wrap text-zinc-200">{active.prompt}</pre>
+                    <pre className="text-sm whitespace-pre-wrap text-zinc-200">{active.system ?? ""}</pre>
                   </div>
                 )}
               </>
