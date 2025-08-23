@@ -63,10 +63,9 @@ export async function loadModelCatalog(opts?: {
 }
 
 export function chooseDefaultModel(list: ModelEntry[], preferFree = true): string {
-  const nonEmpty = list.length ? list : DEFAULTS;
-  const chosen = preferFree
-    ? (nonEmpty.find(m => m.free) ?? nonEmpty[0] ?? DEFAULTS[0])
-    : (nonEmpty[0] ?? DEFAULTS[0]);
+  const nonEmpty: ModelEntry[] = (list && list.length ? list : DEFAULTS);
+  const freePick = preferFree ? nonEmpty.find(m => m.free) : undefined;
+  const chosen: ModelEntry = (freePick ?? nonEmpty[0] ?? DEFAULTS[0]) as ModelEntry;
   return chosen.id;
 }
 

@@ -13,7 +13,9 @@ export function useModel(allow?: string[] | null) {
     let alive = true;
     (async () => {
       const apiKeyRaw = typeof localStorage !== "undefined" ? localStorage.getItem("disa_api_key") ?? undefined : undefined;
-      const opts: { allow?: string[] | null; preferFree?: boolean; apiKey?: string } = { allow, preferFree: true };
+
+      const opts: { allow?: string[] | null; preferFree?: boolean; apiKey?: string } = { preferFree: true };
+      if (allow !== undefined) opts.allow = allow;
       if (apiKeyRaw) opts.apiKey = apiKeyRaw;
 
       const catalog = await loadModelCatalog(opts);
