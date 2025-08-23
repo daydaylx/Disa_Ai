@@ -8,11 +8,11 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => { void loadPersona(); }, []);
 
-  async function tryFetchJSON(url: string): Promise<any | null> {
+  async function tryFetchJSON(url: string): Promise<unknown | null> {
     try { const r = await fetch(url, { cache: "no-cache" }); if (!r.ok) return null; return await r.json(); } catch { return null; }
   }
 
-  function validatePersona(input: any): { models: PersonaModel[]; styles: PersonaStyle[]; warnings: string[] } {
+  function validatePersona(input: unknown): { models: PersonaModel[]; styles: PersonaStyle[]; warnings: string[] } {
     const W: string[] = []; const models: PersonaModel[] = []; const styles: PersonaStyle[] = [];
     const MODEL_ID_RE = /^[a-z0-9._-]+(?:\/[a-z0-9._-]+)+$/i;
     const STYLE_ID_RE = /^[a-z0-9][a-z0-9._-]{1,63}$/i;
@@ -28,7 +28,7 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
         if (seen.has(id)) { W.push(`Modell ${i}: doppelte id "${id}"`); continue; }
         seen.add(id);
         const out: PersonaModel = { id, label };
-        if (Array.isArray(m.tags)) out.tags = m.tags.filter((t: any) => typeof t === "string");
+        if (Array.isArray(m.tags)) out.tags = m.tags.filter((t: unknown) => typeof t === "string");
         if (typeof m.context === "number") out.context = m.context;
         models.push(out);
       }
@@ -68,7 +68,7 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
   async function loadPersona() {
     setWarnings([]); setError(null);
     try {
-      let data: any | null =
+      let data: unknown | null =
         await tryFetchJSON("/persona.json") ??
         await tryFetchJSON("/personas.json") ??
         await tryFetchJSON("/data/personas.json");

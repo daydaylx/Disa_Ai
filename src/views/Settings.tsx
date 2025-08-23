@@ -7,6 +7,7 @@ import { Input, Textarea } from "../components/Input";
 import { Select } from "../components/Select";
 import { MODELS } from "../config/models";
 import { usePersonaSelection } from "../config/personas";
+import type { StyleItem } from "../config/personas";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useModel } from "../hooks/useModel";
 
@@ -88,8 +89,8 @@ export default function Settings() {
             ) : (
               <>
                 <Select value={(personaId ?? "")} onChange={(e)=>setPersonaId(e.target.value)}>
-                  {personas.map((p: any) => (
-                    <option key={p.id} value={p.id}>{p.label}</option>
+                  {personas.map((p: StyleItem) => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
                 </Select>
                 {active && (

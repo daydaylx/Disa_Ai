@@ -13,7 +13,7 @@ export async function loadPersona<T = unknown>(): Promise<T> {
 
   try {
     return JSON.parse(text) as T;
-  } catch (e: any) {
-    throw new Error(`persona.json ist kein valides JSON: ${e?.message || e}`);
+  } catch (e: unknown) {
+    throw new Error(`persona.json ist kein valides JSON: ${(e as Error)?.message || e}`);
   }
 }

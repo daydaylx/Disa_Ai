@@ -3,24 +3,21 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { vi, expect, test, describe } from "vitest";
 import PersonaQuickBar from "../components/PersonaQuickBar";
 
-let setStyleIdMock: ReturnType<typeof vi.fn>;
+const setStyleIdMock = vi.fn();
 
-vi.mock("../config/personas", () => {
-  setStyleIdMock = vi.fn();
-  return {
-    usePersonaSelection: () => ({
-      styles: [
-        { id: "a", name: "A" },
-        { id: "b", name: "B" },
-      ],
-      styleId: "a",
-      setStyleId: setStyleIdMock,
-      loading: false,
-      error: null,
-      current: { id: "a", name: "A" },
-    }),
-  };
-});
+vi.mock("../config/personas", () => ({
+  usePersonaSelection: () => ({
+    styles: [
+      { id: "a", name: "A" },
+      { id: "b", name: "B" },
+    ],
+    styleId: "a",
+    setStyleId: setStyleIdMock,
+    loading: false,
+    error: null,
+    current: { id: "a", name: "A" },
+  }),
+}));
 
 describe("PersonaQuickBar", () => {
   test("rendert Buttons und setzt Auswahl", () => {

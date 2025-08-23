@@ -77,10 +77,10 @@ export default function ChatPanel() {
         }
       });
 
-    } catch (e: any) {
-      const msg = String(e?.name || "").toLowerCase() === "aborterror"
+    } catch (e: unknown) {
+      const msg = String((e as Error)?.name || "").toLowerCase() === "aborterror"
         ? "⏹️ abgebrochen"
-        : `❌ ${String(e?.message ?? e)}`;
+        : `❌ ${String((e as Error)?.message ?? e)}`;
       setItems(prev => prev.map(b => b.id === asst.id ? ({ ...b, content: (b.content || msg) }) : b));
     } finally {
       setBusy(false);
