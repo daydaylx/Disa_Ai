@@ -19,3 +19,17 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
+
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  (async () => {
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const r of regs) { try { await r.unregister(); } catch {} }
+      if ("caches" in window) {
+        const keys = await caches.keys();
+        for (const k of keys) { try { await caches.delete(k); } catch {} }
+      }
+      console.warn("[DisaAI] SW & Caches bereinigt");
+    } catch {}
+  })();
+}
