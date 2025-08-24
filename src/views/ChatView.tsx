@@ -35,6 +35,19 @@ export default function ChatView(): JSX.Element {
   const [titleDraft, setTitleDraft] = React.useState<string>("");
   const [isEditingTitle, setIsEditingTitle] = React.useState<boolean>(false);
 
+  const taRef = React.useRef<HTMLTextAreaElement | null>(null);
+  const autoGrow = React.useCallback(() => {
+    const ta = taRef.current;
+    if (!ta) return;
+    ta.style.height = "auto";
+    const next = Math.min(ta.scrollHeight, 240); // max ~12 Zeilen
+    ta.style.height = `${next}px`;
+  }, []);
+
+  React.useEffect(() => {
+    autoGrow();
+  }, [autoGrow]);
+
   // mindestens eine Konversation sicherstellen
   React.useEffect(() => {
     if (!activeId) {
@@ -60,11 +73,17 @@ export default function ChatView(): JSX.Element {
       onDelta: () => void 0,
     });
     setInput("");
+    // nach dem Senden wieder auf Grundhöhe bringen
+    const ta = taRef.current;
+    if (ta) {
+      ta.style.height = "auto";
+      ta.blur();
+    }
   }
 
   return (
     <div className="w-full h-full min-h-screen flex flex-col bg-black">
-      {/* Kompakter Header */}
+      {/* Header */}
       <header className="border-b border-neutral-800 px-4 py-3 flex items-center gap-3 bg-neutral-950/80 backdrop-blur">
         {/* Titel (inline-edit) links */}
         <div className="flex items-center gap-2">
@@ -86,7 +105,7 @@ export default function ChatView(): JSX.Element {
                 if (active?.id) renameConversation(active.id, titleDraft);
                 setIsEditingTitle(false);
               }}
-              className="min-w-[12rem] rounded-md border border-neutral-700 bg-neutral-900 text-neutral-100 py-1 px-2 outline-none focus:ring-2 focus:ring-indigo-500"
+              className="min-w-[12rem] rounded-md border border-neutral-700 bg-neutral-900 text-neutral-100 py-1 px-2 outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
               aria-label="Konversationstitel bearbeiten"
               autoFocus
             />
@@ -119,51 +138,61 @@ export default function ChatView(): JSX.Element {
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="sk-or-…"
-            className="w-44 sm:w-56 rounded-md border border-neutral-700 bg-neutral-900 text-neutral-100 placeholder-neutral-500 caret-neutral-200 py-1.5 px-2 outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-44 sm:w-56 rounded-md border border-neutral-700 bg-neutral-900 text-neutral-100 placeholder-neutral-500 caret-neutral-200 py-1.5 px-2 outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
             title="OpenRouter API-Key (nur lokal)"
             aria-label="OpenRouter API-Key"
           />
         </div>
       </header>
 
-      {/* Verlauf */}
+      {/* Composer – jetzt direkt unter dem Header, gut sichtbar */}
+      <section className="px-4 pt-3 pb-2 border-b border-neutral-800 bg-neutral-950">
+        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-2 shadow-lg">
+          <div className="flex items-end gap-2">
+            <textarea
+              ref={taRef}
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                autoGrow();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void handleSend();
+                }
+              }}
+              placeholder="Schreibe etwas… (Enter sendet, Shift+Enter = neue Zeile)"
+              className="flex-1 max-h-60 min-h-[3rem] rounded-lg border border-neutral-700 bg-neutral-900 text-neutral-100 placeholder-neutral-500 caret-neutral-200 p-3 outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={!input.trim() || !activeId}
+              className="shrink-0 rounded-lg border border-indigo-600 bg-indigo-600 text-white px-4 py-2 font-medium disabled:opacity-50 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-neutral-900"
+              title="Senden"
+            >
+              Senden
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Schnellzugriff: Stile – direkt unter dem Textfeld */}
+      <div className="px-4">
+        <QuickStyles />
+      </div>
+
+      {/* Nachrichten-Bereich darunter */}
       <section className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 ? (
-          <div className="text-sm text-neutral-400">Noch keine Nachrichten. Starte mit einer Frage.</div>
+          <div className="text-sm text-neutral-400">
+            Noch keine Nachrichten. Starte mit einer Frage.
+          </div>
         ) : (
           messages.map((m, idx) => <MessageBubble key={idx} msg={m} />)
         )}
-
-        {/* Schnellzugriff: Stile */}
-        <QuickStyles />
       </section>
-
-      {/* Composer – Enter sendet, Shift+Enter neue Zeile */}
-      <footer className="border-t border-neutral-800 p-3 bg-neutral-950/80 backdrop-blur">
-        <div className="flex items-end gap-2">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                void handleSend();
-              }
-            }}
-            placeholder="Schreibe etwas… (Enter sendet, Shift+Enter = neue Zeile)"
-            className="flex-1 h-24 md:h-28 rounded-lg border border-neutral-700 bg-neutral-900 text-neutral-100 placeholder-neutral-500 caret-neutral-200 p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={!input.trim() || !activeId}
-            className="shrink-0 rounded-lg border border-indigo-600 bg-indigo-600 text-white px-4 py-2 font-medium disabled:opacity-50"
-            title="Senden"
-          >
-            Senden
-          </button>
-        </div>
-      </footer>
     </div>
   );
 }
@@ -178,12 +207,12 @@ function MessageBubble({ msg }: { msg: ChatMessage }): JSX.Element {
 
   return (
     <div className={`max-w-[85%] md:max-w-[70%] ${sideCls}`}>
-      <div className={`rounded-xl border ${palette} p-3`}>
+      <div className={`rounded-xl border ${palette} p-3 shadow-sm`}>
         <div className="text-[11px] uppercase tracking-wide text-neutral-400 mb-1">
           {msg.role}
           {msg.meta?.status === "sending" ? " · tippt …" : ""}
         </div>
-        <div className="whitespace-pre-wrap text-sm">{msg.content}</div>
+        <div className="whitespace-pre-wrap text-sm leading-6">{msg.content}</div>
       </div>
     </div>
   );
