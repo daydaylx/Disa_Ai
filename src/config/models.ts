@@ -7,10 +7,9 @@ export interface ModelEntry {
   label: string;
   provider: string;
   ctx: number;
-  tags: string[];
-  price: Price;
-  /** abgeleitet: true, wenn Pricing 0/0 oder Tag "free" */
-  free: boolean;
+  tags: string[];   // z.B. ["chat","code","free"]
+  price: Price;     // null oder {in,out} in USD / 1M Tokens (nur grob)
+  free: boolean;    // abgeleitet aus price==0 oder Tag "free"
 }
 
 export interface LoadOptions {
@@ -20,6 +19,7 @@ export interface LoadOptions {
 }
 
 const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
+  // 1
   {
     id: "mistral/mistral-7b-instruct",
     label: "Mistral 7B Instruct",
@@ -29,6 +29,7 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
+  // 2
   {
     id: "meta-llama/llama-3.1-8b-instruct",
     label: "Llama 3.1 8B Instruct",
@@ -38,6 +39,7 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
+  // 3
   {
     id: "google/gemma-2-9b-it",
     label: "Gemma 2 9B IT",
@@ -47,23 +49,175 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
+  // 4
   {
     id: "deepseek/deepseek-coder",
     label: "DeepSeek Coder",
     provider: "DeepSeek",
     ctx: 16000,
-    tags: ["code"],
+    tags: ["code", "free"],
     price: { in: 0, out: 0 },
     free: true,
   },
+  // 5
   {
-    id: "anthropic/claude-3-haiku",
-    label: "Claude 3 Haiku",
-    provider: "Anthropic",
-    ctx: 200000,
+    id: "deepseek/deepseek-chat",
+    label: "DeepSeek Chat",
+    provider: "DeepSeek",
+    ctx: 16000,
+    tags: ["chat", "free"],
+    price: { in: 0, out: 0 },
+    free: true,
+  },
+  // 6
+  {
+    id: "qwen/qwen2.5-7b-instruct",
+    label: "Qwen2.5 7B Instruct",
+    provider: "Alibaba",
+    ctx: 32768,
+    tags: ["chat", "code", "free"],
+    price: null,
+    free: true,
+  },
+  // 7
+  {
+    id: "qwen/qwen2.5-coder-7b",
+    label: "Qwen2.5 Coder 7B",
+    provider: "Alibaba",
+    ctx: 32768,
+    tags: ["code", "free"],
+    price: null,
+    free: true,
+  },
+  // 8
+  {
+    id: "microsoft/phi-3-mini-128k-instruct",
+    label: "Phi-3 Mini 128k Instruct",
+    provider: "Microsoft",
+    ctx: 128000,
+    tags: ["chat", "code", "free"],
+    price: null,
+    free: true,
+  },
+  // 9 (sehr günstig)
+  {
+    id: "microsoft/phi-3-medium-128k-instruct",
+    label: "Phi-3 Medium 128k Instruct",
+    provider: "Microsoft",
+    ctx: 128000,
     tags: ["chat"],
-    price: { in: 0.25, out: 1.25 },
+    price: { in: 0.05, out: 0.2 },
     free: false,
+  },
+  // 10
+  {
+    id: "huggingfaceh4/zephyr-7b-beta",
+    label: "Zephyr 7B Beta",
+    provider: "HuggingFaceH4",
+    ctx: 8192,
+    tags: ["chat", "free"],
+    price: null,
+    free: true,
+  },
+  // 11
+  {
+    id: "stabilityai/stablelm-2-1_6b",
+    label: "StableLM 2 1.6B",
+    provider: "StabilityAI",
+    ctx: 8192,
+    tags: ["chat", "free"],
+    price: null,
+    free: true,
+  },
+  // 12
+  {
+    id: "tiiuae/falcon-7b-instruct",
+    label: "Falcon 7B Instruct",
+    provider: "TII UAE",
+    ctx: 8192,
+    tags: ["chat", "free"],
+    price: null,
+    free: true,
+  },
+  // 13
+  {
+    id: "bigcode/starcoder2-7b",
+    label: "StarCoder2 7B",
+    provider: "BigCode",
+    ctx: 8192,
+    tags: ["code", "free"],
+    price: null,
+    free: true,
+  },
+  // 14
+  {
+    id: "codellama/codellama-7b-instruct",
+    label: "CodeLlama 7B Instruct",
+    provider: "Meta",
+    ctx: 8192,
+    tags: ["code", "free"],
+    price: null,
+    free: true,
+  },
+  // 15
+  {
+    id: "teknium/openhermes-2.5-mistral-7b",
+    label: "OpenHermes 2.5 (Mistral 7B)",
+    provider: "Teknium",
+    ctx: 32768,
+    tags: ["chat", "free"],
+    price: null,
+    free: true,
+  },
+  // 16
+  {
+    id: "nousresearch/hermes-2-mistral-7b",
+    label: "Hermes 2 (Mistral 7B)",
+    provider: "NousResearch",
+    ctx: 32768,
+    tags: ["chat", "code", "free"],
+    price: null,
+    free: true,
+  },
+  // 17 (günstig)
+  {
+    id: "upstage/solar-10.7b-instruct",
+    label: "Solar 10.7B Instruct",
+    provider: "Upstage",
+    ctx: 32768,
+    tags: ["chat"],
+    price: { in: 0.1, out: 0.1 },
+    free: false,
+  },
+  // 18
+  {
+    id: "openchat/openchat-3.5-7b",
+    label: "OpenChat 3.5 7B",
+    provider: "OpenChat",
+    ctx: 8192,
+    tags: ["chat", "free"],
+    price: null,
+    free: true,
+  },
+  // 19
+  {
+    id: "01-ai/yi-1.5-9b-chat",
+    label: "Yi 1.5 9B Chat",
+    provider: "01.AI",
+    ctx: 32768,
+    tags: ["chat", "free"],
+    price: null,
+    free: true,
+  },
+  // 20
+  {
+    id: "mosaicml/mpt-7b-instruct",
+    label: "MPT 7B Instruct",
+    provider: "MosaicML",
+    ctx: 8192,
+    tags: ["chat", "free"],
+    price: null,
+    free: true,
   },
 ]);
 
@@ -97,7 +251,7 @@ export async function loadModelCatalog(opts: LoadOptions = {}): Promise<ModelEnt
   const { apiKey, allow, preferFree } = opts;
   let list: ModelEntry[] = MODELS.map(normalize);
 
-  // Optionaler Online-Fetch (best effort, niemals Build brechen lassen)
+  // Optionaler Online-Fetch (best effort – niemals Build brechen)
   if (apiKey) {
     try {
       const res = await fetch("https://openrouter.ai/api/v1/models", {
@@ -113,8 +267,7 @@ export async function loadModelCatalog(opts: LoadOptions = {}): Promise<ModelEnt
                 const pin = toNumberSafe(pricing?.prompt ?? pricing?.input ?? 0, 0);
                 const pout = toNumberSafe(pricing?.completion ?? pricing?.output ?? 0, 0);
                 const ctx =
-                  toNumberSafe(m?.context_length ?? m?.ctx ?? 0, 0) ||
-                  32768; // defensiver Default
+                  toNumberSafe(m?.context_length ?? m?.ctx ?? 0, 0) || 32768;
                 const provider =
                   typeof m?.id === "string" && m.id.includes("/") ? m.id.split("/")[0] : "unknown";
                 const tags: string[] = Array.isArray(m?.tags) ? m.tags : [];
