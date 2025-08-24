@@ -6,10 +6,14 @@ export interface TemplateEntry {
   description?: string;
   tags?: string[];
   system: string;
+  allow?: string[]; // optional: Modell-IDs, evtl. mit Suffixen wie ":free"
 }
 
-interface StyleFile {
-  templates: TemplateEntry[];
+interface StylesFileA {
+  styles: TemplateEntry[];
+}
+interface StylesFileB {
+  templates: TemplateEntry[]; // Fallback-Variante
 }
 
 const LS_TEMPLATE_ID = "disa:style:templateId";
@@ -29,58 +33,50 @@ function safeSetItem(key: string, val: string): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(key, val);
-  } catch {
-    /* noop */
-  }
+  } catch {}
 }
 function safeRemoveItem(key: string): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.removeItem(key);
-  } catch {
-    /* noop */
-  }
+  } catch {}
 }
 
-function initialTemplateId(defaultId: string): string {
-  return safeGetItem(LS_TEMPLATE_ID) ?? defaultId;
-}
-function readOverride(id: string): string | null {
-  return safeGetItem(lsKeyForOverride(id));
-}
-function writeOverride(id: string, text: string): void {
-  const key = lsKeyForOverride(id);
-  if (text.trim().length === 0) {
-    safeRemoveItem(key);
-    return;
-  }
-  safeSetItem(key, text);
+function stripSuffix(id: string): string {
+  const idx = id.indexOf(":");
+  return idx >= 0 ? id.slice(0, idx) : id;
 }
 
-function isTemplateEntry(x: unknown): x is TemplateEntry {
-  const o = x as Record<string, unknown>;
-  return !!o && typeof o.id === "string" && typeof o.name === "string" && typeof o.system === "string";
-}
 function normalizeTemplates(arr: unknown): TemplateEntry[] {
   if (!Array.isArray(arr)) return [];
-  return arr.filter(isTemplateEntry).map((t) => ({
-    id: t.id,
-    name: t.name,
-    system: t.system,
-    description: typeof t.description === "string" ? t.description : undefined,
-    tags: Array.isArray(t.tags) ? t.tags.filter((x) => typeof x === "string") : undefined,
-  }));
+  return arr
+    .filter((x) => {
+      const o = x as Record<string, unknown>;
+      return !!o && typeof o.id === "string" && typeof o.name === "string" && typeof o.system === "string";
+    })
+    .map((t: any) => {
+      const base: TemplateEntry = {
+        id: String(t.id),
+        name: String(t.name),
+        system: String(t.system),
+      };
+      if (typeof t.description === "string") base.description = t.description;
+      if (Array.isArray(t.tags)) base.tags = t.tags.filter((z: unknown) => typeof z === "string");
+      if (Array.isArray(t.allow)) base.allow = t.allow.filter((z: unknown) => typeof z === "string");
+      return base;
+    });
 }
 
-/** Fallback, falls /style.json fehlt – minimal, kein Platzhalter-Spam */
-const FALLBACK_TEMPLATES: Readonly<TemplateEntry[]> = Object.freeze([
-  {
-    id: "no-filter-de",
-    name: "No-Filter (DE, direkt)",
-    system:
-      "Du antwortest direkt, ehrlich, ohne Floskeln. Fokus auf Risiken, Schwächen, realistische Einschätzungen. Deutsch, Du-Form.",
-  },
-]);
+/** Fix: harte ID + Objekt, keine unsicheren [0]-Zugriffe */
+const FALLBACK_TEMPLATE_ID = "no-filter-de" as const;
+const FALLBACK_TEMPLATE: TemplateEntry = {
+  id: FALLBACK_TEMPLATE_ID,
+  name: "No-Filter (DE, direkt)",
+  system:
+    "Du antwortest direkt, ehrlich, ohne Floskeln. Fokus auf Risiken, Schwächen, realistische Einschätzungen. Deutsch, Du-Form.",
+  allow: ["mistral/mistral-7b-instruct"],
+};
+const FALLBACK_TEMPLATES: Readonly<TemplateEntry[]> = Object.freeze([FALLBACK_TEMPLATE]);
 
 export interface UseStyleTemplateState {
   list: TemplateEntry[];
@@ -94,29 +90,36 @@ export interface UseStyleTemplateState {
   systemText: string;
   setSystemText: (text: string) => void;
 
+  /** normalisierte Modell-IDs aus allow (Suffixe entfernt) */
+  allowedModelIds: string[];
+  /** true, wenn irgendein allow-Eintrag explizit ":free" markiert war */
+  preferFreeHint: boolean;
+
   reload: () => void;
 }
 
 /**
- * Lädt Templates aus /style.json (public). Persistiert Auswahl und pro-Template Overrides.
- * /style.json Schema:
- * {
- *   "templates": [{ "id": "no-filter-de", "name": "No-Filter", "system": "..." , "description": "...", "tags": ["de"] }]
- * }
+ * Lädt Templates aus /styles.json (primär) oder /style.json (Fallback).
+ * Erwartete Schemata:
+ *  A) { "styles": [ {id,name,system,description?,tags?,allow?[]} ] }
+ *  B) { "templates": [ ... ] }   // ältere Variante
  */
-export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATES[0].id): UseStyleTemplateState {
+export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATE_ID): UseStyleTemplateState {
   const [list, setList] = React.useState<TemplateEntry[]>(() => [...FALLBACK_TEMPLATES]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const [templateId, setTemplateIdState] = React.useState<string>(() => initialTemplateId(defaultId));
+  const [templateId, setTemplateIdState] = React.useState<string>(() => {
+    return safeGetItem(LS_TEMPLATE_ID) ?? defaultId;
+  });
+
   const selected = React.useMemo(
     () => list.find((t) => t.id === templateId) ?? list[0],
     [list, templateId]
   );
 
   const [systemText, setSystemTextState] = React.useState<string>(() => {
-    const ov = readOverride(templateId);
+    const ov = safeGetItem(lsKeyForOverride(templateId));
     if (ov !== null) return ov;
     const sel = list.find((t) => t.id === templateId) ?? list[0];
     return sel ? sel.system : "";
@@ -125,73 +128,90 @@ export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATES[0].id): 
   const setTemplateId = React.useCallback((id: string) => {
     setTemplateIdState(id);
     safeSetItem(LS_TEMPLATE_ID, id);
-    const ov = readOverride(id);
-    const base = list.find((t) => t.id === id)?.system ?? "";
+    const ov = safeGetItem(lsKeyForOverride(id));
+    const base = (list.find((t) => t.id === id) ?? list[0])?.system ?? "";
     setSystemTextState(ov !== null ? ov : base);
   }, [list]);
 
   const setSystemText = React.useCallback((text: string) => {
     setSystemTextState(text);
-    writeOverride(templateId, text);
-    const base = list.find((t) => t.id === templateId)?.system ?? "";
-    // Wenn Override == Basis, Override entfernen (sauber halten)
-    if (text === base) {
-      safeRemoveItem(lsKeyForOverride(templateId));
+    const key = lsKeyForOverride(templateId);
+    const base = (list.find((t) => t.id === templateId) ?? list[0])?.system ?? "";
+    if (text.trim() === base.trim()) {
+      safeRemoveItem(key);
+    } else {
+      safeSetItem(key, text);
     }
   }, [templateId, list]);
 
   const load = React.useCallback(async () => {
     setLoading(true);
     setError(null);
-    const ctrl = new AbortController();
-    try {
-      const res = await fetch("/style.json", { signal: ctrl.signal, cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = (await res.json()) as Partial<StyleFile>;
-      const next = normalizeTemplates(json?.templates);
-      if (next.length > 0) {
-        setList(next);
-        // Auswahl validieren
-        const exists = next.some((t) => t.id === templateId);
-        const nextSel = exists ? templateId : next[0].id;
-        if (!exists) {
-          setTemplateIdState(nextSel);
-          safeSetItem(LS_TEMPLATE_ID, nextSel);
+    const tryPaths = ["/styles.json", "/style.json"];
+    let lastErr: string | null = null;
+    for (const path of tryPaths) {
+      try {
+        const res = await fetch(path, { cache: "no-store" });
+        if (!res.ok) {
+          lastErr = `HTTP ${res.status} bei ${path}`;
+          continue;
         }
-        // Systemtext für (neuen) Selektor aktualisieren
-        const ov = readOverride(nextSel);
-        const base = next.find((t) => t.id === nextSel)?.system ?? "";
-        setSystemTextState(ov !== null ? ov : base);
-      } else {
-        // Leere Datei → Fallback behalten
-        setList([...FALLBACK_TEMPLATES]);
-        const nextSel = FALLBACK_TEMPLATES[0].id;
-        setTemplateIdState(nextSel);
-        safeSetItem(LS_TEMPLATE_ID, nextSel);
-        const ov = readOverride(nextSel);
-        setSystemTextState(ov !== null ? ov : FALLBACK_TEMPLATES[0].system);
+        const json = (await res.json()) as Partial<StylesFileA & StylesFileB>;
+        const arr = Array.isArray((json as StylesFileA).styles)
+          ? (json as StylesFileA).styles
+          : Array.isArray((json as StylesFileB).templates)
+          ? (json as StylesFileB).templates
+          : [];
+        const next = normalizeTemplates(arr);
+        if (next.length > 0) {
+          setList(next);
+          // Auswahl validieren
+          const exists = next.some((t) => t.id === templateId);
+          const first = next.at(0);
+          const nextSel = exists ? templateId : (first ? first.id : FALLBACK_TEMPLATE_ID);
+          if (!exists) {
+            setTemplateIdState(nextSel);
+            safeSetItem(LS_TEMPLATE_ID, nextSel);
+          }
+          const ov = safeGetItem(lsKeyForOverride(nextSel));
+          const base = (next.find((t) => t.id === nextSel) ?? first ?? FALLBACK_TEMPLATE).system;
+          setSystemTextState(ov !== null ? ov : base);
+          setLoading(false);
+          setError(null);
+          return;
+        }
+        lastErr = `Leere Liste in ${path}`;
+      } catch (e: unknown) {
+        lastErr = `Fehler beim Laden ${path}: ${String(e)}`;
       }
-    } catch (e: unknown) {
-      setError(`Konnte /style.json nicht laden: ${String(e)}`);
-      setList([...FALLBACK_TEMPLATES]);
-      const nextSel = FALLBACK_TEMPLATES[0].id;
-      setTemplateIdState(nextSel);
-      safeSetItem(LS_TEMPLATE_ID, nextSel);
-      const ov = readOverride(nextSel);
-      setSystemTextState(ov !== null ? ov : FALLBACK_TEMPLATES[0].system);
-    } finally {
-      setLoading(false);
     }
-    return () => ctrl.abort();
+    // Fallback
+    setList([...FALLBACK_TEMPLATES]);
+    const nextSel = FALLBACK_TEMPLATE_ID;
+    setTemplateIdState(nextSel);
+    safeSetItem(LS_TEMPLATE_ID, nextSel);
+    const ov = safeGetItem(lsKeyForOverride(nextSel));
+    setSystemTextState(ov !== null ? ov : FALLBACK_TEMPLATE.system);
+    setLoading(false);
+    setError(lastErr);
   }, [templateId]);
 
-  // initial laden
   React.useEffect(() => {
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const reload = React.useCallback(() => { void load(); }, [load]);
+
+  // allow normalisieren + Hint für :free
+  const allowedModelIds = React.useMemo<string[]>(
+    () => Array.from(new Set((selected?.allow ?? []).map(stripSuffix))),
+    [selected]
+  );
+  const preferFreeHint = React.useMemo<boolean>(
+    () => (selected?.allow ?? []).some((x) => typeof x === "string" && x.endsWith(":free")),
+    [selected]
+  );
 
   return {
     list,
@@ -202,6 +222,8 @@ export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATES[0].id): 
     selected,
     systemText,
     setSystemText,
+    allowedModelIds,
+    preferFreeHint,
     reload,
   };
 }

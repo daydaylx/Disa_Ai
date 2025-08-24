@@ -43,11 +43,29 @@ export default function Settings(): JSX.Element {
   const [apiKey, setApiKey] = React.useState<string>(() => loadStr(LS_API_KEY, ""));
   const [freeOnly, setFreeOnly] = React.useState<boolean>(() => loadBool(LS_FREE_ONLY, false));
 
-  // Modelle
-  const { model, setModel, list, labelFor } = useModel({
-    preferFree: true,
-    apiKey: apiKey || undefined,
-  });
+  // Styles / Systemprompts aus /styles.json (Fallback /style.json)
+  const {
+    list: tplList,
+    loading: tplLoading,
+    error: tplError,
+    templateId,
+    setTemplateId,
+    selected,
+    systemText,
+    setSystemText,
+    allowedModelIds,
+    preferFreeHint,
+    reload: reloadTemplates,
+  } = useStyleTemplate();
+
+  // Modelle – Optionen **ohne** undefined-Felder bauen
+  const modelOpts: Parameters<typeof useModel>[0] = {
+    preferFree: true, // stabil: UI soll zuerst free zeigen
+    ...(apiKey ? { apiKey } : {}),
+    ...(allowedModelIds.length > 0 ? { allow: allowedModelIds } : {}),
+  };
+
+  const { model, setModel, list, labelFor } = useModel(modelOpts);
 
   React.useEffect(() => saveStr(LS_API_KEY, apiKey), [apiKey]);
   React.useEffect(() => saveBool(LS_FREE_ONLY, freeOnly), [freeOnly]);
@@ -58,18 +76,7 @@ export default function Settings(): JSX.Element {
   );
   const selectedLabel = labelFor(model);
 
-  // Styles / Systemprompts aus public/style.json
-  const {
-    list: tplList,
-    loading: tplLoading,
-    error: tplError,
-    templateId,
-    setTemplateId,
-    selected,
-    systemText,
-    setSystemText,
-    reload: reloadTemplates,
-  } = useStyleTemplate();
+  const allowActive = allowedModelIds.length > 0;
 
   return (
     <div className="mx-auto max-w-5xl p-4 md:p-8">
@@ -79,14 +86,24 @@ export default function Settings(): JSX.Element {
             Einstellungen
           </h1>
           <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-            Modellwahl, kostenlose Filter, OpenRouter-Key und Stil-Templates (aus <code>/style.json</code>).
+            Modellwahl, kostenlose Filter, OpenRouter-Key und Stil-Templates aus <code>/styles.json</code>.
           </p>
         </div>
 
         <div className="p-5 space-y-10">
           {/* Modell-Auswahl */}
           <section className="space-y-2">
-            <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">Modell</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">Modell</h2>
+              <div className="flex items-center gap-2 text-xs">
+                {allowActive && (
+                  <span className="rounded-md border border-indigo-300 dark:border-indigo-700 px-2 py-0.5 text-indigo-700 dark:text-indigo-300" title="durch Stil-Template eingeschränkte Modellliste">
+                    Template-Filter aktiv
+                  </span>
+                )}
+                <span className="text-neutral-500 dark:text-neutral-400">{filtered.length} Modelle</span>
+              </div>
+            </div>
 
             <div
               className="max-w-full md:max-w-xl truncate text-sm text-neutral-800 dark:text-neutral-200"
@@ -123,9 +140,6 @@ export default function Settings(): JSX.Element {
                   Nur kostenlose Modelle anzeigen
                 </span>
               </label>
-              <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                {filtered.length} Modelle
-              </span>
             </div>
           </section>
 
@@ -162,7 +176,7 @@ export default function Settings(): JSX.Element {
                     type="button"
                     onClick={reloadTemplates}
                     className="text-xs rounded-md border border-neutral-300 dark:border-neutral-700 px-2 py-1 hover:bg-neutral-50 dark:hover:bg-neutral-900"
-                    title="Neu laden (liest /style.json)"
+                    title="Neu laden (liest /styles.json oder /style.json)"
                   >
                     Neu laden
                   </button>
@@ -178,7 +192,7 @@ export default function Settings(): JSX.Element {
 
             <div className="space-y-2">
               <label htmlFor="template" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                Vorlage aus <code>/style.json</code>
+                Vorlage
               </label>
               <select
                 id="template"
@@ -198,11 +212,17 @@ export default function Settings(): JSX.Element {
                   {selected.description}
                 </p>
               ) : null}
+
+              {allowActive && (
+                <p className="text-xs text-indigo-700 dark:text-indigo-300">
+                  Diese Vorlage schränkt die Modellliste ein ({allowedModelIds.length} erlaubte IDs).
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
               <label htmlFor="systemText" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                Systemprompt (Edit speichert Override pro Vorlage)
+                Systemprompt (Edit = Override, wird pro Vorlage gespeichert)
               </label>
               <textarea
                 id="systemText"

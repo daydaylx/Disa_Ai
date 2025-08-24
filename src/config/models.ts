@@ -19,7 +19,6 @@ export interface LoadOptions {
 }
 
 const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
-  // 1
   {
     id: "mistral/mistral-7b-instruct",
     label: "Mistral 7B Instruct",
@@ -29,7 +28,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 2
   {
     id: "meta-llama/llama-3.1-8b-instruct",
     label: "Llama 3.1 8B Instruct",
@@ -39,7 +37,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 3
   {
     id: "google/gemma-2-9b-it",
     label: "Gemma 2 9B IT",
@@ -49,7 +46,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 4
   {
     id: "deepseek/deepseek-coder",
     label: "DeepSeek Coder",
@@ -59,7 +55,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: { in: 0, out: 0 },
     free: true,
   },
-  // 5
   {
     id: "deepseek/deepseek-chat",
     label: "DeepSeek Chat",
@@ -69,7 +64,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: { in: 0, out: 0 },
     free: true,
   },
-  // 6
   {
     id: "qwen/qwen2.5-7b-instruct",
     label: "Qwen2.5 7B Instruct",
@@ -79,7 +73,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 7
   {
     id: "qwen/qwen2.5-coder-7b",
     label: "Qwen2.5 Coder 7B",
@@ -89,7 +82,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 8
   {
     id: "microsoft/phi-3-mini-128k-instruct",
     label: "Phi-3 Mini 128k Instruct",
@@ -99,17 +91,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 9 (sehr günstig)
-  {
-    id: "microsoft/phi-3-medium-128k-instruct",
-    label: "Phi-3 Medium 128k Instruct",
-    provider: "Microsoft",
-    ctx: 128000,
-    tags: ["chat"],
-    price: { in: 0.05, out: 0.2 },
-    free: false,
-  },
-  // 10
   {
     id: "huggingfaceh4/zephyr-7b-beta",
     label: "Zephyr 7B Beta",
@@ -119,7 +100,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 11
   {
     id: "stabilityai/stablelm-2-1_6b",
     label: "StableLM 2 1.6B",
@@ -129,7 +109,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 12
   {
     id: "tiiuae/falcon-7b-instruct",
     label: "Falcon 7B Instruct",
@@ -139,7 +118,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 13
   {
     id: "bigcode/starcoder2-7b",
     label: "StarCoder2 7B",
@@ -149,7 +127,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 14
   {
     id: "codellama/codellama-7b-instruct",
     label: "CodeLlama 7B Instruct",
@@ -159,7 +136,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 15
   {
     id: "teknium/openhermes-2.5-mistral-7b",
     label: "OpenHermes 2.5 (Mistral 7B)",
@@ -169,27 +145,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 16
-  {
-    id: "nousresearch/hermes-2-mistral-7b",
-    label: "Hermes 2 (Mistral 7B)",
-    provider: "NousResearch",
-    ctx: 32768,
-    tags: ["chat", "code", "free"],
-    price: null,
-    free: true,
-  },
-  // 17 (günstig)
-  {
-    id: "upstage/solar-10.7b-instruct",
-    label: "Solar 10.7B Instruct",
-    provider: "Upstage",
-    ctx: 32768,
-    tags: ["chat"],
-    price: { in: 0.1, out: 0.1 },
-    free: false,
-  },
-  // 18
   {
     id: "openchat/openchat-3.5-7b",
     label: "OpenChat 3.5 7B",
@@ -199,7 +154,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 19
   {
     id: "01-ai/yi-1.5-9b-chat",
     label: "Yi 1.5 9B Chat",
@@ -209,7 +163,6 @@ const DEFAULTS: Readonly<ModelEntry[]> = Object.freeze([
     price: null,
     free: true,
   },
-  // 20
   {
     id: "mosaicml/mpt-7b-instruct",
     label: "MPT 7B Instruct",
@@ -245,6 +198,11 @@ function normalize(e: Omit<ModelEntry, "free"> & Partial<Pick<ModelEntry, "free"
     price,
     free: e.free !== undefined ? e.free : (freeFromPrice || freeFromTags || false),
   };
+}
+
+function stripSuffix(id: string): string {
+  const idx = id.indexOf(":");
+  return idx >= 0 ? id.slice(0, idx) : id;
 }
 
 export async function loadModelCatalog(opts: LoadOptions = {}): Promise<ModelEntry[]> {
@@ -291,9 +249,17 @@ export async function loadModelCatalog(opts: LoadOptions = {}): Promise<ModelEnt
     }
   }
 
+  // allow-Filter (Suffixe wie ":free" ignorieren); niemals in leere Liste enden
   if (allow && allow.length > 0) {
-    const allowSet = new Set(allow);
-    list = list.filter((m) => allowSet.has(m.id));
+    const normalized = Array.from(new Set(allow.map(stripSuffix)));
+    const pre = list;
+    const allowSet = new Set(normalized);
+    let filtered = list.filter((m) => allowSet.has(m.id));
+    if (filtered.length === 0) {
+      // Fallback: keine harten Treffer -> nichts filtern
+      filtered = pre;
+    }
+    list = filtered;
   }
 
   list.sort((a, b) => {
@@ -326,9 +292,10 @@ export function chooseDefaultModel(
 
   let pool = src;
   if (opts.allow && opts.allow.length > 0) {
-    const allowSet = new Set(opts.allow);
-    pool = pool.filter((m) => allowSet.has(m.id));
-    if (pool.length === 0) pool = src; // Fallback
+    const normalized = Array.from(new Set(opts.allow.map(stripSuffix)));
+    const allowSet = new Set(normalized);
+    const filtered = pool.filter((m) => allowSet.has(m.id));
+    pool = filtered.length > 0 ? filtered : src; // Fallback
   }
 
   if (opts.preferFree) {
