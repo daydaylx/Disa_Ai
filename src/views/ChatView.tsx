@@ -48,7 +48,7 @@ export default function ChatView(): JSX.Element {
   }
 
   return (
-    <div className="w-full h-screen flex">
+    <div className="w-full h-full min-h-screen flex">
       {/* Linke Spalte: Sessions */}
       <SessionSidebar conv={conv} onSelect={() => void 0} />
 

@@ -15,9 +15,9 @@ export default function SessionSidebar({ conv, onSelect }: Props): JSX.Element {
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [editValue, setEditValue] = React.useState<string>("");
 
-  function startEdit(conv: ConversationMeta): void {
-    setEditingId(conv.id);
-    setEditValue(conv.title);
+  function startEdit(c: ConversationMeta): void {
+    setEditingId(c.id);
+    setEditValue(c.title);
   }
   function commitEdit(): void {
     if (!editingId) return;
@@ -51,7 +51,7 @@ export default function SessionSidebar({ conv, onSelect }: Props): JSX.Element {
           {list.map((c) => {
             const isActive = c.id === activeId;
             const baseCls =
-              "group flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-900";
+              "group flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer";
             return (
               <li key={c.id}>
                 <div
