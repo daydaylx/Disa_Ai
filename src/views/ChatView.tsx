@@ -18,7 +18,15 @@ function loadStr(key: string, def = ""): string {
 
 export default function ChatView(): JSX.Element {
   const conv = useConversations(); // eine Instanz
-  const { activeId, messages, sendWithPipeline, active, renameConversation, createConversation, setActiveConversation } = conv;
+  const {
+    activeId,
+    messages,
+    sendWithPipeline,
+    active,
+    renameConversation,
+    createConversation,
+    setActiveConversation,
+  } = conv;
 
   const { systemText, selected } = useStyleTemplate(); // aktives Stil-Template
   const [apiKey, setApiKey] = React.useState<string>(() => loadStr(LS_API_KEY, ""));
@@ -26,7 +34,7 @@ export default function ChatView(): JSX.Element {
   const [titleDraft, setTitleDraft] = React.useState<string>("");
   const [isEditingTitle, setIsEditingTitle] = React.useState<boolean>(false);
 
-  // ensure at least one conversation, aber ohne sichtbare UI-Änderung
+  // ensure at least one conversation – ohne sichtbare UI-Änderung
   React.useEffect(() => {
     if (!activeId) {
       const id = createConversation({ makeActive: true });
@@ -55,7 +63,7 @@ export default function ChatView(): JSX.Element {
 
   return (
     <div className="w-full h-full min-h-screen flex flex-col bg-white dark:bg-neutral-950">
-      {/* Header – bleibt kompakt, nur ein kleiner Chats-Button rechts */}
+      {/* Header – kompakt, dezent */}
       <header className="border-b border-neutral-200 dark:border-neutral-800 px-4 py-3 flex items-center gap-3">
         {/* Titel (inline-edit optional) */}
         <div className="flex items-center gap-2">
@@ -83,7 +91,10 @@ export default function ChatView(): JSX.Element {
             />
           ) : (
             <>
-              <h1 className="text-base md:text-lg font-semibold text-neutral-900 dark:text-neutral-100 truncate max-w-[55vw]" title={active?.title ?? "Chat"}>
+              <h1
+                className="text-base md:text-lg font-semibold text-neutral-900 dark:text-neutral-100 truncate max-w-[55vw]"
+                title={active?.title ?? "Chat"}
+              >
                 {active?.title ?? "Chat"}
               </h1>
               <button
