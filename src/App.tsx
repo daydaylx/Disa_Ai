@@ -1,15 +1,19 @@
 import * as React from "react";
 import ChatView from "./views/ChatView";
 import Settings from "./views/Settings";
+import StyleProbe from "./components/StyleProbe";
 
 /**
- * Leichtgewichtige App-Shell ohne Router:
- * Tabs: Chat | Einstellungen
+ * App Shell mit Tabs; StyleProbe-Overlay erscheint nur bei ?probe=1
  */
 type Tab = "chat" | "settings";
 
 export default function App(): JSX.Element {
   const [tab, setTab] = React.useState<Tab>("chat");
+  const showProbe = React.useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return new URLSearchParams(window.location.search).has("probe");
+  }, []);
 
   return (
     <div className="h-screen w-screen flex flex-col">
@@ -47,6 +51,8 @@ export default function App(): JSX.Element {
       <div className="flex-1 min-h-0">
         {tab === "chat" ? <ChatView /> : <Settings />}
       </div>
+
+      {showProbe ? <StyleProbe /> : null}
     </div>
   );
 }
