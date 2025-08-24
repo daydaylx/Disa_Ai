@@ -53,18 +53,14 @@ export default function Settings(): JSX.Element {
     selected,
     systemText,
     setSystemText,
-    allowedModelIds,
-    preferFreeHint,
     reload: reloadTemplates,
   } = useStyleTemplate();
 
-  // Modelle – Optionen **ohne** undefined-Felder bauen
+  // Modelle – KEIN Template-Filter mehr (allow wird nicht gesetzt)
   const modelOpts: Parameters<typeof useModel>[0] = {
-    preferFree: true, // stabil: UI soll zuerst free zeigen
+    preferFree: true, // UI soll zuerst free zeigen
     ...(apiKey ? { apiKey } : {}),
-    ...(allowedModelIds.length > 0 ? { allow: allowedModelIds } : {}),
   };
-
   const { model, setModel, list, labelFor } = useModel(modelOpts);
 
   React.useEffect(() => saveStr(LS_API_KEY, apiKey), [apiKey]);
@@ -75,8 +71,6 @@ export default function Settings(): JSX.Element {
     [list, freeOnly]
   );
   const selectedLabel = labelFor(model);
-
-  const allowActive = allowedModelIds.length > 0;
 
   return (
     <div className="mx-auto max-w-5xl p-4 md:p-8">
@@ -96,11 +90,6 @@ export default function Settings(): JSX.Element {
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">Modell</h2>
               <div className="flex items-center gap-2 text-xs">
-                {allowActive && (
-                  <span className="rounded-md border border-indigo-300 dark:border-indigo-700 px-2 py-0.5 text-indigo-700 dark:text-indigo-300" title="durch Stil-Template eingeschränkte Modellliste">
-                    Template-Filter aktiv
-                  </span>
-                )}
                 <span className="text-neutral-500 dark:text-neutral-400">{filtered.length} Modelle</span>
               </div>
             </div>
@@ -212,12 +201,6 @@ export default function Settings(): JSX.Element {
                   {selected.description}
                 </p>
               ) : null}
-
-              {allowActive && (
-                <p className="text-xs text-indigo-700 dark:text-indigo-300">
-                  Diese Vorlage schränkt die Modellliste ein ({allowedModelIds.length} erlaubte IDs).
-                </p>
-              )}
             </div>
 
             <div className="space-y-2">
