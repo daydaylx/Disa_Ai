@@ -110,7 +110,7 @@ export default function Settings() {
         >
           {visibleModels.map(m => (
             <option key={m.id} value={m.id}>
-              {labelForModel(m.id, list)}
+              {labelForModel(m.id)}
             </option>
           ))}
         </select>

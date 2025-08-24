@@ -1,42 +1,62 @@
-import * as React from "react";
-import { MODELS, DEFAULT_MODEL_ID } from "../config/models";
+import React from "react";
+import {
+  DEFAULT_MODEL_ID,
+  loadModelCatalog,
+  type ModelEntry,
+  labelForModel as baseLabelForModel,
+} from "../config/models";
 
-const MODEL_KEY = "disa_model";
+const STORAGE_KEY = "disa.model";
 
-export function useModel(allow?: string[] | null) {
-  const [model, setModel] = React.useState<string>(() => {
-    try { return localStorage.getItem(MODEL_KEY) || DEFAULT_MODEL_ID; } catch { return DEFAULT_MODEL_ID; }
-  });
+type UseModelOpts = {
+  apiKey?: string;
+  allow?: string[] | null;
+  preferFree?: boolean;
+};
+
+export function useModel(opts?: UseModelOpts) {
   const [list, setList] = React.useState<ModelEntry[]>([]);
+  const [model, setModel] = React.useState<string>(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY) ?? DEFAULT_MODEL_ID;
+    } catch {
+      return DEFAULT_MODEL_ID;
+    }
+  });
 
+  // Katalog laden + Model-Fallback erzwingen
   React.useEffect(() => {
-    let alive = true;
+    let cancelled = false;
     (async () => {
-      const apiKeyRaw = typeof localStorage !== "undefined" ? localStorage.getItem("disa_api_key") ?? undefined : undefined;
-
-      const opts: { allow?: string[] | null; preferFree?: boolean; apiKey?: string } = { preferFree: true };
-      if (allow !== undefined) opts.allow = allow;
-      if (apiKeyRaw) opts.apiKey = apiKeyRaw;
-
-      const catalog = await loadModelCatalog(opts);
-      if (!alive) return;
+      const catalog = await loadModelCatalog(opts ?? {});
+      if (cancelled) return;
       setList(catalog);
 
-      if (!catalog.find((m: ModelEntry) => m.id === model)) {
+      if (!catalog.find((m) => m.id === model)) {
         const fallback = catalog[0]?.id ?? DEFAULT_MODEL_ID;
         setModel(fallback);
-        try { localStorage.setItem(MODEL_KEY, fallback); } catch {}
+        try {
+          localStorage.setItem(STORAGE_KEY, fallback);
+        } catch { /* noop */ }
       }
     })();
-    return () => { alive = false; };
-  }, [allow]);
 
-  const current = list.find((m: ModelEntry) => m.id === model) ?? list[0];
+    return () => {
+      cancelled = true;
+    };
+    // opts serialisieren, damit das Effect stabil bleibt
+  }, [model, JSON.stringify(opts)]);
 
-  const save = React.useCallback((next: string) => {
-    setModel(next);
-    try { localStorage.setItem(MODEL_KEY, next); } catch {}
-  }, []);
+  // Persistenz des aktuellen Models
+  React.useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, model);
+    } catch { /* noop */ }
+  }, [model]);
 
-  return { model, setModel: save, list, current };
+  function labelForModel(id: string) {
+    return baseLabelForModel(id, list);
+  }
+
+  return { model, setModel, list, labelForModel };
 }

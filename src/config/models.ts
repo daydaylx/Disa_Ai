@@ -1,77 +1,90 @@
 export interface ModelEntry {
   id: string;
   label: string;
-  free?: boolean;
-  context?: number;
   provider?: string;
+  ctx?: number;
+  tags?: string[];
+  price?: { in: number; out: number };
+  /** Abgeleitet: true, wenn Modell als „free/cheap“ markiert ist (für UI-Filter). */
+  free?: boolean;
 }
 
-export const DEFAULTS: ModelEntry[] = [
-  { id: "mistralai/mistral-nemo:free", label: "Mistral Nemo (free)", free: true },
-  { id: "qwen/qwen-2.5-7b-instruct:free", label: "Qwen 2.5 7B (free)", free: true },
-  { id: "nousresearch/hermes-3-llama-3.1-8b:free", label: "Hermes 3 8B (free)", free: true },
-  { id: "meta-llama/llama-3.3-70b-instruct:free", label: "Llama 3.3 70B (free)", free: true }
-];
-
-export const DEFAULT_MODEL_ID: string =
-  (DEFAULTS[0] ?? { id: "meta-llama/llama-3.3-70b-instruct:free" }).id;
-
-/** optionaler OpenRouter-Fetch (wenn API-Key vorhanden) */
-export async function fetchOpenRouterModels(apiKey?: string, signal?: AbortSignal): Promise<ModelEntry[]> {
-  if (!apiKey) return [];
-  try {
-    const res = await fetch("https://openrouter.ai/api/v1/models", {
-      headers: { Authorization: `Bearer ${apiKey}` },
-      signal: signal ?? null,
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    const items = Array.isArray(data?.data) ? data.data : [];
-    return items.map((m: any) => {
-      const id = String(m.id ?? "");
-      const label = String(m.name ?? m.id ?? "");
-      const free = !!(m.pricing?.prompt === 0 && m.pricing?.completion === 0) || /:free$/.test(id);
-      const context = typeof m.context_length === "number" ? m.context_length : undefined;
-      const provider = typeof m.provider === "string" ? m.provider : undefined;
-      return { id, label, free, context, provider } as ModelEntry;
-    }).filter((m: ModelEntry) => m.id && m.label);
-  } catch {
-    return [];
-  }
-}
-
-/** Merge: defaults + online; optional Allow-Filter; Sortierung: free → alpha */
-export async function loadModelCatalog(opts?: {
+export interface CatalogOptions {
   apiKey?: string;
   allow?: string[] | null;
   preferFree?: boolean;
-  signal?: AbortSignal;
-}): Promise<ModelEntry[]> {
-  const online = await fetchOpenRouterModels(opts?.apiKey, opts?.signal);
-  const merged: Record<string, ModelEntry> = {};
-  for (const m of [...DEFAULTS, ...online]) merged[m.id] = m;
+}
 
-  let list = Object.values(merged);
-  const allow = Array.isArray(opts?.allow) ? opts!.allow! : null;
-  if (allow && allow.length) {
-    const set = new Set(allow);
-    const filtered = list.filter(m => set.has(m.id));
-    if (filtered.length) list = filtered;
+/** Minimal stabiler Katalog – typisiert und konsistent. */
+export const MODELS: ModelEntry[] = [
+  {
+    id: "openrouter/auto",
+    label: "OpenRouter Auto",
+    provider: "openrouter",
+    tags: ["meta", "auto"],
+  },
+  {
+    id: "mistralai/mistral-small",
+    label: "Mistral Small",
+    provider: "mistral",
+    ctx: 32_000,
+    tags: ["code", "cheap"],
+    price: { in: 0.1, out: 0.3 },
+  },
+  {
+    id: "google/gemma-2-9b-it",
+    label: "Gemma 2 9B Instruct",
+    provider: "google",
+    ctx: 8_000,
+    tags: ["code", "cheap"],
+    price: { in: 0.05, out: 0.1 },
+  },
+];
+
+export const DEFAULT_MODEL_ID = "openrouter/auto";
+
+/** Liefert menschenlesbaren Namen; fällt auf id zurück. */
+export function labelForModel(id: string, list: ModelEntry[] = MODELS): string {
+  const m = list.find((x) => x.id === id);
+  return m ? m.label : id;
+}
+
+/**
+ * Katalog-Lader mit:
+ * - allow: Whitelist von IDs
+ * - preferFree: sortiert „free/cheap“ nach vorne
+ * - setzt abgeleitetes Flag `free` (benutzt von Settings.tsx)
+ */
+export async function loadModelCatalog(opts: CatalogOptions = {}): Promise<ModelEntry[]> {
+  const { allow = null, preferFree = false } = opts;
+  let list = MODELS;
+
+  if (allow && allow.length > 0) {
+    const allowSet = new Set(allow);
+    list = list.filter((m) => allowSet.has(m.id));
   }
-  list.sort((a, b) => (Number(!!b.free) - Number(!!a.free)) || a.label.localeCompare(b.label));
+
+  // abgeleitetes `free`-Flag setzen
+  list = list.map((m) => ({
+    ...m,
+    free: (m.tags?.includes("free") ?? false) || (m.tags?.includes("cheap") ?? false),
+  }));
+
+  if (preferFree) {
+    list = [...list].sort((a, b) => Number(b.free) - Number(a.free));
+  }
+
   return list;
 }
 
-export function chooseDefaultModel(list: ModelEntry[], preferFree = true): string {
-  const nonEmpty: ModelEntry[] = (list && list.length ? list : DEFAULTS);
-  const freePick = preferFree ? nonEmpty.find(m => m.free) : undefined;
-  const chosen: ModelEntry = (freePick ?? nonEmpty[0] ?? DEFAULTS[0]) as ModelEntry;
-  return chosen.id;
+/**
+ * Wählt ein gültiges Default-Modell:
+ * - Wenn currentId vorhanden und im Katalog: nimm das.
+ * - Sonst DEFAULT_MODEL_ID, falls vorhanden.
+ * - Sonst das erste im Katalog.
+ */
+export function chooseDefaultModel(list: ModelEntry[], currentId?: string): string {
+  if (currentId && list.some((m) => m.id === currentId)) return currentId;
+  if (list.some((m) => m.id === DEFAULT_MODEL_ID)) return DEFAULT_MODEL_ID;
+  return list[0]?.id ?? DEFAULT_MODEL_ID;
 }
-
-export function labelForModel(id: string, catalog: ModelEntry[]): string {
-  return (catalog.find(m => m.id === id) ?? DEFAULTS.find(m => m.id === id) ?? { label: id }).label;
-}
-
-/** Legacy-Export, falls irgendwo noch referenziert */
-export const MODELS = DEFAULTS;
