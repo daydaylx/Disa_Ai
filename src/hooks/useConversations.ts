@@ -1,4 +1,5 @@
 import * as React from "react"
+import { newId } from "../utils/id"
 
 export type Role = "system" | "user" | "assistant"
 export type ChatMessage = { id: string; role: Role; content: string; createdAt: number }
@@ -11,7 +12,7 @@ function readJson<T>(key: string, fallback: T): T { try { const raw = localStora
 function writeJson<T>(key: string, value: T) { try { localStorage.setItem(key, JSON.stringify(value)) } catch {} }
 
 export function createConversation(title = "Neue Unterhaltung", modelId?: string): ConversationMeta {
-  const id = crypto.randomUUID()
+  const id = newId()
   const now = Date.now()
   const meta: ConversationMeta = { id, title, createdAt: now, updatedAt: now }
   if (modelId !== undefined) meta.modelId = modelId
@@ -24,7 +25,7 @@ export function getConversationMeta(id: string): ConversationMeta | null { retur
 export function getConversationMessages(id: string): ChatMessage[] { return readJson<ChatMessage[]>(msgsKey(id), []) }
 
 export function appendMessage(id: string, msg: Omit<ChatMessage, "id" | "createdAt"> & { id?: string; createdAt?: number }): ChatMessage {
-  const message: ChatMessage = { id: msg.id ?? crypto.randomUUID(), createdAt: msg.createdAt ?? Date.now(), role: msg.role, content: msg.content }
+  const message: ChatMessage = { id: msg.id ?? newId(), createdAt: msg.createdAt ?? Date.now(), role: msg.role, content: msg.content }
   const list = getConversationMessages(id)
   list.push(message)
   writeJson(msgsKey(id), list)
