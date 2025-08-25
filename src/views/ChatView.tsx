@@ -10,22 +10,16 @@ import { generateRoleStyleText } from "../config/styleEngine"
 import MessageBubble from "../components/MessageBubble"
 import Icon from "../components/Icon"
 import TopBar from "../components/TopBar"
-import DevPanel from "../components/DevPanel"
 import { newId } from "../utils/id"
+import { useConversations, type ChatMessage } from "../hooks/useConversations"
+import ConversationsPanel from "../components/ConversationsPanel"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
-function estimateTokens(text: string): number { if (!text) return 0; return Math.ceil(text.length / 4) }
-function formatUSD(n: number): string { return `$${n.toFixed(n >= 0.01 ? 2 : 4)}` }
-function getQuickPrompts(roleId: string | null): string[] {
-  if (roleId === "legal_generalist") return ["Bitte analysiere diesen Sachverhalt…", "Welche Risiken bestehen hier konkret?", "Formuliere einen Widerspruch in 5 Punkten."]
-  if (roleId === "therapist_expert") return ["Ich stecke fest bei…", "Gib mir 3 Übungen für…", "Wie spreche ich Thema X an?"]
-  if (roleId === "email_professional") return ["Schreibe eine kurze Mail: …", "Entschuldigung professionell formulieren", "Höfliche Erinnerung an Angebot"]
-  if (roleId === "productivity_helper") return ["Baue mir eine Schrittfolge für …", "Erstelle eine kurze Checkliste zu …", "Gib mir eine Vorlage für …"]
-  return ["Brainstorme 3 Optionen für …", "Erkläre mir kurz und knapp …", "Liste mir die Risiken von …", "Fasse das zusammen: …", "Welche nächsten Schritte?"]
-}
-
 export default function ChatView() {
+  const conv = useConversations()
+  const [convId, setConvId] = React.useState<string | null>(null)
+
   const [messages, setMessages] = React.useState<Msg[]>([])
   const [input, setInput] = React.useState("")
   const [streaming, setStreaming] = React.useState(false)
@@ -33,25 +27,18 @@ export default function ChatView() {
   const [autoScroll, setAutoScroll] = React.useState<boolean>(() => !reducedMotion)
   const [isAtBottom, setIsAtBottom] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
-  const [info, setInfo] = React.useState<string | null>(null)
   const [modelId, setModelId] = React.useState<string | null>(getSelectedModelId())
   const [modelReady, setModelReady] = React.useState(false)
   const [models, setModels] = React.useState<ModelEntry[]>([])
   const [cooldown, setCooldown] = React.useState<number>(0)
   const [switchedFrom, setSwitchedFrom] = React.useState<string | null>(null)
-  const [estPrompt, setEstPrompt] = React.useState<number>(0)
-  const [estCompletion, setEstCompletion] = React.useState<number>(0)
-  const [estCost, setEstCost] = React.useState<number>(0)
-  const [devOpen, setDevOpen] = React.useState(false)
-  const [latSamples, setLatSamples] = React.useState<number[]>([])
-  const [costSamples, setCostSamples] = React.useState<number[]>([])
-  const [errorCount, setErrorCount] = React.useState(0)
+  const [panelOpen, setPanelOpen] = React.useState(false)
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
   const abortRef = React.useRef<AbortController | null>(null)
   const bufferRef = React.useRef<string>("")
-  const completionSoFarRef = React.useRef<number>(0)
   const startTimeRef = React.useRef<number>(0)
+  const assistantBufferRef = React.useRef<string>("") // sammelt Streaming-Text
 
   React.useEffect(() => {
     let alive = true
@@ -71,6 +58,18 @@ export default function ChatView() {
     return () => { alive = false }
   }, [])
 
+  // initial conversation selection
+  React.useEffect(() => {
+    if (convId) return
+    const first = conv.items[0]?.id
+    if (first) { setConvId(first); setMessages(mapMsgs(conv.getMessages(first))) }
+    else {
+      const meta = conv.create("Neue Unterhaltung")
+      setConvId(meta.id); setMessages([])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conv.items.length])
+
   React.useEffect(() => {
     if (!autoScroll || !scrollRef.current || !isAtBottom) return
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -88,23 +87,33 @@ export default function ChatView() {
     return () => el?.removeEventListener("scroll", onScroll)
   }, [])
 
-  React.useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.altKey && (e.key === "d" || e.key === "D")) setDevOpen((v) => !v)
-    }
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
-  }, [])
-
   const hasKey = (() => { try { return !!localStorage.getItem("disa:openrouter:key") } catch { return false } })()
 
+  function mapMsgs(list: ChatMessage[]): Msg[] {
+    return list.map(m => ({ id: m.id, role: m.role === "user" ? "user" : "assistant", content: m.content, t: m.createdAt }))
+  }
+
+  function loadConversation(id: string) {
+    setConvId(id)
+    setMessages(mapMsgs(conv.getMessages(id)))
+    setPanelOpen(false)
+  }
+
   function push(role: Msg["role"], content: string) { setMessages((cur) => [...cur, { id: newId(), role, content, t: Date.now() }]) }
-  function appendAssistantChunk(chunk: string) {
+
+  // robustes Anhängen der Assistant-Deltas – ohne direkten Zugriff auf messages[]
+  function appendAssistantDelta(delta: string) {
+    if (!delta) return
+    assistantBufferRef.current += delta
     setMessages((cur) => {
       const next = cur.slice()
       const last = next[next.length - 1]
-      if (!last || last.role !== "assistant") next.push({ id: newId(), role: "assistant", content: chunk, t: Date.now() })
-      else { last.content += chunk; last.t = Date.now() }
+      if (!last || last.role !== "assistant") {
+        next.push({ id: newId(), role: "assistant", content: delta, t: Date.now() })
+      } else {
+        last.content += delta
+        last.t = Date.now()
+      }
       return next
     })
   }
@@ -119,15 +128,9 @@ export default function ChatView() {
       try {
         const obj = JSON.parse(data)
         const delta = obj?.choices?.[0]?.delta?.content ?? obj?.choices?.[0]?.text ?? ""
-        if (delta) {
-          completionSoFarRef.current += estimateTokens(delta)
-          appendAssistantChunk(delta)
-        }
+        if (delta) appendAssistantDelta(delta)
       } catch {
-        if (data) {
-          completionSoFarRef.current += estimateTokens(data)
-          appendAssistantChunk(data)
-        }
+        if (data) appendAssistantDelta(data)
       }
     }
   }
@@ -149,48 +152,27 @@ export default function ChatView() {
 
   function currentModel(): ModelEntry | null { if (!modelId) return null; return models.find(m => m.id === modelId) ?? null }
 
-  function recalcEstimate(nextInput?: string) {
-    const roleTmpl = getRoleById(getTemplateId())
-    const base = buildSystemPrompt({ nsfw: getNSFW(), style: getStyle(), locale: "de-DE" })
-    const roleStyle = generateRoleStyleText(roleTmpl?.id ?? null, getStyle(), getUseRoleStyle())
-    const system = [roleTmpl?.system ?? "", base, roleStyle].filter(Boolean).join("\n\n")
-    const hist = messages.filter(m => m.role !== "system").map(m => m.content).join("\n")
-    const proposed = (nextInput ?? input).trim()
-    const promptTokens = estimateTokens(system) + estimateTokens(hist) + estimateTokens(proposed)
-    const model = currentModel()
-    const price = model?.price
-    const estOut = Math.max(estimateTokens(proposed) * 0.6 | 0, 150)
-    const cost = price ? ((promptTokens / 1_000_000) * price.in + (estOut / 1_000_000) * price.out) : 0
-    setEstPrompt(promptTokens)
-    setEstCompletion(estOut)
-    setEstCost(cost)
-  }
-
-  React.useEffect(() => { recalcEstimate() }, [input, messages, modelId])
-
-  function showInfo(msg: string) { setInfo(msg); window.setTimeout(() => setInfo(null), 1800) }
-
   function handleCommand(raw: string): boolean {
     const s = raw.trim()
     if (!s.startsWith("/")) return false
     const [cmd, ...rest] = s.slice(1).split(/\s+/)
     const arg = rest.join(" ").trim()
-    if (cmd === "nsfw") { const on = ["on","true","1","an","ja"].includes(arg.toLowerCase()); setNSFWSetting(on); showInfo(`NSFW ${on ? "aktiviert" : "deaktiviert"}`); return true }
+    if (cmd === "nsfw") { const on = ["on","true","1","an","ja"].includes(arg.toLowerCase()); setNSFWSetting(on); return true }
     if (cmd === "style") {
       const ok = ["neutral","blunt_de","concise","friendly","creative_light","minimal"]
       const key = arg as any
-      if (ok.includes(key)) { setStyleSetting(key); showInfo(`Stil: ${key}`); recalcEstimate(""); return true }
+      if (ok.includes(key)) { setStyleSetting(key); return true }
       setError("Unbekannter Stil."); return true
     }
     if (cmd === "role") {
       const all = ["neutral","email_professional","sarcastic_direct","therapist_expert","legal_generalist","productivity_helper","ebay_coach","language_teacher","fitness_nutrition_coach","uncensored_expert","nsfw_roleplay","erotic_creative_author"]
       const found = all.find(id => id === arg) || all.find(id => id.includes(arg))
-      if (found) { setTemplateId(found); showInfo(`Rolle: ${found}`); recalcEstimate(""); return true }
+      if (found) { setTemplateId(found); return true }
       setError("Rolle nicht gefunden."); return true
     }
     if (cmd === "model") {
       const found = models.find(m => m.id === arg) || models.find(m => m.id.includes(arg))
-      if (found) { setModelId(found.id); setSelectedModelId(found.id); showInfo(`Modell: ${found.id}`); recalcEstimate(""); return true }
+      if (found) { setModelId(found.id); setSelectedModelId(found.id); return true }
       setError("Modell nicht gefunden."); return true
     }
     setError("Unbekannter Befehl."); return true
@@ -204,26 +186,29 @@ export default function ChatView() {
     const text = raw.trim()
     if (!text || streaming) return
     if (!hasKey) { setError("Kein OpenRouter API-Key gespeichert."); return }
+    if (!convId) { const m = conv.create("Neue Unterhaltung"); setConvId(m.id) }
 
     let chosenModel = modelId
     const roleTmpl = getRoleById(getTemplateId())
     if (roleTmpl?.allow && roleTmpl.allow.length > 0 && chosenModel && !roleTmpl.allow.includes(chosenModel)) {
       const firstAllowed = models.find(m => roleTmpl.allow!.includes(m.id))?.id
       if (firstAllowed) {
-        setSwitchedFrom(chosenModel)
+        setSwitchedFrom(chosenModel!)
         chosenModel = firstAllowed
         setModelId(firstAllowed)
         setSelectedModelId(firstAllowed)
-        showInfo(`Modell automatisch gewechselt → ${firstAllowed}`)
       }
     }
     if (!chosenModel) { setError("Kein Modell ausgewählt/verfügbar."); return }
 
     setInput("")
     push("user", text)
+    // persist user message
+    if (convId) conv.append(convId, { role: "user", content: text })
+
     setStreaming(true)
     bufferRef.current = ""
-    completionSoFarRef.current = 0
+    assistantBufferRef.current = "" // Reset für aktuelle Antwort
     startTimeRef.current = performance.now()
 
     const base = buildSystemPrompt({ nsfw: getNSFW(), style: getStyle(), locale: "de-DE" })
@@ -262,26 +247,20 @@ export default function ChatView() {
               }, 1000)
             } else {
               setError(err instanceof Error ? err.message : String(err))
-              setErrorCount((n)=>n+1)
             }
             setStreaming(false)
           },
           onComplete: () => {
             try { parseSSE("\n\n", true) } catch {}
             setStreaming(false)
-            const end = performance.now()
-            const latency = end - startTimeRef.current
-            setLatSamples(s => [...s.slice(-99), latency])
-            const m = currentModel()
-            const price = m?.price
-            const realCost = price ? ((estPrompt / 1_000_000) * price.in + (completionSoFarRef.current / 1_000_000) * price.out) : 0
-            setCostSamples(s => [...s.slice(-99), realCost])
+            // persistierte Assistant-Antwort aus Buffer
+            const assistant = assistantBufferRef.current
+            if (assistant && convId) conv.append(convId, { role: "assistant", content: assistant })
           }
         }
       )
     } catch (e: any) {
       setError(e?.message ?? String(e))
-      setErrorCount((n)=>n+1)
       setStreaming(false)
       abortRef.current = null
       return
@@ -293,14 +272,10 @@ export default function ChatView() {
   async function copyMessage(text: string) { try { await navigator.clipboard.writeText(text) } catch {} }
 
   const charCount = input.length
-  const model = currentModel()
-  const price = model?.price
-  const estCostText = price ? formatUSD(estCost) : "—"
-  const estTokText = `${estPrompt} + ~${estCompletion}`
 
   return (
     <div className="min-h-[100svh] sm:h-[100svh] flex flex-col pb-[env(safe-area-inset-bottom)] bg-[radial-gradient(60%_60%_at_0%_0%,rgba(59,130,246,0.08),transparent_60%),radial-gradient(50%_60%_at_100%_0%,rgba(147,51,234,0.08),transparent_60%)]">
-      <TopBar />
+      <TopBar onOpenConversations={() => setPanelOpen(true)} />
 
       {!hasKey && (
         <div className="p-3">
@@ -329,14 +304,7 @@ export default function ChatView() {
               <Icon name="sparkles" width="18" height="18" />
               <span>Neue Unterhaltung</span>
             </div>
-            <div className="text-sm opacity-80 mb-3">Wähle einen Startprompt oder tippe unten. Befehle: <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/role</code>, <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/style</code>, <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/nsfw</code>, <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/model</code>. Dev mit Alt+D.</div>
-            <div className="flex flex-wrap gap-2">
-              {getQuickPrompts(getRoleById(getTemplateId())?.id ?? null).map((p, i) => (
-                <button key={i} type="button" onClick={() => { setInput(p); }} className="text-xs px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">
-                  {p}
-                </button>
-              ))}
-            </div>
+            <div className="text-sm opacity-80">Tippe unten. Befehle: <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/role</code>, <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/style</code>, <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/nsfw</code>, <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/model</code>.</div>
           </div>
         )}
         {messages.map((m) => {
@@ -363,14 +331,9 @@ export default function ChatView() {
               </label>
               <span className="opacity-60">Zeichen:</span>
               <span>{charCount}</span>
-              <span className="opacity-60">•</span>
-              <span>≈ Tokens: {estTokText}</span>
-              <span className="opacity-60">•</span>
-              <span>≈ Kosten: {price ? formatUSD(estCost) : "—"}</span>
               {cooldown > 0 && (<><span className="opacity-60">•</span><span>Warte {cooldown}s</span></>)}
               <div className="ml-auto inline-flex items-center gap-2">
-                <button type="button" onClick={() => setDevOpen(v => !v)} className="px-2 py-1 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">Dev</button>
-                {info && <span className="text-blue-600 dark:text-blue-400">{info}</span>}
+                <button type="button" onClick={() => { const meta = conv.create("Neue Unterhaltung"); loadConversation(meta.id) }} className="px-2 py-1 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">Neu</button>
                 <a href="#/settings" className="hidden sm:inline underline">Einstellungen</a>
               </div>
               {error && <span className="text-red-600 dark:text-red-400" role="alert">• {error}</span>}
@@ -381,7 +344,7 @@ export default function ChatView() {
               <textarea
                 id="chat-input"
                 value={input}
-                onChange={(e) => { setInput(e.target.value); }}
+                onChange={(e) => setInput(e.target.value)}
                 onKeyDown={onKeyDown}
                 placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)"
                 aria-label="Nachricht eingeben"
@@ -423,7 +386,7 @@ export default function ChatView() {
         </div>
       </div>
 
-      <DevPanel open={devOpen} onClose={()=>setDevOpen(false)} samples={latSamples} costs={costSamples} lastCost={costSamples[costSamples.length-1]||0} errors={errorCount} />
+      <ConversationsPanel open={panelOpen} onClose={()=>setPanelOpen(false)} currentId={convId} onSelect={loadConversation} />
     </div>
   )
 }
