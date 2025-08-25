@@ -43,7 +43,12 @@ export async function fetchJson<T>(path: string, init: FetchJsonOptions = {}): P
     let payload: any
     try { payload = JSON.parse(text) } catch { payload = { error: text } }
     const msg = payload?.error?.message ?? payload?.error ?? text ?? `HTTP ${res.status}`
-    throw new Error(`OpenRouter ${res.status}: ${msg}`)
+    const err: any = new Error(`OpenRouter ${res.status}: ${msg}`)
+    err.name = "HttpError"
+    err.status = res.status
+    const ra = res.headers.get("retry-after")
+    err.retryAfter = ra ? parseInt(ra) || 0 : 0
+    throw err
   }
   return JSON.parse(text) as T
 }
@@ -54,7 +59,17 @@ export async function streamChatCompletion(body: unknown, cb: StreamCallback, in
   const headers: Record<string, string> = { "Content-Type": "application/json", "Accept": "text/event-stream" }
   if (effectiveKey) { headers["Authorization"] = `Bearer ${effectiveKey}`; headers["HTTP-Referer"] = location.origin; headers["X-Title"] = "Disa AI" }
   const res = await fetch(`${OPENROUTER_BASE}/chat/completions`, { method: "POST", headers, body: JSON.stringify(body), signal: controller.signal })
-  if (!res.ok || !res.body) { const text = await res.text().catch(() => ""); cb.onError?.(new Error(`Streaming failed ${res.status}: ${text}`)); controller.abort(); return controller }
+  if (!res.ok || !res.body) {
+    const text = await res.text().catch(() => "")
+    const err: any = new Error(`Streaming failed ${res.status}: ${text}`)
+    err.name = "HttpError"
+    err.status = res.status
+    const ra = res.headers.get("retry-after")
+    err.retryAfter = ra ? parseInt(ra) || 0 : 0
+    cb.onError?.(err)
+    controller.abort()
+    return controller
+  }
   const reader = res.body.getReader()
   const dec = new TextDecoder()
   let done = false
