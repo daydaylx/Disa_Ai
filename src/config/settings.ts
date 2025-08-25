@@ -2,6 +2,7 @@ const MODEL_KEY = "disa:settings:modelId"
 const NSFW_KEY = "disa:settings:nsfw"
 const STYLE_KEY = "disa:settings:style"
 const TEMPLATE_KEY = "disa:settings:templateId"
+const ROLESTYLE_KEY = "disa:settings:useRoleStyle"
 
 export function getSelectedModelId(): string | null { try { return localStorage.getItem(MODEL_KEY) } catch { return null } }
 export function setSelectedModelId(id: string) { try { localStorage.setItem(MODEL_KEY, id) } catch {} }
@@ -15,3 +16,6 @@ export function setStyle(k: StyleKey) { try { localStorage.setItem(STYLE_KEY, k)
 
 export function getTemplateId(): string | null { try { return localStorage.getItem(TEMPLATE_KEY) } catch { return null } }
 export function setTemplateId(id: string | null) { try { if (id) localStorage.setItem(TEMPLATE_KEY, id); else localStorage.removeItem(TEMPLATE_KEY) } catch {} }
+
+export function getUseRoleStyle(): boolean { try { const raw = localStorage.getItem(ROLESTYLE_KEY); return raw === null ? true : raw === "1" || raw === "true" } catch { return true } }
+export function setUseRoleStyle(on: boolean) { try { localStorage.setItem(ROLESTYLE_KEY, on ? "1" : "0") } catch {} }

@@ -1,11 +1,12 @@
 import React from "react"
 import InlineBanner from "../components/InlineBanner"
 import { streamChatCompletion } from "../services/openrouter"
-import { getSelectedModelId, getNSFW, getStyle, getTemplateId } from "../config/settings"
+import { getSelectedModelId, getNSFW, getStyle, getTemplateId, getUseRoleStyle } from "../config/settings"
 import { loadModelCatalog, chooseDefaultModel } from "../config/models"
 import { buildSystemPrompt } from "../config/promptStyles"
 import { useReducedMotion } from "../hooks/useReducedMotion"
 import { getRoleById } from "../config/promptTemplates"
+import { generateRoleStyleText } from "../config/styleEngine"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
@@ -83,10 +84,22 @@ export default function ChatView() {
     push("user", text)
     setStreaming(true)
     bufferRef.current = ""
+
     const roleTmpl = getRoleById(getTemplateId())
     const base = buildSystemPrompt({ nsfw: getNSFW(), style: getStyle(), locale: "de-DE" })
-    const system = [roleTmpl?.system ?? "", base].filter(Boolean).join("\n\n")
-    const body = { model: modelId, stream: true, messages: [{ role: "system", content: system }, ...messages.filter((m) => m.role !== "system").map((m) => ({ role: m.role, content: m.content })), { role: "user", content: text }] }
+    const roleStyle = generateRoleStyleText(roleTmpl?.id ?? null, getStyle(), getUseRoleStyle())
+    const system = [roleTmpl?.system ?? "", base, roleStyle].filter(Boolean).join("\n\n")
+
+    const body = {
+      model: modelId,
+      stream: true,
+      messages: [
+        { role: "system", content: system },
+        ...messages.filter((m) => m.role !== "system").map((m) => ({ role: m.role, content: m.content })),
+        { role: "user", content: text }
+      ]
+    }
+
     try {
       abortRef.current = await streamChatCompletion(body, { onChunk: (raw) => parseSSE(raw), onError: (err) => setError(err instanceof Error ? err.message : String(err)), onComplete: () => {} })
     } catch (e: any) {
@@ -135,7 +148,7 @@ export default function ChatView() {
             <input type="checkbox" checked={autoScroll} onChange={(e) => setAutoScroll(e.target.checked)} aria-label="Automatisches Scrollen aktivieren" />
             Auto-Scroll
           </label>
-          <span className="opacity-60">Modell:</span>
+        <span className="opacity-60">Modell:</span>
           <span className="px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800/70">{modelReady ? (modelId ?? "—") : "lade…"}</span>
           <a href="#/settings" className="underline">ändern</a>
           {error && <span className="text-red-600 dark:text-red-400" role="alert">• {error}</span>}
