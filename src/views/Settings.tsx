@@ -1,237 +1,84 @@
-import * as React from "react";
-import { useModel } from "../hooks/useModel";
-import { labelForModel } from "../config/models";
-import { useStyleTemplate } from "../hooks/useStyleTemplate";
+import React from "react"
+import ModelPicker from "../components/ModelPicker"
+import InlineBanner from "../components/InlineBanner"
+import { setApiKey, getApiKey } from "../services/openrouter"
+import { getSelectedModelId, setSelectedModelId, getNSFW, setNSFW, getStyle, setStyle, type StyleKey } from "../config/settings"
 
-const LS_FREE_ONLY = "disa:settings:freeOnly";
-const LS_API_KEY = "disa:settings:apiKey";
+const STYLE_OPTIONS: { value: StyleKey; label: string }[] = [
+  { value: "blunt_de", label: "Direkt & kritisch (empfohlen)" },
+  { value: "neutral", label: "Neutral" },
+  { value: "concise", label: "Sehr knapp" },
+  { value: "friendly", label: "Freundlich" },
+  { value: "creative_light", label: "Etwas bildhaft" },
+  { value: "minimal", label: "Nur Antwort" }
+]
 
-function loadBool(key: string, def: boolean): boolean {
-  if (typeof window === "undefined") return def;
-  try {
-    const v = window.localStorage.getItem(key);
-    if (v === null) return def;
-    return v === "1" || v === "true";
-  } catch {
-    return def;
-  }
-}
-function saveBool(key: string, v: boolean): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(key, v ? "1" : "0");
-  } catch {}
-}
-function loadStr(key: string, def = ""): string {
-  if (typeof window === "undefined") return def;
-  try {
-    const v = window.localStorage.getItem(key);
-    return v ?? def;
-  } catch {
-    return def;
-  }
-}
-function saveStr(key: string, v: string): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(key, v);
-  } catch {}
-}
+export default function SettingsView() {
+  const [key, setKey] = React.useState<string>(getApiKey() ?? "")
+  const [modelId, setModelId] = React.useState<string | null>(getSelectedModelId())
+  const [nsfw, setNsfw] = React.useState<boolean>(getNSFW())
+  const [style, setStyleState] = React.useState<StyleKey>(getStyle())
 
-export default function Settings(): JSX.Element {
-  // Persistente Settings
-  const [apiKey, setApiKey] = React.useState<string>(() => loadStr(LS_API_KEY, ""));
-  const [freeOnly, setFreeOnly] = React.useState<boolean>(() => loadBool(LS_FREE_ONLY, false));
+  function saveKey() { setApiKey(key.trim()) }
+  function clearKey() { setKey(""); setApiKey("") }
+  function onChoose(id: string) { setModelId(id); setSelectedModelId(id) }
+  function onToggleNSFW(e: React.ChangeEvent<HTMLInputElement>) { setNsfw(e.target.checked); setNSFW(e.target.checked) }
+  function onStyleChange(e: React.ChangeEvent<HTMLSelectElement>) { const val = e.target.value as StyleKey; setStyleState(val); setStyle(val) }
 
-  // Styles / Systemprompts aus /styles.json (Fallback /style.json)
-  const {
-    list: tplList,
-    loading: tplLoading,
-    error: tplError,
-    templateId,
-    setTemplateId,
-    selected,
-    systemText,
-    setSystemText,
-    reload: reloadTemplates,
-  } = useStyleTemplate();
-
-  // Modelle – KEIN Template-Filter mehr (allow wird nicht gesetzt)
-  const modelOpts: Parameters<typeof useModel>[0] = {
-    preferFree: true, // UI soll zuerst free zeigen
-    ...(apiKey ? { apiKey } : {}),
-  };
-  const { model, setModel, list, labelFor } = useModel(modelOpts);
-
-  React.useEffect(() => saveStr(LS_API_KEY, apiKey), [apiKey]);
-  React.useEffect(() => saveBool(LS_FREE_ONLY, freeOnly), [freeOnly]);
-
-  const filtered = React.useMemo(
-    () => (freeOnly ? list.filter((m) => m.free) : list),
-    [list, freeOnly]
-  );
-  const selectedLabel = labelFor(model);
+  const hasKey = !!(getApiKey() ?? "")
 
   return (
-    <div className="mx-auto max-w-5xl p-4 md:p-8">
-      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 shadow-sm">
-        <div className="px-5 py-4 border-b border-neutral-200 dark:border-neutral-800">
-          <h1 className="text-lg md:text-xl font-semibold text-neutral-900 dark:text-neutral-50">
-            Einstellungen
-          </h1>
-          <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-            Modellwahl, kostenlose Filter, OpenRouter-Key und Stil-Templates aus <code>/styles.json</code>.
-          </p>
+    <div className="max-w-4xl mx-auto p-4 md:p-6">
+      {!hasKey && (<InlineBanner tone="warn" title="Kein OpenRouter API-Key gespeichert.">Ohne Key kann nicht gechattet werden.</InlineBanner>)}
+
+      <section className="mt-4">
+        <h2 className="text-lg font-semibold mb-2">API-Key</h2>
+        <div className="flex flex-col md:flex-row gap-2">
+          <label className="sr-only" htmlFor="api-key">OpenRouter API-Key</label>
+          <input
+            id="api-key"
+            type="password"
+            autoComplete="off"
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            placeholder="sk-or-…"
+            aria-describedby="api-key-help"
+            className="px-3 py-2 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 w-full md:w-96 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
+          />
+          <div className="flex gap-2">
+            <button type="button" onClick={saveKey} className="px-3 py-2 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">Speichern</button>
+            <button type="button" onClick={clearKey} className="px-3 py-2 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">Löschen</button>
+          </div>
         </div>
+        <p id="api-key-help" className="text-xs opacity-70 mt-1">Wird nur lokal gespeichert.</p>
+      </section>
 
-        <div className="p-5 space-y-10">
-          {/* Modell-Auswahl */}
-          <section className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">Modell</h2>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-neutral-500 dark:text-neutral-400">{filtered.length} Modelle</span>
-              </div>
-            </div>
-
-            <div
-              className="max-w-full md:max-w-xl truncate text-sm text-neutral-800 dark:text-neutral-200"
-              title={selectedLabel}
-            >
-              Ausgewählt: {selectedLabel}
-            </div>
-
-            <select
-              id="model"
-              className="block w-full md:max-w-xl rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 py-2 px-3 outline-none focus:ring-2 focus:ring-indigo-500"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-            >
-              {filtered.map((m) => {
-                const label = labelForModel(m.id, list);
-                return (
-                  <option key={m.id} value={m.id} title={`${label} — ${m.provider}`}>
-                    {label} — {m.provider}{m.free ? " (FREE)" : ""}
-                  </option>
-                );
-              })}
-            </select>
-
-            <div className="flex items-center justify-between">
-              <label className="inline-flex items-center gap-2 select-none">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 accent-indigo-600"
-                  checked={freeOnly}
-                  onChange={(e) => setFreeOnly(e.target.checked)}
-                />
-                <span className="text-sm text-neutral-800 dark:text-neutral-200">
-                  Nur kostenlose Modelle anzeigen
-                </span>
-              </label>
-            </div>
-          </section>
-
-          {/* API-Key */}
-          <section className="space-y-2">
-            <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">OpenRouter</h2>
-            <label
-              htmlFor="apikey"
-              className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
-            >
-              API-Key (optional, lokal gespeichert)
-            </label>
-            <input
-              id="apikey"
-              type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              className="block w-full md:max-w-xl rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 caret-neutral-700 dark:caret-neutral-200 py-2 px-3 outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="sk-or-…"
-            />
-          </section>
-
-          {/* Stil-Templates */}
-          <section className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                Stil-Templates (Systemprompts)
-              </h2>
-              <div className="flex items-center gap-3">
-                {tplLoading ? (
-                  <span className="text-xs text-neutral-500">Lade …</span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={reloadTemplates}
-                    className="text-xs rounded-md border border-neutral-300 dark:border-neutral-700 px-2 py-1 hover:bg-neutral-50 dark:hover:bg-neutral-900"
-                    title="Neu laden (liest /styles.json oder /style.json)"
-                  >
-                    Neu laden
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {tplError ? (
-              <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-md p-3">
-                {tplError}
-              </div>
-            ) : null}
-
-            <div className="space-y-2">
-              <label htmlFor="template" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                Vorlage
-              </label>
-              <select
-                id="template"
-                className="block w-full md:max-w-xl rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 py-2 px-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                value={templateId}
-                onChange={(e) => setTemplateId(e.target.value)}
-              >
-                {tplList.map((t) => (
-                  <option key={t.id} value={t.id} title={t.description ?? t.name}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-
-              {selected?.description ? (
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  {selected.description}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="systemText" className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                Systemprompt (Edit = Override, wird pro Vorlage gespeichert)
-              </label>
-              <textarea
-                id="systemText"
-                value={systemText}
-                onChange={(e) => setSystemText(e.target.value)}
-                className="block w-full h-48 md:h-56 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 caret-neutral-700 dark:caret-neutral-200 p-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Systemprompt …"
-              />
-              <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
-                <span>{systemText.length} Zeichen</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const base = selected?.system ?? "";
-                    setSystemText(base);
-                  }}
-                  className="rounded-md border border-neutral-300 dark:border-neutral-700 px-2 py-1 hover:bg-neutral-50 dark:hover:bg-neutral-900"
-                  title="Override auf Vorlagenstandard zurücksetzen"
-                >
-                  Auf Vorlagenstandard zurücksetzen
-                </button>
-              </div>
-            </div>
-          </section>
+      <section className="mt-8">
+        <h2 className="text-lg font-semibold mb-2">Inhalts-Einstellungen</h2>
+        <div className="flex flex-col md:flex-row gap-4 md:items-center">
+          <label className="flex items-center gap-2 select-none">
+            <input type="checkbox" checked={nsfw} onChange={onToggleNSFW} aria-label="NSFW Inhalte erlauben (18+)" />
+            NSFW (18+) erlauben
+          </label>
+          <div className="text-xs opacity-70">Erlaubt erwachsene Themen (legal, providerabhängig). Tabus: Minderjährige, Zwang, illegale Inhalte.</div>
         </div>
-      </div>
+        <div className="mt-4">
+          <label className="block text-sm mb-1" htmlFor="style-select">Antwort-Stil</label>
+          <select
+            id="style-select"
+            value={style}
+            onChange={onStyleChange}
+            className="px-3 py-2 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
+          >
+            {STYLE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-lg font-semibold mb-2">Modell auswählen</h2>
+        <ModelPicker value={modelId} onChange={onChoose} />
+      </section>
     </div>
-  );
+  )
 }

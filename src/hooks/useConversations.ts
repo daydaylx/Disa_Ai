@@ -1,91 +1,24 @@
 import * as React from "react";
-import type { ChatMessage } from "../types/chat";
-import { sendChat } from "../services/chatPipeline";
+import { sendChat, type ChatMessage as ApiMessage } from "../services/chatPipeline";
 
-// ==== Types ====
+/* Lokaler Nachrichtentyp: erweitert API-Message um Meta */
+export interface ChatMessage extends ApiMessage {
+  meta?: {
+    id?: string;
+    conversationId?: string;
+    timestamp?: number;
+    tokenCount?: number;
+    status?: "sending" | "sent" | "error";
+  };
+}
 
 export interface ConversationMeta {
   id: string;
   title: string;
-  model: string;
   createdAt: number;
   updatedAt: number;
-  archived: boolean;
-}
-
-export interface CreateConversationOptions {
-  title?: string;
-  model?: string;
-  makeActive?: boolean;
-}
-
-export interface SendOptions {
-  apiKey: string;
   model: string;
-  systemText?: string;
-  input: string;
-  stream?: boolean;
-  modelCtx?: number;
-  reservedTokens?: number;
-  abortSignal?: AbortSignal;
-  temperature?: number;
-  maxTokens?: number;
-  referer?: string;
-  title?: string;
-  onDelta?: (delta: string, full: string) => void;
 }
-
-// ==== Storage Keys & Helpers ====
-
-const LS_CONV_LIST = "disa:conv:list"; // JSON Array<ConversationMeta>
-function LS_MSG_KEY(id: string): string {
-  return `disa:conv:${id}:msgs`; // JSON Array<ChatMessage>
-}
-
-function now(): number {
-  return Date.now ? Date.now() : new Date().getTime();
-}
-
-function uid(): string {
-  // Zeit-basiert + random – stabil genug für clientseitige IDs
-  return `${now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-function safeGet<T>(key: string, fallback: T): T {
-  if (typeof window === "undefined") return fallback;
-  try {
-    const raw = window.localStorage.getItem(key);
-    if (!raw) return fallback;
-    const parsed = JSON.parse(raw) as unknown;
-    return (parsed as T) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function safeSet<T>(key: string, val: T): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(key, JSON.stringify(val));
-  } catch {
-    /* ignore quota */
-  }
-}
-
-function loadMessages(id: string): ChatMessage[] {
-  return safeGet<ChatMessage[]>(LS_MSG_KEY(id), []);
-}
-
-function saveMessages(id: string, msgs: ChatMessage[]): void {
-  safeSet(LS_MSG_KEY(id), msgs);
-}
-
-function clampArray<T>(arr: T[], max: number): T[] {
-  if (arr.length <= max) return arr;
-  return arr.slice(arr.length - max); // nur jüngste behalten
-}
-
-// ==== Hook ====
 
 export interface UseConversations {
   list: ConversationMeta[];
@@ -93,244 +26,319 @@ export interface UseConversations {
   active: ConversationMeta | null;
   messages: ChatMessage[];
 
-  createConversation: (opts?: CreateConversationOptions) => string;
+  createConversation: (opts?: { makeActive?: boolean }) => string;
   duplicateConversation: (id: string) => string;
-  renameConversation: (id: string, title: string) => void;
   deleteConversation: (id: string) => void;
+  renameConversation: (id: string, title: string) => void;
   setActiveConversation: (id: string | null) => void;
-  clearConversation: (id: string) => void;
 
-  appendMessage: (id: string, msg: ChatMessage) => void;
-  updateLastAssistantMessage: (id: string, content: string) => void;
-
-  sendWithPipeline: (conversationId: string, opts: SendOptions) => Promise<void>;
+  sendWithPipeline: (
+    conversationId: string,
+    opts: {
+      apiKey: string;
+      model: string;
+      systemText?: string;
+      input: string;
+      stream?: boolean;
+      abortSignal?: AbortSignal;
+      temperature?: number;
+      maxTokens?: number;
+      referer?: string;
+      title?: string;
+      onDelta?: (delta: string) => void;
+    }
+  ) => Promise<void>;
 }
 
-export function useConversations(initialModel: string = "mistral/mistral-7b-instruct"): UseConversations {
-  const [list, setList] = React.useState<ConversationMeta[]>(() => {
-    const l = safeGet<ConversationMeta[]>(LS_CONV_LIST, []);
-    if (l.length > 0) return l.sort((a, b) => b.updatedAt - a.updatedAt);
-    // initiale Konvo
-    const first: ConversationMeta = {
-      id: uid(),
-      title: "Neuer Chat",
-      model: initialModel,
-      createdAt: now(),
-      updatedAt: now(),
-      archived: false,
-    };
-    safeSet(LS_CONV_LIST, [first]);
-    saveMessages(first.id, []);
-    return [first];
+/* Storage-Keys */
+const LS_CONV_INDEX = "disa:conv:index"; // string[] IDs (order: newest first)
+const metaKey = (id: string) => \`disa:conv:\${id}:meta\`; // ConversationMeta
+const msgsKey = (id: string) => \`disa:conv:\${id}:msgs\`; // ChatMessage[]
+
+/* Helpers */
+function now(): number {
+  return Date.now();
+}
+function safeParse<T>(raw: string | null, fallback: T): T {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+}
+function write(key: string, value: unknown): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* ignore quota */
+  }
+}
+function read<T>(key: string, fallback: T): T {
+  try {
+    const v = localStorage.getItem(key);
+    return safeParse<T>(v, fallback);
+  } catch {
+    return fallback;
+  }
+}
+function genId(): string {
+  return \`\${now().toString(36)}-\${Math.random().toString(36).slice(2, 8)}\`;
+}
+
+export function useConversations(): UseConversations {
+  const [index, setIndex] = React.useState<string[]>(() =>
+    read<string[]>(LS_CONV_INDEX, [])
+  );
+
+  const initialActiveId: string | null = (() => {
+    const ids = read<string[]>(LS_CONV_INDEX, []);
+    return ids.length > 0 ? ids[0]! : null;
+  })();
+  const [activeId, setActiveId] = React.useState<string | null>(initialActiveId);
+
+  const list: ConversationMeta[] = React.useMemo(() => {
+    const items: ConversationMeta[] = [];
+    for (const id of index) {
+      const meta = read<ConversationMeta>(metaKey(id), {
+        id,
+        title: "Neuer Chat",
+        createdAt: now(),
+        updatedAt: now(),
+        model: "mistral/mistral-7b-instruct",
+      });
+      items.push(meta);
+    }
+    return items;
+  }, [index]);
+
+  const active: ConversationMeta | null = React.useMemo(() => {
+    if (!activeId) return null;
+    return list.find((c) => c.id === activeId) ?? null;
+  }, [activeId, list]);
+
+  const [messages, setMessages] = React.useState<ChatMessage[]>(() => {
+    if (!activeId) return [];
+    return read<ChatMessage[]>(msgsKey(activeId), []);
   });
 
-  const [activeId, setActiveId] = React.useState<string | null>(() => list[0]?.id ?? null);
-  const active = React.useMemo(() => (activeId ? list.find((c) => c.id === activeId) ?? null : null), [list, activeId]);
-  const [messages, setMessages] = React.useState<ChatMessage[]>(() => (active ? loadMessages(active.id) : []));
-
+  // Laden der Nachrichten bei Wechsel
   React.useEffect(() => {
-    setMessages(active ? loadMessages(active.id) : []);
-  }, [active?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!activeId) {
+      setMessages([]);
+      return;
+    }
+    setMessages(read<ChatMessage[]>(msgsKey(activeId), []));
+  }, [activeId]);
 
-  function persistList(next: ConversationMeta[]): void {
-    const ordered = next.slice().sort((a, b) => b.updatedAt - a.updatedAt);
-    setList(ordered);
-    safeSet(LS_CONV_LIST, ordered);
+  function persistIndex(next: string[]): void {
+    setIndex(next);
+    write(LS_CONV_INDEX, next);
+  }
+  function persistMeta(meta: ConversationMeta): void {
+    write(metaKey(meta.id), meta);
+  }
+  function persistMsgs(id: string, msgs: ChatMessage[]): void {
+    write(msgsKey(id), msgs);
   }
 
-  function touch(id: string): void {
-    persistList(list.map((c) => (c.id === id ? { ...c, updatedAt: now() } : c)));
-  }
-
-  function createConversation(opts?: CreateConversationOptions): string {
-    const id = uid();
+  function createConversation(opts?: { makeActive?: boolean }): string {
+    const id = genId();
     const meta: ConversationMeta = {
       id,
-      title: (opts?.title ?? "Neuer Chat").trim() || "Neuer Chat",
-      model: opts?.model ?? initialModel,
+      title: "Neuer Chat",
       createdAt: now(),
       updatedAt: now(),
-      archived: false,
+      model: "mistral/mistral-7b-instruct",
     };
-    const next = [meta, ...list];
-    persistList(next);
-    saveMessages(id, []);
-    if (opts?.makeActive !== false) {
-      setActiveId(id);
-      setMessages([]);
-    }
+    persistMeta(meta);
+    const nextIndex = [id, ...index];
+    persistIndex(nextIndex);
+    persistMsgs(id, []);
+    if (opts?.makeActive) setActiveId(id);
     return id;
   }
 
   function duplicateConversation(id: string): string {
-    const src = list.find((c) => c.id === id);
-    if (!src) return createConversation();
-    const msgs = loadMessages(id);
-    const newId = uid();
-    const meta: ConversationMeta = {
-      ...src,
-      id: newId,
-      title: `${src.title} (Kopie)`,
+    const srcMeta = read<ConversationMeta>(metaKey(id), {
+      id,
+      title: "Neuer Chat",
       createdAt: now(),
       updatedAt: now(),
-      archived: false,
+      model: "mistral/mistral-7b-instruct",
+    });
+    const srcMsgs = read<ChatMessage[]>(msgsKey(id), []);
+    const nid = genId();
+    const meta: ConversationMeta = {
+      ...srcMeta,
+      id: nid,
+      title: \`\${srcMeta.title} (Kopie)\`,
+      createdAt: now(),
+      updatedAt: now(),
     };
-    persistList([meta, ...list]);
-    saveMessages(newId, msgs);
-    setActiveId(newId);
-    setMessages(msgs);
-    return newId;
-  }
-
-  function renameConversation(id: string, title: string): void {
-    const t = title.trim();
-    persistList(list.map((c) => (c.id === id ? { ...c, title: t.length > 0 ? t : c.title, updatedAt: now() } : c)));
+    persistMeta(meta);
+    persistMsgs(nid, srcMsgs);
+    const nextIndex = [nid, ...index];
+    persistIndex(nextIndex);
+    return nid;
   }
 
   function deleteConversation(id: string): void {
-    const next = list.filter((c) => c.id !== id);
-    persistList(next);
-    // kill messages
-    if (typeof window !== "undefined") {
-      try {
-        window.localStorage.removeItem(LS_MSG_KEY(id));
-      } catch {}
+    try {
+      localStorage.removeItem(metaKey(id));
+      localStorage.removeItem(msgsKey(id));
+    } catch {
+      /* noop */
     }
+    const nextIndex = index.filter((x) => x !== id);
+    persistIndex(nextIndex);
     if (activeId === id) {
-      const newActive = next[0]?.id ?? null;
-      setActiveId(newActive);
-      setMessages(newActive ? loadMessages(newActive) : []);
+      setActiveId(nextIndex[0] ?? null);
     }
+  }
+
+  function renameConversation(id: string, title: string): void {
+    const meta = read<ConversationMeta>(metaKey(id), {
+      id,
+      title: "Neuer Chat",
+      createdAt: now(),
+      updatedAt: now(),
+      model: "mistral/mistral-7b-instruct",
+    });
+    const clean = title.trim();
+    const next: ConversationMeta = { ...meta, title: clean.length > 0 ? clean : meta.title, updatedAt: now() };
+    persistMeta(next);
+    // trigger refresh
+    setIndex((prev) => [...prev]);
   }
 
   function setActiveConversation(id: string | null): void {
     setActiveId(id);
-    if (id) {
-      touch(id);
-      setMessages(loadMessages(id));
-    } else {
-      setMessages([]);
+  }
+
+  async function sendWithPipeline(
+    conversationId: string,
+    opts: {
+      apiKey: string;
+      model: string;
+      systemText?: string;
+      input: string;
+      stream?: boolean;
+      abortSignal?: AbortSignal;
+      temperature?: number;
+      maxTokens?: number;
+      referer?: string;
+      title?: string;
+      onDelta?: (delta: string) => void;
     }
-  }
+  ): Promise<void> {
+    const meta = read<ConversationMeta>(metaKey(conversationId), {
+      id: conversationId,
+      title: "Neuer Chat",
+      createdAt: now(),
+      updatedAt: now(),
+      model: "mistral/mistral-7b-instruct",
+    });
+    const msgs = read<ChatMessage[]>(msgsKey(conversationId), []);
 
-  function clearConversation(id: string): void {
-    saveMessages(id, []);
-    if (activeId === id) setMessages([]);
-    touch(id);
-  }
-
-  function appendMessage(id: string, msg: ChatMessage): void {
-    const msgs = loadMessages(id);
-    const next = clampArray([...msgs, { ...msg }], 2000); // harte Obergrenze
-    saveMessages(id, next);
-    if (activeId === id) setMessages(next);
-    touch(id);
-  }
-
-  function updateLastAssistantMessage(id: string, content: string): void {
-    const msgs = loadMessages(id);
-    for (let i = msgs.length - 1; i >= 0; i--) {
-      const prev = msgs[i];
-      if (prev && prev.role === "assistant") {
-        const updated: ChatMessage = { ...prev, content };
-        msgs[i] = updated;
-        break;
-      }
-    }
-    saveMessages(id, msgs);
-    if (activeId === id) setMessages(msgs);
-    touch(id);
-  }
-
-  async function sendWithPipeline(conversationId: string, opts: SendOptions): Promise<void> {
-    const conv = list.find((c) => c.id === conversationId);
-    if (!conv) throw new Error("Conversation not found");
-
-    const history = loadMessages(conversationId).filter((m) => m.role !== "system");
-    const userInput = opts.input.trim();
-    if (!userInput) return;
-
-    // 1) user message
-    appendMessage(conversationId, { role: "user", content: userInput, meta: { timestamp: now(), status: "sent" } });
-
-    // 2) assistant placeholder
-    appendMessage(conversationId, { role: "assistant", content: "", meta: { timestamp: now(), status: "sending" } });
-
-    // 3) call pipeline (ohne undefined-Felder)
-    const args = {
-      apiKey: opts.apiKey,
-      model: opts.model,
-      ...(opts.systemText ? { systemText: opts.systemText } : {}),
-      history,
-      userInput,
-      stream: opts.stream ?? true,
-      ...(opts.modelCtx !== undefined ? { modelCtx: opts.modelCtx } : {}),
-      ...(opts.reservedTokens !== undefined ? { reservedTokens: opts.reservedTokens } : {}),
-      ...(opts.abortSignal ? { abortSignal: opts.abortSignal } : {}),
-      ...(opts.temperature !== undefined ? { temperature: opts.temperature } : {}),
-      ...(opts.maxTokens !== undefined ? { maxTokens: opts.maxTokens } : {}),
-      ...(opts.referer ? { referer: opts.referer } : {}),
-      ...(opts.title ? { title: opts.title } : {}),
-      memoryScopeId: conversationId,
-      enableMemory: true as const,
+    const userMsg: ChatMessage = {
+      role: "user",
+      content: opts.input,
+      meta: { id: genId(), conversationId, timestamp: now(), status: "sent" },
     };
-    const out = await sendChat(args);
+    const assistantMsgId = genId();
+    const assistantIdx = msgs.length + 1;
 
-    if (out.type === "stream") {
-      let acc = "";
-      for await (const chunk of out.stream) {
-        if (chunk.contentDelta) {
-          acc += chunk.contentDelta;
-          updateLastAssistantMessage(conversationId, acc);
-          if (opts.onDelta) opts.onDelta(chunk.contentDelta, acc);
-        }
-      }
-      // mark sent
-      const msgs = loadMessages(conversationId);
-      for (let i = msgs.length - 1; i >= 0; i--) {
-        const prev = msgs[i];
-        if (prev && prev.role === "assistant") {
-          const updated: ChatMessage = {
-            ...prev,
-            meta: { ...(prev.meta ?? {}), status: "sent" },
-          };
-          msgs[i] = updated;
-          break;
-        }
-      }
-      saveMessages(conversationId, msgs);
-      if (activeId === conversationId) setMessages(msgs);
-      touch(conversationId);
-      return;
+    const assistantPlaceholder: ChatMessage = {
+      role: "assistant",
+      content: "",
+      meta: { id: assistantMsgId, conversationId, timestamp: now(), status: "sending" },
+    };
+
+    const nextMsgs = [...msgs, userMsg, assistantPlaceholder];
+    persistMsgs(conversationId, nextMsgs);
+    if (activeId === conversationId) {
+      setMessages(nextMsgs);
     }
 
-    // non-stream
-    const json = await out.response.json().catch(() => null as unknown);
-    const text = (() => {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        return String((json as any)?.choices?.[0]?.message?.content ?? "");
-      } catch {
-        return "";
+    // Stream-Callback: aktualisiert die Placeholder-Nachricht in localStorage + State
+    const onToken = (delta: string): void => {
+      if (!delta) return;
+      const live = read<ChatMessage[]>(msgsKey(conversationId), []);
+      const idx = assistantIdx;
+      const m = live[idx];
+      if (!m || m.role !== "assistant") return;
+      const updated: ChatMessage = {
+        ...m,
+        content: (m.content ?? "") + delta,
+      };
+      live[idx] = updated;
+      persistMsgs(conversationId, live);
+      if (activeId === conversationId) {
+        setMessages(live);
       }
-    })();
-    updateLastAssistantMessage(conversationId, text);
-    // mark sent
-    const msgs = loadMessages(conversationId);
-    for (let i = msgs.length - 1; i >= 0; i--) {
-      const prev = msgs[i];
-      if (prev && prev.role === "assistant") {
-        const updated: ChatMessage = {
-          ...prev,
-          meta: { ...(prev.meta ?? {}), status: "sent" },
+      if (opts.onDelta) opts.onDelta(delta);
+    };
+
+    try {
+      // exactOptionalPropertyTypes: optionale Felder nur setzen, wenn vorhanden
+      const req: Parameters<typeof sendChat>[0] = {
+        apiKey: opts.apiKey,
+        model: opts.model,
+        stream: true,
+        abortSignal: opts.abortSignal ?? null,
+        // API-Nachrichten: Meta entfernen
+        history: nextMsgs.slice(0, assistantIdx).map<ApiMessage>((m) => ({
+          role: m.role,
+          content: m.content ?? "",
+        })),
+        userInput: "", // userMsg steckt bereits in history
+      };
+      if (typeof opts.systemText === "string") req.systemText = opts.systemText;
+      if (typeof opts.temperature === "number") req.temperature = opts.temperature;
+      if (typeof opts.maxTokens === "number") req.maxTokens = opts.maxTokens;
+      if (opts.referer) req.referer = opts.referer;
+      if (opts.title) req.title = opts.title;
+      req.onToken = onToken;
+
+      const out = await sendChat(req);
+
+      // Abschluss: finaler Text (falls Server am Ende noch was geliefert hat)
+      const finalLive = read<ChatMessage[]>(msgsKey(conversationId), []);
+      const m = finalLive[assistantIdx];
+      if (m && m.role === "assistant") {
+        const finalText = out.content ?? "";
+        finalLive[assistantIdx] = {
+          ...m,
+          content: finalText.length > (m.content ?? "").length ? finalText : m.content,
+          meta: { ...(m.meta ?? {}), status: "sent" },
         };
-        msgs[i] = updated;
-        break;
+        persistMsgs(conversationId, finalLive);
+        if (activeId === conversationId) {
+          setMessages(finalLive);
+        }
+      }
+
+      // Meta updatedAt nach vorne ziehen
+      const updatedMeta: ConversationMeta = { ...meta, updatedAt: now() };
+      persistMeta(updatedMeta);
+      const rest = index.filter((x) => x !== conversationId);
+      persistIndex([conversationId, ...rest]);
+    } catch (e) {
+      const errLive = read<ChatMessage[]>(msgsKey(conversationId), []);
+      const m = errLive[assistantIdx];
+      if (m && m.role === "assistant") {
+        errLive[assistantIdx] = {
+          ...m,
+          content: \`Fehler: \${(e as Error).message}\`,
+          meta: { ...(m.meta ?? {}), status: "error" },
+        };
+        persistMsgs(conversationId, errLive);
+        if (activeId === conversationId) {
+          setMessages(errLive);
+        }
       }
     }
-    saveMessages(conversationId, msgs);
-    if (activeId === conversationId) setMessages(msgs);
-    touch(conversationId);
   }
 
   return {
@@ -340,12 +348,9 @@ export function useConversations(initialModel: string = "mistral/mistral-7b-inst
     messages,
     createConversation,
     duplicateConversation,
-    renameConversation,
     deleteConversation,
+    renameConversation,
     setActiveConversation,
-    clearConversation,
-    appendMessage,
-    updateLastAssistantMessage,
     sendWithPipeline,
   };
 }
