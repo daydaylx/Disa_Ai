@@ -2,7 +2,8 @@ import React from "react"
 import ModelPicker from "../components/ModelPicker"
 import InlineBanner from "../components/InlineBanner"
 import { setApiKey, getApiKey } from "../services/openrouter"
-import { getSelectedModelId, setSelectedModelId, getNSFW, setNSFW, getStyle, setStyle, type StyleKey } from "../config/settings"
+import { getSelectedModelId, setSelectedModelId, getNSFW, setNSFW, getStyle, setStyle, type StyleKey, getTemplateId, setTemplateId } from "../config/settings"
+import { listRoleTemplates, getRoleById } from "../config/promptTemplates"
 
 const STYLE_OPTIONS: { value: StyleKey; label: string }[] = [
   { value: "blunt_de", label: "Direkt & kritisch (empfohlen)" },
@@ -18,14 +19,22 @@ export default function SettingsView() {
   const [modelId, setModelId] = React.useState<string | null>(getSelectedModelId())
   const [nsfw, setNsfw] = React.useState<boolean>(getNSFW())
   const [style, setStyleState] = React.useState<StyleKey>(getStyle())
+  const [templateId, setTemplateIdState] = React.useState<string | null>(getTemplateId())
+  const templates = React.useMemo(() => listRoleTemplates(), [])
 
   function saveKey() { setApiKey(key.trim()) }
   function clearKey() { setKey(""); setApiKey("") }
   function onChoose(id: string) { setModelId(id); setSelectedModelId(id) }
   function onToggleNSFW(e: React.ChangeEvent<HTMLInputElement>) { setNsfw(e.target.checked); setNSFW(e.target.checked) }
   function onStyleChange(e: React.ChangeEvent<HTMLSelectElement>) { const val = e.target.value as StyleKey; setStyleState(val); setStyle(val) }
+  function onTemplateChange(e: React.ChangeEvent<HTMLSelectElement>) { const val = e.target.value || null; setTemplateIdState(val); setTemplateId(val) }
 
   const hasKey = !!(getApiKey() ?? "")
+  const currentRole = React.useMemo(() => getRoleById(templateId), [templateId])
+  const modelAllowed = React.useMemo(() => {
+    if (!currentRole || !currentRole.allow || !modelId) return true
+    return currentRole.allow.includes(modelId)
+  }, [currentRole, modelId])
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
@@ -52,6 +61,29 @@ export default function SettingsView() {
         </div>
         <p id="api-key-help" className="text-xs opacity-70 mt-1">Wird nur lokal gespeichert.</p>
       </section>
+
+      <section className="mt-8">
+        <h2 className="text-lg font-semibold mb-2">Rolle</h2>
+        <div className="flex flex-col gap-2">
+          <select
+            value={templateId ?? ""}
+            onChange={onTemplateChange}
+            className="w-full md:w-96 px-3 py-2 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
+          >
+            <option value="">Keine Rolle (nur Stil/NSFW)</option>
+            {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+          </select>
+          {!!currentRole && <div className="text-xs opacity-80">Ausgewählt: {currentRole.name}</div>}
+        </div>
+      </section>
+
+      {!modelAllowed && (
+        <section className="mt-4">
+          <InlineBanner tone="warn" title="Aktuelles Modell passt nicht zur gewählten Rolle.">
+            Wähle ein kompatibles Modell oder ändere die Rolle.
+          </InlineBanner>
+        </section>
+      )}
 
       <section className="mt-8">
         <h2 className="text-lg font-semibold mb-2">Inhalts-Einstellungen</h2>

@@ -1,10 +1,11 @@
 import React from "react"
 import InlineBanner from "../components/InlineBanner"
 import { streamChatCompletion } from "../services/openrouter"
-import { getSelectedModelId, getNSFW, getStyle } from "../config/settings"
+import { getSelectedModelId, getNSFW, getStyle, getTemplateId } from "../config/settings"
 import { loadModelCatalog, chooseDefaultModel } from "../config/models"
 import { buildSystemPrompt } from "../config/promptStyles"
 import { useReducedMotion } from "../hooks/useReducedMotion"
+import { getRoleById } from "../config/promptTemplates"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
@@ -82,7 +83,9 @@ export default function ChatView() {
     push("user", text)
     setStreaming(true)
     bufferRef.current = ""
-    const system = buildSystemPrompt({ nsfw: getNSFW(), style: getStyle(), locale: "de-DE" })
+    const roleTmpl = getRoleById(getTemplateId())
+    const base = buildSystemPrompt({ nsfw: getNSFW(), style: getStyle(), locale: "de-DE" })
+    const system = [roleTmpl?.system ?? "", base].filter(Boolean).join("\n\n")
     const body = { model: modelId, stream: true, messages: [{ role: "system", content: system }, ...messages.filter((m) => m.role !== "system").map((m) => ({ role: m.role, content: m.content })), { role: "user", content: text }] }
     try {
       abortRef.current = await streamChatCompletion(body, { onChunk: (raw) => parseSSE(raw), onError: (err) => setError(err instanceof Error ? err.message : String(err)), onComplete: () => {} })

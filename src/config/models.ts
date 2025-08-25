@@ -25,14 +25,16 @@ function normalizeEntry(raw: any): ModelEntry | null {
   const label = labelForModel(id, raw?.name)
   const provider = parseProvider(id)
   const ctx = typeof raw?.context_length === "number" ? raw.context_length : undefined
-  let price: Price | undefined
+  const entry: ModelEntry = { id, label, tags: detectTags(raw) }
+  if (provider !== undefined) entry.provider = provider
+  if (ctx !== undefined) entry.ctx = ctx
   const p = raw?.pricing ?? raw?.price
   if (p) {
     const input = Number(p?.prompt ?? p?.input ?? p?.in)
     const output = Number(p?.completion ?? p?.output ?? p?.out)
-    if (Number.isFinite(input) && Number.isFinite(output)) price = { in: input, out: output }
+    if (Number.isFinite(input) && Number.isFinite(output)) entry.price = { in: input, out: output }
   }
-  return { id, label, provider, ctx, tags: detectTags(raw), price }
+  return entry
 }
 
 export async function loadModelCatalog(forceReload = false): Promise<ModelEntry[]> {
