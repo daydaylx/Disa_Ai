@@ -2,7 +2,7 @@ import React from "react"
 import ModelPicker from "../components/ModelPicker"
 import InlineBanner from "../components/InlineBanner"
 import { setApiKey, getApiKey } from "../services/openrouter"
-import { getSelectedModelId, setSelectedModelId, getNSFW, setNSFW, getStyle, setStyle, type StyleKey, getTemplateId, setTemplateId } from "../config/settings"
+import { getSelectedModelId, setSelectedModelId, getNSFW, setNSFW, getStyle, setStyle, type StyleKey, getTemplateId, setTemplateId, getUseRoleStyle, setUseRoleStyle } from "../config/settings"
 import { listRoleTemplates, getRoleById } from "../config/promptTemplates"
 
 const STYLE_OPTIONS: { value: StyleKey; label: string }[] = [
@@ -20,6 +20,7 @@ export default function SettingsView() {
   const [nsfw, setNsfw] = React.useState<boolean>(getNSFW())
   const [style, setStyleState] = React.useState<StyleKey>(getStyle())
   const [templateId, setTemplateIdState] = React.useState<string | null>(getTemplateId())
+  const [useRoleStyle, setUseRoleStyleState] = React.useState<boolean>(getUseRoleStyle())
   const templates = React.useMemo(() => listRoleTemplates(), [])
 
   function saveKey() { setApiKey(key.trim()) }
@@ -28,6 +29,7 @@ export default function SettingsView() {
   function onToggleNSFW(e: React.ChangeEvent<HTMLInputElement>) { setNsfw(e.target.checked); setNSFW(e.target.checked) }
   function onStyleChange(e: React.ChangeEvent<HTMLSelectElement>) { const val = e.target.value as StyleKey; setStyleState(val); setStyle(val) }
   function onTemplateChange(e: React.ChangeEvent<HTMLSelectElement>) { const val = e.target.value || null; setTemplateIdState(val); setTemplateId(val) }
+  function onUseRoleStyle(e: React.ChangeEvent<HTMLInputElement>) { setUseRoleStyleState(e.target.checked); setUseRoleStyle(e.target.checked) }
 
   const hasKey = !!(getApiKey() ?? "")
   const currentRole = React.useMemo(() => getRoleById(templateId), [templateId])
@@ -73,6 +75,10 @@ export default function SettingsView() {
             <option value="">Keine Rolle (nur Stil/NSFW)</option>
             {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
+          <label className="flex items-center gap-2 select-none">
+            <input type="checkbox" checked={useRoleStyle} onChange={onUseRoleStyle} />
+            Rollenstil verwenden (empfohlen)
+          </label>
           {!!currentRole && <div className="text-xs opacity-80">Ausgewählt: {currentRole.name}</div>}
         </div>
       </section>
