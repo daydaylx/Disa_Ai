@@ -60,10 +60,9 @@ export default function ChatView() {
       return next
     })
   }
-  function parseSSE(raw: string) {
-    bufferRef.current += raw
-    const lines = bufferRef.current.split(/\r?\n/)
-    bufferRef.current = lines.pop() ?? ""
+
+  function consumeEventBlock(block: string) {
+    const lines = block.split(/\r?\n/)
     for (const ln of lines) {
       const line = ln.trimStart()
       if (!line.startsWith("data:")) continue
@@ -73,7 +72,24 @@ export default function ChatView() {
         const obj = JSON.parse(data)
         const delta = obj?.choices?.[0]?.delta?.content ?? obj?.choices?.[0]?.text ?? ""
         if (delta) appendAssistantChunk(delta)
-      } catch { if (data) appendAssistantChunk(data) }
+      } catch {
+        if (data) appendAssistantChunk(data)
+      }
+    }
+  }
+
+  function parseSSE(raw: string, final = false) {
+    bufferRef.current += raw
+    let idx = bufferRef.current.indexOf("\n\n")
+    while (idx >= 0) {
+      const block = bufferRef.current.slice(0, idx)
+      bufferRef.current = bufferRef.current.slice(idx + 2)
+      consumeEventBlock(block)
+      idx = bufferRef.current.indexOf("\n\n")
+    }
+    if (final && bufferRef.current.trim().length > 0) {
+      consumeEventBlock(bufferRef.current)
+      bufferRef.current = ""
     }
   }
 
@@ -104,17 +120,32 @@ export default function ChatView() {
     }
 
     try {
-      abortRef.current = await streamChatCompletion(body, { onChunk: (raw) => parseSSE(raw), onError: (err) => setError(err instanceof Error ? err.message : String(err)), onComplete: () => {} })
+      abortRef.current = await streamChatCompletion(
+        body,
+        {
+          onChunk: (raw) => parseSSE(raw, false),
+          onError: (err) => {
+            const name = (err as any)?.name ?? ""
+            if (name === "AbortError") return
+            setError(err instanceof Error ? err.message : String(err))
+            setStreaming(false)
+          },
+          onComplete: () => {
+            try { parseSSE("\n\n", true) } catch {}
+            setStreaming(false)
+          }
+        }
+      )
     } catch (e: any) {
       setError(e?.message ?? String(e))
       setStreaming(false)
       abortRef.current = null
       return
     }
-    setTimeout(() => { setStreaming(false); abortRef.current = null }, 200)
   }
 
   function stop() { try { abortRef.current?.abort() } catch {} ; abortRef.current = null; setStreaming(false) }
+
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send() } }
   async function copyMessage(text: string) { try { await navigator.clipboard.writeText(text) } catch {} }
 

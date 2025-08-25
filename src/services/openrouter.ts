@@ -51,7 +51,7 @@ export async function fetchJson<T>(path: string, init: FetchJsonOptions = {}): P
 export async function streamChatCompletion(body: unknown, cb: StreamCallback, init?: Omit<FetchJsonOptions, "headers" | "method" | "body">): Promise<AbortController> {
   const controller = new AbortController()
   const effectiveKey = init?.apiKey ?? getApiKey()
-  const headers: Record<string, string> = { "Content-Type": "application/json" }
+  const headers: Record<string, string> = { "Content-Type": "application/json", "Accept": "text/event-stream" }
   if (effectiveKey) { headers["Authorization"] = `Bearer ${effectiveKey}`; headers["HTTP-Referer"] = location.origin; headers["X-Title"] = "Disa AI" }
   const res = await fetch(`${OPENROUTER_BASE}/chat/completions`, { method: "POST", headers, body: JSON.stringify(body), signal: controller.signal })
   if (!res.ok || !res.body) { const text = await res.text().catch(() => ""); cb.onError?.(new Error(`Streaming failed ${res.status}: ${text}`)); controller.abort(); return controller }
@@ -62,13 +62,14 @@ export async function streamChatCompletion(body: unknown, cb: StreamCallback, in
     while (!done) {
       const chunk = await reader.read()
       done = chunk.done
-      if (!done) {
-        const text = dec.decode(chunk.value, { stream: true })
-        cb.onChunk(text)
-      }
+      if (!done) cb.onChunk(dec.decode(chunk.value, { stream: true }))
     }
     cb.onComplete?.()
-  } catch (err) { cb.onError?.(err) } finally { try { reader.releaseLock() } catch {} }
+  } catch (err) {
+    cb.onError?.(err)
+  } finally {
+    try { reader.releaseLock() } catch {}
+  }
   return controller
 }
 
