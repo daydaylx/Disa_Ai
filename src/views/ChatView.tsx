@@ -7,6 +7,9 @@ import { buildSystemPrompt } from "../config/promptStyles"
 import { useReducedMotion } from "../hooks/useReducedMotion"
 import { getRoleById } from "../config/promptTemplates"
 import { generateRoleStyleText } from "../config/styleEngine"
+import MessageBubble from "../components/MessageBubble"
+import Icon from "../components/Icon"
+import TopBar from "../components/TopBar"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
@@ -115,8 +118,12 @@ export default function ChatView() {
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send() } }
   async function copyMessage(text: string) { try { await navigator.clipboard.writeText(text) } catch {} }
 
+  const charCount = input.length
+
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-[radial-gradient(60%_60%_at_0%_0%,rgba(59,130,246,0.08),transparent_60%),radial-gradient(50%_60%_at_100%_0%,rgba(147,51,234,0.08),transparent_60%)]">
+      <TopBar />
+
       {!hasKey && (
         <div className="p-3">
           <InlineBanner tone="warn" title="Kein OpenRouter API-Key – Chat ist deaktiviert." actions={<a href="#/settings" className="underline">Key speichern</a>}>
@@ -125,55 +132,82 @@ export default function ChatView() {
         </div>
       )}
 
-      <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-4" role="log" aria-live="polite" aria-atomic="false">
-        {messages.length === 0 && <div className="text-sm opacity-70">Neue Unterhaltung. Tippe unten eine Nachricht und drücke Enter (Shift+Enter = Zeilenumbruch).</div>}
-        {messages.map((m) => (
-          <div key={m.id} className={`mb-4 ${m.role === "user" ? "text-right" : "text-left"}`}>
-            <div className="inline-flex items-start gap-2 max-w-[820px]">
-              {m.role !== "user" && <div className="select-none text-xs opacity-60 mt-1" aria-hidden="true">AI</div>}
-              <div className={`rounded-lg px-3 py-2 leading-relaxed whitespace-pre-wrap ${m.role === "user" ? "bg-neutral-200 dark:bg-neutral-800" : "bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800"}`}>
-                {m.content}
-              </div>
-              <button type="button" onClick={() => copyMessage(m.content)} className="self-start text-xs px-2 py-1 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500" title="Nachricht kopieren" aria-label="Nachricht in die Zwischenablage kopieren">
-                Copy
-              </button>
+      <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-6 sm:px-6">
+        {messages.length === 0 && (
+          <div className="mx-auto max-w-[860px] rounded-2xl border border-neutral-200/70 dark:border-neutral-800/70 bg-white/60 dark:bg-neutral-900/60 backdrop-blur p-6 shadow-sm">
+            <div className="flex items-center gap-2 text-sm font-medium mb-2">
+              <Icon name="sparkles" width="18" height="18" />
+              <span>Neue Unterhaltung</span>
             </div>
+            <div className="text-sm opacity-80">Schreibe unten deine Nachricht und drücke Enter. Shift+Enter für Zeilenumbruch. Auto-Scroll kannst du in der Leiste unter dem Feld steuern.</div>
           </div>
+        )}
+        {messages.map((m) => (
+          <MessageBubble key={m.id} role={m.role === "user" ? "user" : "assistant"} content={m.content} onCopy={copyMessage} />
         ))}
       </div>
 
-      <div className="border-t border-neutral-200 dark:border-neutral-800 p-3">
-        <div className="mb-2 flex flex-wrap items-center gap-3 text-xs text-neutral-600 dark:text-neutral-400">
-          <label className="flex items-center gap-1 cursor-pointer select-none">
-            <input type="checkbox" checked={autoScroll} onChange={(e) => setAutoScroll(e.target.checked)} aria-label="Automatisches Scrollen aktivieren" />
-            Auto-Scroll
-          </label>
-        <span className="opacity-60">Modell:</span>
-          <span className="px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800/70">{modelReady ? (modelId ?? "—") : "lade…"}</span>
-          <a href="#/settings" className="underline">ändern</a>
-          {error && <span className="text-red-600 dark:text-red-400" role="alert">• {error}</span>}
-        </div>
+      <div className="border-t border-neutral-200 dark:border-neutral-800 p-3 sm:p-4 bg-white/80 dark:bg-neutral-950/70 backdrop-blur">
+        <div className="mx-auto max-w-[960px]">
+          <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
+            <div className="px-3 sm:px-4 py-2 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3 text-xs text-neutral-600 dark:text-neutral-400">
+              <label className="flex items-center gap-1 cursor-pointer select-none">
+                <input type="checkbox" checked={autoScroll} onChange={(e) => setAutoScroll(e.target.checked)} aria-label="Automatisches Scrollen aktivieren" />
+                Auto-Scroll
+              </label>
+              <div className="ml-auto inline-flex items-center gap-1">
+                <span className="opacity-60">Zeichen:</span>
+                <span>{charCount}</span>
+                <span className="hidden sm:inline opacity-60">•</span>
+                <a href="#/settings" className="hidden sm:inline underline">Einstellungen</a>
+              </div>
+              {error && <span className="text-red-600 dark:text-red-400" role="alert">• {error}</span>}
+            </div>
 
-        <div className="flex items-end gap-2">
-          <label className="sr-only" htmlFor="chat-input">Nachricht eingeben</label>
-          <textarea
-            id="chat-input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={onKeyDown}
-            placeholder="Nachricht eingeben… (Enter = Senden, Shift+Enter = Zeilenumbruch)"
-            aria-label="Nachricht eingeben"
-            className="flex-1 min-h-[60px] max-h-[240px] px-3 py-2 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
-          />
-          {!streaming ? (
-            <button type="button" onClick={send} disabled={!hasKey || !modelId || input.trim().length === 0} aria-label="Nachricht senden" className="px-3 py-2 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">
-              Senden
-            </button>
-          ) : (
-            <button type="button" onClick={stop} aria-label="Streaming stoppen" className="px-3 py-2 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">
-              Stop
-            </button>
-          )}
+            <div className="px-3 sm:px-4 py-3 flex items-end gap-2">
+              <label className="sr-only" htmlFor="chat-input">Nachricht eingeben</label>
+              <textarea
+                id="chat-input"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={onKeyDown}
+                placeholder="Nachricht eingeben…"
+                aria-label="Nachricht eingeben"
+                className="flex-1 min-h-[72px] max-h-[240px] px-3 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
+              />
+              {!streaming ? (
+                <button
+                  type="button"
+                  onClick={send}
+                  disabled={!hasKey || !modelId || input.trim().length === 0}
+                  aria-label="Nachricht senden"
+                  className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-blue-600 bg-blue-600 text-white hover:brightness-110 disabled:opacity-50 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
+                >
+                  <Icon name="send" width="18" height="18" />
+                  <span className="hidden sm:inline">Senden</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={stop}
+                  aria-label="Streaming stoppen"
+                  className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
+                >
+                  <Icon name="stop" width="16" height="16" />
+                  <span className="hidden sm:inline">Stop</span>
+                </button>
+              )}
+            </div>
+
+            <div className="px-3 sm:px-4 py-2 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">
+                <Icon name="model" width="14" height="14" />
+                <span className="truncate max-w-[200px]">{modelReady ? (modelId ?? "—") : "lade…"}</span>
+              </span>
+              <span className="opacity-60">•</span>
+              <a href="#/settings" className="underline">Modell ändern</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
