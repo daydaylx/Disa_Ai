@@ -1,127 +1,184 @@
-import type { ChatMessage } from "../types/chat";
-import { buildMessages } from "../utils/buildMessages";
-import { ContextManager } from "./contextManager";
-import { createChatCompletion, type StreamChunk } from "./openRouterClient";
-import { loadMemory, updateMemory, formatMemoryForSystem } from "./memory";
+/* Chat-Pipeline: baut Messages und ruft OpenRouter (Streaming optional).
+ * - Strikt typisiert, kompatibel mit exactOptionalPropertyTypes.
+ * - sendChat liefert IMMER { content: string } (auch bei Stream).
+ * - Optionaler onToken-Callback für Live-UI-Updates.
+ */
 
-export type SendArgs = {
+export type ChatRole = "system" | "user" | "assistant";
+
+export interface ChatMessage {
+  role: ChatRole;
+  content: string;
+}
+
+export interface BuildArgs {
+  systemText?: string;
+  memory?: string;          // z. B. Kurzkontext
+  history?: ChatMessage[];  // bisherige Unterhaltung (ohne userInput)
+  userInput?: string;       // aktuelle Eingabe (falls nicht in history)
+}
+
+export function buildMessages(args: BuildArgs): ChatMessage[] {
+  const out: ChatMessage[] = [];
+
+  if (args.systemText && args.systemText.trim().length > 0) {
+    out.push({ role: "system", content: args.systemText });
+  }
+  if (args.memory && args.memory.trim().length > 0) {
+    out.push({ role: "system", content: \`Kontext: \${args.memory}\` });
+  }
+
+  if (Array.isArray(args.history) && args.history.length > 0) {
+    for (const m of args.history) {
+      if (m && (m.role === "system" || m.role === "user" || m.role === "assistant")) {
+        out.push({ role: m.role, content: m.content ?? "" });
+      }
+    }
+  }
+
+  if (args.userInput && args.userInput.trim().length > 0) {
+    out.push({ role: "user", content: args.userInput });
+  }
+
+  return out;
+}
+
+export interface SendArgs {
   apiKey: string;
   model: string;
   systemText?: string;
+  memory?: string;
   history?: ChatMessage[];
   userInput?: string;
+
   stream?: boolean;
-  modelCtx?: number;
-  reservedTokens?: number;
-  abortSignal?: AbortSignal;
+  abortSignal?: AbortSignal | null;
   temperature?: number;
   maxTokens?: number;
   referer?: string;
   title?: string;
-  memoryScopeId?: string;
-  enableMemory?: boolean;
-};
 
-export interface ChatResponse { type: "json"; response: Response; }
-export interface ChatStream { type: "stream"; stream: AsyncIterable<StreamChunk>; }
-
-interface ChatCompletionJSON {
-  choices?: Array<{ message?: { content?: string } }>;
-}
-function extractAssistant(json: unknown): string {
-  const obj = json as ChatCompletionJSON | null | undefined;
-  const content = obj?.choices?.[0]?.message?.content;
-  return typeof content === "string" ? content : "";
+  onToken?: (delta: string) => void; // Streaming-Callback (optional)
 }
 
-/**
- * Systemprompt + Memory in **eine** System-Message, Token-Pruning, Auto-Memory-Update.
- */
-export async function sendChat(args: SendArgs): Promise<ChatResponse | ChatStream> {
+export interface ChatResponse {
+  content: string;
+}
+
+function makeHeaders(apiKey: string, referer?: string, title?: string): Headers {
+  const h = new Headers();
+  h.set("Content-Type", "application/json");
+  h.set("Authorization", \`Bearer \${apiKey}\`);
+  if (referer) h.set("HTTP-Referer", referer);
+  if (title) h.set("X-Title", title);
+  return h;
+}
+
+export async function sendChat(args: SendArgs): Promise<ChatResponse> {
   const {
-    apiKey, model, systemText, history, userInput,
-    stream, modelCtx, reservedTokens, abortSignal, temperature, maxTokens,
-    referer, title, memoryScopeId, enableMemory,
+    apiKey, model, systemText, memory, history, userInput,
+    stream, abortSignal, temperature, maxTokens, referer, title, onToken,
   } = args;
 
-  const scope = (memoryScopeId && memoryScopeId.trim()) || "default";
-  const memoryEnabled = enableMemory !== false;
+  // exactOptionalPropertyTypes: optionale Felder nur setzen, wenn vorhanden
+  const mArgs: BuildArgs = {};
+  if (typeof systemText === "string") mArgs.systemText = systemText;
+  if (typeof memory === "string") mArgs.memory = memory;
+  if (Array.isArray(history)) mArgs.history = history;
+  if (typeof userInput === "string") mArgs.userInput = userInput;
 
-  const memStr = memoryEnabled ? formatMemoryForSystem(loadMemory(scope)) : "";
+  const messages = buildMessages(mArgs);
 
-  // mit exactOptionalPropertyTypes KEINE undefined-Properties weitergeben
-  const messages = buildMessages({
-    ...(systemText ? { systemText } : {}),
-    ...(memStr ? { memory: memStr } : {}),
-    ...(Array.isArray(history) ? { history } : {}),
-    ...(userInput ? { userInput } : {}),
+  // Body nur mit definierten Feldern befüllen
+  const body: Record<string, unknown> = { model, messages };
+  if (stream === true) body.stream = true;
+  if (typeof temperature === "number") body.temperature = temperature;
+  if (typeof maxTokens === "number") body.max_tokens = maxTokens;
+
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: makeHeaders(apiKey, referer, title),
+    body: JSON.stringify(body),
+    signal: abortSignal ?? null, // DOM erwartet AbortSignal | null
   });
 
-  const cm = new ContextManager({
-    maxTokens: modelCtx ?? 4000,
-    reservedTokens: reservedTokens ?? 1000,
-  });
-  const optimized = cm.optimize(messages);
-
-  const result = await createChatCompletion({
-    apiKey,
-    model,
-    messages: optimized,
-    ...(temperature !== undefined ? { temperature } : {}),
-    ...(maxTokens !== undefined ? { maxTokens } : {}),
-    stream: Boolean(stream),
-    ...(abortSignal ? { abortSignal } : {}),
-    ...(referer ? { referer } : {}),
-    ...(title ? { title } : {}),
-  });
-
-  if (Symbol.asyncIterator in Object(result)) {
-    const iter = result as AsyncIterable<StreamChunk>;
-    return {
-      type: "stream",
-      stream: (async function* wrapped() {
-        let acc = "";
-        for await (const chunk of iter) {
-          if (chunk.contentDelta) acc += chunk.contentDelta;
-          yield chunk;
-        }
-        if (memoryEnabled) {
-          const turns: ChatMessage[] = [
-            ...(Array.isArray(history) ? history.filter(m => m.role !== "system") : []),
-          ];
-          if (userInput && userInput.trim()) {
-            turns.push({ role: "user", content: userInput.trim() });
-          }
-          if (acc && acc.trim()) {
-            turns.push({ role: "assistant", content: acc.trim() });
-          }
-          updateMemory(scope, turns);
-        }
-      })(),
-    };
+  if (!res.ok) {
+    let msg = \`HTTP \${res.status}\`;
+    try {
+      const e = await res.json();
+      if (e?.error?.message) msg = e.error.message as string;
+    } catch {
+      // ignore JSON parse
+    }
+    throw new Error(\`OpenRouter-Fehler: \${msg}\`);
   }
 
-  const res = result as Response;
-  const json = await res.json().catch(() => null as unknown);
-  const assistantText = extractAssistant(json);
+  // Streaming-Pfad
+  if (stream === true) {
+    const reader = res.body?.getReader();
+    if (!reader) {
+      // Fallback: falls Server kein stream liefert
+      const j = await res.json();
+      const text =
+        (j?.choices?.[0]?.message?.content as string | undefined) ??
+        (j?.choices?.[0]?.delta?.content as string | undefined) ??
+        "";
+      return { content: text };
+    }
 
-  if (memoryEnabled) {
-    const turns: ChatMessage[] = [
-      ...(Array.isArray(history) ? history.filter(m => m.role !== "system") : []),
-    ];
-    if (userInput && userInput.trim()) {
-      turns.push({ role: "user", content: userInput.trim() });
+    const decoder = new TextDecoder("utf-8");
+    let buffer = "";
+    let full = "";
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        // text/event-stream → Blöcke über \n\n
+        const parts = buffer.split("\n\n");
+        buffer = parts.pop() ?? ""; // unvollständigen Rest behalten
+
+        for (const chunk of parts) {
+          const line = chunk.trim();
+          if (!line.startsWith("data:")) continue;
+          const payload = line.slice(5).trim();
+          if (payload === "[DONE]") continue;
+
+          try {
+            const json = JSON.parse(payload) as {
+              choices?: Array<{
+                delta?: { content?: string };
+                message?: { content?: string };
+              }>;
+            };
+            const delta =
+              json.choices?.[0]?.delta?.content ??
+              json.choices?.[0]?.message?.content ??
+              "";
+
+            if (delta && delta.length > 0) {
+              full += delta;
+              if (onToken) onToken(delta);
+            }
+          } catch {
+            // Ignoriere fehlerhafte Fragmente
+          }
+        }
+      }
+    } finally {
+      try { await reader.cancel(); } catch { /* noop */ }
     }
-    if (assistantText && assistantText.trim()) {
-      turns.push({ role: "assistant", content: assistantText.trim() });
-    }
-    updateMemory(scope, turns);
+
+    return { content: full };
   }
 
-  const rebuilt = new Response(JSON.stringify(json), {
-    headers: { "Content-Type": "application/json" },
-    status: 200,
-  });
-
-  return { type: "json", response: rebuilt };
+  // Non-Streaming
+  const j = await res.json();
+  const text =
+    (j?.choices?.[0]?.message?.content as string | undefined) ??
+    (j?.choices?.[0]?.delta?.content as string | undefined) ??
+    "";
+  return { content: text };
 }
