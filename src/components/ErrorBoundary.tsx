@@ -1,29 +1,25 @@
-import * as React from "react";
+import React, { Component, ReactNode } from "react"
 
-type Props = { children: React.ReactNode };
-type State = { hasError: boolean; message?: string };
+type Props = { children: ReactNode }
+type State = { hasError: boolean; message?: string }
 
-export class ErrorBoundary extends React.Component<Props, State> {
-  public override state: State = { hasError: false };
-
+export default class ErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false }
   static getDerivedStateFromError(error: unknown): Partial<State> {
-    return { hasError: true, message: String(error) };
+    return { hasError: true, message: error instanceof Error ? error.message : String(error) }
   }
-
-  public override componentDidCatch(error: unknown, info: React.ErrorInfo): void {
-    // eslint-disable-next-line no-console
-    console.error("[ErrorBoundary]", error, info);
+  componentDidCatch(error: unknown, info: unknown) {
+    console.error("[ErrorBoundary]", error, info)
   }
-
-  public override render(): React.ReactNode {
+  render() {
     if (this.state.hasError) {
       return (
-        <div className="p-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-lg">
+        <div className="p-4 rounded-md border border-red-300 bg-red-50 text-red-900">
           <div className="font-semibold mb-1">Es ist ein Fehler aufgetreten.</div>
-          <div className="break-words">{this.state.message ?? "Unbekannter Fehler"}</div>
+          <div className="text-sm opacity-80 break-words">{this.state.message}</div>
         </div>
-      );
+      )
     }
-    return this.props.children;
+    return this.props.children
   }
 }
