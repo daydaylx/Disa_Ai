@@ -4,7 +4,8 @@ export type Price = { in: number; out: number }
 export type ModelEntry = { id: string; label: string; provider?: string; ctx?: number; tags: string[]; price?: Price }
 
 export const DEFAULT_MODEL_ID = "google/gemma-2-9b-it:free"
-const SESSION_CACHE_KEY = "disa:modelCatalog:v1"
+const SESSION_CACHE_KEY = "disa:modelCatalog:v2"
+const MODEL_CACHE_TTL_MS = 6 * 60 * 60 * 1000
 
 function parseProvider(id: string): string | undefined { const idx = id.indexOf("/"); return idx > 0 ? id.slice(0, idx) : undefined }
 export function labelForModel(id: string, name?: string): string { if (name && name.trim().length > 0) return name.trim(); const idx = id.indexOf("/"); return idx > 0 ? id.slice(idx + 1) : id }
@@ -37,20 +38,24 @@ function normalizeEntry(raw: any): ModelEntry | null {
   return entry
 }
 
+type CatalogCache = { ts: number; items: ModelEntry[] }
+
 export async function loadModelCatalog(forceReload = false): Promise<ModelEntry[]> {
   if (!forceReload) {
     try {
-      const cached = sessionStorage.getItem(SESSION_CACHE_KEY)
-      if (cached) {
-        const parsed: ModelEntry[] = JSON.parse(cached)
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      const raw = sessionStorage.getItem(SESSION_CACHE_KEY)
+      if (raw) {
+        const cached = JSON.parse(raw) as CatalogCache
+        if (cached?.ts && Array.isArray(cached.items) && Date.now() - cached.ts < MODEL_CACHE_TTL_MS) {
+          return cached.items
+        }
       }
     } catch {}
   }
   const data = await getRawModels()
   const rawList: any[] = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : []
   const normalized = rawList.map((r) => normalizeEntry(r)).filter((x): x is ModelEntry => !!x).sort((a, b) => a.label.localeCompare(b.label))
-  try { sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(normalized)) } catch {}
+  try { sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify({ ts: Date.now(), items: normalized } satisfies CatalogCache)) } catch {}
   return normalized
 }
 
