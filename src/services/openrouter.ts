@@ -72,4 +72,7 @@ export async function streamChatCompletion(body: unknown, cb: StreamCallback, in
   return controller
 }
 
-export async function getRawModels(apiKey?: string) { return fetchJson<any>("/models", { apiKey }) }
+export async function getRawModels(apiKey?: string) {
+  const init = apiKey ? { apiKey } : {}
+  return fetchJson<any>("/models", init as any)
+}

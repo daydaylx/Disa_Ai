@@ -1,17 +1,18 @@
-import React, { Component, ReactNode } from "react"
+import React, { Component } from "react"
+import type { ReactNode, ErrorInfo } from "react"
 
 type Props = { children: ReactNode }
 type State = { hasError: boolean; message?: string }
 
 export default class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false }
+  override state: State = { hasError: false }
   static getDerivedStateFromError(error: unknown): Partial<State> {
     return { hasError: true, message: error instanceof Error ? error.message : String(error) }
   }
-  componentDidCatch(error: unknown, info: unknown) {
+  override componentDidCatch(error: unknown, info: ErrorInfo) {
     console.error("[ErrorBoundary]", error, info)
   }
-  render() {
+  override render() {
     if (this.state.hasError) {
       return (
         <div className="p-4 rounded-md border border-red-300 bg-red-50 text-red-900">

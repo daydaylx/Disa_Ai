@@ -7,15 +7,14 @@ export type ConversationMeta = { id: string; title: string; createdAt: number; u
 const metaKey = (id: string) => `disa:conv:${id}:meta`
 const msgsKey = (id: string) => `disa:conv:${id}:msgs`
 
-function readJson<T>(key: string, fallback: T): T {
-  try { const raw = localStorage.getItem(key); if (!raw) return fallback; return JSON.parse(raw) as T } catch { return fallback }
-}
+function readJson<T>(key: string, fallback: T): T { try { const raw = localStorage.getItem(key); if (!raw) return fallback; return JSON.parse(raw) as T } catch { return fallback } }
 function writeJson<T>(key: string, value: T) { try { localStorage.setItem(key, JSON.stringify(value)) } catch {} }
 
 export function createConversation(title = "Neue Unterhaltung", modelId?: string): ConversationMeta {
   const id = crypto.randomUUID()
   const now = Date.now()
-  const meta: ConversationMeta = { id, title, createdAt: now, updatedAt: now, modelId }
+  const meta: ConversationMeta = { id, title, createdAt: now, updatedAt: now }
+  if (modelId !== undefined) meta.modelId = modelId
   writeJson(metaKey(id), meta)
   writeJson<ChatMessage[]>(msgsKey(id), [])
   return meta
@@ -76,3 +75,5 @@ export function useConversations() {
   }), [])
   return { items, ...api }
 }
+
+export type UseConversations = ReturnType<typeof useConversations>
