@@ -10,6 +10,7 @@ import { generateRoleStyleText } from "../config/styleEngine"
 import MessageBubble from "../components/MessageBubble"
 import Icon from "../components/Icon"
 import TopBar from "../components/TopBar"
+import { newId } from "../utils/id"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
@@ -50,12 +51,12 @@ export default function ChatView() {
 
   const hasKey = (() => { try { return !!localStorage.getItem("disa:openrouter:key") } catch { return false } })()
 
-  function push(role: Msg["role"], content: string) { setMessages((cur) => [...cur, { id: crypto.randomUUID(), role, content, t: Date.now() }]) }
+  function push(role: Msg["role"], content: string) { setMessages((cur) => [...cur, { id: newId(), role, content, t: Date.now() }]) }
   function appendAssistantChunk(chunk: string) {
     setMessages((cur) => {
       const next = cur.slice()
       const last = next[next.length - 1]
-      if (!last || last.role !== "assistant") next.push({ id: crypto.randomUUID(), role: "assistant", content: chunk, t: Date.now() })
+      if (!last || last.role !== "assistant") next.push({ id: newId(), role: "assistant", content: chunk, t: Date.now() })
       else { last.content += chunk; last.t = Date.now() }
       return next
     })
