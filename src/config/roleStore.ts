@@ -23,6 +23,7 @@ function normalize(input: any): RoleTemplate[] {
   const arr: any[] = Array.isArray(input) ? input
     : Array.isArray(input?.templates) ? input.templates
     : Array.isArray(input?.roles) ? input.roles
+    : Array.isArray(input?.styles) ? input.styles
     : []
   const out: RoleTemplate[] = []
   for (const r of arr) {
