@@ -1,12 +1,19 @@
 import { defineConfig } from "vitest/config";
+import path from "node:path";
 
 export default defineConfig({
   test: {
-    environment: "happy-dom",
+    environment: "jsdom",
     globals: true,
-    setupFiles: ["./src/test/setup.ts"],
-    css: true,
-    coverage: { reporter: ["text", "lcov"] },
-    exclude: ["e2e/**", "node_modules/**", "dist/**", "build/**"],
+    setupFiles: ["./vitest.setup.ts"],
+    include: ["tests/**/*.spec.ts"],
+    coverage: {
+      enabled: false
+    }
   },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src")
+    }
+  }
 });
