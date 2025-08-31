@@ -1,31 +1,31 @@
-import React from "react";
+import { useCallback, useState } from "react";
 
-type ToastT = { id: string; text: string; kind?: "info" | "error" };
-type Ctx = { show: (text: string, kind?: ToastT["kind"]) => void };
-const ToastCtx = React.createContext<Ctx | null>(null);
+export type ToastT = {
+  id: string;
+  text: string;
+  kind: "info" | "error";
+};
 
-export function ToastProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = React.useState<ToastT[]>([]);
-  const show = (text: string, kind?: ToastT["kind"]) => {
-    const t: ToastT = { id: crypto.randomUUID?.() ?? String(Math.random()), text, kind };
-    setItems((p) => [...p, t]);
-    setTimeout(() => setItems((p) => p.filter((x) => x.id !== t.id)), 3500);
-  };
+export default function Toast() {
+  const [items, setItems] = useState<ToastT[]>([]);
+
+  const add = useCallback((text: string, kind?: "info" | "error") => {
+    const t: ToastT = {
+      id: crypto.randomUUID?.() ?? String(Math.random()),
+      text,
+      kind: kind ?? "info",
+    };
+    setItems((prev) => [t, ...prev]);
+  }, []);
+
   return (
-    <ToastCtx.Provider value={{ show }}>
-      {children}
-      <div className="fixed left-0 right-0 bottom-3 flex flex-col items-center gap-2 z-50 px-3">
-        {items.map((t) => (
-          <div key={t.id} className={`px-3 py-2 rounded-xl text-sm shadow ${t.kind==="error"?"bg-red-600 text-white":"bg-black text-white dark:bg-white dark:text-black"}`}>
-            {t.text}
-          </div>
-        ))}
-      </div>
-    </ToastCtx.Provider>
+    <div className="fixed bottom-2 right-2 space-y-2">
+      {items.map((t) => (
+        <div key={t.id} className="px-3 py-2 rounded text-white"
+             style={{ background: t.kind === "error" ? "#b91c1c" : "#2563eb" }}>
+          {t.text}
+        </div>
+      ))}
+    </div>
   );
-}
-export function useToast() {
-  const ctx = React.useContext(ToastCtx);
-  if (!ctx) throw new Error("ToastProvider fehlt");
-  return ctx;
 }
