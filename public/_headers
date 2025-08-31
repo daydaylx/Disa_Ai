@@ -1,5 +1,11 @@
-
-/styles.json
-  Cache-Control: no-store, must-revalidate
-/persona.json
-  Cache-Control: no-store, must-revalidate
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Resource-Policy: same-origin
+  # CSP: connect-src ggf. an weitere APIs anpassen
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https://openrouter.ai https://\*.openrouter.ai\; frame-ancestors 'none'
