@@ -1,13 +1,13 @@
-import React from "react"
+import React from "react";
 
-type Opt = { value: string; label: string }
-type Props = { value: string; options: Opt[]; onChange: (v: string) => void }
+type Opt = { value: string; label: string };
+type Props = { value: string; options: Opt[]; onChange: (v: string) => void };
 
 export default function PillSelect({ value, options, onChange }: Props) {
   return (
     <div className="flex flex-wrap gap-2">
-      {options.map(opt => {
-        const active = value === opt.value
+      {options.map((opt) => {
+        const active = value === opt.value;
         return (
           <button
             key={opt.value}
@@ -17,8 +17,8 @@ export default function PillSelect({ value, options, onChange }: Props) {
           >
             {opt.label}
           </button>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

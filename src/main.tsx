@@ -1,7 +1,9 @@
+import "./styles/globals.css";
+
 import React from "react";
 import ReactDOM from "react-dom/client";
+
 import App from "./App";
-import "./styles/globals.css";
 import { PersonaProvider } from "./config/personas";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -9,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <PersonaProvider>
       <App />
     </PersonaProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 if (import.meta?.env?.PROD && "serviceWorker" in navigator) {
@@ -20,7 +22,7 @@ if (import.meta?.env?.PROD && "serviceWorker" in navigator) {
       for (const r of regs) await r.unregister();
       if ("caches" in window) {
         const keys = await caches.keys();
-        await Promise.all(keys.map(k => caches.delete(k)));
+        await Promise.all(keys.map((k) => caches.delete(k)));
       }
       // eslint-disable-next-line no-empty
     } catch {}

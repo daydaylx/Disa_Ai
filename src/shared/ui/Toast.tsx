@@ -21,8 +21,11 @@ export default function Toast() {
   return (
     <div className="fixed bottom-2 right-2 space-y-2">
       {items.map((t) => (
-        <div key={t.id} className="px-3 py-2 rounded text-white"
-             style={{ background: t.kind === "error" ? "#b91c1c" : "#2563eb" }}>
+        <div
+          key={t.id}
+          className="px-3 py-2 rounded text-white"
+          style={{ background: t.kind === "error" ? "#b91c1c" : "#2563eb" }}
+        >
           {t.text}
         </div>
       ))}

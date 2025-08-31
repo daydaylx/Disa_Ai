@@ -1,5 +1,8 @@
 export type Role = "system" | "user" | "assistant" | "tool";
-export interface Msg { role: Role; content: string; }
+export interface Msg {
+  role: Role;
+  content: string;
+}
 
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const KEY_NAME = "disa_api_key";
@@ -12,7 +15,7 @@ function getHeaders() {
     Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
     "HTTP-Referer": location.origin,
-    "X-Title": "Disa AI"
+    "X-Title": "Disa AI",
   } satisfies Record<string, string>;
 }
 
@@ -40,7 +43,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
     headers,
     body: JSON.stringify({ model, messages, stream: false }),
     // wegen exactOptionalPropertyTypes darf 'signal' nicht undefined sein:
-    signal: opts?.signal ?? null
+    signal: opts?.signal ?? null,
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
   const data = await res.json();
@@ -51,7 +54,12 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
 export async function chatStream(
   messages: Msg[],
   onDelta: (textDelta: string) => void,
-  opts?: { model?: string; signal?: AbortSignal; onStart?: () => void; onDone?: (full: string) => void }
+  opts?: {
+    model?: string;
+    signal?: AbortSignal;
+    onStart?: () => void;
+    onDone?: (full: string) => void;
+  },
 ) {
   const headers = getHeaders();
   const model = opts?.model ?? getModelFallback();
@@ -59,7 +67,7 @@ export async function chatStream(
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: true }),
-    signal: opts?.signal ?? null
+    signal: opts?.signal ?? null,
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
 
@@ -102,9 +110,7 @@ export async function chatStream(
                 throw new Error(msg);
               }
               delta =
-                json?.choices?.[0]?.delta?.content ??
-                json?.choices?.[0]?.message?.content ??
-                "";
+                json?.choices?.[0]?.delta?.content ?? json?.choices?.[0]?.message?.content ?? "";
             } catch (err) {
               const m = err instanceof Error ? err.message : String(err);
               throw new Error(m);

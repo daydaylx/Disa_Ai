@@ -15,7 +15,7 @@ export function Select({
       onChange={onChange}
       className={cn(
         "w-full h-12 rounded-2xl bg-[#12121A]/80 text-foreground border border-border px-4 focus:outline-none focus:shadow-ring",
-        className
+        className,
       )}
       {...rest}
     >

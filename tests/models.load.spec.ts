@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { loadModelCatalog, chooseDefaultModel, labelForModel, type ModelEntry } from "@/config/models";
+import {
+  loadModelCatalog,
+  chooseDefaultModel,
+  labelForModel,
+  type ModelEntry,
+} from "@/config/models";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -24,21 +29,21 @@ describe("loadModelCatalog()", () => {
           id: "qwen/qwen-2.5-coder-32b-instruct",
           name: "Qwen 2.5 Coder 32B (Instruct)",
           context_length: 128000,
-          pricing: { prompt: 0.1, completion: 0.2 }
+          pricing: { prompt: 0.1, completion: 0.2 },
         },
         {
           id: "mistral/mistral-small-latest",
           name: "Mistral Small (latest)",
           context_length: 32000,
-          pricing: { prompt: 0.05, completion: 0.1 }
-        }
-      ]
+          pricing: { prompt: 0.05, completion: 0.1 },
+        },
+      ],
     };
 
     const fetchMock = vi.spyOn(globalThis, "fetch" as any).mockResolvedValue({
       ok: true,
       status: 200,
-      json: async () => wire
+      json: async () => wire,
     } as Response);
 
     const list = await loadModelCatalog({ apiKey: "test-key", preferFree: false, maxAgeMs: 0 });
@@ -56,15 +61,13 @@ describe("loadModelCatalog()", () => {
   it("chooseDefaultModel() bevorzugt free, wenn vorhanden", () => {
     const list: ModelEntry[] = [
       { id: "foo/a", label: "A", provider: { name: "foo" }, tags: [] },
-      { id: "bar/b", label: "B", provider: { name: "bar" }, tags: ["free"] }
+      { id: "bar/b", label: "B", provider: { name: "bar" }, tags: ["free"] },
     ];
     expect(chooseDefaultModel(list, true)).toBe("bar/b");
   });
 
   it("labelForModel() liefert Label oder ID", () => {
-    const list: ModelEntry[] = [
-      { id: "x/y", label: "Y", provider: { name: "x" } }
-    ];
+    const list: ModelEntry[] = [{ id: "x/y", label: "Y", provider: { name: "x" } }];
     expect(labelForModel("x/y", list)).toBe("Y");
     expect(labelForModel("unknown", list)).toBe("unknown");
   });

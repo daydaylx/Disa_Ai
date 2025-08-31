@@ -1,5 +1,5 @@
-import type { ChatMessage } from "@/types/chat";
 import { getRoleById } from "@/config/roleStore";
+import type { ChatMessage } from "@/types/chat";
 
 export type BuildOptions = {
   roleTemplateId?: string;

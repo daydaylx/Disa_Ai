@@ -7,7 +7,7 @@ import {
   migrateStorage,
   listKeys,
   setJSON,
-  getJSON
+  getJSON,
 } from "@/utils/storage";
 
 afterEach(() => {

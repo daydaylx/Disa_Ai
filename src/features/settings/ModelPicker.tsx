@@ -21,7 +21,7 @@ export default function ModelPicker() {
               "w-full min-h-[48px] px-3 py-2 rounded-xl text-left border transition-colors",
               "flex items-center gap-2",
               selected ? "border-black bg-black/5" : "border-black/10 hover:bg-black/5",
-              "dark:border-white/10 dark:hover:bg-white/10"
+              "dark:border-white/10 dark:hover:bg-white/10",
             )}
             title={`${m.label} (${m.id})`}
             onClick={() => settings.setModelId(m.id)}

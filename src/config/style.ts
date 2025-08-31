@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { swrGet, swrSet } from "@/utils/swrCache";
+
 import type { PolicyFromRole } from "@/types/safety";
+import { swrGet, swrSet } from "@/utils/swrCache";
 
 export type RoleEntry = {
   policy: PolicyFromRole;
@@ -24,8 +25,8 @@ const FALLBACK_STYLE: StyleConfig = {
   roles: {
     nocensor: { policy: "any", systemPrompt: "Be direct. Do not add moralizing prefaces." },
     balanced: { policy: "medium" },
-    strict: { policy: "high" }
-  }
+    strict: { policy: "high" },
+  },
 };
 
 async function fetchWithTimeout(url: string, timeoutMs = 8_000): Promise<Response> {
@@ -49,12 +50,13 @@ async function fetchStyleJson(timeoutMs = 8_000): Promise<StyleConfig> {
     const defaultRole =
       typeof raw.defaultRole === "string" && raw.defaultRole in roles
         ? raw.defaultRole
-        : Object.keys(roles)[0] ?? FALLBACK_STYLE.defaultRole;
+        : (Object.keys(roles)[0] ?? FALLBACK_STYLE.defaultRole);
 
     const merged: StyleConfig = {
       version,
       defaultRole,
-      roles: Object.keys(roles).length > 0 ? (roles as Record<string, RoleEntry>) : FALLBACK_STYLE.roles
+      roles:
+        Object.keys(roles).length > 0 ? (roles as Record<string, RoleEntry>) : FALLBACK_STYLE.roles,
     };
     return merged;
   } catch {
@@ -76,7 +78,10 @@ export function getDefaultRole(cfg: StyleConfig): string {
   return first ?? FALLBACK_STYLE.defaultRole;
 }
 
-export function getPolicyForRole(cfg: StyleConfig, roleName?: string | null): PolicyFromRole | undefined {
+export function getPolicyForRole(
+  cfg: StyleConfig,
+  roleName?: string | null,
+): PolicyFromRole | undefined {
   const name = roleName && cfg.roles[roleName] ? roleName : getDefaultRole(cfg);
   const entry = cfg.roles[name];
   return entry?.policy;
@@ -111,7 +116,9 @@ export function useStyle(maxAgeMs = DEFAULT_MAX_AGE_MS): UseStyle {
     if (!cfg.roles[role]) setRole(getDefaultRole(cfg));
   }, [maxAgeMs, role, setRole]);
 
-  useEffect(() => { void refreshStyle(); /* on mount */ }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    void refreshStyle(); /* on mount */
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     style,

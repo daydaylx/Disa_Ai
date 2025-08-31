@@ -3,7 +3,7 @@
    - Robust mapping for OpenRouter models with a safe local fallback.
    - SWR cache to avoid hammering the API and speed up UI.
 */
-import { swrGet, swrSet, swrClear } from "@/utils/swrCache";
+import { swrClear, swrGet, swrSet } from "@/utils/swrCache";
 
 export type ProviderInfo = { name: string };
 export type Price = { in: number; out: number };
@@ -20,9 +20,27 @@ export type ModelEntry = {
 export const DEFAULT_MODEL_ID = "openrouter/auto";
 
 const FALLBACK_MODELS: ModelEntry[] = [
-  { id: "openrouter/auto", label: "Auto (OpenRouter)", provider: { name: "openrouter" }, ctx: 128_000, tags: ["auto"] },
-  { id: "qwen/qwen-2.5-coder-32b-instruct", label: "Qwen 2.5 Coder 32B (Instruct)", provider: { name: "qwen" }, ctx: 128_000, tags: ["code"] },
-  { id: "mistral/mistral-small-latest", label: "Mistral Small (latest)", provider: { name: "mistral" }, ctx: 32_000, tags: ["general"] }
+  {
+    id: "openrouter/auto",
+    label: "Auto (OpenRouter)",
+    provider: { name: "openrouter" },
+    ctx: 128_000,
+    tags: ["auto"],
+  },
+  {
+    id: "qwen/qwen-2.5-coder-32b-instruct",
+    label: "Qwen 2.5 Coder 32B (Instruct)",
+    provider: { name: "qwen" },
+    ctx: 128_000,
+    tags: ["code"],
+  },
+  {
+    id: "mistral/mistral-small-latest",
+    label: "Mistral Small (latest)",
+    provider: { name: "mistral" },
+    ctx: 32_000,
+    tags: ["general"],
+  },
 ];
 
 type OpenRouterWire = {
@@ -46,7 +64,10 @@ export type LoadCatalogOptions = {
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/models";
 const CACHE_KEY_RAW = "disa:models:raw:v1";
 
-async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit & { timeoutMs?: number } = {}) {
+async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init: RequestInit & { timeoutMs?: number } = {},
+) {
   const { timeoutMs = 10_000, ...rest } = init;
   const ctrl = new AbortController();
   const id = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -61,8 +82,12 @@ async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit & { 
 async function withRetry<T>(fn: () => Promise<T>, tries = 2, delayMs = 400): Promise<T> {
   let lastErr: unknown;
   for (let i = 0; i < tries; i++) {
-    try { return await fn(); }
-    catch (e) { lastErr = e; if (i < tries - 1) await new Promise(r => setTimeout(r, delayMs * (i + 1))); }
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+      if (i < tries - 1) await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+    }
   }
   throw lastErr;
 }
@@ -87,9 +112,10 @@ function mapWire(m: NonNullable<OpenRouterWire["data"]>[number]): ModelEntry {
     provider: providerFromId(m.id),
     tags: tagsFrom(m.id, m.pricing),
   };
-  const price = (typeof m.pricing?.prompt === "number" || typeof m.pricing?.completion === "number")
-    ? { in: m.pricing?.prompt ?? NaN, out: m.pricing?.completion ?? NaN }
-    : undefined;
+  const price =
+    typeof m.pricing?.prompt === "number" || typeof m.pricing?.completion === "number"
+      ? { in: m.pricing?.prompt ?? NaN, out: m.pricing?.completion ?? NaN }
+      : undefined;
 
   return {
     ...base,
@@ -98,11 +124,15 @@ function mapWire(m: NonNullable<OpenRouterWire["data"]>[number]): ModelEntry {
   };
 }
 
-function filterAndSort(list: ModelEntry[], allow?: string[] | null, preferFree?: boolean): ModelEntry[] {
+function filterAndSort(
+  list: ModelEntry[],
+  allow?: string[] | null,
+  preferFree?: boolean,
+): ModelEntry[] {
   let out = list.slice();
   if (Array.isArray(allow) && allow.length > 0) {
     const allowSet = new Set(allow);
-    out = out.filter(m => allowSet.has(m.id));
+    out = out.filter((m) => allowSet.has(m.id));
   }
   out.sort((a, b) => {
     if (preferFree) {
@@ -162,16 +192,16 @@ export async function loadModelCatalog(opts: LoadCatalogOptions = {}): Promise<M
 export function chooseDefaultModel(list: ModelEntry[], preferFree = false): string {
   if (!Array.isArray(list) || list.length === 0) return DEFAULT_MODEL_ID;
   if (preferFree) {
-    const free = list.find(m => m.tags?.includes("free"));
+    const free = list.find((m) => m.tags?.includes("free"));
     if (free) return free.id;
   }
-  const auto = list.find(m => m.id === DEFAULT_MODEL_ID);
+  const auto = list.find((m) => m.id === DEFAULT_MODEL_ID);
   if (auto) return auto.id;
   return list[0]!.id;
 }
 
 export function labelForModel(id: string, list: ModelEntry[]): string {
-  const hit = list.find(m => m.id === id);
+  const hit = list.find((m) => m.id === id);
   return hit ? hit.label : id;
 }
 

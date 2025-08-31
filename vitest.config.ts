@@ -8,12 +8,12 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     include: ["tests/**/*.spec.ts"],
     coverage: {
-      enabled: false
-    }
+      enabled: false,
+    },
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src")
-    }
-  }
+      "@": path.resolve(__dirname, "src"),
+    },
+  },
 });

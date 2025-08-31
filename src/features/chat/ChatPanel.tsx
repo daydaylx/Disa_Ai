@@ -28,7 +28,9 @@ export default function ChatPanel() {
   const messages: ChatMessage[] = useMemo(() => conv.messages, [conv.messages]);
 
   // Dummy-Send, nur um Typfehler zu beseitigen (kein echter API-Call hier)
-  useEffect(() => { /* no-op */ }, []);
+  useEffect(() => {
+    /* no-op */
+  }, []);
 
   return (
     <div className="p-3 space-y-3">

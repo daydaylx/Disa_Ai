@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+
 import type { ModelEntry } from "@/config/models";
 import type { Safety } from "@/types/safety";
 
@@ -43,7 +44,7 @@ export default function ModelPicker(props: ModelPickerProps) {
   const filtered = useMemo(() => {
     const qq = q.trim().toLowerCase();
     return models.filter((m) => {
-      if (onlyFree && !(m.tags?.includes("free"))) return false;
+      if (onlyFree && !m.tags?.includes("free")) return false;
       if (provider && m.provider?.name !== provider) return false;
       if (!qq) return true;
       const hay = `${m.id} ${m.label} ${m.provider?.name ?? ""}`.toLowerCase();
@@ -51,10 +52,7 @@ export default function ModelPicker(props: ModelPickerProps) {
     });
   }, [models, q, onlyFree, provider]);
 
-  const current = useMemo(
-    () => filtered.find((m) => m.id === (value ?? "")),
-    [filtered, value]
-  );
+  const current = useMemo(() => filtered.find((m) => m.id === (value ?? "")), [filtered, value]);
 
   return (
     <div className="flex flex-col gap-2 text-sm">
@@ -86,7 +84,9 @@ export default function ModelPicker(props: ModelPickerProps) {
         >
           <option value="">alle Provider</option>
           {providers.map((p) => (
-            <option key={p} value={p}>{p}</option>
+            <option key={p} value={p}>
+              {p}
+            </option>
           ))}
         </select>
       </div>
@@ -116,7 +116,9 @@ export default function ModelPicker(props: ModelPickerProps) {
           {current.tags?.includes("free") && (
             <span className="inline-flex items-center px-2 py-0.5 rounded-full border">free</span>
           )}
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full border">ctx: {fmtCtx(current.ctx)}</span>
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full border">
+            ctx: {fmtCtx(current.ctx)}
+          </span>
           <span className="inline-flex items-center px-2 py-0.5 rounded-full border">
             price: {fmtPriceUSD(current.price)}
           </span>

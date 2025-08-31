@@ -1,6 +1,7 @@
-import { Suspense, lazy, useCallback } from "react";
-import { useModel } from "@/hooks/useModel";
+import { lazy, Suspense, useCallback } from "react";
+
 import { useStyle } from "@/config/style";
+import { useModel } from "@/hooks/useModel";
 
 const ModelPicker = lazy(() => import("@/components/ModelPicker"));
 
@@ -9,8 +10,10 @@ export default function Settings() {
   const { style, role, setRole, policyFromRole, refreshStyle } = useStyle();
 
   const handleChange = useCallback(
-    (next: string) => { setModelId(next); },
-    [setModelId]
+    (next: string) => {
+      setModelId(next);
+    },
+    [setModelId],
   );
 
   const roles = Object.keys(style.roles);
@@ -35,7 +38,9 @@ export default function Settings() {
               onChange={(e) => setRole(e.target.value)}
             >
               {roles.map((r) => (
-                <option key={r} value={r}>{r}</option>
+                <option key={r} value={r}>
+                  {r}
+                </option>
               ))}
             </select>
           </div>
@@ -71,7 +76,8 @@ export default function Settings() {
           </button>
         </div>
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Der Modellkatalog nutzt OpenRouter (falls API-Key vorhanden) und fällt sonst auf eine Offline-Liste zurück.
+          Der Modellkatalog nutzt OpenRouter (falls API-Key vorhanden) und fällt sonst auf eine
+          Offline-Liste zurück.
         </p>
       </section>
     </div>

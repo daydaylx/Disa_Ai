@@ -1,9 +1,10 @@
 import type { PolicyFromRole } from "@/types/safety";
+
 import { loadStyleConfig } from "./style";
 
 export type RoleTemplate = {
-  id: string;            // Rollenname (Key in style.json)
-  name: string;          // Anzeigename (identisch mit id, sofern nicht erweitert)
+  id: string; // Rollenname (Key in style.json)
+  name: string; // Anzeigename (identisch mit id, sofern nicht erweitert)
   policy: PolicyFromRole;
   systemPrompt?: string;
 };

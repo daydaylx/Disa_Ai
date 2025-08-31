@@ -52,7 +52,12 @@ function normalizeTemplates(arr: unknown): TemplateEntry[] {
   return arr
     .filter((x) => {
       const o = x as Record<string, unknown>;
-      return !!o && typeof o.id === "string" && typeof o.name === "string" && typeof o.system === "string";
+      return (
+        !!o &&
+        typeof o.id === "string" &&
+        typeof o.name === "string" &&
+        typeof o.system === "string"
+      );
     })
     .map((t: any) => {
       const base: TemplateEntry = {
@@ -62,7 +67,8 @@ function normalizeTemplates(arr: unknown): TemplateEntry[] {
       };
       if (typeof t.description === "string") base.description = t.description;
       if (Array.isArray(t.tags)) base.tags = t.tags.filter((z: unknown) => typeof z === "string");
-      if (Array.isArray(t.allow)) base.allow = t.allow.filter((z: unknown) => typeof z === "string");
+      if (Array.isArray(t.allow))
+        base.allow = t.allow.filter((z: unknown) => typeof z === "string");
       return base;
     });
 }
@@ -115,7 +121,7 @@ export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATE_ID): UseS
 
   const selected = React.useMemo(
     () => list.find((t) => t.id === templateId) ?? list[0],
-    [list, templateId]
+    [list, templateId],
   );
 
   const [systemText, setSystemTextState] = React.useState<string>(() => {
@@ -125,24 +131,30 @@ export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATE_ID): UseS
     return sel ? sel.system : "";
   });
 
-  const setTemplateId = React.useCallback((id: string) => {
-    setTemplateIdState(id);
-    safeSetItem(LS_TEMPLATE_ID, id);
-    const ov = safeGetItem(lsKeyForOverride(id));
-    const base = (list.find((t) => t.id === id) ?? list[0])?.system ?? "";
-    setSystemTextState(ov !== null ? ov : base);
-  }, [list]);
+  const setTemplateId = React.useCallback(
+    (id: string) => {
+      setTemplateIdState(id);
+      safeSetItem(LS_TEMPLATE_ID, id);
+      const ov = safeGetItem(lsKeyForOverride(id));
+      const base = (list.find((t) => t.id === id) ?? list[0])?.system ?? "";
+      setSystemTextState(ov !== null ? ov : base);
+    },
+    [list],
+  );
 
-  const setSystemText = React.useCallback((text: string) => {
-    setSystemTextState(text);
-    const key = lsKeyForOverride(templateId);
-    const base = (list.find((t) => t.id === templateId) ?? list[0])?.system ?? "";
-    if (text.trim() === base.trim()) {
-      safeRemoveItem(key);
-    } else {
-      safeSetItem(key, text);
-    }
-  }, [templateId, list]);
+  const setSystemText = React.useCallback(
+    (text: string) => {
+      setSystemTextState(text);
+      const key = lsKeyForOverride(templateId);
+      const base = (list.find((t) => t.id === templateId) ?? list[0])?.system ?? "";
+      if (text.trim() === base.trim()) {
+        safeRemoveItem(key);
+      } else {
+        safeSetItem(key, text);
+      }
+    },
+    [templateId, list],
+  );
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -160,15 +172,15 @@ export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATE_ID): UseS
         const arr = Array.isArray((json as StylesFileA).styles)
           ? (json as StylesFileA).styles
           : Array.isArray((json as StylesFileB).templates)
-          ? (json as StylesFileB).templates
-          : [];
+            ? (json as StylesFileB).templates
+            : [];
         const next = normalizeTemplates(arr);
         if (next.length > 0) {
           setList(next);
           // Auswahl validieren
           const exists = next.some((t) => t.id === templateId);
           const first = next.at(0);
-          const nextSel = exists ? templateId : (first ? first.id : FALLBACK_TEMPLATE_ID);
+          const nextSel = exists ? templateId : first ? first.id : FALLBACK_TEMPLATE_ID;
           if (!exists) {
             setTemplateIdState(nextSel);
             safeSetItem(LS_TEMPLATE_ID, nextSel);
@@ -201,16 +213,18 @@ export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATE_ID): UseS
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const reload = React.useCallback(() => { void load(); }, [load]);
+  const reload = React.useCallback(() => {
+    void load();
+  }, [load]);
 
   // allow normalisieren + Hint für :free
   const allowedModelIds = React.useMemo<string[]>(
     () => Array.from(new Set((selected?.allow ?? []).map(stripSuffix))),
-    [selected]
+    [selected],
   );
   const preferFreeHint = React.useMemo<boolean>(
     () => (selected?.allow ?? []).some((x) => typeof x === "string" && x.endsWith(":free")),
-    [selected]
+    [selected],
   );
 
   return {

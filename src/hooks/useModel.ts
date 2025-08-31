@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+
 import {
-  DEFAULT_MODEL_ID,
   chooseDefaultModel,
+  DEFAULT_MODEL_ID,
   labelForModel as labelFor,
   loadModelCatalog,
   type ModelEntry,
@@ -42,7 +43,9 @@ export function useModel(opts: UseModelOptions = {}): UseModel {
 
   const refreshCatalog = useCallback(async () => {
     const apiKey = getOpenRouterApiKey();
-    const base = { allow, preferFree } as { allow: string[] | null; preferFree: boolean } & { apiKey?: string };
+    const base = { allow, preferFree } as { allow: string[] | null; preferFree: boolean } & {
+      apiKey?: string;
+    };
     if (apiKey) (base as any).apiKey = apiKey;
     const list = await loadModelCatalog(base);
     setModels(list);
@@ -53,10 +56,12 @@ export function useModel(opts: UseModelOptions = {}): UseModel {
     }
   }, [allow, preferFree, modelId, setModelId]);
 
-  useEffect(() => { void refreshCatalog(); /* on mount */ }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    void refreshCatalog(); /* on mount */
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { models, modelId, modelLabel, setModelId, refreshCatalog };
 }
 
 export type { ModelEntry } from "@/config/models";
-export { DEFAULT_MODEL_ID, chooseDefaultModel } from "@/config/models";
+export { chooseDefaultModel, DEFAULT_MODEL_ID } from "@/config/models";

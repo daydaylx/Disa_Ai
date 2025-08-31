@@ -16,14 +16,14 @@ describe("style.json Loader", () => {
       defaultRole: "balanced",
       roles: {
         nocensor: { policy: "any" },
-        balanced: { policy: "medium", systemPrompt: "ok" }
-      }
+        balanced: { policy: "medium", systemPrompt: "ok" },
+      },
     };
 
     const fetchMock = vi.spyOn(globalThis, "fetch" as any).mockResolvedValue({
       ok: true,
       status: 200,
-      json: async () => wire
+      json: async () => wire,
     } as Response);
 
     const cfg = await loadStyleConfig(0);
@@ -37,7 +37,7 @@ describe("style.json Loader", () => {
     vi.spyOn(globalThis, "fetch" as any).mockResolvedValue({
       ok: false,
       status: 500,
-      json: async () => ({})
+      json: async () => ({}),
     } as Response);
 
     const cfg = await loadStyleConfig(0);

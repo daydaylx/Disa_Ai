@@ -1,6 +1,7 @@
+import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { vi, expect, test, describe } from "vitest";
+import { describe, expect, test, vi } from "vitest";
+
 import PersonaQuickBar from "../components/PersonaQuickBar";
 
 const setStyleIdMock = vi.fn();

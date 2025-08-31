@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  getOpenRouterApiKey,
-  setOpenRouterApiKey,
-} from "@/services/openrouter";
+
+import { getOpenRouterApiKey, setOpenRouterApiKey } from "@/services/openrouter";
 
 /** Minimale Client-Facade für UI-Settings */
 export function useClient() {
@@ -23,6 +21,6 @@ export function useClient() {
       apiKey,
       setApiKey,
     }),
-    [apiKey]
+    [apiKey],
   );
 }

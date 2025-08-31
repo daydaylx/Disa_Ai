@@ -9,12 +9,18 @@ function load(): ChatSession {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) return JSON.parse(raw) as ChatSession;
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return { id: `s-${Date.now()}`, createdAt: Date.now(), messages: [], memory: "" };
 }
 
 function save(s: ChatSession) {
-  try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ }
+  try {
+    localStorage.setItem(KEY, JSON.stringify(s));
+  } catch {
+    /* ignore */
+  }
 }
 
 export function useChatSession() {
@@ -31,7 +37,10 @@ export function useChatSession() {
   }
 
   function appendAssistantPlaceholder() {
-    setSession((s) => ({ ...s, messages: [...s.messages, { role: "assistant", text: "", ts: Date.now() }] }));
+    setSession((s) => ({
+      ...s,
+      messages: [...s.messages, { role: "assistant", text: "", ts: Date.now() }],
+    }));
   }
 
   function appendAssistantDelta(delta: string) {
@@ -48,10 +57,17 @@ export function useChatSession() {
     setDirty((x) => x + 1);
   }
 
-  function setMemory(mem: string) { setSession((s) => ({ ...s, memory: mem })); }
+  function setMemory(mem: string) {
+    setSession((s) => ({ ...s, memory: mem }));
+  }
 
   function reset() {
-    const fresh: ChatSession = { id: `s-${Date.now()}`, createdAt: Date.now(), messages: [], memory: "" };
+    const fresh: ChatSession = {
+      id: `s-${Date.now()}`,
+      createdAt: Date.now(),
+      messages: [],
+      memory: "",
+    };
     setSession(fresh);
     save(fresh);
   }
@@ -61,5 +77,13 @@ export function useChatSession() {
     return msgs.slice(Math.max(0, msgs.length - n));
   }
 
-  return { session, append, appendAssistantPlaceholder, appendAssistantDelta, setMemory, reset, lastWindow };
+  return {
+    session,
+    append,
+    appendAssistantPlaceholder,
+    appendAssistantDelta,
+    setMemory,
+    reset,
+    lastWindow,
+  };
 }

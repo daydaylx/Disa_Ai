@@ -21,7 +21,9 @@ function relLum([r, g, b]: [number, number, number]): number {
     const s = v / 255;
     return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
   };
-  const R = tn(r), G = tn(g), B = tn(b);
+  const R = tn(r),
+    G = tn(g),
+    B = tn(b);
   return 0.2126 * R + 0.7152 * G + 0.0722 * B;
 }
 
@@ -47,7 +49,7 @@ function getBgColor(el: Element): string | null {
 export default function StyleProbe(): JSX.Element {
   const [checks, setChecks] = React.useState<Check[]>([]);
   const [dark, setDark] = React.useState<boolean>(() =>
-    document.documentElement.classList.contains("dark")
+    document.documentElement.classList.contains("dark"),
   );
 
   React.useEffect(() => {
@@ -87,7 +89,9 @@ export default function StyleProbe(): JSX.Element {
       id: "tw-supports-variant",
       label: "supports:[backdrop-filter] Variant verwendbar",
       ok: Boolean(sup),
-      detail: sup ? "Browser unterstützt backdrop-filter" : "Kein Support (ok, Klasse greift dann nicht)",
+      detail: sup
+        ? "Browser unterstützt backdrop-filter"
+        : "Kein Support (ok, Klasse greift dann nicht)",
     });
 
     // 4) Kontraste echter UI-Elemente messen (optional falls gefunden)
@@ -97,14 +101,24 @@ export default function StyleProbe(): JSX.Element {
 
     const measureContrast = (el: HTMLElement | null, label: string) => {
       if (!el) {
-        results.push({ id: `contrast-${label}`, label: `Kontrast: ${label}`, ok: null, detail: "Element nicht gefunden" });
+        results.push({
+          id: `contrast-${label}`,
+          label: `Kontrast: ${label}`,
+          ok: null,
+          detail: "Element nicht gefunden",
+        });
         return;
       }
       const st = window.getComputedStyle(el);
       const fg = toRGB(st.color);
       const bg = toRGB(getBgColor(el));
       if (!fg || !bg) {
-        results.push({ id: `contrast-${label}`, label: `Kontrast: ${label}`, ok: null, detail: "Farben nicht ermittelbar" });
+        results.push({
+          id: `contrast-${label}`,
+          label: `Kontrast: ${label}`,
+          ok: null,
+          detail: "Farben nicht ermittelbar",
+        });
         return;
       }
       const ratio = contrastRatio(fg, bg);
@@ -153,7 +167,9 @@ export default function StyleProbe(): JSX.Element {
     <div className="fixed inset-2 sm:inset-4 z-[9999] pointer-events-none">
       <div className="pointer-events-auto max-w-3xl mx-auto rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white/90 dark:bg-neutral-900/90 backdrop-blur p-4 shadow-2xl">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Style Probe</h2>
+          <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+            Style Probe
+          </h2>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -169,7 +185,15 @@ export default function StyleProbe(): JSX.Element {
         <ul className="space-y-1">
           {checks.map((c) => (
             <li key={c.id} className="text-sm flex items-start gap-2">
-              <span className={c.ok === true ? "text-green-600" : c.ok === false ? "text-red-600" : "text-neutral-500"}>
+              <span
+                className={
+                  c.ok === true
+                    ? "text-green-600"
+                    : c.ok === false
+                      ? "text-red-600"
+                      : "text-neutral-500"
+                }
+              >
                 {c.ok === true ? "✔" : c.ok === false ? "✖" : "•"}
               </span>
               <div>

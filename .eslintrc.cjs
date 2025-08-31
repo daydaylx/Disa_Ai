@@ -1,66 +1,47 @@
-/* ESLint config – Disa_Ai (klassisch, kompatibel) */
+/* Strict, aber TS-freundlich */
 module.exports = {
   root: true,
-  env: {
-    es2022: true,
-    browser: true,
-    node: true,
-  },
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    ecmaFeatures: { jsx: true },
-    project: false
-  },
-  plugins: [
-    "@typescript-eslint",
-    "react",
-    "react-hooks",
-    "import",
-    "unused-imports"
-  ],
+  env: { browser: true, es2022: true },
+  parserOptions: { ecmaVersion: "latest", sourceType: "module" },
+  plugins: ["@typescript-eslint", "simple-import-sort", "unused-imports", "react"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-    "prettier"
   ],
-  settings: {
-    react: { version: "detect" }
-  },
+  settings: { react: { version: "detect" } },
   rules: {
-    // --- TypeScript Striktheit, aber praxistauglich ---
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-unused-vars": "off", // wir nutzen unused-imports statt dessen
-    // --- React ---
-    "react/jsx-uses-react": "off", // neue JSX-Transform
-    "react/react-in-jsx-scope": "off",
-    // --- Imports ---
-    "import/order": ["warn", {
-      "groups": ["builtin", "external", "internal", ["parent", "sibling", "index"]],
-      "newlines-between": "always",
-      "alphabetize": { "order": "asc", "caseInsensitive": true }
-    }],
-    "import/no-unresolved": "off", // Vite alias/bundler-resolve
-    // --- Unused Imports (schnell + zuverlässig) ---
-    "unused-imports/no-unused-imports": "error",
-    "unused-imports/no-unused-vars": [
-      "warn",
-      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
-    ]
+    // Global: wir delegieren Unused an plugin
+    "no-unused-vars": "off",
   },
   overrides: [
     {
-      files: ["**/*.test.*", "**/*.spec.*"],
-      env: { jest: false },
-      plugins: ["@typescript-eslint"],
+      files: ["**/*.ts", "**/*.tsx"],
+      parser: "@typescript-eslint/parser",
+      parserOptions: { ecmaFeatures: { jsx: true } },
       rules: {
-        "@typescript-eslint/no-explicit-any": "off"
-      }
-    }
-  ]
+        // TS kennt Typen wie JSX/RequestInit – diese Regel ist in TS-Projekten schlicht falsch
+        "no-undef": "off",
+        // Sortierung + Aufräumen
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+        "unused-imports/no-unused-imports": "error",
+        // Empty-Blocks: wir ersparen uns kosmetische Kommentare in Platzhalterdateien
+        "no-empty": "off",
+      },
+    },
+    {
+      files: ["tests/**/*.{ts,tsx}", "**/*.spec.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
+      parser: "@typescript-eslint/parser",
+      env: { browser: true, node: true },
+      globals: {
+        vi: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+      },
+    },
+  ],
 };

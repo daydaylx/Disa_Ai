@@ -12,18 +12,20 @@ export default defineConfig(async () => {
         visualizer({
           filename: "dist/stats.html",
           template: "treemap",
-          open: false
-        })
+          open: false,
+        }),
       );
     } catch {
-      console.warn("[analyze] 'rollup-plugin-visualizer' nicht installiert. Optional: npm i -D rollup-plugin-visualizer");
+      console.warn(
+        "[analyze] 'rollup-plugin-visualizer' nicht installiert. Optional: npm i -D rollup-plugin-visualizer",
+      );
     }
   }
 
   return {
     plugins,
     resolve: {
-      alias: { "@": path.resolve(__dirname, "./src") }
-    }
+      alias: { "@": path.resolve(__dirname, "./src") },
+    },
   };
 });

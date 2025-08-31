@@ -8,13 +8,7 @@ interface Props {
 }
 
 export default function TopNav({ tab, onChange }: Props): JSX.Element {
-  const LinkBtn = ({
-    to,
-    children,
-  }: {
-    to: Tab;
-    children: React.ReactNode;
-  }) => {
+  const LinkBtn = ({ to, children }: { to: Tab; children: React.ReactNode }) => {
     const active = tab === to;
     return (
       <button

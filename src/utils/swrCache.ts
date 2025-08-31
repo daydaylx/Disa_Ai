@@ -22,7 +22,7 @@ function getStorage(backend: SwrCacheBackend): Storage | null {
 export function swrGet<T>(
   key: string,
   maxAgeMs: number,
-  backend: SwrCacheBackend = "local"
+  backend: SwrCacheBackend = "local",
 ): { fresh: boolean; value: T | null } {
   const store = getStorage(backend);
   if (!store) return { fresh: false, value: null };
@@ -39,11 +39,7 @@ export function swrGet<T>(
   }
 }
 
-export function swrSet<T>(
-  key: string,
-  data: T,
-  backend: SwrCacheBackend = "local"
-): void {
+export function swrSet<T>(key: string, data: T, backend: SwrCacheBackend = "local"): void {
   const store = getStorage(backend);
   if (!store) return;
   const entry: SwrEntry<T> = { ts: Date.now(), data };

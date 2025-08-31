@@ -16,7 +16,7 @@ const desired = {
   format: "prettier --write .",
   "format:check": "prettier --check .",
   test: "vitest run",
-  "test:watch": "vitest"
+  "test:watch": "vitest",
 };
 
 // Scripts-Objekt sicherstellen

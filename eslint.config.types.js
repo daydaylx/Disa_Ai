@@ -25,7 +25,7 @@ export default [
         "@typescript-eslint/no-floating-promises": ["error", { ignoreIIFE: true }],
         "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
         "@typescript-eslint/require-await": "error",
-        "@typescript-eslint/consistent-type-assertions": "warn"
+        "@typescript-eslint/consistent-type-assertions": "warn",
       },
     };
   }),

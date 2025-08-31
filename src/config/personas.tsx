@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { loadStyles, type StyleItem } from "../lib/configLoader";
 
 const STYLE_KEY = "disa_style_id";
@@ -24,7 +25,11 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [styleId, setStyleId] = React.useState<string | null>(() => {
-    try { return localStorage.getItem(STYLE_KEY); } catch { return null; }
+    try {
+      return localStorage.getItem(STYLE_KEY);
+    } catch {
+      return null;
+    }
   });
 
   React.useEffect(() => {
@@ -35,7 +40,9 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
         if (!alive) return;
         setStyles(items);
         if (!styleId && items[0]?.id) {
-          try { localStorage.setItem(STYLE_KEY, items[0].id); } catch {}
+          try {
+            localStorage.setItem(STYLE_KEY, items[0].id);
+          } catch {}
           setStyleId(items[0].id);
         }
       } catch (e: any) {
@@ -45,17 +52,27 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
         if (alive) setLoading(false);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const current = React.useMemo<StyleItem | null>(
-    () => styles.find(s => s.id === styleId) ?? styles[0] ?? null,
-    [styles, styleId]
+    () => styles.find((s) => s.id === styleId) ?? styles[0] ?? null,
+    [styles, styleId],
   );
 
-  const value = React.useMemo(() => ({
-    styles, loading, error, styleId, setStyleId, current
-  }), [styles, loading, error, styleId, setStyleId, current]);
+  const value = React.useMemo(
+    () => ({
+      styles,
+      loading,
+      error,
+      styleId,
+      setStyleId,
+      current,
+    }),
+    [styles, loading, error, styleId, setStyleId, current],
+  );
 
   return <PersonaContext.Provider value={value}>{children}</PersonaContext.Provider>;
 }

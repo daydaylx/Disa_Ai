@@ -1,4 +1,5 @@
 import React from "react";
+
 import { usePersonaSelection } from "../config/personas";
 import { cn } from "../lib/cn";
 
@@ -17,7 +18,7 @@ const PersonaQuickBar: React.FC = () => {
             "px-3 py-1 rounded-full text-sm border transition",
             styleId === s.id
               ? "bg-violet-600/20 border-violet-500 text-violet-200"
-              : "bg-zinc-800/40 border-zinc-700 hover:border-violet-500/60"
+              : "bg-zinc-800/40 border-zinc-700 hover:border-violet-500/60",
           )}
           aria-pressed={styleId === s.id}
         >

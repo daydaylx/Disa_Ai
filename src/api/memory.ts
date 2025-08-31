@@ -1,4 +1,4 @@
-import { chatOnce, getModelFallback,type Msg } from "./openrouter";
+import { chatOnce, getModelFallback, type Msg } from "./openrouter";
 
 export async function updateMemorySummary(params: {
   previousMemory: string;
@@ -11,25 +11,23 @@ export async function updateMemorySummary(params: {
 
   const sys: Msg = {
     role: "system",
-    content:
-`Du extrahierst dauerhaft nützliche Nutzer-Merkpunkte aus einem Chatverlauf.
+    content: `Du extrahierst dauerhaft nützliche Nutzer-Merkpunkte aus einem Chatverlauf.
 Gib ausschließlich eine kurze, präzise Bullet-Liste in DEUTSCH zurück.
 Regeln:
 - Nur stabile Fakten/Präferenzen/Ziele/Verbote/Arbeitsstil.
 - Keine Einmalfragen, keine temporären Details, kein Smalltalk.
-- Maximal 12 Punkte, jeweils 1 Zeile.`
+- Maximal 12 Punkte, jeweils 1 Zeile.`,
   };
 
   const user: Msg = {
     role: "user",
-    content:
-`Bisheriges Memory:
+    content: `Bisheriges Memory:
 ${previousMemory || "(leer)"}
 
 Neue Nachrichten (neueste unten):
-${recentWindow.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n")}
+${recentWindow.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join("\n")}
 
-Aktualisiere die Merkliste.`
+Aktualisiere die Merkliste.`,
   };
 
   const opts = signal ? { model: chosen, signal } : { model: chosen };
@@ -48,26 +46,24 @@ export async function addExplicitMemory(params: {
 
   const sys: Msg = {
     role: "system",
-    content:
-`Du bist ein strenger Kurator einer dauerhaften Merkliste (DEUTSCH).
+    content: `Du bist ein strenger Kurator einer dauerhaften Merkliste (DEUTSCH).
 Aufgabe: Integriere den neuen Hinweis in die bestehende Liste.
 Regeln:
 - Nur stabile, wiederverwendbare Fakten/Präferenzen/Regeln behalten.
 - Keine Einmalaufgaben, keine temporären Details.
 - Entferne Dubletten, fasse redundanten Inhalt zusammen.
-- Maximal 12 Bullet-Punkte, jeweils 1 kurze Zeile.`
+- Maximal 12 Bullet-Punkte, jeweils 1 kurze Zeile.`,
   };
 
   const user: Msg = {
     role: "user",
-    content:
-`Bestehende Merkliste:
+    content: `Bestehende Merkliste:
 ${previousMemory || "(leer)"}
 
 Neuer Hinweis (vom Nutzer markiert):
 ${note}
 
-Gib NUR die aktualisierte Bullet-Liste aus.`
+Gib NUR die aktualisierte Bullet-Liste aus.`,
   };
 
   const opts = signal ? { model: chosen, signal } : { model: chosen };

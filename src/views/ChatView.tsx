@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { useConversations, type ChatMessage } from "../hooks/useConversations";
-import { loadModelCatalog, chooseDefaultModel } from "../config/models";
+import { useEffect, useState } from "react";
+
+import { chooseDefaultModel, loadModelCatalog } from "../config/models";
+import { type ChatMessage, useConversations } from "../hooks/useConversations";
 
 export default function ChatView() {
   const conv = useConversations();
@@ -18,8 +19,10 @@ export default function ChatView() {
 
   useEffect(() => {
     const first = conv.items[0]?.id ?? null;
-    if (first) { setConvId(first); setMessages(conv.getMessages(first)); }
-    else {
+    if (first) {
+      setConvId(first);
+      setMessages(conv.getMessages(first));
+    } else {
       const meta = conv.create("Neue Unterhaltung");
       setConvId(meta.id);
       setMessages([]);
