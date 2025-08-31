@@ -116,7 +116,7 @@ export default function SettingsView() {
             <ModelPicker
               value={modelId}
               onChange={(id) => { setModelId(id); setSelectedModelId(id) }}
-              policyFromRole={preferRolePolicy ? recPolicy : undefined}
+              policyFromRole={preferRolePolicy ? recPolicy : "any"}
             />
             <p className="text-xs opacity-70">Einige Rollen erfordern spezifische Modelle. Bei Konflikt wird automatisch umgeschaltet.</p>
           </div>
