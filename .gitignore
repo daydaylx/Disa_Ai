@@ -1,18 +1,22 @@
-# Node
+# Node/Vite/Dist
 node_modules/
-npm-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-.DS_Store
-
-# Vite
 dist/
 .vite/
-vite.svg
+.stats/
+*.log
 
-# Env
+# Env/Keys/Analyzer
 .env
 .env.*
 !.env.example
-test-results/
-*.log
+dist/stats.html
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Test/coverage
+coverage/
