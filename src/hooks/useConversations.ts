@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import type { ChatMessage, ConversationMeta } from "@/types/chat";
 import {
   convIndexKey, convMetaKey, convMsgsKey,
@@ -9,6 +8,7 @@ import {
 /** Sort helper: newest first */
 function sortByUpdated(a: ConversationMeta, b: ConversationMeta): number { return b.updatedAt - a.updatedAt; }
 function now(): number { return Date.now(); }
+function genId(): string { return globalThis.crypto?.randomUUID?.() ?? `m_${Math.random().toString(36).slice(2)}`; }
 
 export type UseConversations = {
   items: ConversationMeta[];
@@ -62,7 +62,7 @@ export function useConversations(): UseConversations {
   useEffect(() => { if (!activeId) { setMessages([]); return; } setMessages(readMsgs(activeId)); }, [activeId]);
 
   const createConversation = useCallback((title?: string) => {
-    const id = uuidv4();
+    const id = genId();
     const meta: ConversationMeta = { id, title: title?.trim() || "Neue Unterhaltung", createdAt: now(), updatedAt: now() };
     const index = readIndex();
     writeIndex([id, ...index]);
@@ -92,7 +92,7 @@ export function useConversations(): UseConversations {
   const addMessage = useCallback((msg: Omit<ChatMessage, "id" | "ts"> & { id?: string; ts?: number }) => {
     if (!activeId) return;
     const ts = typeof msg.ts === "number" ? msg.ts : now();
-    const id = msg.id ?? crypto.randomUUID?.() ?? `m_${Math.random().toString(36).slice(2)}`;
+    const id = msg.id ?? genId();
     const full: ChatMessage = { id, role: msg.role, content: msg.content, ts, ...(msg as any).meta ? { meta: (msg as any).meta } : {} };
 
     const list = readMsgs(activeId); const nextList = [...list, full];
@@ -115,7 +115,7 @@ export function useConversations(): UseConversations {
   const getMessages = useCallback((id: string) => readMsgs(id), []);
   const append = useCallback((id: string, msg: Omit<ChatMessage, "id" | "ts"> & { id?: string; ts?: number }) => {
     const ts = typeof msg.ts === "number" ? msg.ts : now();
-    const mid = msg.id ?? crypto.randomUUID?.() ?? `m_${Math.random().toString(36).slice(2)}`;
+    const mid = msg.id ?? genId();
     const full: ChatMessage = { id: mid, role: msg.role, content: msg.content, ts, ...(msg as any).meta ? { meta: (msg as any).meta } : {} };
     const list = readMsgs(id); const next = [...list, full]; writeMsgs(id, next);
     if (activeId === id) setMessages(next);
