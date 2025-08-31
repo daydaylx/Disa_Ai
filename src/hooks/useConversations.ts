@@ -1,80 +1,141 @@
-import * as React from "react"
-import { newId } from "../utils/id"
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import type { ChatMessage, ConversationMeta } from "@/types/chat";
+import {
+  convIndexKey, convMetaKey, convMsgsKey,
+  getJSON, setJSON, del, migrateStorage
+} from "@/utils/storage";
 
-export type Role = "system" | "user" | "assistant"
-export type ChatMessage = { id: string; role: Role; content: string; createdAt: number }
-export type ConversationMeta = { id: string; title: string; createdAt: number; updatedAt: number; modelId?: string }
+/** Sort helper: newest first */
+function sortByUpdated(a: ConversationMeta, b: ConversationMeta): number { return b.updatedAt - a.updatedAt; }
+function now(): number { return Date.now(); }
 
-const metaKey = (id: string) => `disa:conv:${id}:meta`
-const msgsKey = (id: string) => `disa:conv:${id}:msgs`
+export type UseConversations = {
+  items: ConversationMeta[];
+  activeId: string | null;
+  setActiveId: (id: string | null) => void;
 
-function readJson<T>(key: string, fallback: T): T { try { const raw = localStorage.getItem(key); if (!raw) return fallback; return JSON.parse(raw) as T } catch { return fallback } }
-function writeJson<T>(key: string, value: T) { try { localStorage.setItem(key, JSON.stringify(value)) } catch {} }
+  messages: ChatMessage[];
+  addMessage: (msg: Omit<ChatMessage, "id" | "ts"> & { id?: string; ts?: number }) => void;
 
-export function createConversation(title = "Neue Unterhaltung", modelId?: string): ConversationMeta {
-  const id = newId()
-  const now = Date.now()
-  const meta: ConversationMeta = { id, title, createdAt: now, updatedAt: now }
-  if (modelId !== undefined) meta.modelId = modelId
-  writeJson(metaKey(id), meta)
-  writeJson<ChatMessage[]>(msgsKey(id), [])
-  return meta
+  createConversation: (title?: string) => string;
+  renameConversation: (id: string, title: string) => void;
+  deleteConversation: (id: string) => void;
+
+  reload: () => void;
+
+  // Backcompat (ältere Komponenten)
+  create: (title?: string) => ConversationMeta;
+  getMeta: (id: string) => ConversationMeta | null;
+  getMessages: (id: string) => ChatMessage[];
+  append: (id: string, msg: Omit<ChatMessage, "id" | "ts"> & { id?: string; ts?: number }) => void;
+  rename: (id: string, title: string) => void;
+  remove: (id: string) => void;
+};
+
+function readIndex(): string[] {
+  const idx = getJSON<string[]>(convIndexKey());
+  return Array.isArray(idx) ? idx : [];
 }
+function writeIndex(ids: string[]): void { setJSON(convIndexKey(), ids); }
+function readMeta(id: string): ConversationMeta | null { return getJSON<ConversationMeta>(convMetaKey(id)); }
+function writeMeta(meta: ConversationMeta): void { setJSON(convMetaKey(meta.id), meta); }
+function readMsgs(id: string): ChatMessage[] { const arr = getJSON<ChatMessage[]>(convMsgsKey(id)); return Array.isArray(arr) ? arr : []; }
+function writeMsgs(id: string, messages: ChatMessage[]): void { setJSON(convMsgsKey(id), messages); }
 
-export function getConversationMeta(id: string): ConversationMeta | null { return readJson<ConversationMeta | null>(metaKey(id), null) }
-export function getConversationMessages(id: string): ChatMessage[] { return readJson<ChatMessage[]>(msgsKey(id), []) }
+export function useConversations(): UseConversations {
+  const [items, setItems] = useState<ConversationMeta[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-export function appendMessage(id: string, msg: Omit<ChatMessage, "id" | "createdAt"> & { id?: string; createdAt?: number }): ChatMessage {
-  const message: ChatMessage = { id: msg.id ?? newId(), createdAt: msg.createdAt ?? Date.now(), role: msg.role, content: msg.content }
-  const list = getConversationMessages(id)
-  list.push(message)
-  writeJson(msgsKey(id), list)
-  const meta = getConversationMeta(id)
-  if (meta) { meta.updatedAt = message.createdAt; writeJson(metaKey(id), meta) }
-  return message
-}
+  const reload = useCallback(() => {
+    migrateStorage();
+    const index = readIndex();
+    const metas = index.map(id => readMeta(id)).filter((m): m is ConversationMeta => !!m).sort(sortByUpdated);
+    setItems(metas);
+    const nextActive = (activeId && metas.find(m => m.id === activeId)) ? activeId : metas[0]?.id ?? null;
+    setActiveId(nextActive);
+    setMessages(nextActive ? readMsgs(nextActive) : []);
+  }, [activeId]);
 
-export function setConversationTitle(id: string, title: string) {
-  const meta = getConversationMeta(id)
-  if (meta) { meta.title = title; meta.updatedAt = Date.now(); writeJson(metaKey(id), meta) }
-}
+  useEffect(() => { reload(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!activeId) { setMessages([]); return; } setMessages(readMsgs(activeId)); }, [activeId]);
 
-export function deleteConversation(id: string) {
-  try { localStorage.removeItem(metaKey(id)); localStorage.removeItem(msgsKey(id)) } catch {}
-}
+  const createConversation = useCallback((title?: string) => {
+    const id = uuidv4();
+    const meta: ConversationMeta = { id, title: title?.trim() || "Neue Unterhaltung", createdAt: now(), updatedAt: now() };
+    const index = readIndex();
+    writeIndex([id, ...index]);
+    writeMeta(meta);
+    writeMsgs(id, []);
+    setItems(prev => [meta, ...prev].sort(sortByUpdated));
+    setActiveId(id);
+    setMessages([]);
+    return id;
+  }, []);
 
-export function listConversations(): ConversationMeta[] {
-  const list: ConversationMeta[] = []
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i)
-      if (!k) continue
-      if (k.startsWith("disa:conv:") && k.endsWith(":meta")) {
-        const meta = readJson<ConversationMeta | null>(k, null)
-        if (meta) list.push(meta)
-      }
+  const renameConversation = useCallback((id: string, title: string) => {
+    const meta = readMeta(id); if (!meta) return;
+    const next: ConversationMeta = { ...meta, title: title.trim(), updatedAt: now() };
+    writeMeta(next);
+    setItems(prev => prev.map(m => m.id === id ? next : m).sort(sortByUpdated));
+  }, []);
+
+  const deleteConversation = useCallback((id: string) => {
+    const rest = readIndex().filter(x => x !== id);
+    writeIndex(rest);
+    del(convMetaKey(id)); del(convMsgsKey(id));
+    setItems(prev => prev.filter(m => m.id !== id));
+    if (activeId === id) setActiveId(rest[0] ?? null);
+  }, [activeId]);
+
+  const addMessage = useCallback((msg: Omit<ChatMessage, "id" | "ts"> & { id?: string; ts?: number }) => {
+    if (!activeId) return;
+    const ts = typeof msg.ts === "number" ? msg.ts : now();
+    const id = msg.id ?? crypto.randomUUID?.() ?? `m_${Math.random().toString(36).slice(2)}`;
+    const full: ChatMessage = { id, role: msg.role, content: msg.content, ts, ...(msg as any).meta ? { meta: (msg as any).meta } : {} };
+
+    const list = readMsgs(activeId); const nextList = [...list, full];
+    writeMsgs(activeId, nextList); setMessages(nextList);
+
+    const meta = readMeta(activeId);
+    if (meta) {
+      const updated: ConversationMeta = { ...meta, updatedAt: ts };
+      writeMeta(updated);
+      setItems(prev => prev.map(m => m.id === activeId ? updated : m).sort(sortByUpdated));
     }
-  } catch {}
-  return list.sort((a, b) => b.updatedAt - a.updatedAt)
+  }, [activeId]);
+
+  // Backcompat
+  const create = useCallback((title?: string) => {
+    const id = createConversation(title);
+    return readMeta(id)!;
+  }, [createConversation]);
+  const getMeta = useCallback((id: string) => readMeta(id), []);
+  const getMessages = useCallback((id: string) => readMsgs(id), []);
+  const append = useCallback((id: string, msg: Omit<ChatMessage, "id" | "ts"> & { id?: string; ts?: number }) => {
+    const ts = typeof msg.ts === "number" ? msg.ts : now();
+    const mid = msg.id ?? crypto.randomUUID?.() ?? `m_${Math.random().toString(36).slice(2)}`;
+    const full: ChatMessage = { id: mid, role: msg.role, content: msg.content, ts, ...(msg as any).meta ? { meta: (msg as any).meta } : {} };
+    const list = readMsgs(id); const next = [...list, full]; writeMsgs(id, next);
+    if (activeId === id) setMessages(next);
+    const meta = readMeta(id); if (meta) {
+      const upd: ConversationMeta = { ...meta, updatedAt: ts };
+      writeMeta(upd);
+      setItems(prev => prev.map(m => m.id === id ? upd : m).sort(sortByUpdated));
+    }
+  }, [activeId]);
+  const rename = useCallback((id: string, title: string) => renameConversation(id, title), [renameConversation]);
+  const remove = useCallback((id: string) => deleteConversation(id), [deleteConversation]);
+
+  return useMemo(() => ({
+    items, activeId, setActiveId,
+    messages, addMessage,
+    createConversation, renameConversation, deleteConversation,
+    reload,
+    create, getMeta, getMessages, append, rename, remove,
+  }), [items, activeId, messages, addMessage, createConversation, renameConversation, deleteConversation, reload, create, getMeta, getMessages, append, rename, remove]);
 }
 
-export function useConversations() {
-  const [items, setItems] = React.useState<ConversationMeta[]>(() => listConversations())
-  React.useEffect(() => {
-    function onStorage(ev: StorageEvent) { if (!ev.key) return; if (ev.key.startsWith("disa:conv:")) setItems(listConversations()) }
-    window.addEventListener("storage", onStorage)
-    return () => window.removeEventListener("storage", onStorage)
-  }, [])
-  const api = React.useMemo(() => ({
-    refresh: () => setItems(listConversations()),
-    create: (title?: string, modelId?: string) => { const meta = createConversation(title, modelId); setItems(listConversations()); return meta },
-    rename: (id: string, title: string) => { setConversationTitle(id, title); setItems(listConversations()) },
-    remove: (id: string) => { deleteConversation(id); setItems(listConversations()) },
-    append: appendMessage,
-    getMessages: getConversationMessages,
-    getMeta: getConversationMeta
-  }), [])
-  return { items, ...api }
-}
-
-export type UseConversations = ReturnType<typeof useConversations>
+// Re-export types
+export type { ChatMessage, ConversationMeta } from "@/types/chat";

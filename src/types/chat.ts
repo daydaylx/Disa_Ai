@@ -1,26 +1,16 @@
-export type ChatRole = "system" | "user" | "assistant";
+export type Role = "user" | "assistant" | "system";
 
-export interface ChatMessage {
-  role: ChatRole;
+export type ChatMessage = {
+  id?: string;
+  role: Role;
   content: string;
-  /** optionale Metadaten (nicht an die API senden) */
-  meta?: {
-    id?: string;
-    conversationId?: string;
-    timestamp?: number;
-    tokenCount?: number;
-    status?: "sending" | "sent" | "error";
-  };
-}
+  ts?: number;
+  meta?: Record<string, unknown>;
+};
 
-export interface Conversation {
+export type ConversationMeta = {
   id: string;
   title: string;
-  model: string;
-  systemPrompt?: string;
   createdAt: number;
   updatedAt: number;
-  messageCount: number;
-  tokenCount: number;
-  archived: boolean;
-}
+};
