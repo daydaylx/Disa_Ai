@@ -1,42 +1,30 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "jsx": "react-jsx",
     "strict": true,
-    "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
     "useUnknownInCatchVariables": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolvePackageJsonExports": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true,
     "allowJs": false,
     "checkJs": false,
-    "isolatedModules": true
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["vite/client"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "vite.config.ts",
-    "vitest.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "coverage",
-    "e2e",
-    "src/features/**",
-    "src/entities/**",
-    "src/widgets/**",
-    "src/shared/**",
-    "src/lib/openrouter.ts"  // Legacy-Client
-  ]
+  "include": ["src", "env.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }
