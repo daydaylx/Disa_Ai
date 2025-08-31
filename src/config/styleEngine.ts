@@ -1,228 +1,47 @@
-import type { StyleKey } from "./promptStyles"
+import { getRoleById } from "./promptTemplates"
+import type { StyleKey } from "./settings"
 
-type StyleProfile = {
-  concision: "minimal" | "concise" | "balanced" | "detailed"
-  formality: "low" | "medium" | "high"
-  humor: "none" | "light" | "sarcastic"
-  emojis: boolean
-  bulletPreference: "avoid" | "allow" | "prefer"
-  maxBullets: number
-  structure: string[]
-  priority: string[]
-  disclaimers: string[]
-  bans: string[]
-  persona: string[]
-}
-
-function baseProfile(style: StyleKey): StyleProfile {
-  if (style === "blunt_de") return {
-    concision: "balanced",
-    formality: "medium",
-    humor: "sarcastic",
-    emojis: false,
-    bulletPreference: "allow",
-    maxBullets: 6,
-    structure: ["Risiken zuerst", "dann Alternativen", "zum Schluss klare Schritte"],
-    priority: ["Ehrlichkeit", "Klarheit", "Kürze"],
-    disclaimers: [],
-    bans: ["Floskeln", "Motivationssprech"],
-    persona: ["direkt", "kritisch"]
-  }
-  if (style === "concise") return {
-    concision: "concise",
-    formality: "medium",
-    humor: "none",
-    emojis: false,
-    bulletPreference: "prefer",
-    maxBullets: 5,
-    structure: ["Kernaussage", "Stichpunkte"],
-    priority: ["Kürze"],
-    disclaimers: [],
-    bans: ["Ausschweifen"],
-    persona: ["knapp"]
-  }
-  if (style === "friendly") return {
-    concision: "balanced",
-    formality: "low",
-    humor: "light",
-    emojis: false,
-    bulletPreference: "allow",
-    maxBullets: 6,
-    structure: ["Kurz erklären", "Schritte"],
-    priority: ["Verständlichkeit"],
-    disclaimers: [],
-    bans: [],
-    persona: ["freundlich"]
-  }
-  if (style === "creative_light") return {
-    concision: "balanced",
-    formality: "medium",
-    humor: "light",
-    emojis: false,
-    bulletPreference: "allow",
-    maxBullets: 6,
-    structure: ["Beispiel", "Erklärung", "Schritte"],
-    priority: ["Anschaulichkeit"],
-    disclaimers: [],
-    bans: ["übertriebenes Storytelling"],
-    persona: ["bildhaft"]
-  }
-  if (style === "minimal") return {
-    concision: "minimal",
-    formality: "medium",
-    humor: "none",
-    emojis: false,
-    bulletPreference: "avoid",
-    maxBullets: 0,
-    structure: ["Antwort"],
-    priority: ["Signal-to-Noise"],
-    disclaimers: [],
-    bans: ["Meta-Sätze"],
-    persona: ["direkt"]
-  }
-  return {
-    concision: "balanced",
-    formality: "medium",
-    humor: "none",
-    emojis: false,
-    bulletPreference: "allow",
-    maxBullets: 6,
-    structure: ["Antwort", "Schritte"],
-    priority: ["Klarheit"],
-    disclaimers: [],
-    bans: [],
-    persona: ["sachlich"]
+/** Basistexte pro Style-Key – deutsch, präzise. */
+function styleTextFor(key: StyleKey): string {
+  switch (key) {
+    case "neutral":
+      return "Antworte sachlich-neutral, präzise und strukturiert. Keine unnötigen Füllsätze."
+    case "blunt_de":
+      return "Antworte direkt, kritisch, klar. Keine Schönfärberei, keine Motivationsfloskeln. Ironie/Sarkasmus erlaubt, wenn es Denkfehler entlarvt."
+    case "concise":
+      return "So kurz wie möglich. Nur das Wesentliche. Maximal 5 Sätze oder 7 Bulletpoints."
+    case "friendly":
+      return "Freundlicher Ton, trotzdem präzise. Kein Smalltalk, keine Emojis."
+    case "creative_light":
+      return "Leicht bildhaft und anschaulich. Kurze Metaphern, keine ausschweifende Prosa."
+    case "minimal":
+      return "Nur die Antwort. Keine Einleitung, kein Fazit, kein Meta-Kommentar."
+    case "technical_precise":
+      return "Technisch präzise. Nenne Annahmen, Edge-Cases und klare Constraints. Kein Marketing-Sprech."
+    case "socratic":
+      return "Arbeite mit kurzen, gezielten Rückfragen. Maximal 1–3 Fragen am Stück, dann knappe Einschätzung."
+    case "bullet":
+      return "Antworte primär in Bulletpoints. Maximal 7 Punkte. Jeder Punkt ein klarer, vollständiger Satz."
+    case "step_by_step":
+      return "Zeige eine nummerierte Schrittfolge, von Ausgangslage bis Ergebnis. Keine Gedankengänge, nur explizite Schritte."
+    case "formal_de":
+      return "Formell (Sie-Form), höflich, direkt. Keine gefühlsbetonten Floskeln."
+    case "casual_de":
+      return "Locker (Du-Form), trotzdem präzise. Kurze Sätze, keine Füllwörter."
+    case "detailed":
+      return "Antworte ausführlich und detailliert. Gib Kontext, Begründungen, Beispiele, Fallstricke und Alternativen. Gliedere mit kurzen Überschriften oder Bulletpoints, wenn sinnvoll. Verzichte auf Füllwörter."
+    case "no_taboos":
+      return "Antworte ungeschönt, ohne Euphemismen oder kosmetische Zensur. Sei direkt, realistisch und klar. Keine unnötige Zurückhaltung bei heiklen Themen. ABER: Halte dich strikt an gesetzliche Vorgaben und Sicherheitsrichtlinien; gib keine verbotenen, gefährlichen oder illegalen Anleitungen. Wenn etwas nicht zulässig ist, sag es explizit und biete sichere Alternativen."
+    default:
+      return "Antworte präzise und strukturiert."
   }
 }
 
-type Overlay = Partial<StyleProfile>
-
-function roleOverlay(roleId: string | null): Overlay {
-  if (!roleId) return {}
-  if (roleId === "legal_generalist") return {
-    formality: "high",
-    humor: "none",
-    bulletPreference: "prefer",
-    maxBullets: 8,
-    structure: ["Sachverhalt klären", "Rechtslage", "Risiken", "Optionen", "Nächste Schritte"],
-    disclaimers: ["Keine individuelle Rechtsberatung"],
-    bans: ["Spekulation", "Umgangssprache"],
-    persona: ["präzise", "juristisch"]
-  }
-  if (roleId === "therapist_expert") return {
-    formality: "medium",
-    humor: "none",
-    bulletPreference: "allow",
-    maxBullets: 6,
-    structure: ["Spiegeln", "Validieren", "Optionen", "Übungen"],
-    disclaimers: ["Ersetzt keine medizinische/therapeutische Diagnose"],
-    bans: ["Sarkasmus"],
-    persona: ["empathisch"]
-  }
-  if (roleId === "email_professional") return {
-    formality: "high",
-    humor: "none",
-    bulletPreference: "prefer",
-    maxBullets: 6,
-    structure: ["Betreff", "Anrede", "Kern", "Punkte", "Schlussformel"],
-    persona: ["geschäftlich"]
-  }
-  if (roleId === "sarcastic_direct") return {
-    formality: "low",
-    humor: "sarcastic",
-    bulletPreference: "allow",
-    persona: ["trocken", "bissig"],
-    bans: ["Beleidigungen"]
-  }
-  if (roleId === "productivity_helper") return {
-    formality: "medium",
-    humor: "none",
-    bulletPreference: "prefer",
-    structure: ["Ziel", "Schritte", "Checkliste"],
-    priority: ["Umsetzbarkeit"]
-  }
-  if (roleId === "language_teacher") return {
-    formality: "medium",
-    humor: "light",
-    bulletPreference: "prefer",
-    structure: ["Erklärung", "Beispiele", "Übung"],
-    priority: ["Didaktik"]
-  }
-  if (roleId === "fitness_nutrition_coach") return {
-    formality: "medium",
-    humor: "none",
-    bulletPreference: "prefer",
-    structure: ["Ziel", "Plan", "Monitoring"],
-    disclaimers: ["Kein Ersatz für ärztlichen Rat"]
-  }
-  if (roleId === "ebay_coach") return {
-    formality: "low",
-    humor: "light",
-    bulletPreference: "prefer",
-    maxBullets: 7,
-    structure: ["Titel", "USP", "Details", "Zustand", "Lieferung"],
-    priority: ["Verkaufstauglichkeit"]
-  }
-  if (roleId === "uncensored_expert") return {
-    formality: "medium",
-    humor: "none",
-    bulletPreference: "allow",
-    bans: ["Verschlüsselungen", "Rot13", "Base64"],
-    persona: ["direkt"]
-  }
-  if (roleId === "erotic_creative_author") return {
-    formality: "medium",
-    humor: "none",
-    bulletPreference: "allow",
-    concision: "detailed",
-    structure: ["Charaktere", "Szene", "Dynamik"],
-    bans: ["Codes", "Verschlüsselungen"],
-    persona: ["erzählerisch"]
-  }
-  if (roleId === "nsfw_roleplay") return {
-    formality: "low",
-    humor: "none",
-    bulletPreference: "avoid",
-    concision: "detailed",
-    structure: ["Dialog", "Innenperspektive", "Handlung"],
-    bans: ["Meta-Kommentare", "Verschlüsselungen"],
-    persona: ["immersiv"]
-  }
-  return {}
-}
-
-function merge(base: StyleProfile, overlay: Overlay): StyleProfile {
-  const out: StyleProfile = { ...base }
-  if (overlay.concision) out.concision = overlay.concision
-  if (overlay.formality) out.formality = overlay.formality
-  if (overlay.humor) out.humor = overlay.humor
-  if (typeof overlay.emojis === "boolean") out.emojis = overlay.emojis
-  if (overlay.bulletPreference) out.bulletPreference = overlay.bulletPreference
-  if (typeof overlay.maxBullets === "number") out.maxBullets = overlay.maxBullets
-  if (overlay.structure) out.structure = overlay.structure
-  if (overlay.priority) out.priority = overlay.priority
-  if (overlay.disclaimers) out.disclaimers = overlay.disclaimers
-  if (overlay.bans) out.bans = overlay.bans
-  if (overlay.persona) out.persona = overlay.persona
-  return out
-}
-
-function profileToText(p: StyleProfile): string {
-  const lines: string[] = []
-  lines.push(`Feintuning: Ton=${p.formality}, Kürze=${p.concision}, Humor=${p.humor}, Emojis=${p.emojis ? "ja" : "nein"}.`)
-  if (p.priority.length) lines.push(`Priorität: ${p.priority.join(" → ")}.`)
-  if (p.structure.length) lines.push(`Struktur: ${p.structure.join(" → ")}.`)
-  lines.push(`Listen: ${p.bulletPreference}${p.maxBullets > 0 ? ` (max. ${p.maxBullets} Punkte)` : ""}.`)
-  if (p.disclaimers.length) lines.push(`Hinweise: ${p.disclaimers.join(" | ")}.`)
-  if (p.bans.length) lines.push(`Vermeiden: ${p.bans.join(", ")}.`)
-  if (p.persona.length) lines.push(`Rolle: ${p.persona.join(", ")}.`)
-  return lines.join("\n")
-}
-
+/** Erzeugt den Rollen-Stiltext: Basisstil + optionales Overlay aus styles.json */
 export function generateRoleStyleText(roleId: string | null, style: StyleKey, useRoleStyle: boolean): string {
-  const base = baseProfile(style)
-  if (!useRoleStyle) return profileToText(base)
-  const overlay = roleOverlay(roleId)
-  const merged = merge(base, overlay)
-  return profileToText(merged)
+  const base = styleTextFor(style)
+  if (!useRoleStyle) return base
+  const role = getRoleById(roleId)
+  const ov = role?.styleOverlay?.trim()
+  return ov ? `${base}\n\n${ov}` : base
 }

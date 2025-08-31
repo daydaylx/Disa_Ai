@@ -1,19 +1,36 @@
-export type StyleKey = "neutral" | "blunt_de" | "concise" | "friendly" | "creative_light" | "minimal"
+import type { StyleKey } from "./settings"
 
-const GUARDRAILS_BASE = "Du bist ein Chat-Assistent für allgemeine Gespräche. Antworte korrekt, knapp und ohne Abschweifungen. Wenn Informationen fehlen, sag das explizit. Keine medizinischen, rechtlichen oder finanziellen Empfehlungen ohne Unsicherheitshinweis."
-const NSFW_OFF = "Explizite Sexualität oder detaillierte Gewalt vermeidest du. Minderjährige, nicht-einvernehmliche Handlungen, Gewaltverherrlichung, illegale Inhalte: immer ablehnen."
-const NSFW_ON = "Erwachsenenthemen sind grundsätzlich erlaubt, sofern legal und im Rahmen der Plattformregeln. Tabu bleiben: Minderjährige, nicht-einvernehmliche Handlungen, Ausbeutung, Gewaltpornografie, illegale Inhalte. Wenn der Provider Inhalte blockiert, sag es offen und biete ggf. ein anderes Modell an."
-const STYLE_TEXT: Record<StyleKey, string> = {
-  neutral: "Ton: sachlich, nüchtern, ohne Emojis. Keine Floskeln.",
-  blunt_de: "Ton: direkt, kritisch, keine Schönrederei. Zeige Risiken und Schwächen zuerst, dann kurze Alternativen. Ironie/Sarkasmus nur zur Fehleraufdeckung.",
-  concise: "Antwortformat: maximal 3–5 Sätze oder eine kompakte Liste. Kein Fülltext.",
-  friendly: "Ton: freundlich, locker, aber informativ. Kurz halten, klare Handlungsschritte.",
-  creative_light: "Ton: lebendig, gelegentlich bildhafte Beispiele, trotzdem präzise. Kein übertriebenes Storytelling.",
-  minimal: "Nur die Antwort. Keine Meta-Sätze, keine Entschuldigungen."
-}
-const LOCALE_DE = "Schreibe auf Deutsch. Nutze klare Absätze oder kurze Listen; vermeide Überschriften außer bei strukturierten Listen."
-
+/**
+ * Basis-Systemprompt (rollen-agnostisch).
+ * - Sprache/Locale
+ * - Sicherheitsrahmen (abhängig von NSFW-Flag)
+ * - Klare, nüchterne Ausgaberichtlinien
+ * Hinweis: Der eigentliche Stiltext (Direktheit etc.) wird separat
+ * über generateRoleStyleText zugemischt. Hier bleibt es neutral.
+ */
 export function buildSystemPrompt(opts: { nsfw: boolean; style: StyleKey; locale?: "de-DE" | "de" }): string {
-  const parts = [GUARDRAILS_BASE, opts.nsfw ? NSFW_ON : NSFW_OFF, STYLE_TEXT[opts.style], LOCALE_DE]
-  return parts.join("\n\n")
+  const lang = (opts.locale === "de-DE" || opts.locale === "de") ? "de" : "de"
+  const common = [
+    `Antworte in ${lang}-Deutsch.`,
+    "Sei präzise, ehrlich und klar. Keine Füllfloskeln, keine Halluzinationen. Wenn dir Kontext fehlt, sag es eindeutig.",
+    "Nenne, wo sinnvoll, Annahmen und Grenzen. Struktur vor Wortmenge.",
+  ]
+
+  const safety = opts.nsfw
+    ? [
+        // NSFW erlaubt, aber mit klaren Grenzen
+        "NSFW-Inhalte sind erlaubt, solange legal und sicher. Keine Anleitungen zu illegalen, gefährlichen oder schädlichen Handlungen.",
+        "Bei rechtlichen/gefährlichen Themen: Risiken benennen, keine operative Anleitung, sichere Alternativen anbieten.",
+      ]
+    : [
+        // NSFW verboten
+        "Keine NSFW-Inhalte (sexuell explizit, pornografisch, Fetisch, Gewaltverherrlichung).",
+        "Keine Anleitungen zu illegalen, gefährlichen oder schädlichen Handlungen. Bei Grenzfällen höflich ablehnen und sichere Alternativen nennen.",
+      ]
+
+  // Der konkrete Stil kommt aus styleEngine (generateRoleStyleText) oben drauf.
+  // Hier bleibt der Basisrahmen neutral/konstant.
+  return [...common, ...safety].join("\n")
 }
+
+export type { StyleKey } from "./settings";
