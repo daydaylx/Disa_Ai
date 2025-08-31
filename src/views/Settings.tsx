@@ -40,7 +40,7 @@ export default function SettingsView() {
     let alive = true
     ;(async () => {
       try {
-        await fetchRoleTemplates(false)
+        await fetchRoleTemplates(true)
         if (!alive) return
         setTemplates(listRoleTemplates())
       } catch {

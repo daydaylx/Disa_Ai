@@ -12,37 +12,82 @@ export type RoleTemplate = {
 
 type RoleState = "idle" | "loading" | "ok" | "missing" | "error"
 
-const SS_KEY = "disa:roles:v1"
+const SS_KEY = "disa:roles:v2" // v2 => bricht alten Session-Cache bewusst
 let _roles: RoleTemplate[] = []
 let _loaded = false
 let _loading: Promise<RoleTemplate[]> | null = null
 let _state: RoleState = "idle"
 let _error: string | null = null
 
+function asArray(x: any): any[] { return Array.isArray(x) ? x : [] }
+
+function pickId(r: any): string {
+  const raw = r?.id ?? r?.key ?? r?.slug ?? r?.name ?? r?.title ?? ""
+  return String(raw).trim()
+}
+function pickName(r: any, id: string): string {
+  const raw = r?.name ?? r?.title ?? id
+  return String(raw).trim()
+}
+function pickSystem(r: any): string | undefined {
+  const raw = r?.system ?? r?.prompt ?? r?.template ?? r?.content
+  return typeof raw === "string" && raw.trim() ? raw : undefined
+}
+function pickAllow(r: any): string[] | undefined {
+  const src = r?.allow
+  if (Array.isArray(src)) return src.filter((s: any) => typeof s === "string")
+  if (typeof src === "string") return src.split(",").map(s => s.trim()).filter(Boolean)
+  return undefined
+}
+function pickPolicy(r: any): Safety | undefined {
+  const raw = (r?.policy ?? r?.safety ?? r?.moderation)
+  if (raw === "strict" || raw === "moderate" || raw === "loose") return raw
+  if (typeof raw === "string") {
+    const s = raw.toLowerCase()
+    if (/(strict|hard|tight|safe)/.test(s)) return "strict"
+    if (/(loose|uncensored|nsfw)/.test(s)) return "loose"
+    if (/(moderate|default|normal)/.test(s)) return "moderate"
+  }
+  return undefined
+}
+function pickTags(r: any): string[] | undefined {
+  const src = r?.tags
+  if (Array.isArray(src)) return src.filter((t: any) => typeof t === "string")
+  if (typeof src === "string") return src.split(",").map((t) => t.trim()).filter(Boolean)
+  return undefined
+}
+
+function normalizeRoot(input: any): any[] {
+  if (Array.isArray(input)) return input
+  if (Array.isArray(input?.templates)) return input.templates
+  if (Array.isArray(input?.roles)) return input.roles
+  if (Array.isArray(input?.styles)) return input.styles
+  if (Array.isArray(input?.data)) return input.data
+  return []
+}
+
 function normalize(input: any): RoleTemplate[] {
-  const arr: any[] = Array.isArray(input) ? input
-    : Array.isArray(input?.templates) ? input.templates
-    : Array.isArray(input?.roles) ? input.roles
-    : Array.isArray(input?.styles) ? input.styles
-    : []
+  const arr = normalizeRoot(input)
   const out: RoleTemplate[] = []
   for (const r of arr) {
-    const id = String(r?.id ?? "").trim()
-    const name = String(r?.name ?? id).trim()
+    const idRaw = pickId(r)
+    const id = idRaw || ""
+    const name = pickName(r, id)
     if (!id || !name) continue
     const item: RoleTemplate = { id, name }
-    if (typeof r?.system === "string") item.system = r.system
-    if (Array.isArray(r?.allow)) item.allow = r.allow.filter((x: any) => typeof x === "string")
-    const pol = r?.policy
-    if (pol === "strict" || pol === "moderate" || pol === "loose") item.policy = pol
+    const sys = pickSystem(r); if (sys) item.system = sys
+    const allow = pickAllow(r); if (allow) item.allow = allow
+    const pol = pickPolicy(r); if (pol) item.policy = pol
+    const tags = pickTags(r); if (tags) item.tags = tags
     if (typeof r?.styleOverlay === "string") item.styleOverlay = r.styleOverlay
-    if (Array.isArray(r?.tags)) item.tags = r.tags.filter((x: any) => typeof x === "string")
     out.push(item)
   }
   return out
 }
 
-function saveCache(list: RoleTemplate[]) { try { sessionStorage.setItem(SS_KEY, JSON.stringify({ ts: Date.now(), items: list })) } catch {} }
+function saveCache(list: RoleTemplate[]) {
+  try { sessionStorage.setItem(SS_KEY, JSON.stringify({ ts: Date.now(), items: list })) } catch {}
+}
 function loadCache(): RoleTemplate[] | null {
   try {
     const raw = sessionStorage.getItem(SS_KEY)
@@ -56,6 +101,7 @@ function loadCache(): RoleTemplate[] | null {
 export async function fetchRoleTemplates(force = false): Promise<RoleTemplate[]> {
   if (_loaded && !force) return _roles
   if (_loading && !force) return _loading
+
   const cached = loadCache()
   if (cached && !force) { _roles = cached; _loaded = true; _state = "ok"; return _roles }
 
@@ -63,12 +109,13 @@ export async function fetchRoleTemplates(force = false): Promise<RoleTemplate[]>
   _loading = (async () => {
     try {
       const res = await fetch("/styles.json", { cache: "no-store" })
-      if (res.status === 404) { _roles = []; _loaded = true; _state = "missing"; _error = "styles.json nicht gefunden."; return _roles }
+      if (res.status === 404) { _roles = []; _loaded = true; _state = "missing"; _error = "styles.json nicht gefunden (public/styles.json)"; return _roles }
       if (!res.ok)          { _roles = []; _loaded = true; _state = "error";   _error = `styles.json HTTP ${res.status}`; return _roles }
       const json = await res.json()
       const list = normalize(json)
-      _roles = list; _loaded = true; _state = "ok"; _loading = null
+      _roles = list; _loaded = true; _state = "ok"; _error = null
       saveCache(list)
+      _loading = null
       return _roles
     } catch (e: any) {
       _roles = []; _loaded = true; _state = "error"; _error = e?.message ?? String(e); _loading = null
