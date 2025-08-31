@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Chrome: Vite App",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}",
+      "skipFiles": ["**/node_modules/**"],
+      "preLaunchTask": "dev",
+      "serverReadyAction": {
+        "pattern": "Local:\\s*(http://localhost:5173/?)",
+        "action": "openExternally",
+        "uriFormat": "%s"
+      },
+      "sourceMaps": true
+    },
+    {
+      "name": "Vitest: current file",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": ["run", "--inspect-brk", "--threads=false", "${file}"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "smartStep": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
+    }
+  ]
+}
