@@ -33,8 +33,8 @@ export default function ChatView() {
   const [modelReady, setModelReady] = React.useState(false)
   const [models, setModels] = React.useState<ModelEntry[]>([])
   const [cooldown, setCooldown] = React.useState<number>(0)
-  const [switchedFrom, setSwitchedFrom] = React.useState<string | null>(null)
   const [panelOpen, setPanelOpen] = React.useState(false)
+  const [compatWarning, setCompatWarning] = React.useState<string | null>(null)
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
   const abortRef = React.useRef<AbortController | null>(null)
@@ -156,7 +156,11 @@ export default function ChatView() {
     const arg = rest.join(" ").trim()
     if (cmd === "nsfw") { const on = ["on","true","1","an","ja"].includes(arg.toLowerCase()); setNSFWSetting(on); return true }
     if (cmd === "style") {
-      const ok = ["neutral","blunt_de","concise","friendly","creative_light","minimal"]
+      const ok = [
+        "neutral","blunt_de","concise","friendly","creative_light","minimal",
+        "technical_precise","socratic","bullet","step_by_step","formal_de","casual_de",
+        "detailed","no_taboos"
+      ] as const
       const key = arg as any
       if (ok.includes(key)) { setStyleSetting(key); return true }
       setError("Unbekannter Stil."); return true
@@ -188,16 +192,13 @@ export default function ChatView() {
 
     let chosenModel = modelId
     const roleTmpl = getRoleById(getTemplateId())
-    if (roleTmpl?.allow && roleTmpl.allow.length > 0 && chosenModel && !roleTmpl.allow.includes(chosenModel)) {
-      const firstAllowed = models.find(m => roleTmpl.allow!.includes(m.id))?.id
-      if (firstAllowed) {
-        setSwitchedFrom(chosenModel!)
-        chosenModel = firstAllowed
-        setModelId(firstAllowed)
-        setSelectedModelId(firstAllowed)
-      }
-    }
+    setCompatWarning(null)
 
+    // KEIN auto-switch mehr. Nur Hinweise ausgeben, falls unpassend:
+    if (roleTmpl?.allow && roleTmpl.allow.length > 0 && chosenModel && !roleTmpl.allow.includes(chosenModel)) {
+      const allowed = roleTmpl.allow.join(", ")
+      setCompatWarning(`Rolle „${roleTmpl.name}“ empfiehlt Modelle: ${allowed}. Du nutzt: ${chosenModel}. Ich lasse es unverändert.`)
+    }
     if (chosenModel) {
       const prefer = getPreferRolePolicy()
       if (prefer) {
@@ -205,15 +206,8 @@ export default function ChatView() {
         if (rec !== "any") {
           const curSafety = models.find(m => m.id === chosenModel)?.safety ?? "moderate"
           if (curSafety !== rec) {
-            let candidates = models.filter(m => (m.safety ?? "moderate") === rec)
-            if (roleTmpl?.allow?.length) candidates = candidates.filter(m => roleTmpl.allow!.includes(m.id))
-            const replacement = candidates[0]?.id
-            if (replacement) {
-              setSwitchedFrom(chosenModel)
-              chosenModel = replacement
-              setModelId(replacement)
-              setSelectedModelId(replacement)
-            }
+            const msg = `Modell-Policy (${curSafety}) passt nicht zur empfohlenen Policy (${rec})${roleTmpl?.name ? ` der Rolle „${roleTmpl.name}“` : ""}. Ich ändere das Modell nicht.`
+            setCompatWarning((prev) => prev ? `${prev} ${msg}` : msg)
           }
         }
       }
@@ -303,14 +297,14 @@ export default function ChatView() {
         </div>
       )}
 
-      {switchedFrom && (
+      {compatWarning && (
         <div className="px-3 pt-2">
           <InlineBanner
             tone="info"
-            title="Rolle ↔ Modell"
-            actions={<button className="underline" onClick={() => { if (switchedFrom) { setModelId(switchedFrom); setSelectedModelId(switchedFrom) } setSwitchedFrom(null) }}>Rückgängig</button>}
+            title="Hinweis zu Rolle/Modell"
+            actions={<button className="underline" onClick={() => setCompatWarning(null)}>Ausblenden</button>}
           >
-            Modell wurde automatisch an die Rolle/Policy angepasst.
+            {compatWarning}
           </InlineBanner>
         </div>
       )}
@@ -402,7 +396,7 @@ export default function ChatView() {
                   type="button"
                   onClick={stop}
                   aria-label="Streaming stoppen"
-                  className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
+                  className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-blue-500"
                 >
                   <Icon name="stop" width="16" height="16" />
                   <span className="hidden sm:inline">Stop</span>
