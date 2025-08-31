@@ -20,3 +20,4 @@ Thumbs.db
 
 # Test/coverage
 coverage/
+test-results/
