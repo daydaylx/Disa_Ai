@@ -1,94 +1,90 @@
-export interface RetryOptions { retries: number; baseDelayMs: number; maxDelayMs: number; retryOn: number[] }
-export interface FetchJsonOptions extends RequestInit { timeoutMs?: number; retry?: Partial<RetryOptions>; apiKey?: string }
-export interface StreamCallback { onChunk: (text: string) => void; onError?: (err: unknown) => void; onComplete?: () => void }
+const BASE = "https://openrouter.ai/api/v1"
+const KEY_STORAGE = "disa:openrouter:key"
+const APP_TITLE = "Disa AI"
 
-const OPENROUTER_BASE = "https://openrouter.ai/api/v1"
-const STORAGE_KEY = "disa:openrouter:key"
-
-export function getApiKey(): string | null { try { return localStorage.getItem(STORAGE_KEY) } catch { return null } }
-export function setApiKey(key: string) { localStorage.setItem(STORAGE_KEY, key) }
-function sleep(ms: number) { return new Promise((res) => setTimeout(res, ms)) }
-
-async function fetchWithRetry(input: string, init: FetchJsonOptions = {}) {
-  const { timeoutMs = 20000, retry, apiKey, headers, ...rest } = init
-  const controller = new AbortController()
-  const id = setTimeout(() => controller.abort(), timeoutMs)
-  const effectiveKey = apiKey ?? getApiKey()
-  const mergedHeaders: Record<string, string> = { "Content-Type": "application/json", ...(headers as Record<string, string>) }
-  if (effectiveKey) { mergedHeaders["Authorization"] = `Bearer ${effectiveKey}`; mergedHeaders["HTTP-Referer"] = location.origin; mergedHeaders["X-Title"] = "Disa AI" }
-  const retryConf: RetryOptions = { retries: retry?.retries ?? 3, baseDelayMs: retry?.baseDelayMs ?? 500, maxDelayMs: retry?.maxDelayMs ?? 5000, retryOn: retry?.retryOn ?? [429, 500, 502, 503, 504] }
-  let attempt = 0
-  try {
-    while (true) {
-      attempt++
-      try {
-        const res = await fetch(input, { ...rest, headers: mergedHeaders, signal: controller.signal })
-        if (!retryConf.retryOn.includes(res.status) || attempt > retryConf.retries) { clearTimeout(id); return res }
-        const delay = Math.min(retryConf.maxDelayMs, retryConf.baseDelayMs * Math.pow(2, attempt - 1))
-        await sleep(delay)
-      } catch (err: any) {
-        if (err?.name === "AbortError") { clearTimeout(id); throw err }
-        if (attempt > retryConf.retries) { clearTimeout(id); throw err }
-        const delay = Math.min(retryConf.maxDelayMs, retryConf.baseDelayMs * Math.pow(2, attempt - 1))
-        await sleep(delay)
-      }
-    }
-  } finally { clearTimeout(id) }
+export function getApiKey(): string | null {
+  try { return localStorage.getItem(KEY_STORAGE) || null } catch { return null }
+}
+export function setApiKey(v: string) {
+  try { if (!v) localStorage.removeItem(KEY_STORAGE); else localStorage.setItem(KEY_STORAGE, v) } catch {}
 }
 
-export async function fetchJson<T>(path: string, init: FetchJsonOptions = {}): Promise<T> {
-  const res = await fetchWithRetry(`${OPENROUTER_BASE}${path}`, init)
-  const text = await res.text()
+function buildHeaders(explicitKey?: string): Headers {
+  const key = explicitKey ?? getApiKey() ?? ""
+  const h = new Headers()
+  if (key) h.set("Authorization", `Bearer ${key}`)
+  h.set("Content-Type", "application/json")
+  h.set("X-Title", APP_TITLE)
+  return h
+}
+
+type FetchJsonOptions = RequestInit & { apiKey?: string | null }
+export async function fetchJson<T = any>(path: string, opts?: FetchJsonOptions): Promise<T> {
+  const url = path.startsWith("http") ? path : `${BASE}${path}`
+  const init: RequestInit = {
+    method: opts?.method ?? "GET",
+    headers: buildHeaders(opts?.apiKey ?? undefined),
+    body: opts?.body ?? null,
+    mode: "cors",
+    credentials: "omit",
+    cache: "no-store",
+  }
+  const res = await fetch(url, init)
   if (!res.ok) {
-    let payload: any
-    try { payload = JSON.parse(text) } catch { payload = { error: text } }
-    const msg = payload?.error?.message ?? payload?.error ?? text ?? `HTTP ${res.status}`
-    const err: any = new Error(`OpenRouter ${res.status}: ${msg}`)
-    err.name = "HttpError"
-    err.status = res.status
-    const ra = res.headers.get("retry-after")
-    err.retryAfter = ra ? parseInt(ra) || 0 : 0
-    throw err
-  }
-  return JSON.parse(text) as T
-}
-
-export async function streamChatCompletion(body: unknown, cb: StreamCallback, init?: Omit<FetchJsonOptions, "headers" | "method" | "body">): Promise<AbortController> {
-  const controller = new AbortController()
-  const effectiveKey = init?.apiKey ?? getApiKey()
-  const headers: Record<string, string> = { "Content-Type": "application/json", "Accept": "text/event-stream" }
-  if (effectiveKey) { headers["Authorization"] = `Bearer ${effectiveKey}`; headers["HTTP-Referer"] = location.origin; headers["X-Title"] = "Disa AI" }
-  const res = await fetch(`${OPENROUTER_BASE}/chat/completions`, { method: "POST", headers, body: JSON.stringify(body), signal: controller.signal })
-  if (!res.ok || !res.body) {
     const text = await res.text().catch(() => "")
-    const err: any = new Error(`Streaming failed ${res.status}: ${text}`)
-    err.name = "HttpError"
-    err.status = res.status
-    const ra = res.headers.get("retry-after")
-    err.retryAfter = ra ? parseInt(ra) || 0 : 0
-    cb.onError?.(err)
-    controller.abort()
-    return controller
+    throw Object.assign(new Error(`HTTP ${res.status} ${res.statusText} — ${text.slice(0,200)}`), { status: res.status, body: text })
   }
-  const reader = res.body.getReader()
-  const dec = new TextDecoder()
-  let done = false
-  try {
-    while (!done) {
-      const chunk = await reader.read()
-      done = chunk.done
-      if (!done) cb.onChunk(dec.decode(chunk.value, { stream: true }))
-    }
-    cb.onComplete?.()
-  } catch (err) {
-    cb.onError?.(err)
-  } finally {
-    try { reader.releaseLock() } catch {}
-  }
-  return controller
+  return res.json() as Promise<T>
 }
 
-export async function getRawModels(apiKey?: string) {
-  const init = apiKey ? { apiKey } : {}
-  return fetchJson<any>("/models", init as any)
+export async function getRawModels(apiKey?: string) { return fetchJson<any>("/models", { apiKey: apiKey ?? null }) }
+
+export async function pingOpenRouter(): Promise<{ ok: boolean; status: number | null; corsBlocked: boolean; message: string }> {
+  try {
+    const res = await fetch(`${BASE}/models`, {
+      method: "GET",
+      headers: buildHeaders(),
+      mode: "cors",
+      credentials: "omit",
+      cache: "no-store",
+    })
+    return { ok: res.ok, status: res.status, corsBlocked: false, message: res.ok ? "OK" : `HTTP ${res.status} ${res.statusText}` }
+  } catch (e: any) {
+    return { ok: false, status: null, corsBlocked: true, message: e?.message ?? "Network/CORS error" }
+  }
+}
+
+export async function streamChatCompletion(
+  body: any,
+  handlers: { onChunk: (text: string) => void; onError: (err: any) => void; onComplete: () => void }
+): Promise<AbortController> {
+  const ctrl = new AbortController()
+  const init: RequestInit = {
+    method: "POST",
+    headers: buildHeaders(),
+    body: JSON.stringify(body),
+    mode: "cors",
+    credentials: "omit",
+    cache: "no-store",
+    signal: ctrl.signal,
+  }
+  try {
+    const res = await fetch(`${BASE}/chat/completions`, init)
+    if (!res.ok || !res.body) {
+      const text = await res.text().catch(() => "")
+      const err: any = new Error(`HTTP ${res.status} ${res.statusText} — ${text.slice(0,200)}`)
+      err.status = res.status
+      err.retryAfter = Number(res.headers.get("retry-after") ?? 0) || 0
+      throw err
+    }
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    while (true) {
+      const { value, done } = await reader.read()
+      if (done) break
+      if (value) handlers.onChunk(decoder.decode(value, { stream: true }))
+    }
+    handlers.onComplete()
+  } catch (e) { handlers.onError(e) }
+  return ctrl
 }
