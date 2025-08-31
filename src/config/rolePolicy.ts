@@ -1,7 +1,10 @@
 import type { Safety } from "./models"
+import { getRoleById } from "./promptTemplates"
 
 export function recommendedPolicyForRole(roleId: string | null): Safety | "any" {
-  switch (roleId) {
+  const r = getRoleById(roleId)
+  if (r?.policy === "strict" || r?.policy === "moderate" || r?.policy === "loose") return r.policy
+  switch (r?.id ?? "") {
     case "legal_generalist":
     case "therapist_expert":
     case "email_professional":
@@ -12,11 +15,6 @@ export function recommendedPolicyForRole(roleId: string | null): Safety | "any" 
       return "loose"
     case "sarcastic_direct":
       return "moderate"
-    case "productivity_helper":
-    case "ebay_coach":
-    case "language_teacher":
-    case "fitness_nutrition_coach":
-    case "neutral":
     default:
       return "moderate"
   }

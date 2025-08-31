@@ -7,7 +7,7 @@ import PillSelect from "../components/PillSelect"
 import SectionCard from "../components/SectionCard"
 import { setApiKey, getApiKey } from "../services/openrouter"
 import { getSelectedModelId, setSelectedModelId, getNSFW, setNSFW, getStyle, setStyle, type StyleKey, getTemplateId, setTemplateId, getUseRoleStyle, setUseRoleStyle } from "../config/settings"
-import { listRoleTemplates, getRoleById } from "../config/promptTemplates"
+import { fetchRoleTemplates, listRoleTemplates, getRoleById, type RoleTemplate } from "../config/promptTemplates"
 import { generateRoleStyleText } from "../config/styleEngine"
 import { recommendedPolicyForRole } from "../config/rolePolicy"
 import { getPreferRolePolicy, setPreferRolePolicy } from "../config/featureFlags"
@@ -30,10 +30,23 @@ export default function SettingsView() {
   const [templateId, setTemplateIdState] = React.useState<string | null>(getTemplateId())
   const [useRoleStyle, setUseRoleStyleState] = React.useState<boolean>(getUseRoleStyle())
   const [preferRolePolicy, setPreferRolePolicyState] = React.useState<boolean>(getPreferRolePolicy())
-  const templates = React.useMemo(() => listRoleTemplates(), [])
-  const currentRole = React.useMemo(() => getRoleById(templateId), [templateId])
-  const hasKey = !!(getApiKey() ?? "")
+  const [templates, setTemplates] = React.useState<RoleTemplate[]>([])
   const [savedToast, setSavedToast] = React.useState<string | null>(null)
+  const hasKey = !!(getApiKey() ?? "")
+
+  React.useEffect(() => {
+    let alive = true
+    ;(async () => {
+      try {
+        await fetchRoleTemplates(false)
+        if (!alive) return
+        setTemplates(listRoleTemplates())
+      } catch {
+        setTemplates([])
+      }
+    })()
+    return () => { alive = false }
+  }, [])
 
   React.useEffect(() => {
     if (!savedToast) return
@@ -48,6 +61,7 @@ export default function SettingsView() {
   function toggleNSFW() { const next = !nsfw; setNsfw(next); setNSFW(next) }
   function togglePreferRolePolicy() { const next = !preferRolePolicy; setPreferRolePolicyState(next); setPreferRolePolicy(next) }
 
+  const currentRole = React.useMemo(() => getRoleById(templateId), [templateId, templates])
   const roleStyleText = React.useMemo(() => generateRoleStyleText(currentRole?.id ?? null, style, useRoleStyle), [currentRole?.id, style, useRoleStyle])
   const recPolicy: Safety | "any" = React.useMemo(() => recommendedPolicyForRole(currentRole?.id ?? null), [currentRole?.id])
 
