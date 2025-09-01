@@ -210,7 +210,7 @@ export default function ChatView() {
       if (prefer) {
         const rec = recommendedPolicyForRole(roleTmpl?.id ?? null)
         if (rec !== "any") {
-          const curSafety = models.find(m => m.id === chosenModel)?.safety ?? "moderate"
+          const curSafety = (models.find(m => m.id === chosenModel) as any)?.safety ?? "moderate"
           if (curSafety !== rec) {
             const msg = `Modell-Policy (${curSafety}) passt nicht zur empfohlenen Policy (${rec})${roleTmpl?.name ? ` der Rolle „${roleTmpl.name}“` : ""}. Ich ändere das Modell nicht.`
             setCompatWarning((prev) => prev ? `${prev} ${msg}` : msg)
@@ -350,65 +350,67 @@ export default function ChatView() {
 
       <div className="border-t border-neutral-200 dark:border-neutral-800 p-3 sm:p-4 bg-white/80 dark:bg-neutral-950/70 backdrop-blur">
         <div className="mx-auto max-w-[960px]">
-          <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
-            <div className="px-3 sm:px-4 py-2 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3 text-xs text-neutral-600 dark:text-neutral-400">
-              <label className="flex items-center gap-1 cursor-pointer select-none">
-                <input type="checkbox" checked={autoScroll} onChange={(e) => setAutoScroll(e.target.checked)} aria-label="Automatisches Scrollen aktivieren" />
-                Auto-Scroll
-              </label>
-              <span className="opacity-60">Zeichen:</span><span>{charCount}</span>
-              {cooldown > 0 && (<><span className="opacity-60">•</span><span>Warte {cooldown}s</span></>)}
-              <div className="ml-auto inline-flex items-center gap-2">
-                <button type="button" onClick={() => { const meta = conv.create("Neue Unterhaltung"); loadConversation(meta.id) }}
-                  className="px-2 py-1 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">Neu</button>
-                <a href="#/settings" className="hidden sm:inline underline">Einstellungen</a>
+          <div className="input-shell">
+            <div className="input-shell__inner">
+              <div className="px-3 sm:px-4 py-2 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3 text-xs text-neutral-600 dark:text-neutral-400">
+                <label className="flex items-center gap-1 cursor-pointer select-none">
+                  <input type="checkbox" checked={autoScroll} onChange={(e) => setAutoScroll(e.target.checked)} aria-label="Automatisches Scrollen aktivieren" />
+                  Auto-Scroll
+                </label>
+                <span className="opacity-60">Zeichen:</span><span>{charCount}</span>
+                {cooldown > 0 && (<><span className="opacity-60">•</span><span>Warte {cooldown}s</span></>)}
+                <div className="ml-auto inline-flex items-center gap-2">
+                  <button type="button" onClick={() => { const meta = conv.create("Neue Unterhaltung"); loadConversation(meta.id) }}
+                    className="px-2 py-1 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">Neu</button>
+                  <a href="#/settings" className="hidden sm:inline underline">Einstellungen</a>
+                </div>
+                {error && <span className="text-red-600 dark:text-red-400" role="alert">• {error}</span>}
               </div>
-              {error && <span className="text-red-600 dark:text-red-400" role="alert">• {error}</span>}
-            </div>
 
-            <div className="px-3 sm:px-4 py-3 flex items-end gap-2">
-              <label className="sr-only" htmlFor="chat-input">Nachricht eingeben</label>
-              <textarea id="chat-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown}
-                placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)" aria-label="Nachricht eingeben"
-                className="flex-1 min-h-[72px] max-h-[240px] px-3 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500" />
-              {!streaming ? (
-                <button type="button" onClick={send} disabled={!hasKey || !modelId || input.trim().length === 0 || cooldown > 0}
-                  aria-label="Nachricht senden" className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-blue-600 bg-blue-600 text-white hover:brightness-110 disabled:opacity-50 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">
-                  <Icon name="send" width="18" height="18" /><span className="hidden sm:inline">Senden</span>
-                </button>
-              ) : (
-                <button type="button" onClick={stop} aria-label="Streaming stoppen"
-                  className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-blue-500">
-                  <Icon name="stop" width="16" height="16" /><span className="hidden sm:inline">Stop</span>
-                </button>
-              )}
-            </div>
+              <div className="px-3 sm:px-4 py-3 flex items-end gap-2">
+                <label className="sr-only" htmlFor="chat-input">Nachricht eingeben</label>
+                <textarea id="chat-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown}
+                  placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)" aria-label="Nachricht eingeben"
+                  className="flex-1 min-h-[72px] max-h-[240px] px-3 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline-none" />
+                {!streaming ? (
+                  <button type="button" onClick={send} disabled={!hasKey || !modelId || input.trim().length === 0 || cooldown > 0}
+                    aria-label="Nachricht senden" className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-blue-600 bg-blue-600 text-white hover:brightness-110 disabled:opacity-50 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">
+                    <Icon name="send" width="18" height="18" /><span className="hidden sm:inline">Senden</span>
+                  </button>
+                ) : (
+                  <button type="button" onClick={stop} aria-label="Streaming stoppen"
+                    className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-blue-500">
+                    <Icon name="stop" width="16" height="16" /><span className="hidden sm:inline">Stop</span>
+                  </button>
+                )}
+              </div>
 
-            <div className="px-3 sm:px-4 py-2 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">
-                <Icon name="model" width="14" height="14" />
-                <span className="truncate max-w-[200px]">{modelReady ? (modelId ?? "—") : "lade…"}</span>
-              </span>
-              {/* Rolle & Stil als Pills */}
-              {(() => {
-                const roleId = getTemplateId()
-                const role = getRoleById(roleId)
-                const style = getStyle()
-                const map: Record<string,string> = {
-                  blunt_de: "Direkt", neutral: "Neutral", concise: "Knapp", friendly: "Freundlich",
-                  creative_light: "Anschaulich", minimal: "Nur Antwort", technical_precise: "Technisch",
-                  socratic: "Sokratisch", bullet: "Bulletpoints", step_by_step: "Schritte",
-                  formal_de: "Formell", casual_de: "Locker", detailed: "Detailliert", no_taboos: "Ohne Tabus",
-                }
-                return (
-                  <>
-                    <span className="opacity-60">•</span>
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">Rolle: {role?.name ?? "—"}</span>
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">Stil: {map[style] ?? style}</span>
-                  </>
-                )
-              })()}
-              <span className="opacity-60">•</span><a href="#/settings" className="underline">Modell ändern</a>
+              <div className="px-3 sm:px-4 py-2 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
+                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">
+                  <Icon name="model" width="14" height="14" />
+                  <span className="truncate max-w-[200px]">{modelReady ? (modelId ?? "—") : "lade…"}</span>
+                </span>
+                {/* Rolle & Stil als Pills */}
+                {(() => {
+                  const roleId = getTemplateId()
+                  const role = getRoleById(roleId)
+                  const style = getStyle()
+                  const map: Record<string,string> = {
+                    blunt_de: "Direkt", neutral: "Neutral", concise: "Knapp", friendly: "Freundlich",
+                    creative_light: "Anschaulich", minimal: "Nur Antwort", technical_precise: "Technisch",
+                    socratic: "Sokratisch", bullet: "Bulletpoints", step_by_step: "Schritte",
+                    formal_de: "Formell", casual_de: "Locker", detailed: "Detailliert", no_taboos: "Ohne Tabus",
+                  }
+                  return (
+                    <>
+                      <span className="opacity-60">•</span>
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">Rolle: {role?.name ?? "—"}</span>
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">Stil: {map[style] ?? style}</span>
+                    </>
+                  )
+                })()}
+                <span className="opacity-60">•</span><a href="#/settings" className="underline">Modell ändern</a>
+              </div>
             </div>
           </div>
         </div>

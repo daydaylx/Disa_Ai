@@ -1,6 +1,5 @@
 import React from "react"
 import Icon from "./Icon"
-import Avatar from "./Avatar"
 
 type Action = { label: string; onClick: () => void }
 
@@ -9,16 +8,14 @@ type Props = {
   content: string
   onCopy?: (text: string) => void
   actions?: Action[]
-  /** Nur für letzte Assistant-Zeile beim Streamen */
   isStreamingTail?: boolean
 }
 
 export default function MessageBubble({ role, content, onCopy, actions, isStreamingTail }: Props) {
   const isAssistant = role === "assistant"
   return (
-    <div className={`bubble-row bubble-appear ${isAssistant ? "bubble-row--assistant" : "bubble-row--user"}`}>
-      {/* Avatar links für Assistant, rechts für User */}
-      {isAssistant && <Avatar role="assistant" />}
+    <div className={`bubble-row ${isAssistant ? "bubble-row--assistant" : "bubble-row--user"} animate-in`}>
+      {isAssistant && <div className="avatar avatar--assistant" aria-hidden>A</div>}
       <div className={`bubble-border ${isAssistant ? "" : "bubble-border--user"}`}>
         <div className="bubble-inner">
           {isAssistant && (
@@ -33,7 +30,7 @@ export default function MessageBubble({ role, content, onCopy, actions, isStream
           </div>
         </div>
       </div>
-      {!isAssistant && <Avatar role="user" />}
+      {!isAssistant && <div className="avatar avatar--user" aria-hidden>U</div>}
 
       <div className="bubble-actions">
         {onCopy && (

@@ -1,49 +1,88 @@
 import React from "react"
 import Icon from "./Icon"
-import { getSelectedModelId } from "../config/settings"
 import { applyTheme, getTheme, setTheme, type ThemeMode } from "../config/theme"
 
-type Props = { onOpenConversations?: () => void }
+type Props = {
+  onOpenConversations?: () => void
+}
+
+function useActiveHash() {
+  const [hash, setHash] = React.useState<string>(() => window.location.hash || "#/")
+  React.useEffect(() => {
+    const onHash = () => setHash(window.location.hash || "#/")
+    window.addEventListener("hashchange", onHash)
+    return () => window.removeEventListener("hashchange", onHash)
+  }, [])
+  return hash
+}
 
 export default function TopBar({ onOpenConversations }: Props) {
-  const modelId = getSelectedModelId()
-  const [theme, setThemeState] = React.useState<ThemeMode>(getTheme())
+  const hash = useActiveHash()
+  const items = [
+    { label: "Home", href: "#/", match: /^#\/?$/ },
+    { label: "Chat", href: "#/chat", match: /^#\/chat/ },
+    { label: "Einstellungen", href: "#/settings", match: /^#\/settings/ },
+  ]
 
-  React.useEffect(() => { applyTheme(theme) }, [theme])
+  const [mode, setMode] = React.useState<ThemeMode>(() => getTheme())
+  React.useEffect(() => { applyTheme(mode) }, [mode])
 
-  function toggleTheme() {
-    const next: ThemeMode = theme === "dark" ? "light" : "dark"
-    setTheme(next); setThemeState(next)
+  function cycleTheme() {
+    setMode((m) => {
+      const next: ThemeMode = m === "system" ? "dark" : m === "dark" ? "light" : "system"
+      setTheme(next)
+      return next
+    })
   }
 
+  const isActive = (m: RegExp) => m.test(hash)
+
   return (
-    <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-white/70 dark:supports-[backdrop-filter]:bg-neutral-950/60 bg-white dark:bg-neutral-950 border-b border-neutral-200/70 dark:border-neutral-800/70">
-      <div className="h-12 px-3 sm:px-4 flex items-center gap-3">
+    <header className="topbar px-3 pt-3">
+      <div className="topbar__bar flex items-center gap-2">
         <button
           type="button"
-          onClick={onOpenConversations}
-          className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
-          aria-label="Unterhaltungen öffnen"
-          title="Unterhaltungen"
+          className="icon-btn"
+          aria-label="Gespräche öffnen"
+          onClick={() => onOpenConversations?.()}
+          title="Gespräche"
         >
           <Icon name="menu" width="16" height="16" />
         </button>
-        <div className="flex items-center gap-2 text-sm font-medium">
-          <Icon name="sparkles" width="18" height="18" />
-          <span>Disa AI</span>
-        </div>
-        <div className="ml-auto flex items-center gap-2">
-          <span className="hidden sm:inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">
-            <Icon name="model" width="14" height="14" />
-            <span className="truncate max-w-[180px]">{modelId ?? "kein Modell"}</span>
-          </span>
-          <button type="button" onClick={toggleTheme} className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500" aria-label="Theme umschalten">
-            {theme === "dark" ? <Icon name="sun" width="16" height="16" /> : <Icon name="moon" width="16" height="16" />}
-          </button>
-          <a href="#/settings" className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500" aria-label="Einstellungen">
-            <Icon name="settings" width="16" height="16" />
-          </a>
-        </div>
+
+        <div className="ml-1 mr-1 font-semibold select-none">Disa AI</div>
+
+        <nav className="nav">
+          {items.map((it) => (
+            <a
+              key={it.href}
+              href={it.href}
+              className={`nav-pill ${isActive(it.match) ? "nav-pill--active" : ""}`}
+            >
+              {it.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="nav-spacer" />
+
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label="Theme wechseln (System/Light/Dark)"
+          onClick={cycleTheme}
+          title={`Theme: ${mode}`}
+        >
+          {mode === "dark" ? <Icon name="moon" width="16" height="16" /> : mode === "light" ? <Icon name="sun" width="16" height="16" /> : <Icon name="style" width="16" height="16" />}
+        </button>
+
+        <a href="#/settings" className="icon-btn" aria-label="Einstellungen" title="Einstellungen">
+          <Icon name="settings" width="16" height="16" />
+        </a>
+
+        <a className="nav-pill nav-primary" href="#/chat" title="Loslegen">
+          Loslegen
+        </a>
       </div>
     </header>
   )
