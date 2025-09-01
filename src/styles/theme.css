@@ -151,3 +151,137 @@
 button, a, .glass, .bubble-inner { transition: filter .15s ease, background-color .15s ease, border-color .15s ease; }
 
 /* DEBUG: sichtbar machen, ob theme.css greift (entfernen nach Prüfung) */
+
+/* ===== Topbar & Navigation ===== */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.topbar__bar {
+  border-radius: 18px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0,0,0,.30);
+}
+
+.nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  font-size: .9rem;
+  line-height: 1;
+  transition: filter .15s ease, background-color .15s ease, border-color .15s ease, transform .08s ease;
+  user-select: none;
+}
+.nav-pill:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.nav-pill--active {
+  background-image: var(--grad);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+}
+.nav-primary {
+  background-image: var(--grad);
+  color: #fff;
+  border-color: transparent;
+}
+.nav-spacer { flex: 1 1 auto; }
+
+/* runde Icon-Buttons rechts */
+.icon-btn {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.icon-btn:hover { filter: brightness(1.08); }
+
+/* kleine Text-Badges (z. B. Beta) */
+.badge {
+  font-size: .70rem; padding: 2px 6px; border-radius: 9999px;
+  background: rgba(255,255,255,0.08); border: 1px solid var(--border);
+}
+
+/* ===== Animations (CSS, no deps) ===== */
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(6px) scale(.995); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-in { animation: fade-in-up .24s ease-out both; }
+
+/* ===== Avatars ===== */
+.avatar {
+  width: 28px; height: 28px; border-radius: 9999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; font-size: .75rem; font-weight: 600;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  user-select: none;
+}
+.avatar--assistant { background-image: var(--grad); }
+.avatar--user {
+  background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
+  color: var(--text);
+}
+
+/* Positionierung zur Bubble */
+.bubble-row--assistant .avatar { margin-right: 6px; }
+.bubble-row--user .avatar { margin-left: 6px; }
+
+/* ===== Input Shell mit Gradient-Ring bei Fokus ===== */
+.input-shell {
+  border-radius: 18px;
+  position: relative;
+  padding: 1px;         /* Rahmen außen */
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  transition: box-shadow .15s ease, filter .15s ease;
+}
+.input-shell__inner {
+  border-radius: 17px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.input-shell:focus-within {
+  background-image: var(--grad);
+  border-color: transparent;
+  box-shadow: 0 12px 42px rgba(0,0,0,.3), 0 0 24px rgba(182,108,255,.25);
+}
+
+/* ===== Settings-/Model-Cards ===== */
+.card {
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0,0,0,.30);
+}
+.card__title { font-weight: 600; }
+.card__sub { opacity: .8; }
+
+.model-card { position: relative; }
+.policy-badge {
+  position: absolute; top: 12px; right: 12px;
+  font-size: .70rem; padding: 4px 8px; border-radius: 9999px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.08);
+}
+.policy--strict    { background: rgba(239, 68, 68, .15);  border-color: rgba(239,68,68,.35);   color: #fecaca; }
+.policy--moderate  { background: rgba(245,158, 11, .15);  border-color: rgba(245,158,11,.35); color: #fde68a; }
+.policy--loose     { background: rgba(34, 197, 94, .15);  border-color: rgba(34,197,94,.35);  color: #bbf7d0; }
