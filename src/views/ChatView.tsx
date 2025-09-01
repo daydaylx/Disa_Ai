@@ -10,12 +10,16 @@ import { generateRoleStyleText } from "../config/styleEngine"
 import MessageBubble from "../components/MessageBubble"
 import Icon from "../components/Icon"
 import TopBar from "../components/TopBar"
-import InstallBanner from "../components/InstallBanner"
 import { newId } from "../utils/id"
 import { useConversations, type ChatMessage } from "../hooks/useConversations"
 import ConversationsPanel from "../components/ConversationsPanel"
 import { recommendedPolicyForRole } from "../config/rolePolicy"
 import { getPreferRolePolicy } from "../config/featureFlags"
+import HeroCard from "../components/HeroCard"
+import QuickTiles from "../components/QuickTiles"
+import Orb from "../components/Orb"
+import ScrollToEndFAB from "../components/ScrollToEndFAB"
+import InstallBanner from "../components/InstallBanner"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
@@ -195,7 +199,7 @@ export default function ChatView() {
     const roleTmpl = getRoleById(getTemplateId())
     setCompatWarning(null)
 
-    // KEIN auto-switch mehr. Nur Hinweise ausgeben, falls unpassend:
+    // Kein Auto-Switch – nur Hinweis
     if (roleTmpl?.allow && roleTmpl.allow.length > 0 && chosenModel && !roleTmpl.allow.includes(chosenModel)) {
       const allowed = roleTmpl.allow.join(", ")
       setCompatWarning(`Rolle „${roleTmpl.name}“ empfiehlt Modelle: ${allowed}. Du nutzt: ${chosenModel}. Ich lasse es unverändert.`)
@@ -213,7 +217,6 @@ export default function ChatView() {
         }
       }
     }
-
     if (!chosenModel) { setError("Kein Modell ausgewählt/verfügbar."); return }
 
     setInput("")
@@ -287,8 +290,9 @@ export default function ChatView() {
   const charCount = input.length
 
   return (
-    <div className="min-h-[100svh] sm:h-[100svh] flex flex-col pb-[env(safe-area-inset-bottom)] bg-[radial-gradient(60%_60%_at_0%_0%,rgba(59,130,246,0.08),transparent_60%),radial-gradient(50%_60%_at_100%_0%,rgba(147,51,234,0.08),transparent_60%)]">
+    <div className="min-h-[100svh] sm:h-[100svh] flex flex-col pb-[env(safe-area-inset-bottom)] app-gradient">
       <TopBar onOpenConversations={() => setPanelOpen(true)} />
+      <InstallBanner />
 
       {!hasKey && (
         <div className="p-3">
@@ -300,41 +304,30 @@ export default function ChatView() {
 
       {compatWarning && (
         <div className="px-3 pt-2">
-          <InlineBanner
-            tone="info"
-            title="Hinweis zu Rolle/Modell"
-            actions={<button className="underline" onClick={() => setCompatWarning(null)}>Ausblenden</button>}
-          >
+          <InlineBanner tone="info" title="Hinweis zu Rolle/Modell" actions={<button className="underline" onClick={() => setCompatWarning(null)}>Ausblenden</button>}>
             {compatWarning}
           </InlineBanner>
         </div>
       )}
 
+      {/* Status-Leiste */}
+      <div className="px-4 sm:px-6 pt-3">
+        <div className="rounded-2xl glass px-4 py-2 flex items-center gap-3">
+          <Orb thinking={streaming} size={36} />
+          <div className="text-sm">
+            {streaming ? "Denke…" : "Bereit."}
+            {modelId && <span className="opacity-70"> · Modell: {modelId}</span>}
+          </div>
+        </div>
+      </div>
+
       <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-6 sm:px-6" role="log" aria-live="polite" aria-atomic="false">
-        {/* Top-Gradient wie in Settings */}
         <div className="sticky top-0 -mt-6 h-6 bg-gradient-to-b from-white/60 dark:from-neutral-950/60 to-transparent z-10 pointer-events-none" />
 
         {messages.length === 0 && (
-          <div className="mx-auto max-w-[860px] my-6">
-            <div className="p-[2px] rounded-2xl bg-gradient-to-br from-blue-500/35 via-fuchsia-500/25 to-emerald-400/25">
-              <div className="rounded-2xl border border-white/30 dark:border-white/10 bg-white/70 dark:bg-neutral-950/60 backdrop-blur px-5 py-5 shadow-sm">
-                <div className="flex items-center gap-2 text-sm font-medium mb-2">
-                  <Icon name="sparkles" width="18" height="18" />
-                  <span>Neue Unterhaltung</span>
-                </div>
-                <div className="text-sm opacity-80">
-                  Tippe unten. Befehle:
-                  {" "}
-                  <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/role</code>,
-                  {" "}
-                  <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/style</code>,
-                  {" "}
-                  <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/nsfw</code>,
-                  {" "}
-                  <code className="px-1 rounded bg-neutral-100 dark:bg-neutral-800">/model</code>.
-                </div>
-              </div>
-            </div>
+          <div className="mx-auto max-w-[860px] my-6 space-y-4">
+            <HeroCard onStart={() => setInput("Erkläre mir kurz und klar …")} />
+            <QuickTiles onPick={(p) => setInput(p)} />
           </div>
         )}
 
@@ -360,11 +353,11 @@ export default function ChatView() {
                 <input type="checkbox" checked={autoScroll} onChange={(e) => setAutoScroll(e.target.checked)} aria-label="Automatisches Scrollen aktivieren" />
                 Auto-Scroll
               </label>
-              <span className="opacity-60">Zeichen:</span>
-              <span>{charCount}</span>
+              <span className="opacity-60">Zeichen:</span><span>{charCount}</span>
               {cooldown > 0 && (<><span className="opacity-60">•</span><span>Warte {cooldown}s</span></>)}
               <div className="ml-auto inline-flex items-center gap-2">
-                <button type="button" onClick={() => { const meta = conv.create("Neue Unterhaltung"); loadConversation(meta.id) }} className="px-2 py-1 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">Neu</button>
+                <button type="button" onClick={() => { const meta = conv.create("Neue Unterhaltung"); loadConversation(meta.id) }}
+                  className="px-2 py-1 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">Neu</button>
                 <a href="#/settings" className="hidden sm:inline underline">Einstellungen</a>
               </div>
               {error && <span className="text-red-600 dark:text-red-400" role="alert">• {error}</span>}
@@ -372,35 +365,18 @@ export default function ChatView() {
 
             <div className="px-3 sm:px-4 py-3 flex items-end gap-2">
               <label className="sr-only" htmlFor="chat-input">Nachricht eingeben</label>
-              <textarea
-                id="chat-input"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={onKeyDown}
-                placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)"
-                aria-label="Nachricht eingeben"
-                className="flex-1 min-h-[72px] max-h-[240px] px-3 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
-              />
+              <textarea id="chat-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown}
+                placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)" aria-label="Nachricht eingeben"
+                className="flex-1 min-h-[72px] max-h-[240px] px-3 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500" />
               {!streaming ? (
-                <button
-                  type="button"
-                  onClick={send}
-                  disabled={!hasKey || !modelId || input.trim().length === 0 || cooldown > 0}
-                  aria-label="Nachricht senden"
-                  className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-blue-600 bg-blue-600 text-white hover:brightness-110 disabled:opacity-50 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500"
-                >
-                  <Icon name="send" width="18" height="18" />
-                  <span className="hidden sm:inline">Senden</span>
+                <button type="button" onClick={send} disabled={!hasKey || !modelId || input.trim().length === 0 || cooldown > 0}
+                  aria-label="Nachricht senden" className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-blue-600 bg-blue-600 text-white hover:brightness-110 disabled:opacity-50 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">
+                  <Icon name="send" width="18" height="18" /><span className="hidden sm:inline">Senden</span>
                 </button>
               ) : (
-                <button
-                  type="button"
-                  onClick={stop}
-                  aria-label="Streaming stoppen"
-                  className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-blue-500"
-                >
-                  <Icon name="stop" width="16" height="16" />
-                  <span className="hidden sm:inline">Stop</span>
+                <button type="button" onClick={stop} aria-label="Streaming stoppen"
+                  className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-blue-500">
+                  <Icon name="stop" width="16" height="16" /><span className="hidden sm:inline">Stop</span>
                 </button>
               )}
             </div>
@@ -410,13 +386,32 @@ export default function ChatView() {
                 <Icon name="model" width="14" height="14" />
                 <span className="truncate max-w-[200px]">{modelReady ? (modelId ?? "—") : "lade…"}</span>
               </span>
-              <span className="opacity-60">•</span>
-              <a href="#/settings" className="underline">Modell ändern</a>
+              {/* Rolle & Stil als Pills */}
+              {(() => {
+                const roleId = getTemplateId()
+                const role = getRoleById(roleId)
+                const style = getStyle()
+                const map: Record<string,string> = {
+                  blunt_de: "Direkt", neutral: "Neutral", concise: "Knapp", friendly: "Freundlich",
+                  creative_light: "Anschaulich", minimal: "Nur Antwort", technical_precise: "Technisch",
+                  socratic: "Sokratisch", bullet: "Bulletpoints", step_by_step: "Schritte",
+                  formal_de: "Formell", casual_de: "Locker", detailed: "Detailliert", no_taboos: "Ohne Tabus",
+                }
+                return (
+                  <>
+                    <span className="opacity-60">•</span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">Rolle: {role?.name ?? "—"}</span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">Stil: {map[style] ?? style}</span>
+                  </>
+                )
+              })()}
+              <span className="opacity-60">•</span><a href="#/settings" className="underline">Modell ändern</a>
             </div>
           </div>
         </div>
       </div>
 
+      <ScrollToEndFAB visible={!isAtBottom} onClick={() => { const el = scrollRef.current; if (el) el.scrollTop = el.scrollHeight }} />
       <ConversationsPanel open={panelOpen} onClose={()=>setPanelOpen(false)} currentId={convId} onSelect={loadConversation} />
     </div>
   )
