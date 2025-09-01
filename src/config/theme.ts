@@ -34,6 +34,8 @@ export function setTheme(m: ThemeMode) {
 
 /** Aktiviert die passende Dark/Light-Class – belässt das Farbpreset auf data-theme. */
 export function applyTheme(mode?: ThemeMode) {
+  try { console.log("__THEME", { preset: getThemePreset(), mode: mode ?? getTheme() }); } catch {}
+
   const m = mode ?? getTheme()
   let effective: "light" | "dark"
   if (m === "system") {
