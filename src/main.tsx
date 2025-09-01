@@ -1,4 +1,10 @@
+import "./styles/theme.css";
+import { initTheme } from "./config/theme";
+initTheme();
+initTheme();
+initTheme();
 import React from "react";
+initTheme();
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./styles/globals.css";

@@ -149,3 +149,5 @@
 
 /* Soft transitions */
 button, a, .glass, .bubble-inner { transition: filter .15s ease, background-color .15s ease, border-color .15s ease; }
+
+/* DEBUG: sichtbar machen, ob theme.css greift (entfernen nach Prüfung) */
