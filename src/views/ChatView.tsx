@@ -1,3 +1,4 @@
+
 import React from "react"
 import InlineBanner from "../components/InlineBanner"
 import { streamChatCompletion } from "../services/openrouter"
@@ -21,11 +22,26 @@ import Orb from "../components/Orb"
 import ScrollToEndFAB from "../components/ScrollToEndFAB"
 import InstallBanner from "../components/InstallBanner"
 import Aurora from "../components/Aurora"
+import ChatInput from "../components/ChatInput";
+import { CHAT_NEWSESSION_EVENT } from "../utils/focusChatInput";
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
 export default function ChatView() {
-  const conv = useConversations()
+  
+  React.useEffect(() => {
+    const handler = () => {
+      const meta = conv.create("Neue Unterhaltung");
+      setConvId(meta.id);
+      setMessages([]);
+    };
+    window.addEventListener(CHAT_NEWSESSION_EVENT, handler as unknown as EventListener);function handleInputSubmit(text: string) { setInput(text); void send(); }
+
+
+    return () => window.removeEventListener(CHAT_NEWSESSION_EVENT, handler as unknown as EventListener);
+  }, []);
+
+const conv = useConversations()
   const [convId, setConvId] = React.useState<string | null>(null)
 
   const [messages, setMessages] = React.useState<Msg[]>([])
@@ -414,7 +430,9 @@ export default function ChatView() {
             </div>
           </div>
         </div>
-      </div>
+      </div> 
+      <ChatInput onSubmit={(text) => { setInput(text); void send(); }} onStop={stop} busy={streaming} />
+
 
       <ScrollToEndFAB visible={!isAtBottom} onClick={() => { const el = scrollRef.current; if (el) el.scrollTop = el.scrollHeight }} />
       <ConversationsPanel open={panelOpen} onClose={()=>setPanelOpen(false)} currentId={convId} onSelect={loadConversation} />
