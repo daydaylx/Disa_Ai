@@ -26,3 +26,4 @@ if (import.meta?.env?.PROD && "serviceWorker" in navigator) {
     } catch {}
   })();
 }
+import "./pwa"
