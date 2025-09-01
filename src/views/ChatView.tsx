@@ -20,6 +20,7 @@ import QuickTiles from "../components/QuickTiles"
 import Orb from "../components/Orb"
 import ScrollToEndFAB from "../components/ScrollToEndFAB"
 import InstallBanner from "../components/InstallBanner"
+import Aurora from "../components/Aurora"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
@@ -291,6 +292,7 @@ export default function ChatView() {
 
   return (
     <div className="min-h-[100svh] sm:h-[100svh] flex flex-col pb-[env(safe-area-inset-bottom)] app-gradient">
+      <Aurora />
       <TopBar onOpenConversations={() => setPanelOpen(true)} />
       <InstallBanner />
 
@@ -331,7 +333,7 @@ export default function ChatView() {
           </div>
         )}
 
-        {messages.map((m) => {
+        {messages.map((m, idx) => {
           const actions = m.role === "user"
             ? [{ label: "Edit & resend", onClick: () => setInput(m.content) }]
             : [
@@ -339,8 +341,9 @@ export default function ChatView() {
                 { label: "Zusammenfassen", onClick: () => { setInput("Fasse die letzte Antwort in 5 Punkten zusammen."); } },
                 { label: "To-Dos", onClick: () => { setInput("Extrahiere umsetzbare To-Dos als Markdown-Liste."); } }
               ]
+          const isTail = streaming && idx === messages.length - 1 && m.role === "assistant"
           return (
-            <MessageBubble key={m.id} role={m.role === "user" ? "user" : "assistant"} content={m.content} onCopy={copyMessage} actions={actions} />
+            <MessageBubble key={m.id} role={m.role === "user" ? "user" : "assistant"} content={m.content} onCopy={copyMessage} actions={actions} isStreamingTail={isTail} />
           )
         })}
       </div>
