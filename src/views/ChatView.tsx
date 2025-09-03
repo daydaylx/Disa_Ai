@@ -1,8 +1,7 @@
-
 import React from "react"
 import InlineBanner from "../components/InlineBanner"
 import { streamChatCompletion } from "../services/openrouter"
-import { getSelectedModelId, getNSFW, getStyle, getTemplateId, getUseRoleStyle, setTemplateId, setStyle as setStyleSetting, setNSFW as setNSFWSetting, setSelectedModelId } from "../config/settings"
+import { getSelectedModelId, getNSFW, getStyle, getTemplateId, setNSFW as setNSFWSetting, setSelectedModelId } from "../config/settings"
 import { loadModelCatalog, chooseDefaultModel, type ModelEntry } from "../config/models"
 import { buildSystemPrompt } from "../config/promptStyles"
 import { useReducedMotion } from "../hooks/useReducedMotion"
@@ -22,26 +21,13 @@ import Orb from "../components/Orb"
 import ScrollToEndFAB from "../components/ScrollToEndFAB"
 import InstallBanner from "../components/InstallBanner"
 import Aurora from "../components/Aurora"
-import ChatInput from "../components/ChatInput";
-import { CHAT_NEWSESSION_EVENT } from "../utils/focusChatInput";
+import ChatInput from "../components/ChatInput"
+import { CHAT_NEWSESSION_EVENT } from "../utils/focusChatInput"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
 export default function ChatView() {
-  
-  React.useEffect(() => {
-    const handler = () => {
-      const meta = conv.create("Neue Unterhaltung");
-      setConvId(meta.id);
-      setMessages([]);
-    };
-    window.addEventListener(CHAT_NEWSESSION_EVENT, handler as unknown as EventListener);function handleInputSubmit(text: string) { setInput(text); void send(); }
-
-
-    return () => window.removeEventListener(CHAT_NEWSESSION_EVENT, handler as unknown as EventListener);
-  }, []);
-
-const conv = useConversations()
+  const conv = useConversations()
   const [convId, setConvId] = React.useState<string | null>(null)
 
   const [messages, setMessages] = React.useState<Msg[]>([])
@@ -61,9 +47,21 @@ const conv = useConversations()
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
   const abortRef = React.useRef<AbortController | null>(null)
   const bufferRef = React.useRef<string>("")
-  const startTimeRef = React.useRef<number>(0)
   const assistantBufferRef = React.useRef<string>("")
 
+  // NEWSESSION-Event: neue Unterhaltung starten
+  React.useEffect(() => {
+    const handler = () => {
+      const meta = conv.create("Neue Unterhaltung");
+      setConvId(meta.id);
+      setMessages([]);
+    };
+    window.addEventListener(CHAT_NEWSESSION_EVENT, handler as unknown as EventListener);
+    return () => window.removeEventListener(CHAT_NEWSESSION_EVENT, handler as unknown as EventListener);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Model-Katalog laden + Default wählen (nur 1x)
   React.useEffect(() => {
     let alive = true
     ;(async () => {
@@ -80,8 +78,10 @@ const conv = useConversations()
       }
     })()
     return () => { alive = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Erste Konversation herstellen/laden
   React.useEffect(() => {
     if (convId) return
     const first = conv.items[0]?.id
@@ -90,13 +90,16 @@ const conv = useConversations()
       const meta = conv.create("Neue Unterhaltung")
       setConvId(meta.id); setMessages([])
     }
-  }, [conv.items.length]) // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conv.items.length])
 
+  // Auto-Scroll ans Ende während Streaming
   React.useEffect(() => {
     if (!autoScroll || !scrollRef.current || !isAtBottom) return
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight
   }, [messages, streaming, autoScroll, isAtBottom])
 
+  // Bottom-Tracking
   React.useEffect(() => {
     function onScroll() {
       const el = scrollRef.current
@@ -184,13 +187,13 @@ const conv = useConversations()
         "detailed","no_taboos"
       ] as const
       const key = arg as any
-      if (ok.includes(key)) { setStyleSetting(key); return true }
+      if (ok.includes(key)) { /* Style liegt im globalen Setting */ return true }
       setError("Unbekannter Stil."); return true
     }
     if (cmd === "role") {
       const all = ["neutral","email_professional","sarcastic_direct","therapist_expert","legal_generalist","productivity_helper","ebay_coach","language_teacher","fitness_nutrition_coach","uncensored_expert","nsfw_roleplay","erotic_creative_author"]
       const found = all.find(id => id === arg) || all.find(id => id.includes(arg))
-      if (found) { setTemplateId(found); return true }
+      if (found) { /* Template-Id wird global verwaltet */ return true }
       setError("Rolle nicht gefunden."); return true
     }
     if (cmd === "model") {
@@ -216,7 +219,7 @@ const conv = useConversations()
     const roleTmpl = getRoleById(getTemplateId())
     setCompatWarning(null)
 
-    // Kein Auto-Switch – nur Hinweis
+    // Nur Hinweis, kein Auto-Switch
     if (roleTmpl?.allow && roleTmpl.allow.length > 0 && chosenModel && !roleTmpl.allow.includes(chosenModel)) {
       const allowed = roleTmpl.allow.join(", ")
       setCompatWarning(`Rolle „${roleTmpl.name}“ empfiehlt Modelle: ${allowed}. Du nutzt: ${chosenModel}. Ich lasse es unverändert.`)
@@ -229,7 +232,7 @@ const conv = useConversations()
           const curSafety = (models.find(m => m.id === chosenModel) as any)?.safety ?? "moderate"
           if (curSafety !== rec) {
             const msg = `Modell-Policy (${curSafety}) passt nicht zur empfohlenen Policy (${rec})${roleTmpl?.name ? ` der Rolle „${roleTmpl.name}“` : ""}. Ich ändere das Modell nicht.`
-            setCompatWarning((prev) => prev ? `${prev} ${msg}` : msg)
+            setCompatWarning(prev => prev ? `${prev} ${msg}` : msg)
           }
         }
       }
@@ -243,10 +246,9 @@ const conv = useConversations()
     setStreaming(true)
     bufferRef.current = ""
     assistantBufferRef.current = ""
-    startTimeRef.current = performance.now()
 
     const base = buildSystemPrompt({ nsfw: getNSFW(), style: getStyle(), locale: "de-DE" })
-    const roleStyle = generateRoleStyleText(roleTmpl?.id ?? null, getStyle(), getUseRoleStyle())
+    const roleStyle = generateRoleStyleText(roleTmpl?.id ?? null, getStyle(), true /*getUseRoleStyle*/ as any)
     const system = [roleTmpl?.system ?? "", base, roleStyle].filter(Boolean).join("\n\n")
 
     const body = {
@@ -301,10 +303,8 @@ const conv = useConversations()
   }
 
   function stop() { try { abortRef.current?.abort() } catch {} ; abortRef.current = null; setStreaming(false) }
-  function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send() } }
-  async function copyMessage(text: string) { try { await navigator.clipboard.writeText(text) } catch {} }
 
-  const charCount = input.length
+  async function copyMessage(text: string) { try { await navigator.clipboard.writeText(text) } catch {} }
 
   return (
     <div className="min-h-[100svh] sm:h-[100svh] flex flex-col pb-[env(safe-area-inset-bottom)] app-gradient">
@@ -335,10 +335,18 @@ const conv = useConversations()
           <div className="text-sm">
             {streaming ? "Denke…" : "Bereit."}
             {modelId && <span className="opacity-70"> · Modell: {modelId}</span>}
+            {cooldown > 0 && <span className="opacity-70"> · Warte {cooldown}s</span>}
+          </div>
+          <div className="ml-auto flex items-center gap-3 text-sm">
+            <label className="inline-flex items-center gap-2 select-none cursor-pointer">
+              <input type="checkbox" className="accent-current" checked={autoScroll} onChange={(e)=>setAutoScroll(e.target.checked)} />
+              Auto-Scroll
+            </label>
           </div>
         </div>
       </div>
 
+      {/* Nachrichtenliste */}
       <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-6 sm:px-6" role="log" aria-live="polite" aria-atomic="false">
         <div className="sticky top-0 -mt-6 h-6 bg-gradient-to-b from-white/60 dark:from-neutral-950/60 to-transparent z-10 pointer-events-none" />
 
@@ -362,77 +370,20 @@ const conv = useConversations()
             <MessageBubble key={m.id} role={m.role === "user" ? "user" : "assistant"} content={m.content} onCopy={copyMessage} actions={actions} isStreamingTail={isTail} />
           )
         })}
+
+        {/* Fehler-/Hinweiszeile (klein, unaufdringlich) */}
+        {error && (
+          <div className="mt-4 text-sm opacity-80">
+            <span className="inline-flex items-center gap-2 rounded-md px-2 py-1 bg-red-500/10 border border-red-500/30">
+              <Icon name="info" width="14" height="14" />
+              <span>• {error}</span>
+            </span>
+          </div>
+        )}
       </div>
 
-      <div className="border-t border-neutral-200 dark:border-neutral-800 p-3 sm:p-4 bg-white/80 dark:bg-neutral-950/70 backdrop-blur">
-        <div className="mx-auto max-w-[960px]">
-          <div className="input-shell">
-            <div className="input-shell__inner">
-              <div className="px-3 sm:px-4 py-2 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3 text-xs text-neutral-600 dark:text-neutral-400">
-                <label className="flex items-center gap-1 cursor-pointer select-none">
-                  <input type="checkbox" checked={autoScroll} onChange={(e) => setAutoScroll(e.target.checked)} aria-label="Automatisches Scrollen aktivieren" />
-                  Auto-Scroll
-                </label>
-                <span className="opacity-60">Zeichen:</span><span>{charCount}</span>
-                {cooldown > 0 && (<><span className="opacity-60">•</span><span>Warte {cooldown}s</span></>)}
-                <div className="ml-auto inline-flex items-center gap-2">
-                  <button type="button" onClick={() => { const meta = conv.create("Neue Unterhaltung"); loadConversation(meta.id) }}
-                    className="px-2 py-1 rounded border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">Neu</button>
-                  <a href="#/settings" className="hidden sm:inline underline">Einstellungen</a>
-                </div>
-                {error && <span className="text-red-600 dark:text-red-400" role="alert">• {error}</span>}
-              </div>
-
-              <div className="px-3 sm:px-4 py-3 flex items-end gap-2">
-                <label className="sr-only" htmlFor="chat-input">Nachricht eingeben</label>
-                <textarea id="chat-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown}
-                  placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)" aria-label="Nachricht eingeben"
-                  className="flex-1 min-h-[72px] max-h-[240px] px-3 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline-none" />
-                {!streaming ? (
-                  <button type="button" onClick={send} disabled={!hasKey || !modelId || input.trim().length === 0 || cooldown > 0}
-                    aria-label="Nachricht senden" className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-blue-600 bg-blue-600 text-white hover:brightness-110 disabled:opacity-50 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">
-                    <Icon name="send" width="18" height="18" /><span className="hidden sm:inline">Senden</span>
-                  </button>
-                ) : (
-                  <button type="button" onClick={stop} aria-label="Streaming stoppen"
-                    className="shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline focus:outline-2 focus:outline-blue-500">
-                    <Icon name="stop" width="16" height="16" /><span className="hidden sm:inline">Stop</span>
-                  </button>
-                )}
-              </div>
-
-              <div className="px-3 sm:px-4 py-2 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">
-                  <Icon name="model" width="14" height="14" />
-                  <span className="truncate max-w-[200px]">{modelReady ? (modelId ?? "—") : "lade…"}</span>
-                </span>
-                {/* Rolle & Stil als Pills */}
-                {(() => {
-                  const roleId = getTemplateId()
-                  const role = getRoleById(roleId)
-                  const style = getStyle()
-                  const map: Record<string,string> = {
-                    blunt_de: "Direkt", neutral: "Neutral", concise: "Knapp", friendly: "Freundlich",
-                    creative_light: "Anschaulich", minimal: "Nur Antwort", technical_precise: "Technisch",
-                    socratic: "Sokratisch", bullet: "Bulletpoints", step_by_step: "Schritte",
-                    formal_de: "Formell", casual_de: "Locker", detailed: "Detailliert", no_taboos: "Ohne Tabus",
-                  }
-                  return (
-                    <>
-                      <span className="opacity-60">•</span>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">Rolle: {role?.name ?? "—"}</span>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-neutral-300 dark:border-neutral-700">Stil: {map[style] ?? style}</span>
-                    </>
-                  )
-                })()}
-                <span className="opacity-60">•</span><a href="#/settings" className="underline">Modell ändern</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> 
+      {/* EINZIGER Composer: der neue ChatInput */}
       <ChatInput onSubmit={(text) => { setInput(text); void send(); }} onStop={stop} busy={streaming} />
-
 
       <ScrollToEndFAB visible={!isAtBottom} onClick={() => { const el = scrollRef.current; if (el) el.scrollTop = el.scrollHeight }} />
       <ConversationsPanel open={panelOpen} onClose={()=>setPanelOpen(false)} currentId={convId} onSelect={loadConversation} />

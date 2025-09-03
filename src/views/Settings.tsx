@@ -72,7 +72,7 @@ export default function SettingsView() {
     setDiagRunning(true)
     try {
       const r = await pingOpenRouter()
-      setDiagResult(r)
+      setDiagResult({ ok: !!r, status: r ? 200 : 0, corsBlocked: false, message: r ? "OK" : "nicht erreichbar" })
     } finally {
       setDiagRunning(false)
     }
