@@ -1,16 +1,40 @@
-import * as React from "react";
+import React from "react";
+import { subscribeNav, type AppTab } from "./lib/nav";
 import ChatView from "./views/ChatView";
 import Settings from "./views/Settings";
-import TopNav, { type Tab } from "./components/TopNav";
+import HeaderBadges from "./components/HeaderBadges";
 
-/** App-Shell im Look von Bild 2 */
-export default function App(): JSX.Element {
-const [tab, setTab] = React.useState<Tab>("chat");
+export default function App() {
+  const [tab, setTab] = React.useState<AppTab>("chat");
 
-return (
-<div className="h-screen w-screen flex flex-col bg-black">
-<TopNav tab={tab} onChange={setTab} />
-<div className="flex-1 min-h-0">{tab === "chat" ? <ChatView /> : <Settings />}</div>
-</div>
-);
+  React.useEffect(() => {
+    return subscribeNav((t) => setTab(t));
+  }, []);
+
+  return (
+    <div className="min-h-[100svh] flex flex-col">
+      <div className="px-3 sm:px-4 py-2 border-b border-white/10 flex items-center justify-between">
+        <div className="font-semibold">Disa</div>
+        <HeaderBadges />
+        <div className="flex items-center gap-2">
+          <button
+            className={`chip ${tab === "chat" ? "bg-white/20" : ""}`}
+            onClick={() => setTab("chat")}
+          >
+            Chat
+          </button>
+          <button
+            className={`chip ${tab === "settings" ? "bg-white/20" : ""}`}
+            onClick={() => setTab("settings")}
+          >
+            Einstellungen
+          </button>
+        </div>
+      </div>
+
+      <main className="flex-1">
+        {tab === "settings" ? <Settings /> : <ChatView />}
+      </main>
+    </div>
+  );
 }
