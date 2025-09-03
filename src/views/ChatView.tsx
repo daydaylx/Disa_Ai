@@ -23,13 +23,17 @@ import InstallBanner from "../components/InstallBanner"
 import Aurora from "../components/Aurora"
 import ChatInput from "../components/ChatInput"
 import { CHAT_NEWSESSION_EVENT } from "../utils/focusChatInput"
+import { navigate } from "../lib/nav"
+import { useToast } from "../components/toast/ToastProvider"
+import { humanError } from "../lib/errorText"
 
 type Msg = { id: string; role: "user" | "assistant" | "system"; content: string; t: number }
 
 export default function ChatView() {
   const conv = useConversations()
-  const [convId, setConvId] = React.useState<string | null>(null)
+  const { push } = useToast()
 
+  const [convId, setConvId] = React.useState<string | null>(null)
   const [messages, setMessages] = React.useState<Msg[]>([])
   const [input, setInput] = React.useState("")
   const [streaming, setStreaming] = React.useState(false)
@@ -124,7 +128,7 @@ export default function ChatView() {
     setPanelOpen(false)
   }
 
-  function push(role: Msg["role"], content: string) { setMessages((cur) => [...cur, { id: newId(), role, content, t: Date.now() }]) }
+  function pushMsg(role: Msg["role"], content: string) { setMessages((cur) => [...cur, { id: newId(), role, content, t: Date.now() }]) }
 
   function appendAssistantDelta(delta: string) {
     if (!delta) return
@@ -187,13 +191,13 @@ export default function ChatView() {
         "detailed","no_taboos"
       ] as const
       const key = arg as any
-      if (ok.includes(key)) { /* Style liegt im globalen Setting */ return true }
+      if (ok.includes(key)) { return true }
       setError("Unbekannter Stil."); return true
     }
     if (cmd === "role") {
       const all = ["neutral","email_professional","sarcastic_direct","therapist_expert","legal_generalist","productivity_helper","ebay_coach","language_teacher","fitness_nutrition_coach","uncensored_expert","nsfw_roleplay","erotic_creative_author"]
       const found = all.find(id => id === arg) || all.find(id => id.includes(arg))
-      if (found) { /* Template-Id wird global verwaltet */ return true }
+      if (found) { return true }
       setError("Rolle nicht gefunden."); return true
     }
     if (cmd === "model") {
@@ -212,7 +216,12 @@ export default function ChatView() {
     const text = raw.trim()
     if (!text || streaming) return
     const hasKeyNow = hasKey
-    if (!hasKeyNow) { setError("Kein OpenRouter API-Key gespeichert."); return }
+    if (!hasKeyNow) {
+      const he = humanError(401)
+      push({ kind: "warn", title: he.title, message: he.message, action: { label: "Einstellungen", onClick: () => navigate("settings") } })
+      setError("Kein OpenRouter API-Key gespeichert."); 
+      return 
+    }
     if (!convId) { const m = conv.create("Neue Unterhaltung"); setConvId(m.id) }
 
     let chosenModel = modelId
@@ -240,7 +249,7 @@ export default function ChatView() {
     if (!chosenModel) { setError("Kein Modell ausgewählt/verfügbar."); return }
 
     setInput("")
-    push("user", text)
+    pushMsg("user", text)
     if (convId) conv.append(convId, { role: "user", content: text })
 
     setStreaming(true)
@@ -248,7 +257,7 @@ export default function ChatView() {
     assistantBufferRef.current = ""
 
     const base = buildSystemPrompt({ nsfw: getNSFW(), style: getStyle(), locale: "de-DE" })
-    const roleStyle = generateRoleStyleText(roleTmpl?.id ?? null, getStyle(), true /*getUseRoleStyle*/ as any)
+    const roleStyle = generateRoleStyleText(roleTmpl?.id ?? null, getStyle(), true as any)
     const system = [roleTmpl?.system ?? "", base, roleStyle].filter(Boolean).join("\n\n")
 
     const body = {
@@ -266,11 +275,24 @@ export default function ChatView() {
         body,
         {
           onChunk: (raw) => parseSSE(raw, false),
-          onError: (err) => {
-            const name = (err as any)?.name ?? ""
+          onError: (err: any) => {
+            const name = err?.name ?? ""
             if (name === "AbortError") { setStreaming(false); return }
-            const status = (err as any)?.status
-            const retryAfter = Number((err as any)?.retryAfter || 0)
+            const status = err?.status
+            const retryAfter = Number(err?.retryAfter || 0)
+            // Toast mit sinnvoller Aktion
+            const he = humanError(status)
+            push({
+              kind: status === 429 ? "warn" : "error",
+              title: he.title,
+              message: he.message,
+              action: he.action === "retry"
+                ? { label: retryAfter > 0 ? `In ${retryAfter}s erneut` : "Erneut senden", onClick: () => send() }
+                : he.action === "settings"
+                  ? { label: "Einstellungen öffnen", onClick: () => navigate("settings") }
+                  : undefined
+            })
+
             if (status === 429) {
               const wait = retryAfter > 0 ? retryAfter : 15
               setError(`Rate Limit. Warte ${wait}s…`)
@@ -295,6 +317,8 @@ export default function ChatView() {
         }
       )
     } catch (e: any) {
+      const he = humanError(0)
+      push({ kind: "error", title: he.title, message: he.message, action: he.action === "retry" ? { label: "Erneut senden", onClick: ()=>send() } : undefined })
       setError(e?.message ?? String(e))
       setStreaming(false)
       abortRef.current = null
@@ -314,7 +338,7 @@ export default function ChatView() {
 
       {!hasKey && (
         <div className="p-3">
-          <InlineBanner tone="warn" title="Kein OpenRouter API-Key – Chat ist deaktiviert." actions={<a href="#/settings" className="underline">Key speichern</a>}>
+          <InlineBanner tone="warn" title="Kein OpenRouter API-Key – Chat ist deaktiviert." actions={<button className="underline" onClick={() => navigate("settings")}>Key speichern</button>}>
             Du kannst die Oberfläche testen. Zum Chatten Key in den Einstellungen hinterlegen.
           </InlineBanner>
         </div>
@@ -371,7 +395,7 @@ export default function ChatView() {
           )
         })}
 
-        {/* Fehler-/Hinweiszeile (klein, unaufdringlich) */}
+        {/* Fehler-/Hinweiszeile (klein) */}
         {error && (
           <div className="mt-4 text-sm opacity-80">
             <span className="inline-flex items-center gap-2 rounded-md px-2 py-1 bg-red-500/10 border border-red-500/30">
@@ -382,7 +406,7 @@ export default function ChatView() {
         )}
       </div>
 
-      {/* EINZIGER Composer: der neue ChatInput */}
+      {/* EINZIGER Composer */}
       <ChatInput onSubmit={(text) => { setInput(text); void send(); }} onStop={stop} busy={streaming} />
 
       <ScrollToEndFAB visible={!isAtBottom} onClick={() => { const el = scrollRef.current; if (el) el.scrollTop = el.scrollHeight }} />
