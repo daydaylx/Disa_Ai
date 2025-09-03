@@ -1,12 +1,12 @@
 import React from "react"
-import { resolveStartTemplate } from "../state/templates"
-import { requestChatFocus, requestNewChatSession } from "../utils/focusChatInput"
+import { useNavigate } from "react-router-dom"
+import { requestNewChatSession, requestChatFocus } from "../utils/focusChatInput"
 
 export default function StartHero() {
+  const navigate = useNavigate()
   const onStart = () => {
-    const tpl = resolveStartTemplate()
-    window.location.hash = "/chat"
-    if (tpl) requestNewChatSession({ templateId: tpl.id })
+    navigate("/chat")
+    requestNewChatSession({})
     requestChatFocus()
   }
   return (
