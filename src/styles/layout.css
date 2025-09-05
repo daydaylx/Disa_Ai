@@ -1,0 +1,7 @@
+.app-bg {
+  background: radial-gradient(1200px 600px at 80% -10%, rgba(var(--glow-purple),.20), transparent 60%),
+              radial-gradient(900px 500px at 10% 0%, rgba(var(--glow-cyan),.18), transparent 60%),
+              radial-gradient(1000px 700px at 50% 110%, rgba(var(--glow-pink),.16), transparent 60%),
+              var(--brand-bg);
+}
+.card-round { border-radius: 20px; }

@@ -1,0 +1,63 @@
+:root {
+  /* Grundfarben */
+  --brand-bg: #0a0b0f;               /* tiefer Night-Background */
+  --brand-card: 28 28 36;           /* RGB für Glass Cards */
+  --brand-foreground: 242 244 255;
+
+  /* Neon-Gradient (Pink → Purple → Cyan) */
+  --grad-1:  linear-gradient(135deg,#ff7ad9 0%,#8a5cff 50%,#28d7ff 100%);
+  --grad-cta: linear-gradient(135deg,#6ce1ff 0%,#7b66ff 50%,#ff8ed1 100%);
+
+  /* Akzente / Glow */
+  --glow-pink: 255 122 217;
+  --glow-purple: 138 92 255;
+  --glow-cyan: 40 215 255;
+
+  /* Schatten */
+  --shadow-soft: 0 10px 40px rgba(0,0,0,.35);
+}
+
+/* Dark Theme Basis */
+:root, .dark {
+  color-scheme: dark;
+  --background: var(--brand-bg);
+  --foreground: rgb(var(--brand-foreground));
+}
+
+/* Utilities */
+.glass {
+  /* Frosted glass card */
+  background: rgba(var(--brand-card)/.48);
+  -webkit-backdrop-filter: saturate(140%) blur(18px);
+  backdrop-filter: saturate(140%) blur(18px);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: var(--shadow-soft);
+}
+
+.grad-surface {
+  background-image: var(--grad-1);
+}
+
+.btn-glow {
+  background-image: var(--grad-cta);
+  color: #0b0b0b;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.12) inset,
+    0 10px 30px rgba(124, 102, 255, .35),
+    0 6px 16px rgba(40, 215, 255, .28);
+}
+.btn-glow:active { transform: translateY(1px); }
+
+.pill {
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+}
+
+/* Touch-Ziele & Safe Area */
+.tap { min-height: 48px; min-width: 48px; }
+.safe-pad {
+  padding-left: max(env(safe-area-inset-left),16px);
+  padding-right: max(env(safe-area-inset-right),16px);
+}
+.safe-bottom { padding-bottom: max(env(safe-area-inset-bottom),16px); }

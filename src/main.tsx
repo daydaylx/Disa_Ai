@@ -1,4 +1,5 @@
 import "./styles/tokens.css";
+import "./styles/brand.css";
 import "./styles/theme.css";
 import "./styles/shadcn.css";
 import "./styles/chat.css";
