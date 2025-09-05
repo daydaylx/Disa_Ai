@@ -1,1 +1,1 @@
-export { default } from "./ChatView"
+export { default } from "./ChatView";
