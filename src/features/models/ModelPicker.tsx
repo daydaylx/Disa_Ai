@@ -24,7 +24,7 @@ export interface ModelPickerProps {
 const DEFAULT_RECO: string[] = [
   "qwen/qwen-2.5-coder-14b-instruct",
   "mistralai/mistral-nemo",
-  "nousresearch/nous-hermes-2-mixtral"
+  "nousresearch/nous-hermes-2-mixtral",
 ];
 
 function byId(models: Model[], id?: string) {
@@ -36,7 +36,7 @@ function byId(models: Model[], id?: string) {
 function makeFilters(defaultCap?: number): Filters {
   const base: Filters = {
     q: "",
-    tags: { free: false, code: true, chat: true, long: false, nsfw: false, vision: false }
+    tags: { free: false, code: true, chat: true, long: false, nsfw: false, vision: false },
   };
   if (typeof defaultCap === "number" && Number.isFinite(defaultCap)) {
     base.maxPriceUsdPerMTok = defaultCap;
@@ -51,7 +51,7 @@ export const ModelPicker: React.FC<ModelPickerProps> = ({
   onChange,
   recommended = DEFAULT_RECO,
   onOpenSettings,
-  maxPriceUsdPerMTokDefault
+  maxPriceUsdPerMTokDefault,
 }) => {
   const { push } = useToasts();
   const { models, loading, error, source, refresh } = useModels();
@@ -60,10 +60,8 @@ export const ModelPicker: React.FC<ModelPickerProps> = ({
 
   const selected = byId(models, value);
   const reco = useMemo(
-    () => recommended
-      .map((id) => models.find((m) => m.id === id))
-      .filter(Boolean) as Model[],
-    [models, recommended]
+    () => recommended.map((id) => models.find((m) => m.id === id)).filter(Boolean) as Model[],
+    [models, recommended],
   );
 
   const adv = useMemo(() => {
@@ -100,10 +98,18 @@ export const ModelPicker: React.FC<ModelPickerProps> = ({
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-2">
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
             <div>
-              Quelle: <span className="font-medium">{source === "openrouter" ? "OpenRouter (live)" :
-                source === "public" ? "/models.json" :
-                source === "memory" ? "Cache" :
-                source === "builtin" ? "Eingebaut" : "unbekannt"}</span>
+              Quelle:{" "}
+              <span className="font-medium">
+                {source === "openrouter"
+                  ? "OpenRouter (live)"
+                  : source === "public"
+                    ? "/models.json"
+                    : source === "memory"
+                      ? "Cache"
+                      : source === "builtin"
+                        ? "Eingebaut"
+                        : "unbekannt"}
+              </span>
               {error ? <span className="ml-2 text-destructive">– Fehler: {error}</span> : null}
             </div>
             <div className="model-actions">
@@ -124,7 +130,7 @@ export const ModelPicker: React.FC<ModelPickerProps> = ({
               />
             </div>
             <div className="flex flex-wrap gap-2">
-              {(["free","code","chat","long","nsfw","vision"] as Tag[]).map((t) => (
+              {(["free", "code", "chat", "long", "nsfw", "vision"] as Tag[]).map((t) => (
                 <label key={t} className="filter-chip">
                   <input
                     type="checkbox"
@@ -156,9 +162,15 @@ export const ModelPicker: React.FC<ModelPickerProps> = ({
             <div className="text-sm">
               <div className="model-row p-3">
                 <div className="font-medium">Kein OpenRouter-API-Key gefunden.</div>
-                <div className="meta mt-1">Hinterlege den Key, um die Live-Modellliste zu laden.</div>
+                <div className="meta mt-1">
+                  Hinterlege den Key, um die Live-Modellliste zu laden.
+                </div>
                 <div className="mt-2">
-                  <Button variant="primary" onClick={onOpenSettings} aria-label="Zu den Einstellungen">
+                  <Button
+                    variant="primary"
+                    onClick={onOpenSettings}
+                    aria-label="Zu den Einstellungen"
+                  >
                     Zu den Einstellungen
                   </Button>
                 </div>
@@ -182,17 +194,30 @@ export const ModelPicker: React.FC<ModelPickerProps> = ({
                     <div className="font-medium">{m.label ?? m.id}</div>
                     <div className="meta">{m.id}</div>
                   </div>
-                  <Button variant="primary" size="sm" onClick={() => onPick(m.id)} aria-label="Dieses Modell wählen">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => onPick(m.id)}
+                    aria-label="Dieses Modell wählen"
+                  >
                     Auswählen
                   </Button>
                 </header>
                 <details className="mt-2">
-                  <summary className="cursor-pointer text-sm text-muted-foreground">Details</summary>
+                  <summary className="cursor-pointer text-sm text-muted-foreground">
+                    Details
+                  </summary>
                   <div className="mt-2">
-                    <small className="text-muted-foreground">Kontext: {m.context ? `${m.context.toLocaleString()} Tokens` : "k. A."}</small>
+                    <small className="text-muted-foreground">
+                      Kontext: {m.context ? `${m.context.toLocaleString()} Tokens` : "k. A."}
+                    </small>
                     {m.tags?.length ? (
                       <div className="mt-2 flex flex-wrap gap-2">
-                        {m.tags.map((t) => <span key={t} className="model-badge">{t}</span>)}
+                        {m.tags.map((t) => (
+                          <span key={t} className="model-badge">
+                            {t}
+                          </span>
+                        ))}
                       </div>
                     ) : null}
                   </div>
@@ -220,15 +245,26 @@ export const ModelPicker: React.FC<ModelPickerProps> = ({
                     <div className="meta">{m.id}</div>
                   </div>
                   <div className="model-actions">
-                    <Button variant="secondary" size="sm" onClick={() => onPick(m.id)} aria-label="Wählen">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => onPick(m.id)}
+                      aria-label="Wählen"
+                    >
                       Wählen
                     </Button>
                   </div>
                 </header>
-                {m.description ? <p className="mt-2 text-sm leading-relaxed">{m.description}</p> : null}
+                {m.description ? (
+                  <p className="mt-2 text-sm leading-relaxed">{m.description}</p>
+                ) : null}
                 {m.tags?.length ? (
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {m.tags.map((t) => <span key={t} className="model-badge">{t}</span>)}
+                    {m.tags.map((t) => (
+                      <span key={t} className="model-badge">
+                        {t}
+                      </span>
+                    ))}
                   </div>
                 ) : null}
               </article>

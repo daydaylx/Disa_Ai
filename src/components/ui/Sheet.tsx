@@ -18,7 +18,7 @@ export const Sheet: React.FC<SheetProps> = ({
   title,
   side = "bottom",
   children,
-  className
+  className,
 }) => {
   useEffect(() => {
     if (!open) return;
@@ -39,11 +39,10 @@ export const Sheet: React.FC<SheetProps> = ({
     side === "bottom"
       ? "fixed inset-x-0 bottom-0"
       : side === "right"
-      ? "fixed inset-y-0 right-0"
-      : "fixed inset-y-0 left-0";
+        ? "fixed inset-y-0 right-0"
+        : "fixed inset-y-0 left-0";
 
-  const size =
-    side === "bottom" ? "w-full rounded-t-xl" : "h-full w-[min(92vw,420px)]";
+  const size = side === "bottom" ? "w-full rounded-t-xl" : "h-full w-[min(92vw,420px)]";
 
   return createPortal(
     <div className="fixed inset-0 z-50" aria-modal="true" role="dialog">
@@ -53,8 +52,10 @@ export const Sheet: React.FC<SheetProps> = ({
           className={cn(
             "border border-border bg-card text-card-foreground shadow-2xl",
             size,
-            side === "bottom" ? "animate-in slide-in-from-bottom" : "animate-in slide-in-from-right",
-            className
+            side === "bottom"
+              ? "animate-in slide-in-from-bottom"
+              : "animate-in slide-in-from-right",
+            className,
           )}
         >
           <div className="flex items-center justify-between border-b border-border p-4">
@@ -72,6 +73,6 @@ export const Sheet: React.FC<SheetProps> = ({
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

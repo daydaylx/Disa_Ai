@@ -1,133 +1,175 @@
-import type { Safety } from "./models"
+import { z } from "zod";
+import type { Safety } from "./models";
 
+/** Öffentliche Typen – exakt-optional-freundlich: Property weglassen statt `undefined` setzen */
 export type RoleTemplate = {
-  id: string
-  name: string
-  system?: string
-  allow?: string[]
-  policy?: Safety
-  styleOverlay?: string
-  tags?: string[]
+  id: string;
+  name: string;
+  system?: string;
+  allow?: string[];
+  policy?: Safety;
+  styleOverlay?: string;
+  tags?: string[];
+};
+
+type RoleState = "idle" | "loading" | "ok" | "missing" | "error";
+
+const SS_KEY = "disa:roles:v2";
+let _roles: RoleTemplate[] = [];
+let _loaded = false;
+let _loading: Promise<RoleTemplate[]> | null = null;
+let _state: RoleState = "idle";
+let _error: string | null = null;
+
+/* -------------------- Validation -------------------- */
+
+const safetySchema = z.union([
+  z.literal("any"),
+  z.literal("moderate"),
+  z.literal("strict"),
+  z.literal("loose"),
+]);
+
+const roleSchema = z.object({
+  id: z.string().trim().min(1).max(64),
+  name: z.string().trim().min(1).max(128),
+  system: z.string().trim().min(1).max(4000).optional(),
+  allow: z.array(z.string().trim().min(1)).optional(),
+  policy: safetySchema.optional(),
+  styleOverlay: z.string().trim().min(1).max(128).optional(),
+  tags: z.array(z.string().trim().min(1).max(32)).optional(),
+});
+const rolesSchema = z.array(roleSchema);
+
+/* Entfernt `undefined`-Properties aus optionalen Feldern (für exactOptionalPropertyTypes) */
+function sanitize(list: z.infer<typeof rolesSchema>): RoleTemplate[] {
+  return list.map((r) => ({
+    id: r.id,
+    name: r.name,
+    ...(r.system !== undefined ? { system: r.system } : {}),
+    ...(r.allow !== undefined ? { allow: r.allow } : {}),
+    ...(r.policy !== undefined ? { policy: r.policy } : {}),
+    ...(r.styleOverlay !== undefined ? { styleOverlay: r.styleOverlay } : {}),
+    ...(r.tags !== undefined ? { tags: r.tags } : {}),
+  }));
 }
 
-type RoleState = "idle" | "loading" | "ok" | "missing" | "error"
+/* -------------------- Cache -------------------- */
 
-const SS_KEY = "disa:roles:v2" // v2 => bricht alten Session-Cache bewusst
-let _roles: RoleTemplate[] = []
-let _loaded = false
-let _loading: Promise<RoleTemplate[]> | null = null
-let _state: RoleState = "idle"
-let _error: string | null = null
-
-function asArray(x: any): any[] { return Array.isArray(x) ? x : [] }
-
-function pickId(r: any): string {
-  const raw = r?.id ?? r?.key ?? r?.slug ?? r?.name ?? r?.title ?? ""
-  return String(raw).trim()
-}
-function pickName(r: any, id: string): string {
-  const raw = r?.name ?? r?.title ?? id
-  return String(raw).trim()
-}
-function pickSystem(r: any): string | undefined {
-  const raw = r?.system ?? r?.prompt ?? r?.template ?? r?.content
-  return typeof raw === "string" && raw.trim() ? raw : undefined
-}
-function pickAllow(r: any): string[] | undefined {
-  const src = r?.allow
-  if (Array.isArray(src)) return src.filter((s: any) => typeof s === "string")
-  if (typeof src === "string") return src.split(",").map(s => s.trim()).filter(Boolean)
-  return undefined
-}
-function pickPolicy(r: any): Safety | undefined {
-  const raw = (r?.policy ?? r?.safety ?? r?.moderation)
-  if (raw === "strict" || raw === "moderate" || raw === "loose") return raw
-  if (typeof raw === "string") {
-    const s = raw.toLowerCase()
-    if (/(strict|hard|tight|safe)/.test(s)) return "strict"
-    if (/(loose|uncensored|nsfw)/.test(s)) return "loose"
-    if (/(moderate|default|normal)/.test(s)) return "moderate"
-  }
-  return undefined
-}
-function pickTags(r: any): string[] | undefined {
-  const src = r?.tags
-  if (Array.isArray(src)) return src.filter((t: any) => typeof t === "string")
-  if (typeof src === "string") return src.split(",").map((t) => t.trim()).filter(Boolean)
-  return undefined
-}
-
-function normalizeRoot(input: any): any[] {
-  if (Array.isArray(input)) return input
-  if (Array.isArray(input?.templates)) return input.templates
-  if (Array.isArray(input?.roles)) return input.roles
-  if (Array.isArray(input?.styles)) return input.styles
-  if (Array.isArray(input?.data)) return input.data
-  return []
-}
-
-function normalize(input: any): RoleTemplate[] {
-  const arr = normalizeRoot(input)
-  const out: RoleTemplate[] = []
-  for (const r of arr) {
-    const idRaw = pickId(r)
-    const id = idRaw || ""
-    const name = pickName(r, id)
-    if (!id || !name) continue
-    const item: RoleTemplate = { id, name }
-    const sys = pickSystem(r); if (sys) item.system = sys
-    const allow = pickAllow(r); if (allow) item.allow = allow
-    const pol = pickPolicy(r); if (pol) item.policy = pol
-    const tags = pickTags(r); if (tags) item.tags = tags
-    if (typeof r?.styleOverlay === "string") item.styleOverlay = r.styleOverlay
-    out.push(item)
-  }
-  return out
-}
-
-function saveCache(list: RoleTemplate[]) {
-  try { sessionStorage.setItem(SS_KEY, JSON.stringify({ ts: Date.now(), items: list })) } catch {}
-}
 function loadCache(): RoleTemplate[] | null {
   try {
-    const raw = sessionStorage.getItem(SS_KEY)
-    if (!raw) return null
-    const parsed = JSON.parse(raw)
-    if (!Array.isArray(parsed?.items)) return null
-    return parsed.items
-  } catch { return null }
+    const raw = localStorage.getItem(SS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as unknown;
+    const ok = rolesSchema.safeParse(parsed);
+    return ok.success ? sanitize(ok.data) : null;
+  } catch {
+    return null;
+  }
+}
+function saveCache(list: RoleTemplate[]): void {
+  try {
+    localStorage.setItem(SS_KEY, JSON.stringify(list));
+  } catch {
+    /* ignore */
+  }
 }
 
-export async function fetchRoleTemplates(force = false): Promise<RoleTemplate[]> {
-  if (_loaded && !force) return _roles
-  if (_loading && !force) return _loading
+/* -------------------- Fetch helpers -------------------- */
 
-  const cached = loadCache()
-  if (cached && !force) { _roles = cached; _loaded = true; _state = "ok"; return _roles }
+async function fetchJson(url: string, signal?: AbortSignal): Promise<unknown> {
+  const res = await fetch(url, { cache: "no-store", signal: signal ?? null });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`HTTP ${res.status} @ ${url}`);
+  return await res.json();
+}
 
-  _state = "loading"; _error = null
+async function tryLoadRoles(signal?: AbortSignal): Promise<RoleTemplate[] | null> {
+  const candidates = ["/styles.json", "/persona.json", "/roles.json"];
+  for (const url of candidates) {
+    try {
+      const data = await fetchJson(url, signal);
+      if (!data) continue;
+      const arr = Array.isArray(data)
+        ? data
+        : Array.isArray((data as Record<string, unknown>)["styles"])
+          ? ((data as Record<string, unknown>)["styles"] as unknown[])
+          : null;
+      if (!arr) continue;
+      const parsed = rolesSchema.safeParse(arr);
+      if (parsed.success) return sanitize(parsed.data);
+    } catch {
+      // next candidate
+    }
+  }
+  return null;
+}
+
+/* -------------------- Public API -------------------- */
+
+export function getRoleTemplates(): RoleTemplate[] {
+  return _roles;
+}
+export function getRoleState(): { state: RoleState; error: string | null } {
+  return { state: _state, error: _error };
+}
+/* Kompatibilitäts-Exporte für bestehenden Code */
+export function listRoleTemplates(): RoleTemplate[] {
+  return getRoleTemplates();
+}
+export function getRoleLoadStatus(): { state: RoleState; error: string | null } {
+  return getRoleState();
+}
+
+export async function fetchRoleTemplates(
+  force = false,
+  signal?: AbortSignal,
+): Promise<RoleTemplate[]> {
+  if (_loaded && !force) return _roles;
+  if (_loading && !force) return _loading;
+
+  const cached = !force ? loadCache() : null;
+  if (cached) {
+    _roles = cached;
+    _loaded = true;
+    _state = "ok";
+    _error = null;
+    return _roles;
+  }
+
+  _state = "loading";
+  _error = null;
   _loading = (async () => {
     try {
-      const res = await fetch("/styles.json", { cache: "no-store" })
-      if (res.status === 404) { _roles = []; _loaded = true; _state = "missing"; _error = "styles.json nicht gefunden (public/styles.json)"; return _roles }
-      if (!res.ok)          { _roles = []; _loaded = true; _state = "error";   _error = `styles.json HTTP ${res.status}`; return _roles }
-      const json = await res.json()
-      const list = normalize(json)
-      _roles = list; _loaded = true; _state = "ok"; _error = null
-      saveCache(list)
-      _loading = null
-      return _roles
-    } catch (e: any) {
-      _roles = []; _loaded = true; _state = "error"; _error = e?.message ?? String(e); _loading = null
-      return _roles
+      const list = await tryLoadRoles(signal);
+      if (!list) {
+        _roles = [];
+        _loaded = true;
+        _state = "missing";
+        _error = "styles.json nicht gefunden oder ungültig (public/styles.json)";
+        return _roles;
+      }
+      _roles = list;
+      _loaded = true;
+      _state = "ok";
+      _error = null;
+      saveCache(_roles);
+      return _roles;
+    } catch (e) {
+      _roles = [];
+      _loaded = true;
+      _state = "error";
+      _error = e instanceof Error ? e.message : String(e);
+      return _roles;
+    } finally {
+      _loading = null;
     }
-  })()
-  return _loading
+  })();
+  return _loading;
 }
 
-export function listRoleTemplates(): RoleTemplate[] { return _roles }
-export function getRoleById(id: string | null | undefined): RoleTemplate | null {
-  if (!id) return null
-  return _roles.find(r => r.id === id) ?? null
+export function getRoleById(id: string | null | undefined): RoleTemplate | undefined {
+  const needle = (id ?? "").trim().toLowerCase();
+  if (!needle) return undefined;
+  return _roles.find((r) => r.id.toLowerCase() === needle);
 }
-export function getRoleLoadStatus(): { state: RoleState; error: string | null } { return { state: _state, error: _error } }

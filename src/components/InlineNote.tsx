@@ -1,5 +1,11 @@
 import React from "react";
-export function InlineNote({ kind="info", children }:{ kind?: "info"|"warn"|"error"|"success"; children: React.ReactNode }) {
+export function InlineNote({
+  kind = "info",
+  children,
+}: {
+  kind?: "info" | "warn" | "error" | "success";
+  children: React.ReactNode;
+}) {
   const map = {
     info: "text-blue-300",
     warn: "text-amber-300",

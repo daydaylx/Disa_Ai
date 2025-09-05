@@ -3,175 +3,167 @@ import { readApiKey } from "../../lib/openrouter/key";
 import type { Filters, ModelLike, Tag } from "./modelFilters";
 
 export interface Model extends ModelLike {
-  provider?: string;
+  // Falls ModelLike bereits provider:string definiert, erfüllt dieser Typ das.
 }
 
 export interface ModelsState {
   models: Model[];
   loading: boolean;
-  error?: string; // optional
+  /** optional: Feld nur setzen, wenn vorhanden (exactOptionalPropertyTypes) */
+  error?: string;
   source: "openrouter" | "public" | "builtin" | "memory" | "none";
   refresh: () => void;
 }
 
-const LS_KEY = "disa.models.cache.v1";
-const LS_AT  = "disa.models.cache.ts";
-const MAX_AGE_MS = 5 * 60_000;
+/* -------------------- OpenRouter Types -------------------- */
 
-const BUILTIN: Model[] = [
-  {
-    id: "qwen/qwen-2.5-coder-14b-instruct",
-    label: "Qwen 2.5 Coder 14B",
-    description: "Guter Allround-Coder (preiswert)",
-    context: 131072,
-    tags: ["code", "chat", "long"],
-    pricing: { prompt: 0.5, completion: 0.5, free: false },
-    provider: "openrouter"
-  },
-  {
-    id: "mistralai/mistral-nemo",
-    label: "Mistral Nemo",
-    description: "Solider Chat, schnell & günstig",
-    context: 131072,
-    tags: ["chat", "long"],
-    pricing: { prompt: 0.3, completion: 0.3, free: false },
-    provider: "openrouter"
-  },
-  {
-    id: "nousresearch/nous-hermes-2-mixtral",
-    label: "Nous Hermes 2 Mixtral",
-    description: "Beliebt für Roleplay/Chat",
-    context: 32768,
-    tags: ["chat"],
-    pricing: { prompt: 0.2, completion: 0.2, free: false },
-    provider: "openrouter"
-  }
-];
-
-function loadCache(): { models: Model[]; ts: number } | null {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    const at = Number(localStorage.getItem(LS_AT) ?? "0");
-    if (!raw) return null;
-    const models = JSON.parse(raw) as Model[];
-    return { models, ts: at };
-  } catch {
-    return null;
-  }
+type ORPrice = number | string | null | undefined;
+interface ORPricing {
+  prompt?: ORPrice;
+  completion?: ORPrice;
+}
+interface ORCapabilities {
+  code?: boolean;
+  vision?: boolean;
+}
+interface ORModel {
+  id?: string;
+  name?: string;
+  pricing?: ORPricing;
+  prices?: ORPricing;
+  tags?: string[];
+  topics?: string[];
+  capabilities?: ORCapabilities;
+  context_length?: number;
+  arch?: { family?: string } | null;
+  provider?: { name?: string; slug?: string } | null;
+}
+interface ORResponse {
+  data?: ORModel[];
 }
 
-function saveCache(models: Model[]) {
-  try {
-    localStorage.setItem(LS_KEY, JSON.stringify(models));
-    localStorage.setItem(LS_AT, String(Date.now()));
-  } catch {}
-}
+/* -------------------- Helpers -------------------- */
 
-async function fetchPublic(): Promise<Model[] | null> {
-  try {
-    const r = await fetch("/models.json", { cache: "no-store" });
-    if (!r.ok) return null;
-    const json = await r.json();
-    if (!Array.isArray(json)) return null;
-    return json as Model[];
-  } catch {
-    return null;
+function toNumberUSDPerMTok(v: ORPrice): number | undefined {
+  if (v == null) return undefined;
+  if (typeof v === "number") return v;
+  const s = String(v).trim();
+  const parsed = Number(s);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+function normalizePricing(
+  pricing?: ORPricing,
+): { prompt?: number; completion?: number } | undefined {
+  if (!pricing) return undefined;
+  const prompt = toNumberUSDPerMTok(pricing.prompt);
+  const completion = toNumberUSDPerMTok(pricing.completion);
+  if (prompt == null && completion == null) return undefined;
+  return { ...(prompt != null ? { prompt } : {}), ...(completion != null ? { completion } : {}) };
+}
+function deriveTags(m: ORModel): Tag[] {
+  const tags = new Set<Tag>();
+  const raw = (m.tags ?? []).concat(m.topics ?? []);
+  for (const t of raw) {
+    const s = (t ?? "").toString().toLowerCase();
+    if (s.includes("nsfw")) tags.add("nsfw");
+    if (s.includes("code")) tags.add("code");
+    if (s.includes("vision") || s.includes("image")) tags.add("vision");
+    if (s.includes("free")) tags.add("free");
+    if (s.includes("long") || s.includes("xl") || s.includes("32k") || s.includes("128k"))
+      tags.add("long");
   }
+  if (m.capabilities?.code) tags.add("code");
+  return Array.from(tags);
+}
+function labelOf(m: ORModel): string {
+  const id = m.id ?? m.name ?? "";
+  return String(id);
+}
+function providerOf(m: ORModel): string {
+  const p = m.provider;
+  if (!p) return "";
+  const name = (p.name ?? p.slug ?? "").toString();
+  return name;
 }
 
-async function fetchOpenRouter(): Promise<Model[] | null> {
-  const key = readApiKey() || localStorage.getItem("openrouter_key") || localStorage.getItem("OPENROUTER_API_KEY");
-  if (!key) return null;
-  try {
-    const r = await fetch("https://openrouter.ai/api/v1/models", {
-      headers: { Authorization: `Bearer ${key}` }
-    });
-    if (!r.ok) throw new Error(`OpenRouter ${r.status}`);
-    const data = (await r.json()) as any;
-    const list: Model[] = (data.data ?? []).map((m: any) => {
+/* -------------------- Fetch -------------------- */
+
+async function fetchOpenRouterModels(key: string, signal?: AbortSignal): Promise<Model[]> {
+  const r = await fetch("https://openrouter.ai/api/v1/models", {
+    headers: { Authorization: `Bearer ${key}` },
+    signal: signal ?? null,
+  });
+  if (!r.ok) throw new Error(`OpenRouter ${r.status}`);
+  const data = (await r.json()) as ORResponse;
+  const list = Array.isArray(data.data) ? data.data : [];
+  return list
+    .map<Model>((m) => {
       const id = String(m.id ?? m.name ?? "");
-      const pricing = m.pricing || m.prices || {};
-      const prompt = toPerMTok(pricing?.prompt);
-      const completion = toPerMTok(pricing?.completion);
-      const tags: Tag[] = [];
-      if (m.topics?.includes?.("nsfw")) tags.push("nsfw");
-      if (m.capabilities?.code) tags.push("code");
-      if (m.capabilities?.vision) tags.push("vision");
-      const ctx = Number(m.context_length ?? m.context ?? 0);
-      if (ctx >= 128_000) tags.push("long");
+      const p = normalizePricing(m.pricing ?? (m as any).prices);
       return {
         id,
-        label: String(m.name || id),
-        description: m.description || "",
-        context: ctx || undefined,
-        tags,
-        pricing: {
-          prompt: Number.isFinite(prompt) ? prompt : undefined,
-          completion: Number.isFinite(completion) ? completion : undefined,
-          free: m.pricing?.prompt === 0 && m.pricing?.completion === 0
-        },
-        provider: "openrouter"
+        label: labelOf(m),
+        description: m.arch?.family ? `Architektur: ${m.arch.family}` : undefined,
+        context: m.context_length,
+        tags: deriveTags(m),
+        pricing: p,
+        provider: providerOf(m), // immer string (auch wenn leer)
       } as Model;
-    });
-    return list;
-  } catch {
-    return null;
-  }
+    })
+    .filter((m) => m.id.length > 0);
 }
 
-function toPerMTok(x: any): number {
-  const n = Number(x);
-  if (!Number.isFinite(n) || n <= 0) return Number.POSITIVE_INFINITY;
-  return n * 1_000_000;
-}
+/* -------------------- Hook -------------------- */
 
-async function swrLoad(): Promise<{ models: Model[]; source: ModelsState["source"] }> {
-  const cached = loadCache();
-  if (cached && Date.now() - cached.ts < MAX_AGE_MS && Array.isArray(cached.models) && cached.models.length) {
-    return { models: cached.models, source: "memory" };
-  }
-  const pub = await fetchPublic();
-  if (pub && pub.length) {
-    saveCache(pub);
-    fetchOpenRouter().then((or) => { if (or && or.length) saveCache(or); });
-    return { models: pub, source: "public" };
-  }
-  const or = await fetchOpenRouter();
-  if (or && or.length) {
-    saveCache(or);
-    return { models: or, source: "openrouter" };
-  }
-  saveCache(BUILTIN);
-  return { models: BUILTIN, source: "builtin" };
-}
-
-export function useModels(): { models: Model[]; loading: boolean; error?: string; source: ModelsState["source"]; refresh: () => void } {
+export function useModels(): ModelsState {
   const [models, setModels] = useState<Model[]>([]);
-  const [source, setSource] = useState<ModelsState["source"]>("none");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [source, setSource] = useState<ModelsState["source"]>("none");
+  const [tick, setTick] = useState(0);
 
-  const load = async () => {
-    setLoading(true);
-    setError(undefined);
-    try {
-      const { models, source } = await swrLoad();
-      setModels(models);
-      setSource(source);
-    } catch (e: any) {
-      setError(e?.message ?? "Unbekannter Fehler");
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    let alive = true;
+    const key = readApiKey();
+    async function run() {
+      setLoading(true);
+      setError(undefined);
+      try {
+        if (key) {
+          const list = await fetchOpenRouterModels(key);
+          if (!alive) return;
+          setModels(list);
+          setSource("openrouter");
+        } else {
+          setModels([]);
+          setSource("none");
+        }
+      } catch (e) {
+        if (!alive) return;
+        setModels([]);
+        setSource("none");
+        setError(e instanceof Error ? e.message : String(e));
+      } finally {
+        if (alive) setLoading(false);
+      }
     }
-  };
+    void run();
+    return () => {
+      alive = false;
+    };
+  }, [tick]);
 
-  useEffect(() => { load(); }, []);
+  const refresh = () => setTick((x) => x + 1);
 
-  const refresh = () => { load(); };
-
-  // wichtig: error NUR setzen, wenn vorhanden
-  const base = { models, loading, source, refresh } as const;
-  const value = error ? { ...base, error } : base;
-
-  return useMemo(() => value, [models, loading, source, error]);
+  const memo = useMemo<ModelsState>(
+    () => ({
+      models,
+      loading,
+      ...(error !== undefined ? { error } : {}),
+      source,
+      refresh,
+    }),
+    [models, loading, error, source],
+  );
+  return memo;
 }

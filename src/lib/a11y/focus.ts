@@ -5,7 +5,9 @@ export function focusMain(id = "main") {
   if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
   (el as HTMLElement).focus({ preventScroll: true });
   // optional: sanft zum Anfang scrollen
-  try { el.scrollIntoView({ block: "start", behavior: "smooth" }); } catch {}
+  try {
+    el.scrollIntoView({ block: "start", behavior: "smooth" });
+  } catch {}
 }
 
 /** Bei Mount Fokus auf #main setzen (für echte Seitenwechsel). */

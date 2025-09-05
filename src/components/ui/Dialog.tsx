@@ -11,7 +11,13 @@ export interface DialogProps {
   className?: string;
 }
 
-export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, title, children, className }) => {
+export const Dialog: React.FC<DialogProps> = ({
+  open,
+  onOpenChange,
+  title,
+  children,
+  className,
+}) => {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -28,17 +34,18 @@ export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, title, child
   if (!open) return null;
 
   return createPortal(
-    <div
-      className="fixed inset-0 z-50 grid place-items-center p-4"
-      aria-modal="true"
-      role="dialog"
-    >
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => onOpenChange(false)} />
-      <div className={cn(
-        "relative w-[min(96vw,640px)] rounded-lg border border-border bg-card text-card-foreground shadow-xl",
-        "animate-in fade-in-0 zoom-in-95",
-        className
-      )}>
+    <div className="fixed inset-0 z-50 grid place-items-center p-4" aria-modal="true" role="dialog">
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={() => onOpenChange(false)}
+      />
+      <div
+        className={cn(
+          "relative w-[min(96vw,640px)] rounded-lg border border-border bg-card text-card-foreground shadow-xl",
+          "animate-in fade-in-0 zoom-in-95",
+          className,
+        )}
+      >
         <div className="flex items-center justify-between border-b border-border p-4">
           <h2 className="text-lg font-semibold">{title}</h2>
           <button
@@ -53,6 +60,6 @@ export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, title, child
         <div className="p-4">{children}</div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

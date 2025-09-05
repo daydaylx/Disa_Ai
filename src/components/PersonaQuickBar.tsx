@@ -14,10 +14,10 @@ const PersonaQuickBar: React.FC = () => {
           key={s.id}
           onClick={() => setStyleId(s.id)}
           className={cn(
-            "px-3 py-1 rounded-full text-sm border transition",
+            "rounded-full border px-3 py-1 text-sm transition",
             styleId === s.id
-              ? "bg-violet-600/20 border-violet-500 text-violet-200"
-              : "bg-zinc-800/40 border-zinc-700 hover:border-violet-500/60"
+              ? "border-violet-500 bg-violet-600/20 text-violet-200"
+              : "border-zinc-700 bg-zinc-800/40 hover:border-violet-500/60",
           )}
           aria-pressed={styleId === s.id}
         >

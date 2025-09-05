@@ -1,22 +1,28 @@
-import React from "react"
+import React from "react";
 
-import { Icon } from "./ui/Icon"
+import { Icon } from "./ui/Icon";
 
-type Action = { label: string; onClick: () => void }
+type Action = { label: string; onClick: () => void };
 
 type Props = {
-  role: "user" | "assistant"
-  content: string
-  onCopy?: (text: string) => void
-  actions?: Action[]
-  isStreamingTail?: boolean
-}
+  role: "user" | "assistant";
+  content: string;
+  onCopy?: (text: string) => void;
+  actions?: Action[];
+  isStreamingTail?: boolean;
+};
 
 function MessageBubbleBase({ role, content, onCopy, actions, isStreamingTail }: Props) {
-  const isAssistant = role === "assistant"
+  const isAssistant = role === "assistant";
   return (
-    <div className={`bubble-row ${isAssistant ? "bubble-row--assistant" : "bubble-row--user"} animate-in`}>
-      {isAssistant && <div className="avatar avatar--assistant" aria-hidden>A</div>}
+    <div
+      className={`bubble-row ${isAssistant ? "bubble-row--assistant" : "bubble-row--user"} animate-in`}
+    >
+      {isAssistant && (
+        <div className="avatar avatar--assistant" aria-hidden>
+          A
+        </div>
+      )}
       <div className={`bubble-border ${isAssistant ? "" : "bubble-border--user"}`}>
         <div className="bubble-inner">
           {isAssistant && (
@@ -31,18 +37,26 @@ function MessageBubbleBase({ role, content, onCopy, actions, isStreamingTail }: 
           </div>
         </div>
       </div>
-      {!isAssistant && <div className="avatar avatar--user" aria-hidden>U</div>}
+      {!isAssistant && (
+        <div className="avatar avatar--user" aria-hidden>
+          U
+        </div>
+      )}
 
       <div className="bubble-actions">
         {onCopy && (
-          <button className="action-chip" onClick={() => onCopy(content)} aria-label="Kopieren">Kopieren</button>
+          <button className="action-chip" onClick={() => onCopy(content)} aria-label="Kopieren">
+            Kopieren
+          </button>
         )}
         {(actions ?? []).map((a, i) => (
-          <button key={i} className="action-chip" onClick={a.onClick}>{a.label}</button>
+          <button key={i} className="action-chip" onClick={a.onClick}>
+            {a.label}
+          </button>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export default MessageBubbleBase;

@@ -7,7 +7,7 @@ type Listener = (s: AppSettings) => void;
 
 let current: AppSettings = {
   theme: "system",
-  language: "de"
+  language: "de",
 };
 
 const listeners = new Set<Listener>();
@@ -43,7 +43,9 @@ export function saveSettings(patch: Partial<AppSettings>): AppSettings {
   } catch {}
 
   for (const l of Array.from(listeners)) {
-    try { l(current); } catch {}
+    try {
+      l(current);
+    } catch {}
   }
   return current;
 }

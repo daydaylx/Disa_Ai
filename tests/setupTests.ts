@@ -3,12 +3,24 @@ import "@testing-library/jest-dom/vitest";
 /* ---- Polyfills (localStorage, matchMedia, navigator.onLine, crypto.randomUUID) ---- */
 class MemoryStorage implements Storage {
   private store = new Map<string, string>();
-  get length() { return this.store.size; }
-  clear() { this.store.clear(); }
-  getItem(key: string) { return this.store.has(key) ? this.store.get(key)! : null; }
-  key(index: number) { return Array.from(this.store.keys())[index] ?? null; }
-  removeItem(key: string) { this.store.delete(key); }
-  setItem(key: string, value: string) { this.store.set(key, String(value)); }
+  get length() {
+    return this.store.size;
+  }
+  clear() {
+    this.store.clear();
+  }
+  getItem(key: string) {
+    return this.store.has(key) ? this.store.get(key)! : null;
+  }
+  key(index: number) {
+    return Array.from(this.store.keys())[index] ?? null;
+  }
+  removeItem(key: string) {
+    this.store.delete(key);
+  }
+  setItem(key: string, value: string) {
+    this.store.set(key, String(value));
+  }
 }
 if (!("localStorage" in globalThis)) {
   // @ts-ignore
@@ -21,8 +33,13 @@ if (!("matchMedia" in window)) {
     matches: false,
     media: q,
     onchange: null,
-    addListener() {}, removeListener() {},
-    addEventListener() {}, removeEventListener() {}, dispatchEvent() { return false; }
+    addListener() {},
+    removeListener() {},
+    addEventListener() {},
+    removeEventListener() {},
+    dispatchEvent() {
+      return false;
+    },
   });
 }
 if (!("crypto" in globalThis)) {
@@ -31,8 +48,9 @@ if (!("crypto" in globalThis)) {
 }
 if (typeof (globalThis.crypto as any).randomUUID !== "function") {
   (globalThis.crypto as any).randomUUID = () =>
-    "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
-      const r = (Math.random() * 16) | 0, v = c === "x" ? r : (r & 0x3) | 0x8;
+    "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0,
+        v = c === "x" ? r : (r & 0x3) | 0x8;
       return v.toString(16);
     });
 }

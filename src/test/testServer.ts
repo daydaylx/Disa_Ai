@@ -8,9 +8,13 @@ const handlers = [
     HttpResponse.json({
       personas: [
         { id: "neutral", label: "Neutral", prompt: "You are neutral." },
-        { id: "de_scharf", label: "Deutsch – Scharf", prompt: "Sei direkt, kritisch, ohne Floskeln." }
-      ]
-    })
+        {
+          id: "de_scharf",
+          label: "Deutsch – Scharf",
+          prompt: "Sei direkt, kritisch, ohne Floskeln.",
+        },
+      ],
+    }),
   ),
 ];
 

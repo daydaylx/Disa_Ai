@@ -1,8 +1,8 @@
 export interface BackoffOptions {
-  baseMs?: number;     // Basis-Wartezeit
-  factor?: number;     // Exponent
-  jitter?: number;     // 0..1
-  maxMs?: number;      // Obergrenze pro Schritt
+  baseMs?: number; // Basis-Wartezeit
+  factor?: number; // Exponent
+  jitter?: number; // 0..1
+  maxMs?: number; // Obergrenze pro Schritt
 }
 
 export function backoffDelay(attempt: number, opts: BackoffOptions = {}): number {

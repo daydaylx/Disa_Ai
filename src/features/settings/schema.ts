@@ -3,17 +3,16 @@ export type Theme = "system" | "light" | "dark";
 export interface AppSettings {
   theme: Theme;
   language: "de";
-  defaultModelId?: string;  // optional → NICHT mit undefined setzen
-  openrouterKey?: string;   // optional → NICHT mit undefined setzen
+  defaultModelId?: string; // optional → NICHT mit undefined setzen
+  openrouterKey?: string; // optional → NICHT mit undefined setzen
 }
 
-export function validateSettings(input: Partial<AppSettings>):
-  | { ok: true; value: AppSettings }
-  | { ok: false; error: string } {
-
+export function validateSettings(
+  input: Partial<AppSettings>,
+): { ok: true; value: AppSettings } | { ok: false; error: string } {
   const out: AppSettings = {
     theme: "system",
-    language: "de"
+    language: "de",
   };
 
   if (input.theme) {

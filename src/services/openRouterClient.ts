@@ -27,7 +27,9 @@ function isSseDelta(x: unknown): x is SseDelta {
   return true;
 }
 
-export async function createChatCompletion(args: CreateArgs): Promise<Response | AsyncIterable<StreamChunk>> {
+export async function createChatCompletion(
+  args: CreateArgs,
+): Promise<Response | AsyncIterable<StreamChunk>> {
   const {
     apiKey,
     model,
@@ -36,7 +38,7 @@ export async function createChatCompletion(args: CreateArgs): Promise<Response |
     maxTokens = 1000,
     stream = false,
     abortSignal,
-    referer = (typeof window !== "undefined" ? window.location.origin : "http://localhost"),
+    referer = typeof window !== "undefined" ? window.location.origin : "http://localhost",
     title = "Disa AI",
   } = args;
 
@@ -103,7 +105,11 @@ export async function createChatCompletion(args: CreateArgs): Promise<Response |
         }
       }
     } finally {
-      try { await reader.cancel(); } catch { /* noop */ }
+      try {
+        await reader.cancel();
+      } catch {
+        /* noop */
+      }
     }
     yield { done: true };
   }

@@ -15,13 +15,22 @@ export interface ChatResponse {
 }
 
 export class OfflineError extends Error {
-  constructor(msg = "Offline") { super(msg); this.name = "OfflineError"; }
+  constructor(msg = "Offline") {
+    super(msg);
+    this.name = "OfflineError";
+  }
 }
 export class TimeoutError extends Error {
-  constructor(msg = "Timeout") { super(msg); this.name = "TimeoutError"; }
+  constructor(msg = "Timeout") {
+    super(msg);
+    this.name = "TimeoutError";
+  }
 }
 export class CircuitOpenError extends Error {
-  constructor(msg = "Circuit open") { super(msg); this.name = "CircuitOpenError"; }
+  constructor(msg = "Circuit open") {
+    super(msg);
+    this.name = "CircuitOpenError";
+  }
 }
 export class RateLimitError extends Error {
   retryAfterMs: number;

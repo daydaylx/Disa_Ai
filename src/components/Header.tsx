@@ -4,14 +4,14 @@ import Logo from "./Logo";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-40">
-      <div className="backdrop-blur bg-black/30 border-b border-white/10">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-          <Link to="/" className="flex items-center gap-2">
-            <Logo className="h-6 w-6" />
-            <span className="font-semibold tracking-tight">Disa AI</span>
+    <header className="header-sticky sticky top-0 z-40">
+      <div className="header-sticky border-b border-white/10 bg-black/30 backdrop-blur">
+        <div className="header-sticky mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+          <Link to="/" className="header-sticky flex items-center gap-2">
+            <Logo className="header-sticky h-6 w-6" />
+            <span className="header-sticky font-semibold tracking-tight">Disa AI</span>
           </Link>
-          <nav className="flex items-center gap-4 text-sm">
+          <nav className="header-sticky flex items-center gap-4 text-sm">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -38,7 +38,7 @@ export default function Header() {
             </NavLink>
             <Link
               to="/chat"
-              className="rounded-xl bg-violet-600/90 px-3 py-1.5 font-medium text-white shadow-sm hover:bg-violet-500 active:scale-[0.99] transition"
+              className="header-sticky rounded-xl bg-violet-600/90 px-3 py-1.5 font-medium text-white shadow-sm transition hover:bg-violet-500 active:scale-[0.99]"
             >
               Loslegen
             </Link>

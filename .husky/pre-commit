@@ -1,6 +1,5 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Run lint-staged on staged files (ESLint/Prettier per package.json)
-npx --no-install lint-staged
-
+# nur geänderte Dateien prüfen
+npx lint-staged

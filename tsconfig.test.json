@@ -5,9 +5,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": [
-    "src/__tests__/**/*.ts",
-    "src/__tests__/**/*.tsx",
-    "src/test/**/*.ts"
-  ]
+  "include": ["src/__tests__/**/*.ts", "src/__tests__/**/*.tsx", "src/test/**/*.ts"]
 }

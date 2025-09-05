@@ -33,7 +33,19 @@ const sizes: Record<Size, string> = {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "primary", size = "md", loading = false, leftIcon, rightIcon, className, children, ...props }, ref) => {
+  (
+    {
+      variant = "primary",
+      size = "md",
+      loading = false,
+      leftIcon,
+      rightIcon,
+      className,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <button
         ref={ref}
@@ -46,7 +58,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {rightIcon ? <Icon name={rightIcon} className="ml-2" /> : null}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

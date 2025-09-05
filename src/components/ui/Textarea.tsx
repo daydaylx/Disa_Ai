@@ -13,7 +13,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         id={id}
         ref={ref}
         className={cn("textarea", className)}
-        {...props}  // <- wichtig: data-*, aria-*, on*, usw. werden durchgereicht
+        {...props} // <- wichtig: data-*, aria-*, on*, usw. werden durchgereicht
       />
     );
 
@@ -29,7 +29,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {error ? <span className="mt-1 block text-xs text-destructive">{error}</span> : null}
       </>
     );
-  }
+  },
 );
 
 Textarea.displayName = "Textarea";

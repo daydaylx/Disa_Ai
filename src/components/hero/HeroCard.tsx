@@ -1,18 +1,11 @@
 import React from "react";
-
-export type HeroCardProps = {
-  onStart?: () => void;
-};
-
-export const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
-  <section className="safe-pad mt-3 mb-4">
-    <div className="relative overflow-hidden card-round glass p-4 hero-card">
-      {/* animierter Gradient-Overlay (siehe brand.css .grad-anim) */}
-      <div className="absolute inset-0 opacity-75 grad-surface grad-anim" />
-
-      {/* dezente Hintergrund-Glows */}
+export type HeroCardProps = { onStart?: () => void };
+const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
+  <section className="safe-pad mb-4 mt-3">
+    <div className="card-round glass hero-card relative overflow-hidden p-4">
+      <div className="grad-surface grad-anim absolute inset-0 opacity-75" />
       <div
-        className="absolute -top-10 -right-10 h-40 w-40 rounded-full blur-3xl"
+        className="absolute -right-10 -top-10 h-40 w-40 rounded-full blur-3xl"
         style={{ background: "radial-gradient(circle, rgba(255,142,209,.45), transparent 60%)" }}
         aria-hidden="true"
       />
@@ -21,7 +14,6 @@ export const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
         style={{ background: "radial-gradient(circle, rgba(40,215,255,.35), transparent 60%)" }}
         aria-hidden="true"
       />
-
       <div className="relative flex items-center gap-3">
         <div className="orb float glow-pulse" aria-hidden="true" />
         <div className="min-w-0">
@@ -29,9 +21,8 @@ export const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
           <p className="text-sm opacity-90">Dein KI-Assistent. Direkt, ehrlich, schnell.</p>
         </div>
       </div>
-
       <button
-        className="mt-4 tap pill btn-glow glow-pulse tilt-on-press px-4 py-2 text-sm font-semibold"
+        className="tap pill btn-glow glow-pulse tilt-on-press mt-4 px-4 py-2 text-sm font-semibold"
         onClick={onStart}
         data-testid="hero-start"
       >
@@ -40,5 +31,4 @@ export const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
     </div>
   </section>
 );
-
 export default HeroCard;

@@ -28,10 +28,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           id={inputId}
           ref={ref}
-          className={cn(
-            "input",
-            error && "border-destructive focus-visible:ring-destructive"
-          )}
+          className={cn("input", error && "border-destructive focus-visible:ring-destructive")}
           aria-invalid={!!error || undefined}
           aria-describedby={describedBy.length ? describedBy.join(" ") : undefined}
           {...props}
@@ -48,7 +45,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ) : null}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

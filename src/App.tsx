@@ -1,7 +1,7 @@
 import "./styles/layout.css";
 
-import React, { lazy,Suspense } from "react";
-import { BrowserRouter, Route,Routes } from "react-router-dom";
+import React, { lazy, Suspense } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import TabBar from "./components/nav/TabBar";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";

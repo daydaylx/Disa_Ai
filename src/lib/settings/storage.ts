@@ -3,16 +3,16 @@ export type ChatStyle = "Neutral" | "Anschaulich" | "Technisch" | "Locker";
 export interface AppSettings {
   theme: Theme;
   language: "de";
-  openrouterKey: string;          // wird in localStorage gespiegelt
-  defaultModelId: string;         // wird in localStorage gespiegelt
+  openrouterKey: string; // wird in localStorage gespiegelt
+  defaultModelId: string; // wird in localStorage gespiegelt
   chatStyle: ChatStyle;
-  chatRole: string;               // freitext
+  chatRole: string; // freitext
 }
 
 const KEYS = {
   settings: "disa_settings_v1",
   key: "openrouter_key",
-  model: "default_model_id"
+  model: "default_model_id",
 };
 
 const DEFAULTS: AppSettings = {
@@ -21,7 +21,7 @@ const DEFAULTS: AppSettings = {
   openrouterKey: "",
   defaultModelId: "qwen/qwen-2.5-coder-14b-instruct",
   chatStyle: "Neutral",
-  chatRole: ""
+  chatRole: "",
 };
 
 export function loadSettings(): AppSettings {

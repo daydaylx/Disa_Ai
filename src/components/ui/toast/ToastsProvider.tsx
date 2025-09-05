@@ -19,10 +19,10 @@ export function useToasts() {
 }
 
 const KIND_TO_ICON: Record<ToastKind, React.ReactNode> = {
-  info:    <Icon name="info" />,
+  info: <Icon name="info" />,
   success: <Icon name="success" />,
   warning: <Icon name="warning" />,
-  error:   <Icon name="error" />,
+  error: <Icon name="error" />,
 };
 
 export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -42,15 +42,18 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     setItems((list) => list.filter((i) => i.id !== id));
   }, []);
 
-  const push = useCallback((t: Omit<ToastItem, "id">) => {
-    const id = crypto.randomUUID();
-    const item: ToastItem = { id, durationMs: 3500, ...t };
-    setItems((list) => [item, ...list]);
-    if (item.durationMs && item.durationMs > 0) {
-      window.setTimeout(() => dismiss(id), item.durationMs);
-    }
-    return id;
-  }, [dismiss]);
+  const push = useCallback(
+    (t: Omit<ToastItem, "id">) => {
+      const id = crypto.randomUUID();
+      const item: ToastItem = { id, durationMs: 3500, ...t };
+      setItems((list) => [item, ...list]);
+      if (item.durationMs && item.durationMs > 0) {
+        window.setTimeout(() => dismiss(id), item.durationMs);
+      }
+      return id;
+    },
+    [dismiss],
+  );
 
   const value = useMemo<ToastsContextValue>(() => ({ push, dismiss }), [push, dismiss]);
 
@@ -62,7 +65,9 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
         if (ce?.detail && typeof ce.detail === "object") {
           push(ce.detail as Omit<ToastItem, "id">);
         }
-      } catch {/* ignore */}
+      } catch {
+        /* ignore */
+      }
     };
     window.addEventListener("disa:toast", onToast as any);
     return () => window.removeEventListener("disa:toast", onToast as any);
@@ -72,26 +77,24 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     <ToastsContext.Provider value={value}>
       {children}
       {createPortal(
-        <div className="fixed inset-x-0 top-0 z-50 flex flex-col items-center gap-2 p-3 pointer-events-none">
+        <div className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col items-center gap-2 p-3">
           {items.map((t) => (
             <div
               key={t.id}
               role="status"
               className={cn(
-                "pointer-events-auto tap-target w-[min(96vw,640px)] rounded-md border bg-popover text-popover-foreground shadow-lg",
-                "flex items-start gap-3 p-3"
+                "tap-target pointer-events-auto w-[min(96vw,640px)] rounded-md border bg-popover text-popover-foreground shadow-lg",
+                "flex items-start gap-3 p-3",
               )}
             >
               <div className="mt-0.5">{KIND_TO_ICON[t.kind]}</div>
               <div className="flex-1">
                 {t.title ? <div className="font-semibold leading-snug">{t.title}</div> : null}
-                {t.message ? <div className="text-sm leading-snug opacity-90">{t.message}</div> : null}
+                {t.message ? (
+                  <div className="text-sm leading-snug opacity-90">{t.message}</div>
+                ) : null}
                 {t.action ? (
-                  <button
-                    type="button"
-                    className="mt-2 btn-secondary"
-                    onClick={t.action.onClick}
-                  >
+                  <button type="button" className="btn-secondary mt-2" onClick={t.action.onClick}>
                     {t.action.label}
                   </button>
                 ) : null}
@@ -107,7 +110,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
             </div>
           ))}
         </div>,
-        ensurePortal()
+        ensurePortal(),
       )}
     </ToastsContext.Provider>
   );

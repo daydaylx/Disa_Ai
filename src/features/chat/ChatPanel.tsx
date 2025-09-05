@@ -9,7 +9,8 @@ import type { ChatMessage } from "@/lib/openrouter";
 
 type Bubble = { id: string; role: "user" | "assistant"; content: string };
 
-const uuid = () => (crypto as any)?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+const uuid = () =>
+  (crypto as any)?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 export default function ChatPanel() {
   const [items, setItems] = React.useState<Bubble[]>([]);
@@ -24,10 +25,13 @@ export default function ChatPanel() {
   const toast = useToast();
 
   const currentStyle = React.useMemo(
-    () => persona.data.styles.find(x => x.id === (settings.personaId ?? "")) ?? null,
-    [persona.data.styles, settings.personaId]
+    () => persona.data.styles.find((x) => x.id === (settings.personaId ?? "")) ?? null,
+    [persona.data.styles, settings.personaId],
   );
-  const systemMsg = React.useMemo(() => getSystemFor(currentStyle ?? null), [currentStyle, getSystemFor]);
+  const systemMsg = React.useMemo(
+    () => getSystemFor(currentStyle ?? null),
+    [currentStyle, getSystemFor],
+  );
 
   React.useEffect(() => {
     const el = listRef.current;
@@ -35,7 +39,12 @@ export default function ChatPanel() {
   }, [items.length]);
 
   async function send() {
-    if (busy) { try { abortRef.current?.abort(); } catch {} return; }
+    if (busy) {
+      try {
+        abortRef.current?.abort();
+      } catch {}
+      return;
+    }
 
     const content = input.trim();
     if (!content) return;
@@ -55,7 +64,7 @@ export default function ChatPanel() {
 
     const user: Bubble = { id: uuid(), role: "user", content };
     const asst: Bubble = { id: uuid(), role: "assistant", content: "" };
-    setItems(prev => [...prev, user, asst]);
+    setItems((prev) => [...prev, user, asst]);
     setInput("");
 
     let accum = "";
@@ -63,8 +72,8 @@ export default function ChatPanel() {
     try {
       const base: ChatMessage[] = [
         systemMsg,
-        ...items.map(({ role, content }) => ({ role, content } as ChatMessage)),
-        { role: "user", content }
+        ...items.map(({ role, content }) => ({ role, content }) as ChatMessage),
+        { role: "user", content },
       ];
 
       await client.send({
@@ -73,15 +82,17 @@ export default function ChatPanel() {
         signal: ac.signal,
         onToken: (delta: string) => {
           accum += delta;
-          setItems(prev => prev.map((b) => b.id === asst.id ? ({ ...b, content: accum }) : b));
-        }
+          setItems((prev) => prev.map((b) => (b.id === asst.id ? { ...b, content: accum } : b)));
+        },
       });
-
     } catch (e: unknown) {
-      const msg = String((e as Error)?.name || "").toLowerCase() === "aborterror"
-        ? "⏹️ abgebrochen"
-        : `❌ ${String((e as Error)?.message ?? e)}`;
-      setItems(prev => prev.map(b => b.id === asst.id ? ({ ...b, content: (b.content || msg) }) : b));
+      const msg =
+        String((e as Error)?.name || "").toLowerCase() === "aborterror"
+          ? "⏹️ abgebrochen"
+          : `❌ ${String((e as Error)?.message ?? e)}`;
+      setItems((prev) =>
+        prev.map((b) => (b.id === asst.id ? { ...b, content: b.content || msg } : b)),
+      );
     } finally {
       setBusy(false);
       abortRef.current = null;
@@ -89,16 +100,22 @@ export default function ChatPanel() {
   }
 
   function stop() {
-    try { abortRef.current?.abort(); } catch {}
+    try {
+      abortRef.current?.abort();
+    } catch {}
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <div ref={listRef} className="flex-1 overflow-auto px-3 py-4 space-y-3 overscroll-contain">
+    <div className="flex h-full flex-col">
+      <div ref={listRef} className="flex-1 space-y-3 overflow-auto overscroll-contain px-3 py-4">
         {items.length === 0 && (
           <div className="mx-auto mt-16 max-w-md text-center opacity-70">
-            <div className="text-sm">Starte, indem du <b>API-Key</b>, <b>Modell</b> und <b>Stil</b> wählst.</div>
-            <div className="text-xs mt-2">Der Stil wird als unveränderte System-Nachricht gesendet.</div>
+            <div className="text-sm">
+              Starte, indem du <b>API-Key</b>, <b>Modell</b> und <b>Stil</b> wählst.
+            </div>
+            <div className="mt-2 text-xs">
+              Der Stil wird als unveränderte System-Nachricht gesendet.
+            </div>
           </div>
         )}
         {items.map((it) => (

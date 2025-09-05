@@ -13,10 +13,10 @@ export interface ModelLike {
   context?: number; // Tokens
   tags?: Tag[];
   pricing?: {
-    prompt?: number;       // USD per 1M tokens
-    completion?: number;   // USD per 1M tokens
+    prompt?: number; // USD per 1M tokens
+    completion?: number; // USD per 1M tokens
     free?: boolean;
-  }
+  };
 }
 
 export function normalize(s: string) {
@@ -30,7 +30,7 @@ export function matchesSearch(m: ModelLike, q: string) {
   if (!q) return true;
   const nq = normalize(q);
   const blob = normalize(
-    [m.id, m.label ?? "", m.description ?? "", (m.tags ?? []).join(" ")].join(" | ")
+    [m.id, m.label ?? "", m.description ?? "", (m.tags ?? []).join(" ")].join(" | "),
   );
   return blob.includes(nq);
 }
