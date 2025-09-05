@@ -1,5 +1,6 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+# Husky v10 minimal pre-commit hook (POSIX sh)
+set -eu
 
-# nur geänderte Dateien prüfen
-npx lint-staged
+# Run lint-staged; --no verhindert, dass npx versucht zu installieren
+npx --no -- lint-staged
