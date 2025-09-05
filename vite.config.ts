@@ -12,6 +12,11 @@ export default defineConfig({
       filename: "sw.js",
       injectRegister: null,
       registerType: "autoUpdate",
+      manifest: {
+        name: "Disa Ai",
+        short_name: "Disa Ai",
+        theme_color: "#0a0a0a",
+      },
     }),
   ],
   resolve: {
