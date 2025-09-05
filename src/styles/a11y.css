@@ -1,0 +1,33 @@
+/* Sichtbarer Skip-Link (Tastatur zuerst) */
+.skip-link {
+  position: fixed;
+  left: 8px;
+  top: 8px;
+  z-index: 1000;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  transform: translateY(-150%);
+  transition: transform .2s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+  outline: none;
+}
+
+/* Nutzerpräferenz: Bewegungen reduzieren */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Kontrastreserven: Hover/Active etwas kräftiger, ohne Farbe zu ändern */
+@media (hover: hover) {
+  .btn-primary:hover { filter: brightness(0.98); }
+  .btn-secondary:hover { filter: brightness(0.98); }
+}

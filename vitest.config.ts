@@ -2,11 +2,16 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    environment: "happy-dom",
+    environment: "jsdom",
+    setupFiles: ["tests/setupTests.ts"],
     globals: true,
-    setupFiles: ["./src/test/setup.ts"],
-    css: true,
-    coverage: { reporter: ["text", "lcov"] },
-    exclude: ["e2e/**", "node_modules/**", "dist/**", "build/**"],
-  },
+    fakeTimers: {
+      toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval", "Date"]
+    },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      reportsDirectory: "coverage"
+    }
+  }
 });

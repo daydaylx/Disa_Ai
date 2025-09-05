@@ -1,30 +1,72 @@
 import type { Config } from "tailwindcss";
 
-export default {
-  darkMode: "class",
-  content: ["./index.html","./src/**/*.{ts,tsx,js,jsx}"],
+const config: Config = {
+  darkMode: ["class"],
+  content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx,md,mdx}"],
   theme: {
+    container: {
+      center: true,
+      padding: "16px",
+      screens: { "2xl": "1320px" }
+    },
     extend: {
       colors: {
-        background: "#0B0B0E",
-        foreground: "#E4E4E7",
-        muted: "#1A1A22",
-        border: "#262633",
-        primary: { DEFAULT: "#A855F7", foreground: "#FFFFFF" },
-        secondary: { DEFAULT: "#312E81", foreground: "#C7D2FE" },
-        danger: { DEFAULT: "#EF4444", foreground: "#FFFFFF" },
-        success: { DEFAULT: "#10B981", foreground: "#06281F" },
-        warning: { DEFAULT: "#F59E0B", foreground: "#1E1303" },
+        border: "hsl(var(--border) / <alpha-value>)",
+        input: "hsl(var(--input) / <alpha-value>)",
+        ring: "hsl(var(--ring) / <alpha-value>)",
+        background: "hsl(var(--background) / <alpha-value>)",
+        foreground: "hsl(var(--foreground) / <alpha-value>)",
+        primary: {
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)"
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
+          foreground: "hsl(var(--secondary-foreground) / <alpha-value>)"
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)"
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          foreground: "hsl(var(--muted-foreground) / <alpha-value>)"
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent) / <alpha-value>)",
+          foreground: "hsl(var(--accent-foreground) / <alpha-value>)"
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover) / <alpha-value>)",
+          foreground: "hsl(var(--popover-foreground) / <alpha-value>)"
+        },
+        card: {
+          DEFAULT: "hsl(var(--card) / <alpha-value>)",
+          foreground: "hsl(var(--card-foreground) / <alpha-value>)"
+        }
       },
-      borderRadius: { xl: "1rem", "2xl": "1.5rem" },
-      boxShadow: {
-        card: "0 8px 30px rgba(0,0,0,.35)",
-        glow: "0 0 24px rgba(168, 85, 247, 0.45)",
-        ring: "0 0 0 3px rgba(168, 85, 247, 0.35)",
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)"
       },
-      backdropBlur: { xs: "2px" },
-      transitionDuration: { DEFAULT: "200ms" },
-    },
+      keyframes: {
+        "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },
+        "accordion-up":   { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" } }
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out"
+      }
+    }
   },
-  plugins: [],
-} satisfies Config;
+  plugins: [require("tailwindcss-animate")],
+  safelist: [
+    "bg-primary","text-primary-foreground",
+    "bg-secondary","text-secondary-foreground",
+    "ring-2","ring-offset-2","ring-primary",
+    "outline-none","focus-visible:ring-2","focus-visible:ring-offset-2"
+  ]
+};
+
+export default config;
