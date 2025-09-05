@@ -16,6 +16,7 @@
     "lint": "echo \"lint disabled\"",
     "lint:fix": "echo \"lint disabled\"",
     "lint:types": "eslint . --config eslint.config.types.js",
+    "lint:full": "eslint .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "prepare": "husky install",
