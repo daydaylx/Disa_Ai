@@ -4,9 +4,12 @@ export interface Msg { role: Role; content: string; }
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const KEY_NAME = "disa_api_key";
 const MODEL_KEY = "disa_model";
+import { readApiKey } from "../lib/openrouter/key";
 
 function getHeaders() {
-  const apiKey = localStorage.getItem(KEY_NAME)?.replace(/^"+|"+$/g, "");
+  const apiKey =
+    readApiKey() ??
+    localStorage.getItem(KEY_NAME)?.replace(/^"+|"+$/g, "");
   if (!apiKey) throw new Error("NO_API_KEY");
   return {
     Authorization: `Bearer ${apiKey}`,
