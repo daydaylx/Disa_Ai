@@ -1,3 +1,4 @@
+import "./styles/ui-fixes.css";
 import "./styles/glass.css";
 import "./styles/overrides.css";
 import "./styles/tokens.css";
@@ -11,6 +12,7 @@ import "./styles/a11y.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
+
 import App from "./App";
 import { installSkipLinkFocus } from "./lib/a11y/skipLink";
 import { registerSW } from "./lib/pwa/registerSW";
