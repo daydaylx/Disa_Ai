@@ -1,0 +1,29 @@
+:root {
+  /* Farben */
+  --bg: #0f1117;
+  --panel: rgba(20, 20, 28, 0.65);
+  --text: #eaeaf2;
+  --muted: #a7a9b4;
+  --brand: #4e85ff;
+  --brand-ink: #0b1220;
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --err: #ef4444;
+
+  /* Flächen / Rahmen / Schatten */
+  --radius: 16px;
+  --radius-btn: 14px;
+  --border: 1px solid rgba(255, 255, 255, 0.08);
+  --shadow-e1: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  /* Typo / Spacing */
+  --fs-sm: 0.9rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --gap-1: 8px;
+  --gap-2: 12px;
+  --gap-3: 16px;
+
+  /* Layout */
+  --tabbar-h: 56px;
+}
