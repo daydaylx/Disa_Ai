@@ -2,7 +2,7 @@
 // Workbox Precache (injectManifest) – additiv, ändert bestehende Logik nicht wesentlich.
 // Der Rest dieses SWs bleibt unverändert aktiv.
 import { precacheAndRoute } from "workbox-precaching";
-const VERSION = "v1.0.0";
+const VERSION = "v1.0.1";
 const APP_CACHE = `disa-app-${VERSION}`;
 const APP_SHELL = [
   "/",                     // SPA-Einstieg

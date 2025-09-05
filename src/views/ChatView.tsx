@@ -114,7 +114,7 @@ export const ChatView: React.FC = () => {
       <NetworkBanner />
       <Toolbar title={`Bereit. · Modell: ${modelId}`} onMenu={() => {}} onSettings={() => {}} onModels={() => {}} />
 
-      <main id="main" data-testid="chat-main" ref={listRef} className="chat-body mx-auto w-full max-w-5xl" role="main">
+      <main id="main" data-testid="chat-main" ref={listRef} className="chat-body mx-auto w-full max-w-4xl" role="main">
         {messages.length <= 2 && (
           <>
             <HeroCard onStart={() => { const el = document.querySelector('[data-testid="composer-input"]') as HTMLTextAreaElement | null; el?.focus(); }} />
