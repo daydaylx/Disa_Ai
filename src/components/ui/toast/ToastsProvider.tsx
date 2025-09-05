@@ -1,8 +1,9 @@
 import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+
+import { cn } from "../../../lib/utils/cn";
 import { Icon } from "../Icon";
 import type { ToastItem, ToastKind } from "./ToastTypes";
-import { cn } from "../../../lib/utils/cn";
 
 interface ToastsContextValue {
   push: (t: Omit<ToastItem, "id">) => string;
@@ -52,6 +53,20 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
   }, [dismiss]);
 
   const value = useMemo<ToastsContextValue>(() => ({ push, dismiss }), [push, dismiss]);
+
+  // Global Toast-Bus: erlaubt Toaster außerhalb von React (z.B. SW-Update-Hinweis)
+  React.useEffect(() => {
+    const onToast = (ev: Event) => {
+      try {
+        const ce = ev as CustomEvent<Omit<ToastItem, "id">>;
+        if (ce?.detail && typeof ce.detail === "object") {
+          push(ce.detail as Omit<ToastItem, "id">);
+        }
+      } catch {/* ignore */}
+    };
+    window.addEventListener("disa:toast", onToast as any);
+    return () => window.removeEventListener("disa:toast", onToast as any);
+  }, [push]);
 
   return (
     <ToastsContext.Provider value={value}>
