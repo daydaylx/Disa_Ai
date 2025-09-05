@@ -4,7 +4,15 @@ import { cn } from "../lib/cn";
 export function Card({ className, children }: React.PropsWithChildren<{ className?: string }>) {
   return <div className={cn("card p-5", className)}>{children}</div>;
 }
-export function CardHeader({ title, subtitle, right }:{title:string; subtitle?:string; right?:React.ReactNode}) {
+export function CardHeader({
+  title,
+  subtitle,
+  right,
+}: {
+  title: string;
+  subtitle?: string;
+  right?: React.ReactNode;
+}) {
   return (
     <div className="mb-3 flex items-start justify-between gap-4">
       <div>
@@ -16,5 +24,5 @@ export function CardHeader({ title, subtitle, right }:{title:string; subtitle?:s
   );
 }
 export function CardFooter({ children }: React.PropsWithChildren) {
-  return <div className="mt-4 pt-4 border-t border-white/10">{children}</div>;
+  return <div className="mt-4 border-t border-white/10 pt-4">{children}</div>;
 }

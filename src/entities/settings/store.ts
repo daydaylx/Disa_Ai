@@ -11,7 +11,11 @@ const KEY_MODEL = "settings:modelId";
 const KEY_PERSONA = "settings:personaId";
 
 function readLS(key: string): string | null {
-  try { return localStorage.getItem(key); } catch { return null; }
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
 }
 function writeLS(key: string, v: string | null) {
   try {

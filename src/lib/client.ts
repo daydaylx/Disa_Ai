@@ -13,7 +13,12 @@ export type Client = {
   }) => Promise<void>;
 };
 
-export function useClient(): { client: Client; getSystemFor: (style: { system: string } | null) => { role: "system"; content: string }; apiKey: string | null; setApiKey: (v: string | null) => void } {
+export function useClient(): {
+  client: Client;
+  getSystemFor: (style: { system: string } | null) => { role: "system"; content: string };
+  apiKey: string | null;
+  setApiKey: (v: string | null) => void;
+} {
   const client: Client = {
     async send({ model, messages, signal, onToken }) {
       const res = await chat({ modelId: model, messages: messages as ChatMessageLike[] }, signal);
@@ -27,7 +32,13 @@ export function useClient(): { client: Client; getSystemFor: (style: { system: s
 
   // simple stable identity to please hooks rules
   const [apiKey, setApiKeyState] = React.useState<string | null>(() => readApiKey());
-  const setApiKey = (v: string | null) => { writeApiKey(v ?? ""); setApiKeyState(readApiKey()); };
-  const value = React.useMemo(() => ({ client, getSystemFor, apiKey, setApiKey }), [apiKey, client]);
+  const setApiKey = (v: string | null) => {
+    writeApiKey(v ?? "");
+    setApiKeyState(readApiKey());
+  };
+  const value = React.useMemo(
+    () => ({ client, getSystemFor, apiKey, setApiKey }),
+    [apiKey, client],
+  );
   return value;
 }

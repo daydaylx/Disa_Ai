@@ -5,7 +5,7 @@ test.describe("Chat – Grundfunktionen (mobil)", () => {
     await page.goto("/");
     // Tab → Skip-Link → Enter
     await page.keyboard.press("Tab");
-    const skip = page.locator('a.skip-link');
+    const skip = page.locator("a.skip-link");
     await expect(skip).toBeVisible();
     await page.keyboard.press("Enter");
     await expect(page.locator("#main")).toBeFocused();

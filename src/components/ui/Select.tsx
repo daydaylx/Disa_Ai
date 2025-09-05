@@ -39,7 +39,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           className={cn(
             "input",
             "appearance-none pr-9", // Platz für Dropdown-Indikator
-            error && "border-destructive focus-visible:ring-destructive"
+            error && "border-destructive focus-visible:ring-destructive",
           )}
           aria-invalid={!!error || undefined}
           aria-describedby={describedBy.length ? describedBy.join(" ") : undefined}
@@ -54,7 +54,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         </select>
       </div>
     );
-  }
+  },
 );
 
 Select.displayName = "Select";

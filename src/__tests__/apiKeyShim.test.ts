@@ -35,4 +35,3 @@ describe("API Key Shim", () => {
     expect(readApiKey()).toBeNull();
   });
 });
-

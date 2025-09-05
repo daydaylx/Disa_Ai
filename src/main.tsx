@@ -1,3 +1,5 @@
+import "./styles/glass.css";
+import "./styles/overrides.css";
 import "./styles/tokens.css";
 import "./styles/brand.css";
 import "./styles/theme.css";
@@ -19,5 +21,5 @@ registerSW();
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

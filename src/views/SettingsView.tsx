@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 
-import { type AppSettings, type ChatStyle,loadSettings, saveSettings } from "../lib/settings/storage";
+import {
+  type AppSettings,
+  type ChatStyle,
+  loadSettings,
+  saveSettings,
+} from "../lib/settings/storage";
 
 const DEFAULT_MODEL = "qwen/qwen-2.5-coder-14b-instruct";
 const MODELS: string[] = [
   DEFAULT_MODEL,
   "google/gemini-1.5-pro",
   "openai/gpt-4o-mini",
-  "mistralai/mixtral-8x7b-instruct"
+  "mistralai/mixtral-8x7b-instruct",
 ];
 
 export const SettingsView: React.FC = () => {
@@ -25,17 +30,17 @@ export const SettingsView: React.FC = () => {
       openrouterKey: apiKey.trim(),
       defaultModelId: chosenModel,
       chatStyle: style,
-      chatRole: role.trim()
+      chatRole: role.trim(),
     });
     alert("Gespeichert.");
   };
 
   return (
     <main id="main" className="safe-pad safe-bottom py-4 text-white">
-      <h1 className="text-xl font-semibold mb-4">Einstellungen</h1>
+      <h1 className="mb-4 text-xl font-semibold">Einstellungen</h1>
 
-      <section className="glass card-round p-4 mb-4">
-        <h2 className="font-semibold mb-2">OpenRouter API-Key</h2>
+      <section className="glass card-round mb-4 p-4">
+        <h2 className="mb-2 font-semibold">OpenRouter API-Key</h2>
         <input
           className="input w-full"
           placeholder="sk-…"
@@ -43,20 +48,20 @@ export const SettingsView: React.FC = () => {
           onChange={(e) => setApiKey(e.target.value)}
           autoComplete="off"
         />
-        <p className="text-xs opacity-70 mt-2">
+        <p className="mt-2 text-xs opacity-70">
           Key wird lokal gespeichert (localStorage). Wir senden ihn nur an openrouter.ai.
         </p>
       </section>
 
-      <section className="glass card-round p-4 mb-4">
-        <h2 className="font-semibold mb-2">Standard-Modell</h2>
+      <section className="glass card-round mb-4 p-4">
+        <h2 className="mb-2 font-semibold">Standard-Modell</h2>
         <div className="flex flex-col gap-2">
-          <select
-            className="input w-full"
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-          >
-            {MODELS.map((m) => (<option key={m} value={m}>{m}</option>))}
+          <select className="input w-full" value={model} onChange={(e) => setModel(e.target.value)}>
+            {MODELS.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
           </select>
           <input
             className="input w-full"
@@ -67,13 +72,13 @@ export const SettingsView: React.FC = () => {
         </div>
       </section>
 
-      <section className="glass card-round p-4 mb-4">
-        <h2 className="font-semibold mb-2">Stil & Rolle</h2>
+      <section className="glass card-round mb-4 p-4">
+        <h2 className="mb-2 font-semibold">Stil & Rolle</h2>
         <div className="grid grid-cols-2 gap-3">
           <label className="block">
             <span className="text-sm opacity-80">Stil</span>
             <select
-              className="input w-full mt-1"
+              className="input mt-1 w-full"
               value={style}
               onChange={(e) => setStyle(e.target.value as ChatStyle)}
             >
@@ -83,10 +88,10 @@ export const SettingsView: React.FC = () => {
               <option value="Locker">Locker</option>
             </select>
           </label>
-          <label className="block col-span-2">
+          <label className="col-span-2 block">
             <span className="text-sm opacity-80">Rolle (System-Hinweis)</span>
             <input
-              className="input w-full mt-1"
+              className="input mt-1 w-full"
               placeholder="z. B. 'Du bist ein kritischer Senior-Assistent…'"
               value={role}
               onChange={(e) => setRole(e.target.value)}
@@ -96,7 +101,9 @@ export const SettingsView: React.FC = () => {
       </section>
 
       <div className="flex justify-end">
-        <button onClick={onSave} className="tap pill btn-glow px-4 py-2 font-semibold">Speichern</button>
+        <button onClick={onSave} className="tap pill btn-glow px-4 py-2 font-semibold">
+          Speichern
+        </button>
       </div>
     </main>
   );

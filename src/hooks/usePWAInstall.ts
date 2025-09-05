@@ -1,48 +1,124 @@
-import React from "react"
-type Choice = { outcome: "accepted" | "dismissed"; platform?: string }
-interface BeforeInstallPromptEvent extends Event { prompt: () => Promise<void>; userChoice: Promise<Choice> }
-const LS_KEY_DISMISSED = "disa:pwa:dismissed"
+import React from "react";
+
+/** Chromium-spezifisches Event (nicht in lib.dom.d.ts) */
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform?: string }>;
+}
+
+/** Navigator-Erweiterung für iOS Standalone */
+declare global {
+  interface Navigator {
+    standalone?: boolean;
+  }
+}
+
+const LS_KEY_DISMISSED = "disa:pwa:dismissed";
 
 function isStandalone(): boolean {
-  try { if ((navigator as any).standalone) return true } catch {}
-  try { return window.matchMedia("(display-mode: standalone)").matches } catch { return false }
+  try {
+    if (navigator.standalone) return true;
+  } catch {
+    // absichtlich ignoriert
+    void 0;
+  }
+  try {
+    return window.matchMedia("(display-mode: standalone)").matches;
+  } catch {
+    return false;
+  }
 }
-function isIOS(): boolean { const ua = navigator.userAgent || ""; return /iphone|ipad|ipod/i.test(ua) }
+function isIOS(): boolean {
+  const ua = navigator.userAgent || "";
+  return /iphone|ipad|ipod/i.test(ua);
+}
 
 export function usePWAInstall() {
-  const [deferred, setDeferred] = React.useState<BeforeInstallPromptEvent | null>(null)
-  const [installed, setInstalled] = React.useState<boolean>(() => isStandalone())
-  const [dismissed, setDismissed] = React.useState<boolean>(() => { try { return localStorage.getItem(LS_KEY_DISMISSED) === "true" } catch { return false } })
+  const [deferred, setDeferred] = React.useState<BeforeInstallPromptEvent | null>(null);
+  const [installed, setInstalled] = React.useState<boolean>(() => isStandalone());
+  const [dismissed, setDismissed] = React.useState<boolean>(() => {
+    try {
+      return localStorage.getItem(LS_KEY_DISMISSED) === "true";
+    } catch {
+      return false;
+    }
+  });
 
   React.useEffect(() => {
-    function onBIP(e: Event) { e.preventDefault(); setDeferred(e as BeforeInstallPromptEvent) }
-    function onInstalled() { setInstalled(true); try { localStorage.removeItem(LS_KEY_DISMISSED) } catch {}; setDeferred(null) }
-    window.addEventListener("beforeinstallprompt", onBIP as any)
-    window.addEventListener("appinstalled", onInstalled as any)
+    if (isStandalone()) setInstalled(true);
+
+    const onBeforeInstall = (e: Event) => {
+      const be = e as BeforeInstallPromptEvent;
+      if (typeof be.prompt === "function") {
+        e.preventDefault();
+        setDeferred(be);
+      }
+    };
+    const onAppInstalled = () => {
+      setInstalled(true);
+      setDeferred(null);
+    };
+
+    window.addEventListener("beforeinstallprompt", onBeforeInstall);
+    window.addEventListener("appinstalled", onAppInstalled);
     return () => {
-      window.removeEventListener("beforeinstallprompt", onBIP as any)
-      window.removeEventListener("appinstalled", onInstalled as any)
-    }
-  }, [])
+      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
+      window.removeEventListener("appinstalled", onAppInstalled);
+    };
+  }, []);
 
   async function requestInstall() {
-    if (!deferred) return
+    if (!deferred) return;
     try {
-      await deferred.prompt()
-      const choice = await deferred.userChoice
-      if (choice?.outcome !== "accepted") { try { localStorage.setItem(LS_KEY_DISMISSED, "true") } catch {}; setDismissed(true) }
+      await deferred.prompt();
+      const choice = await deferred.userChoice;
+      if (choice.outcome !== "accepted") {
+        try {
+          localStorage.setItem(LS_KEY_DISMISSED, "true");
+        } catch {
+          // ignore storage errors
+          void 0;
+        }
+        setDismissed(true);
+      }
     } catch {
-      try { localStorage.setItem(LS_KEY_DISMISSED, "true") } catch {}
-      setDismissed(true)
-    } finally { setDeferred(null) }
+      try {
+        localStorage.setItem(LS_KEY_DISMISSED, "true");
+      } catch {
+        // ignore storage errors
+        void 0;
+      }
+      setDismissed(true);
+    } finally {
+      setDeferred(null);
+    }
   }
 
-  function dismiss() { try { localStorage.setItem(LS_KEY_DISMISSED, "true") } catch {}; setDismissed(true) }
+  function dismiss() {
+    try {
+      localStorage.setItem(LS_KEY_DISMISSED, "true");
+    } catch {
+      // ignore storage errors
+      void 0;
+    }
+    setDismissed(true);
+  }
 
-  const canPrompt = !!deferred
-  const ios = isIOS()
-  const showIOSHowTo = ios && !installed && !canPrompt && !dismissed
-  const visible = !installed && !dismissed && (canPrompt || showIOSHowTo)
+  const canInstall = !!deferred && !installed && !dismissed && !isIOS(); // Chromium prompt()
+  const showIOSHowTo = isIOS() && !installed && !dismissed; // iOS: kein prompt()
+  const visible = canInstall || showIOSHowTo; // Banner-Sichtbarkeit
+  const canPrompt = canInstall; // Alias für Alt-Code
 
-  return { visible, canPrompt, requestInstall, dismiss, showIOSHowTo }
+  return {
+    // neue Felder
+    canInstall,
+    installed,
+    dismissed,
+    requestInstall,
+    dismiss,
+    // Abwärtskompatibilität
+    visible,
+    canPrompt,
+    showIOSHowTo,
+  } as const;
 }

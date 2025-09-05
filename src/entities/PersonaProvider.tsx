@@ -1,94 +1,131 @@
 import React from "react";
+import { z } from "zod";
 import { PersonaContext, type PersonaData, type PersonaModel, type PersonaStyle } from "./persona";
+
+const modelSchema = z.object({
+  id: z.string().trim().min(1),
+  label: z.string().trim().min(1),
+  tags: z.array(z.string().trim().min(1)).optional(),
+  context: z.number().int().positive().max(4_000_000).optional(),
+});
+const styleSchema = z.object({
+  id: z
+    .string()
+    .trim()
+    .min(1)
+    .regex(/^[a-z0-9._-]{1,64}$/i, "ungültige id"),
+  name: z.string().trim().min(1).max(64),
+  system: z.string().trim().min(1).max(4000),
+  hint: z.string().trim().min(1).max(200).optional(),
+  allow: z.array(z.string().trim().min(1)).optional(),
+  deny: z.array(z.string().trim().min(1)).optional(),
+});
+const personaSchema = z.object({
+  models: z.array(modelSchema),
+  styles: z.array(styleSchema),
+});
+
+async function fetchMaybe(url: string): Promise<unknown | null> {
+  try {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch {
+    return null;
+  }
+}
+
+function normalize(input: unknown): { data: PersonaData; warnings: string[] } {
+  const warnings: string[] = [];
+  // Erlaube sowohl Kombi-Datei {models,styles} als auch getrennt {styles} bzw. {models}
+  const obj = typeof input === "object" && input !== null ? (input as Record<string, unknown>) : {};
+  const modelsRaw = Array.isArray(obj["models"]) ? (obj["models"] as unknown[]) : [];
+  const stylesRaw = Array.isArray(obj["styles"]) ? (obj["styles"] as unknown[]) : [];
+
+  const models: PersonaModel[] = [];
+  for (const it of modelsRaw) {
+    const ok = modelSchema.safeParse(it);
+    if (ok.success) models.push(ok.data);
+    else warnings.push("modell verworfen: " + ok.error.issues.map((i) => i.message).join(", "));
+  }
+
+  const styles: PersonaStyle[] = [];
+  const seen = new Set<string>();
+  for (const it of stylesRaw) {
+    const ok = styleSchema.safeParse(it);
+    if (!ok.success) {
+      warnings.push("style verworfen: " + ok.error.issues.map((i) => i.message).join(", "));
+      continue;
+    }
+    const s = ok.data;
+    if (seen.has(s.id)) {
+      warnings.push(`doppelte style.id '${s.id}'`);
+      continue;
+    }
+    seen.add(s.id);
+    styles.push(s);
+  }
+
+  return { data: { models, styles }, warnings };
+}
 
 export function PersonaProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = React.useState<PersonaData>({ models: [], styles: [] });
   const [warnings, setWarnings] = React.useState<string[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
-  React.useEffect(() => { void loadPersona(); }, []);
-
-  async function tryFetchJSON(url: string): Promise<unknown | null> {
-    try { const r = await fetch(url, { cache: "no-cache" }); if (!r.ok) return null; return await r.json(); } catch { return null; }
-  }
-
-  function validatePersona(input: unknown): { models: PersonaModel[]; styles: PersonaStyle[]; warnings: string[] } {
-    const W: string[] = []; const models: PersonaModel[] = []; const styles: PersonaStyle[] = [];
-    const MODEL_ID_RE = /^[a-z0-9._-]+(?:\/[a-z0-9._-]+)+$/i;
-    const STYLE_ID_RE = /^[a-z0-9][a-z0-9._-]{1,63}$/i;
-    const obj = (input ?? {}) as Record<string, unknown>;
-
-    if (Array.isArray((obj as any).models)) {
-      const seen = new Set<string>();
-      const list = (obj as any).models as any[];
-      for (let i = 0; i < list.length; i++) {
-        const m = list[i];
-        const id = typeof m.id === "string" ? m.id.trim() : "";
-        const label = typeof m.label === "string" ? m.label.trim() : "";
-        if (!id || !MODEL_ID_RE.test(id)) { W.push(`Modell ${i}: ungültige id "${id}"`); continue; }
-        if (!label || label.length > 64) { W.push(`Modell ${i}: ungültiges Label`); continue; }
-        if (seen.has(id)) { W.push(`Modell ${i}: doppelte id "${id}"`); continue; }
-        seen.add(id);
-        const out: PersonaModel = { id, label };
-        if (Array.isArray(m.tags)) out.tags = m.tags.filter((t: unknown) => typeof t === "string");
-        if (typeof m.context === "number") out.context = m.context;
-        models.push(out);
-      }
+  const load = React.useCallback(async () => {
+    setError(null);
+    setWarnings([]);
+    // Bevorzugte Kombi-Datei
+    const a = await fetchMaybe("/persona.json");
+    if (a) {
+      const { data: d, warnings: w } = normalize(a);
+      setData(d);
+      setWarnings(w);
+      return;
     }
-    if (Array.isArray((obj as any).styles)) {
-      const seen = new Set<string>();
-      const list = (obj as any).styles as any[];
-      for (let j = 0; j < list.length; j++) {
-        const s = list[j];
-        const id = typeof s.id === "string" ? s.id.trim() : "";
-        const name = typeof s.name === "string" ? s.name.trim() : "";
-        const system = typeof s.system === "string" ? s.system.trim() : "";
-        const hint = typeof s.hint === "string" ? s.hint.trim() : "";
-        const allow = Array.isArray(s.allow) ? s.allow.filter((x:any)=>typeof x==="string") : undefined;
-        const deny  = Array.isArray(s.deny)  ? s.deny .filter((x:any)=>typeof x==="string") : undefined;
-
-        const errs: string[] = [];
-        if (!id || !STYLE_ID_RE.test(id)) errs.push("ungültige id");
-        if (seen.has(id)) errs.push("doppelte id");
-        if (name.length < 1 || name.length > 64) errs.push("Name Länge ungültig");
-        if (system.length < 1 || system.length > 4000) errs.push("Systemprompt Länge ungültig");
-        if (allow && deny) errs.push("allow und deny gleichzeitig");
-
-        if (errs.length) { warnings.push(`Stil ${j} (${id||"?"}) übersprungen: ${errs.join(", ")}`); continue; }
-        seen.add(id);
-        const out: PersonaStyle = { id, name, system };
-        if (hint) out.hint = hint; if (allow) out.allow = allow; if (deny) out.deny = deny;
-        styles.push(out);
-      }
+    // Fallback: getrennte Dateien
+    const [m, s] = await Promise.all([fetchMaybe("/models.json"), fetchMaybe("/styles.json")]);
+    if (!m && !s) {
+      setData({ models: [], styles: [] });
+      setError("persona.json / models.json / styles.json nicht gefunden oder ungültig");
+      return;
     }
-    if (styles.length === 0) {
-      W.push("Keine gültigen Stile – Default aktiv.");
-      styles.push({ id:"neutral", name:"Sachlich", system:"Kurz, präzise, Deutsch." });
-    }
-    return { models, styles, warnings: W };
-  }
+    const merged = {
+      models:
+        typeof m === "object" && m && Array.isArray((m as any).models)
+          ? (m as any).models
+          : Array.isArray(m)
+            ? m
+            : [],
+      styles:
+        typeof s === "object" && s && Array.isArray((s as any).styles)
+          ? (s as any).styles
+          : Array.isArray(s)
+            ? s
+            : [],
+    };
+    const { data: d, warnings: w } = normalize(merged);
+    setData(d);
+    setWarnings(w);
+  }, []);
 
-  async function loadPersona() {
-    setWarnings([]); setError(null);
-    try {
-      let data: unknown | null =
-        await tryFetchJSON("/persona.json") ??
-        await tryFetchJSON("/personas.json") ??
-        await tryFetchJSON("/data/personas.json");
+  React.useEffect(() => {
+    void load();
+  }, [load]);
 
-      if (!data) throw new Error("not_found");
-      const v = validatePersona(data);
-      setData({ models: v.models, styles: v.styles });
-      if (v.warnings.length) setWarnings(v.warnings);
-    } catch {
-      setData({ models: [], styles: [{ id:"neutral", name:"Sachlich", system:"Kurz, präzise, Deutsch." }]});
-      setError("Konfiguration nicht geladen – Standardwerte aktiv.");
-    }
-  }
-
-  return (
-    <PersonaContext.Provider value={{ data, warnings, error, reload: loadPersona }}>
-      {children}
-    </PersonaContext.Provider>
+  const value = React.useMemo(
+    () => ({
+      data,
+      warnings,
+      error,
+      reload: () => {
+        void load();
+      },
+    }),
+    [data, warnings, error, load],
   );
+
+  return <PersonaContext.Provider value={value}>{children}</PersonaContext.Provider>;
 }

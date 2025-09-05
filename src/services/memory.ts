@@ -22,13 +22,85 @@ const MAX_FACTS = 6;
 const MAX_SUMMARY_CHARS = 600;
 
 const STOPWORDS = new Set([
-  "der","die","das","und","oder","aber","auch","wenn","dann","weil","mit","ohne","für","von","zum","zur","im","in","am","an",
-  "the","a","an","and","or","but","of","to","for","on","in","at","is","are","was","were","be","been",
-  "ich","du","er","sie","es","wir","ihr","sie",
-  "ein","eine","einer","eines","einem","einen",
-  "nicht","kein","keine","keiner","keines","keinem","keinen",
-  "so","nur","auch","sehr","mehr","weniger","viel","viele","vielen","vieles",
-  "you","we","they","he","she","it","this","that","these","those"
+  "der",
+  "die",
+  "das",
+  "und",
+  "oder",
+  "aber",
+  "auch",
+  "wenn",
+  "dann",
+  "weil",
+  "mit",
+  "ohne",
+  "für",
+  "von",
+  "zum",
+  "zur",
+  "im",
+  "in",
+  "am",
+  "an",
+  "the",
+  "a",
+  "an",
+  "and",
+  "or",
+  "but",
+  "of",
+  "to",
+  "for",
+  "on",
+  "in",
+  "at",
+  "is",
+  "are",
+  "was",
+  "were",
+  "be",
+  "been",
+  "ich",
+  "du",
+  "er",
+  "sie",
+  "es",
+  "wir",
+  "ihr",
+  "sie",
+  "ein",
+  "eine",
+  "einer",
+  "eines",
+  "einem",
+  "einen",
+  "nicht",
+  "kein",
+  "keine",
+  "keiner",
+  "keines",
+  "keinem",
+  "keinen",
+  "so",
+  "nur",
+  "auch",
+  "sehr",
+  "mehr",
+  "weniger",
+  "viel",
+  "viele",
+  "vielen",
+  "vieles",
+  "you",
+  "we",
+  "they",
+  "he",
+  "she",
+  "it",
+  "this",
+  "that",
+  "these",
+  "those",
 ]);
 
 function safeNow(): number {
@@ -121,15 +193,16 @@ function uniqueFactsClamp(arr: MemoryFact[], max: number): MemoryFact[] {
 }
 
 function tokenize(text: string): string[] {
-  return (text.toLowerCase().match(/[a-zäöüß0-9][a-zäöüß0-9\-_.]{2,}/gi) ?? [])
-    .filter(w => w.length >= 4 && !STOPWORDS.has(w));
+  return (text.toLowerCase().match(/[a-zäöüß0-9][a-zäöüß0-9\-_.]{2,}/gi) ?? []).filter(
+    (w) => w.length >= 4 && !STOPWORDS.has(w),
+  );
 }
 
 function topNByFrequency(words: string[], n: number): string[] {
   const freq = new Map<string, number>();
   for (const w of words) freq.set(w, (freq.get(w) ?? 0) + 1);
   return [...freq.entries()]
-    .sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
     .slice(0, n)
     .map(([w]) => w);
 }
@@ -137,20 +210,26 @@ function topNByFrequency(words: string[], n: number): string[] {
 function extractEntities(text: string): string[] {
   const entities = new Set<string>();
   const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi) ?? [];
-  email.forEach(e => entities.add(e));
+  email.forEach((e) => entities.add(e));
   const handles = text.match(/[@#][\w\-]{3,}/g) ?? [];
-  handles.forEach(h => entities.add(h));
+  handles.forEach((h) => entities.add(h));
   const caps = text.match(/\b([A-ZÄÖÜ][a-zäöüß]+(?:\s+[A-ZÄÖÜ0-9][\w\-]+){0,2})\b/g) ?? [];
-  caps.forEach(c => { if (c.length >= 3) entities.add(c.trim()); });
+  caps.forEach((c) => {
+    if (c.length >= 3) entities.add(c.trim());
+  });
   const paths = text.match(/(?:\w+\/)+\w+(\.\w+)?/g) ?? [];
-  paths.forEach(p => entities.add(p));
+  paths.forEach((p) => entities.add(p));
   return uniqueClamp([...entities], MAX_ENTITIES);
 }
 
-export interface MemoryFactCandidate { key: string; value: string; }
+export interface MemoryFactCandidate {
+  key: string;
+  value: string;
+}
 function extractFacts(text: string): MemoryFact[] {
   const results: MemoryFact[] = [];
-  const re = /(?:^|\n|\r|\t)[\-*•]?\s*([A-Za-zÄÖÜäöüß0-9 _./#@-]{2,40})\s*[:=]\s*([^\n\r;]{2,120})/g;
+  const re =
+    /(?:^|\n|\r|\t)[\-*•]?\s*([A-Za-zÄÖÜäöüß0-9 _./#@-]{2,40})\s*[:=]\s*([^\n\r;]{2,120})/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
     const key = (m[1] ?? "").toString().trim().replace(/\s+/g, " ");
@@ -163,8 +242,8 @@ function extractFacts(text: string): MemoryFact[] {
 
 function buildSummaryFromTurns(turns: ChatMessage[], maxChars: number): string {
   const last = turns.slice(-8);
-  const lines = last.map(m => {
-    const role = m.role === "assistant" ? "A" : (m.role === "user" ? "U" : "S");
+  const lines = last.map((m) => {
+    const role = m.role === "assistant" ? "A" : m.role === "user" ? "U" : "S";
     let content = (m.content ?? "").replace(/\s+/g, " ").trim();
     if (content.length > 160) content = content.slice(0, 160) + " …";
     return `${role}: ${content}`;
@@ -177,14 +256,16 @@ function buildSummaryFromTurns(turns: ChatMessage[], maxChars: number): string {
 export function formatMemoryForSystem(mem: MemorySnapshot): string {
   const topics = mem.topics.length ? `Topics: ${mem.topics.join(", ")}` : "";
   const entities = mem.entities.length ? `Entities: ${mem.entities.join(", ")}` : "";
-  const facts = mem.facts.length ? "Facts: " + mem.facts.map(f => `${f.key}=${f.value}`).join("; ") : "";
+  const facts = mem.facts.length
+    ? "Facts: " + mem.facts.map((f) => `${f.key}=${f.value}`).join("; ")
+    : "";
   const summary = mem.summary ? `Summary: ${mem.summary}` : "";
   return [topics, entities, facts, summary].filter(Boolean).join("\n");
 }
 
 export function updateMemory(scopeId: string, recentTurns: ChatMessage[]): MemorySnapshot {
   const mem = loadMemory(scopeId);
-  const joined = recentTurns.map(t => t.content ?? "").join("\n");
+  const joined = recentTurns.map((t) => t.content ?? "").join("\n");
 
   const top = topNByFrequency(tokenize(joined), MAX_TOPICS);
   const mergedTopics = uniqueClamp([...top, ...mem.topics], MAX_TOPICS);

@@ -1,20 +1,44 @@
-html,
-body,
-#root {
-  background: var(--bg-0);
+/* --- Layout Baseline & Safe-Area Fixes --- */
+
+:root {
+  --tabbar-h: 56px;
 }
-.app-bg {
-  background:
-    radial-gradient(1000px 560px at 80% -10%, rgba(138, 92, 255, 0.3), transparent 60%),
-    radial-gradient(900px 480px at 10% -10%, rgba(40, 215, 255, 0.26), transparent 60%),
-    radial-gradient(1000px 760px at 50% 110%, rgba(255, 122, 217, 0.26), transparent 60%),
-    var(--bg-0);
+
+/* Wenn Tabbar montiert ist, wird unten Platz reserviert */
+body.has-tabbar {
+  padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
 }
-.card-round {
-  border-radius: 20px;
+
+/* Hauptbereiche zusätzlich polstern – defensiv */
+main, [data-main], .main, .page, .content {
+  padding-bottom: max(
+    var(--tabbar-h),
+    calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px))
+  );
 }
-.container {
-  width: 100%;
-  max-width: 1080px;
-  margin-inline: auto;
+
+/* Tabbar bleibt sichtbar, blockiert aber NICHT die Seite */
+.tabbar {
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
+  height: var(--tabbar-h);
+  pointer-events: none; /* <<< entscheidend */
+}
+/* Nur die interaktiven Kinder sind klickbar */
+.tabbar > * {
+  pointer-events: auto;
+}
+
+/* Network/Offline-Banner – ganz oben, ohne die Seite zu blocken */
+.net-banner {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px));
+  left: 0;
+  right: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+.net-banner > * {
+  pointer-events: auto;
 }

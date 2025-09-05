@@ -15,9 +15,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastCtx.Provider value={{ show }}>
       {children}
-      <div className="fixed left-0 right-0 bottom-3 flex flex-col items-center gap-2 z-50 px-3">
+      <div className="fixed bottom-3 left-0 right-0 z-50 flex flex-col items-center gap-2 px-3">
         {items.map((t) => (
-          <div key={t.id} className={`px-3 py-2 rounded-xl text-sm shadow ${t.kind==="error"?"bg-red-600 text-white":"bg-black text-white dark:bg-white dark:text-black"}`}>
+          <div
+            key={t.id}
+            className={`rounded-xl px-3 py-2 text-sm shadow ${t.kind === "error" ? "bg-red-600 text-white" : "bg-black text-white dark:bg-white dark:text-black"}`}
+          >
             {t.text}
           </div>
         ))}

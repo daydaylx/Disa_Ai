@@ -12,15 +12,7 @@ export interface SkeletonProps {
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className }) => {
-  return (
-    <div
-      className={cn(
-        "animate-pulse rounded-md bg-muted",
-        className
-      )}
-      aria-hidden="true"
-    />
-  );
+  return <div className={cn("animate-pulse rounded-md bg-muted", className)} aria-hidden="true" />;
 };
 
 export interface SpinnerProps {
@@ -32,16 +24,20 @@ export interface SpinnerProps {
 export const Spinner: React.FC<SpinnerProps> = ({ size = 20, label = "Lädt …", className }) => {
   const border = Math.max(2, Math.round(size / 10));
   return (
-    <div className={cn("inline-flex items-center gap-2", className)} role="status" aria-live="polite">
+    <div
+      className={cn("inline-flex items-center gap-2", className)}
+      role="status"
+      aria-live="polite"
+    >
       <div
-        className="inline-block rounded-full border-t-transparent animate-spin"
+        className="inline-block animate-spin rounded-full border-t-transparent"
         style={{
           width: size,
           height: size,
           borderStyle: "solid",
           borderWidth: border,
           borderColor: "hsl(var(--muted-foreground))",
-          borderTopColor: "transparent"
+          borderTopColor: "transparent",
         }}
         aria-hidden="true"
       />

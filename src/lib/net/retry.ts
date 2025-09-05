@@ -1,7 +1,7 @@
 export interface RetryOptions {
-  maxRetries?: number;           // z.B. 4
-  baseDelayMs?: number;          // z.B. 250
-  maxDelayMs?: number;           // z.B. 6000
+  maxRetries?: number; // z.B. 4
+  baseDelayMs?: number; // z.B. 250
+  maxDelayMs?: number; // z.B. 6000
   retryOn?: (res: Response) => boolean;
   abortSignal?: AbortSignal;
 }
@@ -39,13 +39,17 @@ function backoffDelay(attempt: number, base: number, cap: number): number {
   return Math.floor(Math.random() * exp);
 }
 
-export async function fetchWithRetry(input: RequestInfo | URL, init: RequestInit = {}, opts: RetryOptions = {}): Promise<Response> {
+export async function fetchWithRetry(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+  opts: RetryOptions = {},
+): Promise<Response> {
   const {
     maxRetries = 4,
     baseDelayMs = 250,
     maxDelayMs = 6000,
     retryOn = (res) => res.status >= 500 || res.status === 429,
-    abortSignal
+    abortSignal,
   } = opts;
 
   let lastErr: unknown;

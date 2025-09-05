@@ -1,7 +1,14 @@
 import React from "react";
 
 export type PersonaModel = { id: string; label: string; tags?: string[]; context?: number };
-export type PersonaStyle = { id: string; name: string; system: string; hint?: string; allow?: string[]; deny?: string[] };
+export type PersonaStyle = {
+  id: string;
+  name: string;
+  system: string;
+  hint?: string;
+  allow?: string[];
+  deny?: string[];
+};
 export type PersonaData = { models: PersonaModel[]; styles: PersonaStyle[] };
 
 export const PersonaContext = React.createContext<{

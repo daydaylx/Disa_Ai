@@ -15,9 +15,9 @@ export const Composer: React.FC<{
         <textarea
           data-testid="composer-input"
           className={cn(
-            "w-full min-h-[56px] max-h-[40dvh] p-4 pr-14 text-[15px] leading-5",
-            "rounded-2xl glass outline-none resize-none",
-            "placeholder:text-white/60"
+            "max-h-[40dvh] min-h-[56px] w-full p-4 pr-14 text-[15px] leading-5",
+            "glass resize-none rounded-2xl outline-none",
+            "placeholder:text-white/60",
           )}
           placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)"
           value={text}
@@ -25,15 +25,18 @@ export const Composer: React.FC<{
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              if (!disabled) { onSend(text.trim()); setText(""); }
+              if (!disabled) {
+                onSend(text.trim());
+                setText("");
+              }
             }
           }}
         />
-        <div className="absolute right-2 bottom-2">
+        <div className="absolute bottom-2 right-2">
           {loading ? (
             <button
               data-testid="composer-stop"
-              className="tap pill px-3 py-2 bg-white/10 text-white text-sm"
+              className="tap pill bg-white/10 px-3 py-2 text-sm text-white"
               onClick={onStop}
             >
               Stop
@@ -43,9 +46,14 @@ export const Composer: React.FC<{
               data-testid="composer-send"
               className={cn(
                 "tap pill btn-glow px-3 py-3",
-                disabled && "opacity-60 pointer-events-none"
+                disabled && "pointer-events-none opacity-60",
               )}
-              onClick={() => { if (!disabled) { onSend(text.trim()); setText(""); } }}
+              onClick={() => {
+                if (!disabled) {
+                  onSend(text.trim());
+                  setText("");
+                }
+              }}
               aria-label="Senden"
             >
               ✈️

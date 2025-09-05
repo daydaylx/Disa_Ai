@@ -16,21 +16,30 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   message = "Es ist ein Fehler aufgetreten.",
   details,
   onRetry,
-  className
+  className,
 }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className={cn("rounded-md border border-destructive/40 bg-destructive/10 p-3", className)} role="alert">
+    <div
+      className={cn("rounded-md border border-destructive/40 bg-destructive/10 p-3", className)}
+      role="alert"
+    >
       <div className="flex items-start gap-2">
-        <div className="mt-0.5 text-destructive"><Icon name="error" /></div>
+        <div className="mt-0.5 text-destructive">
+          <Icon name="error" />
+        </div>
         <div className="flex-1">
           <div className="font-semibold text-destructive-foreground">{title}</div>
           <div className="text-sm text-destructive-foreground/90">{message}</div>
           {details ? (
             <details className="mt-1">
-              <summary className="cursor-pointer text-xs underline underline-offset-4">Details</summary>
-              <pre className="mt-1 max-h-48 overflow-auto rounded bg-background p-2 text-xs text-foreground border border-border">{details}</pre>
+              <summary className="cursor-pointer text-xs underline underline-offset-4">
+                Details
+              </summary>
+              <pre className="mt-1 max-h-48 overflow-auto rounded border border-border bg-background p-2 text-xs text-foreground">
+                {details}
+              </pre>
             </details>
           ) : null}
           {onRetry ? (

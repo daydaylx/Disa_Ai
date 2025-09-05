@@ -9,7 +9,12 @@ export interface ToolbarProps {
   onModels?: () => void;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ title = "Chat", onMenu, onSettings, onModels }) => {
+export const Toolbar: React.FC<ToolbarProps> = ({
+  title = "Chat",
+  onMenu,
+  onSettings,
+  onModels,
+}) => {
   return (
     <header className="chat-header px-3 py-2">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-2">

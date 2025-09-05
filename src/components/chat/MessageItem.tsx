@@ -44,10 +44,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, onCopy }) => {
 
   return (
     <div
-      className={cn(
-        "msg rounded-xl p-3",
-        isUser ? "ml-auto msg-user" : "mr-auto msg-assistant"
-      )}
+      className={cn("msg rounded-xl p-3", isUser ? "msg-user ml-auto" : "msg-assistant mr-auto")}
       role="article"
       aria-label={isUser ? "Nachricht von dir" : "Antwort der KI"}
     >
@@ -66,13 +63,15 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, onCopy }) => {
             >
               <Icon name="copy" /> <span className="ml-2">Kopieren</span>
             </Button>
-            <pre><code>{b.content}</code></pre>
+            <pre>
+              <code>{b.content}</code>
+            </pre>
           </div>
         ) : (
-          <div key={i} className="leading-relaxed whitespace-pre-wrap">
+          <div key={i} className="whitespace-pre-wrap leading-relaxed">
             {b.content}
           </div>
-        )
+        ),
       )}
     </div>
   );

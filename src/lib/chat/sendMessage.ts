@@ -26,7 +26,10 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     await new Promise<void>((resolve, reject) => {
       const id = setTimeout(resolve, 600);
       if (opts.signal) {
-        const onAbort = () => { clearTimeout(id); reject(new DOMException("Aborted", "AbortError")); };
+        const onAbort = () => {
+          clearTimeout(id);
+          reject(new DOMException("Aborted", "AbortError"));
+        };
         if (opts.signal.aborted) onAbort();
         opts.signal.addEventListener("abort", onAbort, { once: true });
       }
@@ -34,29 +37,25 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     const last = opts.messages[opts.messages.length - 1]?.content || "";
     const wantsCode = /\bcode\b/i.test(last) || /```/.test(last);
     if (wantsCode) {
-      const demo = [
-        "Hier ein Beispiel:",
-        "```js",
-        "console.log('Hallo, Welt!');",
-        "```"
-      ].join("\n");
+      const demo = ["Hier ein Beispiel:", "```js", "console.log('Hallo, Welt!');", "```"].join(
+        "\n",
+      );
       return { content: demo };
     }
     return { content: "Demo-Antwort (kein API-Key)." };
   }
 
-   
   const init: any = {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${key}`,
+      Authorization: `Bearer ${key}`,
       "Content-Type": "application/json",
       "HTTP-Referer": location.origin,
-      "X-Title": "Disa_Ai"
+      "X-Title": "Disa_Ai",
     },
     body: JSON.stringify(body),
     cache: "no-store",
-    referrerPolicy: "no-referrer"
+    referrerPolicy: "no-referrer",
   };
 
   const retryOpts: {
@@ -69,7 +68,7 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     maxRetries: 4,
     baseDelayMs: 300,
     maxDelayMs: 7000,
-    retryOn: (r) => r.status === 429 || (r.status >= 500 && r.status < 600)
+    retryOn: (r) => r.status === 429 || (r.status >= 500 && r.status < 600),
   };
   if (opts.signal) retryOpts.abortSignal = opts.signal;
 

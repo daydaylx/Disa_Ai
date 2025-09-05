@@ -1,41 +1,43 @@
-import React from "react"
-import Icon from "./Icon"
-import { applyTheme, getTheme, setTheme, type ThemeMode } from "../config/theme"
+import React from "react";
+import Icon from "./Icon";
+import { applyTheme, getTheme, setTheme, type ThemeMode } from "../config/theme";
 
 type Props = {
-  onOpenConversations?: () => void
-}
+  onOpenConversations?: () => void;
+};
 
 function useActiveHash() {
-  const [hash, setHash] = React.useState<string>(() => window.location.hash || "#/")
+  const [hash, setHash] = React.useState<string>(() => window.location.hash || "#/");
   React.useEffect(() => {
-    const onHash = () => setHash(window.location.hash || "#/")
-    window.addEventListener("hashchange", onHash)
-    return () => window.removeEventListener("hashchange", onHash)
-  }, [])
-  return hash
+    const onHash = () => setHash(window.location.hash || "#/");
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+  return hash;
 }
 
 export default function TopBar({ onOpenConversations }: Props) {
-  const hash = useActiveHash()
+  const hash = useActiveHash();
   const items = [
     { label: "Home", href: "#/", match: /^#\/?$/ },
     { label: "Chat", href: "#/chat", match: /^#\/chat/ },
     { label: "Einstellungen", href: "#/settings", match: /^#\/settings/ },
-  ]
+  ];
 
-  const [mode, setMode] = React.useState<ThemeMode>(() => getTheme())
-  React.useEffect(() => { applyTheme(mode) }, [mode])
+  const [mode, setMode] = React.useState<ThemeMode>(() => getTheme());
+  React.useEffect(() => {
+    applyTheme(mode);
+  }, [mode]);
 
   function cycleTheme() {
     setMode((m) => {
-      const next: ThemeMode = m === "system" ? "dark" : m === "dark" ? "light" : "system"
-      setTheme(next)
-      return next
-    })
+      const next: ThemeMode = m === "system" ? "dark" : m === "dark" ? "light" : "system";
+      setTheme(next);
+      return next;
+    });
   }
 
-  const isActive = (m: RegExp) => m.test(hash)
+  const isActive = (m: RegExp) => m.test(hash);
 
   return (
     <header className="topbar px-3 pt-3">
@@ -50,7 +52,7 @@ export default function TopBar({ onOpenConversations }: Props) {
           <Icon name="menu" width="16" height="16" />
         </button>
 
-        <div className="ml-1 mr-1 font-semibold select-none">Disa AI</div>
+        <div className="ml-1 mr-1 select-none font-semibold">Disa AI</div>
 
         <nav className="nav">
           {items.map((it) => (
@@ -73,7 +75,13 @@ export default function TopBar({ onOpenConversations }: Props) {
           onClick={cycleTheme}
           title={`Theme: ${mode}`}
         >
-          {mode === "dark" ? <Icon name="moon" width="16" height="16" /> : mode === "light" ? <Icon name="sun" width="16" height="16" /> : <Icon name="style" width="16" height="16" />}
+          {mode === "dark" ? (
+            <Icon name="moon" width="16" height="16" />
+          ) : mode === "light" ? (
+            <Icon name="sun" width="16" height="16" />
+          ) : (
+            <Icon name="style" width="16" height="16" />
+          )}
         </button>
 
         <a href="#/settings" className="icon-btn" aria-label="Einstellungen" title="Einstellungen">
@@ -85,5 +93,5 @@ export default function TopBar({ onOpenConversations }: Props) {
         </a>
       </div>
     </header>
-  )
+  );
 }
