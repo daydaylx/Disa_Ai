@@ -1,5 +1,6 @@
 import React from "react"
-import Icon from "./Icon"
+
+import { Icon } from "./ui/Icon"
 
 type Action = { label: string; onClick: () => void }
 
@@ -11,7 +12,7 @@ type Props = {
   isStreamingTail?: boolean
 }
 
-export default function MessageBubble({ role, content, onCopy, actions, isStreamingTail }: Props) {
+function MessageBubbleBase({ role, content, onCopy, actions, isStreamingTail }: Props) {
   const isAssistant = role === "assistant"
   return (
     <div className={`bubble-row ${isAssistant ? "bubble-row--assistant" : "bubble-row--user"} animate-in`}>
@@ -42,4 +43,17 @@ export default function MessageBubble({ role, content, onCopy, actions, isStream
       </div>
     </div>
   )
+}
+
+export default MessageBubbleBase;
+
+// Named wrapper for compatibility with features/chat/ChatPanel
+export function MessageBubble(props: { role: "user" | "assistant"; children?: React.ReactNode }) {
+  const childText = (() => {
+    const c = props.children as any;
+    if (typeof c === "string") return c;
+    if (Array.isArray(c)) return c.join("");
+    return String(c ?? "");
+  })();
+  return <MessageBubbleBase role={props.role} content={childText} />;
 }

@@ -16,11 +16,13 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
     const W: string[] = []; const models: PersonaModel[] = []; const styles: PersonaStyle[] = [];
     const MODEL_ID_RE = /^[a-z0-9._-]+(?:\/[a-z0-9._-]+)+$/i;
     const STYLE_ID_RE = /^[a-z0-9][a-z0-9._-]{1,63}$/i;
+    const obj = (input ?? {}) as Record<string, unknown>;
 
-    if (Array.isArray(input?.models)) {
+    if (Array.isArray((obj as any).models)) {
       const seen = new Set<string>();
-      for (let i = 0; i < input.models.length; i++) {
-        const m = input.models[i];
+      const list = (obj as any).models as any[];
+      for (let i = 0; i < list.length; i++) {
+        const m = list[i];
         const id = typeof m.id === "string" ? m.id.trim() : "";
         const label = typeof m.label === "string" ? m.label.trim() : "";
         if (!id || !MODEL_ID_RE.test(id)) { W.push(`Modell ${i}: ungültige id "${id}"`); continue; }
@@ -33,10 +35,11 @@ export function PersonaProvider({ children }: { children: React.ReactNode }) {
         models.push(out);
       }
     }
-    if (Array.isArray(input?.styles)) {
+    if (Array.isArray((obj as any).styles)) {
       const seen = new Set<string>();
-      for (let j = 0; j < input.styles.length; j++) {
-        const s = input.styles[j];
+      const list = (obj as any).styles as any[];
+      for (let j = 0; j < list.length; j++) {
+        const s = list[j];
         const id = typeof s.id === "string" ? s.id.trim() : "";
         const name = typeof s.name === "string" ? s.name.trim() : "";
         const system = typeof s.system === "string" ? s.system.trim() : "";
