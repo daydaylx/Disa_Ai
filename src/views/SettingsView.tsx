@@ -1,102 +1,103 @@
-import React, { Suspense, useEffect, useMemo, useState, lazy } from "react";
-import "../styles/settings.css";
-import { Input } from "../components/ui/Input";
-import { Select } from "../components/ui/Select";
-import { Button } from "../components/ui/Button";
-import { useToasts } from "../components/ui/Toast";
-import { loadSettings, saveSettings } from "../features/settings/storage";
-import type { Theme } from "../features/settings/schema";
-import { PageSkeleton } from "../components/feedback/PageSkeleton";
+import React, { useState } from "react";
+import { loadSettings, saveSettings, type AppSettings, type ChatStyle } from "../lib/settings/storage";
 
-const ModelPicker = lazy(() => import("../features/models/ModelPicker").then(m => ({ default: m.ModelPicker })));
+const DEFAULT_MODEL = "qwen/qwen-2.5-coder-14b-instruct";
+const MODELS: string[] = [
+  DEFAULT_MODEL,
+  "google/gemini-1.5-pro",
+  "openai/gpt-4o-mini",
+  "mistralai/mixtral-8x7b-instruct"
+];
 
 export const SettingsView: React.FC = () => {
-  const { push } = useToasts();
-  const initial = useMemo(() => loadSettings(), []);
-  const [theme, setTheme] = useState<Theme>(initial.theme);
-  const [apiKey, setApiKey] = useState(initial.openrouterKey ?? "");
-  const [modelId, setModelId] = useState<string | undefined>(initial.defaultModelId);
-  const [openPicker, setOpenPicker] = useState(false);
+  const init: AppSettings = loadSettings();
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    if (theme === "system") {
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
-      document.documentElement.classList.toggle("dark", mq.matches);
-    }
-  }, [theme]);
+  const [apiKey, setApiKey] = useState<string>(init.openrouterKey ?? "");
+  const [model, setModel] = useState<string>(init.defaultModelId ?? DEFAULT_MODEL);
+  const [style, setStyle] = useState<ChatStyle>(init.chatStyle ?? "Neutral");
+  const [role, setRole] = useState<string>(init.chatRole ?? "");
 
-  const handleSave = () => {
-    try {
-      const patch: any = { theme, openrouterKey: apiKey.trim() };
-      if (modelId) patch.defaultModelId = modelId;
-      saveSettings(patch);
-      push({ kind: "success", title: "Gespeichert", message: "Einstellungen übernommen" });
-    } catch (e: any) {
-      push({ kind: "error", title: "Fehler", message: e?.message ?? "Ungültige Einstellungen" });
-    }
+  const onSave = () => {
+    const trimmed = model.trim();
+    const chosenModel: string = trimmed !== "" ? trimmed : DEFAULT_MODEL; // immer string
+    saveSettings({
+      openrouterKey: apiKey.trim(),
+      defaultModelId: chosenModel,
+      chatStyle: style,
+      chatRole: role.trim()
+    });
+    alert("Gespeichert.");
   };
 
   return (
-    <div className="px-3 py-4">
-      <h1 className="text-xl font-semibold">Einstellungen</h1>
+    <main id="main" className="safe-pad safe-bottom py-4 text-white">
+      <h1 className="text-xl font-semibold mb-4">Einstellungen</h1>
 
-      <section className="settings-section p-3 mt-3">
-        <h3>Darstellung</h3>
-        <p className="settings-desc mt-1">Theme nur per Klasse – systembasiert, hell oder dunkel.</p>
-        <div className="mt-3 max-w-sm">
-          <Select
-            label="Theme"
-            value={theme}
-            onChange={(e) => setTheme(e.target.value as Theme)}
-            options={[
-              { value: "system", label: "System" },
-              { value: "light", label: "Hell" },
-              { value: "dark", label: "Dunkel" },
-            ]}
+      <section className="glass card-round p-4 mb-4">
+        <h2 className="font-semibold mb-2">OpenRouter API-Key</h2>
+        <input
+          className="w-full rounded-xl p-3 bg-white/5 outline-none"
+          placeholder="sk-…"
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          autoComplete="off"
+        />
+        <p className="text-xs opacity-70 mt-2">
+          Key wird lokal gespeichert (localStorage). Wir senden ihn nur an openrouter.ai.
+        </p>
+      </section>
+
+      <section className="glass card-round p-4 mb-4">
+        <h2 className="font-semibold mb-2">Standard-Modell</h2>
+        <div className="flex flex-col gap-2">
+          <select
+            className="rounded-xl p-3 bg-white/5 outline-none"
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+          >
+            {MODELS.map((m) => (<option key={m} value={m}>{m}</option>))}
+          </select>
+          <input
+            className="w-full rounded-xl p-3 bg-white/5 outline-none"
+            placeholder="oder eigenes Modell (voller Bezeichner)…"
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
           />
         </div>
       </section>
 
-      <section className="settings-section p-3 mt-3">
-        <h3>OpenRouter API-Key</h3>
-        <p className="settings-desc mt-1">Wird lokal gespeichert. Benötigt für Live-Modelle und Antworten.</p>
-        <div className="mt-3 settings-row">
-          <div className="md:col-span-2">
-            <Input label="API-Key" placeholder="sk-…" value={apiKey} onChange={(e) => setApiKey(e.target.value)} autoComplete="off" />
-          </div>
-          <div className="settings-actions">
-            <Button variant="secondary" onClick={() => setApiKey("")}>Leeren</Button>
-          </div>
+      <section className="glass card-round p-4 mb-4">
+        <h2 className="font-semibold mb-2">Stil & Rolle</h2>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="text-sm opacity-80">Stil</span>
+            <select
+              className="mt-1 w-full rounded-xl p-3 bg-white/5 outline-none"
+              value={style}
+              onChange={(e) => setStyle(e.target.value as ChatStyle)}
+            >
+              <option value="Neutral">Neutral</option>
+              <option value="Anschaulich">Anschaulich</option>
+              <option value="Technisch">Technisch</option>
+              <option value="Locker">Locker</option>
+            </select>
+          </label>
+          <label className="block col-span-2">
+            <span className="text-sm opacity-80">Rolle (System-Hinweis)</span>
+            <input
+              className="mt-1 w-full rounded-xl p-3 bg-white/5 outline-none"
+              placeholder="z. B. 'Du bist ein kritischer Senior-Assistent…'"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            />
+          </label>
         </div>
       </section>
 
-      <section className="settings-section p-3 mt-3">
-        <h3>Standardmodell</h3>
-        <p className="settings-desc mt-1">Ausgewähltes Modell wird als Default genutzt.</p>
-        <div className="mt-3 flex items-center justify-between gap-2">
-          <div className="text-sm">Aktuell: <span className="font-medium">{modelId ?? "– keines –"}</span></div>
-          <div className="settings-actions">
-            <Button variant="secondary" onClick={() => setOpenPicker(true)}>Modell wählen</Button>
-          </div>
-        </div>
-      </section>
-
-      <div className="mt-4 flex items-center justify-end gap-2">
-        <Button variant="secondary" onClick={() => { loadSettings(); push({ kind: "info", title: "Verworfen", message: "Änderungen nicht gespeichert" }); }}>Verwerfen</Button>
-        <Button variant="primary" onClick={handleSave}>Speichern</Button>
+      <div className="flex justify-end">
+        <button onClick={onSave} className="tap pill btn-glow px-4 py-2 font-semibold">Speichern</button>
       </div>
-
-      <Suspense fallback={<PageSkeleton />}>
-        <ModelPicker
-          open={openPicker}
-          onOpenChange={setOpenPicker}
-          {...(modelId ? { value: modelId } : {})}
-          onChange={setModelId}
-          onOpenSettings={() => {}}
-        />
-      </Suspense>
-    </div>
+    </main>
   );
 };
 
