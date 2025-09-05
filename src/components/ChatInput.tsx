@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
-import { CHAT_FOCUS_EVENT, requestChatFocus, CHAT_NEWSESSION_EVENT } from "../utils/focusChatInput"
+
+import { CHAT_FOCUS_EVENT, CHAT_NEWSESSION_EVENT,requestChatFocus } from "../utils/focusChatInput"
 
 export interface ChatInputProps { onSubmit: (text: string) => void; onStop?: () => void; busy?: boolean }
 
-export default function ChatInput({ onSubmit, onStop, busy }: ChatInputProps) {
+function ChatInputBase({ onSubmit, onStop, busy }: ChatInputProps) {
   const [value, setValue] = useState("")
   const taRef = useRef<HTMLTextAreaElement | null>(null)
   const wrapRef = useRef<HTMLDivElement | null>(null)
@@ -13,8 +14,9 @@ export default function ChatInput({ onSubmit, onStop, busy }: ChatInputProps) {
     const focus = () => { setTimeout(() => taRef.current?.focus(), 10); wrapRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }) }
     const newSession = () => {} // optional nutzbar
     window.addEventListener(CHAT_FOCUS_EVENT, focus)
-    window.addEventListener(CHAT_NEWSESSION_EVENT, newSession as EventListener)
-    return () => { window.removeEventListener(CHAT_FOCUS_EVENT, focus); window.removeEventListener(CHAT_NEWSESSION_EVENT, newSession as EventListener) }
+    // cast to any to avoid eslint no-undef on DOM EventListener symbol
+    window.addEventListener(CHAT_NEWSESSION_EVENT, newSession as any)
+    return () => { window.removeEventListener(CHAT_FOCUS_EVENT, focus); window.removeEventListener(CHAT_NEWSESSION_EVENT, newSession as any) }
   }, [])
 
   const send = () => { const t = value.trim(); if (!t || busy) return; onSubmit(t); setValue(""); requestChatFocus() }
@@ -36,4 +38,13 @@ export default function ChatInput({ onSubmit, onStop, busy }: ChatInputProps) {
       </div>
     </div>
   )
+}
+
+export default ChatInputBase;
+
+// Named wrapper for compatibility with features/chat/ requirements
+export function ChatInput(props: { value: string; onChange: (v: string) => void; onSend: () => void; onStop?: () => void; busy?: boolean }) {
+  const baseProps: any = { onSubmit: () => { props.onSend(); }, busy: props.busy };
+  if (props.onStop) baseProps.onStop = props.onStop; // exactOptionalPropertyTypes: nur setzen wenn vorhanden
+  return <ChatInputBase {...baseProps} />;
 }

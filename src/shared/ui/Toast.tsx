@@ -7,7 +7,8 @@ const ToastCtx = React.createContext<Ctx | null>(null);
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = React.useState<ToastT[]>([]);
   const show = (text: string, kind?: ToastT["kind"]) => {
-    const t: ToastT = { id: crypto.randomUUID?.() ?? String(Math.random()), text, kind };
+    const t: ToastT = { id: crypto.randomUUID?.() ?? String(Math.random()), text };
+    if (kind !== undefined) (t as any).kind = kind;
     setItems((p) => [...p, t]);
     setTimeout(() => setItems((p) => p.filter((x) => x.id !== t.id)), 3500);
   };
