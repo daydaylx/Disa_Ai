@@ -3,14 +3,18 @@ body,
 #root {
   background: var(--bg-0);
 }
-
 .app-bg {
   background:
-    radial-gradient(900px 480px at 80% -10%, rgba(138, 92, 255, 0.25), transparent 60%),
-    radial-gradient(800px 420px at 10% -10%, rgba(40, 215, 255, 0.22), transparent 60%),
-    radial-gradient(900px 700px at 50% 110%, rgba(255, 122, 217, 0.22), transparent 60%),
+    radial-gradient(1000px 560px at 80% -10%, rgba(138, 92, 255, 0.3), transparent 60%),
+    radial-gradient(900px 480px at 10% -10%, rgba(40, 215, 255, 0.26), transparent 60%),
+    radial-gradient(1000px 760px at 50% 110%, rgba(255, 122, 217, 0.26), transparent 60%),
     var(--bg-0);
 }
 .card-round {
   border-radius: 20px;
+}
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
 }

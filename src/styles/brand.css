@@ -163,3 +163,71 @@
     animation: none !important;
   }
 }
+
+/* === Typografie-Feinschliff === */
+:root {
+  --font-ui:
+    ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial,
+    "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+}
+body {
+  font-family: var(--font-ui);
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings etwas größer/gewichtiger */
+.h1 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.h2 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Tile-Spaces kompakter, aber klar */
+.tile {
+  padding: 18px;
+}
+.tile .desc {
+  opacity: 0.85;
+}
+
+/* Inputs: mehr Kontrast, weniger Milch */
+.input {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+.input:focus {
+  border-color: rgba(124, 102, 255, 0.55);
+  box-shadow: 0 0 0 3px rgba(124, 102, 255, 0.25);
+}
+
+/* CTA minimal größer */
+.btn-glow {
+  font-size: 14px;
+  padding: 10px 14px;
+}
+
+/* Tabbar: optisch leichter, aktiver Tab deutlicher */
+.tabbar .glass {
+  padding: 10px;
+}
+.tabbar .active {
+  box-shadow:
+    0 8px 22px rgba(124, 102, 255, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.16) inset;
+}
+
+/* Hero-Card ContentSpacing */
+.hero-card {
+  padding: 18px;
+}

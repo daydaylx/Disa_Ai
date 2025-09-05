@@ -14,8 +14,8 @@ export const QuickActions: React.FC<{ items: QuickAction[] }> = ({ items }) => {
             className="tile tap text-left tilt-on-press"
             onClick={it.onClick}
           >
-            <div className="text-base font-semibold mb-1">{it.title}</div>
-            <div className="text-xs opacity-80 leading-snug line-clamp-2">{it.desc}</div>
+            <div className="text-base font-semibold mb-1 h2">{it.title}</div>
+            <div className="text-xs desc leading-snug line-clamp-2">{it.desc}</div>
           </button>
         ))}
       </div>

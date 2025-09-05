@@ -2,7 +2,7 @@ import React from "react";
 
 export const HeroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => (
   <section className="safe-pad mt-3 mb-4">
-    <div className="relative overflow-hidden card-round glass p-4">
+    <div className="relative overflow-hidden card-round glass hero-card">
       <div className="absolute inset-0 opacity-75 grad-surface grad-anim" />
       <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full blur-3xl"
            style={{ background: "radial-gradient(circle, rgba(255,142,209,.45), transparent 60%)" }} />
@@ -11,7 +11,7 @@ export const HeroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => (
       <div className="relative flex items-center gap-3">
         <div className="orb float glow-pulse" aria-hidden="true" />
         <div className="min-w-0">
-          <h2 className="text-xl font-semibold tracking-tight">Triff Disa</h2>
+          <h2 className="h1">Triff Disa</h2>
           <p className="text-sm opacity-90">Dein KI-Assistent. Direkt, ehrlich, schnell.</p>
         </div>
       </div>
