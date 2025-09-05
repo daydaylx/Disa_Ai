@@ -11,8 +11,21 @@ export function registerSW() {
       reg.addEventListener("updatefound", () => {
         const nw = reg.installing;
         nw?.addEventListener("statechange", () => {
-          // Falls du einen Update-Toast willst, kannst du hier reagieren:
-          // if (nw.state === "installed" && navigator.serviceWorker.controller) { ... }
+          // Update verfügbar: neuer SW installiert, alter aktiv → UI-Toast anbieten
+          if (nw.state === "installed" && navigator.serviceWorker.controller) {
+            try {
+              const reload = () => { try { window.location.reload(); } catch (e) { /* ignore */ } };
+              const evt = new CustomEvent("disa:toast", {
+                detail: {
+                  kind: "info",
+                  title: "Update verfügbar",
+                  message: "Eine neue Version ist bereit.",
+                  action: { label: "Neu laden", onClick: reload },
+                }
+              });
+              window.dispatchEvent(evt);
+            } catch { /* noop */ }
+          }
         });
       });
     }).catch(() => {});

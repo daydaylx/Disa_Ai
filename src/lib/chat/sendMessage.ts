@@ -1,5 +1,5 @@
-import { fetchWithRetry } from "../net/retry";
 import { TokenBucket } from "../net/rateLimit";
+import { fetchWithRetry } from "../net/retry";
 import { CHAT_ENDPOINT, getApiKey } from "./config";
 import { RateLimitError } from "./types";
 
@@ -31,10 +31,22 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
         opts.signal.addEventListener("abort", onAbort, { once: true });
       }
     });
+    const last = opts.messages[opts.messages.length - 1]?.content || "";
+    const wantsCode = /\bcode\b/i.test(last) || /```/.test(last);
+    if (wantsCode) {
+      const demo = [
+        "Hier ein Beispiel:",
+        "```js",
+        "console.log('Hallo, Welt!');",
+        "```"
+      ].join("\n");
+      return { content: demo };
+    }
     return { content: "Demo-Antwort (kein API-Key)." };
   }
 
-  const init: RequestInit = {
+   
+  const init: any = {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${key}`,
