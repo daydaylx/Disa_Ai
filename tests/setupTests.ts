@@ -1,4 +1,6 @@
-// localStorage Polyfill (einfach & ausreichend für Tests)
+import "@testing-library/jest-dom/vitest";
+
+/* ---- Polyfills (localStorage, matchMedia, navigator.onLine, crypto.randomUUID) ---- */
 class MemoryStorage implements Storage {
   private store = new Map<string, string>();
   get length() { return this.store.size; }
@@ -12,11 +14,7 @@ if (!("localStorage" in globalThis)) {
   // @ts-ignore
   globalThis.localStorage = new MemoryStorage();
 }
-
-// navigator.onLine default
 Object.defineProperty(navigator, "onLine", { value: true, configurable: true });
-
-// matchMedia Stub
 if (!("matchMedia" in window)) {
   // @ts-ignore
   window.matchMedia = (q: string) => ({
@@ -27,8 +25,6 @@ if (!("matchMedia" in window)) {
     addEventListener() {}, removeEventListener() {}, dispatchEvent() { return false; }
   });
 }
-
-// crypto.randomUUID Stub (falls in Tests verwendet)
 if (!("crypto" in globalThis)) {
   // @ts-ignore
   globalThis.crypto = {};
