@@ -12,8 +12,8 @@ test("SW-Update-Toast via global Toast-Bus erscheint und ist klickbar", async ({
     (window as any).__origReload = orig;
   });
 
-  // Stelle sicher, dass der Toast-Portal existiert
-  await page.waitForSelector('#toasts-portal');
+  // Stelle sicher, dass der Toast-Portal im DOM existiert (muss nicht sichtbar sein)
+  await page.locator('#toasts-portal').waitFor({ state: 'attached' });
 
   // Dispatch globaler Toast
   await page.evaluate(() => {
