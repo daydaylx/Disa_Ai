@@ -1,4 +1,5 @@
 import React from "react";
+
 import { cn } from "../../lib/utils/cn";
 import { Icon, type IconName } from "./Icon";
 
@@ -14,7 +15,9 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const base =
-  "tap-target inline-flex items-center justify-center rounded-md font-medium transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring disabled:opacity-60 disabled:cursor-not-allowed";
+  "tap-target inline-flex items-center justify-center rounded-md font-medium transition-colors select-none " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background " +
+  "disabled:opacity-60 disabled:cursor-not-allowed";
 
 const variants: Record<Variant, string> = {
   primary: "bg-primary text-primary-foreground hover:opacity-95 active:opacity-90 shadow",

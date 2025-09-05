@@ -1,18 +1,21 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
 import "../styles/chat.css";
-import { Toolbar } from "../components/chat/Toolbar";
-import { MessageItem, type ChatMessage } from "../components/chat/MessageItem";
+
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
 import { Composer } from "../components/chat/Composer";
+import { type ChatMessage,MessageItem } from "../components/chat/MessageItem";
+import { Toolbar } from "../components/chat/Toolbar";
 import { TypingIndicator } from "../components/chat/TypingIndicator";
-import { useToasts } from "../components/ui/Toast";
-import { Skeleton } from "../components/feedback/Loader";
 import { ErrorState } from "../components/feedback/ErrorState";
-import { focusOnMount } from "../lib/a11y/focus";
+import { Skeleton } from "../components/feedback/Loader";
+import { HeroCard } from "../components/hero/HeroCard";
+import { type QuickAction,QuickActions } from "../components/hero/QuickActions";
 import { NetworkBanner } from "../components/network/NetworkBanner";
+import { useToasts } from "../components/ui/Toast";
+import { getVirtualListEnabled } from "../config/featureFlags";
+import { focusOnMount } from "../lib/a11y/focus";
 import { sendMessage } from "../lib/chat/sendMessage";
 import { RateLimitError } from "../lib/chat/types";
-import { HeroCard } from "../components/hero/HeroCard";
-import { QuickActions, type QuickAction } from "../components/hero/QuickActions";
 import { loadSettings } from "../lib/settings/storage";
 
 export const ChatView: React.FC = () => {
@@ -90,7 +93,7 @@ export const ChatView: React.FC = () => {
 
   const handleStop = () => { abortRef.current?.abort(); abortRef.current = null; setLoading(false); };
   const onCopy = () => { push({ kind: "success", title: "Kopiert", message: "Code in Zwischenablage" }); };
-  const count = useMemo(() => messages.length, [messages]);
+  const _count = useMemo(() => messages.length, [messages]);
 
   const actions: QuickAction[] = [
     { title: "Alltag", desc: "5 Ideen für mehr Produktivität – kurz & umsetzbar.", onClick: () => handleSend("Gib mir 5 Ideen, wie ich heute produktiver werde – kurz & umsetzbar.") },
@@ -98,6 +101,13 @@ export const ChatView: React.FC = () => {
     { title: "Dev", desc: "Clean-Code in 7 Bulletpoints.", onClick: () => handleSend("Fasse Clean-Code-Prinzipien in 7 Bulletpoints zusammen.") },
     { title: "Business", desc: "Kurze SWOT für Coffeeshop.", onClick: () => handleSend("Skizziere eine kurze SWOT für einen Coffeeshop in einer Nebenstraße.") },
   ];
+
+  // optional: einfache Virtualisierung – rendert nur die letzten N Nachrichten, wenn aktiviert
+  const VIRTUAL_ON = getVirtualListEnabled();
+  const VIRTUAL_LIMIT = 60;
+  const visibleMessages = VIRTUAL_ON && messages.length > VIRTUAL_LIMIT
+    ? messages.slice(-VIRTUAL_LIMIT)
+    : messages;
 
   return (
     <div className="chat-root">
@@ -113,7 +123,7 @@ export const ChatView: React.FC = () => {
         )}
 
         <div className="safe-pad mt-3 flex flex-col gap-3">
-          {messages.map((m) => (<MessageItem key={m.id} msg={m} onCopy={onCopy} />))}
+          {visibleMessages.map((m) => (<MessageItem key={m.id} msg={m} onCopy={onCopy} />))}
 
           {loading ? (
             <div className="mr-auto rounded-xl border border-border bg-card p-3">
