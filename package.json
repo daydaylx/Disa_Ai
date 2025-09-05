@@ -23,7 +23,9 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:unit": "vitest run",
-    "test:unit:ui": "vitest"
+    "test:unit:ui": "vitest",
+    "typecheck:ext": "tsc -p tsconfig.extended.json --noEmit",
+    "lint:types:ext": "eslint . --config eslint.config.extended.js"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",

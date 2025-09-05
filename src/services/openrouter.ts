@@ -1,5 +1,6 @@
 const BASE = "https://openrouter.ai/api/v1"
 const KEY_STORAGE = "disa:openrouter:key"
+import { readApiKey, writeApiKey } from "../lib/openrouter/key";
 
 export type ORModel = {
   id: string
@@ -25,13 +26,10 @@ function buildHeaders(explicitKey?: string): Headers {
 }
 
 export function getApiKey(): string | null {
-  try { return localStorage.getItem(KEY_STORAGE) || null } catch { return null }
+  try { return readApiKey(); } catch { return null }
 }
 export function setApiKey(v: string) {
-  try {
-    if (!v) localStorage.removeItem(KEY_STORAGE)
-    else localStorage.setItem(KEY_STORAGE, v.trim())
-  } catch {}
+  try { writeApiKey(v); } catch {}
 }
 
 /** Rohes Model-Listing (für config/models.ts) */

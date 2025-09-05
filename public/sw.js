@@ -1,4 +1,7 @@
 /* Disa Ai – minimaler App-Shell Service Worker (cache-first) */
+// Workbox Precache (injectManifest) – additiv, ändert bestehende Logik nicht wesentlich.
+// Der Rest dieses SWs bleibt unverändert aktiv.
+import { precacheAndRoute } from "workbox-precaching";
 const VERSION = "v1.0.0";
 const APP_CACHE = `disa-app-${VERSION}`;
 const APP_SHELL = [
@@ -7,6 +10,9 @@ const APP_SHELL = [
   "/manifest.webmanifest",
   // Vite legt CSS/JS unter /assets/ ab – wir cache-matchen dynamisch (siehe fetch)
 ];
+
+// Precache manifest wird vom Build injiziert
+precacheAndRoute(self.__WB_MANIFEST);
 
 // Files beim Install sicher cachen
 self.addEventListener("install", (event) => {

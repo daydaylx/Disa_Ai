@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { readApiKey } from "../../lib/openrouter/key";
 import type { Filters, ModelLike, Tag } from "./modelFilters";
 
 export interface Model extends ModelLike {
@@ -79,7 +80,7 @@ async function fetchPublic(): Promise<Model[] | null> {
 }
 
 async function fetchOpenRouter(): Promise<Model[] | null> {
-  const key = localStorage.getItem("openrouter_key") || localStorage.getItem("OPENROUTER_API_KEY");
+  const key = readApiKey() || localStorage.getItem("openrouter_key") || localStorage.getItem("OPENROUTER_API_KEY");
   if (!key) return null;
   try {
     const r = await fetch("https://openrouter.ai/api/v1/models", {
