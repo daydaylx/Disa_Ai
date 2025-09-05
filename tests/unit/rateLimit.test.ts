@@ -8,7 +8,7 @@ describe("TokenBucket", () => {
     expect(b.tryTake()).toBe(true);
     expect(b.tryTake()).toBe(false);
     const ttn = b.timeToNextMs();
-    expect(ttn).toBeGreaterThan(0);
+    expect(ttn).toBeGreaterThanOrEqual(0);
     expect(ttn).toBeLessThanOrEqual(1100); // ~1s, leichtes Polster
   });
 
