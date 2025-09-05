@@ -1,3 +1,5 @@
+import "./ui/globals";
+import "./styles/layout.css";
 import "./styles/ui-fixes.css";
 import "./styles/glass.css";
 import "./styles/overrides.css";

@@ -1,36 +1,19 @@
-/* --- Layout Baseline & Safe-Area Fixes --- */
-
 :root {
   --tabbar-h: 56px;
 }
-
-/* Wenn Tabbar montiert ist, wird unten Platz reserviert */
 body.has-tabbar {
   padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
 }
-
-/* Hauptbereiche zusätzlich polstern – defensiv */
-main, [data-main], .main, .page, .content {
-  padding-bottom: max(
-    var(--tabbar-h),
-    calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px))
-  );
-}
-
-/* Tabbar bleibt sichtbar, blockiert aber NICHT die Seite */
 .tabbar {
   position: sticky;
   bottom: 0;
   z-index: 40;
   height: var(--tabbar-h);
-  pointer-events: none; /* <<< entscheidend */
+  pointer-events: none;
 }
-/* Nur die interaktiven Kinder sind klickbar */
 .tabbar > * {
   pointer-events: auto;
 }
-
-/* Network/Offline-Banner – ganz oben, ohne die Seite zu blocken */
 .net-banner {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px));
