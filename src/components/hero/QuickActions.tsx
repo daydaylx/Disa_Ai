@@ -11,7 +11,7 @@ export const QuickActions: React.FC<{ items: QuickAction[] }> = ({ items }) => {
         {items.map((it, idx) => (
           <button
             key={idx}
-            className="glass card-round p-4 text-left tap"
+            className="tile tap text-left tilt-on-press"
             onClick={it.onClick}
           >
             <div className="text-base font-semibold mb-1">{it.title}</div>

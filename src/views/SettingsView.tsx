@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { loadSettings, saveSettings, type AppSettings, type ChatStyle } from "../lib/settings/storage";
+
+import { type AppSettings, type ChatStyle,loadSettings, saveSettings } from "../lib/settings/storage";
 
 const DEFAULT_MODEL = "qwen/qwen-2.5-coder-14b-instruct";
 const MODELS: string[] = [
@@ -36,7 +37,7 @@ export const SettingsView: React.FC = () => {
       <section className="glass card-round p-4 mb-4">
         <h2 className="font-semibold mb-2">OpenRouter API-Key</h2>
         <input
-          className="w-full rounded-xl p-3 bg-white/5 outline-none"
+          className="input w-full"
           placeholder="sk-…"
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
@@ -51,14 +52,14 @@ export const SettingsView: React.FC = () => {
         <h2 className="font-semibold mb-2">Standard-Modell</h2>
         <div className="flex flex-col gap-2">
           <select
-            className="rounded-xl p-3 bg-white/5 outline-none"
+            className="input w-full"
             value={model}
             onChange={(e) => setModel(e.target.value)}
           >
             {MODELS.map((m) => (<option key={m} value={m}>{m}</option>))}
           </select>
           <input
-            className="w-full rounded-xl p-3 bg-white/5 outline-none"
+            className="input w-full"
             placeholder="oder eigenes Modell (voller Bezeichner)…"
             value={model}
             onChange={(e) => setModel(e.target.value)}
@@ -72,7 +73,7 @@ export const SettingsView: React.FC = () => {
           <label className="block">
             <span className="text-sm opacity-80">Stil</span>
             <select
-              className="mt-1 w-full rounded-xl p-3 bg-white/5 outline-none"
+              className="input w-full mt-1"
               value={style}
               onChange={(e) => setStyle(e.target.value as ChatStyle)}
             >
@@ -85,7 +86,7 @@ export const SettingsView: React.FC = () => {
           <label className="block col-span-2">
             <span className="text-sm opacity-80">Rolle (System-Hinweis)</span>
             <input
-              className="mt-1 w-full rounded-xl p-3 bg-white/5 outline-none"
+              className="input w-full mt-1"
               placeholder="z. B. 'Du bist ein kritischer Senior-Assistent…'"
               value={role}
               onChange={(e) => setRole(e.target.value)}

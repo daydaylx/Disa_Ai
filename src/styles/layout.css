@@ -1,7 +1,16 @@
-.app-bg {
-  background: radial-gradient(1200px 600px at 80% -10%, rgba(var(--glow-purple),.20), transparent 60%),
-              radial-gradient(900px 500px at 10% 0%, rgba(var(--glow-cyan),.18), transparent 60%),
-              radial-gradient(1000px 700px at 50% 110%, rgba(var(--glow-pink),.16), transparent 60%),
-              var(--brand-bg);
+html,
+body,
+#root {
+  background: var(--bg-0);
 }
-.card-round { border-radius: 20px; }
+
+.app-bg {
+  background:
+    radial-gradient(900px 480px at 80% -10%, rgba(138, 92, 255, 0.25), transparent 60%),
+    radial-gradient(800px 420px at 10% -10%, rgba(40, 215, 255, 0.22), transparent 60%),
+    radial-gradient(900px 700px at 50% 110%, rgba(255, 122, 217, 0.22), transparent 60%),
+    var(--bg-0);
+}
+.card-round {
+  border-radius: 20px;
+}
