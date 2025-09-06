@@ -14,6 +14,15 @@ const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
           <h2 className="h1">Hey, ich bin dein Assi.</h2>
           <p className="text-sm opacity-90">Frag mich alles – ich antworte direkt und hilfreich.</p>
         </div>
+        {/* Optionaler Start-Trigger, wenn übergeben */}
+        {onStart ? (
+          <button
+            onClick={onStart}
+            className="ml-auto rounded-md border border-white/20 bg-white/10 px-3 py-1.5 text-sm"
+          >
+            Start
+          </button>
+        ) : null}
       </div>
     </div>
   </section>

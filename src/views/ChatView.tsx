@@ -33,7 +33,7 @@ import type { ChatMessage } from "../types/chat";
 type Msg = { id: string; role: "assistant" | "user"; content: string };
 const uid = () => Math.random().toString(36).slice(2);
 
-const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied }) => {
+const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: _onCopied }) => {
   const parts = React.useMemo(() => {
     const src = msg.content;
     const out: Array<{ t: "text" | "code"; content: string; lang?: string }> = [];
@@ -147,6 +147,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         setTimeout(() => composerRef.current?.focus(), 0);
       }
     } catch (_e) {
+      void _e;
       /* ignore */
     }
   }, []);
@@ -286,6 +287,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       try {
         document.body.removeChild(el);
       } catch (e) {
+        void e;
         /* ignore */
       }
       setPortalEl(null);

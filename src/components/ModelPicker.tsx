@@ -65,21 +65,24 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
     return ["all", ...Array.from(set).sort()];
   }, [all]);
 
-  function priceIn(m: ModelEntry): number {
+  const priceIn = React.useCallback((m: ModelEntry): number => {
     return typeof m.pricing?.in === "number" ? (m.pricing!.in as number) : 0;
-  }
-  function priceOut(m: ModelEntry): number {
+  }, []);
+  const priceOut = React.useCallback((m: ModelEntry): number => {
     return typeof m.pricing?.out === "number" ? (m.pricing!.out as number) : 0;
-  }
-  function priceBucket(m: ModelEntry): "free" | "low" | "med" | "high" {
-    if (isFreeModel(m)) return "free";
-    const pin = priceIn(m);
-    const pout = priceOut(m);
-    const avg = (pin + pout) / 2 || Math.max(pin, pout) || 0;
-    if (avg <= 0.1) return "low"; // <= $0.10 / 1k
-    if (avg <= 0.5) return "med"; // <= $0.50 / 1k
-    return "high";
-  }
+  }, []);
+  const priceBucket = React.useCallback(
+    (m: ModelEntry): "free" | "low" | "med" | "high" => {
+      if (isFreeModel(m)) return "free";
+      const pin = priceIn(m);
+      const pout = priceOut(m);
+      const avg = (pin + pout) / 2 || Math.max(pin, pout) || 0;
+      if (avg <= 0.1) return "low"; // <= $0.10 / 1k
+      if (avg <= 0.5) return "med"; // <= $0.50 / 1k
+      return "high";
+    },
+    [priceIn, priceOut],
+  );
 
   const filtered = React.useMemo(() => {
     const norm = q.trim().toLowerCase();
@@ -123,7 +126,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       return A.localeCompare(B);
     });
     return arr;
-  }, [all, q, provider, onlyFree, minCtx, policyFromRole, policy, cost, sortBy]);
+  }, [all, q, provider, onlyFree, minCtx, policyFromRole, policy, cost, sortBy, priceBucket, priceIn, priceOut]);
 
   return (
     <section className="space-y-3">
