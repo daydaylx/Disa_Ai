@@ -113,7 +113,12 @@ export async function chatStream(
         if (!line) continue;
 
         // Unterstützt SSE (data: ...) und NDJSON (plain JSON per Zeile)
+        // Kommentare (": keep-alive") ignorieren
+        if (line.startsWith(":")) continue;
         const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
+
+        // OpenRouter Status-Zwischenzeilen ignorieren
+        if (/^OPENROUTER\b/i.test(payload)) continue;
 
         if (payload === "[DONE]") {
           opts?.onDone?.(full);
