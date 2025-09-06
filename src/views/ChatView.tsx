@@ -17,9 +17,11 @@ import {
   getTemplateId,
   getUseRoleStyle,
 } from "../config/settings";
-import { composeSystemPrompt } from "../features/prompt/composeSystemPrompt";
-import { appendMessage as convAppendMessage } from "../hooks/useConversations";
+import { appendMessage as convAppendMessage, getConversationMessages as convGetMessages } from "../hooks/useConversations";
+import { buildMessages as buildPipelineMessages } from "../services/chatPipeline";
 import { sendChat } from "../services/chatService";
+import { ContextManager } from "../services/contextManager";
+import { formatMemoryForSystem, loadMemory, updateMemory } from "../services/memory";
 import { getApiKey } from "../services/openrouter";
 import type { ChatMessage } from "../types/chat";
 
@@ -117,21 +119,21 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   };
 
   function buildMessages(userText: string): ChatMessage[] {
-    const system = composeSystemPrompt({
+    const memoryText = convId ? formatMemoryForSystem(loadMemory(convId)) : "";
+    const history = msgs
+      .filter((m) => m.content.trim().length > 0)
+      .map(({ role, content }) => ({ role, content }));
+    const built = buildPipelineMessages({
+      userInput: userText,
+      history,
+      nsfw: allowNSFW,
       style,
+      roleTemplateId: roleId,
       useRoleStyle,
-      roleId,
-      allowNSFW,
-    });
-    const out: ChatMessage[] = [];
-    if (system) out.push({ role: "system", content: system });
-    out.push(
-      ...msgs
-        .filter((m) => m.content.trim().length > 0)
-        .map<ChatMessage>((m) => ({ role: m.role, content: m.content })),
-      { role: "user", content: userText },
-    );
-    return out;
+      memory: memoryText || null,
+    }) as unknown as ChatMessage[];
+    const cm = new ContextManager({ maxTokens: 8000, reservedTokens: 1000 });
+    return cm.optimize(built);
   }
 
   function send() {
@@ -193,6 +195,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         // Persistiere Assistant-Antwort als Nachricht (final)
         if (convId && accum.trim().length > 0) {
           convAppendMessage(convId, { role: "assistant", content: accum } as any);
+          const turns = convGetMessages(convId).map((t) => ({ role: t.role, content: t.content }));
+          updateMemory(convId, turns as any);
         }
         if (rafId != null) {
           cancelAnimationFrame(rafId);
