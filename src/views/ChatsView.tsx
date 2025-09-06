@@ -33,7 +33,7 @@ export default function ChatsView({ onOpen }: Props) {
         </div>
       </header>
 
-      <section className="rounded-xl border border-border bg-background/60 glass card-gradient">
+      <section className="rounded-xl border border-border bg-background/60 glass card-gradient" data-no-swipe>
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-background/80 backdrop-blur thead-grad">
             <tr className="text-left">

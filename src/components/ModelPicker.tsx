@@ -214,7 +214,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
       </div>
 
-      <div className="max-h-[360px] overflow-auto rounded-xl border border-border glass card-gradient">
+      <div className="max-h-[360px] overflow-auto rounded-xl border border-border glass card-gradient" data-no-swipe>
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-background/90 backdrop-blur thead-grad">
             <tr className="text-left">
