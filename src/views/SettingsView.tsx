@@ -126,8 +126,13 @@ export default function SettingsView() {
     );
   }, [style]);
 
-  // Effektiver Systemprompt (Stil + Rolle + NSFW)
+  // Vorschau: Bevorzugt den Systemtext aus der gewählten Rolle (styles.json),
+  // sonst den effektiven Systemprompt (Stil + Rolle + NSFW)
   const systemPreview = React.useMemo(() => {
+    const role = getRoleById(templateId ?? "");
+    const roleSystem = (role as any)?.system as string | undefined;
+    const roleText = roleSystem && roleSystem.trim().length > 0 ? roleSystem : "";
+    if (roleText) return roleText;
     return (
       composeSystemPrompt({
         style,
