@@ -11,6 +11,9 @@ import InstallBanner from "../components/InstallBanner";
 import OrbStatus from "../components/status/OrbStatus";
 import { useToasts } from "../components/ui/Toast";
 import {
+  getCtxMaxTokens,
+  getCtxReservedTokens,
+  getMemoryEnabled,
   getNSFW,
   getSelectedModelId,
   getStyle,
@@ -82,6 +85,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const roleId = useMemo(() => getTemplateId(), []);
   const useRoleStyle = useMemo(() => getUseRoleStyle(), []);
   const allowNSFW = useMemo(() => getNSFW(), []);
+  const memEnabled = useMemo(() => getMemoryEnabled(), []);
+  const ctxLimits = useMemo(() => ({ max: getCtxMaxTokens(), reserve: getCtxReservedTokens() }), []);
 
   // Scroll-FAB steuern
   useEffect(() => {
@@ -119,7 +124,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   };
 
   function buildMessages(userText: string): ChatMessage[] {
-    const memoryText = convId ? formatMemoryForSystem(loadMemory(convId)) : "";
+    const memoryText = memEnabled && convId ? formatMemoryForSystem(loadMemory(convId)) : "";
     const history = msgs
       .filter((m) => m.content.trim().length > 0)
       .map(({ role, content }) => ({ role, content }));
@@ -132,7 +137,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       useRoleStyle,
       memory: memoryText || null,
     }) as unknown as ChatMessage[];
-    const cm = new ContextManager({ maxTokens: 8000, reservedTokens: 1000 });
+    const cm = new ContextManager({ maxTokens: ctxLimits.max, reservedTokens: ctxLimits.reserve });
     return cm.optimize(built);
   }
 
@@ -241,6 +246,14 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       <main id="main" role="main" className="mx-auto w-full max-w-4xl px-4 pb-36 pt-4">
         <InstallBanner />
         <OrbStatus streaming={sending} modelLabel={modelLabel} />
+        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1">
+          <div className="text-xs text-neutral-400">
+            Gedächtnis: {memEnabled ? "aktiv" : "inaktiv"}
+            {memEnabled ? (
+              <span className="ml-2 opacity-80">(max {ctxLimits.max}, Reserve {ctxLimits.reserve})</span>
+            ) : null}
+          </div>
+        </div>
 
         {msgs.length <= 1 && (
           <>

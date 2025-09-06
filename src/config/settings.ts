@@ -10,6 +10,9 @@ const LS = {
   model: "disa:modelId",
   template: "disa:templateId",
   useRoleStyle: "disa:useRoleStyle",
+  memEnabled: "disa:mem:enabled",
+  ctxMax: "disa:ctx:maxTokens",
+  ctxReserve: "disa:ctx:reserve",
 } as const;
 
 /** Antwortstil-Presets */
@@ -103,5 +106,53 @@ export function getUseRoleStyle(): boolean {
 export function setUseRoleStyle(v: boolean): void {
   try {
     localStorage.setItem(LS.useRoleStyle, v ? "true" : "false");
+  } catch {}
+}
+
+/** Gedächtnis (Memory) einschalten? */
+export function getMemoryEnabled(): boolean {
+  try {
+    const raw = localStorage.getItem(LS.memEnabled);
+    if (raw === null) return true;
+    return raw === "true";
+  } catch {
+    return true;
+  }
+}
+export function setMemoryEnabled(v: boolean): void {
+  try {
+    localStorage.setItem(LS.memEnabled, v ? "true" : "false");
+  } catch {}
+}
+
+/** Kontextfenster (max Tokens) für ContextManager */
+export function getCtxMaxTokens(): number {
+  try {
+    const raw = Number(localStorage.getItem(LS.ctxMax));
+    return Number.isFinite(raw) && raw > 0 ? raw : 8000;
+  } catch {
+    return 8000;
+  }
+}
+export function setCtxMaxTokens(n: number): void {
+  try {
+    const v = Math.max(1024, Math.floor(n || 0));
+    localStorage.setItem(LS.ctxMax, String(v));
+  } catch {}
+}
+
+/** Reservierte Tokens für die Antwort */
+export function getCtxReservedTokens(): number {
+  try {
+    const raw = Number(localStorage.getItem(LS.ctxReserve));
+    return Number.isFinite(raw) && raw >= 128 ? raw : 1000;
+  } catch {
+    return 1000;
+  }
+}
+export function setCtxReservedTokens(n: number): void {
+  try {
+    const v = Math.max(128, Math.floor(n || 0));
+    localStorage.setItem(LS.ctxReserve, String(v));
   } catch {}
 }

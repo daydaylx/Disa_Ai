@@ -11,11 +11,17 @@ import {
   type RoleTemplate,
 } from "../config/promptTemplates";
 import {
+  getCtxMaxTokens,
+  getCtxReservedTokens,
+  getMemoryEnabled,
   getNSFW,
   getSelectedModelId,
   getStyle,
   getTemplateId,
   getUseRoleStyle,
+  setCtxMaxTokens,
+  setCtxReservedTokens,
+  setMemoryEnabled,
   setNSFW,
   setSelectedModelId,
   setStyle,
@@ -27,10 +33,6 @@ import { composeSystemPrompt } from "../features/prompt/composeSystemPrompt";
 import { getApiKey,setApiKey } from "../services/openrouter";
 
 // ---- Helper für uneinheitliche Rollentypen ----
-function roleTitle(r: unknown): string {
-  const x = r as any;
-  return x?.title ?? x?.name ?? x?.label ?? x?.id ?? "Unbenannt";
-}
 // rolePurpose entfällt – wir zeigen den echten Systemprompt
 
 // ---- Style-Metadaten (nur Anzeige + Vorschau) ----
@@ -83,6 +85,9 @@ export default function SettingsView() {
   const [key, setKey] = React.useState<string>(getApiKey() ?? "");
   const [modelId, setModelId] = React.useState<string | null>(getSelectedModelId());
   const [nsfw, setNsfw] = React.useState<boolean>(getNSFW());
+  const [memEnabled, setMemEnabled] = React.useState<boolean>(getMemoryEnabled());
+  const [ctxMax, setCtxMax] = React.useState<number>(getCtxMaxTokens());
+  const [ctxReserve, setCtxReserve] = React.useState<number>(getCtxReservedTokens());
   const [style, setStyleState] = React.useState<StyleKey>(getStyle());
   const [templateId, setTemplateIdState] = React.useState<string | null>(getTemplateId());
   const [useRoleStyle, setUseRoleStyleState] = React.useState<boolean>(getUseRoleStyle());
@@ -189,6 +194,18 @@ export default function SettingsView() {
     setUseRoleStyleState(e.target.checked);
     setUseRoleStyle(e.target.checked);
   }
+  function onToggleMem(e: React.ChangeEvent<HTMLInputElement>) {
+    setMemEnabled(e.target.checked);
+    setMemoryEnabled(e.target.checked);
+  }
+  function onCtxMax(n: number) {
+    setCtxMax(n);
+    setCtxMaxTokens(n);
+  }
+  function onCtxReserve(n: number) {
+    setCtxReserve(n);
+    setCtxReservedTokens(n);
+  }
 
   return (
     <main className="mx-auto w-full max-w-4xl space-y-8 px-4 py-6">
@@ -239,6 +256,53 @@ export default function SettingsView() {
           {styleMeta.description ? (
             <p className="text-sm opacity-80">{styleMeta.description}</p>
           ) : null}
+        </div>
+      </section>
+
+      {/* Kontext & Gedächtnis */}
+      <section className="rounded-xl border border-border bg-background/60 p-4">
+        <h2 className="mb-3 text-base font-semibold">Kontext & Gedächtnis</h2>
+        <div className="grid gap-3">
+          <label className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
+            <span>Gedächtnis aktivieren (lokal, pro Chat)</span>
+            <input
+              type="checkbox"
+              className="h-5 w-10 cursor-pointer appearance-none rounded-full bg-neutral-700 outline-none transition checked:bg-blue-600 before:ml-0.5 before:block before:h-4 before:w-4 before:translate-x-0 before:rounded-full before:bg-white before:transition checked:before:translate-x-5"
+              checked={memEnabled}
+              onChange={onToggleMem}
+              aria-label="Gedächtnis aktivieren"
+            />
+          </label>
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <label className="flex items-center gap-2">
+              max Tokens:
+              <input
+                type="number"
+                min={1024}
+                step={512}
+                value={ctxMax}
+                onChange={(e) => onCtxMax(Number(e.target.value) || 0)}
+                className="w-28 rounded-md border border-border bg-background px-2 py-1"
+                aria-label="Maximales Kontextfenster"
+              />
+            </label>
+            <label className="flex items-center gap-2">
+              Antwort‑Reserve:
+              <input
+                type="number"
+                min={128}
+                step={128}
+                value={ctxReserve}
+                onChange={(e) => onCtxReserve(Number(e.target.value) || 0)}
+                className="w-28 rounded-md border border-border bg-background px-2 py-1"
+                aria-label="Reservierte Tokens für die Antwort"
+              />
+            </label>
+          </div>
+          <p className="text-xs opacity-70">
+            Hinweis: Das Gedächtnis bleibt lokal gespeichert. Der Systemprompt enthält einen kompakten
+            Kontextauszug (Themen, Entitäten, Fakten, Summary). Das Token‑Budget kürzt lange Verläufe automatisch.
+          </p>
         </div>
       </section>
 
