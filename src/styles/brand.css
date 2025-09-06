@@ -241,23 +241,7 @@ body {
   overflow: hidden;
 }
 
-/* === Pager (horizontales Blättern) === */
-.pager {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-.pager-track {
-  display: flex;
-  width: calc(100% * 4); /* Anzahl Panels */
-  will-change: transform;
-  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.25, 1);
-}
-.pager-panel {
-  flex: 0 0 100%;
-  width: 100%;
-  max-width: 100%;
-}
+/* Pager entfernt – zurück zu Single-View Rendering */
 .aurora__blob {
   position: absolute;
   width: 60vmax;
