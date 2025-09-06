@@ -224,11 +224,11 @@ export default function SettingsView() {
             onChange={(e) => setKey(e.target.value)}
             placeholder="sk-…"
             aria-label="API-Schlüssel"
-            className="min-w-0 flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+            className="input min-w-0 flex-1 text-sm"
           />
           <button
             onClick={saveKey}
-            className="rounded-md border border-border bg-white/10 px-4 py-2 text-sm active:scale-[.99]"
+            className="btn-glow tilt-on-press"
             aria-label="API-Schlüssel speichern"
           >
             Speichern
@@ -245,7 +245,7 @@ export default function SettingsView() {
             value={style}
             onChange={onStyleChange}
             aria-label="Stil auswählen"
-            className="w-full rounded-lg border border-border bg-background/70 px-3 py-2 text-sm outline-none ring-0"
+            className="w-full input text-sm"
           >
             <option value="concise">{STYLE_META.concise?.label ?? "Kompakt"}</option>
             <option value="blunt_de">{STYLE_META.blunt_de?.label ?? "Direkt (DE)"}</option>
@@ -336,7 +336,7 @@ export default function SettingsView() {
             value={templateId ?? ""}
             onChange={onTemplateChange}
             aria-label="Rolle auswählen"
-            className="w-full rounded-lg border border-border bg-background/70 px-3 py-2 text-sm outline-none ring-0"
+            className="w-full input text-sm"
           >
             <option value="">Keine spezielle Rolle</option>
             {groupedRoleOptions.map(([cat, arr]) => (
