@@ -51,30 +51,26 @@ export default function App() {
           <a
             href="#/chat"
             onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
-            className={`rounded-full border px-3 py-1 ${route.name === "chat" ? "border-violet-600 bg-violet-600/20" : "border-neutral-800 bg-neutral-900/60"}`}
+            className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""}`}
           >
             Chat
           </a>
           <a
             href="#/chats"
             onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
-            className={`rounded-full border px-3 py-1 ${route.name === "chats" ? "border-violet-600 bg-violet-600/20" : "border-neutral-800 bg-neutral-900/60"}`}
+            className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""}`}
           >
             Unterhaltungen
           </a>
           <a
             href="#/settings"
             onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
-            className={`rounded-full border px-3 py-1 ${route.name === "settings" ? "border-violet-600 bg-violet-600/20" : "border-neutral-800 bg-neutral-900/60"}`}
+            className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""}`}
           >
             Einstellungen
           </a>
         </nav>
-        <a
-          href="#/chats"
-          className="rounded-full bg-violet-600 px-3 py-1 font-semibold text-white"
-          onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
-        >
+        <a href="#/chats" className="btn-glow tilt-on-press" onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}>
           Unterhaltungen
         </a>
       </header>
