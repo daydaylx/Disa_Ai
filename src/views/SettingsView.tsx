@@ -23,6 +23,7 @@ import {
   setUseRoleStyle,
   type StyleKey,
 } from "../config/settings";
+import { composeSystemPrompt } from "../features/prompt/composeSystemPrompt";
 import { getApiKey,setApiKey } from "../services/openrouter";
 
 // ---- Helper für uneinheitliche Rollentypen ----
@@ -30,10 +31,7 @@ function roleTitle(r: unknown): string {
   const x = r as any;
   return x?.title ?? x?.name ?? x?.label ?? x?.id ?? "Unbenannt";
 }
-function rolePurpose(r: unknown): string {
-  const x = r as any;
-  return x?.purpose ?? x?.description ?? x?.desc ?? "";
-}
+// rolePurpose entfällt – wir zeigen den echten Systemprompt
 
 // ---- Style-Metadaten (nur Anzeige + Vorschau) ----
 const STYLE_META: Partial<
@@ -128,25 +126,17 @@ export default function SettingsView() {
     );
   }, [style]);
 
-  // Vorschau-Text für die Rolle (wie im alten Stand)
-  const rolePreview = React.useMemo(() => {
-    const r = getRoleById(templateId ?? "");
-    const purpose = rolePurpose(r);
-    const lines: string[] = [];
-    lines.push("Feintuning: Ton=medium, Kürze=balanced, Humor=none, Emojis=nein.");
-    lines.push("Priorität: Ehrlichkeit → Klarheit → Kürze.");
-    lines.push("Struktur: Ziel → Plan → Monitoring.");
-    lines.push("Listen: prefer (max. 6 Punkte).");
-    lines.push("Hinweise: Kein Ersatz für ärztlichen Rat.");
-    lines.push("Vermeiden: Floskeln, Motivationssprech.");
-    lines.push("Rolle: direkt, kritisch.");
-    if (purpose) {
-      lines.push("");
-      lines.push("Rollen-Zusatz:");
-      lines.push(purpose);
-    }
-    return lines.join("\n");
-  }, [templateId]);
+  // Effektiver Systemprompt (Stil + Rolle + NSFW)
+  const systemPreview = React.useMemo(() => {
+    return (
+      composeSystemPrompt({
+        style,
+        useRoleStyle,
+        roleId: templateId ?? null,
+        allowNSFW: nsfw,
+      }) || "—"
+    );
+  }, [style, useRoleStyle, templateId, nsfw]);
 
   // Labels für Rollen-Select mit Policy/Tags
   function policyLabel(p?: Safety | string): string {
@@ -316,12 +306,10 @@ export default function SettingsView() {
             />
           </label>
 
-          {/* Vorschau-Box */}
-          <div className="rounded-lg border border-neutral-700 bg-black/30 p-3">
-            <div className="mb-2 text-sm font-medium opacity-90">Vorschau</div>
-            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-sm leading-relaxed">
-{rolePreview}
-            </pre>
+          {/* Systemprompt-Vorschau (effektiv) */}
+          <div className="rounded-lg border border-border bg-background/60 p-3">
+            <div className="mb-2 text-sm font-medium opacity-90">Vorschau Systemprompt</div>
+            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-sm leading-relaxed">{systemPreview}</pre>
           </div>
         </div>
 
@@ -339,13 +327,7 @@ export default function SettingsView() {
         </div>
       </section>
 
-      {/* Vorschau Systemprompt (Stil) */}
-      <section className="rounded-xl border border-border bg-background/60 p-4">
-        <h2 className="mb-3 text-base font-semibold">Vorschau Systemprompt</h2>
-        <div className="rounded-lg border border-border bg-background/60 p-3 text-sm leading-relaxed">
-          {styleMeta.system || "—"}
-        </div>
-      </section>
+      {/* separate Stil-Vorschau entfernt: die effektive Vorschau steht nun bei Rolle */}
 
       <nav className="flex justify-end">
         <a href="#/chat" className="underline">zurück zum Chat</a>
