@@ -26,7 +26,8 @@
     "test:unit": "vitest run",
     "test:unit:ui": "vitest",
     "typecheck:ext": "tsc -p tsconfig.extended.json --noEmit",
-    "lint:types:ext": "eslint . --config eslint.config.extended.js"
+    "lint:types:ext": "eslint . --config eslint.config.extended.js",
+    "test:e2e:ci": "playwright test --workers=1"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
@@ -76,13 +77,5 @@
     "vite": "5.4.9",
     "vite-plugin-pwa": "0.20.5",
     "vitest": "^3.2.4"
-  },
-  "lint-staged": {
-    "src/**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix"
-    ],
-    "*.{json,md,css,html,yml,yaml}": [
-      "prettier --write --ignore-unknown"
-    ]
   }
 }
