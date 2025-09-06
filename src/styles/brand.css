@@ -5,8 +5,9 @@
   --brand-foreground: 242 244 255;
 
   /* Neon-Gradient (Pink → Purple → Cyan) */
-  --grad-1: linear-gradient(135deg, #ff7ad9 0%, #8a5cff 50%, #28d7ff 100%);
-  --grad-cta: linear-gradient(135deg, #6ce1ff 0%, #7b66ff 50%, #ff8ed1 100%);
+  /* Warme, freundliche Gradients (Orange/Rot → Pink) */
+  --grad-1: linear-gradient(135deg, #ff7a3d 0%, #ff5a5f 50%, #ff8ed1 100%);
+  --grad-cta: linear-gradient(135deg, #ff9650 0%, #ff5a5f 50%, #ff8ed1 100%);
 
   /* Akzente / Glow */
   --glow-pink: 255 122 217;
@@ -292,7 +293,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 .nav-pill--active {
-  background-image: linear-gradient(135deg, #6ce1ff, #7b66ff);
+  background-image: linear-gradient(135deg, #ff9650, #ff5a5f);
   color: #0b0b0b;
   border-color: rgba(255, 255, 255, 0.2);
   box-shadow:
