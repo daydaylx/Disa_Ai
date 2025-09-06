@@ -1,6 +1,7 @@
 import React from "react";
 
 import ModelPicker from "../components/ModelPicker";
+import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
 import type { Safety } from "../config/models";
 import {
@@ -252,13 +253,9 @@ export default function SettingsView() {
             aria-label="API-Schlüssel"
             className="input min-w-0 flex-1 text-sm"
           />
-          <button
-            onClick={saveKey}
-            className="btn-glow tilt-on-press"
-            aria-label="API-Schlüssel speichern"
-          >
+          <Button onClick={saveKey} aria-label="API-Schlüssel speichern">
             Speichern
-          </button>
+          </Button>
         </div>
         <p className="mt-2 text-xs opacity-70">Wird lokal gespeichert (kein Server-Speicher).</p>
       </section>

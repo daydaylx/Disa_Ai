@@ -9,6 +9,7 @@ import HeroCard from "../components/hero/HeroCard";
 import { InlineNote } from "../components/InlineNote";
 import InstallBanner from "../components/InstallBanner";
 import OrbStatus from "../components/status/OrbStatus";
+import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
 import {
   getCtxMaxTokens,
@@ -101,6 +102,21 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  // Legacy Events: Fokus/Neue Session aus älteren Komponenten unterstützen
+  useEffect(() => {
+    const onFocus = () => composerRef.current?.focus();
+    const onNew = () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      composerRef.current?.focus();
+    };
+    window.addEventListener("disa:chat:focusInput", onFocus as any);
+    window.addEventListener("disa:chat:newSession", onNew as any);
+    return () => {
+      window.removeEventListener("disa:chat:focusInput", onFocus as any);
+      window.removeEventListener("disa:chat:newSession", onNew as any);
     };
   }, []);
 
@@ -202,7 +218,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         if (convId && accum.trim().length > 0) {
           convAppendMessage(convId, { role: "assistant", content: accum } as any);
           const turns = convGetMessages(convId).map((t) => ({ role: t.role, content: t.content }));
-          updateMemory(convId, turns as any);
+          const recent = turns.slice(-10);
+          updateMemory(convId, recent as any);
         }
         if (rafId != null) {
           cancelAnimationFrame(rafId);
@@ -409,13 +426,13 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   inputMode="text"
                 />
                 {sending ? (
-                  <button className="nav-pill" onClick={stop} aria-label="Stop">
+                  <Button variant="secondary" size="sm" onClick={stop} aria-label="Stop">
                     Stop
-                  </button>
+                  </Button>
                 ) : (
-                  <button className="btn-glow tilt-on-press" onClick={send} aria-label="Senden">
+                  <Button variant="primary" size="sm" onClick={send} aria-label="Senden">
                     Senden
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
