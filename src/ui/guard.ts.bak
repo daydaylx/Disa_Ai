@@ -1,12 +1,10 @@
-/* Lokaler TS-Alias, um ESLint 'no-undef' für DOM-Typnamen zu vermeiden. */
-
 /**
  * UI Guards – resize/orientation helpers ohne ESLint/TS Ärger.
  */
 export function onResize(fn: () => void) {
   const handler = () => { try { fn(); } catch { /* noop */ } };
-  window.addEventListener("resize", handler, { passive: true } as const);
-  window.addEventListener("orientationchange", handler, { passive: true } as const);
+  window.addEventListener("resize", handler, { passive: true } as AddEventListenerOptions);
+  window.addEventListener("orientationchange", handler, { passive: true } as AddEventListenerOptions);
   return () => {
     window.removeEventListener("resize", handler);
     window.removeEventListener("orientationchange", handler);
