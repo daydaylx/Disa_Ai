@@ -12,6 +12,7 @@ import OrbStatus from "../components/status/OrbStatus";
 import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
 import {
+  getComposerOffset,
   getCtxMaxTokens,
   getCtxReservedTokens,
   getMemoryEnabled,
@@ -88,6 +89,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const allowNSFW = useMemo(() => getNSFW(), []);
   const memEnabled = useMemo(() => getMemoryEnabled(), []);
   const ctxLimits = useMemo(() => ({ max: getCtxMaxTokens(), reserve: getCtxReservedTokens() }), []);
+  const composerOffset = useMemo(() => getComposerOffset(), []);
 
   // Lädt vorhandene Nachrichten aus der Unterhaltung (falls convId gesetzt)
   useEffect(() => {
@@ -98,8 +100,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         .filter((m) => m.role === "user" || m.role === "assistant")
         .map((m) => ({ id: `${m.role}-${m.createdAt}`, role: m.role as "user" | "assistant", content: m.content }));
       setMsgs(mapped.length ? mapped : [{ id: uid(), role: "assistant", content: "Bereit." }]);
-    } catch (e) {
-      // ignore
+    } catch {
+      /* ignore */
     }
      
   }, [convId]);
@@ -420,7 +422,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         createPortal(
           <div
             className="fixed left-0 right-0 z-50"
-            style={{ bottom: "calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + 16px)" }}
+            style={{ bottom: `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)` }}
           >
             <div
               className="mx-auto w-full max-w-3xl border-t border-neutral-800 bg-neutral-950/70 px-2 py-2 backdrop-blur"

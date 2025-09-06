@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Button } from "../components/ui/Button";
+
 const QUESTIONS: string[] = [
   "Erkläre mir diesen Code und mögliche Randfälle:",
   "Fasse den folgenden Text in 5–7 Punkten zusammen:",
@@ -27,7 +29,7 @@ export default function QuickStartView() {
   const onPick = (q: string) => {
     try {
       localStorage.setItem("disa:prefill", q + "\n\n");
-    } catch (_e) {
+    } catch {
       /* ignore */
     }
     location.hash = "#/chat";
@@ -43,16 +45,18 @@ export default function QuickStartView() {
         <p className="text-sm opacity-80">20 Startfragen, die häufig helfen.</p>
       </header>
 
-      <section className="grid gap-3">
+      <section className="grid gap-2">
         {QUESTIONS.map((q, i) => (
-          <button
+          <Button
             key={i}
-            className="nav-pill text-left"
+            variant="secondary"
+            size="sm"
+            className="w-full justify-start text-left"
             onClick={() => onPick(q)}
             aria-label={`Quickstart Frage ${i + 1}`}
           >
             {q}
-          </button>
+          </Button>
         ))}
       </section>
     </main>

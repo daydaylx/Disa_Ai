@@ -13,6 +13,7 @@ import {
   type RoleTemplate,
 } from "../config/promptTemplates";
 import {
+  getComposerOffset,
   getCtxMaxTokens,
   getCtxReservedTokens,
   getMemoryEnabled,
@@ -21,6 +22,7 @@ import {
   getStyle,
   getTemplateId,
   getUseRoleStyle,
+  setComposerOffset,
   setCtxMaxTokens,
   setCtxReservedTokens,
   setMemoryEnabled,
@@ -92,6 +94,7 @@ export default function SettingsView() {
   const [memEnabled, setMemEnabled] = React.useState<boolean>(getMemoryEnabled());
   const [ctxMax, setCtxMax] = React.useState<number>(getCtxMaxTokens());
   const [ctxReserve, setCtxReserve] = React.useState<number>(getCtxReservedTokens());
+  const [composerOffset, setComposerOffsetState] = React.useState<number>(() => getComposerOffset());
   const [style, setStyleState] = React.useState<StyleKey>(getStyle());
   const [templateId, setTemplateIdState] = React.useState<string | null>(getTemplateId());
   const [useRoleStyle, setUseRoleStyleState] = React.useState<boolean>(getUseRoleStyle());
@@ -210,6 +213,10 @@ export default function SettingsView() {
     setCtxReserve(n);
     setCtxReservedTokens(n);
   }
+  function onComposerOffset(n: number) {
+    setComposerOffsetState(n);
+    setComposerOffset(n);
+  }
 
   return (
     <main
@@ -316,6 +323,19 @@ export default function SettingsView() {
                 onChange={(e) => onCtxReserve(Number(e.target.value) || 0)}
                 className="w-28 rounded-md border border-border bg-background px-2 py-1"
                 aria-label="Reservierte Tokens für die Antwort"
+              />
+            </label>
+            <label className="flex items-center gap-2">
+              Composer‑Offset (px):
+              <input
+                type="number"
+                min={16}
+                max={96}
+                step={4}
+                value={composerOffset}
+                onChange={(e) => onComposerOffset(Number(e.target.value) || 48)}
+                className="w-28 rounded-md border border-border bg-background px-2 py-1"
+                aria-label="Offset der Chat‑Eingabe vom unteren Rand"
               />
             </label>
           </div>
