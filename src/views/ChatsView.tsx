@@ -10,7 +10,7 @@ export default function ChatsView({ onOpen }: Props) {
   const [title, setTitle] = React.useState("");
 
   return (
-    <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6">
+    <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6 pb-28">
       <header className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Unterhaltungen</h1>
         <div className="flex gap-2">
