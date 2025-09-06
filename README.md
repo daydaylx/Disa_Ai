@@ -1,11 +1,15 @@
 Deployment: Cloudflare Pages
 
-Hinweis: Dieses Repo ist für Cloudflare Pages konfiguriert. CI baut automatisch auf `main` und deployed nach Pages (siehe `.github/workflows/deploy-cloudflare-pages.yml`).
+Empfohlen: Git‑Integration von Cloudflare Pages (ohne GitHub Actions).
 
-Buildkommando: `npm run build` → Ausgabeverzeichnis: `dist/`.
+Einstellungen in Cloudflare Pages Projekt:
 
-Setze in den Repo‑Secrets:
+- Framework Preset: „Vite“ (oder „None“)
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Node Version: 20 oder 22
 
-- `CLOUDFLARE_API_TOKEN` (Pages:Edit‑Token)
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_PAGES_PROJECT_NAME`
+Hinweise:
+
+- `public/_headers` enthält Caching‑Regeln für wichtige Endpunkte (z. B. `persona.json`).
+- `.github/workflows/ci.yml` führt weiterhin Build/Tests aus, deployt aber nicht.
