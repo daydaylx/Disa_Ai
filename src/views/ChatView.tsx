@@ -259,7 +259,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   }, []);
 
   return (
-    <div className="min-h-[100dvh]">
+    <div className="min-h-[100svh]">
       <main id="main" role="main" className="mx-auto w-full max-w-4xl px-4 pb-48 pt-3">
         <InstallBanner />
         <OrbStatus streaming={sending} modelLabel={modelLabel} />
