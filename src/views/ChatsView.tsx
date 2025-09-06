@@ -35,7 +35,7 @@ export default function ChatsView({ onOpen }: Props) {
 
       <section className="rounded-xl border border-border bg-background/60 glass card-gradient">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-background/80 backdrop-blur">
+          <thead className="sticky top-0 bg-background/80 backdrop-blur thead-grad">
             <tr className="text-left">
               <th className="px-3 py-2">Titel</th>
               <th className="px-3 py-2">Aktualisiert</th>

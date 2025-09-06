@@ -297,3 +297,10 @@ body {
     0 8px 22px rgba(124, 102, 255, 0.35),
     0 0 0 1px rgba(255, 255, 255, 0.16) inset;
 }
+
+/* === Tabellenkopf: dezente Gradient-Linie unten === */
+.thead-grad {
+  box-shadow:
+    inset 0 -1px 0 rgba(124, 102, 255, 0.35),
+    inset 0 -2px 0 rgba(64, 217, 255, 0.12);
+}

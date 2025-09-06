@@ -144,13 +144,13 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           onChange={(e) => setQ(e.target.value)}
           placeholder="Modell suchen…"
           aria-label="Modell suchen"
-          className="min-w-[200px] flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+          className="input min-w-[200px] flex-1 text-sm"
         />
         <select
           value={provider}
           onChange={(e) => setProvider(e.target.value)}
           aria-label="Provider filtern"
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+          className="input text-sm"
         >
           {providers.map((p) => (
             <option key={p} value={p}>
@@ -162,7 +162,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           value={policy}
           onChange={(e) => setPolicy(e.target.value as any)}
           aria-label="Policy/Safety filtern"
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+          className="input text-sm"
         >
           <option value="any">Alle Policies</option>
           <option value="free">Frei</option>
@@ -173,7 +173,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           value={cost}
           onChange={(e) => setCost(e.target.value as any)}
           aria-label="Kostenkategorie filtern"
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+          className="input text-sm"
         >
           <option value="all">Alle Kosten</option>
           <option value="free">Frei</option>
@@ -198,7 +198,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             step={512}
             value={minCtx}
             onChange={(e) => setMinCtx(Number(e.target.value) || 0)}
-            className="w-24 rounded-md border border-border bg-background px-2 py-1"
+            className="input w-24"
             aria-label="Minimale Kontextgröße in Tokens"
           />
         </label>
@@ -206,7 +206,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as any)}
           aria-label="Sortierung"
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+          className="input text-sm"
         >
           <option value="label">Name</option>
           <option value="price">Preis</option>
@@ -214,9 +214,9 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
       </div>
 
-      <div className="max-h-[360px] overflow-auto rounded-xl border border-border">
+      <div className="max-h-[360px] overflow-auto rounded-xl border border-border glass card-gradient">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-background/90 backdrop-blur">
+          <thead className="sticky top-0 bg-background/90 backdrop-blur thead-grad">
             <tr className="text-left">
               <th className="px-3 py-2 font-medium">Modell</th>
               <th className="px-3 py-2 font-medium">Provider</th>
