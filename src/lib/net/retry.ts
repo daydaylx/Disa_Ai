@@ -60,7 +60,7 @@ export async function fetchWithRetry(
 
     try {
       const controller = new AbortController();
-      const signals: AbortSignal[] = [controller.signal];
+      const _signals: AbortSignal[] = [controller.signal];
       if (abortSignal) {
         const onAbort = () => controller.abort(abortSignal.reason as any);
         if (abortSignal.aborted) onAbort();

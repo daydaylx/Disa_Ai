@@ -85,6 +85,7 @@ export default function TemplatesGrid() {
             <div className="mt-3">
               <button
  
+     
     // eslint-disable-next-line react-hooks/rules-of-hooks
                 onClick={() => useTemplate(tpl)}
                 className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 active:scale-[0.98]"

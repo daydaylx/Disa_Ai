@@ -13,7 +13,7 @@ export function getPreferRolePolicy(): boolean {
 export function setPreferRolePolicy(v: boolean) {
   try {
     localStorage.setItem(KEY_PREF_ROLE_POLICY, v ? "true" : "false");
-  } catch (_e) {
+  } catch {
     /* ignore persistence errors (private mode, quota, etc.) */
   }
 }
@@ -29,7 +29,7 @@ export function getVirtualListEnabled(): boolean {
 export function setVirtualListEnabled(v: boolean) {
   try {
     localStorage.setItem(KEY_VIRTUAL_LIST, v ? "true" : "false");
-  } catch (_e) {
+  } catch {
     /* ignore persistence errors */
   }
 }
