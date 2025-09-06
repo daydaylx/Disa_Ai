@@ -35,6 +35,7 @@ export default function App() {
 
   return (
     <div className="min-h-[100dvh]">
+      <a href="#main" className="skip-link">Zum Inhalt springen</a>
       <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 bg-neutral-950/70 px-4 py-3 text-sm text-neutral-200 backdrop-blur">
         <div className="font-semibold">Disa AI</div>
         <nav className="flex gap-2">

@@ -88,7 +88,18 @@ const ChatView: React.FC = () => {
     };
   }, []);
 
-  const handlePick = (t: string) => setText(t);
+  function mapQuickAction(id: string): string {
+    const M: Record<string, string> = {
+      summarize: "Fasse den folgenden Text prägnant in 5–7 Bulletpoints zusammen. Nenne Kernaussagen und ggf. Risiken. Text:",
+      code_help: "Erkläre den folgenden Code Schritt für Schritt. Gehe auf Logik, Randfälle und Komplexität ein. Code:",
+      brainstorm: "Erstelle 8–10 verschiedene Ideen/Vorschläge zu folgendem Thema. Gruppiere sinnvoll. Thema:",
+      translate: "Übersetze den folgenden Text präzise und idiomatisch ins Deutsche. Erhalte Formatierung. Text:",
+      optimize: "Verbessere den folgenden Code auf Lesbarkeit und Performance. Zeige vorher/nachher und begründe kurz: ",
+      spec: "Erstelle eine kurze Feature-Spezifikation mit Akzeptanzkriterien (Given/When/Then) für: ",
+    };
+    return M[id] ?? id;
+  }
+  const handlePick = (t: string) => setText(mapQuickAction(t));
   const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -131,6 +142,7 @@ const ChatView: React.FC = () => {
     let accum = "";
     const chunkQueue: string[] = [];
     let rafId: number | null = null;
+    let flushTimer: number | null = null;
     sendChat({
       apiKey,
       model: modelId,
@@ -139,8 +151,7 @@ const ChatView: React.FC = () => {
       onChunk: (t) => {
         // Chunks sammeln und Updates auf ~1x pro Frame drosseln
         chunkQueue.push(t);
-        if (rafId != null) return;
-        rafId = requestAnimationFrame(() => {
+        const flush = () => {
           const delta = chunkQueue.join("");
           chunkQueue.length = 0;
           accum += delta;
@@ -154,7 +165,14 @@ const ChatView: React.FC = () => {
             return [...m, { id: uid(), role: "assistant", content: accum }];
           });
           rafId = null;
-        });
+          if (flushTimer != null) {
+            clearTimeout(flushTimer);
+            flushTimer = null;
+          }
+        };
+
+        if (rafId == null) rafId = requestAnimationFrame(flush);
+        if (flushTimer == null) flushTimer = window.setTimeout(flush, 80);
       },
       onDone: () => {
         setSending(false);
@@ -163,6 +181,10 @@ const ChatView: React.FC = () => {
           cancelAnimationFrame(rafId);
           rafId = null;
         }
+        if (flushTimer != null) {
+          clearTimeout(flushTimer);
+          flushTimer = null;
+        }
       },
       onError: (err) => {
         setSending(false);
@@ -170,6 +192,10 @@ const ChatView: React.FC = () => {
         if (rafId != null) {
           cancelAnimationFrame(rafId);
           rafId = null;
+        }
+        if (flushTimer != null) {
+          clearTimeout(flushTimer);
+          flushTimer = null;
         }
         setMsgs((m) => [
           ...m,
@@ -214,7 +240,14 @@ const ChatView: React.FC = () => {
                 ].join(" ")}
               >
                 {!mine && <Avatar kind="assistant" />}
-                <div className="max-w-[min(90%,48rem)]">
+                <div
+                  className={[
+                    "max-w-[min(90%,48rem)] rounded-2xl border p-3",
+                    mine
+                      ? "bg-sky-950/40 border-sky-900/60"
+                      : "bg-neutral-900/60 border-neutral-800",
+                  ].join(" ")}
+                >
                   <Message msg={m} onCopied={() => setToast("Kopiert")} />
                 </div>
                 {mine && <Avatar kind="user" />}
@@ -226,15 +259,28 @@ const ChatView: React.FC = () => {
 
       {/* Composer */}
       <div className="fixed bottom-0 left-0 right-0 z-40">
-        <div className="mx-auto w-full max-w-3xl border-t border-neutral-800 bg-neutral-950/70 px-2 py-2 backdrop-blur">
+        <div
+          className="mx-auto w-full max-w-3xl border-t border-neutral-800 bg-neutral-950/70 px-2 py-2 backdrop-blur"
+          style={{ paddingBottom: `max(env(safe-area-inset-bottom), 8px)` }}
+        >
           <div className="flex items-end gap-2">
             <textarea
               ref={composerRef}
-              className="h-[56px] w-full resize-none rounded-md border border-neutral-800 bg-neutral-900/80 p-3 text-neutral-100 outline-none"
+              className="w-full resize-none rounded-md border border-neutral-800 bg-neutral-900/80 p-3 text-neutral-100 outline-none"
               placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={onKeyDown}
+              onInput={(e) => {
+                const el = e.currentTarget;
+                el.style.height = "auto";
+                const max = 6 * 24; // grob 6 Zeilen à 24px
+                const next = Math.min(max, el.scrollHeight);
+                el.style.height = `${next}px`;
+              }}
+              rows={2}
+              enterKeyHint="send"
+              inputMode="text"
             />
             {sending ? (
               <button

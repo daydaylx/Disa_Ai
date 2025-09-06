@@ -6,23 +6,23 @@ import "./ui/base.css";
 import "./ui/kit.css";
 import "./ui/tokens.css";
 import "./ui/globals";
-import "./styles/layout.css";
-import "./styles/ui-fixes.css";
-import "./styles/glass.css";
-import "./styles/overrides.css";
-import "./styles/tokens.css";
-import "./styles/brand.css";
-import "./styles/theme.css";
-import "./styles/shadcn.css";
-import "./styles/chat.css";
-import "./styles/models.css";
-import "./styles/settings.css";
 import "./styles/a11y.css";
+import "./styles/brand.css";
+import "./styles/chat.css";
+import "./styles/glass.css";
+import "./styles/layout.css";
+import "./styles/models.css";
+import "./styles/overrides.css";
+import "./styles/settings.css";
+import "./styles/shadcn.css";
+import "./styles/theme.css";
+import "./styles/tokens.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
+import { ToastsProvider } from "./components/ui/Toast";
 import { installSkipLinkFocus } from "./lib/a11y/skipLink";
 import { registerSW } from "./lib/pwa/registerSW";
 
@@ -31,6 +31,8 @@ registerSW();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <ToastsProvider>
+      <App />
+    </ToastsProvider>
   </React.StrictMode>,
 );
