@@ -7,6 +7,7 @@ export default function StartHero() {
     try {
       if (location.hash !== "#/chat") location.hash = "#/chat";
     } catch (e) {
+      void e;
       /* ignore */
     }
     requestNewChatSession({});

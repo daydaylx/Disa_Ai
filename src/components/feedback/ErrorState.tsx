@@ -20,6 +20,9 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   className,
 }) => {
   const [open, setOpen] = useState(false);
+  // Variablen aktuell ungenutzt, bewusst beibehalten (API)
+  void open;
+  void setOpen;
 
   return (
     <div

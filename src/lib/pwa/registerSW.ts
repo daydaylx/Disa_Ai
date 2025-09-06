@@ -3,6 +3,7 @@ try {
     /* test → kein SW */ throw new Error("__PW_TEST__");
   }
 } catch (_e) {
+  void _e;
   /* stop SW */
 }
 export function registerSW() {
@@ -27,6 +28,7 @@ export function registerSW() {
                   try {
                     window.location.reload();
                   } catch (_e) {
+                    void _e;
                     /* ignore */
                   }
                 };
@@ -61,5 +63,6 @@ try {
     // (falls oben eine auto-registrierende Routine existiert, bitte direkt dort guarden)
   }
 } catch (_e) {
+  void _e;
   /* ignore */
 }

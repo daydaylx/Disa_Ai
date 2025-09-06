@@ -3,6 +3,7 @@
     try {
       el.scrollIntoView({ block: "nearest" });
     } catch (_e) {
+      void _e;
       /* ignore */
     }
   }
