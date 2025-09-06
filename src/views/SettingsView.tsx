@@ -3,7 +3,13 @@ import React from "react";
 import ModelPicker from "../components/ModelPicker";
 import { useToasts } from "../components/ui/Toast";
 import type { Safety } from "../config/models";
-import { fetchRoleTemplates,getRoleById, listRoleTemplates } from "../config/promptTemplates";
+import {
+  fetchRoleTemplates,
+  getRoleById,
+  getRoleLoadStatus,
+  listRoleTemplates,
+  type RoleTemplate,
+} from "../config/promptTemplates";
 import {
   getNSFW,
   getSelectedModelId,
@@ -83,17 +89,24 @@ export default function SettingsView() {
   const [templateId, setTemplateIdState] = React.useState<string | null>(getTemplateId());
   const [useRoleStyle, setUseRoleStyleState] = React.useState<boolean>(getUseRoleStyle());
 
-  const templates = React.useMemo(() => listRoleTemplates(), []);
+  const [templates, setTemplates] = React.useState<RoleTemplate[]>(() => listRoleTemplates());
+  const [roleLoad, setRoleLoad] = React.useState<{ state: string; error: string | null }>(
+    () => getRoleLoadStatus(),
+  );
 
   // Rollen-Templates beim Einstieg laden (einmalig)
   React.useEffect(() => {
     const ac = new AbortController();
-    try {
-      // lädt aus public/styles.json | persona.json | roles.json
-      fetchRoleTemplates(false, ac.signal).catch(() => {});
-    } catch (_e) {
-      void 0;
-    }
+    (async () => {
+      try {
+        const list = await fetchRoleTemplates(false, ac.signal);
+        setTemplates(list);
+      } catch {
+        /* ignore */
+      } finally {
+        setRoleLoad(getRoleLoadStatus());
+      }
+    })();
     return () => ac.abort();
   }, []);
 
@@ -251,6 +264,17 @@ export default function SettingsView() {
               </option>
             ))}
           </select>
+          {roleLoad.state === "loading" && (
+            <div className="text-xs opacity-70">Rollen werden geladen…</div>
+          )}
+          {roleLoad.state === "missing" && (
+            <div className="text-xs text-amber-300">
+              Keine Rollen gefunden. Lege <code>public/styles.json</code> mit Feld <code>styles</code> an.
+            </div>
+          )}
+          {roleLoad.state === "error" && (
+            <div className="text-xs text-red-300">Fehler beim Laden: {roleLoad.error}</div>
+          )}
 
           <label className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
             <span>Stil an Rolle anpassen</span>
