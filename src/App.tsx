@@ -1,5 +1,6 @@
 import React from "react";
 
+import Aurora from "./components/Aurora";
 import ChatsView from "./views/ChatsView";
 import ChatView from "./views/ChatView";
 import SettingsView from "./views/SettingsView";
@@ -41,9 +42,10 @@ export default function App() {
   const [route, nav] = useHashRoute();
 
   return (
-    <div className="min-h-[100dvh]">
+    <div className="min-h-[100dvh] app-bg relative">
+      <Aurora />
       <a href="#main" className="skip-link">Zum Inhalt springen</a>
-      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 bg-neutral-950/70 px-4 py-3 text-sm text-neutral-200 backdrop-blur">
+      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 glass px-4 py-3 text-sm text-neutral-200">
         <div className="font-semibold">Disa AI</div>
         <nav className="flex gap-2">
           <a

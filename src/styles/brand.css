@@ -231,3 +231,33 @@ body {
 .hero-card {
   padding: 18px;
 }
+
+/* === Aurora Hintergrund === */
+.aurora {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.aurora__blob {
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(124, 102, 255, 0.28), transparent 70%);
+  filter: blur(50px) saturate(140%);
+  animation: auroraFloat 22s ease-in-out infinite alternate;
+}
+.aurora__blob--2 {
+  background: radial-gradient(closest-side, rgba(40, 215, 255, 0.25), transparent 70%);
+  animation-duration: 26s;
+}
+@keyframes auroraFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(6%, 4%) scale(1.06);
+  }
+}
