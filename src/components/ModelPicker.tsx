@@ -38,7 +38,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   const [all, setAll] = React.useState<ModelEntry[]>([]);
   const [q, setQ] = React.useState("");
   const [provider, setProvider] = React.useState<string>("all");
-  const [onlyFree, setOnlyFree] = React.useState<boolean>(false);
+  const [onlyFree, setOnlyFree] = React.useState<boolean>(() => !getApiKey());
   const [minCtx, setMinCtx] = React.useState<number>(0);
   const [policy, setPolicy] = React.useState<"any" | "free" | "moderate" | "strict">("any");
   const [cost, setCost] = React.useState<"all" | "free" | "low" | "med" | "high">("all");
