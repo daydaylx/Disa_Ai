@@ -294,7 +294,7 @@ export default function SettingsView() {
       </section>
 
       {/* Kontext & Gedächtnis */}
-      <section className="rounded-xl border border-border bg-background/60 p-4">
+      <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
         <h2 className="mb-3 text-base font-semibold title-underline">Kontext & Gedächtnis</h2>
         <div className="grid gap-3">
           <div className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
@@ -425,7 +425,12 @@ export default function SettingsView() {
       {/* separate Stil-Vorschau entfernt: die effektive Vorschau steht nun bei Rolle */}
 
       <nav className="flex justify-end">
-        <a href="#/chat" className="underline">zurück zum Chat</a>
+        <a
+          href="#/chat"
+          className="underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md px-1"
+        >
+          zurück zum Chat
+        </a>
       </nav>
     </main>
   );

@@ -31,7 +31,7 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
   }, [code, onCopied])
 
   return (
-    <div className={['relative group', className].filter(Boolean).join(' ')}>
+    <div className={['relative group codeblock', className].filter(Boolean).join(' ')}>
       <button
         type="button"
         aria-label="Code kopieren"

@@ -54,7 +54,7 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied }
     <div className="my-2">
       {parts.map((p, i) =>
         p.t === "code" ? (
-          <CodeBlock key={i} code={p.content} lang={p.lang ?? "txt"} onCopied={onCopied} />
+          <CodeBlock key={i} code={p.content} lang={p.lang ?? "txt"} onCopied={() => {}} />
         ) : (
           <p key={i} className="whitespace-pre-wrap leading-relaxed">
             {p.content.trim()}
@@ -276,19 +276,19 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     setSending(false);
   }
 
-  const portalRef = useRef<HTMLElement | null>(null);
+  const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
   useEffect(() => {
     const el = document.createElement("div");
     el.setAttribute("id", "composer-portal");
     document.body.appendChild(el);
-    portalRef.current = el;
+    setPortalEl(el);
     return () => {
       try {
         document.body.removeChild(el);
       } catch (e) {
         /* ignore */
       }
-      portalRef.current = null;
+      setPortalEl(null);
     };
   }, []);
 
@@ -341,7 +341,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                     <div
                       key={m.id}
                       className={[
-                        "my-3 flex items-start gap-2",
+                        "msg my-3 flex items-start gap-2",
                         mine ? "justify-end" : "justify-start",
                       ].join(" ")}
                     >
@@ -418,7 +418,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       </main>
 
       {/* Composer */}
-      {portalRef.current &&
+      {portalEl &&
         createPortal(
           <div
             className="fixed left-0 right-0 z-50"
@@ -432,6 +432,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                 <textarea
                   ref={composerRef}
                   className="w-full resize-none rounded-md border border-neutral-800 bg-neutral-900/80 p-3 text-neutral-100 outline-none"
+                  data-testid="composer-input"
                   placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
@@ -448,18 +449,30 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   inputMode="text"
                 />
                 {sending ? (
-                  <Button variant="secondary" size="sm" onClick={stop} aria-label="Stop">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={stop}
+                    aria-label="Stop"
+                    data-testid="composer-stop"
+                  >
                     Stop
                   </Button>
                 ) : (
-                  <Button variant="primary" size="sm" onClick={send} aria-label="Senden">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={send}
+                    aria-label="Senden"
+                    data-testid="composer-send"
+                  >
                     Senden
                   </Button>
                 )}
               </div>
             </div>
           </div>,
-          portalRef.current,
+          portalEl,
         )}
 
       <ScrollToEndFAB
