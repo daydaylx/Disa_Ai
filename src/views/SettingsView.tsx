@@ -1,6 +1,7 @@
 import React from "react";
 
 import ModelPicker from "../components/ModelPicker";
+import Switch from "../components/Switch";
 import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
 import type { Safety } from "../config/models";
@@ -286,16 +287,9 @@ export default function SettingsView() {
       <section className="rounded-xl border border-border bg-background/60 p-4">
         <h2 className="mb-3 text-base font-semibold title-underline">Kontext & Gedächtnis</h2>
         <div className="grid gap-3">
-          <label className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
-            <span>Gedächtnis aktivieren (lokal, pro Chat)</span>
-            <input
-              type="checkbox"
-              className="h-5 w-10 cursor-pointer appearance-none rounded-full bg-neutral-700 outline-none transition checked:bg-blue-600 before:ml-0.5 before:block before:h-4 before:w-4 before:translate-x-0 before:rounded-full before:bg-white before:transition checked:before:translate-x-5"
-              checked={memEnabled}
-              onChange={onToggleMem}
-              aria-label="Gedächtnis aktivieren"
-            />
-          </label>
+          <div className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
+            <Switch checked={memEnabled} onChange={(v) => onToggleMem({ target: { checked: v } } as any)} label="Gedächtnis aktivieren (lokal, pro Chat)" />
+          </div>
           <div className="flex flex-wrap items-center gap-3 text-sm">
             <label className="flex items-center gap-2">
               max Tokens:
@@ -384,19 +378,13 @@ export default function SettingsView() {
             <div className="text-xs text-red-300">Fehler beim Laden: {roleLoad.error}</div>
           )}
 
-          <label className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
-            <span>Stil an Rolle anpassen</span>
-            <input
-              type="checkbox"
-              className="h-5 w-10 cursor-pointer appearance-none rounded-full bg-neutral-700 outline-none transition
-                         checked:bg-blue-600
-                         before:ml-0.5 before:block before:h-4 before:w-4 before:translate-x-0 before:rounded-full before:bg-white before:transition
-                         checked:before:translate-x-5"
+          <div className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
+            <Switch
               checked={useRoleStyle}
-              onChange={onUseRoleStyle}
-              aria-label="Stil automatisch an die Rolle anpassen"
+              onChange={(v) => onUseRoleStyle({ target: { checked: v } } as any)}
+              label="Stil an Rolle anpassen"
             />
-          </label>
+          </div>
 
           {/* Systemprompt-Vorschau (effektiv) */}
           <div className="rounded-lg border border-border bg-background/60 p-3">
@@ -407,15 +395,7 @@ export default function SettingsView() {
 
         {/* Optional: NSFW */}
         <div className="mt-3 flex items-center gap-3">
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={nsfw}
-              onChange={onToggleNSFW}
-              aria-label="NSFW-Filter lockern"
-            />
-            NSFW-Filter lockern
-          </label>
+          <Switch checked={nsfw} onChange={(v) => onToggleNSFW({ target: { checked: v } } as any)} label="NSFW-Filter lockern" />
         </div>
       </section>
 
