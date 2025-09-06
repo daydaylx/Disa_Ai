@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import type { TemplateCategory, TemplateMeta } from "../state/templates";
 import { setActiveTemplate, setDefaultTemplate, TEMPLATES } from "../state/templates";
@@ -18,7 +17,6 @@ const CATS: { key: TemplateCategory | "all"; label: string }[] = [
 export default function TemplatesGrid() {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<TemplateCategory | "all">("all");
-  const navigate = useNavigate();
 
   const list = useMemo(() => {
     const norm = q.trim().toLowerCase();
@@ -31,9 +29,13 @@ export default function TemplatesGrid() {
     );
   }, [q, cat]);
 
-  const useTemplate = (tpl: TemplateMeta) => {
+  const applyTemplate = (tpl: TemplateMeta) => {
     setActiveTemplate(tpl.id);
-    navigate("/chat");
+    try {
+      if (location.hash !== "#/chat") location.hash = "#/chat";
+    } catch (e) {
+      /* ignore */
+    }
     requestNewChatSession({ templateId: tpl.id });
     requestChatFocus();
   };
@@ -84,10 +86,7 @@ export default function TemplatesGrid() {
             </div>
             <div className="mt-3">
               <button
- 
-     
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-                onClick={() => useTemplate(tpl)}
+                onClick={() => applyTemplate(tpl)}
                 className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 active:scale-[0.98]"
                 aria-label={`Vorlage ${tpl.title} verwenden`}
               >
