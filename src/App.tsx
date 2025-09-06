@@ -43,6 +43,20 @@ function useHashRoute(): [Route, (r: Route) => void] {
 
 export default function App() {
   const [route, nav] = useHashRoute();
+  const index = (() => {
+    switch (route.name) {
+      case "chat":
+        return 0;
+      case "chats":
+        return 1;
+      case "quickstart":
+        return 2;
+      case "settings":
+        return 3;
+      default:
+        return 0;
+    }
+  })();
 
   return (
     <div className="min-h-[100dvh] app-bg relative">
@@ -83,15 +97,26 @@ export default function App() {
         {/* CTA entfernt, da 'Unterhaltungen' bereits als Tab vorhanden ist */}
       </header>
 
-      {route.name === "settings" ? (
-        <SettingsView />
-      ) : route.name === "chats" ? (
-        <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
-      ) : route.name === "quickstart" ? (
-        <QuickStartView />
-      ) : (
-        <ChatView convId={route.chatId ?? null} />
-      )}
+      <div className="pager">
+        <div
+          className="pager-track"
+          style={{ transform: `translateX(-${index * 100}%)` }}
+          aria-live="polite"
+        >
+          <section className="pager-panel" aria-label="Chat">
+            <ChatView convId={route.name === "chat" ? route.chatId ?? null : null} />
+          </section>
+          <section className="pager-panel" aria-label="Unterhaltungen">
+            <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
+          </section>
+          <section className="pager-panel" aria-label="Quickstart">
+            <QuickStartView />
+          </section>
+          <section className="pager-panel" aria-label="Einstellungen">
+            <SettingsView />
+          </section>
+        </div>
+      </div>
     </div>
   );
 }
