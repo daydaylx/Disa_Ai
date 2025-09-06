@@ -1,6 +1,7 @@
 import React from "react";
 
 import Aurora from "./components/Aurora";
+import BottomNav from "./components/layout/BottomNav";
 import ChatsView from "./views/ChatsView";
 import ChatView from "./views/ChatView";
 import QuickStartView from "./views/QuickStartView";
@@ -92,6 +93,8 @@ export default function App() {
       ) : (
         <ChatView convId={route.chatId ?? null} />
       )}
+
+      <BottomNav />
     </div>
   );
 }
