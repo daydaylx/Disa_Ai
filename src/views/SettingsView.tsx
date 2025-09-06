@@ -148,6 +148,28 @@ export default function SettingsView() {
     return lines.join("\n");
   }, [templateId]);
 
+  // Labels für Rollen-Select mit Policy/Tags
+  function policyLabel(p?: Safety | string): string {
+    if (!p) return "";
+    if (p === "strict") return "[strikt] ";
+    if (p === "moderate") return "[moderat] ";
+    if (p === "loose") return "[frei] ";
+    return ""; // any/unknown → kein Präfix
+  }
+  const groupedRoleOptions = React.useMemo(() => {
+    const groups = new Map<string, Array<{ id: string; label: string }>>();
+    for (const t of templates) {
+      const cat = (t.tags && t.tags[0]) || "Allgemein";
+      const label = `${policyLabel(t.policy)}${t.name || t.id}`;
+      if (!groups.has(cat)) groups.set(cat, []);
+      groups.get(cat)!.push({ id: t.id, label });
+    }
+    // sortiere Gruppen + Einträge alphabetisch
+    const order = Array.from(groups.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+    order.forEach(([, arr]) => arr.sort((a, b) => a.label.localeCompare(b.label)));
+    return order;
+  }, [templates]);
+
   // --- Handlers (persistieren) ---
   function saveKey() {
     const val = key.trim();
@@ -258,10 +280,14 @@ export default function SettingsView() {
             className="w-full rounded-lg border border-border bg-background/70 px-3 py-2 text-sm outline-none ring-0"
           >
             <option value="">Keine spezielle Rolle</option>
-            {templates.map((t: unknown, i: number) => (
-              <option key={i} value={(t as any)?.id ?? ""}>
-                {roleTitle(t)}
-              </option>
+            {groupedRoleOptions.map(([cat, arr]) => (
+              <optgroup key={cat} label={cat}>
+                {arr.map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.label}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
           {roleLoad.state === "loading" && (
