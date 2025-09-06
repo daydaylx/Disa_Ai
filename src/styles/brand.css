@@ -35,6 +35,14 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: var(--shadow-soft);
 }
+.glass:hover,
+.glass:focus-within {
+  background: rgba(var(--brand-card) / 0.56);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
 
 .grad-surface {
   background-image: var(--grad-1);
@@ -47,9 +55,36 @@
     0 0 0 1px rgba(255, 255, 255, 0.12) inset,
     0 10px 30px rgba(124, 102, 255, 0.35),
     0 6px 16px rgba(40, 215, 255, 0.28);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
 }
 .btn-glow:active {
   transform: translateY(1px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn-glow {
+    animation: softPulse 2.6s ease-in-out infinite;
+  }
+}
+
+@keyframes softPulse {
+  0%,
+  100% {
+    filter: saturate(1);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+      0 10px 30px rgba(124, 102, 255, 0.3),
+      0 6px 16px rgba(40, 215, 255, 0.22);
+  }
+  50% {
+    filter: saturate(1.08);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+      0 12px 36px rgba(255, 90, 95, 0.38),
+      0 8px 20px rgba(255, 150, 80, 0.26);
+  }
 }
 
 .pill {
@@ -226,6 +261,12 @@ body {
   box-shadow:
     0 8px 22px rgba(124, 102, 255, 0.35),
     0 0 0 1px rgba(255, 255, 255, 0.16) inset;
+}
+
+/* Fokusring für Pills */
+.nav-pill:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 150, 80, 0.6);
 }
 
 /* Hero-Card ContentSpacing */
