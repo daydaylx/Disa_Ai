@@ -1,6 +1,7 @@
 import React from "react";
 
 import { loadModelCatalog, type Safety } from "../config/models";
+import { getApiKey } from "../services/openrouter";
 
 type RolePolicy = Safety | "any";
 type Price = { in?: number; out?: number };
@@ -87,6 +88,11 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
 
   return (
     <section className="space-y-3">
+      {(!getApiKey() || getApiKey() === "") && (
+        <div className="rounded-md border border-amber-700/40 bg-amber-900/20 px-3 py-2 text-xs text-amber-200">
+          Hinweis: Für das Laden der Modell‑Liste ist ein OpenRouter API‑Key nötig (Einstellungen).
+        </div>
+      )}
       {policyFromRole !== "any" && (
         <div className="rounded-md border border-border bg-background/60 px-3 py-2 text-xs text-neutral-300">
           Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste entsprechend gefiltert.
@@ -172,7 +178,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             {filtered.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-3 py-6 text-center opacity-70">
-                  Keine Modelle passend zu den Filtern.
+                  Keine Modelle gefunden. Prüfe Filter und API‑Key.
                 </td>
               </tr>
             ) : null}

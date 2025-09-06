@@ -1,6 +1,7 @@
 import React from "react";
 
 import ModelPicker from "../components/ModelPicker";
+import { useToasts } from "../components/ui/Toast";
 import type { Safety } from "../config/models";
 import { fetchRoleTemplates,getRoleById, listRoleTemplates } from "../config/promptTemplates";
 import {
@@ -73,6 +74,7 @@ const STYLE_META: Partial<
 type RolePolicy = Safety | "any";
 
 export default function SettingsView() {
+  const toasts = useToasts();
   // Persistente Werte laden
   const [key, setKey] = React.useState<string>(getApiKey() ?? "");
   const [modelId, setModelId] = React.useState<string | null>(getSelectedModelId());
@@ -135,7 +137,9 @@ export default function SettingsView() {
 
   // --- Handlers (persistieren) ---
   function saveKey() {
-    setApiKey(key.trim());
+    const val = key.trim();
+    setApiKey(val);
+    toasts.push({ kind: "success", title: "Gespeichert", message: val ? "API‑Key wurde lokal gespeichert." : "API‑Key entfernt." });
   }
   function onToggleNSFW(e: React.ChangeEvent<HTMLInputElement>) {
     setNsfw(e.target.checked);
@@ -194,7 +198,7 @@ export default function SettingsView() {
             value={style}
             onChange={onStyleChange}
             aria-label="Stil auswählen"
-            className="w-full rounded-lg border border-violet-700/60 bg-[#0f172a]/70 px-3 py-2 text-sm outline-none ring-0"
+            className="w-full rounded-lg border border-border bg-background/70 px-3 py-2 text-sm outline-none ring-0"
           >
             <option value="concise">{STYLE_META.concise?.label ?? "Kompakt"}</option>
             <option value="blunt_de">{STYLE_META.blunt_de?.label ?? "Direkt (DE)"}</option>
@@ -238,7 +242,7 @@ export default function SettingsView() {
             value={templateId ?? ""}
             onChange={onTemplateChange}
             aria-label="Rolle auswählen"
-            className="w-full rounded-lg border border-neutral-700 bg-[#0f172a]/70 px-3 py-2 text-sm outline-none ring-0"
+            className="w-full rounded-lg border border-border bg-background/70 px-3 py-2 text-sm outline-none ring-0"
           >
             <option value="">Keine spezielle Rolle</option>
             {templates.map((t: unknown, i: number) => (
@@ -288,7 +292,7 @@ export default function SettingsView() {
       {/* Vorschau Systemprompt (Stil) */}
       <section className="rounded-xl border border-border bg-background/60 p-4">
         <h2 className="mb-3 text-base font-semibold">Vorschau Systemprompt</h2>
-        <div className="rounded-lg border border-neutral-800 bg-[#0b1220] p-3 text-sm leading-relaxed">
+        <div className="rounded-lg border border-border bg-background/60 p-3 text-sm leading-relaxed">
           {styleMeta.system || "—"}
         </div>
       </section>
