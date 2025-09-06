@@ -1,7 +1,7 @@
 /* eslint-disable no-empty */
 import { readApiKey, writeApiKey } from "../lib/openrouter/key";
 const BASE = "https://openrouter.ai/api/v1";
-const KEY_STORAGE = "disa:openrouter:key";
+// const KEY_STORAGE = "disa:openrouter:key";
 
 export type ORModel = {
   id: string;
