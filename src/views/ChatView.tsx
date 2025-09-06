@@ -18,6 +18,7 @@ import {
   getUseRoleStyle,
 } from "../config/settings";
 import { composeSystemPrompt } from "../features/prompt/composeSystemPrompt";
+import { appendMessage as convAppendMessage } from "../hooks/useConversations";
 import { sendChat } from "../services/chatService";
 import { getApiKey } from "../services/openrouter";
 import type { ChatMessage } from "../types/chat";
@@ -57,12 +58,11 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied }
   );
 };
 
-const ChatView: React.FC = () => {
+const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [showScrollFab, setShowScrollFab] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
   const toasts = useToasts();
   const [showAll, setShowAll] = useState(false);
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
@@ -139,6 +139,10 @@ const ChatView: React.FC = () => {
     if (!trimmed || sending) return;
 
     setMsgs((m) => trimHistory([...m, { id: uid(), role: "user", content: trimmed }]));
+    // Persistiere in geöffneter Unterhaltung
+    if (convId) {
+      convAppendMessage(convId, { role: "user", content: trimmed } as any);
+    }
     setText("");
     setSending(true);
 
@@ -186,6 +190,10 @@ const ChatView: React.FC = () => {
       onDone: () => {
         setSending(false);
         abortRef.current = null;
+        // Persistiere Assistant-Antwort als Nachricht (final)
+        if (convId && accum.trim().length > 0) {
+          convAppendMessage(convId, { role: "assistant", content: accum } as any);
+        }
         if (rafId != null) {
           cancelAnimationFrame(rafId);
           rafId = null;
@@ -393,7 +401,6 @@ const ChatView: React.FC = () => {
           window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })
         }
       />
-      {toast && null}
     </div>
   );
 };
