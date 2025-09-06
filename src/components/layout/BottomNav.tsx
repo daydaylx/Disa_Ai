@@ -15,8 +15,26 @@ export default function BottomNav() {
   const is = (p: string) => h.startsWith(p);
   const to = (p: string) => (location.hash = p);
 
+  const ref = React.useRef<HTMLElement | null>(null);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const setVar = () => {
+      const h = el.offsetHeight || 56;
+      document.documentElement.style.setProperty("--bottomnav-h", `${h}px`);
+    };
+    setVar();
+    const ro = new ResizeObserver(setVar);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      document.documentElement.style.removeProperty("--bottomnav-h");
+    };
+  }, []);
+
   return (
     <nav
+      ref={ref as any}
       className="fixed inset-x-3 bottom-3 z-30 glass rounded-2xl px-2 py-2 backdrop-blur safe-bottom"
       role="navigation"
       aria-label="Hauptnavigation unten"
@@ -63,4 +81,3 @@ export default function BottomNav() {
     </nav>
   );
 }
-

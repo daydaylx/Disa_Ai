@@ -34,7 +34,10 @@ export default function QuickStartView() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6 pb-28">
+    <main
+      className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6"
+      style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
+    >
       <header className="space-y-1">
         <h1 className="text-xl font-semibold title-underline">Quickstart</h1>
         <p className="text-sm opacity-80">20 Startfragen, die häufig helfen.</p>
