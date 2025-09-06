@@ -5,6 +5,7 @@ import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import HeroCard from "../components/hero/HeroCard";
 import QuickActions from "../components/hero/QuickActions";
 import InstallBanner from "../components/InstallBanner";
+import SettingsFAB from "../components/nav/SettingsFAB";
 import OrbStatus from "../components/status/OrbStatus";
 import { loadSettings } from "../features/settings/storage";
 
@@ -56,7 +57,7 @@ const CodeBlock: React.FC<{ code: string; lang?: string; onCopied: () => void }>
 );
 
 const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied }) => {
-  const parts = useMemo(() => {
+  const parts = React.useMemo(() => {
     const src = msg.content;
     const out: Array<{ t: "text" | "code"; content: string; lang?: string }> = [];
     const fence = /```(\w+)?\n([\s\S]*?)```/g;
@@ -163,7 +164,7 @@ const ChatView: React.FC = () => {
         tabIndex={-1}
         className="chat-body main-offset mx-auto w-full max-w-4xl px-4 pb-36 pt-4"
       >
-        {/* Install-Banner + Statusleiste (verlustfrei, nur UI) */}
+        {/* Install-Banner + Statusleiste */}
         <InstallBanner />
         <OrbStatus streaming={sending} modelLabel={modelLabel} />
 
@@ -232,7 +233,8 @@ const ChatView: React.FC = () => {
         </div>
       </div>
 
-      {/* FAB nur wenn nicht am Ende */}
+      {/* FABs */}
+      <SettingsFAB />
       <ScrollToEndFAB
         visible={showScrollFab}
         onClick={() =>
