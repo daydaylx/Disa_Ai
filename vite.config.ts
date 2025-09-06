@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 import { VitePWA } from "vite-plugin-pwa";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     VitePWA({
@@ -26,7 +26,8 @@ export default defineConfig({
   },
   build: {
     target: "es2020",
-    sourcemap: false,
+    // Für Debug-Builds per ENV aktivierbar, Standard bleibt aus
+    sourcemap: process.env.DEBUG_SOURCEMAP === "1",
     chunkSizeWarningLimit: 700,
     rollupOptions: {
       output: {
@@ -44,4 +45,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
