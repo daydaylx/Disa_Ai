@@ -215,7 +215,7 @@ export default function SettingsView() {
       </header>
 
       {/* API-Key */}
-      <section className="rounded-xl border border-border bg-background/60 p-4">
+      <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
         <h2 className="mb-3 text-base font-semibold">OpenRouter API Key</h2>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input
@@ -238,7 +238,7 @@ export default function SettingsView() {
       </section>
 
       {/* Stil */}
-      <section className="rounded-xl border border-border bg-background/60 p-4">
+      <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
         <h2 className="mb-3 text-base font-semibold">Stil</h2>
         <div className="grid gap-2">
           <select
@@ -307,7 +307,7 @@ export default function SettingsView() {
       </section>
 
       {/* Modell */}
-      <section className="space-y-3 rounded-xl border border-border bg-background/60 p-4">
+      <section className="space-y-3 rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold">Modell</h2>
           <div className="text-sm opacity-80">
@@ -325,7 +325,7 @@ export default function SettingsView() {
       </section>
 
       {/* Rolle */}
-      <section className="rounded-xl border border-border bg-gradient-to-b from-violet-900/20 to-fuchsia-900/10 p-4">
+      <section className="rounded-xl border border-border bg-gradient-to-b from-violet-900/20 to-fuchsia-900/10 p-4 glass card-gradient">
         <div className="mb-3">
           <h2 className="text-base font-semibold">Rolle</h2>
           <p className="text-sm opacity-80">Optionales System-Verhalten für den Chat.</p>

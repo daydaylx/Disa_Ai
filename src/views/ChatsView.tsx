@@ -17,11 +17,11 @@ export default function ChatsView({ onOpen }: Props) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Titel (optional)"
-            className="w-48 rounded-md border border-border bg-background px-3 py-2 text-sm"
+            className="input w-48 text-sm"
             aria-label="Titel der neuen Unterhaltung"
           />
           <button
-            className="rounded-md bg-violet-600 px-3 py-2 text-sm font-semibold text-white"
+            className="btn-glow tilt-on-press"
             onClick={() => {
               const meta = conv.create(title.trim() || "Neue Unterhaltung");
               setTitle("");
@@ -33,7 +33,7 @@ export default function ChatsView({ onOpen }: Props) {
         </div>
       </header>
 
-      <section className="rounded-xl border border-border bg-background/60">
+      <section className="rounded-xl border border-border bg-background/60 glass card-gradient">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-background/80 backdrop-blur">
             <tr className="text-left">
@@ -49,7 +49,7 @@ export default function ChatsView({ onOpen }: Props) {
                   <input
                     defaultValue={m.title}
                     onBlur={(e) => conv.rename(m.id, e.target.value.trim() || m.title)}
-                    className="w-full rounded-md border border-border bg-background/70 px-2 py-1"
+                    className="w-full input"
                     aria-label="Titel bearbeiten"
                   />
                   <div className="mt-1 truncate text-xs opacity-60">{m.id}</div>
@@ -60,7 +60,7 @@ export default function ChatsView({ onOpen }: Props) {
                 <td className="px-3 py-2">
                   <div className="flex gap-2">
                     <button
-                      className="rounded-md border border-border bg-background/50 px-2 py-1"
+                      className="nav-pill"
                       onClick={() => onOpen(m.id)}
                       aria-label="Öffnen"
                     >
@@ -92,4 +92,3 @@ export default function ChatsView({ onOpen }: Props) {
 }
 
 export { ChatsView };
-
