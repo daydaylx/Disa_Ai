@@ -13,6 +13,7 @@ const LS = {
   memEnabled: "disa:mem:enabled",
   ctxMax: "disa:ctx:maxTokens",
   ctxReserve: "disa:ctx:reserve",
+  composerOffset: "disa:ui:composerOffset",
 } as const;
 
 /** Antwortstil-Presets */
@@ -154,5 +155,20 @@ export function setCtxReservedTokens(n: number): void {
   try {
     const v = Math.max(128, Math.floor(n || 0));
     localStorage.setItem(LS.ctxReserve, String(v));
+  } catch {}
+}
+
+/** Composer-Offset in px (Abstand vom unteren Rand) */
+export function getComposerOffset(): number {
+  try {
+    const raw = Number(localStorage.getItem(LS.composerOffset));
+    if (Number.isFinite(raw)) return Math.min(96, Math.max(16, Math.floor(raw)));
+  } catch {}
+  return 48;
+}
+export function setComposerOffset(n: number): void {
+  try {
+    const v = Math.min(96, Math.max(16, Math.floor(n || 0)));
+    localStorage.setItem(LS.composerOffset, String(v));
   } catch {}
 }
