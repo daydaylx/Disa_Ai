@@ -1,12 +1,14 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 import { requestChatFocus, requestNewChatSession } from "../utils/focusChatInput";
 
 export default function StartHero() {
-  const navigate = useNavigate();
   const onStart = () => {
-    navigate("/chat");
+    try {
+      if (location.hash !== "#/chat") location.hash = "#/chat";
+    } catch (e) {
+      /* ignore */
+    }
     requestNewChatSession({});
     requestChatFocus();
   };
