@@ -1,7 +1,7 @@
 /* eslint-disable no-empty */
 import { readApiKey, writeApiKey } from "../lib/openrouter/key";
+
 const BASE = "https://openrouter.ai/api/v1";
-// const KEY_STORAGE = "disa:openrouter:key";
 
 export type ORModel = {
   id: string;
@@ -9,22 +9,7 @@ export type ORModel = {
   context_length?: number;
   pricing?: { prompt?: number; completion?: number };
   tags?: string[];
-  // …weitere Felder ignorieren wir bewusst
 };
-
-export type StreamHandlers = {
-  onChunk: (raw: string) => void;
-  onComplete: () => void;
-  onError: (err: unknown) => void;
-};
-
-function buildHeaders(explicitKey?: string): Headers {
-  const key = explicitKey ?? getApiKey() ?? "";
-  const h = new Headers();
-  if (key) h.set("Authorization", `Bearer ${key}`);
-  h.set("Content-Type", "application/json");
-  return h;
-}
 
 export function getApiKey(): string | null {
   try {
@@ -33,18 +18,45 @@ export function getApiKey(): string | null {
     return null;
   }
 }
+
 export function setApiKey(v: string) {
   try {
     writeApiKey(v);
   } catch {}
 }
 
+function buildHeaders(explicitKey?: string) {
+  const key = explicitKey ?? getApiKey() ?? "";
+  const h: Record<string, string> = { "Content-Type": "application/json" };
+  if (key) h["Authorization"] = `Bearer ${key}`;
+  return h;
+}
+
 /** Rohes Model-Listing (für config/models.ts) */
-export async function getRawModels(explicitKey?: string): Promise<ORModel[]> {
+const LS_MODELS = "disa:or:models:v1";
+const LS_MODELS_TS = "disa:or:models:ts";
+const DEFAULT_TTL_MS = 20 * 60 * 1000; // 20 Minuten
+
+export async function getRawModels(explicitKey?: string, ttlMs = DEFAULT_TTL_MS): Promise<ORModel[]> {
+  try {
+    const tsRaw = localStorage.getItem(LS_MODELS_TS);
+    const dataRaw = localStorage.getItem(LS_MODELS);
+    const ts = tsRaw ? Number(tsRaw) : 0;
+    if (dataRaw && ts && Date.now() - ts < ttlMs) {
+      const parsed = JSON.parse(dataRaw) as unknown;
+      if (Array.isArray(parsed)) return parsed as ORModel[];
+    }
+  } catch {}
+
   const res = await fetch(`${BASE}/models`, { headers: buildHeaders(explicitKey) });
   if (!res.ok) return [];
   const data = await res.json().catch(() => ({}));
-  return Array.isArray(data?.data) ? (data.data as ORModel[]) : [];
+  const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
+  try {
+    localStorage.setItem(LS_MODELS, JSON.stringify(list));
+    localStorage.setItem(LS_MODELS_TS, String(Date.now()));
+  } catch {}
+  return list;
 }
 
 /** Einfacher Verfügbarkeits-Check */
@@ -57,51 +69,5 @@ export async function pingOpenRouter(): Promise<boolean> {
   }
 }
 
-/** Streaming-Completion (SSE). Gibt AbortController zurück. */
-export async function streamChatCompletion(
-  body: any,
-  handlers: StreamHandlers,
-): Promise<AbortController> {
-  const key = getApiKey();
-  if (!key) {
-    const err = new Error("Missing API key");
-    handlers.onError(err);
-    throw err;
-  }
-
-  const ctrl = new AbortController();
-  try {
-    const res = await fetch(`${BASE}/chat/completions`, {
-      method: "POST",
-      signal: ctrl.signal,
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-        // kritisch: sonst liefern manche Backends chunked JSON statt SSE
-        Accept: "text/event-stream",
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!res.ok || !res.body) {
-      const err: any = new Error(`HTTP ${res.status}`);
-      err.status = res.status;
-      const ra = res.headers.get("retry-after");
-      if (ra) err.retryAfter = Number(ra) || 0;
-      handlers.onError(err);
-      return ctrl;
-    }
-
-    const reader = res.body.getReader();
-    const dec = new TextDecoder();
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      if (value) handlers.onChunk(dec.decode(value, { stream: true }));
-    }
-    handlers.onComplete();
-  } catch (e) {
-    handlers.onError(e);
-  }
-  return ctrl;
-}
+// Konsolidierung: Chat-Streaming/-Once lebt in src/api/openrouter.ts
+export { chatOnce,chatStream } from "../api/openrouter";

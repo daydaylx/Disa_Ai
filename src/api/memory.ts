@@ -1,4 +1,5 @@
-import { chatOnce, getModelFallback, type Msg } from "./openrouter";
+import type { ChatMessage } from "../types/chat";
+import { chatOnce, getModelFallback } from "./openrouter";
 
 export async function updateMemorySummary(params: {
   previousMemory: string;
@@ -9,7 +10,7 @@ export async function updateMemorySummary(params: {
   const { previousMemory, recentWindow, signal, model } = params;
   const chosen = model ?? getModelFallback();
 
-  const sys: Msg = {
+  const sys: ChatMessage = {
     role: "system",
     content: `Du extrahierst dauerhaft nützliche Nutzer-Merkpunkte aus einem Chatverlauf.
 Gib ausschließlich eine kurze, präzise Bullet-Liste in DEUTSCH zurück.
@@ -19,7 +20,7 @@ Regeln:
 - Maximal 12 Punkte, jeweils 1 Zeile.`,
   };
 
-  const user: Msg = {
+  const user: ChatMessage = {
     role: "user",
     content: `Bisheriges Memory:
 ${previousMemory || "(leer)"}
@@ -44,7 +45,7 @@ export async function addExplicitMemory(params: {
   const { previousMemory, note, signal, model } = params;
   const chosen = model ?? getModelFallback();
 
-  const sys: Msg = {
+  const sys: ChatMessage = {
     role: "system",
     content: `Du bist ein strenger Kurator einer dauerhaften Merkliste (DEUTSCH).
 Aufgabe: Integriere den neuen Hinweis in die bestehende Liste.
@@ -55,7 +56,7 @@ Regeln:
 - Maximal 12 Bullet-Punkte, jeweils 1 kurze Zeile.`,
   };
 
-  const user: Msg = {
+  const user: ChatMessage = {
     role: "user",
     content: `Bestehende Merkliste:
 ${previousMemory || "(leer)"}
