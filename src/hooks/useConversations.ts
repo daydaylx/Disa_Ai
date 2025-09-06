@@ -1,4 +1,6 @@
+/* eslint-disable no-empty */
 import * as React from "react";
+
 import { newId } from "../utils/id";
 
 export type Role = "system" | "user" | "assistant";

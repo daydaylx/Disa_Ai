@@ -20,5 +20,5 @@
   @apply mx-auto w-full max-w-2xl text-center;
 }
 .onboarding-card {
-  @apply mx-auto w-full max-w-2xl rounded-lg border border-border bg-card text-card-foreground p-4;
+  @apply mx-auto w-full max-w-2xl rounded-lg border border-border bg-card p-4 text-card-foreground;
 }

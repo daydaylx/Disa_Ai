@@ -1,2 +1,8 @@
-.header-sticky { position: sticky; top: 0; z-index: 30; }
-.main-offset   { padding-top: 56px; } /* Reserve für Header-Höhe */
+.header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.main-offset {
+  padding-top: 56px;
+} /* Reserve für Header-Höhe */

@@ -1,4 +1,77 @@
-/* Unterkante für Composer, falls der View selbst keinen Padding-Bottom setzt */
-.chat-composer-guard {
-  padding-bottom: calc(var(--tabbar-h, 56px) + env(safe-area-inset-bottom, 0px));
+/* Chat container: genug Platz nach unten (Tabbar + Sticky + Keyboard) */
+.chat-root {
+  scroll-padding-bottom: calc(
+    var(--tabbar-h, 56px) + env(safe-area-inset-bottom, 0px) + var(--kb, 0px) + 12px
+  );
+}
+
+/* Messages */
+.msg {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+.msg-in .bubble {
+  background: rgba(255, 255, 255, 0.04);
+}
+.msg-out {
+  justify-content: flex-end;
+}
+.msg-out .bubble {
+  background: rgba(78, 133, 255, 0.18);
+  border: 1px solid rgba(78, 133, 255, 0.35);
+}
+.bubble {
+  max-width: 85vw;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+/* Code blocks inside messages */
+.bubble pre {
+  margin: 0.25rem 0 0 0;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: auto;
+}
+.bubble code {
+  font-size: 0.92rem;
+}
+
+/* Copy button (fallback) */
+[aria-label="Code kopieren"],
+[title="Code kopieren"] {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+/* Composer – robust gegen Tastatur */
+.composer {
+  position: sticky;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--kb, 0px));
+  z-index: 80;
+}
+[data-testid="composer-input"] {
+  min-height: 56px;
+  max-height: 40vh;
+  resize: none;
+}
+[data-testid="composer-send"],
+[data-testid="composer-stop"] {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 12px;
+}
+
+/* Composer-Buttons sicher über UI-Leisten */
+[data-testid="composer-send"],
+[data-testid="composer-stop"] {
+  position: relative;
+  z-index: 101;
 }

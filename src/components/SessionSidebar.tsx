@@ -1,5 +1,6 @@
 import React from "react";
-import { useConversations, type ConversationMeta } from "../hooks/useConversations";
+
+import { type ConversationMeta, useConversations } from "../hooks/useConversations";
 
 export default function SessionSidebar() {
   const { items } = useConversations();

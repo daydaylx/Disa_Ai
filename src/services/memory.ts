@@ -193,7 +193,7 @@ function uniqueFactsClamp(arr: MemoryFact[], max: number): MemoryFact[] {
 }
 
 function tokenize(text: string): string[] {
-  return (text.toLowerCase().match(/[a-zäöüß0-9][a-zäöüß0-9\-_.]{2,}/gi) ?? []).filter(
+  return (text.toLowerCase().match(/[a-zäöüß0-9][a-zäöüß0-9-_.]{2,}/gi) ?? []).filter(
     (w) => w.length >= 4 && !STOPWORDS.has(w),
   );
 }
@@ -211,9 +211,9 @@ function extractEntities(text: string): string[] {
   const entities = new Set<string>();
   const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi) ?? [];
   email.forEach((e) => entities.add(e));
-  const handles = text.match(/[@#][\w\-]{3,}/g) ?? [];
+  const handles = text.match(/[@#][\w-]{3,}/g) ?? [];
   handles.forEach((h) => entities.add(h));
-  const caps = text.match(/\b([A-ZÄÖÜ][a-zäöüß]+(?:\s+[A-ZÄÖÜ0-9][\w\-]+){0,2})\b/g) ?? [];
+  const caps = text.match(/\b([A-ZÄÖÜ][a-zäöüß]+(?:\s+[A-ZÄÖÜ0-9][\w-]+){0,2})\b/g) ?? [];
   caps.forEach((c) => {
     if (c.length >= 3) entities.add(c.trim());
   });
@@ -228,8 +228,7 @@ export interface MemoryFactCandidate {
 }
 function extractFacts(text: string): MemoryFact[] {
   const results: MemoryFact[] = [];
-  const re =
-    /(?:^|\n|\r|\t)[\-*•]?\s*([A-Za-zÄÖÜäöüß0-9 _./#@-]{2,40})\s*[:=]\s*([^\n\r;]{2,120})/g;
+  const re = /(?:^|\n|\r|\t)[-*•]?\s*([A-Za-zÄÖÜäöüß0-9 _./#@-]{2,40})\s*[:=]\s*([^\n\r;]{2,120})/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
     const key = (m[1] ?? "").toString().trim().replace(/\s+/g, " ");

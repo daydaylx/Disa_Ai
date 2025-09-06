@@ -1,35 +1,35 @@
-import ThemePicker from "../components/ThemePicker";
 import React from "react";
-import ModelPicker from "../components/ModelPicker";
-import InlineBanner from "../components/InlineBanner";
+
 import Icon from "../components/Icon";
-import Switch from "../components/Switch";
+import InlineBanner from "../components/InlineBanner";
+import ModelPicker from "../components/ModelPicker";
 import PillSelect from "../components/PillSelect";
 import SectionCard from "../components/SectionCard";
-import { setApiKey, getApiKey, pingOpenRouter } from "../services/openrouter";
-import {
-  getSelectedModelId,
-  setSelectedModelId,
-  getNSFW,
-  setNSFW,
-  getStyle,
-  setStyle,
-  type StyleKey,
-  getTemplateId,
-  setTemplateId,
-  getUseRoleStyle,
-  setUseRoleStyle,
-} from "../config/settings";
+import Switch from "../components/Switch";
+import { getPreferRolePolicy, setPreferRolePolicy } from "../config/featureFlags";
+import type { Safety } from "../config/models";
 import {
   fetchRoleTemplates,
-  listRoleTemplates,
   getRoleById,
   getRoleLoadStatus,
+  listRoleTemplates,
   type RoleTemplate,
 } from "../config/promptTemplates";
 import { recommendedPolicyForRole } from "../config/rolePolicy";
-import { getPreferRolePolicy, setPreferRolePolicy } from "../config/featureFlags";
-import type { Safety } from "../config/models";
+import {
+  getNSFW,
+  getSelectedModelId,
+  getStyle,
+  getTemplateId,
+  getUseRoleStyle,
+  setNSFW,
+  setSelectedModelId,
+  setStyle,
+  setTemplateId,
+  setUseRoleStyle,
+  type StyleKey,
+} from "../config/settings";
+import { getApiKey, pingOpenRouter, setApiKey } from "../services/openrouter";
 
 const STYLE_OPTIONS: { value: StyleKey; label: string }[] = [
   { value: "blunt_de", label: "Direkt & kritisch" },
@@ -92,18 +92,18 @@ export default function SettingsView() {
     setApiKey("");
     setSavedToast("Key gelöscht");
   }
-  function onChoose(id: string) {
+  function _onChoose(id: string) {
     setModelId(id);
     setSelectedModelId(id);
     setSavedToast("Modell geändert");
   }
 
-  function toggleNSFW() {
+  function _toggleNSFW() {
     const next = !nsfw;
     setNsfw(next);
     setNSFW(next);
   }
-  function togglePreferRolePolicy() {
+  function _togglePreferRolePolicy() {
     const next = !preferRolePolicy;
     setPreferRolePolicyState(next);
     setPreferRolePolicy(next);

@@ -11,4 +11,4 @@ export async function chat(req: ChatRequest, signal?: AbortSignal): Promise<Chat
   return { content };
 }
 
-export { OfflineError, RateLimitError, TimeoutError, CircuitOpenError } from "./types";
+export { CircuitOpenError, OfflineError, RateLimitError, TimeoutError } from "./types";

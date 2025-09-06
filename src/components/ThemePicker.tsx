@@ -1,11 +1,12 @@
 import React from "react";
+
 import {
+  type Density,
+  getDensity,
   getThemePreset,
+  setDensity,
   setThemePreset,
   type ThemePreset,
-  getDensity,
-  setDensity,
-  type Density,
 } from "../config/theme";
 
 const PRESETS: { id: ThemePreset; label: string }[] = [

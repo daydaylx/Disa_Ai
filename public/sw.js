@@ -5,7 +5,7 @@ import { precacheAndRoute } from "workbox-precaching";
 const VERSION = "v1.0.2";
 const APP_CACHE = `disa-app-${VERSION}`;
 const APP_SHELL = [
-  "/",                     // SPA-Einstieg
+  "/", // SPA-Einstieg
   "/index.html",
   "/manifest.webmanifest",
   // Vite legt CSS/JS unter /assets/ ab – wir cache-matchen dynamisch (siehe fetch)
@@ -17,16 +17,20 @@ precacheAndRoute(self.__WB_MANIFEST);
 // Files beim Install sicher cachen
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(APP_CACHE).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())
+    caches
+      .open(APP_CACHE)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting()),
   );
 });
 
 // Alte Caches entfernen
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== APP_CACHE).map((k) => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== APP_CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim()),
   );
 });
 
@@ -49,12 +53,17 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.match(req).then((hit) => {
         if (hit) return hit;
-        return fetch(req).then((res) => {
-          const resCloned = res.clone();
-          caches.open(APP_CACHE).then((c) => c.put(req, resCloned)).catch(() => {});
-          return res;
-        }).catch(() => caches.match(req));
-      })
+        return fetch(req)
+          .then((res) => {
+            const resCloned = res.clone();
+            caches
+              .open(APP_CACHE)
+              .then((c) => c.put(req, resCloned))
+              .catch(() => {});
+            return res;
+          })
+          .catch(() => caches.match(req));
+      }),
     );
     return;
   }
@@ -62,17 +71,20 @@ self.addEventListener("fetch", (event) => {
   // App-Shell: network-first mit Fallback
   if (url.pathname === "/" || url.pathname.endsWith("/index.html")) {
     event.respondWith(
-      fetch(req).then((res) => {
-        const resCloned = res.clone();
-        caches.open(APP_CACHE).then((c) => c.put(req, resCloned)).catch(() => {});
-        return res;
-      }).catch(() => caches.match(req).then((hit) => hit || caches.match("/index.html")))
+      fetch(req)
+        .then((res) => {
+          const resCloned = res.clone();
+          caches
+            .open(APP_CACHE)
+            .then((c) => c.put(req, resCloned))
+            .catch(() => {});
+          return res;
+        })
+        .catch(() => caches.match(req).then((hit) => hit || caches.match("/index.html"))),
     );
     return;
   }
 
   // Sonst: try network → fallback cache
-  event.respondWith(
-    fetch(req).catch(() => caches.match(req))
-  );
+  event.respondWith(fetch(req).catch(() => caches.match(req)));
 });

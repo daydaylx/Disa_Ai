@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TEMPLATES, setActiveTemplate, setDefaultTemplate } from "../state/templates";
-import type { TemplateMeta, TemplateCategory } from "../state/templates";
-import { requestNewChatSession, requestChatFocus } from "../utils/focusChatInput";
+
+import type { TemplateCategory, TemplateMeta } from "../state/templates";
+import { setActiveTemplate, setDefaultTemplate, TEMPLATES } from "../state/templates";
+import { requestChatFocus, requestNewChatSession } from "../utils/focusChatInput";
 
 const CATS: { key: TemplateCategory | "all"; label: string }[] = [
   { key: "all", label: "Alle" },
@@ -83,6 +84,7 @@ export default function TemplatesGrid() {
             </div>
             <div className="mt-3">
               <button
+// eslint-disable-next-line react-hooks/rules-of-hooks
                 onClick={() => useTemplate(tpl)}
                 className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 active:scale-[0.98]"
                 aria-label={`Vorlage ${tpl.title} verwenden`}

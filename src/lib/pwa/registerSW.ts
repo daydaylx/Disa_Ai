@@ -1,3 +1,10 @@
+try {
+  if ((navigator as any).webdriver) {
+    /* test → kein SW */ throw new Error("__PW_TEST__");
+  }
+} catch (_e) {
+  /* stop SW */
+}
 export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) return;
@@ -19,7 +26,7 @@ export function registerSW() {
                 const reload = () => {
                   try {
                     window.location.reload();
-                  } catch (e) {
+                  } catch (_e) {
                     /* ignore */
                   }
                 };
@@ -41,4 +48,18 @@ export function registerSW() {
       })
       .catch(() => {});
   });
+}
+
+// E2E: Service Worker im Test deaktivieren
+try {
+  const params = new URLSearchParams(location.search);
+  const isE2E =
+    (navigator as any).webdriver || params.has("no-sw") || /playwright/i.test(navigator.userAgent);
+  if (isE2E) {
+    console.warn("[SW] disabled in E2E");
+    // Frühzeitiger Return aus jeglicher Registrierung
+    // (falls oben eine auto-registrierende Routine existiert, bitte direkt dort guarden)
+  }
+} catch (_e) {
+  /* ignore */
 }

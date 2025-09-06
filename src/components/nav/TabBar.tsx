@@ -31,7 +31,7 @@ export function TabBar() {
       <NetworkBanner />
       <nav
         ref={ref as any}
-        className="tabbar safe-pad safe-bottom sticky bottom-0 z-40 py-2 bg-black/40 backdrop-blur flex gap-2"
+        className="tabbar safe-pad safe-bottom sticky bottom-0 z-40 flex gap-2 bg-black/40 py-2 backdrop-blur"
         aria-label="Hauptnavigation"
         // HARTE Inline-Garantie: Container fängt keine Klicks
         style={{ pointerEvents: "none" }}
@@ -40,7 +40,7 @@ export function TabBar() {
           to="/"
           data-discover="true"
           aria-current={loc.pathname === "/" ? "page" : undefined}
-          className="flex-1 text-center py-2 tap pill bg-white/5 mx-1 btn-glow text-black"
+          className="tap pill btn-glow mx-1 flex-1 bg-white/5 py-2 text-center text-black"
           style={{ pointerEvents: "auto" }}
         >
           Chat
@@ -48,7 +48,7 @@ export function TabBar() {
         <Link
           to="/settings"
           data-discover="true"
-          className="flex-1 text-center py-2 tap pill bg-white/5 mx-1 text-white/90"
+          className="tap pill mx-1 flex-1 bg-white/5 py-2 text-center text-white/90"
           style={{ pointerEvents: "auto" }}
         >
           Einstellungen
@@ -56,7 +56,7 @@ export function TabBar() {
         <Link
           to="/about"
           data-discover="true"
-          className="flex-1 text-center py-2 tap pill bg-white/5 mx-1 text-white/90"
+          className="tap pill mx-1 flex-1 bg-white/5 py-2 text-center text-white/90"
           aria-label="Info"
           title="Info"
           style={{ pointerEvents: "auto" }}

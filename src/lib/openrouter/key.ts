@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 const CANDIDATES = [
   "disa_api_key",
   "openrouter_key",
@@ -9,7 +10,7 @@ function safeGet(key: string): string | null {
   try {
     const v = localStorage.getItem(key);
     if (!v) return null;
-    const trimmed = v.replace(/^\"+|\"+$/g, "").trim();
+    const trimmed = v.replace(/^"+|"+$/g, "").trim();
     return trimmed.length ? trimmed : null;
   } catch {
     return null;

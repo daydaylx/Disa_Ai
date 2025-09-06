@@ -1,4 +1,6 @@
+/* eslint-disable no-empty */
 import * as React from "react";
+
 import { loadStyles, type StyleItem } from "../lib/configLoader";
 
 const STYLE_KEY = "disa_style_id";

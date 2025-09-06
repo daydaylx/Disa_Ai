@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { requestNewChatSession, requestChatFocus } from "../utils/focusChatInput";
+
+import { requestChatFocus, requestNewChatSession } from "../utils/focusChatInput";
 
 export default function StartHero() {
   const navigate = useNavigate();

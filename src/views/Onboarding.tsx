@@ -1,10 +1,12 @@
-import React, { Suspense, useEffect, useMemo, useState, lazy } from "react";
 import "../styles/settings.css";
-import { Input } from "../components/ui/Input";
+
+import React, { lazy, Suspense, useEffect, useMemo, useState } from "react";
+
+import { PageSkeleton } from "../components/feedback/PageSkeleton";
 import { Button } from "../components/ui/Button";
+import { Input } from "../components/ui/Input";
 import { useToasts } from "../components/ui/Toast";
 import { loadSettings, saveSettings } from "../features/settings/storage";
-import { PageSkeleton } from "../components/feedback/PageSkeleton";
 
 const ModelPicker = lazy(() =>
   import("../features/models/ModelPicker").then((m) => ({ default: m.ModelPicker })),

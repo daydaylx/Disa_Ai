@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 export interface RetryOptions {
   maxRetries?: number; // z.B. 4
   baseDelayMs?: number; // z.B. 250

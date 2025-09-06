@@ -1,3 +1,5 @@
+/* --- UI Kit (balanced CSS) ---------------------------------------------- */
+
 /* Panels / Cards */
 .card,
 .glass,
@@ -59,7 +61,7 @@ a:focus-visible {
 /* Sticky Actions – über Tabbar, blockiert nichts */
 .sticky-actions {
   position: sticky;
-  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+  bottom: calc(var(--tabbar-h, 56px) + env(safe-area-inset-bottom, 0px));
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -112,17 +114,17 @@ a:focus-visible {
   }
 }
 
-/* Tabbar + Safe area */
+/* Tabbar + Safe area (enforced) */
 .tabbar {
   position: sticky;
   bottom: 0;
   z-index: 40;
-  height: var(--tabbar-h);
-  pointer-events: none;
+  height: var(--tabbar-h, 56px);
+  pointer-events: none !important;
 }
 .tabbar > * {
-  pointer-events: auto;
+  pointer-events: auto !important;
 }
 body.has-tabbar {
-  padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+  padding-bottom: calc(var(--tabbar-h, 56px) + env(safe-area-inset-bottom, 0px));
 }

@@ -1,13 +1,57 @@
 /* Einfache Keyframes für Dialog/Sheet – Tailwind 'tailwindcss-animate' deckt vieles ab,
    aber hier sind zusätzliche Fades/Slides, falls du mehr Feinschliff willst. */
 
-@keyframes fade-in-0 { from { opacity: 0 } to { opacity: 1 } }
-@keyframes zoom-in-95 { from { transform: scale(.95) } to { transform: scale(1) } }
-@keyframes slide-in-from-bottom { from { transform: translateY(16px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
-@keyframes slide-in-from-right { from { transform: translateX(16px); opacity: 0 } to { transform: translateX(0); opacity: 1 } }
+@keyframes fade-in-0 {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes zoom-in-95 {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
-.animate-in { animation-duration: .18s; animation-timing-function: cubic-bezier(.16,1,.3,1); animation-fill-mode: both; }
-.fade-in-0 { animation-name: fade-in-0; }
-.zoom-in-95 { animation-name: zoom-in-95; }
-.slide-in-from-bottom { animation-name: slide-in-from-bottom; }
-.slide-in-from-right { animation-name: slide-in-from-right; }
+.animate-in {
+  animation-duration: 0.18s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+.fade-in-0 {
+  animation-name: fade-in-0;
+}
+.zoom-in-95 {
+  animation-name: zoom-in-95;
+}
+.slide-in-from-bottom {
+  animation-name: slide-in-from-bottom;
+}
+.slide-in-from-right {
+  animation-name: slide-in-from-right;
+}

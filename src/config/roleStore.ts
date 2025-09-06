@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import type { Safety } from "./models";
 
 /** Öffentliche Typen – exakt-optional-freundlich: Property weglassen statt `undefined` setzen */
