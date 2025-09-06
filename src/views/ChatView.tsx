@@ -89,6 +89,21 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const memEnabled = useMemo(() => getMemoryEnabled(), []);
   const ctxLimits = useMemo(() => ({ max: getCtxMaxTokens(), reserve: getCtxReservedTokens() }), []);
 
+  // Lädt vorhandene Nachrichten aus der Unterhaltung (falls convId gesetzt)
+  useEffect(() => {
+    if (!convId) return;
+    try {
+      const stored = convGetMessages(convId);
+      const mapped = stored
+        .filter((m) => m.role === "user" || m.role === "assistant")
+        .map((m) => ({ id: `${m.role}-${m.createdAt}`, role: m.role as "user" | "assistant", content: m.content }));
+      setMsgs(mapped.length ? mapped : [{ id: uid(), role: "assistant", content: "Bereit." }]);
+    } catch (e) {
+      // ignore
+    }
+     
+  }, [convId]);
+
   // Scroll-FAB steuern
   useEffect(() => {
     const onScroll = () => {
