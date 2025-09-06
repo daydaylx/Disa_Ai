@@ -1,169 +1,175 @@
 import React from "react";
 
-import { loadModelCatalog, type ModelEntry } from "../config/models";
+import { loadModelCatalog, type Safety } from "../config/models";
+
+type RolePolicy = Safety | "any";
+type Price = { in?: number; out?: number };
+
+type ModelEntry = {
+  id: string;
+  label?: string;
+  provider?: string;
+  ctx?: number;
+  tags: string[];
+  pricing?: Price;
+  safety: Safety;
+};
 
 type Props = {
   value: string | null;
   onChange: (id: string) => void;
-  /** optional: empfohlene Policy aus Rolle für Hinweis/Filter */
-  policyFromRole?: "any" | "strict" | "moderate" | "loose";
+  /** optional: von der Rolle empfohlene Policy; wird als zusätzlicher Filter angewendet */
+  policyFromRole?: RolePolicy;
 };
+
+function isFreeModel(m: ModelEntry): boolean {
+  const pin = typeof m.pricing?.in === "number" ? m.pricing!.in! : 0;
+  const pout = typeof m.pricing?.out === "number" ? m.pricing!.out! : 0;
+  if (pin === 0 && pout === 0) return true;
+  const tags = (m.tags ?? []).map((t) => String(t).toLowerCase());
+  if (tags.includes("free") || tags.includes("gratis")) return true;
+  if (String(m.id).toLowerCase().includes(":free")) return true;
+  return false;
+}
 
 export default function ModelPicker({ value, onChange, policyFromRole = "any" }: Props) {
   const [all, setAll] = React.useState<ModelEntry[]>([]);
   const [q, setQ] = React.useState("");
-  const [freeOnly, setFreeOnly] = React.useState(false);
-  const [largeCtx, setLargeCtx] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
+  const [provider, setProvider] = React.useState<string>("all");
+  const [onlyFree, setOnlyFree] = React.useState<boolean>(false);
+  const [minCtx, setMinCtx] = React.useState<number>(0);
 
   React.useEffect(() => {
-    let alive = true;
+    let ok = true;
     (async () => {
       try {
-        const list = await loadModelCatalog(false);
-        if (!alive) return;
-        setAll(list);
-      } finally {
-        if (alive) setLoading(false);
+        const list = await loadModelCatalog();
+        if (ok) setAll(list as ModelEntry[]);
+      } catch {
+        if (ok) setAll([]);
       }
     })();
     return () => {
-      alive = false;
+      ok = false;
     };
   }, []);
 
-  function matches(m: ModelEntry): boolean {
-    const qq = q.trim().toLowerCase();
-    if (qq) {
-      const hay =
-        (m.label || "").toLowerCase() +
-        " " +
-        (m.id || "").toLowerCase() +
-        " " +
-        (m.provider || "").toLowerCase() +
-        " " +
-        (m.tags || []).join(" ").toLowerCase();
-      if (!hay.includes(qq)) return false;
-    }
-    if (freeOnly) {
-      // Heuristik: Tag "free" vorhanden?
-      if (!(m.tags || []).includes("free")) return false;
-    }
-    if (largeCtx) {
-      // Heuristik: Tag "large-context" vorhanden?
-      if (!(m.tags || []).includes("large-context")) return false;
-    }
-    if (policyFromRole !== "any") {
-      // Wenn ein Model eine Safety besitzt, filtern; ansonsten als "moderate" behandeln.
-      const safety = (m as any).safety ?? "moderate";
-      if (safety !== policyFromRole) return false;
-    }
-    return true;
-  }
+  const providers = React.useMemo(() => {
+    const set = new Set<string>();
+    all.forEach((m) => m.provider && set.add(m.provider));
+    return ["all", ...Array.from(set).sort()];
+  }, [all]);
 
-  const list = all.filter(matches);
+  const filtered = React.useMemo(() => {
+    const norm = q.trim().toLowerCase();
+    return all.filter((m) => {
+      // expliziter Rollen-Policy-Filter
+      if (policyFromRole !== "any" && m.safety !== policyFromRole) return false;
+      // UI-Filter
+      if (onlyFree && !isFreeModel(m)) return false;
+      if (provider !== "all" && m.provider !== provider) return false;
+      if (minCtx > 0 && (m.ctx ?? 0) < minCtx) return false;
+
+      if (norm === "") return true;
+      const hay = `${m.id} ${m.label ?? ""} ${m.provider ?? ""} ${m.tags?.join(" ") ?? ""}`.toLowerCase();
+      return hay.includes(norm);
+    });
+  }, [all, q, provider, onlyFree, minCtx, policyFromRole]);
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2">
+    <section className="space-y-3">
+      {policyFromRole !== "any" && (
+        <div className="rounded-md border border-border bg-background/60 px-3 py-2 text-xs text-neutral-300">
+          Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste entsprechend gefiltert.
+        </div>
+      )}
+
+      <div className="flex flex-wrap items-center gap-2">
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Modell suchen…"
-          className="w-full rounded-xl border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
+          aria-label="Modell suchen"
+          className="min-w-[200px] flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
         />
-      </div>
-
-      <div className="flex items-center gap-4 text-sm">
-        <label className="inline-flex items-center gap-2">
+        <select
+          value={provider}
+          onChange={(e) => setProvider(e.target.value)}
+          aria-label="Provider filtern"
+          className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+        >
+          {providers.map((p) => (
+            <option key={p} value={p}>
+              {p === "all" ? "Alle Provider" : p}
+            </option>
+          ))}
+        </select>
+        <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
-            checked={freeOnly}
-            onChange={(e) => setFreeOnly(e.target.checked)}
+            checked={onlyFree}
+            onChange={(e) => setOnlyFree(e.target.checked)}
+            aria-label="Nur freie Modelle zeigen"
           />
-          Free
+          Nur frei
         </label>
-        <label className="inline-flex items-center gap-2">
+        <label className="flex items-center gap-2 text-sm">
+          min. Kontext:
           <input
-            type="checkbox"
-            checked={largeCtx}
-            onChange={(e) => setLargeCtx(e.target.checked)}
+            type="number"
+            min={0}
+            step={512}
+            value={minCtx}
+            onChange={(e) => setMinCtx(Number(e.target.value) || 0)}
+            className="w-24 rounded-md border border-border bg-background px-2 py-1"
+            aria-label="Minimale Kontextgröße in Tokens"
           />
-          Large-Context
         </label>
-        {policyFromRole !== "any" && (
-          <span className="badge">Policy empfohlen: {policyFromRole}</span>
-        )}
       </div>
 
-      {loading && <div className="text-sm opacity-70">Modelle werden geladen…</div>}
-
-      {!loading && list.length === 0 && (
-        <div className="text-sm opacity-70">Keine Modelle gefunden.</div>
-      )}
-
-      <div className="grid gap-3">
-        {list.map((m) => {
-          const selected = value === m.id;
-          const safety = (m as any).safety ?? "moderate"; // tolerant gegenüber fehlender Typangabe
-          return (
-            <button
-              key={m.id}
-              type="button"
-              onClick={() => onChange(m.id)}
-              className={`model-card card p-4 text-left ${selected ? "ring-2" : ""}`}
-              style={
-                selected
-                  ? ({ boxShadow: "0 0 0 2px rgba(182,108,255,.8) inset" } as React.CSSProperties)
-                  : undefined
-              }
-            >
-              <span
-                className={
-                  "policy-badge " +
-                  (safety === "strict"
-                    ? "policy--strict"
-                    : safety === "loose"
-                      ? "policy--loose"
-                      : "policy--moderate")
-                }
-              >
-                {safety}
-              </span>
-
-              <div className="flex items-start gap-3">
-                <div className="shrink-0 rounded-lg border border-neutral-300 px-2 py-1 text-[11px] dark:border-neutral-700">
-                  {(m.provider || "").toLowerCase() || "model"}
-                </div>
-                <div className="flex-1">
-                  <div className="card__title">{m.label || m.id}</div>
-                  <div className="card__sub mt-0.5 break-all text-xs">{m.id}</div>
-                  <div className="mt-2 flex flex-wrap gap-2 text-xs opacity-75">
-                    {(m.tags || []).slice(0, 6).map((t) => (
-                      <span
-                        key={t}
-                        className="inline-flex items-center rounded-full border border-neutral-300 px-2 py-0.5 dark:border-neutral-700"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                    {typeof m.ctx === "number" && (
-                      <span className="inline-flex items-center rounded-full border border-neutral-300 px-2 py-0.5 dark:border-neutral-700">
-                        {m.ctx.toLocaleString()} tokens
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="shrink-0">
-                  <div
-                    className={`h-3 w-3 rounded-full ${selected ? "bg-violet-400" : "bg-neutral-500"}`}
-                  />
-                </div>
-              </div>
-            </button>
-          );
-        })}
+      <div className="max-h-[360px] overflow-auto rounded-xl border border-border">
+        <table className="w-full text-sm">
+          <thead className="sticky top-0 bg-background/90 backdrop-blur">
+            <tr className="text-left">
+              <th className="px-3 py-2 font-medium">Modell</th>
+              <th className="px-3 py-2 font-medium">Provider</th>
+              <th className="px-3 py-2 font-medium">Kontext</th>
+              <th className="px-3 py-2 font-medium">Preis/1k</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((m) => {
+              const active = value === m.id;
+              const priceIn = m.pricing?.in ?? 0;
+              const priceOut = m.pricing?.out ?? 0;
+              const priceLabel = priceIn || priceOut ? `${priceIn}/${priceOut}` : (isFreeModel(m) ? "frei" : "—");
+              return (
+                <tr
+                  key={m.id}
+                  aria-selected={active}
+                  onClick={() => onChange(m.id)}
+                  className={`cursor-pointer border-t border-border hover:bg-white/5 aria-selected:bg-white/10`}
+                >
+                  <td className="px-3 py-2">
+                    <div className="font-medium">{m.label ?? m.id}</div>
+                    <div className="text-xs opacity-70">{m.id}</div>
+                  </td>
+                  <td className="px-3 py-2">{m.provider ?? "—"}</td>
+                  <td className="px-3 py-2">{m.ctx ?? "—"}</td>
+                  <td className="px-3 py-2 whitespace-nowrap">{priceLabel}</td>
+                </tr>
+              );
+            })}
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-3 py-6 text-center opacity-70">
+                  Keine Modelle passend zu den Filtern.
+                </td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </section>
   );
 }
