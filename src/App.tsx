@@ -1,28 +1,35 @@
 import React from "react";
 
+import ChatsView from "./views/ChatsView";
 import ChatView from "./views/ChatView";
 import SettingsView from "./views/SettingsView";
 
-type Route = "chat" | "settings";
+type Route = { name: "chat" | "settings" | "chats"; chatId?: string | null };
 
-function useHashRoute(_defaultRoute: Route = "chat"): [Route, (r: Route) => void] {
-  const [route, setRoute] = React.useState<Route>(() => {
-    const h = (location.hash || "").toLowerCase();
-    if (h.includes("settings")) return "settings";
-    return "chat";
-  });
+function parseHash(): Route {
+  const h = (location.hash || "#").slice(1); // remove '#'
+  const parts = h.split("/").filter(Boolean); // ["chat", "<id>"]
+  const [seg, arg] = parts;
+  if (seg === "settings") return { name: "settings" };
+  if (seg === "chats") return { name: "chats" };
+  if (seg === "chat") return { name: "chat", chatId: arg ?? null };
+  return { name: "chat", chatId: null };
+}
+
+function useHashRoute(): [Route, (r: Route) => void] {
+  const [route, setRoute] = React.useState<Route>(() => parseHash());
 
   React.useEffect(() => {
-    const onHash = () => {
-      const h = (location.hash || "").toLowerCase();
-      setRoute(h.includes("settings") ? "settings" : "chat");
-    };
+    const onHash = () => setRoute(parseHash());
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
   const nav = (r: Route) => {
-    const target = r === "settings" ? "#/settings" : "#/chat";
+    let target = "#/chat";
+    if (r.name === "settings") target = "#/settings";
+    else if (r.name === "chats") target = "#/chats";
+    else if (r.name === "chat") target = r.chatId ? `#/chat/${r.chatId}` : "#/chat";
     if (location.hash !== target) location.hash = target;
     setRoute(r);
   };
@@ -31,7 +38,7 @@ function useHashRoute(_defaultRoute: Route = "chat"): [Route, (r: Route) => void
 }
 
 export default function App() {
-  const [route, nav] = useHashRoute("chat");
+  const [route, nav] = useHashRoute();
 
   return (
     <div className="min-h-[100dvh]">
@@ -41,29 +48,42 @@ export default function App() {
         <nav className="flex gap-2">
           <a
             href="#/chat"
-            onClick={(e) => { e.preventDefault(); nav("chat"); }}
-            className={`rounded-full border px-3 py-1 ${route === "chat" ? "border-violet-600 bg-violet-600/20" : "border-neutral-800 bg-neutral-900/60"}`}
+            onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
+            className={`rounded-full border px-3 py-1 ${route.name === "chat" ? "border-violet-600 bg-violet-600/20" : "border-neutral-800 bg-neutral-900/60"}`}
           >
             Chat
           </a>
           <a
+            href="#/chats"
+            onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
+            className={`rounded-full border px-3 py-1 ${route.name === "chats" ? "border-violet-600 bg-violet-600/20" : "border-neutral-800 bg-neutral-900/60"}`}
+          >
+            Unterhaltungen
+          </a>
+          <a
             href="#/settings"
-            onClick={(e) => { e.preventDefault(); nav("settings"); }}
-            className={`rounded-full border px-3 py-1 ${route === "settings" ? "border-violet-600 bg-violet-600/20" : "border-neutral-800 bg-neutral-900/60"}`}
+            onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
+            className={`rounded-full border px-3 py-1 ${route.name === "settings" ? "border-violet-600 bg-violet-600/20" : "border-neutral-800 bg-neutral-900/60"}`}
           >
             Einstellungen
           </a>
         </nav>
         <a
-          href="#/chat"
+          href="#/chats"
           className="rounded-full bg-violet-600 px-3 py-1 font-semibold text-white"
-          onClick={(e) => { e.preventDefault(); nav("chat"); }}
+          onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
         >
-          Loslegen
+          Unterhaltungen
         </a>
       </header>
 
-      {route === "settings" ? <SettingsView /> : <ChatView />}
+      {route.name === "settings" ? (
+        <SettingsView />
+      ) : route.name === "chats" ? (
+        <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
+      ) : (
+        <ChatView convId={route.chatId ?? null} />
+      )}
     </div>
   );
 }
