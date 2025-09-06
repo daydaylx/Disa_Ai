@@ -5,6 +5,7 @@ import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import CodeBlock from "../components/CodeBlock";
 import HeroCard from "../components/hero/HeroCard";
 import QuickActions from "../components/hero/QuickActions";
+import { InlineNote } from "../components/InlineNote";
 import InstallBanner from "../components/InstallBanner";
 import OrbStatus from "../components/status/OrbStatus";
 import {
@@ -60,8 +61,13 @@ const ChatView: React.FC = () => {
   const [sending, setSending] = useState(false);
   const [showScrollFab, setShowScrollFab] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // Hartes Soft‑Limit: Nur die letzten MAX_HISTORY Nachrichten im State behalten
+  const MAX_HISTORY = 200;
+  const trimHistory = (arr: Msg[]) => (arr.length > MAX_HISTORY ? arr.slice(-MAX_HISTORY) : arr);
 
   const modelId = useMemo(() => getSelectedModelId() ?? "", []);
   const modelLabel = modelId || "—";
@@ -129,7 +135,7 @@ const ChatView: React.FC = () => {
     const trimmed = text.trim();
     if (!trimmed || sending) return;
 
-    setMsgs((m) => [...m, { id: uid(), role: "user", content: trimmed }]);
+    setMsgs((m) => trimHistory([...m, { id: uid(), role: "user", content: trimmed }]));
     setText("");
     setSending(true);
 
@@ -160,9 +166,9 @@ const ChatView: React.FC = () => {
             if (last?.role === "assistant" && last.content !== "Bereit.") {
               const copy = m.slice(0, -1);
               copy.push({ ...last, content: accum });
-              return copy;
+              return trimHistory(copy);
             }
-            return [...m, { id: uid(), role: "assistant", content: accum }];
+            return trimHistory([...m, { id: uid(), role: "assistant", content: accum }]);
           });
           rafId = null;
           if (flushTimer != null) {
@@ -197,14 +203,14 @@ const ChatView: React.FC = () => {
           clearTimeout(flushTimer);
           flushTimer = null;
         }
-        setMsgs((m) => [
+        setMsgs((m) => trimHistory([
           ...m,
           {
             id: uid(),
             role: "assistant",
             content: `Fehler: ${(err as Error)?.message ?? String(err)}`,
           },
-        ]);
+        ]));
       },
     });
   }
@@ -229,31 +235,68 @@ const ChatView: React.FC = () => {
         )}
 
         <section aria-label="Verlauf">
-          {msgs.map((m) => {
-            const mine = m.role === "user";
+          {(() => {
+            const LIMIT = 80;
+            const hasOverflow = msgs.length > LIMIT;
+            const trimmed = hasOverflow && !showAll ? msgs.slice(-LIMIT) : msgs;
+            const hiddenCount = hasOverflow ? msgs.length - trimmed.length : 0;
+
             return (
-              <div
-                key={m.id}
-                className={[
-                  "my-3 flex items-start gap-2",
-                  mine ? "justify-end" : "justify-start",
-                ].join(" ")}
-              >
-                {!mine && <Avatar kind="assistant" />}
-                <div
-                  className={[
-                    "max-w-[min(90%,48rem)] rounded-2xl border p-3",
-                    mine
-                      ? "bg-sky-950/40 border-sky-900/60"
-                      : "bg-neutral-900/60 border-neutral-800",
-                  ].join(" ")}
-                >
-                  <Message msg={m} onCopied={() => setToast("Kopiert")} />
-                </div>
-                {mine && <Avatar kind="user" />}
-              </div>
+              <>
+                {hasOverflow && !showAll && (
+                  <div className="my-3 text-center">
+                    <InlineNote kind="warn">
+                      Verlauf gekürzt: {hiddenCount} ältere Nachrichten ausgeblendet.{' '}
+                      <button
+                        className="underline decoration-amber-300/60 decoration-dotted underline-offset-4 hover:text-amber-200"
+                        onClick={() => setShowAll(true)}
+                      >
+                        Anzeigen
+                      </button>
+                    </InlineNote>
+                  </div>
+                )}
+                {trimmed.map((m) => {
+                  const mine = m.role === "user";
+                  return (
+                    <div
+                      key={m.id}
+                      className={[
+                        "my-3 flex items-start gap-2",
+                        mine ? "justify-end" : "justify-start",
+                      ].join(" ")}
+                    >
+                      {!mine && <Avatar kind="assistant" />}
+                      <div
+                        className={[
+                          "chat-bubble max-w-[min(90%,48rem)] rounded-2xl border p-3",
+                          mine
+                            ? "bg-sky-950/50 border-sky-900/50"
+                            : "bg-neutral-900/70 border-neutral-700",
+                        ].join(" ")}
+                      >
+                        <Message msg={m} onCopied={() => setToast("Kopiert")} />
+                      </div>
+                      {mine && <Avatar kind="user" />}
+                    </div>
+                  );
+                })}
+                {hasOverflow && showAll && (
+                  <div className="my-3 text-center">
+                    <InlineNote kind="info">
+                      Alle Nachrichten angezeigt.
+                      <button
+                        className="ml-2 underline decoration-blue-300/60 decoration-dotted underline-offset-4 hover:text-blue-200"
+                        onClick={() => setShowAll(false)}
+                      >
+                        Nur die letzten {LIMIT}
+                      </button>
+                    </InlineNote>
+                  </div>
+                )}
+              </>
             );
-          })}
+          })()}
         </section>
       </main>
 
