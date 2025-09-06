@@ -38,17 +38,26 @@
     background-color 120ms ease,
     box-shadow 120ms ease;
 }
-.chat-bubble:hover,
 .chat-bubble:focus-within,
-.bubble:hover,
 .bubble:focus-within,
-.msg:hover,
 .msg:focus-within {
   border-color: rgba(120, 120, 255, 0.35);
   box-shadow:
     0 0 0 1px rgba(120, 120, 255, 0.15) inset,
     0 4px 18px rgba(0, 0, 0, 0.25);
   background-color: rgba(255, 255, 255, 0.06);
+}
+
+@media (hover: hover) {
+  .chat-bubble:hover,
+  .bubble:hover,
+  .msg:hover {
+    border-color: rgba(120, 120, 255, 0.35);
+    box-shadow:
+      0 0 0 1px rgba(120, 120, 255, 0.15) inset,
+      0 4px 18px rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 0.06);
+  }
 }
 
 /* Code blocks inside messages */
