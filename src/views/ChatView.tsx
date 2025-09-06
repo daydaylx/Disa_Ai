@@ -243,7 +243,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
 
   return (
     <div className="min-h-[100dvh]">
-      <main id="main" role="main" className="mx-auto w-full max-w-4xl px-4 pb-40 pt-3">
+      <main id="main" role="main" className="mx-auto w-full max-w-4xl px-4 pb-48 pt-3">
         <InstallBanner />
         <OrbStatus streaming={sending} modelLabel={modelLabel} />
         <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1">
@@ -364,7 +364,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       {/* Composer */}
       <div
         className="fixed left-0 right-0 z-40"
-        style={{ bottom: "calc(env(safe-area-inset-bottom) + 24px)" }}
+        style={{ bottom: "calc(env(safe-area-inset-bottom) + 64px)" }}
       >
         <div
           className="mx-auto w-full max-w-3xl border-t border-neutral-800 bg-neutral-950/70 px-2 py-2 backdrop-blur"
