@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Button } from "../components/ui/Button";
 import { useConversations } from "../hooks/useConversations";
 
 type Props = { onOpen: (id: string) => void };
@@ -59,20 +60,17 @@ export default function ChatsView({ onOpen }: Props) {
                 </td>
                 <td className="px-3 py-2">
                   <div className="flex gap-2">
-                    <button
-                      className="nav-pill"
-                      onClick={() => onOpen(m.id)}
-                      aria-label="Öffnen"
-                    >
+                    <Button size="sm" variant="secondary" onClick={() => onOpen(m.id)} aria-label="Öffnen">
                       Öffnen
-                    </button>
-                    <button
-                      className="rounded-md border border-red-800 bg-red-900/30 px-2 py-1 text-red-200"
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
                       onClick={() => conv.remove(m.id)}
                       aria-label="Löschen"
                     >
                       Löschen
-                    </button>
+                    </Button>
                   </div>
                 </td>
               </tr>
