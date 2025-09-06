@@ -17,17 +17,10 @@ const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
       <div className="relative flex items-center gap-3">
         <div className="orb float glow-pulse" aria-hidden="true" />
         <div className="min-w-0">
-          <h2 className="h1">Triff Disa</h2>
-          <p className="text-sm opacity-90">Dein KI-Assistent. Direkt, ehrlich, schnell.</p>
+          <h2 className="h1">Hey, ich bin dein Assi.</h2>
+          <p className="text-sm opacity-90">Frag mich alles – ich antworte direkt und hilfreich.</p>
         </div>
       </div>
-      <button
-        className="tap pill btn-glow glow-pulse tilt-on-press mt-4 px-4 py-2 text-sm font-semibold"
-        onClick={onStart}
-        data-testid="hero-start"
-      >
-        Los geht’s
-      </button>
     </div>
   </section>
 );
