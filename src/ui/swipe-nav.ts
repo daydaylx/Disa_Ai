@@ -58,9 +58,9 @@
       const absX = Math.abs(dx);
       const absY = Math.abs(dy);
       // Heuristics: mostly horizontal, sufficiently long, reasonably quick
-      const H_THRESH = 60;
-      const V_RATIO = 1.5;
-      const MAX_DT = 800;
+      const H_THRESH = 40; // kürzerer Swipe reicht
+      const V_RATIO = 1.3; // etwas toleranter bei Vertikalanteil
+      const MAX_DT = 600;  // schnellerer Wisch nötig
       if (absX < H_THRESH || absX < absY * V_RATIO || dt > MAX_DT) return;
       const idx = currentIndex();
       if (dx < 0) goToIndex(idx + 1);
@@ -71,4 +71,3 @@
 })();
 
 export {};
-
