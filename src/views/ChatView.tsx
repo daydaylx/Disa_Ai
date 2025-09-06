@@ -316,7 +316,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                     ].join(" ")}
                   >
                     <button
-                      className="rounded-md border border-border bg-background/50 px-2 py-1"
+                      className="nav-pill"
                       onClick={() => {
                         navigator.clipboard.writeText(m.content).then(() =>
                           toasts.push({ kind: "success", title: "Kopiert", message: "Nachricht kopiert." }),
@@ -327,7 +327,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                       Kopieren
                     </button>
                     <button
-                      className="rounded-md border border-border bg-background/50 px-2 py-1"
+                      className="rounded-md border border-red-800 bg-red-900/30 px-2 py-1 text-red-200"
                       onClick={() => setMsgs((list) => list.filter((x) => x.id !== m.id))}
                       aria-label="Nachricht löschen"
                     >
@@ -392,19 +392,11 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
               inputMode="text"
             />
             {sending ? (
-              <button
-                className="rounded-md border border-neutral-700 bg-neutral-900/70 px-4 py-2 text-sm"
-                onClick={stop}
-                aria-label="Stop"
-              >
+              <button className="nav-pill" onClick={stop} aria-label="Stop">
                 Stop
               </button>
             ) : (
-              <button
-                className="rounded-md bg-violet-600 px-4 py-2 text-sm font-semibold text-white"
-                onClick={send}
-                aria-label="Senden"
-              >
+              <button className="btn-glow tilt-on-press" onClick={send} aria-label="Senden">
                 Senden
               </button>
             )}
