@@ -32,6 +32,7 @@ function useHashRoute(): [Route, (r: Route) => void] {
     let target = "#/chat";
     if (r.name === "settings") target = "#/settings";
     else if (r.name === "chats") target = "#/chats";
+    else if (r.name === "quickstart") target = "#/quickstart";
     else if (r.name === "chat") target = r.chatId ? `#/chat/${r.chatId}` : "#/chat";
     if (location.hash !== target) location.hash = target;
     setRoute(r);
