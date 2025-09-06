@@ -3,9 +3,10 @@ import React from "react";
 import Aurora from "./components/Aurora";
 import ChatsView from "./views/ChatsView";
 import ChatView from "./views/ChatView";
+import QuickStartView from "./views/QuickStartView";
 import SettingsView from "./views/SettingsView";
 
-type Route = { name: "chat" | "settings" | "chats"; chatId?: string | null };
+type Route = { name: "chat" | "settings" | "chats" | "quickstart"; chatId?: string | null };
 
 function parseHash(): Route {
   const h = (location.hash || "#").slice(1); // remove '#'
@@ -13,6 +14,7 @@ function parseHash(): Route {
   const [seg, arg] = parts;
   if (seg === "settings") return { name: "settings" };
   if (seg === "chats") return { name: "chats" };
+  if (seg === "quickstart") return { name: "quickstart" };
   if (seg === "chat") return { name: "chat", chatId: arg ?? null };
   return { name: "chat", chatId: null };
 }
@@ -63,6 +65,13 @@ export default function App() {
             Unterhaltungen
           </a>
           <a
+            href="#/quickstart"
+            onClick={(e) => { e.preventDefault(); nav({ name: "quickstart" }); }}
+            className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""}`}
+          >
+            Quickstart
+          </a>
+          <a
             href="#/settings"
             onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
             className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""}`}
@@ -79,6 +88,8 @@ export default function App() {
         <SettingsView />
       ) : route.name === "chats" ? (
         <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
+      ) : route.name === "quickstart" ? (
+        <QuickStartView />
       ) : (
         <ChatView convId={route.chatId ?? null} />
       )}

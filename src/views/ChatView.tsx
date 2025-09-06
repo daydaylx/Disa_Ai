@@ -5,7 +5,6 @@ import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import { TypingIndicator } from "../components/chat/TypingIndicator";
 import CodeBlock from "../components/CodeBlock";
 import HeroCard from "../components/hero/HeroCard";
-import QuickActions from "../components/hero/QuickActions";
 import { InlineNote } from "../components/InlineNote";
 import InstallBanner from "../components/InstallBanner";
 import OrbStatus from "../components/status/OrbStatus";
@@ -104,18 +103,19 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     };
   }, []);
 
-  function mapQuickAction(id: string): string {
-    const M: Record<string, string> = {
-      summarize: "Fasse den folgenden Text prägnant in 5–7 Bulletpoints zusammen. Nenne Kernaussagen und ggf. Risiken. Text:",
-      code_help: "Erkläre den folgenden Code Schritt für Schritt. Gehe auf Logik, Randfälle und Komplexität ein. Code:",
-      brainstorm: "Erstelle 8–10 verschiedene Ideen/Vorschläge zu folgendem Thema. Gruppiere sinnvoll. Thema:",
-      translate: "Übersetze den folgenden Text präzise und idiomatisch ins Deutsche. Erhalte Formatierung. Text:",
-      optimize: "Verbessere den folgenden Code auf Lesbarkeit und Performance. Zeige vorher/nachher und begründe kurz: ",
-      spec: "Erstelle eine kurze Feature-Spezifikation mit Akzeptanzkriterien (Given/When/Then) für: ",
-    };
-    return M[id] ?? id;
-  }
-  const handlePick = (t: string) => setText(mapQuickAction(t));
+  // Prefill aus Quickstart übernehmen
+  useEffect(() => {
+    try {
+      const pre = localStorage.getItem("disa:prefill");
+      if (pre && pre.trim().length > 0) {
+        setText(pre);
+        localStorage.removeItem("disa:prefill");
+        setTimeout(() => composerRef.current?.focus(), 0);
+      }
+    } catch (_e) {
+      /* ignore */
+    }
+  }, []);
   const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -255,12 +255,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
           </div>
         </div>
 
-        {msgs.length <= 1 && (
-          <>
-            <HeroCard onStart={() => composerRef.current?.focus()} />
-            <QuickActions onPick={handlePick} />
-          </>
-        )}
+        {msgs.length <= 1 && <HeroCard onStart={() => composerRef.current?.focus()} />}
 
         <section aria-label="Verlauf">
           {(() => {
