@@ -240,6 +240,22 @@ body {
   z-index: 0;
   overflow: hidden;
 }
+
+/* === Pager (horizontales Blättern) === */
+.pager {
+  position: relative;
+  overflow: hidden;
+}
+.pager-track {
+  display: flex;
+  width: 400%;
+  will-change: transform;
+  transition: transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.pager-panel {
+  width: 100%;
+  flex: 0 0 100%;
+}
 .aurora__blob {
   position: absolute;
   width: 60vmax;
