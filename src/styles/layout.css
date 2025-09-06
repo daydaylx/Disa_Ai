@@ -1,27 +1,32 @@
 :root {
   --tabbar-h: 56px;
 }
+
 body.has-tabbar {
-  padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(var(--tabbar-h, 56px) + env(safe-area-inset-bottom, 0px));
 }
+
+/* Tabbar fängt NIE Klicks */
 .tabbar {
   position: sticky;
   bottom: 0;
   z-index: 40;
-  height: var(--tabbar-h);
-  pointer-events: none;
+  height: var(--tabbar-h, 56px);
+  pointer-events: none !important;
 }
 .tabbar > * {
-  pointer-events: auto;
+  pointer-events: auto !important;
 }
+
+/* Network-Banner blockiert nichts */
 .net-banner {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px));
   left: 0;
   right: 0;
   z-index: 50;
-  pointer-events: none;
+  pointer-events: none !important;
 }
 .net-banner > * {
-  pointer-events: auto;
+  pointer-events: auto !important;
 }

@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
+
+import { cn } from "../../lib/utils/cn";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
-import { cn } from "../../lib/utils/cn";
 
 export type Role = "user" | "assistant" | "system";
 

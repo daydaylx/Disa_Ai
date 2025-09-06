@@ -1,7 +1,8 @@
 import React from "react";
-import InlineBanner from "./InlineBanner";
-import Icon from "./Icon";
+
 import { usePWAInstall } from "../hooks/usePWAInstall";
+import Icon from "./Icon";
+import InlineBanner from "./InlineBanner";
 export default function InstallBanner() {
   const { visible, canPrompt, requestInstall, dismiss, showIOSHowTo } = usePWAInstall();
   if (!visible) return null;

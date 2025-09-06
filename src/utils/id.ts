@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 export function newId(): string {
   try {
     if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function")

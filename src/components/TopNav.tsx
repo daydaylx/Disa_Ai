@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import * as React from "react";
 
 export type Tab = "chat" | "settings";

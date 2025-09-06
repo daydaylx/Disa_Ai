@@ -1,5 +1,6 @@
 import React from "react";
-import { type ConversationMeta, useConversations } from "../hooks/useConversations";
+
+import { useConversations } from "../hooks/useConversations";
 import Icon from "./Icon";
 
 type Props = {

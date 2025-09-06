@@ -1,4 +1,5 @@
 import React from "react";
+
 import { loadModelCatalog, type ModelEntry } from "../config/models";
 
 type Props = {

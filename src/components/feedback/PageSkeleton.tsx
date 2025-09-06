@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Skeleton } from "./Loader";
 
 export const PageSkeleton: React.FC = () => {

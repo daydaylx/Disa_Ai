@@ -1,6 +1,7 @@
 import React from "react";
-import Icon from "./Icon";
+
 import { applyTheme, getTheme, setTheme, type ThemeMode } from "../config/theme";
+import Icon from "./Icon";
 
 type Props = {
   onOpenConversations?: () => void;

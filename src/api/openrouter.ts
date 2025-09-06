@@ -1,3 +1,4 @@
+import { readApiKey } from "../lib/openrouter/key";
 export type Role = "system" | "user" | "assistant" | "tool";
 export interface Msg {
   role: Role;
@@ -7,7 +8,6 @@ export interface Msg {
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const KEY_NAME = "disa_api_key";
 const MODEL_KEY = "disa_model";
-import { readApiKey } from "../lib/openrouter/key";
 
 function getHeaders() {
   const apiKey = readApiKey() ?? localStorage.getItem(KEY_NAME)?.replace(/^"+|"+$/g, "");

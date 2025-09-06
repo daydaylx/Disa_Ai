@@ -1,5 +1,5 @@
 import type { ChatMessage } from "../types/chat";
-import { totalTokens, estimateTokens } from "../utils/tokens";
+import { estimateTokens, totalTokens } from "../utils/tokens";
 
 /**
  * Kontextverwaltung ohne Fremdpakete:

@@ -40,8 +40,8 @@ export default defineConfig({
           if (id.includes("features/models")) return "models";
           // Standard: keine separate Chunk-Zuweisung
           return undefined;
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });

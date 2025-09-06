@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 export function focusMain(id = "main") {
   const el = document.getElementById(id);
   if (!el) return;

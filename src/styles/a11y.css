@@ -9,7 +9,7 @@
   background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
   transform: translateY(-150%);
-  transition: transform .2s ease;
+  transition: transform 0.2s ease;
 }
 .skip-link:focus {
   transform: translateY(0);
@@ -19,15 +19,19 @@
 /* Nutzerpräferenz: Bewegungen reduzieren */
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration: .01ms !important;
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }
 
 /* Kontrastreserven: Hover/Active etwas kräftiger, ohne Farbe zu ändern */
 @media (hover: hover) {
-  .btn-primary:hover { filter: brightness(0.98); }
-  .btn-secondary:hover { filter: brightness(0.98); }
+  .btn-primary:hover {
+    filter: brightness(0.98);
+  }
+  .btn-secondary:hover {
+    filter: brightness(0.98);
+  }
 }

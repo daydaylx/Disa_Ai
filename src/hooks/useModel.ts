@@ -1,8 +1,9 @@
 import * as React from "react";
+
 import {
-  loadModelCatalog,
-  labelForModel,
   chooseDefaultModel,
+  labelForModel,
+  loadModelCatalog,
   type ModelEntry,
 } from "../config/models";
 

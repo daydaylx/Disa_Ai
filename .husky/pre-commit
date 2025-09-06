@@ -1,6 +1,5 @@
-#!/bin/sh
-# Husky v10 minimal pre-commit hook (POSIX sh)
-set -eu
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-# Run lint-staged; --no verhindert, dass npx versucht zu installieren
-npx --no -- lint-staged
+# Fail on errors, aber nicht auf Warnungen: das macht lint-staged
+npx lint-staged

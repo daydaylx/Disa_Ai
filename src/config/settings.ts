@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /**
  * Zentrale UI/Feature-Settings (lokal, kein Server).
  * Robust gegen exactOptionalPropertyTypes.

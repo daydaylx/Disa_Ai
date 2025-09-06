@@ -3,9 +3,17 @@
 @tailwind utilities;
 
 @layer base {
-  :root { color-scheme: light; }
-  .dark { color-scheme: dark; }
-  html, body, #root { height: 100%; }
+  :root {
+    color-scheme: light;
+  }
+  .dark {
+    color-scheme: dark;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
   body {
     @apply bg-background text-foreground antialiased;
     padding-top: var(--safe-top);
@@ -13,19 +21,35 @@
     padding-bottom: var(--safe-bottom);
     padding-left: var(--safe-left);
   }
-  h1 { @apply text-2xl font-semibold; }
-  h2 { @apply text-xl font-semibold; }
-  h3 { @apply text-lg font-semibold; }
-  p  { @apply leading-relaxed; }
-  a { @apply text-primary underline-offset-4 hover:underline; }
-  input, textarea, select { @apply bg-background text-foreground; }
+  h1 {
+    @apply text-2xl font-semibold;
+  }
+  h2 {
+    @apply text-xl font-semibold;
+  }
+  h3 {
+    @apply text-lg font-semibold;
+  }
+  p {
+    @apply leading-relaxed;
+  }
+  a {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+  input,
+  textarea,
+  select {
+    @apply bg-background text-foreground;
+  }
   :focus-visible {
     outline: none;
     @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 }
 @layer components {
-  .app-container { @apply container mx-auto; }
+  .app-container {
+    @apply container mx-auto;
+  }
   .sticky-footer {
     position: sticky;
     bottom: 0;
@@ -34,5 +58,8 @@
   }
 }
 @layer utilities {
-  .tap-target { min-height: 44px; min-width: 44px; }
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useOnlineStatus } from "../../lib/net/online";
 
 export const NetworkBanner: React.FC = () => {

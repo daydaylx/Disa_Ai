@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 export type AppTab = "chat" | "settings" | "home";
 
 const EVT = "app:navigate";

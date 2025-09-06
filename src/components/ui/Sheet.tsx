@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Icon } from "./Icon";
+
 import { cn } from "../../lib/utils/cn";
+import { Icon } from "./Icon";
 
 export interface SheetProps {
   open: boolean;

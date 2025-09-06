@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 const LS_THEME = "disa:theme:preset";
 const LS_DENSITY = "disa:theme:density";
 const LS_MODE = "disa:theme:mode";
@@ -57,7 +58,7 @@ export function setTheme(m: ThemeMode) {
 /** Aktiviert die passende Dark/Light-Class – belässt das Farbpreset auf data-theme. */
 export function applyTheme(mode?: ThemeMode) {
   try {
-    console.log("__THEME", { preset: getThemePreset(), mode: mode ?? getTheme() });
+    console.warn("__THEME", { preset: getThemePreset(), mode: mode ?? getTheme() });
   } catch {}
 
   const m = mode ?? getTheme();

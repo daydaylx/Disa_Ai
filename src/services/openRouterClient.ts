@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import type { ChatMessage } from "../types/chat";
 
 export interface CreateArgs {

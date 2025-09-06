@@ -1,4 +1,5 @@
 import React from "react";
+
 import Orb from "./Orb";
 export default function HeroCard({ onStart }: { onStart: () => void }) {
   return (
