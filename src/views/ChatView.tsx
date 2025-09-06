@@ -15,8 +15,9 @@ import {
   getUseRoleStyle,
 } from "../config/settings";
 import { composeSystemPrompt } from "../features/prompt/composeSystemPrompt";
-import { type ChatMessage,sendChat } from "../services/chatService";
+import { sendChat } from "../services/chatService";
 import { getApiKey } from "../services/openrouter";
+import type { ChatMessage } from "../types/chat";
 
 type Msg = { id: string; role: "assistant" | "user"; content: string };
 const uid = () => Math.random().toString(36).slice(2);

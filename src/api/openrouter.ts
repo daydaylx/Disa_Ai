@@ -1,9 +1,5 @@
 import { readApiKey } from "../lib/openrouter/key";
-export type Role = "system" | "user" | "assistant" | "tool";
-export interface Msg {
-  role: Role;
-  content: string;
-}
+import type { ChatMessage } from "../types/chat";
 
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const KEY_NAME = "disa_api_key";
@@ -36,7 +32,7 @@ function mapHttpError(status: number): string {
   return `HTTP_${status}`;
 }
 
-export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?: AbortSignal }) {
+export async function chatOnce(messages: ChatMessage[], opts?: { model?: string; signal?: AbortSignal }) {
   const headers = getHeaders();
   const model = opts?.model ?? getModelFallback();
   const res = await fetch(ENDPOINT, {
@@ -52,7 +48,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
 }
 
 export async function chatStream(
-  messages: Msg[],
+  messages: ChatMessage[],
   onDelta: (textDelta: string) => void,
   opts?: {
     model?: string;
