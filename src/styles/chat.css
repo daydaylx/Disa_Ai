@@ -34,6 +34,9 @@
 .bubble {
   position: relative;
   overflow: hidden;
+  /* zarte Farb-Verläufe für mehr Tiefe */
+  background-image: linear-gradient(135deg, rgba(124, 102, 255, 0.08), rgba(64, 217, 255, 0.05));
+  background-blend-mode: overlay;
 }
 .chat-bubble::before,
 .bubble::before {
@@ -76,6 +79,25 @@
     box-shadow:
       0 14px 40px rgba(124, 102, 255, 0.35),
       inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+    filter: saturate(1.15);
+  }
+}
+
+/* sanfte, sehr langsame Farb-Animation für den Verlauf (optional, wirkt nur minimal) */
+@media (prefers-reduced-motion: no-preference) {
+  .chat-bubble,
+  .bubble {
+    background-size: 160% 160%;
+    animation: bubbleShift 24s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes bubbleShift {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
   }
 }
 
