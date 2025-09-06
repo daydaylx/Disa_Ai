@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import Avatar from "../components/chat/Avatar";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
@@ -241,6 +242,22 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     setSending(false);
   }
 
+  const portalRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const el = document.createElement("div");
+    el.setAttribute("id", "composer-portal");
+    document.body.appendChild(el);
+    portalRef.current = el;
+    return () => {
+      try {
+        document.body.removeChild(el);
+      } catch (e) {
+        /* ignore */
+      }
+      portalRef.current = null;
+    };
+  }, []);
+
   return (
     <div className="min-h-[100dvh]">
       <main id="main" role="main" className="mx-auto w-full max-w-4xl px-4 pb-48 pt-3">
@@ -362,45 +379,49 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       </main>
 
       {/* Composer */}
-      <div
-        className="fixed left-0 right-0 z-40"
-        style={{ bottom: "calc(env(safe-area-inset-bottom) + 64px)" }}
-      >
-        <div
-          className="mx-auto w-full max-w-3xl border-t border-neutral-800 bg-neutral-950/70 px-2 py-2 backdrop-blur"
-          style={{ paddingBottom: `max(env(safe-area-inset-bottom), 8px)` }}
-        >
-          <div className="flex items-end gap-2">
-            <textarea
-              ref={composerRef}
-              className="w-full resize-none rounded-md border border-neutral-800 bg-neutral-900/80 p-3 text-neutral-100 outline-none"
-              placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={onKeyDown}
-              onInput={(e) => {
-                const el = e.currentTarget;
-                el.style.height = "auto";
-                const max = 6 * 24; // grob 6 Zeilen à 24px
-                const next = Math.min(max, el.scrollHeight);
-                el.style.height = `${next}px`;
-              }}
-              rows={2}
-              enterKeyHint="send"
-              inputMode="text"
-            />
-            {sending ? (
-              <button className="nav-pill" onClick={stop} aria-label="Stop">
-                Stop
-              </button>
-            ) : (
-              <button className="btn-glow tilt-on-press" onClick={send} aria-label="Senden">
-                Senden
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+      {portalRef.current &&
+        createPortal(
+          <div
+            className="fixed left-0 right-0 z-50"
+            style={{ bottom: "calc(env(safe-area-inset-bottom) + 48px)" }}
+          >
+            <div
+              className="mx-auto w-full max-w-3xl border-t border-neutral-800 bg-neutral-950/70 px-2 py-2 backdrop-blur"
+              style={{ paddingBottom: `max(env(safe-area-inset-bottom), 8px)` }}
+            >
+              <div className="flex items-end gap-2">
+                <textarea
+                  ref={composerRef}
+                  className="w-full resize-none rounded-md border border-neutral-800 bg-neutral-900/80 p-3 text-neutral-100 outline-none"
+                  placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  onKeyDown={onKeyDown}
+                  onInput={(e) => {
+                    const el = e.currentTarget;
+                    el.style.height = "auto";
+                    const max = 6 * 24; // grob 6 Zeilen à 24px
+                    const next = Math.min(max, el.scrollHeight);
+                    el.style.height = `${next}px`;
+                  }}
+                  rows={2}
+                  enterKeyHint="send"
+                  inputMode="text"
+                />
+                {sending ? (
+                  <button className="nav-pill" onClick={stop} aria-label="Stop">
+                    Stop
+                  </button>
+                ) : (
+                  <button className="btn-glow tilt-on-press" onClick={send} aria-label="Senden">
+                    Senden
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>,
+          portalRef.current,
+        )}
 
       <ScrollToEndFAB
         visible={showScrollFab}
