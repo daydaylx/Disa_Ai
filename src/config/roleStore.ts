@@ -79,7 +79,10 @@ function saveCache(list: RoleTemplate[]): void {
 /* -------------------- Fetch helpers -------------------- */
 
 async function fetchJson(url: string, signal?: AbortSignal): Promise<unknown> {
-  const res = await fetch(url, { cache: "no-store", signal: signal ?? null });
+  const res = await fetch(url, {
+    cache: "no-store",
+    ...(signal ? { signal } : {}),
+  });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`HTTP ${res.status} @ ${url}`);
   return await res.json();

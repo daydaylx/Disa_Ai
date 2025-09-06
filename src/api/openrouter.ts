@@ -43,8 +43,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: false }),
-    // wegen exactOptionalPropertyTypes darf 'signal' nicht undefined sein:
-    signal: opts?.signal ?? null,
+    ...(opts?.signal ? { signal: opts.signal } : {}),
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
   const data = await res.json();
@@ -68,7 +67,7 @@ export async function chatStream(
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: true }),
-    signal: opts?.signal ?? null,
+    ...(opts?.signal ? { signal: opts.signal } : {}),
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
 
