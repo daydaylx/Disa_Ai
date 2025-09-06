@@ -79,9 +79,7 @@ export default function App() {
             Einstellungen
           </a>
         </nav>
-        <a href="#/chats" className="btn-glow tilt-on-press" onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}>
-          Unterhaltungen
-        </a>
+        {/* CTA entfernt, da 'Unterhaltungen' bereits als Tab vorhanden ist */}
       </header>
 
       {route.name === "settings" ? (
