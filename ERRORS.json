@@ -1,0 +1,15 @@
+{
+  "timestamp": "local",
+  "typescript": {
+    "errors": 0,
+    "notes": ["Typecheck läuft grün in Phase A"]
+  },
+  "eslint": {
+    "executed": false,
+    "reason": "npm run lint ist disabled; lint-staged aktiv laeuft nur in pre-commit"
+  },
+  "tests": {
+    "executed": false,
+    "reason": "Vitest-CLI in Umgebung akzeptiert --threads nicht; Standardlauf in Phase B pruefen"
+  }
+}

@@ -20,7 +20,17 @@ export default function OrbStatus({ streaming, modelLabel }: Props) {
           <div className="truncate text-sm text-neutral-200">
             {streaming ? 'Denke…' : 'Bereit.'}
           </div>
-          <div className="truncate text-xs text-neutral-400">Modell: {modelLabel}</div>
+          <div className="truncate text-xs text-neutral-400">
+            Modell: {modelLabel}
+            <span className="mx-1 text-neutral-600">·</span>
+            <a
+              href="#/settings"
+              className="text-violet-300 hover:text-violet-200 hover:underline"
+              aria-label="Modell ändern in den Einstellungen"
+            >
+              Modell ändern
+            </a>
+          </div>
         </div>
       </div>
     </div>

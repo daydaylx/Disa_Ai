@@ -1,5 +1,5 @@
 import type { ChatMessage } from "../types/chat";
-import { estimateTokens, totalTokens } from "../utils/tokens";
+import { totalTokens } from "../utils/tokens";
 
 /**
  * Kontextverwaltung ohne Fremdpakete:
@@ -81,6 +81,6 @@ export class ContextManager {
     const cap = 1200;
     const text = joined.length > cap ? `${joined.slice(0, cap)} …` : joined;
     const summary = `Zusammenfassung bisheriger Nachrichten:\n${text}`;
-    return { role: "system", content: summary, meta: { tokenCount: estimateTokens(summary) } };
+    return { role: "system", content: summary };
   }
 }

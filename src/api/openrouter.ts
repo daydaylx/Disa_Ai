@@ -1,9 +1,5 @@
 import { readApiKey } from "../lib/openrouter/key";
-export type Role = "system" | "user" | "assistant" | "tool";
-export interface Msg {
-  role: Role;
-  content: string;
-}
+import type { ChatMessage } from "../types/chat";
 
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const KEY_NAME = "disa_api_key";
@@ -36,15 +32,14 @@ function mapHttpError(status: number): string {
   return `HTTP_${status}`;
 }
 
-export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?: AbortSignal }) {
+export async function chatOnce(messages: ChatMessage[], opts?: { model?: string; signal?: AbortSignal }) {
   const headers = getHeaders();
   const model = opts?.model ?? getModelFallback();
   const res = await fetch(ENDPOINT, {
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: false }),
-    // wegen exactOptionalPropertyTypes darf 'signal' nicht undefined sein:
-    signal: opts?.signal ?? null,
+    ...(opts?.signal ? { signal: opts.signal } : {}),
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
   const data = await res.json();
@@ -53,7 +48,7 @@ export async function chatOnce(messages: Msg[], opts?: { model?: string; signal?
 }
 
 export async function chatStream(
-  messages: Msg[],
+  messages: ChatMessage[],
   onDelta: (textDelta: string) => void,
   opts?: {
     model?: string;
@@ -68,7 +63,7 @@ export async function chatStream(
     method: "POST",
     headers,
     body: JSON.stringify({ model, messages, stream: true }),
-    signal: opts?.signal ?? null,
+    ...(opts?.signal ? { signal: opts.signal } : {}),
   });
   if (!res.ok) throw new Error(mapHttpError(res.status));
 
@@ -86,53 +81,50 @@ export async function chatStream(
       if (done) break;
 
       buffer += decoder.decode(value, { stream: true });
-      const parts = buffer.split("\n\n");
-      buffer = parts.pop() ?? "";
+      let idx: number;
+      while ((idx = buffer.indexOf("\n")) >= 0) {
+        const line = buffer.slice(0, idx).trim();
+        buffer = buffer.slice(idx + 1);
+        if (!line) continue;
 
-      for (const raw of parts) {
-        const frameLines = raw.split("\n").map((l) => l.trim());
-        const dataLines = frameLines
-          .filter((l) => l.startsWith("data:"))
-          .map((l) => l.slice(5).trim())
-          .filter(Boolean);
+        // Unterstützt SSE (data: ...) und NDJSON (plain JSON per Zeile)
+        const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
 
-        for (const payload of dataLines) {
-          if (payload === "[DONE]") {
-            opts?.onDone?.(full);
-            return;
+        if (payload === "[DONE]") {
+          opts?.onDone?.(full);
+          return;
+        }
+
+        if (payload.startsWith("{")) {
+          let delta = "";
+          try {
+            const json = JSON.parse(payload);
+            if (json?.error) {
+              const msg = json.error?.message || "Unbekannter API-Fehler";
+              throw new Error(msg);
+            }
+            delta =
+              json?.choices?.[0]?.delta?.content ?? json?.choices?.[0]?.message?.content ?? "";
+          } catch (err) {
+            const m = err instanceof Error ? err.message : String(err);
+            throw new Error(m);
           }
-          if (payload.startsWith("{")) {
-            // JSON-Delta oder Fehlerobjekt
-            let delta = "";
-            try {
-              const json = JSON.parse(payload);
-              if (json?.error) {
-                const msg = json.error?.message || "Unbekannter API-Fehler";
-                throw new Error(msg);
-              }
-              delta =
-                json?.choices?.[0]?.delta?.content ?? json?.choices?.[0]?.message?.content ?? "";
-            } catch (err) {
-              const m = err instanceof Error ? err.message : String(err);
-              throw new Error(m);
-            }
-            if (!started) {
-              started = true;
-              opts?.onStart?.();
-            }
-            if (delta) {
-              onDelta(delta);
-              full += delta;
-            }
-          } else {
-            // selten: Plain-Text-Token
-            if (!started) {
-              started = true;
-              opts?.onStart?.();
-            }
-            onDelta(payload);
-            full += payload;
+          if (!started) {
+            started = true;
+            opts?.onStart?.();
           }
+          if (delta) {
+            onDelta(delta);
+            full += delta;
+          }
+        } else {
+          // Plain-Text Token
+          if (!started) {
+            started = true;
+            opts?.onStart?.();
+          }
+          onDelta(payload);
+          full += payload;
         }
       }
     }
