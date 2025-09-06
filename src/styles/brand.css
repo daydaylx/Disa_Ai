@@ -249,6 +249,7 @@ body {
 }
 .pager-track {
   display: flex;
+  width: calc(100% * 4); /* Anzahl Panels */
   will-change: transform;
   transition: transform 280ms cubic-bezier(0.2, 0.8, 0.25, 1);
 }
