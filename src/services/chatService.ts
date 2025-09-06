@@ -1,11 +1,9 @@
 import { chatStream } from "../api/openrouter";
+import type { ChatMessage } from "../types/chat";
 import { getApiKey } from "./openrouter";
 
 /** Minimales Nachrichtenformat (kompatibel zum OpenAI/OpenRouter Chat) */
-export type ChatMessage = {
-  role: "system" | "user" | "assistant" | "tool";
-  content: string;
-};
+export type { ChatMessage };
 
 /** Streaming-Client für OpenRouter (SSE/NDJSON). Fällt auf Demo zurück, wenn kein API-Key. */
 export async function sendChat(opts: {
