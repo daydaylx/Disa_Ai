@@ -211,7 +211,7 @@ export default function SettingsView() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-4xl space-y-8 px-4 py-6">
+    <main className="mx-auto w-full max-w-4xl space-y-8 px-4 py-6 pb-28">
       <header className="space-y-1">
         <h1 className="text-xl font-semibold">Einstellungen</h1>
         <p className="text-sm opacity-80">API-Key, Stil, Modell & Rolle.</p>
