@@ -33,11 +33,30 @@ function buildHeaders(explicitKey?: string) {
 }
 
 /** Rohes Model-Listing (für config/models.ts) */
-export async function getRawModels(explicitKey?: string): Promise<ORModel[]> {
+const LS_MODELS = "disa:or:models:v1";
+const LS_MODELS_TS = "disa:or:models:ts";
+const DEFAULT_TTL_MS = 20 * 60 * 1000; // 20 Minuten
+
+export async function getRawModels(explicitKey?: string, ttlMs = DEFAULT_TTL_MS): Promise<ORModel[]> {
+  try {
+    const tsRaw = localStorage.getItem(LS_MODELS_TS);
+    const dataRaw = localStorage.getItem(LS_MODELS);
+    const ts = tsRaw ? Number(tsRaw) : 0;
+    if (dataRaw && ts && Date.now() - ts < ttlMs) {
+      const parsed = JSON.parse(dataRaw) as unknown;
+      if (Array.isArray(parsed)) return parsed as ORModel[];
+    }
+  } catch {}
+
   const res = await fetch(`${BASE}/models`, { headers: buildHeaders(explicitKey) });
   if (!res.ok) return [];
   const data = await res.json().catch(() => ({}));
-  return Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
+  const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
+  try {
+    localStorage.setItem(LS_MODELS, JSON.stringify(list));
+    localStorage.setItem(LS_MODELS_TS, String(Date.now()));
+  } catch {}
+  return list;
 }
 
 /** Einfacher Verfügbarkeits-Check */
