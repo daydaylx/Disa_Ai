@@ -5,6 +5,7 @@ import { loadModelCatalog, type Safety } from "../config/models";
 type RolePolicy = Safety | "any";
 type Price = { in?: number; out?: number };
 
+// Safety der Modelle kann auch "free" sein (aus dem Katalog abgeleitet)
 type ModelEntry = {
   id: string;
   label?: string;
@@ -12,7 +13,7 @@ type ModelEntry = {
   ctx?: number;
   tags: string[];
   pricing?: Price;
-  safety: Safety;
+  safety: "free" | "moderate" | "strict" | "any";
 };
 
 type Props = {
@@ -62,9 +63,17 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
 
   const filtered = React.useMemo(() => {
     const norm = q.trim().toLowerCase();
+    const matchesPolicy = (m: ModelEntry) => {
+      // "any" oder "loose" → keine Einschränkung
+      if (policyFromRole === "any" || policyFromRole === "loose") return true;
+      // "free" immer zulassen
+      if (m.safety === "free") return true;
+      // sonst exakte Übereinstimmung (moderate/strict)
+      return m.safety === policyFromRole;
+    };
     return all.filter((m) => {
       // expliziter Rollen-Policy-Filter
-      if (policyFromRole !== "any" && m.safety !== policyFromRole) return false;
+      if (!matchesPolicy(m)) return false;
       // UI-Filter
       if (onlyFree && !isFreeModel(m)) return false;
       if (provider !== "all" && m.provider !== provider) return false;
