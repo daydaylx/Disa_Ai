@@ -219,7 +219,7 @@ export default function SettingsView() {
 
       {/* App-Installation */}
       <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
-        <h2 className="mb-3 text-base font-semibold">App-Installation</h2>
+        <h2 className="mb-3 text-base font-semibold title-underline">App-Installation</h2>
         <div className="text-sm opacity-90">
           Installiere die App für schnellen Zugriff, eigenständiges Icon und Offline-Unterstützung.
         </div>
@@ -243,7 +243,7 @@ export default function SettingsView() {
 
       {/* API-Key */}
       <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
-        <h2 className="mb-3 text-base font-semibold">OpenRouter API Key</h2>
+        <h2 className="mb-3 text-base font-semibold title-underline">OpenRouter API Key</h2>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input
             type="password"
@@ -262,7 +262,7 @@ export default function SettingsView() {
 
       {/* Stil */}
       <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
-        <h2 className="mb-3 text-base font-semibold">Stil</h2>
+        <h2 className="mb-3 text-base font-semibold title-underline">Stil</h2>
         <div className="grid gap-2">
           <select
             value={style}
@@ -284,7 +284,7 @@ export default function SettingsView() {
 
       {/* Kontext & Gedächtnis */}
       <section className="rounded-xl border border-border bg-background/60 p-4">
-        <h2 className="mb-3 text-base font-semibold">Kontext & Gedächtnis</h2>
+        <h2 className="mb-3 text-base font-semibold title-underline">Kontext & Gedächtnis</h2>
         <div className="grid gap-3">
           <label className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
             <span>Gedächtnis aktivieren (lokal, pro Chat)</span>
@@ -332,7 +332,7 @@ export default function SettingsView() {
       {/* Modell */}
       <section className="space-y-3 rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold">Modell</h2>
+          <h2 className="text-base font-semibold title-underline">Modell</h2>
           <div className="text-sm opacity-80">
             aktuell: <span className="font-mono">{modelId ?? "—"}</span>
           </div>
@@ -350,7 +350,7 @@ export default function SettingsView() {
       {/* Rolle */}
       <section className="rounded-xl border border-border bg-gradient-to-b from-violet-900/20 to-fuchsia-900/10 p-4 glass card-gradient">
         <div className="mb-3">
-          <h2 className="text-base font-semibold">Rolle</h2>
+          <h2 className="text-base font-semibold title-underline">Rolle</h2>
           <p className="text-sm opacity-80">Optionales System-Verhalten für den Chat.</p>
         </div>
 

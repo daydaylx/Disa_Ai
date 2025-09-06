@@ -48,14 +48,14 @@ export default function TemplatesGrid() {
             <button
               key={c.key}
               onClick={() => setCat(c.key as any)}
-              className={`rounded-full border px-3 py-1.5 text-sm ${cat === c.key ? "border-white/40 bg-white/10" : "border-white/10 bg-white/5 hover:bg-white/10"}`}
+              className={`nav-pill ${cat === c.key ? "nav-pill--active" : ""}`}
             >
               {c.label}
             </button>
           ))}
         </div>
         <input
-          className="rounded-md border border-white/10 bg-white/10 px-3 py-1.5 outline-none"
+          className="input px-3 py-1.5"
           placeholder="Suchen…"
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -64,7 +64,7 @@ export default function TemplatesGrid() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         {list.map((tpl) => (
-          <article key={tpl.id} className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <article key={tpl.id} className="rounded-xl border border-white/10 bg-white/5 p-4 glass card-gradient">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="font-semibold">{tpl.title}</div>
