@@ -100,7 +100,7 @@ export default function App() {
       <div className="pager">
         <div
           className="pager-track"
-          style={{ transform: `translateX(-${index * 100}%)` }}
+          style={{ transform: `translateX(calc(-${index} * 100vw))` }}
           aria-live="polite"
         >
           <section className="pager-panel" aria-label="Chat">
