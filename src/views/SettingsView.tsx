@@ -30,6 +30,7 @@ import {
   type StyleKey,
 } from "../config/settings";
 import { composeSystemPrompt } from "../features/prompt/composeSystemPrompt";
+import { usePWAInstall } from "../hooks/usePWAInstall";
 import { getApiKey,setApiKey } from "../services/openrouter";
 
 // ---- Helper für uneinheitliche Rollentypen ----
@@ -81,6 +82,7 @@ type RolePolicy = Safety | "any";
 
 export default function SettingsView() {
   const toasts = useToasts();
+  const pwa = usePWAInstall();
   // Persistente Werte laden
   const [key, setKey] = React.useState<string>(getApiKey() ?? "");
   const [modelId, setModelId] = React.useState<string | null>(getSelectedModelId());
@@ -213,6 +215,30 @@ export default function SettingsView() {
         <h1 className="text-xl font-semibold">Einstellungen</h1>
         <p className="text-sm opacity-80">API-Key, Stil, Modell & Rolle.</p>
       </header>
+
+      {/* App-Installation */}
+      <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
+        <h2 className="mb-3 text-base font-semibold">App-Installation</h2>
+        <div className="text-sm opacity-90">
+          Installiere die App für schnellen Zugriff, eigenständiges Icon und Offline-Unterstützung.
+        </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {pwa.canInstall ? (
+            <button className="btn-glow tilt-on-press" onClick={pwa.requestInstall}>
+              Jetzt installieren
+            </button>
+          ) : pwa.installed ? (
+            <span className="nav-pill">Bereits installiert</span>
+          ) : (
+            <span className="text-xs opacity-70">Installations‑Aufforderung momentan nicht verfügbar.</span>
+          )}
+          {pwa.showIOSHowTo && (
+            <span className="text-xs opacity-80">
+              iOS: Über „Teilen“ → „Zum Home‑Bildschirm“ hinzufügen
+            </span>
+          )}
+        </div>
+      </section>
 
       {/* API-Key */}
       <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
