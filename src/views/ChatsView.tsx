@@ -44,7 +44,7 @@ export default function ChatsView({ onOpen }: Props) {
           </thead>
           <tbody>
             {conv.items.map((m) => (
-              <tr key={m.id} className="border-t border-border">
+              <tr key={m.id} className="border-t border-border transition-colors hover:bg-white/5">
                 <td className="px-3 py-2">
                   <input
                     defaultValue={m.title}
