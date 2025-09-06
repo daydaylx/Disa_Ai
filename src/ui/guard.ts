@@ -1,22 +1,33 @@
-/* Lightweight UI guard: safe for eslint without DOM type names */
-export function ensureNavGuards(): void {
-  const fixTabbars = () => { /* noop: reserved for future layout fixes */ };
-  const onr = () => { fixTabbars(); };
+/* Lokaler TS-Alias, um ESLint 'no-undef' für DOM-Typnamen zu vermeiden. */
+type AddEventListenerOptions = boolean | {
+  capture?: boolean;
+  passive?: boolean;
+  once?: boolean;
+  signal?: unknown;
+};
 
-  if (typeof window !== "undefined") {
-    // keine DOM-Typen im Codepfad, damit eslint no-undef nicht triggert
-    window.addEventListener("resize", onr as any, { passive: true } as any);
-    window.addEventListener("beforeunload", () => {
-      window.removeEventListener("resize", onr as any);
-    });
-  }
+/**
+ * UI Guards – resize/orientation helpers ohne ESLint/TS Ärger.
+ */
+export function onResize(fn: () => void) {
+  const handler = () => { try { fn(); } catch { /* noop */ } };
+  window.addEventListener("resize", handler, { passive: true } as AddEventListenerOptions);
+  window.addEventListener("orientationchange", handler, { passive: true } as AddEventListenerOptions);
+  return () => {
+    window.removeEventListener("resize", handler);
+    window.removeEventListener("orientationchange", handler);
+  };
 }
 
-(function init() {
-  if (typeof document === "undefined") return;
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => ensureNavGuards(), { once: true } as any);
-  } else {
-    ensureNavGuards();
-  }
-})();
+export function fixTabbars() {
+  const navs = document.querySelectorAll<HTMLElement>(".tabbar");
+  const vh = (window.visualViewport?.height ?? window.innerHeight);
+  const delta = Math.max(0, vh - window.innerHeight);
+  navs.forEach((el) => el.style.setProperty("--safe-bottom", `${delta}px`));
+}
+
+export function bootGuards() {
+  const off = onResize(fixTabbars);
+  window.addEventListener("beforeunload", () => { off(); });
+  fixTabbars();
+}

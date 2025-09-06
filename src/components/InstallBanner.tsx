@@ -1,49 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { usePWAInstall } from "../hooks/usePWAInstall";
-import Icon from "./Icon";
-import InlineBanner from "./InlineBanner";
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice?: Promise<{ outcome: "accepted" | "dismissed" }>;
+};
+
 export default function InstallBanner() {
-  const { visible, canPrompt, requestInstall, dismiss, showIOSHowTo } = usePWAInstall();
-  if (!visible) return null;
-  if (canPrompt) {
-    return (
-      <div className="px-3 pt-2">
-        <InlineBanner
-          tone="info"
-          title="App installieren"
-          actions={
-            <div className="flex gap-2">
-              <button onClick={requestInstall} className="inline-flex items-center gap-1 underline">
-                <Icon name="check" width="14" height="14" /> Jetzt installieren
-              </button>
-              <button onClick={dismiss} className="underline opacity-80">
-                Später
-              </button>
-            </div>
-          }
-        >
-          Installiere die App für Schnellstart und ein besseres Erlebnis.
-        </InlineBanner>
+  const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const onBefore = (e: Event) => {
+      e.preventDefault();
+      setDeferred(e as BeforeInstallPromptEvent);
+    };
+    window.addEventListener("beforeinstallprompt", onBefore as any);
+    return () => window.removeEventListener("beforeinstallprompt", onBefore as any);
+  }, []);
+
+  if (hidden || !deferred) return null;
+
+  return (
+    <div className="mx-auto mb-2 w-full max-w-3xl">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-neutral-800 bg-neutral-900/70 px-3 py-2 text-sm text-neutral-200 shadow-soft backdrop-blur">
+        <span>App installieren für schnelleren Zugriff &amp; Offline-Nutzung.</span>
+        <div className="flex gap-2">
+          <button className="btn btn-ghost" onClick={() => setHidden(true)}>
+            Später
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={async () => {
+              await deferred.prompt();
+              setHidden(true);
+            }}
+          >
+            Installieren
+          </button>
+        </div>
       </div>
-    );
-  }
-  if (showIOSHowTo) {
-    return (
-      <div className="px-3 pt-2">
-        <InlineBanner
-          tone="info"
-          title="Zum Home-Bildschirm hinzufügen"
-          actions={
-            <button onClick={dismiss} className="underline opacity-80">
-              Ok
-            </button>
-          }
-        >
-          iPhone/iPad: Teilen ▵ → <strong>Zum Home-Bildschirm</strong>.
-        </InlineBanner>
-      </div>
-    );
-  }
-  return null;
+    </div>
+  );
 }
