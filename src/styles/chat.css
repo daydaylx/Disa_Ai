@@ -73,6 +73,39 @@
   font-size: 0.92rem;
 }
 
+/* Typing indicator */
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.typing-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.7);
+  animation: typingDot 1.2s infinite ease-in-out;
+}
+.typing-dots .dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.typing-dots .dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes typingDot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
 /* Copy button (fallback) */
 [aria-label="Code kopieren"],
 [title="Code kopieren"] {

@@ -2,12 +2,14 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import Avatar from "../components/chat/Avatar";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
+import { TypingIndicator } from "../components/chat/TypingIndicator";
 import CodeBlock from "../components/CodeBlock";
 import HeroCard from "../components/hero/HeroCard";
 import QuickActions from "../components/hero/QuickActions";
 import { InlineNote } from "../components/InlineNote";
 import InstallBanner from "../components/InstallBanner";
 import OrbStatus from "../components/status/OrbStatus";
+import { useToasts } from "../components/ui/Toast";
 import {
   getNSFW,
   getSelectedModelId,
@@ -61,6 +63,7 @@ const ChatView: React.FC = () => {
   const [sending, setSending] = useState(false);
   const [showScrollFab, setShowScrollFab] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const toasts = useToasts();
   const [showAll, setShowAll] = useState(false);
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -267,16 +270,46 @@ const ChatView: React.FC = () => {
                       ].join(" ")}
                     >
                       {!mine && <Avatar kind="assistant" />}
-                      <div
-                        className={[
-                          "chat-bubble max-w-[min(90%,48rem)] rounded-2xl border p-3",
-                          mine
-                            ? "bg-sky-950/50 border-sky-900/50"
-                            : "bg-neutral-900/70 border-neutral-700",
-                        ].join(" ")}
-                      >
-                        <Message msg={m} onCopied={() => setToast("Kopiert")} />
-                      </div>
+                <div
+                  className={[
+                    "chat-bubble max-w-[min(90%,48rem)] rounded-2xl border p-3",
+                    mine
+                      ? "bg-sky-950/50 border-sky-900/50"
+                      : "bg-neutral-900/70 border-neutral-700",
+                  ].join(" ")}
+                >
+                  <Message
+                    msg={m}
+                    onCopied={() =>
+                      toasts.push({ kind: "success", title: "Kopiert", message: "In die Zwischenablage." })
+                    }
+                  />
+                  <div
+                    className={[
+                      "mt-2 flex gap-2 text-xs opacity-70 transition-opacity",
+                      mine ? "justify-end" : "justify-start",
+                    ].join(" ")}
+                  >
+                    <button
+                      className="rounded-md border border-border bg-background/50 px-2 py-1"
+                      onClick={() => {
+                        navigator.clipboard.writeText(m.content).then(() =>
+                          toasts.push({ kind: "success", title: "Kopiert", message: "Nachricht kopiert." }),
+                        );
+                      }}
+                      aria-label="Nachricht kopieren"
+                    >
+                      Kopieren
+                    </button>
+                    <button
+                      className="rounded-md border border-border bg-background/50 px-2 py-1"
+                      onClick={() => setMsgs((list) => list.filter((x) => x.id !== m.id))}
+                      aria-label="Nachricht löschen"
+                    >
+                      Löschen
+                    </button>
+                  </div>
+                </div>
                       {mine && <Avatar kind="user" />}
                     </div>
                   );
@@ -298,6 +331,14 @@ const ChatView: React.FC = () => {
             );
           })()}
         </section>
+        {sending && (
+          <div className="my-2 flex items-start gap-2">
+            <Avatar kind="assistant" />
+            <div className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-2">
+              <TypingIndicator />
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Composer */}
@@ -352,11 +393,7 @@ const ChatView: React.FC = () => {
           window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })
         }
       />
-      {toast && (
-        <div className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-neutral-700 bg-neutral-900/80 px-3 py-1 text-sm">
-          {toast}
-        </div>
-      )}
+      {toast && null}
     </div>
   );
 };
