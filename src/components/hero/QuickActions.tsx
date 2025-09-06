@@ -1,52 +1,61 @@
 import React from "react";
-export type QuickAction = { title: string; desc: string; prompt: string };
-export type QuickActionsProps = { onPick?: (text: string) => void };
-const PRESETS: QuickAction[] = [
-  {
-    title: "Alltag",
-    desc: "5 Ideen für mehr Produktivität – kurz & konkret.",
-    prompt: "Gib mir 5 schnelle, konkrete Produktivitätsideen für heute.",
-  },
-  {
-    title: "Gesundheit",
-    desc: "3-Tage-Plan für ausgewogene Ernährung.",
-    prompt: "Erstelle mir einen realistischen 3-Tage-Ernährungsplan.",
-  },
-  {
-    title: "Dev",
-    desc: "Clean-Code in 7 Bulletpoints.",
-    prompt: "Fasse Clean-Code-Prinzipien in 7 prägnanten Bulletpoints zusammen.",
-  },
-  {
-    title: "Business",
-    desc: "Kurze SWOT für Coffeeshop.",
-    prompt: "Skizziere eine kurze SWOT-Analyse für einen Coffeeshop in Innenstadtlage.",
-  },
-];
-function fillComposer(text: string) {
-  const el = document.querySelector<HTMLTextAreaElement>('[data-testid="composer-input"]');
-  if (!el) return;
-  const setter = Object.getOwnPropertyDescriptor(
-    window.HTMLTextAreaElement.prototype,
-    "value",
-  )?.set;
-  setter?.call(el, text);
-  el.dispatchEvent(new Event("input", { bubbles: true }));
-  el.focus();
+
+type Action = { id: string; label: string; hint?: string };
+
+type Props = {
+  onPick: (id: string) => void;
+};
+
+export default function QuickActions({ onPick }: Props) {
+  const recommended: Action[] = [
+    { id: "summarize", label: "Text zusammenfassen", hint: "Kompakt & klar" },
+    { id: "code_help", label: "Code erklären", hint: "Schritt für Schritt" },
+  ];
+  const freeOrCheap: Action[] = [
+    { id: "brainstorm", label: "Ideen sammeln", hint: "Varianten" },
+    { id: "translate", label: "Übersetzen", hint: "DE ⇄ EN" },
+  ];
+  const advanced: Action[] = [
+    { id: "optimize", label: "Code optimieren", hint: "Performance/Lesbarkeit" },
+    { id: "spec", label: "Spezifikation erstellen", hint: "Akzeptanzkriterien" },
+  ];
+
+  return (
+    <div className="mx-auto grid w-full max-w-3xl grid-cols-1 gap-3">
+      <Section title="Empfohlen" actions={recommended} onPick={onPick} />
+      <Section title="Kostenlos/Günstig" actions={freeOrCheap} onPick={onPick} />
+      <Section title="Erweitert" actions={advanced} onPick={onPick} />
+    </div>
+  );
 }
-const QuickActions: React.FC<QuickActionsProps> = ({ onPick }) => (
-  <div className="safe-pad mb-4 grid grid-cols-2 gap-3">
-    {PRESETS.map((it) => (
-      <button
-        key={it.title}
-        className="tile tap tilt-on-press text-left"
-        onClick={() => (onPick ? onPick(it.prompt) : fillComposer(it.prompt))}
-        aria-label={it.title}
-      >
-        <div className="h2 mb-1 text-base font-semibold">{it.title}</div>
-        <div className="desc line-clamp-2 text-xs leading-snug">{it.desc}</div>
-      </button>
-    ))}
-  </div>
-);
-export default QuickActions;
+
+function Section({
+  title,
+  actions,
+  onPick,
+}: {
+  title: string;
+  actions: Action[];
+  onPick: (id: string) => void;
+}) {
+  if (!actions?.length) return null;
+  return (
+    <section>
+      <h3 className="mb-2 text-sm font-semibold text-neutral-300">{title}</h3>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {actions.map((a) => (
+          <button
+            key={a.id}
+            className="rounded-xl border border-neutral-800 bg-neutral-900/60 px-3 py-2 text-left text-sm text-neutral-200 shadow-soft backdrop-blur hover:bg-neutral-800/60 active:scale-[.99]"
+            onClick={() => onPick(a.id)}
+          >
+            <div className="truncate">{a.label}</div>
+            {a.hint ? (
+              <div className="truncate text-xs text-neutral-400">{a.hint}</div>
+            ) : null}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}

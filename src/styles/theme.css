@@ -2,64 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Projektweite CSS-Variablen */
+:root {
+  --kl-bg: rgb(15 15 18);
+  --kl-fg: rgb(230 230 234);
+}
+
 @layer base {
-  :root {
-    color-scheme: light;
-  }
-  .dark {
-    color-scheme: dark;
-  }
   html,
   body,
   #root {
     height: 100%;
   }
   body {
-    @apply bg-background text-foreground antialiased;
-    padding-top: var(--safe-top);
-    padding-right: var(--safe-right);
-    padding-bottom: var(--safe-bottom);
-    padding-left: var(--safe-left);
-  }
-  h1 {
-    @apply text-2xl font-semibold;
-  }
-  h2 {
-    @apply text-xl font-semibold;
-  }
-  h3 {
-    @apply text-lg font-semibold;
-  }
-  p {
-    @apply leading-relaxed;
-  }
-  a {
-    @apply text-primary underline-offset-4 hover:underline;
-  }
-  input,
-  textarea,
-  select {
-    @apply bg-background text-foreground;
-  }
-  :focus-visible {
-    outline: none;
-    @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
+    background: var(--kl-bg);
+    color: var(--kl-fg);
   }
 }
+
 @layer components {
-  .app-container {
-    @apply container mx-auto;
+  .card {
+    @apply rounded-xl border border-neutral-800 bg-neutral-900/60 shadow-soft;
   }
-  .sticky-footer {
-    position: sticky;
-    bottom: 0;
-    padding-bottom: calc(12px + var(--safe-bottom));
-    @apply bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80;
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg px-3 py-2 font-medium;
   }
-}
-@layer utilities {
-  .tap-target {
-    min-height: 44px;
-    min-width: 44px;
+  .btn-primary {
+    @apply btn bg-violet-600 text-white hover:bg-violet-500;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent hover:bg-neutral-800/60;
   }
 }

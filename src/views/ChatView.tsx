@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
+import Avatar from "../components/chat/Avatar";
+import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import HeroCard from "../components/hero/HeroCard";
 import QuickActions from "../components/hero/QuickActions";
+import InstallBanner from "../components/InstallBanner";
+import OrbStatus from "../components/status/OrbStatus";
+import { loadSettings } from "../features/settings/storage";
 
 type Msg = { id: string; role: "assistant" | "user"; content: string };
 const uid = () => Math.random().toString(36).slice(2);
@@ -26,6 +31,7 @@ const Toast: React.FC<{ text: string; onDone?: () => void }> = ({ text, onDone }
     </div>
   );
 };
+
 const CodeBlock: React.FC<{ code: string; lang?: string; onCopied: () => void }> = ({
   code,
   lang = "txt",
@@ -48,6 +54,7 @@ const CodeBlock: React.FC<{ code: string; lang?: string; onCopied: () => void }>
     </pre>
   </div>
 );
+
 const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied }) => {
   const parts = useMemo(() => {
     const src = msg.content;
@@ -85,8 +92,35 @@ const ChatView: React.FC = () => {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [showScrollFab, setShowScrollFab] = useState(false);
   const abortRef = useRef<number | null>(null);
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Modellabel aus Settings
+  const modelLabel = useMemo(() => {
+    try {
+      const s = loadSettings();
+      return s?.defaultModelId ?? "–";
+    } catch {
+      return "–";
+    }
+  }, []);
+
+  // Scroll-FAB: sichtbar wenn nicht nahe am Seitenende
+  useEffect(() => {
+    const onScroll = () => {
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 64;
+      setShowScrollFab(!nearBottom);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   const handlePick = (t: string) => setText(t);
   const focusComposer = () => composerRef.current?.focus();
@@ -104,6 +138,7 @@ const ChatView: React.FC = () => {
     }, 600);
     abortRef.current = id;
   };
+
   const stop = () => {
     if (abortRef.current != null) {
       clearTimeout(abortRef.current);
@@ -128,20 +163,40 @@ const ChatView: React.FC = () => {
         tabIndex={-1}
         className="chat-body main-offset mx-auto w-full max-w-4xl px-4 pb-36 pt-4"
       >
+        {/* Install-Banner + Statusleiste (verlustfrei, nur UI) */}
+        <InstallBanner />
+        <OrbStatus streaming={sending} modelLabel={modelLabel} />
+
         {msgs.length <= 1 && (
           <>
             <HeroCard onStart={focusComposer} />
             <QuickActions onPick={handlePick} />
           </>
         )}
+
         <section aria-label="Verlauf">
-          {msgs.map((m) => (
-            <div key={m.id} className="my-3">
-              <Message msg={m} onCopied={() => setToast("Kopiert")} />
-            </div>
-          ))}
+          {msgs.map((m) => {
+            const mine = m.role === "user";
+            return (
+              <div
+                key={m.id}
+                className={[
+                  "my-3 flex items-start gap-2",
+                  mine ? "justify-end" : "justify-start",
+                ].join(" ")}
+              >
+                {!mine && <Avatar kind="assistant" />}
+                <div className="max-w-[min(90%,48rem)]">
+                  <Message msg={m} onCopied={() => setToast("Kopiert")} />
+                </div>
+                {mine && <Avatar kind="user" />}
+              </div>
+            );
+          })}
         </section>
       </main>
+
+      {/* Composer */}
       <div className="safe-pad safe-bottom fixed bottom-0 left-0 right-0 z-40">
         <div className="glass card-round mx-auto w-full max-w-3xl p-2">
           <div className="flex items-end gap-2">
@@ -176,9 +231,19 @@ const ChatView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* FAB nur wenn nicht am Ende */}
+      <ScrollToEndFAB
+        visible={showScrollFab}
+        onClick={() =>
+          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })
+        }
+      />
+
       {toast && <Toast text={toast} onDone={() => setToast(null)} />}
     </div>
   );
 };
+
 export default ChatView;
 export { ChatView };
