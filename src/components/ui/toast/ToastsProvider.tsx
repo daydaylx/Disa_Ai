@@ -83,7 +83,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               key={t.id}
               role="status"
               className={cn(
-                "tap-target pointer-events-auto w-[min(96vw,640px)] rounded-md border bg-popover text-popover-foreground shadow-lg",
+                "tap-target pointer-events-auto w-[min(96vw,640px)] rounded-2xl border border-white/30 bg-white/70 text-popover-foreground shadow-soft backdrop-blur-lg",
                 "flex items-start gap-3 p-3",
               )}
             >

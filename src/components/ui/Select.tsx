@@ -39,8 +39,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           className={cn(
             "input",
-            "appearance-none pr-9", // Platz für Dropdown-Indikator
-            error && "border-destructive focus-visible:ring-destructive",
+            "appearance-none pr-9 bg-white/70 backdrop-blur-md border-white/30 placeholder:text-slate-500",
+            error && "border-destructive focus-visible:ring-[color:rgba(239,68,68,0.35)]",
           )}
           aria-invalid={!!error || undefined}
           aria-describedby={describedBy.length ? describedBy.join(" ") : undefined}

@@ -47,15 +47,13 @@ export const Sheet: React.FC<SheetProps> = ({
 
   return createPortal(
     <div className="fixed inset-0 z-50" aria-modal="true" role="dialog">
-      <div className="absolute inset-0 bg-black/40" onClick={() => onOpenChange(false)} />
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => onOpenChange(false)} />
       <div className={cn(position, "z-10")}>
         <div
           className={cn(
-            "border border-border bg-card text-card-foreground shadow-2xl",
+            "border border-white/30 bg-white/70 text-card-foreground shadow-soft backdrop-blur-lg",
             size,
-            side === "bottom"
-              ? "animate-in slide-in-from-bottom"
-              : "animate-in slide-in-from-right",
+            side === "bottom" ? "animate-in slide-in-from-bottom" : "animate-in slide-in-from-right",
             className,
           )}
         >
