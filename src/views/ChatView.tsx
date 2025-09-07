@@ -414,6 +414,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                 )}
                 {trimmed.map((m) => {
                   const mine = m.role === "user";
+                  const moreBtnId = `more-${m.id}`;
+                  const menuId = `menu-${m.id}`;
                   return (
                     <div
                       key={m.id}
@@ -484,6 +486,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                         onClick={() => setMenuFor(menuFor === m.id ? null : m.id)}
                         aria-label="Weitere Optionen"
                         title="Mehr"
+                        id={moreBtnId}
+                        aria-controls={menuId}
                         data-testid="msg-more"
                       >
                         ⋯
@@ -492,6 +496,11 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                         <div
                           role="menu"
                           className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-md border border-white/10 bg-[#0f172a]/95 p-1 shadow-[0_0_20px_rgba(255,0,255,0.25)] backdrop-blur-md"
+                          id={menuId}
+                          aria-labelledby={moreBtnId}
+                          onKeyDown={(e) => {
+                            if (e.key === "Escape") setMenuFor(null);
+                          }}
                         >
                           <button
                             className="w-full rounded px-2 py-1 text-left text-red-200 hover:bg-red-900/40"
