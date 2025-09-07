@@ -84,12 +84,20 @@
 @layer components {
   /* Glassmorphism utility */
   .glass {
-    @apply bg-surface-glass border-border-glass rounded-2xl border shadow-soft backdrop-blur-xl;
+    @apply rounded-2xl border border-border-glass bg-surface-glass shadow-soft backdrop-blur-xl;
+  }
+
+  /* Card styles for lists/pickers */
+  .card-solid {
+    @apply rounded-2xl border border-border-glass bg-surface-glass text-text shadow-soft backdrop-blur-xl transition-colors;
+  }
+  .card-gradient {
+    @apply rounded-2xl border border-border-glass bg-grad-card text-text shadow-glow transition-transform hover:-translate-y-[1px];
   }
 
   /* Buttons */
   .btn {
-    @apply focus-visible:ring-ring inline-flex select-none items-center justify-center rounded-md font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex select-none items-center justify-center rounded-md font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:cursor-not-allowed disabled:opacity-60;
     min-height: 44px;
   }
   .btn-primary {
@@ -104,7 +112,7 @@
 
   /* Inputs */
   .input {
-    @apply glass focus-visible:ring-ring h-11 w-full px-3 py-2 text-sm placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2;
+    @apply glass h-11 w-full px-3 py-2 text-sm placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
   }
 
   /* Nav Pills */
@@ -112,6 +120,16 @@
     @apply glass rounded-full px-3 py-1.5 text-sm text-text-muted transition hover:text-text;
   }
   .nav-pill--active {
-    @apply nav-pill bg-grad-primary text-text shadow-glow;
+    @apply nav-pill relative bg-grad-primary text-text shadow-glow;
+  }
+  .nav-pill--active::after {
+    content: "";
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 6px;
+    height: 2px;
+    background: hsl(var(--ring));
+    border-radius: 9999px;
   }
 }
