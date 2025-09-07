@@ -17,8 +17,9 @@ export const Composer: React.FC<{
           data-testid="composer-input"
           className={cn(
             "max-h-[40dvh] min-h-[56px] w-full p-4 pr-14 text-[15px] leading-5",
-            "glass resize-none rounded-2xl outline-none",
-            "placeholder:text-white/60",
+            "resize-none rounded-[14px] outline-none",
+            "bg-white/70 backdrop-blur-md border border-white/30",
+            "placeholder:text-slate-500",
           )}
           placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)"
           value={text}
@@ -37,7 +38,7 @@ export const Composer: React.FC<{
           {loading ? (
             <button
               data-testid="composer-stop"
-              className="tap pill bg-white/10 px-3 py-2 text-sm text-white"
+              className="tap nav-pill px-3 py-2 text-sm"
               onClick={onStop}
             >
               Stop
@@ -45,10 +46,7 @@ export const Composer: React.FC<{
           ) : (
             <button
               data-testid="composer-send"
-              className={cn(
-                "tap pill btn-glow px-3 py-3",
-                disabled && "pointer-events-none opacity-60",
-              )}
+              className={cn("tap btn-primary px-3 py-3 rounded-[14px]", disabled && "pointer-events-none opacity-60")}
               onClick={() => {
                 if (!disabled) {
                   onSend(text.trim());

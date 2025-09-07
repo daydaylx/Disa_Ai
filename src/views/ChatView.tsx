@@ -371,7 +371,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 160px)" }}
       >
         {/* Status nur klein über dem Chat */}
-        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1 text-xs text-[#B0B6C0]">
+        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1 text-xs text-slate-600">
           {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || '—'}`}
         </div>
         <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1">
@@ -433,10 +433,10 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                       {!mine && <Avatar kind="assistant" />}
                 <div
                   className={[
-                    "chat-bubble max-w-[min(90%,48rem)] rounded-2xl border p-3 backdrop-blur-md",
+                    "chat-bubble max-w-[min(92%,42.5rem)] rounded-2xl border p-3 backdrop-blur-lg",
                     mine
-                      ? "bg-white/10 border-[#4FC3F7]/30 text-foreground shadow-[0_0_18px_rgba(79,195,247,0.28)]"
-                      : "bg-white/10 border-[#B388FF]/25 text-foreground shadow-[0_0_18px_rgba(179,136,255,0.25)]",
+                      ? "bg-white/80 border-white/30 text-[#0F172A] shadow-soft"
+                      : "bg-gradient-to-br from-[#EEF2FF]/80 to-[#F5F3FF]/80 border-white/30 text-[#0F172A] shadow-soft",
                   ].join(" ")}
                 >
                   <Message
@@ -453,7 +453,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   >
                     <div className="relative">
                     <button
-                      className="nav-pill hover:shadow-[0_0_16px_#00ffff66]"
+                      className="nav-pill"
                       onClick={() => {
                         (async () => {
                             try {
@@ -486,7 +486,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                     </div>
                     <div className="relative">
                       <button
-                        className="nav-pill hover:shadow-[0_0_16px_#ff00ff66]"
+                        className="nav-pill"
                         aria-haspopup="menu"
                         aria-expanded={menuFor === m.id}
                         onClick={() => setMenuFor(menuFor === m.id ? null : m.id)}
@@ -501,7 +501,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                       {menuFor === m.id && (
                         <div
                           role="menu"
-                          className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-md border border-white/10 bg-card/95 p-1 text-foreground shadow-[0_0_20px_rgba(79,195,247,0.25)] backdrop-blur-md"
+                          className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-2xl border border-white/30 bg-white/70 p-1 text-foreground shadow-soft backdrop-blur-lg"
                           id={menuId}
                           aria-labelledby={moreBtnId}
                           onKeyDown={(e) => {
@@ -580,7 +580,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         {sending && (
           <div className="my-2 flex items-start gap-2">
             <Avatar kind="assistant" />
-            <div className="rounded-2xl border border-white/10 bg-white/10 p-2 backdrop-blur-md shadow-[0_0_14px_rgba(255,0,255,0.15)]">
+            <div className="rounded-2xl border border-white/30 bg-white/60 p-2 backdrop-blur-lg shadow-soft">
               <TypingIndicator />
             </div>
           </div>
@@ -595,13 +595,13 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
             style={{ bottom: `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)` }}
           >
             <div
-              className="mx-auto w-full max-w-3xl border-t border-white/10 bg-[#020617]/70 px-2 py-2 backdrop-blur-md shadow-[0_-6px_24px_rgba(0,0,0,0.6)]"
+              className="mx-auto w-full max-w-3xl border-t border-white/30 bg-white/70 px-2 py-2 backdrop-blur-lg shadow-soft"
               style={{ paddingBottom: `max(env(safe-area-inset-bottom), 8px)` }}
             >
-              <div className="flex items-end gap-2">
-                <textarea
+          <div className="flex items-end gap-2">
+            <textarea
                   ref={composerRef}
-                  className="w-full resize-none rounded-xl border border-white/10 bg-white/10 p-3 text-foreground outline-none placeholder-slate-400 focus:ring-2 focus:ring-primary focus:border-primary backdrop-blur-md"
+                  className="w-full resize-none rounded-[14px] border border-white/30 bg-white/70 p-3 text-foreground outline-none placeholder-slate-500 focus:ring-2 focus:ring-[color:rgba(91,140,255,0.4)] focus:border-primary backdrop-blur-md"
                   data-testid="composer-input"
                   placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
                   aria-describedby="composer-hint"
