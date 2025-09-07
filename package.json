@@ -24,6 +24,7 @@
     "verify": "npm run typecheck && npm run lint && npm run test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "snap:ui": "playwright test tests/e2e/screenshots.spec.ts --workers=1",
     "test:unit": "vitest run",
     "test:unit:ui": "vitest",
     "typecheck:ext": "tsc -p tsconfig.extended.json --noEmit",
