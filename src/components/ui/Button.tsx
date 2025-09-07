@@ -20,16 +20,20 @@ const base =
   "disabled:opacity-60 disabled:cursor-not-allowed";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-primary text-primary-foreground hover:opacity-95 active:opacity-90 shadow",
-  secondary: "bg-secondary text-secondary-foreground hover:opacity-95 active:opacity-90",
-  ghost: "bg-transparent hover:bg-muted text-foreground",
-  destructive: "bg-destructive text-destructive-foreground hover:opacity-95 active:opacity-90",
+  primary:
+    "text-[#0a0a0a] bg-gradient-to-r from-[#ff00ff] to-[#00ffff] shadow-[0_0_18px_#ff00ff66] hover:shadow-[0_0_26px_#ff00ffaa] active:shadow-[0_0_14px_#ff00ff66]",
+  secondary:
+    "text-[#0a0a0a] bg-[#facc15] shadow-[0_0_18px_#facc1566] hover:shadow-[0_0_26px_#facc15aa] active:shadow-[0_0_14px_#facc1566]",
+  ghost:
+    "bg-transparent text-[#e5e7eb] hover:bg-white/10 hover:shadow-[0_0_18px_#00ffff33]",
+  destructive:
+    "text-white bg-gradient-to-r from-rose-600 to-fuchsia-600 shadow-[0_0_18px_#ff00ff66] hover:shadow-[0_0_26px_#ff00ffaa]",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-10 px-3 text-sm",
-  md: "h-11 px-4 text-base",
-  lg: "h-12 px-5 text-base",
+  sm: "h-10 px-4 text-sm rounded-xl",
+  md: "h-11 px-5 text-base rounded-xl",
+  lg: "h-12 px-6 text-base rounded-xl",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

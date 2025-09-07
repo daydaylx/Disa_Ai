@@ -33,7 +33,7 @@ export function NetworkBanner() {
     <div className="net-banner">
       <div
         data-testid="offline-banner"
-        className="mx-auto mt-2 w-fit max-w-[92vw] rounded-lg bg-yellow-500/90 px-3 py-1 text-sm text-black shadow"
+        className="mx-auto mt-2 w-fit max-w-[92vw] rounded-lg bg-[#facc15] px-3 py-1 text-sm text-black shadow-[0_0_18px_#facc1566]"
         role="status"
         aria-live="polite"
       >

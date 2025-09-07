@@ -8,8 +8,10 @@ export default function Avatar({ kind, className }: Props) {
     <div
       aria-hidden
       className={[
-        'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-neutral-800 text-xs font-medium',
-        kind === 'user' ? 'bg-sky-900/50 text-sky-200' : 'bg-violet-900/40 text-violet-200',
+        'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-medium',
+        kind === 'user'
+          ? 'border-cyan-400/40 bg-cyan-500/10 text-cyan-200 shadow-[0_0_12px_#00ffff55]'
+          : 'border-fuchsia-400/40 bg-fuchsia-500/10 text-fuchsia-200 shadow-[0_0_12px_#ff00ff55]',
         className || ''
       ].join(' ')}
     >
