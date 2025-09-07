@@ -13,7 +13,11 @@ export default function PillSelect({ value, options, onChange }: Props) {
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`rounded-full border px-3 py-1.5 text-sm ${active ? "border-blue-600 bg-blue-600 text-white" : "border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"}`}
+            className={`rounded-full px-3 py-1.5 text-sm backdrop-blur-md ${
+              active
+                ? "text-white [background-image:linear-gradient(135deg,#7C4DFF_0%,#5B8CFF_100%)] border border-transparent"
+                : "border border-white/30 bg-white/60 hover:bg-white/70"
+            }`}
           >
             {opt.label}
           </button>

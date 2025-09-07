@@ -65,14 +65,14 @@ export default function TemplatesGrid() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         {list.map((tpl) => (
-          <article key={tpl.id} className="rounded-xl border border-white/10 bg-white/5 p-4 glass card-gradient">
+          <article key={tpl.id} className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="font-semibold">{tpl.title}</div>
                 <div className="text-sm opacity-80">{tpl.purpose}</div>
                 <div className="mt-2 flex flex-wrap gap-1">
                   {tpl.tags.map((tag) => (
-                    <span key={tag} className="rounded-full bg-white/10 px-2 py-0.5 text-xs">
+                    <span key={tag} className="rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-xs backdrop-blur-md">
                       {tag}
                     </span>
                   ))}
@@ -88,7 +88,7 @@ export default function TemplatesGrid() {
             <div className="mt-3">
               <button
                 onClick={() => applyTemplate(tpl)}
-                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 active:scale-[0.98]"
+                className="w-full rounded-[14px] border border-white/30 bg-white/60 px-3 py-2 backdrop-blur-md active:scale-[0.98]"
                 aria-label={`Vorlage ${tpl.title} verwenden`}
               >
                 Verwenden

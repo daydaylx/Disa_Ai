@@ -11,8 +11,8 @@ type Props = {
 export default function StickyActions({ nsfw, onToggleNSFW, onClearAll }: Props) {
   return (
     <div className="sticky top-[48px] z-10 mb-4">
-      <div className="rounded-2xl bg-gradient-to-tr from-neutral-500/25 via-neutral-500/10 to-transparent p-[1px]">
-        <div className="rounded-2xl border border-white/30 bg-white/65 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-neutral-900/55">
+      <div className="rounded-2xl p-[1px]">
+        <div className="rounded-2xl border border-white/30 bg-white/65 shadow-soft backdrop-blur-lg dark:border-white/10 dark:bg-neutral-900/55">
           <div className="flex flex-wrap items-center gap-2 px-3 py-2 md:px-4">
             <a
               href="#/"

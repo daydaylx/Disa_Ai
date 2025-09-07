@@ -7,9 +7,9 @@ export function Badge({
   tone?: "neutral" | "green" | "purple";
 }) {
   const map = {
-    neutral: "bg-white/10 text-zinc-200",
-    green: "bg-emerald-500/15 text-emerald-300",
-    purple: "bg-fuchsia-500/15 text-fuchsia-300",
+    neutral: "border border-white/30 bg-white/60 text-slate-700 backdrop-blur-md",
+    green: "border border-white/30 bg-white/60 text-emerald-700 backdrop-blur-md",
+    purple: "border border-white/30 bg-white/60 text-fuchsia-700 backdrop-blur-md",
   } as const;
   return (
     <span className={`inline-flex h-6 items-center rounded-full px-2 text-xs ${map[tone]}`}>
