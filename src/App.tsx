@@ -48,63 +48,63 @@ export default function App() {
 
   return (
     <div
-      className="min-h-[100svh] relative text-foreground"
-      style={{
-        ["--bottomnav-h" as any]: "0px",
-        backgroundImage: "linear-gradient(180deg, #1E222C 0%, #2B303B 100%)",
-      }}
+      className="min-h-[100svh] relative bg-background text-foreground"
+      style={{ ["--bottomnav-h" as any]: "0px" }}
     >
       <Aurora />
       <NetworkBanner />
       <AndroidNoticeBanner />
-      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 px-4 py-3 text-sm text-foreground backdrop-blur-md bg-card/70 border-b border-border shadow-[0_2px_18px_rgba(79,195,247,0.12)]">
-        <div className="font-semibold">Disa AI</div>
-        <nav className="flex gap-2">
-          <a
-            href="#/chat"
-            onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
-            className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""} text-foreground`}
-            data-testid="nav-top-chat"
-          >
-            Chat
-          </a>
-          <a
-            href="#/chats"
-            onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
-            className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""} text-foreground`}
-            data-testid="nav-top-chats"
-          >
-            Unterhaltungen
-          </a>
-          <a
-            href="#/quickstart"
-            onClick={(e) => { e.preventDefault(); nav({ name: "quickstart" }); }}
-            className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""} text-foreground`}
-            data-testid="nav-top-quickstart"
-          >
-            Quickstart
-          </a>
-          <a
-            href="#/settings"
-            onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
-            className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""} text-foreground`}
-            data-testid="nav-top-settings"
-          >
-            Einstellungen
-          </a>
-        </nav>
-        {/* CTA entfernt, da 'Unterhaltungen' bereits als Tab vorhanden ist */}
+      <header className="sticky top-0 z-40 w-full glass py-3">
+        <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4">
+          <div className="font-semibold">Disa AI</div>
+          <nav className="flex gap-2">
+            <a
+              href="#/chat"
+              onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
+              className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""}`}
+              data-testid="nav-top-chat"
+            >
+              Chat
+            </a>
+            <a
+              href="#/chats"
+              onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
+              className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""}`}
+              data-testid="nav-top-chats"
+            >
+              Unterhaltungen
+            </a>
+            <a
+              href="#/quickstart"
+              onClick={(e) => { e.preventDefault(); nav({ name: "quickstart" }); }}
+              className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""}`}
+              data-testid="nav-top-quickstart"
+            >
+              Quickstart
+            </a>
+            <a
+              href="#/settings"
+              onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
+              className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""}`}
+              data-testid="nav-top-settings"
+            >
+              Einstellungen
+            </a>
+          </nav>
+        </div>
       </header>
 
-      {route.name === "settings" ? (
-        <SettingsView />
-      ) : route.name === "chats" ? (
-        <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
-      ) : route.name === "quickstart" ? (
-        <QuickStartView />
-      ) : (
-        <ChatView convId={route.chatId ?? null} />
-      )}
+      <main className="relative mx-auto w-full max-w-4xl p-4">
+        {route.name === "settings" ? (
+          <SettingsView />
+        ) : route.name === "chats" ? (
+          <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
+        ) : route.name === "quickstart" ? (
+          <QuickStartView />
+        ) : (
+          <ChatView convId={route.chatId ?? null} />
+        )}
+      </main>
     </div>
   );
 }
