@@ -61,6 +61,15 @@
   --ring: var(--aurora-cyan);
 }
 
+/* High-contrast users: slightly stronger surfaces/borders */
+@media (prefers-contrast: more) {
+  :root {
+    --surface-glass: rgba(255, 255, 255, 0.14);
+    --border-glass: rgba(255, 255, 255, 0.28);
+    --text-muted: #d6def0;
+  }
+}
+
 @layer base {
   body {
     @apply bg-bg text-[16px] leading-7 text-text;

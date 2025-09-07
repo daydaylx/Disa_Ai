@@ -224,16 +224,16 @@ export default function SettingsView() {
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
       <header className="space-y-1">
-        <h1 className="text-2xl leading-7">Einstellungen</h1>
-        <p className="text-sm text-text-muted">API-Key, Stil, Modell & Rolle.</p>
+        <h1 className="card-title">Einstellungen</h1>
+        <p className="help">API-Key, Stil, Modell & Rolle.</p>
       </header>
 
       {/* App-Installation */}
       <section className="glass p-4">
-        <h2 className="mb-3 title-underline">App-Installation</h2>
-        <div className="text-sm opacity-90">
+        <h2 className="mb-1 card-title">App-Installation</h2>
+        <p className="help mb-2">
           Installiere die App für schnellen Zugriff, eigenständiges Icon und Offline-Unterstützung.
-        </div>
+        </p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {pwa.canInstall ? (
             <Button variant="primary" onClick={pwa.requestInstall}>
@@ -254,7 +254,7 @@ export default function SettingsView() {
 
       {/* API-Key */}
       <section className="glass p-4">
-        <h2 className="mb-3 title-underline">OpenRouter API Key</h2>
+        <h2 className="mb-1 card-title">OpenRouter API Key</h2>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input
             type="password"
@@ -268,12 +268,12 @@ export default function SettingsView() {
             Speichern
           </Button>
         </div>
-        <p className="mt-2 text-xs text-text-muted">Wird lokal gespeichert (kein Server-Speicher).</p>
+        <p className="help mt-2">Wird lokal gespeichert (kein Server-Speicher).</p>
       </section>
 
       {/* Stil */}
       <section className="glass p-4">
-        <h2 className="mb-3 title-underline">Stil</h2>
+        <h2 className="mb-1 card-title">Stil</h2>
         <div className="grid gap-2">
           <select
             value={style}
@@ -289,14 +289,14 @@ export default function SettingsView() {
             <option value="minimal">{STYLE_META.minimal?.label ?? "Minimal"}</option>
           </select>
           {styleMeta.description ? (
-            <p className="text-sm text-text-muted">{styleMeta.description}</p>
+            <p className="help">{styleMeta.description}</p>
           ) : null}
         </div>
       </section>
 
       {/* Kontext & Gedächtnis */}
       <section className="glass p-4">
-        <h2 className="mb-3 title-underline">Kontext & Gedächtnis</h2>
+        <h2 className="mb-1 card-title">Kontext & Gedächtnis</h2>
         <div className="grid gap-3">
           <div className="flex items-center justify-between rounded-lg border border-white/30 bg-white/60 px-3 py-2 text-sm backdrop-blur-md">
             <Switch checked={memEnabled} onChange={(v) => onToggleMem({ target: { checked: v } } as any)} label="Gedächtnis aktivieren (lokal, pro Chat)" />
@@ -343,7 +343,7 @@ export default function SettingsView() {
               />
             </label>
           </div>
-          <p className="text-xs text-text-muted">
+          <p className="help">
             Hinweis: Das Gedächtnis bleibt lokal gespeichert. Der Systemprompt enthält einen kompakten
             Kontextauszug (Themen, Entitäten, Fakten, Summary). Das Token‑Budget kürzt lange Verläufe automatisch.
           </p>
@@ -353,8 +353,8 @@ export default function SettingsView() {
       {/* Modell */}
       <section className="glass space-y-3 p-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold title-underline">Modell</h2>
-          <div className="text-sm text-text-muted">
+          <h2 className="card-title">Modell</h2>
+          <div className="help">
             aktuell: <span className="font-mono">{modelId ?? "—"}</span>
           </div>
         </div>
@@ -370,9 +370,9 @@ export default function SettingsView() {
 
       {/* Rolle */}
       <section className="glass p-4">
-        <div className="mb-3">
-          <h2 className="text-base font-semibold title-underline">Rolle</h2>
-          <p className="text-sm text-text-muted">Optionales System-Verhalten für den Chat.</p>
+        <div className="mb-2">
+          <h2 className="card-title">Rolle</h2>
+          <p className="help">Optionales System-Verhalten für den Chat.</p>
         </div>
 
         <div className="grid gap-3">
