@@ -48,7 +48,7 @@ export default function App() {
 
   return (
     <div
-      className="min-h-[100svh] relative bg-background text-foreground"
+      className="min-h-[100svh] relative bg-background text-foreground app-bg"
       style={{ ["--bottomnav-h" as any]: "0px" }}
     >
       <Aurora />

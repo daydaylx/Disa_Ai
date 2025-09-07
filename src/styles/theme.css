@@ -82,6 +82,41 @@
 }
 
 @layer components {
+  /* App background with faint aurora + grid */
+  .app-bg {
+    background-image:
+      radial-gradient(60% 40% at 20% 0%, rgba(124, 77, 255, 0.06), transparent 60%),
+      radial-gradient(55% 35% at 85% -10%, rgba(34, 211, 238, 0.05), transparent 55%),
+      radial-gradient(70% 50% at 50% 120%, rgba(255, 133, 225, 0.04), transparent 60%),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.025),
+        rgba(255, 255, 255, 0.025) 1px,
+        transparent 1px,
+        transparent 20px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.02),
+        rgba(255, 255, 255, 0.02) 1px,
+        transparent 1px,
+        transparent 20px
+      );
+    background-blend-mode: lighten, lighten, normal, normal, normal;
+    background-attachment: fixed, fixed, fixed, scroll, scroll;
+  }
+
+  /* Decorative orb accent */
+  .aurora-orb {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 9999px;
+    background-image: var(--orb-radial);
+    filter: blur(8px) saturate(120%);
+    opacity: 0.45;
+    pointer-events: none;
+  }
   /* Glassmorphism utility */
   .glass {
     @apply rounded-2xl border border-border-glass bg-surface-glass shadow-soft backdrop-blur-xl;
@@ -108,6 +143,15 @@
   }
   .btn-ghost {
     @apply btn text-text hover:bg-white/5;
+  }
+  .btn-outline {
+    @apply btn border border-border bg-transparent text-text hover:bg-white/5;
+  }
+  .btn-subtle {
+    @apply btn bg-white/5 text-text hover:bg-white/10;
+  }
+  .btn-destructive {
+    @apply btn bg-destructive text-destructive-foreground hover:opacity-95 active:opacity-90;
   }
 
   /* Inputs */

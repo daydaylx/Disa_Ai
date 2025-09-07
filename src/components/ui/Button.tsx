@@ -3,7 +3,7 @@ import React from "react";
 import { cn } from "../../lib/utils/cn";
 import { Icon, type IconName } from "./Icon";
 
-type Variant = "primary" | "secondary" | "ghost" | "destructive";
+type Variant = "primary" | "secondary" | "ghost" | "outline" | "subtle" | "destructive";
 type Size = "sm" | "md" | "lg";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -22,6 +22,8 @@ const variants: Record<Variant, string> = {
   primary: "btn-primary",
   secondary: "btn-secondary",
   ghost: "btn-ghost",
+  outline: "btn-outline",
+  subtle: "btn-subtle",
   destructive: "btn-destructive",
 };
 
