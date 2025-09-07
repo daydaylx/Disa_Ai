@@ -48,38 +48,38 @@ export default function App() {
   const [route, nav] = useHashRoute();
 
   return (
-    <div className="min-h-[100svh] app-bg relative">
+    <div className="min-h-[100svh] relative bg-gradient-to-b from-[#0f172a] to-[#020617] text-[#e5e7eb]">
       <Aurora />
       <NetworkBanner />
       <AndroidNoticeBanner />
-      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 glass px-4 py-3 text-sm text-neutral-200">
+      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 px-4 py-3 text-sm text-[#f3f4f6] backdrop-blur-md bg-white/5 border-b border-white/10 shadow-[0_2px_20px_rgba(255,0,255,0.08)]">
         <div className="font-semibold">Disa AI</div>
         <nav className="flex gap-2">
           <a
             href="#/chat"
             onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
-            className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""}`}
+            className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#00ffff66]`}
           >
             Chat
           </a>
           <a
             href="#/chats"
             onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
-            className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""}`}
+            className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#00ffff66]`}
           >
             Unterhaltungen
           </a>
           <a
             href="#/quickstart"
             onClick={(e) => { e.preventDefault(); nav({ name: "quickstart" }); }}
-            className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""}`}
+            className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#ff00ff66]`}
           >
             Quickstart
           </a>
           <a
             href="#/settings"
             onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
-            className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""}`}
+            className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#ff00ff66]`}
           >
             Einstellungen
           </a>

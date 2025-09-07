@@ -351,7 +351,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1">
           <button
             type="button"
-            className="text-xs text-neutral-400 underline decoration-dotted underline-offset-2"
+            className="text-xs text-[#e5e7eb]/70 underline decoration-dotted underline-offset-2 hover:text-[#f3f4f6]"
             onClick={() => setShowAdv((v) => !v)}
             aria-expanded={showAdv}
             aria-controls="adv-info"
@@ -359,7 +359,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
             Details
           </button>
           {showAdv && (
-            <div id="adv-info" className="mt-1 text-xs text-neutral-400">
+            <div id="adv-info" className="mt-1 text-xs text-[#e5e7eb]/70">
               Gedächtnis: {memEnabled ? "aktiv" : "inaktiv"}
               {memEnabled ? (
                 <span className="ml-2 opacity-80">(max {ctxLimits.max}, Reserve {ctxLimits.reserve})</span>
@@ -425,10 +425,10 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                       {!mine && <Avatar kind="assistant" />}
                 <div
                   className={[
-                    "chat-bubble max-w-[min(90%,48rem)] rounded-2xl border p-3",
+                    "chat-bubble max-w-[min(90%,48rem)] rounded-2xl border p-3 backdrop-blur-md",
                     mine
-                      ? "bg-sky-950/50 border-sky-900/50"
-                      : "bg-neutral-900/70 border-neutral-700",
+                      ? "bg-cyan-500/10 border-cyan-400/20 text-[#f3f4f6] shadow-[0_0_14px_#00ffff44]"
+                      : "bg-white/5 border-white/10 text-[#e5e7eb] shadow-[0_0_14px_rgba(255,0,255,0.15)]",
                   ].join(" ")}
                 >
                   <Message
@@ -445,7 +445,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   >
                     <div className="relative">
                       <button
-                        className="nav-pill"
+                        className="nav-pill hover:shadow-[0_0_16px_#00ffff66]"
                         onClick={() => {
                           (async () => {
                             try {
@@ -477,7 +477,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                     </div>
                     <div className="relative">
                       <button
-                        className="nav-pill"
+                        className="nav-pill hover:shadow-[0_0_16px_#ff00ff66]"
                         aria-haspopup="menu"
                         aria-expanded={menuFor === m.id}
                         onClick={() => setMenuFor(menuFor === m.id ? null : m.id)}
@@ -489,7 +489,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                       {menuFor === m.id && (
                         <div
                           role="menu"
-                          className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-md border border-neutral-700 bg-neutral-900 p-1 shadow-lg"
+                          className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-md border border-white/10 bg-[#0f172a]/95 p-1 shadow-[0_0_20px_rgba(255,0,255,0.25)] backdrop-blur-md"
                         >
                           <button
                             className="w-full rounded px-2 py-1 text-left text-red-200 hover:bg-red-900/40"
@@ -531,7 +531,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         {sending && (
           <div className="my-2 flex items-start gap-2">
             <Avatar kind="assistant" />
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-2">
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-2 backdrop-blur-md shadow-[0_0_14px_rgba(255,0,255,0.15)]">
               <TypingIndicator />
             </div>
           </div>
@@ -546,13 +546,13 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
             style={{ bottom: `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)` }}
           >
             <div
-              className="mx-auto w-full max-w-3xl border-t border-neutral-800 bg-neutral-950/70 px-2 py-2 backdrop-blur"
+              className="mx-auto w-full max-w-3xl border-t border-white/10 bg-[#020617]/70 px-2 py-2 backdrop-blur-md shadow-[0_-6px_24px_rgba(0,0,0,0.6)]"
               style={{ paddingBottom: `max(env(safe-area-inset-bottom), 8px)` }}
             >
               <div className="flex items-end gap-2">
                 <textarea
                   ref={composerRef}
-                  className="w-full resize-none rounded-md border border-neutral-800 bg-neutral-900/80 p-3 text-neutral-100 outline-none"
+                  className="w-full resize-none rounded-xl border border-white/10 bg-white/5 p-3 text-[#f3f4f6] outline-none placeholder-slate-400 focus:ring-2 focus:ring-[#00ffff] focus:border-[#00ffff] backdrop-blur-md"
                   data-testid="composer-input"
                   placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
                   aria-describedby="composer-hint"
