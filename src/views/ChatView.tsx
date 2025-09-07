@@ -152,9 +152,25 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     }
   }, []);
   const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      send();
+    if (e.key === "Escape") {
+      if (sending) {
+        e.preventDefault();
+        stop();
+      }
+      return;
+    }
+    if (e.key === "Enter") {
+      // Ctrl/Cmd+Enter sendet immer
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        send();
+        return;
+      }
+      // Enter ohne Shift sendet, Shift+Enter macht Zeilenumbruch
+      if (!e.shiftKey) {
+        e.preventDefault();
+        send();
+      }
     }
   };
 
@@ -315,7 +331,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
 
         {msgs.length <= 1 && <HeroCard onStart={() => composerRef.current?.focus()} />}
 
-        <section aria-label="Verlauf">
+        <section aria-label="Verlauf" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
           {(() => {
             const LIMIT = 80;
             const hasOverflow = msgs.length > LIMIT;
@@ -461,6 +477,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   className="w-full resize-none rounded-md border border-neutral-800 bg-neutral-900/80 p-3 text-neutral-100 outline-none"
                   data-testid="composer-input"
                   placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
+                  aria-describedby="composer-hint"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   onKeyDown={onKeyDown}
@@ -475,6 +492,9 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   enterKeyHint="send"
                   inputMode="text"
                 />
+                <span id="composer-hint" className="sr-only">
+                  Enter sendet. Shift plus Enter macht einen Zeilenumbruch. Strg oder Befehlstaste plus Enter sendet ebenfalls. Escape stoppt das Laden.
+                </span>
                 {sending ? (
                   <Button
                     variant="secondary"
