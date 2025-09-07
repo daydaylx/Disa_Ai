@@ -278,7 +278,13 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   return (
                     <div key={m.id} className={`msg my-3 flex items-start gap-2 ${mine ? "justify-end" : "justify-start"}`}>
                       {!mine && <Avatar kind="assistant" />}
-                      <div className={`chat-bubble max-w-[min(92%,42.5rem)] rounded-2xl p-3 text-text ${mine ? "glass" : "bg-grad-card shadow-glow border border-border-glass"}`}>
+                      <div
+                        className={`chat-bubble max-w-[min(92%,42.5rem)] rounded-2xl p-3 text-text ${
+                          mine
+                            ? "bg-grad-primary text-white border border-transparent shadow-glow"
+                            : "glass-solid"
+                        }`}
+                      >
                         <Message msg={m} onCopied={() => toasts.push({ kind: "success", title: "Kopiert" })} />
                       </div>
                       {mine && <Avatar kind="user" />}
