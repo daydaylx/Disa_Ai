@@ -129,7 +129,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   }, [all, q, provider, onlyFree, minCtx, policyFromRole, policy, cost, sortBy, priceBucket, priceIn, priceOut]);
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-3" data-testid="settings-model-picker">
       {(!getApiKey() || getApiKey() === "") && (
         <div className="rounded-md border border-amber-700/40 bg-amber-900/20 px-3 py-2 text-xs text-amber-200">
           Hinweis: Für das Laden der Modell‑Liste ist ein OpenRouter API‑Key nötig (Einstellungen).

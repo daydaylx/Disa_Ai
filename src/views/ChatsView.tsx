@@ -23,6 +23,7 @@ export default function ChatsView({ onOpen }: Props) {
             placeholder="Titel (optional)"
             className="input w-48 text-sm"
             aria-label="Titel der neuen Unterhaltung"
+            data-testid="chats-title-input"
           />
           <button
             className="btn-glow tilt-on-press"
@@ -31,6 +32,7 @@ export default function ChatsView({ onOpen }: Props) {
               setTitle("");
               onOpen(meta.id);
             }}
+            data-testid="chats-new"
           >
             Neu
           </button>
@@ -63,7 +65,7 @@ export default function ChatsView({ onOpen }: Props) {
                 </td>
                 <td className="px-3 py-2">
                   <div className="flex gap-2">
-                    <Button size="sm" variant="secondary" onClick={() => onOpen(m.id)} aria-label="Öffnen">
+                    <Button size="sm" variant="secondary" onClick={() => onOpen(m.id)} aria-label="Öffnen" data-testid="chats-open">
                       Öffnen
                     </Button>
                     <Button
@@ -71,6 +73,7 @@ export default function ChatsView({ onOpen }: Props) {
                       variant="destructive"
                       onClick={() => conv.remove(m.id)}
                       aria-label="Löschen"
+                      data-testid="chats-delete"
                     >
                       Löschen
                     </Button>

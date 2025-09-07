@@ -54,6 +54,7 @@ export default function QuickStartView() {
             className="w-full justify-start text-left"
             onClick={() => onPick(q)}
             aria-label={`Quickstart Frage ${i + 1}`}
+            data-testid="quickstart-item"
           >
             {q}
           </Button>

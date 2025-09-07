@@ -59,6 +59,7 @@ export default function App() {
             href="#/chat"
             onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
             className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#00ffff66]`}
+            data-testid="nav-top-chat"
           >
             Chat
           </a>
@@ -66,6 +67,7 @@ export default function App() {
             href="#/chats"
             onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
             className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#00ffff66]`}
+            data-testid="nav-top-chats"
           >
             Unterhaltungen
           </a>
@@ -73,6 +75,7 @@ export default function App() {
             href="#/quickstart"
             onClick={(e) => { e.preventDefault(); nav({ name: "quickstart" }); }}
             className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#ff00ff66]`}
+            data-testid="nav-top-quickstart"
           >
             Quickstart
           </a>
@@ -80,6 +83,7 @@ export default function App() {
             href="#/settings"
             onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
             className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#ff00ff66]`}
+            data-testid="nav-top-settings"
           >
             Einstellungen
           </a>
