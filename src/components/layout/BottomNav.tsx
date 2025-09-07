@@ -46,6 +46,7 @@ export default function BottomNav() {
             onClick={() => to("#/chat")}
             className={`tap w-full rounded-xl px-3 py-2 ${is("#/chat") ? "nav-pill--active" : "nav-pill"}`}
             aria-current={is("#/chat") ? "page" : undefined}
+            data-testid="nav-bottom-chat"
           >
             Chat
           </button>
@@ -55,6 +56,7 @@ export default function BottomNav() {
             onClick={() => to("#/chats")}
             className={`tap w-full rounded-xl px-3 py-2 ${is("#/chats") ? "nav-pill--active" : "nav-pill"}`}
             aria-current={is("#/chats") ? "page" : undefined}
+            data-testid="nav-bottom-chats"
           >
             Unterhaltungen
           </button>
@@ -64,6 +66,7 @@ export default function BottomNav() {
             onClick={() => to("#/quickstart")}
             className={`tap w-full rounded-xl px-3 py-2 ${is("#/quickstart") ? "nav-pill--active" : "nav-pill"}`}
             aria-current={is("#/quickstart") ? "page" : undefined}
+            data-testid="nav-bottom-quickstart"
           >
             Quickstart
           </button>
@@ -73,6 +76,7 @@ export default function BottomNav() {
             onClick={() => to("#/settings")}
             className={`tap w-full rounded-xl px-3 py-2 ${is("#/settings") ? "nav-pill--active" : "nav-pill"}`}
             aria-current={is("#/settings") ? "page" : undefined}
+            data-testid="nav-bottom-settings"
           >
             Einstellungen
           </button>

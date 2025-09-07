@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useConversations } from "../hooks/useConversations";
-import Icon from "./Icon";
+import { Icon } from "./ui/Icon";
 
 type Props = {
   open: boolean;

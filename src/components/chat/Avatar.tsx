@@ -10,8 +10,8 @@ export default function Avatar({ kind, className }: Props) {
       className={[
         'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-medium',
         kind === 'user'
-          ? 'border-cyan-400/40 bg-cyan-500/10 text-cyan-200 shadow-[0_0_12px_#00ffff55]'
-          : 'border-fuchsia-400/40 bg-fuchsia-500/10 text-fuchsia-200 shadow-[0_0_12px_#ff00ff55]',
+          ? 'border-[#4FC3F7]/40 bg-[#4FC3F7]/10 text-[#4FC3F7]'
+          : 'border-[#A78BFA]/40 bg-[#A78BFA]/10 text-[#A78BFA]',
         className || ''
       ].join(' ')}
     >

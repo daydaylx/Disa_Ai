@@ -1,6 +1,6 @@
 import React from "react";
 
-import Icon from "./Icon";
+import { Icon } from "./ui/Icon";
 
 type Props = {
   nsfw: boolean;
@@ -30,7 +30,7 @@ export default function StickyActions({ nsfw, onToggleNSFW, onClearAll }: Props)
                   : "border-neutral-300 hover:bg-neutral-100/60 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
               }`}
             >
-              <Icon name="nsfw" width="16" height="16" />
+              <Icon name="warning" width="16" height="16" />
               <span className="text-sm">{nsfw ? "NSFW an" : "NSFW aus"}</span>
             </button>
             <button
@@ -38,7 +38,7 @@ export default function StickyActions({ nsfw, onToggleNSFW, onClearAll }: Props)
               onClick={onClearAll}
               className="inline-flex items-center gap-2 rounded-full border border-neutral-300 px-3 py-1.5 transition hover:bg-neutral-100/60 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
             >
-              <Icon name="shield" width="16" height="16" />
+              <Icon name="close" width="16" height="16" />
               <span className="text-sm">Alle lokalen Daten löschen</span>
             </button>
             <div className="ml-auto flex items-center gap-2 text-xs opacity-70">

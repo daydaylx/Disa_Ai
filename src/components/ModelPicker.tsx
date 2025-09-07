@@ -129,7 +129,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   }, [all, q, provider, onlyFree, minCtx, policyFromRole, policy, cost, sortBy, priceBucket, priceIn, priceOut]);
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-3" data-testid="settings-model-picker">
       {(!getApiKey() || getApiKey() === "") && (
         <div className="rounded-md border border-amber-700/40 bg-amber-900/20 px-3 py-2 text-xs text-amber-200">
           Hinweis: Für das Laden der Modell‑Liste ist ein OpenRouter API‑Key nötig (Einstellungen).
@@ -217,11 +217,11 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
       </div>
 
-      <div className="max-h-[360px] overflow-auto rounded-xl border border-border glass card-gradient" data-no-swipe>
-        <table className="w-full text-sm">
+      <div className="max-h-[360px] overflow-auto rounded-xl border border-white/10 bg-[#232832]/60 backdrop-blur-sm" data-no-swipe>
+        <table className="w-full text-sm text-[#B0B6C0]">
           <thead className="sticky top-0 bg-background/90 backdrop-blur thead-grad">
             <tr className="text-left">
-              <th className="px-3 py-2 font-medium">Modell</th>
+              <th className="px-3 py-2 font-medium text-[#F0F2F5]">Modell</th>
               <th className="px-3 py-2 font-medium">Provider</th>
               <th className="px-3 py-2 font-medium">Kontext</th>
               <th className="px-3 py-2 font-medium">Preis/1k</th>
@@ -243,13 +243,13 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                   className={`cursor-pointer border-t border-border hover:bg-white/5 aria-selected:bg-white/10`}
                 >
                   <td className="px-3 py-2">
-                    <div className="font-medium">{m.label ?? m.id}</div>
-                    <div className="text-xs opacity-70">{m.id}</div>
+                    <div className="truncate font-medium text-[#F0F2F5]">{m.label ?? m.id}</div>
+                    <div className="truncate text-xs opacity-70">{m.id}</div>
                     <div className="mt-1 flex flex-wrap gap-1 text-[11px] opacity-80">
                       {isFreeModel(m) ? (
-                        <span className="rounded-full border border-emerald-700/50 bg-emerald-900/20 px-2 py-0.5 text-emerald-300">frei</span>
+                        <span className="rounded-full border border-[#4FC3F7]/40 bg-[#4FC3F7]/10 px-2 py-0.5 text-[#4FC3F7]">free</span>
                       ) : (
-                        <span className="rounded-full border border-neutral-700/50 bg-neutral-900/30 px-2 py-0.5">
+                        <span className="rounded-full border border-white/10 bg-[#1A1D24]/60 px-2 py-0.5">
                           {bucket === "low" ? "günstig" : bucket === "med" ? "mittel" : "teuer"}
                         </span>
                       )}
