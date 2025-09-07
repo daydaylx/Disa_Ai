@@ -49,7 +49,13 @@ export default function QuickStartView() {
         {QUESTIONS.map((q, i) => (
           <button
             key={i}
-            className="w-full justify-start text-left rounded-xl border border-white/10 bg-[#232832]/70 p-3 text-left text-[#B0B6C0] hover:border-[#4FC3F7]/40 hover:shadow-[0_0_12px_rgba(79,195,247,0.25)]"
+            className={[
+              "w-full justify-start text-left rounded-xl border p-3 text-left text-[#C5CAD3] backdrop-blur-md",
+              "border-white/15 bg-white/10",
+              i % 2 === 0
+                ? "hover:border-[#4FC3F7]/50 hover:shadow-[0_0_16px_rgba(79,195,247,0.28)]"
+                : "hover:border-[#B388FF]/50 hover:shadow-[0_0_16px_rgba(179,136,255,0.28)]",
+            ].join(" ")}
             onClick={() => onPick(q)}
             aria-label={`Quickstart Frage ${i + 1}`}
             data-testid="quickstart-item"

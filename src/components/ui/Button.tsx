@@ -20,13 +20,13 @@ const base =
   "disabled:opacity-60 disabled:cursor-not-allowed";
 
 const variants: Record<Variant, string> = {
-  // nur Hauptbuttons mit Verlauf (Cyan→Violett), moderater Glow
+  // nur Hauptbuttons mit Verlauf (Cyan→Violett), Glas + Glow
   primary:
-    "text-[#0a0a0a] bg-gradient-to-r from-[#4FC3F7] to-[#A78BFA] shadow-[0_0_14px_rgba(79,195,247,0.35)] hover:shadow-[0_0_18px_rgba(79,195,247,0.45)]",
-  // flach, dezente Fläche
-  secondary: "text-[#F0F2F5] bg-[#232832] border border-white/10 hover:border-[#4FC3F7]/40",
-  ghost: "bg-transparent text-[#F0F2F5] hover:bg-white/5",
-  destructive: "text-[#F0F2F5] bg-transparent border border-[#EF5350]/50 hover:bg-[#EF5350]/15",
+    "text-[#0a0a0a] bg-gradient-to-r from-[#4FC3F7] to-[#B388FF] border border-white/10 backdrop-blur-md shadow-[0_0_18px_rgba(79,195,247,0.35)] hover:brightness-105 active:brightness-95",
+  // flach, dezente Fläche (Glass)
+  secondary: "text-foreground bg-white/10 border border-white/15 backdrop-blur-md hover:border-[#4FC3F7]/40",
+  ghost: "bg-transparent text-foreground hover:bg-white/5",
+  destructive: "text-foreground bg-transparent border border-[#EF5350]/50 hover:bg-[#EF5350]/15",
 };
 
 const sizes: Record<Size, string> = {

@@ -321,8 +321,10 @@ body {
 /* === Nav Pills (Header) === */
 .nav-pill {
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(35, 40, 50, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   padding: 10px 14px;
   transition:
     box-shadow 0.2s ease,
@@ -330,12 +332,12 @@ body {
     border-color 0.2s ease;
 }
 .nav-pill:hover {
-  border-color: rgba(79, 195, 247, 0.35);
-  box-shadow: 0 0 14px rgba(79, 195, 247, 0.24);
+  border-color: rgba(79, 195, 247, 0.45);
+  box-shadow: 0 0 18px rgba(79, 195, 247, 0.32);
 }
 .nav-pill--active {
-  border-color: rgba(79, 195, 247, 0.6);
-  box-shadow: 0 0 18px rgba(79, 195, 247, 0.35);
+  border-color: rgba(79, 195, 247, 0.75);
+  box-shadow: 0 0 24px rgba(79, 195, 247, 0.45);
 }
 
 /* === Tabellenkopf: dezente Gradient-Linie unten === */

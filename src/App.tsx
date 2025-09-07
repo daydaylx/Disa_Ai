@@ -47,7 +47,13 @@ export default function App() {
   const [route, nav] = useHashRoute();
 
   return (
-    <div className="min-h-[100svh] relative bg-background text-foreground" style={{ ["--bottomnav-h" as any]: "0px" }}>
+    <div
+      className="min-h-[100svh] relative text-foreground"
+      style={{
+        ["--bottomnav-h" as any]: "0px",
+        backgroundImage: "linear-gradient(180deg, #1E222C 0%, #2B303B 100%)",
+      }}
+    >
       <Aurora />
       <NetworkBanner />
       <AndroidNoticeBanner />
