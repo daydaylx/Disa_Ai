@@ -47,20 +47,17 @@ export default function App() {
   const [route, nav] = useHashRoute();
 
   return (
-    <div
-      className="min-h-[100svh] relative bg-[#1A1D24] text-[#F0F2F5]"
-      style={{ ["--bottomnav-h" as any]: "0px" }}
-    >
+    <div className="min-h-[100svh] relative bg-background text-foreground" style={{ ["--bottomnav-h" as any]: "0px" }}>
       <Aurora />
       <NetworkBanner />
       <AndroidNoticeBanner />
-      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 px-4 py-3 text-sm text-[#F0F2F5] backdrop-blur-md bg-[#232832]/70 border-b border-white/5 shadow-[0_2px_18px_rgba(79,195,247,0.12)]">
+      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 px-4 py-3 text-sm text-foreground backdrop-blur-md bg-card/70 border-b border-border shadow-[0_2px_18px_rgba(79,195,247,0.12)]">
         <div className="font-semibold">Disa AI</div>
         <nav className="flex gap-2">
           <a
             href="#/chat"
             onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
-            className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""} text-[#F0F2F5]`}
+            className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""} text-foreground`}
             data-testid="nav-top-chat"
           >
             Chat
@@ -68,7 +65,7 @@ export default function App() {
           <a
             href="#/chats"
             onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
-            className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""} text-[#F0F2F5]`}
+            className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""} text-foreground`}
             data-testid="nav-top-chats"
           >
             Unterhaltungen
@@ -76,7 +73,7 @@ export default function App() {
           <a
             href="#/quickstart"
             onClick={(e) => { e.preventDefault(); nav({ name: "quickstart" }); }}
-            className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""} text-[#F0F2F5]`}
+            className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""} text-foreground`}
             data-testid="nav-top-quickstart"
           >
             Quickstart
@@ -84,7 +81,7 @@ export default function App() {
           <a
             href="#/settings"
             onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
-            className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""} text-[#F0F2F5]`}
+            className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""} text-foreground`}
             data-testid="nav-top-settings"
           >
             Einstellungen

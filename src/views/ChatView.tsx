@@ -336,6 +336,22 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     };
   }, []);
 
+  // A11y: Menü-Fokus steuern und Outside-Click schließen
+  useEffect(() => {
+    if (!menuFor) return;
+    const menu = document.getElementById(`menu-${menuFor}`);
+    const first = menu?.querySelector('[role="menuitem"]') as HTMLElement | null;
+    first?.focus();
+    const onDocDown = (e: MouseEvent) => {
+      const t = e.target as Element | null;
+      if (!t) return;
+      if (t.closest(`#menu-${menuFor}`) || t.closest(`#more-${menuFor}`)) return;
+      setMenuFor(null);
+    };
+    document.addEventListener("mousedown", onDocDown, { capture: true });
+    return () => document.removeEventListener("mousedown", onDocDown, { capture: true } as any);
+  }, [menuFor]);
+
   return (
     <div className="min-h-[100svh]">
       <main
