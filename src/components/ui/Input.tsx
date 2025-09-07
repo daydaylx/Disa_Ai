@@ -29,7 +29,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           id={inputId}
           ref={ref}
-          className={cn("input", error && "border-destructive focus-visible:ring-destructive")}
+          className={cn(
+            "input",
+            "bg-white/70 backdrop-blur-md border-white/30 placeholder:text-slate-500",
+            error && "border-destructive focus-visible:ring-[color:rgba(239,68,68,0.35)]",
+          )}
           aria-invalid={!!error || undefined}
           aria-describedby={describedBy.length ? describedBy.join(" ") : undefined}
           {...props}

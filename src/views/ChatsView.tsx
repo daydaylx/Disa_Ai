@@ -12,7 +12,7 @@ export default function ChatsView({ onOpen }: Props) {
   return (
     <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6">
       <header className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Unterhaltungen</h1>
+        <h1 className="text-2xl leading-7 font-semibold">Unterhaltungen</h1>
         <div className="flex gap-2">
           <input
             value={title}
@@ -38,12 +38,12 @@ export default function ChatsView({ onOpen }: Props) {
 
       <section className="grid gap-3">
         {conv.items.map((m) => (
-          <article key={m.id} className="rounded-xl border border-white/10 bg-[#232832]/70 p-3 text-sm text-[#B0B6C0] backdrop-blur-sm">
+          <article key={m.id} className="rounded-2xl border border-white/30 bg-white/65 p-3 text-sm text-slate-600 backdrop-blur-lg shadow-soft transition-transform hover:-translate-y-[1px]">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <div className="truncate text-[#F0F2F5]">{m.title}</div>
-                <div className="mt-0.5 truncate text-xs opacity-70">{new Date(m.updatedAt).toLocaleString()}</div>
-                <div className="truncate text-xs opacity-60">{m.id}</div>
+                <div className="truncate text-slate-900">{m.title}</div>
+                <div className="mt-0.5 truncate text-xs text-slate-500">{new Date(m.updatedAt).toLocaleString()}</div>
+                <div className="truncate text-xs text-slate-500">{m.id}</div>
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button size="sm" variant="primary" onClick={() => onOpen(m.id)} aria-label="Öffnen" data-testid="chats-open">
@@ -57,7 +57,7 @@ export default function ChatsView({ onOpen }: Props) {
           </article>
         ))}
         {conv.items.length === 0 && (
-          <div className="rounded-xl border border-white/10 bg-[#232832]/70 p-4 text-center text-sm text-[#B0B6C0]">Noch keine Unterhaltungen. Lege oben eine neue an.</div>
+          <div className="rounded-2xl border border-white/30 bg-white/65 p-4 text-center text-sm text-slate-600 backdrop-blur-lg">Noch keine Unterhaltungen. Lege oben eine neue an.</div>
         )}
       </section>
     </main>

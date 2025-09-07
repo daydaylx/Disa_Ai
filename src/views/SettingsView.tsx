@@ -224,12 +224,12 @@ export default function SettingsView() {
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
       <header className="space-y-1">
-        <h1 className="text-xl font-semibold">Einstellungen</h1>
-        <p className="text-sm opacity-80">API-Key, Stil, Modell & Rolle.</p>
+        <h1 className="text-2xl leading-7 font-semibold">Einstellungen</h1>
+        <p className="text-sm text-slate-600">API-Key, Stil, Modell & Rolle.</p>
       </header>
 
       {/* App-Installation */}
-      <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
+      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
         <h2 className="mb-3 text-base font-semibold title-underline">App-Installation</h2>
         <div className="text-sm opacity-90">
           Installiere die App für schnellen Zugriff, eigenständiges Icon und Offline-Unterstützung.
@@ -253,7 +253,7 @@ export default function SettingsView() {
       </section>
 
       {/* API-Key */}
-      <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
+      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
         <h2 className="mb-3 text-base font-semibold title-underline">OpenRouter API Key</h2>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input
@@ -268,11 +268,11 @@ export default function SettingsView() {
             Speichern
           </Button>
         </div>
-        <p className="mt-2 text-xs opacity-70">Wird lokal gespeichert (kein Server-Speicher).</p>
+        <p className="mt-2 text-xs text-slate-600">Wird lokal gespeichert (kein Server-Speicher).</p>
       </section>
 
       {/* Stil */}
-      <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
+      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
         <h2 className="mb-3 text-base font-semibold title-underline">Stil</h2>
         <div className="grid gap-2">
           <select
@@ -289,16 +289,16 @@ export default function SettingsView() {
             <option value="minimal">{STYLE_META.minimal?.label ?? "Minimal"}</option>
           </select>
           {styleMeta.description ? (
-            <p className="text-sm opacity-80">{styleMeta.description}</p>
+            <p className="text-sm text-slate-600">{styleMeta.description}</p>
           ) : null}
         </div>
       </section>
 
       {/* Kontext & Gedächtnis */}
-      <section className="rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
+      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
         <h2 className="mb-3 text-base font-semibold title-underline">Kontext & Gedächtnis</h2>
         <div className="grid gap-3">
-          <div className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
+          <div className="flex items-center justify-between rounded-lg border border-white/30 bg-white/60 px-3 py-2 text-sm backdrop-blur-md">
             <Switch checked={memEnabled} onChange={(v) => onToggleMem({ target: { checked: v } } as any)} label="Gedächtnis aktivieren (lokal, pro Chat)" />
           </div>
           <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -343,7 +343,7 @@ export default function SettingsView() {
               />
             </label>
           </div>
-          <p className="text-xs opacity-70">
+          <p className="text-xs text-slate-600">
             Hinweis: Das Gedächtnis bleibt lokal gespeichert. Der Systemprompt enthält einen kompakten
             Kontextauszug (Themen, Entitäten, Fakten, Summary). Das Token‑Budget kürzt lange Verläufe automatisch.
           </p>
@@ -351,10 +351,10 @@ export default function SettingsView() {
       </section>
 
       {/* Modell */}
-      <section className="space-y-3 rounded-xl border border-border bg-background/60 p-4 glass card-gradient">
+      <section className="space-y-3 rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold title-underline">Modell</h2>
-          <div className="text-sm opacity-80">
+          <div className="text-sm text-slate-600">
             aktuell: <span className="font-mono">{modelId ?? "—"}</span>
           </div>
         </div>
@@ -369,10 +369,10 @@ export default function SettingsView() {
       </section>
 
       {/* Rolle */}
-      <section className="rounded-xl border border-border bg-gradient-to-b from-violet-900/20 to-fuchsia-900/10 p-4 glass card-gradient">
+      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
         <div className="mb-3">
           <h2 className="text-base font-semibold title-underline">Rolle</h2>
-          <p className="text-sm opacity-80">Optionales System-Verhalten für den Chat.</p>
+          <p className="text-sm text-slate-600">Optionales System-Verhalten für den Chat.</p>
         </div>
 
         <div className="grid gap-3">
@@ -405,7 +405,7 @@ export default function SettingsView() {
             <div className="text-xs text-red-300">Fehler beim Laden: {roleLoad.error}</div>
           )}
 
-          <div className="flex items-center justify-between rounded-lg border border-neutral-700 bg-black/20 px-3 py-2 text-sm">
+          <div className="flex items-center justify-between rounded-lg border border-white/30 bg-white/60 px-3 py-2 text-sm backdrop-blur-md">
             <Switch
               checked={useRoleStyle}
               onChange={(v) => onUseRoleStyle({ target: { checked: v } } as any)}
