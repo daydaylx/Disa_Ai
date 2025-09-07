@@ -31,7 +31,9 @@ import { registerSW } from "./lib/pwa/registerSW";
 // Ensure dark baseline + tokens are applied early
 initTheme();
 installSkipLinkFocus("a.skip-link", "main");
-registerSW();
+if (import.meta.env.PROD) {
+  registerSW();
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
