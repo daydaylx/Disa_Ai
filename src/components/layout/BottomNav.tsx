@@ -44,7 +44,7 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/chat")}
-            className={`tap w-full rounded-xl px-3 py-2 ${is("#/chat") ? "nav-pill--active" : "nav-pill"}`}
+            className={`w-full ${is("#/chat") ? "tab--active" : "tab"}`}
             aria-current={is("#/chat") ? "page" : undefined}
             data-testid="nav-bottom-chat"
           >
@@ -54,7 +54,7 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/chats")}
-            className={`tap w-full rounded-xl px-3 py-2 ${is("#/chats") ? "nav-pill--active" : "nav-pill"}`}
+            className={`w-full ${is("#/chats") ? "tab--active" : "tab"}`}
             aria-current={is("#/chats") ? "page" : undefined}
             data-testid="nav-bottom-chats"
           >
@@ -64,7 +64,7 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/quickstart")}
-            className={`tap w-full rounded-xl px-3 py-2 ${is("#/quickstart") ? "nav-pill--active" : "nav-pill"}`}
+            className={`w-full ${is("#/quickstart") ? "tab--active" : "tab"}`}
             aria-current={is("#/quickstart") ? "page" : undefined}
             data-testid="nav-bottom-quickstart"
           >
@@ -74,7 +74,7 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/settings")}
-            className={`tap w-full rounded-xl px-3 py-2 ${is("#/settings") ? "nav-pill--active" : "nav-pill"}`}
+            className={`w-full ${is("#/settings") ? "tab--active" : "tab"}`}
             aria-current={is("#/settings") ? "page" : undefined}
             data-testid="nav-bottom-settings"
           >

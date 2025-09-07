@@ -6,9 +6,9 @@ export default function HeaderBadges() {
   const modelId = getSelectedModelId() || "auto";
   return (
     <div className="header-sticky flex items-center gap-2">
-      <span className="header-sticky nav-pill text-xs">
+      <span className="badge">
         <span className="header-sticky mr-1 opacity-70">Modell</span>
-        <span className="header-sticky font-mono">{modelId}</span>
+        <span className="header-sticky font-mono text-[12px]">{modelId}</span>
       </span>
     </div>
   );
