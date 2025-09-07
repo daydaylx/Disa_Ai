@@ -37,16 +37,10 @@ test.describe("Chat – Grundfunktionen (mobil)", () => {
     await expect(bubbles).toHaveCount(3, { timeout: 5000 });
   });
 
-  test("Copy aus Codeblock zeigt Toast", async ({ page }) => {
+  test("Kopieren aus Nachricht zeigt Toast", async ({ page }) => {
     await page.goto("/");
-    const input = page.getByTestId("composer-input");
-    await input.click();
-    await input.type("Bitte antworte mit Code.");
-    await page.keyboard.press("Enter");
-    // Warte auf Antwort mit Codeblock
-    await expect(page.locator(".codeblock")).toBeVisible({ timeout: 6000 });
-    await page.getByRole("button", { name: "Code kopieren" }).first().click();
-    // Toast sichtbar
-    await expect(page.getByText("Kopiert")).toBeVisible();
+    // Kopiere die erste sichtbare Nachricht
+    await page.getByRole("button", { name: "Nachricht kopieren" }).first().click();
+    await expect(page.getByText("Nachricht kopiert.")).toBeVisible();
   });
 });

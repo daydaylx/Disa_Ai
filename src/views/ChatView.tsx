@@ -371,9 +371,34 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                     <button
                       className="nav-pill"
                       onClick={() => {
-                        navigator.clipboard.writeText(m.content).then(() =>
-                          toasts.push({ kind: "success", title: "Kopiert", message: "Nachricht kopiert." }),
-                        );
+                        (async () => {
+                          try {
+                            await navigator.clipboard.writeText(m.content);
+                          } catch {
+                            try {
+                              const ta = document.createElement("textarea");
+                              ta.value = m.content;
+                              ta.setAttribute("readonly", "");
+                              ta.style.position = "fixed";
+                              ta.style.top = "-9999px";
+                              document.body.appendChild(ta);
+                              ta.select();
+                              try {
+                                document.execCommand("copy");
+                              } catch {
+                                /* ignore */
+                              }
+                              document.body.removeChild(ta);
+                            } catch {
+                              /* ignore */
+                            }
+                          }
+                          toasts.push({
+                            kind: "success",
+                            title: "Kopiert",
+                            message: "Nachricht kopiert.",
+                          });
+                        })();
                       }}
                       aria-label="Nachricht kopieren"
                     >

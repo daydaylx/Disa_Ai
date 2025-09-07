@@ -20,13 +20,9 @@ export async function sendChat(opts: {
 
   // Fallback: Demo ohne Netz, wenn kein Key oder Model leer
   if (!apiKey || !model) {
-    // Einfache heuristische Demo-Antwort (inkl. Codeblock, falls gewünscht)
-    const lastUser = [...messages].reverse().find((m) => m.role === "user")?.content ?? "";
-    const wantsCode = /\bcode\b/i.test(lastUser) || /```/.test(lastUser);
-    const demo = wantsCode
-      ? "Klar, hier ein Beispiel:\n\n```ts\nfunction greet(name: string) {\n  console.log(`Hello, ${name}!`)\n}\n\ngreet('Disa')\n```\n\nDu kannst die Funktion anpassen."
-      :
-        "Dies ist eine Demo-Antwort, weil kein API-Key oder Modell konfiguriert ist. Öffne Einstellungen → API-Key & Modell.";
+    // Demo-Fallback ohne Code – nur generische Chat-Antwort
+    const demo =
+      "Demo-Antwort (kein API-Key/Modell gesetzt). Öffne Einstellungen, um echte Antworten zu erhalten.";
 
     let i = 0;
     let t: ReturnType<typeof setTimeout> | null = null;

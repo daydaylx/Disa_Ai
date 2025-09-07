@@ -1,5 +1,6 @@
 import React from "react";
 
+import AndroidNoticeBanner from "./components/AndroidNoticeBanner";
 import Aurora from "./components/Aurora";
 import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
@@ -50,6 +51,7 @@ export default function App() {
     <div className="min-h-[100svh] app-bg relative">
       <Aurora />
       <NetworkBanner />
+      <AndroidNoticeBanner />
       <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 glass px-4 py-3 text-sm text-neutral-200">
         <div className="font-semibold">Disa AI</div>
         <nav className="flex gap-2">
