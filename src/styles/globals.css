@@ -39,10 +39,10 @@ body {
     @apply mx-auto max-w-[1200px] px-4 md:px-6;
   }
   .card {
-    @apply rounded-2xl border border-border bg-[#12121A]/90 shadow-card;
+    @apply card-solid;
   }
   .glass {
-    @apply border border-white/10 bg-white/5 backdrop-blur-sm;
+    @apply glass;
   }
   .focus-ring {
     @apply outline-none ring-0 focus:shadow-ring;
