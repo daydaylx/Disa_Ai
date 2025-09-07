@@ -20,9 +20,10 @@ test.describe("Kritische Flows (mobil)", () => {
     expect(bbox?.y ?? 0).toBeGreaterThan(0);
   });
 
-  test.skip("Settings: Toggle + Persistenz + Fokusierbarkeit Composer", async ({ page }) => {
+  test("Settings: Toggle + Persistenz + Fokusierbarkeit Composer", async ({ page }) => {
     await page.goto("/#/settings");
     await expect(page.getByRole("heading", { name: "Einstellungen" })).toBeVisible();
+    await expect(page.getByTestId("settings-ctx-max")).toBeVisible();
     await page.getByTestId("settings-ctx-max").fill("8192");
     await page.getByTestId("settings-ctx-reserve").fill("1024");
     await page.getByTestId("settings-composer-offset").fill("48");
@@ -32,17 +33,18 @@ test.describe("Kritische Flows (mobil)", () => {
     await expect(page.getByTestId("composer-input")).toBeFocused();
   });
 
-  test.skip("Chats-Liste: Neu → Umbenennen (blur) → Öffnen → Löschen", async ({ page }) => {
+  test("Chats-Liste: Neu → Öffnet automatisch → Löschen in Liste", async ({ page }) => {
     await page.goto("/#/chats");
+    await expect(page.getByTestId("chats-title-input")).toBeVisible();
     await page.getByTestId("chats-title-input").fill("E2E-Chat");
     await page.getByTestId("chats-new").click();
-    // Öffnen
-    await page.getByTestId("chats-open").first().click();
+    // Neu führt direkt zum Chat
     await expect(page.getByTestId("composer-input")).toBeVisible();
-    // zurück zur Liste
+    // zurück zur Liste und löschen
     await page.goto("/#/chats");
-    // Löschen
-    await page.getByTestId("chats-delete").first().click();
+    const del = page.getByTestId("chats-delete").first();
+    await expect(del).toBeVisible();
+    await del.click();
   });
 
   test.skip("Model-Picker öffnen ohne Key (nur frei)", async ({ page }) => {
