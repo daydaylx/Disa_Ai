@@ -166,16 +166,14 @@ export default function StyleProbe(): JSX.Element {
 
   return (
     <div className="pointer-events-none fixed inset-2 z-[9999] sm:inset-4">
-      <div className="pointer-events-auto mx-auto max-w-3xl rounded-xl border border-neutral-300 bg-white/90 p-4 shadow-2xl backdrop-blur dark:border-neutral-700 dark:bg-neutral-900/90">
+      <div className="pointer-events-auto mx-auto max-w-3xl glass p-4 shadow-2xl">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-            Style Probe
-          </h2>
+          <h2 className="text-sm font-semibold">Style Probe</h2>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={toggleDark}
-              className="rounded-md border border-neutral-300 bg-white px-2 py-1 text-xs dark:border-neutral-700 dark:bg-neutral-800"
+              className="nav-pill"
               title="Dark-Mode umschalten"
             >
               Dark
@@ -189,25 +187,23 @@ export default function StyleProbe(): JSX.Element {
               <span
                 className={
                   c.ok === true
-                    ? "text-green-600"
+                    ? "text-success"
                     : c.ok === false
-                      ? "text-red-600"
-                      : "text-neutral-500"
+                      ? "text-error"
+                      : "text-muted-foreground"
                 }
               >
                 {c.ok === true ? "✔" : c.ok === false ? "✖" : "•"}
               </span>
               <div>
-                <div className="text-neutral-900 dark:text-neutral-100">{c.label}</div>
-                {c.detail ? (
-                  <div className="text-xs text-neutral-500 dark:text-neutral-400">{c.detail}</div>
-                ) : null}
+                <div className="text-foreground">{c.label}</div>
+                {c.detail ? <div className="text-xs text-muted-foreground">{c.detail}</div> : null}
               </div>
             </li>
           ))}
         </ul>
 
-        <div className="mt-3 text-[11px] text-neutral-500 dark:text-neutral-400">
+        <div className="mt-3 text-[11px] text-muted-foreground">
           Hinweis: Das Overlay wird nur angezeigt, wenn die URL <code>?probe=1</code> enthält.
         </div>
       </div>

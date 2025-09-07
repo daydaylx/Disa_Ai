@@ -4,7 +4,8 @@ import "./ui/guard";
 import "./ui/viewport";
 import "./ui/base.css";
 import "./ui/kit.css";
-import "./ui/tokens.css";
+// Old UI tokens are obsolete; theme tokens live in styles/tokens.css
+// import "./ui/tokens.css"; // removed
 import "./ui/globals";
 import "./styles/a11y.css";
 import "./styles/brand.css";
