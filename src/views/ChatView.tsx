@@ -11,6 +11,7 @@ import InstallBanner from "../components/InstallBanner";
 import OrbStatus from "../components/status/OrbStatus";
 import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
+import { getVirtualListEnabled } from "../config/featureFlags";
 import {
   getComposerOffset,
   getCtxMaxTokens,
@@ -92,6 +93,29 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const memEnabled = useMemo(() => getMemoryEnabled(), []);
   const ctxLimits = useMemo(() => ({ max: getCtxMaxTokens(), reserve: getCtxReservedTokens() }), []);
   const composerOffset = useMemo(() => getComposerOffset(), []);
+  const virtEnabled = useMemo(() => getVirtualListEnabled(), []);
+
+  function maybeVibrate(pattern: number | number[]) {
+    try {
+      const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
+      const isAndroid = /Android/i.test(ua);
+      // Opt-out via localStorage
+      const pref = ((): boolean => {
+        try {
+          const v = localStorage.getItem("disa:ui:haptics");
+          if (v === null) return true; // default: an
+          return v === "true";
+        } catch {
+          return true;
+        }
+      })();
+      if (isAndroid && pref && "vibrate" in navigator && typeof navigator.vibrate === "function") {
+        navigator.vibrate(pattern as any);
+      }
+    } catch {
+      /* ignore */
+    }
+  }
 
   // Lädt vorhandene Nachrichten aus der Unterhaltung (falls convId gesetzt)
   useEffect(() => {
@@ -197,6 +221,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   function send() {
     const trimmed = text.trim();
     if (!trimmed || sending) return;
+    maybeVibrate(15);
 
     setMsgs((m) => trimHistory([...m, { id: uid(), role: "user", content: trimmed }]));
     // Persistiere in geöffneter Unterhaltung
@@ -293,6 +318,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     abortRef.current?.abort();
     abortRef.current = null;
     setSending(false);
+    maybeVibrate([5, 30]);
   }
 
   const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
@@ -366,7 +392,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
 
         <section aria-label="Verlauf" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
           {(() => {
-            const LIMIT = 80;
+            const LIMIT = virtEnabled ? 60 : 80;
             const hasOverflow = msgs.length > LIMIT;
             const trimmed = hasOverflow && !showAll ? msgs.slice(-LIMIT) : msgs;
             const hiddenCount = hasOverflow ? msgs.length - trimmed.length : 0;
