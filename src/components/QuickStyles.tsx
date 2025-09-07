@@ -20,8 +20,8 @@ export default function QuickStyles(): JSX.Element {
   const selId: string = templateId ?? selected?.id ?? "";
 
   return (
-    <section className="mt-4 rounded-2xl border border-neutral-800 bg-neutral-900/50 p-4">
-      <h3 className="mb-2 text-lg font-semibold text-neutral-100">Schnellzugriff: Stile</h3>
+    <section className="mt-4 glass p-4">
+      <h3 className="mb-2 text-lg font-semibold">Schnellzugriff: Stile</h3>
       <div className="flex flex-wrap gap-2">
         {items.map((t: TemplateLite) => {
           const active = t.id === selId;
@@ -33,12 +33,7 @@ export default function QuickStyles(): JSX.Element {
               onClick={() => {
                 if (setTemplateId) setTemplateId(t.id);
               }}
-              className={[
-                "rounded-full border px-3 py-1.5 text-sm transition",
-                active
-                  ? "border-indigo-600 bg-indigo-600 text-white"
-                  : "border-neutral-700 bg-neutral-900 text-neutral-200 hover:bg-neutral-800",
-              ].join(" ")}
+              className={active ? "nav-pill nav-pill--active" : "nav-pill"}
               title={label}
             >
               {label}
@@ -46,7 +41,7 @@ export default function QuickStyles(): JSX.Element {
           );
         })}
       </div>
-      <p className="mt-3 text-xs text-neutral-400">
+      <p className="mt-3 text-xs text-text-muted">
         Systemprompt aus dem gewählten Stil wird automatisch vorangestellt.
       </p>
     </section>

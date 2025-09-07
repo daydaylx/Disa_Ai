@@ -41,18 +41,16 @@ function Section({
   if (!actions?.length) return null;
   return (
     <section>
-      <h3 className="mb-2 text-sm font-semibold text-neutral-300">{title}</h3>
+      <h3 className="mb-2 text-sm font-semibold text-text-muted">{title}</h3>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         {actions.map((a) => (
           <button
             key={a.id}
-            className="rounded-xl border border-neutral-800 bg-neutral-900/60 px-3 py-2 text-left text-sm text-neutral-200 shadow-soft backdrop-blur hover:bg-neutral-800/60 active:scale-[.99]"
+            className="glass px-3 py-2 text-left text-sm active:scale-[.99]"
             onClick={() => onPick(a.id)}
           >
             <div className="truncate">{a.label}</div>
-            {a.hint ? (
-              <div className="truncate text-xs text-neutral-400">{a.hint}</div>
-            ) : null}
+            {a.hint ? <div className="truncate text-xs text-text-muted">{a.hint}</div> : null}
           </button>
         ))}
       </div>

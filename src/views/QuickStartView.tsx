@@ -42,7 +42,7 @@ export default function QuickStartView() {
     >
       <header className="space-y-1">
         <h1 className="text-2xl leading-7 title-underline">Quickstart</h1>
-        <p className="text-sm text-slate-600">20 Startfragen, die häufig helfen.</p>
+        <p className="text-sm text-text-muted">20 Startfragen, die häufig helfen.</p>
       </header>
 
       <section className="grid gap-2 md:grid-cols-2">

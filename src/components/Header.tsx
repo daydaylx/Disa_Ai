@@ -5,7 +5,7 @@ import Logo from "./Logo";
 export default function Header() {
   return (
     <header className="header-sticky sticky top-0 z-40">
-      <div className="header-sticky bg-white/60 backdrop-blur-md border-b border-white/30">
+      <div className="header-sticky glass border-b">
         <div className="header-sticky mx-auto flex h-14 max-w-5xl items-center justify-between px-4 text-foreground">
           <Link to="/" className="header-sticky flex items-center gap-2">
             <Logo className="header-sticky h-6 w-6" />

@@ -7,7 +7,7 @@ const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
     <div className="card-round glass hero-card relative overflow-hidden p-3 shadow-soft">
       <div className="grad-surface grad-anim absolute inset-0 opacity-30" />
       <div className="relative flex items-center gap-3">
-        <div className="rounded-full bg-white/60 p-1 backdrop-blur-md shadow-soft">
+        <div className="rounded-full glass p-1">
           <Logo className="h-10 w-10" />
         </div>
         <div className="min-w-0">
@@ -16,10 +16,7 @@ const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
         </div>
         {/* Optionaler Start-Trigger, wenn übergeben */}
         {onStart ? (
-          <button
-            onClick={onStart}
-            className="ml-auto rounded-[14px] border border-white/30 bg-white/60 px-3 py-1.5 text-sm backdrop-blur-md"
-          >
+          <button onClick={onStart} className="ml-auto btn-secondary !py-1.5 !px-3 text-sm rounded-[14px]">
             Start
           </button>
         ) : null}

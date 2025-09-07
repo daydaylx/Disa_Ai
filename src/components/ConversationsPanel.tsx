@@ -62,14 +62,14 @@ export default function ConversationsPanel({ open, onClose, currentId, onSelect 
       <aside
         className={`absolute left-0 top-0 h-full w-[320px] p-3 transition-transform md:w-[360px] ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="h-full rounded-2xl bg-gradient-to-tr from-neutral-500/25 via-neutral-500/10 to-transparent p-[1px]">
-          <div className="flex h-full flex-col rounded-2xl border border-white/30 bg-white/65 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-neutral-900/55">
-            <div className="flex items-center gap-2 border-b border-white/30 px-3 py-2 dark:border-white/10">
+        <div className="h-full rounded-2xl bg-grad-card p-[1px]">
+          <div className="flex h-full flex-col glass">
+            <div className="flex items-center gap-2 border-b border-border px-3 py-2">
               <Icon name="sparkles" width="16" height="16" />
               <div className="text-sm font-medium">Unterhaltungen</div>
               <button
                 onClick={onClose}
-                className="ml-auto rounded border border-neutral-300 px-2 py-1 text-xs hover:bg-neutral-100/60 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
+                className="ml-auto btn-secondary !py-1 !px-2 text-xs"
               >
                 Schließen
               </button>
@@ -79,11 +79,11 @@ export default function ConversationsPanel({ open, onClose, currentId, onSelect 
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Suchen…"
-                className="w-full rounded-xl border border-neutral-300/80 bg-white/80 px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:ring-offset-2 dark:border-neutral-700/80 dark:bg-neutral-950/40"
+                className="input w-full"
               />
               <button
                 onClick={createNew}
-                className="rounded-xl border border-blue-600 bg-blue-600 px-3 py-2 text-white hover:brightness-110"
+                className="btn-primary px-3 py-2"
               >
                 Neu
               </button>
@@ -96,10 +96,7 @@ export default function ConversationsPanel({ open, onClose, currentId, onSelect 
                 {filtered.map((it) => {
                   const active = it.id === currentId;
                   return (
-                    <li
-                      key={it.id}
-                      className={`rounded-xl border ${active ? "border-blue-600 bg-blue-600/10" : "border-white/30 bg-white/60 dark:border-white/10 dark:bg-neutral-950/40"} backdrop-blur`}
-                    >
+                    <li key={it.id} className={`glass ${active ? "ring-2 ring-ring" : ""}`}>
                       <button
                         onClick={() => onSelect(it.id)}
                         className="w-full px-3 py-2 text-left"
@@ -110,13 +107,13 @@ export default function ConversationsPanel({ open, onClose, currentId, onSelect 
                       <div className="flex gap-2 px-3 pb-2">
                         <button
                           onClick={() => rename(it.id)}
-                          className="rounded-full border border-neutral-300 px-2 py-1 text-xs hover:bg-neutral-100/60 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
+                          className="btn-secondary !py-1 !px-2 text-xs rounded-full"
                         >
                           Umbenennen
                         </button>
                         <button
                           onClick={() => remove(it.id)}
-                          className="rounded-full border border-neutral-300 px-2 py-1 text-xs hover:bg-neutral-100/60 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
+                          className="btn-secondary !py-1 !px-2 text-xs rounded-full"
                         >
                           Löschen
                         </button>
