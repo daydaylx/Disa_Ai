@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // shadcn/ui Token-Mapping (erzeugt u. a. 'border-border')
+        // Design tokens mapped to CSS variables (HSL triples)
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -49,13 +49,15 @@ const config: Config = {
         "kl-fg": "rgb(230 230 234)",
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
+        lg: "var(--radius)", // global radius (16px)
+        md: "calc(var(--radius) - 2px)", // ~14px for inputs/buttons
         sm: "calc(var(--radius) - 4px)",
         xl: "1rem",
       },
       boxShadow: {
-        soft: "0 10px 20px -5px rgba(0,0,0,.3)",
+        // soft, friendly shadow for glass panels
+        soft: "0 10px 30px rgba(24,39,75,0.12)",
+        glass: "0 10px 30px rgba(24,39,75,0.12)",
       },
     },
   },
