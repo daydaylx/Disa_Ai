@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Design tokens mapped to CSS variables (HSL triples)
+        // Design tokens mapped to CSS variables (HSL triples from theme.css)
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -43,21 +43,20 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-
-        // projekt-spezifisch
-        "kl-bg": "rgb(15 15 18)",
-        "kl-fg": "rgb(230 230 234)",
+        // States
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        error: "hsl(var(--error))",
       },
       borderRadius: {
-        lg: "var(--radius)", // global radius (16px)
-        md: "calc(var(--radius) - 2px)", // ~14px for inputs/buttons
-        sm: "calc(var(--radius) - 4px)",
-        xl: "1rem",
+        lg: "var(--radius)", // 16px
+        md: "calc(var(--radius) - 2px)", // 14px
+        sm: "calc(var(--radius) - 4px)", // 12px
+        full: "9999px", // for chips/pills
       },
       boxShadow: {
         // soft, friendly shadow for glass panels
         soft: "0 10px 30px rgba(24,39,75,0.12)",
-        glass: "0 10px 30px rgba(24,39,75,0.12)",
       },
     },
   },
