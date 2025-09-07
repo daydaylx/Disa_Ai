@@ -12,7 +12,7 @@ export default function ChatsView({ onOpen }: Props) {
   return (
     <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6">
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl leading-7 font-semibold">Unterhaltungen</h1>
+        <h1 className="text-2xl leading-7">Unterhaltungen</h1>
         <div className="flex gap-2">
           <input
             value={title}

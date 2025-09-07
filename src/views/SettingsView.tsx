@@ -224,13 +224,13 @@ export default function SettingsView() {
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
       <header className="space-y-1">
-        <h1 className="text-2xl leading-7 font-semibold">Einstellungen</h1>
+        <h1 className="text-2xl leading-7">Einstellungen</h1>
         <p className="text-sm text-slate-600">API-Key, Stil, Modell & Rolle.</p>
       </header>
 
       {/* App-Installation */}
       <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
-        <h2 className="mb-3 text-base font-semibold title-underline">App-Installation</h2>
+        <h2 className="mb-3 title-underline">App-Installation</h2>
         <div className="text-sm opacity-90">
           Installiere die App für schnellen Zugriff, eigenständiges Icon und Offline-Unterstützung.
         </div>
@@ -254,7 +254,7 @@ export default function SettingsView() {
 
       {/* API-Key */}
       <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
-        <h2 className="mb-3 text-base font-semibold title-underline">OpenRouter API Key</h2>
+        <h2 className="mb-3 title-underline">OpenRouter API Key</h2>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input
             type="password"
@@ -273,7 +273,7 @@ export default function SettingsView() {
 
       {/* Stil */}
       <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
-        <h2 className="mb-3 text-base font-semibold title-underline">Stil</h2>
+        <h2 className="mb-3 title-underline">Stil</h2>
         <div className="grid gap-2">
           <select
             value={style}
@@ -296,7 +296,7 @@ export default function SettingsView() {
 
       {/* Kontext & Gedächtnis */}
       <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
-        <h2 className="mb-3 text-base font-semibold title-underline">Kontext & Gedächtnis</h2>
+        <h2 className="mb-3 title-underline">Kontext & Gedächtnis</h2>
         <div className="grid gap-3">
           <div className="flex items-center justify-between rounded-lg border border-white/30 bg-white/60 px-3 py-2 text-sm backdrop-blur-md">
             <Switch checked={memEnabled} onChange={(v) => onToggleMem({ target: { checked: v } } as any)} label="Gedächtnis aktivieren (lokal, pro Chat)" />
