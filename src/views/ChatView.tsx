@@ -72,6 +72,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [showScrollFab, setShowScrollFab] = useState(false);
   const toasts = useToasts();
   const [showAll, setShowAll] = useState(false);
+  const [showAdv, setShowAdv] = useState(false);
+  const [menuFor, setMenuFor] = useState<string | null>(null);
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -321,15 +323,46 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         <InstallBanner />
         <OrbStatus streaming={sending} modelLabel={modelLabel} />
         <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1">
-          <div className="text-xs text-neutral-400">
-            Gedächtnis: {memEnabled ? "aktiv" : "inaktiv"}
-            {memEnabled ? (
-              <span className="ml-2 opacity-80">(max {ctxLimits.max}, Reserve {ctxLimits.reserve})</span>
-            ) : null}
-          </div>
+          <button
+            type="button"
+            className="text-xs text-neutral-400 underline decoration-dotted underline-offset-2"
+            onClick={() => setShowAdv((v) => !v)}
+            aria-expanded={showAdv}
+            aria-controls="adv-info"
+          >
+            Details
+          </button>
+          {showAdv && (
+            <div id="adv-info" className="mt-1 text-xs text-neutral-400">
+              Gedächtnis: {memEnabled ? "aktiv" : "inaktiv"}
+              {memEnabled ? (
+                <span className="ml-2 opacity-80">(max {ctxLimits.max}, Reserve {ctxLimits.reserve})</span>
+              ) : null}
+            </div>
+          )}
         </div>
 
-        {msgs.length <= 1 && <HeroCard onStart={() => composerRef.current?.focus()} />}
+        {msgs.length <= 1 && (
+          <>
+            <HeroCard onStart={() => composerRef.current?.focus()} />
+            <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-4">
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm">
+                <div className="font-medium">Einstellungen prüfen</div>
+                <div className="opacity-80">Hinterlege API‑Key und Modell für echte Antworten.</div>
+                <div className="mt-2">
+                  <button
+                    className="nav-pill"
+                    onClick={() => {
+                      try { location.hash = "#/settings"; } catch { /* ignore */ }
+                    }}
+                  >
+                    Zu Einstellungen
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
 
         <section aria-label="Verlauf" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
           {(() => {
@@ -380,53 +413,72 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   />
                   <div
                     className={[
-                      "mt-2 flex gap-2 text-xs opacity-70 transition-opacity",
+                      "mt-2 flex items-center gap-2 text-xs opacity-70 transition-opacity",
                       mine ? "justify-end" : "justify-start",
                     ].join(" ")}
                   >
-                    <button
-                      className="nav-pill"
-                      onClick={() => {
-                        (async () => {
-                          try {
-                            await navigator.clipboard.writeText(m.content);
-                          } catch {
+                    <div className="relative">
+                      <button
+                        className="nav-pill"
+                        onClick={() => {
+                          (async () => {
                             try {
-                              const ta = document.createElement("textarea");
-                              ta.value = m.content;
-                              ta.setAttribute("readonly", "");
-                              ta.style.position = "fixed";
-                              ta.style.top = "-9999px";
-                              document.body.appendChild(ta);
-                              ta.select();
-                              try {
-                                document.execCommand("copy");
-                              } catch {
-                                /* ignore */
-                              }
-                              document.body.removeChild(ta);
+                              await navigator.clipboard.writeText(m.content);
                             } catch {
-                              /* ignore */
+                              try {
+                                const ta = document.createElement("textarea");
+                                ta.value = m.content;
+                                ta.setAttribute("readonly", "");
+                                ta.style.position = "fixed";
+                                ta.style.top = "-9999px";
+                                document.body.appendChild(ta);
+                                ta.select();
+                                try { document.execCommand("copy"); } catch { /* ignore */ }
+                                document.body.removeChild(ta);
+                              } catch { /* ignore */ }
                             }
-                          }
-                          toasts.push({
-                            kind: "success",
-                            title: "Kopiert",
-                            message: "Nachricht kopiert.",
-                          });
-                        })();
-                      }}
-                      aria-label="Nachricht kopieren"
-                    >
-                      Kopieren
-                    </button>
-                    <button
-                      className="rounded-md border border-red-800 bg-red-900/30 px-2 py-1 text-red-200"
-                      onClick={() => setMsgs((list) => list.filter((x) => x.id !== m.id))}
-                      aria-label="Nachricht löschen"
-                    >
-                      Löschen
-                    </button>
+                            toasts.push({
+                              kind: "success",
+                              title: "Kopiert",
+                              message: "Nachricht kopiert.",
+                            });
+                          })();
+                        }}
+                        aria-label="Nachricht kopieren"
+                      >
+                        Kopieren
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <button
+                        className="nav-pill"
+                        aria-haspopup="menu"
+                        aria-expanded={menuFor === m.id}
+                        onClick={() => setMenuFor(menuFor === m.id ? null : m.id)}
+                        aria-label="Weitere Optionen"
+                        title="Mehr"
+                      >
+                        ⋯
+                      </button>
+                      {menuFor === m.id && (
+                        <div
+                          role="menu"
+                          className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-md border border-neutral-700 bg-neutral-900 p-1 shadow-lg"
+                        >
+                          <button
+                            className="w-full rounded px-2 py-1 text-left text-red-200 hover:bg-red-900/40"
+                            onClick={() => {
+                              setMsgs((list) => list.filter((x) => x.id !== m.id));
+                              setMenuFor(null);
+                            }}
+                            aria-label="Nachricht löschen"
+                            role="menuitem"
+                          >
+                            Löschen
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                       {mine && <Avatar kind="user" />}
