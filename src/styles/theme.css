@@ -2,10 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Projektweite CSS-Variablen */
+/*
+  Theme tokens (HSL triples) – Light default, Dark preserved via .dark
+  Tailwind maps tokens via hsl(var(--token)) in tailwind.config.ts
+*/
 :root {
-  --kl-bg: rgb(15 15 18);
-  --kl-fg: rgb(230 230 234);
+  color-scheme: light;
+  /* Light palette */
+  --background: 228 38% 97%; /* #F6F7FB */
+  --foreground: 222 47% 11%; /* #0F172A */
+
+  --muted: 215 16% 47%; /* #64748B */
+  --muted-foreground: 215 16% 27%;
+
+  --border: 220 30% 90%; /* #E6E8F0 */
+  --input: 220 30% 90%;
+  --ring: 222 100% 68%; /* #5B8CFF */
+
+  --primary: 222 100% 68%; /* #5B8CFF */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 256 100% 65%; /* #7C4DFF */
+  --secondary-foreground: 0 0% 100%;
+
+  --accent: 142 71% 45%; /* #22C55E */
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84% 60%; /* #EF4444 */
+  --destructive-foreground: 0 0% 100%;
+
+  --success: 160 84% 39%; /* #10B981 */
+  --warning: 38 92% 50%; /* #F59E0B */
+  --error: 0 84% 60%; /* #EF4444 */
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --card: 0 0% 100%; /* #FFFFFF */
+  --card-foreground: 222 47% 11%;
+
+  /* Radii */
+  --radius: 16px; /* global radius */
+}
+
+.dark {
+  color-scheme: dark;
+  --background: 222 47% 7%; /* near slate-950 */
+  --foreground: 210 40% 98%; /* near zinc-50 */
+
+  --muted: 217 32% 24%;
+  --muted-foreground: 215 20% 65%;
+
+  --border: 215 19% 27%;
+  --input: 217 32% 17%;
+  --ring: 256 100% 65%; /* keep accessible */
+
+  --primary: 222 100% 68%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 256 100% 65%;
+  --secondary-foreground: 0 0% 100%;
+
+  --accent: 142 71% 45%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --popover: 222 47% 9%;
+  --popover-foreground: 210 40% 98%;
+  --card: 222 47% 9%;
+  --card-foreground: 210 40% 98%;
 }
 
 @layer base {
@@ -15,22 +81,87 @@
     height: 100%;
   }
   body {
-    background: var(--kl-bg);
-    color: var(--kl-fg);
+    @apply bg-background text-[15px] leading-6 text-foreground;
+  }
+  h1 {
+    @apply text-2xl leading-7;
+  }
+  h2 {
+    @apply text-lg leading-6;
   }
 }
 
+/* Glassmorphism utilities and component skins */
 @layer components {
-  .card {
-    @apply rounded-xl border border-neutral-800 bg-neutral-900/60 shadow-soft;
+  /* Glass surface (light) */
+  .glass {
+    @apply border border-white/30 bg-white/65 shadow-soft backdrop-blur-lg;
   }
+  .glass-xl {
+    @apply border border-white/30 bg-white/65 shadow-soft backdrop-blur-xl;
+  }
+
+  /* Cards */
+  .card {
+    @apply glass rounded-2xl;
+  }
+  .card-solid {
+    @apply rounded-2xl border border-border bg-card shadow-soft;
+  }
+
+  /* Buttons (utility classes to complement Button component) */
   .btn {
-    @apply inline-flex items-center justify-center rounded-lg px-3 py-2 font-medium;
+    @apply inline-flex select-none items-center justify-center rounded-md font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60;
+    min-width: 44px;
+    min-height: 44px;
   }
   .btn-primary {
-    @apply btn bg-violet-600 text-white hover:bg-violet-500;
+    @apply btn text-white shadow-soft active:translate-y-[2px];
+    background-image: linear-gradient(135deg, #7c4dff 0%, #5b8cff 100%);
+  }
+  .btn-secondary {
+    @apply btn glass text-foreground active:translate-y-[2px];
   }
   .btn-ghost {
-    @apply btn bg-transparent hover:bg-neutral-800/60;
+    @apply btn bg-transparent text-foreground hover:bg-black/5 active:translate-y-[1px];
+  }
+  .btn-destructive {
+    @apply btn text-white shadow-soft active:translate-y-[2px];
+    background: hsl(var(--destructive));
+  }
+
+  /* Inputs / selects / textareas */
+  .input {
+    @apply h-11 w-full rounded-md border border-white/30 bg-white/70 px-3 py-2 text-sm text-foreground backdrop-blur-md placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(91,140,255,0.4)] focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+  .textarea {
+    @apply w-full rounded-md border border-white/30 bg-white/70 px-3 py-2 text-sm text-foreground backdrop-blur-md placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(91,140,255,0.4)] focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  /* Nav pills (top/bottom) */
+  .nav-pill {
+    @apply rounded-full border border-white/30 bg-white/60 px-3 py-1.5 text-sm text-foreground backdrop-blur-md transition hover:bg-white/70;
+  }
+  .nav-pill--active {
+    @apply nav-pill text-white shadow-soft;
+    background-image: linear-gradient(135deg, #7c4dff 0%, #5b8cff 100%);
+    box-shadow: inset 0 -2px 0 #7c4dff;
+  }
+
+  /* Title underline */
+  .title-underline {
+    position: relative;
+    padding-bottom: 6px;
+  }
+  .title-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: #7c4dff;
+    opacity: 0.7;
+    border-radius: 2px;
   }
 }
