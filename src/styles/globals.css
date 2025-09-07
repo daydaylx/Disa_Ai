@@ -43,7 +43,7 @@ body {
     @apply rounded-2xl border border-border bg-[#12121A]/90 shadow-card;
   }
   .glass {
-    @apply backdrop-blur-xs border border-white/10 bg-white/5;
+    @apply border border-white/10 bg-white/5 backdrop-blur-sm;
   }
   .focus-ring {
     @apply outline-none ring-0 focus:shadow-ring;

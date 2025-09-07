@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // New Aurora Palette
+        // Aurora palette (used by gradients/effects)
         aurora: {
           pink: "#FF85E1",
           magenta: "#BF5AF2",
@@ -17,14 +17,33 @@ const config: Config = {
           blue: "#5B8CFF",
           cyan: "#22D3EE",
         },
-        // Base colors mapped to CSS variables
+        // Legacy tokens still referenced in styles
         bg: "var(--bg)",
         text: "var(--text)",
         "text-muted": "var(--text-muted)",
-        // States
-        success: "#10B981",
-        error: "#EF4444",
-        warning: "#F59E0B",
+        // Shadcn-style semantic tokens (HSL variables)
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: "hsl(var(--card))",
+        "card-foreground": "hsl(var(--card-foreground))",
+        popover: "hsl(var(--popover))",
+        "popover-foreground": "hsl(var(--popover-foreground))",
+        primary: "hsl(var(--primary))",
+        "primary-foreground": "hsl(var(--primary-foreground))",
+        secondary: "hsl(var(--secondary))",
+        "secondary-foreground": "hsl(var(--secondary-foreground))",
+        muted: "hsl(var(--muted))",
+        "muted-foreground": "hsl(var(--muted-foreground))",
+        accent: "hsl(var(--accent))",
+        "accent-foreground": "hsl(var(--accent-foreground))",
+        destructive: "hsl(var(--destructive))",
+        "destructive-foreground": "hsl(var(--destructive-foreground))",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        // Extra surface/border tokens used by glass styles
+        "surface-glass": "var(--surface-glass)",
+        "border-glass": "var(--border-glass)",
       },
       borderRadius: {
         lg: "16px",
@@ -35,6 +54,9 @@ const config: Config = {
       boxShadow: {
         soft: "var(--shadow-soft)",
         glow: "var(--glow-primary)",
+        // Used by components and utilities in CSS via @apply
+        card: "var(--shadow-soft)",
+        ring: "0 0 0 2px hsl(var(--ring))",
       },
       backgroundImage: {
         "grad-primary": "var(--grad-primary)",

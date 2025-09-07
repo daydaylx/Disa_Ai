@@ -47,7 +47,28 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
     return out;
   }, [msg.content]);
   return (
-    <div className="my-2 text-text">
+    <div className="relative my-2 text-text">
+      {/* Nachricht kopieren */}
+      <button
+        type="button"
+        aria-label="Nachricht kopieren"
+        className="absolute right-1 top-1 rounded-md border border-white/20 bg-white/20 px-2 py-0.5 text-xs text-text backdrop-blur-sm hover:bg-white/30"
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(msg.content);
+          } catch {
+            /* ignore */
+          }
+          // Toast in übergeordneter View auslösen via CustomEvent
+          window.dispatchEvent(
+            new CustomEvent("disa:toast", {
+              detail: { kind: "success", title: "Nachricht kopiert." },
+            } as any),
+          );
+        }}
+      >
+        Kopieren
+      </button>
       {parts.map((p, i) =>
         p.t === "code" ? (
           <CodeBlock key={i} code={p.content} lang={p.lang ?? "txt"} onCopied={() => {}} />
@@ -284,6 +305,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
           <div className="flex items-end gap-2">
             <textarea
               ref={composerRef}
+              data-testid="composer-input"
               className="input w-full resize-none bg-transparent p-3 outline-none"
               placeholder="Nachricht eingeben…"
               value={text}
@@ -292,9 +314,9 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
               rows={2}
             />
             {sending ? (
-              <Button variant="secondary" size="sm" onClick={stop}>Stop</Button>
+              <Button data-testid="composer-stop" variant="secondary" size="sm" onClick={stop}>Stop</Button>
             ) : (
-              <Button variant="primary" size="sm" onClick={send}>Senden</Button>
+              <Button data-testid="composer-send" variant="primary" size="sm" onClick={send}>Senden</Button>
             )}
           </div>
         </div>
