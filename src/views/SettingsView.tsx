@@ -264,7 +264,7 @@ export default function SettingsView() {
             aria-label="API-Schlüssel"
             className="input min-w-0 flex-1 text-sm"
           />
-          <Button onClick={saveKey} aria-label="API-Schlüssel speichern">
+          <Button variant="secondary" onClick={saveKey} aria-label="API-Schlüssel speichern" data-testid="settings-save-key">
             Speichern
           </Button>
         </div>
@@ -280,6 +280,7 @@ export default function SettingsView() {
             onChange={onStyleChange}
             aria-label="Stil auswählen"
             className="w-full input text-sm"
+            data-testid="settings-style"
           >
             <option value="concise">{STYLE_META.concise?.label ?? "Kompakt"}</option>
             <option value="blunt_de">{STYLE_META.blunt_de?.label ?? "Direkt (DE)"}</option>
@@ -311,6 +312,7 @@ export default function SettingsView() {
                 onChange={(e) => onCtxMax(Number(e.target.value) || 0)}
                 className="w-28 rounded-md border border-border bg-background px-2 py-1"
                 aria-label="Maximales Kontextfenster"
+                data-testid="settings-ctx-max"
               />
             </label>
             <label className="flex items-center gap-2">
@@ -323,6 +325,7 @@ export default function SettingsView() {
                 onChange={(e) => onCtxReserve(Number(e.target.value) || 0)}
                 className="w-28 rounded-md border border-border bg-background px-2 py-1"
                 aria-label="Reservierte Tokens für die Antwort"
+                data-testid="settings-ctx-reserve"
               />
             </label>
             <label className="flex items-center gap-2">
@@ -336,6 +339,7 @@ export default function SettingsView() {
                 onChange={(e) => onComposerOffset(Number(e.target.value) || 48)}
                 className="w-28 rounded-md border border-border bg-background px-2 py-1"
                 aria-label="Offset der Chat‑Eingabe vom unteren Rand"
+                data-testid="settings-composer-offset"
               />
             </label>
           </div>
