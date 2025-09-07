@@ -43,7 +43,6 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   const [policy, setPolicy] = React.useState<"any" | "free" | "moderate" | "strict">("any");
   const [cost, setCost] = React.useState<"all" | "free" | "low" | "med" | "high">("all");
   const [sortBy, setSortBy] = React.useState<"label" | "price" | "ctx">("label");
-  const [detailsFor, setDetailsFor] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     let ok = true;
@@ -124,25 +123,18 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   const filtered = React.useMemo(() => {
     const norm = q.trim().toLowerCase();
     const matchesPolicy = (m: ModelEntry) => {
-      // "any" oder "loose" → keine Einschränkung
       if (policyFromRole === "any" || policyFromRole === "loose") return true;
-      // "free" immer zulassen
       if (m.safety === "free") return true;
-      // sonst exakte Übereinstimmung (moderate/strict)
       return m.safety === policyFromRole;
     };
     const base = mergedAll.filter((m) => {
-      // expliziter Rollen-Policy-Filter
       if (!matchesPolicy(m)) return false;
-      // UI-Filter
       if (onlyFree && !isFreeModel(m)) return false;
       if (provider !== "all" && m.provider !== provider) return false;
       if (minCtx > 0 && (m.ctx ?? 0) < minCtx) return false;
-      // Safety/Policy-Filter (Benutzerauswahl)
       if (policy !== "any" && m.safety !== policy && !(policy === "free" && isFreeModel(m))) {
         return false;
       }
-      // Kostenkategorie
       if (cost !== "all" && priceBucket(m) !== cost) return false;
 
       if (norm === "") return true;
@@ -254,130 +246,38 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
       </div>
 
-      <div className="max-h-[360px] overflow-auto rounded-2xl border border-white/30 bg-white/60 backdrop-blur-lg shadow-soft" data-no-swipe>
-        <table className="w-full text-sm text-slate-700">
-          <thead className="sticky top-0 bg-white/70 backdrop-blur">
-            <tr className="text-left">
-              <th className="px-3 py-2 font-medium text-slate-900">Modell</th>
-              <th className="px-3 py-2 font-medium">Provider</th>
-              <th className="px-3 py-2 font-medium">Kontext</th>
-              <th className="px-3 py-2 font-medium">Preis/1k</th>
-              <th className="px-3 py-2 font-medium">Policy</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((m) => {
-              const active = value === m.id;
-              const pin = priceIn(m);
-              const pout = priceOut(m);
-              const priceLabel = pin || pout ? `${pin}/${pout}` : (isFreeModel(m) ? "frei" : "—");
-              const bucket = priceBucket(m);
-              return (
-                <>
-                <tr
-                  key={m.id}
-                  aria-selected={active}
-                  onClick={() => onChange(m.id)}
-                  className={`h-14 cursor-pointer border-t border-white/30 hover:bg-white/50 aria-selected:bg-white/60`}
-                >
-                  <td className="px-3 py-2 align-middle">
-                    <div className="truncate font-medium text-slate-900">{m.label ?? m.id}</div>
-                    <div className="truncate text-xs text-slate-500">{m.id}</div>
-                    <div className="mt-1 flex flex-wrap items-center gap-1 text-[11px]">
-                      {(isFreeModel(m) || (m as any).freeBadge) ? (
-                        <span className="rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-[#22C55E] backdrop-blur-md" data-testid="model-free">free</span>
-                      ) : (
-                        <span className="rounded-full border border-white/30 bg-white/60 px-2 py-0.5 backdrop-blur-md text-slate-700">
-                          {bucket === "low" ? "günstig" : bucket === "med" ? "mittel" : "teuer"}
-                        </span>
-                      )}
-                      {m.tags?.slice(0, 3).map((t) => (
-                        <span key={t} className="rounded-full border border-white/30 bg-white/60 px-2 py-0.5 backdrop-blur-md">
-                          {t}
-                        </span>
-                      ))}
-                      <button
-                        type="button"
-                        className="ml-2 rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-[11px] backdrop-blur-md hover:bg-white/70"
-                        onClick={(e) => { e.stopPropagation?.(); setDetailsFor(detailsFor === m.id ? null : m.id); }}
-                        aria-expanded={detailsFor === m.id}
-                        aria-controls={`model-details-${m.id}`}
-                      >
-                        Details
-                      </button>
-                    </div>
-                  </td>
-                  <td className="px-3 py-2 align-middle">{m.provider ?? "—"}</td>
-                  <td className="px-3 py-2 align-middle">{m.ctx ?? "—"}</td>
-                  <td className="px-3 py-2 align-middle whitespace-nowrap">{priceLabel}</td>
-                  <td className="px-3 py-2 align-middle whitespace-nowrap">
-                    <span
-                      className={
-                        m.safety === "strict"
-                          ? "rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-[#EF4444] backdrop-blur-md"
-                          : m.safety === "moderate"
-                            ? "rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-[#F59E0B] backdrop-blur-md"
-                            : "rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-[#10B981] backdrop-blur-md"
-                      }
-                    >
-                      {m.safety === "strict" ? "strikt" : m.safety === "moderate" ? "moderat" : "frei"}
-                    </span>
-                  </td>
-                </tr>
-                {detailsFor === m.id && (
-                  <tr>
-                    <td colSpan={5}>
-                      <div
-                        id={`model-details-${m.id}`}
-                        role="region"
-                        aria-label="Modelldetails"
-                        className="m-2 rounded-2xl border border-white/30 bg-white/60 p-3 text-sm text-slate-700 backdrop-blur-lg shadow-soft"
-                      >
-                        <div className="flex flex-wrap gap-3">
-                          <div>
-                            <div className="text-xs opacity-70">IDs</div>
-                            <div className="mt-1 flex flex-wrap gap-1">
-                              {((m as any).ids as string[] | undefined)?.map((id) => (
-                                <span key={id} className="rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-xs font-mono backdrop-blur-md">
-                                  {id}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs opacity-70">Tags</div>
-                            <div className="mt-1 flex flex-wrap gap-1">
-                              {m.tags?.slice(0, 6).map((t) => (
-                                <span key={t} className="rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-xs backdrop-blur-md">
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs opacity-70">Preis/1k</div>
-                            <div className="mt-1 font-mono">
-                              in: {m.pricing?.in ?? "—"} / out: {m.pricing?.out ?? "—"}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
+      <div className="max-h-[420px] overflow-y-auto space-y-2 p-1" data-no-swipe>
+        {filtered.map((m) => {
+          const active = value === m.id;
+          return (
+            <div
+              key={m.id}
+              aria-selected={active}
+              onClick={() => onChange(m.id)}
+              className="card-solid grid cursor-pointer grid-cols-3 items-center gap-3 p-3 text-sm transition-transform hover:-translate-y-[1px] aria-selected:ring-2 aria-selected:ring-ring"
+            >
+              <div className="col-span-2 min-w-0">
+                <div className="truncate font-medium text-foreground">{m.label ?? m.id}</div>
+                <div className="truncate text-xs text-muted-foreground">{m.provider ?? "—"}</div>
+              </div>
+              <div className="flex items-center justify-end gap-2 text-xs">
+                {(isFreeModel(m) || (m as any).freeBadge) && (
+                  <span className="rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-success backdrop-blur-md">free</span>
                 )}
-                </>
-              );
-            })}
-            {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="px-3 py-6 text-center opacity-70">
-                  Keine Modelle gefunden. Prüfe Filter und API‑Key.
-                </td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
+                <span className={`rounded-full border border-white/30 bg-white/60 px-2 py-0.5 backdrop-blur-md ${m.safety === 'strict' ? 'text-error' : m.safety === 'moderate' ? 'text-warning' : 'text-success'}`}>
+                  {m.safety}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+        {filtered.length === 0 && (
+          <div className="p-6 text-center text-sm text-muted-foreground">
+            Keine Modelle gefunden. Prüfe Filter und API‑Key.
+          </div>
+        )}
       </div>
     </section>
   );
 }
+
