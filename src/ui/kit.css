@@ -1,61 +1,22 @@
-/* --- UI Kit (balanced CSS) ---------------------------------------------- */
+/* --- UI Kit (compat) ---------------------------------------------- */
+@tailwind components;
+@layer components {
+  /* Panels / Cards – inline styles to avoid cross-file @apply order issues */
+  .card {
+    @apply rounded-2xl border border-border-glass bg-surface-glass text-text shadow-soft backdrop-blur-xl;
+  }
+  .glass,
+  .panel {
+    @apply rounded-2xl border border-border-glass bg-surface-glass text-text shadow-soft backdrop-blur-xl;
+  }
 
-/* Panels / Cards */
-.card,
-.glass,
-.panel {
-  background: var(--panel);
-  backdrop-filter: blur(12px);
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-e1);
-}
+  /* Inputs: select/textarea share input style */
+  .select,
+  .textarea {
+    @apply h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
 
-/* Typography helpers */
-.muted {
-  color: var(--muted);
-}
-.text {
-  color: var(--text);
-}
-
-/* Buttons */
-.btn {
-  font-weight: 700;
-  border-radius: var(--radius-btn);
-  padding: 10px 16px;
-}
-.btn-primary {
-  background: linear-gradient(180deg, #6ea8ff, var(--brand));
-  color: var(--brand-ink);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
-}
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.04);
-  border: var(--border);
-  color: var(--text);
-}
-.btn:disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-/* Inputs */
-.input,
-.select,
-.textarea {
-  background: rgba(255, 255, 255, 0.04);
-  border: var(--border);
-  border-radius: 12px;
-  color: var(--text);
-}
-.input:focus,
-.select:focus,
-.textarea:focus,
-button:focus-visible,
-a:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.55);
+  /* Buttons live in theme.css; disabled state handled via classes */
 }
 
 /* Sticky Actions – über Tabbar, blockiert nichts */
