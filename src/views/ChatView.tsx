@@ -52,7 +52,7 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
       <button
         type="button"
         aria-label="Nachricht kopieren"
-        className="absolute right-1 top-1 rounded-md border border-white/20 bg-white/20 px-2 py-0.5 text-xs text-text backdrop-blur-sm hover:bg-white/30"
+        className="btn-secondary !min-h-0 !px-2 !py-1 absolute right-2 top-2 text-xs"
         onClick={async () => {
           try {
             await navigator.clipboard.writeText(msg.content);
