@@ -41,7 +41,7 @@ export default function QuickStartView() {
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
       <header className="space-y-1">
-        <h1 className="text-2xl leading-7 font-semibold title-underline">Quickstart</h1>
+        <h1 className="text-2xl leading-7 title-underline">Quickstart</h1>
         <p className="text-sm text-slate-600">20 Startfragen, die häufig helfen.</p>
       </header>
 

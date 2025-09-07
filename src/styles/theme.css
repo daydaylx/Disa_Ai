@@ -84,10 +84,13 @@
     @apply bg-background text-[15px] leading-6 text-foreground;
   }
   h1 {
-    @apply text-2xl leading-7;
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl leading-7 text-transparent;
   }
   h2 {
-    @apply text-lg leading-6;
+    @apply text-lg leading-6 text-secondary;
+  }
+  a:not([class]) {
+    @apply text-primary underline decoration-primary/50 underline-offset-4 transition hover:decoration-primary/100;
   }
 }
 
@@ -132,10 +135,10 @@
 
   /* Inputs / selects / textareas */
   .input {
-    @apply h-11 w-full rounded-md border border-white/30 bg-white/70 px-3 py-2 text-sm text-foreground backdrop-blur-md placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(91,140,255,0.4)] focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    @apply h-11 w-full rounded-md border border-white/30 bg-white/70 px-3 py-2 text-sm text-foreground backdrop-blur-md placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
   .textarea {
-    @apply w-full rounded-md border border-white/30 bg-white/70 px-3 py-2 text-sm text-foreground backdrop-blur-md placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(91,140,255,0.4)] focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    @apply w-full rounded-md border border-white/30 bg-white/70 px-3 py-2 text-sm text-foreground backdrop-blur-md placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
   /* Nav pills (top/bottom) */
