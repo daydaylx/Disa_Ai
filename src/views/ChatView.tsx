@@ -1,12 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 
 import Avatar from "../components/chat/Avatar";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import { TypingIndicator } from "../components/chat/TypingIndicator";
 import CodeBlock from "../components/CodeBlock";
-import { InlineNote } from "../components/InlineNote";
-// Hinweisblock/Orb entfernt für cleanere UI
 import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
 import { getVirtualListEnabled } from "../config/featureFlags";
@@ -50,7 +47,7 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
     return out;
   }, [msg.content]);
   return (
-    <div className="my-2">
+    <div className="my-2 text-text">
       {parts.map((p, i) =>
         p.t === "code" ? (
           <CodeBlock key={i} code={p.content} lang={p.lang ?? "txt"} onCopied={() => {}} />
@@ -68,30 +65,14 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [showAll] = useState(false);
   const [showScrollFab, setShowScrollFab] = useState(false);
   const toasts = useToasts();
-  const [showAll, setShowAll] = useState(false);
-  const [showAdv, setShowAdv] = useState(false);
-  const [menuFor, setMenuFor] = useState<string | null>(null);
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  // Hartes Soft‑Limit: Nur die letzten MAX_HISTORY Nachrichten im State behalten
   const MAX_HISTORY = 200;
   const trimHistory = (arr: Msg[]) => (arr.length > MAX_HISTORY ? arr.slice(-MAX_HISTORY) : arr);
-
-  const modelId = useMemo(() => getSelectedModelId() ?? "", []);
-  const modelLabel = modelId || "—";
-
-  // Settings für Systemprompt/Policy
-  const style = useMemo(() => getStyle(), []);
-  const roleId = useMemo(() => getTemplateId(), []);
-  const useRoleStyle = useMemo(() => getUseRoleStyle(), []);
-  const allowNSFW = useMemo(() => getNSFW(), []);
-  const memEnabled = useMemo(() => getMemoryEnabled(), []);
-  const ctxLimits = useMemo(() => ({ max: getCtxMaxTokens(), reserve: getCtxReservedTokens() }), []);
-  const composerOffset = useMemo(() => getComposerOffset(), []);
-  const virtEnabled = useMemo(() => getVirtualListEnabled(), []);
 
   function maybeVibrate(pattern: number | number[]) {
     try {
@@ -115,7 +96,20 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     }
   }
 
-  // Lädt vorhandene Nachrichten aus der Unterhaltung (falls convId gesetzt)
+  const modelId = useMemo(() => getSelectedModelId() ?? "", []);
+  const modelLabel = modelId || "—";
+
+  // Settings für Systemprompt/Policy
+  const style = useMemo(() => getStyle(), []);
+  const roleId = useMemo(() => getTemplateId(), []);
+  const useRoleStyle = useMemo(() => getUseRoleStyle(), []);
+  const allowNSFW = useMemo(() => getNSFW(), []);
+  const memEnabled = useMemo(() => getMemoryEnabled(), []);
+  const ctxLimits = useMemo(() => ({ max: getCtxMaxTokens(), reserve: getCtxReservedTokens() }), []);
+
+  const composerOffset = useMemo(() => getComposerOffset(), []);
+  const virtEnabled = useMemo(() => getVirtualListEnabled(), []);
+
   useEffect(() => {
     if (!convId) return;
     try {
@@ -124,17 +118,12 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         .filter((m) => m.role === "user" || m.role === "assistant")
         .map((m) => ({ id: `${m.role}-${m.createdAt}`, role: m.role as "user" | "assistant", content: m.content }));
       setMsgs(mapped.length ? mapped : [{ id: uid(), role: "assistant", content: "Bereit." }]);
-    } catch {
-      /* ignore */
-    }
-     
+    } catch { /* ignore */ }
   }, [convId]);
 
-  // Scroll-FAB steuern
   useEffect(() => {
     const onScroll = () => {
-      const nearBottom =
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 64;
+      const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 64;
       setShowScrollFab(!nearBottom);
     };
     window.addEventListener("scroll", onScroll, { passive: true } as any);
@@ -146,55 +135,14 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     };
   }, []);
 
-  // Legacy Events: Fokus/Neue Session aus älteren Komponenten unterstützen
-  useEffect(() => {
-    const onFocus = () => composerRef.current?.focus();
-    const onNew = () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      composerRef.current?.focus();
-    };
-    window.addEventListener("disa:chat:focusInput", onFocus as any);
-    window.addEventListener("disa:chat:newSession", onNew as any);
-    return () => {
-      window.removeEventListener("disa:chat:focusInput", onFocus as any);
-      window.removeEventListener("disa:chat:newSession", onNew as any);
-    };
-  }, []);
-
-  // Prefill aus Quickstart übernehmen
-  useEffect(() => {
-    try {
-      const pre = localStorage.getItem("disa:prefill");
-      if (pre && pre.trim().length > 0) {
-        setText(pre);
-        localStorage.removeItem("disa:prefill");
-        setTimeout(() => composerRef.current?.focus(), 0);
-      }
-    } catch (_e) {
-      void _e;
-      /* ignore */
-    }
-  }, []);
   const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === "Escape") {
-      if (sending) {
-        e.preventDefault();
-        stop();
-      }
-      return;
+    if (e.key === "Escape" && sending) {
+      e.preventDefault();
+      stop();
     }
-    if (e.key === "Enter") {
-      // Ctrl/Cmd+Enter sendet immer
-      if (e.ctrlKey || e.metaKey) {
-        e.preventDefault();
-        send();
-        return;
-      }
-      // Enter ohne Shift sendet, Shift+Enter macht Zeilenumbruch
-      if (!e.shiftKey) {
-        e.preventDefault();
-        send();
-      }
+    if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      send();
     }
   };
 
@@ -222,7 +170,6 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     maybeVibrate(15);
 
     setMsgs((m) => trimHistory([...m, { id: uid(), role: "user", content: trimmed }]));
-    // Persistiere in geöffneter Unterhaltung
     if (convId) {
       convAppendMessage(convId, { role: "user", content: trimmed } as any);
     }
@@ -236,70 +183,36 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     const apiKey = getApiKey();
 
     let accum = "";
-    const chunkQueue: string[] = [];
-    let rafId: number | null = null;
-    let flushTimer: number | null = null;
     sendChat({
       apiKey,
       model: modelId,
       messages: buildMessages(trimmed),
       signal: ac.signal,
       onChunk: (t) => {
-        // Chunks sammeln und Updates auf ~1x pro Frame drosseln
-        chunkQueue.push(t);
-        const flush = () => {
-          const delta = chunkQueue.join("");
-          chunkQueue.length = 0;
-          accum += delta;
-          setMsgs((m) => {
-            const last = m[m.length - 1];
-            if (last?.role === "assistant" && last.content !== "Bereit.") {
-              const copy = m.slice(0, -1);
-              copy.push({ ...last, content: accum });
-              return trimHistory(copy);
-            }
-            return trimHistory([...m, { id: uid(), role: "assistant", content: accum }]);
-          });
-          rafId = null;
-          if (flushTimer != null) {
-            clearTimeout(flushTimer);
-            flushTimer = null;
+        accum += t;
+        setMsgs((m) => {
+          const last = m[m.length - 1];
+          if (last?.role === "assistant") {
+            const copy = m.slice(0, -1);
+            copy.push({ ...last, content: accum });
+            return trimHistory(copy);
           }
-        };
-
-        if (rafId == null) rafId = requestAnimationFrame(flush);
-        if (flushTimer == null) flushTimer = window.setTimeout(flush, 80);
+          return trimHistory([...m, { id: uid(), role: "assistant", content: accum }]);
+        });
       },
       onDone: () => {
         setSending(false);
         abortRef.current = null;
-        // Persistiere Assistant-Antwort als Nachricht (final)
         if (convId && accum.trim().length > 0) {
           convAppendMessage(convId, { role: "assistant", content: accum } as any);
           const turns = convGetMessages(convId).map((t) => ({ role: t.role, content: t.content }));
           const recent = turns.slice(-10);
           updateMemory(convId, recent as any);
         }
-        if (rafId != null) {
-          cancelAnimationFrame(rafId);
-          rafId = null;
-        }
-        if (flushTimer != null) {
-          clearTimeout(flushTimer);
-          flushTimer = null;
-        }
       },
       onError: (err) => {
         setSending(false);
         abortRef.current = null;
-        if (rafId != null) {
-          cancelAnimationFrame(rafId);
-          rafId = null;
-        }
-        if (flushTimer != null) {
-          clearTimeout(flushTimer);
-          flushTimer = null;
-        }
         setMsgs((m) => trimHistory([
           ...m,
           {
@@ -319,345 +232,80 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     maybeVibrate([5, 30]);
   }
 
-  const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
-  useEffect(() => {
-    const el = document.createElement("div");
-    el.setAttribute("id", "composer-portal");
-    document.body.appendChild(el);
-    setPortalEl(el);
-    return () => {
-      try {
-        document.body.removeChild(el);
-      } catch (e) {
-        void e;
-        /* ignore */
-      }
-      setPortalEl(null);
-    };
-  }, []);
-
-  // A11y: Menü-Fokus steuern und Outside-Click schließen
-  useEffect(() => {
-    if (!menuFor) return;
-    const menu = document.getElementById(`menu-${menuFor}`);
-    const first = menu?.querySelector('[role="menuitem"]') as HTMLElement | null;
-    first?.focus();
-    const onDocDown = (e: MouseEvent) => {
-      const t = e.target as Element | null;
-      if (!t) return;
-      if (t.closest(`#menu-${menuFor}`) || t.closest(`#more-${menuFor}`)) return;
-      setMenuFor(null);
-    };
-    document.addEventListener("mousedown", onDocDown, { capture: true });
-    return () => document.removeEventListener("mousedown", onDocDown, { capture: true } as any);
-  }, [menuFor]);
-
-  function closeMenuAndReturnFocus(id: string | null) {
-    if (!id) return setMenuFor(null);
-    setMenuFor(null);
-    // Fokus zurück auf Trigger
-    setTimeout(() => {
-      const trigger = document.getElementById(`more-${id}`) as HTMLElement | null;
-      trigger?.focus();
-    }, 0);
-  }
-
   return (
     <div className="min-h-[100svh]">
       <main
         id="main"
         role="main"
         className="mx-auto w-full max-w-4xl px-4 pt-3"
-        style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 160px)" }}
+        style={{ paddingBottom: `calc(var(--bottomnav-h, 56px) + 160px)` }}
       >
-        {/* Status nur klein über dem Chat */}
-        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1 text-xs text-slate-600">
+        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1 text-xs text-text-muted">
           {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || '—'}`}
         </div>
-        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1">
-          <button
-            type="button"
-            className="text-xs text-[#e5e7eb]/70 underline decoration-dotted underline-offset-2 hover:text-[#f3f4f6]"
-            onClick={() => setShowAdv((v) => !v)}
-            aria-expanded={showAdv}
-            aria-controls="adv-info"
-          >
-            Details
-          </button>
-          {showAdv && (
-            <div id="adv-info" className="mt-1 text-xs text-[#e5e7eb]/70">
-              Gedächtnis: {memEnabled ? "aktiv" : "inaktiv"}
-              {memEnabled ? (
-                <span className="ml-2 opacity-80">(max {ctxLimits.max}, Reserve {ctxLimits.reserve})</span>
-              ) : null}
-            </div>
-          )}
-        </div>
 
-        {/* Hinweisblock entfernt für cleaner Start */}
-
-        <section aria-label="Verlauf" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
+        <section aria-label="Verlauf" role="log">
           {(() => {
             const LIMIT = virtEnabled ? 60 : 80;
             const hasOverflow = msgs.length > LIMIT;
             const trimmed = hasOverflow && !showAll ? msgs.slice(-LIMIT) : msgs;
-            const hiddenCount = hasOverflow ? msgs.length - trimmed.length : 0;
 
             return (
               <>
-                {hasOverflow && !showAll && (
-                  <div className="my-3 text-center">
-                    <InlineNote kind="warn">
-                      Verlauf gekürzt: {hiddenCount} ältere Nachrichten ausgeblendet.{' '}
-                      <button
-                        className="underline decoration-amber-300/60 decoration-dotted underline-offset-4 hover:text-amber-200"
-                        onClick={() => setShowAll(true)}
-                      >
-                        Anzeigen
-                      </button>
-                    </InlineNote>
-                  </div>
-                )}
                 {trimmed.map((m) => {
                   const mine = m.role === "user";
-                  const moreBtnId = `more-${m.id}`;
-                  const menuId = `menu-${m.id}`;
                   return (
-                    <div
-                      key={m.id}
-                      className={[
-                        "msg my-3 flex items-start gap-2",
-                        mine ? "justify-end" : "justify-start",
-                      ].join(" ")}
-                    >
+                    <div key={m.id} className={`msg my-3 flex items-start gap-2 ${mine ? "justify-end" : "justify-start"}`}>
                       {!mine && <Avatar kind="assistant" />}
-                <div
-                  className={[
-                    "chat-bubble max-w-[min(92%,42.5rem)] rounded-2xl border p-3 backdrop-blur-lg",
-                    mine
-                      ? "bg-white/80 border-white/30 text-[#0F172A] shadow-soft"
-                      : "bg-gradient-to-br from-[#EEF2FF]/80 to-[#F5F3FF]/80 border-white/30 text-[#0F172A] shadow-soft",
-                  ].join(" ")}
-                >
-                  <Message
-                    msg={m}
-                    onCopied={() =>
-                      toasts.push({ kind: "success", title: "Kopiert", message: "In die Zwischenablage." })
-                    }
-                  />
-                  <div
-                    className={[
-                      "mt-2 flex items-center gap-2 text-xs opacity-70 transition-opacity",
-                      mine ? "justify-end" : "justify-start",
-                    ].join(" ")}
-                  >
-                    <div className="relative">
-                    <button
-                      className="nav-pill"
-                      onClick={() => {
-                        (async () => {
-                            try {
-                              await navigator.clipboard.writeText(m.content);
-                            } catch {
-                              try {
-                                const ta = document.createElement("textarea");
-                                ta.value = m.content;
-                                ta.setAttribute("readonly", "");
-                                ta.style.position = "fixed";
-                                ta.style.top = "-9999px";
-                                document.body.appendChild(ta);
-                                ta.select();
-                                try { document.execCommand("copy"); } catch { /* ignore */ }
-                                document.body.removeChild(ta);
-                              } catch { /* ignore */ }
-                            }
-                            toasts.push({
-                              kind: "success",
-                              title: "Kopiert",
-                              message: "Nachricht kopiert.",
-                            });
-                          })();
-                        }}
-                        aria-label="Nachricht kopieren"
-                        data-testid="msg-copy"
-                      >
-                        Kopieren
-                      </button>
-                    </div>
-                    <div className="relative">
-                      <button
-                        className="nav-pill"
-                        aria-haspopup="menu"
-                        aria-expanded={menuFor === m.id}
-                        onClick={() => setMenuFor(menuFor === m.id ? null : m.id)}
-                        aria-label="Weitere Optionen"
-                        title="Mehr"
-                        id={moreBtnId}
-                        aria-controls={menuId}
-                        data-testid="msg-more"
-                      >
-                        ⋯
-                      </button>
-                      {menuFor === m.id && (
-                        <div
-                          role="menu"
-                          className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-2xl border border-white/30 bg-white/70 p-1 text-foreground shadow-soft backdrop-blur-lg"
-                          id={menuId}
-                          aria-labelledby={moreBtnId}
-                          onKeyDown={(e) => {
-                            const container = e.currentTarget as HTMLElement;
-                            const items = Array.from(container.querySelectorAll<HTMLElement>('[role="menuitem"]'));
-                            const idx = items.findIndex((el) => el === document.activeElement);
-                            if (e.key === "Escape") {
-                              e.preventDefault();
-                              closeMenuAndReturnFocus(m.id);
-                            } else if (e.key === "ArrowDown") {
-                              e.preventDefault();
-                              const next = items[(idx + 1 + items.length) % items.length] || items[0];
-                              next?.focus();
-                            } else if (e.key === "ArrowUp") {
-                              e.preventDefault();
-                              const prev = items[(idx - 1 + items.length) % items.length] || items[0];
-                              prev?.focus();
-                            } else if (e.key === "Home") {
-                              e.preventDefault();
-                              items[0]?.focus();
-                            } else if (e.key === "End") {
-                              e.preventDefault();
-                              items[items.length - 1]?.focus();
-                            } else if (e.key === "Tab") {
-                              // Trap Fokus im Menü
-                              e.preventDefault();
-                              if (e.shiftKey) {
-                                const prev = items[(idx - 1 + items.length) % items.length] || items[0];
-                                prev?.focus();
-                              } else {
-                                const next = items[(idx + 1 + items.length) % items.length] || items[0];
-                                next?.focus();
-                              }
-                            }
-                          }}
-                        >
-                          <button
-                            className="w-full rounded px-2 py-1 text-left hover:bg-destructive/20 focus:bg-destructive/20 focus:outline-none"
-                            onClick={() => {
-                              setMsgs((list) => list.filter((x) => x.id !== m.id));
-                              closeMenuAndReturnFocus(m.id);
-                            }}
-                            aria-label="Nachricht löschen"
-                            data-testid="msg-delete"
-                            role="menuitem"
-                            tabIndex={-1}
-                          >
-                            Löschen
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                      <div className={`chat-bubble max-w-[min(92%,42.5rem)] rounded-2xl p-3 text-text ${mine ? "glass" : "bg-grad-card shadow-glow border border-border-glass"}`}>
+                        <Message msg={m} onCopied={() => toasts.push({ kind: "success", title: "Kopiert" })} />
+                      </div>
                       {mine && <Avatar kind="user" />}
                     </div>
                   );
                 })}
-                {hasOverflow && showAll && (
-                  <div className="my-3 text-center">
-                    <InlineNote kind="info">
-                      Alle Nachrichten angezeigt.
-                      <button
-                        className="ml-2 underline decoration-blue-300/60 decoration-dotted underline-offset-4 hover:text-blue-200"
-                        onClick={() => setShowAll(false)}
-                      >
-                        Nur die letzten {LIMIT}
-                      </button>
-                    </InlineNote>
-                  </div>
-                )}
               </>
             );
           })()}
         </section>
+
         {sending && (
           <div className="my-2 flex items-start gap-2">
             <Avatar kind="assistant" />
-            <div className="rounded-2xl border border-white/30 bg-white/60 p-2 backdrop-blur-lg shadow-soft">
+            <div className="glass p-2">
               <TypingIndicator />
             </div>
           </div>
         )}
       </main>
 
-      {/* Composer */}
-      {portalEl &&
-        createPortal(
-          <div
-            className="fixed left-0 right-0 z-50"
-            style={{ bottom: `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)` }}
-          >
-            <div
-              className="mx-auto w-full max-w-3xl border-t border-white/30 bg-white/70 px-2 py-2 backdrop-blur-lg shadow-soft"
-              style={{ paddingBottom: `max(env(safe-area-inset-bottom), 8px)` }}
-            >
+      <div className="fixed left-0 right-0 z-50" style={{ bottom: `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)` }}>
+        <div className="glass mx-auto w-full max-w-3xl border-t px-2 py-2">
           <div className="flex items-end gap-2">
             <textarea
-                  ref={composerRef}
-                  className="w-full resize-none rounded-[14px] border border-white/30 bg-white/70 p-3 text-foreground outline-none placeholder-slate-500 focus:ring-2 focus:ring-[color:rgba(91,140,255,0.4)] focus:border-primary backdrop-blur-md"
-                  data-testid="composer-input"
-                  placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
-                  aria-describedby="composer-hint"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  onKeyDown={onKeyDown}
-                  onInput={(e) => {
-                    const el = e.currentTarget;
-                    el.style.height = "auto";
-                    const max = 6 * 24; // grob 6 Zeilen à 24px
-                    const next = Math.min(max, el.scrollHeight);
-                    el.style.height = `${next}px`;
-                  }}
-                  rows={2}
-                  enterKeyHint="send"
-                  inputMode="text"
-                />
-                <span id="composer-hint" className="sr-only">
-                  Enter sendet. Shift plus Enter macht einen Zeilenumbruch. Strg oder Befehlstaste plus Enter sendet ebenfalls. Escape stoppt das Laden.
-                </span>
-                {sending ? (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={stop}
-                    aria-label="Stop"
-                    data-testid="composer-stop"
-                  >
-                    Stop
-                  </Button>
-                ) : (
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={send}
-                    aria-label="Senden"
-                    data-testid="composer-send"
-                  >
-                    Senden
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>,
-          portalEl,
-        )}
+              ref={composerRef}
+              className="input w-full resize-none bg-transparent p-3 outline-none"
+              placeholder="Nachricht eingeben…"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={onKeyDown}
+              rows={2}
+            />
+            {sending ? (
+              <Button variant="secondary" size="sm" onClick={stop}>Stop</Button>
+            ) : (
+              <Button variant="primary" size="sm" onClick={send}>Senden</Button>
+            )}
+          </div>
+        </div>
+      </div>
 
       <ScrollToEndFAB
         visible={showScrollFab}
-        onClick={() =>
-          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })
-        }
+        onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })}
       />
     </div>
   );
 };
 
 export default ChatView;
-export { ChatView };
