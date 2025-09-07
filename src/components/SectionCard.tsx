@@ -1,6 +1,6 @@
 import React from "react";
 
-import Icon from "./Icon";
+import { Icon } from "./ui/Icon";
 
 type Variant = "solid" | "glass";
 type Accent = "none" | "blue" | "purple" | "green" | "pink";
