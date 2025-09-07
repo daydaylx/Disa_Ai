@@ -484,6 +484,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                         onClick={() => setMenuFor(menuFor === m.id ? null : m.id)}
                         aria-label="Weitere Optionen"
                         title="Mehr"
+                        data-testid="msg-more"
                       >
                         ⋯
                       </button>
@@ -499,6 +500,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                               setMenuFor(null);
                             }}
                             aria-label="Nachricht löschen"
+                            data-testid="msg-delete"
                             role="menuitem"
                           >
                             Löschen

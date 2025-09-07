@@ -25,7 +25,7 @@ export default function InstallBanner() {
       <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-[#e5e7eb] backdrop-blur-md shadow-[0_0_18px_rgba(255,0,255,0.15)]">
         <span>App installieren für schnelleren Zugriff &amp; Offline-Nutzung.</span>
         <div className="flex gap-2">
-          <button className="btn bg-transparent text-[#e5e7eb] hover:shadow-[0_0_16px_#00ffff55]" onClick={() => setHidden(true)}>
+          <button className="btn bg-transparent text-[#e5e7eb] hover:shadow-[0_0_16px_#00ffff55]" onClick={() => setHidden(true)} data-testid="install-later">
             Später
           </button>
           <button
@@ -34,6 +34,7 @@ export default function InstallBanner() {
               await deferred.prompt();
               setHidden(true);
             }}
+            data-testid="install-now"
           >
             Installieren
           </button>
