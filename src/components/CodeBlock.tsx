@@ -40,7 +40,7 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
       >
         Kopieren
       </button>
-      <pre ref={preRef} className="overflow-x-auto rounded-xl border border-white/10 bg-[#1A1D24]/80 p-4 text-[#F0F2F5]">
+      <pre ref={preRef} className="overflow-x-auto rounded-xl border border-white/10 bg-background/80 p-4 text-foreground">
         <code className="whitespace-pre text-sm">
           {lang ? `// ${lang}\n` : null}
           {code}
