@@ -352,6 +352,16 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     return () => document.removeEventListener("mousedown", onDocDown, { capture: true } as any);
   }, [menuFor]);
 
+  function closeMenuAndReturnFocus(id: string | null) {
+    if (!id) return setMenuFor(null);
+    setMenuFor(null);
+    // Fokus zurück auf Trigger
+    setTimeout(() => {
+      const trigger = document.getElementById(`more-${id}`) as HTMLElement | null;
+      trigger?.focus();
+    }, 0);
+  }
+
   return (
     <div className="min-h-[100svh]">
       <main
@@ -425,8 +435,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                   className={[
                     "chat-bubble max-w-[min(90%,48rem)] rounded-2xl border p-3 backdrop-blur-md",
                     mine
-                      ? "bg-cyan-500/10 border-cyan-400/20 text-[#f3f4f6] shadow-[0_0_14px_#00ffff44]"
-                      : "bg-white/5 border-white/10 text-[#e5e7eb] shadow-[0_0_14px_rgba(255,0,255,0.15)]",
+                      ? "bg-white/10 border-[#4FC3F7]/30 text-foreground shadow-[0_0_18px_rgba(79,195,247,0.28)]"
+                      : "bg-white/10 border-[#B388FF]/25 text-foreground shadow-[0_0_18px_rgba(179,136,255,0.25)]",
                   ].join(" ")}
                 >
                   <Message
@@ -491,22 +501,53 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                       {menuFor === m.id && (
                         <div
                           role="menu"
-                          className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-md border border-white/10 bg-[#0f172a]/95 p-1 shadow-[0_0_20px_rgba(255,0,255,0.25)] backdrop-blur-md"
+                          className="absolute left-0 z-10 mt-1 min-w-[120px] rounded-md border border-white/10 bg-card/95 p-1 text-foreground shadow-[0_0_20px_rgba(79,195,247,0.25)] backdrop-blur-md"
                           id={menuId}
                           aria-labelledby={moreBtnId}
                           onKeyDown={(e) => {
-                            if (e.key === "Escape") setMenuFor(null);
+                            const container = e.currentTarget as HTMLElement;
+                            const items = Array.from(container.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+                            const idx = items.findIndex((el) => el === document.activeElement);
+                            if (e.key === "Escape") {
+                              e.preventDefault();
+                              closeMenuAndReturnFocus(m.id);
+                            } else if (e.key === "ArrowDown") {
+                              e.preventDefault();
+                              const next = items[(idx + 1 + items.length) % items.length] || items[0];
+                              next?.focus();
+                            } else if (e.key === "ArrowUp") {
+                              e.preventDefault();
+                              const prev = items[(idx - 1 + items.length) % items.length] || items[0];
+                              prev?.focus();
+                            } else if (e.key === "Home") {
+                              e.preventDefault();
+                              items[0]?.focus();
+                            } else if (e.key === "End") {
+                              e.preventDefault();
+                              items[items.length - 1]?.focus();
+                            } else if (e.key === "Tab") {
+                              // Trap Fokus im Menü
+                              e.preventDefault();
+                              if (e.shiftKey) {
+                                const prev = items[(idx - 1 + items.length) % items.length] || items[0];
+                                prev?.focus();
+                              } else {
+                                const next = items[(idx + 1 + items.length) % items.length] || items[0];
+                                next?.focus();
+                              }
+                            }
                           }}
                         >
                           <button
-                            className="w-full rounded px-2 py-1 text-left text-red-200 hover:bg-red-900/40"
+                            className="w-full rounded px-2 py-1 text-left hover:bg-destructive/20 focus:bg-destructive/20 focus:outline-none"
                             onClick={() => {
                               setMsgs((list) => list.filter((x) => x.id !== m.id));
-                              setMenuFor(null);
+                              closeMenuAndReturnFocus(m.id);
                             }}
                             aria-label="Nachricht löschen"
                             data-testid="msg-delete"
                             role="menuitem"
+                            tabIndex={-1}
                           >
                             Löschen
                           </button>
@@ -560,7 +601,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
               <div className="flex items-end gap-2">
                 <textarea
                   ref={composerRef}
-                  className="w-full resize-none rounded-xl border border-white/10 bg-white/5 p-3 text-[#f3f4f6] outline-none placeholder-slate-400 focus:ring-2 focus:ring-[#00ffff] focus:border-[#00ffff] backdrop-blur-md"
+                  className="w-full resize-none rounded-xl border border-white/10 bg-white/10 p-3 text-foreground outline-none placeholder-slate-400 focus:ring-2 focus:ring-primary focus:border-primary backdrop-blur-md"
                   data-testid="composer-input"
                   placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
                   aria-describedby="composer-hint"
