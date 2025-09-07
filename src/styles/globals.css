@@ -12,8 +12,7 @@ body,
 }
 
 body {
-  @apply bg-[color:var(--bg,_#0B0B0E)] text-foreground antialiased;
-  --bg: #0b0b0e;
+  @apply bg-bg text-foreground antialiased;
   overflow-x: hidden; /* verhindert horizontales Scrollen durch Pager */
 }
 

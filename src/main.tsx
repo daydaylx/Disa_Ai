@@ -23,9 +23,12 @@ import ReactDOM from "react-dom/client";
 
 import App from "./App";
 import { ToastsProvider } from "./components/ui/Toast";
+import { initTheme } from "./config/theme";
 import { installSkipLinkFocus } from "./lib/a11y/skipLink";
 import { registerSW } from "./lib/pwa/registerSW";
 
+// Ensure dark baseline + tokens are applied early
+initTheme();
 installSkipLinkFocus("a.skip-link", "main");
 registerSW();
 
