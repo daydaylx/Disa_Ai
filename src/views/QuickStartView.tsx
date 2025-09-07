@@ -41,8 +41,8 @@ export default function QuickStartView() {
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
       <header className="space-y-1">
-        <h1 className="text-xl font-semibold title-underline">Quickstart</h1>
-        <p className="text-sm opacity-80">20 Startfragen, die häufig helfen.</p>
+        <h1 className="text-2xl leading-7 font-semibold title-underline">Quickstart</h1>
+        <p className="text-sm text-slate-600">20 Startfragen, die häufig helfen.</p>
       </header>
 
       <section className="grid gap-2 md:grid-cols-2">
@@ -50,11 +50,8 @@ export default function QuickStartView() {
           <button
             key={i}
             className={[
-              "w-full justify-start text-left rounded-xl border p-3 text-left text-[#C5CAD3] backdrop-blur-md",
-              "border-white/15 bg-white/10",
-              i % 2 === 0
-                ? "hover:border-[#4FC3F7]/50 hover:shadow-[0_0_16px_rgba(79,195,247,0.28)]"
-                : "hover:border-[#B388FF]/50 hover:shadow-[0_0_16px_rgba(179,136,255,0.28)]",
+              "w-full justify-start text-left rounded-2xl border border-white/30 bg-white/65 p-3 text-left text-slate-700 backdrop-blur-lg shadow-soft",
+              "transition-transform hover:-translate-y-[1px]",
             ].join(" ")}
             onClick={() => onPick(q)}
             aria-label={`Quickstart Frage ${i + 1}`}
