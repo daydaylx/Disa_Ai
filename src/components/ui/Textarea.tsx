@@ -13,8 +13,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         id={id}
         ref={ref}
-        className={cn("textarea", className)}
-        {...props} // <- wichtig: data-*, aria-*, on*, usw. werden durchgereicht
+        className={cn(
+          "textarea bg-white/70 backdrop-blur-md border-white/30 placeholder:text-slate-500",
+          className,
+        )}
+        {...props}
       />
     );
 
