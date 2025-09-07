@@ -444,10 +444,10 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                     ].join(" ")}
                   >
                     <div className="relative">
-                      <button
-                        className="nav-pill hover:shadow-[0_0_16px_#00ffff66]"
-                        onClick={() => {
-                          (async () => {
+                    <button
+                      className="nav-pill hover:shadow-[0_0_16px_#00ffff66]"
+                      onClick={() => {
+                        (async () => {
                             try {
                               await navigator.clipboard.writeText(m.content);
                             } catch {
@@ -471,6 +471,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                           })();
                         }}
                         aria-label="Nachricht kopieren"
+                        data-testid="msg-copy"
                       >
                         Kopieren
                       </button>
