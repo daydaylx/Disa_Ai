@@ -24,5 +24,5 @@ export function CardHeader({
   );
 }
 export function CardFooter({ children }: React.PropsWithChildren) {
-  return <div className="mt-4 border-t border-white/10 pt-4">{children}</div>;
+  return <div className="mt-4 border-t border-white/30 pt-4">{children}</div>;
 }
