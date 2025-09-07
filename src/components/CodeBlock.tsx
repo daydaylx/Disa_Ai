@@ -31,7 +31,7 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
   }, [code, onCopied])
 
   return (
-    <div className={['relative group codeblock', 'rounded-xl border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_0_16px_rgba(0,255,255,0.15)] hover:shadow-[0_0_22px_rgba(255,0,255,0.25)] transition', className].filter(Boolean).join(' ')}>
+    <div className={['relative group codeblock', 'rounded-xl border border-white/10 bg-[#232832]/80 backdrop-blur-md shadow-[0_0_12px_rgba(79,195,247,0.18)] hover:shadow-[0_0_16px_rgba(167,139,250,0.22)] transition', className].filter(Boolean).join(' ')}>
       <button
         type="button"
         aria-label="Code kopieren"
@@ -40,7 +40,7 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
       >
         Kopieren
       </button>
-      <pre ref={preRef} className="overflow-x-auto rounded-xl border border-white/10 bg-[#020617]/70 p-4 text-[#f3f4f6]">
+      <pre ref={preRef} className="overflow-x-auto rounded-xl border border-white/10 bg-[#1A1D24]/80 p-4 text-[#F0F2F5]">
         <code className="whitespace-pre text-sm">
           {lang ? `// ${lang}\n` : null}
           {code}

@@ -2,7 +2,6 @@ import React from "react";
 
 import AndroidNoticeBanner from "./components/AndroidNoticeBanner";
 import Aurora from "./components/Aurora";
-import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
 import ChatsView from "./views/ChatsView";
 import ChatView from "./views/ChatView";
@@ -48,17 +47,20 @@ export default function App() {
   const [route, nav] = useHashRoute();
 
   return (
-    <div className="min-h-[100svh] relative bg-gradient-to-b from-[#0f172a] to-[#020617] text-[#e5e7eb]">
+    <div
+      className="min-h-[100svh] relative bg-[#1A1D24] text-[#F0F2F5]"
+      style={{ ["--bottomnav-h" as any]: "0px" }}
+    >
       <Aurora />
       <NetworkBanner />
       <AndroidNoticeBanner />
-      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 px-4 py-3 text-sm text-[#f3f4f6] backdrop-blur-md bg-white/5 border-b border-white/10 shadow-[0_2px_20px_rgba(255,0,255,0.08)]">
+      <header className="sticky top-0 z-40 mx-auto flex w-full max-w-4xl items-center justify-between gap-3 px-4 py-3 text-sm text-[#F0F2F5] backdrop-blur-md bg-[#232832]/70 border-b border-white/5 shadow-[0_2px_18px_rgba(79,195,247,0.12)]">
         <div className="font-semibold">Disa AI</div>
         <nav className="flex gap-2">
           <a
             href="#/chat"
             onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
-            className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#00ffff66]`}
+            className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""} text-[#F0F2F5]`}
             data-testid="nav-top-chat"
           >
             Chat
@@ -66,7 +68,7 @@ export default function App() {
           <a
             href="#/chats"
             onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
-            className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#00ffff66]`}
+            className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""} text-[#F0F2F5]`}
             data-testid="nav-top-chats"
           >
             Unterhaltungen
@@ -74,7 +76,7 @@ export default function App() {
           <a
             href="#/quickstart"
             onClick={(e) => { e.preventDefault(); nav({ name: "quickstart" }); }}
-            className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#ff00ff66]`}
+            className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""} text-[#F0F2F5]`}
             data-testid="nav-top-quickstart"
           >
             Quickstart
@@ -82,7 +84,7 @@ export default function App() {
           <a
             href="#/settings"
             onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
-            className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""} text-[#f3f4f6] hover:shadow-[0_0_18px_#ff00ff66]`}
+            className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""} text-[#F0F2F5]`}
             data-testid="nav-top-settings"
           >
             Einstellungen
@@ -100,8 +102,6 @@ export default function App() {
       ) : (
         <ChatView convId={route.chatId ?? null} />
       )}
-
-      <BottomNav />
     </div>
   );
 }

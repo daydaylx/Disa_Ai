@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "../components/ui/Button";
+// Buttons hier als Cards umgesetzt (keine Hauptbuttons)
 
 const QUESTIONS: string[] = [
   "Erkläre mir diesen Code und mögliche Randfälle:",
@@ -45,19 +45,17 @@ export default function QuickStartView() {
         <p className="text-sm opacity-80">20 Startfragen, die häufig helfen.</p>
       </header>
 
-      <section className="grid gap-2">
+      <section className="grid gap-2 md:grid-cols-2">
         {QUESTIONS.map((q, i) => (
-          <Button
+          <button
             key={i}
-            variant="secondary"
-            size="sm"
-            className="w-full justify-start text-left"
+            className="w-full justify-start text-left rounded-xl border border-white/10 bg-[#232832]/70 p-3 text-left text-[#B0B6C0] hover:border-[#4FC3F7]/40 hover:shadow-[0_0_12px_rgba(79,195,247,0.25)]"
             onClick={() => onPick(q)}
             aria-label={`Quickstart Frage ${i + 1}`}
             data-testid="quickstart-item"
           >
             {q}
-          </Button>
+          </button>
         ))}
       </section>
     </main>

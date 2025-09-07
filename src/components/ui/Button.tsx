@@ -20,14 +20,13 @@ const base =
   "disabled:opacity-60 disabled:cursor-not-allowed";
 
 const variants: Record<Variant, string> = {
+  // nur Hauptbuttons mit Verlauf (Cyan→Violett), moderater Glow
   primary:
-    "text-[#0a0a0a] bg-gradient-to-r from-[#ff00ff] to-[#00ffff] shadow-[0_0_18px_#ff00ff66] hover:shadow-[0_0_26px_#ff00ffaa] active:shadow-[0_0_14px_#ff00ff66]",
-  secondary:
-    "text-[#0a0a0a] bg-[#facc15] shadow-[0_0_18px_#facc1566] hover:shadow-[0_0_26px_#facc15aa] active:shadow-[0_0_14px_#facc1566]",
-  ghost:
-    "bg-transparent text-[#e5e7eb] hover:bg-white/10 hover:shadow-[0_0_18px_#00ffff33]",
-  destructive:
-    "text-white bg-gradient-to-r from-rose-600 to-fuchsia-600 shadow-[0_0_18px_#ff00ff66] hover:shadow-[0_0_26px_#ff00ffaa]",
+    "text-[#0a0a0a] bg-gradient-to-r from-[#4FC3F7] to-[#A78BFA] shadow-[0_0_14px_rgba(79,195,247,0.35)] hover:shadow-[0_0_18px_rgba(79,195,247,0.45)]",
+  // flach, dezente Fläche
+  secondary: "text-[#F0F2F5] bg-[#232832] border border-white/10 hover:border-[#4FC3F7]/40",
+  ghost: "bg-transparent text-[#F0F2F5] hover:bg-white/5",
+  destructive: "text-[#F0F2F5] bg-transparent border border-[#EF5350]/50 hover:bg-[#EF5350]/15",
 };
 
 const sizes: Record<Size, string> = {
