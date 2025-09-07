@@ -2,6 +2,16 @@
 
 This is a generated high-level inventory with rough roles by path prefix.
 
+Legend (by prefix):
+
+- src/views: route views/screens
+- src/components: presentational and UI components
+- src/hooks: custom React hooks
+- src/services, src/lib: service and helper layers
+- src/styles: Tailwind and CSS layers
+- tests: unit/e2e tests
+- public: static assets
+
 - vite.config.ts
 - package.json.bak.1757070802
 - package.json
