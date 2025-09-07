@@ -22,8 +22,7 @@ export default function ChatsView({ onOpen }: Props) {
             aria-label="Titel der neuen Unterhaltung"
             data-testid="chats-title-input"
           />
-          <button
-            className="btn-glow tilt-on-press"
+          <Button variant="primary"
             onClick={() => {
               const meta = conv.create(title.trim() || "Neue Unterhaltung");
               setTitle("");
@@ -32,18 +31,18 @@ export default function ChatsView({ onOpen }: Props) {
             data-testid="chats-new"
           >
             Neu
-          </button>
+          </Button>
         </div>
       </header>
 
       <section className="grid gap-3">
         {conv.items.map((m) => (
-          <article key={m.id} className="rounded-2xl border border-white/30 bg-white/65 p-3 text-sm text-slate-600 backdrop-blur-lg shadow-soft transition-transform hover:-translate-y-[1px]">
+          <article key={m.id} className="glass p-3 text-sm transition-transform hover:-translate-y-[1px]">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <div className="truncate text-slate-900">{m.title}</div>
-                <div className="mt-0.5 truncate text-xs text-slate-500">{new Date(m.updatedAt).toLocaleString()}</div>
-                <div className="truncate text-xs text-slate-500">{m.id}</div>
+                <div className="truncate text-text">{m.title}</div>
+                <div className="mt-0.5 truncate text-xs text-text-muted">{new Date(m.updatedAt).toLocaleString()}</div>
+                <div className="truncate text-xs text-text-muted">{m.id}</div>
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button size="sm" variant="primary" onClick={() => onOpen(m.id)} aria-label="Öffnen" data-testid="chats-open">

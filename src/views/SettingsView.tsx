@@ -225,20 +225,20 @@ export default function SettingsView() {
     >
       <header className="space-y-1">
         <h1 className="text-2xl leading-7">Einstellungen</h1>
-        <p className="text-sm text-slate-600">API-Key, Stil, Modell & Rolle.</p>
+        <p className="text-sm text-text-muted">API-Key, Stil, Modell & Rolle.</p>
       </header>
 
       {/* App-Installation */}
-      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
+      <section className="glass p-4">
         <h2 className="mb-3 title-underline">App-Installation</h2>
         <div className="text-sm opacity-90">
           Installiere die App für schnellen Zugriff, eigenständiges Icon und Offline-Unterstützung.
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {pwa.canInstall ? (
-            <button className="btn-glow tilt-on-press" onClick={pwa.requestInstall}>
+            <Button variant="primary" onClick={pwa.requestInstall}>
               Jetzt installieren
-            </button>
+            </Button>
           ) : pwa.installed ? (
             <span className="nav-pill">Bereits installiert</span>
           ) : (
@@ -253,7 +253,7 @@ export default function SettingsView() {
       </section>
 
       {/* API-Key */}
-      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
+      <section className="glass p-4">
         <h2 className="mb-3 title-underline">OpenRouter API Key</h2>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input
@@ -268,11 +268,11 @@ export default function SettingsView() {
             Speichern
           </Button>
         </div>
-        <p className="mt-2 text-xs text-slate-600">Wird lokal gespeichert (kein Server-Speicher).</p>
+        <p className="mt-2 text-xs text-text-muted">Wird lokal gespeichert (kein Server-Speicher).</p>
       </section>
 
       {/* Stil */}
-      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
+      <section className="glass p-4">
         <h2 className="mb-3 title-underline">Stil</h2>
         <div className="grid gap-2">
           <select
@@ -289,13 +289,13 @@ export default function SettingsView() {
             <option value="minimal">{STYLE_META.minimal?.label ?? "Minimal"}</option>
           </select>
           {styleMeta.description ? (
-            <p className="text-sm text-slate-600">{styleMeta.description}</p>
+            <p className="text-sm text-text-muted">{styleMeta.description}</p>
           ) : null}
         </div>
       </section>
 
       {/* Kontext & Gedächtnis */}
-      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
+      <section className="glass p-4">
         <h2 className="mb-3 title-underline">Kontext & Gedächtnis</h2>
         <div className="grid gap-3">
           <div className="flex items-center justify-between rounded-lg border border-white/30 bg-white/60 px-3 py-2 text-sm backdrop-blur-md">
@@ -310,7 +310,7 @@ export default function SettingsView() {
                 step={512}
                 value={ctxMax}
                 onChange={(e) => onCtxMax(Number(e.target.value) || 0)}
-                className="w-28 rounded-md border border-border bg-background px-2 py-1"
+                className="input w-28 px-2 py-1"
                 aria-label="Maximales Kontextfenster"
                 data-testid="settings-ctx-max"
               />
@@ -323,7 +323,7 @@ export default function SettingsView() {
                 step={128}
                 value={ctxReserve}
                 onChange={(e) => onCtxReserve(Number(e.target.value) || 0)}
-                className="w-28 rounded-md border border-border bg-background px-2 py-1"
+                className="input w-28 px-2 py-1"
                 aria-label="Reservierte Tokens für die Antwort"
                 data-testid="settings-ctx-reserve"
               />
@@ -337,13 +337,13 @@ export default function SettingsView() {
                 step={4}
                 value={composerOffset}
                 onChange={(e) => onComposerOffset(Number(e.target.value) || 48)}
-                className="w-28 rounded-md border border-border bg-background px-2 py-1"
+                className="input w-28 px-2 py-1"
                 aria-label="Offset der Chat‑Eingabe vom unteren Rand"
                 data-testid="settings-composer-offset"
               />
             </label>
           </div>
-          <p className="text-xs text-slate-600">
+          <p className="text-xs text-text-muted">
             Hinweis: Das Gedächtnis bleibt lokal gespeichert. Der Systemprompt enthält einen kompakten
             Kontextauszug (Themen, Entitäten, Fakten, Summary). Das Token‑Budget kürzt lange Verläufe automatisch.
           </p>
@@ -351,10 +351,10 @@ export default function SettingsView() {
       </section>
 
       {/* Modell */}
-      <section className="space-y-3 rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
+      <section className="glass space-y-3 p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold title-underline">Modell</h2>
-          <div className="text-sm text-slate-600">
+          <div className="text-sm text-text-muted">
             aktuell: <span className="font-mono">{modelId ?? "—"}</span>
           </div>
         </div>
@@ -369,10 +369,10 @@ export default function SettingsView() {
       </section>
 
       {/* Rolle */}
-      <section className="rounded-2xl border border-white/30 bg-white/65 p-4 backdrop-blur-lg shadow-soft">
+      <section className="glass p-4">
         <div className="mb-3">
           <h2 className="text-base font-semibold title-underline">Rolle</h2>
-          <p className="text-sm text-slate-600">Optionales System-Verhalten für den Chat.</p>
+          <p className="text-sm text-text-muted">Optionales System-Verhalten für den Chat.</p>
         </div>
 
         <div className="grid gap-3">
