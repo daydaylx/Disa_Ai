@@ -129,6 +129,9 @@
   .card-gradient {
     @apply rounded-2xl border border-border-glass bg-grad-card text-text shadow-glow transition-transform hover:-translate-y-[1px];
   }
+  .glass-solid {
+    @apply rounded-2xl border border-border-glass bg-surface-glass text-text shadow-soft backdrop-blur-xl;
+  }
 
   /* Buttons */
   .btn {
@@ -152,6 +155,31 @@
   }
   .btn-destructive {
     @apply btn bg-destructive text-destructive-foreground hover:opacity-95 active:opacity-90;
+  }
+
+  /* Compact tabs */
+  .tab {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 text-sm backdrop-blur-md;
+    min-height: 36px;
+  }
+  .tab--active {
+    @apply border-transparent text-white shadow-lg;
+    background-image: linear-gradient(135deg, #7c4dff 0%, #22d3ee 100%);
+  }
+
+  .badge {
+    @apply rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[11px];
+  }
+
+  .input-glass {
+    @apply h-12 w-full rounded-full border border-white/10 bg-white/5 px-4 backdrop-blur-md placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-ring;
+  }
+
+  .card-title {
+    @apply text-xl font-semibold;
+  }
+  .help {
+    @apply text-sm text-muted-foreground;
   }
 
   /* Inputs */

@@ -54,14 +54,14 @@ export default function App() {
       <Aurora />
       <NetworkBanner />
       <AndroidNoticeBanner />
-      <header className="sticky top-0 z-40 w-full glass py-3">
+      <header className="sticky top-0 z-40 w-full py-2">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4">
           <div className="font-semibold">Disa AI</div>
-          <nav className="flex gap-2">
+          <nav className="glass flex gap-2 p-2 rounded-2xl">
             <a
               href="#/chat"
               onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
-              className={`nav-pill ${route.name === "chat" ? "nav-pill--active" : ""}`}
+              className={`tab ${route.name === "chat" ? "tab--active" : ""}`}
               data-testid="nav-top-chat"
             >
               Chat
@@ -69,7 +69,7 @@ export default function App() {
             <a
               href="#/chats"
               onClick={(e) => { e.preventDefault(); nav({ name: "chats" }); }}
-              className={`nav-pill ${route.name === "chats" ? "nav-pill--active" : ""}`}
+              className={`tab ${route.name === "chats" ? "tab--active" : ""}`}
               data-testid="nav-top-chats"
             >
               Unterhaltungen
@@ -77,7 +77,7 @@ export default function App() {
             <a
               href="#/quickstart"
               onClick={(e) => { e.preventDefault(); nav({ name: "quickstart" }); }}
-              className={`nav-pill ${route.name === "quickstart" ? "nav-pill--active" : ""}`}
+              className={`tab ${route.name === "quickstart" ? "tab--active" : ""}`}
               data-testid="nav-top-quickstart"
             >
               Quickstart
@@ -85,7 +85,7 @@ export default function App() {
             <a
               href="#/settings"
               onClick={(e) => { e.preventDefault(); nav({ name: "settings" }); }}
-              className={`nav-pill ${route.name === "settings" ? "nav-pill--active" : ""}`}
+              className={`tab ${route.name === "settings" ? "tab--active" : ""}`}
               data-testid="nav-top-settings"
             >
               Einstellungen
