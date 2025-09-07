@@ -47,9 +47,11 @@ test.describe("Kritische Flows (mobil)", () => {
     await del.click();
   });
 
-  test.skip("Model-Picker öffnen ohne Key (nur frei)", async ({ page }) => {
+  test("Model-Picker öffnen ohne Key (nur frei)", async ({ page }) => {
     await page.goto("/#/settings");
-    // Der Picker ist vorhanden; ob Inhalte laden, ist abhängig vom Key.
-    await expect(page.getByTestId("settings-model-picker")).toBeAttached();
+    await expect(page.getByRole("heading", { name: "Einstellungen" })).toBeVisible();
+    const picker = page.getByTestId("settings-model-picker");
+    await picker.scrollIntoViewIfNeeded();
+    await expect(picker).toBeVisible();
   });
 });
