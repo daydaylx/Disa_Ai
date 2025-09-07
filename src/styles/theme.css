@@ -6,12 +6,12 @@
 :root {
   color-scheme: dark;
 
-  /* Neutrals / Text */
-  --bg: #0b0b12;
-  --surface-glass: rgba(255, 255, 255, 0.06);
-  --border-glass: rgba(255, 255, 255, 0.18);
-  --text: #f5f7fa;
-  --text-muted: #c7cee3;
+  /* Neutrals / Text – freundlicher, etwas heller */
+  --bg: #12151c;
+  --surface-glass: rgba(255, 255, 255, 0.1);
+  --border-glass: rgba(255, 255, 255, 0.22);
+  --text: #f5f7fb;
+  --text-muted: #cbd4ea;
 
   /* Aurora Palette */
   --aurora-pink: #ff85e1;
@@ -54,8 +54,8 @@
   );
 
   /* Shadows / Glows */
-  --shadow-soft: 0 12px 40px rgba(12, 16, 32, 0.45);
-  --glow-primary: 0 0 30px rgba(124, 77, 255, 0.45), 0 0 60px rgba(91, 140, 255, 0.35);
+  --shadow-soft: 0 12px 34px rgba(12, 16, 32, 0.35);
+  --glow-primary: 0 0 18px rgba(124, 77, 255, 0.3), 0 0 30px rgba(91, 140, 255, 0.25);
 
   /* Ring for focus states */
   --ring: var(--aurora-cyan);
@@ -63,7 +63,7 @@
 
 @layer base {
   body {
-    @apply bg-bg text-[15px] leading-6 text-text;
+    @apply bg-bg text-[16px] leading-7 text-text;
   }
   h1,
   h2,
@@ -117,10 +117,11 @@
 
   /* Nav Pills */
   .nav-pill {
-    @apply glass rounded-full px-3 py-1.5 text-sm text-text-muted transition hover:text-text;
+    @apply glass inline-flex items-center rounded-full px-3 py-1 text-sm text-text-muted transition hover:text-text;
+    min-height: 40px;
   }
   .nav-pill--active {
-    @apply nav-pill relative bg-grad-primary text-text shadow-glow;
+    @apply nav-pill relative bg-white/10 text-text;
   }
   .nav-pill--active::after {
     content: "";
