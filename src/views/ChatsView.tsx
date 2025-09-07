@@ -56,7 +56,7 @@ export default function ChatsView({ onOpen }: Props) {
           </article>
         ))}
         {conv.items.length === 0 && (
-          <div className="rounded-2xl border border-white/30 bg-white/65 p-4 text-center text-sm text-slate-600 backdrop-blur-lg">Noch keine Unterhaltungen. Lege oben eine neue an.</div>
+          <div className="glass p-4 text-center text-sm text-text-muted">Noch keine Unterhaltungen. Lege oben eine neue an.</div>
         )}
       </section>
     </main>

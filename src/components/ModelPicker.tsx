@@ -165,7 +165,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </div>
       )}
       {policyFromRole !== "any" && (
-        <div className="rounded-md border border-border bg-background/60 px-3 py-2 text-xs text-neutral-300">
+        <div className="rounded-md border border-border bg-background/60 px-3 py-2 text-xs text-text-muted">
           Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste entsprechend gefiltert.
         </div>
       )}
@@ -280,4 +280,3 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
     </section>
   );
 }
-

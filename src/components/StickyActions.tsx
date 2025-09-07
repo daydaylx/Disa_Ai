@@ -12,23 +12,16 @@ export default function StickyActions({ nsfw, onToggleNSFW, onClearAll }: Props)
   return (
     <div className="sticky top-[48px] z-10 mb-4">
       <div className="rounded-2xl p-[1px]">
-        <div className="rounded-2xl border border-white/30 bg-white/65 shadow-soft backdrop-blur-lg dark:border-white/10 dark:bg-neutral-900/55">
+        <div className="glass">
           <div className="flex flex-wrap items-center gap-2 px-3 py-2 md:px-4">
-            <a
-              href="#/"
-              className="inline-flex items-center gap-2 rounded-full border border-neutral-300 px-3 py-1.5 transition hover:bg-neutral-100/60 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
-            >
+            <a href="#/" className="nav-pill">
               <Icon name="sparkles" width="16" height="16" />
               <span className="text-sm">Neue Unterhaltung</span>
             </a>
             <button
               type="button"
               onClick={onToggleNSFW}
-              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition ${
-                nsfw
-                  ? "border-blue-600 bg-blue-600 text-white hover:brightness-110"
-                  : "border-neutral-300 hover:bg-neutral-100/60 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
-              }`}
+              className={nsfw ? "nav-pill nav-pill--active" : "nav-pill"}
             >
               <Icon name="warning" width="16" height="16" />
               <span className="text-sm">{nsfw ? "NSFW an" : "NSFW aus"}</span>
@@ -36,7 +29,7 @@ export default function StickyActions({ nsfw, onToggleNSFW, onClearAll }: Props)
             <button
               type="button"
               onClick={onClearAll}
-              className="inline-flex items-center gap-2 rounded-full border border-neutral-300 px-3 py-1.5 transition hover:bg-neutral-100/60 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
+              className="nav-pill"
             >
               <Icon name="close" width="16" height="16" />
               <span className="text-sm">Alle lokalen Daten löschen</span>

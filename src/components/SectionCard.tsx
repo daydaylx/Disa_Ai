@@ -26,19 +26,13 @@ function wrap(content: React.ReactNode, variant: Variant, accent: Accent) {
               ? "from-pink-500/35 via-rose-500/25 to-transparent"
               : "from-neutral-500/20 via-neutral-500/10 to-transparent";
     return (
-      <div
-        className={`rounded-2xl bg-gradient-to-tr p-[1px] ${ring} transition-transform will-change-transform hover:scale-[1.002]`}
-      >
-        <div className="rounded-2xl border border-white/30 bg-white/65 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-neutral-900/55">
-          {content}
-        </div>
+      <div className={`rounded-2xl bg-gradient-to-tr p-[1px] ${ring} transition-transform will-change-transform hover:scale-[1.002]`}>
+        <div className="glass">{content}</div>
       </div>
     );
   }
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-      {content}
-    </div>
+    <div className="card-solid">{content}</div>
   );
 }
 

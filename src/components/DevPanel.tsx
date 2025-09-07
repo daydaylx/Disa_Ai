@@ -33,12 +33,12 @@ export default function DevPanel({ open, onClose, samples, costs, lastCost, erro
   const avg = samples.length ? samples.reduce((a, b) => a + b, 0) / samples.length : 0;
   const avgCost = costs.length ? costs.reduce((a, b) => a + b, 0) / costs.length : 0;
   return (
-    <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom))] right-3 z-30 w-[320px] rounded-xl border border-neutral-300 bg-white/90 shadow-lg backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/90">
-      <div className="flex items-center justify-between border-b border-neutral-200 px-3 py-2 dark:border-neutral-800">
+    <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom))] right-3 z-30 w-[320px] glass">
+      <div className="flex items-center justify-between border-b border-border px-3 py-2">
         <div className="text-sm font-medium">Dev</div>
         <button
           onClick={onClose}
-          className="rounded border border-neutral-300 px-2 py-1 text-xs hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+          className="btn-secondary !py-1 !px-2 text-xs"
         >
           Close
         </button>
