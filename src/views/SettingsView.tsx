@@ -264,7 +264,7 @@ export default function SettingsView() {
             aria-label="API-Schlüssel"
             className="input min-w-0 flex-1 text-sm"
           />
-          <Button onClick={saveKey} aria-label="API-Schlüssel speichern" data-testid="settings-save-key">
+          <Button variant="secondary" onClick={saveKey} aria-label="API-Schlüssel speichern" data-testid="settings-save-key">
             Speichern
           </Button>
         </div>

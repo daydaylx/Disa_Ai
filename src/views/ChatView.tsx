@@ -5,10 +5,8 @@ import Avatar from "../components/chat/Avatar";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import { TypingIndicator } from "../components/chat/TypingIndicator";
 import CodeBlock from "../components/CodeBlock";
-import HeroCard from "../components/hero/HeroCard";
 import { InlineNote } from "../components/InlineNote";
-import InstallBanner from "../components/InstallBanner";
-import OrbStatus from "../components/status/OrbStatus";
+// Hinweisblock/Orb entfernt für cleanere UI
 import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
 import { getVirtualListEnabled } from "../config/featureFlags";
@@ -346,8 +344,10 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         className="mx-auto w-full max-w-4xl px-4 pt-3"
         style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 160px)" }}
       >
-        <InstallBanner />
-        <OrbStatus streaming={sending} modelLabel={modelLabel} />
+        {/* Status nur klein über dem Chat */}
+        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1 text-xs text-[#B0B6C0]">
+          {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || '—'}`}
+        </div>
         <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1">
           <button
             type="button"
@@ -368,27 +368,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
           )}
         </div>
 
-        {msgs.length <= 1 && (
-          <>
-            <HeroCard onStart={() => composerRef.current?.focus()} />
-            <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-4">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm">
-                <div className="font-medium">Einstellungen prüfen</div>
-                <div className="opacity-80">Hinterlege API‑Key und Modell für echte Antworten.</div>
-                <div className="mt-2">
-                  <button
-                    className="nav-pill"
-                    onClick={() => {
-                      try { location.hash = "#/settings"; } catch { /* ignore */ }
-                    }}
-                  >
-                    Zu Einstellungen
-                  </button>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+        {/* Hinweisblock entfernt für cleaner Start */}
 
         <section aria-label="Verlauf" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
           {(() => {
