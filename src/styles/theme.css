@@ -175,7 +175,7 @@
 
   /* Compact tabs */
   .tab {
-    @apply hover:bg-white/8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 text-sm backdrop-blur-md transition-colors;
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 text-sm backdrop-blur-md transition-colors hover:bg-white/10;
     min-height: 36px;
   }
   .tab--active {
