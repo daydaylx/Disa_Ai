@@ -30,6 +30,13 @@
 
 - Schritt A: Statische Verifikation (`rg` auf Importe/Verwendung)
 - Schritt B: Dynamische Verifikation (temporäres Umbenennen, Typecheck+Tests)
-- Schritt C: Quarantäne (`git mv` → `.graveyard/<YYYYMMDD>/...`)
+- Schritt C: Quarantäne (`git mv` → `.graveyard/<YYYYMMDD>/...`).
+  Nach aktuellem Refactor wurden folgende Altlasten bereits entfernt/verschoben:
+  - dist/, playwright-report/, test-artifacts/ (generiert)
+  - LOGS/ (Build/Test-Logs)
+  - package.json.bak.\* und tsconfig.debug.json (Backups/Debug)
+  - scripts/\* → `.graveyard/backups/scripts/`
+    Kandidaten zur weiteren Prüfung: Diverse UI-Komponenten (Cards, Badges, Sidebar etc.),
+    die nicht importiert werden. Erst nach Beleg via Suche/Tests in `.graveyard/` verschieben.
 - Schritt D: Stabilitätslauf; ggf. Revert
 - Schritt E: Purge erst nach Freigabe
