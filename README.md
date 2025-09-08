@@ -1,23 +1,12 @@
-Deployment: Cloudflare Pages (Wrangler)
+Deployment
 
-Automatisch per GitHub Actions bei Push auf `main` und als Preview bei Pull Requests.
-
-Secrets (GitHub → Settings → Secrets and variables → Actions):
-
-- `CLOUDFLARE_API_TOKEN` – Token mit „Cloudflare Pages — Edit“
-- `CLOUDFLARE_ACCOUNT_ID` – deine Account ID
-- `CLOUDFLARE_PAGES_PROJECT` – Projektname in Pages (z. B. `disa-ai`)
-
-Build/Deploy:
-
-- Workflow: `.github/workflows/cloudflare-pages.yml` (Wrangler v3)
-- Build: `npm run build` mit `BASE_URL=./` (relative Pfade für Pages)
-- Deploy: `wrangler pages deploy ./dist --project-name $CLOUDFLARE_PAGES_PROJECT`
+- Cloudflare Pages via Git Integration (Production = `main`). Keine Wrangler/Deploy-Hooks/GitHub-Actions-Deploys.
+- Details siehe `docs/DEPLOYMENT.md`.
 
 Hinweise:
 
 - `public/_headers` kann Caching‑Regeln enthalten (falls vorhanden)
-- `.github/workflows/ci.yml` läuft weiter für Build/Tests (ohne Deploy)
+- `.github/workflows/ci.yml` läuft für Build/Tests (ohne Deploy)
 
 Aurora Dark Theme (Styling)
 
