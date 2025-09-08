@@ -41,6 +41,7 @@ export default function BottomNav() {
       role="navigation"
       aria-label="Hauptnavigation unten"
       style={{ WebkitBackdropFilter: "saturate(140%) blur(18px)" }}
+      data-version={import.meta.env.VITE_APP_VERSION}
     >
       <ul className="grid grid-cols-4 items-center gap-1 text-sm">
         <li>
