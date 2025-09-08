@@ -222,4 +222,53 @@
     background: hsl(var(--ring));
     border-radius: 9999px;
   }
+
+  /* Chat bubbles */
+  .chat-bubble {
+    position: relative;
+    overflow: hidden;
+    background-image: var(--grad-card);
+    background-blend-mode: overlay;
+    box-shadow:
+      0 8px 26px rgba(0, 0, 0, 0.34),
+      0 4px 18px rgba(124, 77, 255, 0.12),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    transition:
+      box-shadow 160ms ease,
+      filter 160ms ease;
+  }
+  @media (hover: hover) {
+    .chat-bubble:hover {
+      box-shadow:
+        0 14px 36px rgba(124, 77, 255, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+      filter: saturate(1.06);
+    }
+  }
+
+  /* User vs Assistant accents */
+  .msg-user .chat-bubble {
+    background-image: var(--grad-primary);
+    color: #fff;
+    box-shadow:
+      0 14px 36px rgba(124, 77, 255, 0.4),
+      0 8px 20px rgba(91, 140, 255, 0.24),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  }
+  .msg-assistant .chat-bubble {
+    background-image: none;
+    background-color: var(--surface-glass);
+  }
+
+  /* Composer tweaks */
+  .composer-glass {
+    @apply glass border-t px-2 py-2;
+    background-color: color-mix(in oklab, var(--surface-glass) 92%, transparent);
+  }
+  .composer-input {
+    @apply input w-full resize-none bg-transparent p-3 outline-none;
+  }
+  .composer-actions .btn {
+    @apply rounded-xl;
+  }
 }
