@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from "node:url";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(() => {
-  const base = process.env.BASE_URL ?? "./";
+  const base = process.env.VITE_BASE_URL ?? process.env.BASE_URL ?? "./";
   return {
     base,
     plugins: [
