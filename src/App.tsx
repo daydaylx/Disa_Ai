@@ -57,7 +57,7 @@ export default function App() {
       <header className="sticky top-0 z-40 w-full py-2">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4">
           <div className="font-semibold">Disa AI</div>
-          <nav className="glass flex gap-2 p-2 rounded-2xl">
+          <nav className="tabs">
             <a
               href="#/chat"
               onClick={(e) => { e.preventDefault(); nav({ name: "chat", chatId: null }); }}
