@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const base = process.env.BASE_URL ?? "./";
   return ({
     base,
-  plugins: [
+    plugins: [
     react(),
     VitePWA({
       strategies: "injectManifest",
@@ -34,13 +34,13 @@ export default defineConfig(({ mode }) => {
         ],
       },
     }),
-  ],
-  resolve: {
+    ],
+    resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-  },
-  build: {
+    },
+    build: {
     target: "es2020",
     // Für Debug-Builds per ENV aktivierbar, Standard bleibt aus
     sourcemap: process.env.DEBUG_SOURCEMAP === "1",
