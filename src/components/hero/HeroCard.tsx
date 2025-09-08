@@ -1,6 +1,6 @@
 import React from "react";
 
-import Logo from "../Logo";
+// Logo entfernt (Quarantäne)
 export type HeroCardProps = { onStart?: () => void };
 const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
   <section className="safe-pad mb-3 mt-2">
@@ -9,7 +9,7 @@ const HeroCard: React.FC<HeroCardProps> = ({ onStart }) => (
       <div className="aurora-orb" style={{ right: "-20px", top: "-20px" }} />
       <div className="relative flex items-center gap-3">
         <div className="rounded-full glass p-1">
-          <Logo className="h-10 w-10" />
+          {/* Logo entfernt */}
         </div>
         <div className="min-w-0">
           <h2 className="h1">Hey, ich bin dein Assi.</h2>

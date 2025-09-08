@@ -1,6 +1,6 @@
 import React from "react";
 
-import AndroidNoticeBanner from "./components/AndroidNoticeBanner";
+// AndroidNoticeBanner entfernt (Quarantäne)
 import Aurora from "./components/Aurora";
 import NetworkBanner from "./components/NetworkBanner";
 import ChatsView from "./views/ChatsView";
@@ -53,7 +53,7 @@ export default function App() {
     >
       <Aurora />
       <NetworkBanner />
-      <AndroidNoticeBanner />
+      {/* AndroidNoticeBanner entfernt */}
       <header className="sticky top-0 z-40 w-full py-2">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4">
           <div className="font-semibold">Disa AI</div>

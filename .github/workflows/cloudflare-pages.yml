@@ -1,7 +1,14 @@
-name: deploy-cloudflare-pages
+name: deploy-cloudflare-pages (wrangler)
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: ["**"]
+
+env:
+  NODE_VERSION: "20"
+  # Vite base for Cloudflare Pages (relative paths)
+  BASE_URL: ./
 
 jobs:
   deploy:
@@ -9,6 +16,9 @@ jobs:
     permissions:
       contents: read
       deployments: write
+    env:
+      NODE_VERSION: ${{ env.NODE_VERSION }}
+      BASE_URL: ${{ env.BASE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,7 +26,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
       - name: Install
@@ -24,14 +34,53 @@ jobs:
 
       - name: Build (relative base for Pages)
         run: npm run build
-        env:
-          BASE_URL: ./
 
-      - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+      - name: Publish to Cloudflare Pages (Wrangler)
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_PAGES_PROJECT != '' }}
+        uses: cloudflare/wrangler-action@v3
         with:
+          wranglerVersion: "3"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: disa-ai
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy ./dist --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+
+  preview:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      NODE_VERSION: ${{ env.NODE_VERSION }}
+      BASE_URL: ${{ env.BASE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build (relative base for Pages)
+        run: npm run build
+
+      - name: Upload dist artifact (Preview)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.run_id }}-${{ github.run_attempt }}
+          path: dist
+
+      - name: Publish Preview to Cloudflare Pages (Wrangler)
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_PAGES_PROJECT != '' }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          wranglerVersion: "3"
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT }} --branch=${{ github.head_ref || github.ref_name }}
