@@ -10,7 +10,7 @@ export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) return;
 
-  const swUrl = "/sw.js";
+  const swUrl = (globalThis as any).importScripts ? "/sw.js" : `${(import.meta as any)?.env?.BASE_URL ?? "./"}sw.js`;
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register(swUrl)
