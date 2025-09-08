@@ -1,0 +1,17 @@
+name: Trigger Cloudflare Pages build (production, no token)
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger CF Pages via Deploy Hook
+        run: |
+          if [ -z "${{ secrets.CF_PAGES_DEPLOY_HOOK_URL }}" ]; then
+            echo "Missing secret CF_PAGES_DEPLOY_HOOK_URL"; exit 1
+          fi
+          curl -sS -X POST "${{ secrets.CF_PAGES_DEPLOY_HOOK_URL }}"
