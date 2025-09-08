@@ -38,8 +38,15 @@ jobs:
       - name: Build (relative base for Pages)
         run: npm run build
 
+      - name: Trigger Cloudflare Pages via Deploy Hook (Prod)
+        if: ${{ secrets.CF_PAGES_DEPLOY_HOOK_URL != '' }}
+        run: |
+          echo "Triggering Cloudflare Pages deploy hook..."
+          curl -fsS -X POST "${{ secrets.CF_PAGES_DEPLOY_HOOK_URL }}"
+          echo "Deploy hook triggered."
+
       - name: Publish to Cloudflare Pages (Wrangler)
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_PAGES_PROJECT != '' }}
+        if: ${{ secrets.CF_PAGES_DEPLOY_HOOK_URL == '' && secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_PAGES_PROJECT != '' }}
         uses: cloudflare/wrangler-action@v3
         with:
           wranglerVersion: "3"
