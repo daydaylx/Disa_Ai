@@ -45,7 +45,8 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     return { content: "Demo-Antwort (kein API-Key)." };
   }
 
-  const init: any = {
+  type Init = NonNullable<Parameters<typeof fetch>[1]>;
+  const init: Init = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${key}`,

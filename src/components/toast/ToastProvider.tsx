@@ -2,6 +2,7 @@
 import React from "react";
 
 import { ToastsProvider, useToasts } from "../ui/Toast";
+import type { ToastItem as UiToastItem } from "../ui/toast/ToastTypes";
 
 export type ToastKind = "info" | "success" | "warn" | "error";
 export interface ToastItem {
@@ -17,11 +18,11 @@ export const useToast = () => {
   return {
     push: (t: Omit<ToastItem, "id">) =>
       push({
-        kind: (t.kind === "warn" ? "warning" : (t.kind as any)) ?? "info",
+        kind: t.kind === "warn" ? "warning" : (t.kind as "info" | "success" | "warning" | "error"),
         title: t.title,
         message: t.message,
         action: t.action,
-      } as any),
+      } as Omit<UiToastItem, "id">),
   };
 };
 

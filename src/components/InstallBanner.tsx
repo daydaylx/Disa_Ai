@@ -11,11 +11,14 @@ export default function InstallBanner() {
 
   useEffect(() => {
     const onBefore = (e: Event) => {
-      e.preventDefault();
-      setDeferred(e as BeforeInstallPromptEvent);
+      // vor iOS 16.4 nicht standardisiert, daher manuell typisieren
+      const be = e as BeforeInstallPromptEvent;
+      be.prompt?.bind?.(be);
+      e.preventDefault?.();
+      setDeferred(be);
     };
-    window.addEventListener("beforeinstallprompt", onBefore as any);
-    return () => window.removeEventListener("beforeinstallprompt", onBefore as any);
+    window.addEventListener("beforeinstallprompt", onBefore);
+    return () => window.removeEventListener("beforeinstallprompt", onBefore);
   }, []);
 
   if (hidden || !deferred) return null;

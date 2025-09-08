@@ -70,4 +70,4 @@ export async function pingOpenRouter(): Promise<boolean> {
 }
 
 // Konsolidierung: Chat-Streaming/-Once lebt in src/api/openrouter.ts
-export { chatOnce,chatStream } from "../api/openrouter";
+export { chatOnce, chatStream } from "../api/openrouter";

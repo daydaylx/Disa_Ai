@@ -9,15 +9,19 @@ function isTestEnv(): boolean {
   // Vitest setzt import.meta.vitest und VITEST=1
   const viaImportMeta = (() => {
     try {
-      return Boolean((import.meta as any)?.vitest);
+      return Boolean((import.meta as unknown as { vitest?: unknown })?.vitest);
     } catch {
       return false;
     }
   })();
-  const viaProcess =
-    typeof globalThis !== "undefined" &&
-    typeof (globalThis as any).process !== "undefined" &&
-    Boolean((globalThis as any).process?.env?.VITEST);
+  const viaProcess = (() => {
+    try {
+      const g = globalThis as unknown as { process?: { env?: Record<string, unknown> } };
+      return Boolean(g?.process?.env?.VITEST);
+    } catch {
+      return false;
+    }
+  })();
   return viaImportMeta || viaProcess;
 }
 

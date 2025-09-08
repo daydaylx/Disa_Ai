@@ -63,14 +63,14 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
       try {
         const ce = ev as CustomEvent<Omit<ToastItem, "id">>;
         if (ce?.detail && typeof ce.detail === "object") {
-          push(ce.detail as Omit<ToastItem, "id">);
+          push(ce.detail);
         }
       } catch {
         /* ignore */
       }
     };
-    window.addEventListener("disa:toast", onToast as any);
-    return () => window.removeEventListener("disa:toast", onToast as any);
+    window.addEventListener("disa:toast", onToast);
+    return () => window.removeEventListener("disa:toast", onToast);
   }, [push]);
 
   return (
