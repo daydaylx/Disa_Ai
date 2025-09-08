@@ -105,6 +105,29 @@ export default function App() {
           <ChatView convId={route.chatId ?? null} />
         )}
       </main>
+
+      {/* Build-/Umgebungsdiagnose: Version + manueller Reload */}
+      <footer className="mt-6 pb-6">
+        <div className="mx-auto flex w-full max-w-4xl items-center justify-end gap-3 px-4 text-xs opacity-80">
+          <span className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5">
+            v {import.meta.env.VITE_APP_VERSION ?? "dev"}
+          </span>
+          <button
+            type="button"
+            className="btn-ghost !min-h-0 px-2 py-1"
+            onClick={() => {
+              try {
+                window.location.reload();
+              } catch {
+                /* noop */
+              }
+            }}
+            aria-label="Neu laden"
+          >
+            Neu laden
+          </button>
+        </div>
+      </footer>
     </div>
   );
 }
