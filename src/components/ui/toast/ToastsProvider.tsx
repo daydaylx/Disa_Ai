@@ -83,7 +83,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               key={t.id}
               role="status"
               className={cn(
-                "tap-target pointer-events-auto w-[min(96vw,640px)] rounded-2xl border border-white/30 bg-white/70 text-popover-foreground shadow-soft backdrop-blur-lg",
+                "tap-target pointer-events-auto w-[min(96vw,640px)] rounded-2xl border border-white/20 bg-black/50 text-white shadow-soft backdrop-blur-xl",
                 "flex items-start gap-3 p-3",
               )}
             >
@@ -91,10 +91,10 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               <div className="flex-1">
                 {t.title ? <div className="font-semibold leading-snug">{t.title}</div> : null}
                 {t.message ? (
-                  <div className="text-sm leading-snug opacity-90">{t.message}</div>
+                  <div className="text-sm leading-snug opacity-95">{t.message}</div>
                 ) : null}
                 {t.action ? (
-                  <button type="button" className="btn-secondary mt-2" onClick={t.action.onClick}>
+                  <button type="button" className="btn-outline mt-2" onClick={t.action.onClick}>
                     {t.action.label}
                   </button>
                 ) : null}
@@ -102,7 +102,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               <button
                 type="button"
                 aria-label="Schließen"
-                className="btn-ghost ml-2"
+                className="btn-ghost ml-2 hover:bg-white/10"
                 onClick={() => dismiss(t.id)}
               >
                 <Icon name="close" />
