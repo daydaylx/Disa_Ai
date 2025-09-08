@@ -307,12 +307,12 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       </main>
 
       <div className="fixed left-0 right-0 z-50" style={{ bottom: `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)` }}>
-        <div className="glass mx-auto w-full max-w-3xl border-t px-2 py-2">
-          <div className="flex items-end gap-2">
+        <div className="composer-glass mx-auto w-full max-w-3xl">
+          <div className="flex items-end gap-2 composer-actions">
             <textarea
               ref={composerRef}
               data-testid="composer-input"
-              className="input w-full resize-none bg-transparent p-3 outline-none"
+              className="composer-input"
               placeholder="Nachricht eingeben…"
               value={text}
               onChange={(e) => setText(e.target.value)}
