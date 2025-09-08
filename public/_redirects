@@ -1,3 +1,5 @@
 # Serve SPA index.html for all subpaths (hash router safe as fallback)
-/*   /index.html   200
-
+# SPA fallback for non-asset requests (avoid infinite loop by excluding /index.html itself)
+# Cloudflare Pages understands this format; Wrangler warns if it detects loops.
+# We scope to extensions without .html to avoid looping on /index.html
+/*    /index.html   200!
