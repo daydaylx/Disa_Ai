@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Chat – Grundfunktionen (mobil)", () => {
   test("Skip-Link fokussiert Hauptbereich", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/#/");
     // Tab → Skip-Link → Enter
     await page.keyboard.press("Tab");
     const skip = page.locator("a.skip-link");
@@ -12,7 +12,7 @@ test.describe("Chat – Grundfunktionen (mobil)", () => {
   });
 
   test("Composer: Enter sendet, Shift+Enter macht Zeilenumbruch", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/#/");
     const input = page.getByTestId("composer-input");
 
     // Shift+Enter → Zeilenumbruch, NICHT senden
@@ -38,7 +38,7 @@ test.describe("Chat – Grundfunktionen (mobil)", () => {
   });
 
   test("Kopieren aus Nachricht zeigt Toast", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/#/");
     // Kopiere die erste sichtbare Nachricht
     await page.getByRole("button", { name: "Nachricht kopieren" }).first().click();
     await expect(page.getByText("Nachricht kopiert.")).toBeVisible();
