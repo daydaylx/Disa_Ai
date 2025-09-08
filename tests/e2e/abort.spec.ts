@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("Abort: Stop verhindert Bot-Antwort", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#/");
 
   // Ausgangszahl der Bubbles merken (eine Assi-Startnachricht)
   const bubbles = page.locator(".msg");

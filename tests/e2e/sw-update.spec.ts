@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("SW-Update-Toast via global Toast-Bus erscheint und ist klickbar", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#/");
 
   // Stubbe reload, damit Klick überprüfbar ist
   await page.addInitScript(() => {
