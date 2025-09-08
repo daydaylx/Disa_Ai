@@ -20,6 +20,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          BASE_URL: ./
 
       - name: Serve dist and probe persona.json
         run: |
