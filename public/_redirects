@@ -1,0 +1,3 @@
+# Serve SPA index.html for all subpaths (hash router safe as fallback)
+/*   /index.html   200
+
