@@ -4,10 +4,11 @@
 import { precacheAndRoute } from "workbox-precaching";
 const VERSION = "v1.0.2";
 const APP_CACHE = `disa-app-${VERSION}`;
+const BASE = self.registration.scope || "/"; // e.g. https://host/app/ → "/app/"
 const APP_SHELL = [
-  "/", // SPA-Einstieg
-  "/index.html",
-  "/manifest.webmanifest",
+  BASE,
+  new URL("index.html", BASE).pathname,
+  new URL("manifest.webmanifest", BASE).pathname,
   // Vite legt CSS/JS unter /assets/ ab – wir cache-matchen dynamisch (siehe fetch)
 ];
 
@@ -49,7 +50,9 @@ self.addEventListener("fetch", (event) => {
   if (url.hostname.includes("openrouter.ai")) return;
 
   // Assets: cache-first
-  if (url.pathname.startsWith("/assets/") || url.pathname.startsWith("/icons/")) {
+  const assetsPrefix = new URL("assets/", BASE).pathname;
+  const iconsPrefix = new URL("icons/", BASE).pathname;
+  if (url.pathname.startsWith(assetsPrefix) || url.pathname.startsWith(iconsPrefix)) {
     event.respondWith(
       caches.match(req).then((hit) => {
         if (hit) return hit;
@@ -69,7 +72,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   // App-Shell: network-first mit Fallback
-  if (url.pathname === "/" || url.pathname.endsWith("/index.html")) {
+  if (url.pathname === BASE || url.pathname.endsWith("/index.html")) {
     event.respondWith(
       fetch(req)
         .then((res) => {
@@ -80,7 +83,7 @@ self.addEventListener("fetch", (event) => {
             .catch(() => {});
           return res;
         })
-        .catch(() => caches.match(req).then((hit) => hit || caches.match("/index.html"))),
+        .catch(() => caches.match(req).then((hit) => hit || caches.match(new URL("index.html", BASE).pathname))),
     );
     return;
   }
