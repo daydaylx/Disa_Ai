@@ -34,7 +34,9 @@ export default function BottomNav() {
 
   return (
     <nav
-      ref={ref as any}
+      ref={(el) => {
+        ref.current = el;
+      }}
       className="fixed inset-x-3 bottom-3 z-30 glass rounded-2xl px-2 py-2 backdrop-blur safe-bottom"
       role="navigation"
       aria-label="Hauptnavigation unten"

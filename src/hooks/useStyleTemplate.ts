@@ -60,7 +60,7 @@ function normalizeTemplates(arr: unknown): TemplateEntry[] {
         typeof o.system === "string"
       );
     })
-    .map((t: any) => {
+    .map((t: Partial<TemplateEntry>) => {
       const base: TemplateEntry = {
         id: String(t.id),
         name: String(t.name),
@@ -68,8 +68,7 @@ function normalizeTemplates(arr: unknown): TemplateEntry[] {
       };
       if (typeof t.description === "string") base.description = t.description;
       if (Array.isArray(t.tags)) base.tags = t.tags.filter((z: unknown) => typeof z === "string");
-      if (Array.isArray(t.allow))
-        base.allow = t.allow.filter((z: unknown) => typeof z === "string");
+      if (Array.isArray(t.allow)) base.allow = t.allow.filter((z: unknown) => typeof z === "string");
       return base;
     });
 }

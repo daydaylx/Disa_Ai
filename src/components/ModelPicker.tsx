@@ -192,7 +192,9 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
         <select
           value={policy}
-          onChange={(e) => setPolicy(e.target.value as any)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setPolicy(e.target.value as "any" | "free" | "moderate" | "strict")
+          }
           aria-label="Policy/Safety filtern"
           className="input text-sm"
         >
@@ -203,7 +205,9 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
         <select
           value={cost}
-          onChange={(e) => setCost(e.target.value as any)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setCost(e.target.value as "all" | "free" | "low" | "med" | "high")
+          }
           aria-label="Kostenkategorie filtern"
           className="input text-sm"
         >
@@ -236,7 +240,9 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </label>
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setSortBy(e.target.value as "label" | "price" | "ctx")
+          }
           aria-label="Sortierung"
           className="input text-sm"
         >

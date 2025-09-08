@@ -63,7 +63,7 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
           window.dispatchEvent(
             new CustomEvent("disa:toast", {
               detail: { kind: "success", title: "Nachricht kopiert." },
-            } as any),
+            }),
           );
         }}
       >
@@ -110,7 +110,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         }
       })();
       if (isAndroid && pref && "vibrate" in navigator && typeof navigator.vibrate === "function") {
-        navigator.vibrate(pattern as any);
+        navigator.vibrate(pattern as number | number[]);
       }
     } catch {
       /* ignore */
@@ -147,7 +147,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 64;
       setShowScrollFab(!nearBottom);
     };
-    window.addEventListener("scroll", onScroll, { passive: true } as any);
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     onScroll();
     return () => {

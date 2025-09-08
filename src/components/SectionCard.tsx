@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Icon } from "./ui/Icon";
+import { Icon, type IconName } from "./ui/Icon";
 
 type Variant = "solid" | "glass";
 type Accent = "none" | "blue" | "purple" | "green" | "pink";
 type Props = {
   title: string;
-  icon?: string;
+  icon?: IconName;
   children: React.ReactNode;
   subtitle?: string;
   variant?: Variant;
@@ -48,7 +48,7 @@ export default function SectionCard({
     <div className="mb-4 flex items-start gap-3">
       {icon && (
         <div className="mt-0.5 shrink-0">
-          <Icon name={icon as any} width="18" height="18" />
+          <Icon name={icon} width="18" height="18" />
         </div>
       )}
       <div>

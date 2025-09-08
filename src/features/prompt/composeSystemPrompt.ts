@@ -27,8 +27,12 @@ function nsfwPreamble(allowNSFW: boolean): string {
 /** Rollenschnipsel (aus älteren Ständen abgeleitete Vorschau) */
 function roleOverlay(roleId: string | null): string {
   if (!roleId) return "";
-  const r = getRoleById(roleId as any) as any;
-  const purpose: string = r?.purpose ?? r?.description ?? r?.desc ?? "";
+  const r = getRoleById(roleId);
+  const purpose: string =
+    r && typeof (r as any).purpose === "string"
+      ? ((r as any).purpose as string)
+      : (r && (typeof (r as any).description === "string" ? ((r as any).description as string) :
+         typeof (r as any).desc === "string" ? ((r as any).desc as string) : "")) || "";
   const base = [
     "Feintuning: Ton=medium, Kürze=balanced, Humor=none, Emojis=nein.",
     "Priorität: Ehrlichkeit → Klarheit → Kürze.",

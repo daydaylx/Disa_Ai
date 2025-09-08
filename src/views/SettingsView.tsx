@@ -406,11 +406,11 @@ export default function SettingsView() {
           )}
 
           <div className="flex items-center justify-between rounded-lg border border-white/30 bg-white/60 px-3 py-2 text-sm backdrop-blur-md">
-            <Switch
-              checked={useRoleStyle}
-              onChange={(v) => onUseRoleStyle({ target: { checked: v } } as any)}
-              label="Stil an Rolle anpassen"
-            />
+          <Switch
+            checked={useRoleStyle}
+            onChange={(checked: boolean) => onUseRoleStyle({ target: { checked } } as unknown as React.ChangeEvent<HTMLInputElement>)}
+            label="Stil an Rolle anpassen"
+          />
           </div>
 
           {/* Systemprompt-Vorschau (effektiv) */}
@@ -422,7 +422,11 @@ export default function SettingsView() {
 
         {/* Optional: NSFW */}
         <div className="mt-3 flex items-center gap-3">
-          <Switch checked={nsfw} onChange={(v) => onToggleNSFW({ target: { checked: v } } as any)} label="NSFW-Filter lockern" />
+          <Switch
+            checked={nsfw}
+            onChange={(checked: boolean) => onToggleNSFW({ target: { checked } } as unknown as React.ChangeEvent<HTMLInputElement>)}
+            label="NSFW-Filter lockern"
+          />
         </div>
       </section>
 
