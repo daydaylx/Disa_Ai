@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
-    "preview": "vite preview --port 4173 --strictPort",
+    "preview": "vite preview --port 5173 --strictPort",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -20,7 +20,6 @@
     "lint:full": "eslint .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
-    "prepare": "husky install",
     "verify": "npm run typecheck && npm run lint && npm run test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -31,7 +30,8 @@
     "typecheck:ext": "tsc -p tsconfig.extended.json --noEmit",
     "lint:types:ext": "eslint . --config eslint.config.extended.js",
     "test:e2e:ci": "playwright test --workers=1",
-    "scan:visual": "node scripts/visual-scan.mjs"
+    "scan:visual": "node scripts/visual-scan.mjs",
+    "clean": "rm -rf dist .vite .cache .tmp"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
