@@ -1,6 +1,14 @@
 Deployment & CI
 
-Deploy via Cloudflare Pages Git-Integration (Branch main, Output dist/). GitHub Actions führt nur CI-Checks aus (typecheck + lint:full + test). Theme nutzt CSS Custom Properties statt hard-coded Tailwind-Farben für bessere Konsistenz.
+Deploy via Cloudflare Pages Git-Integration (Branch main, Output dist/). GitHub Actions führt nur CI-Checks aus (typecheck + lint + test). Theme nutzt CSS Custom Properties statt hard-coded Tailwind-Farben für bessere Konsistenz.
+
+⚠️ **ESLint Config Warnung**: Projekt hat fragmentierte ESLint-Konfiguration:
+
+- `eslint.config.js` (Haupt-Config)
+- `eslint.config.types.js` (Type-aware Rules)
+- `eslint.config.extended.js` (Erweiterte Scopes)
+
+Nutze `npm run lint` für Standard-Checks. Spezial-Configs sind Legacy und sollten konsolidiert werden.
 
 Aurora Dark Theme (Styling)
 
