@@ -19,6 +19,7 @@ import {
   getUseRoleStyle,
 } from "../config/settings";
 import { appendMessage as convAppendMessage, getConversationMessages as convGetMessages } from "../hooks/useConversations";
+import { humanErrorToToast } from "../lib/errors/humanError";
 import { buildMessages as buildPipelineMessages } from "../services/chatPipeline";
 import { sendChat } from "../services/chatService";
 import { ContextManager } from "../services/contextManager";
@@ -234,12 +235,18 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       onError: (err) => {
         setSending(false);
         abortRef.current = null;
+        
+        // Show user-friendly error toast
+        const errorToast = humanErrorToToast(err);
+        toasts.push(errorToast);
+        
+        // Also add a brief error message to chat for context
         setMsgs((m) => trimHistory([
           ...m,
           {
             id: uid(),
             role: "assistant",
-            content: `Fehler: ${(err as Error)?.message ?? String(err)}`,
+            content: "Die Anfrage konnte nicht verarbeitet werden. Siehe Benachrichtigung für Details.",
           },
         ]));
       },
