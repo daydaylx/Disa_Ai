@@ -1,0 +1,8 @@
+Kontext: Disa_Ai im aktuellen Arbeitsverzeichnis. MCP: fs, git.
+Ziel: Diagnose für "Cloudflare Pages zeigt alte Version" + Build/Tooling-Drift.
+Schritte:
+1) Projektstruktur + wichtige Configs lesen (package.json, vite.config.*, public/_headers, public/_redirects, src/**).
+2) Probleme als Liste P0/P1/P2 mit: Ursache (konkret), Datei+Zeile, Fix-Vorschlag (1–2 Sätze).
+3) Git-Lage: Branches, unveröffentlichte Commits, Diff-Umfang (nur lesend über git-MCP).
+Regeln: Keine Schreib- oder Bash-Operationen. Nur MCP-Lesen.
+Output: Kompakte Tabelle (Problem | Ursache | Fundstelle | Fix | Risiko).

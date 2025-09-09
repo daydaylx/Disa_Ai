@@ -1,0 +1,5 @@
+Zuerst nur lesen/analysieren:
+- Liste die Projekt-Root (fs.listDirectory ".").
+- Lies package.json, vite.config.*, public/_headers, public/_redirects.
+- Gib mir eine 10-Zeilen-Zusammenfassung der Build/Deploy-Risiken.
+Wichtig: Keine Änderungen. Nur Lesetools verwenden.

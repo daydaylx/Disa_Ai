@@ -1,0 +1,8 @@
+Arbeite den genehmigten Plan ab.
+Regeln:
+- Neuer Branch: fix/infra-ci-routing
+- Jede Änderung = 1 Commit mit klarem Betreff+Body.
+- Erlaubte Kommandos: npm ci, npm run lint|typecheck|build, git add/commit.
+- Keine Pushes. Kein npm install/update ohne Rückfrage.
+- Nach jedem Commit: Diff-Zusammenfassung + Begründung.
+Wenn Schreibrechte via MCP gebraucht: nur gezielt anfragen (writeFile).
