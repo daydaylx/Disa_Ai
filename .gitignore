@@ -16,4 +16,5 @@ vite.svg
 .env.*
 !.env.example
 test-results/
+test-artifacts/
 *.log
