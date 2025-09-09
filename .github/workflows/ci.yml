@@ -19,7 +19,7 @@ jobs:
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
-      - run: pnpm lint:full
+      - run: pnpm lint
       - run: pnpm test
 
   e2e-smoke:
