@@ -1,6 +1,6 @@
-Deployment
+Deployment & CI
 
-Deploy via Cloudflare Pages Git-Integration (Branch main, Output dist/). GitHub Actions = nur CI.
+Deploy via Cloudflare Pages Git-Integration (Branch main, Output dist/). GitHub Actions führt nur CI-Checks aus (typecheck + lint:full + test). Theme nutzt CSS Custom Properties statt hard-coded Tailwind-Farben für bessere Konsistenz.
 
 Aurora Dark Theme (Styling)
 
