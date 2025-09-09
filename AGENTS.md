@@ -1,60 +1,30 @@
-# Repository Guidelines
+# Disa_Ai – Agent Guardrails & Workflow
 
-## Projektstruktur & Modul‑Organisation
+## Ziele (minimal-invasive Fixes)
 
-- `src/`: Anwendungscode
-  - `components/`: React‑Komponenten in PascalCase (`Button.tsx`)
-  - `hooks/`: Custom Hooks (`useSomething.ts`)
-  - `lib/`, `services/`, `utils/`: gemeinsame Helper
-  - `views/`, `entities/`, `shared/`, `widgets/`: Feature-/Layout‑Primitives
-  - `styles/`: CSS/Tailwind‑Layer
-  - `__tests__/`, `test/`: co‑lokalisierte Tests und Helfer
-- `tests/`: Top‑Level‑Tests (`unit/`, `e2e/`)
-- `public/`: statische Assets (`icons/`, `manifest`, `persona.json`, `sw.js`)
-- `dist/`: Build‑Artefakte (nicht bearbeiten)
+- Reproduzierbarer Build: `pnpm i --frozen-lockfile && pnpm typecheck && pnpm -s build`
+- TS-Fixer: Nur kleinste Typ-Fixes (z. B. optionale Props korrekt), keine großen Umbauten.
+- Tailwind/PostCSS: Direktiven konsistent, keine toten Layers.
+- Cloudflare Pages: Workflows mit `actionlint` prüfen; bei Fehlern minimalen, stabilen Workflow vorschlagen.
+- Visuelle Regressionen: Vorher/Nachher-Screens (3 Breakpoints) erzeugen, bevor UI-Patches gemerged werden.
 
-## Build, Test und Entwicklung
+## Schritte, die der Agent ausführen soll
 
-- `npm run dev`: startet Vite‑Dev‑Server.
-- `npm run build`: Produktionsbuild nach `dist/`.
-- `npm run preview`: dient Build unter `http://localhost:4173` (für e2e).
-- `npm run typecheck`: strikte TypeScript‑Prüfung (App + Tests).
-- `npm run test`, `npm run test:unit`: Vitest einmalig; `test:watch` mit Watch‑UI.
-- `npm run test:e2e`: Playwright‑Tests in `tests/e2e` (mobiles Viewport).
-- `npm run verify`: führt `typecheck` + Unit‑Tests aus; vor PRs nutzen.
+1. `pnpm clean` (falls vorhanden), `pnpm i --frozen-lockfile`, `pnpm typecheck`, `pnpm -s build`.
+2. Fehlerliste sammeln; **Plan** mit atomaren Patches vorschlagen. Keine Major-Updates „ins Blaue“.
+3. `actionlint` gegen `.github/workflows/**/*.yml` laufen lassen; Findings dokumentieren.
+4. **Snyk MCP** laufen lassen:
+   - Code Scan (Snyk Code) und SCA für `dependencies`.
+   - Nur Low-Risk-Upgrades/Fixes vorschlagen; keine massiven Major-Bumps ohne Begründung.
+5. UI-Check: Headless-Browser Screens in 360 / 768 / 1280 px.
+6. PR-Text generieren: Befunde, Befehle, Diff, Screenshots.
 
-## Code‑Stil & Benennung
+## Sicherheitsregeln
 
-- Sprache: TypeScript + React 18 + Vite.
-- Formatierung: Prettier (100 Spalten, trailing commas). `npm run format:fix`.
-- Linting: ESLint mit Importsortierung und Entfernen ungenutzter Importe (Husky/lint‑staged Auto‑Fix).
-- Einrückung: 2 Leerzeichen.
-- Benennung: Komponenten PascalCase (`HeaderBadges.tsx`); Hooks `useX.ts`; Utilities camelCase.
-- Tailwind: Klassenreihenfolge via `prettier-plugin-tailwindcss`.
+- Änderungsvorschläge zuerst als Patch/Diff zeigen; **keine** Mass-Refactors.
+- Keine Secrets anfassen. Keine Cloudflare-Settings „erraten“.
+- Netzwerkzugriffe **nur** bei Bedarf (Snyk/Tavily) und erst nach Freigabe.
 
-## Test‑Richtlinien
+## Security "Secure at inception" (Snyk)
 
-- Frameworks: Vitest + Testing Library (Unit), Playwright (E2E).
-- Orte: `tests/unit`, `src/__tests__`, `tests/e2e`.
-- Namensschema: `*.test.ts` / `*.test.tsx`.
-- Coverage: V8‑Reporter (`text`, `html` → `coverage/`). Fokus auf zentrale Zweige und Fehlerpfade.
-- Lokal ausführen: `npm run verify` und `npm run test:e2e` gegen `npm run preview`.
-
-## Commits & Pull Requests
-
-- Commits: Conventional Commits (z. B. `feat(ui): …`, `fix(net): …`, `chore:`). Imperativ, klarer Scope.
-- PRs: klare Beschreibung, verlinkte Issues, Screenshots bei UI‑Änderungen; Testauswirkungen nennen.
-- Sicherstellen, dass `npm run verify` besteht; bei Flow‑Änderungen `npm run test:e2e` ausführen.
-
-## Sicherheit & Konfiguration
-
-- Keine Secrets committen. OpenRouter‑API‑Key kommt aus `localStorage` (`disa_api_key`) — nicht hardcoden.
-- Keine generierten Artefakte bearbeiten (`dist/`, `playwright-report/`). `public/`‑Assets leichtgewichtig und versioniert halten.
-
-## Architekturüberblick
-
-- Komponenten: Präsentations‑ und Containerkomponenten unter `src/components` sowie feature‑nah in `views/` und `widgets/`.
-- Feature‑Slices: `views/`, `entities/`, `widgets/`, `shared/` bündeln UI und Logik je Domäne.
-- Wiederverwendung: `hooks/` für Zustands-/Effektlogik; `lib/`/`services/` für API/Plattform; `utils/` für pure Helfer.
-- Datenfluss: Props → Hooks → Services; nur pure Funktionen in `utils/`.
-- Tests: Unit nah am Code (`src/__tests__`, `tests/unit`), E2E gegen `npm run preview`.
+- Nach _jedem_ Code- oder Dependency-Change Snyk-Scan → Fix → Rescan bis „clean“.
