@@ -2,6 +2,12 @@ Deployment & CI
 
 Deploy via Cloudflare Pages Git-Integration (Branch main, Output dist/). GitHub Actions führt nur CI-Checks aus (typecheck + lint + test). Theme nutzt CSS Custom Properties statt hard-coded Tailwind-Farben für bessere Konsistenz.
 
+**Deploy & Caching:**
+
+- **HTML-Caching**: `public/_headers` setzt `no-store` für index.html – verhindert veraltete App-Versionen
+- **Service Worker**: Deaktiviert in `src/main.tsx` um Stale-Content zu vermeiden
+- **Client-Cache leeren**: Bei Deployment-Problemen Cloudflare "Purge Everything" + Benutzer müssen Browser-Cache/SW manuell löschen
+
 ⚠️ **ESLint Config Warnung**: Projekt hat fragmentierte ESLint-Konfiguration:
 
 - `eslint.config.js` (Haupt-Config)
