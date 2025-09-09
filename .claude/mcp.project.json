@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "fs": {
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/d/Schreibtisch/Disa Ai"],
+      "env": {},
+      "allow": ["readFile", "writeFile", "listDirectory", "searchFiles", "stat"]
+    },
+    "git": {
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["-y", "@cyanheads/git-mcp-server"],
+      "env": {}
+    }
+  }
+}

@@ -1,12 +1,6 @@
 Deployment
 
-- Cloudflare Pages via Git Integration (Production = `main`). Keine Wrangler/Deploy-Hooks/GitHub-Actions-Deploys.
-- Details siehe `docs/DEPLOYMENT.md`.
-
-Hinweise:
-
-- `public/_headers` kann Caching‑Regeln enthalten (falls vorhanden)
-- `.github/workflows/ci.yml` läuft für Build/Tests (ohne Deploy)
+Deploy via Cloudflare Pages Git-Integration (Branch main, Output dist/). GitHub Actions = nur CI.
 
 Aurora Dark Theme (Styling)
 

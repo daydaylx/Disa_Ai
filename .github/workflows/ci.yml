@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,9 +16,5 @@ jobs:
           cache: "npm"
       - run: npm ci
       - run: npm run typecheck
-      - run: npm run lint
+      - run: npm run lint:full
       - run: npm test -- --run
-      - name: Build (relative base)
-        run: npm run build
-        env:
-          BASE_URL: ./
