@@ -25,11 +25,13 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "snap:ui": "playwright test tests/e2e/screenshots.spec.ts --workers=1",
+    "snap:breakpoints": "playwright test tests/e2e/screenshots.spec.ts -c playwright.breakpoints.config.ts --workers=1",
     "test:unit": "vitest run",
     "test:unit:ui": "vitest",
     "typecheck:ext": "tsc -p tsconfig.extended.json --noEmit",
     "lint:types:ext": "eslint . --config eslint.config.extended.js",
-    "test:e2e:ci": "playwright test --workers=1"
+    "test:e2e:ci": "playwright test --workers=1",
+    "scan:visual": "node scripts/visual-scan.mjs"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
@@ -70,6 +72,7 @@
     "jsdom": "^26.1.0",
     "lint-staged": "^16.1.5",
     "msw": "^2.10.5",
+    "playwright": "^1.55.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
