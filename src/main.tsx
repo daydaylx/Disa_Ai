@@ -26,13 +26,12 @@ import App from "./App";
 import { ToastsProvider } from "./components/ui/Toast";
 import { initTheme } from "./config/theme";
 import { installSkipLinkFocus } from "./lib/a11y/skipLink";
-import { registerSW } from "./lib/pwa/registerSW";
 
 // Ensure dark baseline + tokens are applied early
 initTheme();
 installSkipLinkFocus("a.skip-link", "main");
 if (import.meta.env.PROD) {
-  registerSW();
+  // registerSW(); // DEAKTIVIERT: verhindert stale HTML-Content
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

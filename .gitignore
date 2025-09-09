@@ -1,5 +1,6 @@
 # Node
 node_modules/
+package-lock.json
 npm-debug.log*
 yarn-error.log*
 pnpm-debug.log*
@@ -15,4 +16,5 @@ vite.svg
 .env.*
 !.env.example
 test-results/
+test-artifacts/
 *.log
