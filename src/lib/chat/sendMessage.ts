@@ -75,6 +75,12 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
 
   const res = await fetchWithRetry(url, init, retryOpts);
   if (!res.ok) {
+    // Use standard HTTP error pattern that humanError() can parse
+    if (res.status === 401) throw new Error("API-Key fehlt oder ist ungültig (401).");
+    if (res.status === 403) throw new Error("Zugriff verweigert/Modell blockiert (403).");
+    if (res.status === 429) throw new Error("Rate-Limit/Quota erreicht (429).");
+    if (res.status >= 500) throw new Error("Anbieterfehler (5xx). Bitte später erneut.");
+    
     const text = await res.text().catch(() => "");
     throw new Error(`HTTP ${res.status} – ${text || res.statusText}`);
   }
