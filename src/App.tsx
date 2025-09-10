@@ -2,11 +2,14 @@ import React from "react";
 
 // AndroidNoticeBanner entfernt (Quarantäne)
 import Aurora from "./components/Aurora";
+import ErrorBoundary from "./components/ErrorBoundary";
 import NetworkBanner from "./components/NetworkBanner";
-import ChatsView from "./views/ChatsView";
-import ChatView from "./views/ChatView";
-import QuickStartView from "./views/QuickStartView";
-import SettingsView from "./views/SettingsView";
+
+// Code-splitting für bessere Performance
+const ChatsView = React.lazy(() => import("./views/ChatsView"));
+const ChatView = React.lazy(() => import("./views/ChatView"));
+const QuickStartView = React.lazy(() => import("./views/QuickStartView"));
+const SettingsView = React.lazy(() => import("./views/SettingsView"));
 
 type Route = { name: "chat" | "settings" | "chats" | "quickstart"; chatId?: string | null };
 
@@ -95,15 +98,24 @@ export default function App() {
       </header>
 
       <main className="relative mx-auto w-full max-w-4xl p-4">
-        {route.name === "settings" ? (
-          <SettingsView />
-        ) : route.name === "chats" ? (
-          <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
-        ) : route.name === "quickstart" ? (
-          <QuickStartView />
-        ) : (
-          <ChatView convId={route.chatId ?? null} />
-        )}
+        <ErrorBoundary>
+          <React.Suspense fallback={<div className="flex items-center justify-center py-12">
+            <div className="glass rounded-lg p-6 text-center">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"></div>
+              <p className="mt-3 text-sm text-muted-foreground">Lädt...</p>
+            </div>
+          </div>}>
+            {route.name === "settings" ? (
+              <SettingsView />
+            ) : route.name === "chats" ? (
+              <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
+            ) : route.name === "quickstart" ? (
+              <QuickStartView />
+            ) : (
+              <ChatView convId={route.chatId ?? null} />
+            )}
+          </React.Suspense>
+        </ErrorBoundary>
       </main>
 
       {/* Build-/Umgebungsdiagnose: Version + manueller Reload */}

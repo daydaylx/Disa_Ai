@@ -96,6 +96,31 @@
 }
 
 @layer components {
+  /* Enhanced focus indicators for accessibility */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
+  }
+
+  /* Interactive elements should have consistent focus styles */
+  a,
+  button,
+  [role="button"],
+  [tabindex]:not([tabindex="-1"]),
+  input,
+  textarea,
+  select,
+  [contenteditable] {
+    @apply focus-ring;
+  }
+
+  /* Ensure focus is visible for keyboard navigation */
+  @media (prefers-reduced-motion: no-preference) {
+    .focus-ring {
+      transition:
+        box-shadow 0.15s ease-in-out,
+        outline 0.15s ease-in-out;
+    }
+  }
   /* App background with faint aurora + grid */
   .app-bg {
     background-image:
