@@ -21,3 +21,6 @@ test-artifacts/
 
 # allow npm lockfile for CI
 !package-lock.json
+
+# ignore editor backup files
+*.bak
