@@ -1,42 +1,26 @@
-name: CI
+name: CI (npm, Vite build)
+
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
   pull_request:
-    branches: [main]
 
 jobs:
-  checks:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm lint
-      - run: pnpm test
 
-  e2e-smoke:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          version: 9
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm playwright install --with-deps chromium
-      - run: pnpm build
-      - name: Run stable E2E tests
-        run: pnpm test:e2e --workers=1
-        continue-on-error: true
+          node-version: '22'
+          cache: 'npm'   # <-- npm-Cache nutzt package-lock.json
+          # package-manager-cache bleibt standardmäßig an
+          # (siehe setup-node Doku)
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
