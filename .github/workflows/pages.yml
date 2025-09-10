@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Pages (tests-gated)
 
 on:
   push:
@@ -15,8 +15,62 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  detect:
+    name: Detect test folders
     runs-on: ubuntu-latest
+    outputs:
+      has_e2e: ${{ steps.chk.outputs.has_e2e }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: chk
+        run: |
+          if git ls-files 'e2e/**' | grep -q .; then
+            echo "has_e2e=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_e2e=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  unit:
+    name: Unit tests (Vitest)
+    runs-on: ubuntu-latest
+    needs: detect
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run test:ci
+      - name: Upload coverage
+        if: always() && hashFiles('coverage/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+
+  e2e:
+    name: E2E tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: ${{ needs.detect.outputs.has_e2e == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - uses: microsoft/playwright-github-action@v1
+      - run: npx playwright install --with-deps
+      - run: npx playwright test
+
+  build:
+    name: Build artifact
+    runs-on: ubuntu-latest
+    needs: [unit, e2e]
+    # erlaubt: e2e 'success' ODER 'skipped' (falls es keine e2e-Tests gibt)
+    if: ${{ needs.unit.result == 'success' && (needs.e2e.result == 'success' || needs.e2e.result == 'skipped') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,8 +85,9 @@ jobs:
           path: dist
 
   deploy:
-    needs: build
+    name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
