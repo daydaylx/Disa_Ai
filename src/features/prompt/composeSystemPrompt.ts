@@ -1,18 +1,36 @@
 import type { StyleKey } from "../../config/settings";
 import { getRoleById } from "../../config/promptTemplates";
 
-/** Style-Mapping (nur für bekannte Keys). Unbekannte fallen auf den Default zurück. */
-const STYLE_SNIPPETS: Partial<Record<StyleKey, string>> = {
-  concise:
-    "Du bist ein sachlicher, hilfreicher Assistent. Antworte klar, strukturiert und ohne Floskeln. Verwende kurze Sätze.",
+/** Style-Mapping für alle StyleKey-Werte. */
+const STYLE_SNIPPETS: Record<StyleKey, string> = {
+  neutral:
+    "Antworte sachlich, ausgewogen und objektiv. Nutze neutrale Sprache ohne emotionale Färbung.",
   blunt_de:
     "Antworte direkt, ehrlich, kritisch. Risiken/Schwächen zuerst. Kein Motivationssprech. Kein Smalltalk.",
+  concise:
+    "Du bist ein sachlicher, hilfreicher Assistent. Antworte klar, strukturiert und ohne Floskeln. Verwende kurze Sätze.",
   friendly:
     "Antworte kollegial und respektvoll, aber präzise. Verwende Alltagssprache und halte dich kurz.",
   creative_light:
     "Erkläre mit kurzen Analogien/Beispielen. Bleibe präzise und handlungsorientiert.",
   minimal:
     "Antworte so kurz wie möglich, ohne Informationsverlust. Keine Ausschmückungen.",
+  technical_precise:
+    "Verwende präzise Fachterminologie. Strukturiere technische Erklärungen logisch und vollständig.",
+  socratic:
+    "Leite durch gezielte Fragen zur Erkenntnis. Fördere eigenständiges Denken statt direkter Antworten.",
+  bullet:
+    "Strukturiere Antworten als prägnante Bullet Points. Maximal 6 Punkte pro Liste.",
+  step_by_step:
+    "Erkläre in numerierten, aufeinander aufbauenden Schritten. Jeder Schritt klar und vollständig.",
+  formal_de:
+    "Verwende formelle deutsche Sprache. Höflich, respektvoll, sachlich. Sie-Form verwenden.",
+  casual_de:
+    "Lockere, umgangssprachliche deutsche Kommunikation. Du-Form, entspannt aber hilfreich.",
+  detailed:
+    "Liefere umfassende, detaillierte Erklärungen. Berücksichtige Kontext, Alternativen und Hintergründe.",
+  no_taboos:
+    "Antworte offen zu allen Themen ohne inhaltliche Beschränkungen. Sachlich und informativ.",
 };
 
 /** Optionales NSFW-Präfix, wenn Filter nicht gelockert ist */
@@ -52,9 +70,7 @@ export function composeSystemPrompt(params: {
 }): string {
   const { style, useRoleStyle, roleId, allowNSFW } = params;
 
-  const styleText =
-    STYLE_SNIPPETS[style] ??
-    "Antworte präzise, strukturiert und ohne unnötige Floskeln.";
+  const styleText = STYLE_SNIPPETS[style];
 
   const nsfwText = nsfwPreamble(allowNSFW);
   const roleText = useRoleStyle ? roleOverlay(roleId) : "";

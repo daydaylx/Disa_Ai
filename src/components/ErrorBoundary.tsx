@@ -15,9 +15,20 @@ export default class ErrorBoundary extends Component<Props, State> {
   override render() {
     if (this.state.hasError) {
       return (
-        <div className="rounded-md border border-red-300 bg-red-50 p-4 text-red-900">
-          <div className="mb-1 font-semibold">Es ist ein Fehler aufgetreten.</div>
-          <div className="break-words text-sm opacity-80">{this.state.message}</div>
+        <div className="glass mx-auto max-w-md rounded-lg p-6 text-center">
+          <div className="mb-3 text-lg font-semibold text-destructive">
+            ⚠️ Es ist ein Fehler aufgetreten
+          </div>
+          <div className="mb-4 break-words text-sm text-muted-foreground">
+            {this.state.message}
+          </div>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={() => window.location.reload()}
+          >
+            Neu laden
+          </button>
         </div>
       );
     }
