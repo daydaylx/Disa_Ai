@@ -1,9 +1,9 @@
-/* eslint-disable no-empty */
+// Safe ID generation with crypto API fallback
 export function newId(): string {
   try {
     if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function")
       return crypto.randomUUID();
-  } catch {}
+  } catch { /* Fallback to manual generation */ }
   const s4 = () =>
     Math.floor((1 + Math.random()) * 0x10000)
       .toString(16)

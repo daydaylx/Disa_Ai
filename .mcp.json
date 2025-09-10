@@ -1,14 +1,22 @@
 {
   "mcpServers": {
-    "fs": {
-      "transport": "stdio",
+    "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${PWD}"]
     },
-    "git": {
-      "transport": "stdio",
+    "github": {
       "command": "npx",
-      "args": ["-y", "@cyanheads/git-mcp-server"]
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN:-}" }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": { "DATABASE_URL": "${DATABASE_URL:-}" }
     }
   }
 }
