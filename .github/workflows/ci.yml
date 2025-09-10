@@ -1,22 +1,37 @@
-name: CI (npm, Vite build)
+name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'   # nutzt package-lock.json für Caching (offiziell unterstützt)
-      - name: Install
-        run: npm ci
-      - name: Build
-        run: npm run build
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test:ci
+      - uses: actions/upload-artifact@v4
+        if: always() && hashFiles('coverage/**') != ''
+        with:
+          name: coverage
+          path: coverage
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build

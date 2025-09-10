@@ -1,0 +1,10 @@
+{
+  "env": {
+    "ANTHROPIC_MODEL": "sonnet",
+    "BASH_DEFAULT_TIMEOUT_MS": "60000",
+    "MAX_THINKING_TOKENS": "50000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "DISABLE_TELEMETRY": "1"
+  },
+  "verbose": false
+}

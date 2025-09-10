@@ -1,4 +1,4 @@
-/* eslint-disable no-empty */
+// Safe localStorage operations with defensive error handling
 const LS_THEME = "disa:theme:preset";
 const LS_DENSITY = "disa:theme:density";
 const LS_MODE = "disa:theme:mode";
@@ -20,10 +20,10 @@ export function getThemePreset(): ThemePreset {
 export function setThemePreset(p: ThemePreset) {
   try {
     localStorage.setItem(LS_THEME, p);
-  } catch {}
+  } catch { /* Safe: fallback to default */ }
   try {
     document.documentElement.setAttribute("data-theme", p);
-  } catch {}
+  } catch { /* Safe: fallback to default */ }
 }
 
 /* ---------- Dichte ---------- */
@@ -37,7 +37,7 @@ export function getDensity(): Density {
 export function setDensity(d: Density) {
   try {
     localStorage.setItem(LS_DENSITY, d);
-  } catch {}
+  } catch { /* Safe: fallback to default */ }
 }
 
 /* ---------- Mode (System/Light/Dark) – Kompatibilität zu alter TopBar ---------- */
@@ -51,7 +51,7 @@ export function getTheme(): ThemeMode {
 export function setTheme(m: ThemeMode) {
   try {
     localStorage.setItem(LS_MODE, m);
-  } catch {}
+  } catch { /* Safe: fallback to default */ }
   applyTheme(m);
 }
 
@@ -59,7 +59,7 @@ export function setTheme(m: ThemeMode) {
 export function applyTheme(mode?: ThemeMode) {
   try {
     console.warn("__THEME", { preset: getThemePreset(), mode: mode ?? getTheme() });
-  } catch {}
+  } catch { /* Safe: fallback to default */ }
 
   const m = mode ?? getTheme();
   let effective: "light" | "dark";
@@ -81,7 +81,7 @@ export function applyTheme(mode?: ThemeMode) {
     // Preset sicherstellen (falls extern noch nicht gesetzt)
     const cur = getThemePreset();
     root.setAttribute("data-theme", cur);
-  } catch {}
+  } catch { /* Safe: fallback to default */ }
 }
 
 /* ---------- Init ---------- */

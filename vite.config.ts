@@ -3,5 +3,10 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Disa_Ai/',  // wichtig für GitHub Pages (Unterpfad)
+  base: '/',  // Cloudflare Pages deploys to root
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 })

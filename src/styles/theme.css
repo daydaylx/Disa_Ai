@@ -59,6 +59,11 @@
 
   /* Ring for focus states */
   --ring: var(--aurora-cyan);
+
+  /* Consistent spacing for touch targets (WCAG AA) */
+  --tap-target-min: 44px;
+  --tap-target-comfortable: 48px;
+  --tap-target-compact: 40px;
 }
 
 /* High-contrast users: slightly stronger surfaces/borders */
@@ -152,7 +157,7 @@
   /* Buttons */
   .btn {
     @apply inline-flex select-none items-center justify-center rounded-md font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:cursor-not-allowed disabled:opacity-60;
-    min-height: 44px;
+    min-height: var(--tap-target-min);
   }
   .btn-primary {
     @apply btn bg-grad-primary text-white shadow-glow;
@@ -176,7 +181,7 @@
   /* Compact tabs */
   .tab {
     @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 text-sm backdrop-blur-md transition-colors hover:bg-white/10;
-    min-height: 36px;
+    min-height: var(--tap-target-compact);
   }
   .tab--active {
     @apply border-transparent text-white shadow-lg;
@@ -210,7 +215,7 @@
   /* Nav Pills */
   .nav-pill {
     @apply glass inline-flex items-center rounded-full px-3 py-1 text-sm text-text-muted transition hover:text-text;
-    min-height: 40px;
+    min-height: var(--tap-target-compact);
   }
   .nav-pill--active {
     @apply nav-pill relative bg-white/10 text-text;

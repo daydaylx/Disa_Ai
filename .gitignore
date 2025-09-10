@@ -30,3 +30,6 @@ test-artifacts/
 
 # ignore editor backup files
 *.bak
+
+.gemini/
+gha-creds-*.json
