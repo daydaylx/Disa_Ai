@@ -18,3 +18,6 @@ vite.svg
 test-results/
 test-artifacts/
 *.log
+
+# allow npm lockfile for CI
+!package-lock.json
