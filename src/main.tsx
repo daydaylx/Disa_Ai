@@ -1,4 +1,5 @@
 import "./ui/interaction-helpers";
+import "@/bootstrap/migrations";
 import "./ui/overlap-guard";
 import "./ui/guard";
 import "./ui/viewport";
@@ -25,11 +26,23 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { ToastsProvider } from "./components/ui/Toast";
 import { initTheme } from "./config/theme";
+import { migrateConversationsToLimits } from "./hooks/useConversations";
 import { installSkipLinkFocus } from "./lib/a11y/skipLink";
 
 // Ensure dark baseline + tokens are applied early
 initTheme();
 installSkipLinkFocus("a.skip-link", "main");
+
+// Migrate existing conversations to respect storage limits
+try {
+  const migrationResult = migrateConversationsToLimits();
+  if (migrationResult.conversationsProcessed > 0 || migrationResult.conversationsRemoved > 0) {
+    console.log("Storage migration completed:", migrationResult);
+  }
+} catch (error) {
+  console.warn("Storage migration failed:", error);
+}
+
 if (import.meta.env.PROD) {
   // registerSW(); // DEAKTIVIERT: verhindert stale HTML-Content
 }
