@@ -22,6 +22,15 @@
     "postbuild": "cp dist/index.html dist/404.html && touch dist/.nojekyll",
     "test:ci": "vitest run --coverage"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss}": [
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "js-yaml": "^4.1.0",
     "react": "^18.3.1",
