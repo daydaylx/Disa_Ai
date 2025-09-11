@@ -1,7 +1,0 @@
-# Tool Versions (20250907-0533)
-Node: v22.18.0
-npm:  10.9.3
-Vite: vite/5.4.9 linux-x64 node-v22.18.0
-TS:   Version 5.6.2
-ESLint: v9.34.0
-Vitest: vitest/3.2.4 linux-x64 node-v22.18.0
