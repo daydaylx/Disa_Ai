@@ -5,7 +5,6 @@ export const RoleSchema = z.object({
   name: z.string(),
   systemPrompt: z.string().optional(),
 });
-
 export const RoleListSchema = z.array(RoleSchema);
 export type Role = z.infer<typeof RoleSchema>;
 

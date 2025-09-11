@@ -5,7 +5,6 @@ export const SettingsSchema = z.object({
   modelId: z.string().min(1).optional(),
   nsfw: z.boolean().optional(),
 });
-
 export type Settings = z.infer<typeof SettingsSchema>;
 
 export function parseSettings(raw: unknown): Settings {
