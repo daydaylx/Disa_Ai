@@ -3,7 +3,7 @@ export type ChatStyle = "Neutral" | "Anschaulich" | "Technisch" | "Locker";
 export interface AppSettings {
   theme: Theme;
   language: "de";
-  openrouterKey: string; // wird in localStorage gespiegelt
+  openrouterKey: string; // wird in sessionStorage gespiegelt (sicherer)
   defaultModelId: string; // wird in localStorage gespiegelt
   chatStyle: ChatStyle;
   chatRole: string; // freitext
@@ -39,15 +39,28 @@ export function loadSettings(): AppSettings {
 export function saveSettings(patch: Partial<AppSettings>): AppSettings {
   const next = { ...loadSettings(), ...patch };
   localStorage.setItem(KEYS.settings, JSON.stringify(next));
-  // Spiegel für Sender/Bestandteile
-  localStorage.setItem(KEYS.key, next.openrouterKey || "");
-  localStorage.setItem(KEYS.model, next.defaultModelId || "");
+  // API-Key in sessionStorage (sicherer), Model-ID in localStorage
+  try {
+    if (next.openrouterKey) {
+      sessionStorage.setItem(KEYS.key, next.openrouterKey);
+      localStorage.removeItem(KEYS.key); // Migration: aus localStorage entfernen
+    } else {
+      sessionStorage.removeItem(KEYS.key);
+      localStorage.removeItem(KEYS.key);
+    }
+    localStorage.setItem(KEYS.model, next.defaultModelId || "");
+  } catch { /* Safe: storage operations können fehlschlagen */ }
   return next;
 }
 
 function applySideEffects(s: AppSettings): AppSettings {
-  // Spiegel beim Laden sicherstellen (falls Settings aus alter Version stammen)
-  localStorage.setItem(KEYS.key, s.openrouterKey || "");
-  localStorage.setItem(KEYS.model, s.defaultModelId || "");
+  // Spiegel beim Laden: API-Key zu sessionStorage migrieren
+  try {
+    if (s.openrouterKey) {
+      sessionStorage.setItem(KEYS.key, s.openrouterKey);
+      localStorage.removeItem(KEYS.key); // Migration: aus localStorage entfernen
+    }
+    localStorage.setItem(KEYS.model, s.defaultModelId || "");
+  } catch { /* Safe: storage operations können fehlschlagen */ }
   return s;
 }
