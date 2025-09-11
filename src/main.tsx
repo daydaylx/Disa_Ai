@@ -1,4 +1,4 @@
-import "./bootstrap/storage-migration";
+import "./bootstrap/migrations";
 
 import ReactDOM from "react-dom/client";
 
