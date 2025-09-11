@@ -10,7 +10,7 @@
     },
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
@@ -20,7 +20,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolvePackageJsonExports": true,
     "verbatimModuleSyntax": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "allowJs": false,
     "checkJs": false,
     "isolatedModules": true

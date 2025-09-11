@@ -8,7 +8,7 @@ export function estimateTokens(text: string): number {
   return Math.max(1, Math.ceil(len / 4));
 }
 
-export function countMessageTokens(role: string, content: string): number {
+export function countMessageTokens(_role: string, content: string): number {
   const base = estimateTokens(content);
   const roleOverhead = 2;
   return base + roleOverhead;

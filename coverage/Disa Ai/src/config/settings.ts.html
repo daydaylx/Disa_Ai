@@ -411,7 +411,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >/* eslint-disable no-empty */</span></span></span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >// Safe localStorage operations with defensive error handling</span></span></span>
 <span class="cstat-no" title="statement not covered" >/**</span>
 <span class="cstat-no" title="statement not covered" > * Zentrale UI/Feature-Settings (lokal, kein Server).</span>
 <span class="cstat-no" title="statement not covered" > * Robust gegen exactOptionalPropertyTypes.</span>
@@ -458,7 +458,7 @@
 <span class="cstat-no" title="statement not covered" >export function setStyle(v: StyleKey): void {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS.style, v);</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/** NSFW-Flag */</span>
@@ -474,7 +474,7 @@
 <span class="cstat-no" title="statement not covered" >export function setNSFW(v: boolean): void {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS.nsfw, v ? "true" : "false");</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/** Ausgewähltes Modell */</span>
@@ -489,7 +489,7 @@
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    if (id === null) localStorage.removeItem(LS.model);</span>
 <span class="cstat-no" title="statement not covered" >    else localStorage.setItem(LS.model, id);</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/** Aktive Rolle (Template-ID aus public/styles.json) */</span>
@@ -504,7 +504,7 @@
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    if (id === null) localStorage.removeItem(LS.template);</span>
 <span class="cstat-no" title="statement not covered" >    else localStorage.setItem(LS.template, id);</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/** Stil-Overlay der Rolle anwenden? */</span>
@@ -520,7 +520,7 @@
 <span class="cstat-no" title="statement not covered" >export function setUseRoleStyle(v: boolean): void {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS.useRoleStyle, v ? "true" : "false");</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/** Gedächtnis (Memory) einschalten? */</span>
@@ -536,7 +536,7 @@
 <span class="cstat-no" title="statement not covered" >export function setMemoryEnabled(v: boolean): void {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS.memEnabled, v ? "true" : "false");</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/** Kontextfenster (max Tokens) für ContextManager */</span>
@@ -552,7 +552,7 @@
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    const v = Math.max(1024, Math.floor(n || 0));</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS.ctxMax, String(v));</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/** Reservierte Tokens für die Antwort */</span>
@@ -568,7 +568,7 @@
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    const v = Math.max(128, Math.floor(n || 0));</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS.ctxReserve, String(v));</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/** Composer-Offset in px (Abstand vom unteren Rand) */</span>
@@ -576,14 +576,14 @@
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    const raw = Number(localStorage.getItem(LS.composerOffset));</span>
 <span class="cstat-no" title="statement not covered" >    if (Number.isFinite(raw)) return Math.min(96, Math.max(16, Math.floor(raw)));</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >  return 48;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" >export function setComposerOffset(n: number): void {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    const v = Math.min(96, Math.max(16, Math.floor(n || 0)));</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS.composerOffset, String(v));</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -592,7 +592,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-10T20:33:03.235Z
+                at 2025-09-11T16:57:35.636Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

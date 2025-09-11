@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/133</span>
+                <span class='fraction'>0/145</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/133</span>
+                <span class='fraction'>0/145</span>
             </div>
         
             
@@ -196,7 +196,31 @@
 <a name='L131'></a><a href='#L131'>131</a>
 <a name='L132'></a><a href='#L132'>132</a>
 <a name='L133'></a><a href='#L133'>133</a>
-<a name='L134'></a><a href='#L134'>134</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -333,11 +357,14 @@
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >// AndroidNoticeBanner entfernt (Quarantäne)</span>
 <span class="cstat-no" title="statement not covered" >import Aurora from "./components/Aurora";</span>
+<span class="cstat-no" title="statement not covered" >import ErrorBoundary from "./components/ErrorBoundary";</span>
 <span class="cstat-no" title="statement not covered" >import NetworkBanner from "./components/NetworkBanner";</span>
-<span class="cstat-no" title="statement not covered" >import ChatsView from "./views/ChatsView";</span>
-<span class="cstat-no" title="statement not covered" >import ChatView from "./views/ChatView";</span>
-<span class="cstat-no" title="statement not covered" >import QuickStartView from "./views/QuickStartView";</span>
-<span class="cstat-no" title="statement not covered" >import SettingsView from "./views/SettingsView";</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >// Code-splitting für bessere Performance</span>
+<span class="cstat-no" title="statement not covered" >const ChatsView = React.lazy(() =&gt; import("./views/ChatsView"));</span>
+<span class="cstat-no" title="statement not covered" >const ChatView = React.lazy(() =&gt; import("./views/ChatView"));</span>
+<span class="cstat-no" title="statement not covered" >const QuickStartView = React.lazy(() =&gt; import("./views/QuickStartView"));</span>
+<span class="cstat-no" title="statement not covered" >const SettingsView = React.lazy(() =&gt; import("./views/SettingsView"));</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >type Route = { name: "chat" | "settings" | "chats" | "quickstart"; chatId?: string | null };</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -426,15 +453,24 @@
 <span class="cstat-no" title="statement not covered" >      &lt;/header&gt;</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      &lt;main className="relative mx-auto w-full max-w-4xl p-4"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {route.name === "settings" ? (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;SettingsView /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        ) : route.name === "chats" ? (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;ChatsView onOpen={(id) =&gt; nav({ name: "chat", chatId: id })} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        ) : route.name === "quickstart" ? (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;QuickStartView /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        ) : (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;ChatView convId={route.chatId ?? null} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        )}</span>
+<span class="cstat-no" title="statement not covered" >        &lt;ErrorBoundary&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;React.Suspense fallback={&lt;div className="flex items-center justify-center py-12"&gt;</span>
+<span class="cstat-no" title="statement not covered" >            &lt;div className="glass rounded-lg p-6 text-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" >              &lt;div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"&gt;&lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >              &lt;p className="mt-3 text-sm text-muted-foreground"&gt;Lädt...&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;}&gt;</span>
+<span class="cstat-no" title="statement not covered" >            {route.name === "settings" ? (</span>
+<span class="cstat-no" title="statement not covered" >              &lt;SettingsView /&gt;</span>
+<span class="cstat-no" title="statement not covered" >            ) : route.name === "chats" ? (</span>
+<span class="cstat-no" title="statement not covered" >              &lt;ChatsView onOpen={(id) =&gt; nav({ name: "chat", chatId: id })} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >            ) : route.name === "quickstart" ? (</span>
+<span class="cstat-no" title="statement not covered" >              &lt;QuickStartView /&gt;</span>
+<span class="cstat-no" title="statement not covered" >            ) : (</span>
+<span class="cstat-no" title="statement not covered" >              &lt;ChatView convId={route.chatId ?? null} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >            )}</span>
+<span class="cstat-no" title="statement not covered" >          &lt;/React.Suspense&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/ErrorBoundary&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;/main&gt;</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      {/* Build-/Umgebungsdiagnose: Version + manueller Reload */}</span>
@@ -469,7 +505,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-10T20:33:03.235Z
+                at 2025-09-11T16:57:35.636Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
