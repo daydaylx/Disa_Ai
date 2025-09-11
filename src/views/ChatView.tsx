@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import * as React from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Avatar from "../components/chat/Avatar";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";

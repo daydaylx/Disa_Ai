@@ -1,4 +1,3 @@
-import React from "react";
 
 import report from "../diagnostics/corruptionReport.json";
 

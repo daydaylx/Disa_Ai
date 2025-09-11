@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import {  useCallback, useRef  } from 'react';
 
 export interface CodeBlockProps {
   code: string

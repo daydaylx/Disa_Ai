@@ -1,5 +1,3 @@
-import React from 'react'
-
 type Props = { kind: 'user' | 'assistant'; className?: string }
 
 export default function Avatar({ kind, className }: Props) {

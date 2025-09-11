@@ -1,44 +1,36 @@
-import React from "react";
+import * as React from "react";
 
 export function NetworkBanner() {
-  const [online, setOnline] = React.useState<boolean>(
-    typeof navigator !== "undefined" ? navigator.onLine : true,
-  );
-  const [show, setShow] = React.useState<boolean>(false);
+  const [isOnline, setIsOnline] = React.useState(navigator.onLine);
 
   React.useEffect(() => {
-    const on = () => {
-      setOnline(true);
-      setShow(false);
-    };
-    const off = () => {
-      setOnline(false);
-      setShow(true);
-    };
-    window.addEventListener("online", on);
-    window.addEventListener("offline", off);
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
-    // Initial prüfen (Playwright offline toggle)
-    if (!navigator.onLine) off();
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    // Also check current status in case it changed before the listener was attached
+    setIsOnline(navigator.onLine);
 
     return () => {
-      window.removeEventListener("online", on);
-      window.removeEventListener("offline", off);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
-  if (!show || online) return null;
+  if (isOnline) {
+    return null;
+  }
 
   return (
-    <div className="net-banner">
-      <div
-        data-testid="offline-banner"
-        className="mx-auto mt-2 w-fit max-w-[92vw] rounded-full border border-white/30 bg-white/70 px-3 py-1 text-sm text-slate-800 backdrop-blur-md shadow-soft"
-        role="status"
-        aria-live="polite"
-      >
-        Offline – Eingaben werden gepuffert
-      </div>
+    <div
+      data-testid="offline-banner"
+      className="mx-auto mt-2 w-fit max-w-[92vw] rounded-full border border-white/30 bg-white/70 px-3 py-1 text-sm text-slate-800 backdrop-blur-md shadow-soft"
+      role="status"
+      aria-live="polite"
+    >
+      Offline – Eingaben werden gepuffert
     </div>
   );
 }

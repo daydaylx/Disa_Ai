@@ -1,4 +1,3 @@
-import React from "react";
 
 // Buttons hier als Cards umgesetzt (keine Hauptbuttons)
 

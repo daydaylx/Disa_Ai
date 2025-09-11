@@ -1,5 +1,5 @@
+import * as React from 'react';
 /* eslint-disable no-empty */
-import * as React from "react";
 
 export interface TemplateEntry {
   id: string;

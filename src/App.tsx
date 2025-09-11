@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from 'react';
 
 // AndroidNoticeBanner entfernt (Quarantäne)
 import Aurora from "./components/Aurora";

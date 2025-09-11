@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import * as React from 'react';
+import { useMemo } from 'react';
 
 import { cn } from "../../lib/utils/cn";
 import { Button } from "../ui/Button";

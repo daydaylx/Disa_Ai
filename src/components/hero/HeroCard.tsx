@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from 'react';
 
 // Logo entfernt (Quarantäne)
 export type HeroCardProps = { onStart?: () => void };

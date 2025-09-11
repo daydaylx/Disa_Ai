@@ -1,4 +1,5 @@
-import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
+import * as React from 'react';
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { createPortal } from "react-dom";
 
 import { cn } from "../../../lib/utils/cn";
