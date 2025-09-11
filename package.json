@@ -10,8 +10,10 @@
     "preview": "vite preview --strictPort --port 4173",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
     "lint": "eslint .",
+    "lint:full": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
     "test": "vitest",
+    "test:unit": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -20,7 +22,9 @@
     "verify": "npm run typecheck && npm run lint && npm run test",
     "clean": "rm -rf dist .vite .cache .tmp",
     "postbuild": "cp dist/index.html dist/404.html && touch dist/.nojekyll",
-    "test:ci": "vitest run --coverage"
+    "test:ci": "vitest run --coverage",
+    "prepare": "husky",
+    "guard:build": "bash scripts/build-guard.sh"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
