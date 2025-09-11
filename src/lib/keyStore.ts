@@ -6,7 +6,7 @@ export function getKey(): string | null {
     if (!raw) return null;
     const k = raw.trim().replace(/^"+|"+$/g, "");
     return k.length ? k : null;
-  } catch (e) {
+  } catch { /* ignore: storage unavailable */ } {
     return null;
   }
 }
@@ -15,7 +15,7 @@ export function setKey(k: string): void {
   if (typeof k !== "string") return;
   try {
     sessionStorage.setItem(KEY_NAME, k.trim());
-  } catch (e) {
+  } catch { /* ignore: storage unavailable */ } {
     return;
   }
 }
@@ -23,7 +23,7 @@ export function setKey(k: string): void {
 export function clearKey(): void {
   try {
     sessionStorage.removeItem(KEY_NAME);
-  } catch (e) {
+  } catch { /* ignore: storage unavailable */ } {
     return;
   }
 }
@@ -35,7 +35,7 @@ export function migrateLegacyKeyFromLocalStorage(): void {
       // Nicht automatisch migrieren; Nutzer soll bewusst neu setzen.
       localStorage.removeItem(KEY_NAME);
     }
-  } catch (e) {
+  } catch { /* ignore: storage unavailable */ } {
     return;
   }
 }

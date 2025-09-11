@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from 'react';
 
 export const SkipLink: React.FC<{ targetId?: string; label?: string }> = ({
   targetId = "main",

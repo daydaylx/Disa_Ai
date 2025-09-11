@@ -1,6 +1,6 @@
-// Legacy-Adapter auf den kanonischen React-Toaster
-import React from "react";
+import * as React from 'react';
 
+// Legacy-Adapter auf den kanonischen React-Toaster
 import { ToastsProvider, useToasts } from "../ui/Toast";
 import type { ToastItem as UiToastItem } from "../ui/toast/ToastTypes";
 

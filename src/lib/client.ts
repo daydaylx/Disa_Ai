@@ -1,6 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import * as React from "react";
+import * as React from 'react';
 
+/* eslint-disable react-hooks/exhaustive-deps */
 import { chat } from "./chat/client";
 import type { ChatMessageLike } from "./chat/types";
 import { readApiKey, writeApiKey } from "./openrouter/key";

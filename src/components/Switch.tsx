@@ -1,4 +1,3 @@
-import React from "react";
 
 type Props = { checked: boolean; onChange: (val: boolean) => void; id?: string; label?: string };
 

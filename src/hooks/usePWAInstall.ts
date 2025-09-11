@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from 'react';
 
 /** Chromium-spezifisches Event (nicht in lib.dom.d.ts) */
 interface BeforeInstallPromptEvent extends Event {

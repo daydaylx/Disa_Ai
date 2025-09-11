@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 export function useOnline() {
   const [online, setOnline] = React.useState(() => navigator.onLine);
   React.useEffect(() => {

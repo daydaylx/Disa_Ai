@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from 'react';
 
 function useHash(): string {
   const [h, setH] = React.useState<string>(() => (typeof location !== "undefined" ? location.hash || "#/chat" : "#/chat"));

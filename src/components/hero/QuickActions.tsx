@@ -1,4 +1,3 @@
-import React from "react";
 
 type Action = { id: string; label: string; hint?: string };
 
