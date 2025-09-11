@@ -245,7 +245,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >/* eslint-disable no-empty */</span></span></span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >// Safe localStorage operations with defensive error handling</span></span></span>
 <span class="cstat-no" title="statement not covered" >const LS_THEME = "disa:theme:preset";</span>
 <span class="cstat-no" title="statement not covered" >const LS_DENSITY = "disa:theme:density";</span>
 <span class="cstat-no" title="statement not covered" >const LS_MODE = "disa:theme:mode";</span>
@@ -267,10 +267,10 @@
 <span class="cstat-no" title="statement not covered" >export function setThemePreset(p: ThemePreset) {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS_THEME, p);</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    document.documentElement.setAttribute("data-theme", p);</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/* ---------- Dichte ---------- */</span>
@@ -284,7 +284,7 @@
 <span class="cstat-no" title="statement not covered" >export function setDensity(d: Density) {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS_DENSITY, d);</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/* ---------- Mode (System/Light/Dark) – Kompatibilität zu alter TopBar ---------- */</span>
@@ -298,7 +298,7 @@
 <span class="cstat-no" title="statement not covered" >export function setTheme(m: ThemeMode) {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem(LS_MODE, m);</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >  applyTheme(m);</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -306,7 +306,7 @@
 <span class="cstat-no" title="statement not covered" >export function applyTheme(mode?: ThemeMode) {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
 <span class="cstat-no" title="statement not covered" >    console.warn("__THEME", { preset: getThemePreset(), mode: mode ?? getTheme() });</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  const m = mode ?? getTheme();</span>
 <span class="cstat-no" title="statement not covered" >  let effective: "light" | "dark";</span>
@@ -328,7 +328,7 @@
 <span class="cstat-no" title="statement not covered" >    // Preset sicherstellen (falls extern noch nicht gesetzt)</span>
 <span class="cstat-no" title="statement not covered" >    const cur = getThemePreset();</span>
 <span class="cstat-no" title="statement not covered" >    root.setAttribute("data-theme", cur);</span>
-<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: fallback to default */ }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/* ---------- Init ---------- */</span>
@@ -343,7 +343,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-10T20:33:03.235Z
+                at 2025-09-11T16:57:35.636Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
