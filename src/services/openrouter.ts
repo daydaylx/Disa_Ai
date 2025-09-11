@@ -1,4 +1,6 @@
 /* eslint-disable no-empty */
+import { mapNetworkError } from "../lib/net/errorMapping";
+import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey, writeApiKey } from "../lib/openrouter/key";
 
 const BASE = "https://openrouter.ai/api/v1";
@@ -48,15 +50,31 @@ export async function getRawModels(explicitKey?: string, ttlMs = DEFAULT_TTL_MS)
     }
   } catch {}
 
-  const res = await fetch(`${BASE}/models`, { headers: buildHeaders(explicitKey) });
-  if (!res.ok) return [];
-  const data = await res.json().catch(() => ({}));
-  const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
   try {
-    localStorage.setItem(LS_MODELS, JSON.stringify(list));
-    localStorage.setItem(LS_MODELS_TS, String(Date.now()));
-  } catch {}
-  return list;
+    const res = await fetchWithTimeoutAndRetry(`${BASE}/models`, {
+      timeoutMs: 15000,
+      maxRetries: 2,
+      retryDelayMs: 1000,
+      fetchOptions: {
+        headers: buildHeaders(explicitKey)
+      }
+    });
+    
+    if (!res.ok) return [];
+    const data = await res.json().catch(() => ({}));
+    const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
+    
+    try {
+      localStorage.setItem(LS_MODELS, JSON.stringify(list));
+      localStorage.setItem(LS_MODELS_TS, String(Date.now()));
+    } catch {}
+    
+    return list;
+  } catch (error) {
+    // Log but don't throw - return empty array for graceful degradation
+    console.warn("Failed to fetch models:", mapNetworkError(error instanceof Error ? error : new Error(String(error))));
+    return [];
+  }
 }
 
 /** Einfacher Verfügbarkeits-Check */

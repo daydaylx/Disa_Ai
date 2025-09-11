@@ -1,3 +1,6 @@
+import { chatConcurrency } from "../lib/net/concurrency";
+import { handleResponseError,mapNetworkError } from "../lib/net/errorMapping";
+import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
 
@@ -53,27 +56,41 @@ export function getModelFallback() {
   }
 }
 
-function mapHttpError(status: number): string {
-  if (status === 401) return "API-Key fehlt oder ist ungültig (401).";
-  if (status === 403) return "Zugriff verweigert/Modell blockiert (403).";
-  if (status === 429) return "Rate-Limit/Quota erreicht (429).";
-  if (status >= 500) return "Anbieterfehler (5xx). Bitte später erneut.";
-  return `HTTP_${status}`;
-}
+// Error mapping moved to ../lib/net/errorMapping.ts
 
 export async function chatOnce(messages: ChatMessage[], opts?: { model?: string; signal?: AbortSignal }) {
-  const headers = getHeaders();
-  const model = opts?.model ?? getModelFallback();
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ model, messages, stream: false }),
-    ...(opts?.signal ? { signal: opts.signal } : {}),
+  const key = `chat-once-${Date.now()}-${Math.random().toString(36).substring(2)}`;
+  
+  return chatConcurrency.startRequest(key, async (signal) => {
+    const combinedSignal = opts?.signal ? combineSignals([opts.signal, signal]) : signal;
+    
+    try {
+      const headers = getHeaders();
+      const model = opts?.model ?? getModelFallback();
+      
+      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
+        timeoutMs: 30000,
+        signal: combinedSignal,
+        maxRetries: 2,
+        retryDelayMs: 1000,
+        fetchOptions: {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ model, messages, stream: false }),
+        },
+      });
+      
+      if (!res.ok) {
+        await handleResponseError(res);
+      }
+      
+      const data = await res.json();
+      const text = data?.choices?.[0]?.message?.content ?? "";
+      return { text, raw: data };
+    } catch (error) {
+      throw mapNetworkError(error instanceof Error ? error : new Error(String(error)));
+    }
   });
-  if (!res.ok) throw new Error(mapHttpError(res.status));
-  const data = await res.json();
-  const text = data?.choices?.[0]?.message?.content ?? "";
-  return { text, raw: data };
 }
 
 export async function chatStream(
@@ -86,93 +103,126 @@ export async function chatStream(
     onDone?: (full: string) => void;
   },
 ) {
-  const headers = getHeaders();
-  const model = opts?.model ?? getModelFallback();
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ model, messages, stream: true }),
-    ...(opts?.signal ? { signal: opts.signal } : {}),
-  });
-  if (!res.ok) throw new Error(mapHttpError(res.status));
+  const key = `chat-stream-${Date.now()}-${Math.random().toString(36).substring(2)}`;
+  
+  return chatConcurrency.startRequest(key, async (signal) => {
+    const combinedSignal = opts?.signal ? combineSignals([opts.signal, signal]) : signal;
+    
+    try {
+      const headers = getHeaders();
+      const model = opts?.model ?? getModelFallback();
+      
+      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
+        timeoutMs: 45000, // Longer timeout for streaming
+        signal: combinedSignal,
+        maxRetries: 1, // Less retries for streaming
+        retryDelayMs: 2000,
+        fetchOptions: {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ model, messages, stream: true }),
+        },
+      });
+      
+      if (!res.ok) {
+        await handleResponseError(res);
+      }
 
-  const reader = res.body?.getReader();
-  if (!reader) return;
+      const reader = res.body?.getReader();
+      if (!reader) return;
 
-  const decoder = new TextDecoder();
-  let buffer = "";
-  let started = false;
-  let full = "";
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let started = false;
+      let full = "";
 
-  try {
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
-      let idx: number;
-      while ((idx = buffer.indexOf("\n")) >= 0) {
-        const line = buffer.slice(0, idx).trim();
-        buffer = buffer.slice(idx + 1);
-        if (!line) continue;
+          buffer += decoder.decode(value, { stream: true });
+          let idx: number;
+          while ((idx = buffer.indexOf("\n")) >= 0) {
+            const line = buffer.slice(0, idx).trim();
+            buffer = buffer.slice(idx + 1);
+            if (!line) continue;
 
-        // Unterstützt SSE (data: ...) und NDJSON (plain JSON per Zeile)
-        // Kommentare (": keep-alive") ignorieren
-        if (line.startsWith(":")) continue;
-        const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
+            // Unterstützt SSE (data: ...) und NDJSON (plain JSON per Zeile)
+            // Kommentare (": keep-alive") ignorieren
+            if (line.startsWith(":")) continue;
+            const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
 
-        // OpenRouter Status-Zwischenzeilen ignorieren
-        if (/^OPENROUTER\b/i.test(payload)) continue;
+            // OpenRouter Status-Zwischenzeilen ignorieren
+            if (/^OPENROUTER\b/i.test(payload)) continue;
 
-        if (payload === "[DONE]") {
-          opts?.onDone?.(full);
-          return;
-        }
-
-        if (payload.startsWith("{")) {
-          let delta = "";
-          try {
-            const json = JSON.parse(payload);
-            if (json?.error) {
-              const msg = json.error?.message || "Unbekannter API-Fehler";
-              throw new Error(msg);
+            if (payload === "[DONE]") {
+              opts?.onDone?.(full);
+              return;
             }
-            delta =
-              json?.choices?.[0]?.delta?.content ?? json?.choices?.[0]?.message?.content ?? "";
-          } catch (err) {
-            const m = err instanceof Error ? err.message : String(err);
-            throw new Error(m);
+
+            if (payload.startsWith("{")) {
+              let delta = "";
+              try {
+                const json = JSON.parse(payload);
+                if (json?.error) {
+                  const msg = json.error?.message || "Unbekannter API-Fehler";
+                  throw new Error(msg);
+                }
+                delta =
+                  json?.choices?.[0]?.delta?.content ?? json?.choices?.[0]?.message?.content ?? "";
+              } catch (err) {
+                throw mapNetworkError(err instanceof Error ? err : new Error(String(err)));
+              }
+              if (!started) {
+                started = true;
+                opts?.onStart?.();
+              }
+              if (delta) {
+                onDelta(delta);
+                full += delta;
+              }
+            } else {
+              // Plain-Text Token
+              if (!started) {
+                started = true;
+                opts?.onStart?.();
+              }
+              onDelta(payload);
+              full += payload;
+            }
           }
-          if (!started) {
-            started = true;
-            opts?.onStart?.();
-          }
-          if (delta) {
-            onDelta(delta);
-            full += delta;
-          }
-        } else {
-          // Plain-Text Token
-          if (!started) {
-            started = true;
-            opts?.onStart?.();
-          }
-          onDelta(payload);
-          full += payload;
+        }
+        opts?.onDone?.(full);
+      } finally {
+        try {
+          reader.releaseLock();
+        } catch {
+          /* noop */
+        }
+        try {
+          await res.body?.cancel();
+        } catch {
+          /* noop */
         }
       }
+    } catch (error) {
+      throw mapNetworkError(error instanceof Error ? error : new Error(String(error)));
     }
-    opts?.onDone?.(full);
-  } finally {
-    try {
-      reader.releaseLock();
-    } catch {
-      /* noop */
+  });
+}
+
+// Utility to combine multiple AbortSignals
+function combineSignals(signals: AbortSignal[]): AbortSignal {
+  const controller = new AbortController();
+  
+  for (const signal of signals) {
+    if (signal.aborted) {
+      controller.abort();
+      break;
     }
-    try {
-      await res.body?.cancel();
-    } catch {
-      /* noop */
-    }
+    signal.addEventListener("abort", () => controller.abort(), { once: true });
   }
+  
+  return controller.signal;
 }
