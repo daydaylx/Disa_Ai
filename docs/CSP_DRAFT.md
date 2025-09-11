@@ -1,4 +1,4 @@
-# CSP Draft (nicht aktiv, nur Entwurf)
+# CSP Draft (nicht aktiv; Entwurf)
 
 Content-Security-Policy:
 default-src 'self';
@@ -18,5 +18,5 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 X-Content-Type-Options: nosniff
 
 Hinweis:
-- Wenn Analytics/Worker/etc. dazu kommen: die jeweiligen Direktiven ergänzen.
-- Für Cloudflare Pages kann dies in `_headers` gemappt werden.
+- Falls Analytics/Worker/CDN nötig werden, die Direktiven gezielt erweitern.
+- Für Cloudflare Pages ggf. per `_headers` abbilden.
