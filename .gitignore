@@ -1,35 +1,26 @@
 # Node
 node_modules/
-package-lock.json
-npm-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-.DS_Store
-
-# Vite
 dist/
 .vite/
-vite.svg
+.pnpm-store/
+.tmp/
+.DS_Store
 
 # Env
-.env
-.env.*
-!.env.example
-test-results/
+.env.local
+.env.*.local
+
+# Test/Reports/Logs
+playwright-report/
 test-artifacts/
-*.log
+coverage/.tmp/
+LOGS/
+DOCS/
 
-# allow npm lockfile for CI
-!package-lock.json
+# IDE
+.vscode/
+.idea/
 
-# ignore editor backup files
+# Misc backups
 *.bak
-
-# allow npm lockfile for CI
-!package-lock.json
-
-# ignore editor backup files
-*.bak
-
-.gemini/
-gha-creds-*.json
+*.bak.*
