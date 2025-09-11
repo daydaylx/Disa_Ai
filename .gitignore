@@ -1,18 +1,26 @@
 # Node
 node_modules/
-npm-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-.DS_Store
-
-# Vite
 dist/
 .vite/
-vite.svg
+.pnpm-store/
+.tmp/
+.DS_Store
 
 # Env
-.env
-.env.*
-!.env.example
-test-results/
-*.log
+.env.local
+.env.*.local
+
+# Test/Reports/Logs
+playwright-report/
+test-artifacts/
+coverage/.tmp/
+LOGS/
+DOCS/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc backups
+*.bak
+*.bak.*
