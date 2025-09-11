@@ -13,6 +13,7 @@ dist/
 # Test/Reports/Logs
 playwright-report/
 test-artifacts/
+coverage/
 coverage/.tmp/
 LOGS/
 DOCS/
