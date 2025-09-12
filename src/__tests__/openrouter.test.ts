@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { mockFetch } from "../../tests/setup/fetch"; // Keep this for the second test
 import { chatOnce, chatStream } from "../api/openrouter";
+import { RateLimitError } from "../lib/errors";
 
 function sseBody(parts: string[]) {
   // Simuliere einen Responsekörper mit SSE Frames
@@ -18,9 +20,15 @@ describe("openrouter chatStream", () => {
     global.fetch = vi.fn(async () => ({
       ok: true,
       body: sseBody([
-        'data: {"choices":[{"delta":{"content":"Hal"}}]}\n\n',
-        'data: {"choices":[{"delta":{"content":"lo"}}]}\n\n',
-        "data: [DONE]\n\n",
+        `data: {"choices":[{"delta":{"content":"Hal"}}]}
+
+`,
+        `data: {"choices":[{"delta":{"content":"lo"}}]}
+
+`,
+        `data: [DONE]
+
+`,
       ]),
     }));
 
@@ -35,9 +43,8 @@ describe("openrouter chatStream", () => {
   });
 
   it("mapped HTTP Fehler klar", async () => {
-    // @ts-expect-error stub fetch
-    global.fetch = vi.fn(async () => ({ ok: false, status: 429 }));
+    mockFetch({}, { ok: false, status: 429 });
     localStorage.setItem("disa_api_key", "sk-test");
-    await expect(chatOnce([{ role: "user", content: "Ping" }])).rejects.toThrow(/429|Rate-Limit/);
+    await expect(chatOnce([{ role: "user", content: "Ping" }])).rejects.toThrow(RateLimitError);
   });
 });

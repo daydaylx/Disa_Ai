@@ -5,3 +5,4 @@ export type ChatMessage = {
   content: string;
 };
 
+export type ChatMessageLike = ChatMessage;

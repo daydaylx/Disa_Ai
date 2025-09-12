@@ -1,3 +1,3 @@
-import type { ChatMessageLike } from "../chat/types";
+import type { ChatMessageLike } from "../../types/chat";
 
 export type ChatMessage = ChatMessageLike;

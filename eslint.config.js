@@ -53,6 +53,8 @@ export default [
       parserOptions: { ecmaVersion: "latest", sourceType: "module", ecmaFeatures: { jsx: true } },
       globals: {
         ...globals.browser,
+        dom: "readonly",
+        RequestInit: "readonly",
         AbortController: "readonly",
         AbortSignal: "readonly",
         ReadableStream: "readonly",

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/53</span>
+                <span class='fraction'>0/66</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/53</span>
+                <span class='fraction'>0/66</span>
             </div>
         
             
@@ -116,7 +116,33 @@
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -174,7 +200,7 @@
 <span class="cstat-no" title="statement not covered" >export interface AppSettings {</span>
 <span class="cstat-no" title="statement not covered" >  theme: Theme;</span>
 <span class="cstat-no" title="statement not covered" >  language: "de";</span>
-<span class="cstat-no" title="statement not covered" >  openrouterKey: string; // wird in localStorage gespiegelt</span>
+<span class="cstat-no" title="statement not covered" >  openrouterKey: string; // wird in sessionStorage gespiegelt (sicherer)</span>
 <span class="cstat-no" title="statement not covered" >  defaultModelId: string; // wird in localStorage gespiegelt</span>
 <span class="cstat-no" title="statement not covered" >  chatStyle: ChatStyle;</span>
 <span class="cstat-no" title="statement not covered" >  chatRole: string; // freitext</span>
@@ -210,16 +236,29 @@
 <span class="cstat-no" title="statement not covered" >export function saveSettings(patch: Partial&lt;AppSettings&gt;): AppSettings {</span>
 <span class="cstat-no" title="statement not covered" >  const next = { ...loadSettings(), ...patch };</span>
 <span class="cstat-no" title="statement not covered" >  localStorage.setItem(KEYS.settings, JSON.stringify(next));</span>
-<span class="cstat-no" title="statement not covered" >  // Spiegel für Sender/Bestandteile</span>
-<span class="cstat-no" title="statement not covered" >  localStorage.setItem(KEYS.key, next.openrouterKey || "");</span>
-<span class="cstat-no" title="statement not covered" >  localStorage.setItem(KEYS.model, next.defaultModelId || "");</span>
+<span class="cstat-no" title="statement not covered" >  // API-Key in sessionStorage (sicherer), Model-ID in localStorage</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    if (next.openrouterKey) {</span>
+<span class="cstat-no" title="statement not covered" >      sessionStorage.setItem(KEYS.key, next.openrouterKey);</span>
+<span class="cstat-no" title="statement not covered" >      localStorage.removeItem(KEYS.key); // Migration: aus localStorage entfernen</span>
+<span class="cstat-no" title="statement not covered" >    } else {</span>
+<span class="cstat-no" title="statement not covered" >      sessionStorage.removeItem(KEYS.key);</span>
+<span class="cstat-no" title="statement not covered" >      localStorage.removeItem(KEYS.key);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    localStorage.setItem(KEYS.model, next.defaultModelId || "");</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: storage operations können fehlschlagen */ }</span>
 <span class="cstat-no" title="statement not covered" >  return next;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >function applySideEffects(s: AppSettings): AppSettings {</span>
-<span class="cstat-no" title="statement not covered" >  // Spiegel beim Laden sicherstellen (falls Settings aus alter Version stammen)</span>
-<span class="cstat-no" title="statement not covered" >  localStorage.setItem(KEYS.key, s.openrouterKey || "");</span>
-<span class="cstat-no" title="statement not covered" >  localStorage.setItem(KEYS.model, s.defaultModelId || "");</span>
+<span class="cstat-no" title="statement not covered" >  // Spiegel beim Laden: API-Key zu sessionStorage migrieren</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    if (s.openrouterKey) {</span>
+<span class="cstat-no" title="statement not covered" >      sessionStorage.setItem(KEYS.key, s.openrouterKey);</span>
+<span class="cstat-no" title="statement not covered" >      localStorage.removeItem(KEYS.key); // Migration: aus localStorage entfernen</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    localStorage.setItem(KEYS.model, s.defaultModelId || "");</span>
+<span class="cstat-no" title="statement not covered" >  } catch { /* Safe: storage operations können fehlschlagen */ }</span>
 <span class="cstat-no" title="statement not covered" >  return s;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
@@ -229,7 +268,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T16:57:35.636Z
+                at 2025-09-11T22:37:55.836Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { mapError } from "../lib/errors";
 import type { Safety } from "./models";
 
 /** Öffentliche Typen – exakt-optional-freundlich: Property weglassen statt `undefined` setzen */
@@ -85,12 +86,7 @@ async function fetchJson(url: string, signal?: AbortSignal): Promise<unknown> {
   });
   if (res.status === 404) return null;
   if (!res.ok) {
-    // Use standard HTTP error pattern that humanError() can parse
-    if (res.status === 401) throw new Error("API-Key fehlt oder ist ungültig (401).");
-    if (res.status === 403) throw new Error("Zugriff verweigert/Modell blockiert (403).");
-    if (res.status === 429) throw new Error("Rate-Limit/Quota erreicht (429).");
-    if (res.status >= 500) throw new Error("Anbieterfehler (5xx). Bitte später erneut.");
-    throw new Error(`HTTP ${res.status} @ ${url}`);
+    throw mapError(res);
   }
   return await res.json();
 }
@@ -167,10 +163,11 @@ export async function fetchRoleTemplates(
       saveCache(_roles);
       return _roles;
     } catch (e) {
+      const err = mapError(e);
       _roles = [];
       _loaded = true;
       _state = "error";
-      _error = e instanceof Error ? e.message : String(e);
+      _error = err.message;
       return _roles;
     } finally {
       _loading = null;

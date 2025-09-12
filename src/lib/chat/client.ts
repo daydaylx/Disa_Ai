@@ -1,5 +1,14 @@
+import type { ChatMessage } from "../../types/chat";
 import { sendMessage } from "./sendMessage";
-import type { ChatRequest, ChatResponse } from "./types";
+
+export interface ChatRequest {
+  modelId: string;
+  messages: ChatMessage[];
+}
+
+export interface ChatResponse {
+  content: string;
+}
 
 export async function chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
   const { content } = await sendMessage({
@@ -10,4 +19,4 @@ export async function chat(req: ChatRequest, signal?: AbortSignal): Promise<Chat
   return { content };
 }
 
-export { CircuitOpenError, OfflineError, RateLimitError, TimeoutError } from "./types";
+export { AbortError, ApiClientError, ApiError, ApiServerError, AuthenticationError, HttpError, NetworkError, NotFoundError, PermissionError, RateLimitError, TimeoutError, UnknownError } from "../errors";

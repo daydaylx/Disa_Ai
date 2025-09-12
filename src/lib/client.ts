@@ -1,14 +1,14 @@
 import * as React from 'react';
 
+import type { ChatMessage } from '../types/chat';
 /* eslint-disable react-hooks/exhaustive-deps */
 import { chat } from "./chat/client";
-import type { ChatMessageLike } from "./chat/types";
 import { readApiKey, writeApiKey } from "./openrouter/key";
 
 export type Client = {
   send: (opts: {
     model: string;
-    messages: Array<{ role: "user" | "assistant" | "system"; content: string }>;
+    messages: ChatMessage[];
     signal?: AbortSignal;
     onToken?: (delta: string) => void;
   }) => Promise<void>;
@@ -22,7 +22,7 @@ export function useClient(): {
 } {
   const client: Client = {
     async send({ model, messages, signal, onToken }) {
-      const res = await chat({ modelId: model, messages: messages as ChatMessageLike[] }, signal);
+      const res = await chat({ modelId: model, messages }, signal);
       if (onToken) onToken(res.content);
     },
   };
