@@ -1,41 +1,23 @@
-/**
- * Robust fetch wrapper with timeout and abort support
- * Handles network failures, timeouts, and request cancellation
- */
+import { AbortError, mapError, TimeoutError } from "../errors";
 
 export interface FetchWithTimeoutOptions {
-  /** Timeout in milliseconds (default: 30000) */
   timeoutMs?: number;
-  /** Optional AbortSignal to cancel the request */
   signal?: AbortSignal;
-  /** Fetch options */
-  fetchOptions?: Omit<globalThis.RequestInit, 'signal'>;
+  fetchOptions?: Omit<globalThis.RequestInit, "signal">;
 }
 
-/**
- * Fetch with automatic timeout and abort support
- * Combines user AbortSignal with internal timeout
- */
 export async function fetchWithTimeout(
   url: string,
   options: FetchWithTimeoutOptions = {},
 ): Promise<Response> {
   const { timeoutMs = 30000, signal: userSignal, fetchOptions = {} } = options;
-  
-  // Create timeout controller
+
   const timeoutController = new AbortController();
-  const timeoutId = setTimeout(() => {
-    timeoutController.abort();
-  }, timeoutMs);
+  const timeoutId = setTimeout(() => timeoutController.abort(), timeoutMs);
 
-  // Combine user signal and timeout signal
   const combinedController = new AbortController();
-  
-  const cleanup = () => {
-    clearTimeout(timeoutId);
-  };
+  const cleanup = () => clearTimeout(timeoutId);
 
-  // If either signal aborts, abort the combined controller
   const abortBoth = () => {
     cleanup();
     combinedController.abort();
@@ -44,11 +26,11 @@ export async function fetchWithTimeout(
   if (userSignal) {
     if (userSignal.aborted) {
       cleanup();
-      throw new DOMException("Request was aborted", "AbortError");
+      throw new AbortError();
     }
     userSignal.addEventListener("abort", abortBoth, { once: true });
   }
-  
+
   timeoutController.signal.addEventListener("abort", abortBoth, { once: true });
 
   try {
@@ -56,27 +38,23 @@ export async function fetchWithTimeout(
       ...fetchOptions,
       signal: combinedController.signal,
     });
-    
     cleanup();
     return response;
   } catch (error) {
     cleanup();
-    
-    // Convert timeout abort to timeout error
     if (error instanceof DOMException && error.name === "AbortError") {
       if (timeoutController.signal.aborted && !userSignal?.aborted) {
-        throw new Error(`Request timeout after ${timeoutMs}ms`);
+        throw new TimeoutError(`Request timeout after ${timeoutMs}ms`, { cause: error });
+      }
+      if (userSignal?.aborted) {
+        throw new AbortError();
       }
     }
-    
-    throw error;
+    // Für andere Fehler (z.B. TypeError bei Netzwerkproblemen) den Mapper verwenden
+    throw mapError(error);
   }
 }
 
-/**
- * Fetch with retry logic and timeout
- * Automatically retries on network errors and 5xx/429 responses
- */
 export async function fetchWithTimeoutAndRetry(
   url: string,
   options: FetchWithTimeoutOptions & {
@@ -94,60 +72,50 @@ export async function fetchWithTimeoutAndRetry(
     ...fetchOptions
   } = options;
 
-  let lastError: Error;
+  let lastError: unknown;
   let delayMs = retryDelayMs;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetchWithTimeout(url, fetchOptions);
-      
-      // If response is not ok but we shouldn't retry, return it
+
       if (!response.ok && !retryOn(response)) {
         return response;
       }
-      
-      // If response is ok or we've exhausted retries, return it
+
       if (response.ok || attempt === maxRetries) {
         return response;
       }
-      
-      // Clone response for retry logic (body can only be read once)
+
       response.body?.cancel();
-      
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
-      
-      // Don't retry on user abort
-      if (lastError.name === "AbortError" && fetchOptions.signal?.aborted) {
-        throw lastError;
+      lastError = error;
+
+      if (error instanceof AbortError) {
+        throw error;
       }
-      
-      // If we've exhausted retries, throw the last error
+
       if (attempt === maxRetries) {
-        throw lastError;
+        throw mapError(lastError);
       }
     }
 
-    // Wait before retry (unless user aborted)
     if (fetchOptions.signal?.aborted) {
-      throw new DOMException("Request was aborted", "AbortError");
+      throw new AbortError();
     }
 
     await new Promise((resolve, reject) => {
       const timeoutId = setTimeout(resolve, delayMs);
-      
+      const onAbort = () => {
+        clearTimeout(timeoutId);
+        reject(new AbortError());
+      };
+
       if (fetchOptions.signal) {
-        const onAbort = () => {
-          clearTimeout(timeoutId);
-          reject(new DOMException("Request was aborted", "AbortError"));
-        };
-        
         if (fetchOptions.signal.aborted) {
-          clearTimeout(timeoutId);
-          reject(new DOMException("Request was aborted", "AbortError"));
+          onAbort();
           return;
         }
-        
         fetchOptions.signal.addEventListener("abort", onAbort, { once: true });
       }
     });
@@ -155,5 +123,5 @@ export async function fetchWithTimeoutAndRetry(
     delayMs *= retryBackoffMultiplier;
   }
 
-  throw lastError!;
+  throw mapError(lastError);
 }

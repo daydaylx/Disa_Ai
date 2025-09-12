@@ -1,12 +1,13 @@
+import type { ChatMessage } from "../../types/chat";
+import { mapError, RateLimitError } from "../errors";
+import { fetchWithTimeoutAndRetry } from "../net/fetchTimeout";
 import { TokenBucket } from "../net/rateLimit";
-import { fetchWithRetry } from "../net/retry";
 import { CHAT_ENDPOINT, getApiKey } from "./config";
-import { RateLimitError } from "./types";
 
 export interface SendOptions {
   apiKey?: string;
   modelId: string;
-  messages: Array<{ role: "user" | "assistant" | "system"; content: string }>;
+  messages: ChatMessage[];
   signal?: AbortSignal;
 }
 
@@ -14,8 +15,8 @@ const bucket = new TokenBucket(3, 1);
 
 export async function sendMessage(opts: SendOptions): Promise<{ content: string }> {
   if (!bucket.tryTake(1)) {
-    const ms = bucket.timeToNextMs();
-    throw new RateLimitError(ms);
+    // This is a client-side rate limit, so we create the error manually.
+    throw new RateLimitError("Client-side rate limit exceeded", 429, "Too Many Requests");
   }
 
   const key = opts.apiKey || getApiKey();
@@ -28,7 +29,7 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
       if (opts.signal) {
         const onAbort = () => {
           clearTimeout(id);
-          reject(new DOMException("Aborted", "AbortError"));
+          reject(mapError(new DOMException("Aborted", "AbortError")));
         };
         if (opts.signal.aborted) onAbort();
         opts.signal.addEventListener("abort", onAbort, { once: true });
@@ -45,8 +46,7 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     return { content: "Demo-Antwort (kein API-Key)." };
   }
 
-  type Init = NonNullable<Parameters<typeof fetch>[1]>;
-  const init: Init = {
+  const init: Omit<RequestInit, 'signal'> & { signal?: AbortSignal } = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${key}`,
@@ -58,34 +58,20 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     cache: "no-store",
     referrerPolicy: "no-referrer",
   };
-
-  const retryOpts: {
-    maxRetries: number;
-    baseDelayMs: number;
-    maxDelayMs: number;
-    retryOn: (r: Response) => boolean;
-    abortSignal?: AbortSignal;
-  } = {
-    maxRetries: 4,
-    baseDelayMs: 300,
-    maxDelayMs: 7000,
-    retryOn: (r) => r.status === 429 || (r.status >= 500 && r.status < 600),
-  };
-  if (opts.signal) retryOpts.abortSignal = opts.signal;
-
-  const res = await fetchWithRetry(url, init, retryOpts);
-  if (!res.ok) {
-    // Use standard HTTP error pattern that humanError() can parse
-    if (res.status === 401) throw new Error("API-Key fehlt oder ist ungültig (401).");
-    if (res.status === 403) throw new Error("Zugriff verweigert/Modell blockiert (403).");
-    if (res.status === 429) throw new Error("Rate-Limit/Quota erreicht (429).");
-    if (res.status >= 500) throw new Error("Anbieterfehler (5xx). Bitte später erneut.");
-    
-    const text = await res.text().catch(() => "");
-    throw new Error(`HTTP ${res.status} – ${text || res.statusText}`);
+  if (opts.signal) {
+    init.signal = opts.signal;
   }
-  const json = await res.json().catch(() => null);
-  const content = json?.choices?.[0]?.message?.content ?? "";
-  if (!content) throw new Error("Leere Antwort vom Server");
-  return { content };
+
+  try {
+    const res = await fetchWithTimeoutAndRetry(url, init);
+    if (!res.ok) {
+      throw mapError(res);
+    }
+    const json = await res.json().catch(() => null);
+    const content = json?.choices?.[0]?.message?.content ?? "";
+    if (!content) throw mapError(new Error("Leere Antwort vom Server"));
+    return { content };
+  } catch (error) {
+    throw mapError(error);
+  }
 }

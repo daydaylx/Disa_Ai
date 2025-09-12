@@ -1,5 +1,5 @@
+import { mapError } from "../lib/errors";
 import { chatConcurrency } from "../lib/net/concurrency";
-import { handleResponseError,mapNetworkError } from "../lib/net/errorMapping";
 import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
@@ -9,17 +9,16 @@ const KEY_NAME = "disa_api_key";
 const MODEL_KEY = "disa_model";
 
 function isTestEnv(): boolean {
-  // Vitest setzt import.meta.vitest und VITEST=1
   const viaImportMeta = (() => {
     try {
-      return Boolean((import.meta as unknown as { vitest?: unknown })?.vitest);
+      return Boolean((import.meta as any).vitest);
     } catch {
       return false;
     }
   })();
   const viaProcess = (() => {
     try {
-      const g = globalThis as unknown as { process?: { env?: Record<string, unknown> } };
+      const g = globalThis as any;
       return Boolean(g?.process?.env?.VITEST);
     } catch {
       return false;
@@ -29,10 +28,9 @@ function isTestEnv(): boolean {
 }
 
 function getHeaders() {
-  const apiKey = readApiKey() ?? localStorage.getItem(KEY_NAME)?.replace(/^"+|"+$/g, "");
-  // In Tests keinen harten Fehler werfen: Dummy-Key nutzen, damit Stubs greifen
+  const apiKey = readApiKey() ?? localStorage.getItem(KEY_NAME)?.replace(/^"+"|"+"$/g, "");
   const key = apiKey || (isTestEnv() ? "test" : "");
-  if (!key) throw new Error("NO_API_KEY");
+  if (!key) throw mapError(new Error("NO_API_KEY"));
   const referer = (() => {
     try {
       return location.origin;
@@ -56,18 +54,13 @@ export function getModelFallback() {
   }
 }
 
-// Error mapping moved to ../lib/net/errorMapping.ts
-
 export async function chatOnce(messages: ChatMessage[], opts?: { model?: string; signal?: AbortSignal }) {
-  const key = `chat-once-${Date.now()}-${Math.random().toString(36).substring(2)}`;
-  
+  const key = `chat-once-${Date.now()}`;
   return chatConcurrency.startRequest(key, async (signal) => {
     const combinedSignal = opts?.signal ? combineSignals([opts.signal, signal]) : signal;
-    
     try {
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
-      
       const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
         timeoutMs: 30000,
         signal: combinedSignal,
@@ -79,16 +72,16 @@ export async function chatOnce(messages: ChatMessage[], opts?: { model?: string;
           body: JSON.stringify({ model, messages, stream: false }),
         },
       });
-      
+
       if (!res.ok) {
-        await handleResponseError(res);
+        throw mapError(res);
       }
-      
+
       const data = await res.json();
       const text = data?.choices?.[0]?.message?.content ?? "";
       return { text, raw: data };
     } catch (error) {
-      throw mapNetworkError(error instanceof Error ? error : new Error(String(error)));
+      throw mapError(error);
     }
   });
 }
@@ -103,19 +96,16 @@ export async function chatStream(
     onDone?: (full: string) => void;
   },
 ) {
-  const key = `chat-stream-${Date.now()}-${Math.random().toString(36).substring(2)}`;
-  
+  const key = `chat-stream-${Date.now()}`;
   return chatConcurrency.startRequest(key, async (signal) => {
     const combinedSignal = opts?.signal ? combineSignals([opts.signal, signal]) : signal;
-    
     try {
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
-      
       const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
-        timeoutMs: 45000, // Longer timeout for streaming
+        timeoutMs: 45000,
         signal: combinedSignal,
-        maxRetries: 1, // Less retries for streaming
+        maxRetries: 1,
         retryDelayMs: 2000,
         fetchOptions: {
           method: "POST",
@@ -123,9 +113,9 @@ export async function chatStream(
           body: JSON.stringify({ model, messages, stream: true }),
         },
       });
-      
+
       if (!res.ok) {
-        await handleResponseError(res);
+        throw mapError(res);
       }
 
       const reader = res.body?.getReader();
@@ -146,14 +136,9 @@ export async function chatStream(
           while ((idx = buffer.indexOf("\n")) >= 0) {
             const line = buffer.slice(0, idx).trim();
             buffer = buffer.slice(idx + 1);
-            if (!line) continue;
+            if (!line || line.startsWith(":")) continue;
 
-            // Unterstützt SSE (data: ...) und NDJSON (plain JSON per Zeile)
-            // Kommentare (": keep-alive") ignorieren
-            if (line.startsWith(":")) continue;
             const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
-
-            // OpenRouter Status-Zwischenzeilen ignorieren
             if (/^OPENROUTER\b/i.test(payload)) continue;
 
             if (payload === "[DONE]") {
@@ -162,28 +147,24 @@ export async function chatStream(
             }
 
             if (payload.startsWith("{")) {
-              let delta = "";
               try {
                 const json = JSON.parse(payload);
                 if (json?.error) {
-                  const msg = json.error?.message || "Unbekannter API-Fehler";
-                  throw new Error(msg);
+                  throw new Error(json.error?.message || "Unbekannter API-Fehler");
                 }
-                delta =
-                  json?.choices?.[0]?.delta?.content ?? json?.choices?.[0]?.message?.content ?? "";
+                const delta = json?.choices?.[0]?.delta?.content ?? "";
+                if (!started) {
+                  started = true;
+                  opts?.onStart?.();
+                }
+                if (delta) {
+                  onDelta(delta);
+                  full += delta;
+                }
               } catch (err) {
-                throw mapNetworkError(err instanceof Error ? err : new Error(String(err)));
-              }
-              if (!started) {
-                started = true;
-                opts?.onStart?.();
-              }
-              if (delta) {
-                onDelta(delta);
-                full += delta;
+                throw mapError(err);
               }
             } else {
-              // Plain-Text Token
               if (!started) {
                 started = true;
                 opts?.onStart?.();
@@ -195,34 +176,23 @@ export async function chatStream(
         }
         opts?.onDone?.(full);
       } finally {
-        try {
-          reader.releaseLock();
-        } catch {
-          /* noop */
-        }
-        try {
-          await res.body?.cancel();
-        } catch {
-          /* noop */
-        }
+        reader.releaseLock();
+        res.body?.cancel().catch(() => {});
       }
     } catch (error) {
-      throw mapNetworkError(error instanceof Error ? error : new Error(String(error)));
+      throw mapError(error);
     }
   });
 }
 
-// Utility to combine multiple AbortSignals
 function combineSignals(signals: AbortSignal[]): AbortSignal {
   const controller = new AbortController();
-  
   for (const signal of signals) {
     if (signal.aborted) {
       controller.abort();
-      break;
+      return controller.signal;
     }
     signal.addEventListener("abort", () => controller.abort(), { once: true });
   }
-  
   return controller.signal;
 }

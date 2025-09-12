@@ -1,11 +1,23 @@
-import { fetchWithTimeout } from "../lib/net/fetchWithTimeout";
+import { afterEach, beforeEach,describe, expect, it, vi } from "vitest";
+
+import { TimeoutError } from "../lib/errors";
+import { fetchWithTimeout } from "../lib/net/fetchTimeout";
 
 describe("fetchWithTimeout", () => {
-  it("aborts when timeout elapses", async () => {
-    const p = fetchWithTimeout("https://example.invalid/never", {
-      method: "GET",
-      timeoutMs: 1
-    });
-    await expect(p).rejects.toThrow(/Request timeout/);
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("sollte bei einem Timeout einen TimeoutError werfen", async () => {
+    const timeoutPromise = fetchWithTimeout("https://example.com", { timeoutMs: 5000 });
+
+    // Timer vorrücken
+    vi.advanceTimersByTime(5001);
+
+    await expect(timeoutPromise).rejects.toThrow(TimeoutError);
   });
 });

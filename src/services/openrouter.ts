@@ -1,5 +1,5 @@
 /* eslint-disable no-empty */
-import { mapNetworkError } from "../lib/net/errorMapping";
+import { mapError } from "../lib/errors";
 import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey, writeApiKey } from "../lib/openrouter/key";
 
@@ -60,7 +60,7 @@ export async function getRawModels(explicitKey?: string, ttlMs = DEFAULT_TTL_MS)
       }
     });
     
-    if (!res.ok) return [];
+    if (!res.ok) throw mapError(res);
     const data = await res.json().catch(() => ({}));
     const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
     
@@ -72,7 +72,7 @@ export async function getRawModels(explicitKey?: string, ttlMs = DEFAULT_TTL_MS)
     return list;
   } catch (error) {
     // Log but don't throw - return empty array for graceful degradation
-    console.warn("Failed to fetch models:", mapNetworkError(error instanceof Error ? error : new Error(String(error))));
+    console.warn("Failed to fetch models:", mapError(error));
     return [];
   }
 }
