@@ -2,23 +2,34 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  timeout: 30_000,
-  fullyParallel: false,
-  reporter: [["list"]],
+  timeout: 8000,
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: [
+    ["html", { outputFolder: "test-results/html-report" }],
+    ["json", { outputFile: "test-results/results.json" }]
+  ],
+  outputDir: "test-results/artifacts",
   use: {
-    baseURL: "http://localhost:4173",
-    trace: "on-first-retry",
-    serviceWorkers: "block", // verhindert SW-Störungen
+    headless: true,
+    baseURL: "http://127.0.0.1:5173",
+    trace: "retain-on-failure",
+    serviceWorkers: "block",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
-  outputDir: "test-artifacts",
   webServer: {
-    command: "npm run build && npm run preview",
-    port: 4173,
+    command: "npm run dev",
+    url: "http://127.0.0.1:5173",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
   projects: [
-    { name: "android-samsung", use: { ...devices["Galaxy S8+"] } },
-    { name: "android-dark", use: { ...devices["Galaxy S8+"], colorScheme: "dark" } },
+    {
+      name: "mobile-chromium",
+      use: { ...devices["Pixel 5"] },
+    },
   ],
 });

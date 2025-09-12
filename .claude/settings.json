@@ -1,99 +1,37 @@
 {
-  "projectName": "Disa_Ai",
-  "workingDirectory": ".",
-  "dryRun": false,
-  "confirmBeforeWrite": true,
-  "showDiffOnWrite": true,
-  "maxWriteBatch": 1,
-  "mcp": {
-    "enabled": false,
-    "providers": []
-  },
-  "shell": {
-    "enabled": true,
-    "askBeforeRun": true,
-    "timeoutSeconds": 600,
-    "allowlist": [
-      "npm ci",
-      "npm run typecheck",
-      "npm run lint",
-      "npm test -- --coverage",
-      "npm run build",
-      "git status",
-      "git diff",
-      "git add -A",
-      "git commit -m",
-      "git switch -c",
-      "git switch",
-      "git restore --staged .",
-      "git checkout -- .",
-      "node -v",
-      "npm -v",
-      "npx --version"
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Bash(git status)"
     ],
-    "denylist": [
-      "rm -rf",
-      "curl",
-      "wget",
-      "scp",
-      "ssh",
-      "chmod -R",
-      "chown -R",
-      "sudo",
-      "pnpm",
-      "yarn"
-    ]
-  },
-  "writeGuards": {
-    "protectedGlobs": ["**/.git/**", "**/.env*", "**/node_modules/**", "**/dist/**", "**/build/**"],
-    "askOnProtected": true
-  },
-  "git": {
-    "createBranchIfDirty": true,
-    "defaultBranchPrefix": "chore/hardening-",
-    "commitMessageStyle": "conventional",
-    "requireGreenChecksBeforeCommit": false
-  },
-  "postCommitChecks": [
-    {
-      "name": "typecheck",
-      "cmd": "npm run typecheck",
-      "timeoutSeconds": 300,
-      "failOnNonZero": true
-    },
-    { "name": "lint", "cmd": "npm run lint", "timeoutSeconds": 300, "failOnNonZero": true },
-    {
-      "name": "test",
-      "cmd": "npm test -- --coverage",
-      "timeoutSeconds": 1200,
-      "failOnNonZero": true
-    },
-    { "name": "build", "cmd": "npm run build", "timeoutSeconds": 600, "failOnNonZero": true }
-  ],
-  "interaction": {
-    "onUncertainty": "STOP_AND_ASK",
-    "requireNextStepSingle": true,
-    "maxLogLinesPerTool": 30,
-    "showStatusSummary": true
-  },
-  "instructions": {
-    "system": [
-      "Rolle: Unabhängiger Senior-Software-Architekt & Lead-QA-Automator.",
-      "Arbeite phasenbasiert gemäß Plan (P0–P9).",
-      "Vor JEDEM Commit: Diff zeigen; NUR betroffene Dateien.",
-      "Ein Commit = 1 atomarer Zweck. Keine Sammelcommits.",
-      "Keine Secrets schreiben/loggen. Keine Massenlöschung ohne Liste & Freigabe.",
-      "Nach JEDEM Commit: typecheck → lint → test → build und Status melden.",
-      "Bei Unsicherheit: STOP & FRAGEN mit konkreter Liste."
+    "ask": [
+      "Bash(npm run build)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
-    "developer": [
-      "Halte dich an die Shell-Allowlist.",
-      "Keine Paketmanager-Wechsel. Verwende den vorhandenen Lockfile mit 'npm ci'.",
-      "Keine globale Systemänderung (Node, NPM) während der Session."
+    "deny": [
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(./**/*.pem)",
+      "Read(./build)",
+      "Read(./dist)"
     ],
-    "user": [
-      "Starte mit PHASE 0 (Inventur). Stoppe danach und liefere Bericht.",
-      "Erst nach Freigabe die nächste Phase beginnen."
-    ]
-  }
+    "additionalDirectories": []
+  },
+  "env": {
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1"
+  },
+  "includeCoAuthoredBy": false,
+  "model": "claude-sonnet-4-0",
+  "outputStyle": "Default",
+  "enableAllProjectMcpServers": false,
+  "enabledMcpjsonServers": [],
+  "disabledMcpjsonServers": []
 }
+
