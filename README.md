@@ -1,6 +1,6 @@
 Disa AI — Private KI-Chat PWA
 
-Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle. Fokus: klare UX, robuste Builds, reproduzierbares Deployment und nachvollziehbare Qualitätssicherung.
+Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen Rollen (18+) und geringere Police. Fokus: klare UX, robuste Builds, reproduzierbares Deployment und nachvollziehbare Qualitätssicherung.
 
 **Live:** https://disaai.pages.dev/  
 **Repository:** https://github.com/daydaylx/Disa_Ai
