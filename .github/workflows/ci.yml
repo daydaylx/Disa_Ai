@@ -1,38 +1,237 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run test:ci
-      - uses: actions/upload-artifact@v4
-        if: always() && hashFiles('coverage/**') != ''
-        with:
-          name: coverage
-          path: coverage
+# Cancel running workflows on new push
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-  build:
+jobs:
+  # Gate 1: Install & Setup
+  setup:
+    name: Setup & Install
     runs-on: ubuntu-latest
-    needs: test
+    outputs:
+      node-cache-hit: ${{ steps.node-cache.outputs.cache-hit }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "npm"
-      - run: npm ci
-      - run: npm run build
+
+      - name: Cache node_modules
+        id: node-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+  # Gate 2: Lint
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: needs.setup.outputs.node-cache-hit != 'true'
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+  # Gate 3: Typecheck
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: needs.setup.outputs.node-cache-hit != 'true'
+        run: npm ci
+
+      - name: Run TypeScript checks
+        run: npm run typecheck
+
+  # Gate 4: Unit Tests
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: needs.setup.outputs.node-cache-hit != 'true'
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm run test:ci
+
+      - name: Upload coverage reports
+        if: always() && hashFiles('coverage/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: coverage/
+          retention-days: 7
+
+  # Gate 5: E2E Tests
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [setup, lint, typecheck, unit-tests]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: needs.setup.outputs.node-cache-hit != 'true'
+        run: npm ci
+
+      - name: Install Playwright dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload E2E artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  # Gate 6: Build
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [setup, lint, typecheck, unit-tests, e2e-tests]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: needs.setup.outputs.node-cache-hit != 'true'
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run post-build steps
+        run: npm run postbuild
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: dist/
+          retention-days: 30
+
+  # Gate 7: Deploy Gate (Test Only - No Actual Deploy)
+  deploy-gate:
+    name: Deploy Gate
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Deploy gate passed
+        run: |
+          echo "🎉 All checks passed! Ready for Cloudflare Pages deploy."
+          echo "Build artifacts are available and Cloudflare will handle deployment."
+          echo "No GitHub Pages deployment - Cloudflare is the single source of truth."

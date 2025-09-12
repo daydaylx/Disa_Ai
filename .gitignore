@@ -13,10 +13,13 @@ dist/
 # Test/Reports/Logs
 playwright-report/
 test-artifacts/
+test-results/
 coverage/
 coverage/.tmp/
 LOGS/
 DOCS/
+playwright/.cache/
+*.spec.js-snapshots/
 
 # IDE
 .vscode/

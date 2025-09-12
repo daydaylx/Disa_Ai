@@ -1,9 +1,10 @@
-name: Pages (tests-gated)
+name: Pages (DISABLED - Cloudflare Only)
 
 on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
+  # DISABLED: All deployment now handled by Cloudflare Pages
+  # push:
+  #   branches: ["main"]
+  # workflow_dispatch:
 
 permissions:
   contents: read
