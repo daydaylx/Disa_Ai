@@ -18,7 +18,7 @@
 
 - Conventional Commits.
 - PR beschreibt Scope, Risiken, manuelle Schritte.
-- CI muss grün sein. Bei Fail: fixen oder revert, nicht „wird schon“.
+- CI muss grün sein. Bei Fail: fixen oder revert.
 
 ## Code-Qualität
 
