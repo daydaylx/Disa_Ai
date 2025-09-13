@@ -6,7 +6,8 @@ test("Fehler: RateLimit (429) → Toast", async ({ page }) => {
   await setupRequestInterception(page, "rate-limit");
   await page.addInitScript(() => {
     try {
-      sessionStorage.setItem("OPENROUTER_API_KEY", "test");
+      sessionStorage.setItem("OPENROUTER_API_KEY", "test-api-key");
+      localStorage.setItem("disa_model", "meta-llama/llama-3.3-70b-instruct:free");
     } catch {}
   });
 
@@ -22,7 +23,8 @@ test("Fehler: Serverfehler (5xx) → Toast", async ({ page }) => {
   await setupRequestInterception(page, "server-error");
   await page.addInitScript(() => {
     try {
-      sessionStorage.setItem("OPENROUTER_API_KEY", "test");
+      sessionStorage.setItem("OPENROUTER_API_KEY", "test-api-key");
+      localStorage.setItem("disa_model", "meta-llama/llama-3.3-70b-instruct:free");
     } catch {}
   });
 
@@ -38,7 +40,8 @@ test("Fehler: Timeout/Netzwerk → Toast", async ({ page }) => {
   await setupRequestInterception(page, "timeout");
   await page.addInitScript(() => {
     try {
-      sessionStorage.setItem("OPENROUTER_API_KEY", "test");
+      sessionStorage.setItem("OPENROUTER_API_KEY", "test-api-key");
+      localStorage.setItem("disa_model", "meta-llama/llama-3.3-70b-instruct:free");
     } catch {}
   });
 
@@ -54,7 +57,8 @@ test("Fehler: Nutzer-Abbruch (Stop) → Toast", async ({ page }) => {
   await setupRequestInterception(page, "success");
   await page.addInitScript(() => {
     try {
-      sessionStorage.setItem("OPENROUTER_API_KEY", "test");
+      sessionStorage.setItem("OPENROUTER_API_KEY", "test-api-key");
+      localStorage.setItem("disa_model", "meta-llama/llama-3.3-70b-instruct:free");
     } catch {}
   });
 
