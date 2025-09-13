@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import * as React from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { cn } from "../../../lib/utils/cn";
@@ -46,7 +46,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
   const push = useCallback(
     (t: Omit<ToastItem, "id">) => {
       const id = crypto.randomUUID();
-      const item: ToastItem = { id, durationMs: 3500, ...t };
+      const item: ToastItem = { id, durationMs: 5000, ...t };
       setItems((list) => [item, ...list]);
       if (item.durationMs && item.durationMs > 0) {
         window.setTimeout(() => dismiss(id), item.durationMs);
