@@ -636,3 +636,16 @@ PRs und Issues sind willkommen, sofern sie:
 ### Changelog
 
 Siehe [Rescue-Checklist](docs/status/rescue-checklist.md) für detaillierte Projekt-Transformation und Git-History für chronologische Änderungen.
+
+## CI & Gates
+
+Die GitHub Actions Pipeline prüft in dieser Reihenfolge:
+
+1. **Lint**
+2. **Typecheck**
+3. **Unit Tests**
+4. **E2E (offline)** – alle Netzwerkaufrufe werden via Interception/Fixtures beantwortet. Keine echten Upstream-Requests.
+5. **Build**
+6. **Deploy Gate** – reines Gate. Der produktive Deploy erfolgt ausschließlich über **Cloudflare Pages**.
+
+Test- und Report-Artefakte (`coverage/`, `playwright-report/`, `test-results/`) werden nicht eingecheckt und nur als CI-Artefakte bei Fehlschlägen erzeugt.
