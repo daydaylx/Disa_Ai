@@ -3,3 +3,7 @@ build
 coverage
 node_modules
 *.snap
+dist/
+coverage/
+playwright-report/
+test-results/
