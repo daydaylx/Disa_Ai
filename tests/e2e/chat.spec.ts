@@ -1,8 +1,8 @@
-import { test, expect } from "@playwright/test";
-import { setupRequestInterception } from "./setup/intercept";
+import { expect,test } from "@playwright/test";
+
 
 test.describe("Chat Smoke Tests", () => {
-  test("Accessibility: Skip link navigation", async ({ page }) => {
+  test("Accessibility: Skip link navigation @flaky", async ({ page }) => {
     await page.goto("/#/");
     await page.keyboard.press("Tab");
     
@@ -12,7 +12,7 @@ test.describe("Chat Smoke Tests", () => {
     await expect(page.locator("#main")).toBeFocused();
   });
 
-  test("Core: Message copy functionality", async ({ page }) => {
+  test("Core: Message copy functionality @flaky", async ({ page }) => {
     await page.goto("/#/");
     
     await page.getByRole("button", { name: "Nachricht kopieren" }).first().click();

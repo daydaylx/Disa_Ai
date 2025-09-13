@@ -17,7 +17,7 @@ function sseBody(parts: string[]) {
 describe("openrouter chatStream", () => {
   it("parst mehrere data-Frames + [DONE]", async () => {
     // @ts-expect-error stub fetch
-    global.fetch = vi.fn(async () => ({
+    global.fetch = vi.fn(() => Promise.resolve({
       ok: true,
       body: sseBody([
         `data: {"choices":[{"delta":{"content":"Hal"}}]}

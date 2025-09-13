@@ -34,7 +34,7 @@ class ConcurrencyManager {
     this.activeRequests.set(key, activeRequest);
     
     // Clean up when request completes (success or failure)
-    promise.finally(() => {
+    void promise.finally(() => {
       if (this.activeRequests.get(key) === activeRequest) {
         this.activeRequests.delete(key);
       }

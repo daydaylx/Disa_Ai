@@ -18,13 +18,43 @@ coverage/
 coverage/.tmp/
 LOGS/
 DOCS/
+docs/screenshots/
 playwright/.cache/
 *.spec.js-snapshots/
+*.html-report/
+*.xml
+*.lcov
+allure-results/
+allure-report/
+*.trx
+*.junit.xml
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.vim/
+.emacs.d/
+.sublime-project
+.sublime-workspace
+*.code-workspace
 
-# Misc backups
+# Build/Cache
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.nuxt/
+.vercel/
+.eslintcache
+tsconfig.tsbuildinfo
+
+# Misc backups & temp
 *.bak
 *.bak.*
+*.tmp
+*.temp
+.temp/
+Thumbs.db

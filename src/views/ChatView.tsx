@@ -206,7 +206,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     const apiKey = getApiKey();
 
     let accum = "";
-    sendChat({
+    void sendChat({
       apiKey,
       model: modelId,
       messages: buildMessages(trimmed),

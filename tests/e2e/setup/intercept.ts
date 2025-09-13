@@ -1,8 +1,7 @@
 import { Page } from "@playwright/test";
+
 import baseResponse from "../../../e2e/fixtures/base-response.json" with { type: "json" };
 import rateLimit from "../../../e2e/fixtures/rate-limit.json" with { type: "json" };
-import timeoutError from "../../../e2e/fixtures/timeout-error.json" with { type: "json" };
-import abortError from "../../../e2e/fixtures/abort-error.json" with { type: "json" };
 import serverError from "../../../e2e/fixtures/server-error.json" with { type: "json" };
 
 export type InterceptScenario = 

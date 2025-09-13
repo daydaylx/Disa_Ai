@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/vitest';
+
 import { ApiError } from '../src/lib/errors';
 
 process.on('unhandledRejection', (reason) => {

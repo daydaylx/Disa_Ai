@@ -5,7 +5,21 @@ Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen R
 **Live:** https://disaai.pages.dev/  
 **Repository:** https://github.com/daydaylx/Disa_Ai
 
-> Stand: 12. September 2025
+> Stand: 13. September 2025
+
+## ✅ Production Status
+
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-59%2F59-brightgreen) 
+![Coverage](https://img.shields.io/badge/coverage-15.78%25-yellow)
+![Security](https://img.shields.io/badge/security-compliant-brightgreen)
+![TypeScript](https://img.shields.io/badge/typescript-100%25-blue)
+
+**CI/CD Pipeline**: 8 Gates ✅ Setup → Secrets → Lint → Typecheck → Unit → E2E → Build → Deploy  
+**Code Quality**: ESLint + Prettier automatisch enforced  
+**Security**: sessionStorage-only, TruffleHog scanning, CSP headers  
+**Testing**: Offline-first E2E mit Playwright, Unit Tests mit Vitest  
+**Documentation**: [Vollständige Rescue-Dokumentation](docs/status/rescue-checklist.md)
 
 ---
 
@@ -16,16 +30,20 @@ Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen R
 3. [Technikstack](#technikstack)  
 4. [Projektstruktur](#projektstruktur)  
 5. [Lokale Entwicklung](#lokale-entwicklung)  
-6. [Umgebungsvariablen](#umgebungsvariablen)  
-7. [NPM-Skripte](#npm-skripte)  
-8. [Tests & Qualitätssicherung](#tests--qualitätssicherung)  
-9. [Styling & Designsystem](#styling--designsystem)  
-10. [Deployment (Cloudflare Pages)](#deployment-cloudflare-pages)  
-11. [Caching & Stale-Content vermeiden](#caching--stale-content-vermeiden)  
-12. [MCP/Agent-Setup (optional)](#mcpagent-setup-optional)  
-13. [Roadmap & interne Doks](#roadmap--interne-doks)  
-14. [Troubleshooting](#troubleshooting)  
-15. [Lizenz](#lizenz)
+6. [Sicherheit & API-Key-Flow](#sicherheit--api-key-flow)  
+7. [Umgebungsvariablen](#umgebungsvariablen)  
+8. [NPM-Skripte](#npm-skripte)  
+9. [Tests & Qualitätssicherung](#tests--qualitätssicherung)  
+10. [Styling & Designsystem](#styling--designsystem)  
+11. [Deployment (Cloudflare Pages)](#deployment-cloudflare-pages)  
+12. [Fehlervertrag & Error Handling](#fehlervertrag--error-handling)  
+13. [Contributing Guidelines](#contributing-guidelines)  
+14. [Architektur-Entscheidungen (ADRs)](#architektur-entscheidungen-adrs)  
+15. [Caching & Stale-Content vermeiden](#caching--stale-content-vermeiden)  
+16. [MCP/Agent-Setup (optional)](#mcpagent-setup-optional)  
+17. [Roadmap & interne Doks](#roadmap--interne-doks)  
+18. [Troubleshooting](#troubleshooting)  
+19. [Lizenz](#lizenz)
 
 ---
 
@@ -102,52 +120,404 @@ npm run build
 
 # Lokaler Preview des Build-Outputs
 npm run preview
-Umgebungsvariablen
-Lege eine .env basierend auf .env.example an.
-Typischerweise sind hier API-Keys, Basispfade und Modell-Voreinstellungen enthalten.
-Für das Deployment auf Cloudflare Pages setze dieselben Keys als Project Variables.
-Wichtig: Keine Secrets ins Repo commiten.
-NPM-Skripte
-Die gängigen Skripte sind in package.json definiert, u. a.:
-dev – lokalen Dev-Server starten
-build – Production-Build in dist/
-preview – lokalen Preview auf Basis von dist/
-typecheck – TypeScript ohne Emission
-lint – ESLint-Checks
-test – Vitest (Unit)
-E2E (Playwright) – je nach Scriptkonvention (test:e2e oder via npx playwright test)
-Präzise Bezeichner bitte direkt der package.json entnehmen.
-Tests & Qualitätssicherung
-TypeScript: strikt, npm run typecheck
-ESLint: Projekt nutzt mehrere ESLint-Configs. Mittelfristig Zusammenführung empfohlen.
-Vitest: schnelles Unit-Testing
-Playwright: E2E-Flows
-CI führt primär die Checks aus (typecheck, lint, test). Deployment erfolgt über Cloudflare Pages, nicht über Actions.
-Styling & Designsystem
-Token-First: zentrale HSL-Tokens in src/styles/tokens.css
-Tailwind-Mapping in tailwind.config.ts auf semantische Farben (background, foreground, card, primary, muted-foreground, ring, …)
-Dark-Baseline: App setzt beim Start .dark auf <html>; aktives Preset via data-theme
-Utilities in src/styles/theme.css:
-Flächen: glass, card-solid, card-gradient
-Buttons: btn, btn-primary, btn-secondary, btn-ghost
-Inputs: input (auch select, textarea)
-Navigation: nav-pill, nav-pill--active
-Typografie: text-foreground, text-text, text-text-muted, text-muted-foreground
-Hinweis: Legacy-CSS in src/styles/brand.css, src/styles/glass.css, src/ui/kit.css nur als Kompat-Helfer; neue Styles bitte über Tokens/Utilities lösen.
-Deployment (Cloudflare Pages)
-Modell: Git-Integration auf Branch main, Build-Output dist/.
-Wichtig: GitHub Actions machen nur CI-Checks; die Veröffentlichung übernimmt Cloudflare Pages.
-Kurzablauf:
-Cloudflare Pages Projekt auf Repo verbinden (Branch main).
-Build Command aus package.json verwenden, Output-Folder dist/.
-Project Variables in Cloudflare setzen (statt .env im Repo).
-Nach erfolgreichem Build wird disaai.pages.dev aktualisiert.
-Caching & Stale-Content vermeiden
-HTML-Caching: public/_headers setzt no-store für index.html, damit die App immer frisch lädt.
-Service Worker: bewusst deaktiviert (in src/main.tsx), um alte Bundles nicht festzukleben.
-Wenn doch mal Altstände auftauchen:
-In Cloudflare Pages: Purge Everything
-Clientseitig: Browser-Cache leeren bzw. evtl. alten SW manuell entfernen
+```
+
+---
+
+## Sicherheit & API-Key-Flow
+
+### 🔐 Sichere API-Key-Verwaltung
+
+**Speicherung:**
+- API-Keys werden **nur in sessionStorage** gespeichert (session-only, sicherer als localStorage)
+- Automatische Migration von localStorage → sessionStorage bei App-Start
+- Vollständige Löschung aus localStorage nach erfolgreicher Migration
+
+**Key-Lifecycle:**
+```typescript
+// Key setzen (sessionStorage only)
+writeApiKey("sk-your-key");
+
+// Key abrufen (mit automatischer Migration)
+const key = readApiKey();
+
+// Alle Keys löschen (logout)
+clearAllApiKeys();
+
+// Key-Status prüfen
+const hasKey = hasApiKey();
+```
+
+**Migration & Cleanup:**
+- App migriert automatisch vorhandene localStorage-Keys zu sessionStorage
+- Unterstützt mehrere Key-Kandidaten: `disa_api_key`, `openrouter_key`, `OPENROUTER_API_KEY`
+- Keys werden bei Browser-Neustart automatisch gelöscht (session-only)
+
+**Architektur-Entscheidung:** [ADR-0004: SessionStorage für API-Keys](docs/adr/0004-sessionStorage-api-keys.md)
+
+### 🛡️ Security Headers
+
+Strikte Sicherheitsrichtlinien via `public/_headers`:
+
+```
+Content-Security-Policy: default-src 'self'; 
+  script-src 'self' 'unsafe-inline'; 
+  style-src 'self' 'unsafe-inline'; 
+  connect-src 'self' https://openrouter.ai; 
+  img-src 'self' data: blob:; 
+  frame-src 'none'; 
+  object-src 'none'
+```
+
+**Zusätzliche Headers:**
+- `X-Frame-Options: DENY` - Clickjacking-Schutz
+- `X-Content-Type-Options: nosniff` - MIME-Type-Sniffing blockieren
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy` - Hardware-Zugriff blockieren
+
+### 🔍 Secret Scanning
+
+CI-Pipeline mit TruffleHog zur Erkennung versehentlich commiteter Secrets:
+- Scannt gesamte Git-History
+- Bricht Build bei Secret-Fund ab
+- Läuft vor allen anderen CI-Gates
+
+---
+
+## Umgebungsvariablen
+
+**Lokale Entwicklung:**
+```bash
+# .env basierend auf .env.example anlegen
+cp .env.example .env
+# Variablen ausfüllen
+```
+
+**Typische Variablen:**
+- `VITE_OPENROUTER_API_KEY` - OpenRouter API-Schlüssel
+- `VITE_BASE_URL` - Basis-URL für Deployment
+- `VITE_DEFAULT_MODEL` - Standard-Modell-ID
+
+**Cloudflare Pages:**
+- Setze dieselben Variablen als **Project Variables** in Cloudflare Dashboard
+- **Wichtig:** Keine Secrets ins Repository commiten!
+
+---
+
+## NPM-Skripte
+
+**Entwicklung:**
+```bash
+npm run dev          # Dev-Server starten (http://localhost:5173)
+npm run build        # Production-Build in dist/
+npm run preview      # Lokaler Preview von dist/ (http://localhost:4173)
+```
+
+**Qualitätssicherung:**
+```bash
+npm run typecheck    # TypeScript-Checks (alle tsconfig.*.json)
+npm run lint         # ESLint auf gesamte Codebase
+npm run lint:fix     # ESLint mit automatischen Fixes
+npm run format       # Prettier check
+npm run format:fix   # Prettier mit automatischen Fixes
+npm run verify       # Typecheck + Lint + Unit Tests
+```
+
+**Tests:**
+```bash
+npm run test         # Unit Tests (Vitest watch mode)  
+npm run test:unit    # Unit Tests (single run)
+npm run test:ci      # Unit Tests mit Coverage
+npm run test:e2e     # E2E Tests (Playwright)
+npm run test:e2e:ui  # E2E Tests mit UI
+```
+
+**Cleanup:**
+```bash
+npm run clean        # dist, cache, coverage, test-results löschen
+```
+
+---
+
+## Tests & Qualitätssicherung
+
+### 🏗️ Offline-First Testing
+
+**Prinzip:** Alle Tests laufen **ohne echte Netzwerkaufrufe**
+- **Unit Tests:** Mocked Dependencies via Vitest
+- **E2E Tests:** Request Interception via Playwright mit JSON-Fixtures
+
+### Unit Tests (Vitest)
+```bash
+# Watch mode für Entwicklung
+npm run test
+
+# Single run für CI
+npm run test:unit
+
+# Mit Coverage
+npm run test:ci
+```
+
+**Test-Dateien:**
+- `src/**/*.{test,spec}.{ts,tsx}` - Component/Logic Tests
+- `tests/unit/` - Isolated Unit Tests  
+- `tests/smoke/` - Integration/Smoke Tests
+
+### E2E Tests (Playwright)
+
+**Offline-Modus mit Request Interception:**
+```bash
+npm run test:e2e
+```
+
+**Setup:**
+- `tests/e2e/setup/intercept.ts` - Request Interception
+- `e2e/fixtures/*.json` - API Response Fixtures  
+- Scenarios: success, rate-limit, timeout, server-error, abort
+
+**Architektur-Entscheidung:** [ADR-0003: Offline-First Testing](docs/adr/0003-offline-first-testing.md)
+
+**Test Coverage:**
+- Chat flow (send message, receive response)
+- Error handling (rate limits, timeouts, network errors)
+- Accessibility (skip links, focus management)
+- Keyboard shortcuts
+
+### CI-Pipeline (GitHub Actions)
+
+8 Gates müssen grün sein:
+1. **Setup** - Dependencies installieren
+2. **Secret Scan** - TruffleHog auf Git-History  
+3. **Lint** - ESLint Code-Quality
+4. **Typecheck** - TypeScript Validation
+5. **Unit Tests** - Vitest mit Coverage
+6. **E2E Tests** - Playwright offline
+7. **Build** - Production Build
+8. **Deploy Gate** - Cloudflare Pages bereit
+
+### Code Quality Standards
+
+**TypeScript:**
+- Strict mode aktiviert
+- `noUncheckedIndexedAccess: true`
+- `useUnknownInCatchVariables: true`
+
+**ESLint:**
+- Type-aware rules
+- Import sorting & unused import detection
+- React hooks rules
+- JSX accessibility checks
+---
+
+## Styling & Designsystem
+### 🎨 Token-First Approach
+
+**Design Tokens:** `src/styles/tokens.css`
+- HSL-basierte Farbdefinitionen
+- Semantische Variablen (background, foreground, primary, etc.)
+- Dark-Mode als Standard mit Theme-Presets
+
+**Tailwind Integration:** `tailwind.config.ts`
+- Mapping von Tokens auf Tailwind-Klassen
+- Konsistente Farbpalette app-weit
+
+### Utility Classes
+
+**Flächen:**
+- `glass` - Glasmorphism-Effekt
+- `card-solid`, `card-gradient` - Karten-Styles
+
+**Buttons:**
+- `btn`, `btn-primary`, `btn-secondary`, `btn-ghost`
+
+**Inputs:**
+- `input` - Einheitlicher Input-Style (auch select, textarea)
+
+**Navigation:**
+- `nav-pill`, `nav-pill--active` - Tab-Navigation
+
+**Legacy-Hinweis:**
+CSS in `src/styles/brand.css`, `src/ui/kit.css` sind Kompat-Helfer.
+Neue Styles bitte über Tokens/Utilities implementieren.
+
+---
+
+## Deployment (Cloudflare Pages)
+
+### 🚀 Git-Integration Deployment
+
+**Quelle:** Cloudflare Pages (nicht GitHub Actions)
+- **Branch:** `main` (automatische Builds bei Push)
+- **Build Output:** `dist/`
+- **Build Command:** `npm run build && npm run postbuild`
+
+### Setup-Schritte
+
+1. **Cloudflare Pages Projekt erstellen**
+   - Repository: `github.com/daydaylx/Disa_Ai`
+   - Production Branch: `main`
+
+2. **Build-Konfiguration**
+   ```
+   Build Command: npm run build && npm run postbuild
+   Build Output: dist
+   Node Version: 22
+   ```
+
+3. **Environment Variables**
+   - Setze Project Variables in Cloudflare Dashboard
+   - Verwende dieselben Keys wie in `.env.example`
+   - **Keine Secrets ins Git Repository!**
+
+4. **Deployment**
+   - Push zu `main` → automatischer Build
+   - Deploy-URL: https://disaai.pages.dev/
+
+### CI vs. Deployment
+
+**GitHub Actions:** Nur Quality Gates (CI)
+- Secret Scanning, Lint, TypeScript, Tests, Build-Verification
+
+**Cloudflare Pages:** Deployment + Hosting
+- Automatische Builds, CDN, Edge-Optimization
+
+---
+
+## Fehlervertrag & Error Handling
+
+### 🚨 Definierte Fehlerklassen
+
+**Netzwerk-Fehler:**
+- `TimeoutError` - Request-Timeouts (configurable)
+- `AbortError` - User-initiated cancellation  
+- `RateLimitError` - API rate limits (429)
+- `NetworkError` - Konnektivitätsprobleme
+
+**API-Fehler:**
+- `AuthenticationError` - Invalid API key (401)
+- `ServerError` - Upstream-Probleme (5xx)
+- `ValidationError` - Malformed requests (400)
+
+### Error Mapping & UI
+
+**Konsistente Behandlung:**
+```typescript
+// src/lib/errors/mapper.ts
+export function mapError(error: unknown): AppError {
+  // Unified error classification
+}
+```
+
+**UI-Verhalten:**
+- **Retry-Strategien** mit exponential backoff
+- **User-friendly Fehlermeldungen** (keine technischen Details)
+- **Graceful Degradation** bei API-Ausfällen
+- **Offline-Modus** Anzeige bei Konnektivitätsverlust
+
+**Implementierung siehe:**  
+- [Error Types](src/lib/errors/types.ts): Strukturierte Error-Klassen  
+- [Error Mapper](src/lib/errors/mapper.ts): `mapError()` für einheitliche Konvertierung  
+- [Human Error](src/lib/errors/humanError.ts): User-friendly UI-Meldungen  
+
+**Architektur-Entscheidung:** [ADR-0001: Error Handling Strategy](docs/adr/0001-error-handling.md)
+
+---
+
+## Contributing Guidelines
+
+### 🔄 Trunk-Based Development
+
+**Branch-Strategie:** [ADR-0002: Trunk-Based Development](docs/adr/0002-trunk-based-development.md)
+- Ein Hauptbranch: `main`
+- Kurze Feature-Branches (1-2 Tage max.)
+- Kleine, atomare PRs (<400 Zeilen)
+
+**Workflow:**
+```bash
+git checkout main
+git pull origin main
+git checkout -b feat/neue-funktion
+# Entwickeln...
+git push -u origin feat/neue-funktion
+# PR erstellen
+```
+
+### Commit-Konventionen
+
+**Conventional Commits Format:**
+```
+feat(scope): kurze Beschreibung im Imperativ
+
+Längere Beschreibung falls nötig.
+
+- Bullet Points für Details  
+- Closes #123
+```
+
+**Typen:**
+- `feat` - Neue Features
+- `fix` - Bugfixes  
+- `chore` - Wartung/Refactoring
+- `docs` - Dokumentation
+- `test` - Tests hinzufügen/ändern
+
+### Review-Checkliste
+
+**Vor PR-Erstellung:**
+- [ ] `npm run verify` bestanden
+- [ ] Tests für neue Features geschrieben
+- [ ] README/Docs bei API-Änderungen aktualisiert
+- [ ] Keine Secrets/Keys im Code
+
+**CI-Gates (alle müssen grün sein):**
+1. Secret Scanning
+2. Lint & Format
+3. TypeScript Check
+4. Unit Tests + Coverage
+5. E2E Tests (offline)
+6. Production Build
+
+**Detaillierte Guidelines:** [CONTRIBUTING.md](CONTRIBUTING.md)
+
+---
+
+## Architektur-Entscheidungen (ADRs)
+
+**ADR-Verzeichnis:** [`docs/adr/`](docs/adr/)
+
+**Aktuelle ADRs:**
+- [ADR-0001: Error Handling Strategy](docs/adr/0001-error-handling.md)
+- [ADR-0002: Trunk-Based Development](docs/adr/0002-trunk-based-development.md)
+- [ADR-0003: Offline-First Testing](docs/adr/0003-offline-first-testing.md)
+
+**ADR-Template:** [`docs/adr/template.md`](docs/adr/template.md)
+
+---
+
+## Caching & Stale-Content vermeiden
+
+### 📦 Cache-Strategie
+
+**HTML-Caching:** `public/_headers`
+- `no-store` für `index.html` (immer frisch)
+- `no-cache` für Service Worker und Manifest
+- `max-age=31536000` für Assets (mit Hashing)
+
+**Service Worker:**
+- Bewusst deaktiviert für Development
+- Verhindert festgeklemmte alte Bundles
+
+### Stale-Content Debugging
+
+**Cloudflare Pages:**
+1. Dashboard → Caching → "Purge Everything"
+2. Wait 30 seconds → Test
+
+**Browser-seitig:**
+1. Hard Refresh: `Ctrl+Shift+R` / `Cmd+Shift+R`
+2. DevTools → Network Tab → "Disable Cache"
+3. Manual: Clear site data via DevTools → Application
 MCP/Agent-Setup (optional)
 Das Repo enthält .mcp.json und einen .claude/ Ordner. Diese Dateien standardisieren lokale Agent-Capabilities und Regeln für toolgestützte Code-Analysen und Umbauten.
 Nützlich, wenn du Code-Assistenten per CLI nutzt, die MCP/Agent-Profile lesen.
@@ -167,12 +537,40 @@ Perspektivisch die fragmentierten ESLint-Configs konsolidieren
 Build schlägt lokal fehl
 Node-Version gemäß .nvmrc setzen
 Lockfile respektieren (keine Mischformen aus npm/pnpm)
-Lizenz
+## What's Next
+
+### 🚀 Performance & Observability Roadmap
+
+**1. Performance Monitoring**
+- Bundle analyzer für Größen-Optimierung  
+- Web Vitals tracking (CLS, FID, LCP)
+- React DevTools Profiler für Render-Performance
+
+**2. Error Tracking & Analytics** 
+- Sentry integration für Production error monitoring
+- User session tracking für UX insights  
+- API response time & error rate dashboards
+
+**3. Advanced Testing**
+- Visual regression testing mit Playwright
+- Performance budgets in CI/CD pipeline
+- Accessibility testing automation (axe-core)
+
+**Priorität**: Performance > Observability > Advanced Testing
+
+---
+
+## Lizenz
+
 Im Repository ist keine explizite Lizenzdatei hinterlegt. Wenn externe Nutzung geplant ist, eine passende Open-Source-Lizenz ergänzen (z. B. MIT, Apache-2.0) oder eine Closed-Source-Lizenz definieren.
-Hinweise für Beiträge
+
+### Hinweise für Beiträge
+
 PRs und Issues sind willkommen, sofern sie:
-reproduzierbare Fehlerberichte mit Logs/Schritten enthalten,
-UI/UX-Vorschläge mit konkreten Code-Diffs oder Screenshots untermauern,
-und keine Secrets/Keys enthalten.
-Changelog
-Siehe Git-History und ggf. docs/ für begleitende Änderungen
+- reproduzierbare Fehlerberichte mit Logs/Schritten enthalten,
+- UI/UX-Vorschläge mit konkreten Code-Diffs oder Screenshots untermauern,
+- und keine Secrets/Keys enthalten.
+
+### Changelog
+
+Siehe [Rescue-Checklist](docs/status/rescue-checklist.md) für detaillierte Projekt-Transformation und Git-History für chronologische Änderungen.

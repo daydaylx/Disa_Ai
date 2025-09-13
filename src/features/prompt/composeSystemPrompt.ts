@@ -1,5 +1,5 @@
-import type { StyleKey } from "../../config/settings";
 import { getRoleById } from "../../config/promptTemplates";
+import type { StyleKey } from "../../config/settings";
 
 /** Style-Mapping für alle StyleKey-Werte. */
 const STYLE_SNIPPETS: Record<StyleKey, string> = {

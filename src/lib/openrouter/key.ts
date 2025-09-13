@@ -50,7 +50,7 @@ export function writeApiKey(v: string | null | undefined): void {
       if (val) {
         // Store in sessionStorage (session-only, more secure)
         sessionStorage.setItem(k, val);
-        // Remove from localStorage if it exists
+        // Always clear from localStorage (migration)
         localStorage.removeItem(k);
       } else {
         // Clear from both storages
@@ -59,4 +59,18 @@ export function writeApiKey(v: string | null | undefined): void {
       }
     } catch { /* Safe: continue with next candidate */ }
   }
+}
+
+export function clearAllApiKeys(): void {
+  // Clear all API key candidates from both storages
+  for (const k of CANDIDATES) {
+    try {
+      sessionStorage.removeItem(k);
+      localStorage.removeItem(k);
+    } catch { /* Safe: continue with next candidate */ }
+  }
+}
+
+export function hasApiKey(): boolean {
+  return Boolean(readApiKey());
 }

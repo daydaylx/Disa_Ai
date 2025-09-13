@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
 import { fetchWithRetry } from "../../src/lib/net/retry";
 
 function makeResponse(status: number, headers: Record<string, string> = {}) {

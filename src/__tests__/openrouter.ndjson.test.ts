@@ -15,7 +15,7 @@ function ndjsonBody(lines: string[]) {
 describe("openrouter chatStream – NDJSON support", () => {
   it("verarbeitet JSON-Zeilen und [DONE]", async () => {
     // @ts-expect-error stub fetch
-    global.fetch = vi.fn(async () => ({ ok: true, body: ndjsonBody([
+    global.fetch = vi.fn(() => Promise.resolve({ ok: true, body: ndjsonBody([
       '{"choices":[{"delta":{"content":"Hal"}}]}',
       '{"choices":[{"delta":{"content":"lo"}}]}',
       '[DONE]'
