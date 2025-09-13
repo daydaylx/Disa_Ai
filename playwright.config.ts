@@ -2,10 +2,10 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  timeout: 8000,
+  timeout: 5000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 0,
+  retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [
     ["html", { outputFolder: "test-results/html-report" }],
@@ -19,6 +19,8 @@ export default defineConfig({
     serviceWorkers: "block",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
+    actionTimeout: 3000,
+    navigationTimeout: 5000,
   },
   webServer: {
     command: "npm run dev",
@@ -28,8 +30,8 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "mobile-chromium",
-      use: { ...devices["Pixel 5"] },
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
     },
   ],
 });

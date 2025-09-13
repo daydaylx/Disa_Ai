@@ -28,6 +28,7 @@ allure-results/
 allure-report/
 *.trx
 *.junit.xml
+*.zip
 
 # IDE
 .vscode/
