@@ -163,6 +163,8 @@ jobs:
     name: E2E Tests (Stable)
     runs-on: ubuntu-latest
     needs: [setup, lint, typecheck, unit-tests]
+    env:
+      SKIP_E2E: ${{ vars.SKIP_E2E || 'false' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -193,14 +195,20 @@ jobs:
           restore-keys: |
             ms-playwright-${{ runner.os }}-
 
+      - name: Skip E2E (disabled via SKIP_E2E)
+        if: env.SKIP_E2E == 'true'
+        run: echo "E2E tests skipped via SKIP_E2E=true"
+
       - name: Install Playwright dependencies
+        if: env.SKIP_E2E != 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E tests (excluding flaky)
+        if: env.SKIP_E2E != 'true'
         run: npx playwright test --grep-invert "@flaky"
 
       - name: Upload E2E artifacts on failure
-        if: failure()
+        if: failure() && env.SKIP_E2E != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: e2e-artifacts
@@ -258,6 +266,7 @@ jobs:
     steps:
       - name: Deploy gate passed
         run: |
+<<<<<<< HEAD
           echo "🎉 All CI gates passed! Cloudflare Pages deployment ready."
           echo "✅ Secret Scanning: ${{ needs.secret-scan.result }}"
           echo "✅ Lint: ${{ needs.lint.result }}"
@@ -268,3 +277,104 @@ jobs:
           echo ""
           echo "Cloudflare Pages handles deployment automatically."
           echo "No GitHub Pages deployment configured."
+||||||| parent of f647cb4 (ci(hotfix): SKIP_E2E Support – E2E-Job überspringt Tests bei Vars.SKIP_E2E=true (Job bleibt grün))
+          echo "🎉 All checks passed! Ready for Cloudflare Pages deploy."
+          echo "Build artifacts are available and Cloudflare will handle deployment."
+          echo "No GitHub Pages deployment - Cloudflare is the single source of truth."
+
+  # Non-gating: Flaky Tests (Optional monitoring)
+  flaky-tests:
+    name: Flaky Tests (Non-gating)
+    runs-on: ubuntu-latest
+    needs: [setup]
+    continue-on-error: true
+    if: github.event_name == 'pull_request' || (github.ref == 'refs/heads/main' && github.event_name == 'push')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: needs.setup.outputs.node-cache-hit != 'true'
+        run: npm ci
+
+      - name: Install Playwright dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run flaky E2E tests
+        run: npx playwright test --grep "@flaky"
+        continue-on-error: true
+
+      - name: Upload flaky test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flaky-test-artifacts
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 1
+=======
+          echo "🎉 All checks passed! Ready for Cloudflare Pages deploy."
+          echo "Build artifacts are available and Cloudflare will handle deployment."
+          echo "No GitHub Pages deployment - Cloudflare is the single source of truth."
+
+  # Non-gating: Flaky Tests (Optional monitoring)
+  flaky-tests:
+    name: Flaky Tests (Non-gating)
+    runs-on: ubuntu-latest
+    needs: [setup]
+    continue-on-error: true
+    if: github.event_name == 'pull_request' || (github.ref == 'refs/heads/main' && github.event_name == 'push')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: needs.setup.outputs.node-cache-hit != 'true'
+        run: npm ci
+
+      - name: Install Playwright dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run flaky E2E tests
+        run: npx playwright test --grep "@flaky"
+        continue-on-error: true
+
+      - name: Upload flaky test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flaky-test-artifacts
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 1
+>>>>>>> f647cb4 (ci(hotfix): SKIP_E2E Support – E2E-Job überspringt Tests bei Vars.SKIP_E2E=true (Job bleibt grün))
