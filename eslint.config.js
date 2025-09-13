@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import prettier from "eslint-config-prettier";
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import react from "eslint-plugin-react";
@@ -11,6 +12,8 @@ import globals from "globals";
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
 export default [
+  // Disable stylistic rules that conflict with Prettier formatting
+  prettier,
   // Global ignores
   {
     ignores: [
@@ -42,13 +45,13 @@ export default [
       parserOptions: { ecmaVersion: "latest", sourceType: "module" },
       globals: globals.node,
     },
-    plugins: { 
+    plugins: {
       "@typescript-eslint": tsPlugin,
-      "simple-import-sort": sort 
+      "simple-import-sort": sort,
     },
     rules: {
       ...js.configs.recommended.rules,
-      "simple-import-sort/imports": "off", 
+      "simple-import-sort/imports": "off",
       "simple-import-sort/exports": "off",
     },
   },
@@ -58,9 +61,9 @@ export default [
     files: ["src/**/*.{ts,tsx,js,jsx}"],
     languageOptions: {
       parser: tsParser,
-      parserOptions: { 
-        ecmaVersion: "latest", 
-        sourceType: "module", 
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
         ecmaFeatures: { jsx: true },
         project: "./tsconfig.json",
         tsconfigRootDir: import.meta.dirname,
@@ -69,8 +72,8 @@ export default [
         ...globals.browser,
       },
     },
-    settings: { 
-      react: { version: "detect" }, 
+    settings: {
+      react: { version: "detect" },
       "import/resolver": { typescript: true },
     },
     plugins: {
@@ -84,12 +87,12 @@ export default [
     },
     rules: {
       ...js.configs.recommended.rules,
-      
+
       // Core JavaScript/TypeScript
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "no-undef": "off", // TypeScript handles this
-      
+
       // Import management
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
@@ -108,17 +111,17 @@ export default [
       "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
       "@typescript-eslint/require-await": "error",
       "@typescript-eslint/consistent-type-assertions": "warn",
-      
+
       // React
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      
+
       // Accessibility
       "jsx-a11y/alt-text": "warn",
       "jsx-a11y/no-autofocus": "warn",
-      
+
       // Code quality
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "warn",
@@ -134,14 +137,14 @@ export default [
     ],
     languageOptions: {
       parser: tsParser,
-      parserOptions: { 
-        ecmaVersion: "latest", 
-        sourceType: "module", 
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
         ecmaFeatures: { jsx: true },
         // Remove project reference for test files to avoid parsing errors
       },
-      globals: { 
-        ...globals.browser, 
+      globals: {
+        ...globals.browser,
         ...globals.node,
         // Vitest globals
         describe: "readonly",
