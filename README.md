@@ -649,3 +649,7 @@ Die GitHub Actions Pipeline prüft in dieser Reihenfolge:
 6. **Deploy Gate** – reines Gate. Der produktive Deploy erfolgt ausschließlich über **Cloudflare Pages**.
 
 Test- und Report-Artefakte (`coverage/`, `playwright-report/`, `test-results/`) werden nicht eingecheckt und nur als CI-Artefakte bei Fehlschlägen erzeugt.
+
+### CI-Artefakte
+
+Test- und Report-Artefakte (`coverage/`, `playwright-report/`, `test-results/`, `test-artifacts/`, `screenshots/`) werden **nicht** versioniert. Sie entstehen nur im CI (bei Fehlschlag) und lokal für Debugging.

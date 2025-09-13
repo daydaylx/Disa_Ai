@@ -7,3 +7,7 @@ dist/
 coverage/
 playwright-report/
 test-results/
+dist/
+coverage/
+playwright-report/
+test-results/

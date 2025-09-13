@@ -67,3 +67,21 @@ tsconfig.tsbuildinfo
 *.temp
 .temp/
 Thumbs.db
+coverage/
+playwright-report/
+test-results/
+*.zip
+# Build/Test/Playwright-Artefakte
+dist/
+coverage/
+playwright-report/
+test-results/
+test-artifacts/
+screenshots/
+
+# TS build info
+*.tsbuildinfo
+tsconfig.node.tsbuildinfo
+
+# Sonstiges
+*.zip

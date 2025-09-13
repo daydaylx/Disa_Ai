@@ -1,53 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "compilerOptions": {
-    // Target & Module
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    
-    // Paths
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    
-    // Type Checking
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": false,
-    "noImplicitOverride": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "useUnknownInCatchVariables": true,
-    
-    // Module Resolution
-    "forceConsistentCasingInFileNames": true,
-    "resolvePackageJsonExports": true,
-    "verbatimModuleSyntax": true,
-    
-    // Performance
-    "skipLibCheck": true,
-    "allowJs": false,
-    "checkJs": false,
-    "isolatedModules": true
-  },
-  
-  "include": [
-    "src/**/*.ts", 
-    "src/**/*.tsx"
-  ],
-  
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build", 
-    "coverage",
-    "e2e",
-    "tests",
-    "src/lib/openrouter.ts"
-  ]
+  "extends": "./tsconfig.base.json",
+  "include": ["src", "tests", "e2e", "vite.config.ts", "vitest.config.ts", "playwright.config.ts"],
+  "exclude": ["dist", "build", "coverage", "playwright-report", "test-results", "test-artifacts"]
 }
