@@ -1,30 +1,21 @@
-Titel
+## Was & Warum
 
-- Kurzer, prägnanter Titel im Imperativ (z. B. „fix: …“ / „feat: …“)
+Kurz: Was ändert sich? Warum jetzt?
 
-Beschreibung
+## Checks
 
-- Motivation, Scope (max. 2–3 Sätze)
-- Relevante Issues/Links (z. B. Closes #123)
-- ADR-Link bei Architektur-/Verhaltensänderungen
+- [ ] Lint grün
+- [ ] Typecheck grün
+- [ ] Unit-Tests grün
+- [ ] E2E (offline) grün
+- [ ] Build grün
+- [ ] Doku/ADR ggf. aktualisiert
 
-Checkliste
+## Risiken/Backout
 
-- [ ] CI grün: Lint, Typecheck, Unit Tests, E2E Tests (Stable), Build, Deploy Gate
-- [ ] ADR verlinkt oder „N/A“ (keine Architekturänderung)
-- [ ] README/Docs angepasst (bei API/CI/UI Änderungen)
-- [ ] Keine Secrets/Keys im Code; CSP/Policies unverändert
-- [ ] E2E Tests laufen offline; ggf. Fixtures/Intercepts aktualisiert
-- [ ] PR ist klein/atomar; Scope klar; keine unnötigen Änderungen
+- Risiko:
+- Backout: revert <commit/branch>
 
-Breaking Changes
+## Manual steps (falls nötig)
 
-- [ ] Breaking Change? Wenn ja: klar dokumentiert und migrierbar
-
-Screenshots (bei UI-Änderungen)
-
-- Vorher/Nachher auf 360/768/1280 px
-
-Manuelle Schritte (falls notwendig)
-
-- Migrations-/Konfig‑Hinweise für Reviewer/Deploy
+- [ ] Branch-Protection prüfen/setzen
