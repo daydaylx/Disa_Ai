@@ -13,7 +13,9 @@ test("Smoke: Prompt → Response (offline, SSE)", async ({ page }) => {
     } catch {}
   });
 
-  await page.goto("/");
+  await page.goto("/#/");
+
+  await expect(page.getByTestId("composer-input")).toBeVisible({ timeout: 5000 });
 
   const input = page.getByTestId("composer-input");
   await input.fill("Hallo Welt");

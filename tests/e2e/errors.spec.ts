@@ -10,7 +10,8 @@ test("Fehler: RateLimit (429) → Toast", async ({ page }) => {
     } catch {}
   });
 
-  await page.goto("/");
+  await page.goto("/#/");
+  await expect(page.getByTestId("composer-input")).toBeVisible({ timeout: 5000 });
   await page.getByTestId("composer-input").fill("trigger rate limit");
   await page.getByTestId("composer-send").click();
 
@@ -25,7 +26,8 @@ test("Fehler: Serverfehler (5xx) → Toast", async ({ page }) => {
     } catch {}
   });
 
-  await page.goto("/");
+  await page.goto("/#/");
+  await expect(page.getByTestId("composer-input")).toBeVisible({ timeout: 5000 });
   await page.getByTestId("composer-input").fill("trigger server error");
   await page.getByTestId("composer-send").click();
 
@@ -40,7 +42,8 @@ test("Fehler: Timeout/Netzwerk → Toast", async ({ page }) => {
     } catch {}
   });
 
-  await page.goto("/");
+  await page.goto("/#/");
+  await expect(page.getByTestId("composer-input")).toBeVisible({ timeout: 5000 });
   await page.getByTestId("composer-input").fill("trigger timeout");
   await page.getByTestId("composer-send").click();
 
@@ -55,7 +58,8 @@ test("Fehler: Nutzer-Abbruch (Stop) → Toast", async ({ page }) => {
     } catch {}
   });
 
-  await page.goto("/");
+  await page.goto("/#/");
+  await expect(page.getByTestId("composer-input")).toBeVisible({ timeout: 5000 });
   await page.getByTestId("composer-input").fill("bitte stoppen");
   await page.getByTestId("composer-send").click();
   // Sofort stoppen, um AbortError zu provozieren
