@@ -10,7 +10,7 @@ Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen R
 ## ✅ Production Status
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Tests](https://img.shields.io/badge/tests-59%2F59-brightgreen) 
+![Tests](https://img.shields.io/badge/tests-59%2F59-brightgreen)
 ![Coverage](https://img.shields.io/badge/coverage-15.78%25-yellow)
 ![Security](https://img.shields.io/badge/security-compliant-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-100%25-blue)
@@ -25,53 +25,53 @@ Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen R
 
 ## Inhaltsverzeichnis
 
-1. [Ziele & Scope](#ziele--scope)  
-2. [Feature-Überblick](#feature-überblick)  
-3. [Technikstack](#technikstack)  
-4. [Projektstruktur](#projektstruktur)  
-5. [Lokale Entwicklung](#lokale-entwicklung)  
-6. [Sicherheit & API-Key-Flow](#sicherheit--api-key-flow)  
-7. [Umgebungsvariablen](#umgebungsvariablen)  
-8. [NPM-Skripte](#npm-skripte)  
-9. [Tests & Qualitätssicherung](#tests--qualitätssicherung)  
-10. [Styling & Designsystem](#styling--designsystem)  
-11. [Deployment (Cloudflare Pages)](#deployment-cloudflare-pages)  
-12. [Fehlervertrag & Error Handling](#fehlervertrag--error-handling)  
-13. [Contributing Guidelines](#contributing-guidelines)  
-14. [Architektur-Entscheidungen (ADRs)](#architektur-entscheidungen-adrs)  
-15. [Caching & Stale-Content vermeiden](#caching--stale-content-vermeiden)  
-16. [MCP/Agent-Setup (optional)](#mcpagent-setup-optional)  
-17. [Roadmap & interne Doks](#roadmap--interne-doks)  
-18. [Troubleshooting](#troubleshooting)  
+1. [Ziele & Scope](#ziele--scope)
+2. [Feature-Überblick](#feature-überblick)
+3. [Technikstack](#technikstack)
+4. [Projektstruktur](#projektstruktur)
+5. [Lokale Entwicklung](#lokale-entwicklung)
+6. [Sicherheit & API-Key-Flow](#sicherheit--api-key-flow)
+7. [Umgebungsvariablen](#umgebungsvariablen)
+8. [NPM-Skripte](#npm-skripte)
+9. [Tests & Qualitätssicherung](#tests--qualitätssicherung)
+10. [Styling & Designsystem](#styling--designsystem)
+11. [Deployment (Cloudflare Pages)](#deployment-cloudflare-pages)
+12. [Fehlervertrag & Error Handling](#fehlervertrag--error-handling)
+13. [Contributing Guidelines](#contributing-guidelines)
+14. [Architektur-Entscheidungen (ADRs)](#architektur-entscheidungen-adrs)
+15. [Caching & Stale-Content vermeiden](#caching--stale-content-vermeiden)
+16. [MCP/Agent-Setup (optional)](#mcpagent-setup-optional)
+17. [Roadmap & interne Doks](#roadmap--interne-doks)
+18. [Troubleshooting](#troubleshooting)
 19. [Lizenz](#lizenz)
 
 ---
 
 ## Ziele & Scope
 
-- **Privates KI-Chat-Frontend** für den Eigengebrauch, optimiert für Mobile und Desktop.  
-- **Einfaches Deployment** über Cloudflare Pages, Build-Output `dist/`.  
-- **Nüchterne Qualitätssicherung**: Type-Checks, Linting, Tests.  
+- **Privates KI-Chat-Frontend** für den Eigengebrauch, optimiert für Mobile und Desktop.
+- **Einfaches Deployment** über Cloudflare Pages, Build-Output `dist/`.
+- **Nüchterne Qualitätssicherung**: Type-Checks, Linting, Tests.
 - **Bewusstes Designsystem** mit Token-First-Ansatz anstelle willkürlicher Farbcodes.
 
 ---
 
 ## Feature-Überblick
 
-- Reaktionsschnelle **Chat-UI** mit moderner Dark-Theme-Basis.  
-- **Konfigurierbare Backends/Modelle** via `.env` bzw. Cloudflare Project-Vars.  
-- **Klare Build-Pipelines**: lokaler Dev-Server, Production-Build, optionaler Preview.  
-- **Qualitätssicherung**: TypeScript Typecheck, ESLint, Unit/E2E-Tests (siehe Skripte).  
+- Reaktionsschnelle **Chat-UI** mit moderner Dark-Theme-Basis.
+- **Konfigurierbare Backends/Modelle** via `.env` bzw. Cloudflare Project-Vars.
+- **Klare Build-Pipelines**: lokaler Dev-Server, Production-Build, optionaler Preview.
+- **Qualitätssicherung**: TypeScript Typecheck, ESLint, Unit/E2E-Tests (siehe Skripte).
 - **Stale-Content-Schutz**: Header/Cache-Regeln und deaktivierter SW zur Vermeidung alter App-Stände.
 
 ---
 
 ## Technikstack
 
-- **Build:** Vite  
-- **UI:** React + TypeScript  
-- **Styles:** Tailwind CSS, CSS Custom Properties (Tokens)  
-- **Tests:** Vitest (Unit), Playwright (E2E)  
+- **Build:** Vite
+- **UI:** React + TypeScript
+- **Styles:** Tailwind CSS, CSS Custom Properties (Tokens)
+- **Tests:** Vitest (Unit), Playwright (E2E)
 - **CI:** GitHub Actions (Checks), Deployment via **Cloudflare Pages** (Git-Integration)
 
 > Exakte Versionen bitte der `.nvmrc` und `package.json` entnehmen.
@@ -81,7 +81,7 @@ Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen R
 ## Projektstruktur
 
 Top-Level (Auszug):
-.claude/                 # Projektbezogene Vorgaben/Prompts für Agenten .github/                 # Workflows (CI) .graveyard/              # Archiv/Altlasten .husky/                  # Git Hooks docs/                    # Interne Dokumentation e2e/                     # End-to-End Tests (Playwright) ops/                     # Betriebs-/Scriptmaterial public/                  # Statische Public-Assets (inkl. _headers) scripts/                 # Node/Utility-Skripte (Build/Analyse) src/                     # App-Quellcode (React/TS, Styles, Utilities) tests/                   # Unit-/Integrationstests (Vitest) .env.example             # Vorlage für lokale Umgebungsvariablen tailwind.config.ts       # Tailwind-Setup mit Token-Anbindung vite.config.ts           # Vite-Build/Dev-Konfiguration vitest.config.ts         # Test-Setup
+.claude/ # Projektbezogene Vorgaben/Prompts für Agenten .github/ # Workflows (CI) .graveyard/ # Archiv/Altlasten .husky/ # Git Hooks docs/ # Interne Dokumentation e2e/ # End-to-End Tests (Playwright) ops/ # Betriebs-/Scriptmaterial public/ # Statische Public-Assets (inkl. \_headers) scripts/ # Node/Utility-Skripte (Build/Analyse) src/ # App-Quellcode (React/TS, Styles, Utilities) tests/ # Unit-/Integrationstests (Vitest) .env.example # Vorlage für lokale Umgebungsvariablen tailwind.config.ts # Tailwind-Setup mit Token-Anbindung vite.config.ts # Vite-Build/Dev-Konfiguration vitest.config.ts # Test-Setup
 Code kopieren
 
 Hilfs-Markdowns (Auswahl) im Repo: `AGENTS.md`, `ANALYSIS.md`, `REFACTOR_PLAN.md`, `UX_FINDINGS.md`, `DEPENDENCIES.md`, `DEPLOYMENT_READINESS.md`. Diese dokumentieren Analyse- und Umbaupläne, UI-Befunde und Abhängigkeiten.
@@ -92,7 +92,7 @@ Hilfs-Markdowns (Auswahl) im Repo: `AGENTS.md`, `ANALYSIS.md`, `REFACTOR_PLAN.md
 
 **Voraussetzungen**
 
-- Node gemäß `.nvmrc`  
+- Node gemäß `.nvmrc`
 - Ein Paketmanager (npm oder pnpm). Nutze den, für den ein Lockfile im Repo liegt.
 
 **Setup**
@@ -129,11 +129,13 @@ npm run preview
 ### 🔐 Sichere API-Key-Verwaltung
 
 **Speicherung:**
+
 - API-Keys werden **nur in sessionStorage** gespeichert (session-only, sicherer als localStorage)
 - Automatische Migration von localStorage → sessionStorage bei App-Start
 - Vollständige Löschung aus localStorage nach erfolgreicher Migration
 
 **Key-Lifecycle:**
+
 ```typescript
 // Key setzen (sessionStorage only)
 writeApiKey("sk-your-key");
@@ -149,6 +151,7 @@ const hasKey = hasApiKey();
 ```
 
 **Migration & Cleanup:**
+
 - App migriert automatisch vorhandene localStorage-Keys zu sessionStorage
 - Unterstützt mehrere Key-Kandidaten: `disa_api_key`, `openrouter_key`, `OPENROUTER_API_KEY`
 - Keys werden bei Browser-Neustart automatisch gelöscht (session-only)
@@ -160,16 +163,17 @@ const hasKey = hasApiKey();
 Strikte Sicherheitsrichtlinien via `public/_headers`:
 
 ```
-Content-Security-Policy: default-src 'self'; 
-  script-src 'self' 'unsafe-inline'; 
-  style-src 'self' 'unsafe-inline'; 
-  connect-src 'self' https://openrouter.ai; 
-  img-src 'self' data: blob:; 
-  frame-src 'none'; 
+Content-Security-Policy: default-src 'self';
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
+  connect-src 'self' https://openrouter.ai;
+  img-src 'self' data: blob:;
+  frame-src 'none';
   object-src 'none'
 ```
 
 **Zusätzliche Headers:**
+
 - `X-Frame-Options: DENY` - Clickjacking-Schutz
 - `X-Content-Type-Options: nosniff` - MIME-Type-Sniffing blockieren
 - `Referrer-Policy: strict-origin-when-cross-origin`
@@ -178,6 +182,7 @@ Content-Security-Policy: default-src 'self';
 ### 🔍 Secret Scanning
 
 CI-Pipeline mit TruffleHog zur Erkennung versehentlich commiteter Secrets:
+
 - Scannt gesamte Git-History
 - Bricht Build bei Secret-Fund ab
 - Läuft vor allen anderen CI-Gates
@@ -187,6 +192,7 @@ CI-Pipeline mit TruffleHog zur Erkennung versehentlich commiteter Secrets:
 ## Umgebungsvariablen
 
 **Lokale Entwicklung:**
+
 ```bash
 # .env basierend auf .env.example anlegen
 cp .env.example .env
@@ -194,11 +200,13 @@ cp .env.example .env
 ```
 
 **Typische Variablen:**
+
 - `VITE_OPENROUTER_API_KEY` - OpenRouter API-Schlüssel
 - `VITE_BASE_URL` - Basis-URL für Deployment
 - `VITE_DEFAULT_MODEL` - Standard-Modell-ID
 
 **Cloudflare Pages:**
+
 - Setze dieselben Variablen als **Project Variables** in Cloudflare Dashboard
 - **Wichtig:** Keine Secrets ins Repository commiten!
 
@@ -207,6 +215,7 @@ cp .env.example .env
 ## NPM-Skripte
 
 **Entwicklung:**
+
 ```bash
 npm run dev          # Dev-Server starten (http://localhost:5173)
 npm run build        # Production-Build in dist/
@@ -214,6 +223,7 @@ npm run preview      # Lokaler Preview von dist/ (http://localhost:4173)
 ```
 
 **Qualitätssicherung:**
+
 ```bash
 npm run typecheck    # TypeScript-Checks (alle tsconfig.*.json)
 npm run lint         # ESLint auf gesamte Codebase
@@ -224,8 +234,9 @@ npm run verify       # Typecheck + Lint + Unit Tests
 ```
 
 **Tests:**
+
 ```bash
-npm run test         # Unit Tests (Vitest watch mode)  
+npm run test         # Unit Tests (Vitest watch mode)
 npm run test:unit    # Unit Tests (single run)
 npm run test:ci      # Unit Tests mit Coverage
 npm run test:e2e     # E2E Tests (Playwright)
@@ -233,6 +244,7 @@ npm run test:e2e:ui  # E2E Tests mit UI
 ```
 
 **Cleanup:**
+
 ```bash
 npm run clean        # dist, cache, coverage, test-results löschen
 ```
@@ -241,13 +253,17 @@ npm run clean        # dist, cache, coverage, test-results löschen
 
 ## Tests & Qualitätssicherung
 
+Hinweis: Generierte Test-Artefakte sind CI-only und werden nicht versioniert. Folgende Pfade sind in `.gitignore` erfasst: `coverage/`, `playwright-report/`, `test-results/`, `*.zip`.
+
 ### 🏗️ Offline-First Testing
 
 **Prinzip:** Alle Tests laufen **ohne echte Netzwerkaufrufe**
+
 - **Unit Tests:** Mocked Dependencies via Vitest
 - **E2E Tests:** Request Interception via Playwright mit JSON-Fixtures
 
 ### Unit Tests (Vitest)
+
 ```bash
 # Watch mode für Entwicklung
 npm run test
@@ -260,25 +276,31 @@ npm run test:ci
 ```
 
 **Test-Dateien:**
+
 - `src/**/*.{test,spec}.{ts,tsx}` - Component/Logic Tests
-- `tests/unit/` - Isolated Unit Tests  
+- `tests/unit/` - Isolated Unit Tests
 - `tests/smoke/` - Integration/Smoke Tests
 
 ### E2E Tests (Playwright)
 
 **Offline-Modus mit Request Interception:**
+
 ```bash
 npm run test:e2e
 ```
 
 **Setup:**
+
 - `tests/e2e/setup/intercept.ts` - Request Interception
-- `e2e/fixtures/*.json` - API Response Fixtures  
+- `e2e/fixtures/*.json` - API Response Fixtures
 - Scenarios: success, rate-limit, timeout, server-error, abort
+
+**Artefakte:** Test-Reports und Coverage sind CI-only - nicht im Repository.
 
 **Architektur-Entscheidung:** [ADR-0003: Offline-First Testing](docs/adr/0003-offline-first-testing.md)
 
 **Test Coverage:**
+
 - Chat flow (send message, receive response)
 - Error handling (rate limits, timeouts, network errors)
 - Accessibility (skip links, focus management)
@@ -287,8 +309,9 @@ npm run test:e2e
 ### CI-Pipeline (GitHub Actions)
 
 8 Gates müssen grün sein:
+
 1. **Setup** - Dependencies installieren
-2. **Secret Scan** - TruffleHog auf Git-History  
+2. **Secret Scan** - TruffleHog auf Git-History
 3. **Lint** - ESLint Code-Quality
 4. **Typecheck** - TypeScript Validation
 5. **Unit Tests** - Vitest mit Coverage
@@ -299,42 +322,52 @@ npm run test:e2e
 ### Code Quality Standards
 
 **TypeScript:**
+
 - Strict mode aktiviert
 - `noUncheckedIndexedAccess: true`
 - `useUnknownInCatchVariables: true`
 
 **ESLint:**
+
 - Type-aware rules
 - Import sorting & unused import detection
 - React hooks rules
 - JSX accessibility checks
+
 ---
 
 ## Styling & Designsystem
+
 ### 🎨 Token-First Approach
 
 **Design Tokens:** `src/styles/tokens.css`
+
 - HSL-basierte Farbdefinitionen
 - Semantische Variablen (background, foreground, primary, etc.)
 - Dark-Mode als Standard mit Theme-Presets
 
 **Tailwind Integration:** `tailwind.config.ts`
+
 - Mapping von Tokens auf Tailwind-Klassen
 - Konsistente Farbpalette app-weit
 
 ### Utility Classes
 
 **Flächen:**
+
 - `glass` - Glasmorphism-Effekt
 - `card-solid`, `card-gradient` - Karten-Styles
 
 **Buttons:**
+
 - `btn`, `btn-primary`, `btn-secondary`, `btn-ghost`
 
 **Inputs:**
+
 - `input` - Einheitlicher Input-Style (auch select, textarea)
 
 **Navigation:**
+
 - `nav-pill`, `nav-pill--active` - Tab-Navigation
 
 **Legacy-Hinweis:**
@@ -348,6 +381,7 @@ Neue Styles bitte über Tokens/Utilities implementieren.
 ### 🚀 Git-Integration Deployment
 
 **Quelle:** Cloudflare Pages (nicht GitHub Actions)
+
 - **Branch:** `main` (automatische Builds bei Push)
 - **Build Output:** `dist/`
 - **Build Command:** `npm run build && npm run postbuild`
@@ -359,6 +393,7 @@ Neue Styles bitte über Tokens/Utilities implementieren.
    - Production Branch: `main`
 
 2. **Build-Konfiguration**
+
    ```
    Build Command: npm run build && npm run postbuild
    Build Output: dist
@@ -377,9 +412,11 @@ Neue Styles bitte über Tokens/Utilities implementieren.
 ### CI vs. Deployment
 
 **GitHub Actions:** Nur Quality Gates (CI)
+
 - Secret Scanning, Lint, TypeScript, Tests, Build-Verification
 
 **Cloudflare Pages:** Deployment + Hosting
+
 - Automatische Builds, CDN, Edge-Optimization
 
 ---
@@ -389,12 +426,14 @@ Neue Styles bitte über Tokens/Utilities implementieren.
 ### 🚨 Definierte Fehlerklassen
 
 **Netzwerk-Fehler:**
+
 - `TimeoutError` - Request-Timeouts (configurable)
-- `AbortError` - User-initiated cancellation  
+- `AbortError` - User-initiated cancellation
 - `RateLimitError` - API rate limits (429)
 - `NetworkError` - Konnektivitätsprobleme
 
 **API-Fehler:**
+
 - `AuthenticationError` - Invalid API key (401)
 - `ServerError` - Upstream-Probleme (5xx)
 - `ValidationError` - Malformed requests (400)
@@ -402,6 +441,7 @@ Neue Styles bitte über Tokens/Utilities implementieren.
 ### Error Mapping & UI
 
 **Konsistente Behandlung:**
+
 ```typescript
 // src/lib/errors/mapper.ts
 export function mapError(error: unknown): AppError {
@@ -410,15 +450,17 @@ export function mapError(error: unknown): AppError {
 ```
 
 **UI-Verhalten:**
+
 - **Retry-Strategien** mit exponential backoff
 - **User-friendly Fehlermeldungen** (keine technischen Details)
 - **Graceful Degradation** bei API-Ausfällen
 - **Offline-Modus** Anzeige bei Konnektivitätsverlust
 
-**Implementierung siehe:**  
-- [Error Types](src/lib/errors/types.ts): Strukturierte Error-Klassen  
-- [Error Mapper](src/lib/errors/mapper.ts): `mapError()` für einheitliche Konvertierung  
-- [Human Error](src/lib/errors/humanError.ts): User-friendly UI-Meldungen  
+**Implementierung siehe:**
+
+- [Error Types](src/lib/errors/types.ts): Strukturierte Error-Klassen
+- [Error Mapper](src/lib/errors/mapper.ts): `mapError()` für einheitliche Konvertierung
+- [Human Error](src/lib/errors/humanError.ts): User-friendly UI-Meldungen
 
 **Architektur-Entscheidung:** [ADR-0001: Error Handling Strategy](docs/adr/0001-error-handling.md)
 
@@ -429,11 +471,13 @@ export function mapError(error: unknown): AppError {
 ### 🔄 Trunk-Based Development
 
 **Branch-Strategie:** [ADR-0002: Trunk-Based Development](docs/adr/0002-trunk-based-development.md)
+
 - Ein Hauptbranch: `main`
 - Kurze Feature-Branches (1-2 Tage max.)
 - Kleine, atomare PRs (<400 Zeilen)
 
 **Workflow:**
+
 ```bash
 git checkout main
 git pull origin main
@@ -446,18 +490,20 @@ git push -u origin feat/neue-funktion
 ### Commit-Konventionen
 
 **Conventional Commits Format:**
+
 ```
 feat(scope): kurze Beschreibung im Imperativ
 
 Längere Beschreibung falls nötig.
 
-- Bullet Points für Details  
+- Bullet Points für Details
 - Closes #123
 ```
 
 **Typen:**
+
 - `feat` - Neue Features
-- `fix` - Bugfixes  
+- `fix` - Bugfixes
 - `chore` - Wartung/Refactoring
 - `docs` - Dokumentation
 - `test` - Tests hinzufügen/ändern
@@ -465,18 +511,24 @@ Längere Beschreibung falls nötig.
 ### Review-Checkliste
 
 **Vor PR-Erstellung:**
+
 - [ ] `npm run verify` bestanden
 - [ ] Tests für neue Features geschrieben
 - [ ] README/Docs bei API-Änderungen aktualisiert
 - [ ] Keine Secrets/Keys im Code
 
 **CI-Gates (alle müssen grün sein):**
+
 1. Secret Scanning
-2. Lint & Format
-3. TypeScript Check
-4. Unit Tests + Coverage
-5. E2E Tests (offline)
-6. Production Build
+2. Lint
+3. Typecheck
+4. Unit Tests
+5. E2E Tests (Stable)
+6. Build
+7. Deploy Gate – Cloudflare Ready (kein GitHub-Deploy)
+
+Empfohlene Required Checks (Branch‑Protection):
+`Lint`, `Typecheck`, `Unit Tests`, `E2E Tests (Stable)`, `Build`, `Deploy Gate - Cloudflare Ready`.
 
 **Detaillierte Guidelines:** [CONTRIBUTING.md](CONTRIBUTING.md)
 
@@ -487,6 +539,7 @@ Längere Beschreibung falls nötig.
 **ADR-Verzeichnis:** [`docs/adr/`](docs/adr/)
 
 **Aktuelle ADRs:**
+
 - [ADR-0001: Error Handling Strategy](docs/adr/0001-error-handling.md)
 - [ADR-0002: Trunk-Based Development](docs/adr/0002-trunk-based-development.md)
 - [ADR-0003: Offline-First Testing](docs/adr/0003-offline-first-testing.md)
@@ -500,58 +553,66 @@ Längere Beschreibung falls nötig.
 ### 📦 Cache-Strategie
 
 **HTML-Caching:** `public/_headers`
+
 - `no-store` für `index.html` (immer frisch)
 - `no-cache` für Service Worker und Manifest
 - `max-age=31536000` für Assets (mit Hashing)
 
 **Service Worker:**
+
 - Bewusst deaktiviert für Development
 - Verhindert festgeklemmte alte Bundles
 
 ### Stale-Content Debugging
 
 **Cloudflare Pages:**
+
 1. Dashboard → Caching → "Purge Everything"
 2. Wait 30 seconds → Test
 
 **Browser-seitig:**
+
 1. Hard Refresh: `Ctrl+Shift+R` / `Cmd+Shift+R`
 2. DevTools → Network Tab → "Disable Cache"
 3. Manual: Clear site data via DevTools → Application
-MCP/Agent-Setup (optional)
-Das Repo enthält .mcp.json und einen .claude/ Ordner. Diese Dateien standardisieren lokale Agent-Capabilities und Regeln für toolgestützte Code-Analysen und Umbauten.
-Nützlich, wenn du Code-Assistenten per CLI nutzt, die MCP/Agent-Profile lesen.
-Roadmap & interne Doks
-Umbau/Refactor: REFACTOR_PLAN.md
-UX-Befunde: UX_FINDINGS.md
-Abhängigkeiten: DEPENDENCIES.md
-Deployment-Prüfungen: DEPLOYMENT_READINESS.md
-Analyse-Notizen: ANALYSIS.md
-Diese Dateien begleiten die Weiterentwicklung und dokumentieren Entscheidungen.
-Troubleshooting
-Cloudflare zeigt alten Stand
-Pages-Cache leeren (Purge)
-Browser-Cache / Service Worker checken
-ESLint-Regeln inkonsistent
-Perspektivisch die fragmentierten ESLint-Configs konsolidieren
-Build schlägt lokal fehl
-Node-Version gemäß .nvmrc setzen
-Lockfile respektieren (keine Mischformen aus npm/pnpm)
+   MCP/Agent-Setup (optional)
+   Das Repo enthält .mcp.json und einen .claude/ Ordner. Diese Dateien standardisieren lokale Agent-Capabilities und Regeln für toolgestützte Code-Analysen und Umbauten.
+   Nützlich, wenn du Code-Assistenten per CLI nutzt, die MCP/Agent-Profile lesen.
+   Roadmap & interne Doks
+   Umbau/Refactor: REFACTOR_PLAN.md
+   UX-Befunde: UX_FINDINGS.md
+   Abhängigkeiten: DEPENDENCIES.md
+   Deployment-Prüfungen: DEPLOYMENT_READINESS.md
+   Analyse-Notizen: ANALYSIS.md
+   Diese Dateien begleiten die Weiterentwicklung und dokumentieren Entscheidungen.
+   Troubleshooting
+   Cloudflare zeigt alten Stand
+   Pages-Cache leeren (Purge)
+   Browser-Cache / Service Worker checken
+   ESLint-Regeln inkonsistent
+   Konsolidiert: Eine Flat ESLint-Config (eslint.config.js)
+   Build schlägt lokal fehl
+   Node-Version gemäß .nvmrc setzen
+   Lockfile respektieren (keine Mischformen aus npm/pnpm)
+
 ## What's Next
 
 ### 🚀 Performance & Observability Roadmap
 
 **1. Performance Monitoring**
-- Bundle analyzer für Größen-Optimierung  
+
+- Bundle analyzer für Größen-Optimierung
 - Web Vitals tracking (CLS, FID, LCP)
 - React DevTools Profiler für Render-Performance
 
-**2. Error Tracking & Analytics** 
+**2. Error Tracking & Analytics**
+
 - Sentry integration für Production error monitoring
-- User session tracking für UX insights  
+- User session tracking für UX insights
 - API response time & error rate dashboards
 
 **3. Advanced Testing**
+
 - Visual regression testing mit Playwright
 - Performance budgets in CI/CD pipeline
 - Accessibility testing automation (axe-core)
@@ -567,6 +628,7 @@ Im Repository ist keine explizite Lizenzdatei hinterlegt. Wenn externe Nutzung g
 ### Hinweise für Beiträge
 
 PRs und Issues sind willkommen, sofern sie:
+
 - reproduzierbare Fehlerberichte mit Logs/Schritten enthalten,
 - UI/UX-Vorschläge mit konkreten Code-Diffs oder Screenshots untermauern,
 - und keine Secrets/Keys enthalten.
