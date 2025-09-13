@@ -10,12 +10,13 @@ Dieses Projekt folgt einer **Trunk-Based Development** Strategie mit strikten Qu
 - **Kurze Feature-Branches**: Maximal 1-2 Tage, dann PR zurück zu `main`
 - **Kleine PRs**: Keine großen Änderungen; lieber mehrere kleine, atomare PRs
 - **Direktes Arbeiten auf `main`**: Für Hotfixes und kleinere Änderungen erlaubt
+- **Keine Dual-Trunks**: Branches wie `neues-main` werden umgehend zusammengeführt oder geschlossen (kein Parallel‑Main)
 
 ### Branch-Namenskonventionen
 
 ```
 feat/kurze-beschreibung     # Neue Features
-fix/issue-beschreibung      # Bugfixes  
+fix/issue-beschreibung      # Bugfixes
 chore/wartung-beschreibung  # Wartungsarbeiten
 docs/dokumentation         # Dokumentation
 ```
@@ -52,7 +53,7 @@ git push -u origin feat/neue-funktion
 1. **Install** - Abhängigkeiten installieren (`npm ci`)
 2. **Secrets** - Secret-Scanning mit TruffleHog
 3. **Lint** - Code-Style prüfen (`npm run lint`)
-4. **Typecheck** - TypeScript-Typen prüfen (`npm run typecheck`)  
+4. **Typecheck** - TypeScript-Typen prüfen (`npm run typecheck`)
 5. **Unit Tests** - Unit-Tests ausführen (`npm run test`)
 6. **E2E Tests** - End-to-End Tests offline (`npm run test:e2e`)
 7. **Build** - Produktions-Build (`npm run build`)
@@ -110,7 +111,7 @@ Verwende [Conventional Commits](https://www.conventionalcommits.org/) Format:
 
 ```
 feat(auth): implement sessionStorage API key migration
-fix(ui): resolve button alignment in mobile view  
+fix(ui): resolve button alignment in mobile view
 chore(deps): update playwright to latest version
 docs(adr): add error handling architecture decision
 test(e2e): add offline fixtures for API scenarios
@@ -149,14 +150,21 @@ Use `/auth/login` instead with the new request format.
 
 Der `main` Branch ist geschützt mit folgenden Rules:
 
-- **Require status checks**: install, secrets, lint, typecheck, unit-tests, e2e-tests, build
+- **Require status checks** (benannte Checks):
+  - `Secret Scanning`
+  - `Lint`
+  - `Typecheck`
+  - `Unit Tests`
+  - `E2E Tests (Stable)`
+  - `Build`
+  - `Deploy Gate - Cloudflare Ready`
 - **Require branches up to date** vor Merge
 - **No direct pushes** zu `main` (außer für Maintainer)
 - **Delete head branches** nach Merge
 
 ### Required Checks Configuration
 
-Siehe [REQUIRED_CHECKS.md](docs/REQUIRED_CHECKS.md) für detaillierte Konfiguration der Branch Protection Rules.
+Siehe README → Abschnitt "CI-Gates" für empfohlene Required Checks und den konsolidierten Workflow.
 
 ## Deployment
 
@@ -179,7 +187,7 @@ Falls ein `neues-main` Branch existiert:
 ## Fragen?
 
 - **Issues**: Für Bugs und Feature-Requests
-- **Discussions**: Für allgemeine Fragen und Ideen  
+- **Discussions**: Für allgemeine Fragen und Ideen
 - **ADRs**: `docs/adr/` für wichtige Architektur-Entscheidungen
 
 ## Testing-Strategie
@@ -224,4 +232,4 @@ Wichtige Entscheidungen sind in [ADRs](docs/adr/index.md) dokumentiert:
 
 ---
 
-*Letzte Aktualisierung: PR #9 - Dokumentation konsolidiert für vollständiges Onboarding*
+_Letzte Aktualisierung: PR #9 - Dokumentation konsolidiert für vollständiges Onboarding_
