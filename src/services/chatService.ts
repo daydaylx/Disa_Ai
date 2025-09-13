@@ -1,4 +1,4 @@
-import { chatStream } from "../api/openrouter";
+import { chatStream, getModelFallback } from "../api/openrouter";
 import type { ChatMessage } from "../types/chat";
 import { getApiKey } from "./openrouter";
 
@@ -16,10 +16,11 @@ export async function sendChat(opts: {
   signal?: AbortSignal;
 }) {
   const apiKey = (opts.apiKey ?? getApiKey()) || null;
-  const { model, messages, onChunk, onDone, onError, signal } = opts;
+  const { messages, onChunk, onDone, onError, signal } = opts;
+  const resolvedModel = opts.model || getModelFallback();
 
   // Fallback: Demo ohne Netz, wenn kein Key oder Model leer
-  if (!apiKey || !model) {
+  if (!apiKey || !resolvedModel) {
     // Demo-Fallback ohne Code – nur generische Chat-Antwort
     const demo =
       "Demo-Antwort (kein API-Key/Modell gesetzt). Öffne Einstellungen, um echte Antworten zu erhalten.";
@@ -71,7 +72,7 @@ export async function sendChat(opts: {
         if (typeof delta === "string" && delta.length > 0) onChunk(delta);
       },
       {
-        model,
+        model: resolvedModel,
         ...(signal ? { signal } : {}),
         onDone: () => onDone(),
       },
