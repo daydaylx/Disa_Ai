@@ -11,7 +11,10 @@ dist/
 .env.*.local
 
 # Test/Reports/Logs
+# Playwright
 playwright-report/
+test-results/
+*.zip
 test-artifacts/
 test-results/
 coverage/
