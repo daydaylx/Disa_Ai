@@ -283,7 +283,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [setup]
     continue-on-error: true
-    if: github.event_name == 'pull_request' || (github.ref == 'refs/heads/main' && github.event_name == 'push')
+    if: ${{ vars.SKIP_E2E != 'true' && (github.event_name == 'pull_request' || (github.ref == 'refs/heads/main' && github.event_name == 'push')) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
