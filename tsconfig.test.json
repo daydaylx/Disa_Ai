@@ -2,14 +2,10 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["vitest/globals", "happy-dom", "@testing-library/jest-dom"],
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "allowJs": true
   },
-  "include": [
-    "src/**/*.{test,spec}.{ts,tsx}",
-    "tests/**/*.{ts,tsx}",
-    "vitest.config.ts"
-  ]
+  "include": ["src/**/*.{test,spec}.{ts,tsx}", "tests/**/*.{ts,tsx}", "vitest.config.ts"]
 }
