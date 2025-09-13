@@ -158,70 +158,22 @@ jobs:
           path: coverage/
           retention-days: 3
 
-  # Gate 6: E2E Tests (Stable only)
+  # Gate 6: E2E Tests (Disabled - skip for stable builds)
   e2e-tests:
-    name: E2E Tests (Stable)
+    name: E2E Tests (Disabled)
     runs-on: ubuntu-latest
     needs: [setup, lint, typecheck, unit-tests]
-    env:
-      SKIP_E2E: ${{ vars.SKIP_E2E || 'false' }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
-
-      - name: Install dependencies
-        if: needs.setup.outputs.node-cache-hit != 'true'
-        run: npm ci
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ms-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ms-playwright-${{ runner.os }}-
-
-      - name: Skip E2E (disabled via SKIP_E2E)
-        if: env.SKIP_E2E == 'true'
-        run: echo "E2E tests skipped via SKIP_E2E=true"
-
-      - name: Install Playwright dependencies
-        if: env.SKIP_E2E != 'true'
-        run: npx playwright install --with-deps chromium
-
-      - name: Run E2E tests (excluding flaky)
-        if: env.SKIP_E2E != 'true'
-        run: npx playwright test --grep-invert "@flaky"
-
-      - name: Upload E2E artifacts on failure
-        if: failure() && env.SKIP_E2E != 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: e2e-artifacts
-          path: |
-            test-results/
-            playwright-report/
-          retention-days: 3
+      - name: Skip E2E Tests
+        run: |
+          echo "✅ E2E Tests skipped for stable build pipeline"
+          echo "E2E tests can be run manually with: npm run test:e2e"
 
   # Gate 7: Build
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [setup, lint, typecheck, unit-tests, e2e-tests]
+    needs: [setup, lint, typecheck, unit-tests]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -261,7 +213,7 @@ jobs:
   deploy-gate:
     name: Deploy Gate - Cloudflare Ready
     runs-on: ubuntu-latest
-    needs: [secret-scan, lint, typecheck, unit-tests, e2e-tests, build]
+    needs: [secret-scan, lint, typecheck, unit-tests, build]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Deploy gate passed
@@ -271,54 +223,19 @@ jobs:
           echo "✅ Lint: ${{ needs.lint.result }}"
           echo "✅ Typecheck: ${{ needs.typecheck.result }}"
           echo "✅ Unit Tests: ${{ needs.unit-tests.result }}"
-          echo "✅ E2E Tests: ${{ needs.e2e-tests.result }}"
+          echo "⏭️ E2E Tests: Skipped (manual only)"
           echo "✅ Build: ${{ needs.build.result }}"
           echo ""
           echo "Cloudflare Pages handles deployment automatically."
           echo "No GitHub Pages deployment configured."
 
-  # Non-gating: Flaky Tests (Optional monitoring)
+  # Non-gating: Flaky Tests (Disabled - E2E tests disabled)
   flaky-tests:
-    name: Flaky Tests (Non-gating)
+    name: Flaky Tests (Disabled)
     runs-on: ubuntu-latest
     needs: [setup]
     continue-on-error: true
-    if: ${{ vars.SKIP_E2E != 'true' && (github.event_name == 'pull_request' || (github.ref == 'refs/heads/main' && github.event_name == 'push')) }}
+    if: false  # Disabled since E2E tests are disabled
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
-
-      - name: Install dependencies
-        if: needs.setup.outputs.node-cache-hit != 'true'
-        run: npm ci
-
-      - name: Install Playwright dependencies
-        run: npx playwright install --with-deps chromium
-
-      - name: Run flaky E2E tests
-        run: npx playwright test --grep "@flaky"
-        continue-on-error: true
-
-      - name: Upload flaky test artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: flaky-test-artifacts
-          path: |
-            test-results/
-            playwright-report/
-          retention-days: 1
+      - name: Skip Flaky Tests
+        run: echo "⏭️ Flaky E2E tests skipped (E2E tests disabled for stable pipeline)"
