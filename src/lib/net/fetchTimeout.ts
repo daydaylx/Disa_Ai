@@ -87,7 +87,7 @@ export async function fetchWithTimeoutAndRetry(
         return response;
       }
 
-      response.body?.cancel();
+      void response.body?.cancel();
     } catch (error) {
       lastError = error;
 

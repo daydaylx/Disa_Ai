@@ -11,21 +11,21 @@ import globals from "globals";
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
 export default [
+  // Global ignores
   {
     ignores: [
-      "dist",
-      "build",
-      "coverage",
-      "node_modules",
+      "dist/**",
+      "build/**",
+      "coverage/**",
+      "node_modules/**",
       "e2e/**",
-      "src/shared/**",
-      "src/entities/**",
-      "src/widgets/**",
-      "src/features/**",
-      "src/lib/openrouter.ts",
-      "src/lib/client.tsx",
+      "src/lib/openrouter.ts", // Legacy client
+      "*.config.js",
+      "*.config.ts",
     ],
   },
+
+  // Configuration files (Node.js environment)
   {
     files: [
       "eslint.config*.js",
@@ -33,7 +33,6 @@ export default [
       "vitest.config.ts",
       "postcss.config.js",
       "tailwind.config.ts",
-      "e2e/*.ts",
       "playwright.config.ts",
       "*.cjs",
       "*.mjs",
@@ -43,26 +42,37 @@ export default [
       parserOptions: { ecmaVersion: "latest", sourceType: "module" },
       globals: globals.node,
     },
-    plugins: { "simple-import-sort": sort },
-    rules: { "simple-import-sort/imports": "off", "simple-import-sort/exports": "off" },
+    plugins: { 
+      "@typescript-eslint": tsPlugin,
+      "simple-import-sort": sort 
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      "simple-import-sort/imports": "off", 
+      "simple-import-sort/exports": "off",
+    },
   },
+
+  // Main source files
   {
     files: ["src/**/*.{ts,tsx,js,jsx}"],
     languageOptions: {
       parser: tsParser,
-      parserOptions: { ecmaVersion: "latest", sourceType: "module", ecmaFeatures: { jsx: true } },
+      parserOptions: { 
+        ecmaVersion: "latest", 
+        sourceType: "module", 
+        ecmaFeatures: { jsx: true },
+        project: "./tsconfig.json",
+        tsconfigRootDir: import.meta.dirname,
+      },
       globals: {
         ...globals.browser,
-        dom: "readonly",
-        RequestInit: "readonly",
-        AbortController: "readonly",
-        AbortSignal: "readonly",
-        ReadableStream: "readonly",
-        TextEncoder: "readonly",
-        crypto: "readonly",
       },
     },
-    settings: { react: { version: "detect" }, "import/resolver": { typescript: true } },
+    settings: { 
+      react: { version: "detect" }, 
+      "import/resolver": { typescript: true },
+    },
     plugins: {
       "@typescript-eslint": tsPlugin,
       react,
@@ -74,8 +84,13 @@ export default [
     },
     rules: {
       ...js.configs.recommended.rules,
-      "no-unused-vars": "off" /* <- wichtig */,
+      
+      // Core JavaScript/TypeScript
+      "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "off",
+      "no-undef": "off", // TypeScript handles this
+      
+      // Import management
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
         "warn",
@@ -86,23 +101,67 @@ export default [
       "import/no-mutable-exports": "error",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
+
+      // TypeScript specific
+      "@typescript-eslint/await-thenable": "error",
+      "@typescript-eslint/no-floating-promises": ["error", { ignoreIIFE: true }],
+      "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
+      "@typescript-eslint/require-await": "error",
+      "@typescript-eslint/consistent-type-assertions": "warn",
+      
+      // React
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
+      
+      // Accessibility
       "jsx-a11y/alt-text": "warn",
       "jsx-a11y/no-autofocus": "warn",
+      
+      // Code quality
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "warn",
     },
   },
+
+  // Test files
   {
-    files: ["src/__tests__/**/*.{ts,tsx}", "src/test/**/*.{ts,tsx}"],
+    files: [
+      "src/**/*.{test,spec}.{ts,tsx}",
+      "src/**/__tests__/**/*.{ts,tsx}",
+      "tests/**/*.{ts,tsx}",
+    ],
     languageOptions: {
       parser: tsParser,
-      parserOptions: { ecmaVersion: "latest", sourceType: "module", ecmaFeatures: { jsx: true } },
-      globals: { ...globals.browser, ...globals.node },
+      parserOptions: { 
+        ecmaVersion: "latest", 
+        sourceType: "module", 
+        ecmaFeatures: { jsx: true },
+        // Remove project reference for test files to avoid parsing errors
+      },
+      globals: { 
+        ...globals.browser, 
+        ...globals.node,
+        // Vitest globals
+        describe: "readonly",
+        it: "readonly",
+        expect: "readonly",
+        vi: "readonly",
+      },
     },
-    rules: { "no-undef": "off" },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+      "unused-imports": unused,
+      "simple-import-sort": sort,
+    },
+    rules: {
+      "no-console": "off",
+      "no-undef": "off",
+      "@typescript-eslint/no-floating-promises": "off", // Tests can have floating promises
+      "unused-imports/no-unused-imports": "error",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+    },
   },
 ];

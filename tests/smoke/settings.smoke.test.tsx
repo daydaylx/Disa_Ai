@@ -1,8 +1,9 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
-import SettingsView from "../../src/views/SettingsView";
+import { describe, expect,it } from "vitest";
+
 import { ToastsProvider } from "../../src/components/ui/toast/ToastsProvider";
+import SettingsView from "../../src/views/SettingsView";
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(<ToastsProvider>{ui}</ToastsProvider>);

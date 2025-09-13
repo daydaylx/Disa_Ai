@@ -59,7 +59,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, onCopy }) => {
               variant="secondary"
               aria-label="Code kopieren"
               onClick={() => {
-                navigator.clipboard.writeText(b.content);
+                void navigator.clipboard.writeText(b.content);
                 onCopy?.(b.content);
               }}
             >

@@ -8,7 +8,7 @@ describe("getRawModels cache", () => {
     localStorage.setItem("disa:or:models:v1", JSON.stringify(sample));
     localStorage.setItem("disa:or:models:ts", String(Date.now()));
 
-    const fetchSpy = vi.spyOn(globalThis, "fetch" as any).mockResolvedValue({ ok: true, json: async () => ({ data: [] }) } as any);
+    const fetchSpy = vi.spyOn(globalThis, "fetch" as any).mockResolvedValue({ ok: true, json: () => Promise.resolve({ data: [] }) } as any);
     const list = await getRawModels(undefined, 60_000);
     expect(Array.isArray(list)).toBe(true);
     expect(list.length).toBe(2);

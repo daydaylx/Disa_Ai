@@ -1,8 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import React from 'react'
-import { Icon } from '../../src/components/ui/Icon'
+import { describe, expect, it, vi } from 'vitest'
+
 import CodeBlock from '../../src/components/CodeBlock'
+import { Icon } from '../../src/components/ui/Icon'
 
 // Minimaler, aber echter UI-Schnitt – keine Platzhalter
 

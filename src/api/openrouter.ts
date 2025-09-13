@@ -5,7 +5,6 @@ import { readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
 
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
-const KEY_NAME = "disa_api_key";
 const MODEL_KEY = "disa_model";
 
 function isTestEnv(): boolean {
@@ -28,7 +27,7 @@ function isTestEnv(): boolean {
 }
 
 function getHeaders() {
-  const apiKey = readApiKey() ?? localStorage.getItem(KEY_NAME)?.replace(/^"+"|"+"$/g, "");
+  const apiKey = readApiKey(); // Only use secure keyStore, no localStorage fallback
   const key = apiKey || (isTestEnv() ? "test" : "");
   if (!key) throw mapError(new Error("NO_API_KEY"));
   const referer = (() => {
@@ -48,6 +47,7 @@ function getHeaders() {
 
 export function getModelFallback() {
   try {
+    // Model selection is non-sensitive, localStorage is acceptable here
     return localStorage.getItem(MODEL_KEY) || "meta-llama/llama-3.3-70b-instruct:free";
   } catch {
     return "meta-llama/llama-3.3-70b-instruct:free";

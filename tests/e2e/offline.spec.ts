@@ -1,8 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { expect,test } from "@playwright/test";
+
 import { setupRequestInterception } from "./setup/intercept";
 
 test.describe("E2E Offline Tests", () => {
-  test("Smoke: Successful prompt-response flow", async ({ page }) => {
+  test("Smoke: Successful prompt-response flow @flaky", async ({ page }) => {
     await setupRequestInterception(page, "success");
     await page.goto("/#/");
 
@@ -14,7 +15,7 @@ test.describe("E2E Offline Tests", () => {
     await expect(input).toHaveValue("");
   });
 
-  test("Error handling: Rate limit with retry", async ({ page }) => {
+  test("Error handling: Rate limit with retry @flaky", async ({ page }) => {
     await setupRequestInterception(page, "rate-limit");
     await page.goto("/#/");
 
@@ -24,7 +25,7 @@ test.describe("E2E Offline Tests", () => {
     await expect(page.getByText("Rate limit exceeded")).toBeVisible();
   });
 
-  test("Error handling: Request timeout", async ({ page }) => {
+  test("Error handling: Request timeout @flaky", async ({ page }) => {
     await setupRequestInterception(page, "timeout");
     await page.goto("/#/");
 
@@ -34,7 +35,7 @@ test.describe("E2E Offline Tests", () => {
     await expect(page.getByText("Request timed out")).toBeVisible();
   });
 
-  test("Error handling: Server error", async ({ page }) => {
+  test("Error handling: Server error @flaky", async ({ page }) => {
     await setupRequestInterception(page, "server-error");
     await page.goto("/#/");
 
@@ -44,7 +45,7 @@ test.describe("E2E Offline Tests", () => {
     await expect(page.getByText("Internal server error")).toBeVisible();
   });
 
-  test("Key flow: Stop button functionality", async ({ page }) => {
+  test("Key flow: Stop button functionality @flaky", async ({ page }) => {
     await setupRequestInterception(page, "success");
     await page.goto("/#/");
 
@@ -64,7 +65,7 @@ test.describe("E2E Offline Tests", () => {
     expect(after).toBe(before + 1);
   });
 
-  test("Key flow: Offline mode banner", async ({ page }) => {
+  test("Key flow: Offline mode banner @flaky", async ({ page }) => {
     await page.goto("/#/");
     await page.context().setOffline(true);
     await page.waitForTimeout(100);
@@ -74,7 +75,7 @@ test.describe("E2E Offline Tests", () => {
     await page.context().setOffline(false);
   });
 
-  test("Key flow: Composer keyboard shortcuts", async ({ page }) => {
+  test("Key flow: Composer keyboard shortcuts @flaky", async ({ page }) => {
     await setupRequestInterception(page, "success");
     await page.goto("/#/");
     
