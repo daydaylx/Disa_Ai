@@ -5,9 +5,12 @@ export default defineConfig({
   timeout: 30_000,
   reporter: [["list"]],
   use: {
+    headless: true,
     baseURL: "http://localhost:4173",
-    trace: "off",
+    trace: "retain-on-failure",
     serviceWorkers: "block",
+    screenshot: "only-on-failure",
+    video: "off",
   },
   outputDir: "test-artifacts",
   webServer: {

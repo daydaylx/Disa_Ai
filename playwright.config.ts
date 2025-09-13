@@ -9,7 +9,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [
     ["html", { outputFolder: "test-results/html-report" }],
-    ["json", { outputFile: "test-results/results.json" }]
+    ["json", { outputFile: "test-results/results.json" }],
   ],
   outputDir: "test-results/artifacts",
   use: {
@@ -18,7 +18,7 @@ export default defineConfig({
     trace: "retain-on-failure",
     serviceWorkers: "block",
     screenshot: "only-on-failure",
-    video: "retain-on-failure",
+    video: "off",
     actionTimeout: 3000,
     navigationTimeout: 5000,
   },
@@ -30,8 +30,13 @@ export default defineConfig({
   },
   projects: [
     {
+      name: "setup",
+      testMatch: /.*\.setup\.ts/,
+    },
+    {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      dependencies: ["setup"],
     },
   ],
 });
