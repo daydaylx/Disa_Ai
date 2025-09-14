@@ -1,2 +1,1 @@
-import { migrateLegacyKeyFromLocalStorage } from "@/lib/keyStore";
-migrateLegacyKeyFromLocalStorage();
+// This file is reserved for future data migrations.
