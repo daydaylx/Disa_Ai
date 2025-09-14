@@ -1,0 +1,28 @@
+stages:
+  - ai
+
+claude:
+  stage: ai
+  image: node:24-alpine3.21
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  variables:
+    GIT_STRATEGY: fetch
+  before_script:
+    - apk update
+    - apk add --no-cache git curl bash
+    - npm install -g @anthropic-ai/claude-code
+  script:
+    # Optional: GitLab MCP-Server aktivieren (stellt mcp__gitlab-Tool bereit)
+    - /bin/gitlab-mcp-server || true
+    # Kontext aus Web/API-Triggern (falls du @claude-Listener verwendest)
+    - echo "$AI_FLOW_INPUT for $AI_FLOW_CONTEXT on $AI_FLOW_EVENT"
+    - >
+      claude
+        --model sonnet-4
+        -p "${AI_FLOW_INPUT:-'Bitte prüfe diesen Merge Request, fasse die Änderungen zusammen, schlage konkrete Verbesserungen vor und implementiere sie. Antworte auf Deutsch.'}"
+        --permission-mode acceptEdits
+        --allowedTools "Bash(*) Read(*) Edit(*) Write(*) mcp__gitlab"
+        --debug
+# Hinweis: Der Job nutzt die maskierte CI/CD-Variable ANTHROPIC_API_KEY.

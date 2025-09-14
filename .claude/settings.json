@@ -1,37 +1,90 @@
 {
+  "model": "sonnet-4",
+  "cleanupPeriodDays": 7,
+  "includeCoAuthoredBy": false,
   "permissions": {
     "defaultMode": "acceptEdits",
     "allow": [
-      "Bash(npm run lint)",
+      "Read(**)",
+      "Edit(/src/**)",
+      "Edit(/public/**)",
+      "Edit(/tests/**)",
+      "Edit(/README.md)",
+      "Edit(/CLAUDE.md)",
+      "Edit(/AGENT.md)",
+      "Edit(/GEMINI.md)",
+      "Bash(npm ci)",
+      "Bash(npm run dev)",
+      "Bash(npm run build)",
+      "Bash(npm run test)",
       "Bash(npm run test:*)",
-      "Bash(git status)"
+      "Bash(npm run typecheck)",
+      "Bash(npm run e2e*)",
+      "Bash(npm install --no-audit --no-fund*)",
+      "Bash(npm i --no-audit --no-fund*)",
+      "Bash(git checkout -b *)",
+      "Bash(git add -A)",
+      "Bash(git commit -m *)"
     ],
     "ask": [
-      "Bash(npm run build)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(npm install*)",
+      "Bash(npm i*)",
+      "Bash(npx *)",
+      "Bash(git push*)",
+      "Bash(git reset --hard*)",
+      "Edit(/public/_headers)",
+      "Edit(/vite.config.*)",
+      "Edit(/package.json)"
     ],
     "deny": [
-      "Bash(curl:*)",
-      "Bash(wget:*)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
-      "Read(./**/*.pem)",
-      "Read(./build)",
-      "Read(./dist)"
-    ],
-    "additionalDirectories": []
+      "WebFetch",
+      "Bash(curl*)",
+      "Bash(wget*)",
+      "Bash(rm -rf*)"
+    ]
   },
   "env": {
+    "LANG": "de-DE",
+    "LOCALE": "de-DE",
+    "ANTHROPIC_MODEL": "sonnet-4",
     "DISABLE_TELEMETRY": "1",
-    "DISABLE_ERROR_REPORTING": "1"
+    "DISABLE_ERROR_REPORTING": "1",
+    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
   },
-  "includeCoAuthoredBy": false,
-  "model": "claude-sonnet-4-0",
-  "outputStyle": "Default",
   "enableAllProjectMcpServers": false,
-  "enabledMcpjsonServers": [],
-  "disabledMcpjsonServers": []
+  "statusLine": {
+    "type": "command",
+    "command": "printf \"$(git rev-parse --abbrev-ref HEAD)@$(git rev-parse --short HEAD) • %s\" \"$ANTHROPIC_MODEL\""
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read file_path; if echo \"$file_path\" | grep -q '\\.ts$'; then npx prettier --write \"$file_path\"; fi; }"
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/markdown_formatter.py"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import json,sys; d=json.load(sys.stdin); p=d.get('tool_input',{}).get('file_path',''); sys.exit(2 if any(x in p for x in ['.env','package-lock.json','.git/']) else 0)\""
+          }
+        ]
+      }
+    ]
+  }
 }
-
