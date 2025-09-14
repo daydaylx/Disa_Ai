@@ -1,5 +1,7 @@
 import YAML from "js-yaml";
 
+import { fetchWithTimeoutAndRetry } from "./net/fetchWithTimeoutAndRetry";
+
 /** Stil-Eintrag – optional heißt: Property einfach weglassen, nicht `undefined` setzen */
 export interface StyleItem {
   id: string;
@@ -38,7 +40,15 @@ function parseJsonSafe(text: string): unknown | null {
 /** Lädt Text (ohne CORS-Probleme, da aus /public) */
 async function fetchText(url: string, signal?: AbortSignal): Promise<string | null> {
   try {
-    const res = await fetch(url, { cache: "no-store", signal: signal ?? null });
+    const res = await fetchWithTimeoutAndRetry(
+      url,
+      { cache: "no-store" },
+      {
+        signal,
+        timeoutMs: 5000,
+        maxRetries: 1,
+      },
+    );
     if (!res.ok) return null;
     return await res.text();
   } catch {

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { mapError } from "../lib/errors";
+import { fetchWithTimeoutAndRetry } from "../lib/net/fetchWithTimeoutAndRetry";
 import type { Safety } from "./models";
 
 /** Öffentliche Typen – exakt-optional-freundlich: Property weglassen statt `undefined` setzen */
@@ -80,10 +81,17 @@ function saveCache(list: RoleTemplate[]): void {
 /* -------------------- Fetch helpers -------------------- */
 
 async function fetchJson(url: string, signal?: AbortSignal): Promise<unknown> {
-  const res = await fetch(url, {
-    cache: "no-store",
-    ...(signal ? { signal } : {}),
-  });
+  const res = await fetchWithTimeoutAndRetry(
+    url,
+    {
+      cache: "no-store",
+    },
+    {
+      signal,
+      timeoutMs: 10000,
+      maxRetries: 2,
+    },
+  );
   if (res.status === 404) return null;
   if (!res.ok) {
     throw mapError(res);

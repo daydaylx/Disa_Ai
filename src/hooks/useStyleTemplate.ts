@@ -1,5 +1,7 @@
-import * as React from 'react';
+import * as React from "react";
+
 /* eslint-disable no-empty */
+import { fetchWithTimeoutAndRetry } from "../lib/net/fetchWithTimeoutAndRetry";
 
 export interface TemplateEntry {
   id: string;
@@ -68,7 +70,8 @@ function normalizeTemplates(arr: unknown): TemplateEntry[] {
       };
       if (typeof t.description === "string") base.description = t.description;
       if (Array.isArray(t.tags)) base.tags = t.tags.filter((z: unknown) => typeof z === "string");
-      if (Array.isArray(t.allow)) base.allow = t.allow.filter((z: unknown) => typeof z === "string");
+      if (Array.isArray(t.allow))
+        base.allow = t.allow.filter((z: unknown) => typeof z === "string");
       return base;
     });
 }
@@ -163,7 +166,11 @@ export function useStyleTemplate(defaultId: string = FALLBACK_TEMPLATE_ID): UseS
     let lastErr: string | null = null;
     for (const path of tryPaths) {
       try {
-        const res = await fetch(path, { cache: "no-store" });
+        const res = await fetchWithTimeoutAndRetry(
+          path,
+          { cache: "no-store" },
+          { timeoutMs: 5000 },
+        );
         if (!res.ok) {
           lastErr = `HTTP ${res.status} bei ${path}`;
           continue;

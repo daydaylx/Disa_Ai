@@ -1,6 +1,6 @@
 import type { ChatMessage } from "../../types/chat";
 import { mapError, RateLimitError } from "../errors";
-import { fetchWithTimeoutAndRetry } from "../net/fetchTimeout";
+import { fetchWithTimeoutAndRetry } from "../net/fetchWithTimeoutAndRetry";
 import { TokenBucket } from "../net/rateLimit";
 import { CHAT_ENDPOINT, getApiKey } from "./config";
 
@@ -46,7 +46,7 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     return { content: "Demo-Antwort (kein API-Key)." };
   }
 
-  const init: Omit<RequestInit, 'signal'> & { signal?: AbortSignal } = {
+  const init = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${key}`,
@@ -58,12 +58,13 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     cache: "no-store",
     referrerPolicy: "no-referrer",
   };
-  if (opts.signal) {
-    init.signal = opts.signal;
-  }
 
   try {
-    const res = await fetchWithTimeoutAndRetry(url, init);
+    const res = await fetchWithTimeoutAndRetry(url, init, {
+      signal: opts.signal,
+      timeoutMs: 30000,
+      maxRetries: 2,
+    });
     if (!res.ok) {
       throw mapError(res);
     }

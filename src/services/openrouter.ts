@@ -1,6 +1,6 @@
 /* eslint-disable no-empty */
 import { mapError } from "../lib/errors";
-import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
+import { fetchWithTimeoutAndRetry } from "../lib/net/fetchWithTimeoutAndRetry";
 import { readApiKey, writeApiKey } from "../lib/openrouter/key";
 
 const BASE = "https://openrouter.ai/api/v1";
@@ -39,7 +39,10 @@ const LS_MODELS = "disa:or:models:v1";
 const LS_MODELS_TS = "disa:or:models:ts";
 const DEFAULT_TTL_MS = 20 * 60 * 1000; // 20 Minuten
 
-export async function getRawModels(explicitKey?: string, ttlMs = DEFAULT_TTL_MS): Promise<ORModel[]> {
+export async function getRawModels(
+  explicitKey?: string,
+  ttlMs = DEFAULT_TTL_MS,
+): Promise<ORModel[]> {
   try {
     const tsRaw = localStorage.getItem(LS_MODELS_TS);
     const dataRaw = localStorage.getItem(LS_MODELS);
@@ -51,24 +54,27 @@ export async function getRawModels(explicitKey?: string, ttlMs = DEFAULT_TTL_MS)
   } catch {}
 
   try {
-    const res = await fetchWithTimeoutAndRetry(`${BASE}/models`, {
-      timeoutMs: 15000,
-      maxRetries: 2,
-      retryDelayMs: 1000,
-      fetchOptions: {
-        headers: buildHeaders(explicitKey)
-      }
-    });
-    
+    const res = await fetchWithTimeoutAndRetry(
+      `${BASE}/models`,
+      {
+        headers: buildHeaders(explicitKey),
+      },
+      {
+        timeoutMs: 15000,
+        maxRetries: 2,
+        baseDelayMs: 1000,
+      },
+    );
+
     if (!res.ok) throw mapError(res);
     const data = await res.json().catch(() => ({}));
     const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
-    
+
     try {
       localStorage.setItem(LS_MODELS, JSON.stringify(list));
       localStorage.setItem(LS_MODELS_TS, String(Date.now()));
     } catch {}
-    
+
     return list;
   } catch (error) {
     // Log but don't throw - return empty array for graceful degradation

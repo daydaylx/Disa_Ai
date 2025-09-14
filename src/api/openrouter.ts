@@ -1,6 +1,6 @@
 import { mapError } from "../lib/errors";
 import { chatConcurrency } from "../lib/net/concurrency";
-import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
+import { fetchWithTimeoutAndRetry } from "../lib/net/fetchWithTimeoutAndRetry";
 import { readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
 
@@ -54,24 +54,30 @@ export function getModelFallback() {
   }
 }
 
-export async function chatOnce(messages: ChatMessage[], opts?: { model?: string; signal?: AbortSignal }) {
+export async function chatOnce(
+  messages: ChatMessage[],
+  opts?: { model?: string; signal?: AbortSignal },
+) {
   const key = `chat-once-${Date.now()}`;
   return chatConcurrency.startRequest(key, async (signal) => {
     const combinedSignal = opts?.signal ? combineSignals([opts.signal, signal]) : signal;
     try {
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
-      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
-        timeoutMs: 30000,
-        signal: combinedSignal,
-        maxRetries: 2,
-        retryDelayMs: 1000,
-        fetchOptions: {
+      const res = await fetchWithTimeoutAndRetry(
+        ENDPOINT,
+        {
           method: "POST",
           headers,
           body: JSON.stringify({ model, messages, stream: false }),
         },
-      });
+        {
+          timeoutMs: 30000,
+          signal: combinedSignal,
+          maxRetries: 2,
+          baseDelayMs: 1000,
+        },
+      );
 
       if (!res.ok) {
         throw mapError(res);
@@ -102,17 +108,20 @@ export async function chatStream(
     try {
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
-      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
-        timeoutMs: 45000,
-        signal: combinedSignal,
-        maxRetries: 1,
-        retryDelayMs: 2000,
-        fetchOptions: {
+      const res = await fetchWithTimeoutAndRetry(
+        ENDPOINT,
+        {
           method: "POST",
           headers,
           body: JSON.stringify({ model, messages, stream: true }),
         },
-      });
+        {
+          timeoutMs: 45000,
+          signal: combinedSignal,
+          maxRetries: 1,
+          baseDelayMs: 2000,
+        },
+      );
 
       if (!res.ok) {
         throw mapError(res);
