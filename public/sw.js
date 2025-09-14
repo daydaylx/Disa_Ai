@@ -1,19 +1,12 @@
-/* Disa Ai – minimaler App-Shell Service Worker (cache-first) */
-// Workbox Precache (injectManifest) – additiv, ändert bestehende Logik nicht wesentlich.
-// Der Rest dieses SWs bleibt unverändert aktiv.
-import { precacheAndRoute } from "workbox-precaching";
-const VERSION = "v1.0.2";
+/* Disa Ai – minimaler App-Shell Service Worker */
+const VERSION = "v1.0.3";
 const APP_CACHE = `disa-app-${VERSION}`;
-const BASE = self.registration.scope || "/"; // e.g. https://host/app/ → "/app/"
+const BASE = self.registration.scope || "/";
 const APP_SHELL = [
   BASE,
   new URL("index.html", BASE).pathname,
   new URL("manifest.webmanifest", BASE).pathname,
-  // Vite legt CSS/JS unter /assets/ ab – wir cache-matchen dynamisch (siehe fetch)
 ];
-
-// Precache manifest wird vom Build injiziert
-precacheAndRoute(self.__WB_MANIFEST);
 
 // Files beim Install sicher cachen
 self.addEventListener("install", (event) => {
@@ -83,11 +76,31 @@ self.addEventListener("fetch", (event) => {
             .catch(() => {});
           return res;
         })
-        .catch(() => caches.match(req).then((hit) => hit || caches.match(new URL("index.html", BASE).pathname))),
+        .catch(() =>
+          caches
+            .match(req)
+            .then((hit) => hit || caches.match(new URL("index.html", BASE).pathname)),
+        ),
     );
     return;
   }
 
   // Sonst: try network → fallback cache
   event.respondWith(fetch(req).catch(() => caches.match(req)));
+});
+
+// Update-Benachrichtigung für Clients
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+// Neue Version verfügbar → Client benachrichtigen
+self.addEventListener("waiting", () => {
+  self.clients.matchAll().then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({ type: "NEW_VERSION_AVAILABLE" });
+    });
+  });
 });
