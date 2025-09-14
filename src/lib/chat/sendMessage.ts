@@ -55,8 +55,8 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
       "X-Title": "Disa_Ai",
     },
     body: JSON.stringify(body),
-    cache: "no-store",
-    referrerPolicy: "no-referrer",
+    cache: "no-store" as RequestCache,
+    referrerPolicy: "no-referrer" as ReferrerPolicy,
   };
 
   try {
