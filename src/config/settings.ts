@@ -45,7 +45,9 @@ export function getStyle(): StyleKey {
 export function setStyle(v: StyleKey): void {
   try {
     localStorage.setItem(LS.style, v);
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }
 
 /** NSFW-Flag */
@@ -61,13 +63,20 @@ export function getNSFW(): boolean {
 export function setNSFW(v: boolean): void {
   try {
     localStorage.setItem(LS.nsfw, v ? "true" : "false");
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }
 
 /** Ausgewähltes Modell */
 export function getSelectedModelId(): string | null {
   try {
-    return localStorage.getItem(LS.model);
+    // Primary key
+    const v = localStorage.getItem(LS.model);
+    if (v && v.trim().length > 0) return v;
+    // Backward-compat: accept legacy key used in tests and older builds
+    const legacy = localStorage.getItem("disa_model");
+    return legacy && legacy.trim().length > 0 ? legacy : null;
   } catch {
     return null;
   }
@@ -76,7 +85,9 @@ export function setSelectedModelId(id: string | null): void {
   try {
     if (id === null) localStorage.removeItem(LS.model);
     else localStorage.setItem(LS.model, id);
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }
 
 /** Aktive Rolle (Template-ID aus public/styles.json) */
@@ -91,7 +102,9 @@ export function setTemplateId(id: string | null): void {
   try {
     if (id === null) localStorage.removeItem(LS.template);
     else localStorage.setItem(LS.template, id);
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }
 
 /** Stil-Overlay der Rolle anwenden? */
@@ -107,7 +120,9 @@ export function getUseRoleStyle(): boolean {
 export function setUseRoleStyle(v: boolean): void {
   try {
     localStorage.setItem(LS.useRoleStyle, v ? "true" : "false");
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }
 
 /** Gedächtnis (Memory) einschalten? */
@@ -123,7 +138,9 @@ export function getMemoryEnabled(): boolean {
 export function setMemoryEnabled(v: boolean): void {
   try {
     localStorage.setItem(LS.memEnabled, v ? "true" : "false");
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }
 
 /** Kontextfenster (max Tokens) für ContextManager */
@@ -139,7 +156,9 @@ export function setCtxMaxTokens(n: number): void {
   try {
     const v = Math.max(1024, Math.floor(n || 0));
     localStorage.setItem(LS.ctxMax, String(v));
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }
 
 /** Reservierte Tokens für die Antwort */
@@ -155,7 +174,9 @@ export function setCtxReservedTokens(n: number): void {
   try {
     const v = Math.max(128, Math.floor(n || 0));
     localStorage.setItem(LS.ctxReserve, String(v));
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }
 
 /** Composer-Offset in px (Abstand vom unteren Rand) */
@@ -163,12 +184,16 @@ export function getComposerOffset(): number {
   try {
     const raw = Number(localStorage.getItem(LS.composerOffset));
     if (Number.isFinite(raw)) return Math.min(96, Math.max(16, Math.floor(raw)));
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
   return 48;
 }
 export function setComposerOffset(n: number): void {
   try {
     const v = Math.min(96, Math.max(16, Math.floor(n || 0)));
     localStorage.setItem(LS.composerOffset, String(v));
-  } catch { /* Safe: fallback to default */ }
+  } catch {
+    /* Safe: fallback to default */
+  }
 }

@@ -22,54 +22,81 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
-      - run: npm run -s lint
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run -s lint
 
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
-      - run: npm run -s typecheck
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run Typecheck
+        run: npm run -s typecheck
 
   unit:
     name: Unit Tests
     runs-on: ubuntu-latest
     needs: [typecheck]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
-      - run: npm test -s
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run Unit Tests
+        run: npm test -s
 
   e2e:
     name: E2E (offline)
     runs-on: ubuntu-latest
     needs: [unit]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
-      # Installiere Playwright-Browser nur im CI-Job, nicht ad hoc in Tests
+
+      - name: Install deps
+        run: npm ci
+
       - name: Install Playwright chromium
         run: npx playwright install --with-deps chromium
+
       - name: Run Playwright (offline suite)
         env:
           PWDEBUG: "0"
@@ -81,18 +108,43 @@ jobs:
             --reporter=dot \
             --grep-invert @flaky
 
+      # === Artefakte nur bei Fehlschlag hochladen ===
+      - name: Upload Playwright report (on fail)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: playwright-report
+          if-no-files-found: ignore
+
+      - name: Upload test-results (on fail)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: test-results
+          if-no-files-found: ignore
+
   build:
     name: Build
     runs-on: ubuntu-latest
     needs: [e2e]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
-      - run: npm run -s build
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run -s build
+
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
@@ -105,4 +157,5 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - run: echo "All required gates passed. Deploy happens via Cloudflare Pages, not GitHub Actions."
+      - name: Gate passed
+        run: echo "All required gates passed. Deploy happens via Cloudflare Pages (not GitHub Actions)."
