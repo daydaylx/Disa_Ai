@@ -1,41 +1,10 @@
-const KEY_NAME = "disa_api_key";
+export type KeyRecord = { id: string; value: string };
 
-export function getKey(): string | null {
-  try {
-    const raw = sessionStorage.getItem(KEY_NAME);
-    if (!raw) return null;
-    const k = raw.trim().replace(/^"+|"+$/g, "");
-    return k.length ? k : null;
-  } catch { /* ignore: storage unavailable */ } {
-    return null;
+export class KeyStore {
+  get(_id: string): KeyRecord | undefined {
+    return undefined;
   }
+  set(_rec: KeyRecord): void {}
 }
 
-export function setKey(k: string): void {
-  if (typeof k !== "string") return;
-  try {
-    sessionStorage.setItem(KEY_NAME, k.trim());
-  } catch { /* ignore: storage unavailable */ } {
-    return;
-  }
-}
-
-export function clearKey(): void {
-  try {
-    sessionStorage.removeItem(KEY_NAME);
-  } catch { /* ignore: storage unavailable */ } {
-    return;
-  }
-}
-
-export function migrateLegacyKeyFromLocalStorage(): void {
-  try {
-    const legacy = localStorage.getItem(KEY_NAME);
-    if (legacy) {
-      // Nicht automatisch migrieren; Nutzer soll bewusst neu setzen.
-      localStorage.removeItem(KEY_NAME);
-    }
-  } catch { /* ignore: storage unavailable */ } {
-    return;
-  }
-}
+export default new KeyStore();

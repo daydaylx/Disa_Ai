@@ -1,4 +1,4 @@
-// Flat ESLint config
+// Flat ESLint config (TypeScript + typed linting)
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 
@@ -6,14 +6,14 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
-    files: ["**/*.ts","**/*.tsx"],
+    files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       parserOptions: {
-        project: ["./tsconfig.base.json","./tsconfig.test.json"]
+        project: ["./tsconfig.base.json", "./tsconfig.test.json"]
       }
     },
     rules: {
-      "no-console": ["warn", { "allow": ["warn","error"] }]
+      "no-console": ["warn", { "allow": ["warn", "error"] }]
     }
   }
 ];
