@@ -38,6 +38,8 @@ async function handleApiRoute(route: any, scenario: InterceptScenario) {
     default:
       // Simulate minimal SSE/NDJSON streaming that ChatView can parse
       // Send two chunks followed by [DONE]
+      // Small delay to ensure UI renders "Stop" button and test can click it
+      await new Promise((r) => setTimeout(r, 250));
       const chunk1 = {
         ...baseResponse,
         choices: [{ index: 0, delta: { content: "Offline-" }, finish_reason: null }],

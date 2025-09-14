@@ -59,6 +59,7 @@ allure-report/
 .vercel/
 .eslintcache
 tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # Misc backups & temp
 *.bak
