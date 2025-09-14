@@ -1,20 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    // Target & Module
-    "target": "ES2022",
-    "module": "ESNext",
     "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    
-    // Paths
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    
+
     // Type Checking
-    "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": false,
     "noImplicitOverride": true,
@@ -23,31 +13,19 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "useUnknownInCatchVariables": true,
-    
+
     // Module Resolution
     "forceConsistentCasingInFileNames": true,
     "resolvePackageJsonExports": true,
     "verbatimModuleSyntax": true,
-    
+
     // Performance
-    "skipLibCheck": true,
     "allowJs": false,
     "checkJs": false,
     "isolatedModules": true
   },
-  
-  "include": [
-    "src/**/*.ts", 
-    "src/**/*.tsx"
-  ],
-  
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build", 
-    "coverage",
-    "e2e",
-    "tests",
-    "src/lib/openrouter.ts"
-  ]
+
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+
+  "exclude": ["node_modules", "dist", "build", "coverage", "e2e", "tests", "src/lib/openrouter.ts"]
 }
