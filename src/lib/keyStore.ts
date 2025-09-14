@@ -7,4 +7,8 @@ export class KeyStore {
   set(_rec: KeyRecord): void {}
 }
 
+export function migrateLegacyKeyFromLocalStorage(): void {
+  // Placeholder for legacy key migration
+}
+
 export default new KeyStore();
