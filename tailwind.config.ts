@@ -1,10 +1,18 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    "./index.html",
-    "./src/**/*.{ts,tsx,html}",
-    "./tests/**/*.{ts,tsx}",
+  content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}", "./src/**/*.css"],
+  safelist: [
+    "card-solid",
+    "card-glass",
+    "surface-glass",
+    "btn",
+    "btn-primary",
+    "btn-ghost",
+    "btn-danger",
+    "bubble",
+    "bubble-user",
+    "bubble-assistant",
   ],
   theme: {
     extend: {
