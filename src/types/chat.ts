@@ -1,8 +1,12 @@
-export type Role = "system" | "user" | "assistant" | "tool";
+export type ChatRole = "system" | "user" | "assistant";
 
-export type ChatMessage = {
-  role: Role;
+export interface ChatMessage {
+  role: ChatRole;
   content: string;
-};
+}
 
+/**
+ * Alias für ältere/andere Call-Sites, die ChatMessageLike erwarten.
+ * Entspricht aktuell exakt ChatMessage.
+ */
 export type ChatMessageLike = ChatMessage;

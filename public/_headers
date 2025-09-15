@@ -1,29 +1,28 @@
 /*
-  # Security Headers
+  # Security headers for Cloudflare Pages (or any static host that respects _headers)
+  # Strikte CSP ohne 'unsafe-inline'. Skripts und Styles nur self.
+  # Wenn Inline nötig wäre, dann Nonces/Hashes verwenden und hier ergänzen.
+
+  Content-Security-Policy: default-src 'self';
+    script-src 'self';
+    style-src 'self';
+    connect-src 'self' https://openrouter.ai\;
+    img-src 'self' data: blob:;
+    font-src 'self';
+    media-src 'none';
+    object-src 'none';
+    frame-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+  X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  X-Frame-Options: DENY
-  X-XSS-Protection: 1; mode=block
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=()
-  Cross-Origin-Embedder-Policy: require-corp
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), usb=(), fullscreen=(*)
   Cross-Origin-Opener-Policy: same-origin
-  # Strict CSP - only allow necessary sources
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://openrouter.ai; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Resource-Policy: same-origin
 
-/index.html
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
-
-/manifest.webmanifest
-  Cache-Control: no-cache
-
-/sw.js
-  Cache-Control: no-cache
-
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/icons/*
-  Cache-Control: public, max-age=31536000, immutable
-
+  # Cache: HTML sehr kurz, Assets lang (falls genutzt). Für eine PWA ohne SW konservativ.
+  Cache-Control: no-store
