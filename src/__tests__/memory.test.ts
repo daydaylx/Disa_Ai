@@ -1,11 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 
 import * as memory from "../api/memory";
-
 // chatOnce wird im Modul memory importiert → wir mocken Rückgabe
+import { DEFAULT_MODELS } from "../config/defaults";
+
 vi.mock("../api/openrouter", () => ({
   chatOnce: vi.fn(() => Promise.resolve({ text: "- Punkt 1\n- Punkt 2" })),
-  getModelFallback: vi.fn(() => "meta-llama/llama-3.3-70b-instruct:free"),
+  getModelFallback: vi.fn(() => DEFAULT_MODELS.FALLBACK_MODEL),
 }));
 
 describe("addExplicitMemory", () => {

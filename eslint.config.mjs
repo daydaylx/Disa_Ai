@@ -74,7 +74,6 @@ export default [
     },
     settings: {
       react: { version: "detect" },
-      "import/resolver": { typescript: true },
     },
     plugins: {
       "@typescript-eslint": tsPlugin,

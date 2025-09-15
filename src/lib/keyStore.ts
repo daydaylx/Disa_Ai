@@ -1,4 +1,6 @@
-const KEY_NAME = "disa_api_key";
+import { STORAGE_KEYS } from "../config/defaults";
+
+const KEY_NAME = STORAGE_KEYS.API_KEY;
 
 export function getKey(): string | null {
   try {

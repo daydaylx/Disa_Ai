@@ -43,7 +43,8 @@ export class TimeoutError extends NetworkError {
 }
 
 /**
- * Fehler, der auftritt, wenn eine Anfrage durch ein AbortSignal abgebrochen wurde.
+ * Fehler, der auftritt, wenn eine Anfrage durch ein AbortSignal abgebrochen
+ * wurde.
  * Dies ist typischerweise eine vom Nutzer initiierte Aktion.
  */
 export class AbortError extends ApiError {

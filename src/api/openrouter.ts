@@ -1,11 +1,9 @@
+import { API_CONFIG, DEFAULT_MODELS, STORAGE_KEYS, TIMEOUTS } from "../config/defaults";
 import { mapError } from "../lib/errors";
 import { chatConcurrency } from "../lib/net/concurrency";
 import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
-
-const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL_KEY = "disa_model";
 
 function isTestEnv(): boolean {
   const viaImportMeta = (() => {
@@ -41,28 +39,31 @@ function getHeaders() {
     Authorization: `Bearer ${key}`,
     "Content-Type": "application/json",
     "HTTP-Referer": referer,
-    "X-Title": "Disa AI",
+    [API_CONFIG.OPENROUTER.REFERER_HEADER]: API_CONFIG.OPENROUTER.APP_NAME,
   } satisfies Record<string, string>;
 }
 
 export function getModelFallback() {
   try {
     // Model selection is non-sensitive, localStorage is acceptable here
-    return localStorage.getItem(MODEL_KEY) || "meta-llama/llama-3.3-70b-instruct:free";
+    return localStorage.getItem(STORAGE_KEYS.MODEL_SELECTION) || DEFAULT_MODELS.FALLBACK_MODEL;
   } catch {
-    return "meta-llama/llama-3.3-70b-instruct:free";
+    return DEFAULT_MODELS.FALLBACK_MODEL;
   }
 }
 
-export async function chatOnce(messages: ChatMessage[], opts?: { model?: string; signal?: AbortSignal }) {
+export async function chatOnce(
+  messages: ChatMessage[],
+  opts?: { model?: string; signal?: AbortSignal },
+) {
   const key = `chat-once-${Date.now()}`;
   return chatConcurrency.startRequest(key, async (signal) => {
     const combinedSignal = opts?.signal ? combineSignals([opts.signal, signal]) : signal;
     try {
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
-      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
-        timeoutMs: 30000,
+      const res = await fetchWithTimeoutAndRetry(API_CONFIG.OPENROUTER.CHAT_ENDPOINT, {
+        timeoutMs: TIMEOUTS.CHAT_ONCE,
         signal: combinedSignal,
         maxRetries: 2,
         retryDelayMs: 1000,
@@ -102,8 +103,8 @@ export async function chatStream(
     try {
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
-      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
-        timeoutMs: 45000,
+      const res = await fetchWithTimeoutAndRetry(API_CONFIG.OPENROUTER.CHAT_ENDPOINT, {
+        timeoutMs: TIMEOUTS.CHAT_STREAM,
         signal: combinedSignal,
         maxRetries: 1,
         retryDelayMs: 2000,
