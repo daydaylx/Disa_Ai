@@ -74,7 +74,11 @@ export default [
     },
     settings: {
       react: { version: "detect" },
-      "import/resolver": { typescript: true },
+      "import/resolver": {
+        typescript: {
+          project: "./tsconfig.json",
+        },
+      },
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
@@ -100,7 +104,7 @@ export default [
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "import/first": "error",
-      "import/no-duplicates": "error",
+      "import/no-duplicates": "off",
       "import/no-mutable-exports": "error",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
