@@ -1,4 +1,9 @@
 import "./bootstrap/migrations";
+import "./ui/base.css";
+import "./styles/globals.css";
+import "./styles/brand.css";
+import "./styles/theme.css";
+import "./styles/chat.css";
 
 import ReactDOM from "react-dom/client";
 

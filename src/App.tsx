@@ -52,10 +52,7 @@ export default function App() {
 
   return (
     <ToastsProvider>
-      <div
-        className="app-bg relative min-h-[100svh] bg-background text-foreground"
-        style={{ ["--bottomnav-h" as unknown as string]: "0px" }}
-      >
+      <div className="app-bg relative min-h-[100svh] bg-bg text-foreground">
         <Aurora />
         <NetworkBanner />
         {/* AndroidNoticeBanner entfernt */}
