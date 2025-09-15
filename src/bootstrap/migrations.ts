@@ -1,2 +1,2 @@
-import { migrateLegacyKeyFromLocalStorage } from "@/lib/keyStore";
+import { migrateLegacyKeyFromLocalStorage } from "../lib/keyStore";
 migrateLegacyKeyFromLocalStorage();
