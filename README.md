@@ -81,7 +81,24 @@ Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen R
 ## Projektstruktur
 
 Top-Level (Auszug):
-.claude/ # Projektbezogene Vorgaben/Prompts für Agenten .github/ # Workflows (CI) .graveyard/ # Archiv/Altlasten .husky/ # Git Hooks docs/ # Interne Dokumentation e2e/ # End-to-End Tests (Playwright) ops/ # Betriebs-/Scriptmaterial public/ # Statische Public-Assets (inkl. \_headers) scripts/ # Node/Utility-Skripte (Build/Analyse) src/ # App-Quellcode (React/TS, Styles, Utilities) tests/ # Unit-/Integrationstests (Vitest) .env.example # Vorlage für lokale Umgebungsvariablen tailwind.config.ts # Tailwind-Setup mit Token-Anbindung vite.config.ts # Vite-Build/Dev-Konfiguration vitest.config.ts # Test-Setup
+
+```
+.claude/             # Projektbezogene Vorgaben/Prompts für Agenten
+.github/             # Workflows (CI)
+.husky/              # Git Hooks
+docs/                # Interne Dokumentation
+e2e/                 # End-to-End Tests (Playwright)
+ops/                 # Betriebs-/Scriptmaterial
+public/              # Statische Public-Assets (inkl. _headers)
+scripts/             # Node/Utility-Skripte (Build/Analyse)
+src/                 # App-Quellcode (React/TS, Styles, Utilities)
+tests/               # Unit-/Integrationstests (Vitest)
+.env.example         # Vorlage für lokale Umgebungsvariablen
+tailwind.config.ts   # Tailwind-Setup mit Token-Anbindung
+vite.config.ts       # Vite-Build/Dev-Konfiguration
+vitest.config.ts     # Test-Setup
+```
+
 Code kopieren
 
 Hilfs-Markdowns (Auswahl) im Repo: `AGENTS.md`, `ANALYSIS.md`, `REFACTOR_PLAN.md`, `UX_FINDINGS.md`, `DEPENDENCIES.md`, `DEPLOYMENT_READINESS.md`. Diese dokumentieren Analyse- und Umbaupläne, UI-Befunde und Abhängigkeiten.
@@ -162,6 +179,8 @@ const hasKey = hasApiKey();
 
 Strikte Sicherheitsrichtlinien via `public/_headers`:
 
+**Content Security Policy (CSP):**
+
 ```
 Content-Security-Policy: default-src 'self';
   script-src 'self';
@@ -177,12 +196,17 @@ Content-Security-Policy: default-src 'self';
   form-action 'self'
 ```
 
-**Zusätzliche Headers:**
+**Zusätzliche Sicherheits-Headers:**
 
 - `X-Frame-Options: DENY` - Clickjacking-Schutz
 - `X-Content-Type-Options: nosniff` - MIME-Type-Sniffing blockieren
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy` - Hardware-Zugriff blockieren
+- `Referrer-Policy: strict-origin-when-cross-origin` - Kontrollierte Referrer-Übertragung
+- `X-XSS-Protection: 1; mode=block` - XSS-Schutz im Browser
+- `Permissions-Policy` - Hardware-Zugriff (Kamera, Mikrofon, etc.) blockieren
+- `Cross-Origin-Embedder-Policy: require-corp` - COEP-Schutz
+- `Cross-Origin-Opener-Policy: same-origin` - COOP-Isolation
+
+**Wichtig:** Keine `unsafe-inline` oder `unsafe-eval` Direktiven - alle Styles und Scripts werden über separate Dateien geladen für maximale Sicherheit.
 
 ### 🔍 Secret Scanning
 
@@ -375,17 +399,22 @@ npm run test:e2e
 
 - `nav-pill`, `nav-pill--active` - Tab-Navigation
 
-### Stylesheet Imports
+### 📂 Korrekte Style-Import-Reihenfolge
 
-Lade Styles in `src/main.tsx` genau in dieser Reihenfolge:
+**Essentiell:** Styles müssen in `src/main.tsx` genau in dieser Reihenfolge geladen werden:
 
-1. `src/ui/base.css`
-2. `src/styles/globals.css`
-3. `src/styles/brand.css`
-4. `src/styles/theme.css`
-5. `src/styles/chat.css`
+```typescript
+import "./ui/base.css"; // 1. Reset & Basis-Styles
+import "./styles/globals.css"; // 2. Globale Variablen & Layouts
+import "./styles/brand.css"; // 3. Brand-Colors & Aurora-Effekte
+import "./styles/theme.css"; // 4. Design-Tokens & Utility-Klassen
+import "./styles/chat.css"; // 5. Komponenten-spezifische Styles
+```
 
-Der React-Root (`#root`) muss parallel `app-bg bg-bg text-foreground` erhalten, damit der Aurora-Background sichtbar bleibt.
+**Kritisch:** Diese Reihenfolge gewährleistet korrekte CSS-Kaskade und verhindert Design-Token-Konflikte.
+
+**React-Root-Setup:**
+Der React-Root (`#root`) erhält automatisch `app-bg bg-bg text-foreground` und `min-h-[100svh] relative` für Aurora-Background und korrekte Viewport-Behandlung.
 
 ### Do / Don't
 
