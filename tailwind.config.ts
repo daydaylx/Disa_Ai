@@ -16,6 +16,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      saturate: {
+        106: "1.06",
+        110: "1.1",
+        115: "1.15",
+      },
       colors: {
         // Aurora palette (used by gradients/effects)
         aurora: {

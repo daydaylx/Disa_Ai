@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 import { cn } from "../lib/cn";
 
@@ -7,12 +7,7 @@ export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn("input", props.className)} {...props} />;
 }
 
-// Now using the centralized .textarea class from theme.css
+// Textarea nutzt dieselbe Input-Utility mit dynamischer Höhe
 export function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
-    <textarea
-      className={cn("textarea", props.className)}
-      {...props}
-    />
-  );
+  return <textarea className={cn("input h-auto resize-y", props.className)} {...props} />;
 }

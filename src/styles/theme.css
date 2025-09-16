@@ -173,7 +173,10 @@
     @apply rounded-2xl border border-border-glass bg-surface-glass text-text shadow-soft backdrop-blur-xl transition-colors;
   }
   .card-gradient {
-    @apply hover:saturate-110 rounded-2xl border border-border-glass bg-grad-card text-text shadow-glow transition-[transform,filter] hover:-translate-y-[1px];
+    @apply rounded-2xl border border-border-glass bg-grad-card text-text shadow-glow transition-[transform,filter] hover:-translate-y-[1px] hover:saturate-110;
+  }
+  .card {
+    @apply card-solid;
   }
   .glass-solid {
     @apply rounded-2xl border border-border-glass bg-surface-glass text-text shadow-soft backdrop-blur-xl;
@@ -275,7 +278,7 @@
       box-shadow:
         0 14px 36px rgba(124, 77, 255, 0.3),
         inset 0 0 0 1px rgba(255, 255, 255, 0.14);
-      filter: saturate(1.06);
+      @apply saturate-106;
     }
   }
 

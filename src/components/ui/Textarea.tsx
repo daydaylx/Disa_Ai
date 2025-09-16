@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 import { cn } from "../../lib/utils/cn";
 
@@ -14,7 +14,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         id={id}
         ref={ref}
         className={cn(
-          "textarea bg-white/70 backdrop-blur-md border-white/30 placeholder:text-slate-500",
+          "input h-auto resize-y border-white/30 bg-white/70 backdrop-blur-md placeholder:text-slate-500",
           className,
         )}
         {...props}
