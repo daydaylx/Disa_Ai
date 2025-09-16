@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import * as React from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import Avatar from "../components/chat/Avatar";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import { TypingIndicator } from "../components/chat/TypingIndicator";
 import CodeBlock from "../components/CodeBlock";
 import { Button } from "../components/ui/Button";
+import { CopyButton } from "../components/ui/CopyButton";
 import { useToasts } from "../components/ui/Toast";
 import { getVirtualListEnabled } from "../config/featureFlags";
 import {
@@ -19,7 +20,11 @@ import {
   getTemplateId,
   getUseRoleStyle,
 } from "../config/settings";
-import { appendMessage as convAppendMessage, getConversationMessages as convGetMessages } from "../hooks/useConversations";
+import {
+  appendMessage as convAppendMessage,
+  getConversationMessages as convGetMessages,
+} from "../hooks/useConversations";
+import { useVisualViewport } from "../hooks/useVisualViewport";
 import { humanErrorToToast } from "../lib/errors/humanError";
 import { buildMessages as buildPipelineMessages } from "../services/chatPipeline";
 import { sendChat } from "../services/chatService";
@@ -51,26 +56,11 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
   return (
     <div className="relative my-2 text-text">
       {/* Nachricht kopieren */}
-      <button
-        type="button"
+      <CopyButton
+        text={msg.content}
+        className="absolute right-2 top-2"
         aria-label="Nachricht kopieren"
-        className="btn-secondary !min-h-0 !px-2 !py-1 absolute right-2 top-2 text-xs"
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(msg.content);
-          } catch {
-            /* ignore */
-          }
-          // Toast in übergeordneter View auslösen via CustomEvent
-          window.dispatchEvent(
-            new CustomEvent("disa:toast", {
-              detail: { kind: "success", title: "Nachricht kopiert." },
-            }),
-          );
-        }}
-      >
-        Kopieren
-      </button>
+      />
       {parts.map((p, i) =>
         p.t === "code" ? (
           <CodeBlock key={i} code={p.content} lang={p.lang ?? "txt"} onCopied={() => {}} />
@@ -91,6 +81,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [showAll] = useState(false);
   const [showScrollFab, setShowScrollFab] = useState(false);
   const toasts = useToasts();
+  const viewport = useVisualViewport();
   const composerRef = useRef<HTMLTextAreaElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -128,7 +119,10 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const useRoleStyle = useMemo(() => getUseRoleStyle(), []);
   const allowNSFW = useMemo(() => getNSFW(), []);
   const memEnabled = useMemo(() => getMemoryEnabled(), []);
-  const ctxLimits = useMemo(() => ({ max: getCtxMaxTokens(), reserve: getCtxReservedTokens() }), []);
+  const ctxLimits = useMemo(
+    () => ({ max: getCtxMaxTokens(), reserve: getCtxReservedTokens() }),
+    [],
+  );
 
   const composerOffset = useMemo(() => getComposerOffset(), []);
   const virtEnabled = useMemo(() => getVirtualListEnabled(), []);
@@ -139,14 +133,21 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       const stored = convGetMessages(convId);
       const mapped = stored
         .filter((m) => m.role === "user" || m.role === "assistant")
-        .map((m) => ({ id: `${m.role}-${m.createdAt}`, role: m.role as "user" | "assistant", content: m.content }));
+        .map((m) => ({
+          id: `${m.role}-${m.createdAt}`,
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        }));
       setMsgs(mapped.length ? mapped : [{ id: uid(), role: "assistant", content: "Bereit." }]);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, [convId]);
 
   useEffect(() => {
     const onScroll = () => {
-      const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 64;
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 64;
       setShowScrollFab(!nearBottom);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -236,20 +237,23 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       onError: (err) => {
         setSending(false);
         abortRef.current = null;
-        
+
         // Show user-friendly error toast
         const errorToast = humanErrorToToast(err);
         toasts.push(errorToast);
-        
+
         // Also add a brief error message to chat for context
-        setMsgs((m) => trimHistory([
-          ...m,
-          {
-            id: uid(),
-            role: "assistant",
-            content: "Die Anfrage konnte nicht verarbeitet werden. Siehe Benachrichtigung für Details.",
-          },
-        ]));
+        setMsgs((m) =>
+          trimHistory([
+            ...m,
+            {
+              id: uid(),
+              role: "assistant",
+              content:
+                "Die Anfrage konnte nicht verarbeitet werden. Siehe Benachrichtigung für Details.",
+            },
+          ]),
+        );
       },
     });
   }
@@ -270,7 +274,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         style={{ paddingBottom: `calc(var(--bottomnav-h, 56px) + 160px)` }}
       >
         <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1 text-xs text-text-muted">
-          {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || '—'}`}
+          {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
         </div>
 
         <section aria-label="Verlauf" role="log">
@@ -284,16 +288,22 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
                 {trimmed.map((m) => {
                   const mine = m.role === "user";
                   return (
-                    <div key={m.id} className={`msg my-3 flex items-start gap-2 ${mine ? "justify-end" : "justify-start"}`}>
+                    <div
+                      key={m.id}
+                      className={`msg my-3 flex items-start gap-2 ${mine ? "justify-end" : "justify-start"}`}
+                    >
                       {!mine && <Avatar kind="assistant" />}
                       <div
                         className={`chat-bubble max-w-[min(92%,42.5rem)] rounded-2xl p-3 text-text ${
                           mine
-                            ? "bg-grad-primary text-white border border-transparent shadow-glow"
+                            ? "border border-transparent bg-grad-primary text-white shadow-glow"
                             : "glass-solid"
                         }`}
                       >
-                        <Message msg={m} onCopied={() => toasts.push({ kind: "success", title: "Kopiert" })} />
+                        <Message
+                          msg={m}
+                          onCopied={() => toasts.push({ kind: "success", title: "Kopiert" })}
+                        />
                       </div>
                       {mine && <Avatar kind="user" />}
                     </div>
@@ -314,9 +324,16 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         )}
       </main>
 
-      <div className="fixed left-0 right-0 z-50" style={{ bottom: `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)` }}>
+      <div
+        className="fixed left-0 right-0 z-50"
+        style={{
+          bottom: viewport.isKeyboardOpen
+            ? `calc(${viewport.offsetTop}px + var(--keyboard-offset, 0px) + 16px)`
+            : `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)`,
+        }}
+      >
         <div className="composer-glass mx-auto w-full max-w-3xl">
-          <div className="flex items-end gap-2 composer-actions">
+          <div className="composer-actions flex items-end gap-2">
             <textarea
               ref={composerRef}
               data-testid="composer-input"
@@ -326,11 +343,18 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
               onChange={(e) => setText(e.target.value)}
               onKeyDown={onKeyDown}
               rows={2}
+              style={{
+                maxHeight: viewport.isKeyboardOpen ? "120px" : "200px",
+              }}
             />
             {sending ? (
-              <Button data-testid="composer-stop" variant="secondary" size="sm" onClick={stop}>Stop</Button>
+              <Button data-testid="composer-stop" variant="secondary" size="sm" onClick={stop}>
+                Stop
+              </Button>
             ) : (
-              <Button data-testid="composer-send" variant="primary" size="sm" onClick={send}>Senden</Button>
+              <Button data-testid="composer-send" variant="primary" size="sm" onClick={send}>
+                Senden
+              </Button>
             )}
           </div>
         </div>
@@ -338,7 +362,9 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
 
       <ScrollToEndFAB
         visible={showScrollFab}
-        onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })}
+        onClick={() =>
+          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })
+        }
       />
     </div>
   );

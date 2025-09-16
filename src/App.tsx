@@ -1,8 +1,10 @@
 import * as React from "react";
 
+import { SkipLink } from "./components/accessibility/SkipLink";
 // AndroidNoticeBanner entfernt (Quarantäne)
 import Aurora from "./components/Aurora";
 import ErrorBoundary from "./components/ErrorBoundary";
+import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
 import { ToastsProvider } from "./components/ui/Toast";
 
@@ -54,62 +56,17 @@ export default function App() {
     <ToastsProvider>
       <div className="app-bg relative min-h-[100svh] bg-bg text-foreground">
         <Aurora />
+        <SkipLink targetId="main" />
         <div className="relative z-10 flex min-h-[100svh] flex-col">
           <NetworkBanner />
           {/* AndroidNoticeBanner entfernt */}
-          <header className="sticky top-0 z-40 w-full py-2">
-            <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4">
-              <div className="font-semibold">Disa AI</div>
-              <nav className="tabs">
-                <a
-                  href="#/chat"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    nav({ name: "chat", chatId: null });
-                  }}
-                  className={`tab ${route.name === "chat" ? "tab--active" : ""}`}
-                  data-testid="nav-top-chat"
-                >
-                  Chat
-                </a>
-                <a
-                  href="#/chats"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    nav({ name: "chats" });
-                  }}
-                  className={`tab ${route.name === "chats" ? "tab--active" : ""}`}
-                  data-testid="nav-top-chats"
-                >
-                  Unterhaltungen
-                </a>
-                <a
-                  href="#/quickstart"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    nav({ name: "quickstart" });
-                  }}
-                  className={`tab ${route.name === "quickstart" ? "tab--active" : ""}`}
-                  data-testid="nav-top-quickstart"
-                >
-                  Quickstart
-                </a>
-                <a
-                  href="#/settings"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    nav({ name: "settings" });
-                  }}
-                  className={`tab ${route.name === "settings" ? "tab--active" : ""}`}
-                  data-testid="nav-top-settings"
-                >
-                  Einstellungen
-                </a>
-              </nav>
+          <header className="sticky top-0 z-40 w-full py-3">
+            <div className="mx-auto flex w-full max-w-4xl items-center justify-center px-4">
+              <h1 className="text-xl font-semibold">Disa AI</h1>
             </div>
           </header>
 
-          <main className="relative mx-auto w-full max-w-4xl flex-1 p-4">
+          <main id="main" role="main" className="relative mx-auto w-full max-w-4xl flex-1 p-4">
             <ErrorBoundary>
               <React.Suspense
                 fallback={
@@ -135,7 +92,7 @@ export default function App() {
           </main>
 
           {/* Build-/Umgebungsdiagnose: Version + manueller Reload */}
-          <footer className="mt-6 pb-6">
+          <footer className="mt-6 pb-20">
             <div className="mx-auto flex w-full max-w-4xl items-center justify-end gap-3 px-4 text-xs opacity-80">
               <span className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5">
                 v {import.meta.env.VITE_APP_VERSION ?? "dev"}
@@ -156,6 +113,8 @@ export default function App() {
               </button>
             </div>
           </footer>
+
+          <BottomNav />
         </div>
       </div>
     </ToastsProvider>
