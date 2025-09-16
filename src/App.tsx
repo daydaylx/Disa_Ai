@@ -54,107 +54,109 @@ export default function App() {
     <ToastsProvider>
       <div className="app-bg relative min-h-[100svh] bg-bg text-foreground">
         <Aurora />
-        <NetworkBanner />
-        {/* AndroidNoticeBanner entfernt */}
-        <header className="sticky top-0 z-40 w-full py-2">
-          <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4">
-            <div className="font-semibold">Disa AI</div>
-            <nav className="tabs">
-              <a
-                href="#/chat"
-                onClick={(e) => {
-                  e.preventDefault();
-                  nav({ name: "chat", chatId: null });
-                }}
-                className={`tab ${route.name === "chat" ? "tab--active" : ""}`}
-                data-testid="nav-top-chat"
-              >
-                Chat
-              </a>
-              <a
-                href="#/chats"
-                onClick={(e) => {
-                  e.preventDefault();
-                  nav({ name: "chats" });
-                }}
-                className={`tab ${route.name === "chats" ? "tab--active" : ""}`}
-                data-testid="nav-top-chats"
-              >
-                Unterhaltungen
-              </a>
-              <a
-                href="#/quickstart"
-                onClick={(e) => {
-                  e.preventDefault();
-                  nav({ name: "quickstart" });
-                }}
-                className={`tab ${route.name === "quickstart" ? "tab--active" : ""}`}
-                data-testid="nav-top-quickstart"
-              >
-                Quickstart
-              </a>
-              <a
-                href="#/settings"
-                onClick={(e) => {
-                  e.preventDefault();
-                  nav({ name: "settings" });
-                }}
-                className={`tab ${route.name === "settings" ? "tab--active" : ""}`}
-                data-testid="nav-top-settings"
-              >
-                Einstellungen
-              </a>
-            </nav>
-          </div>
-        </header>
+        <div className="relative z-10 flex min-h-[100svh] flex-col">
+          <NetworkBanner />
+          {/* AndroidNoticeBanner entfernt */}
+          <header className="sticky top-0 z-40 w-full py-2">
+            <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4">
+              <div className="font-semibold">Disa AI</div>
+              <nav className="tabs">
+                <a
+                  href="#/chat"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    nav({ name: "chat", chatId: null });
+                  }}
+                  className={`tab ${route.name === "chat" ? "tab--active" : ""}`}
+                  data-testid="nav-top-chat"
+                >
+                  Chat
+                </a>
+                <a
+                  href="#/chats"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    nav({ name: "chats" });
+                  }}
+                  className={`tab ${route.name === "chats" ? "tab--active" : ""}`}
+                  data-testid="nav-top-chats"
+                >
+                  Unterhaltungen
+                </a>
+                <a
+                  href="#/quickstart"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    nav({ name: "quickstart" });
+                  }}
+                  className={`tab ${route.name === "quickstart" ? "tab--active" : ""}`}
+                  data-testid="nav-top-quickstart"
+                >
+                  Quickstart
+                </a>
+                <a
+                  href="#/settings"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    nav({ name: "settings" });
+                  }}
+                  className={`tab ${route.name === "settings" ? "tab--active" : ""}`}
+                  data-testid="nav-top-settings"
+                >
+                  Einstellungen
+                </a>
+              </nav>
+            </div>
+          </header>
 
-        <main className="relative mx-auto w-full max-w-4xl p-4">
-          <ErrorBoundary>
-            <React.Suspense
-              fallback={
-                <div className="flex items-center justify-center py-12">
-                  <div className="glass rounded-lg p-6 text-center">
-                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"></div>
-                    <p className="mt-3 text-sm text-muted-foreground">Lädt...</p>
+          <main className="relative mx-auto w-full max-w-4xl flex-1 p-4">
+            <ErrorBoundary>
+              <React.Suspense
+                fallback={
+                  <div className="flex items-center justify-center py-12">
+                    <div className="glass rounded-lg p-6 text-center">
+                      <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"></div>
+                      <p className="mt-3 text-sm text-muted-foreground">Lädt...</p>
+                    </div>
                   </div>
-                </div>
-              }
-            >
-              {route.name === "settings" ? (
-                <SettingsView />
-              ) : route.name === "chats" ? (
-                <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
-              ) : route.name === "quickstart" ? (
-                <QuickStartView />
-              ) : (
-                <ChatView convId={route.chatId ?? null} />
-              )}
-            </React.Suspense>
-          </ErrorBoundary>
-        </main>
-
-        {/* Build-/Umgebungsdiagnose: Version + manueller Reload */}
-        <footer className="mt-6 pb-6">
-          <div className="mx-auto flex w-full max-w-4xl items-center justify-end gap-3 px-4 text-xs opacity-80">
-            <span className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5">
-              v {import.meta.env.VITE_APP_VERSION ?? "dev"}
-            </span>
-            <button
-              type="button"
-              className="btn-ghost !min-h-0 px-2 py-1"
-              onClick={() => {
-                try {
-                  window.location.reload();
-                } catch {
-                  /* noop */
                 }
-              }}
-              aria-label="Neu laden"
-            >
-              Neu laden
-            </button>
-          </div>
-        </footer>
+              >
+                {route.name === "settings" ? (
+                  <SettingsView />
+                ) : route.name === "chats" ? (
+                  <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
+                ) : route.name === "quickstart" ? (
+                  <QuickStartView />
+                ) : (
+                  <ChatView convId={route.chatId ?? null} />
+                )}
+              </React.Suspense>
+            </ErrorBoundary>
+          </main>
+
+          {/* Build-/Umgebungsdiagnose: Version + manueller Reload */}
+          <footer className="mt-6 pb-6">
+            <div className="mx-auto flex w-full max-w-4xl items-center justify-end gap-3 px-4 text-xs opacity-80">
+              <span className="rounded-full border border-white/15 bg-white/10 px-2 py-0.5">
+                v {import.meta.env.VITE_APP_VERSION ?? "dev"}
+              </span>
+              <button
+                type="button"
+                className="btn-ghost !min-h-0 px-2 py-1"
+                onClick={() => {
+                  try {
+                    window.location.reload();
+                  } catch {
+                    /* noop */
+                  }
+                }}
+                aria-label="Neu laden"
+              >
+                Neu laden
+              </button>
+            </div>
+          </footer>
+        </div>
       </div>
     </ToastsProvider>
   );
