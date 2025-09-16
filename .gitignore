@@ -68,4 +68,6 @@ tsconfig.tsbuildinfo
 *.temp
 .temp/
 Thumbs.db
-\n# Build artifacts\n*.tsbuildinfo
+
+# Build artifacts
+*.tsbuildinfo
