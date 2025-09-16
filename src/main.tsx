@@ -3,6 +3,7 @@ import "./styles/globals.css";
 import "./styles/brand.css";
 import "./styles/theme.css";
 import "./styles/chat.css";
+import "./styles/mobile.css";
 import "./bootstrap/migrations";
 
 import ReactDOM from "react-dom/client";

@@ -1,5 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
+import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
 import { Icon, type IconName } from "./Icon";
 
@@ -12,6 +13,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   loading?: boolean;
   leftIcon?: IconName;
   rightIcon?: IconName;
+  enableHaptic?: boolean;
 }
 
 // Base styles are now in theme.css under the .btn class
@@ -42,17 +44,34 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       leftIcon,
       rightIcon,
+      enableHaptic = true,
       className,
       children,
+      onClick,
       ...props
     },
     ref,
   ) => {
+    const handleClick = React.useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (enableHaptic) {
+          if (variant === "destructive") {
+            hapticFeedback.warning();
+          } else {
+            hapticFeedback.tap();
+          }
+        }
+        onClick?.(e);
+      },
+      [enableHaptic, variant, onClick],
+    );
+
     return (
       <button
         ref={ref}
         className={cn(base, variants[variant], sizes[size], className)}
         aria-busy={loading || undefined}
+        onClick={handleClick}
         {...props}
       >
         {leftIcon ? <Icon name={leftIcon} className="mr-2" /> : null}

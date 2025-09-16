@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { useState } from 'react';
+import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
 
 export const Composer: React.FC<{
@@ -9,52 +10,95 @@ export const Composer: React.FC<{
   onStop: () => void;
 }> = ({ loading, onSend, onStop }) => {
   const [text, setText] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const composerRef = useRef<HTMLDivElement>(null);
   const disabled = loading || text.trim().length === 0;
 
+  // Handle keyboard visibility and scrolling
+  useEffect(() => {
+    const handleResize = () => {
+      if (textareaRef.current && document.activeElement === textareaRef.current) {
+        // Delay scroll to allow keyboard animation
+        setTimeout(() => {
+          textareaRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }, 100);
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleResize);
+      return () => window.visualViewport?.removeEventListener("resize", handleResize);
+    } else {
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
+  const handleSend = () => {
+    if (!disabled) {
+      hapticFeedback.success();
+      onSend(text.trim());
+      setText("");
+    }
+  };
+
+  const handleStop = () => {
+    hapticFeedback.warning();
+    onStop();
+  };
+
   return (
-    <div className="safe-pad safe-bottom py-3">
+    <div ref={composerRef} className="composer-container safe-pad safe-bottom py-3">
       <div className="relative flex items-end gap-2">
         <textarea
+          ref={textareaRef}
           data-testid="composer-input"
           className={cn(
             "max-h-[40dvh] min-h-[56px] w-full p-4 pr-14 text-[15px] leading-5",
-            "resize-none rounded-[14px] outline-none",
-            "bg-white/70 backdrop-blur-md border border-white/30",
+            "touch-target resize-none rounded-[14px] outline-none",
+            "border border-white/30 bg-white/70 backdrop-blur-md",
             "placeholder:text-slate-500",
+            "keyboard-aware",
           )}
           placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onFocus={() => {
+            // Light haptic feedback when focusing input
+            hapticFeedback.select();
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              if (!disabled) {
-                onSend(text.trim());
-                setText("");
-              }
+              handleSend();
             }
           }}
+          inputMode="text"
+          autoCapitalize="sentences"
+          autoCorrect="on"
         />
         <div className="absolute bottom-2 right-2">
           {loading ? (
             <button
               data-testid="composer-stop"
-              className="tap nav-pill px-3 py-2 text-sm"
-              onClick={onStop}
+              className="tap nav-pill touch-target px-3 py-2 text-sm"
+              onClick={handleStop}
             >
               Stop
             </button>
           ) : (
             <button
               data-testid="composer-send"
-              className={cn("tap btn-primary px-3 py-3 rounded-[14px]", disabled && "pointer-events-none opacity-60")}
-              onClick={() => {
-                if (!disabled) {
-                  onSend(text.trim());
-                  setText("");
-                }
-              }}
+              className={cn(
+                "tap btn-primary touch-target rounded-[14px] px-3 py-3",
+                disabled && "pointer-events-none opacity-60",
+              )}
+              onClick={handleSend}
               aria-label="Senden"
+              data-no-zoom
             >
               ✈️
             </button>
