@@ -17,38 +17,23 @@ const createMockTouchEvent = (
   type: string,
   touches: Array<{ clientX: number; clientY: number }>,
 ): TouchEvent => {
-  const touchList = touches.map((touch, index) => ({
-    identifier: index,
-    target: document.body,
-    clientX: touch.clientX,
-    clientY: touch.clientY,
-    pageX: touch.clientX,
-    pageY: touch.clientY,
-    screenX: touch.clientX,
-    screenY: touch.clientY,
-    radiusX: 10,
-    radiusY: 10,
-    rotationAngle: 0,
-    force: 1,
-  }));
+  const touchList = touches.map(
+    (touch, index) =>
+      new Touch({
+        identifier: index,
+        target: document.body,
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+      }),
+  );
 
-  return {
-    type,
-    touches: touchList as any,
-    targetTouches: touchList as any,
-    changedTouches: touchList as any,
-    preventDefault: vi.fn(),
-    stopPropagation: vi.fn(),
+  return new TouchEvent(type, {
+    touches: touchList,
+    targetTouches: touchList,
+    changedTouches: touchList,
     bubbles: true,
     cancelable: true,
-    composed: true,
-    currentTarget: null,
-    defaultPrevented: false,
-    eventPhase: 2,
-    isTrusted: true,
-    target: document.body,
-    timeStamp: Date.now(),
-  } as any;
+  });
 };
 
 describe("TouchGestureHandler", () => {
@@ -67,6 +52,14 @@ describe("TouchGestureHandler", () => {
   });
 
   describe("Tap Gestures", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it("should detect single tap", () => {
       const onTap = vi.fn();
       gestureHandler.onTapGesture(onTap);
@@ -76,12 +69,11 @@ describe("TouchGestureHandler", () => {
       element.dispatchEvent(touchStart);
 
       // Simulate touch end (short duration)
-      setTimeout(() => {
-        const touchEnd = createMockTouchEvent("touchend", []);
-        element.dispatchEvent(touchEnd);
+      vi.advanceTimersByTime(50);
+      const touchEnd = createMockTouchEvent("touchend", [{ clientX: 100, clientY: 100 }]);
+      element.dispatchEvent(touchEnd);
 
-        expect(onTap).toHaveBeenCalledTimes(1);
-      }, 50);
+      expect(onTap).toHaveBeenCalledTimes(1);
     });
 
     it("should not trigger tap on long press", () => {
@@ -120,7 +112,7 @@ describe("TouchGestureHandler", () => {
       element.dispatchEvent(touchMove);
 
       // End touch
-      const touchEnd = createMockTouchEvent("touchend", []);
+      const touchEnd = createMockTouchEvent("touchend", [{ clientX: 50, clientY: 100 }]);
       element.dispatchEvent(touchEnd);
 
       expect(onSwipe).toHaveBeenCalledWith(
@@ -145,7 +137,7 @@ describe("TouchGestureHandler", () => {
       element.dispatchEvent(touchMove);
 
       // End touch
-      const touchEnd = createMockTouchEvent("touchend", []);
+      const touchEnd = createMockTouchEvent("touchend", [{ clientX: 100, clientY: 50 }]);
       element.dispatchEvent(touchEnd);
 
       expect(onSwipe).toHaveBeenCalledWith(
@@ -170,7 +162,7 @@ describe("TouchGestureHandler", () => {
       element.dispatchEvent(touchMove);
 
       // End touch
-      const touchEnd = createMockTouchEvent("touchend", []);
+      const touchEnd = createMockTouchEvent("touchend", [{ clientX: 110, clientY: 100 }]);
       element.dispatchEvent(touchEnd);
 
       expect(onSwipe).not.toHaveBeenCalled();
@@ -179,7 +171,7 @@ describe("TouchGestureHandler", () => {
 
   describe("Pinch Gestures", () => {
     it("should detect pinch zoom in", () => {
-      const onPinch = vi.fn();
+      const _onPinch = vi.fn();
       // Note: onPinchGesture not implemented yet, skip test
       // gestureHandler.onPinchGesture(onPinch);
 
@@ -202,7 +194,7 @@ describe("TouchGestureHandler", () => {
     });
 
     it("should detect pinch zoom out", () => {
-      const onPinch = vi.fn();
+      const _onPinch = vi.fn();
       // Note: onPinchGesture not implemented yet, skip test
       // gestureHandler.onPinchGesture(onPinch);
 
@@ -242,7 +234,7 @@ describe("TouchGestureHandler", () => {
       const touchMove = createMockTouchEvent("touchmove", [{ clientX: 150, clientY: 100 }]);
       element.dispatchEvent(touchMove);
 
-      const touchEnd = createMockTouchEvent("touchend", []);
+      const touchEnd = createMockTouchEvent("touchend", [{ clientX: 150, clientY: 100 }]);
       element.dispatchEvent(touchEnd);
 
       expect(onSwipe).not.toHaveBeenCalled();
@@ -278,10 +270,14 @@ describe("TouchGestureHandler", () => {
         preventDefaultSwipe: true,
       });
 
+      const touchStart = createMockTouchEvent("touchstart", [{ clientX: 200, clientY: 100 }]);
+      element.dispatchEvent(touchStart);
+
       const touchMove = createMockTouchEvent("touchmove", [{ clientX: 50, clientY: 100 }]);
+      const spy = vi.spyOn(touchMove, "preventDefault");
       element.dispatchEvent(touchMove);
 
-      expect(touchMove.preventDefault).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it("should not prevent default when disabled", () => {
@@ -291,9 +287,10 @@ describe("TouchGestureHandler", () => {
       });
 
       const touchMove = createMockTouchEvent("touchmove", [{ clientX: 50, clientY: 100 }]);
+      const spy = vi.spyOn(touchMove, "preventDefault");
       element.dispatchEvent(touchMove);
 
-      expect(touchMove.preventDefault).not.toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 

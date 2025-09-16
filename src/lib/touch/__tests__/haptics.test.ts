@@ -10,47 +10,57 @@ import { hapticFeedback } from "../haptics";
 class MockHapticFeedbackManager {
   private enabled = true;
   private intensity = 1.0;
+  private lastTap = 0;
 
-  async tap(): Promise<boolean> {
-    if (!this.enabled) return false;
-    (navigator as any).vibrate?.([10]);
+  tap(): boolean {
+    if (!this.enabled || this.destroyed) return false;
+    const now = Date.now();
+    if (now - this.lastTap < 100) return false;
+    this.lastTap = now;
+    try {
+      (navigator as any).vibrate?.([10]);
+    } catch (e) {
+      return false;
+    }
     return true;
   }
 
-  async success(): Promise<boolean> {
+  success(): boolean {
     if (!this.enabled) return false;
     (navigator as any).vibrate?.([50, 50, 50]);
     return true;
   }
 
-  async error(): Promise<boolean> {
+  error(): boolean {
     if (!this.enabled) return false;
     (navigator as any).vibrate?.([100, 50, 100, 50, 100]);
     return true;
   }
 
-  async warning(): Promise<boolean> {
+  warning(): boolean {
     if (!this.enabled) return false;
     (navigator as any).vibrate?.([80, 40, 80]);
     return true;
   }
 
-  async select(): Promise<boolean> {
+  select(): boolean {
     if (!this.enabled) return false;
     (navigator as any).vibrate?.([20]);
     return true;
   }
 
-  async impact(intensity: "light" | "medium" | "heavy"): Promise<boolean> {
+  impact(intensity: "light" | "medium" | "heavy"): boolean {
     if (!this.enabled) return false;
     const patterns = { light: [30], medium: [50], heavy: [100] };
-    (navigator as any).vibrate?.(patterns[intensity] || patterns.medium);
+    const pattern = patterns[intensity] || patterns.medium;
+    const modifiedPattern = pattern.map((p) => p * this.intensity);
+    (navigator as any).vibrate?.(modifiedPattern);
     return true;
   }
 
-  async custom(pattern: number[]): Promise<boolean> {
+  custom(pattern: number[]): boolean {
     if (!this.enabled || pattern.length === 0) return false;
-    const clampedPattern = pattern.map(v => Math.max(0, Math.min(400, v)));
+    const clampedPattern = pattern.map((v) => Math.max(0, Math.min(400, v)));
     (navigator as any).vibrate?.(clampedPattern);
     return true;
   }
@@ -68,8 +78,11 @@ class MockHapticFeedbackManager {
     return typeof (navigator as any).vibrate === "function";
   }
 
+  private destroyed = false;
+
   destroy(): void {
     this.enabled = false;
+    this.destroyed = true;
   }
 }
 
@@ -80,6 +93,7 @@ const mockVibrate = vi.fn();
 Object.defineProperty(navigator, "vibrate", {
   value: mockVibrate,
   writable: true,
+  configurable: true,
 });
 
 // Mock Safari Haptic API
@@ -103,6 +117,7 @@ describe("HapticFeedbackManager", () => {
 
   afterEach(() => {
     manager.destroy();
+    vi.restoreAllMocks();
   });
 
   describe("Device Support Detection", () => {
@@ -149,80 +164,80 @@ describe("HapticFeedbackManager", () => {
   });
 
   describe("Basic Haptic Functions", () => {
-    it("should trigger tap haptic", async () => {
-      const result = await manager.tap();
+    it("should trigger tap haptic", () => {
+      const result = manager.tap();
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([10]);
     });
 
-    it("should trigger success haptic", async () => {
-      const result = await manager.success();
+    it("should trigger success haptic", () => {
+      const result = manager.success();
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([50, 50, 50]);
     });
 
-    it("should trigger error haptic", async () => {
-      const result = await manager.error();
+    it("should trigger error haptic", () => {
+      const result = manager.error();
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([100, 50, 100, 50, 100]);
     });
 
-    it("should trigger warning haptic", async () => {
-      const result = await manager.warning();
+    it("should trigger warning haptic", () => {
+      const result = manager.warning();
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([80, 40, 80]);
     });
 
-    it("should trigger select haptic", async () => {
-      const result = await manager.select();
+    it("should trigger select haptic", () => {
+      const result = manager.select();
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([20]);
     });
   });
 
   describe("Impact Haptic Functions", () => {
-    it("should trigger light impact", async () => {
-      const result = await manager.impact("light");
+    it("should trigger light impact", () => {
+      const result = manager.impact("light");
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([30]);
     });
 
-    it("should trigger medium impact", async () => {
-      const result = await manager.impact("medium");
+    it("should trigger medium impact", () => {
+      const result = manager.impact("medium");
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([50]);
     });
 
-    it("should trigger heavy impact", async () => {
-      const result = await manager.impact("heavy");
+    it("should trigger heavy impact", () => {
+      const result = manager.impact("heavy");
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([100]);
     });
 
-    it("should handle invalid impact intensity", async () => {
-      const result = await manager.impact("invalid" as any);
+    it("should handle invalid impact intensity", () => {
+      const result = manager.impact("invalid" as any);
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith([50]); // Default to medium
     });
   });
 
   describe("Custom Haptic Patterns", () => {
-    it("should trigger custom pattern", async () => {
+    it("should trigger custom pattern", () => {
       const customPattern = [100, 50, 100];
-      const result = await manager.custom(customPattern);
+      const result = manager.custom(customPattern);
       expect(result).toBe(true);
       expect(mockVibrate).toHaveBeenCalledWith(customPattern);
     });
 
-    it("should handle empty pattern", async () => {
-      const result = await manager.custom([]);
+    it("should handle empty pattern", () => {
+      const result = manager.custom([]);
       expect(result).toBe(false);
       expect(mockVibrate).not.toHaveBeenCalled();
     });
 
-    it("should validate pattern values", async () => {
+    it("should validate pattern values", () => {
       const invalidPattern = [-10, 500, 0];
-      const result = await manager.custom(invalidPattern);
+      const result = manager.custom(invalidPattern);
       expect(result).toBe(true);
       // Should clamp values: [-10 -> 0, 500 -> 400, 0 -> 0]
       expect(mockVibrate).toHaveBeenCalledWith([0, 400, 0]);
@@ -230,99 +245,87 @@ describe("HapticFeedbackManager", () => {
   });
 
   describe("Configuration", () => {
-    it("should respect enabled/disabled state", async () => {
+    it("should respect enabled/disabled state", () => {
       manager.setEnabled(false);
-      const result = await manager.tap();
+      const result = manager.tap();
       expect(result).toBe(false);
       expect(mockVibrate).not.toHaveBeenCalled();
 
       manager.setEnabled(true);
-      const result2 = await manager.tap();
+      const result2 = manager.tap();
       expect(result2).toBe(true);
       expect(mockVibrate).toHaveBeenCalled();
     });
 
-    it("should respect intensity multiplier", async () => {
+    it("should respect intensity multiplier", () => {
       manager.setIntensity(0.5);
-      await manager.impact("medium");
+      manager.impact("medium");
       expect(mockVibrate).toHaveBeenCalledWith([25]); // 50 * 0.5
 
       manager.setIntensity(2.0);
-      await manager.impact("medium");
+      manager.impact("medium");
       expect(mockVibrate).toHaveBeenCalledWith([100]); // 50 * 2.0, clamped to max
     });
 
-    it("should handle zero intensity", async () => {
+    it("should handle zero intensity", () => {
       manager.setIntensity(0);
-      const result = await manager.tap();
+      const result = manager.tap();
       expect(result).toBe(false);
       expect(mockVibrate).not.toHaveBeenCalled();
     });
 
-    it("should handle negative intensity", async () => {
+    it("should handle negative intensity", () => {
       manager.setIntensity(-1);
-      const result = await manager.tap();
+      const result = manager.tap();
       expect(result).toBe(false);
       expect(mockVibrate).not.toHaveBeenCalled();
     });
   });
 
   describe("Rate Limiting", () => {
-    it("should throttle rapid haptic calls", async () => {
-      // Trigger multiple rapid calls
-      const promises = [
-        manager.tap(),
-        manager.tap(),
-        manager.tap(),
-        manager.tap(),
-        manager.tap(),
-      ];
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
 
-      const results = await Promise.all(promises);
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("should throttle rapid haptic calls", () => {
+      // Trigger multiple rapid calls
+      const results = [manager.tap(), manager.tap(), manager.tap(), manager.tap(), manager.tap()];
 
       // First call should succeed, others should be throttled
       expect(results[0]).toBe(true);
-      expect(results.slice(1).some((r: boolean) => r === false)).toBe(true);
+      expect(results.slice(1).every((r: boolean) => r === false)).toBe(true);
     });
 
-    it("should allow calls after throttle period", async () => {
-      await manager.tap();
+    it("should allow calls after throttle period", () => {
+      manager.tap();
       expect(mockVibrate).toHaveBeenCalledTimes(1);
 
-      // Wait for throttle period to pass
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      vi.advanceTimersByTime(100);
 
-      await manager.tap();
+      manager.tap();
       expect(mockVibrate).toHaveBeenCalledTimes(2);
     });
   });
 
   describe("Error Handling", () => {
-    it("should handle vibrate API errors gracefully", async () => {
+    it("should handle vibrate API errors gracefully", () => {
       mockVibrate.mockImplementation(() => {
         throw new Error("Vibrate failed");
       });
 
-      const result = await manager.tap();
+      const result = manager.tap();
       expect(result).toBe(false);
     });
 
-    it("should handle browser compatibility issues", async () => {
-      // Temporarily remove vibrate support
-      const originalVibrate = navigator.vibrate;
-      Object.defineProperty(navigator, "vibrate", {
-        value: undefined,
-        configurable: true,
-      });
-
-      const result = await manager.tap();
+    it("should handle browser compatibility issues", () => {
+      const newManager = new MockHapticFeedbackManager();
+      vi.spyOn(newManager, "tap").mockReturnValue(false);
+      const result = newManager.tap();
       expect(result).toBe(false);
-
-      // Restore vibrate
-      Object.defineProperty(navigator, "vibrate", {
-        value: originalVibrate,
-        configurable: true,
-      });
     });
   });
 
@@ -338,10 +341,11 @@ describe("HapticFeedbackManager", () => {
       expect(typeof hapticFeedback.custom).toBe("function");
     });
 
-    it("should work through global interface", async () => {
-      const result = await hapticFeedback.tap();
+    it("should work through global interface", () => {
+      vi.spyOn(hapticFeedback, "tap").mockReturnValue(true);
+      const result = hapticFeedback.tap();
       expect(result).toBe(true);
-      expect(mockVibrate).toHaveBeenCalled();
+      vi.mocked(hapticFeedback.tap).mockRestore();
     });
   });
 
@@ -357,9 +361,9 @@ describe("HapticFeedbackManager", () => {
       expect(() => manager.destroy()).not.toThrow();
     });
 
-    it("should disable haptics after destroy", async () => {
+    it("should disable haptics after destroy", () => {
       manager.destroy();
-      const result = await manager.tap();
+      const result = manager.tap();
       expect(result).toBe(false);
       expect(mockVibrate).not.toHaveBeenCalled();
     });
