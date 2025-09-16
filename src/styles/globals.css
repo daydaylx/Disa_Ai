@@ -38,12 +38,6 @@ body {
   .container-page {
     @apply mx-auto max-w-[1200px] px-4 md:px-6;
   }
-  .card {
-    @apply card-solid;
-  }
-  .glass {
-    @apply glass;
-  }
   .focus-ring {
     @apply outline-none ring-0 focus:shadow-ring;
   }
