@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
+import { VoiceButton } from "./VoiceButton";
 
 export const Composer: React.FC<{
   loading?: boolean;
@@ -50,6 +51,17 @@ export const Composer: React.FC<{
     onStop();
   };
 
+  const handleVoiceTranscript = (transcript: string) => {
+    setText(transcript);
+    // Auto-focus textarea nach Voice-Input
+    textareaRef.current?.focus();
+  };
+
+  const handleVoiceError = (error: string) => {
+    // Zeige Toast-Nachricht oder andere Fehlerbehandlung
+    console.warn("Voice recognition error:", error);
+  };
+
   return (
     <div ref={composerRef} className="composer-container safe-pad safe-bottom py-3">
       <div className="relative flex items-end gap-2">
@@ -80,6 +92,17 @@ export const Composer: React.FC<{
           autoCapitalize="sentences"
           autoCorrect="on"
         />
+
+        {/* Voice Button */}
+        <div className="absolute bottom-2 right-16">
+          <VoiceButton
+            onTranscript={handleVoiceTranscript}
+            onError={handleVoiceError}
+            disabled={loading}
+            className="h-8 w-8"
+          />
+        </div>
+
         <div className="absolute bottom-2 right-2">
           {loading ? (
             <button
