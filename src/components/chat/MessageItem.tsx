@@ -1,9 +1,8 @@
-import * as React from 'react';
-import { useMemo } from 'react';
+import * as React from "react";
+import { useMemo } from "react";
 
 import { cn } from "../../lib/utils/cn";
-import { Button } from "../ui/Button";
-import { Icon } from "../ui/Icon";
+import { CopyButton } from "../ui/CopyButton";
 
 export type Role = "user" | "assistant" | "system";
 
@@ -53,18 +52,11 @@ export const MessageItem: React.FC<MessageItemProps> = ({ msg, onCopy }) => {
       {blocks.map((b, i) =>
         b.type === "code" ? (
           <div key={i} className="codeblock my-2">
-            <Button
-              className="copy-btn"
-              size="sm"
-              variant="secondary"
-              aria-label="Code kopieren"
-              onClick={() => {
-                void navigator.clipboard.writeText(b.content);
-                onCopy?.(b.content);
-              }}
-            >
-              <Icon name="copy" /> <span className="ml-2">Kopieren</span>
-            </Button>
+            <CopyButton
+              text={b.content}
+              className="copy-btn mb-2"
+              onCopied={() => onCopy?.(b.content)}
+            />
             <pre>
               <code>{b.content}</code>
             </pre>
