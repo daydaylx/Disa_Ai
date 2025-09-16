@@ -6,6 +6,7 @@ import * as React from "react";
 import { useCallback, useState } from "react";
 
 import { useVoiceToText, VoiceRecognitionResult } from "../../lib/speech/voiceToText";
+import { mobileToast } from "../../lib/toast/mobileToast";
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
 
@@ -53,12 +54,25 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
         if (result.isFinal && result.transcript.trim()) {
           onTranscript(result.transcript.trim());
           setTranscript("");
+
+          // Erfolgs-Toast für erfolgreiche Spracherkennung
+          mobileToast.success("Sprache erkannt", {
+            duration: 2000,
+            position: "top",
+            icon: "🎤",
+          });
         }
       })
       .onError((error) => {
         const errorMessage = getErrorMessage(error.type);
         onError?.(errorMessage);
         hapticFeedback.error();
+
+        // Mobile Toast für Fehler anzeigen
+        mobileToast.error(errorMessage, {
+          duration: 4000,
+          position: "top",
+        });
 
         if (error.type === "permission") {
           setHasPermission(false);

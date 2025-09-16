@@ -1,5 +1,8 @@
 import * as React from "react";
 
+import { TouchGestureHandler } from "../../lib/touch/gestures";
+import { hapticFeedback } from "../../lib/touch/haptics";
+
 function useHash(): string {
   const [h, setH] = React.useState<string>(() =>
     typeof location !== "undefined" ? location.hash || "#/chat" : "#/chat",
@@ -15,9 +18,14 @@ function useHash(): string {
 export default function BottomNav() {
   const h = useHash().toLowerCase();
   const is = (p: string) => h.startsWith(p);
-  const to = (p: string) => (location.hash = p);
+  const to = (p: string) => {
+    hapticFeedback.select();
+    location.hash = p;
+  };
 
   const ref = React.useRef<HTMLElement | null>(null);
+  const gestureHandlerRef = React.useRef<TouchGestureHandler | null>(null);
+  // Navigation height tracking
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -34,12 +42,53 @@ export default function BottomNav() {
     };
   }, []);
 
+  // Touch gestures for navigation
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const handler = new TouchGestureHandler(el, {
+      swipeThreshold: 80,
+      preventDefaultSwipe: false,
+    });
+
+    gestureHandlerRef.current = handler;
+
+    // Swipe gestures for navigation
+    handler.onSwipeGesture((event) => {
+      const currentIndex = getCurrentTabIndex(h);
+
+      if (event.direction === "left" && currentIndex < 3) {
+        // Swipe left = next tab
+        const tabs = ["#/chat", "#/chats", "#/quickstart", "#/settings"];
+        to(tabs[currentIndex + 1]!);
+      } else if (event.direction === "right" && currentIndex > 0) {
+        // Swipe right = previous tab
+        const tabs = ["#/chat", "#/chats", "#/quickstart", "#/settings"];
+        to(tabs[currentIndex - 1]!);
+      }
+    });
+
+    return () => {
+      handler.destroy();
+      gestureHandlerRef.current = null;
+    };
+  }, [h]);
+
+  const getCurrentTabIndex = (hash: string): number => {
+    if (hash.startsWith("#/chat")) return 0;
+    if (hash.startsWith("#/chats")) return 1;
+    if (hash.startsWith("#/quickstart")) return 2;
+    if (hash.startsWith("#/settings")) return 3;
+    return 0;
+  };
+
   return (
     <nav
       ref={(el) => {
         ref.current = el;
       }}
-      className="glass safe-bottom fixed inset-x-3 bottom-3 z-30 rounded-2xl px-2 py-2 backdrop-blur"
+      className="glass safe-bottom fixed inset-x-3 bottom-3 z-30 rounded-2xl px-2 py-2 backdrop-blur touch-target"
       role="navigation"
       aria-label="Hauptnavigation"
       style={{
@@ -52,10 +101,11 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/chat")}
-            className={`flex min-h-[48px] w-full items-center justify-center ${is("#/chat") ? "tab--active" : "tab"}`}
+            className={`tap touch-target flex min-h-[48px] w-full items-center justify-center ${is("#/chat") ? "tab--active" : "tab"}`}
             aria-current={is("#/chat") ? "page" : undefined}
             aria-label="Chat öffnen"
             data-testid="nav-bottom-chat"
+            onTouchStart={() => hapticFeedback.tap()}
           >
             <span className="text-xs">Chat</span>
           </button>
@@ -63,10 +113,11 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/chats")}
-            className={`flex min-h-[48px] w-full items-center justify-center ${is("#/chats") ? "tab--active" : "tab"}`}
+            className={`tap touch-target flex min-h-[48px] w-full items-center justify-center ${is("#/chats") ? "tab--active" : "tab"}`}
             aria-current={is("#/chats") ? "page" : undefined}
             aria-label="Alle Unterhaltungen"
             data-testid="nav-bottom-chats"
+            onTouchStart={() => hapticFeedback.tap()}
           >
             <span className="text-xs">Chats</span>
           </button>
@@ -74,10 +125,11 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/quickstart")}
-            className={`flex min-h-[48px] w-full items-center justify-center ${is("#/quickstart") ? "tab--active" : "tab"}`}
+            className={`tap touch-target flex min-h-[48px] w-full items-center justify-center ${is("#/quickstart") ? "tab--active" : "tab"}`}
             aria-current={is("#/quickstart") ? "page" : undefined}
             aria-label="Schnellstart"
             data-testid="nav-bottom-quickstart"
+            onTouchStart={() => hapticFeedback.tap()}
           >
             <span className="text-xs">Start</span>
           </button>
@@ -85,10 +137,11 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/settings")}
-            className={`flex min-h-[48px] w-full items-center justify-center ${is("#/settings") ? "tab--active" : "tab"}`}
+            className={`tap touch-target flex min-h-[48px] w-full items-center justify-center ${is("#/settings") ? "tab--active" : "tab"}`}
             aria-current={is("#/settings") ? "page" : undefined}
             aria-label="Einstellungen öffnen"
             data-testid="nav-bottom-settings"
+            onTouchStart={() => hapticFeedback.tap()}
           >
             <span className="text-xs">Settings</span>
           </button>
