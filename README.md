@@ -164,12 +164,17 @@ Strikte Sicherheitsrichtlinien via `public/_headers`:
 
 ```
 Content-Security-Policy: default-src 'self';
-  script-src 'self' 'unsafe-inline';
-  style-src 'self' 'unsafe-inline';
-  connect-src 'self' https://openrouter.ai;
+  script-src 'self';
+  style-src 'self';
   img-src 'self' data: blob:;
+  font-src 'self' data:;
+  connect-src 'self' https://openrouter.ai;
+  worker-src 'self';
+  manifest-src 'self';
   frame-src 'none';
-  object-src 'none'
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self'
 ```
 
 **Zusätzliche Headers:**
@@ -370,9 +375,26 @@ npm run test:e2e
 
 - `nav-pill`, `nav-pill--active` - Tab-Navigation
 
-**Legacy-Hinweis:**
-CSS in `src/styles/brand.css`, `src/ui/kit.css` sind Kompat-Helfer.
-Neue Styles bitte über Tokens/Utilities implementieren.
+### Stylesheet Imports
+
+Lade Styles in `src/main.tsx` genau in dieser Reihenfolge:
+
+1. `src/ui/base.css`
+2. `src/styles/globals.css`
+3. `src/styles/brand.css`
+4. `src/styles/theme.css`
+5. `src/styles/chat.css`
+
+Der React-Root (`#root`) muss parallel `app-bg bg-bg text-foreground` erhalten, damit der Aurora-Background sichtbar bleibt.
+
+### Do / Don't
+
+- **Do:** feste Utility-Klassen über `@apply` definieren und bei dynamischen Klassen die Tailwind-Safelist pflegen (`tailwind.config.ts`).
+- **Do:** Wrapper-Elemente statt Inline-Styles nutzen, um Gradients/Blurs einzubetten.
+- **Don't:** Inline-Styles für Farben oder Layout verwenden; verwende Tokens/Utilities.
+- **Don't:** neue Stylesheets außerhalb des Imports in `src/main.tsx` anlegen – konsolidierte Layers halten Purge stabil.
+
+**Hinweis:** Aurora- und Token-Styles liegen in `src/styles/brand.css` und `src/styles/theme.css`; zusätzliche Kompat-Schichten werden nicht mehr benötigt.
 
 ---
 
