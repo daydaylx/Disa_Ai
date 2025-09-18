@@ -3,6 +3,8 @@
  * Measures Core Web Vitals: LCP, CLS, INP, TTFB
  */
 
+import * as React from "react";
+
 interface Metric {
   name: string;
   value: number;
@@ -95,9 +97,13 @@ class WebVitalsReporter {
       let clsEntries: PerformanceEntry[] = [];
 
       const observer = new PerformanceObserver((list) => {
+        let latestValue = 0;
+
         for (const entry of list.getEntries()) {
           if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value;
+            const entryValue = (entry as any).value;
+            clsValue += entryValue;
+            latestValue = entryValue;
             clsEntries.push(entry);
           }
         }
@@ -106,7 +112,7 @@ class WebVitalsReporter {
           name: "CLS",
           value: clsValue,
           rating: this.getRating("CLS", clsValue),
-          delta: (entry as any).value || 0,
+          delta: latestValue,
           entries: clsEntries,
           id: this.generateId(),
           navigationType: this.getNavigationType(),
@@ -128,7 +134,7 @@ class WebVitalsReporter {
 
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries() as PerformanceEventTiming[]) {
-          if (entry.interactionId && entry.duration > longestInteraction) {
+          if ((entry as any).interactionId && entry.duration > longestInteraction) {
             longestInteraction = entry.duration;
             longestEntry = entry;
           }
@@ -147,7 +153,7 @@ class WebVitalsReporter {
         }
       });
 
-      observer.observe({ type: "event", buffered: true, durationThreshold: 16 });
+      observer.observe({ type: "event", buffered: true } as any);
     } catch (error) {
       this.debugLog("INP observer error:", error);
     }
