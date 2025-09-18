@@ -68,7 +68,7 @@ export class BundleOptimizer {
 
     // Lade Webpack/Vite Stats wenn verfügbar
     if (import.meta.env.DEV) {
-      await this.analyzeDevBundle(analysis);
+      this.analyzeDevBundle(analysis);
     } else {
       await this.analyzeProductionBundle(analysis);
     }
@@ -83,7 +83,7 @@ export class BundleOptimizer {
   /**
    * Development Bundle analysieren
    */
-  private async analyzeDevBundle(analysis: BundleAnalysis): Promise<void> {
+  private analyzeDevBundle(analysis: BundleAnalysis): void {
     // In Development Mode können wir die Module über import.meta analysieren
     if (import.meta.hot) {
       const modules = import.meta.hot.data?.modules || new Set();

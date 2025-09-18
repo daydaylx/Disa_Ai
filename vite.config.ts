@@ -16,4 +16,16 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor splitting for better caching
+          vendor: ["react", "react-dom"],
+          // Utils and libraries
+          utils: ["zod", "js-yaml"],
+        },
+      },
+    },
+  },
 });

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  
+  <!--
+  SPA Deep-Link Fallback:
+  Cloudflare Pages can handle this server-side via _headers with:
+    /* /index.html 200
+  This 404.html serves as client-side backup for any hosting provider.
+  -->
+  
+  <script>
+    // Preserve query parameters and hash fragment when redirecting to SPA
+    const currentUrl = window.location;
+    const targetUrl = '/' + currentUrl.search + currentUrl.hash;
+    
+    // Replace current history entry to avoid back-button loop
+    window.location.replace(targetUrl);
+  </script>
+</head>
+<body>
+  <p>Redirecting to app...</p>
+</body>
+</html>
