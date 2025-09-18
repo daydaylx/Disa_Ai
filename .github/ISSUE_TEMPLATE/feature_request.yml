@@ -1,0 +1,153 @@
+name: ✨ Feature Request
+description: Suggest an idea for this project
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please provide as much detail as possible to help us understand your request.
+
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem is.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: false
+
+  - type: textarea
+    id: solution-description
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+      placeholder: I would like to see...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative-solutions
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: I've also considered...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: feature-category
+    attributes:
+      label: Feature category
+      description: What type of feature is this?
+      options:
+        - User Interface / UX
+        - Chat functionality
+        - AI/Model integration
+        - Performance
+        - Accessibility
+        - Mobile experience
+        - Security
+        - Developer experience
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would improve my workflow
+        - High - Essential for my use case
+        - Critical - Blocking my usage
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: platform-support
+    attributes:
+      label: Platform support needed
+      description: Which platforms should this feature support?
+      options:
+        - label: Desktop web browsers
+        - label: Mobile web browsers
+        - label: PWA (installable app)
+        - label: Keyboard users
+        - label: Screen reader users
+        - label: Touch screen users
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use cases
+      description: Describe specific scenarios where this feature would be helpful.
+      placeholder: |
+        1. When I'm doing X, I need to...
+        2. As a user who Y, I want to...
+        3. In the situation where Z, it would help if...
+    validations:
+      required: true
+
+  - type: textarea
+    id: user-research
+    attributes:
+      label: User research
+      description: Have you seen this feature implemented elsewhere? How do other similar tools handle this?
+      placeholder: I've seen this in [app name] where they...
+
+  - type: checkboxes
+    id: accessibility-considerations
+    attributes:
+      label: Accessibility considerations
+      description: Please consider accessibility requirements for this feature
+      options:
+        - label: This feature should work with keyboard navigation
+        - label: This feature should work with screen readers
+        - label: This feature should meet color contrast requirements
+        - label: This feature should have appropriate touch targets
+        - label: Not applicable
+
+  - type: checkboxes
+    id: performance-considerations
+    attributes:
+      label: Performance considerations
+      description: Please consider performance impact of this feature
+      options:
+        - label: This feature should not impact loading times
+        - label: This feature should work on slow connections
+        - label: This feature should not increase bundle size significantly
+        - label: This feature should be optimized for mobile devices
+        - label: Not applicable
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context, screenshots, mockups, or examples about the feature request here.
+      placeholder: Any additional information, mockups, or examples...
+
+  - type: checkboxes
+    id: implementation-willingness
+    attributes:
+      label: Implementation
+      description: Are you willing to help implement this feature?
+      options:
+        - label: I'd be willing to submit a PR for this feature
+        - label: I'd be willing to help with testing
+        - label: I'd be willing to help with design/UX
+        - label: I can only provide feedback/requirements
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
