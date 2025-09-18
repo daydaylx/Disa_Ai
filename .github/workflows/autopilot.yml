@@ -1,0 +1,128 @@
+name: Autopilot Maintenance
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  autopilot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.14.0
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run safe auto-fixes
+        id: fixes
+        run: |
+          echo "Starting auto-fixes..." | tee -a autopilot.log
+
+          # ESLint auto-fix if configured
+          if [ -f "eslint.config.mjs" ] || [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+            echo "Running ESLint auto-fix..." | tee -a autopilot.log
+            npx eslint . --fix --ext .js,.jsx,.ts,.tsx 2>&1 | tee -a autopilot.log || true
+          fi
+
+          # Prettier auto-fix if configured
+          if [ -f ".prettierrc" ] || [ -f ".prettierrc.json" ] || [ -f "prettier.config.js" ]; then
+            echo "Running Prettier..." | tee -a autopilot.log
+            npx prettier --write . 2>&1 | tee -a autopilot.log || true
+          fi
+
+          # Remove unused imports (TypeScript-aware)
+          echo "Checking for unused imports..." | tee -a autopilot.log
+          if command -v npx >/dev/null 2>&1; then
+            npx ts-unused-exports tsconfig.json 2>&1 | tee -a autopilot.log || true
+          fi
+
+      - name: Run local scripts
+        id: scripts
+        run: |
+          echo "Running local maintenance scripts..." | tee -a autopilot.log
+
+          # Run setup-verify if exists
+          if [ -f "scripts/setup-verify.mjs" ]; then
+            echo "Running setup-verify.mjs..." | tee -a autopilot.log
+            node scripts/setup-verify.mjs 2>&1 | tee -a autopilot.log || true
+          fi
+
+          # Run setup-alias if exists
+          if [ -f "scripts/setup-alias.mjs" ]; then
+            echo "Running setup-alias.mjs..." | tee -a autopilot.log
+            node scripts/setup-alias.mjs 2>&1 | tee -a autopilot.log || true
+          fi
+
+          # Run CSP smoke test if exists
+          if [ -f "scripts/csp-smoke.mjs" ]; then
+            echo "Running CSP smoke test..." | tee -a autopilot.log
+            node scripts/csp-smoke.mjs 2>&1 | tee -a autopilot.log || true
+          fi
+
+      - name: Build project
+        id: build
+        run: |
+          echo "Building project..." | tee -a autopilot.log
+
+          # Try vite build first, fallback to npm run build
+          if [ -f "vite.config.ts" ] || [ -f "vite.config.js" ]; then
+            echo "Running vite build..." | tee -a autopilot.log
+            npx vite build 2>&1 | tee -a autopilot.log
+          else
+            echo "Running npm run build..." | tee -a autopilot.log
+            npm run build 2>&1 | tee -a autopilot.log
+          fi
+
+          echo "Build completed. Preview server available on port 4173 with: npm run preview" | tee -a autopilot.log
+
+      - name: Generate summary
+        id: summary
+        run: |
+          if [ -f "scripts/autopilot-summary.mjs" ]; then
+            echo "Generating autopilot summary..." | tee -a autopilot.log
+            node scripts/autopilot-summary.mjs 2>&1 | tee -a autopilot.log || true
+          else
+            echo "No autopilot-summary.mjs found, using basic summary" | tee -a autopilot.log
+            echo "## Autopilot Maintenance Summary" > pr-body.md
+            echo "" >> pr-body.md
+            echo "### Changes Applied" >> pr-body.md
+            echo "- ESLint auto-fixes" >> pr-body.md
+            echo "- Prettier formatting" >> pr-body.md
+            echo "- Local maintenance scripts" >> pr-body.md
+            echo "- Build verification" >> pr-body.md
+            echo "" >> pr-body.md
+            echo "### Logs" >> pr-body.md
+            echo "\`\`\`" >> pr-body.md
+            cat autopilot.log >> pr-body.md
+            echo "\`\`\`" >> pr-body.md
+          fi
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: autopilot/${{ github.run_id }}
+          title: 'chore(autopilot): sichere Wartungsfixes'
+          body-path: pr-body.md
+          commit-message: |
+            chore(autopilot): sichere Wartungsfixes
+
+            - ESLint auto-fixes angewendet
+            - Prettier formatting durchgeführt
+            - Lokale Maintenance-Skripte ausgeführt
+            - Build verifiziert
+          delete-branch: true

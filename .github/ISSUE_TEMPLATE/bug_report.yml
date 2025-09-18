@@ -1,0 +1,133 @@
+name: 🐛 Bug Report
+description: Create a report to help us improve
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: What should have happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Please provide the exact steps to reproduce this bug.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Microsoft Edge
+        - Opera
+        - Mobile Safari (iOS)
+        - Chrome Mobile (Android)
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device-type
+    attributes:
+      label: Device type
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      placeholder: e.g., Windows 11, macOS 13.0, iOS 16.1, Android 13
+    validations:
+      required: true
+
+  - type: textarea
+    id: console-errors
+    attributes:
+      label: Console errors
+      description: If applicable, paste any console errors you see (open DevTools with F12).
+      placeholder: Paste console errors here...
+      render: text
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here. Screenshots are very helpful!
+      placeholder: Any additional information that might help us understand the issue...
+
+  - type: checkboxes
+    id: accessibility
+    attributes:
+      label: Accessibility Impact
+      description: Does this bug affect accessibility?
+      options:
+        - label: This bug affects keyboard navigation
+        - label: This bug affects screen readers
+        - label: This bug affects color contrast
+        - label: This bug affects touch targets
+        - label: Not applicable
+
+  - type: checkboxes
+    id: performance
+    attributes:
+      label: Performance Impact
+      description: Does this bug affect performance?
+      options:
+        - label: This bug causes slow loading
+        - label: This bug causes layout shifts
+        - label: This bug causes interaction delays
+        - label: This bug affects battery life
+        - label: Not applicable
+
+  - type: textarea
+    id: network-conditions
+    attributes:
+      label: Network conditions
+      description: What was your internet connection like when the bug occurred?
+      placeholder: e.g., Fast WiFi, 4G, Slow 3G, Offline, etc.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

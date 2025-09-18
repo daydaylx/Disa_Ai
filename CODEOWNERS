@@ -1,0 +1,67 @@
+# CODEOWNERS file for Disa AI
+# This file defines code ownership and review requirements
+
+# Global fallback - require at least one review
+* @owner
+
+# Core library and utilities - requires careful review
+/src/lib/ @owner @security-reviewer
+/src/utils/ @owner
+
+# Security-critical files - require security review
+/public/_headers @owner @security-reviewer
+/src/lib/errors/ @owner @security-reviewer
+/src/api/ @owner @security-reviewer
+
+# Authentication and API integration
+/src/services/ @owner @backend-reviewer
+
+# Build and deployment configuration
+/vite.config.ts @owner @devops-reviewer
+/package.json @owner @devops-reviewer
+/package-lock.json @owner @devops-reviewer
+/.github/workflows/ @owner @devops-reviewer
+/public/_headers @owner @devops-reviewer @security-reviewer
+
+# E2E tests and quality assurance
+/tests/ @owner @qa-reviewer
+/e2e/ @owner @qa-reviewer
+/playwright.config.ts @owner @qa-reviewer
+
+# Documentation and developer experience
+/README.md @owner @docs-reviewer
+/CLAUDE.md @owner @docs-reviewer
+/docs/ @owner @docs-reviewer
+/.github/ @owner @docs-reviewer
+
+# UI and accessibility - require UX review
+/src/components/ @owner @ux-reviewer
+/src/styles/ @owner @ux-reviewer
+/src/views/ @owner @ux-reviewer
+
+# Performance and monitoring
+/src/lib/performance/ @owner @performance-reviewer
+
+# Mobile-specific code
+/src/lib/touch/ @owner @mobile-reviewer
+
+# Critical configuration files
+/eslint.config.mjs @owner
+/tsconfig.json @owner
+/tailwind.config.ts @owner
+/renovate.json @owner @devops-reviewer
+
+# Security and compliance
+/public/offline.html @security-reviewer
+/public/manifest.webmanifest @security-reviewer
+
+# Example team assignments (replace with actual GitHub usernames):
+# @owner - Primary maintainer
+# @security-reviewer - Security specialist  
+# @backend-reviewer - Backend/API specialist
+# @devops-reviewer - DevOps/Infrastructure specialist
+# @qa-reviewer - Quality assurance specialist
+# @docs-reviewer - Documentation specialist
+# @ux-reviewer - UX/Accessibility specialist
+# @performance-reviewer - Performance specialist
+# @mobile-reviewer - Mobile specialist

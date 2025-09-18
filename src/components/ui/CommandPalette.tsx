@@ -1,0 +1,371 @@
+import * as React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { hapticFeedback } from "../../lib/touch/haptics";
+import { cn } from "../../lib/utils/cn";
+
+export interface Command {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  shortcut?: string;
+  action: () => void;
+  disabled?: boolean;
+}
+
+interface CommandPaletteProps {
+  isOpen: boolean;
+  onClose: () => void;
+  commands: Command[];
+  placeholder?: string;
+}
+
+export const CommandPalette: React.FC<CommandPaletteProps> = ({
+  isOpen,
+  onClose,
+  commands,
+  placeholder = "Befehl suchen...",
+}) => {
+  const [query, setQuery] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+
+  // Filter commands based on query
+  const filteredCommands = React.useMemo(() => {
+    if (!query.trim()) return commands;
+
+    const lowercaseQuery = query.toLowerCase();
+    return commands.filter(
+      (command) =>
+        command.title.toLowerCase().includes(lowercaseQuery) ||
+        command.description?.toLowerCase().includes(lowercaseQuery),
+    );
+  }, [commands, query]);
+
+  // Reset selected index when filtered commands change
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [filteredCommands]);
+
+  // Focus search input when opened
+  useEffect(() => {
+    if (isOpen) {
+      requestAnimationFrame(() => {
+        searchRef.current?.focus();
+      });
+    } else {
+      setQuery("");
+      setSelectedIndex(0);
+    }
+  }, [isOpen]);
+
+  // Scroll selected item into view
+  useEffect(() => {
+    const selectedItem = itemRefs.current[selectedIndex];
+    if (selectedItem && listRef.current) {
+      selectedItem.scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }, [selectedIndex]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setSelectedIndex((prev) => (prev < filteredCommands.length - 1 ? prev + 1 : 0));
+          hapticFeedback.select();
+          break;
+
+        case "ArrowUp":
+          e.preventDefault();
+          setSelectedIndex((prev) => (prev > 0 ? prev - 1 : filteredCommands.length - 1));
+          hapticFeedback.select();
+          break;
+
+        case "Enter":
+          e.preventDefault();
+          if (filteredCommands[selectedIndex] && !filteredCommands[selectedIndex].disabled) {
+            hapticFeedback.success();
+            filteredCommands[selectedIndex].action();
+            onClose();
+          }
+          break;
+
+        case "Escape":
+          e.preventDefault();
+          onClose();
+          break;
+
+        default:
+          break;
+      }
+    },
+    [filteredCommands, selectedIndex, onClose],
+  );
+
+  const handleCommandClick = useCallback(
+    (command: Command, index: number) => {
+      if (command.disabled) return;
+
+      hapticFeedback.success();
+      setSelectedIndex(index);
+      command.action();
+      onClose();
+    },
+    [onClose],
+  );
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Command Palette */}
+      <div
+        className="fixed inset-x-4 top-[20vh] z-50 mx-auto max-w-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="command-palette-title"
+      >
+        <div className="overflow-hidden rounded-xl border border-white/20 bg-white/90 shadow-2xl backdrop-blur-md">
+          {/* Search Input */}
+          <div className="flex items-center border-b border-white/20 px-4">
+            <svg
+              className="h-5 w-5 text-slate-500"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <input
+              ref={searchRef}
+              type="text"
+              className="h-12 w-full border-0 bg-transparent pl-3 pr-4 text-slate-900 placeholder:text-slate-500 focus:ring-0 sm:text-sm"
+              placeholder={placeholder}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+              aria-labelledby="command-palette-title"
+              aria-expanded="true"
+              aria-activedescendant={
+                filteredCommands[selectedIndex]
+                  ? `command-${filteredCommands[selectedIndex].id}`
+                  : undefined
+              }
+              role="combobox"
+              aria-autocomplete="list"
+            />
+          </div>
+
+          {/* Command List */}
+          {filteredCommands.length > 0 ? (
+            <ul
+              ref={listRef}
+              className="max-h-80 overflow-y-auto scroll-smooth p-2"
+              role="listbox"
+              aria-labelledby="command-palette-title"
+            >
+              {filteredCommands.map((command, index) => (
+                <li
+                  key={command.id}
+                  ref={(el) => (itemRefs.current[index] = el)}
+                  id={`command-${command.id}`}
+                  className={cn(
+                    "group flex cursor-pointer select-none items-center rounded-lg px-3 py-2",
+                    "transition-colors duration-150",
+                    index === selectedIndex
+                      ? "bg-blue-600 text-white"
+                      : "text-slate-900 hover:bg-blue-50",
+                    command.disabled && "cursor-not-allowed opacity-50",
+                  )}
+                  onClick={() => handleCommandClick(command, index)}
+                  onMouseEnter={() => setSelectedIndex(index)}
+                  role="option"
+                  aria-selected={index === selectedIndex}
+                  aria-disabled={command.disabled}
+                >
+                  {/* Icon */}
+                  {command.icon && (
+                    <div
+                      className={cn(
+                        "mr-3 h-5 w-5 flex-shrink-0",
+                        index === selectedIndex ? "text-white" : "text-slate-500",
+                      )}
+                    >
+                      {command.icon}
+                    </div>
+                  )}
+
+                  {/* Content */}
+                  <div className="min-w-0 flex-1">
+                    <div
+                      className={cn(
+                        "truncate font-medium",
+                        index === selectedIndex ? "text-white" : "text-slate-900",
+                      )}
+                    >
+                      {command.title}
+                    </div>
+                    {command.description && (
+                      <div
+                        className={cn(
+                          "truncate text-sm",
+                          index === selectedIndex ? "text-blue-100" : "text-slate-500",
+                        )}
+                      >
+                        {command.description}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Shortcut */}
+                  {command.shortcut && (
+                    <div
+                      className={cn(
+                        "ml-3 font-mono text-xs",
+                        index === selectedIndex ? "text-blue-100" : "text-slate-400",
+                      )}
+                    >
+                      {command.shortcut}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="px-4 py-14 text-center text-sm text-slate-500">
+              Keine Befehle gefunden für "{query}"
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+// Hook for managing command palette state and keyboard shortcuts
+export function useCommandPalette() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsOpen((prev) => !prev);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
+
+  return { isOpen, open, close, toggle };
+}
+
+// Default commands that can be used across the app
+export function useDefaultCommands() {
+  const focusComposer = useCallback(() => {
+    const composer = document.querySelector(
+      '[data-testid="composer-input"]',
+    ) as HTMLTextAreaElement;
+    if (composer) {
+      composer.focus();
+    }
+  }, []);
+
+  const copyLastMessage = useCallback(async () => {
+    const messages = document.querySelectorAll('[role="article"]');
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage) {
+      const text = lastMessage.textContent || "";
+      try {
+        await navigator.clipboard.writeText(text);
+        hapticFeedback.success();
+      } catch (error) {
+        console.warn("Failed to copy to clipboard:", error);
+      }
+    }
+  }, []);
+
+  const newChat = useCallback(() => {
+    window.location.hash = "#/";
+  }, []);
+
+  const openSettings = useCallback(() => {
+    window.location.hash = "#/settings";
+  }, []);
+
+  const switchModel = useCallback(() => {
+    const modelSelect = document.querySelector('[data-testid="model-select"]') as HTMLSelectElement;
+    if (modelSelect) {
+      modelSelect.focus();
+    }
+  }, []);
+
+  return React.useMemo(
+    () => [
+      {
+        id: "new-chat",
+        title: "Neuer Chat",
+        description: "Einen neuen Chat starten",
+        icon: "💬",
+        shortcut: "Ctrl+N",
+        action: newChat,
+      },
+      {
+        id: "focus-composer",
+        title: "Fokus auf Eingabe",
+        description: "Cursor in das Eingabefeld setzen",
+        icon: "✏️",
+        shortcut: "/",
+        action: focusComposer,
+      },
+      {
+        id: "copy-last",
+        title: "Letzte Antwort kopieren",
+        description: "Die letzte KI-Antwort in die Zwischenablage kopieren",
+        icon: "📋",
+        shortcut: "Ctrl+Shift+C",
+        action: copyLastMessage,
+      },
+      {
+        id: "switch-model",
+        title: "Modell wechseln",
+        description: "Das AI-Modell ändern",
+        icon: "🤖",
+        shortcut: "Ctrl+M",
+        action: switchModel,
+      },
+      {
+        id: "settings",
+        title: "Einstellungen",
+        description: "App-Einstellungen öffnen",
+        icon: "⚙️",
+        shortcut: "Ctrl+,",
+        action: openSettings,
+      },
+    ],
+    [newChat, focusComposer, copyLastMessage, switchModel, openSettings],
+  );
+}
