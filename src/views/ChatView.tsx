@@ -2,10 +2,10 @@ import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import Avatar from "../components/chat/Avatar";
+import { Composer } from "../components/chat/Composer";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import { TypingIndicator } from "../components/chat/TypingIndicator";
 import CodeBlock from "../components/CodeBlock";
-import { Button } from "../components/ui/Button";
 import { CopyButton } from "../components/ui/CopyButton";
 import { useToasts } from "../components/ui/Toast";
 import { getVirtualListEnabled } from "../config/featureFlags";
@@ -76,13 +76,12 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
 
 const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
-  const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [showAll] = useState(false);
   const [showScrollFab, setShowScrollFab] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const toasts = useToasts();
   const viewport = useVisualViewport();
-  const composerRef = useRef<HTMLTextAreaElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const MAX_HISTORY = 200;
@@ -159,15 +158,18 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     };
   }, []);
 
-  const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === "Escape" && sending) {
-      e.preventDefault();
-      stop();
-    }
-    if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
-      e.preventDefault();
-      send();
-    }
+  const handleSend = (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed || sending) return;
+    send(trimmed);
+  };
+
+  const handleStop = () => {
+    stop();
+  };
+
+  const handleClearError = () => {
+    setError(null);
   };
 
   function buildMessages(userText: string): ChatMessage[] {
@@ -188,8 +190,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     return cm.optimize(built);
   }
 
-  function send() {
-    const trimmed = text.trim();
+  function send(trimmed: string) {
     if (!trimmed || sending) return;
     maybeVibrate(15);
 
@@ -197,8 +198,8 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     if (convId) {
       convAppendMessage(convId, { role: "user", content: trimmed } as any);
     }
-    setText("");
     setSending(true);
+    setError(null);
 
     abortRef.current?.abort();
     const ac = new AbortController();
@@ -241,6 +242,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         // Show user-friendly error toast
         const errorToast = humanErrorToToast(err);
         toasts.push(errorToast);
+        setError("Die Anfrage konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.");
 
         // Also add a brief error message to chat for context
         setMsgs((m) =>
@@ -332,31 +334,14 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
             : `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)`,
         }}
       >
-        <div className="composer-glass mx-auto w-full max-w-3xl">
-          <div className="composer-actions flex items-end gap-2">
-            <textarea
-              ref={composerRef}
-              data-testid="composer-input"
-              className="composer-input"
-              placeholder="Nachricht eingeben…"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={onKeyDown}
-              rows={2}
-              style={{
-                maxHeight: viewport.isKeyboardOpen ? "120px" : "200px",
-              }}
-            />
-            {sending ? (
-              <Button data-testid="composer-stop" variant="secondary" size="sm" onClick={stop}>
-                Stop
-              </Button>
-            ) : (
-              <Button data-testid="composer-send" variant="primary" size="sm" onClick={send}>
-                Senden
-              </Button>
-            )}
-          </div>
+        <div className="mx-auto w-full max-w-3xl px-4">
+          <Composer
+            loading={sending}
+            onSend={handleSend}
+            onStop={handleStop}
+            error={error}
+            onClearError={handleClearError}
+          />
         </div>
       </div>
 
