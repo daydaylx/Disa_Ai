@@ -56,53 +56,53 @@ export class MobileFeaturesManager {
   /**
    * Alle Mobile-Features initialisieren
    */
-  async initialize(): Promise<void> {
+  initialize(): void {
     if (this.isInitialized) return;
 
     try {
       // Device-Detection
       if (!this.isMobileDevice()) {
-        console.log("Desktop device detected - skipping mobile optimizations");
+        console.warn("Desktop device detected - skipping mobile optimizations");
         return;
       }
 
-      console.log("Initializing mobile features...");
+      console.warn("Initializing mobile features...");
 
       // Haptisches Feedback
       if (this.options.enableHapticFeedback) {
-        await this.initializeHapticFeedback();
+        this.initializeHapticFeedback();
       }
 
       // Touch-Optimierungen
       if (this.options.enableTouchOptimizations) {
-        await this.initializeTouchOptimizations();
+        this.initializeTouchOptimizations();
       }
 
       // Gesture-Shortcuts
       if (this.options.enableGestureShortcuts) {
-        await this.initializeGestureShortcuts();
+        this.initializeGestureShortcuts();
       }
 
       // Performance-Optimierung
       if (this.options.enablePerformanceOptimization) {
-        await this.initializePerformanceOptimization();
+        this.initializePerformanceOptimization();
       }
 
       // Offline-Modus
       if (this.options.enableOfflineMode) {
-        await this.initializeOfflineMode();
+        this.initializeOfflineMode();
       }
 
       // Toast-Benachrichtigungen
       if (this.options.enableToastNotifications) {
-        await this.initializeToastNotifications();
+        this.initializeToastNotifications();
       }
 
       this.isInitialized = true;
 
       // Erfolgs-Feedback
       if (this.options.enableHapticFeedback) {
-        await hapticFeedback.success();
+        void hapticFeedback.success();
       }
 
       if (this.options.enableToastNotifications) {
@@ -113,7 +113,7 @@ export class MobileFeaturesManager {
         });
       }
 
-      console.log("Mobile features initialized successfully");
+      console.warn("Mobile features initialized successfully");
     } catch (error) {
       console.error("Failed to initialize mobile features:", error);
 
@@ -131,7 +131,15 @@ export class MobileFeaturesManager {
    */
   private isMobileDevice(): boolean {
     const userAgent = navigator.userAgent.toLowerCase();
-    const mobileKeywords = ["mobile", "android", "iphone", "ipad", "ipod", "blackberry", "windows phone"];
+    const mobileKeywords = [
+      "mobile",
+      "android",
+      "iphone",
+      "ipad",
+      "ipod",
+      "blackberry",
+      "windows phone",
+    ];
 
     const isMobileUA = mobileKeywords.some((keyword) => userAgent.includes(keyword));
     const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
@@ -143,14 +151,10 @@ export class MobileFeaturesManager {
   /**
    * Haptisches Feedback initialisieren
    */
-  private async initializeHapticFeedback(): Promise<void> {
+  private initializeHapticFeedback(): void {
     try {
-      const isSupported = await hapticFeedback.tap();
-      if (isSupported) {
-        console.log("Haptic feedback initialized");
-      } else {
-        console.log("Haptic feedback not supported on this device");
-      }
+      hapticFeedback.tap();
+      console.warn("Haptic feedback initialized");
     } catch (error) {
       console.warn("Failed to initialize haptic feedback:", error);
     }
@@ -173,11 +177,11 @@ export class MobileFeaturesManager {
   /**
    * Gesture-Shortcuts initialisieren
    */
-  private async initializeGestureShortcuts(): Promise<void> {
+  private initializeGestureShortcuts(): void {
     try {
       const manager = initializeMobileShortcuts();
       this.managers.gestureShortcuts = manager;
-      console.log("Gesture shortcuts initialized");
+      console.warn("Gesture shortcuts initialized");
     } catch (error) {
       console.warn("Failed to initialize gesture shortcuts:", error);
     }
@@ -186,7 +190,7 @@ export class MobileFeaturesManager {
   /**
    * Performance-Optimierung initialisieren
    */
-  private async initializePerformanceOptimization(): Promise<void> {
+  private initializePerformanceOptimization(): void {
     try {
       const manager = MobilePerformanceOptimizer.getInstance({
         enableFPSMonitoring: true,
@@ -197,12 +201,12 @@ export class MobileFeaturesManager {
       });
 
       this.managers.performance = manager;
-      console.log("Performance optimization initialized");
+      console.warn("Performance optimization initialized");
 
       // Performance-Report nach 5 Sekunden
       setTimeout(() => {
         const report = manager.generateReport();
-        console.log("Performance Report:", report);
+        console.warn("Performance Report:", report);
 
         if (report.score < 70) {
           console.warn("Low performance score detected:", report.score);
@@ -216,14 +220,14 @@ export class MobileFeaturesManager {
   /**
    * Offline-Modus initialisieren
    */
-  private async initializeOfflineMode(): Promise<void> {
+  private initializeOfflineMode(): void {
     try {
       const manager = OfflineManager.getInstance();
       this.managers.offline = manager;
 
       // Status-Updates überwachen
       manager.on("statusChange", (status: any) => {
-        console.log("Offline status changed:", status);
+        console.warn("Offline status changed:", status);
 
         if (this.options.enableToastNotifications) {
           if (status.isOnline) {
@@ -242,7 +246,7 @@ export class MobileFeaturesManager {
         }
       });
 
-      console.log("Offline mode initialized");
+      console.warn("Offline mode initialized");
     } catch (error) {
       console.warn("Failed to initialize offline mode:", error);
     }
@@ -251,10 +255,10 @@ export class MobileFeaturesManager {
   /**
    * Toast-Benachrichtigungen initialisieren
    */
-  private async initializeToastNotifications(): Promise<void> {
+  private initializeToastNotifications(): void {
     try {
       // Toast-System ist bereits verfügbar, keine weitere Initialisierung nötig
-      console.log("Toast notifications initialized");
+      console.warn("Toast notifications initialized");
     } catch (error) {
       console.warn("Failed to initialize toast notifications:", error);
     }
@@ -300,7 +304,7 @@ export class MobileFeaturesManager {
       switch (feature) {
         case "enableGestureShortcuts":
           if (enabled) {
-            void this.initializeGestureShortcuts();
+            this.initializeGestureShortcuts();
           } else {
             this.managers.gestureShortcuts?.destroy();
             delete this.managers.gestureShortcuts;
@@ -309,7 +313,7 @@ export class MobileFeaturesManager {
 
         case "enablePerformanceOptimization":
           if (enabled) {
-            void this.initializePerformanceOptimization();
+            this.initializePerformanceOptimization();
           } else {
             this.managers.performance?.destroy();
             delete this.managers.performance;
@@ -349,10 +353,12 @@ export class MobileFeaturesManager {
  * Globale Initialisierung
  */
 export const mobileFeatures = {
-  initialize: (options?: MobileInitOptions) => MobileFeaturesManager.getInstance(options).initialize(),
+  initialize: (options?: MobileInitOptions) =>
+    MobileFeaturesManager.getInstance(options).initialize(),
   getInstance: (options?: MobileInitOptions) => MobileFeaturesManager.getInstance(options),
   getStatus: () => MobileFeaturesManager.getInstance().getStatus(),
-  getManager: <T>(name: string): T | null => MobileFeaturesManager.getInstance().getManager<T>(name),
+  getManager: <T>(name: string): T | null =>
+    MobileFeaturesManager.getInstance().getManager<T>(name),
   getPerformanceReport: () => MobileFeaturesManager.getInstance().getPerformanceReport(),
 };
 

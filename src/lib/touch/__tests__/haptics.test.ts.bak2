@@ -19,7 +19,7 @@ class MockHapticFeedbackManager {
     this.lastTap = now;
     try {
       (navigator as any).vibrate?.([10]);
-    } catch {
+    } catch (_e) {
       return false;
     }
     return true;

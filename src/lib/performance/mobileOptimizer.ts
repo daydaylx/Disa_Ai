@@ -330,7 +330,7 @@ export class MobilePerformanceOptimizer {
     document.head.appendChild(style);
 
     // Automatische Optimierung für große Listen
-    const longLists = document.querySelectorAll("ul, ol").forEach((list) => {
+    document.querySelectorAll("ul, ol").forEach((list) => {
       if (list.children.length > 50) {
         list.classList.add("optimize-scroll");
       }
@@ -482,8 +482,7 @@ export class MobilePerformanceOptimizer {
  * Globaler Performance-Optimizer
  */
 export const mobilePerformance = {
-  getInstance: (options?: OptimizationOptions) =>
-    MobilePerformanceOptimizer.getInstance(options),
+  getInstance: (options?: OptimizationOptions) => MobilePerformanceOptimizer.getInstance(options),
 
   optimize: () => {
     const optimizer = MobilePerformanceOptimizer.getInstance();

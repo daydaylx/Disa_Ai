@@ -1,8 +1,9 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}", "./src/**/*.css"],
+  content: ["./index.html", "./src/**/*.{ts,tsx}"],
   safelist: [
+    // Existing component classes
     "card-solid",
     "card-glass",
     "surface-glass",
@@ -13,7 +14,35 @@ const config: Config = {
     "bubble",
     "bubble-user",
     "bubble-assistant",
+    // Dynamic chat UI classes - prefer data-attributes over string concatenation
+    // Text colors for status/feedback
+    "text-red-500",
+    "text-red-600",
+    "text-green-500",
+    "text-green-600",
+    "text-yellow-500",
+    "text-yellow-600",
+    // Background colors for dark theme surfaces
+    "bg-slate-800",
+    "bg-slate-900",
+    "bg-zinc-800",
+    "bg-zinc-900",
+    // Border colors for dividers/containers
+    "border-slate-700",
+    "border-slate-800",
+    "border-zinc-700",
+    "border-zinc-800",
+    // Border radius for dynamic sizing
+    "rounded-md",
+    "rounded-lg",
+    "rounded-xl",
+    // Shadows for elevation states
+    "shadow-sm",
+    "shadow-md",
   ],
+  // Note: For dynamic variants, prefer data-attributes in HTML:
+  // <div data-status="error" class="data-[status=error]:text-red-500">
+  // instead of string concatenation: `text-${status}-500`
   theme: {
     extend: {
       saturate: {

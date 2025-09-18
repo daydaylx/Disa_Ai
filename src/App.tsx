@@ -3,7 +3,7 @@ import * as React from "react";
 import { SkipLink } from "./components/accessibility/SkipLink";
 // AndroidNoticeBanner entfernt (Quarantäne)
 import Aurora from "./components/Aurora";
-import ErrorBoundary from "./components/ErrorBoundary";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
 import { ToastsProvider } from "./components/ui/Toast";

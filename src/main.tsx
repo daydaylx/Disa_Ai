@@ -9,6 +9,7 @@ import "./bootstrap/migrations";
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const root = document.getElementById("root");
 if (!root) {
@@ -18,4 +19,8 @@ if (!root) {
 root.classList.add("app-bg", "bg-bg", "text-foreground");
 root.classList.add("min-h-[100svh]", "relative");
 
-ReactDOM.createRoot(root).render(<App />);
+ReactDOM.createRoot(root).render(
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>,
+);
