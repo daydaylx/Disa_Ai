@@ -2,34 +2,17 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="color-scheme" content="dark only" />
-    <meta name="theme-color" content="#A855F7" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-    <!-- Security -->
-    
-    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin" />
-    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp" />
-    <meta http-equiv="Cross-Origin-Resource-Policy" content="same-origin" />
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-    <meta
-      http-equiv="Permissions-Policy"
-      content="geolocation=(), microphone=(), camera=(), payment=()"
-    />
-
-    <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="icon" href="icons/icon-192.png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="icons/maskable-192.png" />
-    <title>Disa Ai</title>
-
-    <link rel="preconnect" href="https://openrouter.ai" crossorigin />
-    <link rel="dns-prefetch" href="//openrouter.ai" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0f14" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>Disa AI</title>
+    <!-- Keine http-equiv Header für COOP/COEP hier. Das regelt public/_headers. -->
+    <!-- Tailwind/Vite injecten ihre Assets selbst im Build; Dev nutzt /src/main.tsx -->
   </head>
   <body>
-    <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
