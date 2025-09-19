@@ -336,7 +336,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
       {!isUser && <Avatar kind="assistant" />}
       <div
         className={cn(
-          "chat-bubble relative max-w-[min(92vw,42ch)] rounded-2xl p-3 text-text",
+          "chat-bubble relative max-w-[min(90vw,38ch)] rounded-2xl p-3 text-text",
           isUser
             ? "border border-transparent bg-grad-primary text-white shadow-glow"
             : "glass-solid",
@@ -353,7 +353,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
         </button>
 
         {/* Message content */}
-        <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
+        <div className="whitespace-pre-wrap text-base leading-relaxed">{message.content}</div>
       </div>
       {isUser && <Avatar kind="user" />}
     </div>
