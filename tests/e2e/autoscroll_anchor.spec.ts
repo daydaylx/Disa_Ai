@@ -6,11 +6,11 @@ test.describe("Autoscroll anchor", () => {
     await page.addInitScript(
       ({ id }) => {
         const now = Date.now();
-        const messages = Array.from({ length: 40 }, (_, idx) => ({
+        const messages = Array.from({ length: 80 }, (_, idx) => ({
           id: `msg-${idx}`,
           createdAt: now + idx,
           role: idx % 2 === 0 ? "assistant" : "user",
-          content: `Langer Testeintrag ${idx} – ${"Text ".repeat(8)}`,
+          content: `Langer Testeintrag ${idx} – ${"Text ".repeat(15)}`,
         }));
         const meta = {
           id,
@@ -30,10 +30,19 @@ test.describe("Autoscroll anchor", () => {
     await log.waitFor();
     await page.waitForTimeout(150);
 
+    // Force a fixed height to ensure overflow
+    await log.evaluate((el) => {
+      el.style.height = "400px";
+      el.style.overflow = "auto";
+    });
+
     // Simulate user scrolling away from the bottom
     await log.evaluate((el) => {
       el.scrollTop = 0;
     });
+
+    // Wait a bit for scroll state to update
+    await page.waitForTimeout(100);
 
     const fab = page.locator('button[aria-label="Zum Ende scrollen"]');
     await expect(fab).toBeVisible();
