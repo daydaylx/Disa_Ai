@@ -388,10 +388,9 @@ export class VoiceToTextManager {
 }
 
 /**
- * React Hook für Voice-to-Text
+ * Simple Voice-to-Text Manager ohne React-Dependencies
  */
-export function useVoiceToText(options: VoiceToTextOptions = {}) {
-  // React Hook-Implementierung würde hier hin
+export function createVoiceToTextManager(options: VoiceToTextOptions = {}) {
   const manager = new VoiceToTextManager(options);
   return {
     manager,
@@ -402,6 +401,15 @@ export function useVoiceToText(options: VoiceToTextOptions = {}) {
     stop: () => manager.stop(),
     abort: () => manager.abort(),
   };
+}
+
+/**
+ * React Hook für Voice-to-Text (placeholder - needs React import)
+ */
+export function useVoiceToText(options: VoiceToTextOptions = {}) {
+  // Diese Funktion sollte nur verwendet werden, wenn React verfügbar ist
+  // Für jetzt geben wir einen statischen Manager zurück
+  return createVoiceToTextManager(options);
 }
 
 // Browser-Typen erweitern

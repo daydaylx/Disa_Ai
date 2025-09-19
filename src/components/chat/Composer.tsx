@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
-import { VoiceButton } from "./VoiceButton";
+// import { VoiceButton } from "./VoiceButton"; // Temporarily disabled
 
 const MAX_TEXTAREA_LINES = 8;
 const LINE_HEIGHT = 20;
@@ -210,7 +210,7 @@ export const Composer: React.FC<{
           aria-invalid={!!error}
         />
 
-        {/* Voice Button */}
+        {/* Voice Button - Temporarily disabled
         <div className="absolute bottom-2 right-16">
           <VoiceButton
             onTranscript={handleVoiceTranscript}
@@ -219,6 +219,7 @@ export const Composer: React.FC<{
             className="h-8 w-8"
           />
         </div>
+        */}
 
         <div className="absolute bottom-2 right-2">
           {loading ? (
