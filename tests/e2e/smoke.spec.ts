@@ -38,8 +38,8 @@ test.describe("Smoke Tests", () => {
     // Check if the main app loads
     await expect(page).toHaveTitle(/Disa Ai/);
 
-    // Check for main UI elements
-    await expect(page.locator("main")).toBeVisible();
+    // Check for main UI elements (use ID to be specific)
+    await expect(page.locator("#main")).toBeVisible();
     await expect(page.locator('[data-testid="composer-input"]')).toBeVisible();
 
     // Check if composer is ready for input
