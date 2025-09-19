@@ -1,17 +1,6 @@
-/* Globale Basis – wenn Tailwind im Projekt ist, zieht das hier automatisch */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Deine bestehenden globalen Styles kannst du hier zusätzlich importieren:
-   @import "./globals.css";
-   @import "../app.css";
-   usw.
-*/
-
-/* Unsere UX-Fixes */
-@import "./chat-bubbles.css";
-@import "./perf-overrides.css";
 
 /* Kleine mobile Korrekturen für Abstände im Chat-Input (Sichtbarkeit) */
 @media (max-width: 480px) {
