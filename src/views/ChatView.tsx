@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Avatar from "../components/chat/Avatar";
 import { Composer } from "../components/chat/Composer";
 import MessageList from "../components/chat/MessageList";
+import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import CodeBlock from "../components/CodeBlock";
 import { CopyButton } from "../components/ui/CopyButton";
 import { useToasts } from "../components/ui/Toast";
@@ -76,6 +77,7 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
 const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
   const [sending, setSending] = useState(false);
+  const [showScrollFab, setShowScrollFab] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const toasts = useToasts();
   const viewport = useVisualViewport();
