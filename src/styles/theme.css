@@ -82,6 +82,24 @@
 
   /* Brand gradient */
   --brand-gradient: linear-gradient(135deg, #a855f7 0%, #22d3ee 45%, #f472b6 100%);
+  --brand-grad: linear-gradient(135deg, #a855f7 0%, #22d3ee 45%, #f472b6 100%);
+
+  /* Radius tokens */
+  --radius-card: 24px;
+  --radius-tile: 16px;
+  --radius-pill: 9999px;
+
+  /* Shadow & Glow tokens */
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --glow-outer: 0 0 60px rgba(168, 85, 247, 0.35);
+  --glow-ring: 0 0 18px rgba(34, 211, 238, 0.55);
+
+  /* Motion tokens */
+  --dur: 180ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Glass utilities */
+  --bg-glass: var(--bg-surface);
 
   /* Neon glass surfaces */
   --surface-glass: var(--bg-surface);

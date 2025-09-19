@@ -20,12 +20,12 @@ export const HeroOrb: React.FC<HeroOrbProps> = ({
   className = "",
   size = "md",
 }) => {
-  const baseClasses = `orb ${sizeClasses[size]} mx-auto`;
+  const baseClasses = `orb ${sizeClasses[size]} mx-auto relative`;
 
   const stateClasses = {
     idle: "orb-pulse",
-    focus: "orb-focus",
-    listening: "orb-listening",
+    focus: "orb-focus glow",
+    listening: "orb-listening glow",
   };
 
   return (

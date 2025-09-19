@@ -101,16 +101,26 @@ const config: Config = {
         "accent-1": "var(--accent-1)",
         "accent-2": "var(--accent-2)",
         "accent-3": "var(--accent-3)",
+        // Glass utility colors
+        "bg-glass": "var(--bg-glass)",
       },
       borderRadius: {
         lg: "16px",
         md: "14px",
         sm: "12px",
         full: "9999px",
+        // Refined glass tokens
+        card: "var(--radius-card)",
+        tile: "var(--radius-tile)",
+        pill: "var(--radius-pill)",
       },
       boxShadow: {
         soft: "var(--shadow-soft)",
         glow: "var(--glow-primary)",
+        // Refined glass shadows
+        "card-refined": "var(--shadow-card)",
+        "glow-outer": "var(--glow-outer)",
+        "glow-ring": "var(--glow-ring)",
         // Used by components and utilities in CSS via @apply
         card: "var(--shadow-soft)",
         ring: "0 0 0 2px hsl(var(--ring))",
@@ -119,8 +129,9 @@ const config: Config = {
         "grad-primary": "var(--grad-primary)",
         "grad-card": "var(--grad-card)",
         "orb-radial": "var(--orb-radial)",
-        // Neon theme gradients
+        // Refined glass theme gradients
         "brand-gradient": "var(--brand-gradient)",
+        "brand-grad": "var(--brand-grad)",
       },
     },
   },
