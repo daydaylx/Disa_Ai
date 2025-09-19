@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-// import { Composer } from "../components/chat/Composer"; // Temporarily replaced with inline pill
+import { Composer } from "../components/chat/Composer";
 import MessageList from "../components/chat/MessageList";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import { HeroOrb } from "../components/ui/HeroOrb";
@@ -79,9 +79,9 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
   const [sending, setSending] = useState(false);
   const [showScrollFab, setShowScrollFab] = useState(false);
-  const [_error, _setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const toasts = useToasts();
-  const _viewport = useVisualViewport();
+  const viewport = useVisualViewport();
   const abortRef = useRef<AbortController | null>(null);
 
   const MAX_HISTORY = 200;
@@ -123,7 +123,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     [],
   );
 
-  const _composerOffset = useMemo(() => getComposerOffset(), []);
+  const composerOffset = useMemo(() => getComposerOffset(), []);
   const virtEnabled = useMemo(() => getVirtualListEnabled(), []);
 
   useEffect(() => {
@@ -158,18 +158,18 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     };
   }, []);
 
-  const _handleSend = (text: string) => {
+  const handleSend = (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || sending) return;
     send(trimmed);
   };
 
-  const _handleStop = () => {
+  const handleStop = () => {
     stop();
   };
 
-  const _handleClearError = () => {
-    _setError(null);
+  const handleClearError = () => {
+    setError(null);
   };
 
   function buildMessages(userText: string): ChatMessage[] {
@@ -199,7 +199,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       convAppendMessage(convId, { role: "user", content: trimmed } as any);
     }
     setSending(true);
-    _setError(null);
+    setError(null);
 
     abortRef.current?.abort();
     const ac = new AbortController();
@@ -242,7 +242,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         // Show user-friendly error toast
         const errorToast = humanErrorToToast(err);
         toasts.push(errorToast);
-        _setError("Die Anfrage konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.");
+        setError("Die Anfrage konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.");
 
         // Also add a brief error message to chat for context
         setMsgs((m) =>
@@ -268,14 +268,15 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   }
 
   return (
-    <div className="flex min-h-[100svh] flex-col">
-      {/* Header with model info */}
-      <div className="mx-auto mb-4 mt-3 w-full max-w-[42ch] px-5 text-xs text-text-secondary">
-        {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
-      </div>
+    <div className="min-h-[100svh]">
+      <main
+        className="mx-auto w-full max-w-4xl px-4 pt-3"
+        style={{ paddingBottom: `calc(var(--bottomnav-h, 56px) + 160px)` }}
+      >
+        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1 text-xs text-text-muted">
+          {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
+        </div>
 
-      {/* Main chat area - refined reading column */}
-      <main className="mx-auto w-full max-w-[42ch] flex-1 px-5 pb-32">
         <MessageList
           messages={msgs.map((m) => ({
             id: m.id,
@@ -299,21 +300,22 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         )}
       </main>
 
-      {/* Fixed composer at bottom - refined glass pill */}
-      <div className="safe-bottom fixed bottom-0 left-0 right-0 z-50">
-        <div className="mx-4 mb-20">
-          <div className="flex items-center gap-3 px-4 glass pill">
-            <input
-              type="text"
-              placeholder="Nachricht eingeben..."
-              className="placeholder:text-text-secondary/60 flex-1 bg-transparent text-sm outline-none"
-            />
-            <button className="hover:bg-accent-1/90 flex h-8 w-8 items-center justify-center rounded-full bg-accent-1 text-white transition-all">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M2 21l21-9L2 3v7l15 2-15 2v7z" />
-              </svg>
-            </button>
-          </div>
+      <div
+        className="fixed left-0 right-0 z-50"
+        style={{
+          bottom: viewport.isKeyboardOpen
+            ? `calc(${viewport.offsetTop}px + var(--keyboard-offset, 0px) + 16px)`
+            : `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)`,
+        }}
+      >
+        <div className="mx-auto w-full max-w-3xl px-4">
+          <Composer
+            loading={sending}
+            onSend={handleSend}
+            onStop={handleStop}
+            error={error}
+            onClearError={handleClearError}
+          />
         </div>
       </div>
 
