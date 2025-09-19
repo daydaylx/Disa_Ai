@@ -15,6 +15,7 @@ import {
 } from "react";
 
 import { cn } from "../../lib/utils/cn";
+import { LoadingDots } from "../ui/Skeleton";
 import Avatar from "./Avatar";
 
 export interface MessageData {
@@ -294,11 +295,7 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
               <div className="my-2 flex items-start gap-2">
                 <Avatar kind="assistant" />
                 <div className="glass-solid rounded-2xl p-3">
-                  <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
-                  </div>
+                  <LoadingDots />
                 </div>
               </div>
             )}
