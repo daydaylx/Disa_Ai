@@ -1,29 +1,26 @@
 /*
-  # Security Headers
+  # Security basics
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
-  X-XSS-Protection: 1; mode=block
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=()
-  Cross-Origin-Embedder-Policy: require-corp
+
+  # Optional: cross-origin isolation (nur lassen, wenn wirklich gebraucht)
   Cross-Origin-Opener-Policy: same-origin
-  # Strict CSP - only allow necessary sources
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://openrouter.ai; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
+  Cross-Origin-Embedder-Policy: require-corp
 
-/index.html
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
+  # Permissions
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
 
-/manifest.webmanifest
-  Cache-Control: no-cache
-
-/sw.js
-  Cache-Control: no-cache
-
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/icons/*
-  Cache-Control: public, max-age=31536000, immutable
-
+  # CSP: minimal strikt, aber praxis-tauglich für Vite/React
+  # Wichtig: OpenRouter erlauben (Domain + Subdomains)
+  Content-Security-Policy: default-src 'self';
+    base-uri 'self';
+    frame-ancestors 'none';
+    object-src 'none';
+    img-src 'self' data: blob:;
+    font-src 'self' data:;
+    style-src 'self' 'unsafe-inline';
+    script-src 'self';
+    connect-src 'self' https://openrouter.ai https://\*.openrouter.ai\;
+    worker-src 'self' blob:;
+    form-action 'self'
