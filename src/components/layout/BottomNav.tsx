@@ -88,7 +88,7 @@ export default function BottomNav() {
       ref={(el) => {
         ref.current = el;
       }}
-      className="glass safe-bottom fixed inset-x-3 bottom-3 z-30 rounded-2xl px-2 py-2 backdrop-blur touch-target"
+      className="safe-bottom touch-target fixed inset-x-3 bottom-3 z-30 rounded-2xl px-2 py-2 backdrop-blur glass"
       role="navigation"
       aria-label="Hauptnavigation"
       style={{
@@ -143,7 +143,7 @@ export default function BottomNav() {
             data-testid="nav-bottom-settings"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            <span className="text-xs">Settings</span>
+            <span className="text-xs">Einstellungen</span>
           </button>
         </li>
       </ul>

@@ -24,9 +24,11 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   disabled = false,
 }) => {
   const baseClasses =
-    "tile flex flex-col items-center justify-center text-center min-h-[120px] touch-target";
+    "tile group flex flex-col items-center justify-center text-center min-h-[120px] touch-target transition-transform duration-200";
   const interactiveClasses =
-    onPress && !disabled ? "cursor-pointer hover:scale-[1.02] active:scale-[0.98]" : "";
+    onPress && !disabled
+      ? "cursor-pointer hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(9,11,17,0.75)]"
+      : "";
   const disabledClasses = disabled ? "opacity-50 cursor-not-allowed" : "";
 
   const handleClick = () => {
@@ -52,7 +54,10 @@ export const GlassTile: React.FC<GlassTileProps> = ({
       aria-disabled={disabled}
     >
       {icon && (
-        <div className="mb-2 text-2xl opacity-80" aria-hidden="true">
+        <div
+          className="text-accent-1/90 mb-2 text-2xl transition duration-200 group-hover:text-accent-1"
+          aria-hidden="true"
+        >
           {icon}
         </div>
       )}

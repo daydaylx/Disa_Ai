@@ -50,4 +50,10 @@ body {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .aurora__blob {
+    animation: none;
+  }
+}
+
 /* Aurora background + blobs (kept). Other UI helpers now live in theme.css */

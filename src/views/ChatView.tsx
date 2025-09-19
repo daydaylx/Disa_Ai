@@ -1,8 +1,7 @@
-import * as React from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Composer } from "../components/chat/Composer";
-import MessageList from "../components/chat/MessageList";
+import MessageList, { type MessageListHandle } from "../components/chat/MessageList";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
 import { HeroOrb } from "../components/ui/HeroOrb";
 // import CodeBlock from "../components/CodeBlock"; // Temporarily unused
@@ -35,54 +34,15 @@ import type { ChatMessage } from "../types/chat";
 
 type Msg = { id: string; role: "assistant" | "user"; content: string };
 const uid = () => Math.random().toString(36).slice(2);
-
-/* Message component - temporarily unused due to MessageList integration
-const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: _onCopied }) => {
-  const parts = React.useMemo(() => {
-    const src = msg.content;
-    const out: Array<{ t: "text" | "code"; content: string; lang?: string }> = [];
-    const fence = /```(\w+)?\n([\s\S]*?)```/g;
-    let last = 0;
-    let m: RegExpExecArray | null;
-    while ((m = fence.exec(src))) {
-      if (m.index > last) out.push({ t: "text", content: src.slice(last, m.index) });
-      const lang = m[1]?.trim() || "txt";
-      const code = ((m[2] ?? "") + "").trimEnd();
-      out.push({ t: "code", lang, content: code });
-      last = m.index + m[0].length;
-    }
-    if (last < src.length) out.push({ t: "text", content: src.slice(last) });
-    return out;
-  }, [msg.content]);
-  return (
-    <div className="relative my-2 text-text">
-      <CopyButton
-        text={msg.content}
-        className="absolute right-2 top-2"
-        aria-label="Nachricht kopieren"
-      />
-      {parts.map((p, i) =>
-        p.t === "code" ? (
-          <CodeBlock key={i} code={p.content} lang={p.lang ?? "txt"} onCopied={() => {}} />
-        ) : (
-          <p key={i} className="whitespace-pre-wrap leading-relaxed">
-            {p.content.trim()}
-          </p>
-        ),
-      )}
-    </div>
-  );
-};
-*/
-
-const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
+const ChatView = ({ convId = null }: { convId?: string | null }) => {
   const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
   const [sending, setSending] = useState(false);
-  const [showScrollFab, setShowScrollFab] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const toasts = useToasts();
   const viewport = useVisualViewport();
+  const messageListRef = useRef<MessageListHandle | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const [scrollState, setScrollState] = useState({ isAtBottom: true, showScrollFab: false });
 
   const MAX_HISTORY = 200;
   const trimHistory = (arr: Msg[]) => (arr.length > MAX_HISTORY ? arr.slice(-MAX_HISTORY) : arr);
@@ -125,9 +85,27 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
 
   const composerOffset = useMemo(() => getComposerOffset(), []);
   const virtEnabled = useMemo(() => getVirtualListEnabled(), []);
+  const composerStack = useMemo(() => Math.max(112, composerOffset + 96), [composerOffset]);
+  const composerStyle = useMemo(
+    () =>
+      ({
+        "--composer-offset": `${composerStack}px`,
+      }) as CSSProperties,
+    [composerStack],
+  );
 
   useEffect(() => {
-    if (!convId) return;
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setSending(false);
+    setError(null);
+
+    if (!convId) {
+      setMsgs([{ id: uid(), role: "assistant", content: "Bereit." }]);
+      requestAnimationFrame(() => messageListRef.current?.scrollToBottom(false));
+      return;
+    }
+
     try {
       const stored = convGetMessages(convId);
       const mapped = stored
@@ -141,20 +119,14 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
     } catch {
       /* ignore */
     }
+
+    requestAnimationFrame(() => messageListRef.current?.scrollToBottom(false));
   }, [convId]);
 
   useEffect(() => {
-    const onScroll = () => {
-      const nearBottom =
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 64;
-      setShowScrollFab(!nearBottom);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    onScroll();
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      abortRef.current?.abort();
+      abortRef.current = null;
     };
   }, []);
 
@@ -171,6 +143,17 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const handleClearError = () => {
     setError(null);
   };
+
+  const handleScrollStateChange = useCallback(
+    (state: { isAtBottom: boolean; showScrollFab: boolean }) => {
+      setScrollState(state);
+    },
+    [],
+  );
+
+  const scrollToBottom = useCallback(() => {
+    messageListRef.current?.scrollToBottom(true);
+  }, []);
 
   function buildMessages(userText: string): ChatMessage[] {
     const memoryText = memEnabled && convId ? formatMemoryForSystem(loadMemory(convId)) : "";
@@ -268,29 +251,52 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   }
 
   return (
-    <div className="min-h-[100svh]">
-      <main
-        className="mx-auto w-full max-w-4xl px-4 pt-3"
-        style={{ paddingBottom: `calc(var(--bottomnav-h, 56px) + 160px)` }}
-      >
-        <div className="mx-auto mb-2 mt-1 w-full max-w-3xl px-1 text-xs text-text-muted">
+    <div className="relative flex min-h-[100dvh] flex-col" style={composerStyle}>
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-4 pb-[calc(var(--bottomnav-h,56px)+var(--composer-offset,128px))] pt-3">
+        <div className="mx-auto mt-1 w-full max-w-3xl px-1 text-xs text-text-muted">
           {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
         </div>
 
-        <MessageList
-          messages={msgs.map((m) => ({
-            id: m.id,
-            role: m.role,
-            content: m.content,
-            timestamp: Date.now(),
-          }))}
-          isLoading={sending}
-          onCopyMessage={(content) => {
-            void navigator.clipboard?.writeText(content);
-            toasts.push({ kind: "success", title: "Kopiert" });
-          }}
-          virtualizeThreshold={virtEnabled ? 50 : 100}
-        />
+        <div className="relative flex min-h-0 flex-1 rounded-[20px] border border-white/10 bg-[rgba(17,22,31,0.55)] px-0 py-2">
+          <MessageList
+            ref={messageListRef}
+            className="flex-1"
+            messages={msgs.map((m) => ({
+              id: m.id,
+              role: m.role,
+              content: m.content,
+              timestamp: Date.now(),
+            }))}
+            isLoading={sending}
+            onCopyMessage={async (content) => {
+              try {
+                if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+                  await navigator.clipboard.writeText(content);
+                } else {
+                  const textarea = document.createElement("textarea");
+                  textarea.value = content;
+                  textarea.setAttribute("readonly", "true");
+                  textarea.style.position = "absolute";
+                  textarea.style.opacity = "0";
+                  document.body.appendChild(textarea);
+                  textarea.select();
+                  document.execCommand("copy");
+                  document.body.removeChild(textarea);
+                }
+                toasts.push({ kind: "success", title: "Kopiert" });
+              } catch (copyError) {
+                console.warn(copyError);
+                toasts.push({
+                  kind: "error",
+                  title: "Kopieren fehlgeschlagen",
+                  message: "Bitte manuell kopieren oder Berechtigungen prüfen.",
+                });
+              }
+            }}
+            virtualizeThreshold={virtEnabled ? 50 : 100}
+            onScrollStateChange={handleScrollStateChange}
+          />
+        </div>
 
         {/* Show listening orb when sending */}
         {sending && (
@@ -301,14 +307,14 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
       </main>
 
       <div
-        className="fixed left-0 right-0 z-50"
+        className="pointer-events-none fixed left-0 right-0 z-50"
         style={{
           bottom: viewport.isKeyboardOpen
             ? `calc(${viewport.offsetTop}px + var(--keyboard-offset, 0px) + 16px)`
             : `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)`,
         }}
       >
-        <div className="mx-auto w-full max-w-3xl px-4">
+        <div className="pointer-events-auto mx-auto w-full max-w-3xl px-4">
           <Composer
             loading={sending}
             onSend={handleSend}
@@ -319,12 +325,7 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
         </div>
       </div>
 
-      <ScrollToEndFAB
-        visible={showScrollFab}
-        onClick={() =>
-          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })
-        }
-      />
+      <ScrollToEndFAB visible={scrollState.showScrollFab} onClick={scrollToBottom} />
     </div>
   );
 };
