@@ -110,7 +110,7 @@ Hilfs-Markdowns (Auswahl) im Repo: `AGENTS.md`, `ANALYSIS.md`, `REFACTOR_PLAN.md
 **Voraussetzungen**
 
 - Node gemäß `.nvmrc`
-- Ein Paketmanager (npm oder pnpm). Nutze den, für den ein Lockfile im Repo liegt.
+- npm (package-lock.json ist vorhanden)
 
 **Setup**
 
@@ -123,7 +123,7 @@ cd Disa_Ai
 # nvm use
 
 # Abhängigkeiten installieren
-npm ci          # oder: pnpm install
+npm ci
 
 # .env anlegen
 cp .env.example .env
@@ -644,7 +644,7 @@ Empfohlene Required Checks (Branch‑Protection):
    Konsolidiert: Eine Flat ESLint-Config (eslint.config.js)
    Build schlägt lokal fehl
    Node-Version gemäß .nvmrc setzen
-   Lockfile respektieren (keine Mischformen aus npm/pnpm)
+   npm verwenden (package-lock.json vorhanden)
 
 ## What's Next
 
