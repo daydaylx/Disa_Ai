@@ -41,16 +41,16 @@ export default function QuickStartView() {
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
       {/* Hero Orb on Glass Card Podest */}
-      <GlassCard className="flex flex-col items-center py-8" hover>
+      <GlassCard className="flex flex-col items-center gap-3 py-8 text-center" hover>
         <HeroOrb state="idle" size="lg" className="glow" />
-        <h1 className="mt-6 text-3xl font-semibold tracking-tight">Quickstart</h1>
-        <p className="mt-3 text-base leading-relaxed text-text-secondary">
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Quickstart</h1>
+        <p className="max-w-[34ch] text-base leading-relaxed text-text-secondary">
           20 Startfragen, die häufig helfen.
         </p>
       </GlassCard>
 
-      <section className="grid grid-cols-2 gap-3">
-        {QUESTIONS.slice(0, 6).map((q, i) => (
+      <section className="grid gap-3 sm:grid-cols-2">
+        {QUESTIONS.slice(0, 4).map((q, i) => (
           <GlassTile
             key={i}
             icon={
@@ -68,16 +68,16 @@ export default function QuickStartView() {
             subtitle="Startfrage"
             onPress={() => onPick(q)}
             data-testid="quickstart-item"
-            className="min-h-[100px]"
+            className="min-h-[120px] sm:min-h-[140px]"
           />
         ))}
       </section>
 
       {/* Additional questions as smaller tiles */}
-      <section className="grid grid-cols-2 gap-2">
-        {QUESTIONS.slice(6).map((q, i) => (
+      <section className="grid gap-2 sm:grid-cols-2">
+        {QUESTIONS.slice(4).map((q, i) => (
           <GlassTile
-            key={i + 6}
+            key={i + 4}
             icon={
               <svg
                 width="20"
@@ -92,7 +92,7 @@ export default function QuickStartView() {
             title={q.split(":")[0]}
             subtitle="Frage"
             onPress={() => onPick(q)}
-            className="min-h-[80px] text-xs"
+            className="min-h-[84px] text-xs"
           />
         ))}
       </section>

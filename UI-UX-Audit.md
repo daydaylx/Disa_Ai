@@ -1,0 +1,26 @@
+# UI/UX Audit
+
+## Mobile Heuristik-Bewertung
+
+| Heuristik     | Befund                                                                                 | Auswirkung                                           | Fix-Empfehlung                                                   | Aufwand |
+| ------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------- | ------- |
+| Mobile Layout | Quickstart bleibt bei <400 px zweispaltig, Karten clippen Text                         | Scroll- und Tap-Friktion auf kleinen Phones          | Grid responsiv auf 1 Spalte umstellen, Auto-Höhen pro Tile       | S       |
+| Lesbarkeit    | Chat-Bubbles strecken bis ~100% Breite, Text läuft über 45 ch hinaus                   | Lange Zeilen, schlechter Scan, höhere kognitive Last | Max-width auf 36–42 ch, großzügige Zeilenhöhe                    | M       |
+| Kontrast      | Glass-Hintergründe nutzen `bg-white/70`, Text in `text-text` (~#E0E5F0) → Ratio <4.5:1 | WCAG-Verstoß, Müdigkeit                              | Tokens auf dunkleres Glas + helleren Text trimmen                | M       |
+| Spacing       | Composer/BottomNav padding addieren sich, Scrollbereich startet erst +160 px           | Sichtbarer Leerraum, verschenkter Viewport           | Composer-Safe-Area über CSS-Var balancieren, Padding reduzieren  | M       |
+| Safe-Area     | MessageList scrollt das Window, ignoriert `env(safe-area-inset-bottom)`                | iOS-Notch verdeckt Inhalte & Scroll-FAB              | Eigener Scroll-Container + Padding für Safe-Area                 | L       |
+| Fokus-States  | Kopier-Button `opacity-0`, kein Fokusring; Tiles ohne sichtbaren Fokus                 | Tastatur/Screenreader ohne affordance                | Fokuszustände per `focus-visible` + permanent sichtbare Controls | S       |
+| Performance   | Virt. Liste deaktiviert, weil Container nicht genutzt; ResizeObserver feuert permanent | Ruckler ab 60+ Nachrichten, Akkuverbrauch            | MessageList Container fix, heights cachen, Observer entkoppeln   | L       |
+| Motion        | Aurora, Orb, Buttons animieren ohne `prefers-reduced-motion` fallback                  | Sensitive Nutzer:innen überfordert                   | Media Query respektieren, Animationen deaktivieren/reduzieren    | S       |
+| Konsistenz    | BottomNav-Label „Settings“ englisch, rest deutsch; Buttons/Chips variieren             | Bricht UI-Lokalisierung & Visual Rhythmus            | Strings vereinheitlichen, Pill-Styles harmonisieren              | S       |
+
+## Chat Fehlerbild
+
+| Symptom                                  | Vermutete Ursache                                                                     | Fundstelle(n)                                                          | Fix-Plan                                                                         | Testfall                          |
+| ---------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------- |
+| Kein zuverlässiger Autoscroll            | `MessageList` nutzt Window-Scroll statt Container, `isAtBottom` vergleicht `document` | `src/components/chat/MessageList.tsx:77`, `src/views/ChatView.tsx:270` | Container `overflow-y-auto`, Intersection-Anker für Ende + ScrollLock            | E2E: `autoscroll_anchor.spec`     |
+| Stream lässt sich nicht sauber abbrechen | `abortRef` wird nie bei Unmount/Routewechsel gecleant                                 | `src/views/ChatView.tsx:204`                                           | Cleanup in `useEffect`, Abort bei neuen Sends & Komponentenaustritt, Toast Retry | E2E: `streaming_sends_once.spec`  |
+| Kopieren meldet Erfolg trotz Fehler      | `navigator.clipboard.writeText` ohne Guard/Fehlerbehandlung                           | `src/views/ChatView.tsx:288`                                           | Feature-Detect, Fehlertoast, Fallback `document.execCommand`                     | Unit: `Composer/MessageList copy` |
+| Enter-Send kollidiert mit IME            | `handleKeyDown` blockiert Enter auch während `compositionstart`                       | `src/components/chat/Composer.tsx:181`                                 | Composition-Flag tracken, nur `Enter` außerhalb IME abfangen                     | Unit: `composer-ime.spec`         |
+| Scroll-FAB Position springt              | FAB fixed am Window, Safe-Area ignoriert, Button im Scrollcontainer                   | `src/components/chat/MessageList.tsx:230`                              | FAB an Container pinnen, Safe-Area Var nutzen, `position: sticky`                | E2E: `autoscroll_anchor.spec`     |
+| Theme-Gefühl uneinheitlich               | Tokens mischen alte (#4FC3F7) + neue (#A855F7) Farben                                 | Diverse Styles/Tokens                                                  | Design-Tokens harmonisieren, GlassCard/Tile/Pill Primitives einsetzen            | Visual Regression Snapshots       |
