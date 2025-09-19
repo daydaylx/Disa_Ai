@@ -18,7 +18,7 @@
   --destructive-foreground: 0 0% 100%;
   --border: 214 32% 91%;
   --input: 214 32% 91%;
-  --ring: 200 95% 62%; /* cyan ring */
+  --ring: 262 83% 62%; /* harmonized ring color */
   --radius: 12px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
@@ -33,7 +33,7 @@
   --card-foreground: 210 17% 95%;
   --popover: 222 18% 17%;
   --popover-foreground: 210 17% 95%;
-  --primary: 200 95% 62%; /* #4FC3F7 */
+  --primary: 262 83% 62%; /* #A855F7 - harmonized with brand gradient */
   --primary-foreground: 0 0% 8%;
   --secondary: 222 18% 17%;
   --secondary-foreground: 210 13% 75%; /* #B0B6C0 */
@@ -45,6 +45,6 @@
   --destructive-foreground: 0 0% 98%;
   --border: 220 18% 26%;
   --input: 220 18% 26%;
-  --ring: 200 95% 62%;
+  --ring: 262 83% 62%; /* harmonized with primary */
   --radius: 12px;
 }
