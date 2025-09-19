@@ -272,7 +272,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
       const height = ref.current.offsetHeight;
       onHeightChange(height);
     }
-  }, [message.content, onHeightChange]);
+  }, [message.content]); // Remove onHeightChange from dependencies to prevent infinite loop
 
   return (
     <div

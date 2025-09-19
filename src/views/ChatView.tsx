@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import Avatar from "../components/chat/Avatar";
 import { Composer } from "../components/chat/Composer";
 import MessageList from "../components/chat/MessageList";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
@@ -291,29 +290,6 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
             toasts.push({ kind: "success", title: "Kopiert" });
           }}
           virtualizeThreshold={virtEnabled ? 50 : 100}
-          renderMessage={(message, onCopy) => (
-            <div
-              key={message.id}
-              className={`msg my-3 flex items-start gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
-            >
-              {message.role !== "user" && <Avatar kind="assistant" />}
-              <div
-                className={`chat-bubble group relative max-w-[min(92%,42.5rem)] rounded-2xl p-3 text-text ${
-                  message.role === "user"
-                    ? "border border-transparent bg-grad-primary text-white shadow-glow"
-                    : "glass-solid"
-                }`}
-              >
-                <CopyButton
-                  text={message.content}
-                  className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100"
-                  aria-label="Nachricht kopieren"
-                />
-                <Message msg={message} onCopied={onCopy} />
-              </div>
-              {message.role === "user" && <Avatar kind="user" />}
-            </div>
-          )}
         />
       </main>
 
