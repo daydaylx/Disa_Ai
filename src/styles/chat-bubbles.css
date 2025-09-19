@@ -1,0 +1,159 @@
+/* Einheitliche Bubble-Grundlage — robust gegen Backdrop-/Transform-Glitches */
+:root {
+  --bubble-radius: 16px;
+  --bubble-padding-v: 10px;
+  --bubble-padding-h: 12px;
+  --bubble-gap: 10px;
+  --bubble-ai-bg: rgba(20, 24, 30, 0.55);
+  --bubble-user-bg: rgba(44, 20, 68, 0.58);
+  --bubble-border: rgba(255, 255, 255, 0.08);
+}
+
+/* Wir fassen gängige Selektoren zusammen, damit es ohne Refactor greift */
+.message,
+[data-message],
+[data-role="message"],
+.bubble {
+  position: relative;
+  display: inline-flex;
+  max-width: 88%;
+  padding: var(--bubble-padding-v) var(--bubble-padding-h);
+  border-radius: var(--bubble-radius);
+  background: var(--bubble-ai-bg);
+  border: 1px solid var(--bubble-border);
+  color: #dbe6ff;
+  line-height: 1.35;
+  overflow: hidden; /* clippt Blur korrekt an den Radius */
+  -webkit-backdrop-filter: blur(8px) saturate(115%);
+  backdrop-filter: blur(8px) saturate(115%);
+  background-clip: padding-box;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 6px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* Ausrichtung */
+.message--ai,
+[data-from="ai"],
+.bubble--ai {
+  align-self: flex-start;
+  margin: var(--bubble-gap) 0 var(--bubble-gap) var(--bubble-gap);
+}
+.message--user,
+[data-from="user"],
+.bubble--user {
+  align-self: flex-end;
+  margin: var(--bubble-gap) var(--bubble-gap) var(--bubble-gap) 0;
+  background: var(--bubble-user-bg);
+  color: #eef4ff;
+}
+
+/* Tail (kleiner runder „Nub“) ohne harte Ecken, clippt in der Bubble */
+.message::after,
+[data-message]::after,
+[data-role="message"]::after,
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  filter: blur(0.2px);
+  transform: rotate(45deg);
+}
+
+/* Tail links (AI) */
+.message--ai::after,
+[data-from="ai"]::after,
+.bubble--ai::after {
+  left: -6px;
+  border-bottom-left-radius: 3px;
+  border-left: 1px solid var(--bubble-border);
+  border-bottom: 1px solid var(--bubble-border);
+}
+
+/* Tail rechts (User) */
+.message--user::after,
+[data-from="user"]::after,
+.bubble--user::after {
+  right: -6px;
+  border-top-right-radius: 3px;
+  border-right: 1px solid var(--bubble-border);
+  border-bottom: 1px solid var(--bubble-border);
+}
+
+/* Copy-Button (erscheint bei Tap/Long-Press, siehe JS) */
+.bubble-copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  backdrop-filter: blur(6px) saturate(120%);
+}
+.message:hover .bubble-copy-btn,
+.message:focus-within .bubble-copy-btn,
+.bubble:hover .bubble-copy-btn,
+.bubble:focus-within .bubble-copy-btn,
+.bubble--show-copy .bubble-copy-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+.bubble-copy-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Copy-Feedback Toast (kleine Einblendung oben in der Bubble) */
+.bubble-copied {
+  position: absolute;
+  top: -10px;
+  right: 8px;
+  transform: translateY(-6px);
+  font-size: 12px;
+  padding: 3px 8px;
+  background: rgba(30, 200, 120, 0.18);
+  border: 1px solid rgba(30, 200, 120, 0.35);
+  color: #c8ffe2;
+  border-radius: 10px;
+  animation: bubbleCopiedFade 1.3s ease forwards;
+}
+@keyframes bubbleCopiedFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Mobile: Blur etwas drosseln, damit nichts ruckelt */
+@media (max-width: 480px) {
+  .message,
+  [data-message],
+  [data-role="message"],
+  .bubble {
+    -webkit-backdrop-filter: blur(6px) saturate(110%);
+    backdrop-filter: blur(6px) saturate(110%);
+  }
+}
