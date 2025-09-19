@@ -120,14 +120,15 @@ export const Composer: React.FC<{
     [error, onClearError],
   );
 
-  const handleVoiceTranscript = useCallback((transcript: string) => {
-    setText(transcript);
-    textareaRef.current?.focus();
-  }, []);
+  // Voice handlers - temporarily disabled
+  // const _handleVoiceTranscript = useCallback((transcript: string) => {
+  //   setText(transcript);
+  //   textareaRef.current?.focus();
+  // }, []);
 
-  const handleVoiceError = useCallback((error: string) => {
-    console.warn("Voice recognition error:", error);
-  }, []);
+  // const _handleVoiceError = useCallback((error: string) => {
+  //   console.warn("Voice recognition error:", error);
+  // }, []);
 
   return (
     <div ref={composerRef} className="composer-container safe-pad safe-bottom py-3">

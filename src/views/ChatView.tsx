@@ -4,8 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Composer } from "../components/chat/Composer";
 import MessageList from "../components/chat/MessageList";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
-import CodeBlock from "../components/CodeBlock";
-import { CopyButton } from "../components/ui/CopyButton";
+// import CodeBlock from "../components/CodeBlock"; // Temporarily unused
+// import { CopyButton } from "../components/ui/CopyButton"; // Temporarily unused
 import { useToasts } from "../components/ui/Toast";
 import { getVirtualListEnabled } from "../config/featureFlags";
 import {
@@ -35,6 +35,7 @@ import type { ChatMessage } from "../types/chat";
 type Msg = { id: string; role: "assistant" | "user"; content: string };
 const uid = () => Math.random().toString(36).slice(2);
 
+/* Message component - temporarily unused due to MessageList integration
 const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: _onCopied }) => {
   const parts = React.useMemo(() => {
     const src = msg.content;
@@ -54,7 +55,6 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
   }, [msg.content]);
   return (
     <div className="relative my-2 text-text">
-      {/* Nachricht kopieren */}
       <CopyButton
         text={msg.content}
         className="absolute right-2 top-2"
@@ -72,6 +72,7 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
     </div>
   );
 };
+*/
 
 const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
