@@ -66,12 +66,41 @@
   --tap-target-compact: 40px;
 }
 
+/* Neon Glass Theme - activated with data-theme="neon" */
+[data-theme="neon"] {
+  /* Core background colors */
+  --bg-primary: #090b11;
+  --bg-surface: rgba(17, 22, 31, 0.72);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --text-primary: #e7ecf3;
+  --text-secondary: #a9b0be;
+
+  /* Accent colors */
+  --accent-1: #a855f7;
+  --accent-2: #22d3ee;
+  --accent-3: #f472b6;
+
+  /* Brand gradient */
+  --brand-gradient: linear-gradient(135deg, #a855f7 0%, #22d3ee 45%, #f472b6 100%);
+
+  /* Neon glass surfaces */
+  --surface-glass: var(--bg-surface);
+  --bg: var(--bg-primary);
+  --text: var(--text-primary);
+  --text-muted: var(--text-secondary);
+}
+
 /* High-contrast users: slightly stronger surfaces/borders */
 @media (prefers-contrast: more) {
   :root {
     --surface-glass: rgba(255, 255, 255, 0.14);
     --border-glass: rgba(255, 255, 255, 0.28);
     --text-muted: #d6def0;
+  }
+
+  [data-theme="neon"] {
+    --bg-surface: rgba(17, 22, 31, 0.85);
+    --border-glass: rgba(255, 255, 255, 0.18);
   }
 }
 
@@ -96,6 +125,41 @@
 }
 
 @layer components {
+  /* Import neon animations */
+  @keyframes orb-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes orb-focus-ring {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes orb-listening-ripple {
+    0% {
+      transform: scale(1);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+  }
   /* Enhanced focus indicators for accessibility */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
@@ -192,7 +256,7 @@
     @apply btn bg-grad-primary text-white shadow-glow;
   }
   .btn-secondary {
-    @apply btn glass text-text hover:bg-white/10;
+    @apply btn text-text glass hover:bg-white/10;
   }
   .btn-ghost {
     @apply btn text-text hover:bg-white/5;
@@ -218,7 +282,7 @@
     filter: saturate(110%);
   }
   .tabs {
-    @apply glass flex gap-2 rounded-2xl p-2;
+    @apply flex gap-2 rounded-2xl p-2 glass;
   }
 
   .badge {
@@ -238,12 +302,12 @@
 
   /* Inputs */
   .input {
-    @apply glass h-11 w-full px-3 py-2 text-sm placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+    @apply h-11 w-full px-3 py-2 text-sm glass placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
   }
 
   /* Nav Pills */
   .nav-pill {
-    @apply glass inline-flex items-center rounded-full px-3 py-1 text-sm text-text-muted transition hover:text-text;
+    @apply inline-flex items-center rounded-full px-3 py-1 text-sm text-text-muted transition glass hover:text-text;
     min-height: var(--tap-target-compact);
   }
   .nav-pill--active {
@@ -299,7 +363,7 @@
 
   /* Composer tweaks */
   .composer-glass {
-    @apply glass border-t px-2 py-2;
+    @apply border-t px-2 py-2 glass;
     background-color: color-mix(in oklab, var(--surface-glass) 92%, transparent);
   }
   .composer-input {
