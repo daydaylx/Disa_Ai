@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Composer } from "../components/chat/Composer";
 import MessageList from "../components/chat/MessageList";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
+import { HeroOrb } from "../components/ui/HeroOrb";
 // import CodeBlock from "../components/CodeBlock"; // Temporarily unused
 // import { CopyButton } from "../components/ui/CopyButton"; // Temporarily unused
 import { useToasts } from "../components/ui/Toast";
@@ -290,6 +291,13 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
           }}
           virtualizeThreshold={virtEnabled ? 50 : 100}
         />
+
+        {/* Show listening orb when sending */}
+        {sending && (
+          <div className="flex justify-center py-8">
+            <HeroOrb state="listening" size="md" />
+          </div>
+        )}
       </main>
 
       <div

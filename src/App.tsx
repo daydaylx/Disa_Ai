@@ -54,7 +54,7 @@ export default function App() {
 
   return (
     <ToastsProvider>
-      <div className="app-bg relative min-h-[100svh] bg-bg text-foreground">
+      <div className="app-bg relative min-h-[100svh] bg-bg text-foreground bg-radial-brand">
         <Aurora />
         <SkipLink targetId="main" />
         <div className="relative z-10 flex min-h-[100svh] flex-col">
@@ -71,7 +71,7 @@ export default function App() {
               <React.Suspense
                 fallback={
                   <div className="flex items-center justify-center py-12">
-                    <div className="glass rounded-lg p-6 text-center">
+                    <div className="rounded-lg p-6 text-center glass">
                       <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-current border-t-transparent"></div>
                       <p className="mt-3 text-sm text-muted-foreground">Lädt...</p>
                     </div>

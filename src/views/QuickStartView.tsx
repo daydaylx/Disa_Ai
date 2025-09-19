@@ -1,5 +1,6 @@
-
-// Buttons hier als Cards umgesetzt (keine Hauptbuttons)
+import { GlassCard } from "../components/ui/GlassCard";
+import { GlassTile } from "../components/ui/GlassTile";
+import { HeroOrb } from "../components/ui/HeroOrb";
 
 const QUESTIONS: string[] = [
   "Erkläre mir diesen Code und mögliche Randfälle:",
@@ -21,7 +22,7 @@ const QUESTIONS: string[] = [
   "Erzeuge eine Tabelle (Markdown) mit den wichtigsten Punkten zu:",
   "Formuliere eine Job‑Beschreibung (kurz) für:",
   "Gib mir eine Checkliste für den Start mit:",
-  "Schreibe eine klare Fehlermeldung und Lösungsvorschläge zu:" ,
+  "Schreibe eine klare Fehlermeldung und Lösungsvorschläge zu:",
 ];
 
 export default function QuickStartView() {
@@ -39,28 +40,37 @@ export default function QuickStartView() {
       className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6"
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
-      <header className="space-y-1">
-        <h1 className="card-title">Quickstart</h1>
-        <p className="help">20 Startfragen, die häufig helfen.</p>
-      </header>
+      {/* Hero Orb on Glass Card */}
+      <GlassCard className="flex flex-col items-center py-8" hover>
+        <HeroOrb state="idle" size="lg" />
+        <h1 className="mt-4 text-2xl font-semibold">Quickstart</h1>
+        <p className="mt-2 text-sm text-text-secondary">20 Startfragen, die häufig helfen.</p>
+      </GlassCard>
 
-      <section className="grid gap-2 md:grid-cols-2">
-        {QUESTIONS.map((q, i) => (
-          <button
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {QUESTIONS.slice(0, 6).map((q, i) => (
+          <GlassTile
             key={i}
-            className="w-full justify-start glass p-3 text-left transition-transform hover:-translate-y-[1px]"
-            onClick={() => onPick(q)}
-            aria-label={`Quickstart Frage ${i + 1}`}
+            icon="✦"
+            title={q.split(":")[0] + ":"}
+            subtitle="Startfrage"
+            onPress={() => onPick(q)}
             data-testid="quickstart-item"
-          >
-            <div className="flex items-start gap-2">
-              <span aria-hidden className="mt-0.5">✦</span>
-              <div className="min-w-0">
-                <div className="truncate">{q}</div>
-                <div className="text-[11px] text-text-muted">Startfrage</div>
-              </div>
-            </div>
-          </button>
+            className="min-h-[100px]"
+          />
+        ))}
+      </section>
+
+      {/* Additional questions as smaller tiles */}
+      <section className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {QUESTIONS.slice(6).map((q, i) => (
+          <GlassTile
+            key={i + 6}
+            title={q.split(":")[0]}
+            subtitle="Frage"
+            onPress={() => onPick(q)}
+            className="min-h-[80px] text-xs"
+          />
         ))}
       </section>
     </main>
