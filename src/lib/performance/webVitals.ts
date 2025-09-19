@@ -261,7 +261,11 @@ class WebVitalsReporter {
   }
 
   private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    // Use window.crypto for secure randomness
+    const array = new Uint32Array(2);
+    window.crypto.getRandomValues(array);
+    // Combine timestamp and random data, base36 encoded
+    return `${Date.now()}-${array[0].toString(36)}${array[1].toString(36)}`;
   }
 
   private shouldSample(): boolean {
