@@ -1,0 +1,9 @@
+{
+  "overrides": [
+    {
+      "files": ["playwright.config.{js,cjs,mjs,ts}"],
+      "env": { "node": true },
+      "parserOptions": { "sourceType": "module", "ecmaVersion": 2022 }
+    }
+  ]
+}

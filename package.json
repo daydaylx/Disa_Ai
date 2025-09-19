@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
-    "preview": "vite preview --strictPort --port 4173",
+    "preview": "vite preview --strictPort --port 4173 --host",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
@@ -26,7 +26,8 @@
     "verify": "npm run typecheck && npm run lint && npm run test:unit",
     "clean": "rm -rf dist .vite .cache .tmp coverage test-results",
     "postbuild": "cp public/404.html dist/404.html && touch dist/.nojekyll",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:e2e": "playwright test"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -82,7 +83,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.43.0",
-    "vite": "^5.4.9",
+    "vite": "^5.4.20",
     "vite-bundle-analyzer": "^1.2.3",
     "vitest": "^3.2.4"
   },

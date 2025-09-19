@@ -1,26 +1,39 @@
-import "./ui/base.css";
-import "./styles/globals.css";
-import "./styles/brand.css";
-import "./styles/theme.css";
-import "./styles/chat.css";
-import "./styles/mobile.css";
-import "./bootstrap/migrations";
+import "./styles/index.css"; // falls dein globales CSS woanders liegt, Pfad anpassen
 
-import ReactDOM from "react-dom/client";
+import React from "react";
+import { createRoot } from "react-dom/client";
 
 import App from "./App";
-import { ErrorBoundary } from "./components/ErrorBoundary";
+import { installViewportEventThrottles } from "./lib/perf/throttle-viewport-events";
 
-const root = document.getElementById("root");
-if (!root) {
-  throw new Error("Root element #root not found");
+// Einmalige Initialisierung
+installViewportEventThrottles();
+
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("#root not found in index.html");
+}
+const root = createRoot(container);
+
+function renderApp() {
+  root.render(<App />);
 }
 
-root.classList.add("app-bg", "bg-bg", "text-foreground");
-root.classList.add("min-h-[100svh]", "relative");
+async function renderDebug() {
+  const mod = await import("./routes/Debug");
+  const Debug = mod.default;
+  root.render(<Debug />);
+}
 
-ReactDOM.createRoot(root).render(
-  <ErrorBoundary>
-    <App />
-  </ErrorBoundary>,
-);
+function route() {
+  if (location.hash === "#/debug") {
+    // bewusst fire-and-forget, aber mit Fehlerbehandlung
+    void renderDebug().catch(console.error);
+  } else {
+    renderApp();
+  }
+}
+
+// Initiale Route rendern und bei Hash-Änderungen neu entscheiden
+route();
+window.addEventListener("hashchange", route);
