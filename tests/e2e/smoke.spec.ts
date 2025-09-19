@@ -40,6 +40,10 @@ test.describe("Smoke Tests", () => {
 
     // Check for main UI elements (use ID to be specific)
     await expect(page.locator("#main")).toBeVisible();
+
+    // Navigate to chat view to test composer
+    await page.goto("/#/chat");
+
     await expect(page.locator('[data-testid="composer-input"]')).toBeVisible();
 
     // Check if composer is ready for input
@@ -49,7 +53,7 @@ test.describe("Smoke Tests", () => {
   });
 
   test("Chat input allows typing and shows send button", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/#/chat");
 
     // Type a message
     const composer = page.locator('[data-testid="composer-input"]');
