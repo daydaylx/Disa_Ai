@@ -1,4 +1,6 @@
 import "./styles/index.css"; // falls dein globales CSS woanders liegt, Pfad anpassen
+import "./styles/chat-bubbles.css";
+import "./styles/perf-overrides.css";
 
 import React from "react";
 import { createRoot } from "react-dom/client";
