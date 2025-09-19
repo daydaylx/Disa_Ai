@@ -33,6 +33,8 @@ export const Composer: React.FC<{
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
+  const [isComposing, setIsComposing] = useState(false);
+  const [platformShortcut, setPlatformShortcut] = useState("Strg");
   const disabled = loading || text.trim().length === 0;
 
   // Auto-resize textarea based on content
@@ -88,6 +90,12 @@ export const Composer: React.FC<{
     }
   }, [loading, text]);
 
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+    const isApple = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent);
+    setPlatformShortcut(isApple ? "⌘" : "Strg");
+  }, []);
+
   const handleSend = useCallback(() => {
     if (!disabled) {
       hapticFeedback.success();
@@ -104,6 +112,7 @@ export const Composer: React.FC<{
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (isComposing) return;
       if (e.key === "Enter") {
         if (e.shiftKey) {
           // Shift+Enter: Insert line break (default behavior)
@@ -119,7 +128,7 @@ export const Composer: React.FC<{
         }
       }
     },
-    [handleSend],
+    [handleSend, isComposing],
   );
 
   const handleTextChange = useCallback(
@@ -130,6 +139,20 @@ export const Composer: React.FC<{
       }
     },
     [error, onClearError],
+  );
+
+  const handleComposition = useCallback(
+    (event: React.CompositionEvent<HTMLTextAreaElement>) => {
+      if (event.type === "compositionstart") {
+        setIsComposing(true);
+      }
+      if (event.type === "compositionend") {
+        setIsComposing(false);
+        // ensure latest text measured after IME commit
+        adjustHeight();
+      }
+    },
+    [adjustHeight],
   );
 
   // Voice handlers - temporarily disabled
@@ -143,12 +166,16 @@ export const Composer: React.FC<{
   // }, []);
 
   return (
-    <div ref={composerRef} className="composer-container safe-pad safe-bottom py-3">
+    <div
+      ref={composerRef}
+      className="composer-container safe-bottom border-white/12 rounded-[28px] border bg-[rgba(17,22,31,0.82)] px-3 py-2 shadow-[0_20px_48px_rgba(0,0,0,0.45)]"
+    >
       {/* Error Message */}
       {error && (
         <div
           ref={errorRef}
-          className="mb-3 rounded-lg border border-red-200 bg-red-50 p-3"
+          id="composer-error"
+          className="mb-3 rounded-lg border border-red-400/50 bg-red-500/10 p-3"
           role="alert"
           aria-live="assertive"
         >
@@ -171,7 +198,7 @@ export const Composer: React.FC<{
               <div className="-mx-1.5 -my-1.5">
                 <button
                   type="button"
-                  className="inline-flex rounded-md bg-red-50 p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50"
+                  className="inline-flex rounded-md bg-red-500/10 p-1.5 text-red-300 transition hover:bg-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
                   onClick={onClearError}
                   aria-label="Fehlermeldung schließen"
                 >
@@ -185,7 +212,7 @@ export const Composer: React.FC<{
                 </button>
                 <button
                   type="button"
-                  className="ml-2 inline-flex items-center rounded-md border border-transparent bg-red-100 px-2.5 py-1.5 text-xs font-medium text-red-800 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="ml-2 inline-flex items-center rounded-md border border-red-400/40 bg-red-500/10 px-2.5 py-1.5 text-xs font-medium text-red-200 transition hover:bg-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
                   onClick={handleSend}
                   disabled={disabled}
                 >
@@ -202,12 +229,11 @@ export const Composer: React.FC<{
           ref={textareaRef}
           data-testid="composer-input"
           className={cn(
-            "w-full resize-none rounded-[14px] p-4 pr-20 text-[15px] leading-5 outline-none",
-            "border border-white/30 bg-white/70 backdrop-blur-md",
-            "keyboard-aware placeholder:text-slate-500",
-            "focus:border-blue-500 focus:ring-2 focus:ring-blue-500",
-            "transition-all duration-200",
-            error && "border-red-300 focus:border-red-500 focus:ring-red-500",
+            "border-white/12 w-full resize-none rounded-full border bg-[rgba(20,26,36,0.78)] px-5 py-3 pr-16 text-[15px] leading-5 text-text shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]",
+            "placeholder:text-text-muted/70 transition-shadow duration-200",
+            "focus:border-accent-2/60 focus:ring-accent-2/35 focus:ring-2 focus:ring-offset-2 focus:ring-offset-[rgba(10,14,22,0.6)] focus-visible:outline-none",
+            error &&
+              "border-red-400/60 focus:border-red-400 focus:ring-red-400/45 focus:ring-offset-red-900/40",
           )}
           style={{ height: `${textareaHeight}px` }}
           placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)"
@@ -221,6 +247,8 @@ export const Composer: React.FC<{
           aria-label="Nachricht eingeben"
           aria-describedby={error ? "composer-error" : undefined}
           aria-invalid={!!error}
+          onCompositionStart={handleComposition}
+          onCompositionEnd={handleComposition}
         />
 
         {/* Voice Button - Temporarily disabled
@@ -238,7 +266,7 @@ export const Composer: React.FC<{
           {loading ? (
             <button
               data-testid="composer-stop"
-              className="tap nav-pill touch-target min-h-[44px] min-w-[44px] px-3 py-2 text-sm"
+              className="tap touch-target flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/15 bg-[rgba(17,22,31,0.6)] px-4 py-2 text-sm text-text transition hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2"
               onClick={handleStop}
               aria-label="Antwort stoppen"
             >
@@ -248,15 +276,16 @@ export const Composer: React.FC<{
             <button
               data-testid="composer-send"
               className={cn(
-                "tap btn-primary touch-target min-h-[44px] min-w-[44px] rounded-[14px] px-3 py-3",
-                "flex items-center justify-center",
+                "tap touch-target flex h-11 w-11 items-center justify-center rounded-full text-sm font-medium text-white shadow-[0_14px_32px_rgba(168,85,247,0.35)] transition-transform duration-200",
+                "hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,14,22,0.7)]",
                 disabled && "pointer-events-none opacity-60",
               )}
               onClick={handleSend}
               disabled={disabled}
-              aria-label={`Nachricht senden (Enter oder ${navigator.platform.includes("Mac") ? "Cmd" : "Strg"}+Enter)`}
-              title={`Senden (Enter oder ${navigator.platform.includes("Mac") ? "Cmd" : "Strg"}+Enter)`}
+              aria-label={`Nachricht senden (Enter oder ${platformShortcut}+Enter)`}
+              title={`Senden (Enter oder ${platformShortcut}+Enter)`}
               data-no-zoom
+              style={{ background: "var(--brand-gradient)" }}
             >
               ✈️
             </button>
@@ -266,7 +295,7 @@ export const Composer: React.FC<{
 
       {/* Optional Token Counter */}
       {text.trim() && (
-        <div className="mt-2 px-2 text-xs text-slate-500">
+        <div className="text-text-muted/70 mt-2 px-2 text-xs">
           ~{Math.ceil(text.trim().split(/\s+/).length * 1.3)} Tokens
         </div>
       )}
