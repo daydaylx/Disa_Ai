@@ -14,7 +14,7 @@ export default defineConfig({
     trace: "retain-on-failure",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
-    viewport: { width: 390, height: 844 }, // Mobile-Portrait
+    viewport: { width: 390, height: 844 },
   },
 
   webServer: {
