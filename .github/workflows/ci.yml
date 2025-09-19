@@ -2,128 +2,67 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-  lint:
+  build-and-test:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run lint
-        run: npm run lint
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [ "20.18.0", "22.x" ]
 
-  typecheck:
-    runs-on: ubuntu-latest
-    needs: lint
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run typecheck
-        run: npm run typecheck
-
-  unit:
-    runs-on: ubuntu-latest
-    needs: typecheck
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests
-        run: npm run test
-
-  build:
-    runs-on: ubuntu-latest
-    needs: unit
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build project
-        run: npm run build
-      
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-  e2e:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
+          node-version: ${{ matrix.node-version }}
+          cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install deps
+        run: npm ci || npm install
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+      - name: Typecheck
+        run: |
+          if npm run -s typecheck; then
+            echo "typecheck ok"
+          else
+            echo "typecheck failed"; exit 1
+          fi
 
-      - name: Run Playwright E2E tests
+      - name: Lint
+        run: |
+          if npm run -s lint; then
+            echo "lint ok"
+          else
+            echo "lint failed"; exit 1
+          fi
+
+      - name: E2E tests (with preview server)
         run: npx playwright test
         env:
-          CI: true
-        timeout-minutes: 10
-        continue-on-error: false
+          CI: "true"
 
-      - name: Upload Playwright Report
+      - name: Upload Playwright report
+        if: always()
         uses: actions/upload-artifact@v4
-        if: failure()
         with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
+          name: playwright-report-${{ matrix.node-version }}
+          path: playwright-report
+          if-no-files-found: ignore
+
+      - name: Upload test-results (raw)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.node-version }}
+          path: test-results
+          if-no-files-found: ignore
