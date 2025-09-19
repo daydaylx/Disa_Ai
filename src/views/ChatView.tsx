@@ -3,8 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import Avatar from "../components/chat/Avatar";
 import { Composer } from "../components/chat/Composer";
-import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
-import { TypingIndicator } from "../components/chat/TypingIndicator";
+import MessageList from "../components/chat/MessageList";
 import CodeBlock from "../components/CodeBlock";
 import { CopyButton } from "../components/ui/CopyButton";
 import { useToasts } from "../components/ui/Toast";
@@ -77,8 +76,6 @@ const Message: React.FC<{ msg: Msg; onCopied: () => void }> = ({ msg, onCopied: 
 const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
   const [sending, setSending] = useState(false);
-  const [showAll] = useState(false);
-  const [showScrollFab, setShowScrollFab] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const toasts = useToasts();
   const viewport = useVisualViewport();
@@ -279,51 +276,43 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
           {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
         </div>
 
-        <section aria-label="Verlauf" role="log">
-          {(() => {
-            const LIMIT = virtEnabled ? 60 : 80;
-            const hasOverflow = msgs.length > LIMIT;
-            const trimmed = hasOverflow && !showAll ? msgs.slice(-LIMIT) : msgs;
-
-            return (
-              <>
-                {trimmed.map((m) => {
-                  const mine = m.role === "user";
-                  return (
-                    <div
-                      key={m.id}
-                      className={`msg my-3 flex items-start gap-2 ${mine ? "justify-end" : "justify-start"}`}
-                    >
-                      {!mine && <Avatar kind="assistant" />}
-                      <div
-                        className={`chat-bubble max-w-[min(92%,42.5rem)] rounded-2xl p-3 text-text ${
-                          mine
-                            ? "border border-transparent bg-grad-primary text-white shadow-glow"
-                            : "glass-solid"
-                        }`}
-                      >
-                        <Message
-                          msg={m}
-                          onCopied={() => toasts.push({ kind: "success", title: "Kopiert" })}
-                        />
-                      </div>
-                      {mine && <Avatar kind="user" />}
-                    </div>
-                  );
-                })}
-              </>
-            );
-          })()}
-        </section>
-
-        {sending && (
-          <div className="my-2 flex items-start gap-2">
-            <Avatar kind="assistant" />
-            <div className="glass p-2">
-              <TypingIndicator />
+        <MessageList
+          messages={msgs.map((m) => ({
+            id: m.id,
+            role: m.role,
+            content: m.content,
+            timestamp: Date.now(),
+          }))}
+          isLoading={sending}
+          onCopyMessage={(content) => {
+            void navigator.clipboard?.writeText(content);
+            toasts.push({ kind: "success", title: "Kopiert" });
+          }}
+          virtualizeThreshold={virtEnabled ? 50 : 100}
+          renderMessage={(message, onCopy) => (
+            <div
+              key={message.id}
+              className={`msg my-3 flex items-start gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              {message.role !== "user" && <Avatar kind="assistant" />}
+              <div
+                className={`chat-bubble group relative max-w-[min(92%,42.5rem)] rounded-2xl p-3 text-text ${
+                  message.role === "user"
+                    ? "border border-transparent bg-grad-primary text-white shadow-glow"
+                    : "glass-solid"
+                }`}
+              >
+                <CopyButton
+                  text={message.content}
+                  className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100"
+                  aria-label="Nachricht kopieren"
+                />
+                <Message msg={message} onCopied={onCopy} />
+              </div>
+              {message.role === "user" && <Avatar kind="user" />}
             </div>
-          </div>
-        )}
+          )}
+        />
       </main>
 
       <div
