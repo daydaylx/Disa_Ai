@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { neonGlassPlugin } from "./src/styles/plugins/neon";
 
 const config: Config = {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -86,6 +87,14 @@ const config: Config = {
         // Extra surface/border tokens used by glass styles
         "surface-glass": "var(--surface-glass)",
         "border-glass": "var(--border-glass)",
+        // Neon theme colors
+        "bg-primary": "var(--bg-primary)",
+        "bg-surface": "var(--bg-surface)",
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
+        "accent-1": "var(--accent-1)",
+        "accent-2": "var(--accent-2)",
+        "accent-3": "var(--accent-3)",
       },
       borderRadius: {
         lg: "16px",
@@ -104,10 +113,12 @@ const config: Config = {
         "grad-primary": "var(--grad-primary)",
         "grad-card": "var(--grad-card)",
         "orb-radial": "var(--orb-radial)",
+        // Neon theme gradients
+        "brand-gradient": "var(--brand-gradient)",
       },
     },
   },
-  plugins: [],
+  plugins: [neonGlassPlugin],
 };
 
 export default config;
