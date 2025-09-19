@@ -24,7 +24,8 @@ function parseHash(): Route {
   if (seg === "chats") return { name: "chats" };
   if (seg === "quickstart") return { name: "quickstart" };
   if (seg === "chat") return { name: "chat", chatId: arg ?? null };
-  return { name: "chat", chatId: null };
+  // Default to quickstart for mobile-first experience
+  return { name: "quickstart" };
 }
 
 function useHashRoute(): [Route, (r: Route) => void] {
@@ -59,7 +60,12 @@ export default function App() {
 
   return (
     <ToastsProvider>
-      <div className="app-bg relative min-h-[100svh] bg-bg text-foreground bg-radial-brand">
+      <div className="app-bg relative min-h-[100svh] bg-bg-primary text-foreground">
+        {/* Subtle radial glow background */}
+        <div className="pointer-events-none fixed inset-0">
+          <div className="bg-accent-1/10 absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full blur-3xl"></div>
+          <div className="bg-accent-3/8 absolute right-1/4 top-20 h-64 w-64 rounded-full blur-3xl"></div>
+        </div>
         <Aurora />
         <SkipLink targetId="main" />
         <div className="relative z-10 flex min-h-[100svh] flex-col">

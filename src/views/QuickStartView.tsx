@@ -40,18 +40,30 @@ export default function QuickStartView() {
       className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6"
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
-      {/* Hero Orb on Glass Card */}
+      {/* Hero Orb on Glass Card Podest */}
       <GlassCard className="flex flex-col items-center py-8" hover>
-        <HeroOrb state="idle" size="lg" />
-        <h1 className="mt-4 text-2xl font-semibold">Quickstart</h1>
-        <p className="mt-2 text-sm text-text-secondary">20 Startfragen, die häufig helfen.</p>
+        <HeroOrb state="idle" size="lg" className="glow" />
+        <h1 className="mt-6 text-3xl font-semibold tracking-tight">Quickstart</h1>
+        <p className="mt-3 text-base leading-relaxed text-text-secondary">
+          20 Startfragen, die häufig helfen.
+        </p>
       </GlassCard>
 
       <section className="grid grid-cols-2 gap-3">
         {QUESTIONS.slice(0, 6).map((q, i) => (
           <GlassTile
             key={i}
-            icon="✦"
+            icon={
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="text-accent-1"
+              >
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            }
             title={q.split(":")[0] + ":"}
             subtitle="Startfrage"
             onPress={() => onPick(q)}
@@ -66,6 +78,17 @@ export default function QuickStartView() {
         {QUESTIONS.slice(6).map((q, i) => (
           <GlassTile
             key={i + 6}
+            icon={
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="text-accent-2"
+              >
+                <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z" />
+              </svg>
+            }
             title={q.split(":")[0]}
             subtitle="Frage"
             onPress={() => onPick(q)}

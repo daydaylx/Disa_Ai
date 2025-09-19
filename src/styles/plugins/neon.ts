@@ -1,48 +1,54 @@
 import plugin from "tailwindcss/plugin";
 
 export const neonGlassPlugin = plugin(function ({ addUtilities, addComponents }) {
-  // Core neon-glass utility classes
+  // Refined glass utility classes
   addUtilities({
     ".glass": {
-      borderRadius: "20px",
+      borderRadius: "var(--radius-card)",
       border: "1px solid var(--border-glass)",
-      backgroundColor: "var(--bg-surface)",
-      boxShadow: "0 10px 30px rgba(0,0,0,0.45)",
+      backgroundColor: "var(--bg-glass)",
+      boxShadow: "var(--shadow-card)",
       backdropFilter: "blur(12px) saturate(115%)",
+      transition: "transform var(--dur) var(--ease)",
     },
     ".orb": {
       borderRadius: "9999px",
-      backgroundImage: "var(--brand-gradient)",
+      backgroundImage: "var(--brand-grad)",
       position: "relative",
+      transition: "transform var(--dur) var(--ease)",
       "&::after": {
         content: '""',
         position: "absolute",
         inset: "1px",
         borderRadius: "9999px",
-        boxShadow: "inset 0 0 18px rgba(34,211,238,0.55)",
+        boxShadow: "inset var(--glow-ring)",
         pointerEvents: "none",
       },
     },
     ".glow": {
-      boxShadow: "0 0 60px rgba(168,85,247,0.35)",
+      boxShadow: "var(--glow-outer)",
     },
     ".tile": {
-      borderRadius: "16px",
+      borderRadius: "var(--radius-tile)",
       border: "1px solid var(--border-glass)",
-      backgroundColor: "var(--bg-surface)",
-      boxShadow: "0 10px 30px rgba(0,0,0,0.45)",
+      backgroundColor: "var(--bg-glass)",
+      boxShadow: "var(--shadow-card)",
       backdropFilter: "blur(12px) saturate(115%)",
-      transition: "transform 120ms cubic-bezier(0.2,0.8,0.2,1)",
+      transition: "transform var(--dur) var(--ease)",
+      "&:hover": {
+        transform: "translateY(-1px)",
+      },
       "&:active": {
         transform: "scale(0.98)",
       },
     },
     ".pill": {
-      borderRadius: "9999px",
+      borderRadius: "var(--radius-pill)",
       height: "44px",
       minHeight: "44px",
       paddingLeft: "16px",
       paddingRight: "16px",
+      transition: "all var(--dur) var(--ease)",
     },
     ".bg-radial-brand": {
       backgroundImage: `
@@ -56,9 +62,10 @@ export const neonGlassPlugin = plugin(function ({ addUtilities, addComponents })
   // Component-level styles with proper motion preferences
   addComponents({
     ".orb-pulse": {
-      animation: "orb-pulse 2s ease-in-out infinite",
+      animation: "orb-pulse 1.8s ease-in-out infinite",
       "@media (prefers-reduced-motion: reduce)": {
         animation: "none",
+        opacity: "0.9",
       },
     },
     ".orb-focus": {
@@ -114,7 +121,7 @@ export const neonGlassPlugin = plugin(function ({ addUtilities, addComponents })
 export const neonAnimations = `
 @keyframes orb-pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.9; }
+  50% { transform: scale(1.06); opacity: 0.9; }
 }
 
 @keyframes orb-focus-ring {

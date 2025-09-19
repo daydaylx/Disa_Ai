@@ -16,7 +16,19 @@ export const Composer: React.FC<{
   error?: string | null;
   onClearError?: () => void;
 }> = ({ loading, onSend, onStop, error, onClearError }) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(() => {
+    // Load prefilled text from QuickStart selection
+    try {
+      const prefilled = localStorage.getItem("disa:prefill");
+      if (prefilled) {
+        localStorage.removeItem("disa:prefill");
+        return prefilled;
+      }
+    } catch {
+      /* ignore */
+    }
+    return "";
+  });
   const [textareaHeight, setTextareaHeight] = useState(MIN_HEIGHT);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
