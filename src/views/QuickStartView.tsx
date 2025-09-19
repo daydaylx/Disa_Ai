@@ -47,7 +47,7 @@ export default function QuickStartView() {
         <p className="mt-2 text-sm text-text-secondary">20 Startfragen, die häufig helfen.</p>
       </GlassCard>
 
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="grid grid-cols-2 gap-3">
         {QUESTIONS.slice(0, 6).map((q, i) => (
           <GlassTile
             key={i}
@@ -62,7 +62,7 @@ export default function QuickStartView() {
       </section>
 
       {/* Additional questions as smaller tiles */}
-      <section className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <section className="grid grid-cols-2 gap-2">
         {QUESTIONS.slice(6).map((q, i) => (
           <GlassTile
             key={i + 6}

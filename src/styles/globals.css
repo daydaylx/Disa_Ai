@@ -18,13 +18,13 @@ body {
 
 @layer base {
   h1 {
-    @apply text-3xl font-semibold tracking-tight md:text-4xl;
+    @apply text-3xl font-semibold tracking-tight;
   }
   h2 {
-    @apply text-2xl font-semibold md:text-3xl;
+    @apply text-2xl font-semibold;
   }
   h3 {
-    @apply text-xl font-semibold md:text-2xl;
+    @apply text-xl font-semibold;
   }
   p {
     @apply leading-relaxed;
@@ -36,7 +36,7 @@ body {
 
 @layer components {
   .container-page {
-    @apply mx-auto max-w-[1200px] px-4 md:px-6;
+    @apply mx-auto max-w-[400px] px-4;
   }
   .focus-ring {
     @apply outline-none ring-0 focus:shadow-ring;

@@ -50,6 +50,11 @@ function useHashRoute(): [Route, (r: Route) => void] {
 }
 
 export default function App() {
+  // Activate neon theme by default for mobile
+  React.useEffect(() => {
+    document.documentElement.setAttribute("data-theme", "neon");
+  }, []);
+
   const [route, nav] = useHashRoute();
 
   return (
