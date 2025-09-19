@@ -269,8 +269,6 @@ const ChatView: React.FC<{ convId?: string | null }> = ({ convId = null }) => {
   return (
     <div className="min-h-[100svh]">
       <main
-        id="main"
-        role="main"
         className="mx-auto w-full max-w-4xl px-4 pt-3"
         style={{ paddingBottom: `calc(var(--bottomnav-h, 56px) + 160px)` }}
       >
