@@ -5,9 +5,11 @@ import { createRoot } from "react-dom/client";
 
 import App from "./App";
 import { installViewportEventThrottles } from "./lib/perf/throttle-viewport-events";
+import { setupPwaInstallCapture } from "./lib/pwa/install";
 
 // Einmalige Initialisierung
 installViewportEventThrottles();
+setupPwaInstallCapture();
 
 const container = document.getElementById("root");
 if (!container) {
