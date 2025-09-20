@@ -274,6 +274,192 @@ button:active,
   }
 }
 
+/* Android-specific Material 3 elevation shadows */
+.elevation-1 {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.elevation-2 {
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.elevation-3 {
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.19),
+    0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+/* Android-style floating action button */
+.fab-android {
+  position: fixed;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  box-shadow:
+    0 6px 10px rgba(0, 0, 0, 0.14),
+    0 1px 18px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fab-android:active {
+  transform: scale(0.95);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.14),
+    0 1px 5px rgba(0, 0, 0, 0.12);
+}
+
+/* Android edge-to-edge gesture support */
+@media (display-mode: standalone) {
+  .gesture-edge-left,
+  .gesture-edge-right {
+    position: fixed;
+    top: 0;
+    width: 20px;
+    height: 100vh;
+    z-index: 1001;
+    pointer-events: auto;
+  }
+
+  .gesture-edge-left {
+    left: 0;
+  }
+
+  .gesture-edge-right {
+    right: 0;
+  }
+}
+
+/* Android predictive back gesture indicator */
+.back-gesture-indicator {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1002;
+}
+
+.back-gesture-indicator.active {
+  opacity: 1;
+}
+
+/* Enhanced Android keyboard detection */
+@supports (height: 100dvh) {
+  .android-keyboard-aware {
+    height: 100dvh;
+    transition: height 0.2s ease-in-out;
+  }
+}
+
+/* Visual feedback for Android navigation bar color */
+.android-nav-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-bottom, 0px);
+  background: var(--theme-color);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Android notification shade pull-down effect */
+.notification-shade-handle {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  margin-top: 8px;
+  z-index: 1000;
+}
+
+/* Android-style snackbar */
+.snackbar-android {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  left: 16px;
+  right: 16px;
+  background: #323232;
+  color: white;
+  padding: 14px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  transform: translateY(100px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.snackbar-android.show {
+  transform: translateY(0);
+}
+
+/* Android system UI optimization */
+@media (display-mode: standalone) {
+  body {
+    /* Hide address bar on scroll */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Optimize for Android Chrome custom tabs */
+  meta[name="theme-color"] {
+    content: var(--theme-color);
+  }
+}
+
+/* Android adaptive layout for different screen sizes */
+@media (min-width: 600dp) {
+  .tablet-layout {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+}
+
+@media (min-width: 840dp) {
+  .desktop-layout {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+}
+
+/* Android split-screen support */
+@media (max-height: 500px) and (orientation: landscape) {
+  .split-screen-layout {
+    font-size: 14px;
+  }
+
+  .split-screen-layout .chat-bubble {
+    padding: 8px 12px;
+    margin: 4px 0;
+  }
+
+  .split-screen-layout .composer-container {
+    padding: 8px;
+  }
+}
+
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   .haptic-success,
@@ -288,6 +474,14 @@ button:active,
   }
 
   .keyboard-open .composer-container {
+    transition: none;
+  }
+
+  .fab-android {
+    transition: none;
+  }
+
+  .snackbar-android {
     transition: none;
   }
 }

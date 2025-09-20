@@ -88,7 +88,7 @@ export default function BottomNav() {
       ref={(el) => {
         ref.current = el;
       }}
-      className="safe-bottom touch-target fixed inset-x-3 bottom-3 z-30 rounded-2xl px-2 py-2 backdrop-blur glass"
+      className="safe-bottom touch-target rounded-2xl glass elevation-3 android-nav-overlay fixed inset-x-3 bottom-3 z-30 px-2 py-2 backdrop-blur"
       role="navigation"
       aria-label="Hauptnavigation"
       style={{

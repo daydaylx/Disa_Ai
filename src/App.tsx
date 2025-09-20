@@ -6,6 +6,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
 import { ToastsProvider } from "./components/ui/Toast";
+import { setupAndroidOptimizations } from "./lib/android/system";
 
 // Code-splitting für bessere Performance
 const ChatsView = React.lazy(() => import("./views/ChatsView"));
@@ -51,6 +52,11 @@ function useHashRoute(): [Route, (r: Route) => void] {
 
 export default function App() {
   const [route, nav] = useHashRoute();
+
+  // Setup Android optimizations on mount
+  React.useEffect(() => {
+    setupAndroidOptimizations();
+  }, []);
 
   return (
     <ToastsProvider>

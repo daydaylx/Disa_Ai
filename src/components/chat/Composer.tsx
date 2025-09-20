@@ -168,7 +168,7 @@ export const Composer: React.FC<{
   return (
     <div
       ref={composerRef}
-      className="composer-container safe-bottom border-white/12 rounded-[28px] border bg-[rgba(17,22,31,0.82)] px-3 py-2 shadow-[0_20px_48px_rgba(0,0,0,0.45)]"
+      className="composer-container safe-bottom border-white/12 android-keyboard-aware elevation-2 rounded-[28px] border bg-[rgba(17,22,31,0.82)] px-3 py-2 shadow-[0_20px_48px_rgba(0,0,0,0.45)]"
     >
       {/* Error Message */}
       {error && (
