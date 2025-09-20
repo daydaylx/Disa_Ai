@@ -15,7 +15,6 @@ import {
 } from "react";
 
 import { cn } from "../../lib/utils/cn";
-import { LoadingDots } from "../ui/Skeleton";
 import Avatar from "./Avatar";
 
 export interface MessageData {
@@ -296,9 +295,9 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
                 <Avatar kind="assistant" />
                 <div className="glass-solid rounded-2xl p-3">
                   <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
+                    <div className="bg-current h-2 w-2 animate-bounce rounded-full [animation-delay:-0.3s]" />
+                    <div className="bg-current h-2 w-2 animate-bounce rounded-full [animation-delay:-0.15s]" />
+                    <div className="bg-current h-2 w-2 animate-bounce rounded-full" />
                   </div>
                 </div>
               </div>
@@ -347,32 +346,24 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
       {!isUser && <Avatar kind="assistant" />}
       <div
         className={cn(
-          "chat-bubble relative max-w-[min(92vw,42ch)] rounded-2xl p-3 text-text",
+          "chat-bubble rounded-2xl text-text relative max-w-[min(92vw,42ch)] p-3",
           isUser
-            ? "border border-transparent bg-grad-primary text-white shadow-glow"
+            ? "border-transparent bg-grad-primary text-white border shadow-glow"
             : "glass-solid",
         )}
       >
         {/* Copy button */}
         <button
           onClick={onCopy}
-          className="focus-visible:ring-accent-2/70 absolute right-2 top-2 rounded-full border border-white/15 bg-black/40 p-1 text-xs opacity-80 transition duration-200 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+          className="touch-target absolute right-2 top-2 rounded p-1 text-xs opacity-60 transition-opacity hover:opacity-100 focus:opacity-100"
           aria-label="Nachricht kopieren"
           type="button"
         >
-          {/* Copy button */}
-          <button
-            onClick={onCopy}
-            className="touch-target absolute right-2 top-2 rounded p-1 text-xs opacity-60 transition-opacity hover:opacity-100 focus:opacity-100"
-            aria-label="Nachricht kopieren"
-            type="button"
-          >
-            📋
-          </button>
+          📋
+        </button>
 
-          {/* Message content */}
-          <div className="whitespace-pre-wrap pr-8 text-base leading-6">{message.content}</div>
-        </div>
+        {/* Message content */}
+        <div className="whitespace-pre-wrap pr-8 text-base leading-6">{message.content}</div>
 
         {/* Timestamp */}
         {message.timestamp && (
