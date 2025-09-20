@@ -88,62 +88,46 @@ export default function BottomNav() {
       ref={(el) => {
         ref.current = el;
       }}
-      className="safe-bottom touch-target rounded-2xl glass elevation-3 android-nav-overlay fixed inset-x-3 bottom-3 z-30 px-2 py-2 backdrop-blur"
+      className="bottom-nav safe-bottom inset-x-5 bottom-5 fixed z-30"
       role="navigation"
       aria-label="Hauptnavigation"
-      style={{
-        WebkitBackdropFilter: "saturate(140%) blur(18px)",
-        paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))",
-      }}
       data-version={import.meta.env.VITE_APP_VERSION}
     >
-      <ul className="grid grid-cols-4 items-center gap-1 text-sm">
+      <ul className="grid grid-cols-3 items-center gap-1">
         <li>
           <button
             onClick={() => to("#/chat")}
-            className={`tap touch-target ripple-effect hover-scale magnetic flex min-h-[48px] w-full items-center justify-center ${is("#/chat") ? "tab--active glow-pulse" : "tab"}`}
+            className={`nav-tab ${is("#/chat") ? "nav-tab--active" : ""}`}
             aria-current={is("#/chat") ? "page" : undefined}
             aria-label="Chat öffnen"
             data-testid="nav-bottom-chat"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            <span className="text-xs">Chat</span>
+            Chat
           </button>
         </li>
         <li>
           <button
             onClick={() => to("#/chats")}
-            className={`tap touch-target ripple-effect hover-scale magnetic flex min-h-[48px] w-full items-center justify-center ${is("#/chats") ? "tab--active glow-pulse" : "tab"}`}
+            className={`nav-tab ${is("#/chats") ? "nav-tab--active" : ""}`}
             aria-current={is("#/chats") ? "page" : undefined}
-            aria-label="Alle Unterhaltungen"
+            aria-label="Chat-Verlauf"
             data-testid="nav-bottom-chats"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            <span className="text-xs">Chats</span>
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={() => to("#/quickstart")}
-            className={`tap touch-target ripple-effect hover-scale magnetic flex min-h-[48px] w-full items-center justify-center ${is("#/quickstart") ? "tab--active glow-pulse" : "tab"}`}
-            aria-current={is("#/quickstart") ? "page" : undefined}
-            aria-label="Schnellstart"
-            data-testid="nav-bottom-quickstart"
-            onTouchStart={() => hapticFeedback.tap()}
-          >
-            <span className="text-xs">Start</span>
+            Verlauf
           </button>
         </li>
         <li>
           <button
             onClick={() => to("#/settings")}
-            className={`tap touch-target ripple-effect hover-scale magnetic flex min-h-[48px] w-full items-center justify-center ${is("#/settings") ? "tab--active glow-pulse" : "tab"}`}
+            className={`nav-tab ${is("#/settings") ? "nav-tab--active" : ""}`}
             aria-current={is("#/settings") ? "page" : undefined}
-            aria-label="Einstellungen öffnen"
+            aria-label="Einstellungen"
             data-testid="nav-bottom-settings"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            <span className="text-xs">Einstellungen</span>
+            Einstellungen
           </button>
         </li>
       </ul>

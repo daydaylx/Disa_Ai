@@ -1,5 +1,5 @@
-// CSS-Imports - unified design system
-import "./styles/globals.css"; // New unified design system
+// CSS-Imports - Plan B unified design system
+import "./styles/theme.css"; // Single theme entry point
 
 import React from "react";
 import { createRoot } from "react-dom/client";

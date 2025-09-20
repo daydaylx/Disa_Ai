@@ -131,13 +131,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       manager.destroy();
       swipeManagerRef.current = null;
     };
-  }, [
-    enableSwipeNavigation,
-    onSwipeLeft,
-    onSwipeRight,
-    onSwipeUp,
-    onSwipeDown,
-  ]);
+  }, [enableSwipeNavigation, onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown]);
 
   const getPreviewText = (direction: "left" | "right" | "up" | "down"): string => {
     switch (direction) {
@@ -167,9 +161,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       {children}
 
       {/* Navigation Overlay bei aktiver Navigation */}
-      {isNavigating && (
-        <div className="absolute inset-0 z-50 bg-black/10 backdrop-blur-sm" />
-      )}
+      {isNavigating && <div className="bg-black/10 absolute inset-0 z-50 backdrop-blur-sm" />}
     </div>
   );
 };
@@ -177,13 +169,15 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
 /**
  * Hook für Chat-Container mit Swipe-Navigation
  */
-export function useChatContainer(options: {
-  enableSwipeNavigation?: boolean;
-  onSwipeLeft?: () => void;
-  onSwipeRight?: () => void;
-  onSwipeUp?: () => void;
-  onSwipeDown?: () => void;
-} = {}) {
+export function useChatContainer(
+  options: {
+    enableSwipeNavigation?: boolean;
+    onSwipeLeft?: () => void;
+    onSwipeRight?: () => void;
+    onSwipeUp?: () => void;
+    onSwipeDown?: () => void;
+  } = {},
+) {
   const [isNavigating, setIsNavigating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -248,16 +242,12 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
     <div className={cn("flex h-full flex-col", className)}>
       {/* Header */}
       {header && (
-        <div className="flex-shrink-0 border-b border-white/10 bg-white/5 backdrop-blur-sm">
-          {header}
-        </div>
+        <div className="flex-shrink-0 border-b border-border-subtle bg-surface-100">{header}</div>
       )}
 
       {/* Chat Content mit Swipe-Navigation */}
       <div className="flex-1 overflow-hidden">
-        <ChatContainer enableSwipeNavigation={enableSwipeNavigation}>
-          {children}
-        </ChatContainer>
+        <ChatContainer enableSwipeNavigation={enableSwipeNavigation}>{children}</ChatContainer>
       </div>
 
       {/* Composer */}

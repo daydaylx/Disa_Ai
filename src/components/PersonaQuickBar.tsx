@@ -1,7 +1,7 @@
-import * as React from 'react';
+import * as React from "react";
 
 import { usePersonaSelection } from "../config/personas";
-import { cn } from "../lib/cn";
+import { cn } from "../lib/utils/cn";
 
 /** QuickBar (falls genutzt) */
 const PersonaQuickBar: React.FC = () => {
@@ -14,7 +14,10 @@ const PersonaQuickBar: React.FC = () => {
         <button
           key={s.id}
           onClick={() => setStyleId(s.id)}
-          className={cn(styleId === s.id ? "nav-pill nav-pill--active" : "nav-pill")}
+          className={cn(
+            "chip",
+            styleId === s.id && "bg-accent-500 text-[var(--accent-foreground)]",
+          )}
           aria-pressed={styleId === s.id}
         >
           {s.name}

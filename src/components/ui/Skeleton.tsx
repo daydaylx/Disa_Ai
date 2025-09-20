@@ -11,7 +11,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({ className, children }) => {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-md bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 bg-[length:200%_100%]",
+        "from-slate-200 via-slate-300 to-slate-200 animate-pulse rounded-md bg-gradient-to-r bg-[length:200%_100%]",
         "dark:from-slate-700 dark:via-slate-600 dark:to-slate-700",
         className,
       )}
@@ -30,8 +30,8 @@ export const MessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false
   return (
     <div
       className={cn(
-        "msg max-w-[80%] rounded-xl p-3",
-        isUser ? "msg-user ml-auto" : "msg-assistant mr-auto",
+        "chat-bubble",
+        isUser ? "chat-bubble--user ml-auto" : "chat-bubble--assistant mr-auto",
       )}
       aria-hidden="true"
     >
@@ -48,14 +48,14 @@ export const MessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false
 export const HeaderSkeleton: React.FC = () => {
   return (
     <div
-      className="flex items-center justify-between border-b border-white/10 p-4"
+      className="flex items-center justify-between border-b border-border-subtle p-4"
       aria-hidden="true"
     >
       <div className="flex items-center space-x-3">
         <Skeleton className="h-8 w-8 rounded-full" />
         <div className="space-y-1">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-3 w-16" />
+          <Skeleton className="w-24 h-4" />
+          <Skeleton className="w-16 h-3" />
         </div>
       </div>
       <div className="flex items-center space-x-2">
@@ -75,7 +75,7 @@ export const ChatListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) =>
           <Skeleton className="h-10 w-10 flex-shrink-0 rounded-full" />
           <div className="flex-1 space-y-2">
             <div className="flex items-center justify-between">
-              <Skeleton className="h-4 w-32" />
+              <Skeleton className="w-32 h-4" />
               <Skeleton className="h-3 w-12" />
             </div>
             <Skeleton className="h-3 w-full" />
@@ -101,7 +101,10 @@ export const ComposerSkeleton: React.FC = () => {
 // Loading dots animation for streaming messages
 export const LoadingDots: React.FC<{ className?: string }> = ({ className }) => {
   return (
-    <div className={cn("flex items-center space-x-1", className)} aria-label="Lädt...">
+    <div
+      className={cn("flex items-center space-x-1 text-text-muted", className)}
+      aria-label="Lädt..."
+    >
       <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
       <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
       <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
@@ -113,11 +116,11 @@ export const LoadingDots: React.FC<{ className?: string }> = ({ className }) => 
 export const TypingIndicator: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div
-      className={cn("msg msg-assistant mr-auto max-w-[80%] rounded-xl p-3", className)}
+      className={cn("chat-bubble chat-bubble--assistant mr-auto", className)}
       aria-live="polite"
       aria-label="KI tippt..."
     >
-      <div className="flex items-center space-x-2 text-slate-500">
+      <div className="flex items-center space-x-2 text-text-muted">
         <LoadingDots />
         <span className="text-sm">KI tippt...</span>
       </div>

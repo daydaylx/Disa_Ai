@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { SkipLink } from "./components/accessibility/SkipLink";
-import Aurora from "./components/Aurora";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
@@ -60,8 +59,7 @@ export default function App() {
 
   return (
     <ToastsProvider>
-      <div className="app-bg bg-bg-primary relative min-h-[100dvh] text-foreground">
-        <Aurora />
+      <div className="app-shell relative min-h-[100dvh]">
         <SkipLink targetId="main" />
 
         {/* Main layout container */}
@@ -69,21 +67,21 @@ export default function App() {
           <NetworkBanner />
 
           {/* Header */}
-          <header className="sticky top-0 z-40 border-b border-neutral-900 bg-surface-primary/95 backdrop-blur">
-            <div className="container flex h-16 items-center">
+          <header className="sticky top-0 z-40 border-b border-border-subtle bg-[rgba(17,26,38,0.94)] backdrop-blur">
+            <div className="h-16 mx-auto flex w-full max-w-5xl items-center px-4">
               <h1 className="text-xl font-semibold">Disa AI</h1>
             </div>
           </header>
 
           {/* Main content */}
-          <main id="main" role="main" className="flex-1 pb-20">
+          <main id="main" role="main" className="pb-20 flex-1">
             <ErrorBoundary>
               <React.Suspense
                 fallback={
-                  <div className="container flex items-center justify-center py-12">
-                    <div className="glass rounded-lg p-6 text-center">
-                      <div className="border-current border-t-transparent mx-auto h-8 w-8 animate-spin rounded-full border-4"></div>
-                      <p className="mt-3 text-sm text-neutral-300">Lädt...</p>
+                  <div className="mx-auto flex w-full max-w-3xl items-center justify-center px-4 py-12">
+                    <div className="card-elev1 w-full max-w-sm text-center">
+                      <div className="border-accent-500 mx-auto h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
+                      <p className="mt-3 text-sm text-text-secondary">Lädt...</p>
                     </div>
                   </div>
                 }

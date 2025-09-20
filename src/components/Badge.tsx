@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 export function Badge({
   children,
   tone = "neutral",
@@ -7,9 +7,9 @@ export function Badge({
   tone?: "neutral" | "green" | "purple";
 }) {
   const map = {
-    neutral: "border border-white/30 bg-white/60 text-slate-700 backdrop-blur-md",
-    green: "border border-white/30 bg-white/60 text-emerald-700 backdrop-blur-md",
-    purple: "border border-white/30 bg-white/60 text-fuchsia-700 backdrop-blur-md",
+    neutral: "border border-border-subtle bg-surface-100 text-text-secondary",
+    green: "border border-border-subtle bg-[rgba(34,197,94,0.12)] text-success",
+    purple: "border border-border-subtle bg-[rgba(192,132,252,0.12)] text-text-secondary",
   } as const;
   return (
     <span className={`inline-flex h-6 items-center rounded-full px-2 text-xs ${map[tone]}`}>

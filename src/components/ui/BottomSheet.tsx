@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { cn } from "../../lib/utils/cn";
+
 export interface BottomSheetProps {
   /** Sheet title */
   title?: string;
@@ -37,13 +39,18 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-end">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="bg-black/50 absolute inset-0 backdrop-blur-sm" onClick={onClose} />
 
       {/* Sheet */}
-      <div className={`relative max-h-[80vh] w-full rounded-t-3xl glass ${className}`}>
+      <div
+        className={cn(
+          "relative max-h-[80vh] w-full rounded-t-[28px] border border-border-strong bg-surface-200",
+          className,
+        )}
+      >
         <div className="safe-top p-4">
           {/* Handle */}
-          <div className="bg-text-secondary/30 mx-auto mb-4 h-1 w-12 rounded-full" />
+          <div className="mx-auto mb-4 h-1 w-12 rounded-full bg-[color:rgba(149,164,187,0.4)]" />
 
           {/* Header */}
           {(title || onClose) && (
@@ -52,7 +59,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="bg-text-secondary/10 hover:bg-text-secondary/20 flex h-8 w-8 items-center justify-center rounded-full"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[color:rgba(149,164,187,0.12)] hover:bg-[color:rgba(149,164,187,0.2)]"
                   aria-label="Schließen"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

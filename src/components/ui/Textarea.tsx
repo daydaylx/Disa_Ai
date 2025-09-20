@@ -13,10 +13,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         id={id}
         ref={ref}
-        className={cn(
-          "input h-auto resize-y border-white/30 bg-white/70 backdrop-blur-md placeholder:text-slate-500",
-          className,
-        )}
+        className={cn("textarea h-auto resize-y", className)}
         {...props}
       />
     );
@@ -25,12 +22,12 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <label className="block">
         <span className="mb-1 block text-sm font-medium">{label}</span>
         {inputEl}
-        {error ? <span className="mt-1 block text-xs text-destructive">{error}</span> : null}
+        {error ? <span className="mt-1 block text-xs text-danger">{error}</span> : null}
       </label>
     ) : (
       <>
         {inputEl}
-        {error ? <span className="mt-1 block text-xs text-destructive">{error}</span> : null}
+        {error ? <span className="mt-1 block text-xs text-danger">{error}</span> : null}
       </>
     );
   },

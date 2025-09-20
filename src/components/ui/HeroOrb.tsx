@@ -1,18 +1,17 @@
 import * as React from "react";
 
+import { cn } from "../../lib/utils/cn";
+
 export interface HeroOrbProps {
-  /** Current state of the orb */
   state?: "idle" | "focus" | "listening";
-  /** Optional className for additional styling */
   className?: string;
-  /** Size variant */
   size?: "sm" | "md" | "lg";
 }
 
-const sizeClasses = {
-  sm: "w-20 h-20",
-  md: "w-32 h-32",
-  lg: "w-40 h-40",
+const sizeClasses: Record<NonNullable<HeroOrbProps["size"]>, string> = {
+  sm: "h-20 w-20",
+  md: "h-32 w-32",
+  lg: "h-40 w-40",
 };
 
 export const HeroOrb: React.FC<HeroOrbProps> = ({
@@ -20,19 +19,22 @@ export const HeroOrb: React.FC<HeroOrbProps> = ({
   className = "",
   size = "md",
 }) => {
-  const baseClasses = `orb ${sizeClasses[size]} mx-auto relative`;
-
-  const stateClasses = {
-    idle: "orb-pulse",
-    focus: "orb-focus glow",
-    listening: "orb-listening glow",
+  const animationByState: Record<HeroOrbProps["state"], string> = {
+    idle: "motion-safe:animate-pulse",
+    focus: "motion-safe:animate-[pulse_1.6s_ease-in-out_infinite]",
+    listening: "motion-safe:animate-[pulse_1.1s_ease-in-out_infinite]",
   };
 
   return (
     <div
-      className={`${baseClasses} ${stateClasses[state]} ${className}`}
-      role="presentation"
-      aria-hidden="true"
+      aria-hidden
+      className={cn(
+        "relative mx-auto rounded-full border border-border-strong bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,0.35),rgba(11,17,24,0.1))]",
+        "after:absolute after:-inset-[6%] after:rounded-full after:border after:border-[rgba(34,211,238,0.25)]",
+        sizeClasses[size],
+        animationByState[state],
+        className,
+      )}
     />
   );
 };

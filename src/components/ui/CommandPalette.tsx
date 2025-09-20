@@ -127,7 +127,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+        className="bg-black/50 fixed inset-0 z-50 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -139,11 +139,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         aria-modal="true"
         aria-labelledby="command-palette-title"
       >
-        <div className="overflow-hidden rounded-xl border border-white/20 bg-white/90 shadow-2xl backdrop-blur-md">
+        <div className="overflow-hidden rounded-xl border border-border-strong bg-surface-200 shadow-elev2">
           {/* Search Input */}
-          <div className="flex items-center border-b border-white/20 px-4">
+          <div className="flex items-center border-b border-border-subtle px-4">
             <svg
-              className="h-5 w-5 text-slate-500"
+              className="h-5 w-5 text-text-muted"
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
@@ -157,7 +157,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             <input
               ref={searchRef}
               type="text"
-              className="h-12 w-full border-0 bg-transparent pl-3 pr-4 text-slate-900 placeholder:text-slate-500 focus:ring-0 sm:text-sm"
+              className="h-12 w-full border-0 bg-transparent pl-3 pr-4 text-text-primary placeholder:text-text-muted focus:ring-0 sm:text-sm"
               placeholder={placeholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -189,10 +189,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   id={`command-${command.id}`}
                   className={cn(
                     "group flex cursor-pointer select-none items-center rounded-lg px-3 py-2",
-                    "transition-colors duration-150",
+                    "transition-colors duration-fast",
                     index === selectedIndex
-                      ? "bg-blue-600 text-white"
-                      : "text-slate-900 hover:bg-blue-50",
+                      ? "bg-accent text-[var(--accent-foreground)]"
+                      : "text-text-secondary hover:bg-surface-100",
                     command.disabled && "cursor-not-allowed opacity-50",
                   )}
                   onClick={() => handleCommandClick(command, index)}
@@ -205,8 +205,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   {command.icon && (
                     <div
                       className={cn(
-                        "mr-3 h-5 w-5 flex-shrink-0",
-                        index === selectedIndex ? "text-white" : "text-slate-500",
+                        "h-5 w-5 mr-3 flex-shrink-0",
+                        index === selectedIndex
+                          ? "text-[var(--accent-foreground)]"
+                          : "text-text-muted",
                       )}
                     >
                       {command.icon}
@@ -218,7 +220,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={cn(
                         "truncate font-medium",
-                        index === selectedIndex ? "text-white" : "text-slate-900",
+                        index === selectedIndex
+                          ? "text-[var(--accent-foreground)]"
+                          : "text-text-primary",
                       )}
                     >
                       {command.title}
@@ -227,7 +231,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       <div
                         className={cn(
                           "truncate text-sm",
-                          index === selectedIndex ? "text-blue-100" : "text-slate-500",
+                          index === selectedIndex ? "text-[rgba(3,20,28,0.85)]" : "text-text-muted",
                         )}
                       >
                         {command.description}
@@ -240,7 +244,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={cn(
                         "ml-3 font-mono text-xs",
-                        index === selectedIndex ? "text-blue-100" : "text-slate-400",
+                        index === selectedIndex ? "text-[rgba(3,20,28,0.8)]" : "text-text-muted",
                       )}
                     >
                       {command.shortcut}
@@ -250,7 +254,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               ))}
             </ul>
           ) : (
-            <div className="px-4 py-14 text-center text-sm text-slate-500">
+            <div className="py-14 px-4 text-center text-sm text-text-muted">
               Keine Befehle gefunden für "{query}"
             </div>
           )}

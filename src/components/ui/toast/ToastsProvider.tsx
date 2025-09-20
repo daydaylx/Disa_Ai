@@ -84,7 +84,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               key={t.id}
               role="status"
               className={cn(
-                "tap-target pointer-events-auto w-[min(96vw,640px)] rounded-2xl border border-white/20 bg-black/50 text-white shadow-soft backdrop-blur-xl",
+                "tap-target rounded-2xl pointer-events-auto w-[min(96vw,640px)] border border-border-strong bg-surface-200 text-text-primary shadow-elev2",
                 "flex items-start gap-3 p-3",
               )}
             >
@@ -95,7 +95,11 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
                   <div className="text-sm leading-snug opacity-95">{t.message}</div>
                 ) : null}
                 {t.action ? (
-                  <button type="button" className="btn-outline mt-2" onClick={t.action.onClick}>
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm mt-2"
+                    onClick={t.action.onClick}
+                  >
                     {t.action.label}
                   </button>
                 ) : null}
@@ -103,7 +107,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               <button
                 type="button"
                 aria-label="Schließen"
-                className="btn-ghost ml-2 hover:bg-white/10"
+                className="btn btn-ghost btn-sm ml-2"
                 onClick={() => dismiss(t.id)}
               >
                 <Icon name="close" />

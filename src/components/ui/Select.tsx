@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 import { cn } from "../../lib/utils/cn";
 
@@ -37,11 +37,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         <select
           id={selectId}
           ref={ref}
-          className={cn(
-            "input",
-            "appearance-none pr-9 bg-white/70 backdrop-blur-md border-white/30 placeholder:text-slate-500",
-            error && "border-destructive focus-visible:ring-[color:rgba(239,68,68,0.35)]",
-          )}
+          className={cn("input appearance-none pr-8", error && "border-danger focus:border-danger")}
           aria-invalid={!!error || undefined}
           aria-describedby={describedBy.length ? describedBy.join(" ") : undefined}
           {...props}
@@ -53,6 +49,16 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             </option>
           ))}
         </select>
+        {hint ? (
+          <p id={`${selectId}-hint`} className="mt-1 text-xs text-text-muted">
+            {hint}
+          </p>
+        ) : null}
+        {error ? (
+          <p id={`${selectId}-error`} className="mt-1 text-xs text-danger">
+            {error}
+          </p>
+        ) : null}
       </div>
     );
   },

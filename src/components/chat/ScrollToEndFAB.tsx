@@ -18,11 +18,10 @@ export default function ScrollToEndFAB({ visible, onClick }: Props) {
       type="button"
       aria-label="Zum Ende scrollen"
       onClick={handleClick}
-      className="touch-target fixed right-4 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full text-white shadow-[0_16px_32px_rgba(168,85,247,0.35)] transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(9,11,17,0.8)] active:scale-95"
+      className="btn btn-primary btn-sm right-5 fixed z-50 inline-flex items-center justify-center shadow-elev2"
       style={{
         bottom:
           "calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + var(--composer-offset, 112px))",
-        background: "var(--brand-gradient)",
       }}
       data-no-zoom
     >
