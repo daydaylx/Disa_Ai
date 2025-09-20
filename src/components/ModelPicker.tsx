@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 import { loadModelCatalog, type Safety } from "../config/models";
 import { getApiKey } from "../services/openrouter";
@@ -138,7 +138,8 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       if (cost !== "all" && priceBucket(m) !== cost) return false;
 
       if (norm === "") return true;
-      const hay = `${m.id} ${m.label ?? ""} ${m.provider ?? ""} ${m.tags?.join(" ") ?? ""}`.toLowerCase();
+      const hay =
+        `${m.id} ${m.label ?? ""} ${m.provider ?? ""} ${m.tags?.join(" ") ?? ""}`.toLowerCase();
       return hay.includes(norm);
     });
     // Sortierung
@@ -155,18 +156,32 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       return A.localeCompare(B);
     });
     return arr;
-  }, [mergedAll, q, provider, onlyFree, minCtx, policyFromRole, policy, cost, sortBy, priceBucket, priceIn, priceOut]);
+  }, [
+    mergedAll,
+    q,
+    provider,
+    onlyFree,
+    minCtx,
+    policyFromRole,
+    policy,
+    cost,
+    sortBy,
+    priceBucket,
+    priceIn,
+    priceOut,
+  ]);
 
   return (
     <section className="space-y-3" data-testid="settings-model-picker">
       {(!getApiKey() || getApiKey() === "") && (
-        <div className="rounded-md border border-amber-700/40 bg-amber-900/20 px-3 py-2 text-xs text-amber-200">
+        <div className="border-amber-700/40 bg-amber-900/20 text-amber-200 rounded-md border px-3 py-2 text-xs">
           Hinweis: Für das Laden der Modell‑Liste ist ein OpenRouter API‑Key nötig (Einstellungen).
         </div>
       )}
       {policyFromRole !== "any" && (
-        <div className="rounded-md border border-border bg-background/60 px-3 py-2 text-xs text-text-muted">
-          Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste entsprechend gefiltert.
+        <div className="rounded-md border border-border-subtle bg-surface-100 px-3 py-2 text-xs text-text-muted">
+          Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste
+          entsprechend gefiltert.
         </div>
       )}
 
@@ -252,7 +267,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
       </div>
 
-      <div className="max-h-[420px] overflow-y-auto space-y-2 p-1" data-no-swipe>
+      <div className="max-h-[420px] space-y-2 overflow-y-auto p-1" data-no-swipe>
         {filtered.map((m) => {
           const active = value === m.id;
           return (
@@ -260,17 +275,25 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
               key={m.id}
               aria-selected={active}
               onClick={() => onChange(m.id)}
-              className="card-solid grid cursor-pointer grid-cols-3 items-center gap-3 p-3 text-sm transition-transform hover:-translate-y-[1px] aria-selected:ring-2 aria-selected:ring-ring"
+              className="card aria-selected:border-accent-500 grid cursor-pointer grid-cols-3 items-center gap-3 p-3 text-sm transition-transform duration-fast hover:-translate-y-[1px]"
             >
               <div className="col-span-2 min-w-0">
-                <div className="truncate font-medium text-foreground">{m.label ?? m.id}</div>
-                <div className="truncate text-xs text-muted-foreground">{m.provider ?? "—"}</div>
+                <div className="truncate font-medium text-text-primary">{m.label ?? m.id}</div>
+                <div className="truncate text-xs text-text-muted">{m.provider ?? "—"}</div>
               </div>
               <div className="flex items-center justify-end gap-2 text-xs">
                 {(isFreeModel(m) || (m as any).freeBadge) && (
-                  <span className="rounded-full border border-white/30 bg-white/60 px-2 py-0.5 text-success backdrop-blur-md">free</span>
+                  <span className="chip bg-[rgba(34,197,94,0.12)] text-success">free</span>
                 )}
-                <span className={`rounded-full border border-white/30 bg-white/60 px-2 py-0.5 backdrop-blur-md ${m.safety === 'strict' ? 'text-error' : m.safety === 'moderate' ? 'text-warning' : 'text-success'}`}>
+                <span
+                  className={`chip bg-[rgba(149,164,187,0.1)] ${
+                    m.safety === "strict"
+                      ? "text-danger"
+                      : m.safety === "moderate"
+                        ? "text-warning"
+                        : "text-success"
+                  }`}
+                >
                   {m.safety}
                 </span>
               </div>
@@ -278,7 +301,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           );
         })}
         {filtered.length === 0 && (
-          <div className="p-6 text-center text-sm text-muted-foreground">
+          <div className="card text-center text-sm text-text-muted">
             Keine Modelle gefunden. Prüfe Filter und API‑Key.
           </div>
         )}

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 import { cn } from "../../lib/utils/cn";
 
@@ -29,22 +29,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           id={inputId}
           ref={ref}
-          className={cn(
-            "input",
-            "bg-white/70 backdrop-blur-md border-white/30 placeholder:text-slate-500",
-            error && "border-destructive focus-visible:ring-[color:rgba(239,68,68,0.35)]",
-          )}
+          className={cn("input", error && "border-danger focus:border-danger")}
           aria-invalid={!!error || undefined}
           aria-describedby={describedBy.length ? describedBy.join(" ") : undefined}
           {...props}
         />
         {hint ? (
-          <p id={`${inputId}-hint`} className="mt-1 text-xs text-muted-foreground">
+          <p id={`${inputId}-hint`} className="mt-1 text-xs text-text-muted">
             {hint}
           </p>
         ) : null}
         {error ? (
-          <p id={`${inputId}-error`} className="mt-1 text-xs text-destructive">
+          <p id={`${inputId}-error`} className="mt-1 text-xs text-danger">
             {error}
           </p>
         ) : null}

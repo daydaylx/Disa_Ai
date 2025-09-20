@@ -15,6 +15,7 @@ import {
 } from "react";
 
 import { cn } from "../../lib/utils/cn";
+import { CopyButton } from "../ui/CopyButton";
 import Avatar from "./Avatar";
 
 export interface MessageData {
@@ -293,11 +294,11 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
             {isLoading && (
               <div className="my-2 flex items-start gap-2">
                 <Avatar kind="assistant" />
-                <div className="glass-solid rounded-2xl p-3">
-                  <div className="flex items-center gap-1">
-                    <div className="bg-current h-2 w-2 animate-bounce rounded-full [animation-delay:-0.3s]" />
-                    <div className="bg-current h-2 w-2 animate-bounce rounded-full [animation-delay:-0.15s]" />
-                    <div className="bg-current h-2 w-2 animate-bounce rounded-full" />
+                <div className="card p-3">
+                  <div className="flex items-center gap-1 text-text-muted">
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
                   </div>
                 </div>
               </div>
@@ -341,33 +342,26 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
   return (
     <div
       ref={ref}
-      className={cn("mb-4 flex items-start", isUser ? "justify-end" : "justify-start")}
+      className={cn("mb-4 flex items-start gap-2", isUser ? "justify-end" : "justify-start")}
     >
       {!isUser && <Avatar kind="assistant" />}
-      <div
-        className={cn(
-          "chat-bubble rounded-2xl text-text touch-action-manipulation relative max-w-[min(85vw,42ch)] p-4",
-          isUser
-            ? "border-transparent bg-grad-primary text-white border shadow-glow"
-            : "glass-solid",
-        )}
-      >
+      <div className={cn("chat-bubble", isUser ? "chat-bubble--user" : "chat-bubble--assistant")}>
         {/* Copy button */}
-        <button
-          onClick={onCopy}
-          className="touch-target absolute right-2 top-2 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-xs opacity-60 transition-opacity hover:opacity-100 focus:opacity-100"
+        <CopyButton
+          text={message.content}
+          onCopied={onCopy}
+          className="btn btn-ghost btn-sm absolute right-3 top-3"
           aria-label="Nachricht kopieren"
-          type="button"
         >
-          📋
-        </button>
+          <span aria-hidden>📋</span>
+        </CopyButton>
 
         {/* Message content */}
-        <div className="whitespace-pre-wrap pr-8 text-base leading-6">{message.content}</div>
+        <div className="pr-9 whitespace-pre-wrap text-text-primary">{message.content}</div>
 
         {/* Timestamp */}
         {message.timestamp && (
-          <div className={cn("mt-1 text-xs text-neutral-600", isUser && "text-right")}>
+          <div className={cn("chat-meta", isUser && "text-right")}>
             {formatTime(message.timestamp)}
           </div>
         )}
