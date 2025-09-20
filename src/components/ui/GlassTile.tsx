@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { cn } from "../../lib/utils/cn";
+
 export interface GlassTileProps {
   /** Icon element or component */
   icon?: React.ReactNode;
@@ -23,13 +25,12 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   className = "",
   disabled = false,
 }) => {
-  const baseClasses =
-    "tile group flex flex-col items-center justify-center text-center min-h-[120px] touch-target transition-transform duration-200";
+  const baseClasses = "card flex min-h-[120px] flex-col items-center justify-center text-center";
   const interactiveClasses =
     onPress && !disabled
-      ? "cursor-pointer hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(9,11,17,0.75)]"
+      ? "cursor-pointer transition-transform duration-fast hover:-translate-y-[1px]"
       : "";
-  const disabledClasses = disabled ? "opacity-50 cursor-not-allowed" : "";
+  const disabledClasses = disabled ? "cursor-not-allowed opacity-50" : "";
 
   const handleClick = () => {
     if (!disabled && onPress) {
@@ -46,23 +47,20 @@ export const GlassTile: React.FC<GlassTileProps> = ({
 
   return (
     <div
-      className={`${baseClasses} ${interactiveClasses} ${disabledClasses} ${className}`}
+      className={cn(baseClasses, interactiveClasses, disabledClasses, className)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role={onPress ? "button" : undefined}
       tabIndex={onPress && !disabled ? 0 : undefined}
       aria-disabled={disabled}
     >
-      {icon && (
-        <div
-          className="text-accent-1/90 mb-2 text-2xl transition duration-200 group-hover:text-accent-1"
-          aria-hidden="true"
-        >
+      {icon ? (
+        <div className="mb-2 text-2xl text-accent" aria-hidden="true">
           {icon}
         </div>
-      )}
-      <div className="text-sm font-medium">{title}</div>
-      {subtitle && <div className="mt-1 text-xs text-text-secondary opacity-70">{subtitle}</div>}
+      ) : null}
+      <div className="text-sm font-semibold text-text-primary">{title}</div>
+      {subtitle ? <div className="mt-1 text-xs text-text-muted">{subtitle}</div> : null}
     </div>
   );
 };

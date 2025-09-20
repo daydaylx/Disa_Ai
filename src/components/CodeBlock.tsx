@@ -1,51 +1,69 @@
-import {  useCallback, useRef  } from 'react';
+import { useCallback, useRef } from "react";
+
+import { cn } from "../lib/utils/cn";
 
 export interface CodeBlockProps {
-  code: string
-  lang?: string
-  onCopied: () => void
-  className?: string
+  code: string;
+  lang?: string;
+  onCopied: () => void;
+  className?: string;
 }
 
 export default function CodeBlock({ code, lang, onCopied, className }: CodeBlockProps) {
-  const preRef = useRef<HTMLPreElement | null>(null)
+  const preRef = useRef<HTMLPreElement | null>(null);
+
+  const copyWithFallback = useCallback(() => {
+    const target = preRef.current;
+    if (!target) return false;
+
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(target);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+
+    let success = false;
+    try {
+      success = document.execCommand("copy");
+    } catch (error) {
+      console.warn("Code copy fallback failed", error);
+    }
+
+    selection?.removeAllRanges();
+    if (success) onCopied();
+    return success;
+  }, [onCopied]);
 
   const handleCopy = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(code)
-      onCopied()
-    } catch {
-      // Fallback: Text selektieren
-      const el = preRef.current
-      if (el) {
-        const r = document.createRange()
-        r.selectNodeContents(el)
-        const sel = window.getSelection()
-        sel?.removeAllRanges()
-        sel?.addRange(r)
-        try { document.execCommand('copy') } catch { /* noop */ }
-        sel?.removeAllRanges()
-        onCopied()
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        await navigator.clipboard.writeText(code);
+        onCopied();
+        return;
       }
+      copyWithFallback();
+    } catch (error) {
+      console.warn("Code copy failed", error);
+      copyWithFallback();
     }
-  }, [code, onCopied])
+  }, [code, onCopied, copyWithFallback]);
 
   return (
-    <div className={["relative group codeblock", "card-solid", className].filter(Boolean).join(' ')}>
+    <div className={cn("code-block relative", className)}>
       <button
         type="button"
         aria-label="Code kopieren"
         onClick={handleCopy}
-        className="btn-secondary !min-h-0 !px-2 !py-1 absolute right-2 top-2 z-10 text-xs"
+        className="btn btn-ghost btn-sm absolute right-3 top-3"
       >
         Kopieren
       </button>
-      <pre ref={preRef} className="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 p-4 text-text">
-        <code className="whitespace-pre text-sm font-mono">
-          {lang ? `// ${lang}\n` : null}
+      <pre ref={preRef}>
+        <code>
+          {lang ? `// ${lang}\n` : ""}
           {code}
         </code>
       </pre>
     </div>
-  )
+  );
 }

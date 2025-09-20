@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    pool: "threads",
     setupFiles: ["tests/setup.ts", "tests/polyfills.ts"],
     exclude: ["**/node_modules/**", "**/dist/**", "**/e2e/**"],
     coverage: {

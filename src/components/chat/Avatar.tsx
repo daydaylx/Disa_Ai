@@ -1,17 +1,22 @@
+import { cn } from "../../lib/utils/cn";
+
 type Props = { kind: "user" | "assistant"; className?: string };
 
 export default function Avatar({ kind, className }: Props) {
   const label = kind === "user" ? "Du" : "AI";
+  const variant =
+    kind === "user"
+      ? "border-[rgba(34,211,238,0.4)] bg-[rgba(34,211,238,0.16)] text-accent"
+      : "border-border-subtle bg-surface-100 text-text-secondary";
+
   return (
     <div
       aria-hidden
-      className={[
+      className={cn(
         "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-medium",
-        kind === "user"
-          ? "border-accent-1/40 bg-accent-1/10 text-accent-1"
-          : "border-accent-2/40 bg-accent-2/10 text-accent-2",
-        className || "",
-      ].join(" ")}
+        variant,
+        className,
+      )}
     >
       {label}
     </div>
