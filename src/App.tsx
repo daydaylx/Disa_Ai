@@ -54,12 +54,12 @@ export default function App() {
 
   return (
     <ToastsProvider>
-      <div className="app-bg bg-bg-primary relative min-h-[100svh] text-foreground">
+      <div className="app-bg bg-bg-primary relative min-h-[100dvh] text-foreground">
         <Aurora />
         <SkipLink targetId="main" />
 
         {/* Main layout container */}
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-[100dvh] flex-col">
           <NetworkBanner />
 
           {/* Header */}

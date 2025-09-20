@@ -198,7 +198,7 @@ export const Composer: React.FC<{
               <div className="-mx-1.5 -my-1.5">
                 <button
                   type="button"
-                  className="rounded-md bg-red-500/10 p-1.5 text-red-300 hover:bg-red-500/20 focus-visible:ring-red-400 inline-flex transition focus-visible:outline-none focus-visible:ring-2"
+                  className="touch-target rounded-md bg-red-500/10 text-red-300 hover:bg-red-500/20 focus-visible:ring-red-400 inline-flex min-h-[44px] min-w-[44px] items-center justify-center p-2 transition focus-visible:outline-none focus-visible:ring-2"
                   onClick={onClearError}
                   aria-label="Fehlermeldung schließen"
                 >
