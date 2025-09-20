@@ -88,7 +88,7 @@ export default function BottomNav() {
       ref={(el) => {
         ref.current = el;
       }}
-      className="safe-bottom touch-target fixed inset-x-3 bottom-3 z-30 rounded-2xl px-2 py-2 backdrop-blur glass"
+      className="safe-bottom touch-target glass-enhanced glow-hover float-animation fixed inset-x-3 bottom-3 z-30 rounded-2xl px-2 py-2 backdrop-blur"
       role="navigation"
       aria-label="Hauptnavigation"
       style={{
@@ -101,7 +101,7 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/chat")}
-            className={`tap touch-target flex min-h-[48px] w-full items-center justify-center ${is("#/chat") ? "tab--active" : "tab"}`}
+            className={`tap touch-target ripple-effect hover-scale magnetic flex min-h-[48px] w-full items-center justify-center ${is("#/chat") ? "tab--active glow-pulse" : "tab"}`}
             aria-current={is("#/chat") ? "page" : undefined}
             aria-label="Chat öffnen"
             data-testid="nav-bottom-chat"
@@ -113,7 +113,7 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/chats")}
-            className={`tap touch-target flex min-h-[48px] w-full items-center justify-center ${is("#/chats") ? "tab--active" : "tab"}`}
+            className={`tap touch-target ripple-effect hover-scale magnetic flex min-h-[48px] w-full items-center justify-center ${is("#/chats") ? "tab--active glow-pulse" : "tab"}`}
             aria-current={is("#/chats") ? "page" : undefined}
             aria-label="Alle Unterhaltungen"
             data-testid="nav-bottom-chats"
@@ -125,7 +125,7 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/quickstart")}
-            className={`tap touch-target flex min-h-[48px] w-full items-center justify-center ${is("#/quickstart") ? "tab--active" : "tab"}`}
+            className={`tap touch-target ripple-effect hover-scale magnetic flex min-h-[48px] w-full items-center justify-center ${is("#/quickstart") ? "tab--active glow-pulse" : "tab"}`}
             aria-current={is("#/quickstart") ? "page" : undefined}
             aria-label="Schnellstart"
             data-testid="nav-bottom-quickstart"
@@ -137,7 +137,7 @@ export default function BottomNav() {
         <li>
           <button
             onClick={() => to("#/settings")}
-            className={`tap touch-target flex min-h-[48px] w-full items-center justify-center ${is("#/settings") ? "tab--active" : "tab"}`}
+            className={`tap touch-target ripple-effect hover-scale magnetic flex min-h-[48px] w-full items-center justify-center ${is("#/settings") ? "tab--active glow-pulse" : "tab"}`}
             aria-current={is("#/settings") ? "page" : undefined}
             aria-label="Einstellungen öffnen"
             data-testid="nav-bottom-settings"
