@@ -1,24 +1,28 @@
-Disa AI — Private KI-Chat PWA
+Disa AI — Professional Mobile-First AI Chat PWA
 
-Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen Rollen (18+) und geringere Police. Fokus: klare UX, robuste Builds, reproduzierbares Deployment und nachvollziehbare Qualitätssicherung.
+Eine moderne, professionelle Chat-App für KI-Modelle mit Android-optimierter UX und offline-first Architektur. Fokus: Mobile-native Feeling, robuste Builds, reproduzierbares Deployment und nachvollziehbare Qualitätssicherung.
 
-**Live:** https://disaai.pages.dev/  
+**Live:** https://disaai.pages.dev/
 **Repository:** https://github.com/daydaylx/Disa_Ai
 
-> Stand: 13. September 2025
+> Stand: 20. September 2025
 
 ## ✅ Production Status
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Tests](https://img.shields.io/badge/tests-59%2F59-brightgreen)
+![Tests](https://img.shields.io/badge/tests-99%2F99-brightgreen)
 ![Coverage](https://img.shields.io/badge/coverage-15.78%25-yellow)
 ![Security](https://img.shields.io/badge/security-compliant-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-100%25-blue)
+![Mobile](https://img.shields.io/badge/mobile--optimized-android-green)
+![PWA](https://img.shields.io/badge/PWA-ready-blue)
 
-**CI/CD Pipeline**: 8 Gates ✅ Setup → Secrets → Lint → Typecheck → Unit → E2E → Build → Deploy  
-**Code Quality**: ESLint + Prettier automatisch enforced  
-**Security**: sessionStorage-only, TruffleHog scanning, CSP headers  
-**Testing**: Offline-first E2E mit Playwright, Unit Tests mit Vitest  
+**CI/CD Pipeline**: 8 Gates ✅ Setup → Secrets → Lint → Typecheck → Unit → E2E → Build → Deploy
+**Code Quality**: ESLint + Prettier automatisch enforced
+**Security**: sessionStorage-only, TruffleHog scanning, CSP headers
+**Testing**: Offline-first E2E mit Playwright, Unit Tests mit Vitest
+**Mobile UX**: Android-optimiert mit Material Design 3, Touch-Targets ≥44px, Edge-to-Edge Support
+**PWA Features**: Enhanced Manifest, Share Target, Protocol Handlers, Offline-First
 **Documentation**: [Vollständige Rescue-Dokumentation](docs/status/rescue-checklist.md)
 
 ---
@@ -58,11 +62,31 @@ Eine moderne, lokal konfigurierbare Chat-App für KI-Modelle mit verschiedenen R
 
 ## Feature-Überblick
 
-- Reaktionsschnelle **Chat-UI** mit moderner Dark-Theme-Basis.
-- **Konfigurierbare Backends/Modelle** via `.env` bzw. Cloudflare Project-Vars.
-- **Klare Build-Pipelines**: lokaler Dev-Server, Production-Build, optionaler Preview.
-- **Qualitätssicherung**: TypeScript Typecheck, ESLint, Unit/E2E-Tests (siehe Skripte).
-- **Stale-Content-Schutz**: Header/Cache-Regeln und deaktivierter SW zur Vermeidung alter App-Stände.
+### 🚀 **Core Features**
+
+- **Professional Chat-UI** mit moderner Dark-Theme-Basis und Glasmorphism-Design
+- **Konfigurierbare Backends/Modelle** via `.env` bzw. Cloudflare Project-Vars
+- **Klare Build-Pipelines**: lokaler Dev-Server, Production-Build, optionaler Preview
+- **Qualitätssicherung**: TypeScript Typecheck, ESLint, Unit/E2E-Tests (siehe Skripte)
+- **Stale-Content-Schutz**: Header/Cache-Regeln und deaktivierter SW zur Vermeidung alter App-Stände
+
+### 📱 **Mobile-First Android Optimizations**
+
+- **Material Design 3** Elevation-System mit authentischen Schatten
+- **Touch Targets ≥44px** für WCAG AA Compliance
+- **Android Edge-to-Edge** Support mit Predictive Back Gestures
+- **Enhanced Keyboard Handling** via Visual Viewport API
+- **Split-Screen Layout** Optimierung für Android Multitasking
+- **Haptic Feedback Patterns** mit Android-spezifischen Vibrationsmustern
+- **Safe Area Handling** für Notch- und Edge-to-Edge Geräte
+
+### 🔧 **PWA Excellence**
+
+- **Enhanced Manifest** mit Share Target und Protocol Handlers
+- **Launch Handler** mit focus-existing Verhalten
+- **Android System UI** Optimierung (Theme Colors, Navigation Bar)
+- **Offline-First Architecture** mit Request Interception
+- **Professional Snackbars** und Floating Action Button Patterns
 
 ---
 
@@ -386,10 +410,19 @@ npm run test:e2e
 
 - `glass` - Glasmorphism-Effekt
 - `card-solid`, `card-gradient` - Karten-Styles
+- `elevation-1`, `elevation-2`, `elevation-3` - Material Design 3 Elevations
 
 **Buttons:**
 
 - `btn`, `btn-primary`, `btn-secondary`, `btn-ghost`
+- `touch-target` - Mindestgröße 44x44px für Accessibility
+- `ripple` - Android-style Ripple-Effekt
+
+**Mobile:**
+
+- `android-keyboard-aware` - Enhanced Keyboard Detection
+- `fab-android` - Material Design Floating Action Button
+- `snackbar-android` - Android-style Snackbar Notifications
 
 **Inputs:**
 
@@ -409,6 +442,7 @@ import "./styles/globals.css"; // 2. Globale Variablen & Layouts
 import "./styles/brand.css"; // 3. Brand-Colors & Aurora-Effekte
 import "./styles/theme.css"; // 4. Design-Tokens & Utility-Klassen
 import "./styles/chat.css"; // 5. Komponenten-spezifische Styles
+import "./styles/mobile.css"; // 6. Mobile-spezifische Optimierungen
 ```
 
 **Kritisch:** Diese Reihenfolge gewährleistet korrekte CSS-Kaskade und verhindert Design-Token-Konflikte.
@@ -424,6 +458,32 @@ Der React-Root (`#root`) erhält automatisch `app-bg bg-bg text-foreground` und 
 - **Don't:** neue Stylesheets außerhalb des Imports in `src/main.tsx` anlegen – konsolidierte Layers halten Purge stabil.
 
 **Hinweis:** Aurora- und Token-Styles liegen in `src/styles/brand.css` und `src/styles/theme.css`; zusätzliche Kompat-Schichten werden nicht mehr benötigt.
+
+### 📱 Android-Specific Optimizations
+
+**Mobile-First CSS:** `src/styles/mobile.css`
+
+- **Material Design 3** Elevation-System mit authentischen Schatten
+- **Touch-friendly Interactions** mit korrekten Touch-Targets
+- **Android Keyboard Detection** via Visual Viewport API
+- **Edge-to-Edge Gestures** für moderne Android Navigation
+- **Split-Screen Support** für Android Multitasking
+- **Haptic Feedback Patterns** mit visuellen Indikatoren
+
+**Android System Integration:** `src/lib/android/system.ts`
+
+- Automatische Feature-Detection für Android-spezifische Capabilities
+- Predictive Back Gesture mit visuellem Indikator
+- Enhanced Keyboard Handling mit Dynamic Viewport
+- Theme Color Updates basierend auf App-Kontext
+- Android-style Snackbar Notifications
+
+**PWA Manifest Enhancements:** `public/manifest.webmanifest`
+
+- Share Target für Inhalte von anderen Apps
+- Protocol Handlers für Deep-Linking
+- Launch Handler mit focus-existing Verhalten
+- Enhanced Screenshots und Shortcuts
 
 ---
 
@@ -648,27 +708,38 @@ Empfohlene Required Checks (Branch‑Protection):
 
 ## What's Next
 
-### 🚀 Performance & Observability Roadmap
+### 🚀 Performance & Mobile Enhancement Roadmap
 
 **1. Performance Monitoring**
 
 - Bundle analyzer für Größen-Optimierung
 - Web Vitals tracking (CLS, FID, LCP)
 - React DevTools Profiler für Render-Performance
+- Mobile-specific performance metrics (touch response times)
 
-**2. Error Tracking & Analytics**
+**2. Advanced Mobile Features**
+
+- Android App Shortcuts integration
+- iOS-specific optimizations (Safari quirks, iOS gestures)
+- Enhanced haptic feedback patterns für verschiedene Aktionen
+- Pull-to-refresh functionality
+- Adaptive layout für Tablets und Foldables
+
+**3. Error Tracking & Analytics**
 
 - Sentry integration für Production error monitoring
 - User session tracking für UX insights
 - API response time & error rate dashboards
+- Mobile-specific error tracking (keyboard, orientation changes)
 
-**3. Advanced Testing**
+**4. Advanced Testing**
 
 - Visual regression testing mit Playwright
 - Performance budgets in CI/CD pipeline
 - Accessibility testing automation (axe-core)
+- Mobile-specific E2E tests (touch gestures, keyboard)
 
-**Priorität**: Performance > Observability > Advanced Testing
+**Priorität**: Mobile Enhancement > Performance > Observability > Advanced Testing
 
 ---
 
