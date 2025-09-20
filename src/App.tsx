@@ -3,6 +3,7 @@ import * as React from "react";
 import { SkipLink } from "./components/accessibility/SkipLink";
 // AndroidNoticeBanner entfernt (Quarantäne)
 import Aurora from "./components/Aurora";
+import PremiumEffects from "./components/effects/PremiumEffects";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
@@ -60,10 +61,11 @@ export default function App() {
 
   return (
     <ToastsProvider>
-      <div className="app-bg relative min-h-[100svh] bg-bg-primary text-foreground">
+      <div className="app-bg parallax-container relative min-h-[100svh] bg-bg-primary text-foreground">
         <Aurora />
+        <PremiumEffects />
         <SkipLink targetId="main" />
-        <div className="relative z-10 flex min-h-[100svh] flex-col">
+        <div className="parallax-near relative z-10 flex min-h-[100svh] flex-col">
           <NetworkBanner />
           {/* AndroidNoticeBanner entfernt */}
           <header className="sticky top-0 z-40 w-full py-3">
