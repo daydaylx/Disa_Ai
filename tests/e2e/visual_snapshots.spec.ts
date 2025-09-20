@@ -22,7 +22,7 @@ test.beforeEach(async ({ page }) => {
 test("quickstart empty state", async ({ page }) => {
   await page.goto("/#/quickstart");
   await page.waitForTimeout(100);
-  await expect(page).toHaveScreenshot("quickstart-empty.png", { fullPage: true });
+  await expect(page).toHaveScreenshot("quickstart-empty.png", { fullPage: true, threshold: 0.1 });
 });
 
 const seedConversation = async (
@@ -77,6 +77,7 @@ test("running chat snapshot", async ({ page }) => {
 
   await expect(page).toHaveScreenshot("chat-running.png", {
     fullPage: true,
+    threshold: 0.1,
     mask: [page.locator(".chat-meta")],
   });
 });
@@ -100,7 +101,10 @@ test("code block snapshot", async ({ page }) => {
   await log.waitFor();
   await page.waitForTimeout(150);
 
-  await expect(log).toHaveScreenshot("chat-code.png", { mask: [log.locator(".chat-meta")] });
+  await expect(log).toHaveScreenshot("chat-code.png", {
+    threshold: 0.1,
+    mask: [log.locator(".chat-meta")],
+  });
 });
 
 test("composer error snapshot", async ({ page }) => {
@@ -118,6 +122,7 @@ test("composer error snapshot", async ({ page }) => {
   await alert.waitFor();
   await expect(page).toHaveScreenshot("chat-error.png", {
     fullPage: true,
+    threshold: 0.1,
     mask: [page.locator(".chat-meta")],
   });
 });
@@ -125,12 +130,12 @@ test("composer error snapshot", async ({ page }) => {
 test("settings overview snapshot", async ({ page }) => {
   await page.goto("/#/settings");
   await page.waitForTimeout(100);
-  await expect(page).toHaveScreenshot("settings-dark.png", { fullPage: true });
+  await expect(page).toHaveScreenshot("settings-dark.png", { fullPage: true, threshold: 0.1 });
 });
 
 test("settings forced-light snapshot", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
   await page.goto("/#/settings");
   await page.waitForTimeout(100);
-  await expect(page).toHaveScreenshot("settings-light.png", { fullPage: true });
+  await expect(page).toHaveScreenshot("settings-light.png", { fullPage: true, threshold: 0.1 });
 });
