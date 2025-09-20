@@ -3,29 +3,26 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
-    // Strict 4pt spacing grid - no exceptions
+    // Unified spacing scale (4 / 8 / 12 / 16 / 24 / 32 / 48)
     spacing: {
       "0": "0",
-      "1": "4px", // 4pt
-      "2": "8px", // 8pt
-      "3": "12px", // 12pt
-      "4": "16px", // 16pt
-      "5": "20px", // 20pt
-      "6": "24px", // 24pt
-      "8": "32px", // 32pt
-      "10": "40px", // 40pt
-      "12": "48px", // 48pt
-      "16": "64px", // 64pt
-      "20": "80px", // 80pt
+      "1": "4px",
+      "2": "8px",
+      "3": "12px",
+      "4": "16px",
+      "6": "24px",
+      "8": "32px",
+      "12": "48px",
     },
 
-    // Consistent border radius system
+    // Consistent border radius system (6 / 10 / 14)
     borderRadius: {
       none: "0",
-      sm: "8px",
-      DEFAULT: "12px",
-      lg: "16px",
-      xl: "20px",
+      sm: "6px",
+      DEFAULT: "10px",
+      md: "10px",
+      lg: "14px",
+      xl: "18px",
       full: "9999px",
     },
 
@@ -41,46 +38,38 @@ const config: Config = {
 
     // Simplified color system - zinc neutral + one accent
     colors: {
-      // Core neutrals (zinc-based)
-      neutral: {
-        50: "#fafafa",
-        100: "#f4f4f5",
-        200: "#e4e4e7",
-        300: "#d4d4d8",
-        600: "#52525b",
-        900: "#18181b",
-      },
-
-      // Single accent (cyan for neon theme)
+      transparent: "transparent",
+      current: "currentColor",
       accent: {
-        500: "#22d3ee",
-        600: "#0891b2",
+        DEFAULT: "var(--accent-500)",
+        hover: "var(--accent-600)",
+        active: "var(--accent-700)",
+        disabled: "var(--accent-disabled)",
       },
-
-      // Semantic colors
-      success: "#22c55e",
-      warning: "#f59e0b",
-      error: "#ef4444",
-
-      // Dark theme surface colors
       surface: {
-        primary: "#0a0a0a",
-        secondary: "#111111",
-        glass: "rgba(17, 22, 31, 0.55)",
+        100: "var(--color-surface-100)",
+        200: "var(--color-surface-200)",
+        300: "var(--color-surface-300)",
       },
-
-      // Legacy CSS custom properties (keep for existing styles)
-      background: "hsl(var(--background))",
-      foreground: "hsl(var(--foreground))",
-      primary: "hsl(var(--primary))",
-      "primary-foreground": "hsl(var(--primary-foreground))",
+      border: {
+        subtle: "var(--color-border-subtle)",
+        strong: "var(--color-border-strong)",
+      },
+      text: {
+        primary: "var(--color-text-primary)",
+        secondary: "var(--color-text-secondary)",
+        muted: "var(--color-text-muted)",
+      },
+      danger: "var(--danger-500)",
+      success: "var(--success-500)",
+      warning: "var(--warning-500)",
+      background: "var(--color-bg-800)",
     },
 
-    // Single shadow for elevation
     boxShadow: {
       none: "none",
-      DEFAULT: "0 1px 3px rgba(0, 0, 0, 0.12)",
-      glow: "0 0 20px rgba(34, 211, 238, 0.3)",
+      elev1: "var(--elevation-1)",
+      elev2: "var(--elevation-2)",
     },
 
     screens: {
@@ -90,16 +79,9 @@ const config: Config = {
     },
 
     extend: {
-      // Glass effect utilities
-      backdropBlur: {
-        glass: "18px",
-      },
-
-      // Animation timing
       transitionDuration: {
-        "150": "150ms",
-        "200": "200ms",
-        "250": "250ms",
+        fast: "140ms",
+        normal: "200ms",
       },
     },
   },

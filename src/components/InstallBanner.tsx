@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -25,14 +25,18 @@ export default function InstallBanner() {
 
   return (
     <div className="mx-auto mb-2 w-full max-w-3xl">
-      <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/30 bg-white/70 px-3 py-2 text-sm text-slate-700 backdrop-blur-lg shadow-soft">
+      <div className="card flex items-center justify-between gap-3 text-sm text-text-secondary">
         <span>App installieren für schnelleren Zugriff &amp; Offline-Nutzung.</span>
         <div className="flex gap-2">
-          <button className="btn-ghost" onClick={() => setHidden(true)} data-testid="install-later">
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={() => setHidden(true)}
+            data-testid="install-later"
+          >
             Später
           </button>
           <button
-            className="btn-primary px-3 py-2 rounded-[14px]"
+            className="btn btn-primary btn-sm"
             onClick={async () => {
               await deferred.prompt();
               setHidden(true);

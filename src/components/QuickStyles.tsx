@@ -19,7 +19,7 @@ export default function QuickStyles(): JSX.Element {
   const selId: string = templateId ?? selected?.id ?? "";
 
   return (
-    <section className="mt-4 glass p-4">
+    <section className="card">
       <h3 className="mb-2 text-lg font-semibold">Schnellzugriff: Stile</h3>
       <div className="flex flex-wrap gap-2">
         {items.map((t: TemplateLite) => {
@@ -32,8 +32,9 @@ export default function QuickStyles(): JSX.Element {
               onClick={() => {
                 if (setTemplateId) setTemplateId(t.id);
               }}
-              className={active ? "nav-pill nav-pill--active" : "nav-pill"}
+              className={active ? "chip bg-accent-500 text-[var(--accent-foreground)]" : "chip"}
               title={label}
+              aria-pressed={active}
             >
               {label}
             </button>

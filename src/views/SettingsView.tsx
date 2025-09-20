@@ -235,7 +235,7 @@ export default function SettingsView() {
       </header>
 
       {/* App-Installation */}
-      <section className="p-4 glass">
+      <section className="card">
         <h2 className="card-title mb-1">App-Installation</h2>
         <p className="help mb-2">
           Installiere die App für schnellen Zugriff, eigenständiges Icon und Offline-Unterstützung.
@@ -246,14 +246,14 @@ export default function SettingsView() {
               Jetzt installieren
             </Button>
           ) : pwa.installed ? (
-            <span className="nav-pill">Bereits installiert</span>
+            <span className="chip">Bereits installiert</span>
           ) : (
-            <span className="text-xs opacity-70">
+            <span className="text-xs text-text-muted">
               Installations‑Aufforderung momentan nicht verfügbar.
             </span>
           )}
           {pwa.showIOSHowTo && (
-            <span className="text-xs opacity-80">
+            <span className="text-xs text-text-muted">
               iOS: Über „Teilen“ → „Zum Home‑Bildschirm“ hinzufügen
             </span>
           )}
@@ -261,7 +261,7 @@ export default function SettingsView() {
       </section>
 
       {/* API-Key */}
-      <section className="p-4 glass">
+      <section className="card">
         <h2 className="card-title mb-1">OpenRouter API Key</h2>
         <div className="flex flex-col gap-2 sm:flex-row">
           <input
@@ -273,7 +273,7 @@ export default function SettingsView() {
             className="input min-w-0 flex-1 text-sm"
           />
           <Button
-            variant="secondary"
+            variant="primary"
             onClick={saveKey}
             aria-label="API-Schlüssel speichern"
             data-testid="settings-save-key"
@@ -285,7 +285,7 @@ export default function SettingsView() {
       </section>
 
       {/* Stil */}
-      <section className="p-4 glass">
+      <section className="card">
         <h2 className="card-title mb-1">Stil</h2>
         <div className="grid gap-2">
           <select
@@ -308,10 +308,10 @@ export default function SettingsView() {
       </section>
 
       {/* Kontext & Gedächtnis */}
-      <section className="p-4 glass">
+      <section className="card">
         <h2 className="card-title mb-1">Kontext & Gedächtnis</h2>
         <div className="grid gap-3">
-          <div className="flex items-center justify-between rounded-lg border border-white/30 bg-white/60 px-3 py-2 text-sm backdrop-blur-md">
+          <div className="flex items-center justify-between rounded-md border border-border-subtle bg-surface-100 px-3 py-2 text-sm">
             <Switch
               checked={memEnabled}
               onChange={(checked) => onToggleMem({ target: { checked } })}
@@ -369,7 +369,7 @@ export default function SettingsView() {
       </section>
 
       {/* Modell */}
-      <section className="space-y-3 p-4 glass">
+      <section className="card space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="card-title">Modell</h2>
           <div className="help">
@@ -387,7 +387,7 @@ export default function SettingsView() {
       </section>
 
       {/* Rolle */}
-      <section className="p-4 glass">
+      <section className="card">
         <div className="mb-2">
           <h2 className="card-title">Rolle</h2>
           <p className="help">Optionales System-Verhalten für den Chat.</p>
@@ -412,19 +412,19 @@ export default function SettingsView() {
             ))}
           </select>
           {roleLoad.state === "loading" && (
-            <div className="text-xs opacity-70">Rollen werden geladen…</div>
+            <div className="text-xs text-text-muted">Rollen werden geladen…</div>
           )}
           {roleLoad.state === "missing" && (
-            <div className="text-xs text-amber-300">
+            <div className="text-xs text-warning">
               Keine Rollen gefunden. Lege <code>public/styles.json</code> mit Feld{" "}
               <code>styles</code> an.
             </div>
           )}
           {roleLoad.state === "error" && (
-            <div className="text-xs text-red-300">Fehler beim Laden: {roleLoad.error}</div>
+            <div className="text-xs text-danger">Fehler beim Laden: {roleLoad.error}</div>
           )}
 
-          <div className="flex items-center justify-between rounded-lg border border-white/30 bg-white/60 px-3 py-2 text-sm backdrop-blur-md">
+          <div className="flex items-center justify-between rounded-md border border-border-subtle bg-surface-100 px-3 py-2 text-sm">
             <Switch
               checked={useRoleStyle}
               onChange={(checked) => onUseRoleStyle({ target: { checked } })}
@@ -433,9 +433,11 @@ export default function SettingsView() {
           </div>
 
           {/* Systemprompt-Vorschau (effektiv) */}
-          <div className="rounded-lg border border-border bg-background/60 p-3">
-            <div className="mb-2 text-sm font-medium opacity-90">Vorschau Systemprompt</div>
-            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-sm leading-relaxed">
+          <div className="rounded-md border border-border-subtle bg-surface-100 p-3">
+            <div className="mb-2 text-sm font-medium text-text-secondary">
+              Vorschau Systemprompt
+            </div>
+            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-sm leading-relaxed text-text-primary">
               {systemPreview}
             </pre>
           </div>
@@ -454,10 +456,7 @@ export default function SettingsView() {
       {/* separate Stil-Vorschau entfernt: die effektive Vorschau steht nun bei Rolle */}
 
       <nav className="flex justify-end">
-        <a
-          href="#/chat"
-          className="rounded-md px-1 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
+        <a href="#/chat" className="rounded-md px-1 underline">
           zurück zum Chat
         </a>
       </nav>

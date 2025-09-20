@@ -3,7 +3,7 @@ import * as React from "react";
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
 
-type Variant = "primary" | "secondary" | "ghost" | "destructive";
+type Variant = "primary" | "ghost" | "danger" | "base";
 type Size = "sm" | "md" | "lg";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -13,19 +13,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   enableHaptic?: boolean;
 }
 
-// Variants using new design system
-const variants: Record<Variant, string> = {
-  primary: "bg-accent-500 text-white hover:bg-accent-600",
-  secondary: "glass border border-neutral-900 text-foreground hover:bg-neutral-900/50",
-  ghost: "text-foreground hover:bg-neutral-900/50",
-  destructive: "bg-error text-white hover:bg-error/90",
+const variantClasses: Record<Variant, string> = {
+  primary: "btn-primary",
+  ghost: "btn-ghost",
+  danger: "btn-danger",
+  base: "",
 };
 
-// Sizes following 4pt grid
-const sizes: Record<Size, string> = {
-  sm: "px-3 py-2 text-sm",
-  md: "px-4 py-3 text-base",
-  lg: "px-6 py-4 text-lg",
+const sizeClasses: Record<Size, string> = {
+  sm: "btn-sm",
+  md: "",
+  lg: "btn-lg",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -45,7 +43,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const handleClick = React.useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         if (enableHaptic) {
-          if (variant === "destructive") {
+          if (variant === "danger") {
             hapticFeedback.warning();
           } else {
             hapticFeedback.tap();
@@ -59,20 +57,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={cn(
-          // Base styles
-          "touch-target inline-flex items-center justify-center rounded font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-          // Variant and size styles
-          variants[variant],
-          sizes[size],
-          className,
-        )}
+        className={cn("btn", variantClasses[variant], sizeClasses[size], className)}
         aria-busy={loading || undefined}
         onClick={handleClick}
         {...props}
       >
         {loading ? (
-          <div className="border-current border-t-transparent mr-2 h-4 w-4 animate-spin rounded-full border-2" />
+          <span className="border-accent-500 mr-2 inline-flex h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
         ) : null}
         {children}
       </button>
