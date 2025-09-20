@@ -4,8 +4,9 @@
   "description": "AI-powered chat assistant with offline-first architecture",
   "start_url": "./",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone"],
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "portrait-primary",
+  "prefer_related_applications": false,
   "background_color": "#0b0f14",
   "theme_color": "#22d3ee",
   "categories": ["productivity", "utilities"],
@@ -45,5 +46,23 @@
       "url": "./#/settings",
       "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
     }
-  ]
+  ],
+  "share_target": {
+    "action": "./",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+disa",
+      "url": "./?handler=%s"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
 }
