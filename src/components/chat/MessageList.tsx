@@ -346,7 +346,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
       {!isUser && <Avatar kind="assistant" />}
       <div
         className={cn(
-          "chat-bubble rounded-2xl text-text relative max-w-[min(92vw,42ch)] p-3",
+          "chat-bubble rounded-2xl text-text touch-action-manipulation relative max-w-[min(85vw,42ch)] p-4",
           isUser
             ? "border-transparent bg-grad-primary text-white border shadow-glow"
             : "glass-solid",
@@ -355,7 +355,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
         {/* Copy button */}
         <button
           onClick={onCopy}
-          className="touch-target absolute right-2 top-2 rounded p-1 text-xs opacity-60 transition-opacity hover:opacity-100 focus:opacity-100"
+          className="touch-target absolute right-2 top-2 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-xs opacity-60 transition-opacity hover:opacity-100 focus:opacity-100"
           aria-label="Nachricht kopieren"
           type="button"
         >
