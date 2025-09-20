@@ -53,7 +53,8 @@ export default function App() {
 
   return (
     <ToastsProvider>
-      <div className="relative min-h-screen bg-surface-primary text-foreground">
+      <div className="app-bg relative min-h-[100svh] bg-bg-primary text-foreground">
+        <Aurora />
         <SkipLink targetId="main" />
 
         {/* Main layout container */}

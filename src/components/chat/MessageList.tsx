@@ -295,7 +295,11 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
               <div className="my-2 flex items-start gap-2">
                 <Avatar kind="assistant" />
                 <div className="glass-solid rounded-2xl p-3">
-                  <LoadingDots />
+                  <div className="flex items-center gap-1">
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
+                  </div>
                 </div>
               </div>
             )}
@@ -341,13 +345,20 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
       className={cn("mb-4 flex items-start", isUser ? "justify-end" : "justify-start")}
     >
       {!isUser && <Avatar kind="assistant" />}
-      <div className={cn("ml-3 max-w-[min(80vw,480px)]", isUser && "ml-0 mr-3")}>
-        {/* Message bubble */}
-        <div
-          className={cn(
-            "glass relative rounded-lg p-4",
-            isUser ? "text-white bg-accent-500" : "bg-surface-glass text-foreground",
-          )}
+      <div
+        className={cn(
+          "chat-bubble relative max-w-[min(92vw,42ch)] rounded-2xl p-3 text-text",
+          isUser
+            ? "border border-transparent bg-grad-primary text-white shadow-glow"
+            : "glass-solid",
+        )}
+      >
+        {/* Copy button */}
+        <button
+          onClick={onCopy}
+          className="focus-visible:ring-accent-2/70 absolute right-2 top-2 rounded-full border border-white/15 bg-black/40 p-1 text-xs opacity-80 transition duration-200 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+          aria-label="Nachricht kopieren"
+          type="button"
         >
           {/* Copy button */}
           <button

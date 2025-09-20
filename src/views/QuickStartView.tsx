@@ -41,20 +41,15 @@ export default function QuickStartView() {
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
       {/* Hero Orb on Glass Card Podest */}
-      <GlassCard
-        className="glass-enhanced float-animation-slow breathe glow-pulse tilt-3d holographic morphing-blob magnetic-zone flex flex-col items-center gap-3 py-8 text-center"
-        hover
-      >
-        <HeroOrb state="idle" size="lg" className="shimmer parallax-mid glow" />
-        <h1 className="typewriter glitch-effect mt-2 text-3xl font-semibold tracking-tight">
-          Quickstart
-        </h1>
-        <p className="scroll-reveal max-w-[34ch] text-base leading-relaxed text-text-secondary">
+      <GlassCard className="flex flex-col items-center gap-3 py-8 text-center" hover>
+        <HeroOrb state="idle" size="lg" className="glow" />
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Quickstart</h1>
+        <p className="max-w-[34ch] text-base leading-relaxed text-text-secondary">
           20 Startfragen, die häufig helfen.
         </p>
       </GlassCard>
 
-      <section className="stagger-animation grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <section className="grid gap-3 sm:grid-cols-2">
         {QUESTIONS.slice(0, 4).map((q, i) => (
           <GlassTile
             key={i}
@@ -73,15 +68,13 @@ export default function QuickStartView() {
             subtitle="Startfrage"
             onPress={() => onPick(q)}
             data-testid="quickstart-item"
-            className={`glow-hover ripple-effect hover-scale magnetic tilt-3d liquid-button scroll-reveal-scale min-h-[120px] sm:min-h-[140px] ${
-              i % 2 === 0 ? "float-animation flip-card" : "float-animation-reverse parallax-mid"
-            }`}
+            className="min-h-[120px] sm:min-h-[140px]"
           />
         ))}
       </section>
 
       {/* Additional questions as smaller tiles */}
-      <section className="stagger-animation grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <section className="grid gap-2 sm:grid-cols-2">
         {QUESTIONS.slice(4).map((q, i) => (
           <GlassTile
             key={i + 4}
@@ -99,13 +92,7 @@ export default function QuickStartView() {
             title={q.split(":")[0]}
             subtitle="Frage"
             onPress={() => onPick(q)}
-            className={`shimmer glow-hover hover-scale magnetic-zone liquid-button scroll-reveal min-h-[84px] text-xs ${
-              i % 3 === 0
-                ? "float-animation tilt-3d"
-                : i % 3 === 1
-                  ? "float-animation-reverse holographic"
-                  : "parallax-far morphing-blob"
-            }`}
+            className="min-h-[84px] text-xs"
           />
         ))}
       </section>
