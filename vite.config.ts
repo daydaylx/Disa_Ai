@@ -28,11 +28,7 @@ export default defineConfig({
           // Utils and libraries
           utils: ["zod", "js-yaml"],
           // Effects and animations
-          effects: [
-            "@/lib/sound/audio-feedback",
-            "@/components/effects/PremiumEffects",
-            "@/styles/plugins/neon",
-          ],
+          effects: ["@/lib/sound/audio-feedback", "@/components/effects/PremiumEffects"],
           // UI components
           ui: [
             "@/components/ui/GlassCard",
