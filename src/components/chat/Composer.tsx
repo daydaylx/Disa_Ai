@@ -34,7 +34,7 @@ export const Composer: React.FC<{
   const composerRef = useRef<HTMLDivElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
   const [isComposing, setIsComposing] = useState(false);
-  const [platformShortcut, setPlatformShortcut] = useState("Strg");
+  const [_platformShortcut, setPlatformShortcut] = useState("Strg");
   const disabled = loading || text.trim().length === 0;
 
   // Auto-resize textarea based on content
@@ -168,134 +168,85 @@ export const Composer: React.FC<{
   return (
     <div
       ref={composerRef}
-      className="composer-container safe-bottom border-white/12 rounded-[28px] border bg-[rgba(17,22,31,0.82)] px-3 py-2 shadow-[0_20px_48px_rgba(0,0,0,0.45)]"
+      className="glass sticky bottom-0 border-t p-4"
+      style={{
+        paddingBottom: `calc(16px + env(safe-area-inset-bottom))`,
+      }}
     >
       {/* Error Message */}
       {error && (
         <div
           ref={errorRef}
           id="composer-error"
-          className="mb-3 rounded-lg border border-red-400/50 bg-red-500/10 p-3"
+          className="mb-3 rounded border border-error/50 bg-error/10 p-3"
           role="alert"
           aria-live="assertive"
         >
-          <div className="flex items-start justify-between">
-            <div className="flex">
-              <div className="text-red-400">
-                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-800">{error}</p>
-              </div>
-            </div>
-            <div className="ml-auto pl-3">
-              <div className="-mx-1.5 -my-1.5">
-                <button
-                  type="button"
-                  className="inline-flex rounded-md bg-red-500/10 p-1.5 text-red-300 transition hover:bg-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-                  onClick={onClearError}
-                  aria-label="Fehlermeldung schließen"
-                >
-                  <svg className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className="ml-2 inline-flex items-center rounded-md border border-red-400/40 bg-red-500/10 px-2.5 py-1.5 text-xs font-medium text-red-200 transition hover:bg-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-                  onClick={handleSend}
-                  disabled={disabled}
-                >
-                  Erneut senden
-                </button>
-              </div>
-            </div>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-error">{error}</p>
+            <button
+              type="button"
+              className="touch-target ml-2 rounded bg-error/20 px-2 py-1 text-xs text-error transition-colors hover:bg-error/30"
+              onClick={handleSend}
+              disabled={disabled}
+            >
+              Wiederholen
+            </button>
           </div>
         </div>
       )}
 
-      <div className="relative flex items-end gap-2">
-        <textarea
-          ref={textareaRef}
-          data-testid="composer-input"
-          className={cn(
-            "border-white/12 w-full resize-none rounded-full border bg-[rgba(20,26,36,0.78)] px-5 py-3 pr-16 text-[15px] leading-5 text-text shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]",
-            "placeholder:text-text-muted/70 transition-shadow duration-200",
-            "focus:border-accent-2/60 focus:ring-accent-2/35 focus:ring-2 focus:ring-offset-2 focus:ring-offset-[rgba(10,14,22,0.6)] focus-visible:outline-none",
-            error &&
-              "border-red-400/60 focus:border-red-400 focus:ring-red-400/45 focus:ring-offset-red-900/40",
-          )}
-          style={{ height: `${textareaHeight}px` }}
-          placeholder="Nachricht eingeben… (/role, /style, /nsfw, /model verfügbar)"
-          value={text}
-          onChange={handleTextChange}
-          onKeyDown={handleKeyDown}
-          onFocus={() => hapticFeedback.select()}
-          inputMode="text"
-          autoCapitalize="sentences"
-          autoCorrect="on"
-          aria-label="Nachricht eingeben"
-          aria-describedby={error ? "composer-error" : undefined}
-          aria-invalid={!!error}
-          onCompositionStart={handleComposition}
-          onCompositionEnd={handleComposition}
-        />
-
-        {/* Voice Button - Temporarily disabled
-        <div className="absolute bottom-2 right-16">
-          <VoiceButton
-            onTranscript={handleVoiceTranscript}
-            onError={handleVoiceError}
-            disabled={loading}
-            className="h-8 w-8"
+      <div className="flex items-end gap-3">
+        <div className="flex-1">
+          <textarea
+            ref={textareaRef}
+            data-testid="composer-input"
+            className="w-full resize-none rounded-full border border-neutral-900 bg-surface-secondary px-4 py-3 text-base leading-6 text-foreground placeholder-neutral-600 transition-colors focus:border-accent-500 focus:outline-none"
+            style={{ height: `${textareaHeight}px` }}
+            placeholder="Nachricht eingeben…"
+            value={text}
+            onChange={handleTextChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => hapticFeedback.select()}
+            inputMode="text"
+            autoCapitalize="sentences"
+            autoCorrect="on"
+            aria-label="Nachricht eingeben"
+            aria-describedby={error ? "composer-error" : undefined}
+            aria-invalid={!!error}
+            onCompositionStart={handleComposition}
+            onCompositionEnd={handleComposition}
           />
         </div>
-        */}
 
-        <div className="absolute bottom-2 right-2">
-          {loading ? (
-            <button
-              data-testid="composer-stop"
-              className="tap touch-target flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/15 bg-[rgba(17,22,31,0.6)] px-4 py-2 text-sm text-text transition hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2"
-              onClick={handleStop}
-              aria-label="Antwort stoppen"
-            >
-              Stop
-            </button>
-          ) : (
-            <button
-              data-testid="composer-send"
-              className={cn(
-                "tap touch-target flex h-11 w-11 items-center justify-center rounded-full text-sm font-medium text-white shadow-[0_14px_32px_rgba(168,85,247,0.35)] transition-transform duration-200",
-                "hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,14,22,0.7)]",
-                disabled && "pointer-events-none opacity-60",
-              )}
-              onClick={handleSend}
-              disabled={disabled}
-              aria-label={`Nachricht senden (Enter oder ${platformShortcut}+Enter)`}
-              title={`Senden (Enter oder ${platformShortcut}+Enter)`}
-              data-no-zoom
-              style={{ background: "var(--brand-gradient)" }}
-            >
-              ✈️
-            </button>
-          )}
-        </div>
+        {loading ? (
+          <button
+            data-testid="composer-stop"
+            className="touch-target hover:bg-neutral-800 rounded-full bg-neutral-900 px-4 py-3 text-sm text-foreground transition-colors"
+            onClick={handleStop}
+            aria-label="Antwort stoppen"
+          >
+            Stop
+          </button>
+        ) : (
+          <button
+            data-testid="composer-send"
+            className={cn(
+              "touch-target text-white rounded-full bg-accent-500 px-4 py-3 text-sm font-medium transition-colors hover:bg-accent-600",
+              disabled && "opacity-50",
+            )}
+            onClick={handleSend}
+            disabled={disabled}
+            aria-label={`Nachricht senden (Enter)`}
+          >
+            Senden
+          </button>
+        )}
       </div>
 
-      {/* Optional Token Counter */}
+      {/* Token Counter */}
       {text.trim() && (
-        <div className="text-text-muted/70 mt-2 px-2 text-xs">
+        <div className="mt-2 text-xs text-neutral-600">
           ~{Math.ceil(text.trim().split(/\s+/).length * 1.3)} Tokens
         </div>
       )}

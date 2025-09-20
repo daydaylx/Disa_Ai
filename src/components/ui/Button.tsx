@@ -2,38 +2,30 @@ import * as React from "react";
 
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
-import { Icon, type IconName } from "./Icon";
 
-type Variant = "primary" | "secondary" | "ghost" | "outline" | "subtle" | "destructive";
+type Variant = "primary" | "secondary" | "ghost" | "destructive";
 type Size = "sm" | "md" | "lg";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
   loading?: boolean;
-  leftIcon?: IconName;
-  rightIcon?: IconName;
   enableHaptic?: boolean;
 }
 
-// Base styles are now in theme.css under the .btn class
-const base = "btn";
-
-// Variants now map to the centralized classes in theme.css
+// Variants using new design system
 const variants: Record<Variant, string> = {
-  primary: "btn-primary",
-  secondary: "btn-secondary",
-  ghost: "btn-ghost",
-  outline: "btn-outline",
-  subtle: "btn-subtle",
-  destructive: "btn-destructive",
+  primary: "bg-accent-500 text-white hover:bg-accent-600",
+  secondary: "glass border border-neutral-900 text-foreground hover:bg-neutral-900/50",
+  ghost: "text-foreground hover:bg-neutral-900/50",
+  destructive: "bg-error text-white hover:bg-error/90",
 };
 
-// Sizes can remain as local utilities, but we ensure min-height is met via .btn
+// Sizes following 4pt grid
 const sizes: Record<Size, string> = {
-  sm: "h-11 px-4 text-sm", // h-11 to ensure 44px hit target
-  md: "h-11 px-5 text-base",
-  lg: "h-12 px-6 text-base",
+  sm: "px-3 py-2 text-sm",
+  md: "px-4 py-3 text-base",
+  lg: "px-6 py-4 text-lg",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -42,8 +34,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       size = "md",
       loading = false,
-      leftIcon,
-      rightIcon,
       enableHaptic = true,
       className,
       children,
@@ -69,14 +59,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={cn(base, variants[variant], sizes[size], className)}
+        className={cn(
+          // Base styles
+          "touch-target inline-flex items-center justify-center rounded font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          // Variant and size styles
+          variants[variant],
+          sizes[size],
+          className,
+        )}
         aria-busy={loading || undefined}
         onClick={handleClick}
         {...props}
       >
-        {leftIcon ? <Icon name={leftIcon} className="mr-2" /> : null}
-        <span className="inline-flex items-center">{children}</span>
-        {rightIcon ? <Icon name={rightIcon} className="ml-2" /> : null}
+        {loading ? (
+          <div className="border-current border-t-transparent mr-2 h-4 w-4 animate-spin rounded-full border-2" />
+        ) : null}
+        {children}
       </button>
     );
   },

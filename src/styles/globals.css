@@ -4,7 +4,28 @@
 
 :root {
   color-scheme: dark;
+
+  /* Design System Tokens */
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --primary: 180 98% 67%; /* hsl(180, 98%, 67%) = #22d3ee cyan-400 */
+  --primary-foreground: 180 14% 10%;
+  --muted: 210 40% 98%;
+  --muted-foreground: 215 16% 47%;
+  --border: 217 32% 17%;
+  --input: 217 32% 17%;
+  --ring: 180 98% 67%;
+
+  /* Semantic colors */
+  --success: 142 76% 36%;
+  --warning: 38 92% 50%;
+  --error: 0 84% 60%;
+
+  /* Glass surfaces */
+  --glass-bg: rgba(17, 22, 31, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.12);
 }
+
 html,
 body,
 #root {
@@ -12,33 +33,60 @@ body,
 }
 
 body {
-  @apply bg-bg text-foreground antialiased;
-  overflow-x: hidden; /* verhindert horizontales Scrollen durch Pager */
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  overflow-x: hidden;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
 
 @layer base {
+  /* Typography hierarchy */
   h1 {
-    @apply text-3xl font-semibold tracking-tight;
+    @apply text-xl font-semibold leading-6;
   }
   h2 {
-    @apply text-2xl font-semibold;
+    @apply text-lg font-semibold leading-6;
   }
   h3 {
-    @apply text-xl font-semibold;
+    @apply text-base font-semibold leading-6;
   }
   p {
-    @apply leading-relaxed;
+    @apply text-base leading-6;
   }
-  a {
-    @apply text-primary transition-opacity hover:opacity-90;
+
+  /* Focus styles */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }
 
 @layer components {
-  .container-page {
-    @apply mx-auto max-w-[400px] px-4;
+  /* Layout containers */
+  .container {
+    @apply mx-auto max-w-4xl px-4;
   }
-  .focus-ring {
-    @apply outline-none ring-0 focus:shadow-ring;
+
+  .container-chat {
+    @apply mx-auto max-w-3xl px-4;
+  }
+
+  /* Glass morphism utility */
+  .glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  /* Touch targets (44px minimum WCAG AA) */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

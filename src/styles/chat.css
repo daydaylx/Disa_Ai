@@ -77,7 +77,7 @@
     box-shadow:
       0 14px 40px rgba(124, 102, 255, 0.35),
       inset 0 0 0 1px rgba(255, 255, 255, 0.16);
-    @apply saturate-115;
+    filter: saturate(1.15);
   }
 }
 

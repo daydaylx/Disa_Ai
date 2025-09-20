@@ -1,11 +1,5 @@
-// CSS-Imports in korrekter Reihenfolge (kritisch für Styling)
-import "./ui/base.css"; // Reset & base styles
-import "./styles/globals.css"; // Global variables & layouts
-import "./styles/brand.css"; // Brand colors & aurora effects
-import "./styles/theme.css"; // Design tokens & utility classes
-import "./styles/chat.css"; // Component-specific styles
-import "./styles/enhanced-effects.css"; // Enhanced UI effects and animations
-import "./styles/premium-effects.css"; // Premium advanced effects
+// CSS-Imports - unified design system
+import "./styles/globals.css"; // New unified design system
 
 import React from "react";
 import { createRoot } from "react-dom/client";

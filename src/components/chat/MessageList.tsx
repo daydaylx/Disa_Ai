@@ -328,32 +328,47 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message.content]); // onHeightChange intentionally excluded to prevent infinite loop
 
+  const formatTime = (timestamp: number) => {
+    return new Date(timestamp).toLocaleTimeString("de-DE", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div
       ref={ref}
-      className={cn("msg my-3 flex items-start gap-2", isUser ? "justify-end" : "justify-start")}
+      className={cn("mb-4 flex items-start", isUser ? "justify-end" : "justify-start")}
     >
       {!isUser && <Avatar kind="assistant" />}
-      <div
-        className={cn(
-          "chat-bubble relative max-w-[min(90vw,38ch)] rounded-2xl p-3 text-text",
-          isUser
-            ? "border border-transparent bg-grad-primary text-white shadow-glow"
-            : "glass-solid",
-        )}
-      >
-        {/* Copy button */}
-        <button
-          onClick={onCopy}
-          className="focus-visible:ring-accent-2/70 absolute right-2 top-2 rounded-full border border-white/15 bg-black/40 p-1 text-xs opacity-80 transition duration-200 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
-          aria-label="Nachricht kopieren"
-          type="button"
+      <div className={cn("ml-3 max-w-[min(80vw,480px)]", isUser && "ml-0 mr-3")}>
+        {/* Message bubble */}
+        <div
+          className={cn(
+            "glass relative rounded-lg p-4",
+            isUser ? "text-white bg-accent-500" : "bg-surface-glass text-foreground",
+          )}
         >
-          📋
-        </button>
+          {/* Copy button */}
+          <button
+            onClick={onCopy}
+            className="touch-target absolute right-2 top-2 rounded p-1 text-xs opacity-60 transition-opacity hover:opacity-100 focus:opacity-100"
+            aria-label="Nachricht kopieren"
+            type="button"
+          >
+            📋
+          </button>
 
-        {/* Message content */}
-        <div className="whitespace-pre-wrap text-base leading-relaxed">{message.content}</div>
+          {/* Message content */}
+          <div className="whitespace-pre-wrap pr-8 text-base leading-6">{message.content}</div>
+        </div>
+
+        {/* Timestamp */}
+        {message.timestamp && (
+          <div className={cn("mt-1 text-xs text-neutral-600", isUser && "text-right")}>
+            {formatTime(message.timestamp)}
+          </div>
+        )}
       </div>
       {isUser && <Avatar kind="user" />}
     </div>

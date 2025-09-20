@@ -1,141 +1,109 @@
 import type { Config } from "tailwindcss";
-import { neonGlassPlugin } from "./src/styles/plugins/neon";
 
 const config: Config = {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
-  // Mobile-only: Remove desktop breakpoints
   theme: {
-    screens: {
-      // Only mobile breakpoints
-      sm: "375px", // Small phones
-      // Remove md, lg, xl, 2xl desktop breakpoints
+    // Strict 4pt spacing grid - no exceptions
+    spacing: {
+      "0": "0",
+      "1": "4px", // 4pt
+      "2": "8px", // 8pt
+      "3": "12px", // 12pt
+      "4": "16px", // 16pt
+      "5": "20px", // 20pt
+      "6": "24px", // 24pt
+      "8": "32px", // 32pt
+      "10": "40px", // 40pt
+      "12": "48px", // 48pt
+      "16": "64px", // 64pt
+      "20": "80px", // 80pt
     },
+
+    // Consistent border radius system
+    borderRadius: {
+      none: "0",
+      sm: "8px",
+      DEFAULT: "12px",
+      lg: "16px",
+      xl: "20px",
+      full: "9999px",
+    },
+
+    // Typography scale with consistent line heights
+    fontSize: {
+      xs: ["12px", "16px"], // Meta text
+      sm: ["13px", "18px"], // Small text
+      base: ["16px", "24px"], // Body text
+      lg: ["18px", "24px"], // Section headings
+      xl: ["20px", "24px"], // Page titles
+      "2xl": ["24px", "32px"], // Display text
+    },
+
+    // Simplified color system - zinc neutral + one accent
+    colors: {
+      // Core neutrals (zinc-based)
+      neutral: {
+        50: "#fafafa",
+        100: "#f4f4f5",
+        200: "#e4e4e7",
+        300: "#d4d4d8",
+        600: "#52525b",
+        900: "#18181b",
+      },
+
+      // Single accent (cyan for neon theme)
+      accent: {
+        500: "#22d3ee",
+        600: "#0891b2",
+      },
+
+      // Semantic colors
+      success: "#22c55e",
+      warning: "#f59e0b",
+      error: "#ef4444",
+
+      // Dark theme surface colors
+      surface: {
+        primary: "#0a0a0a",
+        secondary: "#111111",
+        glass: "rgba(17, 22, 31, 0.55)",
+      },
+
+      // Legacy CSS custom properties (keep for existing styles)
+      background: "hsl(var(--background))",
+      foreground: "hsl(var(--foreground))",
+      primary: "hsl(var(--primary))",
+      "primary-foreground": "hsl(var(--primary-foreground))",
+    },
+
+    // Single shadow for elevation
+    boxShadow: {
+      none: "none",
+      DEFAULT: "0 1px 3px rgba(0, 0, 0, 0.12)",
+      glow: "0 0 20px rgba(34, 211, 238, 0.3)",
+    },
+
+    screens: {
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+    },
+
     extend: {
-      safelist: [
-        // Existing component classes
-        "card-solid",
-        "card-glass",
-        "surface-glass",
-        "btn",
-        "btn-primary",
-        "btn-ghost",
-        "btn-danger",
-        "bubble",
-        "bubble-user",
-        "bubble-assistant",
-        // Dynamic chat UI classes - prefer data-attributes over string concatenation
-        // Text colors for status/feedback
-        "text-red-500",
-        "text-red-600",
-        "text-green-500",
-        "text-green-600",
-        "text-yellow-500",
-        "text-yellow-600",
-        // Background colors for dark theme surfaces
-        "bg-slate-800",
-        "bg-slate-900",
-        "bg-zinc-800",
-        "bg-zinc-900",
-        // Border colors for dividers/containers
-        "border-slate-700",
-        "border-slate-800",
-        "border-zinc-700",
-        "border-zinc-800",
-        // Border radius for dynamic sizing
-        "rounded-md",
-        "rounded-lg",
-        "rounded-xl",
-        // Shadows for elevation states
-        "shadow-sm",
-        "shadow-md",
-      ],
-      // Note: For dynamic variants, prefer data-attributes in HTML:
-      // <div data-status="error" class="data-[status=error]:text-red-500">
-      // instead of string concatenation: `text-${status}-500`
-      saturate: {
-        106: "1.06",
-        110: "1.1",
-        115: "1.15",
+      // Glass effect utilities
+      backdropBlur: {
+        glass: "18px",
       },
-      colors: {
-        // Aurora palette (used by gradients/effects)
-        aurora: {
-          pink: "#FF85E1",
-          magenta: "#BF5AF2",
-          violet: "#7C4DFF",
-          blue: "#5B8CFF",
-          cyan: "#22D3EE",
-        },
-        // Legacy tokens still referenced in styles
-        bg: "var(--bg)",
-        text: "var(--text)",
-        "text-muted": "var(--text-muted)",
-        // Shadcn-style semantic tokens (HSL variables)
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: "hsl(var(--card))",
-        "card-foreground": "hsl(var(--card-foreground))",
-        popover: "hsl(var(--popover))",
-        "popover-foreground": "hsl(var(--popover-foreground))",
-        primary: "hsl(var(--primary))",
-        "primary-foreground": "hsl(var(--primary-foreground))",
-        secondary: "hsl(var(--secondary))",
-        "secondary-foreground": "hsl(var(--secondary-foreground))",
-        muted: "hsl(var(--muted))",
-        "muted-foreground": "hsl(var(--muted-foreground))",
-        accent: "hsl(var(--accent))",
-        "accent-foreground": "hsl(var(--accent-foreground))",
-        destructive: "hsl(var(--destructive))",
-        "destructive-foreground": "hsl(var(--destructive-foreground))",
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        // Extra surface/border tokens used by glass styles
-        "surface-glass": "var(--surface-glass)",
-        "border-glass": "var(--border-glass)",
-        // Neon theme colors
-        "bg-primary": "var(--bg-primary)",
-        "bg-surface": "var(--bg-surface)",
-        "text-primary": "var(--text-primary)",
-        "text-secondary": "var(--text-secondary)",
-        "accent-1": "var(--accent-1)",
-        "accent-2": "var(--accent-2)",
-        "accent-3": "var(--accent-3)",
-        // Glass utility colors
-        "bg-glass": "var(--bg-glass)",
-      },
-      borderRadius: {
-        lg: "16px",
-        md: "14px",
-        sm: "12px",
-        full: "9999px",
-        // Refined glass tokens
-        card: "var(--radius-card)",
-        tile: "var(--radius-tile)",
-        pill: "var(--radius-pill)",
-      },
-      boxShadow: {
-        soft: "var(--shadow-soft)",
-        glow: "var(--glow-primary)",
-        // Refined glass shadows
-        "card-refined": "var(--shadow-card)",
-        "glow-outer": "var(--glow-outer)",
-        "glow-ring": "var(--glow-ring)",
-        // Used by components and utilities in CSS via @apply
-        card: "var(--shadow-soft)",
-        ring: "0 0 0 2px hsl(var(--ring))",
-      },
-      backgroundImage: {
-        "grad-primary": "var(--grad-primary)",
-        "grad-card": "var(--grad-card)",
-        "orb-radial": "var(--orb-radial)",
-        // Refined glass theme gradients
-        "brand-gradient": "var(--brand-gradient)",
-        "brand-grad": "var(--brand-grad)",
+
+      // Animation timing
+      transitionDuration: {
+        "150": "150ms",
+        "200": "200ms",
+        "250": "250ms",
       },
     },
   },
-  plugins: [neonGlassPlugin],
+  plugins: [],
 };
 
 export default config;
