@@ -175,7 +175,7 @@ export const Composer: React.FC<{
         <div
           ref={errorRef}
           id="composer-error"
-          className="mb-3 rounded-lg border border-red-400/50 bg-red-500/10 p-3"
+          className="border-red-400/50 bg-red-500/10 mb-3 rounded-lg border p-3"
           role="alert"
           aria-live="assertive"
         >
@@ -191,14 +191,14 @@ export const Composer: React.FC<{
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-red-800">{error}</p>
+                <p className="text-red-800 text-sm">{error}</p>
               </div>
             </div>
             <div className="ml-auto pl-3">
               <div className="-mx-1.5 -my-1.5">
                 <button
                   type="button"
-                  className="inline-flex rounded-md bg-red-500/10 p-1.5 text-red-300 transition hover:bg-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                  className="rounded-md bg-red-500/10 p-1.5 text-red-300 hover:bg-red-500/20 focus-visible:ring-red-400 inline-flex transition focus-visible:outline-none focus-visible:ring-2"
                   onClick={onClearError}
                   aria-label="Fehlermeldung schließen"
                 >
@@ -212,7 +212,7 @@ export const Composer: React.FC<{
                 </button>
                 <button
                   type="button"
-                  className="ml-2 inline-flex items-center rounded-md border border-red-400/40 bg-red-500/10 px-2.5 py-1.5 text-xs font-medium text-red-200 transition hover:bg-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                  className="rounded-md border-red-400/40 bg-red-500/10 px-2.5 py-1.5 text-red-200 hover:bg-red-500/20 focus-visible:ring-red-400 ml-2 inline-flex items-center border text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2"
                   onClick={handleSend}
                   disabled={disabled}
                 >
@@ -229,7 +229,7 @@ export const Composer: React.FC<{
           ref={textareaRef}
           data-testid="composer-input"
           className={cn(
-            "border-white/12 w-full resize-none rounded-full border bg-[rgba(20,26,36,0.78)] px-5 py-3 pr-16 text-[15px] leading-5 text-text shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]",
+            "border-white/12 text-text w-full resize-none rounded-full border bg-[rgba(20,26,36,0.78)] px-5 py-3 pr-16 text-[15px] leading-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]",
             "placeholder:text-text-muted/70 transition-shadow duration-200",
             "focus:border-accent-2/60 focus:ring-accent-2/35 focus:ring-2 focus:ring-offset-2 focus:ring-offset-[rgba(10,14,22,0.6)] focus-visible:outline-none",
             error &&
@@ -251,21 +251,21 @@ export const Composer: React.FC<{
           onCompositionEnd={handleComposition}
         />
 
-        {/* Voice Button - Temporarily disabled
-        <div className="absolute bottom-2 right-16">
+        {/* Voice Button - Temporarily disabled */}
+        {/* <div className="absolute bottom-2 right-16">
           <VoiceButton
             onTranscript={handleVoiceTranscript}
             onError={handleVoiceError}
             disabled={loading}
             className="h-8 w-8"
           />
-        </div>
+        </div> */}
 
         <div className="absolute bottom-2 right-2">
           {loading ? (
             <button
               data-testid="composer-stop"
-              className="tap touch-target flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-white/15 bg-[rgba(17,22,31,0.6)] px-4 py-2 text-sm text-text transition hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2"
+              className="tap touch-target border-white/15 text-text hover:border-white/25 focus-visible:ring-accent-2 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border bg-[rgba(17,22,31,0.6)] px-4 py-2 text-sm transition focus-visible:outline-none focus-visible:ring-2"
               onClick={handleStop}
               aria-label="Antwort stoppen"
             >
@@ -275,8 +275,8 @@ export const Composer: React.FC<{
             <button
               data-testid="composer-send"
               className={cn(
-                "tap touch-target flex h-11 w-11 items-center justify-center rounded-full text-sm font-medium text-white shadow-[0_14px_32px_rgba(168,85,247,0.35)] transition-transform duration-200",
-                "hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,14,22,0.7)]",
+                "tap touch-target h-11 w-11 text-white flex items-center justify-center rounded-full text-sm font-medium shadow-[0_14px_32px_rgba(168,85,247,0.35)] transition-transform duration-200",
+                "focus-visible:ring-accent-2 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,14,22,0.7)]",
                 disabled && "pointer-events-none opacity-60",
               )}
               onClick={handleSend}

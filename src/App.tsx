@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { SkipLink } from "./components/accessibility/SkipLink";
+import Aurora from "./components/Aurora";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
@@ -53,7 +54,7 @@ export default function App() {
 
   return (
     <ToastsProvider>
-      <div className="app-bg relative min-h-[100svh] bg-bg-primary text-foreground">
+      <div className="app-bg bg-bg-primary relative min-h-[100svh] text-foreground">
         <Aurora />
         <SkipLink targetId="main" />
 
