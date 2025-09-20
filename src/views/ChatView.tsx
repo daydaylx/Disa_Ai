@@ -252,7 +252,7 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
 
   return (
     <div className="relative flex min-h-[100dvh] flex-col" style={composerStyle}>
-      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-4 pb-[calc(var(--bottomnav-h,56px)+var(--composer-offset,128px))] pt-3">
+      <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-4 pb-[calc(var(--bottomnav-h,56px)+var(--composer-offset,128px))] pt-3">
         <div className="mx-auto mt-1 w-full max-w-3xl px-1 text-xs text-text-muted">
           {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
         </div>
@@ -304,7 +304,7 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
             <HeroOrb state="listening" size="md" />
           </div>
         )}
-      </main>
+      </div>
 
       <div
         className="pointer-events-none fixed left-0 right-0 z-50"
