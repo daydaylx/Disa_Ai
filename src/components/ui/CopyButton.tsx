@@ -43,7 +43,25 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
       );
     };
 
+    const copyWithClipboard = async () => {
+      if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
+        return false;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) {
+        console.warn("Copy failed:", error);
+        return false;
+      }
+    };
+
     const copyWithExec = () => {
+      if (typeof document.execCommand !== "function") {
+        return false;
+      }
+
       const textarea = document.createElement("textarea");
       textarea.value = text;
       textarea.setAttribute("readonly", "true");
@@ -51,29 +69,39 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
       textarea.style.left = "-9999px";
       document.body.appendChild(textarea);
       textarea.select();
+
+      let copied = false;
       try {
-        document.execCommand("copy");
-        onCopied?.();
-        runToast("success", "Kopiert");
+        copied = document.execCommand("copy");
       } catch (error) {
         console.warn("Copy fallback failed", error);
-        runToast("error", "Kopieren fehlgeschlagen");
       } finally {
         document.body.removeChild(textarea);
       }
+
+      return copied;
+    };
+
+    const reportSuccess = () => {
+      onCopied?.();
+      runToast("success", "Kopiert");
     };
 
     try {
-      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
-        await navigator.clipboard.writeText(text);
-        onCopied?.();
-        runToast("success", "Kopiert");
+      if (await copyWithClipboard()) {
+        reportSuccess();
         return;
       }
-      copyWithExec();
+
+      if (copyWithExec()) {
+        reportSuccess();
+        return;
+      }
+
+      runToast("error", "Kopieren nicht unterstützt");
     } catch (error) {
       console.warn("Copy failed:", error);
-      copyWithExec();
+      runToast("error", "Kopieren fehlgeschlagen");
     }
   };
 
