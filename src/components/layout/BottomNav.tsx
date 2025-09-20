@@ -93,7 +93,7 @@ export default function BottomNav() {
       aria-label="Hauptnavigation"
       data-version={import.meta.env.VITE_APP_VERSION}
     >
-      <ul className="grid grid-cols-3 items-center gap-1">
+      <ul className="grid grid-cols-4 items-center gap-1">
         <li>
           <button
             onClick={() => to("#/chat")}
@@ -116,6 +116,18 @@ export default function BottomNav() {
             onTouchStart={() => hapticFeedback.tap()}
           >
             Verlauf
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => to("#/quickstart")}
+            className={`nav-tab ${is("#/quickstart") ? "nav-tab--active" : ""}`}
+            aria-current={is("#/quickstart") ? "page" : undefined}
+            aria-label="Quickstart"
+            data-testid="nav-bottom-quickstart"
+            onTouchStart={() => hapticFeedback.tap()}
+          >
+            Quickstart
           </button>
         </li>
         <li>

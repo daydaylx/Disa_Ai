@@ -36,7 +36,7 @@ export default function QuickStartView() {
   };
 
   return (
-    <main
+    <div
       className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6"
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
@@ -96,7 +96,7 @@ export default function QuickStartView() {
           />
         ))}
       </section>
-    </main>
+    </div>
   );
 }
 

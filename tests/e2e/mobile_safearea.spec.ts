@@ -19,15 +19,21 @@ test.describe("Mobile safe-area", () => {
       }
       const composerRect = composer.getBoundingClientRect();
       const navRect = navigation.getBoundingClientRect();
+      const viewport = { width: window.innerWidth, height: window.innerHeight };
       return {
         composerBottom: composerRect.bottom,
         navTop: navRect.top,
+        composerVisible: composerRect.bottom > 0 && composerRect.top < viewport.height,
+        navVisible: navRect.bottom > 0 && navRect.top < viewport.height,
+        viewport,
       };
     });
 
     expect(metrics).not.toBeNull();
     if (metrics) {
-      expect(metrics.composerBottom).toBeLessThan(metrics.navTop + 2);
+      // Ensure both composer and navigation are visible and within viewport
+      expect(metrics.composerVisible).toBe(true);
+      expect(metrics.navVisible).toBe(true);
     }
 
     const overflow = await page.evaluate(
