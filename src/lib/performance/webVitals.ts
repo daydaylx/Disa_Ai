@@ -261,7 +261,9 @@ class WebVitalsReporter {
   }
 
   private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const randomArray = new Uint32Array(1);
+    crypto.getRandomValues(randomArray);
+    return `${Date.now()}-${randomArray[0].toString(36)}`;
   }
 
   private shouldSample(): boolean {
