@@ -1,11 +1,22 @@
 import { useEffect, useRef } from "react";
 
+import {
+  shouldDisableParticles,
+  shouldReduceMotion,
+  usePowerState,
+} from "../../lib/performance/power-manager";
+
 // Custom Cursor Component
 export function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const trailRefs = useRef<HTMLDivElement[]>([]);
+  const powerState = usePowerState();
 
   useEffect(() => {
+    // Disable cursor effects in power saving modes
+    if (!powerState.effectsEnabled || shouldReduceMotion()) {
+      return;
+    }
     const cursor = cursorRef.current;
     if (!cursor) return;
 
@@ -51,7 +62,7 @@ export function CustomCursor() {
       document.removeEventListener("mouseup", handleMouseUp);
       trailElements.forEach((trail) => trail.remove());
     };
-  }, []);
+  }, [powerState.effectsEnabled]);
 
   return <div ref={cursorRef} className="custom-cursor" />;
 }
@@ -59,8 +70,13 @@ export function CustomCursor() {
 // Matrix Rain Component
 export function MatrixRain() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const powerState = usePowerState();
 
   useEffect(() => {
+    // Disable matrix rain in power saving modes or if particles disabled
+    if (!powerState.matrixRainEnabled || shouldDisableParticles()) {
+      return;
+    }
     const container = containerRef.current;
     if (!container) return;
 
@@ -87,7 +103,7 @@ export function MatrixRain() {
     return () => {
       container.innerHTML = "";
     };
-  }, []);
+  }, [powerState.matrixRainEnabled]);
 
   return <div ref={containerRef} className="matrix-rain" />;
 }

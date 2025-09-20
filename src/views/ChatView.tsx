@@ -168,7 +168,7 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
       roleTemplateId: roleId,
       useRoleStyle,
       memory: memoryText || null,
-    }) as unknown as ChatMessage[];
+    }) satisfies ChatMessage[];
     const cm = new ContextManager({ maxTokens: ctxLimits.max, reservedTokens: ctxLimits.reserve });
     return cm.optimize(built);
   }
@@ -179,7 +179,7 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
 
     setMsgs((m) => trimHistory([...m, { id: uid(), role: "user", content: trimmed }]));
     if (convId) {
-      convAppendMessage(convId, { role: "user", content: trimmed } as any);
+      convAppendMessage(convId, { role: "user", content: trimmed });
     }
     setSending(true);
     setError(null);
@@ -212,10 +212,10 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
         setSending(false);
         abortRef.current = null;
         if (convId && accum.trim().length > 0) {
-          convAppendMessage(convId, { role: "assistant", content: accum } as any);
+          convAppendMessage(convId, { role: "assistant", content: accum });
           const turns = convGetMessages(convId).map((t) => ({ role: t.role, content: t.content }));
           const recent = turns.slice(-10);
-          updateMemory(convId, recent as any);
+          updateMemory(convId, recent);
         }
       },
       onError: (err) => {
