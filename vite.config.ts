@@ -20,22 +20,33 @@ export default defineConfig({
   build: {
     target: "esnext",
     minify: "esbuild",
+    cssMinify: "esbuild",
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Vendor splitting for better caching
-          vendor: ["react", "react-dom"],
-          // Utils and libraries
-          utils: ["zod", "js-yaml"],
-          // Effects and animations
-          effects: ["@/lib/sound/audio-feedback", "@/components/effects/PremiumEffects"],
-          // UI components
-          ui: [
-            "@/components/ui/GlassCard",
-            "@/components/ui/GlassTile",
-            "@/components/ui/HeroOrb",
-            "@/components/ui/Button",
-          ],
+        manualChunks: (id) => {
+          // Vendor chunk for core React
+          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+            return "vendor";
+          }
+          // Small utilities chunk
+          if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
+            return "utils";
+          }
+          // Everything else stays in main bundle for better mobile performance
+          return undefined;
+        },
+        // Optimize for mobile bandwidth
+        compact: true,
+        entryFileNames: "js/[name]-[hash].js",
+        chunkFileNames: "js/[name]-[hash].js",
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split(".");
+          const ext = info[info.length - 1];
+          if (/\.(css)$/.test(assetInfo.name)) {
+            return "css/[name]-[hash].[ext]";
+          }
+          return "assets/[name]-[hash].[ext]";
         },
       },
     },

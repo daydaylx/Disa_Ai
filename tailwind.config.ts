@@ -93,8 +93,13 @@ const config: Config = {
       elev2: shadows[2],
     },
 
-    // Breakpoints from design tokens
-    screens: breakpoints,
+    // Mobile-first only - no desktop breakpoints
+    screens: {
+      // Samsung Android specific breakpoints
+      xs: "375px", // Galaxy S series
+      sm: "390px", // Galaxy S21+
+      md: "428px", // Galaxy S22 Ultra
+    },
 
     extend: {
       // Transition durations from design tokens

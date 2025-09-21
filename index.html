@@ -3,12 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport"
-          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, viewport-fit=cover, user-scalable=yes" />
+          content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0b0f14" />
     <meta name="color-scheme" content="dark light" />
-    <link rel="icon" href="/favicon.ico" />
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Disa AI - Intelligenter Chat-Assistent mit Offline-Unterstützung. Sichere, schnelle KI-Unterhaltungen auf allen Geräten." />
+    <meta name="keywords" content="AI, Chat, Assistant, Offline, PWA, OpenRouter, Künstliche Intelligenz" />
+    <meta name="author" content="Disa AI" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Disa AI - Intelligenter Chat-Assistent" />
+    <meta property="og:description" content="Sichere, schnelle KI-Unterhaltungen mit Offline-Unterstützung auf allen Geräten." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://disa-ai.pages.dev" />
+    <meta property="og:image" content="/icon-512.png" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="Disa AI" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Disa AI - Intelligenter Chat-Assistent" />
+    <meta name="twitter:description" content="Sichere, schnelle KI-Unterhaltungen mit Offline-Unterstützung." />
+    <meta name="twitter:image" content="/icon-512.png" />
+
+    <!-- Mobile Android Optimization -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Disa AI" />
+
+    <!-- Samsung Internet specific -->
+    <meta name="samsung-internet-status-bar-style" content="dark" />
+    <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+
+    <!-- Icons & Manifest -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <title>Disa AI</title>
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://openrouter.ai" />
+    <link rel="dns-prefetch" href="https://openrouter.ai" />
+
+    <title>Disa AI - Intelligenter Chat-Assistent</title>
     <!-- Keine http-equiv Header für COOP/COEP hier. Das regelt public/_headers. -->
     <!-- Tailwind/Vite injecten ihre Assets selbst im Build; Dev nutzt /src/main.tsx -->
   </head>

@@ -23,7 +23,8 @@ function renderApp() {
 }
 
 async function renderDebug() {
-  const mod = await import("./routes/Debug");
+  // Debug-Route lazy laden für bessere Bundle-Größe
+  const mod = await import(/* webpackChunkName: "debug" */ "./routes/Debug");
   const Debug = mod.default;
   root.render(<Debug />);
 }
