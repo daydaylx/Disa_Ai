@@ -22,6 +22,11 @@
   animation: aurora-drift 20s ease-in-out infinite;
   border-radius: 50%;
   filter: blur(120px);
+  /* GPU Performance Optimizations */
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000;
 }
 
 .aurora-layer--primary {
@@ -100,6 +105,9 @@
   border-radius: 50%;
   animation: particle-float 15s linear infinite;
   box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
+  /* GPU Performance Optimizations */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 .aurora-particle:nth-child(2n) {
@@ -154,6 +162,43 @@
   }
   50% {
     opacity: 0.6;
+  }
+}
+
+/* ========================================
+   Accessibility - Reduced Motion Support
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-layer {
+    animation: none;
+    opacity: 0.2;
+  }
+
+  .aurora-particle {
+    animation: none;
+    opacity: 0;
+  }
+
+  .aurora-mesh {
+    animation: none;
+    opacity: 0.2;
+  }
+
+  /* Provide static fallback positions */
+  .aurora-layer--primary {
+    top: -20%;
+    left: -20%;
+  }
+
+  .aurora-layer--secondary {
+    top: -10%;
+    right: -20%;
+  }
+
+  .aurora-layer--tertiary {
+    bottom: -10%;
+    left: -10%;
   }
 }
 
