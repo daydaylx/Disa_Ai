@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 export type IconName =
   | "send"
@@ -12,7 +12,10 @@ export type IconName =
   | "error"
   | "success"
   | "warning"
-  | "sparkles";
+  | "sparkles"
+  | "star"
+  | "star-filled"
+  | "wrap";
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
   name: IconName;
@@ -38,6 +41,16 @@ const paths: Record<IconName, React.ReactElement> = {
   warning: <path d="M12 2l10 18H2L12 2zm0 6v4m0 4h.01" />,
   // simple 4-point star as sparkles
   sparkles: <path d="M12 2l2 4 4 2-4 2-2 4-2-4-4-2 4-2 2-4z" />,
+  star: (
+    <path
+      d="M12 3.2l2.3 4.66 5.14.75-3.72 3.63.88 5.1L12 15.77 7.4 17.34l.88-5.1L4.56 8.61l5.14-.75L12 3.2z"
+      fill="none"
+    />
+  ),
+  "star-filled": (
+    <path d="M12 3.2l2.3 4.66 5.14.75-3.72 3.63.88 5.1L12 15.77 7.4 17.34l.88-5.1L4.56 8.61l5.14-.75L12 3.2z" />
+  ),
+  wrap: <path d="M4 5h16M4 11h10a4 4 0 110 8H4m0-6h10" />,
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 20, title, ...rest }) => {

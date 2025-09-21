@@ -15,14 +15,17 @@ import {
 } from "react";
 
 import { cn } from "../../lib/utils/cn";
-import { CopyButton } from "../ui/CopyButton";
 import Avatar from "./Avatar";
+import { AssistantBubble, type BubbleStatus, UserBubble } from "./ChatBubble";
+import ChatMessageContent from "./ChatMessageContent";
 
 export interface MessageData {
   id: string;
   role: "user" | "assistant";
   content: string;
   timestamp?: number;
+  state?: "error";
+  retryText?: string;
 }
 
 export interface MessageListProps {
@@ -33,6 +36,7 @@ export interface MessageListProps {
   virtualizeThreshold?: number;
   renderMessage?: (message: MessageData, onCopy: () => void) => ReactNode;
   onScrollStateChange?: (state: { isAtBottom: boolean; showScrollFab: boolean }) => void;
+  onRetryMessage?: (message: MessageData) => void;
 }
 
 const ITEM_HEIGHT_ESTIMATE = 120; // Estimated height per message
@@ -53,6 +57,7 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
       virtualizeThreshold = 50,
       renderMessage,
       onScrollStateChange,
+      onRetryMessage,
     },
     ref,
   ) => {
@@ -207,18 +212,28 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
     const defaultRenderMessage = useCallback(
       (message: MessageData, onCopy: () => void) => {
         const isUser = message.role === "user";
+        const lastMessage = messages[messages.length - 1];
+        const isLatestAssistant =
+          message.role === "assistant" && lastMessage && lastMessage.id === message.id && isLoading;
+        const status: BubbleStatus | undefined = isUser
+          ? "sent"
+          : isLatestAssistant
+            ? "streaming"
+            : "delivered";
 
         return (
           <MessageItem
             key={message.id}
             message={message}
             isUser={isUser}
+            status={status}
             onCopy={onCopy}
             onHeightChange={(height) => measureItemHeight(message.id, height)}
+            onRetryMessage={onRetryMessage}
           />
         );
       },
-      [measureItemHeight],
+      [measureItemHeight, messages, isLoading, onRetryMessage],
     );
 
     const messageRenderer = renderMessage || defaultRenderMessage;
@@ -292,15 +307,19 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
 
             {/* Loading indicator */}
             {isLoading && (
-              <div className="my-2 flex items-start gap-2">
-                <Avatar kind="assistant" />
-                <div className="card p-3">
-                  <div className="flex items-center gap-1 text-text-muted">
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-current" />
+              <div className="chat-typing">
+                <Avatar kind="assistant" className="chat-message__avatar" />
+                <AssistantBubble status="streaming" className="chat-bubble--typing">
+                  <div
+                    className="chat-typing__dots"
+                    aria-live="polite"
+                    aria-label="Antwort wird erstellt"
+                  >
+                    <span />
+                    <span />
+                    <span />
                   </div>
-                </div>
+                </AssistantBubble>
               </div>
             )}
 
@@ -316,11 +335,20 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
 interface MessageItemProps {
   message: MessageData;
   isUser: boolean;
+  status?: BubbleStatus;
   onCopy: () => void;
   onHeightChange: (height: number) => void;
+  onRetryMessage?: (message: MessageData) => void;
 }
 
-const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHeightChange }) => {
+const MessageItem: React.FC<MessageItemProps> = ({
+  message,
+  isUser,
+  status,
+  onCopy,
+  onHeightChange,
+  onRetryMessage,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
 
   // Measure height when component mounts or content changes
@@ -332,41 +360,45 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isUser, onCopy, onHe
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message.content]); // onHeightChange intentionally excluded to prevent infinite loop
 
-  const formatTime = (timestamp: number) => {
-    return new Date(timestamp).toLocaleTimeString("de-DE", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const BubbleComponent = isUser ? UserBubble : AssistantBubble;
+  const isError = message.state === "error" && !isUser;
+  const bubbleStatus = isError ? "error" : status;
+  const handleRetry = () => {
+    if (isError && message.retryText && onRetryMessage) {
+      onRetryMessage(message);
+    }
   };
 
   return (
     <div
       ref={ref}
-      className={cn("mb-4 flex items-start gap-2", isUser ? "justify-end" : "justify-start")}
+      className={cn("chat-message", isUser ? "chat-message--user" : "chat-message--assistant")}
     >
-      {!isUser && <Avatar kind="assistant" />}
-      <div className={cn("chat-bubble", isUser ? "chat-bubble--user" : "chat-bubble--assistant")}>
-        {/* Copy button */}
-        <CopyButton
-          text={message.content}
-          onCopied={onCopy}
-          className="btn btn-ghost btn-sm absolute right-3 top-3"
-          aria-label="Nachricht kopieren"
-        >
-          <span aria-hidden>📋</span>
-        </CopyButton>
-
-        {/* Message content */}
-        <div className="pr-9 whitespace-pre-wrap text-text-primary">{message.content}</div>
-
-        {/* Timestamp */}
-        {message.timestamp && (
-          <div className={cn("chat-meta", isUser && "text-right")}>
-            {formatTime(message.timestamp)}
+      {!isUser && <Avatar kind="assistant" className="chat-message__avatar" />}
+      <BubbleComponent
+        timestamp={message.timestamp}
+        status={bubbleStatus}
+        copyText={!isError ? message.content : undefined}
+        onCopy={onCopy}
+        className={cn(isError && "chat-bubble--error")}
+      >
+        {isError ? (
+          <div className="chat-error">
+            <p className="chat-error__title">Antwort fehlgeschlagen</p>
+            <p className="chat-error__message">{message.content}</p>
+            {message.retryText ? (
+              <div className="chat-error__actions">
+                <button type="button" className="btn btn-primary btn-sm" onClick={handleRetry}>
+                  Erneut senden
+                </button>
+              </div>
+            ) : null}
           </div>
+        ) : (
+          <ChatMessageContent content={message.content} />
         )}
-      </div>
-      {isUser && <Avatar kind="user" />}
+      </BubbleComponent>
+      {isUser && <Avatar kind="user" className="chat-message__avatar" />}
     </div>
   );
 };

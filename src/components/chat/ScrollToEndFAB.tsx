@@ -3,9 +3,10 @@ import { hapticFeedback } from "../../lib/touch/haptics";
 type Props = {
   visible: boolean;
   onClick: () => void;
+  keyboardLift?: number;
 };
 
-export default function ScrollToEndFAB({ visible, onClick }: Props) {
+export default function ScrollToEndFAB({ visible, onClick, keyboardLift = 0 }: Props) {
   if (!visible) return null;
 
   const handleClick = () => {
@@ -22,6 +23,8 @@ export default function ScrollToEndFAB({ visible, onClick }: Props) {
       style={{
         bottom:
           "calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + var(--composer-offset, 112px))",
+        transform: keyboardLift > 0 ? `translateY(-${keyboardLift}px)` : undefined,
+        transition: "transform 160ms ease-out",
       }}
       data-no-zoom
     >

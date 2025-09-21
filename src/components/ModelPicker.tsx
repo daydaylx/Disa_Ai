@@ -1,12 +1,13 @@
 import * as React from "react";
 
 import { loadModelCatalog, type Safety } from "../config/models";
+import { cn } from "../lib/utils/cn";
 import { getApiKey } from "../services/openrouter";
+import { Icon } from "./ui/Icon";
 
 type RolePolicy = Safety | "any";
 type Price = { in?: number; out?: number };
 
-// Safety der Modelle kann auch "free" sein (aus dem Katalog abgeleitet)
 type ModelEntry = {
   id: string;
   label?: string;
@@ -20,9 +21,13 @@ type ModelEntry = {
 type Props = {
   value: string | null;
   onChange: (id: string) => void;
-  /** optional: von der Rolle empfohlene Policy; wird als zusätzlicher Filter angewendet */
   policyFromRole?: RolePolicy;
 };
+
+type MergedEntry = ModelEntry & { freeBadge: boolean; ids: string[] };
+
+const FAVORITES_KEY = "disa:model:favorites";
+const normalizeId = (id: string) => id.replace(/:free$/i, "").toLowerCase();
 
 function isFreeModel(m: ModelEntry): boolean {
   const pin = typeof m.pricing?.in === "number" ? m.pricing!.in! : 0;
@@ -30,28 +35,82 @@ function isFreeModel(m: ModelEntry): boolean {
   if (pin === 0 && pout === 0) return true;
   const tags = (m.tags ?? []).map((t) => String(t).toLowerCase());
   if (tags.includes("free") || tags.includes("gratis")) return true;
-  if (String(m.id).toLowerCase().includes(":free")) return true;
-  return false;
+  return String(m.id).toLowerCase().includes(":free");
+}
+
+function isCodeModel(m: ModelEntry): boolean {
+  const haystack = `${m.id} ${m.label ?? ""} ${(m.tags ?? []).join(" ")}`.toLowerCase();
+  return /code|coder|coding|program|dev/.test(haystack);
+}
+
+function formatPrice(pricing?: Price): string {
+  const fmt = (value?: number) => {
+    if (typeof value !== "number" || Number.isNaN(value)) return null;
+    if (value === 0) return "0";
+    if (value >= 1) return value.toFixed(2);
+    if (value >= 0.01) return value.toFixed(2);
+    return value.toPrecision(2);
+  };
+  const pin = fmt(pricing?.in);
+  const pout = fmt(pricing?.out);
+  if (!pin && !pout) return "—";
+  if (pin && pout) return `$${pin} / $${pout}`;
+  return `$${pin ?? pout}`;
+}
+
+function safetyLabel(value: ModelEntry["safety"]): string {
+  if (value === "strict") return "Strikt";
+  if (value === "moderate") return "Moderat";
+  if (value === "free") return "Frei";
+  return "Flexibel";
+}
+
+function costBucketLabel(bucket: "free" | "low" | "med" | "high"): string {
+  if (bucket === "free") return "Frei";
+  if (bucket === "low") return "Günstig";
+  if (bucket === "med") return "Mittel";
+  return "Premium";
 }
 
 export default function ModelPicker({ value, onChange, policyFromRole = "any" }: Props) {
   const [all, setAll] = React.useState<ModelEntry[]>([]);
+  const [loading, setLoading] = React.useState(true);
   const [q, setQ] = React.useState("");
   const [provider, setProvider] = React.useState<string>("all");
   const [onlyFree, setOnlyFree] = React.useState<boolean>(() => !getApiKey());
+  const [onlyCode, setOnlyCode] = React.useState<boolean>(false);
+  const [onlyFavorites, setOnlyFavorites] = React.useState<boolean>(false);
   const [minCtx, setMinCtx] = React.useState<number>(0);
   const [policy, setPolicy] = React.useState<"any" | "free" | "moderate" | "strict">("any");
   const [cost, setCost] = React.useState<"all" | "free" | "low" | "med" | "high">("all");
   const [sortBy, setSortBy] = React.useState<"label" | "price" | "ctx">("label");
+  const [favorites, setFavorites] = React.useState<string[]>(() => {
+    try {
+      const raw = localStorage.getItem(FAVORITES_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed.map((id) => normalizeId(String(id)));
+    } catch {
+      /* ignore */
+    }
+    return [];
+  });
 
   React.useEffect(() => {
     let ok = true;
     (async () => {
       try {
+        setLoading(true);
         const list = await loadModelCatalog();
-        if (ok) setAll(list as ModelEntry[]);
+        if (ok) {
+          setAll(list as ModelEntry[]);
+          setLoading(false);
+        }
       } catch {
-        if (ok) setAll([]);
+        if (ok) {
+          setAll([]);
+          setLoading(false);
+        }
       }
     })();
     return () => {
@@ -59,16 +118,27 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
     };
   }, []);
 
+  React.useEffect(() => {
+    try {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+    } catch {
+      /* ignore */
+    }
+  }, [favorites]);
+
+  const favoritesSet = React.useMemo(
+    () => new Set(favorites.map((id) => normalizeId(id))),
+    [favorites],
+  );
+
   const providers = React.useMemo(() => {
     const set = new Set<string>();
     all.forEach((m) => m.provider && set.add(m.provider));
     return ["all", ...Array.from(set).sort()];
   }, [all]);
 
-  // Gruppiert potenzielle Duplikate (z. B. ":free" Varianten) zu einer Zeile
-  type Merged = ModelEntry & { freeBadge: boolean; ids: string[] };
-  const mergedAll = React.useMemo<Merged[]>(() => {
-    const byKey = new Map<string, Merged>();
+  const mergedAll = React.useMemo<MergedEntry[]>(() => {
+    const byKey = new Map<string, MergedEntry>();
     const keyOf = (id: string) => id.replace(/:free$/i, "");
     for (const m of all) {
       const k = keyOf(m.id);
@@ -77,11 +147,11 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       if (!prev) {
         byKey.set(k, {
           ...m,
-          id: m.id, // wird später ggf. auf "bevorzugt" gesetzt
+          id: m.id,
           freeBadge: isFree,
           ids: [m.id],
           ctx: m.ctx ?? 0,
-          pricing: {} as Price,
+          pricing: { ...(m.pricing ?? {}) },
         });
       } else {
         prev.ids.push(m.id);
@@ -93,9 +163,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         if (Number.isFinite(pin)) next.in = pin;
         if (Number.isFinite(pout)) next.out = pout;
         prev.pricing = { ...(prev.pricing ?? {}), ...next } as Price;
-        // Bevorzugte ID: wenn bereits free und jetzt paid → bevorzugt paid, sonst erste
-        const wasFree = /:free$/i.test(prev.id);
-        if (wasFree && !isFree) prev.id = m.id;
+        if (/:free$/i.test(prev.id) && !isFree) prev.id = m.id;
       }
     }
     return Array.from(byKey.values());
@@ -113,12 +181,37 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       const pin = priceIn(m);
       const pout = priceOut(m);
       const avg = (pin + pout) / 2 || Math.max(pin, pout) || 0;
-      if (avg <= 0.1) return "low"; // <= $0.10 / 1k
-      if (avg <= 0.5) return "med"; // <= $0.50 / 1k
+      if (avg <= 0.1) return "low";
+      if (avg <= 0.5) return "med";
       return "high";
     },
     [priceIn, priceOut],
   );
+
+  const isFavoriteModel = React.useCallback(
+    (entry: MergedEntry) => {
+      const ids = entry.ids && entry.ids.length ? entry.ids : [entry.id];
+      return (
+        ids.some((id) => favoritesSet.has(normalizeId(id))) ||
+        favoritesSet.has(normalizeId(entry.id))
+      );
+    },
+    [favoritesSet],
+  );
+
+  const toggleFavorite = React.useCallback((entry: MergedEntry) => {
+    setFavorites((prev) => {
+      const next = new Set(prev.map((id) => normalizeId(id)));
+      const ids = entry.ids && entry.ids.length ? entry.ids : [entry.id];
+      const normalizedIds = [...ids, entry.id].map(normalizeId);
+      const has = normalizedIds.some((id) => next.has(id));
+      normalizedIds.forEach((id) => {
+        if (has) next.delete(id);
+        else next.add(id);
+      });
+      return Array.from(next);
+    });
+  }, []);
 
   const filtered = React.useMemo(() => {
     const norm = q.trim().toLowerCase();
@@ -127,23 +220,27 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       if (m.safety === "free") return true;
       return m.safety === policyFromRole;
     };
-    const base = mergedAll.filter((m) => {
+
+    const list = mergedAll.filter((m) => {
       if (!matchesPolicy(m)) return false;
       if (onlyFree && !isFreeModel(m)) return false;
+      if (onlyCode && !isCodeModel(m)) return false;
+      if (onlyFavorites && !isFavoriteModel(m)) return false;
       if (provider !== "all" && m.provider !== provider) return false;
       if (minCtx > 0 && (m.ctx ?? 0) < minCtx) return false;
       if (policy !== "any" && m.safety !== policy && !(policy === "free" && isFreeModel(m))) {
         return false;
       }
       if (cost !== "all" && priceBucket(m) !== cost) return false;
-
-      if (norm === "") return true;
-      const hay =
-        `${m.id} ${m.label ?? ""} ${m.provider ?? ""} ${m.tags?.join(" ") ?? ""}`.toLowerCase();
-      return hay.includes(norm);
+      if (norm !== "") {
+        const hay =
+          `${m.id} ${m.label ?? ""} ${m.provider ?? ""} ${(m.tags ?? []).join(" ")}`.toLowerCase();
+        if (!hay.includes(norm)) return false;
+      }
+      return true;
     });
-    // Sortierung
-    const arr = base.slice();
+
+    const arr = list.slice();
     arr.sort((a, b) => {
       if (sortBy === "ctx") return (b.ctx ?? 0) - (a.ctx ?? 0);
       if (sortBy === "price") {
@@ -161,6 +258,8 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
     q,
     provider,
     onlyFree,
+    onlyCode,
+    onlyFavorites,
     minCtx,
     policyFromRole,
     policy,
@@ -169,30 +268,66 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
     priceBucket,
     priceIn,
     priceOut,
+    isFavoriteModel,
   ]);
 
   return (
-    <section className="space-y-3" data-testid="settings-model-picker">
+    <section className="model-picker" data-testid="settings-model-picker">
       {(!getApiKey() || getApiKey() === "") && (
-        <div className="border-warning/40 bg-warning/10 rounded-md border px-3 py-2 text-xs text-warning">
+        <div className="model-picker__banner" role="status">
           Hinweis: Für das Laden der Modell‑Liste ist ein OpenRouter API‑Key nötig (Einstellungen).
         </div>
       )}
       {policyFromRole !== "any" && (
-        <div className="rounded-md border border-border-subtle bg-surface-100 px-3 py-2 text-xs text-text-muted">
+        <div className="model-picker__banner model-picker__banner--muted">
           Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste
           entsprechend gefiltert.
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2">
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Modell suchen…"
-          aria-label="Modell suchen"
-          className="input min-w-[200px] flex-1 text-sm"
-        />
+      <div className="model-picker__filters">
+        <div className="model-picker__search">
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Modell suchen…"
+            aria-label="Modell suchen"
+            className="input min-w-[220px] flex-1 text-sm"
+            data-testid="model-search"
+          />
+        </div>
+        <div className="model-picker__chips" role="group" aria-label="Schnellfilter">
+          <button
+            type="button"
+            className={cn("chip chip-toggle", onlyFavorites && "chip-toggle--active")}
+            onClick={() => setOnlyFavorites((prev) => !prev)}
+            data-testid="model-filter-chip-favorite"
+          >
+            <Icon name={onlyFavorites ? "star-filled" : "star"} size={16} aria-hidden />
+            Favoriten
+          </button>
+          <button
+            type="button"
+            className={cn("chip chip-toggle", onlyFree && "chip-toggle--active")}
+            onClick={() => setOnlyFree((prev) => !prev)}
+            data-testid="model-filter-chip-free"
+          >
+            <span aria-hidden>💸</span>
+            Frei
+          </button>
+          <button
+            type="button"
+            className={cn("chip chip-toggle", onlyCode && "chip-toggle--active")}
+            onClick={() => setOnlyCode((prev) => !prev)}
+            data-testid="model-filter-chip-code"
+          >
+            <span aria-hidden>💻</span>
+            Code
+          </button>
+        </div>
+      </div>
+
+      <div className="model-picker__advanced" role="group" aria-label="Detailfilter">
         <select
           value={provider}
           onChange={(e) => setProvider(e.target.value)}
@@ -232,17 +367,8 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           <option value="med">Mittel (≤$0.50/1k)</option>
           <option value="high">Teuer (&gt;$0.50/1k)</option>
         </select>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={onlyFree}
-            onChange={(e) => setOnlyFree(e.target.checked)}
-            aria-label="Nur freie Modelle zeigen"
-          />
-          Nur frei
-        </label>
-        <label className="flex items-center gap-2 text-sm">
-          min. Kontext:
+        <label className="model-picker__field">
+          <span>min. Kontext</span>
           <input
             type="number"
             min={0}
@@ -267,42 +393,98 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
       </div>
 
-      <div className="max-h-[420px] space-y-2 overflow-y-auto p-1" data-no-swipe>
-        {filtered.map((m) => {
-          const active = value === m.id;
-          return (
-            <div
-              key={m.id}
-              aria-selected={active}
-              onClick={() => onChange(m.id)}
-              className="card aria-selected:border-accent-500 grid cursor-pointer grid-cols-3 items-center gap-3 p-3 text-sm transition-transform duration-fast hover:-translate-y-[1px]"
-            >
-              <div className="col-span-2 min-w-0">
-                <div className="truncate font-medium text-text-primary">{m.label ?? m.id}</div>
-                <div className="truncate text-xs text-text-muted">{m.provider ?? "—"}</div>
-              </div>
-              <div className="flex items-center justify-end gap-2 text-xs">
-                {(isFreeModel(m) || (m as any).freeBadge) && (
-                  <span className="chip bg-bg-success-subtle text-success">free</span>
-                )}
-                <span
-                  className={`chip bg-surface-200 ${
-                    m.safety === "strict"
-                      ? "text-danger"
-                      : m.safety === "moderate"
-                        ? "text-warning"
-                        : "text-success"
-                  }`}
-                >
-                  {m.safety}
-                </span>
-              </div>
+      <div className="model-picker__results" role="listbox" aria-label="Modelle">
+        {loading ? (
+          <div className="model-picker__loading" role="status" aria-label="Modelle werden geladen">
+            <div className="loading-skeleton">
+              <div className="skeleton-card"></div>
+              <div className="skeleton-card"></div>
+              <div className="skeleton-card"></div>
             </div>
-          );
-        })}
-        {filtered.length === 0 && (
-          <div className="card text-center text-sm text-text-muted">
-            Keine Modelle gefunden. Prüfe Filter und API‑Key.
+            <p className="loading-text">Modelle werden geladen...</p>
+          </div>
+        ) : (
+          filtered.map((m) => {
+            const isFavorite = isFavoriteModel(m);
+            const isCode = isCodeModel(m);
+            const active = value
+              ? value === m.id ||
+                (m.ids && m.ids.includes(value)) ||
+                normalizeId(value) === normalizeId(m.id)
+              : false;
+            const context = m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—";
+            const isFree = isFreeModel(m) || m.freeBadge;
+            const priceLabel = isFree ? "Frei" : formatPrice(m.pricing);
+            const costBucket = priceBucket(m);
+            const costLabel = costBucketLabel(costBucket);
+
+            const handleSelect = () => onChange(m.id);
+            const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                handleSelect();
+              }
+            };
+
+            return (
+              <div
+                key={m.id}
+                role="option"
+                aria-selected={active}
+                tabIndex={0}
+                className={cn("model-card", active && "model-card--active")}
+                onClick={handleSelect}
+                onKeyDown={handleKeyDown}
+                data-testid="model-option"
+              >
+                <div className="model-card__header">
+                  <div className="model-card__title-group">
+                    <div className="model-card__title">{m.label ?? m.id}</div>
+                    <div className="model-card__subtitle">
+                      {m.provider ?? "Unbekannter Provider"}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className={cn(
+                      "model-card__favorite",
+                      isFavorite && "model-card__favorite--active",
+                    )}
+                    aria-pressed={isFavorite}
+                    aria-label={isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleFavorite(m);
+                    }}
+                    data-testid="model-favorite-toggle"
+                  >
+                    <Icon name={isFavorite ? "star-filled" : "star"} size={18} aria-hidden />
+                  </button>
+                </div>
+
+                <div className="model-card__meta">
+                  <span title="Kontextfenster">Kontext: {context}</span>
+                  <span title="Kosten pro 1k Tokens">Kosten: {priceLabel}</span>
+                  <span>Sicherheit: {safetyLabel(m.safety)}</span>
+                </div>
+
+                <div className="model-card__tags">
+                  {isFavorite && <span className="model-chip model-chip--favorite">Favorit</span>}
+                  {isFree && <span className="model-chip model-chip--free">Free</span>}
+                  {isCode && <span className="model-chip model-chip--code">Code</span>}
+                  <span className={cn("model-chip", `model-chip--safety-${m.safety}`)}>
+                    {safetyLabel(m.safety)}
+                  </span>
+                  {!isFree && <span className="model-chip model-chip--cost">{costLabel}</span>}
+                </div>
+              </div>
+            );
+          })
+        )}
+
+        {!loading && filtered.length === 0 && (
+          <div className="model-picker__empty" role="status">
+            Keine Modelle gefunden. Passe Filter oder Suchbegriff an.
           </div>
         )}
       </div>

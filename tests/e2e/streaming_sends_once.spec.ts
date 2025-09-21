@@ -21,7 +21,7 @@ test.describe("Streaming stability", () => {
     ).toHaveCount(1);
 
     // Navigating away should abort the stream and hide the stop button
-    await page.locator('[data-testid="nav-bottom-quickstart"]').click();
+    await page.locator('[data-testid="nav-bottom-models"]').click();
     await stopButton.waitFor({ state: "detached" });
 
     // Return to chat and ensure composer is ready again

@@ -32,14 +32,37 @@ import { formatMemoryForSystem, loadMemory, updateMemory } from "../services/mem
 import { getApiKey } from "../services/openrouter";
 import type { ChatMessage } from "../types/chat";
 
-type Msg = { id: string; role: "assistant" | "user"; content: string };
+type Msg = {
+  id: string;
+  role: "assistant" | "user";
+  content: string;
+  createdAt: number;
+  state?: "error";
+  retryText?: string;
+};
 const uid = () => Math.random().toString(36).slice(2);
 const ChatView = ({ convId = null }: { convId?: string | null }) => {
-  const [msgs, setMsgs] = useState<Msg[]>([{ id: uid(), role: "assistant", content: "Bereit." }]);
+  const [msgs, setMsgs] = useState<Msg[]>([
+    {
+      id: uid(),
+      role: "assistant",
+      content: "Bereit.",
+      createdAt: Date.now(),
+    },
+  ]);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const toasts = useToasts();
   const viewport = useVisualViewport();
+  const keyboardInset = useMemo(() => {
+    if (!viewport.isKeyboardOpen) return 0;
+    if (typeof window === "undefined") return 0;
+    const innerHeight = window.innerHeight || viewport.height;
+    const diff = innerHeight - (viewport.height + viewport.offsetTop);
+    return diff > 0 ? diff : 0;
+  }, [viewport.height, viewport.offsetTop, viewport.isKeyboardOpen]);
+  const keyboardLift = useMemo(() => Math.max(0, keyboardInset - 12), [keyboardInset]);
+  const horizontalInset = useMemo(() => Math.max(0, viewport.offsetLeft), [viewport.offsetLeft]);
   const messageListRef = useRef<MessageListHandle | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const [scrollState, setScrollState] = useState({ isAtBottom: true, showScrollFab: false });
@@ -93,6 +116,17 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
       }) as CSSProperties,
     [composerStack],
   );
+  const baseComposerBottom = useMemo(
+    () => `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)`,
+    [composerOffset],
+  );
+  const contentBottomPadding = useMemo(
+    () =>
+      `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + var(--composer-offset, 128px) + ${keyboardLift}px)`,
+    [keyboardLift],
+  );
+  const hasUserMessages = useMemo(() => msgs.some((m) => m.role === "user"), [msgs]);
+  const showEmptyState = useMemo(() => !hasUserMessages && !sending, [hasUserMessages, sending]);
 
   useEffect(() => {
     abortRef.current?.abort();
@@ -101,7 +135,14 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
     setError(null);
 
     if (!convId) {
-      setMsgs([{ id: uid(), role: "assistant", content: "Bereit." }]);
+      setMsgs([
+        {
+          id: uid(),
+          role: "assistant",
+          content: "Bereit.",
+          createdAt: Date.now(),
+        },
+      ]);
       requestAnimationFrame(() => messageListRef.current?.scrollToBottom(false));
       return;
     }
@@ -114,8 +155,20 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
           id: `${m.role}-${m.createdAt}`,
           role: m.role as "user" | "assistant",
           content: m.content,
+          createdAt: m.createdAt ?? Date.now(),
         }));
-      setMsgs(mapped.length ? mapped : [{ id: uid(), role: "assistant", content: "Bereit." }]);
+      setMsgs(
+        mapped.length
+          ? mapped
+          : [
+              {
+                id: uid(),
+                role: "assistant",
+                content: "Bereit.",
+                createdAt: Date.now(),
+              },
+            ],
+      );
     } catch {
       /* ignore */
     }
@@ -177,7 +230,13 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
     if (!trimmed || sending) return;
     maybeVibrate(15);
 
-    setMsgs((m) => trimHistory([...m, { id: uid(), role: "user", content: trimmed }]));
+    const userEntry: Msg = {
+      id: uid(),
+      role: "user",
+      content: trimmed,
+      createdAt: Date.now(),
+    };
+    setMsgs((m) => trimHistory([...m, userEntry]));
     if (convId) {
       convAppendMessage(convId, { role: "user", content: trimmed });
     }
@@ -205,7 +264,10 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
             copy.push({ ...last, content: accum });
             return trimHistory(copy);
           }
-          return trimHistory([...m, { id: uid(), role: "assistant", content: accum }]);
+          return trimHistory([
+            ...m,
+            { id: uid(), role: "assistant", content: accum, createdAt: Date.now() },
+          ]);
         });
       },
       onDone: () => {
@@ -225,7 +287,9 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
         // Show user-friendly error toast
         const errorToast = humanErrorToToast(err);
         toasts.push(errorToast);
-        setError("Die Anfrage konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.");
+        const friendlyMessage =
+          errorToast.message || "Die Antwort konnte nicht erstellt werden. Bitte erneut versuchen.";
+        setError(friendlyMessage);
 
         // Also add a brief error message to chat for context
         setMsgs((m) =>
@@ -234,8 +298,10 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
             {
               id: uid(),
               role: "assistant",
-              content:
-                "Die Anfrage konnte nicht verarbeitet werden. Siehe Benachrichtigung für Details.",
+              content: friendlyMessage,
+              createdAt: Date.now(),
+              state: "error",
+              retryText: trimmed,
             },
           ]),
         );
@@ -250,14 +316,36 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
     maybeVibrate([5, 30]);
   }
 
+  const handleRetryMessage = (message: { retryText?: string; id: string }) => {
+    if (!message.retryText) return;
+    setMsgs((prev) => prev.filter((entry) => entry.id !== message.id));
+    send(message.retryText);
+  };
+
   return (
     <div className="relative flex min-h-[100dvh] flex-col" style={composerStyle}>
-      <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-4 pb-[calc(var(--bottomnav-h,56px)+var(--composer-offset,128px))] pt-3">
+      <div
+        className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-4 pt-3"
+        style={{ paddingBottom: contentBottomPadding }}
+      >
         <div className="mx-auto mt-1 w-full max-w-3xl px-1 text-xs text-text-muted">
           {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
         </div>
 
         <div className="relative flex min-h-0 flex-1 rounded-lg border border-border-subtle bg-surface-100 px-0 py-2">
+          {showEmptyState && (
+            <div className="chat-empty-state" role="status">
+              <p className="chat-empty-state__title">Starte deinen ersten Chat</p>
+              <ul className="chat-empty-state__list">
+                <li>Stelle eine Frage oder beschreibe dein Ziel in einem Satz.</li>
+                <li>
+                  Nutze Befehle wie <code>/model</code> oder <code>/style</code> für schnelle
+                  Anpassungen.
+                </li>
+                <li>Der Button unten rechts bringt dich sofort zum aktuellen Ende.</li>
+              </ul>
+            </div>
+          )}
           <MessageList
             ref={messageListRef}
             className="flex-1"
@@ -265,7 +353,9 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
               id: m.id,
               role: m.role,
               content: m.content,
-              timestamp: Date.now(),
+              timestamp: m.createdAt,
+              state: m.state,
+              retryText: m.retryText,
             }))}
             isLoading={sending}
             onCopyMessage={async (content) => {
@@ -295,6 +385,7 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
             }}
             virtualizeThreshold={virtEnabled ? 50 : 100}
             onScrollStateChange={handleScrollStateChange}
+            onRetryMessage={handleRetryMessage}
           />
         </div>
 
@@ -309,9 +400,11 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
       <div
         className="pointer-events-none fixed left-0 right-0 z-50"
         style={{
-          bottom: viewport.isKeyboardOpen
-            ? "16px" // Simple fixed position when keyboard is open
-            : `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)`,
+          bottom: baseComposerBottom,
+          transform: keyboardLift > 0 ? `translateY(-${keyboardLift}px)` : undefined,
+          transition: "transform 160ms ease-out",
+          left: horizontalInset ? `${horizontalInset}px` : undefined,
+          right: horizontalInset ? `${horizontalInset}px` : undefined,
         }}
       >
         <div className="pointer-events-auto mx-auto w-full max-w-3xl px-4">
@@ -325,7 +418,11 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
         </div>
       </div>
 
-      <ScrollToEndFAB visible={scrollState.showScrollFab} onClick={scrollToBottom} />
+      <ScrollToEndFAB
+        visible={scrollState.showScrollFab}
+        onClick={scrollToBottom}
+        keyboardLift={keyboardLift}
+      />
     </div>
   );
 };

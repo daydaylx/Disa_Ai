@@ -21,16 +21,16 @@
 
 ## Test-IDs (Auszug)
 
-- Header: `nav-top-{chat|chats|quickstart|settings}`
-- BottomNav: `nav-bottom-{chat|chats|quickstart|settings}`
+- Header: `nav-top-{chat|models|settings}`
+- BottomNav: `nav-bottom-{chat|models|settings}`
 - Settings: `settings-save-key`, `settings-style`, `settings-ctx-max`, `settings-ctx-reserve`, `settings-composer-offset`, `settings-model-picker`
 - Chats: `chats-title-input`, `chats-new`, `chats-open`, `chats-delete`
 - Chat: `composer-input`, `composer-send`, `composer-stop`, `msg-copy`, `msg-more`, `msg-delete`
-- Quickstart: `quickstart-item`
+- Model-Picker: `model-search`, `model-filter-chip-{favorite|free|code}`, `model-option`, `model-favorite-toggle`, `model-picker-back`
 
 ## E2E (grün)
 
-1. Quickstart → Chat → Senden/Stop → kein Layout‑Sprung
+1. Model-Picker → Chat → Senden/Stop → kein Layout‑Sprung
 2. Settings: Toggles/Persistenz → Chat Fokus
 3. Chats‑Liste: Neu → zurück → Löschen
 4. Model‑Picker sichtbar

@@ -8,23 +8,21 @@ import { ToastsProvider } from "./components/ui/Toast";
 import { setupAndroidOptimizations } from "./lib/android/system";
 
 // Code-splitting für bessere Performance
-const ChatsView = React.lazy(() => import("./views/ChatsView"));
 const ChatView = React.lazy(() => import("./views/ChatView"));
-const QuickStartView = React.lazy(() => import("./views/QuickStartView"));
+const ModelPickerView = React.lazy(() => import("./views/ModelPickerView"));
 const SettingsView = React.lazy(() => import("./views/SettingsView"));
 
-type Route = { name: "chat" | "settings" | "chats" | "quickstart"; chatId?: string | null };
+type Route = { name: "chat" | "models" | "settings"; chatId?: string | null };
 
 function parseHash(): Route {
   const h = (location.hash || "#").slice(1); // remove '#'
   const parts = h.split("/").filter(Boolean); // ["chat", "<id>"]
   const [seg, arg] = parts;
   if (seg === "settings") return { name: "settings" };
-  if (seg === "chats") return { name: "chats" };
-  if (seg === "quickstart") return { name: "quickstart" };
+  if (seg === "models") return { name: "models" };
   if (seg === "chat") return { name: "chat", chatId: arg ?? null };
-  // Default to quickstart for mobile-first experience
-  return { name: "quickstart" };
+  // Default to chat for direct access
+  return { name: "chat", chatId: null };
 }
 
 function useHashRoute(): [Route, (r: Route) => void] {
@@ -39,8 +37,7 @@ function useHashRoute(): [Route, (r: Route) => void] {
   const nav = (r: Route) => {
     let target = "#/chat";
     if (r.name === "settings") target = "#/settings";
-    else if (r.name === "chats") target = "#/chats";
-    else if (r.name === "quickstart") target = "#/quickstart";
+    else if (r.name === "models") target = "#/models";
     else if (r.name === "chat") target = r.chatId ? `#/chat/${r.chatId}` : "#/chat";
     if (location.hash !== target) location.hash = target;
     setRoute(r);
@@ -88,10 +85,8 @@ export default function App() {
               >
                 {route.name === "settings" ? (
                   <SettingsView />
-                ) : route.name === "chats" ? (
-                  <ChatsView onOpen={(id) => nav({ name: "chat", chatId: id })} />
-                ) : route.name === "quickstart" ? (
-                  <QuickStartView />
+                ) : route.name === "models" ? (
+                  <ModelPickerView onSelectChat={() => nav({ name: "chat" })} />
                 ) : (
                   <ChatView convId={route.chatId ?? null} />
                 )}
