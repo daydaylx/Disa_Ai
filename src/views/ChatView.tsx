@@ -3,6 +3,7 @@ import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState }
 import { Composer } from "../components/chat/Composer";
 import MessageList, { type MessageListHandle } from "../components/chat/MessageList";
 import ScrollToEndFAB from "../components/chat/ScrollToEndFAB";
+import { GlassCard } from "../components/glass/GlassCard";
 import { HeroOrb } from "../components/ui/HeroOrb";
 // import CodeBlock from "../components/CodeBlock"; // Temporarily unused
 // import { CopyButton } from "../components/ui/CopyButton"; // Temporarily unused
@@ -325,14 +326,19 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
   return (
     <div className="relative flex min-h-[100dvh] flex-col" style={composerStyle}>
       <div
-        className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-4 pt-3"
+        className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 pt-6"
         style={{ paddingBottom: contentBottomPadding }}
       >
-        <div className="mx-auto mt-1 w-full max-w-3xl px-1 text-xs text-text-muted">
-          {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
+        <div className="mx-auto w-full max-w-3xl px-1 text-center">
+          <div className="glass-backdrop inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs text-text-secondary">
+            <div
+              className={`h-2 w-2 rounded-full ${sending ? "bg-cyan-400 animate-pulse" : "bg-gray-400"}`}
+            />
+            {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
+          </div>
         </div>
 
-        <div className="relative flex min-h-0 flex-1 rounded-lg border border-border-subtle bg-surface-100 px-0 py-2">
+        <GlassCard variant="elevated" glow="cyan" className="relative flex min-h-0 flex-1 p-4">
           {showEmptyState && (
             <div className="chat-empty-state" role="status">
               <p className="chat-empty-state__title">Starte deinen ersten Chat</p>
@@ -387,13 +393,13 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
             onScrollStateChange={handleScrollStateChange}
             onRetryMessage={handleRetryMessage}
           />
-        </div>
+        </GlassCard>
 
         {/* Show listening orb when sending */}
         {sending && (
-          <div className="flex justify-center py-8">
+          <GlassCard variant="subtle" className="flex justify-center py-6">
             <HeroOrb state="listening" size="md" />
-          </div>
+          </GlassCard>
         )}
       </div>
 
