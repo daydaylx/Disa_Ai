@@ -332,30 +332,40 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
         className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 pt-6"
         style={{ paddingBottom: contentBottomPadding }}
       >
-        <div className="mx-auto w-full max-w-3xl space-y-3 px-1 text-center">
-          <div className="glass-backdrop inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs text-text-secondary">
+        <div className="mx-auto w-full max-w-3xl space-y-4 px-1 text-center">
+          {/* Status Badge with Glass Design */}
+          <div className="glass-badge glass-badge--accent inline-flex items-center gap-2">
             <div
               className={`h-2 w-2 rounded-full ${sending ? "bg-cyan-400 animate-pulse" : "bg-gray-400"}`}
             />
             {sending ? "Antwort wird erstellt …" : `Modell: ${modelLabel || "—"}`}
           </div>
 
-          {/* Style & Role Indicator */}
-          <StyleRoleIndicator onQuickStylesClick={quickStylesPanel.open} className="inline-block" />
+          {/* Style & Role Indicator with Enhanced Glass */}
+          <div className="glass-panel glass-panel--floating inline-block p-3">
+            <StyleRoleIndicator onQuickStylesClick={quickStylesPanel.open} />
+          </div>
         </div>
 
-        <GlassCard variant="elevated" glow="cyan" className="relative flex min-h-0 flex-1 p-4">
+        <GlassCard variant="floating" tint="cyan" className="relative flex min-h-0 flex-1" enhanced>
           {showEmptyState && (
-            <div className="chat-empty-state" role="status">
-              <p className="chat-empty-state__title">Starte deinen ersten Chat</p>
-              <ul className="chat-empty-state__list">
-                <li>Stelle eine Frage oder beschreibe dein Ziel in einem Satz.</li>
-                <li>
-                  Nutze Befehle wie <code>/model</code> oder <code>/style</code> für schnelle
-                  Anpassungen.
-                </li>
-                <li>Der Button unten rechts bringt dich sofort zum aktuellen Ende.</li>
-              </ul>
+            <div className="glass-bg--soft m-4 rounded-lg p-8 text-center" role="status">
+              <div className="space-y-4">
+                <div className="text-4xl mb-4">💬</div>
+                <h3 className="text-white mb-3 text-xl font-semibold">Starte deinen ersten Chat</h3>
+                <div className="text-neutral-300 space-y-3">
+                  <div className="glass-badge glass-badge--accent">
+                    💡 Stelle eine Frage oder beschreibe dein Ziel in einem Satz
+                  </div>
+                  <div className="glass-badge">
+                    ⚡ Nutze Befehle wie <code className="text-cyan-400">/model</code> oder{" "}
+                    <code className="text-cyan-400">/style</code> für schnelle Anpassungen
+                  </div>
+                  <div className="glass-badge">
+                    🎯 Der Button unten rechts bringt dich sofort zum aktuellen Ende
+                  </div>
+                </div>
+              </div>
             </div>
           )}
           <MessageList
@@ -403,8 +413,10 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
 
         {/* Show listening orb when sending */}
         {sending && (
-          <GlassCard variant="subtle" className="flex justify-center py-6">
-            <HeroOrb state="listening" size="md" />
+          <GlassCard variant="floating" tint="cyan" className="flex justify-center py-8" enhanced>
+            <div className="glass-bg--medium rounded-full p-6">
+              <HeroOrb state="listening" size="md" />
+            </div>
           </GlassCard>
         )}
       </div>

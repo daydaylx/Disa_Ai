@@ -86,7 +86,7 @@ export default function BottomNav() {
       ref={(el) => {
         ref.current = el;
       }}
-      className="glass-nav safe-bottom fixed inset-x-4 bottom-4 z-50 mx-auto max-w-md"
+      className="glass-nav glass-hardware-accel safe-bottom fixed inset-x-4 bottom-4 z-50 mx-auto max-w-md"
       role="navigation"
       aria-label="Hauptnavigation"
       data-version={import.meta.env.VITE_APP_VERSION}

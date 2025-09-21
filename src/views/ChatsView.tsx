@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { GlassCard } from "../components/glass/GlassCard";
 import { Button } from "../components/ui/Button";
 import { useConversations } from "../hooks/useConversations";
 import { TouchGestureHandler } from "../lib/touch/gestures";
@@ -48,20 +49,31 @@ export default function ChatsView({ onOpen }: Props) {
     >
       {/* Pull-to-refresh indicator */}
       {isRefreshing && (
-        <div className="flex items-center justify-center py-4">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
-          <span className="ml-2 text-sm text-text-muted">Aktualisiere...</span>
-        </div>
+        <GlassCard variant="floating" className="flex items-center justify-center py-4">
+          <div className="border-accent-500 h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
+          <span className="text-neutral-300 ml-2 text-sm">Aktualisiere...</span>
+        </GlassCard>
       )}
 
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Unterhaltungen</h1>
-        <div className="flex gap-2">
+      <GlassCard variant="floating" tint="mint" className="p-8">
+        <div className="mb-6 flex items-center justify-center gap-3">
+          <div className="bg-mint-500/20 rounded-xl p-3">
+            <span className="text-3xl">💬</span>
+          </div>
+          <div className="text-left">
+            <h1 className="text-3xl from-mint-400 to-cyan-400 bg-gradient-to-r bg-clip-text font-bold text-transparent">
+              Unterhaltungen
+            </h1>
+            <p className="text-neutral-300 text-lg">Deine Chat-Historie verwalten</p>
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-3">
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Titel (optional)"
-            className="input w-48 text-sm"
+            className="glass-input max-w-xs flex-1"
             aria-label="Titel der neuen Unterhaltung"
             data-testid="chats-title-input"
           />
@@ -74,24 +86,29 @@ export default function ChatsView({ onOpen }: Props) {
             }}
             data-testid="chats-new"
           >
-            Neu
+            Neu erstellen
           </Button>
         </div>
-      </header>
+      </GlassCard>
 
-      <section className="grid gap-3">
+      <section className="grid gap-4">
         {conv.items.map((m) => (
-          <article
+          <GlassCard
             key={m.id}
-            className="card text-sm transition-transform duration-fast hover:-translate-y-[1px]"
+            variant="soft"
+            className="p-4 transition-all duration-200 hover:scale-[1.02]"
+            interactive
+            enhanced
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="truncate text-text-primary">{m.title}</div>
-                <div className="mt-0.5 truncate text-xs text-text-muted">
-                  {new Date(m.updatedAt).toLocaleString()}
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-white truncate font-medium">{m.title}</h3>
+                <div className="mt-1 space-y-1">
+                  <div className="glass-badge glass-badge--accent text-xs">
+                    {new Date(m.updatedAt).toLocaleString()}
+                  </div>
+                  <div className="text-neutral-400 truncate font-mono text-xs">{m.id}</div>
                 </div>
-                <div className="truncate text-xs text-text-muted">{m.id}</div>
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button
@@ -114,12 +131,16 @@ export default function ChatsView({ onOpen }: Props) {
                 </Button>
               </div>
             </div>
-          </article>
+          </GlassCard>
         ))}
         {conv.items.length === 0 && (
-          <div className="card text-center text-sm text-text-muted">
-            Noch keine Unterhaltungen. Lege oben eine neue an.
-          </div>
+          <GlassCard variant="soft" className="p-8 text-center">
+            <div className="space-y-3">
+              <div className="text-4xl">💭</div>
+              <h3 className="text-white font-medium">Noch keine Unterhaltungen</h3>
+              <p className="text-neutral-400 text-sm">Erstelle oben deine erste Unterhaltung</p>
+            </div>
+          </GlassCard>
         )}
       </section>
     </div>
