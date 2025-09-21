@@ -50,7 +50,7 @@ export function StyleSettings() {
     setStyle(style);
     toasts.push({
       kind: "success",
-      title: "Stil geändert",
+      title: "🎯 Stil geändert",
       message: `Antwortstil auf "${STYLE_LABELS[style].name}" gesetzt.`,
     });
   };
@@ -60,7 +60,7 @@ export function StyleSettings() {
     setNSFW(enabled);
     toasts.push({
       kind: "info",
-      title: enabled ? "NSFW aktiviert" : "NSFW deaktiviert",
+      title: enabled ? "🔓 NSFW aktiviert" : "🔒 NSFW deaktiviert",
       message: enabled ? "Inhaltsfilterung deaktiviert" : "Inhaltsfilterung aktiviert",
     });
   };
@@ -70,7 +70,7 @@ export function StyleSettings() {
     setUseRoleStyle(enabled);
     toasts.push({
       kind: "info",
-      title: enabled ? "Rollen-Stil aktiviert" : "Rollen-Stil deaktiviert",
+      title: enabled ? "👤 Rollen-Stil aktiviert" : "📝 Rollen-Stil deaktiviert",
       message: enabled
         ? "Rollenstil wird mit Grundstil kombiniert"
         : "Nur Grundstil wird verwendet",
@@ -88,7 +88,7 @@ export function StyleSettings() {
 
     toasts.push({
       kind: "success",
-      title: "Stil zurückgesetzt",
+      title: "↩️ Stil zurückgesetzt",
       message: "Alle Stileinstellungen auf Standard zurückgesetzt.",
     });
   };

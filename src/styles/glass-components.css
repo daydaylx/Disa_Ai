@@ -218,9 +218,10 @@
 
 /* Button Sizes */
 .glass-button--sm {
-  height: 36px;
+  height: 44px; /* Erhöht von 36px für Touch-Standards */
   padding: 0 16px;
   font-size: 0.875rem;
+  min-height: 44px; /* Sicherstellung der Mindesthöhe */
 }
 
 .glass-button--md {
