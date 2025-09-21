@@ -1,7 +1,3 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
 
 Disa AI is a React-based AI chat PWA with offline-first architecture, built with Vite and TypeScript. The app focuses on security, performance, and mobile-responsive design.

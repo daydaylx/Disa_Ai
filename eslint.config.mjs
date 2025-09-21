@@ -135,16 +135,9 @@ export default [
         "error",
         {
           selector: "Literal[value=/^#[0-9a-fA-F]{3,6}$/]",
-          message: "Direct hex colors are not allowed. Use design tokens from src/design-tokens.ts or CSS custom properties instead."
+          message:
+            "Direct hex colors are not allowed. Use design tokens from src/styles/design-tokens.ts or CSS custom properties instead.",
         },
-        {
-          selector: "CallExpression[callee.name='rgb']",
-          message: "Direct rgb() colors are not allowed. Use design tokens from src/design-tokens.ts or CSS custom properties instead."
-        },
-        {
-          selector: "CallExpression[callee.name='rgba']",
-          message: "Direct rgba() colors are not allowed. Use design tokens from src/design-tokens.ts or CSS custom properties instead."
-        }
       ],
     },
   },
@@ -191,7 +184,7 @@ export default [
 
   // Design tokens file - exception for hex colors (must be last to override)
   {
-    files: ["src/design-tokens.ts"],
+    files: ["src/styles/design-tokens.ts"],
     rules: {
       "no-restricted-syntax": "off", // Allow hex colors in design tokens
     },

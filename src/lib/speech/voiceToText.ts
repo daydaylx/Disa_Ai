@@ -225,20 +225,20 @@ export class VoiceToTextManager {
     this.visualIndicator.className = "voice-recording-indicator";
     this.visualIndicator.style.cssText = `
       position: fixed;
-      top: 20px;
+      top: var(--space-5);
       left: 50%;
       transform: translateX(-50%);
-      background: #ef4444;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
+      background: var(--danger-500);
+      color: var(--color-neutral-0);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-lg);
       font-size: 12px;
       font-weight: 500;
       backdrop-filter: blur(10px);
       z-index: 1000;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--space-2);
       animation: pulse-recording 1.5s infinite ease-in-out;
     `;
 

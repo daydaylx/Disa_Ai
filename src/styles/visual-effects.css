@@ -63,7 +63,12 @@
 
 /* Gradient Text Effects */
 .gradient-text {
-  background: linear-gradient(135deg, #22d3ee 0%, #a855f7 50%, #6ee7b7 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-500) 0%,
+    var(--gradient-purple-600) 50%,
+    var(--color-mint-500) 100%
+  );
   background-size: 200% 200%;
   background-clip: text;
   -webkit-background-clip: text;
@@ -120,12 +125,12 @@
   );
   border-radius: inherit;
   mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(var(--color-neutral-0) 0 0) content-box,
+    linear-gradient(var(--color-neutral-0) 0 0);
   mask-composite: exclude;
   -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(var(--color-neutral-0) 0 0) content-box,
+    linear-gradient(var(--color-neutral-0) 0 0);
   -webkit-mask-composite: destination-out;
   opacity: 0;
   transition: opacity 0.3s ease;

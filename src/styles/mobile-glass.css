@@ -129,7 +129,12 @@
   }
 
   .glass-mobile-container {
-    background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 50%, #0f1419 100%);
+    background: linear-gradient(
+      135deg,
+      var(--gradient-night-deep) 0%,
+      var(--gradient-night-mid) 50%,
+      var(--gradient-night-soft) 100%
+    );
   }
 
   /* PWA Navigation Tabs */
@@ -161,7 +166,7 @@
 
   .glass-pwa-nav__item--active {
     background: rgba(34, 211, 238, 0.15);
-    color: #22d3ee;
+    color: var(--color-accent-500);
     box-shadow: 0 2px 8px rgba(34, 211, 238, 0.2);
   }
 
@@ -272,7 +277,7 @@
 
   .glass-pwa-nav__item--active {
     background: rgba(34, 211, 238, 0.3);
-    border: 1px solid #22d3ee;
+    border: 1px solid var(--color-accent-500);
   }
 }
 
