@@ -3,8 +3,10 @@ import * as React from "react";
 import { GlassButton } from "../components/glass/GlassButton";
 import { GlassCard } from "../components/glass/GlassCard";
 import { AuroraThemeSettings } from "../components/settings/AuroraThemeSettings";
+import { RoleSettings } from "../components/settings/RoleSettings";
 import { SettingsCard } from "../components/settings/SettingsCard";
 import SimpleThemeToggle from "../components/settings/SimpleThemeToggle";
+import { StyleSettings } from "../components/settings/StyleSettings";
 import Switch from "../components/Switch";
 import { useToasts } from "../components/ui/Toast";
 import { usePWAInstall } from "../hooks/usePWAInstall";
@@ -128,6 +130,28 @@ export default function SettingsView() {
           className="lg:col-span-2"
         >
           <AuroraThemeSettings />
+        </SettingsCard>
+
+        {/* Style Settings */}
+        <SettingsCard
+          title="Antwortstil"
+          description="Wähle den Stil für KI-Antworten - von neutral bis kreativ."
+          icon="🎯"
+          glow="cyan"
+          className="lg:col-span-2"
+        >
+          <StyleSettings />
+        </SettingsCard>
+
+        {/* Role Settings */}
+        <SettingsCard
+          title="KI-Rollen"
+          description="Spezialisierte Rollen für verschiedene Anwendungsfälle."
+          icon="👤"
+          glow="purple"
+          className="lg:col-span-2"
+        >
+          <RoleSettings />
         </SettingsCard>
 
         {/* Basic Theme Settings */}

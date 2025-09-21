@@ -1,8 +1,10 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { executeSlashCommand, parseSlashCommand } from "../../lib/chat/slashCommands";
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
+import { useToasts } from "../ui/Toast";
 // import { VoiceButton } from "./VoiceButton"; // Temporarily disabled
 
 const MAX_TEXTAREA_LINES = 8;
@@ -35,6 +37,8 @@ export const Composer: React.FC<{
   const errorRef = useRef<HTMLDivElement>(null);
   const [isComposing, setIsComposing] = useState(false);
   const [platformShortcut, setPlatformShortcut] = useState("Strg");
+  const [showCommandSuggestions, setShowCommandSuggestions] = useState(false);
+  const toasts = useToasts();
   const disabled = loading || text.trim().length === 0;
 
   // Auto-resize textarea based on content
@@ -100,14 +104,53 @@ export const Composer: React.FC<{
     setPlatformShortcut(isApple ? "⌘" : "Strg");
   }, []);
 
-  const handleSend = useCallback(() => {
-    if (!disabled) {
-      hapticFeedback.success();
-      onSend(text.trim());
-      setText("");
-      onClearError?.();
+  const handleSend = useCallback(async () => {
+    if (disabled) return;
+
+    const trimmedText = text.trim();
+
+    // Check if it's a slash command
+    const parsed = parseSlashCommand(trimmedText);
+    if (parsed.isCommand) {
+      try {
+        hapticFeedback.select();
+        const result = await executeSlashCommand(trimmedText);
+
+        if (result.success) {
+          toasts.push({
+            kind: "success",
+            title: "Befehl ausgeführt",
+            message: result.message,
+          });
+          if (result.shouldClearInput) {
+            setText("");
+          }
+        } else {
+          toasts.push({
+            kind: "error",
+            title: "Befehl fehlgeschlagen",
+            message: result.message,
+          });
+        }
+        onClearError?.();
+        return;
+      } catch (error) {
+        toasts.push({
+          kind: "error",
+          title: "Befehl-Fehler",
+          message: "Unerwarteter Fehler beim Ausführen des Befehls",
+        });
+        console.error("Slash command error:", error);
+        return;
+      }
     }
-  }, [disabled, text, onSend, onClearError]);
+
+    // Regular message sending
+    hapticFeedback.success();
+    onSend(trimmedText);
+    setText("");
+    onClearError?.();
+  }, [disabled, text, onSend, onClearError, toasts]);
 
   const handleStop = useCallback(() => {
     hapticFeedback.warning();
@@ -124,11 +167,11 @@ export const Composer: React.FC<{
         } else if (e.metaKey || e.ctrlKey) {
           // Cmd/Ctrl+Enter: Always send
           e.preventDefault();
-          handleSend();
+          void handleSend();
         } else {
           // Plain Enter: Send if not disabled
           e.preventDefault();
-          handleSend();
+          void handleSend();
         }
       }
     },
@@ -137,7 +180,13 @@ export const Composer: React.FC<{
 
   const handleTextChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setText(e.target.value);
+      const newText = e.target.value;
+      setText(newText);
+
+      // Show command suggestions if text starts with /
+      const trimmed = newText.trim();
+      setShowCommandSuggestions(trimmed.startsWith("/") && trimmed.length > 1);
+
       if (error) {
         onClearError?.();
       }
@@ -188,7 +237,7 @@ export const Composer: React.FC<{
               <button
                 type="button"
                 className="btn btn-primary btn-sm"
-                onClick={handleSend}
+                onClick={() => void handleSend()}
                 disabled={disabled}
               >
                 Erneut senden
@@ -236,7 +285,7 @@ export const Composer: React.FC<{
             <button
               data-testid="composer-send"
               className={cn("glass-composer__send", disabled && "pointer-events-none opacity-60")}
-              onClick={handleSend}
+              onClick={() => void handleSend()}
               disabled={disabled}
               aria-label={`Nachricht senden (Enter oder ${platformShortcut}+Enter)`}
               title={`Senden (Enter oder ${platformShortcut}+Enter)`}
@@ -250,9 +299,16 @@ export const Composer: React.FC<{
         </div>
       </div>
 
-      {text.trim() && (
+      {text.trim() && !showCommandSuggestions && (
         <div className="mt-2 px-1 text-xs text-text-muted">
           ~{Math.ceil(text.trim().split(/\s+/).length * 1.3)} Tokens
+        </div>
+      )}
+
+      {/* Command Suggestions */}
+      {showCommandSuggestions && (
+        <div className="text-cyan-400 mt-2 px-1 text-xs">
+          💡 Verfügbare Befehle: <span className="text-white">/style, /role, /nsfw, /help</span>
         </div>
       )}
     </div>
