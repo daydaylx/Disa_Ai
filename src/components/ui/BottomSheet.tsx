@@ -39,7 +39,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-end">
       {/* Backdrop */}
-      <div className="bg-black/50 absolute inset-0 backdrop-blur-sm" onClick={onClose} />
+      <div className="bg-background-deep/50 absolute inset-0 backdrop-blur-sm" onClick={onClose} />
 
       {/* Sheet */}
       <div
@@ -50,7 +50,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       >
         <div className="safe-top p-4">
           {/* Handle */}
-          <div className="mx-auto mb-4 h-1 w-12 rounded-full bg-[color:rgba(149,164,187,0.4)]" />
+          <div className="bg-text-muted/40 mx-auto mb-4 h-1 w-12 rounded-full" />
 
           {/* Header */}
           {(title || onClose) && (
@@ -59,7 +59,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[color:rgba(149,164,187,0.12)] hover:bg-[color:rgba(149,164,187,0.2)]"
+                  className="bg-text-muted/12 hover:bg-text-muted/20 flex h-8 w-8 items-center justify-center rounded-full"
                   aria-label="Schließen"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

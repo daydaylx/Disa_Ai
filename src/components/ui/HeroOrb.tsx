@@ -33,8 +33,8 @@ export const HeroOrb: React.FC<HeroOrbProps> = ({
     <div
       aria-hidden
       className={cn(
-        "relative mx-auto rounded-full border border-border-strong bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,0.35),rgba(11,17,24,0.1))]",
-        "after:absolute after:-inset-[6%] after:rounded-full after:border after:border-[rgba(34,211,238,0.25)]",
+        "from-accent/35 to-background/10 relative mx-auto rounded-full border border-border-strong bg-gradient-to-br",
+        "after:border-accent/25 after:absolute after:-inset-[6%] after:rounded-full after:border",
         sizeClasses[resolvedSize],
         animationByState[resolvedState],
         className,

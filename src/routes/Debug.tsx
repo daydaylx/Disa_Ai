@@ -21,7 +21,7 @@ export default function Debug() {
 
   return (
     <div style={{ padding: 16, fontFamily: "ui-sans-serif, system-ui" }}>
-      <h1>Debug</h1>
+      <h1 className="mb-4 text-2xl font-semibold">Debug</h1>
       <ul>
         <li>
           UserAgent: <code>{state.ua}</code>

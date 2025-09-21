@@ -27,7 +27,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 
   return (
     <div
-      className={cn("rounded-md border border-danger bg-[rgba(239,68,68,0.12)] p-3", className)}
+      className={cn("rounded-md border border-danger bg-bg-danger-subtle p-3", className)}
       role="alert"
     >
       <div className="flex items-start gap-2">
@@ -42,7 +42,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
               <summary className="cursor-pointer text-xs underline underline-offset-4">
                 Details
               </summary>
-              <pre className="max-h-48 mt-1 overflow-auto rounded border border-border-subtle bg-surface-100 p-2 text-xs text-text-primary">
+              <pre className="max-h-48 rounded mt-1 overflow-auto border border-border-subtle bg-surface-100 p-2 text-xs text-text-primary">
                 {details}
               </pre>
             </details>

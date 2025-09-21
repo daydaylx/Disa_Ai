@@ -127,7 +127,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="bg-black/50 fixed inset-0 z-50 backdrop-blur-sm"
+        className="bg-background-deep/50 fixed inset-0 z-50 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -191,7 +191,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     "group flex cursor-pointer select-none items-center rounded-lg px-3 py-2",
                     "transition-colors duration-fast",
                     index === selectedIndex
-                      ? "bg-accent text-[var(--accent-foreground)]"
+                      ? "bg-accent text-accent-foreground"
                       : "text-text-secondary hover:bg-surface-100",
                     command.disabled && "cursor-not-allowed opacity-50",
                   )}
@@ -206,9 +206,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={cn(
                         "h-5 w-5 mr-3 flex-shrink-0",
-                        index === selectedIndex
-                          ? "text-[var(--accent-foreground)]"
-                          : "text-text-muted",
+                        index === selectedIndex ? "text-accent-foreground" : "text-text-muted",
                       )}
                     >
                       {command.icon}
@@ -220,9 +218,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={cn(
                         "truncate font-medium",
-                        index === selectedIndex
-                          ? "text-[var(--accent-foreground)]"
-                          : "text-text-primary",
+                        index === selectedIndex ? "text-accent-foreground" : "text-text-primary",
                       )}
                     >
                       {command.title}
@@ -231,7 +227,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       <div
                         className={cn(
                           "truncate text-sm",
-                          index === selectedIndex ? "text-[rgba(3,20,28,0.85)]" : "text-text-muted",
+                          index === selectedIndex ? "text-accent-foreground/85" : "text-text-muted",
                         )}
                       >
                         {command.description}
@@ -244,7 +240,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={cn(
                         "ml-3 font-mono text-xs",
-                        index === selectedIndex ? "text-[rgba(3,20,28,0.8)]" : "text-text-muted",
+                        index === selectedIndex ? "text-accent-foreground/80" : "text-text-muted",
                       )}
                     >
                       {command.shortcut}

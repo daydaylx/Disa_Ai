@@ -73,6 +73,13 @@ const config: Config = {
       // Background colors
       background: "var(--color-bg-800)",
       "background-deep": "var(--color-bg-900)",
+
+      // Subtle background variants
+      "bg-success-subtle": "var(--bg-success-subtle)",
+      "bg-purple-subtle": "var(--bg-purple-subtle)",
+      "bg-danger-subtle": "var(--bg-danger-subtle)",
+      "bg-accent-subtle": "var(--bg-accent-subtle)",
+      "bg-accent-low": "var(--bg-accent-low)",
     },
 
     // Shadow system from design tokens

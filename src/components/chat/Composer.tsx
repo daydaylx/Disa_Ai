@@ -174,7 +174,7 @@ export const Composer: React.FC<{
         <div
           ref={errorRef}
           id="composer-error"
-          className="mb-3 rounded-md border border-danger bg-[rgba(239,68,68,0.14)] p-3 text-sm text-danger"
+          className="mb-3 rounded-md border border-danger bg-bg-danger-subtle p-3 text-sm text-danger"
           role="alert"
           aria-live="assertive"
         >

@@ -68,13 +68,13 @@ export default function App() {
 
           {/* Header */}
           <header className="sticky top-0 z-40 border-b border-border-subtle bg-[rgba(17,26,38,0.94)] backdrop-blur">
-            <div className="h-16 mx-auto flex w-full max-w-5xl items-center px-4">
-              <h1 className="text-xl font-semibold">Disa AI</h1>
+            <div className="mx-auto flex h-16 w-full max-w-5xl items-center px-4">
+              <h1 className="text-2xl font-semibold">Disa AI</h1>
             </div>
           </header>
 
           {/* Main content */}
-          <main id="main" role="main" className="pb-20 flex-1">
+          <main id="main" role="main" className="flex-1 pb-20">
             <ErrorBoundary>
               <React.Suspense
                 fallback={

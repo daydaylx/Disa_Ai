@@ -174,7 +174,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   return (
     <section className="space-y-3" data-testid="settings-model-picker">
       {(!getApiKey() || getApiKey() === "") && (
-        <div className="border-amber-700/40 bg-amber-900/20 text-amber-200 rounded-md border px-3 py-2 text-xs">
+        <div className="border-warning/40 bg-warning/10 rounded-md border px-3 py-2 text-xs text-warning">
           Hinweis: Für das Laden der Modell‑Liste ist ein OpenRouter API‑Key nötig (Einstellungen).
         </div>
       )}
@@ -283,10 +283,10 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
               </div>
               <div className="flex items-center justify-end gap-2 text-xs">
                 {(isFreeModel(m) || (m as any).freeBadge) && (
-                  <span className="chip bg-[rgba(34,197,94,0.12)] text-success">free</span>
+                  <span className="chip bg-bg-success-subtle text-success">free</span>
                 )}
                 <span
-                  className={`chip bg-[rgba(149,164,187,0.1)] ${
+                  className={`chip bg-surface-200 ${
                     m.safety === "strict"
                       ? "text-danger"
                       : m.safety === "moderate"

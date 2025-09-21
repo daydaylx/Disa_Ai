@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
@@ -23,7 +23,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           <Button variant="ghost" size="sm" aria-label="Menü" onClick={onMenu}>
             <Icon name="menu" />
           </Button>
-          <h1 className="text-base font-semibold">{title}</h1>
+          <h1 className="text-lg font-semibold">{title}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" aria-label="Modelle" onClick={onModels}>

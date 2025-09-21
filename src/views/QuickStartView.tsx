@@ -43,8 +43,8 @@ export default function QuickStartView() {
       {/* Hero Orb on Glass Card Podest */}
       <GlassCard className="flex flex-col items-center gap-3 py-8 text-center" hover>
         <HeroOrb state="idle" size="lg" />
-        <h1 className="text-3xl mt-2 font-semibold tracking-tight">Quickstart</h1>
-        <p className="max-w-[34ch] text-base leading-relaxed text-text-secondary">
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight">Quickstart</h1>
+        <p className="max-w-[34ch] text-base text-text-secondary">
           20 Startfragen, die häufig helfen.
         </p>
       </GlassCard>

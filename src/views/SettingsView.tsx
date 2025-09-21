@@ -437,7 +437,7 @@ export default function SettingsView() {
             <div className="mb-2 text-sm font-medium text-text-secondary">
               Vorschau Systemprompt
             </div>
-            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-sm leading-relaxed text-text-primary">
+            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-sm text-text-primary">
               {systemPreview}
             </pre>
           </div>

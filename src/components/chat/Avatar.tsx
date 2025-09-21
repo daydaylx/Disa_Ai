@@ -6,7 +6,7 @@ export default function Avatar({ kind, className }: Props) {
   const label = kind === "user" ? "Du" : "AI";
   const variant =
     kind === "user"
-      ? "border-[rgba(34,211,238,0.4)] bg-[rgba(34,211,238,0.16)] text-accent"
+      ? "border-accent/40 bg-accent-low text-accent"
       : "border-border-subtle bg-surface-100 text-text-secondary";
 
   return (
