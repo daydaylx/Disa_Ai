@@ -12,13 +12,15 @@ const renderWithProviders = (ui: React.ReactElement) => {
 describe("SettingsView Smoke", () => {
   it("renders API key input and model section", () => {
     renderWithProviders(<SettingsView />);
-    expect(screen.getByLabelText(/API-Schlüssel/i, { selector: "input" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Modell/i, level: 2 })).toBeInTheDocument();
+    expect(screen.getByTestId("settings-save-key")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Modell-Auswahl/i })).toBeInTheDocument();
   });
 
-  it("renders role & style controls", async () => {
+  it("renders theme and advanced settings", async () => {
     renderWithProviders(<SettingsView />);
-    expect(await screen.findByLabelText(/Rolle auswählen/i)).toBeInTheDocument();
-    expect(await screen.findByLabelText(/Stil auswählen/i)).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: /Design & Thema/i })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: /Erweiterte Einstellungen/i }),
+    ).toBeInTheDocument();
   });
 });

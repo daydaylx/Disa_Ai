@@ -1,7 +1,11 @@
 // CSS-Imports - Glassmorphism 2.0 Design System
 import "./styles/theme.css"; // Single theme entry point
 import "./styles/aurora.css"; // Aurora background system
+import "./styles/aurora-themes.css"; // Aurora theme variations
 import "./styles/glass-components.css"; // Glass component library
+import "./styles/interactive-effects.css"; // Interactive micro-animations
+import "./styles/chat-glass.css"; // Chat-specific glass effects
+import "./styles/mobile-glass.css"; // Mobile optimizations
 import "./styles/visual-effects.css"; // Enhanced visual effects
 
 import React from "react";

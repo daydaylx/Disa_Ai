@@ -8,6 +8,9 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* GPU Performance */
+  transform: translate3d(0, 0, 0);
+  will-change: transform, box-shadow;
 }
 
 .glass-card--interactive {
@@ -290,4 +293,141 @@
     0 32px 80px rgba(0, 0, 0, 0.2),
     0 16px 40px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ========================================
+   Extended Glassmorphism Effects
+   ======================================== */
+
+/* Adaptive Blur - Adjusts based on content contrast */
+.glass-adaptive {
+  backdrop-filter: blur(clamp(12px, 4vw, 28px)) saturate(150%);
+  -webkit-backdrop-filter: blur(clamp(12px, 4vw, 28px)) saturate(150%);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-adaptive--high-contrast {
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient Borders */
+.glass-gradient-border {
+  position: relative;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+}
+
+.glass-gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 211, 238, 0.6) 0%,
+    rgba(179, 136, 255, 0.6) 25%,
+    rgba(110, 231, 183, 0.6) 50%,
+    rgba(255, 183, 77, 0.6) 75%,
+    rgba(34, 211, 238, 0.6) 100%
+  );
+  border-radius: inherit;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: source-out;
+}
+
+.glass-gradient-border--animated::before {
+  background-size: 300% 300%;
+  animation: gradient-rotate 4s ease-in-out infinite;
+}
+
+@keyframes gradient-rotate {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Depth System with Z-levels */
+.glass-depth-1 {
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.glass-depth-2 {
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.glass-depth-3 {
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.glass-depth-4 {
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* Frosted Glass - Textured surface effect */
+.glass-frosted {
+  backdrop-filter: blur(20px) contrast(120%) brightness(110%);
+  -webkit-backdrop-filter: blur(20px) contrast(120%) brightness(110%);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 2%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 2%),
+    radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.06) 0%, transparent 1%),
+    rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+}
+
+.glass-frosted::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Reduced Motion for Extended Effects */
+@media (prefers-reduced-motion: reduce) {
+  .glass-gradient-border--animated::before {
+    animation: none;
+    background-position: 0% 50%;
+  }
+
+  .glass-gradient-border::before {
+    background: linear-gradient(
+      135deg,
+      rgba(34, 211, 238, 0.4) 0%,
+      rgba(179, 136, 255, 0.4) 50%,
+      rgba(110, 231, 183, 0.4) 100%
+    );
+  }
 }
