@@ -16,11 +16,9 @@ describe("SettingsView Smoke", () => {
     expect(screen.getByRole("heading", { name: /Modell-Auswahl/i })).toBeInTheDocument();
   });
 
-  it("renders theme and advanced settings", async () => {
+  it("renders tabbed navigation structure", async () => {
     renderWithProviders(<SettingsView />);
-    expect(await screen.findByRole("heading", { name: /Design & Thema/i })).toBeInTheDocument();
-    expect(
-      await screen.findByRole("heading", { name: /Erweiterte Einstellungen/i }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: /Control Center/i })).toBeInTheDocument();
+    expect(screen.getByRole("tablist")).toBeInTheDocument();
   });
 });

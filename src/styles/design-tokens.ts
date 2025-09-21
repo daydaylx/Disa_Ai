@@ -103,11 +103,47 @@ export const radii = {
   full: "9999px",
 } as const;
 
-// Elevation tokens (0 / 1 / 2)
+// Elevation tokens (0 / 1 / 2 / 3)
 export const elevation = {
   0: "none",
   1: "0 8px 20px -12px rgba(5, 11, 20, 0.55)",
   2: "0 20px 48px -18px rgba(5, 11, 20, 0.55)",
+  3: "0 32px 64px -24px rgba(5, 11, 20, 0.65)",
+} as const;
+
+// Glassmorphism tokens
+export const glassmorphism = {
+  blur: {
+    sm: "8px",
+    md: "16px",
+    lg: "24px",
+    xl: "32px",
+    "2xl": "40px",
+  },
+  background: {
+    subtle: "rgba(255, 255, 255, 0.05)",
+    soft: "rgba(255, 255, 255, 0.08)",
+    medium: "rgba(255, 255, 255, 0.12)",
+    strong: "rgba(255, 255, 255, 0.16)",
+  },
+  border: {
+    subtle: "rgba(255, 255, 255, 0.08)",
+    soft: "rgba(255, 255, 255, 0.12)",
+    medium: "rgba(255, 255, 255, 0.16)",
+    strong: "rgba(255, 255, 255, 0.24)",
+  },
+  tint: {
+    cyan: "rgba(34, 211, 238, 0.1)",
+    purple: "rgba(168, 85, 247, 0.1)",
+    mint: "rgba(110, 231, 183, 0.1)",
+    warm: "rgba(255, 183, 77, 0.1)",
+  },
+  glow: {
+    subtle: "0 0 20px rgba(34, 211, 238, 0.15)",
+    soft: "0 0 30px rgba(34, 211, 238, 0.2)",
+    medium: "0 0 40px rgba(34, 211, 238, 0.25)",
+    strong: "0 0 60px rgba(34, 211, 238, 0.3)",
+  },
 } as const;
 
 // Motion tokens
@@ -131,6 +167,7 @@ export const designTokens = {
   typography,
   radii,
   elevation,
+  glassmorphism,
   transitions,
   breakpoints,
 } as const;

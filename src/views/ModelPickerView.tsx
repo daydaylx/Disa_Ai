@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { GlassCard } from "../components/glass/GlassCard";
 import ModelPicker from "../components/ModelPicker";
 import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
@@ -48,26 +49,34 @@ export default function ModelPickerView({ onSelectChat }: Props) {
         paddingBottom: "calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + 32px)",
       }}
     >
-      <header className="space-y-1">
-        <p className="text-xs uppercase tracking-wide text-text-muted">Chat-Konfiguration</p>
-        <h1 className="text-2xl font-semibold">Modell auswählen</h1>
-        <p className="text-sm text-text-muted">
-          Suche und filtere Modelle nach Preis, Kontextfenster und Sicherheitseinstufung.
-        </p>
-      </header>
+      <GlassCard variant="floating" tint="purple" className="p-8 text-center">
+        <div className="mb-4 flex items-center justify-center gap-3">
+          <div className="bg-purple-500/20 rounded-xl p-3">
+            <span className="text-3xl">🤖</span>
+          </div>
+          <div className="text-left">
+            <p className="text-neutral-400 mb-1 text-xs uppercase tracking-wide">
+              Chat-Konfiguration
+            </p>
+            <h1 className="text-3xl from-purple-400 to-cyan-400 bg-gradient-to-r bg-clip-text font-bold text-transparent">
+              Modell auswählen
+            </h1>
+            <p className="text-neutral-300 text-lg">
+              Suche und filtere Modelle nach Preis, Kontextfenster und Sicherheitseinstufung.
+            </p>
+          </div>
+        </div>
+      </GlassCard>
 
-      <section className="card space-y-4">
+      <GlassCard variant="medium" className="space-y-4 p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="card-title">Katalog</h2>
-            <p className="help">Favoriten markieren, Filter kombinieren, direkt übernehmen.</p>
+            <h2 className="text-white text-xl font-semibold">Katalog</h2>
+            <p className="text-neutral-400 text-sm">
+              Favoriten markieren, Filter kombinieren, direkt übernehmen.
+            </p>
           </div>
-          <div className="text-xs text-text-muted">
-            aktiv:
-            <span className="rounded px-1.5 py-0.5 ml-1 bg-surface-200 font-mono text-[0.65rem]">
-              {modelId ?? "—"}
-            </span>
-          </div>
+          <div className="glass-badge glass-badge--accent">aktiv: {modelId ?? "—"}</div>
         </div>
 
         <ModelPicker value={modelId} onChange={handleSelect} policyFromRole={policyFromRole} />
@@ -79,7 +88,7 @@ export default function ModelPickerView({ onSelectChat }: Props) {
             </Button>
           </div>
         )}
-      </section>
+      </GlassCard>
     </div>
   );
 }

@@ -101,4 +101,36 @@
   --elevation-0: none;
   --elevation-1: 0 8px 20px -12px rgba(5, 11, 20, 0.55);
   --elevation-2: 0 20px 48px -18px rgba(5, 11, 20, 0.55);
+  --elevation-3: 0 32px 64px -24px rgba(5, 11, 20, 0.65);
+
+  /* Glassmorphism blur values */
+  --glass-blur-sm: 8px;
+  --glass-blur-md: 16px;
+  --glass-blur-lg: 24px;
+  --glass-blur-xl: 32px;
+  --glass-blur-2xl: 40px;
+
+  /* Glassmorphism backgrounds */
+  --glass-bg-subtle: rgba(255, 255, 255, 0.05);
+  --glass-bg-soft: rgba(255, 255, 255, 0.08);
+  --glass-bg-medium: rgba(255, 255, 255, 0.12);
+  --glass-bg-strong: rgba(255, 255, 255, 0.16);
+
+  /* Glassmorphism borders */
+  --glass-border-subtle: rgba(255, 255, 255, 0.08);
+  --glass-border-soft: rgba(255, 255, 255, 0.12);
+  --glass-border-medium: rgba(255, 255, 255, 0.16);
+  --glass-border-strong: rgba(255, 255, 255, 0.24);
+
+  /* Glassmorphism tints */
+  --glass-tint-cyan: rgba(34, 211, 238, 0.1);
+  --glass-tint-purple: rgba(168, 85, 247, 0.1);
+  --glass-tint-mint: rgba(110, 231, 183, 0.1);
+  --glass-tint-warm: rgba(255, 183, 77, 0.1);
+
+  /* Glassmorphism glows */
+  --glass-glow-subtle: 0 0 20px rgba(34, 211, 238, 0.15);
+  --glass-glow-soft: 0 0 30px rgba(34, 211, 238, 0.2);
+  --glass-glow-medium: 0 0 40px rgba(34, 211, 238, 0.25);
+  --glass-glow-strong: 0 0 60px rgba(34, 211, 238, 0.3);
 }

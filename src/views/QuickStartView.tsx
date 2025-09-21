@@ -1,5 +1,4 @@
-import { GlassCard } from "../components/ui/GlassCard";
-import { GlassTile } from "../components/ui/GlassTile";
+import { GlassCard } from "../components/glass/GlassCard";
 import { HeroOrb } from "../components/ui/HeroOrb";
 
 const QUESTIONS: string[] = [
@@ -41,59 +40,82 @@ export default function QuickStartView() {
       style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
     >
       {/* Hero Orb on Glass Card Podest */}
-      <GlassCard className="flex flex-col items-center gap-3 py-8 text-center" hover>
-        <HeroOrb state="idle" size="lg" />
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight">Quickstart</h1>
-        <p className="max-w-[34ch] text-base text-text-secondary">
-          20 Startfragen, die häufig helfen.
-        </p>
+      <GlassCard variant="floating" tint="warm" className="p-8 text-center" enhanced>
+        <div className="mb-6 flex items-center justify-center gap-3">
+          <div className="bg-warm-500/20 rounded-xl p-4">
+            <HeroOrb state="idle" size="lg" />
+          </div>
+          <div className="text-left">
+            <h1 className="text-3xl from-warm-400 to-purple-400 bg-gradient-to-r bg-clip-text font-bold text-transparent">
+              Quickstart
+            </h1>
+            <p className="text-neutral-300 text-lg">20 Startfragen, die häufig helfen</p>
+          </div>
+        </div>
       </GlassCard>
 
-      <section className="grid gap-3 sm:grid-cols-2">
+      <section className="grid gap-4 sm:grid-cols-2">
         {QUESTIONS.slice(0, 4).map((q, i) => (
-          <GlassTile
+          <GlassCard
             key={i}
-            icon={
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="text-accent"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            }
-            title={q.split(":")[0] + ":"}
-            subtitle="Startfrage"
-            onPress={() => onPick(q)}
+            variant="medium"
+            className="min-h-[140px] cursor-pointer p-6 transition-all duration-200 hover:scale-[1.02]"
+            onClick={() => onPick(q)}
+            interactive
+            enhanced
             data-testid="quickstart-item"
-            className="min-h-[120px] sm:min-h-[140px]"
-          />
+          >
+            <div className="flex items-start gap-4">
+              <div className="bg-accent-500/20 rounded-xl flex-shrink-0 p-3">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="text-accent-400"
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-white mb-2 text-base font-semibold leading-tight">
+                  {q.split(":")[0]}:
+                </h3>
+                <div className="glass-badge glass-badge--accent">Startfrage</div>
+              </div>
+            </div>
+          </GlassCard>
         ))}
       </section>
 
       {/* Additional questions as smaller tiles */}
-      <section className="grid gap-2 sm:grid-cols-2">
+      <section className="lg:grid-cols-3 grid gap-3 sm:grid-cols-2">
         {QUESTIONS.slice(4).map((q, i) => (
-          <GlassTile
+          <GlassCard
             key={i + 4}
-            icon={
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="text-accent"
-              >
-                <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z" />
-              </svg>
-            }
-            title={q.split(":")[0]}
-            subtitle="Frage"
-            onPress={() => onPick(q)}
-            className="min-h-[84px] text-xs"
-          />
+            variant="soft"
+            className="min-h-[100px] cursor-pointer p-4 transition-all duration-200 hover:scale-[1.02]"
+            onClick={() => onPick(q)}
+            interactive
+          >
+            <div className="flex items-start gap-3">
+              <div className="bg-purple-500/20 flex-shrink-0 rounded-lg p-2">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="text-purple-400"
+                >
+                  <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z" />
+                </svg>
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-white text-sm font-medium leading-tight">{q.split(":")[0]}</h4>
+                <div className="glass-badge mt-2 text-xs">Frage</div>
+              </div>
+            </div>
+          </GlassCard>
         ))}
       </section>
     </div>
