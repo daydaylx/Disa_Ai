@@ -1,196 +1,25 @@
 import * as React from "react";
 
-import ModelPicker from "../components/ModelPicker";
+import { GlassButton } from "../components/glass/GlassButton";
+import { GlassCard } from "../components/glass/GlassCard";
+import { SettingsCard } from "../components/settings/SettingsCard";
+import SimpleThemeToggle from "../components/settings/SimpleThemeToggle";
 import Switch from "../components/Switch";
-import { Button } from "../components/ui/Button";
 import { useToasts } from "../components/ui/Toast";
-import type { Safety } from "../config/models";
-import {
-  fetchRoleTemplates,
-  getRoleById,
-  getRoleLoadStatus,
-  listRoleTemplates,
-  type RoleTemplate,
-} from "../config/promptTemplates";
-import {
-  getComposerOffset,
-  getCtxMaxTokens,
-  getCtxReservedTokens,
-  getMemoryEnabled,
-  getNSFW,
-  getSelectedModelId,
-  getStyle,
-  getTemplateId,
-  getUseRoleStyle,
-  setComposerOffset,
-  setCtxMaxTokens,
-  setCtxReservedTokens,
-  setMemoryEnabled,
-  setNSFW,
-  setSelectedModelId,
-  setStyle,
-  setTemplateId,
-  setUseRoleStyle,
-  type StyleKey,
-} from "../config/settings";
-import { composeSystemPrompt } from "../features/prompt/composeSystemPrompt";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { getApiKey, setApiKey } from "../services/openrouter";
 
-// ---- Helper für uneinheitliche Rollentypen ----
-// rolePurpose entfällt – wir zeigen den echten Systemprompt
-
-// ---- Style-Metadaten (nur Anzeige + Vorschau) ----
-const STYLE_META: Partial<
-  Record<
-    StyleKey,
-    {
-      label: string;
-      description: string;
-      system: string; // „Vorschau Systemprompt“
-    }
-  >
-> = {
-  concise: {
-    label: "Neutral Standard",
-    description: "Nüchtern, faktisch, ohne Floskeln.",
-    system: "Du bist ein sachlicher, hilfreicher Assistent. Antworte klar und strukturiert.",
-  },
-  blunt_de: {
-    label: "Direkt (DE, bissig)",
-    description: "Schonungslos ehrlich, keine Motivationsfloskeln. Risiken/Schwächen zuerst.",
-    system:
-      "Antworte direkt und kritisch. Benenne Risiken und Schwächen zuerst, dann Optionen. Kein Motivationssprech.",
-  },
-  friendly: {
-    label: "Locker",
-    description: "Kollegialer Ton, aber präzise.",
-    system: "Antworte locker, aber präzise. Kein Smalltalk.",
-  },
-  creative_light: {
-    label: "Kreativ (leicht)",
-    description: "Analogie-/Beispiel-freundlich, ohne abzuschweifen.",
-    system: "Erkläre mit kurzen Analogien/Beispielen, bleibe präzise und handlungsorientiert.",
-  },
-  minimal: {
-    label: "Minimal",
-    description: "Extrem knapp, nur das Nötigste.",
-    system: "Antworte so kurz wie möglich, ohne Informationsverlust.",
-  },
-};
-
-// ---- Settings-View ----
-type RolePolicy = Safety | "any";
-
 export default function SettingsView() {
-  const toasts = useToasts();
-  const pwa = usePWAInstall();
-  // Persistente Werte laden
-  const [key, setKey] = React.useState<string>(getApiKey() ?? "");
-  const [keyVisible, setKeyVisible] = React.useState(false);
+  const [apiKey, setApiKeyState] = React.useState(() => getApiKey() || "");
   const [keyError, setKeyError] = React.useState<string | null>(null);
   const [keySaving, setKeySaving] = React.useState(false);
-  const [modelId, setModelId] = React.useState<string | null>(getSelectedModelId());
-  const [nsfw, setNsfw] = React.useState<boolean>(getNSFW());
-  const [memEnabled, setMemEnabled] = React.useState<boolean>(getMemoryEnabled());
-  const [ctxMax, setCtxMax] = React.useState<number>(getCtxMaxTokens());
-  const [ctxReserve, setCtxReserve] = React.useState<number>(getCtxReservedTokens());
-  const [composerOffset, setComposerOffsetState] = React.useState<number>(() =>
-    getComposerOffset(),
-  );
-  const [style, setStyleState] = React.useState<StyleKey>(getStyle());
-  const [templateId, setTemplateIdState] = React.useState<string | null>(getTemplateId());
-  const [useRoleStyle, setUseRoleStyleState] = React.useState<boolean>(getUseRoleStyle());
+  const toasts = useToasts();
+  const pwa = usePWAInstall();
 
-  const [templates, setTemplates] = React.useState<RoleTemplate[]>(() => listRoleTemplates());
-  const [roleLoad, setRoleLoad] = React.useState<{ state: string; error: string | null }>(() =>
-    getRoleLoadStatus(),
-  );
-
-  // Rollen-Templates beim Einstieg laden (einmalig)
-  React.useEffect(() => {
-    const ac = new AbortController();
-    (async () => {
-      try {
-        const list = await fetchRoleTemplates(false, ac.signal);
-        setTemplates(list);
-      } catch {
-        /* ignore */
-      } finally {
-        setRoleLoad(getRoleLoadStatus());
-      }
-    })();
-    return () => ac.abort();
-  }, []);
-
-  // Normalisierte Policy aus Rolle → ModelPicker-Filter
-  const policyFromRole: RolePolicy = React.useMemo(() => {
-    const r = getRoleById(templateId ?? "");
-    const policy = r?.policy;
-    return policy === "loose" || policy === "moderate" || policy === "strict" ? policy : "any";
-  }, [templateId]);
-
-  // Anzeigenamen/Beschreibung/Systemprompt zum Stil
-  const styleMeta = React.useMemo(() => {
-    return (
-      STYLE_META[style] ?? {
-        label: String(style),
-        description: "",
-        system: "",
-      }
-    );
-  }, [style]);
-
-  // Vorschau: Bevorzugt den Systemtext aus der gewählten Rolle (styles.json),
-  // sonst den effektiven Systemprompt (Stil + Rolle + NSFW)
-  const systemPreview = React.useMemo(() => {
-    const role = getRoleById(templateId ?? "");
-    const roleSystem = role?.system;
-    const roleText = roleSystem && roleSystem.trim().length > 0 ? roleSystem : "";
-    if (roleText) return roleText;
-    return (
-      composeSystemPrompt({
-        style,
-        useRoleStyle,
-        roleId: templateId ?? null,
-        allowNSFW: nsfw,
-      }) || "—"
-    );
-  }, [style, useRoleStyle, templateId, nsfw]);
-
-  // Labels für Rollen-Select mit Policy/Tags
-  function policyLabel(p?: Safety | string): string {
-    if (!p) return "";
-    if (p === "strict") return "[strikt] ";
-    if (p === "moderate") return "[moderat] ";
-    if (p === "loose") return "[frei] ";
-    return ""; // any/unknown → kein Präfix
-  }
-  const groupedRoleOptions = React.useMemo(() => {
-    const groups = new Map<string, Array<{ id: string; label: string }>>();
-    for (const t of templates) {
-      const cat = (t.tags && t.tags[0]) || "Allgemein";
-      const label = `${policyLabel(t.policy)}${t.name || t.id}`;
-      if (!groups.has(cat)) groups.set(cat, []);
-      groups.get(cat)!.push({ id: t.id, label });
-    }
-    // sortiere Gruppen + Einträge alphabetisch
-    const order = Array.from(groups.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-    order.forEach(([, arr]) => arr.sort((a, b) => a.label.localeCompare(b.label)));
-    return order;
-  }, [templates]);
-
-  // --- Handlers (persistieren) ---
-  function saveKey() {
-    const val = key.trim();
+  const handleSaveApiKey = () => {
+    const val = apiKey.trim();
     if (!val) {
-      setApiKey("");
-      setKeyError(null);
-      toasts.push({
-        kind: "info",
-        title: "API-Key entfernt",
-        message: "Ohne Key bleiben Demo-Antworten aktiv.",
-      });
+      setKeyError("API-Key darf nicht leer sein.");
       return;
     }
 
@@ -214,310 +43,163 @@ export default function SettingsView() {
     } finally {
       setKeySaving(false);
     }
-  }
-  function onToggleNSFW(e: React.ChangeEvent<HTMLInputElement> | { target: { checked: boolean } }) {
-    setNsfw(e.target.checked);
-    setNSFW(e.target.checked);
-  }
-  function onStyleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const val = e.target.value as StyleKey;
-    setStyleState(val);
-    setStyle(val);
-  }
-  function onTemplateChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const val = e.target.value || null;
-    setTemplateIdState(val);
-    setTemplateId(val);
-  }
-  function onUseRoleStyle(
-    e: React.ChangeEvent<HTMLInputElement> | { target: { checked: boolean } },
-  ) {
-    setUseRoleStyleState(e.target.checked);
-    setUseRoleStyle(e.target.checked);
-  }
-  function onToggleMem(e: React.ChangeEvent<HTMLInputElement> | { target: { checked: boolean } }) {
-    setMemEnabled(e.target.checked);
-    setMemoryEnabled(e.target.checked);
-  }
-  function onCtxMax(n: number) {
-    setCtxMax(n);
-    setCtxMaxTokens(n);
-  }
-  function onCtxReserve(n: number) {
-    setCtxReserve(n);
-    setCtxReservedTokens(n);
-  }
-  function onComposerOffset(n: number) {
-    setComposerOffsetState(n);
-    setComposerOffset(n);
-  }
+  };
 
   return (
     <main
-      className="mx-auto w-full max-w-4xl space-y-8 px-4 py-6"
-      style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 24px)" }}
+      className="mx-auto w-full max-w-6xl px-4 py-8"
+      style={{ paddingBottom: "calc(var(--bottomnav-h, 56px) + 32px)" }}
     >
-      <header className="space-y-1">
-        <h1 className="card-title">Einstellungen</h1>
-        <p className="help">API-Key, Stil, Modell & Rolle.</p>
-      </header>
+      {/* Header */}
+      <GlassCard variant="subtle" className="mb-8 p-6 text-center">
+        <h1 className="from-cyan-400 to-purple-400 mb-2 bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent">
+          Einstellungen
+        </h1>
+        <p className="text-gray-300">API-Key, Modell-Auswahl und Personalisierung</p>
+      </GlassCard>
 
-      {/* App-Installation */}
-      <section className="card">
-        <h2 className="card-title mb-1">App-Installation</h2>
-        <p className="help mb-2">
-          Installiere die App für schnellen Zugriff, eigenständiges Icon und Offline-Unterstützung.
-        </p>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          {pwa.canInstall ? (
-            <Button variant="primary" onClick={pwa.requestInstall}>
-              Jetzt installieren
-            </Button>
-          ) : pwa.installed ? (
-            <span className="chip">Bereits installiert</span>
-          ) : (
-            <span className="text-xs text-text-muted">
-              Installations‑Aufforderung momentan nicht verfügbar.
-            </span>
-          )}
-          {pwa.showIOSHowTo && (
-            <span className="text-xs text-text-muted">
-              iOS: Über „Teilen“ → „Zum Home‑Bildschirm“ hinzufügen
-            </span>
-          )}
-        </div>
-      </section>
-
-      {/* API-Key */}
-      <section className="card">
-        <h2 className="card-title mb-1">OpenRouter API Key</h2>
-        <p className="help">
-          Schlüssel wird ausschließlich lokal gespeichert. Ohne Key nutzt die App Demo-Antworten.
-        </p>
-        <div className="mt-3 grid gap-3">
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <div className="relative flex min-w-0 flex-1 items-center">
+      {/* Settings Grid */}
+      <div className="lg:grid-cols-2 grid gap-6">
+        {/* API Configuration */}
+        <SettingsCard
+          title="OpenRouter API Key"
+          description="Schlüssel wird ausschließlich lokal gespeichert. Ohne Key nutzt die App Demo-Antworten."
+          icon="🔑"
+          glow="cyan"
+        >
+          <div className="space-y-4">
+            <div>
               <input
-                type={keyVisible ? "text" : "password"}
-                value={key}
+                type="password"
+                placeholder="sk-or-..."
+                value={apiKey}
                 onChange={(e) => {
-                  setKey(e.target.value);
+                  setApiKeyState(e.target.value);
                   setKeyError(null);
                 }}
-                placeholder="sk-…"
-                aria-label="API-Schlüssel"
-                className="input min-w-0 flex-1 pr-12 text-sm"
-                data-testid="settings-key-input"
+                className="border-white/20 bg-white/10 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400/50 w-full rounded-lg border px-4 py-3 backdrop-blur focus:outline-none focus:ring-2"
+                data-testid="settings-save-key"
               />
-              {key ? (
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-2 my-auto flex h-8 w-8 items-center justify-center rounded-full text-xs text-text-muted transition hover:text-text-primary"
-                  onClick={() => setKeyVisible((prev) => !prev)}
-                  aria-pressed={keyVisible}
-                  aria-label={keyVisible ? "API-Key ausblenden" : "API-Key anzeigen"}
-                  data-testid="settings-key-visibility"
-                >
-                  {keyVisible ? "Verbergen" : "Anzeigen"}
-                </button>
-              ) : null}
+              {keyError && <p className="text-red-400 mt-2 text-sm">{keyError}</p>}
             </div>
-            <Button
-              variant="primary"
-              onClick={saveKey}
-              aria-label="API-Schlüssel speichern"
-              data-testid="settings-save-key"
-              loading={keySaving}
-            >
-              Speichern
-            </Button>
+            <GlassButton variant="primary" onClick={handleSaveApiKey} disabled={keySaving}>
+              {keySaving ? "Speichert..." : "Key speichern"}
+            </GlassButton>
           </div>
-          {keyError ? (
-            <div className="settings-key-error px-3 py-2">{keyError}</div>
-          ) : (
-            <div className="settings-key-hint px-3 py-2">
-              Tipp: Key findest du im OpenRouter Dashboard. Nach Änderung App neu laden.
+        </SettingsCard>
+
+        {/* App Installation */}
+        <SettingsCard
+          title="App Installation"
+          description="Installiere die App für schnellen Zugriff und Offline-Unterstützung."
+          icon="📱"
+          glow="mint"
+        >
+          <div className="space-y-3">
+            {pwa.canInstall ? (
+              <GlassButton variant="primary" onClick={pwa.requestInstall}>
+                Jetzt installieren
+              </GlassButton>
+            ) : pwa.installed ? (
+              <div className="bg-green-500/20 text-green-400 inline-flex items-center gap-2 rounded-full px-4 py-2">
+                <div className="bg-green-400 h-2 w-2 rounded-full"></div>
+                Bereits installiert
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm">
+                Installations-Aufforderung momentan nicht verfügbar.
+              </p>
+            )}
+            {pwa.showIOSHowTo && (
+              <p className="text-gray-400 text-xs">
+                iOS: Über „Teilen" → „Zum Home-Bildschirm" hinzufügen
+              </p>
+            )}
+          </div>
+        </SettingsCard>
+
+        {/* Theme Settings */}
+        <SettingsCard
+          title="Design & Thema"
+          description="Personalisiere das Aussehen der App nach deinen Vorlieben."
+          icon="🎨"
+          glow="purple"
+        >
+          <SimpleThemeToggle />
+        </SettingsCard>
+
+        {/* Model Selection */}
+        <SettingsCard
+          title="Modell-Auswahl"
+          description="Wähle das AI-Modell für optimale Ergebnisse."
+          icon="🤖"
+          glow="warm"
+        >
+          <GlassButton variant="secondary" size="lg" className="w-full">
+            Zur Modell-Auswahl
+          </GlassButton>
+        </SettingsCard>
+
+        {/* Advanced Settings */}
+        <SettingsCard
+          title="Erweiterte Einstellungen"
+          description="Speicher, Kontext und weitere Anpassungen."
+          icon="⚙️"
+          glow="none"
+          className="lg:col-span-2"
+        >
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-white font-medium">Chat-Speicher</h4>
+                  <p className="text-gray-400 text-sm">Automatische Speicherung der Gespräche</p>
+                </div>
+                <Switch checked={true} onChange={() => {}} />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-white font-medium">NSFW-Filter</h4>
+                  <p className="text-gray-400 text-sm">Aktiviert Inhaltsfilterung</p>
+                </div>
+                <Switch checked={false} onChange={() => {}} />
+              </div>
             </div>
-          )}
-        </div>
-      </section>
 
-      {/* Stil */}
-      <section className="card">
-        <h2 className="card-title mb-1">Stil</h2>
-        <div className="grid gap-2">
-          <select
-            value={style}
-            onChange={onStyleChange}
-            aria-label="Stil auswählen"
-            className="input w-full text-sm"
-            data-testid="settings-style"
-          >
-            <option value="concise">{STYLE_META.concise?.label ?? "Kompakt"}</option>
-            <option value="blunt_de">{STYLE_META.blunt_de?.label ?? "Direkt (DE)"}</option>
-            <option value="friendly">{STYLE_META.friendly?.label ?? "Locker"}</option>
-            <option value="creative_light">
-              {STYLE_META.creative_light?.label ?? "Kreativ (leicht)"}
-            </option>
-            <option value="minimal">{STYLE_META.minimal?.label ?? "Minimal"}</option>
-          </select>
-          {styleMeta.description ? <p className="help">{styleMeta.description}</p> : null}
-        </div>
-      </section>
+            <div className="space-y-4">
+              <div>
+                <label className="text-white mb-2 block text-sm font-medium">Kontext-Limit</label>
+                <input
+                  type="number"
+                  defaultValue={4000}
+                  className="border-white/20 bg-white/10 text-white focus:border-cyan-400 focus:ring-cyan-400/50 w-full rounded-lg border px-3 py-2 backdrop-blur focus:outline-none focus:ring-2"
+                />
+              </div>
 
-      {/* Kontext & Gedächtnis */}
-      <section className="card">
-        <h2 className="card-title mb-1">Kontext & Gedächtnis</h2>
-        <div className="grid gap-3">
-          <div className="flex items-center justify-between rounded-md border border-border-subtle bg-surface-100 px-3 py-2 text-sm">
-            <Switch
-              checked={memEnabled}
-              onChange={(checked) => onToggleMem({ target: { checked } })}
-              label="Gedächtnis aktivieren (lokal, pro Chat)"
-            />
-          </div>
-          <div className="flex flex-wrap items-center gap-3 text-sm">
-            <label className="flex items-center gap-2">
-              max Tokens:
-              <input
-                type="number"
-                min={1024}
-                step={512}
-                value={ctxMax}
-                onChange={(e) => onCtxMax(Number(e.target.value) || 0)}
-                className="input w-28 px-2 py-1"
-                aria-label="Maximales Kontextfenster"
-                data-testid="settings-ctx-max"
-              />
-            </label>
-            <label className="flex items-center gap-2">
-              Antwort‑Reserve:
-              <input
-                type="number"
-                min={128}
-                step={128}
-                value={ctxReserve}
-                onChange={(e) => onCtxReserve(Number(e.target.value) || 0)}
-                className="input w-28 px-2 py-1"
-                aria-label="Reservierte Tokens für die Antwort"
-                data-testid="settings-ctx-reserve"
-              />
-            </label>
-            <label className="flex items-center gap-2">
-              Composer‑Offset (px):
-              <input
-                type="number"
-                min={16}
-                max={96}
-                step={4}
-                value={composerOffset}
-                onChange={(e) => onComposerOffset(Number(e.target.value) || 48)}
-                className="input w-28 px-2 py-1"
-                aria-label="Offset der Chat‑Eingabe vom unteren Rand"
-                data-testid="settings-composer-offset"
-              />
-            </label>
-          </div>
-          <p className="help">
-            Hinweis: Das Gedächtnis bleibt lokal gespeichert. Der Systemprompt enthält einen
-            kompakten Kontextauszug (Themen, Entitäten, Fakten, Summary). Das Token‑Budget kürzt
-            lange Verläufe automatisch.
-          </p>
-        </div>
-      </section>
-
-      {/* Modell */}
-      <section className="card space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="card-title">Modell</h2>
-          <div className="help">
-            aktuell: <span className="font-mono">{modelId ?? "—"}</span>
-          </div>
-        </div>
-        <ModelPicker
-          value={modelId}
-          onChange={(id) => {
-            setModelId(id);
-            setSelectedModelId(id);
-          }}
-          policyFromRole={policyFromRole}
-        />
-      </section>
-
-      {/* Rolle */}
-      <section className="card">
-        <div className="mb-2">
-          <h2 className="card-title">Rolle</h2>
-          <p className="help">Optionales System-Verhalten für den Chat.</p>
-        </div>
-
-        <div className="grid gap-3">
-          <select
-            value={templateId ?? ""}
-            onChange={onTemplateChange}
-            aria-label="Rolle auswählen"
-            className="input w-full text-sm"
-          >
-            <option value="">Keine spezielle Rolle</option>
-            {groupedRoleOptions.map(([cat, arr]) => (
-              <optgroup key={cat} label={cat}>
-                {arr.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.label}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-          {roleLoad.state === "loading" && (
-            <div className="text-xs text-text-muted">Rollen werden geladen…</div>
-          )}
-          {roleLoad.state === "missing" && (
-            <div className="text-xs text-warning">
-              Keine Rollen gefunden. Lege <code>public/styles.json</code> mit Feld{" "}
-              <code>styles</code> an.
+              <div>
+                <label className="text-white mb-2 block text-sm font-medium">
+                  Reservierte Tokens
+                </label>
+                <input
+                  type="number"
+                  defaultValue={1000}
+                  className="border-white/20 bg-white/10 text-white focus:border-cyan-400 focus:ring-cyan-400/50 w-full rounded-lg border px-3 py-2 backdrop-blur focus:outline-none focus:ring-2"
+                />
+              </div>
             </div>
-          )}
-          {roleLoad.state === "error" && (
-            <div className="text-xs text-danger">Fehler beim Laden: {roleLoad.error}</div>
-          )}
-
-          <div className="flex items-center justify-between rounded-md border border-border-subtle bg-surface-100 px-3 py-2 text-sm">
-            <Switch
-              checked={useRoleStyle}
-              onChange={(checked) => onUseRoleStyle({ target: { checked } })}
-              label="Stil an Rolle anpassen"
-            />
           </div>
+        </SettingsCard>
+      </div>
 
-          {/* Systemprompt-Vorschau (effektiv) */}
-          <div className="rounded-md border border-border-subtle bg-surface-100 p-3">
-            <div className="mb-2 text-sm font-medium text-text-secondary">
-              Vorschau Systemprompt
-            </div>
-            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-sm text-text-primary">
-              {systemPreview}
-            </pre>
-          </div>
+      {/* Footer Actions */}
+      <GlassCard variant="subtle" className="mt-8 p-6 text-center">
+        <div className="flex flex-wrap justify-center gap-4">
+          <GlassButton variant="ghost">Einstellungen exportieren</GlassButton>
+          <GlassButton variant="ghost">Auf Standard zurücksetzen</GlassButton>
+          <GlassButton variant="danger">Alle Daten löschen</GlassButton>
         </div>
-
-        {/* Optional: NSFW */}
-        <div className="mt-3 flex items-center gap-3">
-          <Switch
-            checked={nsfw}
-            onChange={(checked) => onToggleNSFW({ target: { checked } })}
-            label="NSFW-Filter lockern"
-          />
-        </div>
-      </section>
-
-      {/* separate Stil-Vorschau entfernt: die effektive Vorschau steht nun bei Rolle */}
-
-      <nav className="flex justify-end">
-        <a href="#/chat" className="rounded-md px-1 underline">
-          zurück zum Chat
-        </a>
-      </nav>
+      </GlassCard>
     </main>
   );
 }

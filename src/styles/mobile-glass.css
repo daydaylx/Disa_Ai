@@ -1,0 +1,345 @@
+/* ========================================
+   Mobile Glassmorphism Optimizations
+   Safe area, keyboard handling, PWA enhancements
+   ======================================== */
+
+/* iOS Safe Area Integration */
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top);
+  --safe-area-inset-right: env(safe-area-inset-right);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --safe-area-inset-left: env(safe-area-inset-left);
+}
+
+/* Glass Header with Safe Area */
+.glass-header {
+  padding-top: max(12px, var(--safe-area-inset-top));
+  padding-left: max(16px, var(--safe-area-inset-left));
+  padding-right: max(16px, var(--safe-area-inset-right));
+  background: rgba(10, 14, 26, 0.95);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Glass Navigation with Safe Area */
+.glass-nav-mobile {
+  padding-bottom: max(12px, var(--safe-area-inset-bottom));
+  padding-left: max(16px, var(--safe-area-inset-left));
+  padding-right: max(16px, var(--safe-area-inset-right));
+  background: rgba(10, 14, 26, 0.95);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+/* Keyboard-Aware Composer */
+.glass-composer-mobile {
+  padding-bottom: max(16px, var(--safe-area-inset-bottom));
+  padding-left: max(16px, var(--safe-area-inset-left));
+  padding-right: max(16px, var(--safe-area-inset-right));
+  background: rgba(10, 14, 26, 0.95);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Keyboard handling for iOS */
+@supports (-webkit-appearance: none) {
+  .glass-composer-mobile {
+    padding-bottom: max(16px, env(keyboard-inset-height, var(--safe-area-inset-bottom)));
+  }
+}
+
+/* Dynamic viewport height handling */
+.glass-mobile-container {
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
+  overflow: hidden;
+  position: relative;
+}
+
+.glass-mobile-content {
+  height: calc(100vh - var(--header-height, 60px) - var(--composer-height, 80px));
+  height: calc(100dvh - var(--header-height, 60px) - var(--composer-height, 80px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Enhanced Touch Targets */
+.glass-touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glass-touch-target:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Haptic Feedback Integration */
+.glass-haptic-light {
+  /* Will be enhanced via JavaScript */
+  touch-action: manipulation;
+}
+
+.glass-haptic-medium {
+  /* Will be enhanced via JavaScript */
+  touch-action: manipulation;
+}
+
+.glass-haptic-heavy {
+  /* Will be enhanced via JavaScript */
+  touch-action: manipulation;
+}
+
+/* PWA-Specific Enhancements */
+@media (display-mode: standalone) {
+  .glass-header {
+    padding-top: max(20px, var(--safe-area-inset-top));
+  }
+
+  .glass-mobile-container {
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 50%, #0f1419 100%);
+  }
+
+  /* PWA Navigation Tabs */
+  .glass-pwa-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px 20px 0 0;
+  }
+
+  .glass-pwa-nav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    border-radius: 12px;
+    color: rgba(244, 247, 251, 0.7);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+  }
+
+  .glass-pwa-nav__item--active {
+    background: rgba(34, 211, 238, 0.15);
+    color: #22d3ee;
+    box-shadow: 0 2px 8px rgba(34, 211, 238, 0.2);
+  }
+
+  .glass-pwa-nav__icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+}
+
+/* Landscape Mode Adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+  .glass-header {
+    padding-top: max(8px, var(--safe-area-inset-top));
+    padding-bottom: 8px;
+  }
+
+  .glass-mobile-content {
+    height: calc(100vh - var(--header-height, 50px) - var(--composer-height, 70px));
+    height: calc(100dvh - var(--header-height, 50px) - var(--composer-height, 70px));
+  }
+
+  .glass-composer-mobile {
+    padding: 8px max(16px, var(--safe-area-inset-left)) max(8px, var(--safe-area-inset-bottom))
+      max(16px, var(--safe-area-inset-right));
+  }
+}
+
+/* Notch and Dynamic Island Support */
+@supports (padding: max(0px)) {
+  .glass-header-notch {
+    padding-top: max(var(--safe-area-inset-top), 44px);
+  }
+}
+
+/* Reduce Motion for Mobile */
+@media (prefers-reduced-motion: reduce) {
+  .glass-composer-mobile,
+  .glass-touch-target,
+  .glass-pwa-nav__item {
+    transition: none;
+  }
+
+  .glass-touch-target:active {
+    transform: none;
+  }
+}
+
+/* Battery Saving Mode */
+@media (prefers-reduced-motion: reduce) and (prefers-color-scheme: dark) {
+  .glass-header,
+  .glass-nav-mobile,
+  .glass-composer-mobile {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .glass-touch-target {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+}
+
+/* Android-specific optimizations */
+@media screen and (min-resolution: 192dpi) {
+  .glass-touch-target {
+    border-width: 0.5px;
+  }
+}
+
+/* Foldable Device Support */
+@media (spanning: single-fold-vertical) {
+  .glass-mobile-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .glass-mobile-content {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (spanning: single-fold-horizontal) {
+  .glass-mobile-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 0;
+  }
+}
+
+/* Accessibility Enhancements */
+@media (prefers-contrast: high) {
+  .glass-header,
+  .glass-nav-mobile,
+  .glass-composer-mobile {
+    background: rgba(10, 14, 26, 1);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .glass-touch-target {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-pwa-nav__item--active {
+    background: rgba(34, 211, 238, 0.3);
+    border: 1px solid #22d3ee;
+  }
+}
+
+/* Large Text Support */
+@media (prefers-reduced-data: reduce) {
+  .glass-header,
+  .glass-nav-mobile,
+  .glass-composer-mobile {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(10, 14, 26, 0.98);
+  }
+
+  .glass-touch-target {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Pull-to-Refresh Enhancement */
+.glass-pull-refresh {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  margin: 16px;
+  padding: 16px;
+  text-align: center;
+  color: rgba(244, 247, 251, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-pull-refresh--active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Swipe Gestures Visual Feedback */
+.glass-swipe-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 40px;
+  background: linear-gradient(
+    to bottom,
+    rgba(34, 211, 238, 0.8),
+    rgba(34, 211, 238, 0.4),
+    rgba(34, 211, 238, 0.8)
+  );
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.glass-swipe-indicator--left {
+  left: 8px;
+}
+
+.glass-swipe-indicator--right {
+  right: 8px;
+}
+
+.glass-swipe-indicator--active {
+  opacity: 1;
+}
