@@ -5,7 +5,6 @@ import { executeSlashCommand, parseSlashCommand } from "../../lib/chat/slashComm
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { cn } from "../../lib/utils/cn";
 import { useToasts } from "../ui/Toast";
-// import { VoiceButton } from "./VoiceButton"; // Temporarily disabled
 
 const MAX_TEXTAREA_LINES = 8;
 const LINE_HEIGHT = 20;
@@ -207,16 +206,6 @@ export const Composer: React.FC<{
     },
     [adjustHeight],
   );
-
-  // Voice handlers - temporarily disabled
-  // const _handleVoiceTranscript = useCallback((transcript: string) => {
-  //   setText(transcript);
-  //   textareaRef.current?.focus();
-  // }, []);
-
-  // const _handleVoiceError = useCallback((error: string) => {
-  //   console.warn("Voice recognition error:", error);
-  // }, []);
 
   return (
     <div ref={composerRef} className="glass-composer safe-bottom">
