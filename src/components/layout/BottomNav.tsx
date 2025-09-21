@@ -86,46 +86,46 @@ export default function BottomNav() {
       ref={(el) => {
         ref.current = el;
       }}
-      className="bottom-nav safe-bottom inset-x-5 bottom-5 fixed z-50"
+      className="glass-nav safe-bottom fixed inset-x-4 bottom-4 z-50 mx-auto max-w-md"
       role="navigation"
       aria-label="Hauptnavigation"
       data-version={import.meta.env.VITE_APP_VERSION}
     >
-      <ul className="grid grid-cols-3 items-center gap-1">
+      <ul className="grid grid-cols-3 items-center gap-2 p-2">
         <li>
           <button
             onClick={() => to("#/chat")}
-            className={`nav-tab ${is("#/chat") ? "nav-tab--active" : ""}`}
+            className={`glass-nav__tab ${is("#/chat") ? "glass-nav__tab--active" : ""}`}
             aria-current={is("#/chat") ? "page" : undefined}
             aria-label="Chat öffnen"
             data-testid="nav-bottom-chat"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            Chat
+            💬 Chat
           </button>
         </li>
         <li>
           <button
             onClick={() => to("#/models")}
-            className={`nav-tab ${is("#/models") ? "nav-tab--active" : ""}`}
+            className={`glass-nav__tab ${is("#/models") ? "glass-nav__tab--active" : ""}`}
             aria-current={is("#/models") ? "page" : undefined}
             aria-label="Modelle"
             data-testid="nav-bottom-models"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            Modelle
+            🤖 Modelle
           </button>
         </li>
         <li>
           <button
             onClick={() => to("#/settings")}
-            className={`nav-tab ${is("#/settings") ? "nav-tab--active" : ""}`}
+            className={`glass-nav__tab ${is("#/settings") ? "glass-nav__tab--active" : ""}`}
             aria-current={is("#/settings") ? "page" : undefined}
             aria-label="Einstellungen"
             data-testid="nav-bottom-settings"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            Einstellungen
+            ⚙️ Settings
           </button>
         </li>
       </ul>

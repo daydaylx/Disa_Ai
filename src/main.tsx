@@ -1,5 +1,8 @@
-// CSS-Imports - Plan B unified design system
+// CSS-Imports - Glassmorphism 2.0 Design System
 import "./styles/theme.css"; // Single theme entry point
+import "./styles/aurora.css"; // Aurora background system
+import "./styles/glass-components.css"; // Glass component library
+import "./styles/visual-effects.css"; // Enhanced visual effects
 
 import React from "react";
 import { createRoot } from "react-dom/client";
