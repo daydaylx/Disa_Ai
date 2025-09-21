@@ -36,43 +36,40 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
   const normalizedLang = React.useMemo(() => (lang ? lang.trim() : ""), [lang]);
 
   return (
-    <div className={cn("code-block", className)}>
-      <div className="code-block__toolbar">
+    <div className={cn("glass-code-block", className)}>
+      <div className="glass-code-block__header">
         <div className="code-block__meta" aria-hidden={!normalizedLang}>
           {normalizedLang ? normalizedLang : "Code"}
         </div>
-        <div className="code-block__actions">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleToggleWrap}
-            className={cn("btn btn-ghost btn-sm code-block__toggle", wrap && "is-active")}
+            className={cn("glass-code-block__copy", wrap && "opacity-100")}
             aria-pressed={wrap}
             aria-label={wrap ? "Zeilenumbruch deaktivieren" : "Zeilenumbruch aktivieren"}
           >
-            <Icon name="wrap" size={16} aria-hidden />
-            <span className="code-block__action-label">Umbruch</span>
+            <Icon name="wrap" size={12} aria-hidden />
           </button>
           <CopyButton
             text={code}
             onCopied={handleCopied}
-            size="sm"
-            variant="ghost"
-            className="code-block__copy"
+            className="glass-code-block__copy"
             aria-label="Code kopieren"
           >
             {copied ? (
-              <Icon name="check" size={16} aria-hidden />
+              <Icon name="check" size={12} aria-hidden />
             ) : (
-              <Icon name="copy" size={16} aria-hidden />
+              <Icon name="copy" size={12} aria-hidden />
             )}
           </CopyButton>
         </div>
       </div>
-      <pre className={cn("code-block__pre", wrap && "code-block__pre--wrap")}>
-        <code className="code-block__code" data-lang={normalizedLang || undefined}>
-          {code}
-        </code>
-      </pre>
+      <div className="glass-code-block__content">
+        <pre className={cn("", wrap && "whitespace-pre-wrap")}>
+          <code data-lang={normalizedLang || undefined}>{code}</code>
+        </pre>
+      </div>
     </div>
   );
 }

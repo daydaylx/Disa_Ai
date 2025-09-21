@@ -170,10 +170,7 @@ export const Composer: React.FC<{
   // }, []);
 
   return (
-    <div
-      ref={composerRef}
-      className="safe-bottom rounded-[18px] border border-border-strong bg-surface-200 p-3 shadow-elev2"
-    >
+    <div ref={composerRef} className="glass-composer safe-bottom">
       {error && (
         <div
           ref={errorRef}
@@ -206,8 +203,7 @@ export const Composer: React.FC<{
           ref={textareaRef}
           data-testid="composer-input"
           className={cn(
-            "textarea w-full resize-none rounded-lg bg-transparent pr-12 text-base leading-6",
-            "placeholder:text-text-muted focus-visible:outline-none",
+            "glass-composer__input w-full resize-none pr-12",
             error && "border-danger focus:border-danger",
           )}
           style={{ height: `${textareaHeight}px` }}
@@ -239,14 +235,16 @@ export const Composer: React.FC<{
           ) : (
             <button
               data-testid="composer-send"
-              className={cn("btn btn-primary btn-sm", disabled && "pointer-events-none opacity-60")}
+              className={cn("glass-composer__send", disabled && "pointer-events-none opacity-60")}
               onClick={handleSend}
               disabled={disabled}
               aria-label={`Nachricht senden (Enter oder ${platformShortcut}+Enter)`}
               title={`Senden (Enter oder ${platformShortcut}+Enter)`}
               data-no-zoom
             >
-              Senden
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
             </button>
           )}
         </div>

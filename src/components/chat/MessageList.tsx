@@ -305,21 +305,21 @@ export const MessageList = forwardRef<MessageListHandle, MessageListProps>(
               return messageRenderer(message, handleCopy);
             })}
 
-            {/* Loading indicator */}
+            {/* Loading indicator with glass effect */}
             {isLoading && (
               <div className="chat-typing">
                 <Avatar kind="assistant" className="chat-message__avatar" />
-                <AssistantBubble status="streaming" className="chat-bubble--typing">
+                <div className="glass-typing-indicator">
                   <div
-                    className="chat-typing__dots"
+                    className="glass-typing-dots"
                     aria-live="polite"
                     aria-label="Antwort wird erstellt"
                   >
-                    <span />
-                    <span />
-                    <span />
+                    <div className="glass-typing-dot" />
+                    <div className="glass-typing-dot" />
+                    <div className="glass-typing-dot" />
                   </div>
-                </AssistantBubble>
+                </div>
               </div>
             )}
 

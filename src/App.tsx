@@ -6,6 +6,7 @@ import { AuroraBackground } from "./components/glass/AuroraBackground";
 import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
 import { ToastsProvider } from "./components/ui/Toast";
+import { useAuroraTheme } from "./hooks/useAuroraTheme";
 import { setupAndroidOptimizations } from "./lib/android/system";
 
 // Code-splitting für bessere Performance
@@ -49,6 +50,9 @@ function useHashRoute(): [Route, (r: Route) => void] {
 
 export default function App() {
   const [route, nav] = useHashRoute();
+
+  // Initialize Aurora Theme System
+  const _auroraTheme = useAuroraTheme();
 
   // Setup Android optimizations on mount
   React.useEffect(() => {

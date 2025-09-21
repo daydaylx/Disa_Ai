@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { GlassButton } from "../components/glass/GlassButton";
 import { GlassCard } from "../components/glass/GlassCard";
+import { AuroraThemeSettings } from "../components/settings/AuroraThemeSettings";
 import { SettingsCard } from "../components/settings/SettingsCard";
 import SimpleThemeToggle from "../components/settings/SimpleThemeToggle";
 import Switch from "../components/Switch";
@@ -118,12 +119,23 @@ export default function SettingsView() {
           </div>
         </SettingsCard>
 
-        {/* Theme Settings */}
+        {/* Aurora Theme Settings */}
+        <SettingsCard
+          title="Aurora Themes"
+          description="Wähle dein bevorzugtes Farbschema und passe die Performance an."
+          icon="🌈"
+          glow="purple"
+          className="lg:col-span-2"
+        >
+          <AuroraThemeSettings />
+        </SettingsCard>
+
+        {/* Basic Theme Settings */}
         <SettingsCard
           title="Design & Thema"
-          description="Personalisiere das Aussehen der App nach deinen Vorlieben."
+          description="Grundlegende Darstellungsoptionen."
           icon="🎨"
-          glow="purple"
+          glow="mint"
         >
           <SimpleThemeToggle />
         </SettingsCard>

@@ -14,9 +14,16 @@ export default function CodeBlockLazy(props: CodeBlockLazyProps) {
   return (
     <React.Suspense
       fallback={
-        <pre className="bg-surface-secondary overflow-x-auto rounded-lg p-4 text-sm">
-          <code>{props.code}</code>
-        </pre>
+        <div className="glass-code-block">
+          <div className="glass-code-block__header">
+            <div>Code</div>
+          </div>
+          <div className="glass-code-block__content">
+            <pre>
+              <code>{props.code}</code>
+            </pre>
+          </div>
+        </div>
       }
     >
       <CodeBlock {...props} />
