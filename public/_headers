@@ -11,6 +11,11 @@
   # Permissions
   Permissions-Policy: geolocation=(), microphone=(), camera=()
 
+  # Performance & PWA headers
+  Accept-CH: Viewport-Width, DPR, Width
+  Critical-CH: Viewport-Width, DPR
+  Vary: Accept-Encoding, Viewport-Width, DPR
+
   # CSP: minimal strikt, aber praxis-tauglich für Vite/React
   # Wichtig: OpenRouter erlauben (Domain + Subdomains)
   Content-Security-Policy: default-src 'self';
@@ -48,3 +53,36 @@
 
 /*.css
   Cache-Control: public, max-age=31536000, immutable
+
+/*.woff
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.otf
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.avif
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.ico
+  Cache-Control: public, max-age=2592000

@@ -1,4 +1,4 @@
-const SW_VERSION = "20240505";
+const SW_VERSION = "20250921-mobile";
 const HTML_CACHE = `html-${SW_VERSION}`;
 const ASSET_CACHE = `assets-${SW_VERSION}`;
 const OFFLINE_URL = "/offline.html";
@@ -18,6 +18,7 @@ const ASSET_EXTENSIONS = [
   ".woff",
   ".woff2",
   ".ttf",
+  ".otf",
   ".png",
   ".jpg",
   ".jpeg",
@@ -25,6 +26,9 @@ const ASSET_EXTENSIONS = [
   ".svg",
   ".webp",
   ".avif",
+  ".ico",
+  ".json",
+  ".webmanifest",
 ];
 
 self.addEventListener("install", (event) => {
@@ -44,10 +48,22 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
+      // Clean old caches
       const expected = new Set([HTML_CACHE, ASSET_CACHE]);
       const keys = await caches.keys();
-      await Promise.all(keys.filter((key) => !expected.has(key)).map((key) => caches.delete(key)));
+      const deletePromises = keys
+        .filter((key) => !expected.has(key))
+        .map((key) => {
+          console.log("[SW] Deleting old cache:", key);
+          return caches.delete(key);
+        });
+
+      await Promise.all(deletePromises);
+
+      // Claim all clients immediately
       await self.clients.claim();
+
+      console.log("[SW] Activated with version:", SW_VERSION);
     })(),
   );
 });
@@ -114,12 +130,22 @@ async function staleWhileRevalidate(request) {
 
   const fetchPromise = fetch(request)
     .then((response) => {
-      if (response && response.ok) {
-        cache.put(request, response.clone()).catch(() => {});
+      if (response && response.ok && response.status < 400) {
+        // Clone response before caching to avoid stream consumption
+        const responseClone = response.clone();
+        cache.put(request, responseClone).catch(() => {});
       }
       return response;
     })
     .catch(() => undefined);
 
-  return cached || (await fetchPromise) || fetch(request);
+  // Return cached version immediately if available, then update in background
+  if (cached) {
+    // Update cache in background without waiting
+    fetchPromise.catch(() => {});
+    return cached;
+  }
+
+  // No cached version, wait for network
+  return (await fetchPromise) || fetch(request);
 }
