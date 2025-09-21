@@ -31,8 +31,13 @@ function detectPerformanceLevel(): AuroraPerformance {
   }
 
   // Simple performance detection based on available features
-  const hasWillChange = CSS.supports("will-change", "transform");
-  const hasBackdropFilter = CSS.supports("backdrop-filter", "blur(10px)");
+  // Fallback for test environments (jsdom) where CSS.supports is not available
+  const hasWillChange =
+    typeof CSS !== "undefined" && CSS.supports ? CSS.supports("will-change", "transform") : true;
+  const hasBackdropFilter =
+    typeof CSS !== "undefined" && CSS.supports
+      ? CSS.supports("backdrop-filter", "blur(10px)")
+      : true;
 
   if (!hasWillChange || !hasBackdropFilter) {
     return "low";
