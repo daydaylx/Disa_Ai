@@ -28,7 +28,7 @@ interface QuickStylesPanelProps {
   onClose: () => void;
 }
 
-export function QuickStylesPanel({ isOpen, onClose }: QuickStylesPanelProps) {
+export const QuickStylesPanel = React.memo<QuickStylesPanelProps>(({ isOpen, onClose }) => {
   const [currentStyle, setCurrentStyle] = React.useState<StyleKey>(() => getStyle());
   const [currentRoleId, setCurrentRoleId] = React.useState<string | null>(() => getTemplateId());
   const [useRoleStyleEnabled, setUseRoleStyleEnabled] = React.useState(() => getUseRoleStyle());
@@ -38,26 +38,48 @@ export function QuickStylesPanel({ isOpen, onClose }: QuickStylesPanelProps) {
     return currentRoleId ? getRoleById(currentRoleId) : null;
   }, [currentRoleId]);
 
-  const handleStyleChange = (style: StyleKey) => {
-    setCurrentStyle(style);
-    setStyle(style);
-    toasts.push({
-      kind: "success",
-      title: "Stil geändert",
-      message: `Auf "${QUICK_STYLES.find((s) => s.key === style)?.name}" gesetzt`,
-    });
-    onClose();
-  };
+  const handleStyleChange = React.useCallback(
+    (style: StyleKey) => {
+      setCurrentStyle(style);
+      setStyle(style);
+      toasts.push({
+        kind: "success",
+        title: "⚡ Stil geändert",
+        message: `Auf "${QUICK_STYLES.find((s) => s.key === style)?.name}" gesetzt`,
+      });
+      onClose();
+    },
+    [toasts, onClose],
+  );
 
   const clearRole = () => {
     setCurrentRoleId(null);
     setTemplateId(null);
     toasts.push({
       kind: "info",
-      title: "Rolle entfernt",
+      title: "🚫 Rolle entfernt",
       message: "Standard KI-Verhalten aktiv",
     });
   };
+
+  // Keyboard navigation
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (e.key === "Escape") {
+        onClose();
+      } else if (e.key >= "1" && e.key <= "6") {
+        const index = parseInt(e.key) - 1;
+        if (QUICK_STYLES[index]) {
+          handleStyleChange(QUICK_STYLES[index].key);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose, handleStyleChange]);
 
   const toggleUseRoleStyle = () => {
     const newValue = !useRoleStyleEnabled;
@@ -65,7 +87,7 @@ export function QuickStylesPanel({ isOpen, onClose }: QuickStylesPanelProps) {
     setUseRoleStyle(newValue);
     toasts.push({
       kind: "info",
-      title: newValue ? "Rollen-Stil aktiviert" : "Rollen-Stil deaktiviert",
+      title: newValue ? "🔗 Rollen-Stil aktiviert" : "🔗 Rollen-Stil deaktiviert",
       message: newValue ? "Rolle + Stil kombiniert" : "Nur Grundstil",
     });
   };
@@ -83,7 +105,12 @@ export function QuickStylesPanel({ isOpen, onClose }: QuickStylesPanelProps) {
 
       {/* Panel */}
       <div
-        className="fixed bottom-20 left-4 right-4 z-50 mx-auto max-w-lg"
+        className="fixed z-50 mx-auto max-w-lg"
+        style={{
+          bottom: `max(80px, calc(env(safe-area-inset-bottom) + 80px))`,
+          left: `max(16px, env(safe-area-inset-left))`,
+          right: `max(16px, env(safe-area-inset-right))`,
+        }}
         role="dialog"
         aria-modal="true"
         aria-labelledby="quick-styles-title"
@@ -123,7 +150,7 @@ export function QuickStylesPanel({ isOpen, onClose }: QuickStylesPanelProps) {
           {/* Quick Style Buttons */}
           <div>
             <h4 className="text-white mb-2 text-sm font-medium">Stil wechseln:</h4>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {QUICK_STYLES.map((style) => {
                 const isActive = currentStyle === style.key;
                 return (
@@ -177,7 +204,7 @@ export function QuickStylesPanel({ isOpen, onClose }: QuickStylesPanelProps) {
       </div>
     </>
   );
-}
+});
 
 // Hook for managing quick styles panel
 export function useQuickStylesPanel() {

@@ -187,14 +187,41 @@ export function RoleSettings() {
     );
   };
 
+  // Skeleton loading component
+  const SkeletonRoleCard = () => (
+    <div className="space-y-3">
+      <div className="w-32 bg-gray-700 rounded h-4 animate-pulse"></div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="bg-gray-800/50 space-y-2 rounded-lg p-4">
+            <div className="w-24 bg-gray-600 rounded h-4 animate-pulse"></div>
+            <div className="bg-gray-700 rounded h-3 w-full animate-pulse"></div>
+            <div className="bg-gray-700 rounded h-3 w-3/4 animate-pulse"></div>
+            <div className="mt-2 flex gap-2">
+              <div className="h-5 bg-gray-600 w-12 animate-pulse rounded-full"></div>
+              <div className="h-5 bg-gray-600 w-16 animate-pulse rounded-full"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   if (loading && roles.length === 0) {
     return (
-      <div className="space-y-4">
-        <h4 className="text-white font-semibold">KI-Rollen</h4>
-        <GlassCard variant="subtle" className="p-6 text-center">
-          <div className="border-accent-500 mx-auto h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
-          <p className="text-gray-400 mt-3 text-sm">Lade Rollen...</p>
-        </GlassCard>
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="text-white font-semibold">KI-Rollen</h4>
+              <div className="w-32 bg-gray-700 rounded mt-1 h-4 animate-pulse"></div>
+            </div>
+            <div className="bg-gray-700 rounded h-8 w-8 animate-pulse"></div>
+          </div>
+          <div className="bg-gray-800/30 h-16 animate-pulse rounded-lg"></div>
+        </div>
+        <SkeletonRoleCard />
+        <SkeletonRoleCard />
       </div>
     );
   }
