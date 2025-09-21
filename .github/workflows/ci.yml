@@ -46,6 +46,14 @@ jobs:
             echo "lint failed"; exit 1
           fi
 
+      - name: Unit tests
+        run: |
+          if npm run -s test:unit; then
+            echo "unit tests ok"
+          else
+            echo "unit tests failed"; exit 1
+          fi
+
       - name: E2E tests (with preview server)
         run: npx playwright test
         env:
