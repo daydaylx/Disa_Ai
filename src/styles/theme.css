@@ -10,7 +10,7 @@
 :root {
   color-scheme: dark;
 
-  /* Core surfaces & text */
+  /* Core surfaces & text - mapped from design tokens */
   --color-bg-900: #05070d;
   --color-bg-800: #0b1118;
   --color-surface-100: #111a26;
@@ -22,19 +22,22 @@
   --color-text-secondary: #c6cfde;
   --color-text-muted: #95a4bb;
 
-  /* Single accent ramp (cyan) */
+  /* Accent colors - single accent (cyan) with consistent opacity levels */
   --accent-500: #22d3ee;
   --accent-600: #0fb5d0;
   --accent-700: #0a8aae;
   --accent-outline: rgba(34, 211, 238, 0.38);
   --accent-disabled: #0f3745;
   --accent-foreground: #03141c;
+  --accent-subtle: rgba(34, 211, 238, 0.08);
+  --accent-low: rgba(34, 211, 238, 0.16);
 
   /* Semantic colors */
   --danger-500: #ef4444;
   --danger-600: #dc2626;
   --success-500: #22c55e;
   --warning-500: #f59e0b;
+  --info-500: #3b82f6;
 
   /* Spacing scale (4 / 8 / 12 / 16 / 24 / 32 / 48) */
   --space-1: 0.25rem;

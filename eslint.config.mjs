@@ -24,6 +24,8 @@ export default [
       "src/lib/openrouter.ts", // Legacy client
       "*.config.js",
       "*.config.ts",
+      "tailwind.config.ts", // Ignore Tailwind config
+      "src/styles/**/*.css", // Ignore CSS files (not parsed by ESLint)
     ],
   },
 
@@ -127,6 +129,23 @@ export default [
       // Code quality
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "warn",
+
+      // Design token enforcement - prevent inline hex colors
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "Literal[value=/^#[0-9a-fA-F]{3,6}$/]",
+          message: "Direct hex colors are not allowed. Use design tokens from src/design-tokens.ts or CSS custom properties instead."
+        },
+        {
+          selector: "CallExpression[callee.name='rgb']",
+          message: "Direct rgb() colors are not allowed. Use design tokens from src/design-tokens.ts or CSS custom properties instead."
+        },
+        {
+          selector: "CallExpression[callee.name='rgba']",
+          message: "Direct rgba() colors are not allowed. Use design tokens from src/design-tokens.ts or CSS custom properties instead."
+        }
+      ],
     },
   },
 
@@ -167,6 +186,14 @@ export default [
       "unused-imports/no-unused-imports": "error",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
+    },
+  },
+
+  // Design tokens file - exception for hex colors (must be last to override)
+  {
+    files: ["src/design-tokens.ts"],
+    rules: {
+      "no-restricted-syntax": "off", // Allow hex colors in design tokens
     },
   },
 ]

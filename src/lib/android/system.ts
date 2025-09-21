@@ -2,6 +2,8 @@
  * Android-specific system utilities and optimizations
  */
 
+import { colors } from "../../design-tokens";
+
 export interface AndroidFeatures {
   isAndroid: boolean;
   supportsPredictiveBack: boolean;
@@ -204,13 +206,13 @@ function setupThemeColorUpdates() {
 
     switch (true) {
       case currentHash.includes("chat"):
-        updateThemeColor("#22d3ee"); // Cyan for chat
+        updateThemeColor(colors.accent[500]); // Cyan for chat
         break;
       case currentHash.includes("settings"):
-        updateThemeColor("#8b5cf6"); // Purple for settings
+        updateThemeColor(colors.semantic.purple); // Purple for settings
         break;
       default:
-        updateThemeColor("#0b0f14"); // Default dark
+        updateThemeColor(colors.neutral[800]); // Default dark
     }
   });
 
