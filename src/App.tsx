@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { SkipLink } from "./components/accessibility/SkipLink";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { AuroraBackground } from "./components/glass/AuroraBackground";
 import BottomNav from "./components/layout/BottomNav";
 import NetworkBanner from "./components/NetworkBanner";
 import { ToastsProvider } from "./components/ui/Toast";
@@ -57,16 +58,19 @@ export default function App() {
   return (
     <ToastsProvider>
       <div className="app-shell relative min-h-[100dvh]">
+        <AuroraBackground />
         <SkipLink targetId="main" />
 
         {/* Main layout container */}
         <div className="flex min-h-[100dvh] flex-col">
           <NetworkBanner />
 
-          {/* Header */}
-          <header className="sticky top-0 z-40 border-b border-border-subtle bg-[rgba(17,26,38,0.94)] backdrop-blur">
-            <div className="mx-auto flex h-16 w-full max-w-5xl items-center px-4">
-              <h1 className="text-2xl font-semibold">Disa AI</h1>
+          {/* Glass Header */}
+          <header className="glass-backdrop border-white/10 sticky top-0 z-40 border-b">
+            <div className="h-14 mx-auto flex w-full max-w-5xl items-center px-4">
+              <h1 className="from-cyan-400 to-purple-400 bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent">
+                Disa AI
+              </h1>
             </div>
           </header>
 
