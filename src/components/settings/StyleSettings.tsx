@@ -111,29 +111,47 @@ export function StyleSettings() {
   }, []);
 
   const renderStyleGroup = (title: string, emoji: string, styles: StyleKey[]) => (
-    <div key={title} className="space-y-3">
-      <h5 className="text-white flex items-center gap-2 font-medium">
-        <span>{emoji}</span>
-        {title}
-      </h5>
-      <div className="grid grid-cols-2 gap-2">
+    <div key={title} className="space-y-4">
+      <div className="flex items-center gap-3">
+        <div className="bg-white/10 rounded-lg p-2">
+          <span className="text-2xl">{emoji}</span>
+        </div>
+        <div className="flex-1">
+          <h5 className="text-white text-lg font-semibold">{title}</h5>
+          <p className="text-gray-400 text-sm">{styles.length} Stile verfügbar</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {styles.map((style) => {
           const styleData = STYLE_LABELS[style];
           const isActive = currentStyle === style;
           return (
             <GlassButton
               key={style}
-              variant={isActive ? "primary" : "secondary"}
-              size="sm"
+              variant={isActive ? "accent" : "secondary"}
+              size="lg"
               onClick={() => handleStyleChange(style)}
-              className="flex h-auto flex-col items-start gap-1 p-3 text-left"
+              className="flex h-auto w-full flex-col items-start gap-3 p-4 text-left transition-all duration-300 hover:scale-[1.02]"
             >
-              <div className="flex w-full items-center gap-2">
-                <span className="text-sm">{styleData.emoji}</span>
-                <span className="flex-1 text-xs font-medium">{styleData.name}</span>
-                {isActive && <span className="text-cyan-400 text-xs">✓</span>}
+              <div className="flex w-full items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`rounded-lg p-2 ${isActive ? "bg-accent-500/20" : "bg-white/10"}`}
+                  >
+                    <span className="text-lg">{styleData.emoji}</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-white text-sm font-semibold">{styleData.name}</span>
+                    {isActive && (
+                      <div className="mt-1 flex items-center gap-1">
+                        <span className="text-accent-500 text-xs">✓</span>
+                        <span className="text-accent-400 text-xs font-medium">Aktiv</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <span className="line-clamp-2 text-xs opacity-75">{styleData.description}</span>
+              <p className="text-gray-300 text-xs leading-relaxed">{styleData.description}</p>
             </GlassButton>
           );
         })}

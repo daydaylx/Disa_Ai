@@ -143,27 +143,52 @@ export function RoleSettings() {
   const renderRoleCard = (role: any) => {
     const isActive = currentRoleId === role.id;
     const truncatedSystem =
-      role.system?.length > 150 ? role.system.substring(0, 150) + "..." : role.system;
+      role.system?.length > 120 ? role.system.substring(0, 120) + "..." : role.system;
 
     return (
       <GlassButton
         key={role.id}
-        variant={isActive ? "primary" : "secondary"}
+        variant={isActive ? "accent" : "secondary"}
+        size="lg"
         onClick={() => handleRoleChange(role.id)}
-        className="relative flex h-auto flex-col items-start gap-2 p-4 text-left"
+        className="relative flex h-auto w-full flex-col items-start gap-3 p-5 text-left transition-all duration-300 hover:scale-[1.02]"
       >
-        <div className="flex w-full items-center justify-between">
-          <h6 className="text-sm font-medium">{role.name}</h6>
-          {isActive && <span className="text-cyan-400 text-xs">✓</span>}
+        <div className="flex w-full items-start justify-between">
+          <div className="min-w-0 flex-1">
+            <h6 className="text-white mb-1 text-base font-semibold">{role.name}</h6>
+            {isActive && (
+              <div className="flex items-center gap-1">
+                <span className="text-accent-500 text-sm">✓</span>
+                <span className="text-accent-400 text-xs font-medium">Aktiv</span>
+              </div>
+            )}
+          </div>
+          <div className="ml-2 flex-shrink-0">
+            {isActive && (
+              <div className="bg-accent-500/20 border-accent-500/40 rounded-full border p-1">
+                <span className="text-accent-400 text-lg">👤</span>
+              </div>
+            )}
+          </div>
         </div>
-        {truncatedSystem && <p className="line-clamp-3 text-xs opacity-75">{truncatedSystem}</p>}
+
+        {truncatedSystem && (
+          <p className="text-gray-300 line-clamp-3 text-sm leading-relaxed">{truncatedSystem}</p>
+        )}
+
         {role.tags && role.tags.length > 0 && (
-          <div className="mt-1 flex flex-wrap gap-1">
+          <div className="mt-2 flex flex-wrap gap-2">
             {role.tags.slice(0, 3).map((tag: string) => (
-              <span key={tag} className="bg-white/10 rounded-full px-2 py-1 text-xs">
+              <span
+                key={tag}
+                className="bg-white/15 text-gray-200 rounded-lg px-3 py-1 text-xs font-medium"
+              >
                 {tag}
               </span>
             ))}
+            {role.tags.length > 3 && (
+              <span className="text-gray-400 text-xs">+{role.tags.length - 3} mehr</span>
+            )}
           </div>
         )}
       </GlassButton>
@@ -174,15 +199,17 @@ export function RoleSettings() {
     if (category.roles.length === 0) return null;
 
     return (
-      <div key={categoryKey} className="space-y-3">
-        <h5 className="text-white flex items-center gap-2 font-medium">
-          <span>{category.emoji}</span>
-          {category.title}
-          <span className="text-gray-400 text-xs">({category.roles.length})</span>
-        </h5>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          {category.roles.map(renderRoleCard)}
+      <div key={categoryKey} className="space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="bg-white/10 rounded-lg p-2">
+            <span className="text-2xl">{category.emoji}</span>
+          </div>
+          <div className="flex-1">
+            <h5 className="text-white text-lg font-semibold">{category.title}</h5>
+            <p className="text-gray-400 text-sm">{category.roles.length} Rollen verfügbar</p>
+          </div>
         </div>
+        <div className="grid grid-cols-1 gap-4">{category.roles.map(renderRoleCard)}</div>
       </div>
     );
   };
@@ -198,8 +225,8 @@ export function RoleSettings() {
             <div className="bg-gray-700 rounded h-3 w-full animate-pulse"></div>
             <div className="bg-gray-700 rounded h-3 w-3/4 animate-pulse"></div>
             <div className="mt-2 flex gap-2">
-              <div className="h-5 bg-gray-600 w-12 animate-pulse rounded-full"></div>
-              <div className="h-5 bg-gray-600 w-16 animate-pulse rounded-full"></div>
+              <div className="bg-gray-600 h-5 w-12 animate-pulse rounded-full"></div>
+              <div className="bg-gray-600 h-5 w-16 animate-pulse rounded-full"></div>
             </div>
           </div>
         ))}
