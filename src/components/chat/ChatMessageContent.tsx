@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import CodeBlock from "../CodeBlock";
+import CodeBlockLazy from "../CodeBlockLazy";
+import SimpleMarkdownRenderer from "../SimpleMarkdownRenderer";
 
 type Segment = { type: "code"; content: string; lang?: string } | { type: "text"; content: string };
 
@@ -47,7 +48,7 @@ export function ChatMessageContent({ content }: Props) {
       {segments.map((segment, index) => {
         if (segment.type === "code") {
           return (
-            <CodeBlock
+            <CodeBlockLazy
               key={`code-${index}`}
               code={segment.content}
               lang={segment.lang}
@@ -57,9 +58,11 @@ export function ChatMessageContent({ content }: Props) {
         }
 
         return (
-          <p key={`text-${index}`} className="chat-message__text">
-            {segment.content}
-          </p>
+          <SimpleMarkdownRenderer
+            key={`text-${index}`}
+            content={segment.content}
+            className="chat-message__text"
+          />
         );
       })}
     </div>
