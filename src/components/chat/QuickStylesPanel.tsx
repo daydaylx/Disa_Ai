@@ -149,20 +149,39 @@ export const QuickStylesPanel = React.memo<QuickStylesPanelProps>(({ isOpen, onC
 
           {/* Quick Style Buttons */}
           <div>
-            <h4 className="text-white mb-2 text-sm font-medium">Stil wechseln:</h4>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {QUICK_STYLES.map((style) => {
+            <h4 className="text-white mb-4 text-base font-semibold">Stil wechseln:</h4>
+            <div className="lg:grid-cols-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {QUICK_STYLES.map((style, index) => {
                 const isActive = currentStyle === style.key;
                 return (
                   <GlassButton
                     key={style.key}
-                    variant={isActive ? "primary" : "secondary"}
-                    size="sm"
+                    variant={isActive ? "accent" : "secondary"}
+                    size="lg"
                     onClick={() => handleStyleChange(style.key)}
-                    className="flex h-auto flex-col items-center gap-1 p-2"
+                    className="group relative flex h-auto flex-col items-center gap-2 p-4 transition-all duration-300 hover:scale-105"
                   >
-                    <span className="text-sm">{style.emoji}</span>
-                    <span className="text-xs">{style.name}</span>
+                    <div
+                      className={`rounded-lg p-2 transition-colors ${
+                        isActive ? "bg-accent-500/20" : "bg-white/10 group-hover:bg-white/15"
+                      }`}
+                    >
+                      <span className="text-lg">{style.emoji}</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="text-white text-sm font-medium">{style.name}</span>
+                      {isActive && (
+                        <div className="mt-1">
+                          <span className="text-accent-400 text-xs">✓ Aktiv</span>
+                        </div>
+                      )}
+                    </div>
+                    {/* Keyboard shortcut indicator */}
+                    <div className="absolute right-2 top-2">
+                      <span className="bg-black/30 text-gray-300 rounded px-1 text-xs">
+                        {index + 1}
+                      </span>
+                    </div>
                   </GlassButton>
                 );
               })}
@@ -171,18 +190,30 @@ export const QuickStylesPanel = React.memo<QuickStylesPanelProps>(({ isOpen, onC
 
           {/* Role Style Toggle */}
           {currentRole && (
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-white text-sm font-medium">Rollen-Stil</span>
-                <p className="text-gray-400 text-xs">Rolle mit Grundstil kombinieren</p>
+            <div className="bg-white/5 space-y-3 rounded-lg p-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="bg-purple-500/20 rounded-lg p-2">
+                    <span className="text-lg">👤</span>
+                  </div>
+                  <div>
+                    <span className="text-white text-sm font-semibold">Rollen-Stil</span>
+                    <p className="text-gray-400 text-xs">Rolle mit Grundstil kombinieren</p>
+                  </div>
+                </div>
+                <GlassButton
+                  variant={useRoleStyleEnabled ? "success" : "ghost"}
+                  size="md"
+                  onClick={toggleUseRoleStyle}
+                  className="px-4"
+                >
+                  {useRoleStyleEnabled ? "✓ An" : "Aus"}
+                </GlassButton>
               </div>
-              <GlassButton
-                variant={useRoleStyleEnabled ? "primary" : "ghost"}
-                size="sm"
-                onClick={toggleUseRoleStyle}
-              >
-                {useRoleStyleEnabled ? "An" : "Aus"}
-              </GlassButton>
+              <div className="text-gray-400 text-xs">
+                Aktuelle Rolle:{" "}
+                <span className="text-cyan-400 font-medium">{currentRole.name}</span>
+              </div>
             </div>
           )}
 
