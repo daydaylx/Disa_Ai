@@ -75,10 +75,10 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex min-h-screen items-center justify-center bg-background p-4 text-foreground">
+        <div className="text-foreground flex min-h-screen items-center justify-center bg-background p-4">
           <div className="w-full max-w-md space-y-6 text-center">
             <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-destructive">Oops! Something went wrong</h1>
+              <h1 className="text-2xl font-semibold text-danger">Oops! Something went wrong</h1>
               <p className="text-muted-foreground">
                 The application encountered an unexpected error. This has been logged and will be
                 investigated.
@@ -86,7 +86,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {import.meta.env.DEV && this.state.error && (
-              <details className="rounded-lg bg-muted p-4 text-left text-sm">
+              <details className="bg-muted rounded-lg p-4 text-left text-sm">
                 <summary className="mb-2 cursor-pointer font-medium">
                   Error Details (Development)
                 </summary>
@@ -100,7 +100,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   {this.state.error.stack && (
                     <div>
                       <strong>Stack:</strong>
-                      <pre className="mt-1 whitespace-pre-wrap rounded border bg-background p-2 text-xs">
+                      <pre className="rounded mt-1 whitespace-pre-wrap border bg-background p-2 text-xs">
                         {this.state.error.stack}
                       </pre>
                     </div>
@@ -108,7 +108,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   {this.state.errorInfo?.componentStack && (
                     <div>
                       <strong>Component Stack:</strong>
-                      <pre className="mt-1 whitespace-pre-wrap rounded border bg-background p-2 text-xs">
+                      <pre className="rounded mt-1 whitespace-pre-wrap border bg-background p-2 text-xs">
                         {this.state.errorInfo.componentStack}
                       </pre>
                     </div>
@@ -120,19 +120,19 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex justify-center gap-3">
               <button
                 onClick={this.handleRetry}
-                className="rounded-md bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 transition-colors"
               >
                 Try Again
               </button>
               <button
                 onClick={this.handleReload}
-                className="rounded-md bg-secondary px-4 py-2 text-secondary-foreground transition-colors hover:bg-secondary/90"
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-md px-4 py-2 transition-colors"
               >
                 Reload Page
               </button>
             </div>
 
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               If this problem persists, please refresh your browser or contact support.
             </p>
           </div>

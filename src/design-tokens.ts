@@ -40,6 +40,15 @@ export const colors = {
     info: "#3b82f6",
     purple: "#8b5cf6", // Settings theme color
   },
+
+  // Low opacity backgrounds for badges and chips
+  background: {
+    "success-subtle": "rgba(34, 197, 94, 0.12)", // green badge
+    "purple-subtle": "rgba(192, 132, 252, 0.12)", // purple badge
+    "danger-subtle": "rgba(239, 68, 68, 0.12)", // error states
+    "accent-subtle": "rgba(34, 211, 238, 0.08)", // accent/low
+    "accent-low": "rgba(34, 211, 238, 0.16)", // accent backgrounds
+  },
 } as const;
 
 // Spacing Scale (4px base, following 4/8/12/16/24/32/48)
