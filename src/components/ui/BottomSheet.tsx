@@ -59,7 +59,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="bg-text-muted/12 hover:bg-text-muted/20 flex h-8 w-8 items-center justify-center rounded-full"
+                  className="bg-text-muted/12 hover:bg-text-muted/20 tap-target flex items-center justify-center rounded-full"
                   aria-label="Schließen"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

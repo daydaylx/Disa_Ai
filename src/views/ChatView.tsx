@@ -310,7 +310,7 @@ const ChatView = ({ convId = null }: { convId?: string | null }) => {
         className="pointer-events-none fixed left-0 right-0 z-50"
         style={{
           bottom: viewport.isKeyboardOpen
-            ? `calc(${viewport.offsetTop}px + var(--keyboard-offset, 0px) + 16px)`
+            ? "16px" // Simple fixed position when keyboard is open
             : `calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + ${composerOffset}px)`,
         }}
       >

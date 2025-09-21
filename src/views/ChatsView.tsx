@@ -2,15 +2,58 @@ import * as React from "react";
 
 import { Button } from "../components/ui/Button";
 import { useConversations } from "../hooks/useConversations";
+import { TouchGestureHandler } from "../lib/touch/gestures";
+import { hapticFeedback } from "../lib/touch/haptics";
 
 type Props = { onOpen: (id: string) => void };
 
 export default function ChatsView({ onOpen }: Props) {
   const conv = useConversations();
   const [title, setTitle] = React.useState("");
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // Pull-to-refresh functionality
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handler = new TouchGestureHandler(container, {
+      swipeThreshold: 100,
+      preventDefaultSwipe: false,
+    });
+
+    handler.onSwipeGesture((event) => {
+      // Pull down to refresh when at top of list
+      if (event.direction === "down" && container.scrollTop === 0 && !isRefreshing) {
+        setIsRefreshing(true);
+        hapticFeedback.success();
+
+        // Simulate refresh (reload conversations)
+        setTimeout(() => {
+          conv.refresh?.(); // If refresh method exists
+          setIsRefreshing(false);
+          hapticFeedback.tap();
+        }, 1000);
+      }
+    });
+
+    return () => handler.destroy();
+  }, [conv, isRefreshing]);
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6">
+    <div
+      ref={containerRef}
+      className="scroll-container mx-auto w-full max-w-4xl space-y-6 px-4 py-6"
+    >
+      {/* Pull-to-refresh indicator */}
+      {isRefreshing && (
+        <div className="flex items-center justify-center py-4">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+          <span className="ml-2 text-sm text-text-muted">Aktualisiere...</span>
+        </div>
+      )}
+
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Unterhaltungen</h1>
         <div className="flex gap-2">

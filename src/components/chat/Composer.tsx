@@ -63,23 +63,27 @@ export const Composer: React.FC<{
 
   // Handle keyboard visibility and scrolling
   useEffect(() => {
-    const handleResize = () => {
+    const handleViewportChange = () => {
+      // Only scroll if textarea is focused and keyboard opens
       if (textareaRef.current && document.activeElement === textareaRef.current) {
-        setTimeout(() => {
+        // Use requestAnimationFrame for better performance
+        requestAnimationFrame(() => {
+          // Ensure composer stays visible above keyboard
           textareaRef.current?.scrollIntoView({
             behavior: "smooth",
-            block: "center",
+            block: "nearest", // More stable than "center"
           });
-        }, 100);
+        });
       }
     };
 
     if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize);
-      return () => window.visualViewport?.removeEventListener("resize", handleResize);
+      window.visualViewport.addEventListener("resize", handleViewportChange);
+      return () => window.visualViewport?.removeEventListener("resize", handleViewportChange);
     } else {
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
+      // Fallback for older browsers
+      window.addEventListener("resize", handleViewportChange);
+      return () => window.removeEventListener("resize", handleViewportChange);
     }
   }, []);
 
