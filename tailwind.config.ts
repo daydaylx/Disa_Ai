@@ -1,87 +1,117 @@
 import type { Config } from "tailwindcss";
+import {
+  spacing,
+  borderRadius,
+  typography,
+  shadows,
+  transitions,
+  breakpoints,
+} from "./src/design-tokens";
 
 const config: Config = {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
-    // Unified spacing scale (4 / 8 / 12 / 16 / 24 / 32 / 48)
-    spacing: {
-      "0": "0",
-      "1": "4px",
-      "2": "8px",
-      "3": "12px",
-      "4": "16px",
-      "6": "24px",
-      "8": "32px",
-      "12": "48px",
-    },
+    // Design token-based spacing scale
+    spacing,
 
-    // Consistent border radius system (6 / 10 / 14)
-    borderRadius: {
-      none: "0",
-      sm: "6px",
-      DEFAULT: "10px",
-      md: "10px",
-      lg: "14px",
-      xl: "18px",
-      full: "9999px",
-    },
+    // Design token-based border radius
+    borderRadius,
 
-    // Typography scale with consistent line heights
+    // Typography scale from design tokens
     fontSize: {
       xs: ["12px", "16px"], // Meta text
-      sm: ["13px", "18px"], // Small text
-      base: ["16px", "24px"], // Body text
-      lg: ["18px", "24px"], // Section headings
-      xl: ["20px", "24px"], // Page titles
-      "2xl": ["24px", "32px"], // Display text
+      sm: [typography.label.fontSize, typography.label.lineHeight], // Labels
+      base: [typography.body.fontSize, typography.body.lineHeight], // Body
+      lg: [typography.subtitle.fontSize, typography.subtitle.lineHeight], // Subtitle
+      xl: [typography.h2.fontSize, typography.h2.lineHeight], // H2
+      "2xl": [typography.h1.fontSize, typography.h1.lineHeight], // H1
     },
 
-    // Simplified color system - zinc neutral + one accent
+    // Color system using CSS custom properties
     colors: {
       transparent: "transparent",
       current: "currentColor",
+
+      // Accent colors
       accent: {
         DEFAULT: "var(--accent-500)",
         hover: "var(--accent-600)",
         active: "var(--accent-700)",
         disabled: "var(--accent-disabled)",
+        foreground: "var(--accent-foreground)",
+        outline: "var(--accent-outline)",
+        subtle: "var(--accent-subtle)",
+        low: "var(--accent-low)",
       },
+
+      // Surface colors
       surface: {
         100: "var(--color-surface-100)",
         200: "var(--color-surface-200)",
         300: "var(--color-surface-300)",
       },
+
+      // Border colors
       border: {
         subtle: "var(--color-border-subtle)",
         strong: "var(--color-border-strong)",
       },
+
+      // Text colors
       text: {
         primary: "var(--color-text-primary)",
         secondary: "var(--color-text-secondary)",
         muted: "var(--color-text-muted)",
       },
+
+      // Semantic colors
       danger: "var(--danger-500)",
       success: "var(--success-500)",
       warning: "var(--warning-500)",
+      info: "var(--info-500)",
+
+      // Background colors
       background: "var(--color-bg-800)",
+      "background-deep": "var(--color-bg-900)",
     },
 
+    // Shadow system from design tokens
     boxShadow: {
       none: "none",
-      elev1: "var(--elevation-1)",
-      elev2: "var(--elevation-2)",
+      1: shadows[1], // elev1
+      2: shadows[2], // elev2
+      3: shadows[3], // elev3
+      // Legacy support
+      elev1: shadows[1],
+      elev2: shadows[2],
     },
 
-    screens: {
-      sm: "640px",
-      md: "768px",
-      lg: "1024px",
-    },
+    // Breakpoints from design tokens
+    screens: breakpoints,
 
     extend: {
+      // Transition durations from design tokens
       transitionDuration: {
-        fast: "140ms",
-        normal: "200ms",
+        fast: transitions.fast,
+        normal: transitions.normal,
+        slow: transitions.slow,
+      },
+
+      // Touch target utilities
+      minWidth: {
+        touch: "44px", // Minimum touch target
+        "touch-comfortable": "48px", // Comfortable touch target
+        "touch-roomy": "56px", // Roomy touch target
+      },
+      minHeight: {
+        touch: "44px",
+        "touch-comfortable": "48px",
+        "touch-roomy": "56px",
+      },
+
+      // Font families
+      fontFamily: {
+        mono: ["ui-monospace", "SF Mono", "Monaco", "Inconsolata", "monospace"],
       },
     },
   },
