@@ -3,6 +3,8 @@
    Tokens + component primitives for the entire UI layer
    ======================================== */
 
+@import "./design-tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,65 +13,45 @@
   color-scheme: dark;
 
   /* Core surfaces & text - mapped from design tokens */
-  --color-bg-900: #05070d;
-  --color-bg-800: #0b1118;
-  --color-surface-100: #111a26;
-  --color-surface-200: #172231;
-  --color-surface-300: #1d2b3c;
-  --color-border-strong: #2d3b50;
-  --color-border-subtle: #1b2735;
-  --color-text-primary: #f4f7fb;
-  --color-text-secondary: #c6cfde;
-  --color-text-muted: #95a4bb;
+  --color-bg-900: var(--color-neutral-950);
+  --color-bg-800: var(--color-neutral-900);
+  --color-surface-100: var(--color-neutral-800);
+  --color-surface-200: var(--color-neutral-700);
+  --color-surface-300: var(--color-neutral-600);
+  --color-border-strong: var(--color-neutral-400);
+  --color-border-subtle: var(--color-neutral-300);
+  --color-text-primary: var(--color-neutral-50);
+  --color-text-secondary: var(--color-neutral-100);
+  --color-text-muted: var(--color-neutral-200);
 
   /* Accent colors - single accent (cyan) with consistent opacity levels */
-  --accent-500: #22d3ee;
-  --accent-600: #0fb5d0;
-  --accent-700: #0a8aae;
-  --accent-outline: rgba(34, 211, 238, 0.38);
-  --accent-disabled: #0f3745;
-  --accent-foreground: #03141c;
-  --accent-subtle: rgba(34, 211, 238, 0.08);
-  --accent-low: rgba(34, 211, 238, 0.16);
+  --accent-500: var(--color-accent-500);
+  --accent-600: color-mix(in srgb, var(--color-accent-500) 80%, var(--color-accent-700));
+  --accent-700: var(--color-accent-700);
+  --accent-outline: var(--color-accent-outline);
+  --accent-disabled: color-mix(in srgb, var(--color-accent-700) 70%, var(--color-neutral-800));
+  --accent-foreground: var(--color-accent-foreground);
+  --accent-subtle: var(--color-accent-subtle);
+  --accent-low: var(--color-accent-low);
 
   /* Semantic colors */
-  --danger-500: #ef4444;
-  --danger-600: #dc2626;
-  --success-500: #22c55e;
-  --warning-500: #f59e0b;
-  --info-500: #3b82f6;
+  --danger-500: var(--color-danger-500);
+  --danger-600: color-mix(in srgb, var(--color-danger-500) 92%, black);
+  --success-500: var(--color-success-500);
+  --warning-500: var(--color-warning-500);
+  --info-500: var(--color-info-500);
 
   /* Subtle background variants */
-  --bg-success-subtle: rgba(34, 197, 94, 0.12);
-  --bg-purple-subtle: rgba(192, 132, 252, 0.12);
-  --bg-danger-subtle: rgba(239, 68, 68, 0.12);
-  --bg-accent-subtle: rgba(34, 211, 238, 0.08);
-  --bg-accent-low: rgba(34, 211, 238, 0.16);
-
-  /* Spacing scale (4 / 8 / 12 / 16 / 24 / 32 / 48) */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-12: 3rem;
-
-  /* Border radii (6 / 10 / 14) */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 0.875rem;
-  --radius-full: 9999px;
-
-  /* Elevation tokens */
-  --elevation-0: none;
-  --elevation-1: 0 8px 20px -12px rgba(5, 11, 20, 0.55);
-  --elevation-2: 0 20px 48px -18px rgba(5, 11, 20, 0.55);
+  --bg-success-subtle: color-mix(in srgb, var(--color-success-500) 12%, transparent);
+  --bg-purple-subtle: color-mix(in srgb, var(--color-purple-500) 12%, transparent);
+  --bg-danger-subtle: color-mix(in srgb, var(--color-danger-500) 12%, transparent);
+  --bg-accent-subtle: var(--color-accent-subtle);
+  --bg-accent-low: var(--color-accent-low);
 
   /* Focus ring & motion */
   --focus-ring-width: 3px;
   --focus-ring-offset: 2px;
-  --focus-ring-color: rgba(56, 189, 248, 0.65);
+  --focus-ring-color: color-mix(in srgb, var(--color-accent-500) 65%, transparent);
   --focus-ring-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
 
   --transition-fast: 160ms cubic-bezier(0.33, 1, 0.68, 1);
@@ -84,11 +66,11 @@
   --bubble-assistant-bg: rgba(33, 45, 61, 0.9);
   --bubble-assistant-bg-secondary: rgba(23, 32, 45, 0.95);
   --bubble-assistant-border: rgba(98, 123, 153, 0.35);
-  --bubble-assistant-text: #f4f7fb;
+  --bubble-assistant-text: var(--color-neutral-50);
 
   --bubble-user-bg: rgba(73, 119, 252, 0.95);
   --bubble-user-bg-secondary: rgba(58, 99, 225, 0.9);
-  --bubble-user-text: #03141c;
+  --bubble-user-text: var(--color-accent-foreground);
   --bubble-user-text-meta: rgba(255, 255, 255, 0.7);
 
   --bubble-typing-bg: rgba(25, 35, 51, 0.85);
@@ -96,7 +78,7 @@
 
   --bubble-error-bg: rgba(83, 23, 27, 0.9);
   --bubble-error-border: rgba(255, 99, 132, 0.45);
-  --bubble-error-text: #ffe7eb;
+  --bubble-error-text: var(--color-danger-100);
 
   /* Model picker color tokens */
   --model-chip-bg: rgba(26, 38, 55, 0.6);
@@ -105,15 +87,15 @@
 
   --model-favorite-bg: rgba(255, 199, 103, 0.1);
   --model-favorite-border: rgba(255, 199, 103, 0.6);
-  --model-favorite-text: #ffd27d;
+  --model-favorite-text: var(--color-warning-200);
 
   --model-free-bg: rgba(102, 212, 140, 0.15);
   --model-free-border: rgba(102, 212, 140, 0.6);
-  --model-free-text: #6fd08f;
+  --model-free-text: var(--color-success-200);
 
   --model-code-bg: rgba(127, 160, 255, 0.15);
   --model-code-border: rgba(127, 160, 255, 0.5);
-  --model-code-text: #9caeff;
+  --model-code-text: var(--color-info-200);
 
   --model-cost-bg: rgba(255, 255, 255, 0.06);
   --model-cost-border: rgba(255, 255, 255, 0.2);
@@ -130,15 +112,15 @@
   /* Safety level tokens */
   --safety-free-bg: rgba(102, 212, 140, 0.12);
   --safety-free-border: rgba(102, 212, 140, 0.4);
-  --safety-free-text: #6fd08f;
+  --safety-free-text: var(--color-success-200);
 
   --safety-moderate-bg: rgba(255, 176, 31, 0.12);
   --safety-moderate-border: rgba(255, 176, 31, 0.4);
-  --safety-moderate-text: #ffbd66;
+  --safety-moderate-text: var(--color-warning-200);
 
   --safety-strict-bg: rgba(255, 99, 132, 0.12);
   --safety-strict-border: rgba(255, 99, 132, 0.5);
-  --safety-strict-text: #ff7a9c;
+  --safety-strict-text: var(--color-strict-200);
 
   --safety-any-bg: rgba(98, 123, 153, 0.18);
   --safety-any-border: rgba(98, 123, 153, 0.4);
@@ -147,10 +129,22 @@
 
 @media (prefers-contrast: more) {
   :root {
-    --color-border-strong: #3b4f69;
-    --color-border-subtle: #253345;
-    --color-text-secondary: #d9e2f0;
-    --color-text-muted: #adb9cc;
+    --color-border-strong: color-mix(
+      in srgb,
+      var(--color-neutral-400) 85%,
+      var(--color-neutral-50)
+    );
+    --color-border-subtle: color-mix(
+      in srgb,
+      var(--color-neutral-300) 75%,
+      var(--color-neutral-100)
+    );
+    --color-text-secondary: color-mix(
+      in srgb,
+      var(--color-neutral-100) 92%,
+      var(--color-neutral-0)
+    );
+    --color-text-muted: color-mix(in srgb, var(--color-neutral-200) 88%, var(--color-neutral-0));
   }
 }
 
@@ -1072,7 +1066,7 @@
     border-radius: var(--radius-md);
     border: 1px solid rgba(255, 99, 132, 0.6);
     background: rgba(255, 99, 132, 0.12);
-    color: #ff8ba3;
+    color: var(--color-danger-200);
     font-size: 0.85rem;
   }
 

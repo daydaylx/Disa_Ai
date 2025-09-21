@@ -1,0 +1,104 @@
+/*
+  Global design tokens expressed as CSS custom properties.
+  Keep hex values isolated to this file – other styles should consume the
+  variables instead of hard-coded colors/shadows.
+*/
+
+:root {
+  /* Neutral palette */
+  --color-neutral-1000: #000000;
+  --color-neutral-950: #05070d;
+  --color-neutral-900: #0b1118;
+  --color-neutral-800: #111a26;
+  --color-neutral-700: #172231;
+  --color-neutral-600: #1d2b3c;
+  --color-neutral-500: #24344a;
+  --color-neutral-400: #2d3b50;
+  --color-neutral-300: #40526b;
+  --color-neutral-200: #95a4bb;
+  --color-neutral-100: #c6cfde;
+  --color-neutral-50: #f4f7fb;
+  --color-neutral-0: #ffffff;
+
+  /* Accent ramp */
+  --color-accent-700: #0a8aae;
+  --color-accent-500: #22d3ee;
+  --color-accent-300: #7dd3fc;
+  --color-accent-outline: rgba(34, 211, 238, 0.38);
+  --color-accent-subtle: rgba(34, 211, 238, 0.08);
+  --color-accent-low: rgba(34, 211, 238, 0.16);
+  --color-accent-foreground: #03141c;
+
+  /* Semantic colors */
+  --color-danger-100: #ffe7eb;
+  --color-danger-200: #ff8ba3;
+  --color-danger-500: #ef4444;
+  --color-success-500: #22c55e;
+  --color-success-200: #6fd08f;
+  --color-warning-500: #f59e0b;
+  --color-warning-200: #ffd27d;
+  --color-info-500: #3b82f6;
+  --color-info-200: #9caeff;
+  --color-purple-500: #8b5cf6;
+  --color-mint-500: #6ee7b7;
+  --color-strict-200: #ff7a9c;
+
+  /* Gradient helpers */
+  --gradient-night-deep: #0a0e1a;
+  --gradient-night-mid: #1a1f2e;
+  --gradient-night-soft: #0f1419;
+  --gradient-purple-600: #a855f7;
+
+  /* Spacing scale */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Typography scale */
+  --font-h1-size: 24px;
+  --font-h1-line: 32px;
+  --font-h1-weight: 600;
+  --font-h1-spacing: -0.01em;
+
+  --font-h2-size: 20px;
+  --font-h2-line: 28px;
+  --font-h2-weight: 600;
+  --font-h2-spacing: -0.01em;
+
+  --font-subtitle-size: 18px;
+  --font-subtitle-line: 26px;
+  --font-subtitle-weight: 500;
+
+  --font-body-size: 16px;
+  --font-body-line: 24px;
+  --font-body-weight: 400;
+
+  --font-label-size: 13px;
+  --font-label-line: 18px;
+  --font-label-weight: 500;
+
+  --font-mono-size: 14px;
+  --font-mono-line: 20px;
+  --font-mono-weight: 400;
+  --font-mono-family: ui-monospace, "SF Mono", "Monaco", "Inconsolata", monospace;
+
+  /* Border radii */
+  --radius-none: 0px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Elevation */
+  --elevation-0: none;
+  --elevation-1: 0 8px 20px -12px rgba(5, 11, 20, 0.55);
+  --elevation-2: 0 20px 48px -18px rgba(5, 11, 20, 0.55);
+}

@@ -32,6 +32,8 @@
   "outputStyle": "Default",
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [],
-  "disabledMcpjsonServers": []
+  "disabledMcpjsonServers": [
+    "tavily",
+    "snyk-security"
+  ]
 }
-

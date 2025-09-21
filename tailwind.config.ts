@@ -1,12 +1,12 @@
 import type { Config } from "tailwindcss";
 import {
   spacing,
-  borderRadius,
+  radii,
   typography,
-  shadows,
+  elevation,
   transitions,
   breakpoints,
-} from "./src/design-tokens";
+} from "./src/styles/design-tokens";
 
 const config: Config = {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -15,7 +15,7 @@ const config: Config = {
     spacing,
 
     // Design token-based border radius
-    borderRadius,
+    borderRadius: radii,
 
     // Typography scale from design tokens
     fontSize: {
@@ -34,14 +34,14 @@ const config: Config = {
 
       // Accent colors
       accent: {
-        DEFAULT: "var(--accent-500)",
+        DEFAULT: "var(--color-accent-500)",
         hover: "var(--accent-600)",
-        active: "var(--accent-700)",
+        active: "var(--color-accent-700)",
         disabled: "var(--accent-disabled)",
-        foreground: "var(--accent-foreground)",
-        outline: "var(--accent-outline)",
-        subtle: "var(--accent-subtle)",
-        low: "var(--accent-low)",
+        foreground: "var(--color-accent-foreground)",
+        outline: "var(--color-accent-outline)",
+        subtle: "var(--color-accent-subtle)",
+        low: "var(--color-accent-low)",
       },
 
       // Surface colors
@@ -65,10 +65,10 @@ const config: Config = {
       },
 
       // Semantic colors
-      danger: "var(--danger-500)",
-      success: "var(--success-500)",
-      warning: "var(--warning-500)",
-      info: "var(--info-500)",
+      danger: "var(--color-danger-500)",
+      success: "var(--color-success-500)",
+      warning: "var(--color-warning-500)",
+      info: "var(--color-info-500)",
 
       // Background colors
       background: "var(--color-bg-800)",
@@ -84,13 +84,13 @@ const config: Config = {
 
     // Shadow system from design tokens
     boxShadow: {
-      none: "none",
-      1: shadows[1], // elev1
-      2: shadows[2], // elev2
-      3: shadows[3], // elev3
+      none: elevation[0],
+      0: elevation[0],
+      1: elevation[1],
+      2: elevation[2],
       // Legacy support
-      elev1: shadows[1],
-      elev2: shadows[2],
+      elev1: elevation[1],
+      elev2: elevation[2],
     },
 
     // Mobile-first only - no desktop breakpoints
