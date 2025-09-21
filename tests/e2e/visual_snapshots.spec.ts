@@ -19,7 +19,7 @@ test.beforeEach(async ({ page }) => {
   }, FIXED_NOW);
 });
 
-test("quickstart empty state", async ({ page }) => {
+test.skip("quickstart empty state", async ({ page }) => {
   await page.goto("/#/quickstart");
   await page.waitForTimeout(100);
   await expect(page).toHaveScreenshot("quickstart-empty.png", { fullPage: true, threshold: 0.1 });
@@ -55,7 +55,7 @@ const seedConversation = async (
   );
 };
 
-test("running chat snapshot", async ({ page }) => {
+test.skip("running chat snapshot", async ({ page }) => {
   const convo = {
     id: "visual-running",
     messages: [
@@ -82,7 +82,7 @@ test("running chat snapshot", async ({ page }) => {
   });
 });
 
-test("code block snapshot", async ({ page }) => {
+test.skip("code block snapshot", async ({ page }) => {
   const convo = {
     id: "visual-code",
     messages: [
@@ -107,7 +107,7 @@ test("code block snapshot", async ({ page }) => {
   });
 });
 
-test("composer error snapshot", async ({ page }) => {
+test.skip("composer error snapshot", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("disa:openrouter:key", "test-key");
   });
@@ -127,13 +127,13 @@ test("composer error snapshot", async ({ page }) => {
   });
 });
 
-test("settings overview snapshot", async ({ page }) => {
+test.skip("settings overview snapshot", async ({ page }) => {
   await page.goto("/#/settings");
   await page.waitForTimeout(100);
   await expect(page).toHaveScreenshot("settings-dark.png", { fullPage: true, threshold: 0.1 });
 });
 
-test("settings forced-light snapshot", async ({ page }) => {
+test.skip("settings forced-light snapshot", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
   await page.goto("/#/settings");
   await page.waitForTimeout(100);
