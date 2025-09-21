@@ -25,13 +25,25 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Vendor chunk for core React
+          // Core React vendors
           if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
-            return "vendor";
+            return "vendor-react";
           }
-          // Small utilities chunk
+          // UI/Styling libraries
+          if (id.includes("node_modules/@heroicons") || id.includes("node_modules/tailwindcss")) {
+            return "vendor-ui";
+          }
+          // Data/API libraries
           if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
-            return "utils";
+            return "vendor-data";
+          }
+          // Markdown/Text processing (for future markdown features)
+          if (
+            id.includes("node_modules/marked") ||
+            id.includes("node_modules/highlight.js") ||
+            id.includes("node_modules/katex")
+          ) {
+            return "vendor-markdown";
           }
           // Everything else stays in main bundle for better mobile performance
           return undefined;
