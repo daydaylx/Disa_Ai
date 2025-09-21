@@ -49,6 +49,70 @@ export const colors = {
     "accent-subtle": "rgba(34, 211, 238, 0.08)", // accent/low
     "accent-low": "rgba(34, 211, 238, 0.16)", // accent backgrounds
   },
+
+  // Chat bubble specific colors
+  bubble: {
+    assistant: {
+      bg: "rgba(33, 45, 61, 0.9)",
+      "bg-secondary": "rgba(23, 32, 45, 0.95)",
+      border: "rgba(98, 123, 153, 0.35)",
+      text: "#f4f7fb",
+    },
+    user: {
+      bg: "rgba(73, 119, 252, 0.95)",
+      "bg-secondary": "rgba(58, 99, 225, 0.9)",
+      text: "#03141c",
+      "text-meta": "rgba(255, 255, 255, 0.7)",
+    },
+    typing: {
+      bg: "rgba(25, 35, 51, 0.85)",
+      border: "rgba(98, 123, 153, 0.25)",
+    },
+    error: {
+      bg: "rgba(83, 23, 27, 0.9)",
+      border: "rgba(255, 99, 132, 0.45)",
+      text: "#ffe7eb",
+    },
+  },
+
+  // Model picker and chips
+  model: {
+    chip: {
+      bg: "rgba(26, 38, 55, 0.6)",
+      border: "rgba(98, 123, 153, 0.4)",
+      text: "rgba(185, 205, 230, 0.9)",
+    },
+    favorite: {
+      bg: "rgba(255, 199, 103, 0.1)",
+      border: "rgba(255, 199, 103, 0.6)",
+      text: "#ffd27d",
+    },
+    free: {
+      bg: "rgba(102, 212, 140, 0.15)",
+      border: "rgba(102, 212, 140, 0.6)",
+      text: "#6fd08f",
+    },
+    code: {
+      bg: "rgba(127, 160, 255, 0.15)",
+      border: "rgba(127, 160, 255, 0.5)",
+      text: "#9caeff",
+    },
+    cost: {
+      bg: "rgba(255, 255, 255, 0.06)",
+      border: "rgba(255, 255, 255, 0.2)",
+      text: "rgba(255, 255, 255, 0.8)",
+    },
+    banner: {
+      bg: "rgba(255, 176, 31, 0.12)",
+      border: "rgba(255, 176, 31, 0.4)",
+      "bg-muted": "rgba(19, 27, 40, 0.5)",
+      "border-muted": "rgba(98, 123, 153, 0.35)",
+    },
+    empty: {
+      bg: "rgba(19, 27, 40, 0.6)",
+      border: "rgba(112, 138, 170, 0.4)",
+    },
+  },
 } as const;
 
 // Spacing Scale (4px base, following 4/8/12/16/24/32/48)

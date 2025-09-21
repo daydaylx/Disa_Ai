@@ -19,10 +19,10 @@ test.beforeEach(async ({ page }) => {
   }, FIXED_NOW);
 });
 
-test.skip("quickstart empty state", async ({ page }) => {
-  await page.goto("/#/quickstart");
+test.skip("model picker empty state", async ({ page }) => {
+  await page.goto("/#/models");
   await page.waitForTimeout(100);
-  await expect(page).toHaveScreenshot("quickstart-empty.png", { fullPage: true, threshold: 0.1 });
+  await expect(page).toHaveScreenshot("model-picker-empty.png", { fullPage: true, threshold: 0.1 });
 });
 
 const seedConversation = async (
@@ -78,7 +78,7 @@ test.skip("running chat snapshot", async ({ page }) => {
   await expect(page).toHaveScreenshot("chat-running.png", {
     fullPage: true,
     threshold: 0.1,
-    mask: [page.locator(".chat-meta")],
+    mask: [page.locator(".chat-bubble__meta")],
   });
 });
 
@@ -103,7 +103,7 @@ test.skip("code block snapshot", async ({ page }) => {
 
   await expect(log).toHaveScreenshot("chat-code.png", {
     threshold: 0.1,
-    mask: [log.locator(".chat-meta")],
+    mask: [log.locator(".chat-bubble__meta")],
   });
 });
 
@@ -123,7 +123,7 @@ test.skip("composer error snapshot", async ({ page }) => {
   await expect(page).toHaveScreenshot("chat-error.png", {
     fullPage: true,
     threshold: 0.1,
-    mask: [page.locator(".chat-meta")],
+    mask: [page.locator(".chat-bubble__meta")],
   });
 });
 

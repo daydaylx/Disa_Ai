@@ -17,10 +17,10 @@ module.exports = {
     },
     assert: {
       assertions: {
-        "categories:performance": ["error", { minScore: 0.85 }],
-        "categories:accessibility": ["warn", { minScore: 0.90 }],
+        "categories:performance": ["error", { minScore: 0.90 }],
+        "categories:accessibility": ["error", { minScore: 0.95 }],
         "categories:best-practices": ["error", { minScore: 0.95 }],
-        "categories:seo": ["warn", { minScore: 0.90 }],
+        "categories:seo": ["error", { minScore: 0.90 }],
         "total-byte-weight": ["warn", { maxNumericValue: 450000 }],
         "script-treemap-data": "off"
       }

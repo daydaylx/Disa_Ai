@@ -87,6 +87,9 @@ export default function SettingsView() {
   const pwa = usePWAInstall();
   // Persistente Werte laden
   const [key, setKey] = React.useState<string>(getApiKey() ?? "");
+  const [keyVisible, setKeyVisible] = React.useState(false);
+  const [keyError, setKeyError] = React.useState<string | null>(null);
+  const [keySaving, setKeySaving] = React.useState(false);
   const [modelId, setModelId] = React.useState<string | null>(getSelectedModelId());
   const [nsfw, setNsfw] = React.useState<boolean>(getNSFW());
   const [memEnabled, setMemEnabled] = React.useState<boolean>(getMemoryEnabled());
@@ -180,12 +183,37 @@ export default function SettingsView() {
   // --- Handlers (persistieren) ---
   function saveKey() {
     const val = key.trim();
-    setApiKey(val);
-    toasts.push({
-      kind: "success",
-      title: "Gespeichert",
-      message: val ? "API‑Key wurde lokal gespeichert." : "API‑Key entfernt.",
-    });
+    if (!val) {
+      setApiKey("");
+      setKeyError(null);
+      toasts.push({
+        kind: "info",
+        title: "API-Key entfernt",
+        message: "Ohne Key bleiben Demo-Antworten aktiv.",
+      });
+      return;
+    }
+
+    if (!/^sk_[a-zA-Z0-9_-]{24,}$/.test(val)) {
+      setKeyError("Der Key sieht ungewöhnlich aus. Bitte prüfen und erneut versuchen.");
+      return;
+    }
+
+    try {
+      setKeySaving(true);
+      setKeyError(null);
+      setApiKey(val);
+      toasts.push({
+        kind: "success",
+        title: "API-Key gespeichert",
+        message: "Du kannst jetzt echte Antworten abrufen.",
+      });
+    } catch (err) {
+      console.warn("API key save failed", err);
+      setKeyError("Speichern nicht möglich. Bitte Browser-Speicher prüfen und erneut versuchen.");
+    } finally {
+      setKeySaving(false);
+    }
   }
   function onToggleNSFW(e: React.ChangeEvent<HTMLInputElement> | { target: { checked: boolean } }) {
     setNsfw(e.target.checked);
@@ -263,25 +291,55 @@ export default function SettingsView() {
       {/* API-Key */}
       <section className="card">
         <h2 className="card-title mb-1">OpenRouter API Key</h2>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <input
-            type="password"
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-            placeholder="sk-…"
-            aria-label="API-Schlüssel"
-            className="input min-w-0 flex-1 text-sm"
-          />
-          <Button
-            variant="primary"
-            onClick={saveKey}
-            aria-label="API-Schlüssel speichern"
-            data-testid="settings-save-key"
-          >
-            Speichern
-          </Button>
+        <p className="help">
+          Schlüssel wird ausschließlich lokal gespeichert. Ohne Key nutzt die App Demo-Antworten.
+        </p>
+        <div className="mt-3 grid gap-3">
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="relative flex min-w-0 flex-1 items-center">
+              <input
+                type={keyVisible ? "text" : "password"}
+                value={key}
+                onChange={(e) => {
+                  setKey(e.target.value);
+                  setKeyError(null);
+                }}
+                placeholder="sk-…"
+                aria-label="API-Schlüssel"
+                className="input min-w-0 flex-1 pr-12 text-sm"
+                data-testid="settings-key-input"
+              />
+              {key ? (
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-2 my-auto flex h-8 w-8 items-center justify-center rounded-full text-xs text-text-muted transition hover:text-text-primary"
+                  onClick={() => setKeyVisible((prev) => !prev)}
+                  aria-pressed={keyVisible}
+                  aria-label={keyVisible ? "API-Key ausblenden" : "API-Key anzeigen"}
+                  data-testid="settings-key-visibility"
+                >
+                  {keyVisible ? "Verbergen" : "Anzeigen"}
+                </button>
+              ) : null}
+            </div>
+            <Button
+              variant="primary"
+              onClick={saveKey}
+              aria-label="API-Schlüssel speichern"
+              data-testid="settings-save-key"
+              loading={keySaving}
+            >
+              Speichern
+            </Button>
+          </div>
+          {keyError ? (
+            <div className="settings-key-error px-3 py-2">{keyError}</div>
+          ) : (
+            <div className="settings-key-hint px-3 py-2">
+              Tipp: Key findest du im OpenRouter Dashboard. Nach Änderung App neu laden.
+            </div>
+          )}
         </div>
-        <p className="help mt-2">Wird lokal gespeichert (kein Server-Speicher).</p>
       </section>
 
       {/* Stil */}

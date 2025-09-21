@@ -57,14 +57,13 @@ export default function BottomNav() {
     // Swipe gestures for navigation
     handler.onSwipeGesture((event) => {
       const currentIndex = getCurrentTabIndex(h);
+      const tabs = ["#/chat", "#/models", "#/settings"] as const;
 
-      if (event.direction === "left" && currentIndex < 3) {
+      if (event.direction === "left" && currentIndex < tabs.length - 1) {
         // Swipe left = next tab
-        const tabs = ["#/chat", "#/chats", "#/quickstart", "#/settings"];
         to(tabs[currentIndex + 1]!);
       } else if (event.direction === "right" && currentIndex > 0) {
         // Swipe right = previous tab
-        const tabs = ["#/chat", "#/chats", "#/quickstart", "#/settings"];
         to(tabs[currentIndex - 1]!);
       }
     });
@@ -77,9 +76,8 @@ export default function BottomNav() {
 
   const getCurrentTabIndex = (hash: string): number => {
     if (hash.startsWith("#/chat")) return 0;
-    if (hash.startsWith("#/chats")) return 1;
-    if (hash.startsWith("#/quickstart")) return 2;
-    if (hash.startsWith("#/settings")) return 3;
+    if (hash.startsWith("#/models")) return 1;
+    if (hash.startsWith("#/settings")) return 2;
     return 0;
   };
 
@@ -88,12 +86,12 @@ export default function BottomNav() {
       ref={(el) => {
         ref.current = el;
       }}
-      className="bottom-nav safe-bottom inset-x-5 bottom-5 fixed z-30"
+      className="bottom-nav safe-bottom inset-x-5 bottom-5 fixed z-50"
       role="navigation"
       aria-label="Hauptnavigation"
       data-version={import.meta.env.VITE_APP_VERSION}
     >
-      <ul className="grid grid-cols-4 items-center gap-1">
+      <ul className="grid grid-cols-3 items-center gap-1">
         <li>
           <button
             onClick={() => to("#/chat")}
@@ -108,26 +106,14 @@ export default function BottomNav() {
         </li>
         <li>
           <button
-            onClick={() => to("#/chats")}
-            className={`nav-tab ${is("#/chats") ? "nav-tab--active" : ""}`}
-            aria-current={is("#/chats") ? "page" : undefined}
-            aria-label="Chat-Verlauf"
-            data-testid="nav-bottom-chats"
+            onClick={() => to("#/models")}
+            className={`nav-tab ${is("#/models") ? "nav-tab--active" : ""}`}
+            aria-current={is("#/models") ? "page" : undefined}
+            aria-label="Modelle"
+            data-testid="nav-bottom-models"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            Verlauf
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={() => to("#/quickstart")}
-            className={`nav-tab ${is("#/quickstart") ? "nav-tab--active" : ""}`}
-            aria-current={is("#/quickstart") ? "page" : undefined}
-            aria-label="Quickstart"
-            data-testid="nav-bottom-quickstart"
-            onTouchStart={() => hapticFeedback.tap()}
-          >
-            Quickstart
+            Modelle
           </button>
         </li>
         <li>
