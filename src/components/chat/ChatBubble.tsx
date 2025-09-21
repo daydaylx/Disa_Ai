@@ -47,7 +47,7 @@ function BubbleBase({
   const metaIcon = status ? statusIcon[status] : undefined;
 
   return (
-    <div className={cn("chat-bubble", `chat-bubble--${variant}`, className)}>
+    <div className={cn("chat-bubble", `chat-bubble--${variant}`, className)} data-status={status}>
       {copyText ? (
         <CopyButton
           text={copyText}
