@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 
-import Accordion, { AccordionItem } from "../../components/ui/Accordion";
+import Accordion, { type AccordionItem } from "../../components/ui/Accordion";
 import BottomSheet from "../../components/ui/BottomSheet";
 import Card from "../../components/ui/Card";
 import { STYLE_CATEGORIES, STYLES } from "../data/styles";

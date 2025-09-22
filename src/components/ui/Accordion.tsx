@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 
-export type AccordionItem = {
+type AccordionItem = {
   id?: string;
   title: string;
   meta?: string;
@@ -8,13 +8,7 @@ export type AccordionItem = {
   defaultOpen?: boolean;
 };
 
-export default function Accordion({
-  items,
-  single = false,
-}: {
-  items: AccordionItem[];
-  single?: boolean;
-}) {
+function Accordion({ items, single = false }: { items: AccordionItem[]; single?: boolean }) {
   const uid = useId();
   const [openSet, setOpenSet] = useState<Set<number>>(
     new Set(items.map((it, i) => (it.defaultOpen ? i : -1)).filter((i) => i >= 0)),
@@ -99,3 +93,6 @@ export default function Accordion({
     </div>
   );
 }
+
+export { type AccordionItem };
+export default Accordion;
