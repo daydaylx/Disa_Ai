@@ -80,7 +80,7 @@ export default function SettingsView() {
       });
     } catch (err) {
       console.warn("API key save failed", err);
-      setKeyError("Speichern nicht möglich. Bitte Browser-Speicher prüfen und erneut versuchen.");
+      setKeyError("API-Schlüssel konnte nicht gespeichert werden.");
     } finally {
       setKeySaving(false);
     }
@@ -166,7 +166,7 @@ export default function SettingsView() {
             <div className="grid gap-6 lg:grid-cols-2">
               {/* API Configuration */}
               <SettingsCard
-                title="OpenRouter API Key"
+                title="API-Schlüssel"
                 description="Schlüssel wird ausschließlich lokal gespeichert. Ohne Key nutzt die App Demo-Antworten."
                 icon="🔑"
                 glow="cyan"
@@ -187,7 +187,7 @@ export default function SettingsView() {
                     {keyError && <p className="mt-2 text-sm text-red-400">{keyError}</p>}
                   </div>
                   <GlassButton variant="primary" onClick={handleSaveApiKey} disabled={keySaving}>
-                    {keySaving ? "Speichert..." : "Key speichern"}
+                    {keySaving ? "Speichert..." : "Speichern"}
                   </GlassButton>
                 </div>
               </SettingsCard>
