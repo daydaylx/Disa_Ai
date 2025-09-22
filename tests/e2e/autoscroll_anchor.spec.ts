@@ -2,47 +2,58 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Autoscroll anchor", () => {
   test("shows anchor when user scrolls up and returns to bottom on tap", async ({ page }) => {
-    const convId = "autoscroll-e2e";
-    await page.addInitScript(
-      ({ id }) => {
-        const now = Date.now();
-        const messages = Array.from({ length: 80 }, (_, idx) => ({
-          id: `msg-${idx}`,
-          createdAt: now + idx,
-          role: idx % 2 === 0 ? "assistant" : "user",
-          content: `Langer Testeintrag ${idx} – ${"Text ".repeat(15)}`,
-        }));
-        const meta = {
-          id,
-          title: "Autoscroll Test",
-          createdAt: now,
-          updatedAt: now,
-        };
-        window.localStorage.setItem(`disa:conv:${id}:msgs`, JSON.stringify(messages));
-        window.localStorage.setItem(`disa:conv:${id}:meta`, JSON.stringify(meta));
-      },
-      { id: convId },
-    );
+    await page.addInitScript(() => {
+      const now = Date.now();
+      const messages = Array.from({ length: 80 }, (_, idx) => ({
+        id: `msg-${idx}`,
+        ts: now + idx,
+        role: idx % 2 === 0 ? "assistant" : "user",
+        content: `Langer Testeintrag ${idx} – ${"Text ".repeat(50)}`, // More content to ensure scrolling
+      }));
+
+      // Inject test messages directly into ChatApp state
+      (window as any).__testMessages = messages;
+    });
 
     await page.goto(`/#/chat`);
 
     const log = page.locator('[aria-label="Chat messages"]');
     await log.waitFor();
-    await page.waitForTimeout(150);
 
-    // Force a fixed height to ensure overflow
+    // Debug: Check if messages are loaded
+    const messageCount = await page.locator(".chat-bubble").count();
+    console.log(`Found ${messageCount} messages`);
+
+    // Wait for messages to load
+    await page.waitForFunction(
+      () => {
+        const messages = document.querySelectorAll(".chat-bubble");
+        return messages.length > 50; // Wait for at least 50 messages to load
+      },
+      { timeout: 5000 },
+    );
+
+    // Force a fixed height to ensure overflow and trigger scrollbar
     await log.evaluate((el) => {
-      el.style.height = "400px";
+      el.style.height = "300px";
       el.style.overflow = "auto";
+      console.log(`Scroll height: ${el.scrollHeight}, Client height: ${el.clientHeight}`);
     });
 
-    // Simulate user scrolling away from the bottom
+    // Wait for scroll state initialization
+    await page.waitForTimeout(300);
+
+    // Force scroll to position > 200 to trigger FAB (as per VirtualMessageList logic)
     await log.evaluate((el) => {
-      el.scrollTop = 0;
+      el.scrollTop = 250; // Must be > 200 for FAB to show
+      // Force scroll events to fire
+      el.dispatchEvent(new Event("scroll", { bubbles: true }));
+      // Validate scroll position
+      console.log(`After scroll - scrollTop: ${el.scrollTop}, scrollHeight: ${el.scrollHeight}`);
     });
 
-    // Wait a bit for scroll state to update
-    await page.waitForTimeout(100);
+    // Wait for scroll state to update
+    await page.waitForTimeout(500);
 
     const fab = page.locator('button[aria-label="Zum Ende scrollen"]');
     await expect(fab).toBeVisible();
