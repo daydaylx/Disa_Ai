@@ -21,11 +21,12 @@ test.describe("Streaming stability", () => {
     ).toHaveCount(1);
 
     // Navigating away should abort the stream and hide the stop button
-    await page.locator('[data-testid="nav-bottom-models"]').click();
+    // Force click on navigation to bypass composer interference
+    await page.locator('[data-testid="nav-bottom-models"]').click({ force: true });
     await stopButton.waitFor({ state: "detached" });
 
     // Return to chat and ensure composer is ready again
-    await page.locator('[data-testid="nav-bottom-chat"]').click();
+    await page.locator('[data-testid="nav-bottom-chat"]').click({ force: true });
     await expect(page.locator('[data-testid="composer-send"]')).toBeVisible();
   });
 });

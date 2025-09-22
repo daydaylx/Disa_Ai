@@ -286,7 +286,13 @@ function ModelSheet({
 
 /** ====== ChatApp (Demo-Logik lokal, Fokus UI) ====== */
 export default function ChatApp() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    // Support test data injection
+    if (typeof window !== "undefined" && (window as any).__testMessages) {
+      return (window as any).__testMessages;
+    }
+    return [];
+  });
   const [model, setModel] = useState<Model>(MODELS[0]);
   const [input, setInput] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
