@@ -1,79 +1,75 @@
-import * as React from "react";
+import React, { useEffect, useRef } from "react";
 
-import { cn } from "../../lib/utils/cn";
-
-export interface BottomSheetProps {
-  /** Sheet title */
-  title?: string;
-  /** Sheet content */
-  children: React.ReactNode;
-  /** Open state */
-  open: boolean;
-  /** Close handler */
-  onClose?: () => void;
-  /** Optional className for additional styling */
-  className?: string;
-}
-
-export const BottomSheet: React.FC<BottomSheetProps> = ({
-  title,
-  children,
+/** A11y-konformes BottomSheet */
+export default function BottomSheet({
   open,
+  title,
   onClose,
-  className = "",
-}) => {
-  React.useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+  children,
+}: {
+  open: boolean;
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
 
-    return () => {
-      document.body.style.overflow = "";
-    };
+  useEffect(() => {
+    if (open) closeRef.current?.focus();
   }, [open]);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "Tab") {
+        const nodes = sheetRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (!nodes || nodes.length === 0) return;
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end">
-      {/* Backdrop */}
-      <div className="bg-background-deep/50 absolute inset-0 backdrop-blur-sm" onClick={onClose} />
-
-      {/* Sheet */}
+    <div className={`fixed inset-0 z-50 ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
       <div
-        className={cn(
-          "relative max-h-[80vh] w-full rounded-t-[28px] border border-border-strong bg-surface-200",
-          className,
-        )}
+        onClick={onClose}
+        className={`absolute inset-0 bg-black/50 transition ${open ? "opacity-100" : "opacity-0"}`}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        ref={sheetRef}
+        className={`safe-px safe-pb absolute bottom-0 left-0 right-0 transition-transform duration-200 ${open ? "translate-y-0" : "translate-y-full"}`}
       >
-        <div className="safe-top p-4">
-          {/* Handle */}
-          <div className="bg-text-muted/40 mx-auto mb-4 h-1 w-12 rounded-full" />
-
-          {/* Header */}
-          {(title || onClose) && (
-            <div className="mb-4 flex items-center justify-between">
-              {title && <h2 className="text-lg font-semibold">{title}</h2>}
-              {onClose && (
-                <button
-                  onClick={onClose}
-                  className="bg-text-muted/12 hover:bg-text-muted/20 tap-target flex items-center justify-center rounded-full"
-                  aria-label="Schließen"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                  </svg>
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="safe-bottom">{children}</div>
+        <div className="glass rounded-t-2xl p-3 shadow-md">
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-sm font-semibold">{title}</h2>
+            <button
+              ref={closeRef}
+              onClick={onClose}
+              className="text-sm opacity-80 hover:opacity-100"
+            >
+              Schließen
+            </button>
+          </div>
+          <div className="max-measure text-[15px] leading-relaxed">{children}</div>
         </div>
       </div>
     </div>
   );
-};
+}
