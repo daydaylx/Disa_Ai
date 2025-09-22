@@ -48,7 +48,7 @@ export default function SettingsView() {
         {tab === "roles" && <SettingsRoles />}
         {tab === "style" && <SettingsStyle />}
         {tab === "general" && <div className="text-sm text-muted/80">Allgemein folgt.</div>}
-        {tab === "app" && <div className="text-sm text-muted/80">App-Settings folgt.</div>}
+        {tab === "app" && <div className="text-sm text-muted/80">App-Settings folgen.</div>}
       </main>
     </div>
   );

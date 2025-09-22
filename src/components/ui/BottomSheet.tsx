@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-/** A11y-konformes BottomSheet */
 export default function BottomSheet({
   open,
   title,
@@ -24,12 +23,12 @@ export default function BottomSheet({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "Tab") {
-        const nodes = sheetRef.current?.querySelectorAll<HTMLElement>(
+        const focusables = sheetRef.current?.querySelectorAll<HTMLElement>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
         );
-        if (!nodes || nodes.length === 0) return;
-        const first = nodes[0];
-        const last = nodes[nodes.length - 1];
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
@@ -54,7 +53,9 @@ export default function BottomSheet({
         aria-modal="true"
         aria-label={title}
         ref={sheetRef}
-        className={`safe-px safe-pb absolute bottom-0 left-0 right-0 transition-transform duration-200 ${open ? "translate-y-0" : "translate-y-full"}`}
+        className={`safe-px safe-pb absolute bottom-0 left-0 right-0 transition-transform duration-200 ${
+          open ? "translate-y-0" : "translate-y-full"
+        }`}
       >
         <div className="glass rounded-t-2xl p-3 shadow-md">
           <div className="mb-2 flex items-center justify-between">

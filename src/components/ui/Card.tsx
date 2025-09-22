@@ -34,7 +34,7 @@ export default function Card({
       aria-labelledby={ariaLabelledby}
       className={[
         "w-full rounded-xl border border-white/10 text-left",
-        "hover:bg-white/7 bg-white/5 transition-colors",
+        "bg-white/5 transition-colors hover:bg-white/10",
         "px-3 py-3",
         interactive ? "cursor-pointer" : "",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400",

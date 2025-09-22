@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 
-/** WAI-ARIA Accordion (APG) */
 export type AccordionItem = {
   id?: string;
   title: string;
@@ -43,15 +42,15 @@ export default function Accordion({
   );
 
   const onKeyDown = (e: React.KeyboardEvent, i: number) => {
-    const n = items.length;
-    let t = i;
-    if (e.key === "ArrowDown") t = (i + 1) % n;
-    else if (e.key === "ArrowUp") t = (i - 1 + n) % n;
-    else if (e.key === "Home") t = 0;
-    else if (e.key === "End") t = n - 1;
+    const count = items.length;
+    let target = i;
+    if (e.key === "ArrowDown") target = (i + 1) % count;
+    else if (e.key === "ArrowUp") target = (i - 1 + count) % count;
+    else if (e.key === "Home") target = 0;
+    else if (e.key === "End") target = count - 1;
     else return;
     e.preventDefault();
-    headerRefs.current[t]?.focus();
+    headerRefs.current[target]?.focus();
   };
 
   return (
@@ -69,7 +68,7 @@ export default function Accordion({
               aria-expanded={isOpen}
               onClick={() => toggle(i)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className="hover:bg-white/7 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-left focus-visible:ring-2 focus-visible:ring-violet-400"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-left hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-violet-400"
               style={{ minHeight: 56 }}
             >
               <div className="flex items-center justify-between gap-3">
@@ -77,7 +76,10 @@ export default function Accordion({
                   <div className="truncate font-medium">{it.title}</div>
                   {it.meta && <div className="truncate text-xs text-muted/80">{it.meta}</div>}
                 </div>
-                <span aria-hidden className={"transition-transform " + (isOpen ? "rotate-90" : "")}>
+                <span
+                  aria-hidden
+                  className={"transform transition-transform " + (isOpen ? "rotate-90" : "")}
+                >
                   ▸
                 </span>
               </div>
@@ -87,7 +89,7 @@ export default function Accordion({
               role="region"
               aria-labelledby={hid}
               hidden={!isOpen}
-              className="bg-white/3 rounded-b-lg border-b border-l border-r border-white/10 px-3 pb-3 pt-2"
+              className="rounded-b-lg border-b border-l border-r border-white/10 bg-white/5 px-3 pb-3 pt-2"
             >
               {it.content}
             </div>
