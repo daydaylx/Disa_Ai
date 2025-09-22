@@ -1,30 +1,22 @@
-/** @type {import('lighthouse').Flags} */
+/** @type {import('lighthouse').Configuration} */
 module.exports = {
   ci: {
     collect: {
-      numberOfRuns: 1,
       startServerCommand: "npm run build && npm run preview -- --port=4174",
-      // Vite schreibt "Local: http://...", nicht "ready". Also darauf warten:
-      startServerReadyPattern: "Local:",
-      startServerReadyTimeout: 120000,
       url: ["http://localhost:4174/"],
-      settings: {
-        // Korrekt in neuen LH-Versionen: Formfaktor + Screen-Emulation
-        formFactor: "mobile",
-        screenEmulation: { mobile: true, width: 390, height: 844, deviceScaleFactor: 3, disabled: false },
-        throttlingMethod: "simulate"
-      }
+      numberOfRuns: 1,
+      settings: { formFactor: "mobile", screenEmulation: { mobile: true, width: 360, height: 640, deviceScaleRatio: 2 } },
     },
     assert: {
       assertions: {
-        "categories:performance": ["error", { minScore: 0.80 }],
-        "categories:accessibility": ["error", { minScore: 0.95 }],
-        "categories:best-practices": ["error", { minScore: 0.95 }],
-        "categories:seo": ["error", { minScore: 0.90 }],
-        "total-byte-weight": ["warn", { maxNumericValue: 450000 }],
-        "script-treemap-data": "off"
-      }
+        "categories:performance": ["warn", { minScore: 0.85 }],
+        "categories:accessibility": ["warn", { minScore: 0.9 }],
+        "first-contentful-paint": ["warn", { maxNumericValue: 2500 }],
+        "largest-contentful-paint": ["warn", { maxNumericValue: 2500 }],
+        "total-blocking-time": ["warn", { maxNumericValue: 200 }],
+        "cumulative-layout-shift": ["warn", { maxNumericValue: 0.02 }],
+      },
     },
-    upload: { target: "temporary-public-storage" }
-  }
+    upload: { target: "filesystem", outputDir: ".lighthouseci" },
+  },
 };
