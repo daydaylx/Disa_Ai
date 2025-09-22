@@ -80,7 +80,7 @@ function MessageBubble({ msg }: { msg: Message }) {
 
   return (
     <div className={`flex w-full ${mine ? "justify-end" : "justify-start"}`}>
-      <div className={`${base} ${mine ? mineCls : otherCls}`}>
+      <div className={`chat-bubble ${base} ${mine ? mineCls : otherCls}`}>
         {segs.map((s, i) =>
           s.type === "text" ? (
             <div key={i} className="whitespace-pre-wrap">
