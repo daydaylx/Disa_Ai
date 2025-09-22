@@ -36,7 +36,7 @@ export const Composer: React.FC<{
   const errorRef = useRef<HTMLDivElement>(null);
   const [isComposing, setIsComposing] = useState(false);
   const [platformShortcut, setPlatformShortcut] = useState("Strg");
-  const [showCommandSuggestions, setShowCommandSuggestions] = useState(false);
+  const [_showCommandSuggestions, setShowCommandSuggestions] = useState(false);
   const toasts = useToasts();
   const disabled = loading || text.trim().length === 0;
 
@@ -213,7 +213,7 @@ export const Composer: React.FC<{
         <div
           ref={errorRef}
           id="composer-error"
-          className="mb-3 rounded-md border border-danger bg-bg-danger-subtle p-3 text-sm text-danger"
+          className="bg-bg-danger-subtle mb-3 rounded-md border border-danger p-3 text-sm text-danger"
           role="alert"
           aria-live="assertive"
         >
@@ -288,18 +288,12 @@ export const Composer: React.FC<{
         </div>
       </div>
 
-      {text.trim() && !showCommandSuggestions && (
-        <div className="mt-2 px-1 text-xs text-text-muted">
-          ~{Math.ceil(text.trim().split(/\s+/).length * 1.3)} Tokens
-        </div>
-      )}
-
-      {/* Command Suggestions */}
-      {showCommandSuggestions && (
-        <div className="text-cyan-400 mt-2 px-1 text-xs">
-          💡 Verfügbare Befehle: <span className="text-white">/style, /role, /nsfw, /help</span>
-        </div>
-      )}
+      <div className="mt-2 flex justify-between text-xs text-muted/60">
+        <span>~{Math.ceil(text.trim().split(/\s+/).length * 1.3)} Token</span>
+        <span className="text-xs text-muted/80">
+          💡 Verfügbare Befehle: <span className="text-white">/stil, /rolle, /nsfw, /hilfe</span>
+        </span>
+      </div>
     </div>
   );
 };

@@ -1,34 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { chatStream } from "../api/openrouter";
+import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import CodeBlock from "./CodeBlock";
 import { segmentMessage } from "./segment";
 import type { Message, Model } from "./types";
 import VirtualMessageList from "./VirtualMessageList";
-
-/** ====== Dummy-Modelle (Bottom-Sheet) ====== */
-const MODELS: Model[] = [
-  {
-    id: "qwen-2.5-coder-32b:free",
-    name: "Qwen 2.5 Coder 32B (free)",
-    pricePer1k: 0,
-    context: 131072,
-    tags: ["free", "code", "speed"],
-  },
-  {
-    id: "grok-2-1212",
-    name: "Grok 2 1212",
-    pricePer1k: 2.0,
-    context: 131072,
-    tags: ["general", "long"],
-  },
-  {
-    id: "mistral-large",
-    name: "Mistral Large",
-    pricePer1k: 1.0,
-    context: 32000,
-    tags: ["general"],
-  },
-];
 
 /** ====== UI: Header ====== */
 function Header({
@@ -174,11 +151,13 @@ function ModelSheet({
   onClose,
   onSelect,
   currentId,
+  models,
 }: {
   open: boolean;
   onClose: () => void;
   onSelect: (m: Model) => void;
   currentId: string;
+  models: Model[];
 }) {
   const closeBtn = useRef<HTMLButtonElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -245,7 +224,7 @@ function ModelSheet({
             </button>
           </div>
           <div className="grid grid-cols-1 gap-2">
-            {MODELS.map((m) => (
+            {models.map((m) => (
               <button
                 key={m.id}
                 onClick={() => {
@@ -257,13 +236,13 @@ function ModelSheet({
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="font-medium">{m.name}</div>
+                  <div className="font-medium">{m.label}</div>
                   <div className="text-xs text-muted/80">
-                    {m.pricePer1k === 0 ? "free" : `${m.pricePer1k}$/1k`}
+                    {(m.pricing?.in ?? 0) === 0 ? "free" : `${m.pricing?.in ?? 0}$/1k`}
                   </div>
                 </div>
                 <div className="mt-1 text-xs text-muted/80">
-                  Kontext: {m.context.toLocaleString()} Tokens
+                  Kontext: {(m.ctx ?? 0).toLocaleString()} Tokens
                 </div>
                 <div className="mt-1 flex flex-wrap gap-1">
                   {m.tags.map((t) => (
@@ -284,7 +263,7 @@ function ModelSheet({
   );
 }
 
-/** ====== ChatApp (Demo-Logik lokal, Fokus UI) ====== */
+/** ====== ChatApp ====== */
 export default function ChatApp() {
   const [messages, setMessages] = useState<Message[]>(() => {
     // Support test data injection
@@ -293,59 +272,98 @@ export default function ChatApp() {
     }
     return [];
   });
-  const [model, setModel] = useState<Model>(MODELS[0]);
+  const [models, setModels] = useState<Model[]>([]);
+  const [model, setModel] = useState<Model | null>(null);
   const [input, setInput] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [streaming, setStreaming] = useState(false);
-  const timerRef = useRef<number | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  const send = () => {
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const catalog = await loadModelCatalog();
+      if (!alive) return;
+      setModels(catalog);
+      const defaultModelId = chooseDefaultModel(catalog, { preferFree: true });
+      const defaultModel = catalog.find((m) => m.id === defaultModelId);
+      setModel(defaultModel ?? catalog[0] ?? null);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const send = async () => {
     const text = input.trim();
-    if (!text || streaming) return;
-    const now = Date.now();
-    const user: Message = { id: `u_${now}`, role: "user", content: text, ts: now };
-    setMessages((prev) => [...prev, user]);
-    setInput("");
-    // Simulierter Stream
-    setStreaming(true);
-    const assistId = `a_${now}`;
-    const placeholder: Message = { id: assistId, role: "assistant", content: "…", ts: Date.now() };
-    setMessages((prev) => [...prev, placeholder]);
-    timerRef.current = window.setTimeout(() => {
-      const reply = text.includes("```")
-        ? "Ich sehe Code:\n\n" + text
-        : `Echo (${model.name}): ${text}\n\nBeispiel-Code:\n\`\`\`ts\nconsole.log('hi');\n\`\`\``;
-      setMessages((prev) => prev.map((m) => (m.id === assistId ? { ...m, content: reply } : m)));
-      setStreaming(false);
-      timerRef.current = null;
-    }, 900);
-  };
+    if (!text || streaming || !model) return;
 
-  const stop = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
+    const now = Date.now();
+    const userMessage: Message = { id: `u_${now}`, role: "user", content: text, ts: now };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setStreaming(true);
+
+    const assistantId = `a_${now}`;
+    const placeholder: Message = {
+      id: assistantId,
+      role: "assistant",
+      content: "…",
+      ts: Date.now(),
+    };
+    setMessages((prev) => [...prev, placeholder]);
+
+    abortControllerRef.current = new AbortController();
+    const messagesForApi = [...messages, userMessage].map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
+
+    try {
+      await chatStream(
+        messagesForApi,
+        (delta) => {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId
+                ? { ...m, content: m.content === "…" ? delta : m.content + delta }
+                : m,
+            ),
+          );
+        },
+        {
+          model: model.id,
+          signal: abortControllerRef.current.signal,
+          onDone: () => {
+            setStreaming(false);
+            abortControllerRef.current = null;
+          },
+        },
+      );
+    } catch (error: any) {
       setStreaming(false);
-      setMessages((prev) => {
-        const last = [...prev].pop();
-        if (!last || last.role !== "assistant") return prev;
-        return prev.map((m) =>
-          m.id === last.id ? { ...m, content: m.content + " (abgebrochen)" } : m,
-        );
-      });
+      abortControllerRef.current = null;
+      const errorMessage = error?.message || "Ein Fehler ist aufgetreten.";
+      setMessages((prev) =>
+        prev.map((m) => (m.id === assistantId ? { ...m, content: `Fehler: ${errorMessage}` } : m)),
+      );
     }
   };
 
-  useEffect(
-    () => () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    },
-    [],
-  );
+  const stop = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      setStreaming(false);
+    }
+  };
 
   return (
     <div className="flex h-full flex-col">
-      <Header title="Disa AI" modelName={model.name} onOpenModels={() => setSheetOpen(true)} />
+      <Header
+        title="Disa AI"
+        modelName={model?.label ?? "Lade..."}
+        onOpenModels={() => setSheetOpen(true)}
+      />
       <main className="flex-1 overflow-hidden" role="main" aria-label="Chat-Verlauf">
         <VirtualMessageList items={messages} renderItem={(m) => <MessageBubble msg={m} />} />
       </main>
@@ -362,7 +380,8 @@ export default function ChatApp() {
         open={sheetOpen}
         onClose={() => setSheetOpen(false)}
         onSelect={setModel}
-        currentId={model.id}
+        currentId={model?.id ?? ""}
+        models={models}
       />
     </div>
   );

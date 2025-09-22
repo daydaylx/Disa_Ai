@@ -4,7 +4,8 @@
     "allow": [
       "Bash(npm run lint)",
       "Bash(npm run test:*)",
-      "Bash(git status)"
+      "Bash(git status)",
+      "Bash(npx playwright test:*)"
     ],
     "ask": [
       "Bash(npm run build)",
@@ -31,9 +32,24 @@
   "model": "claude-sonnet-4-0",
   "outputStyle": "Default",
   "enableAllProjectMcpServers": false,
-  "enabledMcpjsonServers": [],
-  "disabledMcpjsonServers": [
-    "tavily",
-    "snyk-security"
-  ]
+
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/d/Schreibtisch/Disa Ai"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "mcp-sqlite", "/home/d/data/app.sqlite"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@itseasy21/mcp-knowledge-graph"],
+      "env": { "MEMORY_FILE_PATH": "/home/d/.cache/mcp/memory.jsonl" }
+    }
+  }
 }

@@ -52,7 +52,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         await navigator.clipboard.writeText(text);
         return true;
       } catch (error) {
-        console.warn("Copy failed:", error);
+        console.warn("Kopieren fehlgeschlagen:", error);
         return false;
       }
     };
@@ -74,9 +74,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
       try {
         copied = document.execCommand("copy");
       } catch (error) {
-        console.warn("Copy fallback failed", error);
-      } finally {
-        document.body.removeChild(textarea);
+        console.warn("Kopieren (Fallback) fehlgeschlagen", error);
       }
 
       return copied;
@@ -100,7 +98,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 
       runToast("error", "Kopieren nicht unterstützt");
     } catch (error) {
-      console.warn("Copy failed:", error);
+      console.warn("Kopieren fehlgeschlagen:", error);
       runToast("error", "Kopieren fehlgeschlagen");
     }
   };
@@ -109,7 +107,13 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
     <button
       type="button"
       onClick={handleCopy}
-      className={cn("btn", variantClasses[variant], sizeClasses[size], className)}
+      className={cn(
+        "btn",
+        variantClasses[variant],
+        sizeClasses[size],
+        "focus-visible:ring-focus",
+        className,
+      )}
       aria-label="Text kopieren"
       {...buttonProps}
     >
