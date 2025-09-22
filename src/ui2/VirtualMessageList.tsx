@@ -34,7 +34,12 @@ export default function VirtualMessageList({
   };
 
   return (
-    <div ref={containerRef} className="flex-1 space-y-3 overflow-y-auto px-3 pb-2 pt-3">
+    <div
+      ref={containerRef}
+      className="flex-1 space-y-3 overflow-y-auto px-3 pb-2 pt-3"
+      aria-label="Chat messages"
+      role="log"
+    >
       {start > 0 && (
         <div className="sticky top-0 z-10 flex justify-center">
           <button
