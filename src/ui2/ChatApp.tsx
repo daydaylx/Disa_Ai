@@ -41,7 +41,7 @@ function Header({
   onOpenModels: () => void;
 }) {
   return (
-    <header className="safe-pt safe-px sticky top-0 z-10">
+    <header className="safe-pt safe-px sticky top-0 z-10" role="banner">
       <div className="glass flex items-center justify-between rounded-xl px-3 py-2 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="grid size-8 place-items-center rounded-lg bg-primary/20" aria-hidden>
@@ -128,6 +128,9 @@ function Composer({
   return (
     <div className="safe-px safe-pb sticky bottom-0 z-10">
       <div className="glass rounded-xl p-2 shadow-sm">
+        <div id="composer-help" className="sr-only">
+          Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
+        </div>
         <div className="flex items-end gap-2">
           <textarea
             ref={taRef}
@@ -136,12 +139,16 @@ function Composer({
             placeholder="Schreib was Sinnvolles…"
             rows={1}
             className="flex-1 resize-none bg-transparent text-[15px] outline-none ring-0 placeholder:text-muted/60 focus:ring-0"
+            aria-label="Nachricht eingeben"
+            aria-describedby="composer-help"
+            data-testid="composer-input"
           />
           {!streaming ? (
             <button
               onClick={onSend}
               disabled={!value.trim()}
               className="rounded-lg border border-white/10 bg-primary/25 px-3 py-2 text-white/95 hover:bg-primary/35 disabled:opacity-50"
+              data-testid="composer-send"
             >
               Senden
             </button>
@@ -150,6 +157,7 @@ function Composer({
               onClick={onStop}
               className="rounded-lg border border-white/10 bg-danger/25 px-3 py-2 text-white/95 hover:bg-danger/35"
               aria-label="Stopp"
+              data-testid="composer-stop"
             >
               Stop
             </button>
@@ -332,14 +340,18 @@ export default function ChatApp() {
   return (
     <div className="flex h-full flex-col">
       <Header title="Disa AI" modelName={model.name} onOpenModels={() => setSheetOpen(true)} />
-      <VirtualMessageList items={messages} renderItem={(m) => <MessageBubble msg={m} />} />
-      <Composer
-        value={input}
-        onChange={setInput}
-        onSend={send}
-        onStop={stop}
-        streaming={streaming}
-      />
+      <main className="flex-1 overflow-hidden" role="main" aria-label="Chat-Verlauf">
+        <VirtualMessageList items={messages} renderItem={(m) => <MessageBubble msg={m} />} />
+      </main>
+      <section role="region" aria-label="Nachricht eingeben">
+        <Composer
+          value={input}
+          onChange={setInput}
+          onSend={send}
+          onStop={stop}
+          streaming={streaming}
+        />
+      </section>
       <ModelSheet
         open={sheetOpen}
         onClose={() => setSheetOpen(false)}

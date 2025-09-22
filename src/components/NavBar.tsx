@@ -1,9 +1,9 @@
 import React from "react";
 
 const tabs = [
-  { href: "#/chat", label: "Chat", icon: "💬" },
-  { href: "#/models", label: "Modelle", icon: "🤖" },
-  { href: "#/settings", label: "Settings", icon: "⚙️" },
+  { href: "#/chat", label: "Chat", icon: "💬", testId: "nav-bottom-chat" },
+  { href: "#/models", label: "Modelle", icon: "🤖", testId: "nav-bottom-models" },
+  { href: "#/settings", label: "Settings", icon: "⚙️", testId: "nav-bottom-settings" },
 ];
 
 export default function NavBar() {
@@ -27,6 +27,7 @@ export default function NavBar() {
                 active ? "bg-primary/25" : "bg-white/5 hover:bg-white/10",
               ].join(" ")}
               style={{ minHeight: 44 }}
+              data-testid={t.testId}
             >
               <div className="text-sm">
                 {t.icon} {t.label}
