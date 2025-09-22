@@ -24,7 +24,7 @@ test.describe("Autoscroll anchor", () => {
       { id: convId },
     );
 
-    await page.goto(`/#/chat/${convId}`);
+    await page.goto(`/#/chat`);
 
     const log = page.locator('[aria-label="Chat messages"]');
     await log.waitFor();
