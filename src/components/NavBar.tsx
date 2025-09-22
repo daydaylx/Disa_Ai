@@ -10,7 +10,7 @@ export default function NavBar() {
   const hash = typeof window !== "undefined" ? window.location.hash || "#/chat" : "#/chat";
   return (
     <nav
-      className="safe-px safe-pb fixed bottom-0 left-0 right-0"
+      className="safe-px safe-pb fixed bottom-0 left-0 right-0 z-50"
       style={{ height: "var(--bottom-nav-h)" }}
       aria-label="Hauptnavigation"
     >
