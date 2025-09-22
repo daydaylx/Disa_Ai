@@ -1,9 +1,12 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
+import { setupApiMocking } from "./global-setup";
+
 const FIXED_NOW = 1_714_099_200_000; // 2024-04-25T00:00:00Z
 
 test.beforeEach(async ({ page }) => {
+  await setupApiMocking(page);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript((now) => {
     const fixedNow = now;
