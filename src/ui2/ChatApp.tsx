@@ -208,7 +208,7 @@ function ModelSheet({
       {/* Sheet */}
       <div
         ref={sheetRef}
-        className={`safe-px safe-pb absolute bottom-0 left-0 right-0 transition-transform duration-200 ${
+        className={`safe-px safe-pb absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto transition-transform duration-200 ${
           open ? "translate-y-0" : "translate-y-full"
         }`}
       >

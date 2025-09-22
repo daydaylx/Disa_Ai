@@ -12,11 +12,12 @@ const MIN_HEIGHT = 56;
 
 export const Composer: React.FC<{
   loading?: boolean;
+  streaming?: boolean;
   onSend: (text: string) => void;
   onStop: () => void;
   error?: string | null;
   onClearError?: () => void;
-}> = ({ loading, onSend, onStop, error, onClearError }) => {
+}> = ({ loading, streaming, onSend, onStop, error, onClearError }) => {
   const [text, setText] = useState(() => {
     // Load prefilled text from QuickStart selection
     try {
@@ -38,7 +39,8 @@ export const Composer: React.FC<{
   const [platformShortcut, setPlatformShortcut] = useState("Strg");
   const [_showCommandSuggestions, setShowCommandSuggestions] = useState(false);
   const toasts = useToasts();
-  const disabled = loading || text.trim().length === 0;
+  const isLoading = loading || streaming;
+  const disabled = isLoading || text.trim().length === 0;
 
   // Auto-resize textarea based on content
   const adjustHeight = useCallback(() => {
@@ -261,7 +263,7 @@ export const Composer: React.FC<{
         />
 
         <div className="absolute bottom-3 right-3 flex items-center gap-2">
-          {loading ? (
+          {isLoading ? (
             <button
               data-testid="composer-stop"
               className="btn btn-ghost btn-sm"

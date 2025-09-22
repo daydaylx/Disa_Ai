@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
 
+import { setupTestEnvironment } from "./global-setup";
+
 test("Composer send/stop, Model-Sheet", async ({ page }) => {
+  await setupTestEnvironment(page);
   await page.goto("/");
   // Composer tippen und senden
   const ta = page.locator("textarea");
