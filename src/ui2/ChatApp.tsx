@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { chatStream } from "../api/openrouter";
+import { useToasts } from "../components/ui/Toast";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import CodeBlock from "./CodeBlock";
 import { segmentMessage } from "./segment";
@@ -85,12 +86,14 @@ function Composer({
   onSend,
   onStop,
   streaming,
+  canSend,
 }: {
   value: string;
   onChange: (s: string) => void;
   onSend: () => void;
   onStop: () => void;
   streaming: boolean;
+  canSend: boolean;
 }) {
   const taRef = useRef<HTMLTextAreaElement>(null);
 
@@ -124,7 +127,7 @@ function Composer({
           {!streaming ? (
             <button
               onClick={onSend}
-              disabled={!value.trim()}
+              disabled={!value.trim() || !canSend}
               className="hover:bg-accent-teal/28 rounded-xl border border-accent-teal/45 bg-accent-teal/20 px-3 py-2 text-text-primary transition-colors hover:border-accent-teal/55 disabled:cursor-not-allowed disabled:opacity-60"
               data-testid="composer-send"
             >
@@ -279,6 +282,7 @@ export default function ChatApp() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [streaming, setStreaming] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const toasts = useToasts();
 
   useEffect(() => {
     let alive = true;
@@ -297,7 +301,16 @@ export default function ChatApp() {
 
   const send = async () => {
     const text = input.trim();
-    if (!text || streaming || !model) return;
+    if (!text || streaming) return;
+
+    if (!model) {
+      toasts.push({
+        kind: "error",
+        title: "Kein Modell verfügbar",
+        message: "Bitte wähle zunächst ein Modell aus, bevor du eine Nachricht sendest.",
+      });
+      return;
+    }
 
     const now = Date.now();
     const userMessage: Message = { id: `u_${now}`, role: "user", content: text, ts: now };
@@ -348,6 +361,11 @@ export default function ChatApp() {
       setMessages((prev) =>
         prev.map((m) => (m.id === assistantId ? { ...m, content: `Fehler: ${errorMessage}` } : m)),
       );
+      toasts.push({
+        kind: "error",
+        title: "Antwort fehlgeschlagen",
+        message: errorMessage,
+      });
     }
   };
 
@@ -375,6 +393,7 @@ export default function ChatApp() {
           onSend={send}
           onStop={stop}
           streaming={streaming}
+          canSend={Boolean(model)}
         />
       </section>
       <ModelSheet

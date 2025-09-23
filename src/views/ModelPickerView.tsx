@@ -46,7 +46,7 @@ export default function ModelPickerView({ onSelectChat }: Props) {
     <div
       className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-6"
       style={{
-        paddingBottom: "calc(env(safe-area-inset-bottom) + var(--bottomnav-h, 56px) + 32px)",
+        paddingBottom: "calc(env(safe-area-inset-bottom) + var(--bottom-nav-h, 56px) + 32px)",
       }}
     >
       <GlassCard variant="floating" tint="purple" className="p-8 text-center">
