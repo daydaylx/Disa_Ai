@@ -89,60 +89,62 @@ export default function SettingsView() {
   return (
     <div className="flex h-full flex-col">
       <header className="safe-pt safe-px sticky top-0 z-10">
-        <div className="glass flex items-center justify-between rounded-xl px-3 py-2 shadow-sm">
+        <div className="glass flex items-center justify-between rounded-xl px-4 py-3 shadow-sm">
           <div>
-            <div className="text-sm text-muted/80">Einstellungen</div>
-            <h1 className="text-base font-semibold">Control Center</h1>
+            <div className="text-sm font-medium tracking-wide text-muted/80">Settings</div>
+            <h1 className="text-xl font-semibold tracking-tight">Control Center</h1>
           </div>
         </div>
       </header>
 
       <main className="safe-px with-bottomnav flex-1 space-y-6 overflow-y-auto pt-3">
         {/* Control Center Header */}
-        <GlassCard variant="floating" tint="cyan" className="p-6">
+        <GlassCard variant="floating" tint="cyan" className="p-8">
           <div className="text-center">
-            <h1 className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-2xl font-bold text-transparent">
-              Einstellungen
+            <h1 className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent">
+              Settings
             </h1>
-            <p className="mt-1 text-sm text-neutral-400">Konfiguration und Verwaltung</p>
+            <p className="mt-2 text-base font-medium text-neutral-400/90">
+              Configuration & Management
+            </p>
           </div>
 
           {/* Status Overview */}
-          <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
             <div className="text-center">
-              <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-400">
+              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
                 API
               </div>
               <div
-                className={`text-sm font-medium ${apiKey ? "text-green-400" : "text-orange-400"}`}
+                className={`text-sm font-semibold tracking-wide ${apiKey ? "text-green-400" : "text-orange-400"}`}
               >
-                {apiKey ? "Verbunden" : "Nicht konfiguriert"}
+                {apiKey ? "Connected" : "Not Configured"}
               </div>
             </div>
 
             <div className="text-center">
-              <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-400">
+              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
                 App
               </div>
               <div
-                className={`text-sm font-medium ${pwa.installed ? "text-green-400" : "text-blue-400"}`}
+                className={`text-sm font-semibold tracking-wide ${pwa.installed ? "text-green-400" : "text-blue-400"}`}
               >
-                {pwa.installed ? "Installiert" : "Web"}
+                {pwa.installed ? "Installed" : "Web"}
               </div>
             </div>
 
             <div className="text-center">
-              <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-400">
-                Stil
+              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
+                Style
               </div>
-              <div className="text-sm font-medium text-cyan-400">Konfiguriert</div>
+              <div className="text-sm font-semibold tracking-wide text-cyan-400">Configured</div>
             </div>
 
             <div className="text-center">
-              <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-400">
-                Rollen
+              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
+                Roles
               </div>
-              <div className="text-sm font-medium text-purple-400">Verfügbar</div>
+              <div className="text-sm font-semibold tracking-wide text-purple-400">Available</div>
             </div>
           </div>
         </GlassCard>
