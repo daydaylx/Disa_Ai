@@ -101,7 +101,7 @@ export default function BottomNav() {
             data-testid="nav-bottom-chat"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            💬 Chat
+            Chat
           </button>
         </li>
         <li>
@@ -113,7 +113,7 @@ export default function BottomNav() {
             data-testid="nav-bottom-models"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            🤖 Modelle
+            Modelle
           </button>
         </li>
         <li>
@@ -125,7 +125,7 @@ export default function BottomNav() {
             data-testid="nav-bottom-settings"
             onTouchStart={() => hapticFeedback.tap()}
           >
-            ⚙️ Settings
+            Settings
           </button>
         </li>
       </ul>

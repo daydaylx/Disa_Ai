@@ -29,28 +29,28 @@
   --color-accent-low: rgba(34, 211, 238, 0.16);
   --color-accent-foreground: #03141c;
 
-  /* Professional Dark Glass palette */
-  --color-darkglass-bg: #0b0f14;
-  --color-darkglass-bg-rgb: 11 15 20;
-  --color-darkglass-surface: #10151b;
-  --color-darkglass-surface-rgb: 16 21 27;
+  /* Professional Dark Glass palette - Enhanced Business Grade */
+  --color-darkglass-bg: #0a0e13;
+  --color-darkglass-bg-rgb: 10 14 19;
+  --color-darkglass-surface: #0f1419;
+  --color-darkglass-surface-rgb: 15 20 25;
   --color-darkglass-surface-elevated: #131a21;
-  --color-darkglass-text-primary: #e0e0e0;
-  --color-darkglass-text-primary-rgb: 224 224 224;
-  --color-darkglass-text-secondary: #b8bec4;
+  --color-darkglass-text-primary: #e8eaed;
+  --color-darkglass-text-primary-rgb: 232 234 237;
+  --color-darkglass-text-secondary: #bdc1c6;
   --color-darkglass-text-muted: #9aa0a6;
-  --color-darkglass-accent-teal: #00bcd4;
-  --color-darkglass-accent-teal-rgb: 0 188 212;
-  --color-darkglass-accent-violet: #7c4dff;
-  --color-darkglass-accent-violet-rgb: 124 77 255;
-  --color-darkglass-accent-pink: #ff4d8b;
-  --color-darkglass-accent-pink-rgb: 255 77 139;
-  --color-darkglass-border-soft: rgba(255, 255, 255, 0.12);
-  --color-darkglass-border-strong: rgba(255, 255, 255, 0.18);
-  --color-darkglass-border-ultra: rgba(255, 255, 255, 0.32);
-  --color-darkglass-overlay-weak: rgba(255, 255, 255, 0.06);
-  --color-darkglass-overlay-soft: rgba(255, 255, 255, 0.1);
-  --color-darkglass-overlay-strong: rgba(255, 255, 255, 0.18);
+  --color-darkglass-accent-teal: #00acc1;
+  --color-darkglass-accent-teal-rgb: 0 172 193;
+  --color-darkglass-accent-violet: #6366f1;
+  --color-darkglass-accent-violet-rgb: 99 102 241;
+  --color-darkglass-accent-pink: #ec4899;
+  --color-darkglass-accent-pink-rgb: 236 72 153;
+  --color-darkglass-border-soft: rgba(255, 255, 255, 0.08);
+  --color-darkglass-border-strong: rgba(255, 255, 255, 0.14);
+  --color-darkglass-border-ultra: rgba(255, 255, 255, 0.24);
+  --color-darkglass-overlay-weak: rgba(255, 255, 255, 0.04);
+  --color-darkglass-overlay-soft: rgba(255, 255, 255, 0.07);
+  --color-darkglass-overlay-strong: rgba(255, 255, 255, 0.12);
   --color-darkglass-shadow: 0 28px 80px -32px rgba(5, 9, 15, 0.75);
   --color-darkglass-shadow-soft: 0 18px 48px -24px rgba(5, 9, 15, 0.55);
 
@@ -63,10 +63,10 @@
   --color-darkglass-accent-foreground: #041019;
   --color-danger-subtle-tint: #ffe7eb;
 
-  /* Professional gradient colors */
-  --color-gradient-dark-start: #0f2027;
-  --color-gradient-dark-mid: #203a43;
-  --color-gradient-dark-end: #2c5364;
+  /* Professional gradient colors - Business Grade */
+  --color-gradient-dark-start: #0a0e13;
+  --color-gradient-dark-mid: #151b22;
+  --color-gradient-dark-end: #1f2937;
   --color-success-500: #22c55e;
   --color-success-200: #6fd08f;
   --color-warning-500: #f59e0b;
@@ -83,36 +83,36 @@
   --gradient-night-soft: #0f1419;
   --gradient-purple-600: #a855f7;
 
-  /* Spacing scale */
+  /* Spacing scale - Enhanced Professional */
   --space-0: 0px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
-  --space-16: 64px;
+  --space-5: 24px;
+  --space-6: 28px;
+  --space-8: 36px;
+  --space-10: 44px;
+  --space-12: 52px;
+  --space-16: 72px;
 
-  /* Typography scale */
-  --font-h1-size: 24px;
-  --font-h1-line: 32px;
-  --font-h1-weight: 600;
-  --font-h1-spacing: -0.01em;
+  /* Typography scale - Professional Grade */
+  --font-h1-size: 28px;
+  --font-h1-line: 36px;
+  --font-h1-weight: 700;
+  --font-h1-spacing: -0.02em;
 
-  --font-h2-size: 20px;
-  --font-h2-line: 28px;
+  --font-h2-size: 22px;
+  --font-h2-line: 30px;
   --font-h2-weight: 600;
-  --font-h2-spacing: -0.01em;
+  --font-h2-spacing: -0.015em;
 
   --font-subtitle-size: 18px;
   --font-subtitle-line: 26px;
   --font-subtitle-weight: 500;
 
-  --font-body-size: 16px;
-  --font-body-line: 24px;
+  --font-body-size: 15px;
+  --font-body-line: 22px;
   --font-body-weight: 400;
 
   --font-label-size: 13px;
@@ -137,35 +137,35 @@
   --elevation-2: 0 20px 48px -18px rgba(5, 11, 20, 0.55);
   --elevation-3: 0 32px 64px -24px rgba(5, 11, 20, 0.65);
 
-  /* Enhanced Glassmorphism blur values */
-  --glass-blur-xs: 8px;
-  --glass-blur-sm: 12px;
-  --glass-blur-md: 20px;
-  --glass-blur-lg: 28px;
-  --glass-blur-xl: 36px;
-  --glass-blur-2xl: 48px;
+  /* Enhanced Glassmorphism blur values - Professional Grade */
+  --glass-blur-xs: 16px;
+  --glass-blur-sm: 20px;
+  --glass-blur-md: 28px;
+  --glass-blur-lg: 36px;
+  --glass-blur-xl: 44px;
+  --glass-blur-2xl: 60px;
 
-  /* Glassmorphism backgrounds */
-  --glass-bg-subtle: rgba(255, 255, 255, 0.05);
-  --glass-bg-soft: rgba(255, 255, 255, 0.08);
-  --glass-bg-medium: rgba(255, 255, 255, 0.12);
-  --glass-bg-strong: rgba(255, 255, 255, 0.16);
+  /* Glassmorphism backgrounds - Professional Opacity */
+  --glass-bg-subtle: rgba(255, 255, 255, 0.03);
+  --glass-bg-soft: rgba(255, 255, 255, 0.06);
+  --glass-bg-medium: rgba(255, 255, 255, 0.09);
+  --glass-bg-strong: rgba(255, 255, 255, 0.12);
 
-  /* Glassmorphism borders */
-  --glass-border-subtle: rgba(255, 255, 255, 0.08);
-  --glass-border-soft: rgba(255, 255, 255, 0.12);
-  --glass-border-medium: rgba(255, 255, 255, 0.16);
-  --glass-border-strong: rgba(255, 255, 255, 0.24);
+  /* Glassmorphism borders - Professional Subtlety */
+  --glass-border-subtle: rgba(255, 255, 255, 0.06);
+  --glass-border-soft: rgba(255, 255, 255, 0.09);
+  --glass-border-medium: rgba(255, 255, 255, 0.12);
+  --glass-border-strong: rgba(255, 255, 255, 0.18);
 
-  /* Glassmorphism tints */
-  --glass-tint-cyan: rgba(34, 211, 238, 0.1);
-  --glass-tint-purple: rgba(168, 85, 247, 0.1);
-  --glass-tint-mint: rgba(110, 231, 183, 0.1);
-  --glass-tint-warm: rgba(255, 183, 77, 0.1);
+  /* Glassmorphism tints - Reduced for Professional Look */
+  --glass-tint-cyan: rgba(34, 211, 238, 0.04);
+  --glass-tint-purple: rgba(168, 85, 247, 0.04);
+  --glass-tint-mint: rgba(110, 231, 183, 0.04);
+  --glass-tint-warm: rgba(255, 183, 77, 0.04);
 
-  /* Glassmorphism glows */
-  --glass-glow-subtle: 0 0 20px rgba(34, 211, 238, 0.15);
-  --glass-glow-soft: 0 0 30px rgba(34, 211, 238, 0.2);
-  --glass-glow-medium: 0 0 40px rgba(34, 211, 238, 0.25);
-  --glass-glow-strong: 0 0 60px rgba(34, 211, 238, 0.3);
+  /* Glassmorphism glows - Professional Subtlety */
+  --glass-glow-subtle: 0 0 16px rgba(34, 211, 238, 0.08);
+  --glass-glow-soft: 0 0 24px rgba(34, 211, 238, 0.12);
+  --glass-glow-medium: 0 0 32px rgba(34, 211, 238, 0.15);
+  --glass-glow-strong: 0 0 40px rgba(34, 211, 238, 0.18);
 }
