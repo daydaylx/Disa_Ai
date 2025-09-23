@@ -16,5 +16,5 @@ test("Composer send/stop, Model-Sheet", async ({ page }) => {
   // Model-Sheet öffnen/schließen
   await page.getByRole("button", { name: "Modell auswählen" }).click();
   await expect(page.getByRole("dialog", { name: "Modell-Auswahl" })).toBeVisible();
-  await page.getByRole("button", { name: "Schließen" }).click();
+  await page.getByRole("button", { name: "Schließen" }).first().click();
 });
