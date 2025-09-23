@@ -29,7 +29,7 @@
   --color-accent-low: rgba(34, 211, 238, 0.16);
   --color-accent-foreground: #03141c;
 
-  /* Dark glass palette */
+  /* Professional Dark Glass palette */
   --color-darkglass-bg: #0b0f14;
   --color-darkglass-bg-rgb: 11 15 20;
   --color-darkglass-surface: #10151b;
@@ -39,8 +39,8 @@
   --color-darkglass-text-primary-rgb: 224 224 224;
   --color-darkglass-text-secondary: #b8bec4;
   --color-darkglass-text-muted: #9aa0a6;
-  --color-darkglass-accent-teal: #26c6da;
-  --color-darkglass-accent-teal-rgb: 38 198 218;
+  --color-darkglass-accent-teal: #00bcd4;
+  --color-darkglass-accent-teal-rgb: 0 188 212;
   --color-darkglass-accent-violet: #7c4dff;
   --color-darkglass-accent-violet-rgb: 124 77 255;
   --color-darkglass-accent-pink: #ff4d8b;
@@ -48,9 +48,9 @@
   --color-darkglass-border-soft: rgba(255, 255, 255, 0.12);
   --color-darkglass-border-strong: rgba(255, 255, 255, 0.18);
   --color-darkglass-border-ultra: rgba(255, 255, 255, 0.32);
-  --color-darkglass-overlay-weak: rgba(255, 255, 255, 0.04);
-  --color-darkglass-overlay-soft: rgba(255, 255, 255, 0.08);
-  --color-darkglass-overlay-strong: rgba(255, 255, 255, 0.16);
+  --color-darkglass-overlay-weak: rgba(255, 255, 255, 0.06);
+  --color-darkglass-overlay-soft: rgba(255, 255, 255, 0.1);
+  --color-darkglass-overlay-strong: rgba(255, 255, 255, 0.18);
   --color-darkglass-shadow: 0 28px 80px -32px rgba(5, 9, 15, 0.75);
   --color-darkglass-shadow-soft: 0 18px 48px -24px rgba(5, 9, 15, 0.55);
 
@@ -62,6 +62,11 @@
   /* Theme-specific hex colors (extracted from theme.css) */
   --color-darkglass-accent-foreground: #041019;
   --color-danger-subtle-tint: #ffe7eb;
+
+  /* Professional gradient colors */
+  --color-gradient-dark-start: #0f2027;
+  --color-gradient-dark-mid: #203a43;
+  --color-gradient-dark-end: #2c5364;
   --color-success-500: #22c55e;
   --color-success-200: #6fd08f;
   --color-warning-500: #f59e0b;
@@ -132,13 +137,13 @@
   --elevation-2: 0 20px 48px -18px rgba(5, 11, 20, 0.55);
   --elevation-3: 0 32px 64px -24px rgba(5, 11, 20, 0.65);
 
-  /* Glassmorphism blur values */
-  --glass-blur-xs: 6px;
-  --glass-blur-sm: 8px;
-  --glass-blur-md: 16px;
-  --glass-blur-lg: 24px;
-  --glass-blur-xl: 32px;
-  --glass-blur-2xl: 40px;
+  /* Enhanced Glassmorphism blur values */
+  --glass-blur-xs: 8px;
+  --glass-blur-sm: 12px;
+  --glass-blur-md: 20px;
+  --glass-blur-lg: 28px;
+  --glass-blur-xl: 36px;
+  --glass-blur-2xl: 48px;
 
   /* Glassmorphism backgrounds */
   --glass-bg-subtle: rgba(255, 255, 255, 0.05);
