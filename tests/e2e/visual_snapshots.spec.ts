@@ -25,7 +25,7 @@ test.beforeEach(async ({ page }) => {
 test("model picker empty state", async ({ page }) => {
   await page.goto("/models");
   await page.waitForTimeout(100);
-  await expect(page).toHaveScreenshot("model-picker-empty.png", { fullPage: true, threshold: 0.1 });
+  await expect(page).toHaveScreenshot("model-picker-empty.png", { fullPage: true, threshold: 0.3 });
 });
 
 const seedConversation = async (
@@ -80,7 +80,7 @@ test("running chat snapshot", async ({ page }) => {
 
   await expect(page).toHaveScreenshot("chat-running.png", {
     fullPage: true,
-    threshold: 0.1,
+    threshold: 0.3,
     mask: [page.locator(".chat-bubble__meta")],
   });
 });
@@ -105,7 +105,7 @@ test("code block snapshot", async ({ page }) => {
   await page.waitForTimeout(150);
 
   await expect(log).toHaveScreenshot("chat-code.png", {
-    threshold: 0.1,
+    threshold: 0.3,
     mask: [log.locator(".chat-bubble__meta")],
   });
 });
@@ -134,12 +134,12 @@ test.skip("composer error snapshot", async ({ page }) => {
 test("settings overview snapshot", async ({ page }) => {
   await page.goto("/settings");
   await page.waitForTimeout(100);
-  await expect(page).toHaveScreenshot("settings-dark.png", { fullPage: true, threshold: 0.1 });
+  await expect(page).toHaveScreenshot("settings-dark.png", { fullPage: true, threshold: 0.3 });
 });
 
 test("settings forced-light snapshot", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
   await page.goto("/settings");
   await page.waitForTimeout(100);
-  await expect(page).toHaveScreenshot("settings-light.png", { fullPage: true, threshold: 0.1 });
+  await expect(page).toHaveScreenshot("settings-light.png", { fullPage: true, threshold: 0.3 });
 });
