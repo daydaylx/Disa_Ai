@@ -48,13 +48,13 @@ async function handleStreamingResponse(route: any) {
 
   // Simulate streaming response - start immediately but continue streaming
   const streamBody =
-    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"gpt-3.5-turbo","choices":[{"index":0,"delta":{"role":"assistant","content":"Hallo"},"finish_reason":null}]}\n\n' +
-    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"gpt-3.5-turbo","choices":[{"index":0,"delta":{"content":" das"},"finish_reason":null}]}\n\n' +
-    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"gpt-3.5-turbo","choices":[{"index":0,"delta":{"content":" ist"},"finish_reason":null}]}\n\n' +
-    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"gpt-3.5-turbo","choices":[{"index":0,"delta":{"content":" eine"},"finish_reason":null}]}\n\n' +
-    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"gpt-3.5-turbo","choices":[{"index":0,"delta":{"content":" Test"},"finish_reason":null}]}\n\n' +
-    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"gpt-3.5-turbo","choices":[{"index":0,"delta":{"content":"-Antwort"},"finish_reason":null}]}\n\n' +
-    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"gpt-3.5-turbo","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}\n\n' +
+    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"mistralai/mistral-nemo:free","choices":[{"index":0,"delta":{"role":"assistant","content":"Hallo"},"finish_reason":null}]}\n\n' +
+    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"mistralai/mistral-nemo:free","choices":[{"index":0,"delta":{"content":" das"},"finish_reason":null}]}\n\n' +
+    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"mistralai/mistral-nemo:free","choices":[{"index":0,"delta":{"content":" ist"},"finish_reason":null}]}\n\n' +
+    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"mistralai/mistral-nemo:free","choices":[{"index":0,"delta":{"content":" eine"},"finish_reason":null}]}\n\n' +
+    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"mistralai/mistral-nemo:free","choices":[{"index":0,"delta":{"content":" Test"},"finish_reason":null}]}\n\n' +
+    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"mistralai/mistral-nemo:free","choices":[{"index":0,"delta":{"content":"-Antwort"},"finish_reason":null}]}\n\n' +
+    'data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1234567890,"model":"mistralai/mistral-nemo:free","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}\n\n' +
     "data: [DONE]\n\n";
 
   // Add a delay to make sure streaming state is visible
@@ -74,12 +74,22 @@ async function handleModelsResponse(route: any) {
   const mockModels = {
     data: [
       {
-        id: "gpt-3.5-turbo",
+        id: "mistralai/mistral-nemo:free",
         object: "model",
         created: 1677610602,
-        owned_by: "openai",
-        pricing: { prompt: "0.0015", completion: "0.002" },
-        context_length: 4096,
+        owned_by: "mistralai",
+        pricing: { prompt: "0", completion: "0" },
+        context_length: 128000,
+        tags: ["free"],
+      },
+      {
+        id: "qwen/qwen-2.5-7b-instruct:free",
+        object: "model",
+        created: 1677610602,
+        owned_by: "qwen",
+        pricing: { prompt: "0", completion: "0" },
+        context_length: 32768,
+        tags: ["free"],
       },
     ],
   };
