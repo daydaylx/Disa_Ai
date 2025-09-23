@@ -22,7 +22,7 @@ test.beforeEach(async ({ page }) => {
   }, FIXED_NOW);
 });
 
-test.skip("model picker empty state", async ({ page }) => {
+test("model picker empty state", async ({ page }) => {
   await page.goto("/#/models");
   await page.waitForTimeout(100);
   await expect(page).toHaveScreenshot("model-picker-empty.png", { fullPage: true, threshold: 0.1 });
@@ -58,7 +58,7 @@ const seedConversation = async (
   );
 };
 
-test.skip("running chat snapshot", async ({ page }) => {
+test("running chat snapshot", async ({ page }) => {
   const convo = {
     id: "visual-running",
     messages: [
@@ -85,7 +85,7 @@ test.skip("running chat snapshot", async ({ page }) => {
   });
 });
 
-test.skip("code block snapshot", async ({ page }) => {
+test("code block snapshot", async ({ page }) => {
   const convo = {
     id: "visual-code",
     messages: [
@@ -110,13 +110,13 @@ test.skip("code block snapshot", async ({ page }) => {
   });
 });
 
-test.skip("composer error snapshot", async ({ page }) => {
+test("composer error snapshot", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("disa:openrouter:key", "test-key");
   });
 
   await page.route("https://**", (route) => route.abort());
-  await page.goto("/#/chat");
+  await page.goto("#/chat");
   const input = page.locator('[data-testid="composer-input"]');
   await input.waitFor();
   await input.fill("Bitte löse eine quadratische Gleichung.");
@@ -130,15 +130,15 @@ test.skip("composer error snapshot", async ({ page }) => {
   });
 });
 
-test.skip("settings overview snapshot", async ({ page }) => {
-  await page.goto("/#/settings");
+test("settings overview snapshot", async ({ page }) => {
+  await page.goto("#/settings");
   await page.waitForTimeout(100);
   await expect(page).toHaveScreenshot("settings-dark.png", { fullPage: true, threshold: 0.1 });
 });
 
-test.skip("settings forced-light snapshot", async ({ page }) => {
+test("settings forced-light snapshot", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
-  await page.goto("/#/settings");
+  await page.goto("#/settings");
   await page.waitForTimeout(100);
   await expect(page).toHaveScreenshot("settings-light.png", { fullPage: true, threshold: 0.1 });
 });
