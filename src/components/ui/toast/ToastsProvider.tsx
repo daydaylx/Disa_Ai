@@ -2,7 +2,7 @@ import * as React from "react";
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { cn } from "../../../lib/utils/cn";
+import { cn } from "../../../lib/cn";
 import { Icon } from "../Icon";
 import type { ToastItem, ToastKind } from "./ToastTypes";
 
@@ -84,7 +84,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               key={t.id}
               role="status"
               className={cn(
-                "tap-target rounded-2xl pointer-events-auto w-[min(96vw,640px)] border border-border-strong bg-surface-200 text-text-primary shadow-elev2",
+                "tap-target border-border-strong bg-surface-200 shadow-elev2 pointer-events-auto w-[min(96vw,640px)] rounded-2xl border text-text-primary",
                 "flex items-start gap-3 p-3",
               )}
             >

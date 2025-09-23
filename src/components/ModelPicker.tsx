@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { loadModelCatalog, type Safety } from "../config/models";
-import { cn } from "../lib/utils/cn";
+import { cn } from "../lib/cn";
 import { getApiKey } from "../services/openrouter";
 import { Icon } from "./ui/Icon";
 

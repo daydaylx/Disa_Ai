@@ -1,34 +1,34 @@
 /*
-  # Security basics
+  # Security headers
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
 
-  # Optional: cross-origin isolation (nur lassen, wenn wirklich gebraucht)
+  # Cross-origin isolation (optional but recommended)
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
 
-  # Permissions
-  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  # Permissions policy - restrict dangerous APIs
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
 
   # Performance & PWA headers
   Accept-CH: Viewport-Width, DPR, Width
   Critical-CH: Viewport-Width, DPR
   Vary: Accept-Encoding, Viewport-Width, DPR
 
-  # CSP: minimal strikt, aber praxis-tauglich für Vite/React
-  # Wichtig: OpenRouter erlauben (Domain + Subdomains)
+  # Strict CSP - Remove unsafe-inline and strengthen security
   Content-Security-Policy: default-src 'self';
     base-uri 'self';
     frame-ancestors 'none';
     object-src 'none';
     img-src 'self' data: blob:;
     font-src 'self' data:;
-    style-src 'self' 'unsafe-inline';
-    script-src 'self';
-    connect-src 'self' https://openrouter.ai https://*.openrouter.ai;
+    style-src 'self' 'sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+    script-src 'self' 'nonce-vite-dev' 'sha256-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=';
+    connect-src 'self' https://openrouter.ai https://*.openrouter.ai wss://localhost:* ws://localhost:*;
     worker-src 'self' blob:;
-    form-action 'self'
+    form-action 'self';
+    upgrade-insecure-requests
 
 /*
   /index.html 200

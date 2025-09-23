@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { usePersonaSelection } from "../config/personas";
-import { cn } from "../lib/utils/cn";
+import { cn } from "../lib/cn";
 
 /** QuickBar (falls genutzt) */
 const PersonaQuickBar: React.FC = () => {

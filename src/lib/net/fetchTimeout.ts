@@ -12,26 +12,39 @@ export async function fetchWithTimeout(
 ): Promise<Response> {
   const { timeoutMs = 30000, signal: userSignal, fetchOptions = {} } = options;
 
-  const timeoutController = new AbortController();
-  const timeoutId = setTimeout(() => timeoutController.abort(), timeoutMs);
-
   const combinedController = new AbortController();
-  const cleanup = () => clearTimeout(timeoutId);
 
-  const abortBoth = () => {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let isTimeout = false;
+  let isUserAbort = false;
+
+  const cleanup = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+  };
+
+  const abortBoth = (reason: "timeout" | "user") => {
     cleanup();
+    if (reason === "timeout") isTimeout = true;
+    if (reason === "user") isUserAbort = true;
     combinedController.abort();
   };
 
-  if (userSignal) {
-    if (userSignal.aborted) {
-      cleanup();
-      throw new AbortError();
-    }
-    userSignal.addEventListener("abort", abortBoth, { once: true });
+  // Check if user signal is already aborted
+  if (userSignal?.aborted) {
+    cleanup();
+    throw new AbortError();
   }
 
-  timeoutController.signal.addEventListener("abort", abortBoth, { once: true });
+  // Set up timeout
+  timeoutId = setTimeout(() => abortBoth("timeout"), timeoutMs);
+
+  // Set up user signal listener
+  if (userSignal) {
+    userSignal.addEventListener("abort", () => abortBoth("user"), { once: true });
+  }
 
   try {
     const response = await fetch(url, {
@@ -42,15 +55,21 @@ export async function fetchWithTimeout(
     return response;
   } catch (error) {
     cleanup();
+
+    // Handle abort errors with proper priority
     if (error instanceof DOMException && error.name === "AbortError") {
-      if (timeoutController.signal.aborted && !userSignal?.aborted) {
-        throw new TimeoutError(`Request timeout after ${timeoutMs}ms`, { cause: error });
-      }
-      if (userSignal?.aborted) {
+      // User abort takes priority over timeout
+      if (isUserAbort) {
         throw new AbortError();
       }
+      if (isTimeout) {
+        throw new TimeoutError(`Request timeout after ${timeoutMs}ms`, { cause: error });
+      }
+      // Fallback for other abort scenarios
+      throw new AbortError();
     }
-    // Für andere Fehler (z.B. TypeError bei Netzwerkproblemen) den Mapper verwenden
+
+    // For other errors (e.g., TypeError for network problems) use the mapper
     throw mapError(error);
   }
 }

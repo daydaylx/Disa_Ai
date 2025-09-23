@@ -1,3 +1,4 @@
+import DOMPurify from "isomorphic-dompurify";
 import * as React from "react";
 
 export interface SimpleMarkdownRendererProps {
@@ -6,8 +7,9 @@ export interface SimpleMarkdownRendererProps {
 }
 
 /**
- * Simple markdown renderer for basic formatting
+ * Secure markdown renderer with XSS protection
  * Handles: **bold**, *italic*, `code`, and basic line breaks
+ * Uses DOMPurify to sanitize HTML and prevent XSS attacks
  */
 export default function SimpleMarkdownRenderer({
   content,
@@ -16,10 +18,18 @@ export default function SimpleMarkdownRenderer({
   const processedContent = React.useMemo(() => {
     let text = content;
 
+    // Escape HTML entities first to prevent injection
+    text = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#x27;");
+
     // Handle code blocks (```...```)
-    text = text.replace(/```[\s\S]*?```/g, (match) => {
-      const code = match.slice(3, -3).trim();
-      return `<pre class="bg-surface-secondary rounded-lg p-4 overflow-x-auto my-4"><code>${code}</code></pre>`;
+    text = text.replace(/```([\s\S]*?)```/g, (_, code) => {
+      const cleanCode = code.trim();
+      return `<pre class="bg-surface-secondary rounded-lg p-4 overflow-x-auto my-4"><code>${cleanCode}</code></pre>`;
     });
 
     // Handle inline code (`...`)
@@ -45,7 +55,12 @@ export default function SimpleMarkdownRenderer({
       text = `<p>${text}</p>`;
     }
 
-    return text;
+    // Sanitize the final HTML to prevent XSS
+    return DOMPurify.sanitize(text, {
+      ALLOWED_TAGS: ["p", "br", "strong", "em", "code", "pre"],
+      ALLOWED_ATTR: ["class"],
+      KEEP_CONTENT: true,
+    });
   }, [content]);
 
   return (

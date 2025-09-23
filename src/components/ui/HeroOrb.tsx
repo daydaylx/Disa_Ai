@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "../../lib/utils/cn";
+import { cn } from "../../lib/cn";
 
 export interface HeroOrbProps {
   state?: "idle" | "focus" | "listening";
@@ -33,8 +33,8 @@ export const HeroOrb: React.FC<HeroOrbProps> = ({
     <div
       aria-hidden
       className={cn(
-        "from-accent/35 to-background/10 relative mx-auto rounded-full border border-border-strong bg-gradient-to-br",
-        "after:border-accent/25 after:absolute after:-inset-[6%] after:rounded-full after:border",
+        "to-background/10 border-border-strong relative mx-auto rounded-full border bg-gradient-to-br from-accent/35",
+        "after:absolute after:-inset-[6%] after:rounded-full after:border after:border-accent/25",
         sizeClasses[resolvedSize],
         animationByState[resolvedState],
         className,

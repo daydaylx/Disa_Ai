@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 
-import { cn } from "../../lib/utils/cn";
+import { cn } from "../../lib/cn";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
 
@@ -27,7 +27,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 
   return (
     <div
-      className={cn("rounded-md border border-danger bg-bg-danger-subtle p-3", className)}
+      className={cn("bg-bg-danger-subtle rounded-md border border-danger p-3", className)}
       role="alert"
     >
       <div className="flex items-start gap-2">
@@ -42,7 +42,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
               <summary className="cursor-pointer text-xs underline underline-offset-4">
                 Details
               </summary>
-              <pre className="max-h-48 rounded mt-1 overflow-auto border border-border-subtle bg-surface-100 p-2 text-xs text-text-primary">
+              <pre className="border-border-subtle bg-surface-100 mt-1 max-h-48 overflow-auto rounded border p-2 text-xs text-text-primary">
                 {details}
               </pre>
             </details>
