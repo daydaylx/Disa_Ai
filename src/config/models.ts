@@ -70,11 +70,38 @@ function byLabel(a: ModelEntry, b: ModelEntry) {
 
 /* ---- Public API ---- */
 
-/** Lädt und transformiert das OpenRouter-Model-Listing. */
+/** Sammelt alle erlaubten Modell-IDs aus styles.json */
+async function getAllowedModelIds(): Promise<string[]> {
+  try {
+    const response = await fetch("/styles.json");
+    const stylesData = await response.json();
+    const allowed = new Set<string>();
+
+    if (stylesData?.styles && Array.isArray(stylesData.styles)) {
+      for (const style of stylesData.styles) {
+        if (style.allow && Array.isArray(style.allow)) {
+          style.allow.forEach((modelId: string) => allowed.add(modelId));
+        }
+      }
+    }
+
+    return Array.from(allowed);
+  } catch (error) {
+    console.warn("Failed to load allowed models from styles.json:", error);
+    return [];
+  }
+}
+
+/** Lädt und transformiert das OpenRouter-Model-Listing, gefiltert nach erlaubten Modellen. */
 export async function loadModelCatalog(_opts?: CatalogOptions | boolean): Promise<ModelEntry[]> {
-  const data = await getRawModels();
+  const [data, allowedIds] = await Promise.all([getRawModels(), getAllowedModelIds()]);
+
   const list: ORModel[] = Array.isArray(data) ? data : [];
-  return list.map(toEntry).sort(byLabel);
+
+  // Filtere nur die Modelle, die in styles.json erlaubt sind
+  const filtered = list.filter((model) => allowedIds.includes(model.id));
+
+  return filtered.map(toEntry).sort(byLabel);
 }
 
 /** Wählt ein Default-Modell aus der Liste. */
