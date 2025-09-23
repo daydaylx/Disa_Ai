@@ -15,25 +15,25 @@ const OPTIONS: ThemeOption[] = [
     value: "dark-glass",
     label: "Dark Glass",
     description: "Transparente Panels mit Teal & Violett",
-    icon: "🪟",
+    icon: "",
   },
   {
     value: "dark",
     label: "Dark",
     description: "Klassische dunkle Oberfläche",
-    icon: "🌙",
+    icon: "",
   },
   {
     value: "light",
     label: "Light",
     description: "Helle Oberfläche",
-    icon: "☀️",
+    icon: "",
   },
   {
     value: "auto",
     label: "System",
     description: "Folgt der Betriebssystem-Einstellung",
-    icon: "🖥️",
+    icon: "",
   },
 ];
 
@@ -83,10 +83,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
               aria-pressed={isActive}
             >
               <div className="flex flex-col gap-1">
-                <span className="flex items-center gap-2 font-medium">
-                  <span aria-hidden>{option.icon}</span>
-                  {option.label}
-                </span>
+                <span className="font-medium">{option.label}</span>
                 <span className="text-xs text-text-muted/85">{option.description}</span>
               </div>
               {isActive ? (
