@@ -26,9 +26,12 @@
     font-src 'self' data:;
     style-src 'self' 'unsafe-inline';
     script-src 'self';
-    connect-src 'self' https://openrouter.ai https://\*.openrouter.ai\;
+    connect-src 'self' https://openrouter.ai https://*.openrouter.ai;
     worker-src 'self' blob:;
     form-action 'self'
+
+/*
+  /index.html 200
 
 /index.html
   Cache-Control: no-store, no-cache, must-revalidate
