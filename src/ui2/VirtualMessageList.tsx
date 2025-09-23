@@ -73,9 +73,82 @@ export default function VirtualMessageList({
           </div>
         )}
         {slice.length === 0 ? (
-          <div className="mt-16 text-center text-muted">
-            <p className="text-sm">Noch nichts passiert.</p>
-            <p className="text-xs opacity-80">Schreib unten etwas oder wähle ein Modell.</p>
+          <div className="mt-8 px-4">
+            <div className="space-y-8">
+              {/* Main Hero Card */}
+              <div className="card-elev2 flex items-center gap-6">
+                <div
+                  aria-hidden
+                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-accent-teal/30 bg-glass-surface/10 backdrop-blur-sm"
+                >
+                  <div className="h-6 w-6 animate-pulse rounded-full bg-gradient-to-br from-accent-teal/80 to-accent-violet/60 shadow-lg"></div>
+                </div>
+                <div className="flex-1 space-y-3">
+                  <p className="text-sm font-medium tracking-wide text-text-secondary/90">
+                    AI Assistant
+                  </p>
+                  <h2 className="text-xl font-semibold tracking-tight">Disa AI</h2>
+                  <p className="text-sm text-text-muted/85">
+                    Professional AI-powered conversation partner
+                  </p>
+                  <div className="text-sm font-medium text-accent-teal/80">
+                    Start typing below to begin a conversation
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Start Suggestions */}
+              <div className="glass-card p-6">
+                <h3 className="mb-4 text-base font-semibold text-text-primary">
+                  Quick Start Ideas
+                </h3>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    "Explain complex topics",
+                    "Help with coding",
+                    "Creative writing",
+                    "Problem solving",
+                  ].map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="group flex cursor-pointer items-center gap-3 rounded-xl border border-glass-border/30 bg-glass-surface/10 p-4 text-left transition-all hover:scale-[1.02] hover:border-accent-teal/40 hover:bg-glass-surface/20"
+                    >
+                      <div className="h-2 w-2 rounded-full bg-accent-teal/60 group-hover:bg-accent-teal"></div>
+                      <span className="text-sm font-medium text-text-secondary group-hover:text-text-primary">
+                        {suggestion}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Features Overview */}
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="glass-card p-4 text-center">
+                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-teal/20 to-accent-violet/20">
+                    <div className="h-3 w-3 rounded bg-accent-teal/80"></div>
+                  </div>
+                  <h4 className="mb-2 text-sm font-semibold text-text-primary">Smart Responses</h4>
+                  <p className="text-xs text-text-muted/80">Contextual and accurate answers</p>
+                </div>
+
+                <div className="glass-card p-4 text-center">
+                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-violet/20 to-accent-teal/20">
+                    <div className="h-3 w-3 rounded bg-accent-violet/80"></div>
+                  </div>
+                  <h4 className="mb-2 text-sm font-semibold text-text-primary">Multiple Styles</h4>
+                  <p className="text-xs text-text-muted/80">Adapt tone and approach</p>
+                </div>
+
+                <div className="glass-card p-4 text-center">
+                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-teal/20 to-accent-violet/20">
+                    <div className="h-3 w-3 rounded bg-gradient-to-r from-accent-teal/80 to-accent-violet/80"></div>
+                  </div>
+                  <h4 className="mb-2 text-sm font-semibold text-text-primary">Offline Ready</h4>
+                  <p className="text-xs text-text-muted/80">Works without internet</p>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           slice.map((m) => <div key={m.id}>{renderItem(m)}</div>)
