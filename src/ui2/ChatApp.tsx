@@ -104,7 +104,7 @@ function Composer({
   }, [value]);
 
   return (
-    <div className="safe-px safe-pb sticky bottom-0 z-10">
+    <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 8px)" }}>
       <div className="glass rounded-xl p-2 shadow-glass">
         <div id="composer-help" className="sr-only">
           Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter

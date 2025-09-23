@@ -35,25 +35,25 @@ export default function SettingsView() {
     {
       id: "general",
       label: "Allgemein",
-      icon: "⚙️",
+      icon: "",
       "aria-label": "Allgemeine Einstellungen",
     },
     {
       id: "style",
       label: "Stil",
-      icon: "🎯",
+      icon: "",
       "aria-label": "Antwortstil-Einstellungen",
     },
     {
       id: "roles",
       label: "Rollen",
-      icon: "👤",
+      icon: "",
       "aria-label": "KI-Rollen Einstellungen",
     },
     {
       id: "app",
       label: "App",
-      icon: "📱",
+      icon: "",
       "aria-label": "App-Einstellungen",
     },
   ];
@@ -100,52 +100,51 @@ export default function SettingsView() {
 
       <main className="safe-px with-bottomnav flex-1 space-y-6 overflow-y-auto pt-3">
         {/* Control Center Header */}
-        <GlassCard variant="floating" tint="cyan" className="p-6 text-center">
-          <div className="mb-4 flex items-center justify-center gap-3">
-            <div className="bg-accent-500/20 rounded-xl p-3">
-              <span className="text-2xl">⚙️</span>
-            </div>
-            <div className="text-left">
-              <h1 className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-2xl font-bold text-transparent">
-                Control Center
-              </h1>
-              <p className="text-base text-neutral-300">Zentrale Steuerung für Disa AI</p>
-            </div>
+        <GlassCard variant="floating" tint="cyan" className="p-6">
+          <div className="text-center">
+            <h1 className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-2xl font-bold text-transparent">
+              Einstellungen
+            </h1>
+            <p className="mt-1 text-sm text-neutral-400">Konfiguration und Verwaltung</p>
           </div>
 
-          {/* Quick Status Cards */}
-          <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-            <GlassCard variant="soft" className="p-3 text-center">
-              <div className="mb-2 text-xl">🔑</div>
-              <div className="text-xs text-neutral-400">API Key</div>
-              <div
-                className={`text-xs font-medium ${apiKey ? "text-green-400" : "text-orange-400"}`}
-              >
-                {apiKey ? "Aktiv" : "Fehlt"}
+          {/* Status Overview */}
+          <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="text-center">
+              <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-400">
+                API
               </div>
-            </GlassCard>
-
-            <GlassCard variant="soft" className="p-3 text-center">
-              <div className="mb-2 text-xl">📱</div>
-              <div className="text-xs text-neutral-400">App Status</div>
               <div
-                className={`text-xs font-medium ${pwa.installed ? "text-green-400" : "text-blue-400"}`}
+                className={`text-sm font-medium ${apiKey ? "text-green-400" : "text-orange-400"}`}
               >
-                {pwa.installed ? "Installiert" : "Browser"}
+                {apiKey ? "Verbunden" : "Nicht konfiguriert"}
               </div>
-            </GlassCard>
+            </div>
 
-            <GlassCard variant="soft" className="p-3 text-center">
-              <div className="mb-2 text-xl">🎯</div>
-              <div className="text-xs text-neutral-400">Stil</div>
-              <div className="text-xs font-medium text-cyan-400">Aktiv</div>
-            </GlassCard>
+            <div className="text-center">
+              <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-400">
+                App
+              </div>
+              <div
+                className={`text-sm font-medium ${pwa.installed ? "text-green-400" : "text-blue-400"}`}
+              >
+                {pwa.installed ? "Installiert" : "Web"}
+              </div>
+            </div>
 
-            <GlassCard variant="soft" className="p-3 text-center">
-              <div className="mb-2 text-xl">👤</div>
-              <div className="text-xs text-neutral-400">Rolle</div>
-              <div className="text-xs font-medium text-purple-400">Konfiguriert</div>
-            </GlassCard>
+            <div className="text-center">
+              <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-400">
+                Stil
+              </div>
+              <div className="text-sm font-medium text-cyan-400">Konfiguriert</div>
+            </div>
+
+            <div className="text-center">
+              <div className="mb-1 text-xs font-medium uppercase tracking-wider text-neutral-400">
+                Rollen
+              </div>
+              <div className="text-sm font-medium text-purple-400">Verfügbar</div>
+            </div>
           </div>
         </GlassCard>
 
@@ -169,7 +168,6 @@ export default function SettingsView() {
               <SettingsCard
                 title="OpenRouter API Key"
                 description="Schlüssel wird ausschließlich lokal gespeichert. Ohne Key nutzt die App Demo-Antworten."
-                icon="🔑"
                 glow="cyan"
               >
                 <div className="space-y-4">
@@ -197,7 +195,6 @@ export default function SettingsView() {
               <SettingsCard
                 title="UI Theme"
                 description="Wechsle zwischen klassischem Dunkelmodus, hellem Layout oder dem neuen Dark Glass."
-                icon="🪟"
                 glow="purple"
               >
                 <ThemeToggle />
@@ -207,7 +204,6 @@ export default function SettingsView() {
               <SettingsCard
                 title="Modell-Auswahl"
                 description="Wähle das AI-Modell für optimale Ergebnisse."
-                icon="🤖"
                 glow="warm"
               >
                 <div className="space-y-4">
@@ -225,7 +221,6 @@ export default function SettingsView() {
             <SettingsCard
               title="Antwortstil"
               description="Wähle den Stil für KI-Antworten - von neutral bis kreativ."
-              icon="🎯"
               glow="cyan"
             >
               <SettingsStyle />
@@ -237,7 +232,6 @@ export default function SettingsView() {
             <SettingsCard
               title="KI-Rollen"
               description="Spezialisierte Rollen für verschiedene Anwendungsfälle."
-              icon="👤"
               glow="purple"
             >
               <SettingsRoles />
@@ -251,7 +245,6 @@ export default function SettingsView() {
               <SettingsCard
                 title="App Installation"
                 description="Installiere die App für schnellen Zugriff und Offline-Unterstützung."
-                icon="📱"
                 glow="mint"
               >
                 <div className="space-y-3">
@@ -281,7 +274,6 @@ export default function SettingsView() {
               <SettingsCard
                 title="Speicher & Performance"
                 description="Datenmanagement und App-Optimierung."
-                icon="💾"
                 glow="purple"
               >
                 <div className="space-y-4">
