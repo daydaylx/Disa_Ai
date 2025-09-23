@@ -13,12 +13,12 @@
   "lang": "de",
   "scope": "./",
   "icons": [
-    { "src": "/icon-72.png",  "sizes": "72x72",   "type": "image/png"  },
-    { "src": "/icon-96.png",  "sizes": "96x96",   "type": "image/png"  },
-    { "src": "/icon-128.png", "sizes": "128x128", "type": "image/png"  },
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icon-256.png", "sizes": "256x256", "type": "image/png"  },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png"  }
+    { "src": "/icons/icon-72.png",  "sizes": "72x72",   "type": "image/png"  },
+    { "src": "/icons/icon-96.png",  "sizes": "96x96",   "type": "image/png"  },
+    { "src": "/icons/icon-128.png", "sizes": "128x128", "type": "image/png"  },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-256.png", "sizes": "256x256", "type": "image/png"  },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png"  }
   ],
   "screenshots": [
     {
@@ -34,14 +34,14 @@
       "short_name": "Chat",
       "description": "Starte eine neue Unterhaltung",
       "url": "./#/chat",
-      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "Einstellungen",
       "short_name": "Settings",
       "description": "App-Einstellungen öffnen",
       "url": "./#/settings",
-      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
     }
   ],
   "share_target": {
@@ -69,7 +69,7 @@
         "text/plain": [".txt", ".md"],
         "application/json": [".json"]
       },
-      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
     }
   ],
   "handle_links": "preferred",
