@@ -6,14 +6,14 @@ test.describe("Mobile safe-area", () => {
     await page.goto("/#/chat");
 
     const composerInput = page.locator('[data-testid="composer-input"]');
-    const nav = page.locator('nav[aria-label="Hauptnavigation"]');
+    const nav = page.locator('nav[aria-label="Main Navigation"]');
 
     await expect(composerInput).toBeVisible();
     await expect(nav).toBeVisible();
 
     const metrics = await page.evaluate(() => {
       const composer = document.querySelector('[data-testid="composer-input"]');
-      const navigation = document.querySelector('nav[aria-label="Hauptnavigation"]');
+      const navigation = document.querySelector('nav[aria-label="Main Navigation"]');
       if (!composer || !navigation) {
         return null;
       }
