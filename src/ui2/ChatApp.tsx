@@ -22,7 +22,7 @@ function Header({
   return (
     <header className="safe-pt safe-px sticky top-0 z-20 backdrop-blur-xl" role="banner">
       <div className="mx-auto max-w-4xl">
-        <div className="glass flex items-center justify-between rounded-2xl border-border-secondary px-6 py-4 shadow-glass">
+        <div className="glass-bg--medium flex items-center justify-between rounded-2xl border border-border-secondary px-6 py-4 shadow-lg backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div
               className="grid size-10 place-items-center rounded-xl border border-border-tertiary bg-gradient-to-br from-interactive-secondary/20 to-interactive-primary/20"
@@ -42,7 +42,7 @@ function Header({
           </div>
           <button
             onClick={onOpenModels}
-            className="hover:bg-interactive-primary/8 rounded-xl border border-border-secondary px-4 py-3 text-label font-medium text-text-secondary transition-all duration-200 hover:border-interactive-primary/40 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-interactive-primary/60"
+            className="glass-button glass-button--secondary glass-button--sm hover:bg-interactive-primary/8 rounded-xl px-4 py-3 text-label font-medium transition-all duration-200"
             aria-label="Modell auswählen"
           >
             {modelName}
@@ -57,17 +57,18 @@ function Header({
 function MessageBubble({ msg }: { msg: Message }) {
   const mine = msg.role === "user";
   const base =
-    "max-w-[85%] rounded-2xl px-6 py-4 text-body leading-relaxed break-words transition-all duration-200";
+    "max-w-[85%] rounded-2xl px-5 py-3 text-body leading-relaxed break-words transition-all duration-200";
   const mineCls =
-    "ml-auto rounded-br-lg border border-interactive-primary/30 bg-gradient-to-br from-interactive-primary/20 to-interactive-primary/10 text-text-primary shadow-xl backdrop-blur-sm";
-  const otherCls = "glass border border-border-secondary rounded-bl-lg text-text-primary shadow-lg";
+    "ml-auto rounded-br-lg glass-tint--cyan text-white shadow-xl backdrop-blur-md border border-interactive-primary/40";
+  const otherCls =
+    "glass-bg--medium border border-border-secondary rounded-bl-lg text-text-primary shadow-lg backdrop-blur-md";
 
   const segs = segmentMessage(msg.content);
 
   return (
     <div className={`flex w-full ${mine ? "justify-end" : "justify-start"} group`}>
       <div
-        className={`chat-bubble ${base} ${mine ? mineCls : otherCls} transition-transform group-hover:scale-[1.02]`}
+        className={`chat-bubble ${base} ${mine ? mineCls : otherCls} transition-transform hover:shadow-xl group-hover:scale-[1.01]`}
       >
         {segs.map((s, i) =>
           s.type === "text" ? (
@@ -118,7 +119,7 @@ function Composer({
   return (
     <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 16px)" }}>
       <div className="mx-auto max-w-4xl">
-        <div className="glass rounded-2xl border-border-secondary p-6 shadow-glass backdrop-blur-xl">
+        <div className="glass-bg--medium rounded-2xl border border-border-secondary p-6 shadow-lg backdrop-blur-xl">
           <div id="composer-help" className="sr-only">
             Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
           </div>
@@ -140,7 +141,7 @@ function Composer({
               <button
                 onClick={onSend}
                 disabled={!value.trim() || !canSend}
-                className="shrink-0 rounded-xl border border-interactive-primary/40 bg-interactive-primary/10 px-6 py-3 text-label font-medium text-interactive-primary transition-all duration-200 hover:border-interactive-primary/60 hover:bg-interactive-primary/15 hover:text-interactive-primary-hover disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-interactive-primary/10"
+                className="glass-button glass-button--primary glass-button--sm shrink-0 px-6 py-3 disabled:cursor-not-allowed disabled:opacity-50"
                 data-testid="composer-send"
               >
                 Senden
@@ -148,7 +149,7 @@ function Composer({
             ) : (
               <button
                 onClick={onStop}
-                className="shrink-0 rounded-xl border border-danger/55 bg-danger/20 px-6 py-3 text-label font-medium text-danger transition-all duration-200 hover:border-danger/70 hover:bg-danger/30"
+                className="glass-button glass-button--danger glass-button--sm shrink-0 px-6 py-3"
                 aria-label="Stopp"
                 data-testid="composer-stop"
               >
@@ -220,7 +221,7 @@ function ModelSheet({
       {/* Overlay */}
       <div
         onClick={onClose}
-        className={`absolute inset-0 bg-black/50 transition ${open ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition ${open ? "opacity-100" : "opacity-0"}`}
       />
       {/* Sheet */}
       <div
@@ -229,18 +230,18 @@ function ModelSheet({
           open ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        <div className="glass rounded-t-2xl p-3 shadow-md">
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-sm font-semibold">Modell wählen</h2>
+        <div className="glass-bg--strong border-glass-border-medium rounded-t-2xl border p-4 shadow-xl">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-h4 font-semibold text-text-primary">Modell wählen</h2>
             <button
               ref={closeBtn}
               onClick={onClose}
-              className="text-sm opacity-80 hover:opacity-100"
+              className="glass-button glass-button--ghost glass-button--xs"
             >
               Schließen
             </button>
           </div>
-          <div className="grid grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 gap-3">
             {models.map((m) => (
               <button
                 key={m.id}
@@ -248,25 +249,24 @@ function ModelSheet({
                   onSelect(m);
                   onClose();
                 }}
-                className={`rounded-xl border border-white/10 p-3 text-left transition hover:bg-white/5 ${
-                  currentId === m.id ? "ring-2 ring-violet-400" : ""
+                className={`glass-card--interactive glass-bg--soft rounded-xl border p-4 text-left transition-all ${
+                  currentId === m.id
+                    ? "glass-tint--cyan border-interactive-primary/60"
+                    : "border-glass-border-soft hover:border-glass-border-medium"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="font-medium">{m.label}</div>
-                  <div className="text-xs text-muted/80">
+                  <div className="font-medium text-text-primary">{m.label}</div>
+                  <div className="glass-badge glass-badge--accent">
                     {(m.pricing?.in ?? 0) === 0 ? "free" : `${m.pricing?.in ?? 0}$/1k`}
                   </div>
                 </div>
-                <div className="mt-1 text-xs text-muted/80">
+                <div className="mt-2 text-label text-text-muted">
                   Kontext: {(m.ctx ?? 0).toLocaleString()} Tokens
                 </div>
-                <div className="mt-1 flex flex-wrap gap-1">
+                <div className="mt-2 flex flex-wrap gap-2">
                   {m.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px]"
-                    >
+                    <span key={t} className="glass-badge">
                       {t}
                     </span>
                   ))}
@@ -390,7 +390,7 @@ export default function ChatApp() {
   };
 
   return (
-    <div className="flex h-full flex-col bg-background-primary">
+    <div className="flex h-screen flex-col overflow-hidden bg-gradient-to-br from-background-primary via-background-secondary to-background-primary">
       <Header
         title="Disa AI"
         modelName={model?.label ?? "Lade..."}
@@ -401,13 +401,15 @@ export default function ChatApp() {
           <PersonaQuickBar />
         </div>
       </div>
-      <main className="flex-1 overflow-hidden px-4" role="main" aria-label="Chat-Verlauf">
-        <div className="mx-auto h-full max-w-4xl">
-          <VirtualMessageList
-            items={messages}
-            renderItem={(m) => <MessageBubble msg={m} />}
-            className="space-y-6 py-6"
-          />
+      <main className="flex-1 overflow-hidden" role="main" aria-label="Chat-Verlauf">
+        <div className="h-full px-4">
+          <div className="mx-auto h-full max-w-4xl">
+            <VirtualMessageList
+              items={messages}
+              renderItem={(m) => <MessageBubble msg={m} />}
+              className="space-y-4 py-4"
+            />
+          </div>
         </div>
       </main>
       <section role="region" aria-label="Nachricht eingeben">
