@@ -23,7 +23,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("model picker empty state", async ({ page }) => {
-  await page.goto("/#/models");
+  await page.goto("/models");
   await page.waitForTimeout(100);
   await expect(page).toHaveScreenshot("model-picker-empty.png", { fullPage: true, threshold: 0.1 });
 });
@@ -131,14 +131,14 @@ test("composer error snapshot", async ({ page }) => {
 });
 
 test("settings overview snapshot", async ({ page }) => {
-  await page.goto("#/settings");
+  await page.goto("/settings");
   await page.waitForTimeout(100);
   await expect(page).toHaveScreenshot("settings-dark.png", { fullPage: true, threshold: 0.1 });
 });
 
 test("settings forced-light snapshot", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
-  await page.goto("#/settings");
+  await page.goto("/settings");
   await page.waitForTimeout(100);
   await expect(page).toHaveScreenshot("settings-light.png", { fullPage: true, threshold: 0.1 });
 });

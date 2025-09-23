@@ -1,8 +1,9 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const tabs = [
   {
-    href: "#/chat",
+    to: "/",
     label: "Chat",
     testId: "nav-bottom-chat",
     icon: (
@@ -12,7 +13,7 @@ const tabs = [
     ),
   },
   {
-    href: "#/models",
+    to: "/models",
     label: "Models",
     testId: "nav-bottom-models",
     icon: (
@@ -22,7 +23,7 @@ const tabs = [
     ),
   },
   {
-    href: "#/settings",
+    to: "/settings",
     label: "Settings",
     testId: "nav-bottom-settings",
     icon: (
@@ -34,7 +35,7 @@ const tabs = [
 ];
 
 export default function NavBar() {
-  const hash = typeof window !== "undefined" ? window.location.hash || "#/chat" : "#/chat";
+  const location = useLocation();
   return (
     <nav
       className="safe-px safe-pb fixed bottom-0 left-0 right-0 z-50"
@@ -43,11 +44,11 @@ export default function NavBar() {
     >
       <div className="glass glass-depth-3 grid grid-cols-3 gap-2 rounded-t-2xl p-2 shadow-glass">
         {tabs.map((t) => {
-          const active = hash.startsWith(t.href);
+          const active = location.pathname === t.to || (t.to === "/" && location.pathname === "/");
           return (
-            <a
-              key={t.href}
-              href={t.href}
+            <Link
+              key={t.to}
+              to={t.to}
               aria-current={active ? "page" : undefined}
               className={[
                 "group transform rounded-xl border px-3 py-3 text-center text-sm font-medium tracking-wide transition-all duration-300 ease-out hover:scale-105",
@@ -66,7 +67,7 @@ export default function NavBar() {
                 </div>
                 <span className="text-xs font-medium tracking-wide">{t.label}</span>
               </div>
-            </a>
+            </Link>
           );
         })}
       </div>
