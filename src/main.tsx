@@ -8,6 +8,7 @@ import "./styles/mobile-glass.css";
 import "./styles/chat-glass.css";
 import "./styles/visual-effects.css";
 import "./styles/interactive-effects.css";
+import "./ui/overlap-guard";
 
 import React from "react";
 import ReactDOM from "react-dom/client";

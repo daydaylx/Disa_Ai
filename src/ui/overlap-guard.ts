@@ -14,7 +14,7 @@
     });
   }
   function update() {
-    const bar = document.querySelector(".tabbar") as HTMLElement | null;
+    const bar = document.querySelector('nav[aria-label="Hauptnavigation"]') as HTMLElement | null;
     if (!bar) return;
     const send = document.querySelector('[data-testid="composer-send"]') as HTMLElement | null;
     const stop = document.querySelector('[data-testid="composer-stop"]') as HTMLElement | null;
