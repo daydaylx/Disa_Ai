@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { cn } from "../../lib/utils/cn";
+import { cn } from "../../lib/cn";
 
 /**
  * Loader-Komponenten:
@@ -42,7 +42,7 @@ export const Spinner: React.FC<SpinnerProps> = ({ size = 20, label = "Lädt …"
         }}
         aria-hidden="true"
       />
-      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className="text-muted-foreground text-sm">{label}</span>
     </div>
   );
 };

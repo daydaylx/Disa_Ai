@@ -1,7 +1,7 @@
 import * as React from "react";
 
+import { cn } from "../../lib/cn";
 import { hapticFeedback } from "../../lib/touch/haptics";
-import { cn } from "../../lib/utils/cn";
 
 type Variant = "primary" | "ghost" | "danger" | "base";
 type Size = "sm" | "md" | "lg";

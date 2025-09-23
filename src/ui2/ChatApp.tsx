@@ -314,7 +314,10 @@ export default function ChatApp() {
 
   const send = async () => {
     const text = input.trim();
-    if (!text || streaming) return;
+    if (!text) return;
+
+    // Prevent race condition - check if already streaming
+    if (streaming) return;
 
     if (!model) {
       toasts.push({
@@ -325,11 +328,13 @@ export default function ChatApp() {
       return;
     }
 
+    // Set streaming state immediately to prevent double sends
+    setStreaming(true);
+
     const now = Date.now();
     const userMessage: Message = { id: `u_${now}`, role: "user", content: text, ts: now };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    setStreaming(true);
 
     const assistantId = `a_${now}`;
     const placeholder: Message = {
