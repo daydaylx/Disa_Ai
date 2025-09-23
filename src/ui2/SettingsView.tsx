@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 import { GlassButton } from "../components/glass/GlassButton";
 import { GlassCard } from "../components/glass/GlassCard";
 import { type GlassTab, GlassTabPanel, GlassTabs } from "../components/glass/GlassTabs";
+import ModelPicker from "../components/ModelPicker";
 import { SettingsCard } from "../components/settings/SettingsCard";
+import BottomSheet from "../components/ui/BottomSheet";
 import { GlassSpinner } from "../components/ui/Skeleton";
 import { useToasts } from "../components/ui/Toast";
+import { labelForModel, loadModelCatalog } from "../config/models";
+import { getSelectedModelId, setSelectedModelId } from "../config/settings";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { getApiKey, setApiKey } from "../services/openrouter";
 import SettingsRoles from "./settings/SettingsRoles";
@@ -22,6 +26,11 @@ export default function SettingsView() {
   const toasts = useToasts();
   const pwa = usePWAInstall();
 
+  const [isModelPickerOpen, setIsModelPickerOpen] = useState(false);
+  const [modelId, setModelId] = useState(() => getSelectedModelId());
+  const [modelLabel, setModelLabel] = useState("Lade...");
+  const [modelCatalog, setModelCatalog] = useState<Awaited<ReturnType<typeof loadModelCatalog>>>([]);
+
   useEffect(() => {
     const h = window.location.hash;
     const anchor = h.split("#")[2];
@@ -30,6 +39,38 @@ export default function SettingsView() {
     if (anchor === "general") setActiveTab("general");
     if (anchor === "app") setActiveTab("app");
   }, []);
+
+  useEffect(() => {
+    let ok = true;
+    (async () => {
+      const catalog = await loadModelCatalog();
+      if (ok) {
+        const current = getSelectedModelId();
+        if (current) {
+          const label = labelForModel(current, catalog.find((m) => m.id === current)?.label);
+          setModelLabel(label);
+        } else {
+          setModelLabel("Kein Modell ausgewählt");
+        }
+      }
+    })();
+    return () => {
+      ok = false;
+    };
+  }, []);
+
+  const handleModelChange = (newModelId: string) => {
+    setSelectedModelId(newModelId);
+    setModelId(newModelId);
+    const label = labelForModel(newModelId);
+    setModelLabel(label);
+    setIsModelPickerOpen(false);
+    toasts.push({
+      kind: "success",
+      title: "Modell geändert",
+      message: `Das aktive Modell ist jetzt ${label}.`,
+    });
+  };
 
   const settingsTabs: GlassTab[] = [
     {
@@ -212,6 +253,7 @@ export default function SettingsView() {
                         <span>{keySaving ? "Speichert..." : "Key speichern"}</span>
                       </div>
                     </GlassButton>
+                    .
                   </div>
                 </SettingsCard>
 
@@ -237,10 +279,13 @@ export default function SettingsView() {
                   glow="warm"
                 >
                   <div className="space-y-4">
-                    <div className="glass-badge glass-badge--accent">
-                      Claude 3.5 Sonnet (Aktuell)
-                    </div>
-                    <GlassButton variant="secondary" size="lg" className="w-full">
+                    <div className="glass-badge glass-badge--accent">{modelLabel}</div>
+                    <GlassButton
+                      variant="secondary"
+                      size="lg"
+                      className="w-full"
+                      onClick={() => setIsModelPickerOpen(true)}
+                    >
                       Modell wechseln
                     </GlassButton>
                   </div>
@@ -354,6 +399,13 @@ export default function SettingsView() {
           </GlassCard>
         </div>
       </main>
+      <BottomSheet
+        open={isModelPickerOpen}
+        onClose={() => setIsModelPickerOpen(false)}
+        title="Modell auswählen"
+      >
+        <ModelPicker value={modelId} onChange={handleModelChange} />
+      </BottomSheet>
     </div>
   );
 }

@@ -1,17 +1,11 @@
-import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App";
 import { PersonaProvider } from "./config/personas";
 import ChatApp from "./ui2/ChatApp";
 import SettingsView from "./ui2/SettingsView";
-import ModelPickerView from "./views/ModelPickerView";
 
-function ModelPickerWithNavigation() {
-  const navigate = useNavigate();
-  return <ModelPickerView onSelectChat={() => navigate("/")} />;
-}
-
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <App />,
@@ -21,11 +15,7 @@ const router = createBrowserRouter([
         element: <ChatApp />,
       },
       {
-        path: "models",
-        element: <ModelPickerWithNavigation />,
-      },
-      {
-        path: "settings",
+        path: "/settings",
         element: <SettingsView />,
       },
     ],
