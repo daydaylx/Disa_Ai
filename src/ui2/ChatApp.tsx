@@ -19,9 +19,9 @@ function Header({
 }) {
   return (
     <header className="safe-pt safe-px sticky top-0 z-10" role="banner">
-      <div className="glass flex items-center justify-between rounded-xl px-3 py-2 shadow-sm">
+      <div className="glass flex items-center justify-between rounded-xl px-3 py-2 shadow-glass">
         <div className="flex items-center gap-3">
-          <div className="grid size-8 place-items-center rounded-lg bg-primary/20" aria-hidden>
+          <div className="grid size-8 place-items-center rounded-xl bg-accent-teal/20" aria-hidden>
             <svg width="18" height="18" viewBox="0 0 24 24" className="text-primary">
               <path
                 fill="currentColor"
@@ -30,13 +30,13 @@ function Header({
             </svg>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm text-muted/80">Chat</span>
-            <h1 className="text-base font-semibold">{title}</h1>
+            <span className="text-sm text-text-muted/80">Chat</span>
+            <h1 className="text-base font-semibold text-text-primary">{title}</h1>
           </div>
         </div>
         <button
           onClick={onOpenModels}
-          className="rounded-lg border border-white/10 px-2 py-1 text-sm transition hover:bg-white/5"
+          className="hover:bg-accent-teal/12 rounded-xl border border-glass-border/25 px-3 py-2 text-sm text-text-secondary/90 transition-colors hover:border-accent-teal/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-violet/40"
           aria-label="Modell auswählen"
         >
           {modelName}
@@ -50,8 +50,9 @@ function Header({
 function MessageBubble({ msg }: { msg: Message }) {
   const mine = msg.role === "user";
   const base = "max-w-[82%] rounded-xl px-3 py-2 text-[15px] leading-relaxed break-words";
-  const mineCls = "bg-primary/15 border border-white/10 ml-auto rounded-br-sm";
-  const otherCls = "glass border border-white/10 rounded-bl-sm";
+  const mineCls =
+    "ml-auto rounded-br-sm border border-accent-teal/45 bg-accent-teal/25 text-text-primary shadow-[0_18px_38px_-22px_rgba(38,198,218,0.65)]";
+  const otherCls = "glass border border-glass-border/20 rounded-bl-sm text-text-primary";
 
   const segs = segmentMessage(msg.content);
 
@@ -69,7 +70,7 @@ function MessageBubble({ msg }: { msg: Message }) {
             </div>
           ),
         )}
-        <div className="mt-2 text-[11px] text-muted/80">
+        <div className="mt-2 text-[11px] text-text-muted/80">
           {new Date(msg.ts).toLocaleTimeString()}
         </div>
       </div>
@@ -104,7 +105,7 @@ function Composer({
 
   return (
     <div className="safe-px safe-pb sticky bottom-0 z-10">
-      <div className="glass rounded-xl p-2 shadow-sm">
+      <div className="glass rounded-xl p-2 shadow-glass">
         <div id="composer-help" className="sr-only">
           Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
         </div>
@@ -115,7 +116,7 @@ function Composer({
             onChange={(e) => onChange(e.target.value)}
             placeholder="Schreib was Sinnvolles…"
             rows={1}
-            className="flex-1 resize-none bg-transparent text-[15px] outline-none ring-0 placeholder:text-muted/60 focus:ring-0"
+            className="flex-1 resize-none bg-transparent text-[15px] text-text-primary outline-none ring-0 placeholder:text-text-muted/60 focus:ring-0"
             aria-label="Nachricht eingeben"
             aria-describedby="composer-help"
             data-testid="composer-input"
@@ -124,7 +125,7 @@ function Composer({
             <button
               onClick={onSend}
               disabled={!value.trim()}
-              className="rounded-lg border border-white/10 bg-primary/25 px-3 py-2 text-white/95 hover:bg-primary/35 disabled:opacity-50"
+              className="hover:bg-accent-teal/28 rounded-xl border border-accent-teal/45 bg-accent-teal/20 px-3 py-2 text-text-primary transition-colors hover:border-accent-teal/55 disabled:cursor-not-allowed disabled:opacity-60"
               data-testid="composer-send"
             >
               Senden
@@ -132,7 +133,7 @@ function Composer({
           ) : (
             <button
               onClick={onStop}
-              className="rounded-lg border border-white/10 bg-danger/25 px-3 py-2 text-white/95 hover:bg-danger/35"
+              className="rounded-xl border border-danger/55 bg-danger/25 px-3 py-2 text-text-primary transition-colors hover:bg-danger/30"
               aria-label="Stopp"
               data-testid="composer-stop"
             >

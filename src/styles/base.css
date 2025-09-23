@@ -3,7 +3,8 @@
 @import "tailwindcss/utilities";
 
 /* ====== Design Tokens (Dark-first) ====== */
-:root {
+:root,
+:root[data-ui-theme="dark"] {
   --bg: 10 14 20;
   --surface: 18 22 30;
   --overlay: 255 255 255;
@@ -16,6 +17,24 @@
   --muted: 148 163 184;
   --ring: 168 85 247;
 
+  --text-primary: 244 247 251;
+  --text-secondary: 204 212 224;
+  --text-muted: 162 174 191;
+
+  --glass-surface-rgb: 255 255 255;
+  --glass-border-rgb: 255 255 255;
+  --glass-highlight-rgb: 168 85 247;
+  --glass-backdrop-blur: var(--glass-blur-md);
+  --glass-backdrop-blur-strong: var(--glass-blur-xl);
+  --glass-backdrop-saturation: 160%;
+  --glass-backdrop-brightness: 108%;
+  --glass-shadow-soft: 0 12px 32px -20px rgba(5, 11, 20, 0.45);
+  --glass-shadow: 0 24px 60px -28px rgba(5, 11, 20, 0.6);
+
+  --accent-teal-rgb: 34 211 238;
+  --accent-violet-rgb: 168 85 247;
+  --accent-pink-rgb: 255 77 139;
+
   --radius: 12px;
 
   --safe-top: env(safe-area-inset-top);
@@ -26,6 +45,35 @@
   --bottom-nav-h: 64px;
 }
 
+:root[data-ui-theme="dark-glass"] {
+  --bg: var(--color-darkglass-bg-rgb);
+  --surface: var(--color-darkglass-surface-rgb);
+  --overlay: 224 224 224;
+
+  --primary: var(--color-darkglass-accent-teal-rgb);
+  --accent: var(--color-darkglass-accent-violet-rgb);
+  --muted: 154 160 166;
+  --ring: var(--color-darkglass-accent-violet-rgb);
+
+  --text-primary: var(--color-darkglass-text-primary-rgb);
+  --text-secondary: 184 190 196;
+  --text-muted: 154 160 166;
+
+  --glass-surface-rgb: 255 255 255;
+  --glass-border-rgb: 255 255 255;
+  --glass-highlight-rgb: var(--color-darkglass-accent-teal-rgb);
+  --glass-backdrop-blur: var(--glass-blur-lg);
+  --glass-backdrop-blur-strong: var(--glass-blur-2xl);
+  --glass-backdrop-saturation: 175%;
+  --glass-backdrop-brightness: 112%;
+  --glass-shadow-soft: var(--color-darkglass-shadow-soft);
+  --glass-shadow: var(--color-darkglass-shadow);
+
+  --accent-teal-rgb: var(--color-darkglass-accent-teal-rgb);
+  --accent-violet-rgb: var(--color-darkglass-accent-violet-rgb);
+  --accent-pink-rgb: var(--color-darkglass-accent-pink-rgb);
+}
+
 html,
 body,
 #root {
@@ -33,7 +81,7 @@ body,
 }
 body {
   background-color: rgb(var(--bg));
-  color: rgb(var(--overlay) / 0.92);
+  color: rgb(var(--text-primary));
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
@@ -46,13 +94,17 @@ body {
 
 @layer utilities {
   .glass {
-    background-color: rgb(var(--surface) / 0.7);
-    backdrop-filter: blur(20px) saturate(180%) brightness(105%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(105%);
-    border: 1px solid rgb(var(--overlay) / 0.1);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 rgb(var(--overlay) / 0.15);
+    background-color: rgb(var(--glass-surface-rgb) / 0.08);
+    border: 1px solid rgb(var(--glass-border-rgb) / 0.18);
+    backdrop-filter: blur(var(--glass-backdrop-blur)) saturate(var(--glass-backdrop-saturation))
+      brightness(var(--glass-backdrop-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur))
+      saturate(var(--glass-backdrop-saturation)) brightness(var(--glass-backdrop-brightness));
+    box-shadow: var(--glass-shadow-soft);
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 220ms ease;
   }
   /* Leselänge ~72 Zeichen */
   .max-measure {

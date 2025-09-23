@@ -5,6 +5,7 @@ import { GlassButton } from "../components/glass/GlassButton";
 import { GlassCard } from "../components/glass/GlassCard";
 import { type GlassTab, GlassTabPanel, GlassTabs } from "../components/glass/GlassTabs";
 import { SettingsCard } from "../components/settings/SettingsCard";
+import { ThemeToggle } from "../components/ui/ThemeToggle";
 import { useToasts } from "../components/ui/Toast";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { getApiKey, setApiKey } from "../services/openrouter";
@@ -190,6 +191,16 @@ export default function SettingsView() {
                     {keySaving ? "Speichert..." : "Key speichern"}
                   </GlassButton>
                 </div>
+              </SettingsCard>
+
+              {/* UI Theme */}
+              <SettingsCard
+                title="UI Theme"
+                description="Wechsle zwischen klassischem Dunkelmodus, hellem Layout oder dem neuen Dark Glass."
+                icon="🪟"
+                glow="purple"
+              >
+                <ThemeToggle />
               </SettingsCard>
 
               {/* Model Selection */}

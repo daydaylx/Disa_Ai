@@ -31,54 +31,54 @@
 /* Glass Glow Effects */
 .glass-glow--cyan {
   box-shadow:
-    0 8px 32px rgba(34, 211, 238, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 24%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-glow--cyan:hover {
   box-shadow:
-    0 12px 40px rgba(34, 211, 238, 0.25),
-    0 0 0 1px rgba(34, 211, 238, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 12px 40px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 32%, transparent),
+    0 0 0 1px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 45%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 .glass-glow--purple {
   box-shadow:
-    0 8px 32px rgba(179, 136, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px color-mix(in srgb, rgb(var(--accent-violet-rgb)) 22%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-glow--purple:hover {
   box-shadow:
-    0 12px 40px rgba(179, 136, 255, 0.25),
-    0 0 0 1px rgba(179, 136, 255, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 12px 40px color-mix(in srgb, rgb(var(--accent-violet-rgb)) 32%, transparent),
+    0 0 0 1px color-mix(in srgb, rgb(var(--accent-violet-rgb)) 46%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 .glass-glow--mint {
   box-shadow:
-    0 8px 32px rgba(110, 231, 183, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 18%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-glow--mint:hover {
   box-shadow:
-    0 12px 40px rgba(110, 231, 183, 0.25),
-    0 0 0 1px rgba(110, 231, 183, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 12px 40px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 26%, transparent),
+    0 0 0 1px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 40%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 .glass-glow--warm {
   box-shadow:
-    0 8px 32px rgba(255, 183, 77, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px color-mix(in srgb, rgba(255, 183, 77, 1) 24%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-glow--warm:hover {
   box-shadow:
-    0 12px 40px rgba(255, 183, 77, 0.25),
-    0 0 0 1px rgba(255, 183, 77, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 12px 40px color-mix(in srgb, rgba(255, 183, 77, 1) 32%, transparent),
+    0 0 0 1px color-mix(in srgb, rgba(255, 183, 77, 1) 45%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 /* Glass Button Base */
@@ -94,8 +94,10 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   overflow: hidden;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(var(--glass-backdrop-blur)) saturate(var(--glass-backdrop-saturation))
+    brightness(var(--glass-backdrop-brightness));
+  -webkit-backdrop-filter: blur(var(--glass-backdrop-blur))
+    saturate(var(--glass-backdrop-saturation)) brightness(var(--glass-backdrop-brightness));
   /* Enhanced interaction feedback */
   will-change: transform, box-shadow, background;
   transform: translate3d(0, 0, 0);
@@ -110,18 +112,18 @@
   outline: none;
   box-shadow:
     0 0 0 3px var(--color-accent-outline),
-    0 0 20px rgba(34, 211, 238, 0.3);
+    0 0 20px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 32%, transparent);
 }
 
 /* Enhanced hover effects with dynamic glow */
 .glass-button:hover {
   transform: translateY(-2px);
-  backdrop-filter: blur(24px) saturate(200%) brightness(110%);
-  -webkit-backdrop-filter: blur(24px) saturate(200%) brightness(110%);
+  backdrop-filter: blur(var(--glass-backdrop-blur-strong)) saturate(185%) brightness(112%);
+  -webkit-backdrop-filter: blur(var(--glass-backdrop-blur-strong)) saturate(185%) brightness(112%);
   box-shadow:
-    0 8px 32px rgba(34, 211, 238, 0.2),
-    0 0 20px rgba(34, 211, 238, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 8px 32px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 24%, transparent),
+    0 0 20px color-mix(in srgb, rgb(var(--accent-violet-rgb)) 16%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .glass-button__content {
@@ -154,46 +156,46 @@
 .glass-button--primary {
   background: linear-gradient(
     135deg,
-    rgba(34, 211, 238, 0.8) 0%,
-    rgba(147, 197, 253, 0.6) 50%,
-    rgba(34, 211, 238, 0.8) 100%
+    color-mix(in srgb, rgb(var(--accent-teal-rgb)) 88%, transparent) 0%,
+    color-mix(in srgb, rgb(var(--accent-violet-rgb)) 58%, rgb(var(--accent-teal-rgb)) 42%) 50%,
+    color-mix(in srgb, rgb(var(--accent-teal-rgb)) 88%, transparent) 100%
   );
   color: var(--color-neutral-900);
-  border: 1px solid rgba(34, 211, 238, 0.4);
+  border: 1px solid color-mix(in srgb, rgb(var(--accent-teal-rgb)) 55%, transparent);
   box-shadow:
-    0 4px 16px rgba(34, 211, 238, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 4px 16px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 36%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .glass-button--primary:hover {
   background: linear-gradient(
     135deg,
-    rgba(34, 211, 238, 0.9) 0%,
-    rgba(147, 197, 253, 0.7) 50%,
-    rgba(34, 211, 238, 0.9) 100%
+    color-mix(in srgb, rgb(var(--accent-teal-rgb)) 94%, transparent) 0%,
+    color-mix(in srgb, rgb(var(--accent-violet-rgb)) 62%, rgb(var(--accent-teal-rgb)) 38%) 50%,
+    color-mix(in srgb, rgb(var(--accent-teal-rgb)) 94%, transparent) 100%
   );
   box-shadow:
-    0 6px 20px rgba(34, 211, 238, 0.4),
-    0 0 0 1px rgba(34, 211, 238, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 6px 20px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 44%, transparent),
+    0 0 0 1px color-mix(in srgb, rgb(var(--accent-teal-rgb)) 68%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
   transform: translateY(-1px);
 }
 
 .glass-button--secondary {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(var(--glass-surface-rgb) / 0.08);
   color: var(--color-text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(var(--glass-border-rgb) / 0.16);
   box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 4px 16px rgba(5, 9, 16, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .glass-button--secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgb(var(--glass-surface-rgb) / 0.12);
+  border-color: rgb(var(--glass-border-rgb) / 0.26);
   box-shadow:
-    0 6px 20px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 6px 20px rgba(5, 9, 16, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transform: translateY(-1px);
 }
 
