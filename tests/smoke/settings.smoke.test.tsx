@@ -3,7 +3,7 @@ import React from "react";
 import { describe, expect, it } from "vitest";
 
 import { ToastsProvider } from "../../src/components/ui/toast/ToastsProvider";
-import SettingsView from "../../src/views/SettingsView";
+import SettingsView from "../../src/ui2/SettingsView";
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(<ToastsProvider>{ui}</ToastsProvider>);

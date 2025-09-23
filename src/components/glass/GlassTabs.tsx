@@ -75,6 +75,7 @@ export function GlassTabs({
             key={tab.id}
             type="button"
             role="tab"
+            id={`tab-${tab.id}`}
             aria-selected={isActive}
             aria-controls={`tabpanel-${tab.id}`}
             aria-label={tab["aria-label"] || tab.label}
