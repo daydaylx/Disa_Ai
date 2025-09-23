@@ -29,22 +29,28 @@
   --color-accent-low: rgba(34, 211, 238, 0.16);
   --color-accent-foreground: #03141c;
 
-  /* Professional Dark Glass palette - Enhanced Business Grade */
-  --color-darkglass-bg: #0a0e13;
-  --color-darkglass-bg-rgb: 10 14 19;
-  --color-darkglass-surface: #0f1419;
-  --color-darkglass-surface-rgb: 15 20 25;
-  --color-darkglass-surface-elevated: #131a21;
-  --color-darkglass-text-primary: #e8eaed;
-  --color-darkglass-text-primary-rgb: 232 234 237;
-  --color-darkglass-text-secondary: #bdc1c6;
-  --color-darkglass-text-muted: #9aa0a6;
-  --color-darkglass-accent-teal: #00acc1;
-  --color-darkglass-accent-teal-rgb: 0 172 193;
-  --color-darkglass-accent-violet: #6366f1;
-  --color-darkglass-accent-violet-rgb: 99 102 241;
+  /* Futuristic AI Design - Based on Reference */
+  --color-darkglass-bg: #0a0a0a;
+  --color-darkglass-bg-rgb: 10 10 10;
+  --color-darkglass-surface: #121212;
+  --color-darkglass-surface-rgb: 18 18 18;
+  --color-darkglass-surface-elevated: #1a1a1a;
+  --color-darkglass-text-primary: #ffffff;
+  --color-darkglass-text-primary-rgb: 255 255 255;
+  --color-darkglass-text-secondary: #b3b3b3;
+  --color-darkglass-text-muted: #8a8a8a;
+  --color-darkglass-accent-purple: #8b5cf6;
+  --color-darkglass-accent-purple-rgb: 139 92 246;
+  --color-darkglass-accent-blue: #3b82f6;
+  --color-darkglass-accent-blue-rgb: 59 130 246;
   --color-darkglass-accent-pink: #ec4899;
   --color-darkglass-accent-pink-rgb: 236 72 153;
+  --color-darkglass-accent-yellow: #eab308;
+  --color-darkglass-accent-yellow-rgb: 234 179 8;
+  --color-darkglass-accent-teal: #00d4aa;
+  --color-darkglass-accent-teal-rgb: 0 212 170;
+  --color-darkglass-accent-cyan: #22d3ee;
+  --color-darkglass-accent-cyan-rgb: 34 211 238;
   --color-darkglass-border-soft: rgba(255, 255, 255, 0.08);
   --color-darkglass-border-strong: rgba(255, 255, 255, 0.14);
   --color-darkglass-border-ultra: rgba(255, 255, 255, 0.24);
@@ -63,10 +69,76 @@
   --color-darkglass-accent-foreground: #041019;
   --color-danger-subtle-tint: #ffe7eb;
 
-  /* Professional gradient colors - Business Grade */
-  --color-gradient-dark-start: #0a0e13;
-  --color-gradient-dark-mid: #151b22;
-  --color-gradient-dark-end: #1f2937;
+  /* Futuristic gradient colors - AI Theme */
+  --color-gradient-dark-start: #0a0a0a;
+  --color-gradient-dark-mid: #1a0a1a;
+  --color-gradient-dark-end: #0a1a2a;
+
+  /* Holographic Orb Gradients */
+  --gradient-orb-purple: linear-gradient(
+    135deg,
+    #8b5cf6 0%,
+    #a855f7 25%,
+    #ec4899 50%,
+    #eab308 75%,
+    #3b82f6 100%
+  );
+  --gradient-orb-glow: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.4) 0%,
+    rgba(168, 85, 247, 0.3) 25%,
+    rgba(236, 72, 153, 0.2) 50%,
+    transparent 70%
+  );
+
+  /* Card Gradients from Reference */
+  --gradient-card-purple: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.3) 0%,
+    rgba(168, 85, 247, 0.2) 100%
+  );
+  --gradient-card-blue: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.3) 0%,
+    rgba(96, 165, 250, 0.2) 100%
+  );
+  --gradient-card-pink: linear-gradient(
+    135deg,
+    rgba(236, 72, 153, 0.3) 0%,
+    rgba(244, 114, 182, 0.2) 100%
+  );
+  --gradient-card-yellow: linear-gradient(
+    135deg,
+    rgba(234, 179, 8, 0.3) 0%,
+    rgba(250, 204, 21, 0.2) 100%
+  );
+  --gradient-card-teal: linear-gradient(
+    135deg,
+    rgba(0, 212, 170, 0.3) 0%,
+    rgba(34, 211, 238, 0.2) 100%
+  );
+  --gradient-card-cyan: linear-gradient(
+    135deg,
+    rgba(34, 211, 238, 0.3) 0%,
+    rgba(103, 232, 249, 0.2) 100%
+  );
+
+  /* Teal Orb Gradients from Second Reference */
+  --gradient-orb-teal: linear-gradient(
+    135deg,
+    #00d4aa 0%,
+    #22d3ee 25%,
+    #3b82f6 50%,
+    #00d4aa 75%,
+    #22d3ee 100%
+  );
+  --gradient-orb-teal-glow: radial-gradient(
+    circle,
+    rgba(0, 212, 170, 0.5) 0%,
+    rgba(34, 211, 238, 0.3) 25%,
+    rgba(59, 130, 246, 0.2) 50%,
+    transparent 70%
+  );
   --color-success-500: #22c55e;
   --color-success-200: #6fd08f;
   --color-warning-500: #f59e0b;
@@ -163,9 +235,22 @@
   --glass-tint-mint: rgba(110, 231, 183, 0.04);
   --glass-tint-warm: rgba(255, 183, 77, 0.04);
 
-  /* Glassmorphism glows - Professional Subtlety */
-  --glass-glow-subtle: 0 0 16px rgba(34, 211, 238, 0.08);
-  --glass-glow-soft: 0 0 24px rgba(34, 211, 238, 0.12);
-  --glass-glow-medium: 0 0 32px rgba(34, 211, 238, 0.15);
-  --glass-glow-strong: 0 0 40px rgba(34, 211, 238, 0.18);
+  /* Futuristic Glows - AI Theme */
+  --glass-glow-subtle: 0 0 20px rgba(139, 92, 246, 0.15);
+  --glass-glow-soft: 0 0 30px rgba(139, 92, 246, 0.25);
+  --glass-glow-medium: 0 0 40px rgba(139, 92, 246, 0.35);
+  --glass-glow-strong: 0 0 60px rgba(139, 92, 246, 0.45);
+
+  /* Orb Glow Effects */
+  --glow-orb-inner: 0 0 20px rgba(139, 92, 246, 0.6);
+  --glow-orb-middle: 0 0 40px rgba(236, 72, 153, 0.4);
+  --glow-orb-outer: 0 0 80px rgba(59, 130, 246, 0.3);
+
+  /* Accent Glows */
+  --glow-purple: 0 0 20px rgba(139, 92, 246, 0.4);
+  --glow-blue: 0 0 20px rgba(59, 130, 246, 0.4);
+  --glow-pink: 0 0 20px rgba(236, 72, 153, 0.4);
+  --glow-yellow: 0 0 20px rgba(234, 179, 8, 0.4);
+  --glow-teal: 0 0 20px rgba(0, 212, 170, 0.5);
+  --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.4);
 }

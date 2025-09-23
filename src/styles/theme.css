@@ -257,6 +257,9 @@
 
   .app-shell {
     background:
+      radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at top right, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
       linear-gradient(
         135deg,
         var(--color-gradient-dark-start) 0%,
@@ -303,8 +306,8 @@
 
   body {
     margin: 0;
-    background-color: var(--color-bg-800);
-    color: var(--color-text-primary);
+    background-color: var(--color-darkglass-bg);
+    color: var(--color-darkglass-text-primary);
     font-family:
       "Inter",
       "Segoe UI",
