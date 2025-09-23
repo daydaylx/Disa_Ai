@@ -2,6 +2,7 @@ import "./styles/base.css";
 
 import React, { useEffect } from "react";
 
+import { AuroraBackground } from "./components/glass/AuroraBackground";
 import NavBar from "./components/NavBar";
 import { ToastsProvider } from "./components/ui/Toast";
 import ChatApp from "./ui2/ChatApp";
@@ -33,6 +34,7 @@ export default function App() {
   return (
     <ToastsProvider>
       <div className="relative h-full">
+        <AuroraBackground />
         {route === "chat" && <ChatApp />}
         {route === "models" && <TempModels />}
         {route === "settings" && <TempSettings />}
