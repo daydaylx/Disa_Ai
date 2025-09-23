@@ -28,7 +28,7 @@ export default function Card({
   className,
 }: Props) {
   const interactive = typeof onClick === "function";
-  const Comp: any = interactive ? "button" : "div";
+  const Comp: React.ElementType = interactive ? "button" : "div";
   return (
     <Comp
       onClick={onClick}
