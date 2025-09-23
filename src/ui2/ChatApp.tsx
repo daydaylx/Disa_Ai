@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { chatStream } from "../api/openrouter";
+import PersonaQuickBar from "../components/PersonaQuickBar";
 import { useToasts } from "../components/ui/Toast";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import CodeBlock from "./CodeBlock";
@@ -19,29 +20,34 @@ function Header({
   onOpenModels: () => void;
 }) {
   return (
-    <header className="safe-pt safe-px sticky top-0 z-10" role="banner">
-      <div className="glass flex items-center justify-between rounded-xl px-3 py-2 shadow-glass">
-        <div className="flex items-center gap-3">
-          <div className="grid size-8 place-items-center rounded-xl bg-accent-teal/20" aria-hidden>
-            <svg width="18" height="18" viewBox="0 0 24 24" className="text-primary">
-              <path
-                fill="currentColor"
-                d="M12 2a7 7 0 0 0-7 7v4l-1.5 3A1 1 0 0 0 4.4 17H19.6a1 1 0 0 0 .9-1.5L19 13V9a7 7 0 0 0-7-7Z"
-              />
-            </svg>
+    <header className="safe-pt safe-px sticky top-0 z-20 backdrop-blur-xl" role="banner">
+      <div className="mx-auto max-w-4xl">
+        <div className="glass flex items-center justify-between rounded-2xl border-border-secondary px-6 py-4 shadow-glass">
+          <div className="flex items-center gap-4">
+            <div
+              className="grid size-10 place-items-center rounded-xl border border-border-tertiary bg-gradient-to-br from-interactive-secondary/20 to-interactive-primary/20"
+              aria-hidden
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" className="text-interactive-primary">
+                <path
+                  fill="currentColor"
+                  d="M12 2a7 7 0 0 0-7 7v4l-1.5 3A1 1 0 0 0 4.4 17H19.6a1 1 0 0 0 .9-1.5L19 13V9a7 7 0 0 0-7-7Z"
+                />
+              </svg>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-caption text-text-muted">Chat</span>
+              <h1 className="text-h3 font-bold text-text-primary">{title}</h1>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm text-text-muted/80">Chat</span>
-            <h1 className="text-base font-semibold text-text-primary">{title}</h1>
-          </div>
+          <button
+            onClick={onOpenModels}
+            className="hover:bg-interactive-primary/8 rounded-xl border border-border-secondary px-4 py-3 text-label font-medium text-text-secondary transition-all duration-200 hover:border-interactive-primary/40 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-interactive-primary/60"
+            aria-label="Modell auswählen"
+          >
+            {modelName}
+          </button>
         </div>
-        <button
-          onClick={onOpenModels}
-          className="hover:bg-accent-teal/12 rounded-xl border border-glass-border/25 px-3 py-2 text-sm text-text-secondary/90 transition-colors hover:border-accent-teal/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-violet/40"
-          aria-label="Modell auswählen"
-        >
-          {modelName}
-        </button>
       </div>
     </header>
   );
@@ -50,28 +56,31 @@ function Header({
 /** ====== UI: Message Bubble ====== */
 function MessageBubble({ msg }: { msg: Message }) {
   const mine = msg.role === "user";
-  const base = "max-w-[82%] rounded-xl px-3 py-2 text-[15px] leading-relaxed break-words";
+  const base =
+    "max-w-[85%] rounded-2xl px-6 py-4 text-body leading-relaxed break-words transition-all duration-200";
   const mineCls =
-    "ml-auto rounded-br-sm border border-accent-teal/45 bg-accent-teal/25 text-text-primary shadow-[0_18px_38px_-22px_rgba(38,198,218,0.65)]";
-  const otherCls = "glass border border-glass-border/20 rounded-bl-sm text-text-primary";
+    "ml-auto rounded-br-lg border border-interactive-primary/30 bg-gradient-to-br from-interactive-primary/20 to-interactive-primary/10 text-text-primary shadow-xl backdrop-blur-sm";
+  const otherCls = "glass border border-border-secondary rounded-bl-lg text-text-primary shadow-lg";
 
   const segs = segmentMessage(msg.content);
 
   return (
-    <div className={`flex w-full ${mine ? "justify-end" : "justify-start"}`}>
-      <div className={`chat-bubble ${base} ${mine ? mineCls : otherCls}`}>
+    <div className={`flex w-full ${mine ? "justify-end" : "justify-start"} group`}>
+      <div
+        className={`chat-bubble ${base} ${mine ? mineCls : otherCls} transition-transform group-hover:scale-[1.02]`}
+      >
         {segs.map((s, i) =>
           s.type === "text" ? (
             <div key={i} className="whitespace-pre-wrap">
               {s.content}
             </div>
           ) : (
-            <div key={i} className="mt-2">
+            <div key={i} className="-mx-2 mt-4">
               <CodeBlock code={s.content} lang={s.lang} />
             </div>
           ),
         )}
-        <div className="mt-2 text-[11px] text-text-muted/80">
+        <div className="mt-3 text-caption font-medium text-text-muted/70">
           {new Date(msg.ts).toLocaleTimeString()}
         </div>
       </div>
@@ -107,42 +116,46 @@ function Composer({
   }, [value]);
 
   return (
-    <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 8px)" }}>
-      <div className="glass rounded-xl p-2 shadow-glass">
-        <div id="composer-help" className="sr-only">
-          Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
-        </div>
-        <div className="flex items-end gap-2">
-          <textarea
-            ref={taRef}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="Schreib was Sinnvolles…"
-            rows={1}
-            className="flex-1 resize-none bg-transparent text-[15px] text-text-primary outline-none ring-0 placeholder:text-text-muted/60 focus:ring-0"
-            aria-label="Nachricht eingeben"
-            aria-describedby="composer-help"
-            data-testid="composer-input"
-          />
-          {!streaming ? (
-            <button
-              onClick={onSend}
-              disabled={!value.trim() || !canSend}
-              className="hover:bg-accent-teal/28 rounded-xl border border-accent-teal/45 bg-accent-teal/20 px-3 py-2 text-text-primary transition-colors hover:border-accent-teal/55 disabled:cursor-not-allowed disabled:opacity-60"
-              data-testid="composer-send"
-            >
-              Senden
-            </button>
-          ) : (
-            <button
-              onClick={onStop}
-              className="rounded-xl border border-danger/55 bg-danger/25 px-3 py-2 text-text-primary transition-colors hover:bg-danger/30"
-              aria-label="Stopp"
-              data-testid="composer-stop"
-            >
-              Stop
-            </button>
-          )}
+    <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 16px)" }}>
+      <div className="mx-auto max-w-4xl">
+        <div className="glass rounded-2xl border-border-secondary p-6 shadow-glass backdrop-blur-xl">
+          <div id="composer-help" className="sr-only">
+            Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
+          </div>
+          <div className="flex items-end gap-4">
+            <div className="flex min-h-[44px] flex-1 items-center">
+              <textarea
+                ref={taRef}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder="Schreib was Sinnvolles…"
+                rows={1}
+                className="w-full resize-none bg-transparent text-body leading-relaxed text-text-primary outline-none ring-0 placeholder:text-text-muted/60 focus:ring-0"
+                aria-label="Nachricht eingeben"
+                aria-describedby="composer-help"
+                data-testid="composer-input"
+              />
+            </div>
+            {!streaming ? (
+              <button
+                onClick={onSend}
+                disabled={!value.trim() || !canSend}
+                className="shrink-0 rounded-xl border border-interactive-primary/40 bg-interactive-primary/10 px-6 py-3 text-label font-medium text-interactive-primary transition-all duration-200 hover:border-interactive-primary/60 hover:bg-interactive-primary/15 hover:text-interactive-primary-hover disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-interactive-primary/10"
+                data-testid="composer-send"
+              >
+                Senden
+              </button>
+            ) : (
+              <button
+                onClick={onStop}
+                className="shrink-0 rounded-xl border border-danger/55 bg-danger/20 px-6 py-3 text-label font-medium text-danger transition-all duration-200 hover:border-danger/70 hover:bg-danger/30"
+                aria-label="Stopp"
+                data-testid="composer-stop"
+              >
+                Stop
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -377,14 +390,25 @@ export default function ChatApp() {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-background-primary">
       <Header
         title="Disa AI"
         modelName={model?.label ?? "Lade..."}
         onOpenModels={() => setSheetOpen(true)}
       />
-      <main className="flex-1 overflow-hidden" role="main" aria-label="Chat-Verlauf">
-        <VirtualMessageList items={messages} renderItem={(m) => <MessageBubble msg={m} />} />
+      <div className="safe-px py-content-gap">
+        <div className="mx-auto max-w-4xl">
+          <PersonaQuickBar />
+        </div>
+      </div>
+      <main className="flex-1 overflow-hidden px-4" role="main" aria-label="Chat-Verlauf">
+        <div className="mx-auto h-full max-w-4xl">
+          <VirtualMessageList
+            items={messages}
+            renderItem={(m) => <MessageBubble msg={m} />}
+            className="space-y-6 py-6"
+          />
+        </div>
       </main>
       <section role="region" aria-label="Nachricht eingeben">
         <Composer

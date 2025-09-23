@@ -65,8 +65,45 @@
   --color-danger-200: #ff8ba3;
   --color-danger-500: #ef4444;
 
+  /* Enhanced Semantic Color System - Accessible & Consistent */
+  --color-text-primary: #ffffff;
+  --color-text-primary-rgb: 255 255 255;
+  --color-text-secondary: #b3b3b3;
+  --color-text-secondary-rgb: 179 179 179;
+  --color-text-muted: #a0a0a0;
+  --color-text-muted-rgb: 160 160 160;
+  --color-text-disabled: #808080;
+  --color-text-inverse: #ffffff;
+
+  /* Background Colors - Professional Dark Theme */
+  --color-bg-primary: #0a0a0a;
+  --color-bg-primary-rgb: 10 10 10;
+  --color-bg-secondary: #121212;
+  --color-bg-secondary-rgb: 18 18 18;
+  --color-bg-tertiary: #1a1a1a;
+  --color-bg-tertiary-rgb: 26 26 26;
+  --color-bg-elevated: #1e1e1e;
+  --color-bg-overlay: rgba(0, 0, 0, 0.8);
+
+  /* Interactive States - Accessible Contrast */
+  --color-interactive-primary: #22d3ee;
+  --color-interactive-primary-rgb: 34 211 238;
+  --color-interactive-primary-hover: #06b6d4;
+  --color-interactive-primary-active: #0891b2;
+  --color-interactive-secondary: #8b5cf6;
+  --color-interactive-secondary-rgb: 139 92 246;
+  --color-interactive-secondary-hover: #7c3aed;
+  --color-interactive-secondary-active: #6d28d9;
+
+  /* Border Colors - Subtle & Professional */
+  --color-border-primary: rgba(255, 255, 255, 0.08);
+  --color-border-secondary: rgba(255, 255, 255, 0.12);
+  --color-border-tertiary: rgba(255, 255, 255, 0.16);
+  --color-border-focus: rgba(34, 211, 238, 0.6);
+  --color-border-error: rgba(239, 68, 68, 0.6);
+
   /* Theme-specific hex colors (extracted from theme.css) */
-  --color-darkglass-accent-foreground: #041019;
+  --color-darkglass-accent-foreground: #ffffff;
   --color-danger-subtle-tint: #ffe7eb;
 
   /* Futuristic gradient colors - AI Theme */
@@ -155,20 +192,48 @@
   --gradient-night-soft: #0f1419;
   --gradient-purple-600: #a855f7;
 
-  /* Spacing scale - Enhanced Professional */
-  --space-0: 0px;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 28px;
-  --space-8: 36px;
-  --space-10: 44px;
-  --space-12: 52px;
-  --space-16: 72px;
+  /* Spacing scale - 8-Point Grid System */
+  --space-0: 0px; /* 0 * 4px */
+  --space-1: 4px; /* 1 * 4px */
+  --space-2: 8px; /* 2 * 4px */
+  --space-3: 12px; /* 3 * 4px */
+  --space-4: 16px; /* 4 * 4px */
+  --space-5: 20px; /* 5 * 4px */
+  --space-6: 24px; /* 6 * 4px */
+  --space-8: 32px; /* 8 * 4px */
+  --space-10: 40px; /* 10 * 4px */
+  --space-12: 48px; /* 12 * 4px */
+  --space-16: 64px; /* 16 * 4px */
+  --space-20: 80px; /* 20 * 4px */
+  --space-24: 96px; /* 24 * 4px */
+  --space-32: 128px; /* 32 * 4px */
+  --space-40: 160px; /* 40 * 4px */
+  --space-48: 192px; /* 48 * 4px */
+  --space-56: 224px; /* 56 * 4px */
+  --space-64: 256px; /* 64 * 4px */
 
-  /* Typography scale - Professional Grade */
+  /* Component-specific spacing */
+  --space-card-padding: var(--space-6);
+  --space-section-gap: var(--space-8);
+  --space-content-gap: var(--space-4);
+  --space-element-gap: var(--space-2);
+
+  /* Typography scale - Design System Specification */
+  /* Font Sizes */
+  --font-size-display: 3rem; /* 48px */
+  --font-size-h1: 2.25rem; /* 36px */
+  --font-size-h2: 1.875rem; /* 30px */
+  --font-size-h3: 1.5rem; /* 24px */
+  --font-size-body: 1rem; /* 16px */
+  --font-size-label: 0.875rem; /* 14px */
+  --font-size-caption: 0.75rem; /* 12px */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Legacy Typography scale - Professional Grade (keeping for compatibility) */
   --font-h1-size: 28px;
   --font-h1-line: 36px;
   --font-h1-weight: 700;
