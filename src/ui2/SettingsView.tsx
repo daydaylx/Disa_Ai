@@ -5,6 +5,7 @@ import { GlassButton } from "../components/glass/GlassButton";
 import { GlassCard } from "../components/glass/GlassCard";
 import { type GlassTab, GlassTabPanel, GlassTabs } from "../components/glass/GlassTabs";
 import { SettingsCard } from "../components/settings/SettingsCard";
+import { GlassSpinner } from "../components/ui/Skeleton";
 import { useToasts } from "../components/ui/Toast";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { getApiKey, setApiKey } from "../services/openrouter";
@@ -197,13 +198,16 @@ export default function SettingsView() {
                         setApiKeyState(e.target.value);
                         setKeyError(null);
                       }}
-                      className="glass-input w-full"
+                      className="glass-input w-full transition-all duration-200 focus:scale-[1.01] focus:shadow-lg focus:shadow-accent-teal/10"
                       data-testid="settings-save-key"
                     />
                     {keyError && <p className="mt-2 text-sm text-red-400">{keyError}</p>}
                   </div>
                   <GlassButton variant="primary" onClick={handleSaveApiKey} disabled={keySaving}>
-                    {keySaving ? "Speichert..." : "Key speichern"}
+                    <div className="flex items-center gap-2">
+                      {keySaving && <GlassSpinner size="sm" />}
+                      <span>{keySaving ? "Speichert..." : "Key speichern"}</span>
+                    </div>
                   </GlassButton>
                 </div>
               </SettingsCard>
