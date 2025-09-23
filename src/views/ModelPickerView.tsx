@@ -50,18 +50,15 @@ export default function ModelPickerView({ onSelectChat }: Props) {
       }}
     >
       <GlassCard variant="floating" tint="purple" className="p-8 text-center">
-        <div className="mb-4 flex items-center justify-center gap-3">
-          <div className="bg-purple-500/20 rounded-xl p-3">
-            <span className="text-3xl">🤖</span>
-          </div>
-          <div className="text-left">
-            <p className="text-neutral-400 mb-1 text-xs uppercase tracking-wide">
+        <div className="mb-4">
+          <div className="text-center">
+            <p className="mb-1 text-xs uppercase tracking-wide text-neutral-400">
               Chat-Konfiguration
             </p>
-            <h1 className="text-3xl from-purple-400 to-cyan-400 bg-gradient-to-r bg-clip-text font-bold text-transparent">
+            <h1 className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-3xl font-bold text-transparent">
               Modell auswählen
             </h1>
-            <p className="text-neutral-300 text-lg">
+            <p className="text-lg text-neutral-300">
               Suche und filtere Modelle nach Preis, Kontextfenster und Sicherheitseinstufung.
             </p>
           </div>
@@ -71,8 +68,8 @@ export default function ModelPickerView({ onSelectChat }: Props) {
       <GlassCard variant="medium" className="space-y-4 p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-white text-xl font-semibold">Katalog</h2>
-            <p className="text-neutral-400 text-sm">
+            <h2 className="text-xl font-semibold text-white">Katalog</h2>
+            <p className="text-sm text-neutral-400">
               Favoriten markieren, Filter kombinieren, direkt übernehmen.
             </p>
           </div>

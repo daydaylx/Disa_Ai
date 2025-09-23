@@ -472,16 +472,16 @@
   transition: all 0.1s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
-/* Glass Navigation */
+/* Glass Navigation - Professional Grade */
 .glass-nav {
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  background: rgba(10, 14, 26, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur-xl)) saturate(160%) brightness(105%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-xl)) saturate(160%) brightness(105%);
+  background: var(--glass-bg-medium);
+  border: 1px solid var(--glass-border-soft);
   border-radius: 20px;
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 12px 40px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-nav__tab {
@@ -489,26 +489,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 16px;
-  border-radius: 14px;
-  color: var(--color-text-muted);
-  transition: all 0.2s ease;
+  padding: 14px 18px;
+  border-radius: 16px;
+  color: var(--color-darkglass-text-secondary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: transparent;
   border: none;
   cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
 .glass-nav__tab:hover {
-  color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-darkglass-text-primary);
+  background: var(--glass-bg-soft);
+  transform: translateY(-1px);
 }
 
 .glass-nav__tab--active {
-  color: var(--color-neutral-900);
-  background: linear-gradient(135deg, rgba(34, 211, 238, 0.9) 0%, rgba(147, 197, 253, 0.8) 100%);
+  color: var(--color-darkglass-text-primary);
+  background: linear-gradient(135deg, var(--glass-bg-strong) 0%, var(--glass-bg-medium) 100%);
+  border: 1px solid var(--glass-border-medium);
   box-shadow:
-    0 4px 12px rgba(34, 211, 238, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 6px 20px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 /* Floating glass effects */

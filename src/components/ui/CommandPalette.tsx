@@ -139,9 +139,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         aria-modal="true"
         aria-labelledby="command-palette-title"
       >
-        <div className="overflow-hidden rounded-xl border border-border-strong bg-surface-200 shadow-elev2">
+        <div className="border-border-strong bg-surface-200 shadow-elev2 overflow-hidden rounded-xl border">
           {/* Search Input */}
-          <div className="flex items-center border-b border-border-subtle px-4">
+          <div className="border-border-subtle flex items-center border-b px-4">
             <svg
               className="h-5 w-5 text-text-muted"
               viewBox="0 0 20 20"
@@ -189,10 +189,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   id={`command-${command.id}`}
                   className={cn(
                     "group flex cursor-pointer select-none items-center rounded-lg px-3 py-2",
-                    "transition-colors duration-fast",
+                    "duration-fast transition-colors",
                     index === selectedIndex
-                      ? "bg-accent text-accent-foreground"
-                      : "text-text-secondary hover:bg-surface-100",
+                      ? "text-accent-foreground bg-accent"
+                      : "hover:bg-surface-100 text-text-secondary",
                     command.disabled && "cursor-not-allowed opacity-50",
                   )}
                   onClick={() => handleCommandClick(command, index)}
@@ -205,7 +205,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   {command.icon && (
                     <div
                       className={cn(
-                        "h-5 w-5 mr-3 flex-shrink-0",
+                        "mr-3 h-5 w-5 flex-shrink-0",
                         index === selectedIndex ? "text-accent-foreground" : "text-text-muted",
                       )}
                     >
@@ -250,7 +250,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               ))}
             </ul>
           ) : (
-            <div className="py-14 px-4 text-center text-sm text-text-muted">
+            <div className="px-4 py-14 text-center text-sm text-text-muted">
               Keine Befehle gefunden für "{query}"
             </div>
           )}
@@ -329,7 +329,6 @@ export function useDefaultCommands() {
         id: "new-chat",
         title: "Neuer Chat",
         description: "Einen neuen Chat starten",
-        icon: "💬",
         shortcut: "Ctrl+N",
         action: newChat,
       },
@@ -337,7 +336,6 @@ export function useDefaultCommands() {
         id: "focus-composer",
         title: "Fokus auf Eingabe",
         description: "Cursor in das Eingabefeld setzen",
-        icon: "✏️",
         shortcut: "/",
         action: focusComposer,
       },
@@ -345,7 +343,6 @@ export function useDefaultCommands() {
         id: "copy-last",
         title: "Letzte Antwort kopieren",
         description: "Die letzte KI-Antwort in die Zwischenablage kopieren",
-        icon: "📋",
         shortcut: "Ctrl+Shift+C",
         action: copyLastMessage,
       },
@@ -353,7 +350,6 @@ export function useDefaultCommands() {
         id: "switch-model",
         title: "Modell wechseln",
         description: "Das AI-Modell ändern",
-        icon: "🤖",
         shortcut: "Ctrl+M",
         action: switchModel,
       },
@@ -361,7 +357,6 @@ export function useDefaultCommands() {
         id: "settings",
         title: "Einstellungen",
         description: "App-Einstellungen öffnen",
-        icon: "⚙️",
         shortcut: "Ctrl+,",
         action: openSettings,
       },

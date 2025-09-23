@@ -22,25 +22,25 @@ export default function SettingsView() {
     {
       id: "general",
       label: "Allgemein",
-      icon: "⚙️",
+      icon: "",
       "aria-label": "Allgemeine Einstellungen",
     },
     {
       id: "style",
       label: "Stil",
-      icon: "🎯",
+      icon: "",
       "aria-label": "Antwortstil-Einstellungen",
     },
     {
       id: "roles",
       label: "Rollen",
-      icon: "👤",
+      icon: "",
       "aria-label": "KI-Rollen Einstellungen",
     },
     {
       id: "app",
       label: "App",
-      icon: "📱",
+      icon: "",
       "aria-label": "App-Einstellungen",
     },
   ];
@@ -81,31 +81,26 @@ export default function SettingsView() {
     >
       {/* Control Center Header */}
       <GlassCard variant="floating" tint="cyan" className="mb-8 p-8 text-center">
-        <div className="mb-4 flex items-center justify-center gap-3">
-          <div className="bg-accent-500/20 rounded-xl p-3">
-            <span className="text-3xl">⚙️</span>
-          </div>
-          <div className="text-left">
-            <h1 className="from-cyan-400 to-purple-400 text-3xl bg-gradient-to-r bg-clip-text font-bold text-transparent">
+        <div className="mb-4">
+          <div className="text-center">
+            <h1 className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-3xl font-bold text-transparent">
               Control Center
             </h1>
-            <p className="text-neutral-300 text-lg">Zentrale Steuerung für Disa AI</p>
+            <p className="text-lg text-neutral-300">Zentrale Steuerung für Disa AI</p>
           </div>
         </div>
 
         {/* Quick Status Cards */}
         <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           <GlassCard variant="soft" className="p-4 text-center">
-            <div className="mb-2 text-2xl">🔑</div>
-            <div className="text-neutral-400 text-xs">API Key</div>
+            <div className="text-xs text-neutral-400">API Key</div>
             <div className={`text-sm font-medium ${apiKey ? "text-green-400" : "text-orange-400"}`}>
               {apiKey ? "Aktiv" : "Fehlt"}
             </div>
           </GlassCard>
 
           <GlassCard variant="soft" className="p-4 text-center">
-            <div className="mb-2 text-2xl">📱</div>
-            <div className="text-neutral-400 text-xs">App Status</div>
+            <div className="text-xs text-neutral-400">App Status</div>
             <div
               className={`text-sm font-medium ${pwa.installed ? "text-green-400" : "text-blue-400"}`}
             >
@@ -114,15 +109,13 @@ export default function SettingsView() {
           </GlassCard>
 
           <GlassCard variant="soft" className="p-4 text-center">
-            <div className="mb-2 text-2xl">🎯</div>
-            <div className="text-neutral-400 text-xs">Stil</div>
-            <div className="text-cyan-400 text-sm font-medium">Aktiv</div>
+            <div className="text-xs text-neutral-400">Stil</div>
+            <div className="text-sm font-medium text-cyan-400">Aktiv</div>
           </GlassCard>
 
           <GlassCard variant="soft" className="p-4 text-center">
-            <div className="mb-2 text-2xl">👤</div>
-            <div className="text-neutral-400 text-xs">Rolle</div>
-            <div className="text-purple-400 text-sm font-medium">Konfiguriert</div>
+            <div className="text-xs text-neutral-400">Rolle</div>
+            <div className="text-sm font-medium text-purple-400">Konfiguriert</div>
           </GlassCard>
         </div>
       </GlassCard>
@@ -142,12 +135,11 @@ export default function SettingsView() {
       <div className="min-h-[60vh]">
         {/* General Settings Tab */}
         <GlassTabPanel tabId="general" activeTab={activeTab}>
-          <div className="lg:grid-cols-2 grid gap-6">
+          <div className="grid gap-6 lg:grid-cols-2">
             {/* API Configuration */}
             <SettingsCard
               title="OpenRouter API Key"
               description="Schlüssel wird ausschließlich lokal gespeichert. Ohne Key nutzt die App Demo-Antworten."
-              icon="🔑"
               glow="cyan"
             >
               <div className="space-y-4">
@@ -163,7 +155,7 @@ export default function SettingsView() {
                     className="glass-input w-full"
                     data-testid="settings-save-key"
                   />
-                  {keyError && <p className="text-red-400 mt-2 text-sm">{keyError}</p>}
+                  {keyError && <p className="mt-2 text-sm text-red-400">{keyError}</p>}
                 </div>
                 <GlassButton variant="primary" onClick={handleSaveApiKey} disabled={keySaving}>
                   {keySaving ? "Speichert..." : "Key speichern"}
@@ -175,7 +167,6 @@ export default function SettingsView() {
             <SettingsCard
               title="Modell-Auswahl"
               description="Wähle das AI-Modell für optimale Ergebnisse."
-              icon="🤖"
               glow="warm"
             >
               <div className="space-y-4">
@@ -193,7 +184,6 @@ export default function SettingsView() {
           <SettingsCard
             title="Antwortstil"
             description="Wähle den Stil für KI-Antworten - von neutral bis kreativ."
-            icon="🎯"
             glow="cyan"
           >
             <StyleSettings />
@@ -205,7 +195,6 @@ export default function SettingsView() {
           <SettingsCard
             title="KI-Rollen"
             description="Spezialisierte Rollen für verschiedene Anwendungsfälle."
-            icon="👤"
             glow="purple"
           >
             <RoleSettings />
@@ -214,12 +203,11 @@ export default function SettingsView() {
 
         {/* App Settings Tab */}
         <GlassTabPanel tabId="app" activeTab={activeTab}>
-          <div className="lg:grid-cols-2 grid gap-6">
+          <div className="grid gap-6 lg:grid-cols-2">
             {/* App Installation */}
             <SettingsCard
               title="App Installation"
               description="Installiere die App für schnellen Zugriff und Offline-Unterstützung."
-              icon="📱"
               glow="mint"
             >
               <div className="space-y-3">
@@ -229,16 +217,16 @@ export default function SettingsView() {
                   </GlassButton>
                 ) : pwa.installed ? (
                   <div className="glass-badge glass-badge--success">
-                    <div className="bg-green-400 h-2 w-2 rounded-full"></div>
+                    <div className="h-2 w-2 rounded-full bg-green-400"></div>
                     Bereits installiert
                   </div>
                 ) : (
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-sm text-gray-400">
                     Installations-Aufforderung momentan nicht verfügbar.
                   </p>
                 )}
                 {pwa.showIOSHowTo && (
-                  <p className="text-gray-400 text-xs">
+                  <p className="text-xs text-gray-400">
                     iOS: Über „Teilen" → „Zum Home-Bildschirm" hinzufügen
                   </p>
                 )}
@@ -255,8 +243,8 @@ export default function SettingsView() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-white font-medium">Chat-Speicher</h4>
-                    <p className="text-gray-400 text-sm">Automatische Speicherung der Gespräche</p>
+                    <h4 className="font-medium text-white">Chat-Speicher</h4>
+                    <p className="text-sm text-gray-400">Automatische Speicherung der Gespräche</p>
                   </div>
                   <div className="glass-badge glass-badge--success">Aktiv</div>
                 </div>
@@ -279,8 +267,8 @@ export default function SettingsView() {
       <GlassCard variant="soft" className="mt-8 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-white mb-1 font-semibold">Schnellaktionen</h3>
-            <p className="text-neutral-400 text-sm">Einstellungen verwalten und zurücksetzen</p>
+            <h3 className="mb-1 font-semibold text-white">Schnellaktionen</h3>
+            <p className="text-sm text-neutral-400">Einstellungen verwalten und zurücksetzen</p>
           </div>
           <div className="flex gap-3">
             <GlassButton variant="ghost" size="sm">
