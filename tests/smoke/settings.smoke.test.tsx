@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import React from "react";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ToastsProvider } from "../../src/components/ui/toast/ToastsProvider";
 import SettingsView from "../../src/ui2/SettingsView";
@@ -10,6 +10,34 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("SettingsView Smoke", () => {
+  beforeEach(() => {
+    const stylesMockResponse = {
+      styles: [],
+    };
+    const modelsMockResponse = {
+      data: [],
+    };
+
+    vi.spyOn(global, "fetch").mockImplementation((url) => {
+      if (url.toString().endsWith("/styles.json")) {
+        return Promise.resolve({
+          json: () => Promise.resolve(stylesMockResponse),
+        } as Response);
+      }
+      if (url.toString().endsWith("/models")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(modelsMockResponse),
+        } as Response);
+      }
+      return Promise.reject(new Error(`Unhandled fetch: ${url}`));
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("renders API key input and model section", () => {
     renderWithProviders(<SettingsView />);
     expect(screen.getByTestId("settings-save-key")).toBeInTheDocument();
