@@ -257,17 +257,15 @@
 
   .app-shell {
     background:
-      radial-gradient(
-        110% 120% at 12% 8%,
-        color-mix(in srgb, rgb(var(--accent-teal-rgb)) 18%, transparent) 0%,
-        transparent 70%
-      ),
-      radial-gradient(
-        90% 110% at 88% 92%,
-        color-mix(in srgb, rgb(var(--accent-violet-rgb)) 14%, transparent) 0%,
-        transparent 75%
+      linear-gradient(
+        135deg,
+        var(--color-gradient-dark-start) 0%,
+        var(--color-gradient-dark-mid) 50%,
+        var(--color-gradient-dark-end) 100%
       ),
       var(--color-darkglass-bg);
+    background-size: 100% 100%;
+    background-attachment: fixed;
   }
 
   .app-shell[data-reduced-motion="true"] {
@@ -363,10 +361,7 @@
 @layer components {
   /* Background shell */
   .app-shell {
-    background:
-      radial-gradient(120% 120% at 16% 0%, rgba(34, 211, 238, 0.08), transparent 60%),
-      radial-gradient(100% 120% at 80% 100%, rgba(34, 211, 238, 0.06), transparent 70%),
-      var(--color-bg-800);
+    background: var(--color-bg-800);
     min-height: 100svh;
   }
 

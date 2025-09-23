@@ -5,7 +5,6 @@ import { GlassButton } from "../components/glass/GlassButton";
 import { GlassCard } from "../components/glass/GlassCard";
 import { type GlassTab, GlassTabPanel, GlassTabs } from "../components/glass/GlassTabs";
 import { SettingsCard } from "../components/settings/SettingsCard";
-import { ThemeToggle } from "../components/ui/ThemeToggle";
 import { useToasts } from "../components/ui/Toast";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { getApiKey, setApiKey } from "../services/openrouter";
@@ -191,13 +190,19 @@ export default function SettingsView() {
                 </div>
               </SettingsCard>
 
-              {/* UI Theme */}
+              {/* App Info */}
               <SettingsCard
-                title="UI Theme"
-                description="Wechsle zwischen klassischem Dunkelmodus, hellem Layout oder dem neuen Dark Glass."
+                title="Design System"
+                description="Professionelles Glassmorphism Design mit optimaler Lesbarkeit und modernen Effekten."
                 glow="purple"
               >
-                <ThemeToggle />
+                <div className="space-y-3">
+                  <div className="glass-badge glass-badge--accent">Dark Glass Theme aktiv</div>
+                  <p className="text-sm text-text-muted/85">
+                    Nutzt halbtransparente Glasflächen mit Blur-Effekten für eine moderne,
+                    professionelle Benutzeroberfläche.
+                  </p>
+                </div>
               </SettingsCard>
 
               {/* Model Selection */}
