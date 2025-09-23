@@ -5,9 +5,11 @@ import type { Message } from "./types";
 export default function VirtualMessageList({
   items,
   renderItem,
+  className = "",
 }: {
   items: Message[];
   renderItem: (m: Message) => React.ReactNode;
+  className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(120);
@@ -58,7 +60,7 @@ export default function VirtualMessageList({
     <div className="relative">
       <div
         ref={containerRef}
-        className="flex-1 space-y-3 overflow-y-auto px-3 pb-2 pt-3"
+        className={`h-full flex-1 overflow-y-auto ${className}`}
         aria-label="Chat messages"
         role="log"
       >
