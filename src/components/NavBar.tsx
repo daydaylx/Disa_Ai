@@ -2,8 +2,8 @@ import React from "react";
 
 const tabs = [
   { href: "#/chat", label: "Chat", testId: "nav-bottom-chat" },
-  { href: "#/models", label: "Modelle", testId: "nav-bottom-models" },
-  { href: "#/settings", label: "Einstellungen", testId: "nav-bottom-settings" },
+  { href: "#/models", label: "Models", testId: "nav-bottom-models" },
+  { href: "#/settings", label: "Settings", testId: "nav-bottom-settings" },
 ];
 
 export default function NavBar() {
@@ -12,7 +12,7 @@ export default function NavBar() {
     <nav
       className="safe-px safe-pb fixed bottom-0 left-0 right-0 z-50"
       style={{ height: "var(--bottom-nav-h)" }}
-      aria-label="Hauptnavigation"
+      aria-label="Main Navigation"
     >
       <div className="glass glass-depth-3 grid grid-cols-3 gap-2 rounded-t-2xl p-2 shadow-glass">
         {tabs.map((t) => {
@@ -23,15 +23,17 @@ export default function NavBar() {
               href={t.href}
               aria-current={active ? "page" : undefined}
               className={[
-                "rounded-xl border px-2 py-2 text-center text-sm transition-colors",
+                "rounded-xl border px-3 py-3 text-center text-sm font-medium tracking-wide transition-all duration-300 ease-out",
                 active
-                  ? "border-accent-teal/45 bg-accent-teal/15 text-text-primary"
-                  : "bg-glass-surface/12 hover:bg-glass-surface/18 border-glass-border/25 text-text-secondary/90",
+                  ? "border-accent-teal/50 bg-accent-teal/20 text-white shadow-lg shadow-accent-teal/25"
+                  : "bg-glass-surface/12 border-glass-border/30 text-text-secondary/90 hover:border-glass-border/40 hover:bg-glass-surface/20 hover:text-text-primary/95",
               ].join(" ")}
-              style={{ minHeight: 44 }}
+              style={{ minHeight: 48 }}
               data-testid={t.testId}
             >
-              <div className="flex items-center justify-center gap-1 text-sm">{t.label}</div>
+              <div className="flex items-center justify-center gap-1.5 text-sm font-medium tracking-wide">
+                {t.label}
+              </div>
             </a>
           );
         })}

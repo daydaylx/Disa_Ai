@@ -18,29 +18,53 @@ import {
   type StyleKey,
 } from "../../config/settings";
 
-const STYLE_LABELS: Record<StyleKey, { name: string; description: string; emoji: string }> = {
-  neutral: { name: "Neutral", description: "Sachlich und strukturiert", emoji: "📝" },
-  blunt_de: { name: "Direkt", description: "Kritisch und klar, ohne Schönfärberei", emoji: "🎯" },
-  concise: { name: "Prägnant", description: "Maximal 5 Sätze oder 7 Punkte", emoji: "⚡" },
-  friendly: { name: "Freundlich", description: "Höflicher Ton, trotzdem präzise", emoji: "😊" },
+const STYLE_LABELS: Record<StyleKey, { name: string; description: string; category: string }> = {
+  neutral: { name: "Neutral", description: "Sachlich und strukturiert", category: "basic" },
+  blunt_de: {
+    name: "Direkt",
+    description: "Kritisch und klar, ohne Schönfärberei",
+    category: "basic",
+  },
+  concise: { name: "Prägnant", description: "Maximal 5 Sätze oder 7 Punkte", category: "basic" },
+  friendly: {
+    name: "Freundlich",
+    description: "Höflicher Ton, trotzdem präzise",
+    category: "personality",
+  },
   creative_light: {
     name: "Kreativ",
     description: "Bildhafte Metaphern und Beispiele",
-    emoji: "🎨",
+    category: "creative",
   },
-  minimal: { name: "Minimal", description: "Nur die Antwort, kein Meta-Text", emoji: "🔹" },
-  technical_precise: { name: "Technisch", description: "Präzise mit Edge-Cases", emoji: "⚙️" },
-  socratic: { name: "Sokratisch", description: "Arbeitet mit gezielten Rückfragen", emoji: "❓" },
-  bullet: { name: "Bullet-Points", description: "Primär in Aufzählungen", emoji: "📋" },
+  minimal: { name: "Minimal", description: "Nur die Antwort, kein Meta-Text", category: "basic" },
+  technical_precise: {
+    name: "Technisch",
+    description: "Präzise mit Edge-Cases",
+    category: "technical",
+  },
+  socratic: {
+    name: "Sokratisch",
+    description: "Arbeitet mit gezielten Rückfragen",
+    category: "technical",
+  },
+  bullet: { name: "Bullet-Points", description: "Primär in Aufzählungen", category: "technical" },
   step_by_step: {
     name: "Schritt-für-Schritt",
     description: "Nummerierte Anleitungen",
-    emoji: "📈",
+    category: "technical",
   },
-  formal_de: { name: "Formell", description: "Sie-Form, höflich und direkt", emoji: "🎩" },
-  casual_de: { name: "Locker", description: "Du-Form, kurze Sätze", emoji: "👋" },
-  detailed: { name: "Detailliert", description: "Ausführlich mit Kontext", emoji: "📚" },
-  no_taboos: { name: "Unzensiert", description: "Direkt ohne Euphemismen", emoji: "🔓" },
+  formal_de: {
+    name: "Formell",
+    description: "Sie-Form, höflich und direkt",
+    category: "personality",
+  },
+  casual_de: { name: "Locker", description: "Du-Form, kurze Sätze", category: "personality" },
+  detailed: { name: "Detailliert", description: "Ausführlich mit Kontext", category: "technical" },
+  no_taboos: {
+    name: "Unzensiert",
+    description: "Direkt ohne Euphemismen",
+    category: "personality",
+  },
 };
 
 export default function SettingsStyle() {
@@ -61,8 +85,8 @@ export default function SettingsStyle() {
     setStyle(style);
     toasts.push({
       kind: "success",
-      title: "🎯 Stil geändert",
-      message: `Antwortstil auf "${STYLE_LABELS[style].name}" gesetzt.`,
+      title: "Style Updated",
+      message: `Response style set to "${STYLE_LABELS[style].name}".`,
     });
   };
 
@@ -123,10 +147,10 @@ export default function SettingsStyle() {
 
   const allStylesGrouped = React.useMemo(() => {
     return [
-      { title: "Grundstile", emoji: "📄", styles: basicStyles },
-      { title: "Kreative Stile", emoji: "🎨", styles: creativeStyles },
-      { title: "Technische Stile", emoji: "⚙️", styles: technicalStyles },
-      { title: "Persönlichkeit", emoji: "👤", styles: personalityStyles },
+      { title: "Basic Styles", styles: basicStyles },
+      { title: "Creative Styles", styles: creativeStyles },
+      { title: "Technical Styles", styles: technicalStyles },
+      { title: "Personality", styles: personalityStyles },
     ];
   }, [basicStyles, creativeStyles, technicalStyles, personalityStyles]);
 
@@ -141,12 +165,12 @@ export default function SettingsStyle() {
   }, [query]);
 
   const sections: AccordionItem[] = allStylesGrouped
-    .map(({ title, emoji, styles }) => {
+    .map(({ title, styles }) => {
       const filteredStyles = styles.filter((style) => filtered.includes(style));
 
       return {
-        title: `${emoji} ${title}`,
-        meta: `${filteredStyles.length} Stile verfügbar`,
+        title: title,
+        meta: `${filteredStyles.length} styles available`,
         content: (
           <div className="space-y-2">
             {filteredStyles.map((styleKey) => {
@@ -156,7 +180,7 @@ export default function SettingsStyle() {
               return (
                 <Card
                   key={styleKey}
-                  title={`${style.emoji} ${style.name}`}
+                  title={style.name}
                   meta={style.description}
                   active={isActive}
                   onClick={() => {
@@ -182,10 +206,12 @@ export default function SettingsStyle() {
       {/* Current Style Display */}
       <GlassCard variant="subtle" className="p-4">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{STYLE_LABELS[currentStyle].emoji}</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-teal/20 backdrop-blur-sm">
+            <div className="h-2 w-2 rounded-full bg-accent-teal"></div>
+          </div>
           <div>
             <div className="flex items-center gap-2 font-medium text-white">
-              <span className="text-accent-400">✓</span>
+              <span className="text-accent-400 text-xs uppercase tracking-wider">Current</span>
               {STYLE_LABELS[currentStyle].name}
             </div>
             <div className="text-sm text-gray-400">{STYLE_LABELS[currentStyle].description}</div>
