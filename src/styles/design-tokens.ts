@@ -37,6 +37,35 @@ export const colors = {
     purple: "#8b5cf6",
     mint: "#6ee7b7",
   },
+  darkGlass: {
+    background: "#0b0f14",
+    surface: "#10151b",
+    surfaceElevated: "#131a21",
+    text: {
+      primary: "#e0e0e0",
+      secondary: "#b8bec4",
+      muted: "#9aa0a6",
+    },
+    accent: {
+      teal: "#26c6da",
+      violet: "#7c4dff",
+      pink: "#ff4d8b",
+    },
+    border: {
+      soft: "rgba(255, 255, 255, 0.12)",
+      strong: "rgba(255, 255, 255, 0.18)",
+      ultra: "rgba(255, 255, 255, 0.32)",
+    },
+    overlay: {
+      weak: "rgba(255, 255, 255, 0.04)",
+      soft: "rgba(255, 255, 255, 0.08)",
+      strong: "rgba(255, 255, 255, 0.16)",
+    },
+    shadow: {
+      base: "0 28px 80px -32px rgba(5, 9, 15, 0.75)",
+      soft: "0 18px 48px -24px rgba(5, 9, 15, 0.55)",
+    },
+  },
 } as const;
 
 export type ColorRamp = typeof colors.neutral;
