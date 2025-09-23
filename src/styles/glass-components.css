@@ -18,10 +18,11 @@
 }
 
 .glass-card--interactive:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.15);
+    0 20px 40px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 0 40px rgba(139, 92, 246, 0.2);
 }
 
 .glass-card--interactive:active {
@@ -413,6 +414,57 @@
   }
 }
 
+/* Futuristic Glow Animations */
+@keyframes futuristic-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(139, 92, 246, 0.3),
+      0 0 40px rgba(139, 92, 246, 0.2),
+      0 0 80px rgba(139, 92, 246, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(139, 92, 246, 0.5),
+      0 0 50px rgba(139, 92, 246, 0.3),
+      0 0 100px rgba(139, 92, 246, 0.2);
+  }
+}
+
+@keyframes teal-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(0, 212, 170, 0.4),
+      0 0 40px rgba(0, 212, 170, 0.2),
+      0 0 80px rgba(0, 212, 170, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(0, 212, 170, 0.6),
+      0 0 50px rgba(0, 212, 170, 0.4),
+      0 0 100px rgba(0, 212, 170, 0.2);
+  }
+}
+
+@keyframes shimmer-border {
+  0% {
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+  25% {
+    border-color: rgba(0, 212, 170, 0.4);
+  }
+  50% {
+    border-color: rgba(236, 72, 153, 0.3);
+  }
+  75% {
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+  100% {
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+}
+
 .glass-button--animate-success {
   animation: button-success-flash 0.6s ease-in-out;
 }
@@ -423,6 +475,29 @@
 
 .glass-button__glow--pulse {
   animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Futuristic Animation Classes */
+.glass-futuristic-glow {
+  animation: futuristic-glow 3s ease-in-out infinite;
+}
+
+.glass-teal-glow {
+  animation: teal-glow 3s ease-in-out infinite;
+}
+
+.glass-shimmer-border {
+  animation: shimmer-border 4s ease-in-out infinite;
+}
+
+.glass-card--futuristic {
+  animation: futuristic-glow 4s ease-in-out infinite;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card--futuristic:hover {
+  animation-duration: 2s;
+  transform: translateY(-6px) scale(1.02);
 }
 
 /* Loading state */
@@ -665,6 +740,83 @@
    Enhanced Glass Components with Design Tokens
    ======================================== */
 
+/* Holographic Orb Element - Central AI Avatar */
+.holographic-orb {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: var(--gradient-orb-purple);
+  box-shadow: var(--glow-orb-inner), var(--glow-orb-middle), var(--glow-orb-outer);
+  animation: orb-pulse 4s ease-in-out infinite;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.holographic-orb::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: var(--gradient-orb-glow);
+  opacity: 0.6;
+  animation: orb-rotate 8s linear infinite;
+}
+
+.holographic-orb::after {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+  backdrop-filter: blur(2px);
+}
+
+.holographic-orb:hover {
+  transform: scale(1.05);
+  box-shadow:
+    var(--glow-orb-inner),
+    var(--glow-orb-middle),
+    var(--glow-orb-outer),
+    0 0 120px rgba(139, 92, 246, 0.3);
+}
+
+/* Teal variant for second reference */
+.holographic-orb--teal {
+  background: var(--gradient-orb-teal);
+  box-shadow:
+    0 0 20px rgba(0, 212, 170, 0.6),
+    0 0 40px rgba(34, 211, 238, 0.4),
+    0 0 80px rgba(59, 130, 246, 0.3);
+}
+
+.holographic-orb--teal::before {
+  background: var(--gradient-orb-teal-glow);
+}
+
+@keyframes orb-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+@keyframes orb-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Glass Background Variants using Design Tokens */
 .glass-bg--subtle {
   background: var(--glass-bg-subtle);
@@ -719,29 +871,54 @@
   transform: translateY(-2px);
 }
 
-/* Tinted Glass Effects */
+/* Futuristic Tinted Glass Effects - From Reference Images */
 .glass-tint--cyan {
-  background: var(--glass-tint-cyan);
-  border-color: rgba(34, 211, 238, 0.2);
-  box-shadow: var(--glass-glow-subtle);
+  background: var(--gradient-card-cyan);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  box-shadow: var(--glow-cyan);
 }
 
 .glass-tint--purple {
-  background: var(--glass-tint-purple);
-  border-color: rgba(168, 85, 247, 0.2);
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
+  background: var(--gradient-card-purple);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: var(--glow-purple);
 }
 
+.glass-tint--teal {
+  background: var(--gradient-card-teal);
+  border: 1px solid rgba(0, 212, 170, 0.3);
+  box-shadow: var(--glow-teal);
+}
+
+.glass-tint--pink {
+  background: var(--gradient-card-pink);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  box-shadow: var(--glow-pink);
+}
+
+.glass-tint--blue {
+  background: var(--gradient-card-blue);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: var(--glow-blue);
+}
+
+.glass-tint--yellow {
+  background: var(--gradient-card-yellow);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  box-shadow: var(--glow-yellow);
+}
+
+/* Legacy support */
 .glass-tint--mint {
-  background: var(--glass-tint-mint);
-  border-color: rgba(110, 231, 183, 0.2);
-  box-shadow: 0 0 20px rgba(110, 231, 183, 0.15);
+  background: var(--gradient-card-teal);
+  border: 1px solid rgba(0, 212, 170, 0.3);
+  box-shadow: var(--glow-teal);
 }
 
 .glass-tint--warm {
-  background: var(--glass-tint-warm);
-  border-color: rgba(255, 183, 77, 0.2);
-  box-shadow: 0 0 20px rgba(255, 183, 77, 0.15);
+  background: var(--gradient-card-yellow);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  box-shadow: var(--glow-yellow);
 }
 
 /* Enhanced Interactive Glass Components */
