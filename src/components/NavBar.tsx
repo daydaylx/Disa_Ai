@@ -14,7 +14,7 @@ export default function NavBar() {
       style={{ height: "var(--bottom-nav-h)" }}
       aria-label="Hauptnavigation"
     >
-      <div className="glass grid grid-cols-3 gap-2 rounded-t-2xl p-2 shadow-md">
+      <div className="glass glass-depth-3 grid grid-cols-3 gap-2 rounded-t-2xl p-2 shadow-md">
         {tabs.map((t) => {
           const active = hash.startsWith(t.href);
           return (
