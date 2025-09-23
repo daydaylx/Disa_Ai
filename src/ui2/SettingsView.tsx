@@ -99,52 +99,68 @@ export default function SettingsView() {
 
       <main className="safe-px with-bottomnav flex-1 space-y-6 overflow-y-auto pt-3">
         {/* Control Center Header */}
-        <GlassCard variant="floating" tint="cyan" className="p-8">
+        <GlassCard variant="floating" tint="cyan" className="p-6">
           <div className="text-center">
-            <h1 className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent">
+            <h1 className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-2xl font-bold tracking-tight text-transparent">
               Settings
             </h1>
-            <p className="mt-2 text-base font-medium text-neutral-400/90">
+            <p className="mt-2 text-sm font-medium text-neutral-400/90">
               Configuration & Management
             </p>
           </div>
 
-          {/* Status Overview */}
-          <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
-            <div className="text-center">
-              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
+          {/* Compact Status Overview */}
+          <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <div className="glass-card p-4 text-center transition-colors hover:bg-glass-surface/15">
+              <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20">
+                <div
+                  className={`h-3 w-3 rounded-full ${apiKey ? "bg-green-400" : "bg-orange-400"}`}
+                ></div>
+              </div>
+              <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
                 API
               </div>
               <div
-                className={`text-sm font-semibold tracking-wide ${apiKey ? "text-green-400" : "text-orange-400"}`}
+                className={`text-xs font-semibold ${apiKey ? "text-green-400" : "text-orange-400"}`}
               >
-                {apiKey ? "Connected" : "Not Configured"}
+                {apiKey ? "Connected" : "Setup Required"}
               </div>
             </div>
 
-            <div className="text-center">
-              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
+            <div className="glass-card p-4 text-center transition-colors hover:bg-glass-surface/15">
+              <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
+                <div
+                  className={`h-3 w-3 rounded-full ${pwa.installed ? "bg-green-400" : "bg-blue-400"}`}
+                ></div>
+              </div>
+              <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
                 App
               </div>
               <div
-                className={`text-sm font-semibold tracking-wide ${pwa.installed ? "text-green-400" : "text-blue-400"}`}
+                className={`text-xs font-semibold ${pwa.installed ? "text-green-400" : "text-blue-400"}`}
               >
                 {pwa.installed ? "Installed" : "Web"}
               </div>
             </div>
 
-            <div className="text-center">
-              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
+            <div className="glass-card p-4 text-center transition-colors hover:bg-glass-surface/15">
+              <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-teal-500/20">
+                <div className="h-3 w-3 rounded-full bg-cyan-400"></div>
+              </div>
+              <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
                 Style
               </div>
-              <div className="text-sm font-semibold tracking-wide text-cyan-400">Configured</div>
+              <div className="text-xs font-semibold text-cyan-400">Ready</div>
             </div>
 
-            <div className="text-center">
-              <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
+            <div className="glass-card p-4 text-center transition-colors hover:bg-glass-surface/15">
+              <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-violet-500/20">
+                <div className="h-3 w-3 rounded-full bg-purple-400"></div>
+              </div>
+              <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
                 Roles
               </div>
-              <div className="text-sm font-semibold tracking-wide text-purple-400">Available</div>
+              <div className="text-xs font-semibold text-purple-400">Available</div>
             </div>
           </div>
         </GlassCard>
