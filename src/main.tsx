@@ -17,8 +17,8 @@ import "./ui/overlap-guard";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import App from "./App";
 import { registerSW } from "./lib/pwa/registerSW";
+import { Router } from "./Router";
 
 function bootstrapTheme() {
   if (typeof window === "undefined") return;
@@ -34,7 +34,7 @@ bootstrapTheme();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <Router />
   </React.StrictMode>,
 );
 
