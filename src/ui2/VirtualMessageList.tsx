@@ -76,12 +76,12 @@ export default function VirtualMessageList({
           <div className="mt-8 px-4">
             <div className="space-y-8">
               {/* Main Hero Card */}
-              <div className="card-elev2 flex items-center gap-6">
+              <div className="card-elev2 flex items-center gap-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-accent-teal/10">
                 <div
                   aria-hidden
-                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-accent-teal/30 bg-glass-surface/10 backdrop-blur-sm"
+                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-accent-teal/30 bg-glass-surface/10 backdrop-blur-sm transition-all duration-300 hover:border-accent-teal/50 hover:bg-glass-surface/20"
                 >
-                  <div className="h-6 w-6 animate-pulse rounded-full bg-gradient-to-br from-accent-teal/80 to-accent-violet/60 shadow-lg"></div>
+                  <div className="h-6 w-6 animate-pulse rounded-full bg-gradient-to-br from-accent-teal/80 to-accent-violet/60 shadow-lg transition-all duration-300 hover:scale-110"></div>
                 </div>
                 <div className="flex-1 space-y-3">
                   <p className="text-sm font-medium tracking-wide text-text-secondary/90">
@@ -98,7 +98,7 @@ export default function VirtualMessageList({
               </div>
 
               {/* Quick Start Suggestions */}
-              <div className="glass-card p-6">
+              <div className="glass-card p-6 transition-all duration-300 hover:bg-glass-surface/15 hover:shadow-lg hover:shadow-accent-teal/5">
                 <h3 className="mb-4 text-base font-semibold text-text-primary">
                   Quick Start Ideas
                 </h3>
@@ -111,9 +111,9 @@ export default function VirtualMessageList({
                   ].map((suggestion, index) => (
                     <div
                       key={index}
-                      className="group flex cursor-pointer items-center gap-3 rounded-xl border border-glass-border/30 bg-glass-surface/10 p-4 text-left transition-all hover:scale-[1.02] hover:border-accent-teal/40 hover:bg-glass-surface/20"
+                      className="group flex cursor-pointer items-center gap-3 rounded-xl border border-glass-border/30 bg-glass-surface/10 p-4 text-left transition-all duration-200 hover:scale-[1.02] hover:border-accent-teal/40 hover:bg-glass-surface/20 hover:shadow-md hover:shadow-accent-teal/10"
                     >
-                      <div className="h-2 w-2 rounded-full bg-accent-teal/60 group-hover:bg-accent-teal"></div>
+                      <div className="h-2 w-2 rounded-full bg-accent-teal/60 transition-all duration-200 group-hover:scale-125 group-hover:bg-accent-teal"></div>
                       <span className="text-sm font-medium text-text-secondary group-hover:text-text-primary">
                         {suggestion}
                       </span>
@@ -124,25 +124,25 @@ export default function VirtualMessageList({
 
               {/* Features Overview */}
               <div className="grid gap-4 sm:grid-cols-3">
-                <div className="glass-card p-4 text-center">
-                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-teal/20 to-accent-violet/20">
-                    <div className="h-3 w-3 rounded bg-accent-teal/80"></div>
+                <div className="glass-card p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:bg-glass-surface/15 hover:shadow-lg hover:shadow-accent-teal/10">
+                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-teal/20 to-accent-violet/20 transition-all duration-300 hover:scale-110 hover:from-accent-teal/30 hover:to-accent-violet/30">
+                    <div className="h-3 w-3 rounded bg-accent-teal/80 transition-all duration-300 hover:scale-125"></div>
                   </div>
                   <h4 className="mb-2 text-sm font-semibold text-text-primary">Smart Responses</h4>
                   <p className="text-xs text-text-muted/80">Contextual and accurate answers</p>
                 </div>
 
-                <div className="glass-card p-4 text-center">
-                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-violet/20 to-accent-teal/20">
-                    <div className="h-3 w-3 rounded bg-accent-violet/80"></div>
+                <div className="glass-card p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:bg-glass-surface/15 hover:shadow-lg hover:shadow-accent-violet/10">
+                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-violet/20 to-accent-teal/20 transition-all duration-300 hover:scale-110 hover:from-accent-violet/30 hover:to-accent-teal/30">
+                    <div className="h-3 w-3 rounded bg-accent-violet/80 transition-all duration-300 hover:scale-125"></div>
                   </div>
                   <h4 className="mb-2 text-sm font-semibold text-text-primary">Multiple Styles</h4>
                   <p className="text-xs text-text-muted/80">Adapt tone and approach</p>
                 </div>
 
-                <div className="glass-card p-4 text-center">
-                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-teal/20 to-accent-violet/20">
-                    <div className="h-3 w-3 rounded bg-gradient-to-r from-accent-teal/80 to-accent-violet/80"></div>
+                <div className="glass-card p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:bg-glass-surface/15 hover:shadow-lg hover:shadow-accent-teal/10">
+                  <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-teal/20 to-accent-violet/20 transition-all duration-300 hover:scale-110 hover:from-accent-teal/30 hover:to-accent-violet/30">
+                    <div className="h-3 w-3 rounded bg-gradient-to-r from-accent-teal/80 to-accent-violet/80 transition-all duration-300 hover:scale-125"></div>
                   </div>
                   <h4 className="mb-2 text-sm font-semibold text-text-primary">Offline Ready</h4>
                   <p className="text-xs text-text-muted/80">Works without internet</p>
