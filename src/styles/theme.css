@@ -127,6 +127,154 @@
   --safety-any-text: rgba(185, 205, 230, 0.9);
 }
 
+:root[data-ui-theme="dark-glass"] {
+  color-scheme: dark;
+
+  --color-bg-900: var(--color-darkglass-bg);
+  --color-bg-800: var(--color-darkglass-surface);
+  --color-surface-100: color-mix(
+    in srgb,
+    var(--color-darkglass-surface) 92%,
+    rgba(255, 255, 255, 0.05)
+  );
+  --color-surface-200: var(--color-darkglass-surface-elevated);
+  --color-surface-300: color-mix(
+    in srgb,
+    var(--color-darkglass-surface-elevated) 86%,
+    rgba(255, 255, 255, 0.12)
+  );
+  --color-border-strong: var(--color-darkglass-border-strong);
+  --color-border-subtle: var(--color-darkglass-border-soft);
+  --color-text-primary: var(--color-darkglass-text-primary);
+  --color-text-secondary: var(--color-darkglass-text-secondary);
+  --color-text-muted: var(--color-darkglass-text-muted);
+
+  --accent-500: var(--color-darkglass-accent-teal);
+  --accent-600: color-mix(
+    in srgb,
+    var(--color-darkglass-accent-teal) 68%,
+    var(--color-darkglass-accent-violet)
+  );
+  --accent-700: var(--color-darkglass-accent-violet);
+  --accent-outline: color-mix(in srgb, var(--color-darkglass-accent-violet) 42%, transparent);
+  --accent-disabled: color-mix(
+    in srgb,
+    var(--color-darkglass-accent-violet) 28%,
+    var(--color-darkglass-bg)
+  );
+  --accent-foreground: var(--color-darkglass-accent-foreground);
+  --accent-subtle: color-mix(in srgb, var(--color-darkglass-accent-teal) 14%, transparent);
+  --accent-low: color-mix(in srgb, var(--color-darkglass-accent-teal) 26%, transparent);
+
+  --glass-bg-subtle: var(--color-darkglass-overlay-weak);
+  --glass-bg-soft: var(--color-darkglass-overlay-soft);
+  --glass-bg-medium: var(--color-darkglass-overlay-strong);
+  --glass-bg-strong: color-mix(
+    in srgb,
+    var(--color-darkglass-overlay-strong) 92%,
+    rgba(255, 255, 255, 0.08)
+  );
+  --glass-border-subtle: color-mix(in srgb, var(--color-darkglass-border-soft) 70%, transparent);
+  --glass-border-soft: var(--color-darkglass-border-soft);
+  --glass-border-medium: color-mix(in srgb, var(--color-darkglass-border-strong) 82%, transparent);
+  --glass-border-strong: var(--color-darkglass-border-strong);
+  --glass-tint-cyan: color-mix(in srgb, var(--color-darkglass-accent-teal) 16%, transparent);
+  --glass-tint-purple: color-mix(in srgb, var(--color-darkglass-accent-violet) 14%, transparent);
+
+  --focus-ring-color: color-mix(in srgb, var(--color-darkglass-accent-teal) 62%, transparent);
+  --focus-ring-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+
+  --bg-success-subtle: color-mix(in srgb, var(--color-success-500) 14%, transparent);
+  --bg-purple-subtle: color-mix(in srgb, var(--color-darkglass-accent-violet) 12%, transparent);
+  --bg-danger-subtle: color-mix(in srgb, var(--color-danger-500) 14%, transparent);
+  --bg-accent-subtle: color-mix(in srgb, var(--color-darkglass-accent-teal) 18%, transparent);
+  --bg-accent-low: color-mix(in srgb, var(--color-darkglass-accent-teal) 26%, transparent);
+
+  --bubble-assistant-bg: var(--color-darkglass-overlay-soft);
+  --bubble-assistant-bg-secondary: color-mix(
+    in srgb,
+    var(--color-darkglass-overlay-strong) 80%,
+    transparent
+  );
+  --bubble-assistant-border: var(--color-darkglass-border-soft);
+  --bubble-assistant-text: var(--color-darkglass-text-primary);
+
+  --bubble-user-bg: color-mix(
+    in srgb,
+    var(--color-darkglass-accent-teal) 72%,
+    var(--color-darkglass-accent-violet)
+  );
+  --bubble-user-bg-secondary: color-mix(
+    in srgb,
+    var(--color-darkglass-accent-teal) 58%,
+    var(--color-darkglass-accent-violet) 42%
+  );
+  --bubble-user-text: var(--color-darkglass-accent-foreground);
+  --bubble-user-text-meta: rgba(8, 20, 28, 0.72);
+
+  --bubble-typing-bg: color-mix(in srgb, var(--color-darkglass-overlay-soft) 92%, transparent);
+  --bubble-typing-border: var(--color-darkglass-border-soft);
+
+  --bubble-error-bg: color-mix(in srgb, var(--color-danger-500) 38%, rgba(11, 15, 20, 0.82));
+  --bubble-error-border: color-mix(in srgb, var(--color-danger-500) 52%, transparent);
+  --bubble-error-text: color-mix(
+    in srgb,
+    var(--color-darkglass-text-primary) 85%,
+    var(--color-danger-subtle-tint)
+  );
+
+  --model-chip-bg: color-mix(in srgb, var(--color-darkglass-overlay-soft) 90%, transparent);
+  --model-chip-border: color-mix(in srgb, var(--color-darkglass-border-soft) 88%, transparent);
+  --model-chip-text: color-mix(in srgb, var(--color-darkglass-text-secondary) 92%, transparent);
+
+  --model-favorite-bg: color-mix(in srgb, var(--color-warning-500) 18%, transparent);
+  --model-favorite-border: color-mix(in srgb, var(--color-warning-500) 48%, transparent);
+  --model-favorite-text: color-mix(in srgb, var(--color-warning-500) 82%, transparent);
+
+  --model-free-bg: color-mix(in srgb, var(--color-success-500) 16%, transparent);
+  --model-free-border: color-mix(in srgb, var(--color-success-500) 48%, transparent);
+  --model-free-text: color-mix(in srgb, var(--color-success-500) 86%, transparent);
+
+  --model-code-bg: color-mix(in srgb, var(--color-darkglass-accent-violet) 22%, transparent);
+  --model-code-border: color-mix(in srgb, var(--color-darkglass-accent-violet) 50%, transparent);
+  --model-code-text: color-mix(in srgb, var(--color-darkglass-accent-violet) 88%, transparent);
+
+  --model-cost-bg: color-mix(in srgb, var(--color-darkglass-overlay-soft) 88%, transparent);
+  --model-cost-border: color-mix(in srgb, var(--color-darkglass-border-soft) 90%, transparent);
+  --model-cost-text: color-mix(in srgb, var(--color-darkglass-text-secondary) 88%, transparent);
+
+  --model-banner-bg: color-mix(in srgb, var(--color-warning-500) 18%, transparent);
+  --model-banner-border: color-mix(in srgb, var(--color-warning-500) 48%, transparent);
+  --model-banner-bg-muted: color-mix(in srgb, var(--color-darkglass-overlay-soft) 88%, transparent);
+  --model-banner-border-muted: color-mix(
+    in srgb,
+    var(--color-darkglass-border-soft) 86%,
+    transparent
+  );
+
+  --model-empty-bg: color-mix(in srgb, var(--color-darkglass-overlay-soft) 94%, transparent);
+  --model-empty-border: color-mix(in srgb, var(--color-darkglass-border-soft) 84%, transparent);
+
+  .app-shell {
+    background:
+      radial-gradient(
+        110% 120% at 12% 8%,
+        color-mix(in srgb, rgb(var(--accent-teal-rgb)) 18%, transparent) 0%,
+        transparent 70%
+      ),
+      radial-gradient(
+        90% 110% at 88% 92%,
+        color-mix(in srgb, rgb(var(--accent-violet-rgb)) 14%, transparent) 0%,
+        transparent 75%
+      ),
+      var(--color-darkglass-bg);
+  }
+
+  .app-shell[data-reduced-motion="true"] {
+    background: var(--color-darkglass-bg);
+  }
+}
+
 @media (prefers-contrast: more) {
   :root {
     --color-border-strong: color-mix(
