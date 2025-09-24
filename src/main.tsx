@@ -5,8 +5,8 @@ import { App as AppV2 } from "./ui-v2/App";
 // Legacy bleibt zur Not verfügbar:
 // import { App as LegacyApp } from "./App";
 
-const el = document.getElementById("app");
-if (!el) throw new Error("Root element #app not found");
+const el = document.getElementById("root");
+if (!el) throw new Error("Root element #root not found");
 
 // UI-V2 ist jetzt Standard. Wenn du Legacy zwingend brauchst, nimm die kommentierte Zeile oben.
 // createRoot(el).render(<LegacyApp />);
