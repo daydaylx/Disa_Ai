@@ -1,13 +1,10 @@
 import React from "react";
 
-import {
-  ApiError,
-  AuthError,
-  Message as ORMsg,
-  RateLimitError,
-  streamChat,
-} from "../services/openrouter";
+import { ApiError, AuthError, RateLimitError, streamChat } from "../services/openrouter";
 import { useSettings } from "./settings";
+
+// Lokale Type-Definition für bessere Kompatibilität
+type ORMsg = { role: "system" | "user" | "assistant"; content: string };
 
 export type ChatMessage = {
   id: string;

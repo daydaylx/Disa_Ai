@@ -1,13 +1,18 @@
 import React from "react";
 
-import {
-  ApiError,
-  AuthError,
-  listModels,
-  ORModel,
-  RateLimitError,
-} from "../../services/openrouter";
+import { ApiError, AuthError, listModels, RateLimitError } from "../../services/openrouter";
 import { useSettings } from "../../state/settings";
+
+// Lokale Type-Definition für bessere Kompatibilität
+type ORModel = {
+  id: string;
+  name?: string;
+  context_length?: number;
+  pricing?: { prompt?: number; completion?: number; unit?: string } | null;
+  tags?: string[];
+  description?: string;
+  provider?: string;
+};
 
 export const ModelPicker: React.FC = () => {
   const { settings, setModel } = useSettings();
