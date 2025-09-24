@@ -29,7 +29,9 @@ export default function SettingsView() {
   const [isModelPickerOpen, setIsModelPickerOpen] = useState(false);
   const [modelId, setModelId] = useState(() => getSelectedModelId());
   const [modelLabel, setModelLabel] = useState("Lade...");
-  const [modelCatalog, setModelCatalog] = useState<Awaited<ReturnType<typeof loadModelCatalog>>>([]);
+  const [_modelCatalog, _setModelCatalog] = useState<Awaited<ReturnType<typeof loadModelCatalog>>>(
+    [],
+  );
 
   useEffect(() => {
     const h = window.location.hash;

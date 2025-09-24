@@ -5,8 +5,19 @@ import { Field } from "../components/form/Field";
 import { Input } from "../components/form/Input";
 import { Select } from "../components/form/Select";
 import { Switch } from "../components/form/Switch";
-import { ApiError, AuthError, listModels, ORModel, RateLimitError } from "../services/openrouter";
+import { ApiError, AuthError, listModels, RateLimitError } from "../services/openrouter";
 import { useSettings } from "../state/settings";
+
+// Lokale Type-Definition für bessere Kompatibilität
+type ORModel = {
+  id: string;
+  name?: string;
+  context_length?: number;
+  pricing?: { prompt?: number; completion?: number; unit?: string } | null;
+  tags?: string[];
+  description?: string;
+  provider?: string;
+};
 
 type Opt = { value: string; label: string; disabled?: boolean };
 
