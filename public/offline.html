@@ -1,270 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Offline - Disa AI</title>
-  <meta name="description" content="Du bist offline. Bitte überprüfe deine Internetverbindung.">
-  
-  <!-- Theme and manifest -->
-  <meta name="theme-color" content="#7c4dff">
-  <meta name="color-scheme" content="dark">
-  
-  <!-- Accessibility -->
-  <meta name="robots" content="noindex, nofollow">
-  
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Offline - Disa AI</title>
+    <meta name="description" content="Du bist offline. Bitte überprüfe deine Internetverbindung." />
 
-    :root {
-      --bg: #0e1218;
-      --text: #eef2f7;
-      --text-muted: #bcc7dd;
-      --aurora-violet: #7c4dff;
-      --aurora-cyan: #22d3ee;
-      --surface-glass: rgba(255, 255, 255, 0.08);
-      --border-glass: rgba(255, 255, 255, 0.18);
-    }
+    <!-- Theme and manifest -->
+    <meta name="theme-color" content="#7c4dff" />
+    <meta name="color-scheme" content="dark" />
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100svh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      background-image:
-        radial-gradient(60% 40% at 18% -6%, rgba(124, 77, 255, 0.08), transparent 60%),
-        radial-gradient(52% 32% at 86% -12%, rgba(34, 211, 238, 0.07), transparent 56%);
-    }
+    <!-- Accessibility -->
+    <meta name="robots" content="noindex, nofollow" />
 
-    .container {
-      max-width: 480px;
-      text-align: center;
-      background: var(--surface-glass);
-      border: 1px solid var(--border-glass);
-      border-radius: 24px;
-      padding: 3rem 2rem;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 12px 34px rgba(6, 10, 20, 0.45);
-    }
-
-    .icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 2rem;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--aurora-violet), var(--aurora-cyan));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-    }
-
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--aurora-violet), var(--aurora-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    p {
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-    }
-
-    .actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.75rem 1.5rem;
-      border-radius: 12px;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      min-height: 44px;
-      min-width: 44px;
-      border: 1px solid var(--border-glass);
-      background: var(--surface-glass);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .btn:hover, .btn:focus {
-      background: rgba(255, 255, 255, 0.12);
-      transform: translateY(-1px);
-      outline: none;
-      box-shadow: 0 0 0 2px var(--aurora-cyan);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--aurora-violet), var(--aurora-cyan));
-      border: none;
-      color: white;
-    }
-
-    .btn-primary:hover, .btn-primary:focus {
-      background: linear-gradient(135deg, var(--aurora-violet), var(--aurora-cyan));
-      filter: brightness(1.1);
-      box-shadow: 0 0 0 2px var(--aurora-cyan);
-    }
-
-    .status {
-      margin-top: 2rem;
-      padding: 1rem;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-glass);
-      font-family: monospace;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    .online-indicator {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: 0.5rem;
-      background-color: #ef4444;
-    }
-
-    .online-indicator.online {
-      background-color: #10b981;
-    }
-
-    @media (max-width: 640px) {
-      .container {
-        padding: 2rem 1rem;
-      }
-      
-      .actions {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-    }
-
-    /* High contrast mode */
-    @media (prefers-contrast: high) {
-      .container {
-        border: 2px solid var(--text);
-      }
-      
-      .btn {
-        border: 2px solid var(--text);
-      }
-    }
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
+    <style>
       * {
-        transition: none !important;
-        animation: none !important;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
-    }
-  </style>
-</head>
-<body>
-  <main class="container" role="main">
-    <div class="icon" aria-hidden="true">
-      📡
-    </div>
-    
-    <h1>Du bist offline</h1>
-    
-    <p>
-      Disa AI benötigt eine Internetverbindung, um mit KI-Modellen zu kommunizieren. 
-      Bitte überprüfe deine Verbindung und versuche es erneut.
-    </p>
-    
-    <div class="actions">
-      <button class="btn btn-primary" onclick="window.location.reload()" aria-label="Seite neu laden">
-        🔄 Neu laden
-      </button>
-      
-      <a href="/" class="btn" aria-label="Zur Startseite">
-        🏠 Startseite
-      </a>
-    </div>
 
-    <div class="status">
-      <div>
-        <span id="connection-status" class="online-indicator" aria-hidden="true"></span>
-        <span id="connection-text">Verbindungsstatus wird geprüft...</span>
-      </div>
-      <div style="margin-top: 0.5rem;">
-        Letzte Aktualisierung: <span id="last-update"></span>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    // Update connection status
-    function updateConnectionStatus() {
-      const indicator = document.getElementById('connection-status');
-      const text = document.getElementById('connection-text');
-      const lastUpdate = document.getElementById('last-update');
-      
-      if (navigator.onLine) {
-        indicator.classList.add('online');
-        text.textContent = 'Online - Verbindung verfügbar';
-      } else {
-        indicator.classList.remove('online');
-        text.textContent = 'Offline - Keine Verbindung';
+      :root {
+        --bg: #0e1218;
+        --text: #eef2f7;
+        --text-muted: #bcc7dd;
+        --aurora-violet: #7c4dff;
+        --aurora-cyan: #22d3ee;
+        --surface-glass: rgba(255, 255, 255, 0.08);
+        --border-glass: rgba(255, 255, 255, 0.18);
       }
-      
-      lastUpdate.textContent = new Date().toLocaleTimeString('de-DE');
-    }
 
-    // Check connection periodically
-    updateConnectionStatus();
-    setInterval(updateConnectionStatus, 5000);
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-image:
+          radial-gradient(60% 40% at 18% -6%, rgba(124, 77, 255, 0.08), transparent 60%),
+          radial-gradient(52% 32% at 86% -12%, rgba(34, 211, 238, 0.07), transparent 56%);
+      }
 
-    // Listen for online/offline events
-    window.addEventListener('online', updateConnectionStatus);
-    window.addEventListener('offline', updateConnectionStatus);
+      .container {
+        max-width: 480px;
+        text-align: center;
+        background: var(--surface-glass);
+        border: 1px solid var(--border-glass);
+        border-radius: 24px;
+        padding: 3rem 2rem;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 12px 34px rgba(6, 10, 20, 0.45);
+      }
 
-    // Auto-reload when back online
-    window.addEventListener('online', () => {
-      setTimeout(() => {
-        if (navigator.onLine) {
-          window.location.href = '/';
+      .icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 2rem;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--aurora-violet), var(--aurora-cyan));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--aurora-violet), var(--aurora-cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      p {
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+      }
+
+      .actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        min-height: 44px;
+        min-width: 44px;
+        border: 1px solid var(--border-glass);
+        background: var(--surface-glass);
+        color: var(--text);
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn:hover,
+      .btn:focus {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-1px);
+        outline: none;
+        box-shadow: 0 0 0 2px var(--aurora-cyan);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--aurora-violet), var(--aurora-cyan));
+        border: none;
+        color: white;
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background: linear-gradient(135deg, var(--aurora-violet), var(--aurora-cyan));
+        filter: brightness(1.1);
+        box-shadow: 0 0 0 2px var(--aurora-cyan);
+      }
+
+      .status {
+        margin-top: 2rem;
+        padding: 1rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-glass);
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+      }
+
+      .online-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        background-color: #ef4444;
+      }
+
+      .online-indicator.online {
+        background-color: #10b981;
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          padding: 2rem 1rem;
         }
-      }, 1000);
-    });
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'r' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        window.location.reload();
-      } else if (e.key === 'h' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        window.location.href = '/';
+        .actions {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+        }
       }
-    });
-  </script>
-</body>
+
+      /* High contrast mode */
+      @media (prefers-contrast: high) {
+        .container {
+          border: 2px solid var(--text);
+        }
+
+        .btn {
+          border: 2px solid var(--text);
+        }
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container" role="main">
+      <div class="icon" aria-hidden="true">📡</div>
+
+      <h1>Du bist offline</h1>
+
+      <p>
+        Disa AI benötigt eine Internetverbindung, um mit KI-Modellen zu kommunizieren. Bitte
+        überprüfe deine Verbindung und versuche es erneut.
+      </p>
+
+      <div class="actions">
+        <button
+          class="btn btn-primary"
+          onclick="window.location.reload()"
+          aria-label="Seite neu laden"
+        >
+          🔄 Neu laden
+        </button>
+
+        <a href="/" class="btn" aria-label="Zur Startseite"> 🏠 Startseite </a>
+      </div>
+
+      <div class="status">
+        <div>
+          <span id="connection-status" class="online-indicator" aria-hidden="true"></span>
+          <span id="connection-text">Verbindungsstatus wird geprüft...</span>
+        </div>
+        <div style="margin-top: 0.5rem">Letzte Aktualisierung: <span id="last-update"></span></div>
+      </div>
+    </main>
+
+    <script>
+      // Update connection status
+      function updateConnectionStatus() {
+        const indicator = document.getElementById("connection-status");
+        const text = document.getElementById("connection-text");
+        const lastUpdate = document.getElementById("last-update");
+
+        if (navigator.onLine) {
+          indicator.classList.add("online");
+          text.textContent = "Online - Verbindung verfügbar";
+        } else {
+          indicator.classList.remove("online");
+          text.textContent = "Offline - Keine Verbindung";
+        }
+
+        lastUpdate.textContent = new Date().toLocaleTimeString("de-DE");
+      }
+
+      // Check connection periodically
+      updateConnectionStatus();
+      setInterval(updateConnectionStatus, 5000);
+
+      // Listen for online/offline events
+      window.addEventListener("online", updateConnectionStatus);
+      window.addEventListener("offline", updateConnectionStatus);
+
+      // Auto-reload when back online
+      window.addEventListener("online", () => {
+        setTimeout(() => {
+          if (navigator.onLine) {
+            window.location.href = "/";
+          }
+        }, 1000);
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "r" && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          window.location.reload();
+        } else if (e.key === "h" && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          window.location.href = "/";
+        }
+      });
+    </script>
+  </body>
 </html>

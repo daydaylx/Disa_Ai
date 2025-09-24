@@ -5,7 +5,10 @@ module.exports = {
       startServerCommand: "npm run build && npm run preview -- --port=4174",
       url: ["http://localhost:4174/"],
       numberOfRuns: 1,
-      settings: { formFactor: "mobile", screenEmulation: { mobile: true, width: 360, height: 640, deviceScaleRatio: 2 } },
+      settings: {
+        formFactor: "mobile",
+        screenEmulation: { mobile: true, width: 360, height: 640, deviceScaleRatio: 2 },
+      },
     },
     assert: {
       assertions: {

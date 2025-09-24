@@ -27,16 +27,16 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 
   return (
     <div
-      className={cn("bg-bg-danger-subtle rounded-md border border-danger p-3", className)}
+      className={cn("bg-bg-danger-subtle border-danger rounded-md border p-3", className)}
       role="alert"
     >
       <div className="flex items-start gap-2">
-        <div className="mt-0.5 text-danger">
+        <div className="text-danger mt-0.5">
           <Icon name="error" />
         </div>
         <div className="flex-1">
-          <div className="font-semibold text-danger">{title}</div>
-          <div className="text-sm text-danger">{message}</div>
+          <div className="text-danger font-semibold">{title}</div>
+          <div className="text-danger text-sm">{message}</div>
           {details ? (
             <details className="mt-1">
               <summary className="cursor-pointer text-xs underline underline-offset-4">

@@ -13,7 +13,7 @@ export interface SkeletonProps {
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className }) => {
-  return <div className={cn("animate-pulse rounded-md bg-muted", className)} aria-hidden="true" />;
+  return <div className={cn("bg-muted animate-pulse rounded-md", className)} aria-hidden="true" />;
 };
 
 export interface SpinnerProps {

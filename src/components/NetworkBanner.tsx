@@ -26,7 +26,7 @@ export function NetworkBanner() {
   return (
     <div
       data-testid="offline-banner"
-      className="mx-auto mt-2 w-fit max-w-[92vw] rounded-full border border-border-strong bg-surface-100 px-3 py-1 text-sm text-text-secondary shadow-elev1"
+      className="border-border-strong bg-surface-100 shadow-elev1 mx-auto mt-2 w-fit max-w-[92vw] rounded-full border px-3 py-1 text-sm text-text-secondary"
       role="status"
       aria-live="polite"
     >

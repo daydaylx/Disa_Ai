@@ -75,10 +75,10 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="text-foreground flex min-h-screen items-center justify-center bg-background p-4">
+        <div className="text-foreground bg-background flex min-h-screen items-center justify-center p-4">
           <div className="w-full max-w-md space-y-6 text-center">
             <div className="space-y-2">
-              <h1 className="text-2xl font-semibold text-danger">Oops! Something went wrong</h1>
+              <h1 className="text-danger text-2xl font-semibold">Oops! Something went wrong</h1>
               <p className="text-muted-foreground">
                 The application encountered an unexpected error. This has been logged and will be
                 investigated.
@@ -100,7 +100,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   {this.state.error.stack && (
                     <div>
                       <strong>Stack:</strong>
-                      <pre className="rounded mt-1 whitespace-pre-wrap border bg-background p-2 text-xs">
+                      <pre className="bg-background mt-1 whitespace-pre-wrap rounded border p-2 text-xs">
                         {this.state.error.stack}
                       </pre>
                     </div>
@@ -108,7 +108,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   {this.state.errorInfo?.componentStack && (
                     <div>
                       <strong>Component Stack:</strong>
-                      <pre className="rounded mt-1 whitespace-pre-wrap border bg-background p-2 text-xs">
+                      <pre className="bg-background mt-1 whitespace-pre-wrap rounded border p-2 text-xs">
                         {this.state.errorInfo.componentStack}
                       </pre>
                     </div>

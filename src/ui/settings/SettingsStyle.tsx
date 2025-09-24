@@ -206,12 +206,12 @@ export default function SettingsStyle() {
       {/* Current Style Display */}
       <GlassCard variant="subtle" className="p-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-teal/20 backdrop-blur-sm">
-            <div className="h-2 w-2 rounded-full bg-accent-teal"></div>
+          <div className="bg-accent-teal/20 flex h-8 w-8 items-center justify-center rounded-md backdrop-blur-sm">
+            <div className="bg-accent-teal h-2 w-2 rounded-full"></div>
           </div>
           <div>
             <div className="flex items-center gap-2 font-medium text-white">
-              <span className="text-accent-400 text-xs uppercase tracking-wider">Current</span>
+              <span className="text-xs uppercase tracking-wider text-accent-400">Current</span>
               {STYLE_LABELS[currentStyle].name}
             </div>
             <div className="text-sm text-gray-400">{STYLE_LABELS[currentStyle].description}</div>

@@ -3,7 +3,7 @@ name: Autopilot Maintenance
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: "0 3 * * *"
 
 permissions:
   contents: write
@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           cache: npm
 
       - name: Install dependencies
@@ -116,7 +116,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           branch: autopilot/${{ github.run_id }}
-          title: 'chore(autopilot): sichere Wartungsfixes'
+          title: "chore(autopilot): sichere Wartungsfixes"
           body-path: pr-body.md
           commit-message: |
             chore(autopilot): sichere Wartungsfixes

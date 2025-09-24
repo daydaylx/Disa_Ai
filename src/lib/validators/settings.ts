@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const SettingsSchema = z.object({
-  theme: z.enum(["light","dark"]).optional(),
+  theme: z.enum(["light", "dark"]).optional(),
   modelId: z.string().min(1).optional(),
   nsfw: z.boolean().optional(),
 });

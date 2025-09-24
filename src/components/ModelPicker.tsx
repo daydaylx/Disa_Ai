@@ -292,7 +292,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             onChange={(e) => setQ(e.target.value)}
             placeholder="Modell suchen…"
             aria-label="Modell suchen"
-            className="input min-w-[220px] flex-1 text-sm transition-all duration-200 focus:scale-[1.01] focus:shadow-lg focus:shadow-accent-teal/10"
+            className="input focus:shadow-accent-teal/10 min-w-[220px] flex-1 text-sm transition-all duration-200 focus:scale-[1.01] focus:shadow-lg"
             data-testid="model-search"
           />
         </div>

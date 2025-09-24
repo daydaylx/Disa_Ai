@@ -155,25 +155,25 @@ export function RoleSettings() {
       >
         <div className="flex w-full items-start justify-between">
           <div className="min-w-0 flex-1">
-            <h6 className="text-white mb-1 text-base font-semibold">{role.name}</h6>
+            <h6 className="mb-1 text-base font-semibold text-white">{role.name}</h6>
             {isActive && (
               <div className="flex items-center gap-1">
-                <span className="text-accent-500 text-sm">✓</span>
-                <span className="text-accent-400 text-xs font-medium">Aktiv</span>
+                <span className="text-sm text-accent-500">✓</span>
+                <span className="text-xs font-medium text-accent-400">Aktiv</span>
               </div>
             )}
           </div>
           <div className="ml-2 flex-shrink-0">
             {isActive && (
-              <div className="bg-accent-500/20 border-accent-500/40 rounded-full border p-1">
-                <span className="text-accent-400 text-lg">👤</span>
+              <div className="rounded-full border border-accent-500/40 bg-accent-500/20 p-1">
+                <span className="text-lg text-accent-400">👤</span>
               </div>
             )}
           </div>
         </div>
 
         {truncatedSystem && (
-          <p className="text-gray-300 line-clamp-3 text-sm leading-relaxed">{truncatedSystem}</p>
+          <p className="line-clamp-3 text-sm leading-relaxed text-gray-300">{truncatedSystem}</p>
         )}
 
         {role.tags && role.tags.length > 0 && (
@@ -181,13 +181,13 @@ export function RoleSettings() {
             {role.tags.slice(0, 3).map((tag: string) => (
               <span
                 key={tag}
-                className="bg-white/15 text-gray-200 rounded-lg px-3 py-1 text-xs font-medium"
+                className="rounded-lg bg-white/15 px-3 py-1 text-xs font-medium text-gray-200"
               >
                 {tag}
               </span>
             ))}
             {role.tags.length > 3 && (
-              <span className="text-gray-400 text-xs">+{role.tags.length - 3} mehr</span>
+              <span className="text-xs text-gray-400">+{role.tags.length - 3} mehr</span>
             )}
           </div>
         )}
@@ -201,12 +201,12 @@ export function RoleSettings() {
     return (
       <div key={categoryKey} className="space-y-4">
         <div className="flex items-center gap-3">
-          <div className="bg-white/10 rounded-lg p-2">
+          <div className="rounded-lg bg-white/10 p-2">
             <span className="text-2xl">{category.emoji}</span>
           </div>
           <div className="flex-1">
-            <h5 className="text-white text-lg font-semibold">{category.title}</h5>
-            <p className="text-gray-400 text-sm">{category.roles.length} Rollen verfügbar</p>
+            <h5 className="text-lg font-semibold text-white">{category.title}</h5>
+            <p className="text-sm text-gray-400">{category.roles.length} Rollen verfügbar</p>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4">{category.roles.map(renderRoleCard)}</div>
@@ -217,16 +217,16 @@ export function RoleSettings() {
   // Skeleton loading component
   const SkeletonRoleCard = () => (
     <div className="space-y-3">
-      <div className="w-32 bg-gray-700 rounded h-4 animate-pulse"></div>
+      <div className="h-4 w-32 animate-pulse rounded bg-gray-700"></div>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-gray-800/50 space-y-2 rounded-lg p-4">
-            <div className="w-24 bg-gray-600 rounded h-4 animate-pulse"></div>
-            <div className="bg-gray-700 rounded h-3 w-full animate-pulse"></div>
-            <div className="bg-gray-700 rounded h-3 w-3/4 animate-pulse"></div>
+          <div key={i} className="space-y-2 rounded-lg bg-gray-800/50 p-4">
+            <div className="h-4 w-24 animate-pulse rounded bg-gray-600"></div>
+            <div className="h-3 w-full animate-pulse rounded bg-gray-700"></div>
+            <div className="h-3 w-3/4 animate-pulse rounded bg-gray-700"></div>
             <div className="mt-2 flex gap-2">
-              <div className="bg-gray-600 h-5 w-12 animate-pulse rounded-full"></div>
-              <div className="bg-gray-600 h-5 w-16 animate-pulse rounded-full"></div>
+              <div className="h-5 w-12 animate-pulse rounded-full bg-gray-600"></div>
+              <div className="h-5 w-16 animate-pulse rounded-full bg-gray-600"></div>
             </div>
           </div>
         ))}
@@ -240,12 +240,12 @@ export function RoleSettings() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-white font-semibold">KI-Rollen</h4>
-              <div className="w-32 bg-gray-700 rounded mt-1 h-4 animate-pulse"></div>
+              <h4 className="font-semibold text-white">KI-Rollen</h4>
+              <div className="mt-1 h-4 w-32 animate-pulse rounded bg-gray-700"></div>
             </div>
-            <div className="bg-gray-700 rounded h-8 w-8 animate-pulse"></div>
+            <div className="h-8 w-8 animate-pulse rounded bg-gray-700"></div>
           </div>
-          <div className="bg-gray-800/30 h-16 animate-pulse rounded-lg"></div>
+          <div className="h-16 animate-pulse rounded-lg bg-gray-800/30"></div>
         </div>
         <SkeletonRoleCard />
         <SkeletonRoleCard />
@@ -256,9 +256,9 @@ export function RoleSettings() {
   if (error && roles.length === 0) {
     return (
       <div className="space-y-4">
-        <h4 className="text-white font-semibold">KI-Rollen</h4>
+        <h4 className="font-semibold text-white">KI-Rollen</h4>
         <GlassCard variant="subtle" className="p-6 text-center">
-          <p className="text-red-400 mb-3 text-sm">{error}</p>
+          <p className="mb-3 text-sm text-red-400">{error}</p>
           <GlassButton variant="secondary" onClick={reloadRoles} disabled={loading}>
             Erneut versuchen
           </GlassButton>
@@ -273,8 +273,8 @@ export function RoleSettings() {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="text-white font-semibold">KI-Rollen</h4>
-            <p className="text-gray-400 text-sm">
+            <h4 className="font-semibold text-white">KI-Rollen</h4>
+            <p className="text-sm text-gray-400">
               {currentRole ? `Aktiv: ${currentRole.name}` : "Keine Rolle aktiv"}
             </p>
           </div>
@@ -289,20 +289,20 @@ export function RoleSettings() {
           <GlassCard variant="subtle" className="p-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h6 className="text-white font-medium">{currentRole.name}</h6>
+                <h6 className="font-medium text-white">{currentRole.name}</h6>
                 <GlassButton variant="ghost" size="sm" onClick={clearRole}>
                   Entfernen
                 </GlassButton>
               </div>
               {currentRole.system && (
-                <p className="text-gray-400 line-clamp-3 text-sm">{currentRole.system}</p>
+                <p className="line-clamp-3 text-sm text-gray-400">{currentRole.system}</p>
               )}
               {currentRole.tags && currentRole.tags.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
                   {currentRole.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="bg-cyan-400/20 text-cyan-400 rounded-full px-2 py-1 text-xs"
+                      className="rounded-full bg-cyan-400/20 px-2 py-1 text-xs text-cyan-400"
                     >
                       {tag}
                     </span>
@@ -313,7 +313,7 @@ export function RoleSettings() {
           </GlassCard>
         ) : (
           <GlassCard variant="subtle" className="p-4 text-center">
-            <p className="text-gray-400 text-sm">Keine Rolle ausgewählt - Standard KI-Verhalten</p>
+            <p className="text-sm text-gray-400">Keine Rolle ausgewählt - Standard KI-Verhalten</p>
           </GlassCard>
         )}
       </div>
@@ -326,7 +326,7 @@ export function RoleSettings() {
       {/* Actions */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-white font-semibold">Aktionen</h4>
+          <h4 className="font-semibold text-white">Aktionen</h4>
         </div>
 
         <div className="flex gap-3">
@@ -348,7 +348,7 @@ export function RoleSettings() {
 
         {/* Live Role Info */}
         <GlassCard variant="subtle" className="p-3">
-          <div className="text-gray-400 space-y-1 text-xs">
+          <div className="space-y-1 text-xs text-gray-400">
             <div>
               Aktive Rolle: <span className="text-cyan-400">{currentRole?.name || "Keine"}</span>
             </div>

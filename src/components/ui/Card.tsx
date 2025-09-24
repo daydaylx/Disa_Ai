@@ -37,10 +37,10 @@ export default function Card({
       aria-controls={ariaControls}
       aria-labelledby={ariaLabelledby}
       className={cn(
-        "w-full rounded-xl border border-glass-border/20 bg-glass-surface/10 px-4 py-4 text-left",
+        "border-glass-border/20 bg-glass-surface/10 w-full rounded-xl border px-4 py-4 text-left",
         "shadow-glass transition-colors duration-200",
         interactive &&
-          "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-violet/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          "focus-visible:ring-accent-violet/40 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         !active && "hover:bg-glass-surface/14",
         active && "bg-accent-teal/12 border-accent-teal/45",
         className,

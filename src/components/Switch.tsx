@@ -5,7 +5,7 @@ export default function Switch({ checked, onChange, id, label }: Props) {
     <label htmlFor={id} className="inline-flex cursor-pointer select-none items-center gap-3">
       {label && <span className="text-sm text-text-secondary">{label}</span>}
       <span
-        className={`w-11 relative inline-flex h-6 items-center rounded-full transition-colors duration-fast ${checked ? "bg-accent" : "bg-surface-300"}`}
+        className={`duration-fast relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${checked ? "bg-accent" : "bg-surface-300"}`}
       >
         <input
           id={id}
@@ -15,7 +15,7 @@ export default function Switch({ checked, onChange, id, label }: Props) {
           onChange={(e) => onChange(e.target.checked)}
         />
         <span
-          className={`h-5 w-5 shadow inline-block transform rounded-full bg-surface-100 transition-transform duration-fast ${checked ? "translate-x-6" : "translate-x-1"}`}
+          className={`bg-surface-100 duration-fast inline-block h-5 w-5 transform rounded-full shadow transition-transform ${checked ? "translate-x-6" : "translate-x-1"}`}
         />
       </span>
     </label>

@@ -1,42 +1,13 @@
-import "./ui/base.css";
-import "./styles/design-tokens.css";
-import "./styles/base.css";
-import "./styles/globals.css";
-import "./styles/brand.css";
-import "./styles/theme.css";
-import "./styles/glass-components.css";
-import "./styles/aurora.css";
-import "./styles/aurora-themes.css";
-import "./styles/mobile-glass.css";
-import "./styles/chat.css";
-import "./styles/chat-glass.css";
-import "./styles/visual-effects.css";
-import "./styles/interactive-effects.css";
-import "./ui/overlap-guard";
-
 import React from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 
-import { registerSW } from "./lib/pwa/registerSW";
-import { Router } from "./Router";
+import { App as AppV2 } from "./ui-v2/App";
+// Legacy bleibt zur Not verfügbar:
+// import { App as LegacyApp } from "./App";
 
-function bootstrapTheme() {
-  if (typeof window === "undefined") return;
-  const root = document.documentElement;
+const el = document.getElementById("app");
+if (!el) throw new Error("Root element #app not found");
 
-  // Always apply dark-glass theme
-  root.setAttribute("data-ui-theme", "dark-glass");
-  root.classList.add("dark");
-  root.classList.remove("light");
-}
-
-bootstrapTheme();
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Router />
-  </React.StrictMode>,
-);
-
-// Register service worker for PWA functionality
-registerSW();
+// UI-V2 ist jetzt Standard. Wenn du Legacy zwingend brauchst, nimm die kommentierte Zeile oben.
+// createRoot(el).render(<LegacyApp />);
+createRoot(el).render(<AppV2 />);

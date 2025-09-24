@@ -4,7 +4,7 @@ import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = process.cwd();
-const exts = new Set([".ts",".tsx",".js",".jsx",".mjs",".cjs"]);
+const exts = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"]);
 
 async function* walk(dir) {
   for (const ent of await fs.readdir(dir, { withFileTypes: true })) {
@@ -21,13 +21,13 @@ async function* walk(dir) {
 function hasBadEllipsis(content) {
   // harte Heuristik: Literal "..." im Code, nicht in Kommentaren/Strings unterscheiden wir hier nicht.
   // Reicht, um die offensichtlichen Schnittkanten zu finden.
-  return content.includes("..."); 
+  return content.includes("...");
 }
 
 const bad = [];
 for await (const p of walk(ROOT)) {
   const lower = p.toLowerCase();
-  if (![...exts].some(e => lower.endsWith(e))) continue;
+  if (![...exts].some((e) => lower.endsWith(e))) continue;
   const s = await fs.readFile(p, "utf8");
   if (hasBadEllipsis(s)) bad.push(relative(ROOT, p));
 }
@@ -37,12 +37,14 @@ await fs.mkdir("src/diagnostics", { recursive: true });
 const report = {
   generatedAt: new Date().toISOString(),
   count: bad.length,
-  files: bad.sort()
+  files: bad.sort(),
 };
 await fs.writeFile("src/diagnostics/corruptionReport.json", JSON.stringify(report, null, 2));
 
 if (bad.length > 0) {
-  console.error(`❌ ${bad.length} beschädigte Datei(en) gefunden. Report: src/diagnostics/corruptionReport.json`);
+  console.error(
+    `❌ ${bad.length} beschädigte Datei(en) gefunden. Report: src/diagnostics/corruptionReport.json`,
+  );
   process.exit(1);
 } else {
   console.log("✓ Keine offensichtliche Korruption gefunden.");

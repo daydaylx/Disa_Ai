@@ -63,12 +63,12 @@ export function humanError(error: unknown): HumanError {
       message: "Die Aktion wurde von Ihnen gestoppt.",
     };
   }
-  
-  if (err.message.includes('NO_API_KEY')) {
+
+  if (err.message.includes("NO_API_KEY")) {
     return {
       title: "API-Key erforderlich",
       message: "Kein API-Key konfiguriert.",
-      action: "Gehen Sie zu den Einstellungen und fügen Sie Ihren API-Key hinzu."
+      action: "Gehen Sie zu den Einstellungen und fügen Sie Ihren API-Key hinzu.",
     };
   }
 
