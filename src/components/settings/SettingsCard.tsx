@@ -21,7 +21,7 @@ export function SettingsCard({
   className,
 }: SettingsCardProps) {
   return (
-    <GlassCard variant="default" glow={glow} className={cn("p-6", className)}>
+    <GlassCard variant="elevated" glow={glow} hover enhanced className={cn("p-6", className)}>
       <div className="flex items-start gap-4">
         {icon && (
           <div className="flex-shrink-0">

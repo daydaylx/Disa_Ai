@@ -6,6 +6,14 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Neon-Glass Design System
+        background: "#0D0B14",
+        primary: "#A855F7",
+        secondary: "#33A5FF",
+        text: "#E0E5F0",
+        "glass-stroke": "rgba(255, 255, 255, 0.2)",
+        "glass-bg": "rgba(255, 255, 255, 0.1)",
+        // Legacy colors (kept for compatibility)
         bg: {
           DEFAULT: "#0f0a25",
           soft: "rgba(255,255,255,0.04)",
@@ -49,6 +57,10 @@ export default {
           from: { transform: "scale(.98)", opacity: "0" },
           to: { transform: "scale(1)", opacity: "1" },
         },
+        "spin-slow": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
         "pulse-soft": {
           "0%,100%": { boxShadow: "0 0 0 0 rgba(139,92,246,0.4)" },
           "50%": { boxShadow: "0 0 40px 0 rgba(139,92,246,0.6)" },
@@ -58,6 +70,7 @@ export default {
         "fade-in": "fade-in .18s ease-out",
         "scale-in": "scale-in .18s ease-out",
         "pulse-soft": "pulse-soft 2.2s ease-in-out infinite",
+        "spin-slow": "spin-slow 3s linear infinite",
       },
     },
   },

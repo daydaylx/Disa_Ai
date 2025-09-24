@@ -2,22 +2,23 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* ====== Design Tokens (Dark-first) ====== */
+/* ====== Neon-Glass Design Tokens ====== */
 :root,
 :root[data-ui-theme="dark"] {
-  --bg: 10 14 20;
+  --bg: 13 11 20; /* #0D0B14 */
   --surface: 18 22 30;
   --overlay: 255 255 255;
 
-  --primary: 147 197 253; /* sky-300 */
-  --accent: 196 181 253; /* violet-300 */
+  --primary: 168 85 247; /* #A855F7 */
+  --secondary: 51 165 255; /* #33A5FF */
+  --accent: 168 85 247; /* Same as primary */
   --success: 34 197 94;
   --warning: 245 158 11;
   --danger: 239 68 68;
   --muted: 148 163 184;
   --ring: 168 85 247;
 
-  --text-primary: 248 250 252;
+  --text-primary: 224 229 240; /* #E0E5F0 */
   --text-secondary: 214 222 234;
   --text-muted: 172 182 199;
 
