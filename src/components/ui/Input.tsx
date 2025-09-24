@@ -8,12 +8,13 @@ interface BaseProps {
   hint?: string;
   error?: string;
   className?: string;
+  testId?: string;
 }
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & BaseProps;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ id, label, hint, error, className, ...props }, ref) => {
+  ({ id, label, hint, error, className, testId, ...props }, ref) => {
     const inputId = id || props.name || "input";
     const describedBy: string[] = [];
     if (hint) describedBy.push(`${inputId}-hint`);
@@ -32,6 +33,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn("input", error && "border-danger focus:border-danger")}
           aria-invalid={!!error || undefined}
           aria-describedby={describedBy.length ? describedBy.join(" ") : undefined}
+          data-testid={testId}
           {...props}
         />
         {hint ? (
@@ -40,7 +42,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </p>
         ) : null}
         {error ? (
-          <p id={`${inputId}-error`} className="text-danger mt-1 text-xs">
+          <p id={`${inputId}-error`} className="mt-1 text-xs text-danger">
             {error}
           </p>
         ) : null}

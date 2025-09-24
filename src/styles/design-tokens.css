@@ -8,6 +8,18 @@
     --text-muted: #64748b;
     --text-inverted: #ffffff;
     --color-primary-shadow: rgba(79, 70, 229, 0.2);
+
+    /* Aurora/Glass effects */
+    --aurora-violet-glow: rgba(139, 92, 246, 0.6);
+    --aurora-purple-glow: rgba(167, 139, 250, 0.6);
+    --glass-bg-subtle: rgba(255, 255, 255, 0.05);
+    --glass-bg-medium: rgba(255, 255, 255, 0.1);
+    --glass-border-soft: rgba(255, 255, 255, 0.15);
+    --glass-border-medium: rgba(255, 255, 255, 0.2);
+    --glass-text-muted: rgba(255, 255, 255, 0.6);
+    --glass-text-medium: rgba(255, 255, 255, 0.7);
+    --gradient-violet-start: rgba(139, 92, 246, 0.4);
+    --gradient-fuchsia-end: rgba(245, 101, 101, 0.3);
   }
 
   .dark {
@@ -19,5 +31,17 @@
     --text-muted: #94a3b8;
     --text-inverted: #0f172a;
     --color-primary-shadow: rgba(99, 102, 241, 0.2);
+
+    /* Dark theme aurora/glass effects */
+    --aurora-violet-glow: rgba(139, 92, 246, 0.6);
+    --aurora-purple-glow: rgba(167, 139, 250, 0.6);
+    --glass-bg-subtle: rgba(255, 255, 255, 0.05);
+    --glass-bg-medium: rgba(255, 255, 255, 0.1);
+    --glass-border-soft: rgba(255, 255, 255, 0.15);
+    --glass-border-medium: rgba(255, 255, 255, 0.2);
+    --glass-text-muted: rgba(255, 255, 255, 0.6);
+    --glass-text-medium: rgba(255, 255, 255, 0.7);
+    --gradient-violet-start: rgba(139, 92, 246, 0.4);
+    --gradient-fuchsia-end: rgba(245, 101, 101, 0.3);
   }
 }
