@@ -11,13 +11,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: Size;
   loading?: boolean;
   enableHaptic?: boolean;
+  testId?: string;
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary: "btn-primary",
-  ghost: "btn-ghost",
-  danger: "btn-danger",
-  base: "",
+  primary:
+    "btn-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-accent-500 focus-visible:outline-offset-2",
+  ghost:
+    "btn-ghost focus:outline-none focus-visible:outline-2 focus-visible:outline-accent-500 focus-visible:outline-offset-2",
+  danger:
+    "btn-danger focus:outline-none focus-visible:outline-2 focus-visible:outline-danger focus-visible:outline-offset-2",
+  base: "focus:outline-none focus-visible:outline-2 focus-visible:outline-accent-500 focus-visible:outline-offset-2",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -33,6 +37,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size = "md",
       loading = false,
       enableHaptic = true,
+      testId,
       className,
       children,
       onClick,
@@ -59,11 +64,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn("btn", variantClasses[variant], sizeClasses[size], className)}
         aria-busy={loading || undefined}
+        data-testid={testId}
         onClick={handleClick}
         {...props}
       >
         {loading ? (
-          <span className="mr-2 inline-flex h-4 w-4 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <span className="border-accent-500 mr-2 inline-flex h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
         ) : null}
         {children}
       </button>

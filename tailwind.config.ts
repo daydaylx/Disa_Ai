@@ -14,6 +14,18 @@ export default {
         "text-muted": "var(--text-muted)",
         "text-inverted": "var(--text-inverted)",
         danger: "#ef4444",
+
+        // Glass/Aurora effect colors
+        "aurora-violet": "var(--aurora-violet-glow)",
+        "aurora-purple": "var(--aurora-purple-glow)",
+        "glass-bg-subtle": "var(--glass-bg-subtle)",
+        "glass-bg-medium": "var(--glass-bg-medium)",
+        "glass-border-soft": "var(--glass-border-soft)",
+        "glass-border-medium": "var(--glass-border-medium)",
+        "glass-text-muted": "var(--glass-text-muted)",
+        "glass-text-medium": "var(--glass-text-medium)",
+        "gradient-violet-start": "var(--gradient-violet-start)",
+        "gradient-fuchsia-end": "var(--gradient-fuchsia-end)",
       },
       spacing: {
         "0": "0",
@@ -39,6 +51,10 @@ export default {
         lg: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
         xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
         elevated: "0 10px 30px -10px var(--color-primary-shadow, rgba(0,0,0,0.2))",
+
+        // Aurora glow effects using CSS variables
+        "aurora-violet": "0 0 20px var(--aurora-violet-glow)",
+        "aurora-purple": "0 0 40px var(--aurora-purple-glow)",
       },
       keyframes: {
         "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
@@ -59,17 +75,4 @@ export default {
     },
   },
   plugins: [],
-  safelist: [
-    "shadow-[0_0_20px_rgba(139,92,246,0.6)]",
-    "shadow-[0_0_40px_0_rgba(167,139,250,0.6)]",
-    "bg-white/5",
-    "bg-white/10",
-    "border-white/15",
-    "border-white/20",
-    "text-white/60",
-    "text-white/70",
-    "text-violet-400",
-    "from-violet-600/40",
-    "to-fuchsia-500/30",
-  ],
 } satisfies Config;

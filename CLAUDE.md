@@ -32,28 +32,45 @@ Disa AI is a React-based AI chat PWA with offline-first architecture, built with
 **Core Structure:**
 
 - `src/api/` - API client layer (OpenRouter integration)
-- `src/lib/` - Shared utilities, error handling, storage, validation
-- `src/features/` - Feature-specific code (prompt management)
-- `src/components/` - Reusable UI components
-- `src/views/` - Page-level components
-- `src/state/` - Global state management
-- `src/styles/` - Design tokens and utility classes
+- `src/lib/` - Shared utilities (error handling, storage, validation, performance, PWA, mobile)
+- `src/config/` - Configuration and persona management
+- `src/components/` - Reusable UI components (40+ components with glassmorphism design)
+- `src/ui/` - Page-level components (ChatApp, SettingsView)
+- `src/hooks/` - React hooks (12+ hooks for theme, online status, PWA, etc.)
+- `src/state/` - Global state management (templates)
+- `src/styles/` - Design tokens system and glassmorphism CSS
 
 **Key Patterns:**
 
 - **Offline-first testing** - All tests use mocked network calls, no real API requests
 - **Error contract system** - Structured error handling with TimeoutError, RateLimitError, etc.
 - **SessionStorage security** - API keys stored in sessionStorage only (auto-migrates from localStorage)
-- **Token-first styling** - CSS custom properties in `src/styles/tokens.css` mapped to Tailwind
+- **Token-first styling** - Design tokens in `src/styles/design-tokens.ts` exported to CSS variables and Tailwind config
 
 **Style Import Order (Critical):**
-The styles in `src/main.tsx` must be imported in this exact order:
+The styles in `src/App.tsx` must be imported in this exact order:
 
 1. `./ui/base.css` - Reset & base styles
 2. `./styles/globals.css` - Global variables & layouts
 3. `./styles/brand.css` - Brand colors & aurora effects
-4. `./styles/theme.css` - Design tokens & utility classes
-5. `./styles/chat.css` - Component-specific styles
+4. `./styles/chat.css` - Component-specific styles
+
+Note: `./styles/globals.css` imports `design-tokens.css`, `base.css`, `interactive-effects.css`, and `visual-effects.css`. The `brand.css` imports glassmorphism and aurora effect stylesheets.
+
+**Design System Architecture:**
+
+- **Design Tokens:** Centralized in `src/styles/design-tokens.ts` with TypeScript exports
+- **Glassmorphism:** CSS custom properties for backdrop-blur, rgba backgrounds, and glow effects
+- **Color System:** Dark-first with neutral (11 stops), accent (teal-based), and semantic colors
+- **Component System:** All UI components use design tokens, no hardcoded values allowed (ESLint enforced)
+- **Mobile-First:** 390x844 viewport optimized, safe-area handling, touch-friendly targets
+
+**PWA & Offline Architecture:**
+
+- **Manifest:** Full PWA capabilities (shortcuts, share-target, file-handlers, protocol-handlers)
+- **Service Worker:** Smart caching with version-based invalidation (`public/sw.js`)
+- **Offline Support:** Complete offline functionality with fallback pages
+- **Installation:** Native app-like experience on mobile and desktop
 
 ## Development Guidelines
 
@@ -108,9 +125,18 @@ Longer description if needed.
 
 **E2E Tests (Playwright):**
 
-- Request interception with JSON fixtures
+- Mobile-first testing (390x844 viewport)
+- Request interception with JSON fixtures in `tests/e2e/`
 - Offline scenarios: success, rate-limit, timeout, server-error
+- Visual regression testing with snapshots
+- Accessibility testing with @axe-core/playwright
 - No real API calls in tests
+
+**Test Selector Strategy:**
+
+- Use `data-testid` attributes for stable E2E selectors
+- Pattern: `data-testid="component.action"` (e.g., `message.copy`, `settings.theme`)
+- Avoid CSS class-based selectors that break with styling changes
 
 **Coverage Thresholds:**
 
@@ -149,12 +175,15 @@ Longer description if needed.
 
 - HTML: `no-store` for `index.html`
 - Assets: `max-age=31536000` with hashing
-- Service Worker deliberately disabled to prevent stale content
+- Service Worker: Network-first for HTML, stale-while-revalidate for assets
 
 ## Key Files
 
 - `tailwind.config.ts` - Tailwind setup with design token mapping
-- `vite.config.ts` - Build configuration with @ alias
-- `eslint.config.mjs` - Flat ESLint config with TypeScript rules
+- `vite.config.ts` - Build configuration with @ alias and bundle optimization
+- `eslint.config.mjs` - Flat ESLint config with TypeScript rules and hex color enforcement
 - `vitest.config.ts` - Test configuration and coverage thresholds
+- `playwright.config.ts` - E2E test configuration with mobile viewport
 - `public/_headers` - Cloudflare security headers and CSP
+- `public/manifest.webmanifest` - PWA manifest with comprehensive app capabilities
+- `public/sw.js` - Service worker with smart caching strategy

@@ -16,12 +16,13 @@ interface BaseProps {
   options: Option[];
   placeholder?: string;
   className?: string;
+  testId?: string;
 }
 
 export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & BaseProps;
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ id, label, hint, error, options, placeholder, className, ...props }, ref) => {
+  ({ id, label, hint, error, options, placeholder, className, testId, ...props }, ref) => {
     const selectId = id || props.name || "select";
     const describedBy: string[] = [];
     if (hint) describedBy.push(`${selectId}-hint`);
@@ -40,6 +41,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           className={cn("input appearance-none pr-8", error && "border-danger focus:border-danger")}
           aria-invalid={!!error || undefined}
           aria-describedby={describedBy.length ? describedBy.join(" ") : undefined}
+          data-testid={testId}
           {...props}
         >
           {placeholder ? <option value="">{placeholder}</option> : null}
@@ -55,7 +57,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           </p>
         ) : null}
         {error ? (
-          <p id={`${selectId}-error`} className="text-danger mt-1 text-xs">
+          <p id={`${selectId}-error`} className="mt-1 text-xs text-danger">
             {error}
           </p>
         ) : null}
