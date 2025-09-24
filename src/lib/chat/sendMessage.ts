@@ -46,7 +46,7 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     return { content: "Demo-Antwort (kein API-Key)." };
   }
 
-  const init: Omit<RequestInit, 'signal'> & { signal?: AbortSignal } = {
+  const init: Omit<RequestInit, "signal"> & { signal?: AbortSignal } = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${key}`,

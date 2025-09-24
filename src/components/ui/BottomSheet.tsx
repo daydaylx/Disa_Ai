@@ -57,7 +57,7 @@ export default function BottomSheet({
           open ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        <div className="glass rounded-t-2xl p-3 shadow-glass">
+        <div className="glass shadow-glass rounded-t-2xl p-3">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-sm font-semibold">{title}</h2>
             <button

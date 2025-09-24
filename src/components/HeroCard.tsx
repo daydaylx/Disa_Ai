@@ -9,12 +9,12 @@ export default function HeroCard({ onStart }: { onStart: () => void }) {
   return (
     <div className="space-y-8">
       {/* Main Hero Card */}
-      <article className="card-elev2 flex items-center gap-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-accent-teal/10">
+      <article className="card-elev2 hover:shadow-accent-teal/10 flex items-center gap-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl">
         <div
           aria-hidden
-          className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-accent-teal/30 bg-glass-surface/10 backdrop-blur-sm transition-all duration-300 hover:border-accent-teal/50 hover:bg-glass-surface/20"
+          className="border-accent-teal/30 bg-glass-surface/10 hover:border-accent-teal/50 hover:bg-glass-surface/20 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-300"
         >
-          <div className="h-6 w-6 animate-pulse rounded-full bg-gradient-to-br from-accent-teal/80 to-accent-violet/60 shadow-lg transition-all duration-300 hover:scale-110"></div>
+          <div className="from-accent-teal/80 to-accent-violet/60 h-6 w-6 animate-pulse rounded-full bg-gradient-to-br shadow-lg transition-all duration-300 hover:scale-110"></div>
         </div>
         <div className="flex-1 space-y-3">
           <p className="text-sm font-medium tracking-wide text-text-secondary/90">AI Assistant</p>
@@ -22,7 +22,7 @@ export default function HeroCard({ onStart }: { onStart: () => void }) {
           <p className="text-sm text-text-muted/85">Professional AI-powered conversation partner</p>
           <button
             onClick={onStart}
-            className="glass-button glass-button--primary transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-accent-teal/20"
+            className="glass-button glass-button--primary hover:shadow-accent-teal/20 transition-all duration-200 hover:scale-105 hover:shadow-lg"
           >
             Start Conversation
           </button>
@@ -30,16 +30,16 @@ export default function HeroCard({ onStart }: { onStart: () => void }) {
       </article>
 
       {/* Quick Start Suggestions */}
-      <div className="glass-card p-6 transition-all duration-300 hover:bg-glass-surface/15 hover:shadow-lg hover:shadow-accent-teal/5">
+      <div className="glass-card hover:bg-glass-surface/15 hover:shadow-accent-teal/5 p-6 transition-all duration-300 hover:shadow-lg">
         <h3 className="mb-4 text-base font-semibold text-text-primary">Quick Start Ideas</h3>
         <div className="grid gap-3 sm:grid-cols-2">
           {suggestions.map((suggestion, index) => (
             <button
               key={index}
               onClick={onStart}
-              className="group flex items-center gap-3 rounded-xl border border-glass-border/30 bg-glass-surface/10 p-4 text-left transition-all duration-200 hover:scale-[1.02] hover:border-accent-teal/40 hover:bg-glass-surface/20 hover:shadow-md hover:shadow-accent-teal/10"
+              className="border-glass-border/30 bg-glass-surface/10 hover:border-accent-teal/40 hover:bg-glass-surface/20 hover:shadow-accent-teal/10 group flex items-center gap-3 rounded-xl border p-4 text-left transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
             >
-              <div className="h-2 w-2 rounded-full bg-accent-teal/60 transition-all duration-200 group-hover:scale-125 group-hover:bg-accent-teal"></div>
+              <div className="bg-accent-teal/60 group-hover:bg-accent-teal h-2 w-2 rounded-full transition-all duration-200 group-hover:scale-125"></div>
               <span className="text-sm font-medium text-text-secondary group-hover:text-text-primary">
                 {suggestion}
               </span>
@@ -50,25 +50,25 @@ export default function HeroCard({ onStart }: { onStart: () => void }) {
 
       {/* Features Overview */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="glass-card p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:bg-glass-surface/15 hover:shadow-lg hover:shadow-accent-teal/10">
-          <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-teal/20 to-accent-violet/20 transition-all duration-300 hover:scale-110 hover:from-accent-teal/30 hover:to-accent-violet/30">
-            <div className="h-3 w-3 rounded bg-accent-teal/80 transition-all duration-300 hover:scale-125"></div>
+        <div className="glass-card hover:bg-glass-surface/15 hover:shadow-accent-teal/10 p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+          <div className="from-accent-teal/20 to-accent-violet/20 hover:from-accent-teal/30 hover:to-accent-violet/30 mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br transition-all duration-300 hover:scale-110">
+            <div className="bg-accent-teal/80 h-3 w-3 rounded transition-all duration-300 hover:scale-125"></div>
           </div>
           <h4 className="mb-2 text-sm font-semibold text-text-primary">Smart Responses</h4>
           <p className="text-xs text-text-muted/80">Contextual and accurate answers</p>
         </div>
 
-        <div className="glass-card p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:bg-glass-surface/15 hover:shadow-lg hover:shadow-accent-violet/10">
-          <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-violet/20 to-accent-teal/20 transition-all duration-300 hover:scale-110 hover:from-accent-violet/30 hover:to-accent-teal/30">
-            <div className="h-3 w-3 rounded bg-accent-violet/80 transition-all duration-300 hover:scale-125"></div>
+        <div className="glass-card hover:bg-glass-surface/15 hover:shadow-accent-violet/10 p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+          <div className="from-accent-violet/20 to-accent-teal/20 hover:from-accent-violet/30 hover:to-accent-teal/30 mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br transition-all duration-300 hover:scale-110">
+            <div className="bg-accent-violet/80 h-3 w-3 rounded transition-all duration-300 hover:scale-125"></div>
           </div>
           <h4 className="mb-2 text-sm font-semibold text-text-primary">Multiple Styles</h4>
           <p className="text-xs text-text-muted/80">Adapt tone and approach</p>
         </div>
 
-        <div className="glass-card p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:bg-glass-surface/15 hover:shadow-lg hover:shadow-accent-teal/10">
-          <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-teal/20 to-accent-violet/20 transition-all duration-300 hover:scale-110 hover:from-accent-teal/30 hover:to-accent-violet/30">
-            <div className="h-3 w-3 rounded bg-gradient-to-r from-accent-teal/80 to-accent-violet/80 transition-all duration-300 hover:scale-125"></div>
+        <div className="glass-card hover:bg-glass-surface/15 hover:shadow-accent-teal/10 p-4 text-center transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+          <div className="from-accent-teal/20 to-accent-violet/20 hover:from-accent-teal/30 hover:to-accent-violet/30 mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br transition-all duration-300 hover:scale-110">
+            <div className="from-accent-teal/80 to-accent-violet/80 h-3 w-3 rounded bg-gradient-to-r transition-all duration-300 hover:scale-125"></div>
           </div>
           <h4 className="mb-2 text-sm font-semibold text-text-primary">Offline Ready</h4>
           <p className="text-xs text-text-muted/80">Works without internet</p>

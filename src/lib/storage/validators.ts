@@ -21,10 +21,10 @@ export function safeStorageGet<T>(
   try {
     const raw = storage.getItem(key);
     if (!raw) return validator.default;
-    
+
     const parsed = JSON.parse(raw) as unknown;
     const result = validator.schema.safeParse(parsed);
-    
+
     return result.success ? result.data : validator.default;
   } catch {
     return validator.default;
@@ -34,11 +34,7 @@ export function safeStorageGet<T>(
 /**
  * Safe storage write with error handling
  */
-export function safeStorageSet<T>(
-  storage: Storage,
-  key: string,
-  value: T,
-): boolean {
+export function safeStorageSet<T>(storage: Storage, key: string, value: T): boolean {
   try {
     storage.setItem(key, JSON.stringify(value));
     return true;
@@ -69,25 +65,25 @@ export const validators = {
     schema: z.string().max(maxLength),
     default: "",
   }),
-  
+
   /** Boolean flag */
   boolean: (defaultValue = false): StorageValidator<boolean> => ({
     schema: z.boolean(),
     default: defaultValue,
   }),
-  
+
   /** Number with range constraints */
   number: (min = 0, max = Number.MAX_SAFE_INTEGER, defaultValue = 0): StorageValidator<number> => ({
     schema: z.number().min(min).max(max).finite(),
     default: defaultValue,
   }),
-  
+
   /** String array with size limits */
   stringArray: (maxItems = 100, maxLength = 100): StorageValidator<string[]> => ({
     schema: z.array(z.string().max(maxLength)).max(maxItems),
     default: [],
   }),
-  
+
   /** Generic object with schema */
   object: <T>(schema: z.ZodSchema<T>, defaultValue: T): StorageValidator<T> => ({
     schema,

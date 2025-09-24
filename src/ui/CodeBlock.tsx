@@ -7,7 +7,7 @@ export default function CodeBlock({ code, lang }: { code: string; lang: string |
 
   return (
     <div className="group relative overflow-hidden rounded-lg border border-white/10 bg-black/35">
-      <div className="flex items-center justify-between bg-white/5 px-3 py-1.5 text-[11px] uppercase tracking-wide text-muted/80">
+      <div className="text-muted/80 flex items-center justify-between bg-white/5 px-3 py-1.5 text-[11px] uppercase tracking-wide">
         <span>{lang ?? "code"}</span>
         <button
           onClick={() => copy(code)}

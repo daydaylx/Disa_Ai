@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 // Legacy-Adapter auf den kanonischen React-Toaster
 import { ToastsProvider, useToasts } from "../ui/Toast";

@@ -4,7 +4,7 @@ import path from "node:path";
 const root = path.resolve("src");
 const exts = new Set([".ts", ".tsx"]);
 
-function *walk(d) {
+function* walk(d) {
   for (const e of fs.readdirSync(d, { withFileTypes: true })) {
     const p = path.join(d, e.name);
     if (e.isDirectory()) yield* walk(p);
@@ -23,13 +23,13 @@ function fix(content) {
     if (hasDefNamed) {
       content = content.replace(
         /import\s+React\s*,\s*\{[^}]+\}\s+from\s+['"]react['"];?/,
-        "import * as React from 'react';\nimport { $1 } from 'react>';"
+        "import * as React from 'react';\nimport { $1 } from 'react>';",
       );
       changed = true;
     } else if (hasDefOnly && !hasNS) {
       content = content.replace(
-        /import\s+React\s+from\s+['"]react['"];?/, 
-        "import * as React from 'react>';"
+        /import\s+React\s+from\s+['"]react['"];?/,
+        "import * as React from 'react>';",
       );
       changed = true;
     } else if (!hasNS) {
@@ -39,8 +39,8 @@ function fix(content) {
   } else {
     if (hasDefNamed) {
       content = content.replace(
-        /import\s+React\s*,\s*\{[^}]+\}\s+from\s+['"]react['"];?/, 
-        "import { $1 } from 'react>';"
+        /import\s+React\s*,\s*\{[^}]+\}\s+from\s+['"]react['"];?/,
+        "import { $1 } from 'react>';",
       );
       changed = true;
     }
@@ -54,15 +54,20 @@ function fix(content) {
   let seen = false;
   for (let i = 0; i < lines.length; i++) {
     if (/^\s*import\s+\*\s+as\s+React\s+from\s+['"]react['"];?\s*$/.test(lines[i])) {
-      if (seen) { lines.splice(i,1); i--; changed = true; }
-      else seen = true;
+      if (seen) {
+        lines.splice(i, 1);
+        i--;
+        changed = true;
+      } else seen = true;
     }
   }
   return { content: lines.join("\n"), changed };
 }
 
 let touched = 0;
-for (const f of (function*(){ yield* walk(root) })()) {
+for (const f of (function* () {
+  yield* walk(root);
+})()) {
   const s0 = fs.readFileSync(f, "utf8");
   const { content, changed } = fix(s0);
   if (changed && content !== s0) {

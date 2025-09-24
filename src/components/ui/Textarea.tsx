@@ -22,12 +22,12 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <label className="block">
         <span className="mb-1 block text-sm font-medium">{label}</span>
         {inputEl}
-        {error ? <span className="mt-1 block text-xs text-danger">{error}</span> : null}
+        {error ? <span className="text-danger mt-1 block text-xs">{error}</span> : null}
       </label>
     ) : (
       <>
         {inputEl}
-        {error ? <span className="mt-1 block text-xs text-danger">{error}</span> : null}
+        {error ? <span className="text-danger mt-1 block text-xs">{error}</span> : null}
       </>
     );
   },

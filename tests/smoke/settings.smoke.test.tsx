@@ -3,7 +3,7 @@ import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ToastsProvider } from "../../src/components/ui/toast/ToastsProvider";
-import SettingsView from "../../src/ui2/SettingsView";
+import SettingsView from "../../src/ui/SettingsView";
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(<ToastsProvider>{ui}</ToastsProvider>);
@@ -50,7 +50,7 @@ describe("SettingsView Smoke", () => {
     await act(async () => {
       renderWithProviders(<SettingsView />);
     });
-    expect(await screen.findByRole("heading", { name: /Control Center/i })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: /Einstellungen/i })).toBeInTheDocument();
     expect(screen.getByRole("tablist")).toBeInTheDocument();
   });
 });

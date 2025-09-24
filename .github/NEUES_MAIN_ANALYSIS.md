@@ -10,6 +10,7 @@
 ## Branch-Vergleich
 
 ### Main Branch (aktuell)
+
 ```
 61047e6 feat(ci): CI-Pipeline mit Deploy-Gates konsolidieren
 5641d1c Add coverage reports directory to .gitignore
@@ -18,12 +19,13 @@ f3e13c5 Aktualisieren von README.md
 557f6b2 fix: Resolve build error and ignore coverage files
 ```
 
-### Neues-Main Branch  
+### Neues-Main Branch
+
 ```
 240b3ac chore(repo): remove test/coverage artifacts; harden .gitignore  ← MERGE BASE
 0582ff8 kein plan
 99abc28 chore(core): phase-1 cleanup — remove legacy Shell/Header...
-b01ad0c f  
+b01ad0c f
 93f7996 feat(ui): polish bottom nav tabs, settings headings...
 2683393 fix
 4fd003d feat(ui): adopt design example patterns...
@@ -52,11 +54,13 @@ c72ac5f style(chat): migrate chat bubbles to Aurora tokens...
 ## Bewertung
 
 ### ✅ Wertvoll
+
 - **Aurora Design System**: Umfassende UI-Improvements
 - **Component Cleanup**: Entfernung von Legacy-Code
 - **Theme System**: Moderne Token-basierte Architektur
 
 ### ⚠️ Problematisch
+
 - **Merge-Konflikt-Potenzial**: Umfangreiche UI-Änderungen
 - **Fehlende Tests**: Keine E2E-Tests für UI-Änderungen
 - **Unklare Commits**: Schwer nachvollziehbare Änderungen
@@ -64,6 +68,7 @@ c72ac5f style(chat): migrate chat bubbles to Aurora tokens...
 ## Empfehlung: **Cherry-Pick & Close**
 
 ### Strategie
+
 1. **Selektive Übernahme**: Wertvollen Code über separate PRs integrieren
 2. **Branch schließen**: `neues-main` nach Extraktion schließen
 3. **Dokumentation**: Entscheidung in ADR festhalten
@@ -71,14 +76,16 @@ c72ac5f style(chat): migrate chat bubbles to Aurora tokens...
 ### Konkrete Schritte
 
 1. **Phase 1**: Aurora Theme System (3-4 PRs)
+
    ```
    PR1: Core theme tokens and utilities
-   PR2: Button and input components  
+   PR2: Button and input components
    PR3: Navigation and glass effects
    PR4: Chat bubble styling
    ```
 
 2. **Phase 2**: Legacy Cleanup (1 PR)
+
    ```
    PR5: Remove Shell.tsx, Header.tsx, old tokens
    ```
@@ -98,10 +105,10 @@ c72ac5f style(chat): migrate chat bubbles to Aurora tokens...
 ## Timeline
 
 - **Woche 1**: Theme-System PRs (1-2)
-- **Woche 2**: Komponenten PRs (3-4) 
+- **Woche 2**: Komponenten PRs (3-4)
 - **Woche 3**: Cleanup PR (5) + Branch schließen
 
 ---
 
-*Entscheidung getroffen in PR #5 - Branch-Strategie & Contributing Guidelines*
-*Basis: Trunk-Based Development Prinzipien*
+_Entscheidung getroffen in PR #5 - Branch-Strategie & Contributing Guidelines_
+_Basis: Trunk-Based Development Prinzipien_

@@ -55,7 +55,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
       aria-disabled={disabled}
     >
       {icon ? (
-        <div className="mb-2 text-2xl text-accent" aria-hidden="true">
+        <div className="text-accent mb-2 text-2xl" aria-hidden="true">
           {icon}
         </div>
       ) : null}

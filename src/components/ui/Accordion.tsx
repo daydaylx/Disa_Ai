@@ -68,7 +68,7 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <div className="truncate font-medium">{it.title}</div>
-                  {it.meta && <div className="truncate text-xs text-muted/80">{it.meta}</div>}
+                  {it.meta && <div className="text-muted/80 truncate text-xs">{it.meta}</div>}
                 </div>
                 <span
                   aria-hidden
