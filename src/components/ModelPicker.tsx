@@ -65,13 +65,6 @@ function safetyLabel(value: ModelEntry["safety"]): string {
   return "Flexibel";
 }
 
-function costBucketLabel(bucket: "free" | "low" | "med" | "high"): string {
-  if (bucket === "free") return "Frei";
-  if (bucket === "low") return "Günstig";
-  if (bucket === "med") return "Mittel";
-  return "Premium";
-}
-
 export default function ModelPicker({ value, onChange, policyFromRole = "any" }: Props) {
   const [all, setAll] = React.useState<ModelEntry[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -272,34 +265,37 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   ]);
 
   return (
-    <section className="model-picker" data-testid="settings-model-picker">
+    <section className="space-y-4" data-testid="settings-model-picker">
       {(!getApiKey() || getApiKey() === "") && (
-        <div className="model-picker__banner" role="status">
+        <div className="rounded-lg bg-yellow-500/10 p-4 text-sm text-yellow-200" role="status">
           Hinweis: Für das Laden der Modell‑Liste ist ein OpenRouter API‑Key nötig (Einstellungen).
         </div>
       )}
       {policyFromRole !== "any" && (
-        <div className="model-picker__banner model-picker__banner--muted">
+        <div className="rounded-lg bg-blue-500/10 p-4 text-sm text-blue-200">
           Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste
           entsprechend gefiltert.
         </div>
       )}
 
-      <div className="model-picker__filters">
-        <div className="model-picker__search">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex-grow">
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Modell suchen…"
             aria-label="Modell suchen"
-            className="input focus:shadow-accent-teal/10 min-w-[220px] flex-1 text-sm transition-all duration-200 focus:scale-[1.01] focus:shadow-lg"
+            className="focus:shadow-accent/10 w-full rounded-lg border border-transparent bg-bg-elevated px-4 py-2 text-sm transition-all duration-200 focus:scale-[1.01] focus:border-primary focus:shadow-lg"
             data-testid="model-search"
           />
         </div>
-        <div className="model-picker__chips" role="group" aria-label="Schnellfilter">
+        <div className="flex items-center gap-2" role="group" aria-label="Schnellfilter">
           <button
             type="button"
-            className={cn("chip chip-toggle", onlyFavorites && "chip-toggle--active")}
+            className={cn(
+              "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+              onlyFavorites ? "bg-primary text-text-inverted" : "bg-bg-elevated hover:bg-bg-base",
+            )}
             onClick={() => setOnlyFavorites((prev) => !prev)}
             data-testid="model-filter-chip-favorite"
           >
@@ -308,7 +304,10 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           </button>
           <button
             type="button"
-            className={cn("chip chip-toggle", onlyFree && "chip-toggle--active")}
+            className={cn(
+              "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+              onlyFree ? "bg-primary text-text-inverted" : "bg-bg-elevated hover:bg-bg-base",
+            )}
             onClick={() => setOnlyFree((prev) => !prev)}
             data-testid="model-filter-chip-free"
           >
@@ -317,7 +316,10 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           </button>
           <button
             type="button"
-            className={cn("chip chip-toggle", onlyCode && "chip-toggle--active")}
+            className={cn(
+              "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+              onlyCode ? "bg-primary text-text-inverted" : "bg-bg-elevated hover:bg-bg-base",
+            )}
             onClick={() => setOnlyCode((prev) => !prev)}
             data-testid="model-filter-chip-code"
           >
@@ -327,12 +329,16 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </div>
       </div>
 
-      <div className="model-picker__advanced" role="group" aria-label="Detailfilter">
+      <div
+        className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5"
+        role="group"
+        aria-label="Detailfilter"
+      >
         <select
           value={provider}
           onChange={(e) => setProvider(e.target.value)}
           aria-label="Provider filtern"
-          className="input text-sm"
+          className="rounded-lg border-transparent bg-bg-elevated px-3 py-2 text-sm"
         >
           {providers.map((p) => (
             <option key={p} value={p}>
@@ -346,7 +352,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             setPolicy(e.target.value as "any" | "free" | "moderate" | "strict")
           }
           aria-label="Policy/Safety filtern"
-          className="input text-sm"
+          className="rounded-lg border-transparent bg-bg-elevated px-3 py-2 text-sm"
         >
           <option value="any">Alle Policies</option>
           <option value="free">Frei</option>
@@ -359,7 +365,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             setCost(e.target.value as "all" | "free" | "low" | "med" | "high")
           }
           aria-label="Kostenkategorie filtern"
-          className="input text-sm"
+          className="rounded-lg border-transparent bg-bg-elevated px-3 py-2 text-sm"
         >
           <option value="all">Alle Kosten</option>
           <option value="free">Frei</option>
@@ -367,7 +373,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
           <option value="med">Mittel (≤$0.50/1k)</option>
           <option value="high">Teuer (&gt;$0.50/1k)</option>
         </select>
-        <label className="model-picker__field">
+        <label className="flex flex-col gap-1 text-sm">
           <span>min. Kontext</span>
           <input
             type="number"
@@ -375,7 +381,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             step={512}
             value={minCtx}
             onChange={(e) => setMinCtx(Number(e.target.value) || 0)}
-            className="input w-24"
+            className="w-24 rounded-lg border-transparent bg-bg-elevated px-3 py-2 text-sm"
             aria-label="Minimale Kontextgröße in Tokens"
           />
         </label>
@@ -385,7 +391,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             setSortBy(e.target.value as "label" | "price" | "ctx")
           }
           aria-label="Sortierung"
-          className="input text-sm"
+          className="rounded-lg border-transparent bg-bg-elevated px-3 py-2 text-sm"
         >
           <option value="label">Name</option>
           <option value="price">Preis</option>
@@ -393,20 +399,23 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </select>
       </div>
 
-      <div className="model-picker__results" role="listbox" aria-label="Modelle">
+      <div
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        role="listbox"
+        aria-label="Modelle"
+      >
         {loading ? (
-          <div className="model-picker__loading" role="status" aria-label="Modelle werden geladen">
-            <div className="loading-skeleton">
-              <div className="skeleton-card"></div>
-              <div className="skeleton-card"></div>
-              <div className="skeleton-card"></div>
-            </div>
-            <p className="loading-text">Modelle werden geladen...</p>
+          <div
+            className="col-span-full flex flex-col items-center justify-center p-8 text-text-muted"
+            role="status"
+            aria-label="Modelle werden geladen"
+          >
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+            <p className="mt-4 text-sm">Modelle werden geladen...</p>
           </div>
         ) : (
           filtered.map((m) => {
             const isFavorite = isFavoriteModel(m);
-            const isCode = isCodeModel(m);
             const active = value
               ? value === m.id ||
                 (m.ids && m.ids.includes(value)) ||
@@ -415,8 +424,6 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             const context = m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—";
             const isFree = isFreeModel(m) || m.freeBadge;
             const priceLabel = isFree ? "Frei" : formatPrice(m.pricing);
-            const costBucket = priceBucket(m);
-            const costLabel = costBucketLabel(costBucket);
 
             const handleSelect = () => onChange(m.id);
             const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -432,23 +439,26 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                 role="option"
                 aria-selected={active}
                 tabIndex={0}
-                className={cn("model-card", active && "model-card--active")}
+                className={cn(
+                  "group cursor-pointer rounded-lg bg-bg-elevated p-4 transition-all duration-200 hover:bg-bg-base focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                  active && "ring-2 ring-primary",
+                )}
                 onClick={handleSelect}
                 onKeyDown={handleKeyDown}
                 data-testid="model-option"
               >
-                <div className="model-card__header">
-                  <div className="model-card__title-group">
-                    <div className="model-card__title">{m.label ?? m.id}</div>
-                    <div className="model-card__subtitle">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-text-default">{m.label ?? m.id}</h3>
+                    <p className="text-sm text-text-muted">
                       {m.provider ?? "Unbekannter Provider"}
-                    </div>
+                    </p>
                   </div>
                   <button
                     type="button"
                     className={cn(
-                      "model-card__favorite",
-                      isFavorite && "model-card__favorite--active",
+                      "rounded-full p-1 text-text-muted transition-colors hover:text-accent",
+                      isFavorite && "text-accent",
                     )}
                     aria-pressed={isFavorite}
                     aria-label={isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
@@ -462,20 +472,25 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                   </button>
                 </div>
 
-                <div className="model-card__meta">
-                  <span title="Kontextfenster">Kontext: {context}</span>
-                  <span title="Kosten pro 1k Tokens">Kosten: {priceLabel}</span>
-                  <span>Sicherheit: {safetyLabel(m.safety)}</span>
+                <div className="mt-4 flex items-center justify-between text-sm text-text-muted">
+                  <span title="Kontextfenster">{context}</span>
+                  <span title="Kosten pro 1k Tokens">{priceLabel}</span>
                 </div>
 
-                <div className="model-card__tags">
-                  {isFavorite && <span className="model-chip model-chip--favorite">Favorit</span>}
-                  {isFree && <span className="model-chip model-chip--free">Free</span>}
-                  {isCode && <span className="model-chip model-chip--code">Code</span>}
-                  <span className={cn("model-chip", `model-chip--safety-${m.safety}`)}>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {isFree && (
+                    <span className="rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400">
+                      Free
+                    </span>
+                  )}
+                  {isCodeModel(m) && (
+                    <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-xs text-blue-400">
+                      Code
+                    </span>
+                  )}
+                  <span className="rounded-full bg-gray-500/10 px-2 py-0.5 text-xs text-gray-400">
                     {safetyLabel(m.safety)}
                   </span>
-                  {!isFree && <span className="model-chip model-chip--cost">{costLabel}</span>}
                 </div>
               </div>
             );
@@ -483,7 +498,10 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         )}
 
         {!loading && filtered.length === 0 && (
-          <div className="model-picker__empty" role="status">
+          <div
+            className="col-span-full flex items-center justify-center p-8 text-text-muted"
+            role="status"
+          >
             Keine Modelle gefunden. Passe Filter oder Suchbegriff an.
           </div>
         )}

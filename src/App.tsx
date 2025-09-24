@@ -1,7 +1,6 @@
 import "./ui/base.css";
 import "./styles/globals.css";
 import "./styles/brand.css";
-import "./styles/theme.css";
 import "./styles/chat.css";
 
 import { Outlet } from "react-router-dom";

@@ -1,5 +1,13 @@
 {
-  "autoAccept": true,
-  "disableAutoUpdate": true,
-  "hideCWD": true
+  "tools": {
+    "autoAccept": true
+  },
+  "general": {
+    "disableAutoUpdate": true
+  },
+  "ui": {
+    "footer": {
+      "hideCWD": true
+    }
+  }
 }

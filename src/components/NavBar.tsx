@@ -42,31 +42,29 @@ export default function NavBar() {
       style={{ height: "var(--bottom-nav-h)" }}
       aria-label="Main Navigation"
     >
-      <div className="glass glass-depth-3 shadow-glass max-xs:grid-cols-1 max-xs:gap-1 grid grid-cols-3 gap-2 rounded-t-2xl p-2">
+      <div className="bg-bg-elevated/80 grid grid-cols-3 gap-2 rounded-t-2xl p-2 shadow-lg backdrop-blur-md">
         {tabs.map((t) => {
-          const active = location.pathname === t.to || (t.to === "/" && location.pathname === "/");
+          const active = location.pathname === t.to;
           return (
             <Link
               key={t.to}
               to={t.to}
               aria-current={active ? "page" : undefined}
               className={[
-                "focus-visible:ring-accent-teal/50 group transform rounded-xl border px-3 py-3 text-center text-sm font-medium tracking-wide transition-all duration-300 ease-out hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+                "group flex flex-col items-center justify-center gap-1 rounded-lg p-3 text-center text-sm font-medium transition-all duration-300 ease-out hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                 active
-                  ? "border-accent-teal/50 bg-accent-teal/20 shadow-accent-teal/25 scale-105 text-white shadow-lg"
-                  : "bg-glass-surface/12 border-glass-border/30 hover:border-accent-teal/30 hover:bg-glass-surface/20 text-text-secondary/90 hover:text-text-primary/95 hover:shadow-md",
+                  ? "scale-105 bg-primary text-text-inverted shadow-md"
+                  : "text-text-muted hover:bg-bg-base hover:text-text-default",
               ].join(" ")}
               style={{ minHeight: 48 }}
               data-testid={t.testId}
             >
-              <div className="flex flex-col items-center justify-center gap-1">
-                <div
-                  className={`transition-all duration-200 ${active ? "text-white" : "group-hover:text-accent-teal/90 text-text-secondary/80"}`}
-                >
-                  {t.icon}
-                </div>
-                <span className="text-xs font-medium tracking-wide">{t.label}</span>
+              <div
+                className={`transition-all duration-200 ${active ? "text-text-inverted" : "text-text-muted group-hover:text-primary"}`}
+              >
+                {t.icon}
               </div>
+              <span className="text-xs font-medium tracking-wide">{t.label}</span>
             </Link>
           );
         })}

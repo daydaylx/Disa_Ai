@@ -13,6 +13,7 @@ import { labelForModel, loadModelCatalog } from "../config/models";
 import { getSelectedModelId, setSelectedModelId } from "../config/settings";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { getApiKey, setApiKey } from "../services/openrouter";
+import SettingsAppearance from "./settings/SettingsAppearance";
 import SettingsRoles from "./settings/SettingsRoles";
 import SettingsStyle from "./settings/SettingsStyle";
 
@@ -148,10 +149,10 @@ export default function SettingsView() {
                 </svg>
               </div>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight text-text-primary">
+                <h1 className="text-text-primary text-2xl font-bold tracking-tight">
                   Einstellungen
                 </h1>
-                <p className="text-sm text-text-secondary/80">Konfiguration und Personalisierung</p>
+                <p className="text-text-secondary/80 text-sm">Konfiguration und Personalisierung</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -226,7 +227,7 @@ export default function SettingsView() {
                 >
                   <div className="space-y-3">
                     <div className="glass-badge glass-badge--accent">Dark Glass Theme aktiv</div>
-                    <p className="text-sm text-text-muted/85">
+                    <p className="text-text-muted/85 text-sm">
                       Nutzt halbtransparente Glasflächen mit Blur-Effekten für eine moderne,
                       professionelle Benutzeroberfläche.
                     </p>
@@ -253,7 +254,6 @@ export default function SettingsView() {
                 </SettingsCard>
               </div>
             </GlassTabPanel>
-
             {/* Style Settings Tab */}
             <GlassTabPanel tabId="style" activeTab={activeTab}>
               <SettingsCard
@@ -264,7 +264,6 @@ export default function SettingsView() {
                 <SettingsStyle />
               </SettingsCard>
             </GlassTabPanel>
-
             {/* Roles Settings Tab */}
             <GlassTabPanel tabId="roles" activeTab={activeTab}>
               <SettingsCard
@@ -275,10 +274,19 @@ export default function SettingsView() {
                 <SettingsRoles />
               </SettingsCard>
             </GlassTabPanel>
-
+            import SettingsAppearance from "./settings/SettingsAppearance"; // ... (rest of the
+            imports) // ... (rest of the component)
             {/* App Settings Tab */}
             <GlassTabPanel tabId="app" activeTab={activeTab}>
               <div className="grid gap-6 lg:grid-cols-2">
+                <SettingsCard
+                  title="Appearance"
+                  description="Customize the look and feel of the application."
+                  glow="purple"
+                >
+                  <SettingsAppearance />
+                </SettingsCard>
+
                 {/* App Installation */}
                 <SettingsCard
                   title="App Installation"
@@ -377,7 +385,7 @@ export default function SettingsView() {
           <GlassCard variant="soft" className="p-8">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-h3 mb-2 font-bold text-text-primary">Schnellaktionen</h3>
+                <h3 className="text-h3 text-text-primary mb-2 font-bold">Schnellaktionen</h3>
                 <p className="text-label text-text-secondary">
                   Einstellungen verwalten und zurücksetzen
                 </p>
