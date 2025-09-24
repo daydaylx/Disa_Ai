@@ -10,10 +10,7 @@ export const App: React.FC = () => (
   <SettingsProvider>
     <ChatProvider>
       <ErrorBoundary>
-        <RouterProvider
-          router={router}
-          fallbackElement={<div className="p-4 text-sm text-neutral-400">Laden…</div>}
-        />
+        <RouterProvider router={router} />
       </ErrorBoundary>
     </ChatProvider>
   </SettingsProvider>

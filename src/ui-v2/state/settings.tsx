@@ -64,7 +64,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   });
 
   React.useEffect(() => {
-    const { apiKey, ...rest } = settings;
+    const { apiKey: _apiKey, ...rest } = settings;
     writeSession(KEY_SETTINGS, rest);
   }, [settings]);
 
