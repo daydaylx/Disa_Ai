@@ -22,10 +22,10 @@ function Header({
   return (
     <header className="safe-pt safe-px sticky top-0 z-20 backdrop-blur-xl" role="banner">
       <div className="mx-auto max-w-4xl">
-        <div className="glass-bg--medium flex items-center justify-between rounded-2xl border border-border-secondary px-6 py-4 shadow-lg backdrop-blur-xl">
+        <div className="glass-bg--medium border-border-secondary flex items-center justify-between rounded-2xl border px-6 py-4 shadow-lg backdrop-blur-xl">
           <div className="flex items-center gap-4">
             <div
-              className="grid size-10 place-items-center rounded-xl border border-border-tertiary bg-gradient-to-br from-interactive-secondary/20 to-interactive-primary/20"
+              className="border-border-tertiary from-interactive-secondary/20 to-interactive-primary/20 grid size-10 place-items-center rounded-xl border bg-gradient-to-br"
               aria-hidden
             >
               <svg width="20" height="20" viewBox="0 0 24 24" className="text-interactive-primary">
@@ -42,7 +42,7 @@ function Header({
           </div>
           <button
             onClick={onOpenModels}
-            className="glass-button glass-button--secondary glass-button--sm hover:bg-interactive-primary/8 rounded-xl px-4 py-3 text-label font-medium transition-all duration-200"
+            className="glass-button glass-button--secondary glass-button--sm hover:bg-interactive-primary/8 text-label rounded-xl px-4 py-3 font-medium transition-all duration-200"
             aria-label="Modell auswählen"
           >
             {modelName}
@@ -57,7 +57,7 @@ function Header({
 function MessageBubble({ msg }: { msg: Message }) {
   const mine = msg.role === "user";
   const base =
-    "max-w-[85%] rounded-2xl px-5 py-3 text-body leading-relaxed break-words transition-all duration-200";
+    "max-w-prose rounded-2xl px-5 py-3 text-body leading-relaxed break-words transition-all duration-200";
   const mineCls =
     "ml-auto rounded-br-lg glass-tint--cyan text-white shadow-xl backdrop-blur-md border border-interactive-primary/40";
   const otherCls =
@@ -67,9 +67,7 @@ function MessageBubble({ msg }: { msg: Message }) {
 
   return (
     <div className={`flex w-full ${mine ? "justify-end" : "justify-start"} group`}>
-      <div
-        className={`chat-bubble ${base} ${mine ? mineCls : otherCls} transition-transform hover:shadow-xl group-hover:scale-[1.01]`}
-      >
+      <div className={`chat-bubble ${base} ${mine ? mineCls : otherCls} hover:shadow-xl`}>
         {segs.map((s, i) =>
           s.type === "text" ? (
             <div key={i} className="whitespace-pre-wrap">
@@ -81,7 +79,7 @@ function MessageBubble({ msg }: { msg: Message }) {
             </div>
           ),
         )}
-        <div className="mt-3 text-caption font-medium text-text-muted/70">
+        <div className="text-caption mt-3 font-medium text-text-muted/70">
           {new Date(msg.ts).toLocaleTimeString()}
         </div>
       </div>
@@ -119,7 +117,7 @@ function Composer({
   return (
     <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 16px)" }}>
       <div className="mx-auto max-w-4xl">
-        <div className="glass-bg--medium rounded-2xl border border-border-secondary p-6 shadow-lg backdrop-blur-xl">
+        <div className="glass-bg--medium border-border-secondary rounded-2xl border p-6 shadow-lg backdrop-blur-xl">
           <div id="composer-help" className="sr-only">
             Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
           </div>
@@ -131,7 +129,7 @@ function Composer({
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="Schreib was Sinnvolles…"
                 rows={1}
-                className="w-full resize-none bg-transparent text-body leading-relaxed text-text-primary outline-none ring-0 placeholder:text-text-muted/60 focus:ring-0"
+                className="text-body w-full resize-none bg-transparent leading-relaxed text-text-primary outline-none ring-0 placeholder:text-text-muted/60 focus:ring-0"
                 aria-label="Nachricht eingeben"
                 aria-describedby="composer-help"
                 data-testid="composer-input"
@@ -261,7 +259,7 @@ function ModelSheet({
                     {(m.pricing?.in ?? 0) === 0 ? "free" : `${m.pricing?.in ?? 0}$/1k`}
                   </div>
                 </div>
-                <div className="mt-2 text-label text-text-muted">
+                <div className="text-label mt-2 text-text-muted">
                   Kontext: {(m.ctx ?? 0).toLocaleString()} Tokens
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -395,7 +393,7 @@ export default function ChatApp() {
   };
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-gradient-to-br from-background-primary via-background-secondary to-background-primary">
+    <div className="from-background-primary via-background-secondary to-background-primary flex h-screen flex-col overflow-hidden bg-gradient-to-br">
       <Header
         title="Disa AI"
         modelName={model?.label ?? "Lade..."}
@@ -413,6 +411,7 @@ export default function ChatApp() {
               items={messages}
               renderItem={(m) => <MessageBubble msg={m} />}
               className="space-y-4 py-4"
+              onSuggestionClick={(suggestion) => setInput(suggestion)}
             />
           </div>
         </div>

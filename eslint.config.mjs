@@ -189,4 +189,4 @@ export default [
       "no-restricted-syntax": "off", // Allow hex colors in design tokens
     },
   },
-]
+];

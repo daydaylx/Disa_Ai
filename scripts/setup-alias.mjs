@@ -3,32 +3,40 @@ import path from "node:path";
 
 const root = process.cwd();
 
-function readJsonCandidate(...names){
-  for(const name of names){
+function readJsonCandidate(...names) {
+  for (const name of names) {
     const p = path.join(root, name);
     if (fs.existsSync(p)) {
-      try { return {file:p, json: JSON.parse(fs.readFileSync(p, "utf8"))}; } catch {}
+      try {
+        return { file: p, json: JSON.parse(fs.readFileSync(p, "utf8")) };
+      } catch {}
     }
   }
   return null;
 }
-function writeJson(file, json){
+function writeJson(file, json) {
   fs.writeFileSync(file, JSON.stringify(json, null, 2) + "\n", "utf8");
 }
 
 // 1) TSConfig
 {
-  const cand = readJsonCandidate("tsconfig.base.json","tsconfig.json");
-  if (cand){
-    const {file, json} = cand;
+  const cand = readJsonCandidate("tsconfig.base.json", "tsconfig.json");
+  if (cand) {
+    const { file, json } = cand;
     json.compilerOptions ||= {};
     json.compilerOptions.baseUrl ||= ".";
     json.compilerOptions.paths ||= {};
     const cur = json.compilerOptions.paths["@/*"];
-    const same = Array.isArray(cur) && cur.length===1 && cur[0]==="src/*";
+    const same = Array.isArray(cur) && cur.length === 1 && cur[0] === "src/*";
     if (!same) json.compilerOptions.paths["@/*"] = ["src/*"];
     writeJson(file, json);
-    console.log("[tsconfig] Patched:", path.basename(file), "-> baseUrl:", json.compilerOptions.baseUrl, "paths @/* -> src/*");
+    console.log(
+      "[tsconfig] Patched:",
+      path.basename(file),
+      "-> baseUrl:",
+      json.compilerOptions.baseUrl,
+      "paths @/* -> src/*",
+    );
   } else {
     console.warn("[tsconfig] Keine tsconfig gefunden.");
   }
@@ -57,17 +65,23 @@ function writeJson(file, json){
     const hasAlias = /resolve\s*:\s*{[^}]*alias\s*:\s*{[^}]*['"]@['"]\s*:.*?}/s.test(src);
     if (!hasAlias) {
       if (/resolve\s*:\s*{/.test(src)) {
-        src = src.replace(/resolve\s*:\s*{/, m => `${m}
+        src = src.replace(
+          /resolve\s*:\s*{/,
+          (m) => `${m}
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },`);
+    },`,
+        );
       } else {
-        src = src.replace(/defineConfig\(\{\s*/s, m => `${m}
+        src = src.replace(
+          /defineConfig\(\{\s*/s,
+          (m) => `${m}
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
-  },`);
+  },`,
+        );
       }
       changed = true;
     }
@@ -114,7 +128,7 @@ function writeJson(file, json){
   }`;
       // Versuche, in export default [...] einzufügen
       if (/export\s+default\s+\[/s.test(s)) {
-        s = s.replace(/\]\s*;?\s*$/s, m => `,${inject}\n]`);
+        s = s.replace(/\]\s*;?\s*$/s, (m) => `,${inject}\n]`);
         changed = true;
       }
     }
@@ -135,7 +149,7 @@ function writeJson(file, json){
     }
   }`;
       if (/export\s+default\s+\[/s.test(s)) {
-        s = s.replace(/\]\s*;?\s*$/s, m => `,${injectTests}\n]`);
+        s = s.replace(/\]\s*;?\s*$/s, (m) => `,${injectTests}\n]`);
         changed = true;
       }
     }

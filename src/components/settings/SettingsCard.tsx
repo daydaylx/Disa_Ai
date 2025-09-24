@@ -25,7 +25,7 @@ export function SettingsCard({
       <div className="flex items-start gap-4">
         {icon && (
           <div className="flex-shrink-0">
-            <div className="bg-glass-surface/12 flex h-10 w-10 items-center justify-center rounded-xl border border-glass-border/25 text-xl">
+            <div className="bg-glass-surface/12 border-glass-border/25 flex h-10 w-10 items-center justify-center rounded-xl border text-xl">
               {icon}
             </div>
           </div>

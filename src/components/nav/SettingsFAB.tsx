@@ -12,7 +12,7 @@ export default function SettingsFAB() {
       href="#/settings"
       aria-label="Einstellungen öffnen"
       onClick={handleClick}
-      className="touch-target fixed bottom-[calc(env(safe-area-inset-bottom)+16px)] right-4 z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900/80 text-neutral-100 shadow-soft backdrop-blur transition active:scale-95"
+      className="touch-target shadow-soft fixed bottom-[calc(env(safe-area-inset-bottom)+16px)] right-4 z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900/80 text-neutral-100 backdrop-blur transition active:scale-95"
       data-no-zoom
     >
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden>

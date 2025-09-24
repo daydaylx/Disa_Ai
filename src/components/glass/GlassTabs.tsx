@@ -87,7 +87,7 @@ export function GlassTabs({
               tab.disabled && "cursor-not-allowed opacity-50",
               fullWidth && "flex-1",
               "relative flex items-center justify-center gap-2",
-              "focus-visible:ring-accent-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
             )}
             onClick={() => handleTabClick(tab)}
             onKeyDown={(e) => handleKeyDown(e, tab)}

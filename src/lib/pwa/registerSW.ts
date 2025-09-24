@@ -10,11 +10,10 @@ export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) return;
 
-  const hasImportScripts = typeof (globalThis as unknown as { importScripts?: unknown }).importScripts !== "undefined";
+  const hasImportScripts =
+    typeof (globalThis as unknown as { importScripts?: unknown }).importScripts !== "undefined";
   const baseUrl =
-    (import.meta as any)?.env?.VITE_BASE_URL ??
-    (import.meta as any)?.env?.BASE_URL ??
-    "./";
+    (import.meta as any)?.env?.VITE_BASE_URL ?? (import.meta as any)?.env?.BASE_URL ?? "./";
   const swUrl = hasImportScripts ? "/sw.js" : `${baseUrl}sw.js`;
   window.addEventListener("load", () => {
     navigator.serviceWorker

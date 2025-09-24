@@ -1,9 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ToastsProvider } from "../../src/components/ui/toast/ToastsProvider";
-import SettingsView from "../../src/ui2/SettingsView";
+import SettingsView from "../../src/ui/SettingsView";
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(<ToastsProvider>{ui}</ToastsProvider>);
@@ -38,15 +38,19 @@ describe("SettingsView Smoke", () => {
     vi.restoreAllMocks();
   });
 
-  it("renders API key input and model section", () => {
-    renderWithProviders(<SettingsView />);
+  it("renders API key input and model section", async () => {
+    await act(async () => {
+      renderWithProviders(<SettingsView />);
+    });
     expect(screen.getByTestId("settings-save-key")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Modell-Auswahl/i })).toBeInTheDocument();
   });
 
   it("renders tabbed navigation structure", async () => {
-    renderWithProviders(<SettingsView />);
-    expect(await screen.findByRole("heading", { name: /Control Center/i })).toBeInTheDocument();
+    await act(async () => {
+      renderWithProviders(<SettingsView />);
+    });
+    expect(await screen.findByRole("heading", { name: /Einstellungen/i })).toBeInTheDocument();
     expect(screen.getByRole("tablist")).toBeInTheDocument();
   });
 });

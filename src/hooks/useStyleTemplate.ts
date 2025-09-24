@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 /* eslint-disable no-empty */
 
 export interface TemplateEntry {
@@ -68,7 +68,8 @@ function normalizeTemplates(arr: unknown): TemplateEntry[] {
       };
       if (typeof t.description === "string") base.description = t.description;
       if (Array.isArray(t.tags)) base.tags = t.tags.filter((z: unknown) => typeof z === "string");
-      if (Array.isArray(t.allow)) base.allow = t.allow.filter((z: unknown) => typeof z === "string");
+      if (Array.isArray(t.allow))
+        base.allow = t.allow.filter((z: unknown) => typeof z === "string");
       return base;
     });
 }

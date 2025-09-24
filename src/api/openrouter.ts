@@ -54,7 +54,10 @@ export function getModelFallback() {
   }
 }
 
-export async function chatOnce(messages: ChatMessage[], opts?: { model?: string; signal?: AbortSignal }) {
+export async function chatOnce(
+  messages: ChatMessage[],
+  opts?: { model?: string; signal?: AbortSignal },
+) {
   const key = `chat-once-${Date.now()}`;
   return chatConcurrency.startRequest(key, async (signal) => {
     const combinedSignal = opts?.signal ? combineSignals([opts.signal, signal]) : signal;

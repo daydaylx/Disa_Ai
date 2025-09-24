@@ -13,6 +13,7 @@ npm run changeset:add
 ```
 
 Dies startet einen interaktiven Dialog:
+
 - **Bump-Type wählen**: patch (bugfix), minor (feature), major (breaking)
 - **Beschreibung eingeben**: Was wurde geändert?
 
@@ -42,6 +43,7 @@ npm run changeset:publish  # Veröffentlicht neue Version
 ## Beispiel-Changesets
 
 ### Feature (minor)
+
 ```markdown
 ---
 "disa-ai": minor
@@ -51,6 +53,7 @@ Add offline-first E2E testing with Playwright fixtures
 ```
 
 ### Bugfix (patch)
+
 ```markdown
 ---
 "disa-ai": patch
@@ -60,6 +63,7 @@ Fix API key migration from localStorage to sessionStorage
 ```
 
 ### Breaking Change (major)
+
 ```markdown
 ---
 "disa-ai": major

@@ -11,38 +11,35 @@ interface ActiveRequest {
 
 class ConcurrencyManager {
   private activeRequests = new Map<string, ActiveRequest>();
-  
+
   /**
    * Start a new request, aborting any existing request with the same key
    */
-  startRequest<T>(
-    key: string,
-    requestFn: (signal: AbortSignal) => Promise<T>
-  ): Promise<T> {
+  startRequest<T>(key: string, requestFn: (signal: AbortSignal) => Promise<T>): Promise<T> {
     // Abort existing request with same key
     this.abortRequest(key);
-    
+
     const controller = new AbortController();
     const promise = requestFn(controller.signal);
-    
+
     const activeRequest: ActiveRequest = {
       controller,
       promise: promise.catch(() => {}), // Prevent unhandled rejection
       startedAt: Date.now(),
     };
-    
+
     this.activeRequests.set(key, activeRequest);
-    
+
     // Clean up when request completes (success or failure)
     void promise.finally(() => {
       if (this.activeRequests.get(key) === activeRequest) {
         this.activeRequests.delete(key);
       }
     });
-    
+
     return promise;
   }
-  
+
   /**
    * Abort an active request by key
    */
@@ -55,7 +52,7 @@ class ConcurrencyManager {
     }
     return false;
   }
-  
+
   /**
    * Abort all active requests
    */
@@ -64,14 +61,14 @@ class ConcurrencyManager {
       this.abortRequest(key);
     }
   }
-  
+
   /**
    * Check if a request is active for the given key
    */
   isRequestActive(key: string): boolean {
     return this.activeRequests.has(key);
   }
-  
+
   /**
    * Get info about active requests
    */
@@ -82,7 +79,7 @@ class ConcurrencyManager {
       duration: now - req.startedAt,
     }));
   }
-  
+
   /**
    * Clean up stale requests (older than maxAge)
    */

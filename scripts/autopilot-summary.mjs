@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync, existsSync, statSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, writeFileSync, existsSync, statSync } from "fs";
+import { join } from "path";
 
 /**
  * Autopilot Summary Generator
@@ -9,22 +9,22 @@ import { join } from 'path';
  */
 
 function parseAutopilotLog() {
-  const logPath = 'autopilot.log';
+  const logPath = "autopilot.log";
 
   if (!existsSync(logPath)) {
-    console.log('No autopilot.log found, creating basic summary');
+    console.log("No autopilot.log found, creating basic summary");
     return {
       eslintFixes: 0,
       prettierChanges: 0,
       cspFindings: [],
       buildStats: {},
       scriptResults: [],
-      errors: []
+      errors: [],
     };
   }
 
-  const logContent = readFileSync(logPath, 'utf-8');
-  const lines = logContent.split('\n');
+  const logContent = readFileSync(logPath, "utf-8");
+  const lines = logContent.split("\n");
 
   const results = {
     eslintFixes: 0,
@@ -32,14 +32,14 @@ function parseAutopilotLog() {
     cspFindings: [],
     buildStats: {},
     scriptResults: [],
-    errors: []
+    errors: [],
   };
 
   let currentSection = null;
 
   for (const line of lines) {
     // ESLint fixes
-    if (line.includes('✓') && line.includes('fixed')) {
+    if (line.includes("✓") && line.includes("fixed")) {
       const match = line.match(/(\d+)\s+problems?\s+fixed/);
       if (match) {
         results.eslintFixes += parseInt(match[1]);
@@ -47,33 +47,40 @@ function parseAutopilotLog() {
     }
 
     // Prettier changes
-    if (line.includes('prettier') && line.includes('wrote')) {
+    if (line.includes("prettier") && line.includes("wrote")) {
       results.prettierChanges++;
     }
 
     // CSP violations
-    if (line.includes('CSP violation') || line.includes('Content Security Policy')) {
+    if (line.includes("CSP violation") || line.includes("Content Security Policy")) {
       results.cspFindings.push(line.trim());
     }
 
     // Build stats
-    if (line.includes('dist/') && line.includes('kB')) {
+    if (line.includes("dist/") && line.includes("kB")) {
       const match = line.match(/(dist\/[^\s]+)\s+([0-9.]+)\s+kB/);
       if (match) {
-        results.buildStats[match[1]] = match[2] + ' kB';
+        results.buildStats[match[1]] = match[2] + " kB";
       }
     }
 
     // Script results
-    if (line.includes('setup-verify.mjs') || line.includes('setup-alias.mjs') || line.includes('csp-smoke.mjs')) {
+    if (
+      line.includes("setup-verify.mjs") ||
+      line.includes("setup-alias.mjs") ||
+      line.includes("csp-smoke.mjs")
+    ) {
       currentSection = line.trim();
-    } else if (currentSection && (line.includes('✓') || line.includes('✗') || line.includes('PASS') || line.includes('FAIL'))) {
+    } else if (
+      currentSection &&
+      (line.includes("✓") || line.includes("✗") || line.includes("PASS") || line.includes("FAIL"))
+    ) {
       results.scriptResults.push(`${currentSection}: ${line.trim()}`);
       currentSection = null;
     }
 
     // Errors
-    if (line.includes('Error:') || line.includes('ERROR') || line.includes('FAILED')) {
+    if (line.includes("Error:") || line.includes("ERROR") || line.includes("FAILED")) {
       results.errors.push(line.trim());
     }
   }
@@ -82,16 +89,16 @@ function parseAutopilotLog() {
 }
 
 function getBuildSize() {
-  const distPath = 'dist';
+  const distPath = "dist";
   if (!existsSync(distPath)) {
-    return 'N/A';
+    return "N/A";
   }
 
   try {
     const stats = statSync(distPath);
-    return `Build folder exists (${stats.isDirectory() ? 'directory' : 'file'})`;
+    return `Build folder exists (${stats.isDirectory() ? "directory" : "file"})`;
   } catch {
-    return 'N/A';
+    return "N/A";
   }
 }
 
@@ -108,7 +115,7 @@ function generatePRBody(results) {
 |----------|---------|
 | ESLint Fixes | ${results.eslintFixes} problems fixed |
 | Prettier | ${results.prettierChanges} files formatted |
-| Build Status | ${Object.keys(results.buildStats).length > 0 ? '✅ Success' : '⚠️ Check logs'} |
+| Build Status | ${Object.keys(results.buildStats).length > 0 ? "✅ Success" : "⚠️ Check logs"} |
 | Build Size | ${getBuildSize()} |
 
 `;
@@ -121,7 +128,7 @@ function generatePRBody(results) {
     for (const result of results.scriptResults) {
       body += `- ${result}\n`;
     }
-    body += '\n';
+    body += "\n";
   }
 
   // CSP Findings
@@ -134,7 +141,7 @@ function generatePRBody(results) {
     for (const finding of results.cspFindings) {
       body += `- \`${finding}\`\n`;
     }
-    body += '\n';
+    body += "\n";
   }
 
   // Build Stats
@@ -147,7 +154,7 @@ function generatePRBody(results) {
     for (const [file, size] of Object.entries(results.buildStats)) {
       body += `| \`${file}\` | ${size} |\n`;
     }
-    body += '\n';
+    body += "\n";
   }
 
   // Errors
@@ -158,7 +165,7 @@ function generatePRBody(results) {
     for (const error of results.errors) {
       body += `- \`${error}\`\n`;
     }
-    body += '\n';
+    body += "\n";
   }
 
   body += `### 🚀 Next Steps
@@ -175,23 +182,22 @@ function generatePRBody(results) {
 
 function main() {
   try {
-    console.log('Parsing autopilot logs...');
+    console.log("Parsing autopilot logs...");
     const results = parseAutopilotLog();
 
-    console.log('Generating PR body...');
+    console.log("Generating PR body...");
     const prBody = generatePRBody(results);
 
-    console.log('Writing pr-body.md...');
-    writeFileSync('pr-body.md', prBody, 'utf-8');
+    console.log("Writing pr-body.md...");
+    writeFileSync("pr-body.md", prBody, "utf-8");
 
-    console.log('Autopilot summary generated successfully');
+    console.log("Autopilot summary generated successfully");
     console.log(`- ESLint fixes: ${results.eslintFixes}`);
     console.log(`- Prettier changes: ${results.prettierChanges}`);
     console.log(`- CSP findings: ${results.cspFindings.length}`);
     console.log(`- Errors: ${results.errors.length}`);
-
   } catch (error) {
-    console.error('Error generating autopilot summary:', error.message);
+    console.error("Error generating autopilot summary:", error.message);
 
     // Fallback summary
     const fallbackBody = `## 🤖 Autopilot Maintenance Summary
@@ -214,7 +220,7 @@ Please check the workflow logs for detailed information.
 ---
 *Generated by Autopilot Workflow (fallback mode)*`;
 
-    writeFileSync('pr-body.md', fallbackBody, 'utf-8');
+    writeFileSync("pr-body.md", fallbackBody, "utf-8");
     process.exit(1);
   }
 }

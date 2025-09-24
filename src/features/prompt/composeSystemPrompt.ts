@@ -13,14 +13,12 @@ const STYLE_SNIPPETS: Record<StyleKey, string> = {
     "Antworte kollegial und respektvoll, aber präzise. Verwende Alltagssprache und halte dich kurz.",
   creative_light:
     "Erkläre mit kurzen Analogien/Beispielen. Bleibe präzise und handlungsorientiert.",
-  minimal:
-    "Antworte so kurz wie möglich, ohne Informationsverlust. Keine Ausschmückungen.",
+  minimal: "Antworte so kurz wie möglich, ohne Informationsverlust. Keine Ausschmückungen.",
   technical_precise:
     "Verwende präzise Fachterminologie. Strukturiere technische Erklärungen logisch und vollständig.",
   socratic:
     "Leite durch gezielte Fragen zur Erkenntnis. Fördere eigenständiges Denken statt direkter Antworten.",
-  bullet:
-    "Strukturiere Antworten als prägnante Bullet Points. Maximal 6 Punkte pro Liste.",
+  bullet: "Strukturiere Antworten als prägnante Bullet Points. Maximal 6 Punkte pro Liste.",
   step_by_step:
     "Erkläre in numerierten, aufeinander aufbauenden Schritten. Jeder Schritt klar und vollständig.",
   formal_de:
@@ -49,8 +47,13 @@ function roleOverlay(roleId: string | null): string {
   const purpose: string =
     r && typeof (r as any).purpose === "string"
       ? ((r as any).purpose as string)
-      : (r && (typeof (r as any).description === "string" ? ((r as any).description as string) :
-         typeof (r as any).desc === "string" ? ((r as any).desc as string) : "")) || "";
+      : (r &&
+          (typeof (r as any).description === "string"
+            ? ((r as any).description as string)
+            : typeof (r as any).desc === "string"
+              ? ((r as any).desc as string)
+              : "")) ||
+        "";
   const base = [
     "Feintuning: Ton=medium, Kürze=balanced, Humor=none, Emojis=nein.",
     "Priorität: Ehrlichkeit → Klarheit → Kürze.",

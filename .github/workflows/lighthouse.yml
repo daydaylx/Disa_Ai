@@ -1,38 +1,21 @@
 name: Lighthouse
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   lhci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: "22.x"
-          cache: npm
-
-      - name: Install deps
-        run: npm ci || npm install
-
-      - name: Install Playwright browsers (für Preview Rendering)
-        run: npx playwright install --with-deps
-
-      - name: Install Lighthouse CI
-        run: npm i -D @lhci/cli
-
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+      - name: Serve build
+        run: npx --yes serve -s dist & sleep 2
       - name: Run Lighthouse CI
-        run: npx lhci autorun --config=./lighthouserc.cjs
-
-      - name: Upload LHCI artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: lighthouse-report
-          path: ".lighthouseci/*"
-          if-no-files-found: ignore
+        run: npx --yes lhci autorun --upload.target=temporary-public-storage
