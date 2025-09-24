@@ -174,8 +174,8 @@ export function StyleSettings() {
                     <span className="text-sm font-semibold text-white">{styleData.name}</span>
                     {isActive && (
                       <div className="mt-1 flex items-center gap-1">
-                        <div className="bg-accent-500 h-2 w-2 rounded-full"></div>
-                        <span className="text-accent-400 text-xs font-medium">Active</span>
+                        <div className="h-2 w-2 rounded-full bg-accent-500"></div>
+                        <span className="text-xs font-medium text-accent-400">Active</span>
                       </div>
                     )}
                   </div>
@@ -202,8 +202,8 @@ export function StyleSettings() {
 
         <GlassCard variant="subtle" className="p-4">
           <div className="flex items-center gap-3">
-            <div className="bg-accent-500/20 flex h-10 w-10 items-center justify-center rounded-lg p-2">
-              <div className="bg-accent-400 h-4 w-4 rounded-sm"></div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-500/20 p-2">
+              <div className="h-4 w-4 rounded-sm bg-accent-400"></div>
             </div>
             <div>
               <div className="font-medium text-white">{STYLE_LABELS[currentStyle].name}</div>

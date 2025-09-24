@@ -17,20 +17,22 @@ function sseBody(parts: string[]) {
 describe("openrouter chatStream", () => {
   it("parst mehrere data-Frames + [DONE]", async () => {
     // @ts-expect-error stub fetch
-    global.fetch = vi.fn(() => Promise.resolve({
-      ok: true,
-      body: sseBody([
-        `data: {"choices":[{"delta":{"content":"Hal"}}]}
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        body: sseBody([
+          `data: {"choices":[{"delta":{"content":"Hal"}}]}
 
 `,
-        `data: {"choices":[{"delta":{"content":"lo"}}]}
+          `data: {"choices":[{"delta":{"content":"lo"}}]}
 
 `,
-        `data: [DONE]
+          `data: [DONE]
 
 `,
-      ]),
-    }));
+        ]),
+      }),
+    );
 
     // key bereitstellen
     localStorage.setItem("disa_api_key", "sk-test");

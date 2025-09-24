@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 /* eslint-disable no-empty */
 import { newId } from "../utils/id";

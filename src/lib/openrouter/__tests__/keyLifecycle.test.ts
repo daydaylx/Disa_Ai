@@ -1,4 +1,4 @@
-import { beforeEach,describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import { clearAllApiKeys, hasApiKey, readApiKey, writeApiKey } from "../key";
 
@@ -12,13 +12,13 @@ describe("API Key Lifecycle & Security", () => {
   describe("Secure Storage Migration", () => {
     it("should migrate from localStorage to sessionStorage", () => {
       const testKey = "sk-test-migration-key";
-      
+
       // Start with key in localStorage (legacy state)
       localStorage.setItem("disa_api_key", testKey);
-      
+
       // Reading key should migrate it to sessionStorage
       const retrievedKey = readApiKey();
-      
+
       expect(retrievedKey).toBe(testKey);
       expect(sessionStorage.getItem("disa_api_key")).toBe(testKey);
       expect(localStorage.getItem("disa_api_key")).toBeNull();
@@ -27,12 +27,12 @@ describe("API Key Lifecycle & Security", () => {
     it("should prefer sessionStorage over localStorage", () => {
       const sessionKey = "sk-session-key";
       const localKey = "sk-local-key";
-      
+
       localStorage.setItem("disa_api_key", localKey);
       sessionStorage.setItem("disa_api_key", sessionKey);
-      
+
       const retrievedKey = readApiKey();
-      
+
       expect(retrievedKey).toBe(sessionKey);
       // localStorage should remain untouched when sessionStorage has a key
       expect(localStorage.getItem("disa_api_key")).toBe(localKey);
@@ -41,17 +41,17 @@ describe("API Key Lifecycle & Security", () => {
     it("should handle migration failure gracefully", () => {
       const testKey = "sk-test-key";
       localStorage.setItem("disa_api_key", testKey);
-      
+
       // Mock sessionStorage to fail
       const originalSetItem = sessionStorage.setItem;
       sessionStorage.setItem = () => {
         throw new Error("Storage full");
       };
-      
+
       // Should still return the key despite migration failure
       const retrievedKey = readApiKey();
       expect(retrievedKey).toBe(testKey);
-      
+
       // Restore original method
       sessionStorage.setItem = originalSetItem;
     });
@@ -60,23 +60,23 @@ describe("API Key Lifecycle & Security", () => {
   describe("Key Expiry & Session Behavior", () => {
     it("should store keys only in sessionStorage", () => {
       const testKey = "sk-new-session-key";
-      
+
       writeApiKey(testKey);
-      
+
       expect(sessionStorage.getItem("disa_api_key")).toBe(testKey);
       expect(localStorage.getItem("disa_api_key")).toBeNull();
     });
 
     it("should clear keys from both storages on logout", () => {
       const testKey = "sk-clear-test-key";
-      
+
       // Set key in both storages
       sessionStorage.setItem("disa_api_key", testKey);
       localStorage.setItem("disa_api_key", testKey);
-      
+
       // Clear all keys
       clearAllApiKeys();
-      
+
       expect(sessionStorage.getItem("disa_api_key")).toBeNull();
       expect(localStorage.getItem("disa_api_key")).toBeNull();
       expect(hasApiKey()).toBe(false);
@@ -85,9 +85,9 @@ describe("API Key Lifecycle & Security", () => {
     it("should clear key when setting empty value", () => {
       const testKey = "sk-temp-key";
       sessionStorage.setItem("disa_api_key", testKey);
-      
+
       writeApiKey(""); // Empty string should clear
-      
+
       expect(hasApiKey()).toBe(false);
       expect(sessionStorage.getItem("disa_api_key")).toBeNull();
     });
@@ -96,24 +96,24 @@ describe("API Key Lifecycle & Security", () => {
   describe("Multiple Key Candidates", () => {
     it("should try all key candidates in order", () => {
       const testKey = "sk-fallback-key";
-      
+
       // Set key in a fallback location
       sessionStorage.setItem("OPENROUTER_API_KEY", testKey);
-      
+
       const retrievedKey = readApiKey();
       expect(retrievedKey).toBe(testKey);
     });
 
     it("should clear all candidates when logging out", () => {
       const testKey = "sk-multi-key";
-      
+
       // Set keys in multiple locations
       sessionStorage.setItem("disa_api_key", testKey);
       sessionStorage.setItem("openrouter_key", testKey);
       localStorage.setItem("OPENROUTER_API_KEY", testKey);
-      
+
       clearAllApiKeys();
-      
+
       expect(sessionStorage.getItem("disa_api_key")).toBeNull();
       expect(sessionStorage.getItem("openrouter_key")).toBeNull();
       expect(localStorage.getItem("OPENROUTER_API_KEY")).toBeNull();
@@ -124,14 +124,14 @@ describe("API Key Lifecycle & Security", () => {
     it("should handle malformed keys gracefully", () => {
       // Keys with quotes should be trimmed
       localStorage.setItem("disa_api_key", '"sk-quoted-key"');
-      
+
       const retrievedKey = readApiKey();
       expect(retrievedKey).toBe("sk-quoted-key");
     });
 
     it("should reject empty or whitespace-only keys", () => {
       localStorage.setItem("disa_api_key", "   ");
-      
+
       const retrievedKey = readApiKey();
       expect(retrievedKey).toBeNull();
     });
@@ -142,11 +142,11 @@ describe("API Key Lifecycle & Security", () => {
       sessionStorage.getItem = () => {
         throw new Error("Storage access denied");
       };
-      
+
       // Should return null gracefully
       const retrievedKey = readApiKey();
       expect(retrievedKey).toBeNull();
-      
+
       // Restore original method
       sessionStorage.getItem = originalGetItem;
     });

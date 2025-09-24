@@ -14,7 +14,7 @@ const tabs = [
   },
   {
     to: "/models",
-    label: "Models",
+    label: "Modelle",
     testId: "nav-bottom-models",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -24,7 +24,7 @@ const tabs = [
   },
   {
     to: "/settings",
-    label: "Settings",
+    label: "Einstellungen",
     testId: "nav-bottom-settings",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -42,7 +42,7 @@ export default function NavBar() {
       style={{ height: "var(--bottom-nav-h)" }}
       aria-label="Main Navigation"
     >
-      <div className="glass glass-depth-3 grid grid-cols-3 gap-2 rounded-t-2xl p-2 shadow-glass">
+      <div className="glass glass-depth-3 shadow-glass max-xs:grid-cols-1 max-xs:gap-1 grid grid-cols-3 gap-2 rounded-t-2xl p-2">
         {tabs.map((t) => {
           const active = location.pathname === t.to || (t.to === "/" && location.pathname === "/");
           return (
@@ -51,17 +51,17 @@ export default function NavBar() {
               to={t.to}
               aria-current={active ? "page" : undefined}
               className={[
-                "group transform rounded-xl border px-3 py-3 text-center text-sm font-medium tracking-wide transition-all duration-300 ease-out hover:scale-105",
+                "focus-visible:ring-accent-teal/50 group transform rounded-xl border px-3 py-3 text-center text-sm font-medium tracking-wide transition-all duration-300 ease-out hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
                 active
-                  ? "scale-105 border-accent-teal/50 bg-accent-teal/20 text-white shadow-lg shadow-accent-teal/25"
-                  : "bg-glass-surface/12 border-glass-border/30 text-text-secondary/90 hover:border-accent-teal/30 hover:bg-glass-surface/20 hover:text-text-primary/95 hover:shadow-md",
+                  ? "border-accent-teal/50 bg-accent-teal/20 shadow-accent-teal/25 scale-105 text-white shadow-lg"
+                  : "bg-glass-surface/12 border-glass-border/30 hover:border-accent-teal/30 hover:bg-glass-surface/20 text-text-secondary/90 hover:text-text-primary/95 hover:shadow-md",
               ].join(" ")}
               style={{ minHeight: 48 }}
               data-testid={t.testId}
             >
               <div className="flex flex-col items-center justify-center gap-1">
                 <div
-                  className={`transition-all duration-200 ${active ? "text-white" : "text-text-secondary/80 group-hover:text-accent-teal/90"}`}
+                  className={`transition-all duration-200 ${active ? "text-white" : "group-hover:text-accent-teal/90 text-text-secondary/80"}`}
                 >
                   {t.icon}
                 </div>

@@ -7,7 +7,7 @@ Configure these named checks in GitHub repository settings → Branches → Bran
 Add the following job names as required status checks:
 
 1. **Setup & Install** (`setup`)
-2. **Lint** (`lint`) 
+2. **Lint** (`lint`)
 3. **Typecheck** (`typecheck`)
 4. **Unit Tests** (`unit-tests`)
 5. **E2E Tests** (`e2e-tests`)

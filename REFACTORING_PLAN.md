@@ -42,7 +42,7 @@ Die Analyse des "Disa AI"-Projekts zeigt eine solide Codebasis mit guter statisc
 
 ### 3. Unbenutzte Dateien und Code entfernen
 
-- **Dateien/Orte**: `src/routes/Debug.tsx`, `src/ui2/` (teilweise), diverse ungenutzte Komponenten.
+- **Dateien/Orte**: `src/routes/Debug.tsx`, ~~`src/ui2/`~~ ✅ **ERLEDIGT**, diverse ungenutzte Komponenten.
 - **Problembeschreibung**: Es gibt ungenutzte Komponenten und Code-Teile, die die Codebasis unnötig vergrößern und die Wartung erschweren.
 - **Einstufung**: SINNVOLL (verbessert die Wartbarkeit)
 - **Akzeptanzkriterien**: `npm run build` läuft ohne Fehler und die ungenutzten Dateien sind gelöscht.
@@ -82,7 +82,7 @@ Die Analyse des "Disa AI"-Projekts zeigt eine solide Codebasis mit guter statisc
 │   ├───services/
 │   ├───state/
 │   ├───styles/
-│   ├───ui2/
+│   ├───ui/ (merged from ui2 ✅)
 │   └───views/
 ├───tests/
 └───tools/

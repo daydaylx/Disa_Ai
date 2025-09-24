@@ -129,89 +129,31 @@ export default function SettingsView() {
   };
 
   return (
-    <div className="flex h-full flex-col bg-background-primary">
+    <div className="bg-background-primary flex h-full flex-col">
       <header className="safe-pt safe-px sticky top-0 z-20 backdrop-blur-xl">
-        <div className="mx-auto max-w-6xl">
-          <div className="glass flex items-center justify-between rounded-2xl border-border-secondary px-6 py-4 shadow-glass">
+        <div className="mx-auto max-w-4xl">
+          <div className="glass border-border-secondary shadow-glass flex items-center justify-between rounded-2xl px-6 py-4">
             <div>
-              <div className="text-caption font-medium text-text-muted">Settings</div>
-              <h1 className="text-h2 font-bold tracking-tight text-text-primary">Control Center</h1>
+              <h1 className="text-h2 font-bold tracking-tight text-text-primary">Einstellungen</h1>
+            </div>
+            <div className="flex items-center gap-3 text-sm">
+              <div
+                className={`flex items-center gap-2 ${apiKey ? "text-green-400" : "text-orange-400"}`}
+              >
+                <div
+                  className={`h-2 w-2 rounded-full ${apiKey ? "bg-green-400" : "bg-orange-400"}`}
+                ></div>
+                <span>API {apiKey ? "verbunden" : "nicht konfiguriert"}</span>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="safe-px with-bottomnav flex-1 overflow-y-auto pt-section-gap">
-        <div className="mx-auto max-w-6xl space-y-section-gap">
-          {/* Control Center Header */}
-          <GlassCard variant="floating" tint="cyan" className="p-8">
-            <div className="text-center">
-              <h1 className="bg-gradient-to-r from-interactive-primary to-interactive-secondary bg-clip-text text-display font-bold tracking-tight text-transparent">
-                Settings
-              </h1>
-              <p className="mt-3 text-body font-medium text-text-secondary">
-                Configuration & Management
-              </p>
-            </div>
-
-            {/* Compact Status Overview */}
-            <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-              <div className="glass-card p-4 text-center transition-colors hover:bg-glass-surface/15">
-                <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20">
-                  <div
-                    className={`h-3 w-3 rounded-full ${apiKey ? "bg-green-400" : "bg-orange-400"}`}
-                  ></div>
-                </div>
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
-                  API
-                </div>
-                <div
-                  className={`text-xs font-semibold ${apiKey ? "text-green-400" : "text-orange-400"}`}
-                >
-                  {apiKey ? "Connected" : "Setup Required"}
-                </div>
-              </div>
-
-              <div className="glass-card p-4 text-center transition-colors hover:bg-glass-surface/15">
-                <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
-                  <div
-                    className={`h-3 w-3 rounded-full ${pwa.installed ? "bg-green-400" : "bg-blue-400"}`}
-                  ></div>
-                </div>
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
-                  App
-                </div>
-                <div
-                  className={`text-xs font-semibold ${pwa.installed ? "text-green-400" : "text-blue-400"}`}
-                >
-                  {pwa.installed ? "Installed" : "Web"}
-                </div>
-              </div>
-
-              <div className="glass-card p-4 text-center transition-colors hover:bg-glass-surface/15">
-                <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-teal-500/20">
-                  <div className="h-3 w-3 rounded-full bg-cyan-400"></div>
-                </div>
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
-                  Style
-                </div>
-                <div className="text-xs font-semibold text-cyan-400">Ready</div>
-              </div>
-
-              <div className="glass-card p-4 text-center transition-colors hover:bg-glass-surface/15">
-                <div className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-violet-500/20">
-                  <div className="h-3 w-3 rounded-full bg-purple-400"></div>
-                </div>
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400/80">
-                  Roles
-                </div>
-                <div className="text-xs font-semibold text-purple-400">Available</div>
-              </div>
-            </div>
-          </GlassCard>
-
+      <main className="safe-px with-bottomnav flex-1 overflow-y-auto pt-6">
+        <div className="mx-auto max-w-4xl space-y-6">
           {/* Tab Navigation */}
-          <GlassCard variant="medium" className="p-3">
+          <div className="bg-glass-surface/5 border-glass-border/20 rounded-2xl border p-3">
             <GlassTabs
               tabs={settingsTabs}
               activeTab={activeTab}
@@ -219,10 +161,10 @@ export default function SettingsView() {
               fullWidth
               variant="large"
             />
-          </GlassCard>
+          </div>
 
           {/* Tab Content */}
-          <div className="min-h-[60vh] space-y-content-gap">
+          <div className="space-y-6">
             {/* General Settings Tab */}
             <GlassTabPanel tabId="general" activeTab={activeTab}>
               <div className="grid gap-6 lg:grid-cols-2">
@@ -242,7 +184,7 @@ export default function SettingsView() {
                           setApiKeyState(e.target.value);
                           setKeyError(null);
                         }}
-                        className="glass-input w-full transition-all duration-200 focus:scale-[1.01] focus:shadow-lg focus:shadow-accent-teal/10"
+                        className="glass-input focus:shadow-accent-teal/10 w-full transition-all duration-200 focus:scale-[1.01] focus:shadow-lg"
                         data-testid="settings-save-key"
                       />
                       {keyError && <p className="mt-2 text-sm text-red-400">{keyError}</p>}
@@ -382,7 +324,7 @@ export default function SettingsView() {
           <GlassCard variant="soft" className="p-8">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="mb-2 text-h3 font-bold text-text-primary">Schnellaktionen</h3>
+                <h3 className="text-h3 mb-2 font-bold text-text-primary">Schnellaktionen</h3>
                 <p className="text-label text-text-secondary">
                   Einstellungen verwalten und zurücksetzen
                 </p>

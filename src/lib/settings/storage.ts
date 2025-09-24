@@ -49,7 +49,9 @@ export function saveSettings(patch: Partial<AppSettings>): AppSettings {
       localStorage.removeItem(KEYS.key);
     }
     localStorage.setItem(KEYS.model, next.defaultModelId || "");
-  } catch { /* Safe: storage operations können fehlschlagen */ }
+  } catch {
+    /* Safe: storage operations können fehlschlagen */
+  }
   return next;
 }
 
@@ -61,6 +63,8 @@ function applySideEffects(s: AppSettings): AppSettings {
       localStorage.removeItem(KEYS.key); // Migration: aus localStorage entfernen
     }
     localStorage.setItem(KEYS.model, s.defaultModelId || "");
-  } catch { /* Safe: storage operations können fehlschlagen */ }
+  } catch {
+    /* Safe: storage operations können fehlschlagen */
+  }
   return s;
 }

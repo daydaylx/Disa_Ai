@@ -14,7 +14,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({ className, children }) => {
         "animate-pulse rounded-md bg-gradient-to-r",
         "from-glass-surface/20 via-glass-surface/40 to-glass-surface/20",
         "bg-[length:200%_100%] backdrop-blur-sm",
-        "border border-glass-border/20",
+        "border-glass-border/20 border",
         className,
       )}
       style={{
@@ -104,12 +104,12 @@ export const ComposerSkeleton: React.FC = () => {
 export const LoadingDots: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div
-      className={cn("flex items-center space-x-1.5 text-accent-teal", className)}
+      className={cn("text-accent-teal flex items-center space-x-1.5", className)}
       aria-label="Lädt..."
     >
-      <div className="h-2 w-2 animate-bounce rounded-full bg-gradient-to-r from-accent-teal to-accent-violet shadow-sm [animation-delay:-0.4s]" />
-      <div className="h-2 w-2 animate-bounce rounded-full bg-gradient-to-r from-accent-violet to-accent-teal shadow-sm [animation-delay:-0.2s]" />
-      <div className="h-2 w-2 animate-bounce rounded-full bg-gradient-to-r from-accent-teal to-accent-violet shadow-sm" />
+      <div className="from-accent-teal to-accent-violet h-2 w-2 animate-bounce rounded-full bg-gradient-to-r shadow-sm [animation-delay:-0.4s]" />
+      <div className="from-accent-violet to-accent-teal h-2 w-2 animate-bounce rounded-full bg-gradient-to-r shadow-sm [animation-delay:-0.2s]" />
+      <div className="from-accent-teal to-accent-violet h-2 w-2 animate-bounce rounded-full bg-gradient-to-r shadow-sm" />
     </div>
   );
 };
@@ -161,7 +161,7 @@ export const GlassSpinner: React.FC<{ size?: "sm" | "md" | "lg"; className?: str
   return (
     <div
       className={cn(
-        "animate-spin rounded-full border-2 border-glass-border/20",
+        "border-glass-border/20 animate-spin rounded-full border-2",
         "border-r-accent-violet border-t-accent-teal",
         "shadow-sm backdrop-blur-sm",
         sizeClasses[size],

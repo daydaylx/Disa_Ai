@@ -1,4 +1,3 @@
- 
 const CANDIDATES = [
   "disa_api_key",
   "openrouter_key",
@@ -14,7 +13,7 @@ function safeGet(key: string): string | null {
       const trimmed = sessionVal.replace(/^"+|"+$/g, "").trim();
       return trimmed.length ? trimmed : null;
     }
-    
+
     // Fallback: localStorage (migrate to session)
     const localVal = localStorage.getItem(key);
     if (localVal) {
@@ -24,11 +23,13 @@ function safeGet(key: string): string | null {
         try {
           sessionStorage.setItem(key, trimmed);
           localStorage.removeItem(key);
-        } catch { /* Migration failed, keep in localStorage */ }
+        } catch {
+          /* Migration failed, keep in localStorage */
+        }
         return trimmed;
       }
     }
-    
+
     return null;
   } catch {
     return null;
@@ -57,7 +58,9 @@ export function writeApiKey(v: string | null | undefined): void {
         sessionStorage.removeItem(k);
         localStorage.removeItem(k);
       }
-    } catch { /* Safe: continue with next candidate */ }
+    } catch {
+      /* Safe: continue with next candidate */
+    }
   }
 }
 
@@ -67,7 +70,9 @@ export function clearAllApiKeys(): void {
     try {
       sessionStorage.removeItem(k);
       localStorage.removeItem(k);
-    } catch { /* Safe: continue with next candidate */ }
+    } catch {
+      /* Safe: continue with next candidate */
+    }
   }
 }
 

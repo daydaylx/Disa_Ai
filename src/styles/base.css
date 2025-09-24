@@ -17,9 +17,9 @@
   --muted: 148 163 184;
   --ring: 168 85 247;
 
-  --text-primary: 244 247 251;
-  --text-secondary: 204 212 224;
-  --text-muted: 162 174 191;
+  --text-primary: 248 250 252;
+  --text-secondary: 214 222 234;
+  --text-muted: 172 182 199;
 
   --glass-surface-rgb: 255 255 255;
   --glass-border-rgb: 255 255 255;
@@ -95,17 +95,14 @@ body {
 
 @layer utilities {
   .glass {
-    background-color: rgb(var(--glass-surface-rgb) / 0.08);
-    border: 1px solid rgb(var(--glass-border-rgb) / 0.18);
-    backdrop-filter: blur(var(--glass-backdrop-blur)) saturate(var(--glass-backdrop-saturation))
-      brightness(var(--glass-backdrop-brightness));
-    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur))
-      saturate(var(--glass-backdrop-saturation)) brightness(var(--glass-backdrop-brightness));
+    background-color: rgb(var(--glass-surface-rgb) / 0.12);
+    border: 1px solid rgb(var(--glass-border-rgb) / 0.25);
+    backdrop-filter: blur(8px) saturate(150%) brightness(105%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%) brightness(105%);
     box-shadow: var(--glass-shadow-soft);
     transition:
-      background-color 180ms ease,
-      border-color 180ms ease,
-      box-shadow 220ms ease;
+      background-color 120ms ease,
+      border-color 120ms ease;
   }
   /* Leselänge ~72 Zeichen */
   .max-measure {
@@ -166,6 +163,18 @@ pre {
 :focus-visible {
   outline: 2px solid rgb(var(--ring));
   outline-offset: 2px;
+}
+
+/* Respektiere Motion-Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Scrollbars dezent */

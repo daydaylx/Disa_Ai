@@ -7,8 +7,11 @@
   try {
     const s = new URLSearchParams(location.search);
     if (s.has("nuke-sw") || s.has("no-sw")) {
-      void navigator.serviceWorker?.getRegistrations?.().then((rs) => rs.forEach((r) => r.unregister()));
-      if ("caches" in window) void caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+      void navigator.serviceWorker
+        ?.getRegistrations?.()
+        .then((rs) => rs.forEach((r) => r.unregister()));
+      if ("caches" in window)
+        void caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
       const u = new URL(location.href);
       u.searchParams.delete("nuke-sw");
       u.searchParams.delete("no-sw");

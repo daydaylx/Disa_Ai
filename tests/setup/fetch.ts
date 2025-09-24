@@ -11,7 +11,7 @@ const mockFetch = (
   // The `ok` property is read-only, so we have to define it this way.
   Object.defineProperty(response, "ok", { value: options.ok });
 
-  return vi.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve(response));
+  return vi.spyOn(global, "fetch").mockImplementation(() => Promise.resolve(response));
 };
 
 export { mockFetch };
