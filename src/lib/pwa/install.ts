@@ -58,8 +58,12 @@ export async function promptInstall(): Promise<boolean> {
 // React-Hook optional (nutzt useSyncExternalStore, damit keine States rumhängen)
 export function usePwaInstall() {
   // lazy import to avoid requiring React here
-  // @ts-ignore
-  const React = require("react") as typeof import("react");
+  let React: typeof import("react");
+  try {
+    React = require("react");
+  } catch {
+    throw new Error("React is required for usePwaInstall hook");
+  }
   const { useSyncExternalStore, useCallback } = React;
   const subscribe = (cb: Listener) => {
     listeners.add(cb);
