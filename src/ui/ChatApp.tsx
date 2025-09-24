@@ -64,13 +64,23 @@ function Header({
 }
 
 /** ====== UI: Message Bubble ====== */
-function MessageBubble({ msg }: { msg: Message }) {
+function MessageBubble({
+  msg,
+  onCopy,
+  onRegenerate,
+  onDelete,
+}: {
+  msg: Message;
+  onCopy: () => void;
+  onRegenerate: () => void;
+  onDelete: () => void;
+}) {
   const mine = msg.role === "user";
   const base =
-    "max-w-md rounded-2xl px-6 py-4 text-body leading-relaxed break-words transition-all duration-200 hover:scale-[1.01] group";
-  const mineCls = "ml-auto bg-gray-800 text-text rounded-2xl p-4 shadow-lg";
+    "max-w-md rounded-2xl px-6 py-4 text-body leading-relaxed break-words transition-all duration-200 hover:scale-[1.01] group relative";
+  const mineCls = "ml-auto bg-bg-elevated text-text-default rounded-2xl p-4 shadow-lg";
   const otherCls =
-    "bg-gradient-to-r from-primary to-secondary text-white rounded-2xl p-4 shadow-[0_0_15px_rgba(168,85,247,0.5)]";
+    "bg-primary text-text-inverted rounded-2xl p-4 shadow-[0_0_15px_rgba(168,85,247,0.5)]";
 
   const segs = segmentMessage(msg.content);
 
@@ -88,8 +98,48 @@ function MessageBubble({ msg }: { msg: Message }) {
             </div>
           ),
         )}
-        <div className="text-caption mt-3 font-medium text-text-muted/70">
+        <div className="text-caption text-text-muted/70 mt-3 font-medium">
           {new Date(msg.ts).toLocaleTimeString()}
+        </div>
+        <div className="absolute right-2 top-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <button
+            onClick={onCopy}
+            data-testid="message.copy"
+            className="text-text-muted hover:text-text-default"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zM15 5H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7l-4-4zm3 16H8V7h7v5h5v7z"
+              />
+            </svg>
+          </button>
+          {!mine && (
+            <button
+              onClick={onRegenerate}
+              data-testid="message.regen"
+              className="text-text-muted hover:text-text-default"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                />
+              </svg>
+            </button>
+          )}
+          <button
+            onClick={onDelete}
+            data-testid="message.delete"
+            className="text-text-muted hover:text-red-500"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -126,7 +176,7 @@ function Composer({
   return (
     <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 20px)" }}>
       <div className="mx-auto max-w-4xl">
-        <div className="shadow-glass-strong hover:shadow-glass-strong rounded-2xl border border-glass-stroke bg-glass-bg p-4 backdrop-blur-lg transition-all duration-200">
+        <div className="shadow-glass-strong hover:shadow-glass-strong border-glass-stroke bg-glass-bg rounded-2xl border p-4 backdrop-blur-lg transition-all duration-200">
           <div id="composer-help" className="sr-only">
             Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
           </div>
@@ -146,7 +196,7 @@ function Composer({
                 }}
                 placeholder="Schreib was Sinnvolles…"
                 rows={1}
-                className="text-body w-full resize-none bg-transparent leading-relaxed text-text-primary outline-none ring-0 placeholder:text-text-muted/60 focus:ring-0"
+                className="text-body text-text-primary placeholder:text-text-muted/60 w-full resize-none bg-transparent leading-relaxed outline-none ring-0 focus:ring-0"
                 aria-label="Nachricht eingeben"
                 aria-describedby="composer-help"
                 data-testid="composer-input"
@@ -247,7 +297,7 @@ function ModelSheet({
       >
         <div className="glass-bg--strong border-glass-border-medium rounded-t-2xl border p-4 shadow-xl">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-h4 font-semibold text-text-primary">Modell wählen</h2>
+            <h2 className="text-h4 text-text-primary font-semibold">Modell wählen</h2>
             <button
               ref={closeBtn}
               onClick={onClose}
@@ -271,7 +321,7 @@ function ModelSheet({
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="font-medium text-text-primary">{m.label}</div>
+                  <div className="text-text-primary font-medium">{m.label}</div>
                   <div className="glass-badge glass-badge--accent">
                     {(m.pricing?.in ?? 0) === 0 ? "free" : `${m.pricing?.in ?? 0}$/1k`}
                   </div>
@@ -331,6 +381,32 @@ export default function ChatApp() {
       }
     };
   }, []);
+
+  const handleCopy = (content: string) => {
+    navigator.clipboard
+      .writeText(content)
+      .catch((err) => console.error("Failed to copy text: ", err));
+    toasts.push({
+      kind: "success",
+      title: "Copied!",
+      message: "Message content copied to clipboard.",
+    });
+  };
+
+  const handleRegenerate = () => {
+    // For now, just a placeholder
+    toasts.push({
+      kind: "info",
+      title: "Regenerate",
+      message: "This feature is not yet implemented.",
+    });
+  };
+
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this message?")) {
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+    }
+  };
 
   const send = async () => {
     const text = input.trim();
@@ -431,7 +507,14 @@ export default function ChatApp() {
           <div className="mx-auto h-full max-w-4xl">
             <VirtualMessageList
               items={messages}
-              renderItem={(m) => <MessageBubble msg={m} />}
+              renderItem={(m) => (
+                <MessageBubble
+                  msg={m}
+                  onCopy={() => handleCopy(m.content)}
+                  onRegenerate={handleRegenerate}
+                  onDelete={() => handleDelete(m.id)}
+                />
+              )}
               className="space-y-4 py-4"
               onSuggestionClick={(suggestion) => setInput(suggestion)}
             />

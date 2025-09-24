@@ -14,6 +14,10 @@ const LS = {
   ctxMax: "disa:ctx:maxTokens",
   ctxReserve: "disa:ctx:reserve",
   composerOffset: "disa:ui:composerOffset",
+  theme: "disa:ui:theme",
+  fontSize: "disa:ui:fontSize",
+  reduceMotion: "disa:ui:reduceMotion",
+  hapticFeedback: "disa:ui:hapticFeedback",
 } as const;
 
 /** Antwortstil-Presets */
@@ -193,6 +197,84 @@ export function setComposerOffset(n: number): void {
   try {
     const v = Math.min(96, Math.max(16, Math.floor(n || 0)));
     localStorage.setItem(LS.composerOffset, String(v));
+  } catch {
+    /* Safe: fallback to default */
+  }
+}
+
+/** UI Theme */
+export function getTheme(): "light" | "dark" | "system" {
+  try {
+    const raw = localStorage.getItem(LS.theme) as "light" | "dark" | "system" | null;
+    return raw ?? "system";
+  } catch {
+    return "system";
+  }
+}
+export function setTheme(v: "light" | "dark" | "system"): void {
+  try {
+    localStorage.setItem(LS.theme, v);
+    // Apply theme
+    if (v === "system") {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.classList.toggle("dark", prefersDark);
+    } else {
+      document.documentElement.classList.toggle("dark", v === "dark");
+    }
+  } catch {
+    /* Safe: fallback to default */
+  }
+}
+
+/** Font Size */
+export function getFontSize(): number {
+  try {
+    const raw = Number(localStorage.getItem(LS.fontSize));
+    return Number.isFinite(raw) && raw >= 12 && raw <= 24 ? raw : 16;
+  } catch {
+    return 16;
+  }
+}
+export function setFontSize(n: number): void {
+  try {
+    const v = Math.max(12, Math.min(24, Math.floor(n || 0)));
+    localStorage.setItem(LS.fontSize, String(v));
+    document.documentElement.style.fontSize = `${v}px`;
+  } catch {
+    /* Safe: fallback to default */
+  }
+}
+
+/** Reduce Motion */
+export function getReduceMotion(): boolean {
+  try {
+    const raw = localStorage.getItem(LS.reduceMotion);
+    return raw === "true";
+  } catch {
+    return false;
+  }
+}
+export function setReduceMotion(v: boolean): void {
+  try {
+    localStorage.setItem(LS.reduceMotion, v ? "true" : "false");
+    document.body.classList.toggle("reduce-motion", v);
+  } catch {
+    /* Safe: fallback to default */
+  }
+}
+
+/** Haptic Feedback */
+export function getHapticFeedback(): boolean {
+  try {
+    const raw = localStorage.getItem(LS.hapticFeedback);
+    return raw === "true";
+  } catch {
+    return false;
+  }
+}
+export function setHapticFeedback(v: boolean): void {
+  try {
+    localStorage.setItem(LS.hapticFeedback, v ? "true" : "false");
   } catch {
     /* Safe: fallback to default */
   }
