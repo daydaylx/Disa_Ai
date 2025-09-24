@@ -407,7 +407,7 @@
 
   .btn:focus-visible {
     outline: none;
-    box-shadow: var(--focus-ring-shadow);
+    box-shadow: 0 0 0 2px theme("colors.primary");
   }
 
   .btn:disabled {

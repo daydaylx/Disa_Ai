@@ -22,31 +22,41 @@ function Header({
   return (
     <header className="safe-pt safe-px sticky top-0 z-20 backdrop-blur-xl" role="banner">
       <div className="mx-auto max-w-4xl">
-        <div className="glass-bg--medium border-border-secondary flex items-center justify-between rounded-2xl border px-6 py-4 shadow-lg backdrop-blur-xl">
-          <div className="flex items-center gap-4">
-            <div
-              className="border-border-tertiary from-interactive-secondary/20 to-interactive-primary/20 grid size-10 place-items-center rounded-xl border bg-gradient-to-br"
-              aria-hidden
+        <div className="glass-backdrop--strong border-glass-border-medium shadow-glass-strong hover:shadow-glass-strong relative overflow-hidden rounded-2xl px-8 py-6 transition-all duration-200">
+          {/* Dynamic Background Gradient */}
+          <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-orange-500/10 opacity-50"></div>
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-pink-400/50 bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-lg shadow-pink-500/25 transition-all duration-200 hover:rotate-6 hover:scale-110">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  className="text-white drop-shadow-lg"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M12 3c5.5 0 10 3.58 10 8s-4.5 8-10 8c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.13 2 11c0-4.42 4.5-8 10-8Z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h1 className="bg-gradient-to-r from-purple-200 via-pink-200 to-orange-200 bg-clip-text text-2xl font-bold tracking-tight text-transparent">
+                  {title}
+                </h1>
+                <p className="text-sm font-medium text-pink-200/90">
+                  KI-Assistent für professionelle Gespräche
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onOpenModels}
+              className="rounded-xl border border-pink-400/30 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:from-purple-400 hover:via-pink-400 hover:to-orange-400 hover:shadow-xl"
+              aria-label="Modell auswählen"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" className="text-interactive-primary">
-                <path
-                  fill="currentColor"
-                  d="M12 2a7 7 0 0 0-7 7v4l-1.5 3A1 1 0 0 0 4.4 17H19.6a1 1 0 0 0 .9-1.5L19 13V9a7 7 0 0 0-7-7Z"
-                />
-              </svg>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-caption text-text-muted">Chat</span>
-              <h1 className="text-h3 font-bold text-text-primary">{title}</h1>
-            </div>
+              <span className="drop-shadow-sm">{modelName}</span>
+            </button>
           </div>
-          <button
-            onClick={onOpenModels}
-            className="glass-button glass-button--secondary glass-button--sm hover:bg-interactive-primary/8 text-label rounded-xl px-4 py-3 font-medium transition-all duration-200"
-            aria-label="Modell auswählen"
-          >
-            {modelName}
-          </button>
         </div>
       </div>
     </header>
@@ -57,11 +67,10 @@ function Header({
 function MessageBubble({ msg }: { msg: Message }) {
   const mine = msg.role === "user";
   const base =
-    "max-w-prose rounded-2xl px-5 py-3 text-body leading-relaxed break-words transition-all duration-200";
-  const mineCls =
-    "ml-auto rounded-br-lg glass-tint--cyan text-white shadow-xl backdrop-blur-md border border-interactive-primary/40";
+    "max-w-md rounded-2xl px-6 py-4 text-body leading-relaxed break-words transition-all duration-200 hover:scale-[1.01] group";
+  const mineCls = "ml-auto bg-gray-800 text-text rounded-2xl p-4 shadow-lg";
   const otherCls =
-    "glass-bg--medium border border-border-secondary rounded-bl-lg text-text-primary shadow-lg backdrop-blur-md";
+    "bg-gradient-to-r from-primary to-secondary text-white rounded-2xl p-4 shadow-[0_0_15px_rgba(168,85,247,0.5)]";
 
   const segs = segmentMessage(msg.content);
 
@@ -115,9 +124,9 @@ function Composer({
   }, [value]);
 
   return (
-    <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 16px)" }}>
+    <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 20px)" }}>
       <div className="mx-auto max-w-4xl">
-        <div className="glass-bg--medium border-border-secondary rounded-2xl border p-6 shadow-lg backdrop-blur-xl">
+        <div className="shadow-glass-strong hover:shadow-glass-strong rounded-2xl border border-glass-stroke bg-glass-bg p-4 backdrop-blur-lg transition-all duration-200">
           <div id="composer-help" className="sr-only">
             Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
           </div>
@@ -127,6 +136,14 @@ function Composer({
                 ref={taRef}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                    e.preventDefault();
+                    if (value.trim() && canSend && !streaming) {
+                      onSend();
+                    }
+                  }
+                }}
                 placeholder="Schreib was Sinnvolles…"
                 rows={1}
                 className="text-body w-full resize-none bg-transparent leading-relaxed text-text-primary outline-none ring-0 placeholder:text-text-muted/60 focus:ring-0"
@@ -307,6 +324,11 @@ export default function ChatApp() {
     })();
     return () => {
       alive = false;
+      // Cleanup: Abort any ongoing stream when component unmounts
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
     };
   }, []);
 
