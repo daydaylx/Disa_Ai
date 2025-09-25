@@ -6,7 +6,7 @@ import { GlassCard } from "../../components/glass/GlassCard";
 import Switch from "../../components/Switch";
 import Accordion, { type AccordionItem } from "../../components/ui/Accordion";
 import BottomSheet from "../../components/ui/BottomSheet";
-import Card from "../../components/ui/Card";
+import { Card, CardDescription, CardHeader, CardTitle } from "../../components/ui/Card";
 import { useToasts } from "../../components/ui/Toast";
 import {
   getNSFW,
@@ -180,9 +180,7 @@ export default function SettingsStyle() {
               return (
                 <Card
                   key={styleKey}
-                  title={style.name}
-                  meta={style.description}
-                  active={isActive}
+                  className={cn(isActive && "ring-2 ring-primary", "cursor-pointer")}
                   onClick={() => {
                     setSheet({
                       title: style.name,
@@ -191,7 +189,12 @@ export default function SettingsStyle() {
                     });
                     setSheetOpen(true);
                   }}
-                />
+                >
+                  <CardHeader>
+                    <CardTitle>{style.name}</CardTitle>
+                    <CardDescription>{style.description}</CardDescription>
+                  </CardHeader>
+                </Card>
               );
             })}
           </div>
@@ -211,7 +214,7 @@ export default function SettingsStyle() {
           </div>
           <div>
             <div className="flex items-center gap-2 font-medium text-white">
-              <span className="text-xs uppercase tracking-wider text-accent-400">Current</span>
+              <span className="text-accent-400 text-xs uppercase tracking-wider">Current</span>
               {STYLE_LABELS[currentStyle].name}
             </div>
             <div className="text-sm text-gray-400">{STYLE_LABELS[currentStyle].description}</div>
