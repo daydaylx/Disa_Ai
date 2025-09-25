@@ -22,7 +22,7 @@ function Header({
   return (
     <header className="safe-pt safe-px sticky top-0 z-20 backdrop-blur-xl" role="banner">
       <div className="mx-auto max-w-4xl">
-        <div className="glass-backdrop--strong border-glass-border-medium shadow-glass-strong hover:shadow-glass-strong relative overflow-hidden rounded-2xl px-8 py-6 transition-all duration-200">
+        <div className="glass-backdrop--strong shadow-glass-strong hover:shadow-glass-strong relative overflow-hidden rounded-2xl border-glass-border-medium px-8 py-6 transition-all duration-200">
           {/* Dynamic Background Gradient */}
           <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-orange-500/10 opacity-50"></div>
           <div className="relative flex items-center justify-between">
@@ -53,6 +53,7 @@ function Header({
               onClick={onOpenModels}
               className="rounded-xl border border-pink-400/30 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:from-purple-400 hover:via-pink-400 hover:to-orange-400 hover:shadow-xl"
               aria-label="Modell auswählen"
+              data-testid="model.select"
             >
               <span className="drop-shadow-sm">{modelName}</span>
             </button>
@@ -76,71 +77,99 @@ function MessageBubble({
   onDelete: () => void;
 }) {
   const mine = msg.role === "user";
+  const isError = msg.content.startsWith("Fehler:");
+  const isLoading = msg.content === "…";
+
   const base =
     "max-w-md rounded-2xl px-6 py-4 text-body leading-relaxed break-words transition-all duration-200 hover:scale-[1.01] group relative";
-  const mineCls = "ml-auto bg-bg-elevated text-text-default rounded-2xl p-4 shadow-lg";
-  const otherCls =
-    "bg-primary text-text-inverted rounded-2xl p-4 shadow-[0_0_15px_rgba(168,85,247,0.5)]";
+
+  const mineCls = "ml-auto bg-bg-elevated text-text-default shadow-lg";
+  const otherCls = isError
+    ? "bg-danger/10 text-danger border border-danger/20"
+    : "bg-primary text-text-inverted shadow-[0_0_15px_rgba(168,85,247,0.5)]";
 
   const segs = segmentMessage(msg.content);
 
   return (
-    <div className={`flex w-full ${mine ? "justify-end" : "justify-start"} group`}>
+    <div
+      className={`flex w-full ${mine ? "justify-end" : "justify-start"} group`}
+      data-testid="message.item"
+    >
       <div className={`chat-bubble ${base} ${mine ? mineCls : otherCls} hover:shadow-xl`}>
-        {segs.map((s, i) =>
-          s.type === "text" ? (
-            <div key={i} className="whitespace-pre-wrap">
-              {s.content}
+        {isLoading ? (
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1">
+              <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.3s]"></div>
+              <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]"></div>
+              <div className="h-2 w-2 animate-bounce rounded-full bg-current"></div>
             </div>
-          ) : (
-            <div key={i} className="-mx-2 mt-4">
-              <CodeBlock code={s.content} lang={s.lang} />
-            </div>
-          ),
+            <span className="text-sm opacity-75">AI antwortet...</span>
+          </div>
+        ) : (
+          segs.map((s, i) =>
+            s.type === "text" ? (
+              <div key={i} className="whitespace-pre-wrap">
+                {s.content}
+              </div>
+            ) : (
+              <div key={i} className="-mx-2 mt-4">
+                <CodeBlock code={s.content} lang={s.lang} />
+              </div>
+            ),
+          )
         )}
-        <div className="text-caption text-text-muted/70 mt-3 font-medium">
-          {new Date(msg.ts).toLocaleTimeString()}
-        </div>
-        <div className="absolute right-2 top-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-          <button
-            onClick={onCopy}
-            data-testid="message.copy"
-            className="text-text-muted hover:text-text-default"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24">
-              <path
-                fill="currentColor"
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zM15 5H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7l-4-4zm3 16H8V7h7v5h5v7z"
-              />
-            </svg>
-          </button>
-          {!mine && (
+
+        {!isLoading && (
+          <div className="text-caption text-text-muted/70 mt-3 font-medium">
+            {new Date(msg.ts).toLocaleTimeString()}
+          </div>
+        )}
+
+        {!isLoading && (
+          <div className="absolute right-2 top-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
             <button
-              onClick={onRegenerate}
-              data-testid="message.regen"
-              className="text-text-muted hover:text-text-default"
+              onClick={onCopy}
+              data-testid="message.copy"
+              className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-black/10 hover:text-text-default"
+              title="Nachricht kopieren"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="currentColor"
-                  d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zM15 5H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7l-4-4zm3 16H8V7h7v5h5v7z"
                 />
               </svg>
             </button>
-          )}
-          <button
-            onClick={onDelete}
-            data-testid="message.delete"
-            className="text-text-muted hover:text-red-500"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24">
-              <path
-                fill="currentColor"
-                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
-              />
-            </svg>
-          </button>
-        </div>
+            {!mine && (
+              <button
+                onClick={onRegenerate}
+                data-testid="message.regen"
+                className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-black/10 hover:text-text-default"
+                title="Antwort neu generieren"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                  />
+                </svg>
+              </button>
+            )}
+            <button
+              onClick={onDelete}
+              data-testid="message.delete"
+              className="hover:bg-danger/10 rounded-lg p-1.5 text-text-muted transition-colors hover:text-danger"
+              title="Nachricht löschen"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -295,7 +324,7 @@ function ModelSheet({
           open ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        <div className="glass-bg--strong border-glass-border-medium rounded-t-2xl border p-4 shadow-xl">
+        <div className="glass-bg--strong rounded-t-2xl border border-glass-border-medium p-4 shadow-xl">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-h4 text-text-primary font-semibold">Modell wählen</h2>
             <button
@@ -405,6 +434,11 @@ export default function ChatApp() {
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this message?")) {
       setMessages((prev) => prev.filter((m) => m.id !== id));
+      toasts.push({
+        kind: "success",
+        title: "Nachricht gelöscht",
+        message: "Die Nachricht wurde erfolgreich entfernt.",
+      });
     }
   };
 
@@ -475,10 +509,26 @@ export default function ChatApp() {
       setMessages((prev) =>
         prev.map((m) => (m.id === assistantId ? { ...m, content: `Fehler: ${errorMessage}` } : m)),
       );
+
+      // Enhanced error handling with retry option
+      const isNetworkError = error?.name === "NetworkError" || errorMessage.includes("network");
       toasts.push({
         kind: "error",
-        title: "Antwort fehlgeschlagen",
-        message: errorMessage,
+        title: isNetworkError ? "Verbindungsfehler" : "Antwort fehlgeschlagen",
+        message: isNetworkError
+          ? "Keine Internetverbindung. Versuche es erneut, wenn du wieder online bist."
+          : errorMessage,
+        action: isNetworkError
+          ? {
+              label: "Erneut versuchen",
+              onClick: () => {
+                // Remove error message and retry
+                setMessages((prev) => prev.filter((m) => m.id !== assistantId));
+                setInput(text);
+                setTimeout(() => send(), 100);
+              },
+            }
+          : undefined,
       });
     }
   };
