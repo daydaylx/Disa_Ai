@@ -1,3 +1,4 @@
+// Isolated Playwright config to avoid conflicts with Vitest
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
@@ -14,18 +15,7 @@ export default defineConfig({
     trace: "retain-on-failure",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
-    // Fixed mobile viewport - no randomness
     viewport: { width: 390, height: 844 },
-    // Disable device scaling and mobile emulation for consistency
-    deviceScaleFactor: 1,
-    isMobile: false,
-    hasTouch: false,
-    // Force consistent browser settings
-    ignoreHTTPSErrors: true,
-    bypassCSP: false,
-    // Consistent user agent
-    userAgent:
-      "Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36 Playwright-Test",
   },
 
   webServer: {

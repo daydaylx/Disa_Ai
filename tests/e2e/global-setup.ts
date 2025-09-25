@@ -4,6 +4,9 @@ import type { Page } from "@playwright/test";
  * Set up complete test environment with API mocking and authentication
  */
 export async function setupTestEnvironment(page: Page) {
+  // Clear Service Worker cache before each test run
+  await clearServiceWorkerCache(page);
+
   // Set up API key before navigation
   await page.addInitScript(() => {
     sessionStorage.setItem("disa:api-key", "mock-api-key-for-testing");
@@ -11,6 +14,37 @@ export async function setupTestEnvironment(page: Page) {
 
   // Set up API mocking
   await setupApiMocking(page);
+}
+
+/**
+ * Clear Service Worker caches to ensure clean test state
+ */
+export async function clearServiceWorkerCache(page: Page) {
+  await page.addInitScript(() => {
+    // Clear all caches
+    if ("caches" in window) {
+      caches.keys().then((cacheNames) => {
+        return Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+      });
+    }
+
+    // Unregister service workers
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (const registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+
+    // Clear localStorage and sessionStorage except API key
+    const apiKey = sessionStorage.getItem("disa:api-key");
+    localStorage.clear();
+    sessionStorage.clear();
+    if (apiKey) {
+      sessionStorage.setItem("disa:api-key", apiKey);
+    }
+  });
 }
 
 /**

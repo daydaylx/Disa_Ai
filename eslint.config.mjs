@@ -22,6 +22,7 @@ prettier, // Global ignores
     "build/**",
     "coverage/**",
     "node_modules/**",
+    ".storybook/**", // Ignore Storybook configuration
     "src/lib/openrouter.ts", // Legacy client
     "*.config.js",
     "*.config.ts",
