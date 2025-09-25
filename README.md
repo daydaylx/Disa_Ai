@@ -5,12 +5,14 @@ Eine moderne, professionelle Chat-App für KI-Modelle mit Android-optimierter UX
 **Live:** https://disaai.pages.dev/
 **Repository:** https://github.com/daydaylx/Disa_Ai
 
-> Stand: 23. September 2025
+> Stand: 25. September 2025
 
-## ✅ Production Status
+## ⚠️ Production Status
+
+**Achtung:** Die E2E-Tests schlagen aktuell aufgrund eines Konfigurationsproblems fehl.
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Tests](https://img.shields.io/badge/tests-101%2F101-brightgreen)
+![Tests](https://img.shields.io/badge/tests-failing-red)
 ![Coverage](https://img.shields.io/badge/coverage-15.78%25-yellow)
 ![Security](https://img.shields.io/badge/security-compliant-brightgreen)
 ![TypeScript](https://img.shields.io/badge/typescript-100%25-blue)
@@ -446,23 +448,17 @@ npm run test:e2e
 
 ### 📂 Korrekte Style-Import-Reihenfolge
 
-**Essentiell:** Styles müssen in `src/main.tsx` genau in dieser Reihenfolge geladen werden:
+**Essentiell:** Styles müssen in `src/App.tsx` genau in dieser Reihenfolge geladen werden, um die korrekte Kaskade sicherzustellen:
 
 ```typescript
-import "./ui/base.css"; // 1. Reset & Basis-Styles
-import "./styles/design-tokens.css"; // 2. Futuristische Design-Tokens
-import "./styles/base.css"; // 3. Base-Styles und Variablen
-import "./styles/theme.css"; // 4. Dark-Glass Theme mit Atmospheric Background
-import "./styles/glass-components.css"; // 5. Glassmorphism-Komponenten & Holographic Orbs
-import "./styles/aurora.css"; // 6. Aurora-Effekte und Visual-Effects
-import "./styles/mobile-glass.css"; // 7. Mobile-spezifische Glass-Optimierungen
-import "./styles/chat-glass.css"; // 8. Chat-spezifische Glass-Styles
-import "./styles/visual-effects.css"; // 9. Advanced Visual Effects
-import "./styles/interactive-effects.css"; // 10. Interactive Animations
-import "./ui/overlap-guard"; // 11. Navigation Overlap Protection
+import "./styles/tailwind.css";
+import "./ui/base.css";
+import "./styles/globals.css";
+import "./styles/legacy-buttons.css";
+import "./styles/glass-components.css";
+import "./styles/brand.css";
+import "./styles/chat.css";
 ```
-
-**Kritisch:** Diese Reihenfolge gewährleistet korrekte CSS-Kaskade und verhindert Design-Token-Konflikte.
 
 **React-Root-Setup:**
 Der React-Root (`#root`) erhält automatisch das Dark-Glass Theme mit atmosphärischen Hintergründen und futuristischen Glassmorphism-Effekten für eine immersive AI-Erfahrung.
