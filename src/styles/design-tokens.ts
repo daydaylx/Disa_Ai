@@ -66,6 +66,39 @@ export const colors = {
       soft: "0 18px 48px -24px rgba(5, 9, 15, 0.55)",
     },
   },
+  corporate: {
+    background: {
+      primary: "#000711",
+      secondary: "#0a0f1c",
+      elevated: "#0f1729",
+      card: "#141b2e",
+      hover: "#1a2235",
+    },
+    text: {
+      primary: "#f8fafc",
+      secondary: "#cbd5e1",
+      muted: "#94a3b8",
+      accent: "#60a5fa",
+    },
+    border: {
+      primary: "#1e293b",
+      secondary: "#334155",
+      accent: "#475569",
+    },
+    accent: {
+      primary: "#3b82f6",
+      secondary: "#1d4ed8",
+      success: "#10b981",
+      warning: "#f59e0b",
+      danger: "#ef4444",
+      purple: "#8b5cf6",
+    },
+    glow: {
+      blue: "0 0 20px rgba(59, 130, 246, 0.3)",
+      purple: "0 0 20px rgba(139, 92, 246, 0.3)",
+      green: "0 0 20px rgba(16, 185, 129, 0.3)",
+    },
+  },
 } as const;
 
 export type ColorRamp = typeof colors.neutral;

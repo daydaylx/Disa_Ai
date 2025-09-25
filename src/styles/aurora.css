@@ -37,9 +37,9 @@
 .aurora-layer--primary {
   background: radial-gradient(
     circle,
-    rgba(34, 211, 238, 0.4) 0%,
-    rgba(147, 197, 253, 0.3) 30%,
-    rgba(34, 211, 238, 0.2) 60%,
+    var(--aurora-cyan) 0%,
+    var(--aurora-blue) 30%,
+    var(--aurora-cyan-dim) 60%,
     transparent 100%
   );
   top: -50%;
@@ -51,9 +51,9 @@
 .aurora-layer--secondary {
   background: radial-gradient(
     circle,
-    rgba(179, 136, 255, 0.4) 0%,
-    rgba(139, 92, 246, 0.3) 30%,
-    rgba(168, 85, 247, 0.2) 60%,
+    var(--aurora-purple-bright) 0%,
+    var(--aurora-violet-bright) 30%,
+    var(--aurora-purple-dim) 60%,
     transparent 100%
   );
   top: -30%;
@@ -65,9 +65,9 @@
 .aurora-layer--tertiary {
   background: radial-gradient(
     circle,
-    rgba(110, 231, 183, 0.3) 0%,
-    rgba(52, 211, 153, 0.2) 30%,
-    rgba(110, 231, 183, 0.15) 60%,
+    var(--aurora-mint) 0%,
+    var(--aurora-emerald) 30%,
+    var(--aurora-mint-dim) 60%,
     transparent 100%
   );
   bottom: -30%;
@@ -106,25 +106,25 @@
   position: absolute;
   width: 2px;
   height: 2px;
-  background: rgba(34, 211, 238, 0.8);
+  background: var(--aurora-cyan-dot);
   border-radius: 50%;
   animation: particle-float 15s linear infinite;
-  box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
+  box-shadow: 0 0 6px var(--aurora-cyan-shadow);
   /* GPU Performance Optimizations */
   will-change: transform;
   transform: translate3d(0, 0, 0);
 }
 
 .aurora-particle:nth-child(2n) {
-  background: rgba(179, 136, 255, 0.8);
-  box-shadow: 0 0 6px rgba(179, 136, 255, 0.6);
+  background: var(--aurora-purple-dot);
+  box-shadow: 0 0 6px var(--aurora-purple-shadow);
   animation-duration: 18s;
   animation-delay: -3s;
 }
 
 .aurora-particle:nth-child(3n) {
-  background: rgba(110, 231, 183, 0.8);
-  box-shadow: 0 0 6px rgba(110, 231, 183, 0.6);
+  background: var(--aurora-mint-dot);
+  box-shadow: 0 0 6px var(--aurora-mint-shadow);
   animation-duration: 22s;
   animation-delay: -7s;
 }
@@ -154,9 +154,9 @@
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(179, 136, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(110, 231, 183, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, var(--aurora-cyan-dim) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--aurora-purple-dim) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, var(--aurora-mint-dim) 0%, transparent 50%);
   animation: mesh-pulse 8s ease-in-out infinite;
 }
 
@@ -211,8 +211,8 @@
 .glass-backdrop {
   backdrop-filter: blur(28px) saturate(190%) brightness(105%);
   -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(105%);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--aurora-overlay-subtle);
+  border: 1px solid var(--aurora-overlay-border);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
