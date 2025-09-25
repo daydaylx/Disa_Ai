@@ -33,7 +33,15 @@ const InteractiveComposer = (args: Story["args"]) => {
     args.onChange(newValue);
   };
 
-  return <Composer {...args} value={value} onChange={handleChange} />;
+  return (
+    <Composer
+      {...args}
+      value={value}
+      onChange={handleChange}
+      streaming={args?.streaming ?? false}
+      canSend={args?.canSend ?? true}
+    />
+  );
 };
 
 export const Default: Story = {

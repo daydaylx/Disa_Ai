@@ -23,8 +23,10 @@ const MessageBubble = React.forwardRef<HTMLDivElement, MessageBubbleProps>(
     );
 
     return (
-      <div ref={ref} className={wrapperClasses} {...props}>
-        <div className={bubbleClasses}>{children}</div>
+      <div ref={ref} className={wrapperClasses} data-testid="message-bubble" {...props}>
+        <div className={bubbleClasses} data-testid="message-content">
+          {children}
+        </div>
       </div>
     );
   },

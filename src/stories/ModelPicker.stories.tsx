@@ -3,7 +3,6 @@ import React from "react";
 import { vi } from "vitest";
 
 import ModelPicker from "../components/ModelPicker";
-import * as modelCatalog from "../config/models";
 
 // Mock the model catalog
 const mockModels = [
@@ -63,8 +62,10 @@ const mockModels = [
   },
 ];
 
-// Properly mock the module function using Vitest
-vi.spyOn(modelCatalog, "loadModelCatalog").mockResolvedValue(mockModels);
+// Mock using vi.mock instead of vi.spyOn for ESM compatibility
+vi.mock("../config/models", () => ({
+  loadModelCatalog: vi.fn().mockResolvedValue(mockModels),
+}));
 
 const meta: Meta<typeof ModelPicker> = {
   title: "App/ModelPicker",

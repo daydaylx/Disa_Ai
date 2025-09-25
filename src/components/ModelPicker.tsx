@@ -81,9 +81,9 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   const [onlyFree, setOnlyFree] = React.useState<boolean>(() => !getApiKey());
   const [onlyCode, setOnlyCode] = React.useState<boolean>(false);
   const [onlyFavorites, setOnlyFavorites] = React.useState<boolean>(false);
-  const [minCtx, setMinCtx] = React.useState<number>(0);
-  const [policy, setPolicy] = React.useState<"any" | "free" | "moderate" | "strict">("any");
-  const [cost, setCost] = React.useState<"all" | "free" | "low" | "med" | "high">("all");
+  const [minCtx, _setMinCtx] = React.useState<number>(0);
+  const [policy, _setPolicy] = React.useState<"any" | "free" | "moderate" | "strict">("any");
+  const [cost, _setCost] = React.useState<"all" | "free" | "low" | "med" | "high">("all");
   const [sortBy, setSortBy] = React.useState<"label" | "price" | "ctx">("label");
   const [showAdvanced, setShowAdvanced] = React.useState(false);
   const [favorites, setFavorites] = React.useState<string[]>(() => {

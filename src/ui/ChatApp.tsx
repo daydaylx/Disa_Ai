@@ -6,6 +6,7 @@ import { Composer } from "../components/Composer";
 import PersonaQuickBar from "../components/PersonaQuickBar";
 import { useToasts } from "../components/ui/Toast";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
+import ModelSelectionSheet from "./ModelSheet";
 import { segmentMessage } from "./segment";
 import type { Message, Model } from "./types";
 import VirtualMessageList from "./VirtualMessageList";
@@ -122,7 +123,7 @@ function MessageBubble({
 
         {!isLoading && (
           <div className="text-caption text-text-muted/70 mt-3 font-medium">
-            {new Date(msg.ts).toLocaleTimeString()}
+            {msg.ts ? new Date(msg.ts).toLocaleTimeString() : new Date().toLocaleTimeString()}
           </div>
         )}
 
@@ -341,13 +342,105 @@ export default function ChatApp() {
     });
   };
 
-  const handleRegenerate = () => {
-    // For now, just a placeholder
-    toasts.push({
-      kind: "info",
-      title: "Regenerate",
-      message: "This feature is not yet implemented.",
-    });
+  const handleRegenerate = async (messageId: string) => {
+    // Find the message to regenerate (must be an AI message)
+    const messageIndex = messages.findIndex((m) => m.id === messageId);
+    const messageToRegenerate = messages[messageIndex];
+
+    if (!messageToRegenerate || messageToRegenerate.role !== "assistant") {
+      toasts.push({
+        kind: "error",
+        title: "Fehler",
+        message: "Nur KI-Antworten können regeneriert werden.",
+      });
+      return;
+    }
+
+    // Find the last user message before this AI response
+    const userMessages = messages.slice(0, messageIndex).filter((m) => m.role === "user");
+    if (userMessages.length === 0) {
+      toasts.push({
+        kind: "error",
+        title: "Fehler",
+        message: "Keine Benutzer-Nachricht zum Regenerieren gefunden.",
+      });
+      return;
+    }
+
+    if (!model) {
+      toasts.push({
+        kind: "error",
+        title: "Fehler",
+        message: "Kein Modell ausgewählt.",
+      });
+      return;
+    }
+
+    try {
+      setStreaming(true);
+
+      // Remove the current AI message being regenerated
+      setMessages((prev) => prev.filter((m) => m.id !== messageId));
+
+      // Prepare context: all messages up to the user message we're responding to
+      const contextMessages = messages.slice(0, messageIndex);
+
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
+      // Create new message for regenerated response
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        role: "assistant",
+        content: "",
+        model: model.id,
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, newMessage]);
+
+      // Stream the regenerated response
+      await chatStream(
+        contextMessages.map((m) => ({ role: m.role, content: m.content })),
+        (chunk: string) => {
+          setMessages((prev) =>
+            prev.map((m) => (m.id === newMessage.id ? { ...m, content: m.content + chunk } : m)),
+          );
+        },
+        {
+          model: model.id,
+          signal: abortController.signal,
+          onDone: () => {
+            setStreaming(false);
+            abortControllerRef.current = null;
+          },
+        },
+      );
+
+      toasts.push({
+        kind: "success",
+        title: "Regeneriert",
+        message: "Die Antwort wurde erfolgreich regeneriert.",
+      });
+    } catch (error: any) {
+      setStreaming(false);
+      abortControllerRef.current = null;
+
+      // Remove failed regeneration message
+      setMessages((prev) => prev.filter((m) => m.id !== messageToRegenerate.id));
+      // Restore original message
+      setMessages((prev) => [
+        ...prev.slice(0, messageIndex),
+        messageToRegenerate,
+        ...prev.slice(messageIndex),
+      ]);
+
+      toasts.push({
+        kind: "error",
+        title: "Regeneration fehlgeschlagen",
+        message: error.message || "Unbekannter Fehler bei der Regeneration.",
+      });
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -480,7 +573,7 @@ export default function ChatApp() {
                 <MessageBubble
                   msg={m}
                   onCopy={() => handleCopy(m.content)}
-                  onRegenerate={handleRegenerate}
+                  onRegenerate={() => handleRegenerate(m.id)}
                   onDelete={() => handleDelete(m.id)}
                 />
               )}
@@ -500,7 +593,7 @@ export default function ChatApp() {
           canSend={Boolean(model)}
         />
       </section>
-      <ModelSheet
+      <ModelSelectionSheet
         open={sheetOpen}
         onClose={() => setSheetOpen(false)}
         onSelect={setModel}
