@@ -1,20 +1,20 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Input } from '../components/ui/Input';
+import { Input } from "../components/ui/Input";
 
 const meta: Meta<typeof Input> = {
-  title: 'UI/Input',
+  title: "UI/Input",
   component: Input,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     disabled: {
-      control: 'boolean',
+      control: "boolean",
     },
     placeholder: {
-      control: 'text',
+      control: "text",
     },
   },
 };
@@ -28,13 +28,13 @@ export const Default: Story = {
 
 export const WithPlaceholder: Story = {
   args: {
-    placeholder: 'Enter text here...',
+    placeholder: "Enter text here...",
   },
 };
 
 export const Disabled: Story = {
   args: {
-    placeholder: 'Cannot type here',
+    placeholder: "Cannot type here",
     disabled: true,
   },
 };

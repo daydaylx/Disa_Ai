@@ -1,22 +1,22 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import React, { useState } from "react";
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Composer } from '../components/Composer';
-import React, { useState } from 'react';
+import { Composer } from "../components/Composer";
 
 const meta: Meta<typeof Composer> = {
-  title: 'App/Composer',
+  title: "App/Composer",
   component: Composer,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    value: { control: 'text' },
-    streaming: { control: 'boolean' },
-    canSend: { control: 'boolean' },
-    onSend: { action: 'onSend' },
-    onStop: { action: 'onStop' },
-    onChange: { action: 'onChange' },
+    value: { control: "text" },
+    streaming: { control: "boolean" },
+    canSend: { control: "boolean" },
+    onSend: { action: "onSend" },
+    onStop: { action: "onStop" },
+    onChange: { action: "onChange" },
   },
 };
 
@@ -24,8 +24,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Helper to manage state for the interactive composer
-const InteractiveComposer = (args: Story['args']) => {
-  const [value, setValue] = useState(args?.value || '');
+const InteractiveComposer = (args: Story["args"]) => {
+  const [value, setValue] = useState(args?.value || "");
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
@@ -41,31 +41,31 @@ export const Default: Story = {
     streaming: false,
     canSend: true,
   },
-  render: (args: Story['args']) => <InteractiveComposer {...args} />,
+  render: (args: Story["args"]) => <InteractiveComposer {...args} />,
 };
 
 export const WithText: Story = {
-    args: {
-      ...Default.args,
-      value: 'This is a message waiting to be sent.',
-    },
-    render: (args: Story['args']) => <InteractiveComposer {...args} />,
-  };
+  args: {
+    ...Default.args,
+    value: "This is a message waiting to be sent.",
+  },
+  render: (args: Story["args"]) => <InteractiveComposer {...args} />,
+};
 
 export const Streaming: Story = {
   args: {
     ...Default.args,
-    value: 'This was the prompt.',
+    value: "This was the prompt.",
     streaming: true,
   },
-  render: (args: Story['args']) => <InteractiveComposer {...args} />,
+  render: (args: Story["args"]) => <InteractiveComposer {...args} />,
 };
 
 export const Disabled: Story = {
-    args: {
-      ...Default.args,
-      value: 'Cannot send this message.',
-      canSend: false,
-    },
-    render: (args: Story['args']) => <InteractiveComposer {...args} />,
-  };
+  args: {
+    ...Default.args,
+    value: "Cannot send this message.",
+    canSend: false,
+  },
+  render: (args: Story["args"]) => <InteractiveComposer {...args} />,
+};
