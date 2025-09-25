@@ -3,7 +3,7 @@ import * as React from "react";
 import { cn } from "../../lib/cn";
 import { hapticFeedback } from "../../lib/touch/haptics";
 
-type Variant = "primary" | "ghost" | "danger" | "base";
+type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -12,22 +12,20 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   loading?: boolean;
   enableHaptic?: boolean;
   testId?: string;
+  icon?: React.ReactNode;
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary:
-    "btn-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-accent-500 focus-visible:outline-offset-2",
-  ghost:
-    "btn-ghost focus:outline-none focus-visible:outline-2 focus-visible:outline-accent-500 focus-visible:outline-offset-2",
-  danger:
-    "btn-danger focus:outline-none focus-visible:outline-2 focus-visible:outline-danger focus-visible:outline-offset-2",
-  base: "focus:outline-none focus-visible:outline-2 focus-visible:outline-accent-500 focus-visible:outline-offset-2",
+  primary: "glass-button glass-button--primary",
+  secondary: "glass-button glass-button--secondary",
+  ghost: "btn-ghost", // Keep legacy for specific use cases
+  danger: "glass-button bg-danger text-text-inverted border-danger hover:opacity-90",
 };
 
 const sizeClasses: Record<Size, string> = {
-  sm: "btn-sm",
-  md: "",
-  lg: "btn-lg",
+  sm: "px-3 py-1.5 text-sm",
+  md: "px-4 py-2 text-base",
+  lg: "px-6 py-3 text-lg",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -38,6 +36,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       enableHaptic = true,
       testId,
+      icon,
       className,
       children,
       onClick,
@@ -59,19 +58,30 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       [enableHaptic, variant, onClick],
     );
 
+    const isGlassButton = variant !== "ghost";
+    const baseClass = isGlassButton ? "" : "btn";
+
     return (
       <button
         ref={ref}
-        className={cn("btn", variantClasses[variant], sizeClasses[size], className)}
+        className={cn(
+          baseClass,
+          variantClasses[variant],
+          sizeClasses[size],
+          loading && isGlassButton && "glass-button--loading",
+          className,
+        )}
         aria-busy={loading || undefined}
         data-testid={testId}
         onClick={handleClick}
+        disabled={props.disabled || loading}
         {...props}
       >
-        {loading ? (
-          <span className="border-accent-500 mr-2 inline-flex h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
-        ) : null}
-        {children}
+        {icon && !loading && <span className="mr-2">{icon}</span>}
+        {loading && !isGlassButton && (
+          <span className="mr-2 inline-flex h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        )}
+        <span className={loading && isGlassButton ? "opacity-0" : ""}>{children}</span>
       </button>
     );
   },
