@@ -1,3 +1,5 @@
+@tailwind components;
+
 /* Legacy Button Classes - Fallback for broken components */
 @layer components {
   .btn {
