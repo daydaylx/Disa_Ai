@@ -1,9 +1,11 @@
+import { lazy, Suspense } from "react";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App";
 import { PersonaProvider } from "./config/personas";
-import ChatApp from "./ui/ChatApp";
-import SettingsView from "./ui/SettingsView";
+
+const ChatApp = lazy(() => import("./ui/ChatApp"));
+const SettingsView = lazy(() => import("./ui/SettingsView"));
 
 // Simple Models page that redirects to chat with model picker open
 function ModelsPage() {
@@ -17,15 +19,33 @@ const router = createHashRouter([
     children: [
       {
         index: true,
-        element: <ChatApp />,
+        element: (
+          <Suspense
+            fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}
+          >
+            <ChatApp />
+          </Suspense>
+        ),
       },
       {
         path: "/models",
-        element: <ModelsPage />,
+        element: (
+          <Suspense
+            fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}
+          >
+            <ModelsPage />
+          </Suspense>
+        ),
       },
       {
         path: "/settings",
-        element: <SettingsView />,
+        element: (
+          <Suspense
+            fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}
+          >
+            <SettingsView />
+          </Suspense>
+        ),
       },
     ],
   },

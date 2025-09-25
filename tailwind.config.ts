@@ -6,24 +6,42 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Semantic Colors
         primary: "var(--color-primary)",
         accent: "var(--color-accent)",
+        success: "var(--color-success)",
+        warning: "var(--color-warning)",
+        danger: "var(--color-danger)",
+        info: "var(--color-info)",
+
+        // Surface Colors
         "bg-base": "var(--bg-base)",
         "bg-elevated": "var(--bg-elevated)",
+
+        // Text Colors
         "text-default": "var(--text-default)",
         "text-muted": "var(--text-muted)",
         "text-inverted": "var(--text-inverted)",
-        danger: "#ef4444",
+
+        // Border Colors
+        "border-default": "var(--border-default)",
+        "border-muted": "var(--border-muted)",
 
         // Glass/Aurora effect colors
         "aurora-violet": "var(--aurora-violet-glow)",
         "aurora-purple": "var(--aurora-purple-glow)",
         "glass-bg-subtle": "var(--glass-bg-subtle)",
+        "glass-bg-soft": "var(--glass-bg-soft)",
         "glass-bg-medium": "var(--glass-bg-medium)",
+        "glass-bg-strong": "var(--glass-bg-strong)",
+        "glass-border-subtle": "var(--glass-border-subtle)",
         "glass-border-soft": "var(--glass-border-soft)",
         "glass-border-medium": "var(--glass-border-medium)",
+        "glass-border-strong": "var(--glass-border-strong)",
         "glass-text-muted": "var(--glass-text-muted)",
         "glass-text-medium": "var(--glass-text-medium)",
+
+        // Gradient Colors
         "gradient-violet-start": "var(--gradient-violet-start)",
         "gradient-fuchsia-end": "var(--gradient-fuchsia-end)",
       },
