@@ -1,6 +1,6 @@
+import "./styles/tailwind.css";
 import "./ui/base.css";
 import "./styles/globals.css";
-import "./styles/design-tokens.css";
 import "./styles/legacy-buttons.css";
 import "./styles/glass-components.css";
 import "./styles/brand.css";

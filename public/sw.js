@@ -1,4 +1,4 @@
-const SW_VERSION = "20250921-mobile";
+const SW_VERSION = "v1.0.0-f4c0931f";
 const HTML_CACHE = `html-${SW_VERSION}`;
 const ASSET_CACHE = `assets-${SW_VERSION}`;
 const OFFLINE_URL = "/offline.html";
