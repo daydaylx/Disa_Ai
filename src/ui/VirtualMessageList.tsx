@@ -35,11 +35,18 @@ export default function VirtualMessageList({
     const el = containerRef.current;
     if (!el) return;
 
+    let ticking = false;
     const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-      const nearBottom = scrollHeight - scrollTop - clientHeight < 100;
-      setIsNearBottom(nearBottom);
-      setShowScrollAnchor(!nearBottom && scrollTop > 200);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const { scrollTop, scrollHeight, clientHeight } = el;
+          const nearBottom = scrollHeight - scrollTop - clientHeight < 100;
+          setIsNearBottom(nearBottom);
+          setShowScrollAnchor(!nearBottom && scrollTop > 200);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     el.addEventListener("scroll", handleScroll, { passive: true });
@@ -110,7 +117,7 @@ export default function VirtualMessageList({
 
               {/* Enhanced Quick Start Suggestions */}
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-text-primary">
+                <h3 className="text-text-primary text-xl font-semibold">
                   Was möchtest du besprechen?
                 </h3>
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -165,7 +172,7 @@ export default function VirtualMessageList({
       {showScrollAnchor && (
         <button
           onClick={scrollToBottom}
-          className="focus-visible:ring-accent-teal/50 fixed z-20 rounded-full bg-primary/80 p-2 text-white shadow-lg hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+          className="focus-visible:ring-accent-teal/50 bg-primary/80 fixed z-20 rounded-full p-2 text-white shadow-lg hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           style={{
             bottom: `calc(var(--bottom-nav-h) + 24px + max(16px, var(--safe-bottom)))`,
             right: `max(16px, var(--safe-right))`,

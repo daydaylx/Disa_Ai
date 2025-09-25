@@ -1,0 +1,74 @@
+/* Legacy Button Classes - Fallback for broken components */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center;
+    @apply rounded-lg font-semibold;
+    @apply transition-all duration-200;
+    @apply border border-transparent;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .btn-md {
+    @apply px-4 py-2 text-base;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-text-inverted;
+    @apply hover:opacity-90;
+    @apply border-primary;
+  }
+
+  .btn-secondary {
+    @apply bg-bg-elevated text-text-default;
+    @apply hover:bg-bg-base;
+    @apply border-border-default;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-text-default;
+    @apply hover:bg-bg-elevated;
+    @apply border-transparent;
+  }
+
+  .btn-danger {
+    @apply bg-danger text-text-inverted;
+    @apply hover:opacity-90;
+    @apply border-danger;
+  }
+
+  /* Input styles */
+  .input {
+    @apply w-full px-3 py-2;
+    @apply rounded-lg border border-border-default bg-bg-base;
+    @apply text-text-default placeholder:text-text-muted;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1;
+    @apply transition-all duration-200;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .input:focus {
+    @apply border-primary;
+  }
+
+  .select {
+    @apply w-full px-3 py-2;
+    @apply rounded-lg border border-border-default bg-bg-base;
+    @apply text-text-default;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1;
+    @apply transition-all duration-200;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .select:focus {
+    @apply border-primary;
+  }
+}

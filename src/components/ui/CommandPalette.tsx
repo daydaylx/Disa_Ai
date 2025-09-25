@@ -138,7 +138,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="command-palette-title"
+        aria-describedby="command-palette-description"
       >
+        <h2 id="command-palette-title" className="sr-only">
+          Befehlspalette
+        </h2>
+        <p id="command-palette-description" className="sr-only">
+          Verwende die Pfeiltasten zur Navigation, Enter zum Ausführen, Escape zum Schließen
+        </p>
         <div className="border-border-strong bg-surface-200 shadow-elev2 overflow-hidden rounded-xl border">
           {/* Search Input */}
           <div className="border-border-subtle flex items-center border-b px-4">
@@ -157,7 +164,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             <input
               ref={searchRef}
               type="text"
-              className="h-12 w-full border-0 bg-transparent pl-3 pr-4 text-text-primary placeholder:text-text-muted focus:ring-0 sm:text-sm"
+              className="text-text-primary h-12 w-full border-0 bg-transparent pl-3 pr-4 placeholder:text-text-muted focus:ring-0 sm:text-sm"
               placeholder={placeholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}

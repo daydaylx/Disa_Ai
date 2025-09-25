@@ -11,6 +11,13 @@ import {
   UnknownError,
 } from "./types";
 
+/**
+ * Converts an HTTP Response object to an appropriate HttpError subclass
+ * based on the status code
+ *
+ * @param res - The HTTP Response object to convert
+ * @returns An HttpError instance with appropriate subtype
+ */
 function fromResponse(res: Response): HttpError {
   const { status, statusText } = res;
   const message = `HTTP-Fehler ${status} (${statusText})`;
@@ -35,7 +42,30 @@ function fromResponse(res: Response): HttpError {
   }
 }
 
+/**
+ * Maps unknown errors to structured error types for consistent error handling
+ *
+ * This function converts various error types (DOM exceptions, fetch errors, HTTP responses)
+ * into our standardized error hierarchy, enabling consistent error handling across the app.
+ *
+ * @param error - The unknown error to map
+ * @returns A structured Error instance from our error hierarchy
+ *
+ * @example
+ * ```typescript
+ * try {
+ *   const response = await fetch('/api/data');
+ *   if (!response.ok) throw response;
+ * } catch (error) {
+ *   const mappedError = mapError(error);
+ *   if (mappedError instanceof AuthenticationError) {
+ *     // Handle auth error
+ *   }
+ * }
+ * ```
+ */
 export function mapError(error: unknown): Error {
+  // Return already-mapped errors as-is
   if (
     error instanceof HttpError ||
     error instanceof NetworkError ||
@@ -45,6 +75,7 @@ export function mapError(error: unknown): Error {
     return error;
   }
 
+  // Handle DOM exceptions (fetch aborts, network errors)
   if (error instanceof DOMException) {
     if (error.name === "AbortError") {
       return new AbortError(error.message, { cause: error });
@@ -52,14 +83,17 @@ export function mapError(error: unknown): Error {
     return new NetworkError(`Netzwerkfehler: ${error.message}`, { cause: error });
   }
 
+  // Handle fetch network failures
   if (error instanceof TypeError && error.message.toLowerCase().includes("failed to fetch")) {
     return new NetworkError("Netzwerkfehler: Verbindung fehlgeschlagen.", { cause: error });
   }
 
+  // Handle HTTP Response objects (non-ok responses)
   if (error instanceof Response) {
     return fromResponse(error);
   }
 
+  // Fallback for all other error types
   const message =
     error instanceof Error ? error.message : "Ein unbekannter Fehler ist aufgetreten.";
   return new UnknownError(message, { cause: error });

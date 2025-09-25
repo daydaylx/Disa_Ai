@@ -64,6 +64,7 @@ export default function BottomSheet({
               ref={closeRef}
               onClick={onClose}
               className="text-sm opacity-80 hover:opacity-100"
+              aria-label={`${title} schließen`}
             >
               Schließen
             </button>
