@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { chatStream } from "../api/openrouter";
+import CodeBlock from "../components/CodeBlock";
 import { Composer } from "../components/Composer";
 import PersonaQuickBar from "../components/PersonaQuickBar";
 import { useToasts } from "../components/ui/Toast";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
-import CodeBlock from "./CodeBlock";
 import { segmentMessage } from "./segment";
 import type { Message, Model } from "./types";
 import VirtualMessageList from "./VirtualMessageList";
@@ -114,7 +114,7 @@ function MessageBubble({
               </div>
             ) : (
               <div key={i} className="-mx-2 mt-4">
-                <CodeBlock code={s.content} lang={s.lang} />
+                <CodeBlock code={s.content} lang={s.lang ?? undefined} />
               </div>
             ),
           )

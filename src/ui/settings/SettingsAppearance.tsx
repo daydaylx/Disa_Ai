@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 
-import Switch from "../../components/Switch";
+import { Switch } from "../../components/ui/Switch";
 import {
   getFontSize,
   getHapticFeedback,

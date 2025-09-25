@@ -7,7 +7,7 @@ import {
 } from "../../hooks/useAuroraTheme";
 import { GlassButton } from "../glass/GlassButton";
 import { GlassCard } from "../glass/GlassCard";
-import Switch from "../Switch";
+import { Switch } from "../ui/Switch";
 
 const THEME_LABELS: Record<
   AuroraTheme,

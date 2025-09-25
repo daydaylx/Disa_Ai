@@ -4,5 +4,3 @@ export type ChatMessage = {
   role: Role;
   content: string;
 };
-
-export type ChatMessageLike = ChatMessage;
