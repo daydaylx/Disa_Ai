@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { chatStream } from "../api/openrouter";
+import { Composer } from "../components/Composer";
 import PersonaQuickBar from "../components/PersonaQuickBar";
 import { useToasts } from "../components/ui/Toast";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
@@ -170,88 +171,6 @@ function MessageBubble({
             </button>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-/** ====== UI: Composer (autogrow + Stop) ====== */
-function Composer({
-  value,
-  onChange,
-  onSend,
-  onStop,
-  streaming,
-  canSend,
-}: {
-  value: string;
-  onChange: (s: string) => void;
-  onSend: () => void;
-  onStop: () => void;
-  streaming: boolean;
-  canSend: boolean;
-}) {
-  const taRef = useRef<HTMLTextAreaElement>(null);
-
-  // Autogrow bis max 5 Zeilen
-  useEffect(() => {
-    const ta = taRef.current;
-    if (!ta) return;
-    ta.style.height = "0px";
-    const max = 5 * 22;
-    ta.style.height = Math.min(ta.scrollHeight, max) + "px";
-  }, [value]);
-
-  return (
-    <div className="safe-px sticky z-10" style={{ bottom: "calc(var(--bottom-nav-h) + 20px)" }}>
-      <div className="mx-auto max-w-4xl">
-        <div className="shadow-glass-strong hover:shadow-glass-strong border-glass-stroke bg-glass-bg rounded-2xl border p-4 backdrop-blur-lg transition-all duration-200">
-          <div id="composer-help" className="sr-only">
-            Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
-          </div>
-          <div className="flex items-end gap-4">
-            <div className="flex min-h-[44px] flex-1 items-center">
-              <textarea
-                ref={taRef}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
-                    e.preventDefault();
-                    if (value.trim() && canSend && !streaming) {
-                      onSend();
-                    }
-                  }
-                }}
-                placeholder="Schreib was Sinnvolles…"
-                rows={1}
-                className="text-body text-text-primary placeholder:text-text-muted/60 w-full resize-none bg-transparent leading-relaxed outline-none ring-0 focus:ring-0"
-                aria-label="Nachricht eingeben"
-                aria-describedby="composer-help"
-                data-testid="composer-input"
-              />
-            </div>
-            {!streaming ? (
-              <button
-                onClick={onSend}
-                disabled={!value.trim() || !canSend}
-                className="glass-button glass-button--primary glass-button--sm shrink-0 px-6 py-3 disabled:cursor-not-allowed disabled:opacity-50"
-                data-testid="composer-send"
-              >
-                Senden
-              </button>
-            ) : (
-              <button
-                onClick={onStop}
-                className="glass-button glass-button--danger glass-button--sm shrink-0 px-6 py-3"
-                aria-label="Stopp"
-                data-testid="composer-stop"
-              >
-                Stop
-              </button>
-            )}
-          </div>
-        </div>
       </div>
     </div>
   );

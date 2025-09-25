@@ -15,7 +15,9 @@ export type IconName =
   | "sparkles"
   | "star"
   | "star-filled"
-  | "wrap";
+  | "wrap"
+  | "filter"
+  | "search-off";
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
   name: IconName;
@@ -51,6 +53,10 @@ const paths: Record<IconName, React.ReactElement> = {
     <path d="M12 3.2l2.3 4.66 5.14.75-3.72 3.63.88 5.1L12 15.77 7.4 17.34l.88-5.1L4.56 8.61l5.14-.75L12 3.2z" />
   ),
   wrap: <path d="M4 5h16M4 11h10a4 4 0 110 8H4m0-6h10" />,
+  filter: <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />,
+  "search-off": (
+    <path d="M10.68 11.71a6 6 0 01-7.36-7.36l14.68 14.68a6 6 0 01-7.32 7.32m.64-10.39a6 6 0 018.07 8.07l-8.07-8.07zM1 1l22 22" />
+  ),
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 20, title, ...rest }) => {

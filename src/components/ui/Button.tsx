@@ -1,90 +1,62 @@
 import * as React from "react";
 
 import { cn } from "../../lib/cn";
-import { hapticFeedback } from "../../lib/touch/haptics";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger";
-type Size = "sm" | "md" | "lg";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "destructive";
+type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: Variant;
-  size?: Size;
-  loading?: boolean;
-  enableHaptic?: boolean;
-  testId?: string;
-  icon?: React.ReactNode;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
 }
 
-const variantClasses: Record<Variant, string> = {
-  primary: "glass-button glass-button--primary",
-  secondary: "glass-button glass-button--secondary",
-  ghost: "btn-ghost", // Keep legacy for specific use cases
-  danger: "glass-button bg-danger text-text-inverted border-danger hover:opacity-90",
+const getVariantClasses = (variant: ButtonVariant) => {
+  switch (variant) {
+    case "primary":
+      return "bg-primary text-text-inverted hover:bg-primary/90";
+    case "secondary":
+      return "bg-transparent border border-primary text-primary hover:bg-primary/10";
+    case "ghost":
+      return "bg-transparent text-text-default hover:bg-bg-elevated";
+    case "destructive":
+      return "bg-red-500 text-white hover:bg-red-500/90";
+    default:
+      return "bg-primary text-text-inverted hover:bg-primary/90";
+  }
 };
 
-const sizeClasses: Record<Size, string> = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-6 py-3 text-lg",
+const getSizeClasses = (size: ButtonSize) => {
+  switch (size) {
+    case "sm":
+      return "px-3 py-1.5 text-sm";
+    case "md":
+      return "px-4 py-2 text-base";
+    case "lg":
+      return "px-6 py-3 text-lg";
+    default:
+      return "px-4 py-2 text-base";
+  }
 };
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      variant = "primary",
-      size = "md",
-      loading = false,
-      enableHaptic = true,
-      testId,
-      icon,
-      className,
-      children,
-      onClick,
-      ...props
-    },
-    ref,
-  ) => {
-    const handleClick = React.useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (enableHaptic) {
-          if (variant === "danger") {
-            hapticFeedback.warning();
-          } else {
-            hapticFeedback.tap();
-          }
-        }
-        onClick?.(e);
-      },
-      [enableHaptic, variant, onClick],
-    );
-
-    const isGlassButton = variant !== "ghost";
-    const baseClass = isGlassButton ? "" : "btn";
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "primary", size = "md", ...props }, ref) => {
+    const variantClasses = getVariantClasses(variant);
+    const sizeClasses = getSizeClasses(size);
 
     return (
       <button
-        ref={ref}
         className={cn(
-          baseClass,
-          variantClasses[variant],
-          sizeClasses[size],
-          loading && isGlassButton && "glass-button--loading",
+          "focus-visible:ring-ring inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          variantClasses,
+          sizeClasses,
           className,
         )}
-        aria-busy={loading || undefined}
-        data-testid={testId}
-        onClick={handleClick}
-        disabled={props.disabled || loading}
+        ref={ref}
         {...props}
-      >
-        {icon && !loading && <span className="mr-2">{icon}</span>}
-        {loading && !isGlassButton && (
-          <span className="mr-2 inline-flex h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        )}
-        <span className={loading && isGlassButton ? "opacity-0" : ""}>{children}</span>
-      </button>
+      />
     );
   },
 );
-
 Button.displayName = "Button";
+
+export { Button };

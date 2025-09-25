@@ -5,10 +5,11 @@ import { GlassButton } from "../../components/glass/GlassButton";
 import { GlassCard } from "../../components/glass/GlassCard";
 import Accordion, { type AccordionItem } from "../../components/ui/Accordion";
 import BottomSheet from "../../components/ui/BottomSheet";
-import Card from "../../components/ui/Card";
+import { Card, CardDescription, CardHeader, CardTitle } from "../../components/ui/Card";
 import { useToasts } from "../../components/ui/Toast";
 import { fetchRoleTemplates, getRoleById, listRoleTemplates } from "../../config/roleStore";
 import { getTemplateId, setTemplateId } from "../../config/settings";
+import { cn } from "../../lib/cn";
 
 export default function SettingsRoles() {
   const [currentRoleId, setCurrentRoleId] = useState<string | null>(() => getTemplateId());
@@ -181,9 +182,7 @@ export default function SettingsRoles() {
               return (
                 <Card
                   key={role.id}
-                  title={role.name}
-                  meta={truncatedSystem || "Keine Beschreibung"}
-                  active={isActive}
+                  className={cn(isActive && "ring-2 ring-primary", "cursor-pointer")}
                   onClick={() => {
                     setSheet({
                       title: role.name,
@@ -192,7 +191,12 @@ export default function SettingsRoles() {
                     });
                     setSheetOpen(true);
                   }}
-                />
+                >
+                  <CardHeader>
+                    <CardTitle>{role.name}</CardTitle>
+                    <CardDescription>{truncatedSystem || "Keine Beschreibung"}</CardDescription>
+                  </CardHeader>
+                </Card>
               );
             })}
           </div>
