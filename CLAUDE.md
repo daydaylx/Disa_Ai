@@ -35,7 +35,8 @@ Disa AI is a React-based AI chat PWA with offline-first architecture, built with
 - `src/lib/` - Shared utilities (error handling, storage, validation, performance, PWA, mobile)
 - `src/config/` - Configuration and persona management
 - `src/components/` - Reusable UI components (40+ components with glassmorphism design)
-- `src/ui/` - Page-level components (ChatApp, SettingsView)
+- `src/ui/` - Main page-level components and UI logic (e.g., `ChatApp.tsx`, `SettingsView.tsx`).
+- `src/views/` - Contains additional, often more isolated, view components (e.g., `ModelPickerView.tsx`).
 - `src/hooks/` - React hooks (12+ hooks for theme, online status, PWA, etc.)
 - `src/state/` - Global state management (templates)
 - `src/styles/` - Design tokens system and glassmorphism CSS
@@ -45,17 +46,18 @@ Disa AI is a React-based AI chat PWA with offline-first architecture, built with
 - **Offline-first testing** - All tests use mocked network calls, no real API requests
 - **Error contract system** - Structured error handling with TimeoutError, RateLimitError, etc.
 - **SessionStorage security** - API keys stored in sessionStorage only (auto-migrates from localStorage)
-- **Token-first styling** - Design tokens in `src/styles/design-tokens.ts` exported to CSS variables and Tailwind config
+- **Token-first styling** - Design tokens are defined as TypeScript objects in `src/styles/design-tokens.ts` (the single source of truth) and then mapped to CSS custom properties in `src/styles/design-tokens.css` for browser consumption.
 
 **Style Import Order (Critical):**
-The styles in `src/App.tsx` must be imported in this exact order:
+The styles in `src/App.tsx` must be imported in this exact order to ensure correct cascade behavior:
 
-1. `./ui/base.css` - Reset & base styles
-2. `./styles/globals.css` - Global variables & layouts
-3. `./styles/brand.css` - Brand colors & aurora effects
-4. `./styles/chat.css` - Component-specific styles
-
-Note: `./styles/globals.css` imports `design-tokens.css`, `base.css`, `interactive-effects.css`, and `visual-effects.css`. The `brand.css` imports glassmorphism and aurora effect stylesheets.
+1. `./styles/tailwind.css` - Tailwind's base, component, and utility styles.
+2. `./ui/base.css` - Custom base styles and resets.
+3. `./styles/globals.css` - Global variables and layout styles.
+4. `./styles/legacy-buttons.css` - Styles for older button components.
+5. `./styles/glass-components.css` - Core glassmorphism effect styles.
+6. `./styles/brand.css` - Brand-specific colors and aurora effects.
+7. `./styles/chat.css` - Component-specific styles for the chat interface.
 
 **Design System Architecture:**
 
