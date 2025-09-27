@@ -18,7 +18,15 @@ test.describe("Simple Chat Tests", () => {
     });
 
     await setupTestEnvironment(page);
-    await page.waitForTimeout(5000);
+    await page.goto("/");
+
+    // Wait for models to load and page to be ready
+    await page.waitForTimeout(3000);
+
+    // Add some text to enable the send button
+    await page.getByTestId("composer-input").fill("Test message");
+
+    // Now the button should be enabled
     await expect(page.getByRole("button", { name: "Senden" })).toBeEnabled();
   });
 
@@ -37,29 +45,42 @@ test.describe("Simple Chat Tests", () => {
     });
 
     await setupTestEnvironment(page);
-    await page.waitForTimeout(5000);
+    await page.goto("/");
+
+    // Wait for models to load and page to be ready
+    await page.waitForTimeout(3000);
 
     // In V2, the send button should still be available with same functionality
     // Using testid selector for more robust testing
     const sendButton = page.getByTestId("composer-send");
     await expect(sendButton).toBeVisible();
+
+    // Add some text to enable the send button
+    await page.getByTestId("composer-input").fill("Test message");
+
     await expect(sendButton).toBeEnabled();
   });
 
   test("should enable send button with default UI", async ({ page }) => {
     await setupTestEnvironment(page);
-    await page.waitForTimeout(5000);
+    await page.goto("/");
+
+    // Wait for models to load and page to be ready
+    await page.waitForTimeout(3000);
 
     // Test with default UI configuration - should work with both versions
     // Use a more flexible approach that works with both UI versions
     const sendByRole = page.getByRole("button", { name: "Senden" });
     const sendByTestId = page.getByTestId("composer-send");
 
-    // At least one of these should be present and enabled
+    // At least one of these should be present
     const roleButtonCount = await sendByRole.count();
     const testIdButtonCount = await sendByTestId.count();
 
     expect(roleButtonCount + testIdButtonCount).toBeGreaterThan(0);
+
+    // Add some text to enable the send button
+    await page.getByTestId("composer-input").fill("Test message");
 
     if (roleButtonCount > 0) {
       await expect(sendByRole.first()).toBeEnabled();

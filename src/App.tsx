@@ -17,9 +17,9 @@ export default function App() {
     <ToastsProvider>
       <div className="relative h-full">
         <AuroraBackground />
-        <main className="relative z-10">
+        <div className="relative z-10">
           <Outlet />
-        </main>
+        </div>
         <NavBar />
       </div>
     </ToastsProvider>

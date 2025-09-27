@@ -23,13 +23,15 @@ test.describe("PWA Features", () => {
   });
 
   test("should detect PWA support capabilities", async ({ page }) => {
+    await page.goto("/");
+
     // Test PWA support detection
     const pwaSupportResult = await page.evaluate(() => {
       return {
         shareTarget: "navigator" in window && "share" in navigator,
         protocolHandler: "navigator" in window && "registerProtocolHandler" in navigator,
         serviceWorker: "serviceWorker" in navigator,
-        webAppManifest: "manifest" in document.createElement("link"),
+        webAppManifest: document.querySelector('link[rel="manifest"]') !== null,
       };
     });
 
