@@ -75,7 +75,7 @@ export class ServiceWorkerManager {
 
     const config = getDeploymentConfig();
     if (!config.enableServiceWorker) {
-      console.log("Service Worker disabled for this environment");
+      console.warn("Service Worker disabled for this environment");
       return false;
     }
 
@@ -203,7 +203,7 @@ export class PerformanceReporter {
 
     // Observer for First Input Delay
     new PerformanceObserver((list) => {
-      const firstEntry = list.getEntries()[0];
+      const firstEntry = list.getEntries()[0] as any;
       vitals.FID = firstEntry.processingStart - firstEntry.startTime;
     }).observe({ entryTypes: ["first-input"] });
 

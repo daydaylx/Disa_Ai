@@ -94,70 +94,56 @@ export default function VirtualMessageList({
         {slice.length === 0 ? (
           <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 py-12">
             <div className="max-w-lg space-y-8 text-center">
-              {/* Enhanced Hero with dramatic colors */}
+              {/* Professional Hero Section */}
               <div className="space-y-6">
-                <div className="relative mx-auto h-32 w-32">
-                  <div className="absolute inset-0 animate-spin-slow rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 p-1">
-                    <div className="flex h-full w-full items-center justify-center rounded-full bg-slate-900">
-                      <div className="h-20 w-20 animate-pulse rounded-full border-4 border-white/20 bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-xl"></div>
-                    </div>
+                <div className="relative mx-auto h-24 w-24">
+                  <div className="glass-backdrop--medium shadow-glass-medium flex h-full w-full items-center justify-center rounded-full border-2 border-glass-border-medium">
+                    <svg width="32" height="32" viewBox="0 0 24 24" className="text-slate-300">
+                      <path
+                        fill="currentColor"
+                        d="M12 3c5.5 0 10 3.58 10 8s-4.5 8-10 8c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.13 2 11c0-4.42 4.5-8 10-8Z"
+                      />
+                    </svg>
                   </div>
-                  <div className="absolute -right-2 -top-2 h-8 w-8 animate-bounce rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 shadow-lg"></div>
-                  <div className="absolute -bottom-2 -left-2 h-6 w-6 animate-ping rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 shadow-lg"></div>
                 </div>
-                <div className="space-y-4">
-                  <h2 className="animate-pulse bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent">
-                    Disa AI
-                  </h2>
-                  <p className="text-xl font-medium leading-relaxed text-pink-200 drop-shadow-sm">
-                    🚀 Starte eine Unterhaltung mit deinem KI-Assistenten
+                <div className="space-y-3">
+                  <h2 className="text-3xl font-bold tracking-tight text-white">Disa AI</h2>
+                  <p className="text-lg font-medium text-slate-400">
+                    Starte eine Unterhaltung mit deinem KI-Assistenten
                   </p>
                 </div>
               </div>
 
-              {/* Enhanced Quick Start Suggestions */}
+              {/* Professional Quick Start Suggestions */}
               <div className="space-y-4">
-                <h3 className="text-text-primary text-xl font-semibold">
-                  Was möchtest du besprechen?
-                </h3>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <h3 className="text-xl font-semibold text-white">Was möchtest du besprechen?</h3>
+                <div className="grid gap-3 sm:grid-cols-2">
                   {[
                     {
-                      text: "🎯 Erkläre mir ein komplexes Thema",
-                      color: "from-blue-500 to-cyan-500",
+                      text: "Erkläre mir ein komplexes Thema",
                       icon: "💡",
                     },
                     {
-                      text: "💻 Hilf mir beim Programmieren",
-                      color: "from-green-500 to-emerald-500",
+                      text: "Hilf mir beim Programmieren",
                       icon: "⚡",
                     },
                     {
-                      text: "✨ Lass uns kreativ schreiben",
-                      color: "from-purple-500 to-pink-500",
-                      icon: "🌟",
+                      text: "Lass uns kreativ schreiben",
+                      icon: "✨",
                     },
                     {
-                      text: "🔧 Löse ein Problem mit mir",
-                      color: "from-orange-500 to-red-500",
-                      icon: "🚀",
+                      text: "Löse ein Problem mit mir",
+                      icon: "🔧",
                     },
                   ].map((suggestion, index) => (
                     <button
                       key={index}
-                      onClick={() =>
-                        onSuggestionClick?.(suggestion.text.replace(/[🎯💻✨🔧]\s*/u, ""))
-                      }
-                      className={`bg-gradient-to-r ${suggestion.color} group relative overflow-hidden rounded-2xl border-2 border-white/20 p-5 font-semibold text-white shadow-xl transition-all duration-300 hover:rotate-1 hover:scale-105 hover:shadow-2xl`}
+                      onClick={() => onSuggestionClick?.(suggestion.text)}
+                      className="glass-backdrop--soft hover:glass-backdrop--medium shadow-glass-soft hover:shadow-glass-medium group relative overflow-hidden rounded-xl border border-glass-border-soft p-4 text-white transition-all duration-300 hover:scale-105 hover:border-glass-border-medium"
                     >
-                      <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                      <div className="relative flex items-center gap-3">
-                        <span className="animate-bounce text-2xl transition-transform duration-200 group-hover:scale-125">
-                          {suggestion.icon}
-                        </span>
-                        <span className="text-left text-sm font-bold leading-tight drop-shadow-lg">
-                          {suggestion.text}
-                        </span>
+                      <div className="flex items-center gap-3 text-left">
+                        <span className="text-lg">{suggestion.icon}</span>
+                        <span className="text-sm font-medium leading-tight">{suggestion.text}</span>
                       </div>
                     </button>
                   ))}

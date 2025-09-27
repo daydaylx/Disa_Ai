@@ -199,7 +199,7 @@ export class PerformanceMonitor {
     const endTime = performance.now();
     const duration = endTime - startTime;
 
-    console.log(`${name}: ${duration.toFixed(2)}ms`);
+    console.warn(`${name}: ${duration.toFixed(2)}ms`);
     return duration;
   }
 
