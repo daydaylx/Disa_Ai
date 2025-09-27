@@ -1,5 +1,14 @@
 import type { Preview } from "@storybook/react-vite";
 
+// Import styles in same order as App.tsx
+import "../src/styles/tailwind.css";
+import "../src/ui/base.css";
+import "../src/styles/globals.css";
+import "../src/styles/legacy-buttons.css";
+import "../src/styles/glass-components.css";
+import "../src/styles/brand.css";
+import "../src/styles/chat.css";
+
 const preview: Preview = {
   parameters: {
     controls: {

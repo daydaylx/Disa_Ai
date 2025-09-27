@@ -1,4 +1,4 @@
-const SW_VERSION = "v1.0.0-50250e95";
+const SW_VERSION = "v1.0.0-4f951fbb";
 const HTML_CACHE = `html-${SW_VERSION}`;
 const ASSET_CACHE = `assets-${SW_VERSION}`;
 const OFFLINE_URL = "/offline.html";
@@ -72,6 +72,10 @@ self.addEventListener("message", (event) => {
   if (!event.data) return;
   if (event.data === "SKIP_WAITING" || event.data?.type === "SKIP_WAITING") {
     self.skipWaiting();
+  }
+  // Enhanced update handling
+  if (event.data?.type === "CHECK_FOR_UPDATE") {
+    event.ports[0]?.postMessage({ type: "UPDATE_AVAILABLE", version: SW_VERSION });
   }
 });
 
