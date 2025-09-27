@@ -27,6 +27,29 @@
     /* Glass/Aurora Effects */
     --aurora-violet-glow: rgba(139, 92, 246, 0.6);
     --aurora-purple-glow: rgba(167, 139, 250, 0.6);
+
+    /* Aurora Gradient Colors */
+    --aurora-cyan: rgba(34, 211, 238, 0.4);
+    --aurora-blue: rgba(147, 197, 253, 0.3);
+    --aurora-cyan-dim: rgba(34, 211, 238, 0.2);
+    --aurora-purple-bright: rgba(179, 136, 255, 0.4);
+    --aurora-violet-bright: rgba(139, 92, 246, 0.3);
+    --aurora-purple-dim: rgba(168, 85, 247, 0.2);
+    --aurora-mint: rgba(110, 231, 183, 0.3);
+    --aurora-emerald: rgba(52, 211, 153, 0.2);
+    --aurora-mint-dim: rgba(110, 231, 183, 0.15);
+
+    /* Aurora Dot Colors */
+    --aurora-cyan-dot: rgba(34, 211, 238, 0.8);
+    --aurora-cyan-shadow: rgba(34, 211, 238, 0.6);
+    --aurora-purple-dot: rgba(179, 136, 255, 0.8);
+    --aurora-purple-shadow: rgba(179, 136, 255, 0.6);
+    --aurora-mint-dot: rgba(110, 231, 183, 0.8);
+    --aurora-mint-shadow: rgba(110, 231, 183, 0.6);
+
+    /* Aurora Background Overlays */
+    --aurora-overlay-subtle: rgba(255, 255, 255, 0.12);
+    --aurora-overlay-border: rgba(255, 255, 255, 0.15);
     --glass-bg-subtle: rgba(255, 255, 255, 0.05);
     --glass-bg-soft: rgba(255, 255, 255, 0.08);
     --glass-bg-medium: rgba(255, 255, 255, 0.1);
@@ -92,5 +115,21 @@
     /* Gradient Colors */
     --gradient-violet-start: rgba(139, 92, 246, 0.4);
     --gradient-fuchsia-end: rgba(245, 101, 101, 0.3);
+
+    /* Corporate Theme Colors */
+    --corp-bg-primary: #000711;
+    --corp-bg-elevated: #0f1729;
+    --corp-bg-card: #141b2e;
+    --corp-text-primary: #f8fafc;
+    --corp-text-secondary: #cbd5e1;
+    --corp-text-muted: #94a3b8;
+    --corp-text-accent: #60a5fa;
+    --corp-border-primary: #1e293b;
+    --corp-border-secondary: #334155;
+    --corp-accent-primary: #3b82f6;
+    --corp-accent-danger: #ef4444;
+    --corp-glow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
+    --corp-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
+    --corp-glow-green: 0 0 20px rgba(16, 185, 129, 0.3);
   }
 }
