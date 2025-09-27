@@ -106,7 +106,7 @@ function CorporateMessageBubble({
           <div className="flex gap-2 text-xs">
             <button
               onClick={onCopy}
-              className="flex items-center gap-1 rounded px-2 py-1 text-slate-400 hover:bg-slate-800 hover:text-slate-300"
+              className="flex min-h-[44px] min-w-[44px] items-center gap-1 rounded px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-slate-300"
             >
               <svg
                 width="12"
@@ -124,7 +124,7 @@ function CorporateMessageBubble({
             {onRegenerate && isLast && (
               <button
                 onClick={onRegenerate}
-                className="flex items-center gap-1 rounded px-2 py-1 text-slate-400 hover:bg-slate-800 hover:text-slate-300"
+                className="flex min-h-[44px] min-w-[44px] items-center gap-1 rounded px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-slate-300"
               >
                 <svg
                   width="12"
@@ -145,7 +145,7 @@ function CorporateMessageBubble({
             {onDelete && (
               <button
                 onClick={onDelete}
-                className="flex items-center gap-1 rounded px-2 py-1 text-red-400 hover:bg-red-900/20 hover:text-red-300"
+                className="flex min-h-[44px] min-w-[44px] items-center gap-1 rounded px-3 py-2 text-red-400 hover:bg-red-900/20 hover:text-red-300"
               >
                 <svg
                   width="12"
@@ -225,7 +225,7 @@ function ExecutiveHeader({
 
             <button
               data-testid="executive-settings"
-              className="rounded-lg border border-slate-700 bg-slate-800 p-2 text-slate-400 hover:bg-slate-700 hover:text-slate-300"
+              className="min-h-[44px] min-w-[44px] rounded-lg border border-slate-700 bg-slate-800 p-3 text-slate-400 hover:bg-slate-700 hover:text-slate-300"
             >
               <svg
                 width="16"
@@ -505,14 +505,14 @@ function CorporateChatInterface({ currentModel }: { currentModel: Model | null }
       id: crypto.randomUUID(),
       role: "user",
       content: content.trim(),
-      timestamp: new Date(),
+      timestamp: Date.now(),
     };
 
     const assistantMessage: Message = {
       id: crypto.randomUUID(),
       role: "assistant",
       content: "",
-      timestamp: new Date(),
+      timestamp: Date.now(),
       model: model.id,
     };
 

@@ -6,7 +6,7 @@ export type Message = {
   role: Role;
   content: string;
   ts?: number;
-  timestamp?: Date;
+  timestamp: number;
   model?: string;
 };
 export type Model = ModelEntry;
