@@ -133,3 +133,9 @@
     --corp-glow-green: 0 0 20px rgba(16, 185, 129, 0.3);
   }
 }
+
+/* Corporate Model Picker Ring Colors */
+.corp-ring-primary {
+  --tw-ring-color: var(--corp-accent-primary);
+  --tw-ring-opacity: 0.5;
+}

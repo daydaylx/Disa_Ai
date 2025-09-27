@@ -70,7 +70,7 @@ export default function CorporateModelPickerV2({
           </div>
           <button
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border transition-colors hover:bg-opacity-80"
+            className="flex h-12 w-12 items-center justify-center rounded-lg border transition-colors hover:bg-opacity-80"
             style={{
               borderColor: "var(--corp-border-secondary)",
               backgroundColor: "var(--corp-bg-card)",
@@ -108,7 +108,7 @@ export default function CorporateModelPickerV2({
                       key={model.id}
                       onClick={() => handleSelect(model)}
                       className={`w-full rounded-xl border p-4 text-left transition-all hover:scale-[1.02] ${
-                        selectedId === model.id ? "ring-2 ring-opacity-50" : ""
+                        selectedId === model.id ? "corp-ring-primary ring-2 ring-opacity-50" : ""
                       }`}
                       style={{
                         backgroundColor:
@@ -117,7 +117,6 @@ export default function CorporateModelPickerV2({
                           selectedId === model.id
                             ? "var(--corp-accent-primary)"
                             : "var(--corp-border-secondary)",
-                        // ringColor not supported in React CSS, handle via className instead
                       }}
                     >
                       <div className="flex items-start justify-between">

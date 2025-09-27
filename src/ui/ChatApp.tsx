@@ -4,6 +4,8 @@ import { chatStream } from "../api/openrouter";
 import CodeBlock from "../components/CodeBlock";
 import { Composer } from "../components/Composer";
 import PersonaQuickBar from "../components/PersonaQuickBar";
+import { PWAInstallPrompt } from "../components/PWAInstallPrompt";
+import { PWAIntegration } from "../components/PWAIntegration";
 import { useToasts } from "../components/ui/Toast";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import ModelSelectionSheet from "./ModelSheet";
@@ -177,123 +179,6 @@ function MessageBubble({
   );
 }
 
-/** ====== UI: Bottom Sheet für Modelle mit A11y ====== */
-function ModelSheet({
-  open,
-  onClose,
-  onSelect,
-  currentId,
-  models,
-}: {
-  open: boolean;
-  onClose: () => void;
-  onSelect: (m: Model) => void;
-  currentId: string;
-  models: Model[];
-}) {
-  const closeBtn = useRef<HTMLButtonElement>(null);
-  const sheetRef = useRef<HTMLDivElement>(null);
-
-  // Focus-Management
-  useEffect(() => {
-    if (open) closeBtn.current?.focus();
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "Tab") {
-        // rudimentärer Focus-Trap
-        const focusables = sheetRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-        if (!focusables || focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  return (
-    <div
-      className={`fixed inset-0 z-40 ${open ? "" : "pointer-events-none"}`}
-      aria-hidden={!open}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Modell-Auswahl"
-    >
-      {/* Overlay */}
-      <div
-        onClick={onClose}
-        className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition ${open ? "opacity-100" : "opacity-0"}`}
-      />
-      {/* Sheet */}
-      <div
-        ref={sheetRef}
-        className={`safe-px safe-pb absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto transition-transform duration-200 ${
-          open ? "translate-y-0" : "translate-y-full"
-        }`}
-      >
-        <div className="glass-bg--strong rounded-t-2xl border border-glass-border-medium p-4 shadow-xl">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-h4 text-text-primary font-semibold">Modell wählen</h2>
-            <button
-              ref={closeBtn}
-              onClick={onClose}
-              className="glass-button glass-button--ghost glass-button--xs"
-            >
-              Schließen
-            </button>
-          </div>
-          <div className="grid grid-cols-1 gap-3">
-            {models.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => {
-                  onSelect(m);
-                  onClose();
-                }}
-                className={`glass-card--interactive glass-bg--soft rounded-xl border p-4 text-left transition-all ${
-                  currentId === m.id
-                    ? "glass-tint--cyan border-interactive-primary/60"
-                    : "border-glass-border-soft hover:border-glass-border-medium"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="text-text-primary font-medium">{m.label}</div>
-                  <div className="glass-badge glass-badge--accent">
-                    {(m.pricing?.in ?? 0) === 0 ? "free" : `${m.pricing?.in ?? 0}$/1k`}
-                  </div>
-                </div>
-                <div className="text-label mt-2 text-text-muted">
-                  Kontext: {(m.ctx ?? 0).toLocaleString()} Tokens
-                </div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {m.tags.map((t) => (
-                    <span key={t} className="glass-badge">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /** ====== ChatApp ====== */
 export default function ChatApp() {
   const [messages, setMessages] = useState<Message[]>(() => {
@@ -394,7 +279,7 @@ export default function ChatApp() {
         role: "assistant",
         content: "",
         model: model.id,
-        timestamp: new Date(),
+        timestamp: Date.now(),
       };
 
       setMessages((prev) => [...prev, newMessage]);
@@ -474,7 +359,13 @@ export default function ChatApp() {
     setStreaming(true);
 
     const now = Date.now();
-    const userMessage: Message = { id: `u_${now}`, role: "user", content: text, ts: now };
+    const userMessage: Message = {
+      id: `u_${now}`,
+      role: "user",
+      content: text,
+      ts: now,
+      timestamp: now,
+    };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
@@ -484,6 +375,7 @@ export default function ChatApp() {
       role: "assistant",
       content: "…",
       ts: Date.now(),
+      timestamp: Date.now(),
     };
     setMessages((prev) => [...prev, placeholder]);
 
@@ -552,6 +444,32 @@ export default function ChatApp() {
     }
   };
 
+  // PWA handlers
+  const handleSharedContent = (content: string) => {
+    if (content.trim()) {
+      setInput(content);
+      toasts.push({
+        kind: "success",
+        title: "Inhalt geteilt",
+        message: "Geteilter Inhalt wurde in das Eingabefeld geladen.",
+      });
+    }
+  };
+
+  const handleProtocolAction = (action: { route?: string; message?: string; action?: string }) => {
+    if (action.message) {
+      setInput(action.message);
+    }
+
+    if (action.action) {
+      toasts.push({
+        kind: "info",
+        title: "Protokoll-Aktion",
+        message: `Aktion ausgeführt: ${action.action}`,
+      });
+    }
+  };
+
   return (
     <div className="from-background-primary via-background-secondary to-background-primary flex h-screen flex-col overflow-hidden bg-gradient-to-br">
       <Header
@@ -560,7 +478,12 @@ export default function ChatApp() {
         onOpenModels={() => setSheetOpen(true)}
       />
       <div className="safe-px py-content-gap">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-4xl space-y-4">
+          <PWAInstallPrompt variant="banner" />
+          <PWAIntegration
+            onSharedContent={handleSharedContent}
+            onProtocolAction={handleProtocolAction}
+          />
           <PersonaQuickBar />
         </div>
       </div>
