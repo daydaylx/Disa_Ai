@@ -153,7 +153,7 @@ export function usePWAHandlers() {
   const getProtocolAction = useCallback((): PWAActions | null => {
     if (!state.protocolData) return null;
 
-    return handleProtocolAction(state.protocolData.action, state.protocolData.params);
+    return handleProtocolAction(state.protocolData.action, state.protocolData.params || {});
   }, [state.protocolData]);
 
   /**

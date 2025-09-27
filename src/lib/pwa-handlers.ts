@@ -254,11 +254,7 @@ export function checkPWASupport() {
 export function registerProtocolHandler() {
   try {
     if ("navigator" in window && "registerProtocolHandler" in navigator) {
-      navigator.registerProtocolHandler(
-        "web+disa",
-        `${window.location.origin}/?handler=%s`,
-        "Disa AI",
-      );
+      navigator.registerProtocolHandler("web+disa", `${window.location.origin}/?handler=%s`);
       return true;
     }
   } catch (error) {

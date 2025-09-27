@@ -30,47 +30,14 @@ export function useOfflineMode() {
   const [stats, setStats] = useState<OfflineStorageStats | null>(null);
   const [isProcessingQueue, setIsProcessingQueue] = useState(false);
 
-  // Initialize offline storage
-  useEffect(() => {
-    initializeOfflineStorage();
-    refreshData();
-
-    // Listen for online/offline changes
-    const handleOnline = () => {
-      setIsOfflineMode(false);
-      void processOfflineQueue();
-    };
-
-    const handleOffline = () => {
-      setIsOfflineMode(true);
-    };
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, [processOfflineQueue]);
-
   /**
    * Refresh offline data
    */
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     setPendingSync(getPendingSyncMessages());
     setDrafts(getAllDrafts());
     setStats(getOfflineStorageStats());
-  };
-
-  /**
-   * Save message for offline use
-   */
-  const saveMessageOffline = (message: Message, sentOffline = false): string => {
-    const localId = saveOfflineMessage(message, sentOffline);
-    refreshData();
-    return localId;
-  };
+  }, []);
 
   /**
    * Update message sync status
@@ -80,47 +47,48 @@ export function useOfflineMode() {
       updateMessageSyncStatus(localId, status);
       refreshData();
     },
-    [],
+    [refreshData],
   );
 
   /**
-   * Save draft with auto-save
+   * Process message send from queue
    */
-  const saveDraftWithAutoSave = (content: string, conversationId?: string) => {
-    autoSaveDraft(content, conversationId);
-    // Refresh after delay to show auto-saved draft
-    setTimeout(refreshData, 3500);
-  };
+  const processMessageSend = useCallback(
+    (payload: any): boolean => {
+      try {
+        // This would integrate with your actual API call
+        // For now, we'll simulate success
+        // console.log("Processing offline message send:", payload);
+
+        // Update sync status
+        if (payload.localId) {
+          updateSyncStatus(payload.localId, "synced");
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Failed to send offline message:", error);
+        return false;
+      }
+    },
+    [updateSyncStatus],
+  );
 
   /**
-   * Get draft for specific conversation
+   * Process regenerate from queue
    */
-  const getDraftFor = (conversationId?: string): MessageDraft | null => {
-    return getDraftForConversation(conversationId);
-  };
+  const processRegenerate = useCallback((_payload: any): boolean => {
+    // console.log("Processing offline regenerate:", payload);
+    return true;
+  }, []);
 
   /**
-   * Delete specific draft
+   * Process conversation save from queue
    */
-  const removeDraft = (draftId: string) => {
-    if (deleteDraft(draftId)) {
-      refreshData();
-      return true;
-    }
-    return false;
-  };
-
-  /**
-   * Add action to offline queue
-   */
-  const queueOfflineAction = (
-    type: "send_message" | "regenerate" | "conversation_save",
-    payload: any,
-  ): string => {
-    const queueId = addToOfflineQueue(type, payload);
-    refreshData();
-    return queueId;
-  };
+  const processConversationSave = useCallback((_payload: any): boolean => {
+    // console.log("Processing offline conversation save:", payload);
+    return true;
+  }, []);
 
   /**
    * Process offline queue when back online
@@ -172,47 +140,80 @@ export function useOfflineMode() {
     processMessageSend,
     processRegenerate,
     processConversationSave,
+    refreshData,
   ]);
 
-  /**
-   * Process message send from queue
-   */
-  const processMessageSend = useCallback(
-    (payload: any): boolean => {
-      try {
-        // This would integrate with your actual API call
-        // For now, we'll simulate success
-        // console.log("Processing offline message send:", payload);
+  // Initialize offline storage
+  useEffect(() => {
+    initializeOfflineStorage();
+    refreshData();
 
-        // Update sync status
-        if (payload.localId) {
-          updateSyncStatus(payload.localId, "synced");
-        }
+    // Listen for online/offline changes
+    const handleOnline = () => {
+      setIsOfflineMode(false);
+      void processOfflineQueue();
+    };
 
-        return true;
-      } catch (error) {
-        console.error("Failed to send offline message:", error);
-        return false;
-      }
-    },
-    [updateSyncStatus],
-  );
+    const handleOffline = () => {
+      setIsOfflineMode(true);
+    };
 
-  /**
-   * Process regenerate from queue
-   */
-  const processRegenerate = useCallback((_payload: any): boolean => {
-    // console.log("Processing offline regenerate:", payload);
-    return true;
-  }, []);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [processOfflineQueue, refreshData]);
 
   /**
-   * Process conversation save from queue
+   * Save message for offline use
    */
-  const processConversationSave = useCallback((_payload: any): boolean => {
-    // console.log("Processing offline conversation save:", payload);
-    return true;
-  }, []);
+  const saveMessageOffline = (message: Message, sentOffline = false): string => {
+    const localId = saveOfflineMessage(message, sentOffline);
+    refreshData();
+    return localId;
+  };
+
+  /**
+   * Save draft with auto-save
+   */
+  const saveDraftWithAutoSave = (content: string, conversationId?: string) => {
+    autoSaveDraft(content, conversationId);
+    // Refresh after delay to show auto-saved draft
+    setTimeout(refreshData, 3500);
+  };
+
+  /**
+   * Get draft for specific conversation
+   */
+  const getDraftFor = (conversationId?: string): MessageDraft | null => {
+    return getDraftForConversation(conversationId);
+  };
+
+  /**
+   * Delete specific draft
+   */
+  const removeDraft = (draftId: string) => {
+    if (deleteDraft(draftId)) {
+      refreshData();
+      return true;
+    }
+    return false;
+  };
+
+  /**
+   * Add action to offline queue
+   */
+  const queueOfflineAction = (
+    type: "send_message" | "regenerate" | "conversation_save",
+    payload: any,
+  ): string => {
+    const queueId = addToOfflineQueue(type, payload);
+    refreshData();
+    return queueId;
+  };
 
   /**
    * Manually trigger queue processing
