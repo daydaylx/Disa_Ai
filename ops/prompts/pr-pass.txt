@@ -1,3 +1,0 @@
-Erstelle PR von fix/infra-ci-routing → main.
-PR-Text: Problemsummary + Fix-Plan + Testnachweise (build ok, lint ok).
-Zeige Checks/Actions-Status. Falls keine vorhanden: kurze Empfehlung für minimalen CI-Check (build+lint).
