@@ -1,3 +1,6 @@
+import "./styles/layers.css";
+import "./styles/tokens.css";
+
 import React from "react";
 import { createRoot } from "react-dom/client";
 

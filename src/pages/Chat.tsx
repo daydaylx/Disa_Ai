@@ -1,32 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { chatStream } from "../api/openrouter";
+import { useStudio } from "../app/state/StudioContext";
 import CodeBlock from "../components/CodeBlock";
 import { Composer } from "../components/Composer";
-import PersonaQuickBar from "../components/PersonaQuickBar";
-import { PWAInstallPrompt } from "../components/PWAInstallPrompt";
-import { PWAIntegration } from "../components/PWAIntegration";
-import { useToasts } from "../components/ui/Toast";
+import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
-import ModelSelectionSheet from "./ModelSheet";
-import { segmentMessage } from "./segment";
-import type { Message, Model } from "./types";
-import VirtualMessageList from "./VirtualMessageList";
+import ModelSelectionSheet from "../ui/ModelSheet";
+import { segmentMessage } from "../ui/segment";
+import type { Message, Model } from "../ui/types";
+import VirtualMessageList from "../ui/VirtualMessageList";
 
 /** ====== UI: Header ====== */
 function Header({
   title,
   modelName,
   onOpenModels,
+  activePersonaName,
 }: {
   title: string;
   modelName: string;
   onOpenModels: () => void;
+  activePersonaName: string | null;
 }) {
   return (
     <header className="safe-pt safe-px sticky top-0 z-20 backdrop-blur-2xl" role="banner">
       <div className="mx-auto max-w-4xl">
-        <div className="glass-backdrop--strong shadow-glass-strong hover:glass-backdrop--strong hover:shadow-glass-strong group relative overflow-hidden rounded-2xl border-glass-border-medium px-8 py-6 transition-all duration-300">
+        <div className="group relative overflow-hidden rounded-2xl border-outline bg-surface-variant px-8 py-6 transition-all duration-300">
           {/* Subtle gradient background */}
           <div className="absolute inset-0 opacity-20">
             <div className="absolute inset-0 bg-gradient-to-r from-slate-600/10 via-slate-500/10 to-slate-600/10"></div>
@@ -35,12 +35,12 @@ function Header({
 
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-5">
-              <div className="glass-backdrop--medium hover:glass-backdrop--strong flex h-14 w-14 items-center justify-center rounded-xl border border-glass-border-medium shadow-[0_0_15px_rgba(71,85,105,0.2)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(71,85,105,0.3)]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-outline bg-surface shadow-[0_0_15px_rgba(71,85,105,0.2)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(71,85,105,0.3)]">
                 <svg
                   width="26"
                   height="26"
                   viewBox="0 0 24 24"
-                  className="text-slate-300 drop-shadow-sm"
+                  className="text-on-surface drop-shadow-sm"
                 >
                   <path
                     fill="currentColor"
@@ -49,20 +49,20 @@ function Header({
                 </svg>
               </div>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight text-white">{title}</h1>
-                <p className="text-sm font-medium text-slate-400">
-                  KI-Assistent für professionelle Gespräche
-                </p>
+                <h1 className="text-2xl font-bold tracking-tight text-on-surface">{title}</h1>
               </div>
             </div>
-            <button
-              onClick={onOpenModels}
-              className="glass-backdrop--medium hover:glass-backdrop--strong shadow-glass-medium hover:scale-102 hover:shadow-glass-strong rounded-xl border-glass-border-medium px-6 py-3 font-semibold text-white transition-all duration-300 hover:border-glass-border-strong"
-              aria-label="Modell auswählen"
-              data-testid="model.select"
-            >
-              <span className="drop-shadow-sm">{modelName}</span>
-            </button>
+            <div className="flex items-center gap-4">
+              {activePersonaName && <span className="badge badge-accent">{activePersonaName}</span>}
+              <button
+                onClick={onOpenModels}
+                className="shadow-glass-medium hover:scale-102 hover:shadow-glass-strong hover:border-glass-border-strong rounded-xl border-outline bg-surface px-6 py-3 font-semibold text-on-surface transition-all duration-300 hover:bg-surface-variant"
+                aria-label="Modell auswählen"
+                data-testid="model.select"
+              >
+                <span className="drop-shadow-sm">{modelName}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -89,14 +89,12 @@ function MessageBubble({
   const base =
     "max-w-xs sm:max-w-sm md:max-w-md rounded-2xl px-4 py-4 sm:px-6 sm:py-5 leading-relaxed break-words transition-all duration-300 group relative overflow-hidden touch-manipulation";
 
-  const mineCls = mine
-    ? "ml-auto glass-backdrop--medium border-glass-border-medium text-white shadow-glass-medium hover:glass-backdrop--strong hover:shadow-glass-strong"
-    : "";
+  const mineCls = mine ? "ml-auto bg-primary text-on-primary rounded-3xl" : "";
 
   const otherCls = !mine
     ? isError
-      ? "glass-backdrop--soft border border-red-400/30 text-red-300 bg-red-500/10 shadow-[0_0_20px_rgba(239,68,68,0.15)]"
-      : "glass-backdrop--strong border-glass-border-strong text-white bg-gradient-to-br from-slate-600/15 via-slate-500/15 to-slate-600/15 shadow-glass-strong hover:shadow-glass-strong"
+      ? "bg-error text-on-error rounded-3xl"
+      : "bg-surface-variant text-on-surface rounded-3xl glass"
     : "";
 
   const segs = segmentMessage(msg.content);
@@ -114,7 +112,7 @@ function MessageBubble({
               <div className="h-2 w-2 animate-bounce rounded-full bg-current [animation-delay:-0.15s]"></div>
               <div className="h-2 w-2 animate-bounce rounded-full bg-current"></div>
             </div>
-            <span className="text-sm opacity-75">AI antwortet...</span>
+            <span className="text-sm opacity-75">KI antwortet...</span>
           </div>
         ) : (
           segs.map((s, i) =>
@@ -131,7 +129,7 @@ function MessageBubble({
         )}
 
         {!isLoading && (
-          <div className="text-caption text-text-muted/70 mt-3 font-medium">
+          <div className="text-caption mt-3 font-medium text-on-surface/70">
             {msg.ts ? new Date(msg.ts).toLocaleTimeString() : new Date().toLocaleTimeString()}
           </div>
         )}
@@ -141,7 +139,7 @@ function MessageBubble({
             <button
               onClick={onCopy}
               data-testid="message.copy"
-              className="glass-backdrop--soft hover:glass-backdrop--medium active:glass-backdrop--strong touch-manipulation rounded-lg border-glass-border-soft p-2 text-white/70 transition-all duration-200 hover:scale-110 hover:border-glass-border-medium hover:text-white active:scale-95 sm:p-2.5"
+              className="touch-manipulation rounded-lg border-outline bg-surface-variant/50 p-2 text-on-surface/70 transition-all duration-200 hover:scale-110 hover:border-outline/80 hover:bg-surface-variant hover:text-on-surface active:scale-95 active:bg-surface-variant/80 sm:p-2.5"
               title="Nachricht kopieren"
             >
               <svg
@@ -161,7 +159,7 @@ function MessageBubble({
               <button
                 onClick={onRegenerate}
                 data-testid="message.regen"
-                className="glass-backdrop--soft hover:glass-backdrop--medium active:glass-backdrop--strong touch-manipulation rounded-lg border-glass-border-soft p-2 text-white/70 transition-all duration-200 hover:scale-110 hover:border-glass-border-medium hover:text-white active:scale-95 sm:p-2.5"
+                className="touch-manipulation rounded-lg border-outline bg-surface-variant/50 p-2 text-on-surface/70 transition-all duration-200 hover:scale-110 hover:border-outline/80 hover:bg-surface-variant hover:text-on-surface active:scale-95 active:bg-surface-variant/80 sm:p-2.5"
                 title="Antwort neu generieren"
               >
                 <svg
@@ -181,7 +179,7 @@ function MessageBubble({
             <button
               onClick={onDelete}
               data-testid="message.delete"
-              className="glass-backdrop--soft touch-manipulation rounded-lg border-glass-border-soft p-2 text-white/70 transition-all duration-200 hover:scale-110 hover:border-red-400/40 hover:bg-red-500/20 hover:text-red-300 active:scale-95 active:bg-red-500/30 sm:p-2.5"
+              className="touch-manipulation rounded-lg border-outline bg-surface-variant/50 p-2 text-on-surface/70 transition-all duration-200 hover:scale-110 hover:border-error/40 hover:bg-error/20 hover:text-error active:scale-95 active:bg-error/30 sm:p-2.5"
               title="Nachricht löschen"
             >
               <svg
@@ -205,7 +203,7 @@ function MessageBubble({
 }
 
 /** ====== ChatApp ====== */
-export default function ChatApp() {
+export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>(() => {
     // Support test data injection
     if (typeof window !== "undefined" && (window as any).__testMessages) {
@@ -220,6 +218,27 @@ export default function ChatApp() {
   const [streaming, setStreaming] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const toasts = useToasts();
+  const { activePersona, typographyScale, borderRadius, accentColor } = useStudio();
+
+  useEffect(() => {
+    if (activePersona) {
+      setMessages([
+        {
+          id: "system-prompt",
+          role: "system",
+          content: activePersona.systemPrompt,
+          ts: Date.now(),
+          timestamp: Date.now(),
+        },
+      ]);
+    }
+  }, [activePersona]);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--font-scale", `${typographyScale}`);
+    document.documentElement.style.setProperty("--border-radius", `${borderRadius}rem`);
+    document.documentElement.style.setProperty("--accent-color", accentColor);
+  }, [typographyScale, borderRadius, accentColor]);
 
   useEffect(() => {
     let alive = true;
@@ -244,11 +263,11 @@ export default function ChatApp() {
   const handleCopy = (content: string) => {
     navigator.clipboard
       .writeText(content)
-      .catch((err) => console.error("Failed to copy text: ", err));
+      .catch((err) => console.error("Konnte Text nicht kopieren: ", err));
     toasts.push({
       kind: "success",
-      title: "Copied!",
-      message: "Message content copied to clipboard.",
+      title: "Kopiert!",
+      message: "Nachricht in die Zwischenablage kopiert.",
     });
   };
 
@@ -354,7 +373,7 @@ export default function ChatApp() {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this message?")) {
+    if (window.confirm("Sind Sie sicher, dass Sie diese Nachricht löschen möchten?")) {
       setMessages((prev) => prev.filter((m) => m.id !== id));
       toasts.push({
         kind: "success",
@@ -469,53 +488,16 @@ export default function ChatApp() {
     }
   };
 
-  // PWA handlers
-  const handleSharedContent = (content: string) => {
-    if (content.trim()) {
-      setInput(content);
-      toasts.push({
-        kind: "success",
-        title: "Inhalt geteilt",
-        message: "Geteilter Inhalt wurde in das Eingabefeld geladen.",
-      });
-    }
-  };
-
-  const handleProtocolAction = (action: { route?: string; message?: string; action?: string }) => {
-    if (action.message) {
-      setInput(action.message);
-    }
-
-    if (action.action) {
-      toasts.push({
-        kind: "info",
-        title: "Protokoll-Aktion",
-        message: `Aktion ausgeführt: ${action.action}`,
-      });
-    }
-  };
-
   return (
     <>
       <Header
-        title="Disa AI"
+        title="Disa KI"
         modelName={model?.label ?? "Lade..."}
         onOpenModels={() => setSheetOpen(true)}
+        activePersonaName={activePersona?.name ?? null}
       />
 
-      <main className="from-background-primary via-background-secondary to-background-primary flex h-screen flex-col overflow-hidden bg-gradient-to-br">
-        {/* PWA and Persona Section */}
-        <div className="safe-px py-2 lg:py-4">
-          <div className="mx-auto max-w-4xl space-y-3">
-            <PWAInstallPrompt variant="banner" />
-            <PWAIntegration
-              onSharedContent={handleSharedContent}
-              onProtocolAction={handleProtocolAction}
-            />
-            <PersonaQuickBar />
-          </div>
-        </div>
-
+      <main className="flex h-screen flex-col overflow-hidden bg-surface text-on-surface">
         {/* Chat Area */}
         <section className="flex-1 overflow-hidden" aria-label="Chat-Verlauf">
           <div className="h-full px-3 sm:px-4">

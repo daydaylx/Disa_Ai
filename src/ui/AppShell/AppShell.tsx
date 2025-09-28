@@ -8,7 +8,6 @@ import { ModelProvider, useModel } from "../state/modelContext";
 import { canAbort, canSendMessage, hasError, initialUIState, uiReducer } from "../state/uiMachine";
 import { ChatMain } from "./ChatMain";
 import { ComposerDock } from "./ComposerDock";
-import { RightDrawer } from "./RightDrawer";
 import { SidebarLeft } from "./SidebarLeft";
 import { Topbar } from "./Topbar";
 
@@ -229,10 +228,10 @@ function hello(){
   };
   return (
     <div
-      className="flex min-h-screen flex-col"
+      className="flex min-h-screen flex-col bg-surface text-on-surface"
       style={{
         background:
-          "radial-gradient(120% 120% at 20% 10%, hsl(var(--accent-primary)/.18), transparent 60%), radial-gradient(120% 120% at 80% 70%, hsl(var(--accent-primary)/.12), transparent 55%)",
+          "radial-gradient(circle at 20% 10%, hsl(var(--primary) / 0.1), transparent 40%), radial-gradient(circle at 80% 70%, hsl(var(--primary) / 0.1), transparent 40%)",
       }}
     >
       <h1 className="sr-only">Disa AI Chat Assistant</h1>
@@ -245,7 +244,6 @@ function hello(){
           )}
           <ChatMain messages={messages} handlers={messageHandlers} />
         </div>
-        <RightDrawer />
       </main>
       <ComposerDock
         onSend={send}
