@@ -3,8 +3,13 @@ import "./ui/base.css"; // Reset & base styles
 
 import React from "react";
 
+import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
 import { Router } from "./Router";
 
 export default function App() {
-  return <Router />;
+  return (
+    <ToastsProvider>
+      <Router />
+    </ToastsProvider>
+  );
 }
