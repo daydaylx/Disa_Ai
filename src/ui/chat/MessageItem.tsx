@@ -79,7 +79,6 @@ export function MessageItem({
               onChange={(e) => setEditContent(e.target.value)}
               className="w-full resize-none rounded border border-[hsl(var(--text-muted)/0.3)] bg-[hsl(var(--bg-elevated)/0.5)] p-2 text-sm"
               rows={Math.min(editContent.split("\n").length + 1, 10)}
-              autoFocus
             />
             <div className="flex gap-2">
               <button
