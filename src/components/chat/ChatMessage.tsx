@@ -31,7 +31,7 @@ function CodeBlock({ children, language }: { children: string; language?: string
           variant="ghost"
           size="sm"
           className="h-6 w-6 p-0 text-neutral-400 hover:text-neutral-200"
-          onClick={() => navigator.clipboard?.writeText(children)}
+          onClick={() => void navigator.clipboard?.writeText(children)}
         >
           <Copy className="h-3 w-3" />
         </Button>
@@ -89,7 +89,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
 
   const handleCopy = () => {
     onCopy?.(message.content);
-    navigator.clipboard?.writeText(message.content);
+    void navigator.clipboard?.writeText(message.content);
   };
 
   const handleRetry = () => {

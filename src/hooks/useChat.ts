@@ -72,7 +72,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
 
 export function useChat({
   api = '/api/chat',
-  id,
+  id: _id,
   initialMessages = [],
   onResponse,
   onFinish,
@@ -144,7 +144,12 @@ export function useChat({
                 status: 200,
                 statusText: 'OK'
               });
-              onResponse(mockResponse);
+              const result = onResponse(mockResponse);
+              if (result && typeof result.catch === 'function') {
+                result.catch(() => {
+                  // Ignore errors from onResponse callback
+                });
+              }
             }
           },
           onDone: () => {
@@ -180,7 +185,7 @@ export function useChat({
       dispatch({ type: 'SET_ABORT_CONTROLLER', controller: null });
       abortControllerRef.current = null;
     }
-  }, [api, state.messages, onResponse, onFinish, onError, headers, body]);
+  }, [state.messages, onResponse, onFinish, onError, body]);
 
   const stop = useCallback(() => {
     if (abortControllerRef.current) {
