@@ -4,6 +4,7 @@ import ChatPageV2 from "../pages/ChatV2";
 import ModelsPage from "../pages/Models";
 import SettingsPage from "../pages/Settings";
 import Studio from "../pages/Studio";
+import DesignSystemPage from "../pages/test/DesignSystemPage";
 import { AppShell } from "./layouts/AppShell";
 
 const router = createBrowserRouter([
@@ -24,12 +25,16 @@ const router = createBrowserRouter([
         element: <SettingsPage />,
       },
       {
-        index: true,
-        element: <ChatPageV2 />,
-      },
-      {
         path: "/studio",
         element: <Studio />,
+      },
+      {
+        path: "/test/design-system",
+        element: <DesignSystemPage />,
+      },
+      {
+        index: true,
+        element: <ChatPageV2 />,
       },
     ],
   },
