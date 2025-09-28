@@ -8,13 +8,16 @@ const PersonaQuickBar: React.FC = () => {
   const { styles, styleId, setStyleId, loading } = usePersonaSelection();
   if (loading || !styles.length) return null;
 
-  // Professional neutral color variations
+  // Professional color palette with subtle accent variations
   const colors = [
-    "from-slate-600 to-slate-700 border-slate-500/50 text-white shadow-slate-500/20",
-    "from-gray-600 to-gray-700 border-gray-500/50 text-white shadow-gray-500/20",
-    "from-zinc-600 to-zinc-700 border-zinc-500/50 text-white shadow-zinc-500/20",
-    "from-neutral-600 to-neutral-700 border-neutral-500/50 text-white shadow-neutral-500/20",
-    "from-stone-600 to-stone-700 border-stone-500/50 text-white shadow-stone-500/20",
+    "from-slate-600 to-slate-700 border-slate-400/40 text-white shadow-slate-400/25 hover:shadow-slate-400/40",
+    "from-indigo-600/90 to-indigo-700/90 border-indigo-400/40 text-white shadow-indigo-400/25 hover:shadow-indigo-400/40",
+    "from-teal-600/90 to-teal-700/90 border-teal-400/40 text-white shadow-teal-400/25 hover:shadow-teal-400/40",
+    "from-emerald-600/90 to-emerald-700/90 border-emerald-400/40 text-white shadow-emerald-400/25 hover:shadow-emerald-400/40",
+    "from-amber-600/90 to-amber-700/90 border-amber-400/40 text-white shadow-amber-400/25 hover:shadow-amber-400/40",
+    "from-rose-600/90 to-rose-700/90 border-rose-400/40 text-white shadow-rose-400/25 hover:shadow-rose-400/40",
+    "from-purple-600/90 to-purple-700/90 border-purple-400/40 text-white shadow-purple-400/25 hover:shadow-purple-400/40",
+    "from-blue-600/90 to-blue-700/90 border-blue-400/40 text-white shadow-blue-400/25 hover:shadow-blue-400/40",
   ];
 
   return (
@@ -26,10 +29,10 @@ const PersonaQuickBar: React.FC = () => {
             key={s.id}
             onClick={() => setStyleId(s.id)}
             className={cn(
-              "rounded-xl border px-4 py-2 text-sm font-medium transition-all duration-200 hover:scale-105",
+              "rounded-xl border px-4 py-2 text-sm font-medium backdrop-blur-sm transition-all duration-300 hover:scale-105",
               styleId === s.id
-                ? `bg-gradient-to-r ${colorClass} scale-105 shadow-lg`
-                : "border-gray-500/50 bg-gradient-to-r from-gray-600 to-gray-700 text-gray-200 shadow-md hover:from-gray-500 hover:to-gray-600",
+                ? `bg-gradient-to-r ${colorClass} scale-105 shadow-xl`
+                : "border-gray-500/40 bg-gradient-to-r from-gray-600/80 to-gray-700/80 text-gray-200 shadow-lg hover:border-gray-400/50 hover:from-gray-500/80 hover:to-gray-600/80 hover:shadow-xl",
             )}
             aria-pressed={styleId === s.id}
           >
