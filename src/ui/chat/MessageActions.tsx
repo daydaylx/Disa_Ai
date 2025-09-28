@@ -13,14 +13,8 @@ export interface ActionsProps {
   onDelete?: () => void;
 }
 
-export function MessageActions({
-  messageId,
-  content,
-  role,
-  onRegenerate,
-  onEdit,
-  onDelete,
-}: ActionsProps) {
+export function MessageActions(props: ActionsProps) {
+  const { content, role, onRegenerate, onEdit, onDelete } = props;
   const [isCopying, setIsCopying] = useState(false);
   const [copySuccess, setCopySuccess] = useState<boolean | null>(null);
 

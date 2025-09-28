@@ -125,7 +125,7 @@ export class ChatAdapter {
                   content,
                 };
               }
-            } catch (e) {
+            } catch {
               // Skip malformed JSON chunks
               console.warn("Failed to parse SSE chunk:", data);
             }
