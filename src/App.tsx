@@ -1,8 +1,5 @@
-import "./index.css";
-import "./styles/tokens.css";
-import "./styles/primitives.css";
-import "./styles/components.css";
-import "./ui/base.css";
+import "./index.css"; // Tailwind base/components/utilities
+import "./ui/base.css"; // Reset & base styles
 
 import React from "react";
 
