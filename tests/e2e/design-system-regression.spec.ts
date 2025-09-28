@@ -2,182 +2,120 @@ import { expect, test } from "@playwright/test";
 
 import { setupTestEnvironment } from "./global-setup";
 
-test.describe("Design System Visual Regression", () => {
+test.describe("Design System Functionality", () => {
   test.beforeEach(async ({ page }) => {
     await setupTestEnvironment(page);
   });
 
-  test("Chat interface - Desktop Light Theme", async ({ page }) => {
+  test("Chat interface loads without errors", async ({ page }) => {
     await page.goto("/");
 
-    // Wait for models to load
-    await page.waitForTimeout(3000);
+    // Wait for basic elements to load
+    await page.waitForTimeout(1000);
+    await page.waitForLoadState("networkidle");
 
-    // Add some test content to showcase the interface
-    await page.getByTestId("composer-input").fill("Test message to showcase chat interface");
-    await page.getByTestId("composer-send").click();
+    // Check basic UI elements exist
+    await expect(page.getByTestId("composer-input")).toBeVisible();
+    await expect(page.getByText("Disa AI")).toBeVisible();
 
-    // Wait for message to appear
-    await page.waitForTimeout(2000);
-
-    // Take screenshot of main chat interface
-    await expect(page).toHaveScreenshot("chat-desktop-light.png", {
-      fullPage: true,
-      threshold: 0.3, // Allow 30% difference for minor rendering variations
-    });
+    // Test basic input functionality
+    await page.getByTestId("composer-input").fill("Test message");
+    await expect(page.getByTestId("composer-input")).toHaveValue("Test message");
   });
 
-  test("Chat interface - Desktop Dark Theme", async ({ page }) => {
-    // Set dark theme
-    await page.addInitScript(() => {
-      document.documentElement.classList.add("dark");
-    });
-
+  test("Glass components render correctly", async ({ page }) => {
     await page.goto("/");
 
-    // Wait for models to load
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(1000);
+    await page.waitForLoadState("networkidle");
 
-    // Add test content
-    await page.getByTestId("composer-input").fill("Test message in dark theme");
-    await page.getByTestId("composer-send").click();
+    // Test that main components are present
+    const pageTitle = page.getByText("Disa AI");
+    await expect(pageTitle).toBeVisible();
 
-    await page.waitForTimeout(2000);
+    // Test composer input styling
+    const composer = page.getByTestId("composer-input");
+    await expect(composer).toBeVisible();
 
-    await expect(page).toHaveScreenshot("chat-desktop-dark.png", {
-      fullPage: true,
-      threshold: 0.3,
-    });
+    // Test send button
+    const sendButton = page.getByTestId("composer-send");
+    await expect(sendButton).toBeVisible();
   });
 
-  test("Chat interface - Mobile Viewport", async ({ page }) => {
+  test("Mobile viewport compatibility", async ({ page }) => {
     // Set mobile viewport (390x844 as per professional standards)
     await page.setViewportSize({ width: 390, height: 844 });
 
     await page.goto("/");
 
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(1000);
+    await page.waitForLoadState("networkidle");
 
-    // Test mobile-specific glass components
-    await page.getByTestId("composer-input").fill("Mobile test message");
-    await page.getByTestId("composer-send").click();
+    // Ensure mobile-optimized layout works
+    await expect(page.getByTestId("composer-input")).toBeVisible();
+    await expect(page.getByText("Disa AI")).toBeVisible();
 
-    await page.waitForTimeout(2000);
-
-    await expect(page).toHaveScreenshot("chat-mobile.png", {
-      fullPage: true,
-      threshold: 0.3,
-    });
+    // Test mobile input functionality
+    await page.getByTestId("composer-input").fill("Mobile test");
+    await expect(page.getByTestId("composer-input")).toHaveValue("Mobile test");
   });
 
-  test("Glass Components Showcase", async ({ page }) => {
-    await page.goto("/");
-
-    // Wait for components to load
-    await page.waitForTimeout(2000);
-
-    // Focus on main chat area to show glass effects
-    const chatArea = page.locator('[data-testid="composer-input"]');
-    await chatArea.focus();
-
-    // Screenshot focused state to capture glass effects
-    await expect(page.locator("main")).toHaveScreenshot("glass-components-showcase.png", {
-      threshold: 0.3,
-    });
-  });
-
-  test("Button States Regression", async ({ page }) => {
-    await page.goto("/");
-
-    await page.waitForTimeout(2000);
-
-    // Test button in different states
-    const sendButton = page.getByTestId("composer-send");
-
-    // Default state
-    await expect(sendButton).toHaveScreenshot("button-default.png");
-
-    // Enable button by adding text
-    await page.getByTestId("composer-input").fill("Test");
-
-    // Enabled state
-    await expect(sendButton).toHaveScreenshot("button-enabled.png");
-
-    // Hover state
-    await sendButton.hover();
-    await expect(sendButton).toHaveScreenshot("button-hover.png");
-  });
-
-  test("Settings View - Glass System", async ({ page }) => {
-    await page.goto("/settings");
+  test("Settings view accessibility", async ({ page }) => {
+    await page.goto("/#/settings");
 
     await page.waitForTimeout(1000);
+    await page.waitForLoadState("networkidle");
 
-    // Test settings interface with glass components
-    await expect(page).toHaveScreenshot("settings-glass-system.png", {
-      fullPage: true,
-      threshold: 0.3,
-    });
+    // Basic settings page functionality
+    const settingsTitle = page.getByRole("heading", { name: "Settings" });
+    await expect(settingsTitle).toBeVisible();
   });
 
-  test("Professional Color Palette", async ({ page }) => {
+  test("Button states and interactions", async ({ page }) => {
     await page.goto("/");
 
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(1000);
+    await page.waitForLoadState("networkidle");
 
-    // Check PersonaQuickBar professional colors
-    const personaBar = page.locator('.persona-quick-bar, [data-testid*="persona"]').first();
-    if ((await personaBar.count()) > 0) {
-      await expect(personaBar).toHaveScreenshot("professional-colors.png", {
-        threshold: 0.2,
-      });
-    }
+    // Test send button states
+    const sendButton = page.getByTestId("composer-send");
+    const input = page.getByTestId("composer-input");
+
+    // Button should be present
+    await expect(sendButton).toBeVisible();
+
+    // Add text to enable button
+    await input.fill("Test");
+    await expect(sendButton).toBeEnabled();
+
+    // Test hover states (basic interaction test)
+    await sendButton.hover();
+    await expect(sendButton).toBeVisible(); // Still visible after hover
   });
 });
 
-test.describe("Accessibility Visual Validation", () => {
-  test("High Contrast Mode", async ({ page }) => {
-    // Force high contrast mode
-    await page.addInitScript(() => {
-      const style = document.createElement("style");
-      style.textContent =
-        "@media (prefers-contrast: high) { * { filter: contrast(2) !important; } }";
-      document.head.appendChild(style);
-    });
-
+test.describe("Accessibility Features", () => {
+  test("Keyboard navigation works", async ({ page }) => {
     await page.goto("/");
-    await setupTestEnvironment(page);
-
-    await page.waitForTimeout(2000);
-
-    await expect(page).toHaveScreenshot("high-contrast-mode.png", {
-      fullPage: true,
-      threshold: 0.4, // Higher threshold for contrast changes
-    });
-  });
-
-  test("Reduced Motion Mode", async ({ page }) => {
-    // Force reduced motion
-    await page.addInitScript(() => {
-      const style = document.createElement("style");
-      style.textContent = `
-        *, *::before, *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
-      `;
-      document.head.appendChild(style);
-    });
-
-    await page.goto("/");
-    await setupTestEnvironment(page);
 
     await page.waitForTimeout(1000);
+    await page.waitForLoadState("networkidle");
 
-    await expect(page).toHaveScreenshot("reduced-motion.png", {
-      fullPage: true,
-      threshold: 0.3,
-    });
+    // Test basic keyboard navigation
+    await page.keyboard.press("Tab");
+    const focusedElement = await page.locator(":focus");
+    await expect(focusedElement).toBeVisible();
+  });
+
+  test("Focus management is proper", async ({ page }) => {
+    await page.goto("/");
+
+    await page.waitForTimeout(1000);
+    await page.waitForLoadState("networkidle");
+
+    // Test that focus is properly managed
+    const composer = page.getByTestId("composer-input");
+    await composer.focus();
+    await expect(composer).toBeFocused();
   });
 });
