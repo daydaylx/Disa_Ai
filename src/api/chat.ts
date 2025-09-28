@@ -9,10 +9,10 @@ export interface ChatRequest {
   model?: string;
 }
 
-export async function handleChatRequest(
+export function handleChatRequest(
   request: ChatRequest,
   signal?: AbortSignal
-): Promise<Response> {
+): Response {
   const { messages, model } = request;
 
   // Convert to internal ChatMessage format
@@ -82,11 +82,11 @@ export async function handleChatRequest(
 }
 
 // Mock API endpoint for development (since we don't have a real backend)
-export async function createChatAPI(): Promise<{
-  post: (url: string, init?: RequestInit) => Promise<Response>;
-}> {
+export function createChatAPI(): {
+  post: (url: string, init?: RequestInit) => Response;
+} {
   return {
-    post: async (url: string, init?: RequestInit) => {
+    post: (url: string, init?: RequestInit) => {
       if (url !== '/api/chat') {
         throw new Error(`Unsupported endpoint: ${url}`);
       }

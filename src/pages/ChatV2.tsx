@@ -89,7 +89,7 @@ export default function ChatPageV2() {
     reload,
     stop,
     isLoading,
-    error
+    error: _error
   } = useChat({
     onError: (error) => {
       const { title, message } = humanError(error);
@@ -159,14 +159,14 @@ export default function ChatPageV2() {
       return;
     }
 
-    await append({
+    void append({
       role: "user",
       content: text,
     });
   };
 
-  const handleRetry = async () => {
-    await reload();
+  const handleRetry = () => {
+    void reload();
   };
 
   // Calculate token count from all messages
