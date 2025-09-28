@@ -1,16 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { Save, Upload, Download, Trash2, Plus, Settings, Palette, Key, Zap, Globe, Shield } from "lucide-react";
+import {
+  Download,
+  Globe,
+  Key,
+  Palette,
+  Plus,
+  Save,
+  Settings,
+  Shield,
+  Trash2,
+  Upload,
+  Zap,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
 
+import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 import { Switch } from "../components/ui/Switch";
-import { Separator } from "../components/ui/separator";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
-import { Badge } from "../components/ui/badge";
+import { Textarea } from "../components/ui/textarea";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { cn } from "../lib/utils";
 
@@ -48,7 +71,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   enableNotifications: true,
   autoSave: true,
   maxMessageHistory: 100,
-  defaultModel: "meta-llama/llama-3.3-70b-instruct:free"
+  defaultModel: "meta-llama/llama-3.3-70b-instruct:free",
 };
 
 const DEFAULT_PRESET: Omit<ConversationPreset, "id" | "createdAt" | "updatedAt"> = {
@@ -60,37 +83,42 @@ const DEFAULT_PRESET: Omit<ConversationPreset, "id" | "createdAt" | "updatedAt">
   model: "meta-llama/llama-3.3-70b-instruct:free",
   starterPrompts: [],
   tags: [],
-  isPublic: false
+  isPublic: false,
 };
 
-const STARTER_TEMPLATE_CATEGORIES = {
-  "General": [
+const _STARTER_TEMPLATE_CATEGORIES = {
+  General: [
     "Explain this concept in simple terms:",
     "What are the pros and cons of:",
     "Help me brainstorm ideas for:",
-    "Summarize the key points of:"
+    "Summarize the key points of:",
   ],
-  "Creative": [
+  Creative: [
     "Write a story about:",
     "Create a poem inspired by:",
     "Generate creative ideas for:",
-    "Help me design:"
+    "Help me design:",
   ],
-  "Professional": [
+  Professional: [
     "Write a professional email about:",
     "Create a presentation outline for:",
     "Draft a project proposal for:",
-    "Analyze the business case for:"
+    "Analyze the business case for:",
   ],
-  "Educational": [
+  Educational: [
     "Explain the concept of:",
     "What is the difference between:",
     "Teach me how to:",
-    "Create a study guide for:"
-  ]
+    "Create a study guide for:",
+  ],
 };
 
-function PresetCard({ preset, onEdit, onDelete, onDuplicate }: {
+function PresetCard({
+  preset,
+  onEdit,
+  onDelete,
+  onDuplicate,
+}: {
   preset: ConversationPreset;
   onEdit: (preset: ConversationPreset) => void;
   onDelete: (id: string) => void;
@@ -102,9 +130,7 @@ function PresetCard({ preset, onEdit, onDelete, onDuplicate }: {
         <div className="flex items-start justify-between">
           <div>
             <CardTitle className="text-base">{preset.name}</CardTitle>
-            <CardDescription className="text-sm mt-1">
-              {preset.description}
-            </CardDescription>
+            <CardDescription className="mt-1 text-sm">{preset.description}</CardDescription>
           </div>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="sm" onClick={() => onEdit(preset)}>
@@ -135,7 +161,7 @@ function PresetCard({ preset, onEdit, onDelete, onDuplicate }: {
             ))}
             {preset.isPublic && (
               <Badge variant="secondary" className="text-xs">
-                <Globe className="h-3 w-3 mr-1" />
+                <Globe className="mr-1 h-3 w-3" />
                 Public
               </Badge>
             )}
@@ -163,7 +189,7 @@ function PresetCard({ preset, onEdit, onDelete, onDuplicate }: {
           {preset.systemPrompt && (
             <div className="text-sm">
               <span className="text-neutral-500">System Prompt:</span>
-              <div className="mt-1 p-2 bg-neutral-50 dark:bg-neutral-900 rounded text-xs font-mono">
+              <div className="mt-1 rounded bg-neutral-50 p-2 font-mono text-xs dark:bg-neutral-900">
                 {preset.systemPrompt.slice(0, 100)}
                 {preset.systemPrompt.length > 100 && "..."}
               </div>
@@ -196,7 +222,7 @@ export default function SettingsPage() {
       if (saved) {
         setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(saved) });
       }
-    } catch (error) {
+    } catch {
       console.warn("Failed to load settings:", error);
     }
   };
@@ -210,7 +236,7 @@ export default function SettingsPage() {
         title: "Settings Saved",
         message: "Your preferences have been updated.",
       });
-    } catch (error) {
+    } catch {
       toasts.push({
         kind: "error",
         title: "Save Failed",
@@ -225,7 +251,7 @@ export default function SettingsPage() {
       if (saved) {
         setPresets(JSON.parse(saved));
       }
-    } catch (error) {
+    } catch {
       console.warn("Failed to load presets:", error);
     }
   };
@@ -234,7 +260,7 @@ export default function SettingsPage() {
     try {
       localStorage.setItem("conversation-presets", JSON.stringify(newPresets));
       setPresets(newPresets);
-    } catch (error) {
+    } catch {
       toasts.push({
         kind: "error",
         title: "Save Failed",
@@ -247,7 +273,7 @@ export default function SettingsPage() {
     try {
       const key = sessionStorage.getItem("openrouter-key") || "";
       setApiKey(key);
-    } catch (error) {
+    } catch {
       console.warn("Failed to load API key:", error);
     }
   };
@@ -265,7 +291,7 @@ export default function SettingsPage() {
         title: "API Key Saved",
         message: "Your OpenRouter API key has been updated.",
       });
-    } catch (error) {
+    } catch {
       toasts.push({
         kind: "error",
         title: "Save Failed",
@@ -279,7 +305,7 @@ export default function SettingsPage() {
       ...DEFAULT_PRESET,
       id: `preset-${Date.now()}`,
       createdAt: Date.now(),
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
     setEditingPreset(newPreset);
     setShowPresetDialog(true);
@@ -291,16 +317,16 @@ export default function SettingsPage() {
   };
 
   const handleSavePreset = (preset: ConversationPreset) => {
-    const isNew = !presets.find(p => p.id === preset.id);
+    const isNew = !presets.find((p) => p.id === preset.id);
     const updatedPreset = {
       ...preset,
       updatedAt: Date.now(),
-      ...(isNew ? { createdAt: Date.now() } : {})
+      ...(isNew ? { createdAt: Date.now() } : {}),
     };
 
     const newPresets = isNew
       ? [...presets, updatedPreset]
-      : presets.map(p => p.id === preset.id ? updatedPreset : p);
+      : presets.map((p) => (p.id === preset.id ? updatedPreset : p));
 
     savePresets(newPresets);
     setShowPresetDialog(false);
@@ -315,7 +341,7 @@ export default function SettingsPage() {
 
   const handleDeletePreset = (id: string) => {
     if (window.confirm("Are you sure you want to delete this preset?")) {
-      const newPresets = presets.filter(p => p.id !== id);
+      const newPresets = presets.filter((p) => p.id !== id);
       savePresets(newPresets);
       toasts.push({
         kind: "success",
@@ -331,7 +357,7 @@ export default function SettingsPage() {
       id: `preset-${Date.now()}`,
       name: `${preset.name} (Copy)`,
       createdAt: Date.now(),
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
     const newPresets = [...presets, duplicate];
     savePresets(newPresets);
@@ -360,7 +386,7 @@ export default function SettingsPage() {
         title: "Presets Exported",
         message: "Your presets have been downloaded.",
       });
-    } catch (error) {
+    } catch {
       toasts.push({
         kind: "error",
         title: "Export Failed",
@@ -378,8 +404,8 @@ export default function SettingsPage() {
       try {
         const imported = JSON.parse(e.target?.result as string);
         if (Array.isArray(imported)) {
-          const validPresets = imported.filter(preset =>
-            preset.id && preset.name && typeof preset.systemPrompt === "string"
+          const validPresets = imported.filter(
+            (preset) => preset.id && preset.name && typeof preset.systemPrompt === "string",
           );
           const newPresets = [...presets, ...validPresets];
           savePresets(newPresets);
@@ -389,7 +415,7 @@ export default function SettingsPage() {
             message: `Imported ${validPresets.length} preset(s).`,
           });
         }
-      } catch (error) {
+      } catch {
         toasts.push({
           kind: "error",
           title: "Import Failed",
@@ -402,29 +428,29 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="container mx-auto max-w-4xl p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Settings</h1>
+        <h1 className="mb-2 text-3xl font-bold">Settings</h1>
         <p className="text-neutral-600 dark:text-neutral-400">
           Manage your preferences and conversation presets
         </p>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex space-x-1 mb-6 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-lg">
+      <div className="mb-6 flex space-x-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800">
         {[
           { id: "general", label: "General", icon: Settings },
           { id: "presets", label: "Presets", icon: Zap },
-          { id: "api", label: "API Keys", icon: Key }
+          { id: "api", label: "API Keys", icon: Key },
         ].map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             onClick={() => setActiveTab(id as any)}
             className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors",
+              "flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors",
               activeTab === id
-                ? "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-sm"
-                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-900 dark:text-neutral-100"
+                : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100",
             )}
           >
             <Icon className="h-4 w-4" />
@@ -444,7 +470,7 @@ export default function SettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <Label htmlFor="theme">Theme</Label>
                   <Select
@@ -494,7 +520,9 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <Label htmlFor="sounds">Sound Effects</Label>
-                  <p className="text-sm text-neutral-500">Play sounds for notifications and actions</p>
+                  <p className="text-sm text-neutral-500">
+                    Play sounds for notifications and actions
+                  </p>
                 </div>
                 <Switch
                   id="sounds"
@@ -522,14 +550,14 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <Label htmlFor="autosave">Auto-save Conversations</Label>
-                  <p className="text-sm text-neutral-500">Automatically save conversation history</p>
+                  <p className="text-sm text-neutral-500">
+                    Automatically save conversation history
+                  </p>
                 </div>
                 <Switch
                   id="autosave"
                   checked={settings.autoSave}
-                  onChange={(checked: boolean) =>
-                    saveSettings({ ...settings, autoSave: checked })
-                  }
+                  onChange={(checked: boolean) => saveSettings({ ...settings, autoSave: checked })}
                 />
               </div>
 
@@ -542,11 +570,14 @@ export default function SettingsPage() {
                   max="1000"
                   value={settings.maxMessageHistory}
                   onChange={(e) =>
-                    saveSettings({ ...settings, maxMessageHistory: parseInt(e.target.value) || 100 })
+                    saveSettings({
+                      ...settings,
+                      maxMessageHistory: parseInt(e.target.value) || 100,
+                    })
                   }
                   className="mt-1"
                 />
-                <p className="text-sm text-neutral-500 mt-1">
+                <p className="mt-1 text-sm text-neutral-500">
                   Maximum number of messages to keep in conversation history
                 </p>
               </div>
@@ -578,7 +609,7 @@ export default function SettingsPage() {
                 size="sm"
                 onClick={() => document.getElementById("import-presets")?.click()}
               >
-                <Upload className="h-4 w-4 mr-2" />
+                <Upload className="mr-2 h-4 w-4" />
                 Import
               </Button>
               <Button
@@ -587,11 +618,11 @@ export default function SettingsPage() {
                 onClick={exportPresets}
                 disabled={presets.length === 0}
               >
-                <Download className="h-4 w-4 mr-2" />
+                <Download className="mr-2 h-4 w-4" />
                 Export
               </Button>
               <Button onClick={handleCreatePreset}>
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="mr-2 h-4 w-4" />
                 New Preset
               </Button>
             </div>
@@ -600,21 +631,21 @@ export default function SettingsPage() {
           {presets.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
-                <Zap className="h-12 w-12 text-neutral-400 mb-4" />
-                <h3 className="text-lg font-medium text-neutral-600 dark:text-neutral-400 mb-2">
+                <Zap className="mb-4 h-12 w-12 text-neutral-400" />
+                <h3 className="mb-2 text-lg font-medium text-neutral-600 dark:text-neutral-400">
                   No presets yet
                 </h3>
-                <p className="text-neutral-500 text-center mb-4">
+                <p className="mb-4 text-center text-neutral-500">
                   Create your first conversation preset to save time and ensure consistency
                 </p>
                 <Button onClick={handleCreatePreset}>
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="mr-2 h-4 w-4" />
                   Create Preset
                 </Button>
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {presets.map((preset) => (
                 <PresetCard
                   key={preset.id}
@@ -645,7 +676,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="apiKey">API Key</Label>
-                <div className="flex gap-2 mt-1">
+                <div className="mt-1 flex gap-2">
                   <Input
                     id="apiKey"
                     type="password"
@@ -660,15 +691,15 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
-                <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div className="flex items-start gap-2 rounded-lg bg-blue-50 p-3 dark:bg-blue-950">
+                <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600" />
                 <div className="text-sm">
                   <div className="font-medium text-blue-900 dark:text-blue-100">
                     Security Notice
                   </div>
                   <div className="text-blue-700 dark:text-blue-200">
-                    Your API key is stored locally and encrypted. It's only used to make requests
-                    to OpenRouter on your behalf. You can get your API key from{" "}
+                    Your API key is stored locally and encrypted. It's only used to make requests to
+                    OpenRouter on your behalf. You can get your API key from{" "}
                     <a
                       href="https://openrouter.ai/keys"
                       target="_blank"
@@ -688,11 +719,9 @@ export default function SettingsPage() {
 
       {/* Preset Dialog */}
       <Dialog open={showPresetDialog} onOpenChange={setShowPresetDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {editingPreset?.name ? "Edit Preset" : "Create New Preset"}
-            </DialogTitle>
+            <DialogTitle>{editingPreset?.name ? "Edit Preset" : "Create New Preset"}</DialogTitle>
             <DialogDescription>
               Configure your conversation preset with model settings and starter prompts
             </DialogDescription>
@@ -700,15 +729,13 @@ export default function SettingsPage() {
 
           {editingPreset && (
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <Label htmlFor="presetName">Name</Label>
                   <Input
                     id="presetName"
                     value={editingPreset.name}
-                    onChange={(e) =>
-                      setEditingPreset({ ...editingPreset, name: e.target.value })
-                    }
+                    onChange={(e) => setEditingPreset({ ...editingPreset, name: e.target.value })}
                     placeholder="My Preset"
                   />
                 </div>
@@ -718,9 +745,7 @@ export default function SettingsPage() {
                   <Input
                     id="presetModel"
                     value={editingPreset.model}
-                    onChange={(e) =>
-                      setEditingPreset({ ...editingPreset, model: e.target.value })
-                    }
+                    onChange={(e) => setEditingPreset({ ...editingPreset, model: e.target.value })}
                     placeholder="meta-llama/llama-3.3-70b-instruct:free"
                     className="font-mono"
                   />
@@ -765,7 +790,7 @@ export default function SettingsPage() {
                     onChange={(e) =>
                       setEditingPreset({
                         ...editingPreset,
-                        temperature: parseFloat(e.target.value) || 0.7
+                        temperature: parseFloat(e.target.value) || 0.7,
                       })
                     }
                   />
@@ -782,7 +807,7 @@ export default function SettingsPage() {
                     onChange={(e) =>
                       setEditingPreset({
                         ...editingPreset,
-                        maxTokens: parseInt(e.target.value) || 2048
+                        maxTokens: parseInt(e.target.value) || 2048,
                       })
                     }
                   />
@@ -791,7 +816,7 @@ export default function SettingsPage() {
 
               <div>
                 <Label>Starter Prompts</Label>
-                <div className="space-y-2 mt-2">
+                <div className="mt-2 space-y-2">
                   {editingPreset.starterPrompts.map((prompt, index) => (
                     <div key={index} className="flex gap-2">
                       <Input
@@ -807,7 +832,9 @@ export default function SettingsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                          const newPrompts = editingPreset.starterPrompts.filter((_, i) => i !== index);
+                          const newPrompts = editingPreset.starterPrompts.filter(
+                            (_, i) => i !== index,
+                          );
                           setEditingPreset({ ...editingPreset, starterPrompts: newPrompts });
                         }}
                       >
@@ -820,11 +847,11 @@ export default function SettingsPage() {
                     onClick={() =>
                       setEditingPreset({
                         ...editingPreset,
-                        starterPrompts: [...editingPreset.starterPrompts, ""]
+                        starterPrompts: [...editingPreset.starterPrompts, ""],
                       })
                     }
                   >
-                    <Plus className="h-4 w-4 mr-2" />
+                    <Plus className="mr-2 h-4 w-4" />
                     Add Starter Prompt
                   </Button>
                 </div>
@@ -838,7 +865,10 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setEditingPreset({
                       ...editingPreset,
-                      tags: e.target.value.split(",").map(tag => tag.trim()).filter(Boolean)
+                      tags: e.target.value
+                        .split(",")
+                        .map((tag) => tag.trim())
+                        .filter(Boolean),
                     })
                   }
                   placeholder="creative, professional, educational"
@@ -870,7 +900,7 @@ export default function SettingsPage() {
                   onClick={() => handleSavePreset(editingPreset)}
                   disabled={!editingPreset.name.trim()}
                 >
-                  <Save className="h-4 w-4 mr-2" />
+                  <Save className="mr-2 h-4 w-4" />
                   Save Preset
                 </Button>
               </div>
