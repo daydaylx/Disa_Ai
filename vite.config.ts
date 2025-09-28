@@ -2,8 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 import { analyzer } from "vite-bundle-analyzer";
-import { aggressiveRemoveConsolePlugin } from "./build/vite-remove-console";
-import { swVersionPlugin } from "./build/vite-sw-version-plugin.js";
 
 const analyzerPlugin = analyzer({
   analyzerMode: process.env.BUNDLE_ANALYZE_MODE ?? "static",
@@ -12,7 +10,7 @@ const analyzerPlugin = analyzer({
 });
 
 export default defineConfig({
-  plugins: [react(), swVersionPlugin(), aggressiveRemoveConsolePlugin(), analyzerPlugin],
+  plugins: [react(), analyzerPlugin],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
