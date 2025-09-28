@@ -103,12 +103,10 @@ export default {
         sm: "var(--shadow-1)",
         md: "var(--shadow-2)",
         lg: "var(--shadow-3)",
-        glass: {
-          subtle: "var(--glass-glow-subtle)",
-          soft: "var(--glass-glow-soft)",
-          medium: "var(--glass-glow-medium)",
-          strong: "var(--glass-glow-strong)",
-        },
+        "glass-subtle": "var(--glass-glow-subtle)",
+        "glass-soft": "var(--glass-glow-soft)",
+        "glass-medium": "var(--glass-glow-medium)",
+        "glass-strong": "var(--glass-glow-strong)",
       },
       backdropBlur: {
         sm: "var(--blur-sm)",

@@ -1,0 +1,104 @@
+import { chatStream } from './openrouter';
+import type { ChatMessage } from '../components/chat/ChatMessage';
+
+export interface ChatRequest {
+  messages: Array<{
+    role: 'user' | 'assistant' | 'system';
+    content: string;
+  }>;
+  model?: string;
+}
+
+export async function handleChatRequest(
+  request: ChatRequest,
+  signal?: AbortSignal
+): Promise<Response> {
+  const { messages, model } = request;
+
+  // Convert to internal ChatMessage format
+  const formattedMessages: ChatMessage[] = messages.map(msg => ({
+    id: `temp-${Date.now()}-${Math.random()}`,
+    role: msg.role,
+    content: msg.content,
+    timestamp: Date.now(),
+  }));
+
+  // Create SSE stream response
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        await chatStream(
+          formattedMessages,
+          (delta: string) => {
+            // Send SSE formatted data
+            const data = JSON.stringify({
+              choices: [{
+                delta: {
+                  content: delta
+                }
+              }]
+            });
+
+            controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+          },
+          {
+            model,
+            signal,
+            onStart: () => {
+              // Send initial response
+              controller.enqueue(encoder.encode('data: {"choices":[{"delta":{"content":""}}]}\n\n'));
+            },
+            onDone: () => {
+              // Send completion marker
+              controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+              controller.close();
+            }
+          }
+        );
+      } catch (error) {
+        // Send error and close
+        const errorData = JSON.stringify({
+          error: {
+            message: error instanceof Error ? error.message : 'Unknown error'
+          }
+        });
+        controller.enqueue(encoder.encode(`data: ${errorData}\n\n`));
+        controller.close();
+      }
+    },
+    cancel() {
+      // Stream was cancelled
+    }
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    }
+  });
+}
+
+// Mock API endpoint for development (since we don't have a real backend)
+export async function createChatAPI(): Promise<{
+  post: (url: string, init?: RequestInit) => Promise<Response>;
+}> {
+  return {
+    post: async (url: string, init?: RequestInit) => {
+      if (url !== '/api/chat') {
+        throw new Error(`Unsupported endpoint: ${url}`);
+      }
+
+      if (!init || init.method !== 'POST') {
+        throw new Error('Only POST method supported');
+      }
+
+      const body = init.body as string;
+      const request: ChatRequest = JSON.parse(body);
+
+      return handleChatRequest(request, init.signal || undefined);
+    }
+  };
+}

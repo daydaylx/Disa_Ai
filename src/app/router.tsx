@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import ChatPage from "../pages/Chat";
+import ChatPageV2 from "../pages/ChatV2";
 import ModelsPage from "../pages/Models";
 import SettingsPage from "../pages/Settings";
 import Studio from "../pages/Studio";
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/chat",
-        element: <ChatPage />,
+        element: <ChatPageV2 />,
       },
       {
         path: "/models",
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
       },
       {
         index: true,
-        element: <ChatPage />,
+        element: <ChatPageV2 />,
       },
       {
         path: "/studio",
