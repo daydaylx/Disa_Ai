@@ -1,6 +1,6 @@
 import type { ModelEntry } from "../config/models";
 
-export type Role = "user" | "assistant" | "tool";
+export type Role = "user" | "assistant" | "tool" | "system";
 export type Message = {
   id: string;
   role: Role;

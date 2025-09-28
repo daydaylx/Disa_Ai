@@ -298,7 +298,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         />
         <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Schnellfilter">
           <Button
-            variant={onlyFavorites ? "primary" : "secondary"}
+            variant={onlyFavorites ? "default" : "secondary"}
             size="sm"
             onClick={() => setOnlyFavorites((prev) => !prev)}
             data-testid="model-filter-chip-favorite"
@@ -308,7 +308,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             Favoriten
           </Button>
           <Button
-            variant={onlyFree ? "primary" : "secondary"}
+            variant={onlyFree ? "default" : "secondary"}
             size="sm"
             onClick={() => setOnlyFree((prev) => !prev)}
             data-testid="model-filter-chip-free"
@@ -320,7 +320,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             Frei
           </Button>
           <Button
-            variant={onlyCode ? "primary" : "secondary"}
+            variant={onlyCode ? "default" : "secondary"}
             size="sm"
             onClick={() => setOnlyCode((prev) => !prev)}
             data-testid="model-filter-chip-code"
