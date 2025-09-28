@@ -1,111 +1,31 @@
-import React, { createContext, useContext, useState } from "react";
+import React from "react";
 
-interface TabsContextType {
+import { cn } from "../../lib/cn";
+export function Tabs({
+  value,
+  onChange,
+  items,
+}: {
   value: string;
-  onValueChange: (value: string) => void;
-}
-
-const TabsContext = createContext<TabsContextType | undefined>(undefined);
-
-interface TabsProps {
-  value?: string;
-  defaultValue?: string;
-  onValueChange?: (value: string) => void;
-  children: React.ReactNode;
-  className?: string;
-}
-
-export function Tabs({ value, defaultValue, onValueChange, children, className = "" }: TabsProps) {
-  const [internalValue, setInternalValue] = useState(defaultValue || "");
-
-  const currentValue = value !== undefined ? value : internalValue;
-  const handleValueChange = (newValue: string) => {
-    if (value === undefined) {
-      setInternalValue(newValue);
-    }
-    onValueChange?.(newValue);
-  };
-
+  onChange: (v: string) => void;
+  items: Array<{ value: string; label: string }>;
+}) {
   return (
-    <TabsContext.Provider value={{ value: currentValue, onValueChange: handleValueChange }}>
-      <div className={className}>{children}</div>
-    </TabsContext.Provider>
-  );
-}
-
-interface TabsListProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export function TabsList({ children, className = "" }: TabsListProps) {
-  const classes = ["glass-tabs", className].filter(Boolean).join(" ");
-
-  return (
-    <div className={classes} role="tablist">
-      {children}
-    </div>
-  );
-}
-
-interface TabsTriggerProps {
-  value: string;
-  children: React.ReactNode;
-  className?: string;
-  disabled?: boolean;
-}
-
-export function TabsTrigger({ value, children, className = "", disabled }: TabsTriggerProps) {
-  const context = useContext(TabsContext);
-  if (!context) {
-    throw new Error("TabsTrigger must be used within Tabs");
-  }
-
-  const isActive = context.value === value;
-
-  const classes = ["glass-tab", isActive && "glass-tab--active", className]
-    .filter(Boolean)
-    .join(" ");
-
-  return (
-    <button
-      role="tab"
-      aria-selected={isActive}
-      aria-controls={`tabpanel-${value}`}
-      tabIndex={isActive ? 0 : -1}
-      className={classes}
-      disabled={disabled}
-      onClick={() => !disabled && context.onValueChange(value)}
-    >
-      {children}
-    </button>
-  );
-}
-
-interface TabsContentProps {
-  value: string;
-  children: React.ReactNode;
-  className?: string;
-}
-
-export function TabsContent({ value, children, className = "" }: TabsContentProps) {
-  const context = useContext(TabsContext);
-  if (!context) {
-    throw new Error("TabsContent must be used within Tabs");
-  }
-
-  if (context.value !== value) {
-    return null;
-  }
-
-  return (
-    <div
-      role="tabpanel"
-      id={`tabpanel-${value}`}
-      aria-labelledby={`tab-${value}`}
-      className={className}
-    >
-      {children}
+    <div className="inline-flex gap-1 rounded-[var(--radius-pill)] border border-[hsl(var(--text-muted)/0.25)] bg-[hsl(var(--bg-elevated)/0.6)] p-1">
+      {items.map((it) => (
+        <button
+          key={it.value}
+          onClick={() => onChange(it.value)}
+          className={cn(
+            "rounded-[var(--radius-pill)] px-3 py-1.5 text-sm",
+            value === it.value
+              ? "bg-[hsl(var(--accent-primary)/0.18)] text-[hsl(var(--accent-primary))]"
+              : "text-[hsl(var(--text-muted))] hover:bg-[hsl(var(--bg-elevated)/0.5)]",
+          )}
+        >
+          {it.label}
+        </button>
+      ))}
     </div>
   );
 }

@@ -8,17 +8,11 @@ export interface MessageBubbleProps extends React.HTMLAttributes<HTMLDivElement>
 
 const MessageBubble = React.forwardRef<HTMLDivElement, MessageBubbleProps>(
   ({ className, variant, children, ...props }, ref) => {
-    const wrapperClasses = cn("flex w-full", {
-      "justify-end": variant === "user",
-      "justify-start": variant === "ai",
-    });
+    const wrapperClasses = cn("flex w-full", variant === "user" ? "justify-end" : "justify-start");
 
     const bubbleClasses = cn(
       "max-w-[80%] rounded-2xl px-4 py-3 shadow-md",
-      {
-        "bg-primary text-text-inverted": variant === "user",
-        "bg-bg-elevated text-text-default": variant === "ai",
-      },
+      variant === "user" ? "bg-primary text-text-inverted" : "bg-bg-elevated text-text-default",
       className,
     );
 
