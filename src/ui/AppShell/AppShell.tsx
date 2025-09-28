@@ -3,6 +3,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { chatAdapter } from "../../data/adapter/chat";
 import { Message } from "../chat/types";
 import { ErrorBanner } from "../components/ErrorBanner";
+import { ModelProvider, useModel } from "../state/modelContext";
 import { canAbort, canSendMessage, hasError, initialUIState, uiReducer } from "../state/uiMachine";
 import { ChatMain } from "./ChatMain";
 import { ComposerDock } from "./ComposerDock";
@@ -10,7 +11,8 @@ import { RightDrawer } from "./RightDrawer";
 import { SidebarLeft } from "./SidebarLeft";
 import { Topbar } from "./Topbar";
 
-export function AppShell() {
+function AppShellContent() {
+  const { selectedModelId } = useModel();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "m1",
@@ -82,7 +84,7 @@ function hello(){
 
       for await (const chunk of chatAdapter.sendMessage({
         messages: allMessages,
-        model: "anthropic/claude-3.5-sonnet",
+        model: selectedModelId,
         signal: abortController.signal,
       })) {
         if (chunk.type === "content" && chunk.content) {
@@ -157,5 +159,13 @@ function hello(){
         tokenCount={messages.reduce((n, m) => n + m.content.length, 0)}
       />
     </div>
+  );
+}
+
+export function AppShell() {
+  return (
+    <ModelProvider>
+      <AppShellContent />
+    </ModelProvider>
   );
 }

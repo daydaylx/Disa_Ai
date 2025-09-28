@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Badge } from "../primitives/Badge";
 import { Button } from "../primitives/Button";
 import { TextArea } from "../primitives/TextArea";
+import { useModel } from "../state/modelContext";
 import {
   canAbort,
   canSendMessage,
@@ -23,6 +24,7 @@ export function ComposerDock({
   tokenCount?: number;
 }) {
   const [value, setValue] = useState("");
+  const { selectedModel } = useModel();
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -66,7 +68,7 @@ export function ComposerDock({
             <div>Tokens: {tokenCount ?? 0}</div>
             <div className="flex items-center gap-2">
               <Badge variant={getStatusBadgeVariant(uiState)}>{getStatusBadgeText(uiState)}</Badge>
-              <Badge variant="muted">Model: Claude 3.5</Badge>
+              <Badge variant="muted">{selectedModel ? selectedModel.label : "Kein Modell"}</Badge>
             </div>
           </div>
         </div>
