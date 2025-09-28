@@ -1,12 +1,13 @@
+import { Bot, Copy, RotateCcw, User } from "lucide-react";
+import { useState } from "react";
+
+import { cn } from "../../lib/utils";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { cn } from "../../lib/utils";
-import { Copy, RotateCcw, User, Bot } from "lucide-react";
-import { useState } from "react";
 
-export interface ChatMessage {
+export interface ChatMessageType {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
@@ -16,7 +17,7 @@ export interface ChatMessage {
 }
 
 interface ChatMessageProps {
-  message: ChatMessage;
+  message: ChatMessageType;
   isLast?: boolean;
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
@@ -25,7 +26,7 @@ interface ChatMessageProps {
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   return (
     <div className="relative my-4 rounded-md bg-neutral-900 dark:bg-neutral-800">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-700">
+      <div className="flex items-center justify-between border-b border-neutral-700 px-4 py-2">
         <span className="text-xs text-neutral-400">{language || "text"}</span>
         <Button
           variant="ghost"
@@ -99,18 +100,18 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
   return (
     <div
       className={cn(
-        "group relative flex gap-3 px-4 py-6 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/50",
+        "dark:hover:bg-neutral-900/50 group relative flex gap-3 px-4 py-6 transition-colors hover:bg-neutral-50",
         isUser && "flex-row-reverse",
-        isSystem && "justify-center opacity-70"
+        isSystem && "justify-center opacity-70",
       )}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
       {/* Avatar */}
       <Avatar className={cn("h-8 w-8", isSystem && "hidden")}>
-        <AvatarFallback className={cn(
-          isUser ? "bg-accent-500 text-white" : "bg-neutral-200 dark:bg-neutral-700"
-        )}>
+        <AvatarFallback
+          className={cn(isUser ? "bg-accent-500 text-white" : "bg-neutral-200 dark:bg-neutral-700")}
+        >
           {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
         </AvatarFallback>
       </Avatar>
@@ -140,11 +141,13 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
         )}
 
         {/* Message Content */}
-        <Card className={cn(
-          "p-4 text-sm leading-relaxed",
-          isUser ? "bg-accent-500 text-white ml-12" : "bg-white dark:bg-neutral-800",
-          isSystem && "bg-neutral-100 dark:bg-neutral-800 text-center"
-        )}>
+        <Card
+          className={cn(
+            "p-4 text-sm leading-relaxed",
+            isUser ? "ml-12 bg-accent-500 text-white" : "bg-white dark:bg-neutral-800",
+            isSystem && "bg-neutral-100 text-center dark:bg-neutral-800",
+          )}
+        >
           {parsedContent.map((part, index) => (
             <div key={index}>
               {part.type === "text" ? (
@@ -158,10 +161,12 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
 
         {/* Action Buttons */}
         {!isSystem && showActions && (
-          <div className={cn(
-            "flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100",
-            isUser && "justify-end"
-          )}>
+          <div
+            className={cn(
+              "flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100",
+              isUser && "justify-end",
+            )}
+          >
             <Button
               variant="ghost"
               size="sm"

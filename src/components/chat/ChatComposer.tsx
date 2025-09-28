@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { RotateCcw, Send, Square, Zap } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+import { cn } from "../../lib/utils";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { Badge } from "../ui/badge";
-import { cn } from "../../lib/utils";
-import { Send, Square, RotateCcw, Zap } from "lucide-react";
 
 interface ChatComposerProps {
   value: string;
@@ -34,7 +35,7 @@ export function ChatComposer({
   maxTokens,
   placeholder = "Type your message... (Enter to send, Shift+Enter for new line)",
   disabled = false,
-  className
+  className,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -83,10 +84,12 @@ export function ChatComposer({
   const shouldShowRetry = canRetry && !isLoading && onRetry;
 
   return (
-    <div className={cn(
-      "border-t border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-4",
-      className
-    )}>
+    <div
+      className={cn(
+        "border-t border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900",
+        className,
+      )}
+    >
       <div className="mx-auto max-w-4xl">
         {/* Token Counter */}
         {(tokenCount !== undefined || maxTokens !== undefined) && (
@@ -113,11 +116,13 @@ export function ChatComposer({
         )}
 
         {/* Input Area */}
-        <div className={cn(
-          "relative flex items-end gap-3 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-3 transition-colors",
-          isFocused && "border-accent-500 ring-1 ring-accent-500",
-          disabled && "opacity-50 cursor-not-allowed"
-        )}>
+        <div
+          className={cn(
+            "relative flex items-end gap-3 rounded-lg border border-neutral-200 bg-white p-3 transition-colors dark:border-neutral-700 dark:bg-neutral-800",
+            isFocused && "border-accent-500 ring-1 ring-accent-500",
+            disabled && "cursor-not-allowed opacity-50",
+          )}
+        >
           <div className="flex-1">
             <Textarea
               ref={textareaRef}
@@ -152,7 +157,7 @@ export function ChatComposer({
                 onClick={handleStop}
                 size="sm"
                 variant="outline"
-                className="h-8 w-8 p-0 border-semantic-danger text-semantic-danger hover:bg-semantic-danger hover:text-white"
+                className="h-8 w-8 border-semantic-danger p-0 text-semantic-danger hover:bg-semantic-danger hover:text-white"
                 title="Stop generation"
               >
                 <Square className="h-4 w-4" />
@@ -189,17 +194,9 @@ export function ChatComposer({
         {/* Helper Text */}
         <div className="mt-2 flex items-center justify-between text-xs text-neutral-500">
           <div>
-            {isLoading ? (
-              "Generating response..."
-            ) : (
-              "Enter to send • Shift+Enter for new line"
-            )}
+            {isLoading ? "Generating response..." : "Enter to send • Shift+Enter for new line"}
           </div>
-          {value.length > 0 && (
-            <div>
-              {value.length} characters
-            </div>
-          )}
+          {value.length > 0 && <div>{value.length} characters</div>}
         </div>
       </div>
     </div>

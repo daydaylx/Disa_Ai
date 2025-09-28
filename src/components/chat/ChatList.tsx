@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
-import { ChatMessage } from "./ChatMessage";
+
 import { cn } from "../../lib/utils";
 import type { ChatMessage as ChatMessageType } from "./ChatMessage";
+import { ChatMessage } from "./ChatMessage";
 
 interface ChatListProps {
   messages: ChatMessageType[];
@@ -11,13 +12,7 @@ interface ChatListProps {
   className?: string;
 }
 
-export function ChatList({ 
-  messages, 
-  isLoading, 
-  onRetry, 
-  onCopy,
-  className 
-}: ChatListProps) {
+export function ChatList({ messages, isLoading, onRetry, onCopy, className }: ChatListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -34,18 +29,12 @@ export function ChatList({
   };
 
   return (
-    <div 
-      ref={containerRef}
-      className={cn(
-        "flex-1 overflow-y-auto scroll-smooth",
-        className
-      )}
-    >
+    <div ref={containerRef} className={cn("flex-1 overflow-y-auto scroll-smooth", className)}>
       <div className="mx-auto max-w-4xl">
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <div className="text-center space-y-3">
-              <div className="mx-auto h-12 w-12 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+            <div className="space-y-3 text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800">
                 <svg
                   className="h-6 w-6 text-neutral-400"
                   fill="none"
@@ -81,26 +70,36 @@ export function ChatList({
                 onCopy={handleCopy}
               />
             ))}
-            
+
             {isLoading && (
               <div className="flex gap-3 px-4 py-6">
-                <div className="h-8 w-8 rounded-full bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center">
-                  <svg className="h-4 w-4 text-neutral-600 dark:text-neutral-300" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700">
+                  <svg
+                    className="h-4 w-4 text-neutral-600 dark:text-neutral-300"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="mb-2 flex items-center gap-2">
                     <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                       Assistant
                     </span>
                   </div>
-                  <div className="bg-white dark:bg-neutral-800 rounded-lg p-4">
+                  <div className="rounded-lg bg-white p-4 dark:bg-neutral-800">
                     <div className="flex items-center gap-2">
                       <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-neutral-400 rounded-full animate-pulse"></div>
-                        <div className="w-2 h-2 bg-neutral-400 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
-                        <div className="w-2 h-2 bg-neutral-400 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
+                        <div className="h-2 w-2 animate-pulse rounded-full bg-neutral-400"></div>
+                        <div
+                          className="h-2 w-2 animate-pulse rounded-full bg-neutral-400"
+                          style={{ animationDelay: "0.2s" }}
+                        ></div>
+                        <div
+                          className="h-2 w-2 animate-pulse rounded-full bg-neutral-400"
+                          style={{ animationDelay: "0.4s" }}
+                        ></div>
                       </div>
                       <span className="text-sm text-neutral-500">Typing...</span>
                     </div>
@@ -110,7 +109,7 @@ export function ChatList({
             )}
           </>
         )}
-        
+
         {/* Scroll anchor */}
         <div ref={bottomRef} className="h-1" />
       </div>

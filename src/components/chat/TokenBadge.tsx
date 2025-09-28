@@ -1,8 +1,9 @@
+import { AlertTriangle, Clock, Zap } from "lucide-react";
 import { useMemo } from "react";
+
+import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import { cn } from "../../lib/utils";
-import { Zap, AlertTriangle, Clock } from "lucide-react";
 
 interface TokenBadgeProps {
   current: number;
@@ -21,15 +22,15 @@ export function TokenBadge({
   currency = "USD",
   isLive = false,
   model,
-  className
+  className,
 }: TokenBadgeProps) {
   const percentage = max ? (current / max) * 100 : 0;
-  
+
   const { variant, icon: Icon } = useMemo(() => {
     if (!max) {
       return { variant: "secondary" as const, icon: Zap };
     }
-    
+
     if (percentage >= 90) {
       return { variant: "destructive" as const, icon: AlertTriangle };
     } else if (percentage >= 70) {
@@ -65,15 +66,9 @@ export function TokenBadge({
           <div>Usage: {percentage.toFixed(1)}%</div>
         </>
       )}
-      {cost !== undefined && (
-        <div>Cost: {formatCost(cost, currency)}</div>
-      )}
-      {model && (
-        <div>Model: {model}</div>
-      )}
-      {isLive && (
-        <div className="text-accent-500">● Live updating</div>
-      )}
+      {cost !== undefined && <div>Cost: {formatCost(cost, currency)}</div>}
+      {model && <div>Model: {model}</div>}
+      {isLive && <div className="text-accent-500">● Live updating</div>}
     </div>
   );
 
@@ -84,9 +79,9 @@ export function TokenBadge({
           <Badge
             variant={variant}
             className={cn(
-              "flex items-center gap-1 text-xs font-mono transition-all",
+              "flex items-center gap-1 font-mono text-xs transition-all",
               isLive && "animate-pulse",
-              className
+              className,
             )}
           >
             <Icon className="h-3 w-3" />
@@ -123,20 +118,14 @@ export function LiveTokenCounter({
   cost,
   model,
   isStreaming = false,
-  className
+  className,
 }: LiveTokenCounterProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <TokenBadge
-        current={tokens}
-        max={maxTokens}
-        cost={cost}
-        model={model}
-        isLive={isStreaming}
-      />
+      <TokenBadge current={tokens} max={maxTokens} cost={cost} model={model} isLive={isStreaming} />
       {isStreaming && (
         <div className="flex items-center gap-1 text-xs text-neutral-500">
-          <div className="h-1.5 w-1.5 rounded-full bg-accent-500 animate-ping" />
+          <div className="h-1.5 w-1.5 animate-ping rounded-full bg-accent-500" />
           <span>Streaming...</span>
         </div>
       )}

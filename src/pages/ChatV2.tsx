@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
+import { ChatComposer } from "../components/chat/ChatComposer";
+import { ChatList } from "../components/chat/ChatList";
+import { TokenBadge } from "../components/chat/TokenBadge";
 import { Button } from "../components/ui/button";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
@@ -8,9 +11,6 @@ import { useChat } from "../hooks/useChat";
 import { humanError } from "../lib/errors/humanError";
 import ModelSelectionSheet from "../ui/ModelSheet";
 import type { Model } from "../ui/types";
-import { ChatList } from "../components/chat/ChatList";
-import { ChatComposer } from "../components/chat/ChatComposer";
-import { TokenBadge } from "../components/chat/TokenBadge";
 
 /** ====== UI: Header ====== */
 function Header({
@@ -58,11 +58,7 @@ function Header({
             <div className="flex items-center gap-4">
               {activePersonaName && <span className="badge badge-accent">{activePersonaName}</span>}
               {tokenCount !== undefined && <TokenBadge current={tokenCount} />}
-              <Button
-                onClick={onOpenModels}
-                variant="outline"
-                data-testid="model.select"
-              >
+              <Button onClick={onOpenModels} variant="outline" data-testid="model.select">
                 {modelName}
               </Button>
             </div>
@@ -89,7 +85,7 @@ export default function ChatPageV2() {
     reload,
     stop,
     isLoading,
-    error: _error
+    error: _error,
   } = useChat({
     onError: (error) => {
       const { title, message } = humanError(error);
@@ -100,14 +96,14 @@ export default function ChatPageV2() {
       });
     },
     body: {
-      model: model?.id
-    }
+      model: model?.id,
+    },
   });
 
   useEffect(() => {
     if (activePersona && messages.length === 0) {
       // Add system message for persona
-      append({
+      void append({
         role: "system",
         content: activePersona.systemPrompt,
       });
@@ -146,7 +142,7 @@ export default function ChatPageV2() {
     });
   };
 
-  const handleSend = async () => {
+  const handleSend = () => {
     const text = input.trim();
     if (!text) return;
 
