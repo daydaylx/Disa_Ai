@@ -1,0 +1,145 @@
+/**
+ * Design tokens as CSS custom properties.
+ * Generated from design-tokens.ts
+ */
+
+:root {
+  /* Neutral Colors */
+  --color-neutral-50: #f4f7fb;
+  --color-neutral-100: #c6cfde;
+  --color-neutral-200: #95a4bb;
+  --color-neutral-300: #40526b;
+  --color-neutral-400: #2d3b50;
+  --color-neutral-500: #24344a;
+  --color-neutral-600: #1d2b3c;
+  --color-neutral-700: #172231;
+  --color-neutral-800: #111a26;
+  --color-neutral-900: #0b1118;
+  --color-neutral-950: #05070d;
+
+  /* Accent Colors */
+  --color-accent-300: #7dd3fc;
+  --color-accent-500: #22d3ee;
+  --color-accent-700: #0a8aae;
+  --color-accent-subtle: rgba(34, 211, 238, 0.08);
+  --color-accent-low: rgba(34, 211, 238, 0.16);
+  --color-accent-outline: rgba(34, 211, 238, 0.38);
+  --color-accent-foreground: #03141c;
+
+  /* Semantic Colors */
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+  --color-purple: #8b5cf6;
+  --color-mint: #6ee7b7;
+
+  /* Spacing Scale */
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  /* Border Radius */
+  --radius-none: 0px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-0: none;
+  --shadow-1: 0 8px 20px -12px rgba(5, 11, 20, 0.55);
+  --shadow-2: 0 20px 48px -18px rgba(5, 11, 20, 0.55);
+  --shadow-3: 0 32px 64px -24px rgba(5, 11, 20, 0.65);
+
+  /* Glassmorphism */
+  --blur-sm: 8px;
+  --blur-md: 16px;
+  --blur-lg: 24px;
+  --blur-xl: 32px;
+  --blur-2xl: 40px;
+
+  --glass-bg-subtle: rgba(255, 255, 255, 0.05);
+  --glass-bg-soft: rgba(255, 255, 255, 0.08);
+  --glass-bg-medium: rgba(255, 255, 255, 0.12);
+  --glass-bg-strong: rgba(255, 255, 255, 0.16);
+
+  --glass-border-subtle: rgba(255, 255, 255, 0.08);
+  --glass-border-soft: rgba(255, 255, 255, 0.12);
+  --glass-border-medium: rgba(255, 255, 255, 0.16);
+  --glass-border-strong: rgba(255, 255, 255, 0.24);
+
+  --glass-glow-subtle: 0 0 20px rgba(34, 211, 238, 0.15);
+  --glass-glow-soft: 0 0 30px rgba(34, 211, 238, 0.2);
+  --glass-glow-medium: 0 0 40px rgba(34, 211, 238, 0.25);
+  --glass-glow-strong: 0 0 60px rgba(34, 211, 238, 0.3);
+
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-normal: 200ms;
+  --transition-slow: 300ms;
+
+  /* Typography */
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "Menlo", monospace;
+
+  /* Corporate Theme Colors */
+  --color-corporate-bg-primary: #000711;
+  --color-corporate-bg-secondary: #0a0f1c;
+  --color-corporate-bg-elevated: #0f1729;
+  --color-corporate-bg-card: #141b2e;
+  --color-corporate-bg-hover: #1a2235;
+
+  --color-corporate-text-primary: #f8fafc;
+  --color-corporate-text-secondary: #cbd5e1;
+  --color-corporate-text-muted: #94a3b8;
+  --color-corporate-text-accent: #60a5fa;
+
+  --color-corporate-border-primary: #1e293b;
+  --color-corporate-border-secondary: #334155;
+  --color-corporate-border-accent: #475569;
+
+  --color-corporate-accent-primary: #3b82f6;
+  --color-corporate-accent-secondary: #1d4ed8;
+  --color-corporate-accent-success: #10b981;
+  --color-corporate-accent-warning: #f59e0b;
+  --color-corporate-accent-danger: #ef4444;
+  --color-corporate-accent-purple: #8b5cf6;
+
+  --color-corporate-glow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
+  --color-corporate-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
+  --color-corporate-glow-green: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Dark Glass Theme Overrides */
+[data-theme="dark-glass"] {
+  --color-bg-primary: #0b0f14;
+  --color-bg-surface: #10151b;
+  --color-bg-elevated: #131a21;
+
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #b8bec4;
+  --color-text-muted: #9aa0a6;
+
+  --color-accent-teal: #26c6da;
+  --color-accent-violet: #7c4dff;
+  --color-accent-pink: #ff4d8b;
+
+  --color-border-soft: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.18);
+  --color-border-ultra: rgba(255, 255, 255, 0.32);
+
+  --color-overlay-weak: rgba(255, 255, 255, 0.04);
+  --color-overlay-soft: rgba(255, 255, 255, 0.08);
+  --color-overlay-strong: rgba(255, 255, 255, 0.16);
+
+  --shadow-base: 0 28px 80px -32px rgba(5, 9, 15, 0.75);
+  --shadow-soft: 0 18px 48px -24px rgba(5, 9, 15, 0.55);
+}

@@ -210,7 +210,11 @@ export default function SettingsView() {
                       />
                       {keyError && <p className="mt-2 text-sm text-red-400">{keyError}</p>}
                     </div>
-                    <GlassButton variant="primary" onClick={handleSaveApiKey} disabled={keySaving}>
+                    <GlassButton
+                      variant="secondary"
+                      onClick={handleSaveApiKey}
+                      disabled={keySaving}
+                    >
                       <div className="flex items-center gap-2">
                         {keySaving && <GlassSpinner size="sm" />}
                         <span>{keySaving ? "Speichert..." : "Key speichern"}</span>
@@ -295,7 +299,7 @@ export default function SettingsView() {
                 >
                   <div className="space-y-3">
                     {pwa.canInstall ? (
-                      <GlassButton variant="primary" onClick={pwa.requestInstall}>
+                      <GlassButton variant="secondary" onClick={pwa.requestInstall}>
                         Jetzt installieren
                       </GlassButton>
                     ) : pwa.installed ? (

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 
 import { cn } from "../../lib/cn";
-import { Button } from "../ui/Button";
+import { Button } from "../ui/button";
 import { Icon } from "../ui/Icon";
 
 export interface ErrorStateProps {
@@ -42,14 +42,14 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
               <summary className="cursor-pointer text-xs underline underline-offset-4">
                 Details
               </summary>
-              <pre className="border-border-subtle bg-surface-100 mt-1 max-h-48 overflow-auto rounded border p-2 text-xs text-text-primary">
+              <pre className="border-border-subtle bg-surface-100 text-text-primary mt-1 max-h-48 overflow-auto rounded border p-2 text-xs">
                 {details}
               </pre>
             </details>
           ) : null}
           {onRetry ? (
             <div className="mt-2">
-              <Button variant="primary" size="sm" onClick={onRetry} aria-label="Erneut versuchen">
+              <Button variant="default" size="sm" onClick={onRetry} aria-label="Erneut versuchen">
                 <Icon name="info" className="mr-2" /> Erneut versuchen
               </Button>
             </div>
