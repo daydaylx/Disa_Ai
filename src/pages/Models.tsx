@@ -1,16 +1,38 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Search, Filter, Zap, Clock, DollarSign, Cpu, BarChart3, Star, Bookmark, GitCompare } from "lucide-react";
+import {
+  BarChart3,
+  Bookmark,
+  Clock,
+  Cpu,
+  DollarSign,
+  Filter,
+  GitCompare,
+  Search,
+  Star,
+} from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../components/ui/dialog";
-import { useToasts } from "../components/ui/toast/ToastsProvider";
-import { cn } from "../lib/utils";
-import { loadModelCatalog, type ModelEntry } from "../config/models";
 import { getModelFallback } from "../api/openrouter";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { loadModelCatalog, type ModelEntry } from "../config/models";
+import { cn } from "../lib/utils";
 
 interface ModelFilters {
   provider: string;
@@ -35,7 +57,7 @@ function ModelCard({
   onSelect,
   onCompare,
   onBookmark,
-  isBookmarked
+  isBookmarked,
 }: ModelCardProps) {
   const formatPrice = (price?: number) => {
     if (!price) return "Free";
@@ -53,27 +75,31 @@ function ModelCard({
 
   const getSafetyBadgeVariant = (safety: string) => {
     switch (safety) {
-      case "free": return "secondary";
-      case "moderate": return "outline";
-      case "strict": return "destructive";
-      default: return "secondary";
+      case "free":
+        return "secondary";
+      case "moderate":
+        return "outline";
+      case "strict":
+        return "destructive";
+      default:
+        return "secondary";
     }
   };
 
   return (
-    <Card className={cn(
-      "relative transition-all duration-200 hover:shadow-md cursor-pointer",
-      isSelected && "ring-2 ring-accent-500 shadow-lg"
-    )}>
+    <Card
+      className={cn(
+        "relative cursor-pointer transition-all duration-200 hover:shadow-md",
+        isSelected && "shadow-lg ring-2 ring-accent-500",
+      )}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <CardTitle className="text-base font-medium mb-1">
-              {model.label || model.id}
-            </CardTitle>
+            <CardTitle className="mb-1 text-base font-medium">{model.label || model.id}</CardTitle>
             <CardDescription className="text-sm text-neutral-500">
               {model.provider && (
-                <span className="font-mono text-xs bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded">
+                <span className="rounded bg-neutral-100 px-2 py-1 font-mono text-xs dark:bg-neutral-800">
                   {model.provider}
                 </span>
               )}
@@ -89,10 +115,7 @@ function ModelCard({
                 onBookmark(model);
               }}
             >
-              <Bookmark className={cn(
-                "h-4 w-4",
-                isBookmarked && "fill-current text-accent-500"
-              )} />
+              <Bookmark className={cn("h-4 w-4", isBookmarked && "fill-current text-accent-500")} />
             </Button>
             <Button
               variant="ghost"
@@ -109,12 +132,9 @@ function ModelCard({
         </div>
       </CardHeader>
 
-      <CardContent
-        className="pt-0 cursor-pointer"
-        onClick={() => onSelect(model)}
-      >
+      <CardContent className="cursor-pointer pt-0" onClick={() => onSelect(model)}>
         {/* Model Stats */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="mb-4 grid grid-cols-2 gap-3">
           <div className="flex items-center gap-2">
             <DollarSign className="h-4 w-4 text-neutral-500" />
             <div className="text-sm">
@@ -133,10 +153,8 @@ function ModelCard({
         </div>
 
         {/* Tags and Safety */}
-        <div className="flex flex-wrap gap-2 mb-3">
-          <Badge variant={getSafetyBadgeVariant(model.safety)}>
-            {model.safety}
-          </Badge>
+        <div className="mb-3 flex flex-wrap gap-2">
+          <Badge variant={getSafetyBadgeVariant(model.safety)}>{model.safety}</Badge>
           {model.tags.slice(0, 3).map((tag) => (
             <Badge key={tag} variant="outline" className="text-xs">
               {tag}
@@ -172,7 +190,9 @@ function ModelCard({
 export default function ModelsPage() {
   const [models, setModels] = useState<ModelEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedModel, setSelectedModel] = useState<string>(getModelFallback() || "meta-llama/llama-3.3-70b-instruct:free");
+  const [selectedModel, setSelectedModel] = useState<string>(
+    getModelFallback() || "meta-llama/llama-3.3-70b-instruct:free",
+  );
   const [compareModels, setCompareModels] = useState<ModelEntry[]>([]);
   const [bookmarkedModels, setBookmarkedModels] = useState<Set<string>>(new Set());
   const [showCompareDialog, setShowCompareDialog] = useState(false);
@@ -183,20 +203,20 @@ export default function ModelsPage() {
     safety: "all",
     pricing: "all",
     contextLength: "all",
-    search: ""
+    search: "",
   });
 
   useEffect(() => {
-    loadModels();
+    void loadModels();
     loadBookmarks();
-  }, []);
+  }, [loadModels]);
 
-  const loadModels = async () => {
+  const loadModels = useCallback(async () => {
     try {
       setLoading(true);
       const catalog = await loadModelCatalog();
       setModels(catalog);
-    } catch (error) {
+    } catch {
       toasts.push({
         kind: "error",
         title: "Failed to load models",
@@ -205,7 +225,7 @@ export default function ModelsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toasts]);
 
   const loadBookmarks = () => {
     try {
@@ -213,7 +233,7 @@ export default function ModelsPage() {
       if (saved) {
         setBookmarkedModels(new Set(JSON.parse(saved)));
       }
-    } catch (error) {
+    } catch {
       console.warn("Failed to load bookmarks:", error);
     }
   };
@@ -221,7 +241,7 @@ export default function ModelsPage() {
   const saveBookmarks = (bookmarks: Set<string>) => {
     try {
       localStorage.setItem("bookmarked-models", JSON.stringify(Array.from(bookmarks)));
-    } catch (error) {
+    } catch {
       console.warn("Failed to save bookmarks:", error);
     }
   };
@@ -235,7 +255,7 @@ export default function ModelsPage() {
           model.id.toLowerCase().includes(searchLower) ||
           (model.label?.toLowerCase() || "").includes(searchLower) ||
           (model.provider?.toLowerCase() || "").includes(searchLower) ||
-          model.tags.some(tag => tag.toLowerCase().includes(searchLower));
+          model.tags.some((tag) => tag.toLowerCase().includes(searchLower));
 
         if (!matchesSearch) return false;
       }
@@ -261,11 +281,16 @@ export default function ModelsPage() {
       if (filters.contextLength !== "all") {
         const ctx = model.ctx || 0;
         switch (filters.contextLength) {
-          case "small": return ctx < 8000;
-          case "medium": return ctx >= 8000 && ctx < 32000;
-          case "large": return ctx >= 32000 && ctx < 128000;
-          case "xlarge": return ctx >= 128000;
-          default: return true;
+          case "small":
+            return ctx < 8000;
+          case "medium":
+            return ctx >= 8000 && ctx < 32000;
+          case "large":
+            return ctx >= 32000 && ctx < 128000;
+          case "xlarge":
+            return ctx >= 128000;
+          default:
+            return true;
         }
       }
 
@@ -275,9 +300,7 @@ export default function ModelsPage() {
 
   const providers = useMemo(() => {
     const providerSet = new Set(
-      models
-        .map(m => m.provider)
-        .filter((provider): provider is string => Boolean(provider))
+      models.map((m) => m.provider).filter((provider): provider is string => Boolean(provider)),
     );
     return Array.from(providerSet).sort();
   }, [models]);
@@ -293,10 +316,10 @@ export default function ModelsPage() {
   };
 
   const handleCompareModel = (model: ModelEntry) => {
-    if (compareModels.find(m => m.id === model.id)) {
-      setCompareModels(prev => prev.filter(m => m.id !== model.id));
+    if (compareModels.find((m) => m.id === model.id)) {
+      setCompareModels((prev) => prev.filter((m) => m.id !== model.id));
     } else if (compareModels.length < 3) {
-      setCompareModels(prev => [...prev, model]);
+      setCompareModels((prev) => [...prev, model]);
     } else {
       toasts.push({
         kind: "warning",
@@ -319,16 +342,16 @@ export default function ModelsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-500"></div>
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-accent-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
+    <div className="container mx-auto max-w-7xl p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">AI Models</h1>
+        <h1 className="mb-2 text-3xl font-bold">AI Models</h1>
         <p className="text-neutral-600 dark:text-neutral-400">
           Discover and compare AI models for your conversations
         </p>
@@ -337,11 +360,11 @@ export default function ModelsPage() {
       {/* Filters */}
       <div className="mb-6 space-y-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-500" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-neutral-500" />
           <Input
             placeholder="Search models, providers, or capabilities..."
             value={filters.search}
-            onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+            onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
             className="pl-10"
           />
         </div>
@@ -349,22 +372,24 @@ export default function ModelsPage() {
         <div className="flex flex-wrap gap-4">
           <Select
             value={filters.provider}
-            onValueChange={(value) => setFilters(prev => ({ ...prev, provider: value }))}
+            onValueChange={(value) => setFilters((prev) => ({ ...prev, provider: value }))}
           >
             <SelectTrigger className="w-48">
               <SelectValue placeholder="All Providers" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Providers</SelectItem>
-              {providers.map(provider => (
-                <SelectItem key={provider} value={provider}>{provider}</SelectItem>
+              {providers.map((provider) => (
+                <SelectItem key={provider} value={provider}>
+                  {provider}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
 
           <Select
             value={filters.safety}
-            onValueChange={(value) => setFilters(prev => ({ ...prev, safety: value }))}
+            onValueChange={(value) => setFilters((prev) => ({ ...prev, safety: value }))}
           >
             <SelectTrigger className="w-40">
               <SelectValue placeholder="All Safety" />
@@ -379,7 +404,7 @@ export default function ModelsPage() {
 
           <Select
             value={filters.pricing}
-            onValueChange={(value) => setFilters(prev => ({ ...prev, pricing: value }))}
+            onValueChange={(value) => setFilters((prev) => ({ ...prev, pricing: value }))}
           >
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Pricing" />
@@ -393,7 +418,7 @@ export default function ModelsPage() {
 
           <Select
             value={filters.contextLength}
-            onValueChange={(value) => setFilters(prev => ({ ...prev, contextLength: value }))}
+            onValueChange={(value) => setFilters((prev) => ({ ...prev, contextLength: value }))}
           >
             <SelectTrigger className="w-44">
               <SelectValue placeholder="Context Size" />
@@ -411,12 +436,12 @@ export default function ModelsPage() {
 
       {/* Compare Panel */}
       {compareModels.length > 0 && (
-        <div className="mb-6 p-4 bg-accent-50 dark:bg-accent-950 rounded-lg border">
+        <div className="bg-accent-50 dark:bg-accent-950 mb-6 rounded-lg border p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <GitCompare className="h-5 w-5 text-accent-600" />
+              <GitCompare className="text-accent-600 h-5 w-5" />
               <span className="font-medium">
-                Comparing {compareModels.length} model{compareModels.length > 1 ? 's' : ''}
+                Comparing {compareModels.length} model{compareModels.length > 1 ? "s" : ""}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -428,22 +453,18 @@ export default function ModelsPage() {
               >
                 Compare Details
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setCompareModels([])}
-              >
+              <Button variant="ghost" size="sm" onClick={() => setCompareModels([])}>
                 Clear
               </Button>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {compareModels.map(model => (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {compareModels.map((model) => (
               <Badge key={model.id} variant="secondary" className="flex items-center gap-1">
                 {model.label || model.id}
                 <button
                   onClick={() => handleCompareModel(model)}
-                  className="ml-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-full p-0.5"
+                  className="ml-1 rounded-full p-0.5 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                 >
                   ×
                 </button>
@@ -456,7 +477,7 @@ export default function ModelsPage() {
       {/* Results */}
       <div className="mb-4 flex items-center justify-between">
         <span className="text-sm text-neutral-600 dark:text-neutral-400">
-          {filteredModels.length} model{filteredModels.length !== 1 ? 's' : ''} found
+          {filteredModels.length} model{filteredModels.length !== 1 ? "s" : ""} found
         </span>
         {bookmarkedModels.size > 0 && (
           <Button
@@ -464,61 +485,55 @@ export default function ModelsPage() {
             size="sm"
             onClick={() => {
               const hasBookmarkFilter = filters.search === "bookmarked";
-              setFilters(prev => ({
+              setFilters((prev) => ({
                 ...prev,
-                search: hasBookmarkFilter ? "" : "bookmarked"
+                search: hasBookmarkFilter ? "" : "bookmarked",
               }));
             }}
           >
-            <Bookmark className="h-4 w-4 mr-2" />
+            <Bookmark className="mr-2 h-4 w-4" />
             Bookmarked ({bookmarkedModels.size})
           </Button>
         )}
       </div>
 
       {/* Model Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredModels
-          .filter(model =>
-            filters.search !== "bookmarked" || bookmarkedModels.has(model.id)
-          )
+          .filter((model) => filters.search !== "bookmarked" || bookmarkedModels.has(model.id))
           .map((model) => (
-          <ModelCard
-            key={model.id}
-            model={model}
-            isSelected={selectedModel === model.id}
-            onSelect={handleSelectModel}
-            onCompare={handleCompareModel}
-            onBookmark={handleBookmarkModel}
-            isBookmarked={bookmarkedModels.has(model.id)}
-          />
-        ))}
+            <ModelCard
+              key={model.id}
+              model={model}
+              isSelected={selectedModel === model.id}
+              onSelect={handleSelectModel}
+              onCompare={handleCompareModel}
+              onBookmark={handleBookmarkModel}
+              isBookmarked={bookmarkedModels.has(model.id)}
+            />
+          ))}
       </div>
 
       {filteredModels.length === 0 && (
-        <div className="text-center py-12">
-          <Filter className="h-12 w-12 text-neutral-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-neutral-600 dark:text-neutral-400 mb-2">
+        <div className="py-12 text-center">
+          <Filter className="mx-auto mb-4 h-12 w-12 text-neutral-400" />
+          <h3 className="mb-2 text-lg font-medium text-neutral-600 dark:text-neutral-400">
             No models found
           </h3>
-          <p className="text-neutral-500">
-            Try adjusting your search terms or filters
-          </p>
+          <p className="text-neutral-500">Try adjusting your search terms or filters</p>
         </div>
       )}
 
       {/* Compare Dialog */}
       <Dialog open={showCompareDialog} onOpenChange={setShowCompareDialog}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Model Comparison</DialogTitle>
-            <DialogDescription>
-              Compare the selected models side by side
-            </DialogDescription>
+            <DialogDescription>Compare the selected models side by side</DialogDescription>
           </DialogHeader>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {compareModels.map(model => (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {compareModels.map((model) => (
               <Card key={model.id}>
                 <CardHeader>
                   <CardTitle className="text-base">{model.label || model.id}</CardTitle>
@@ -526,26 +541,27 @@ export default function ModelsPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <div className="font-medium text-sm">Pricing</div>
+                    <div className="text-sm font-medium">Pricing</div>
                     <div className="text-sm text-neutral-600">
-                      Input: ${model.pricing?.in || 0}/1K<br/>
+                      Input: ${model.pricing?.in || 0}/1K
+                      <br />
                       Output: ${model.pricing?.out || 0}/1K
                     </div>
                   </div>
                   <div>
-                    <div className="font-medium text-sm">Context Length</div>
+                    <div className="text-sm font-medium">Context Length</div>
                     <div className="text-sm text-neutral-600">
                       {model.ctx ? `${model.ctx.toLocaleString()} tokens` : "Unknown"}
                     </div>
                   </div>
                   <div>
-                    <div className="font-medium text-sm">Safety Level</div>
+                    <div className="text-sm font-medium">Safety Level</div>
                     <Badge variant="outline">{model.safety}</Badge>
                   </div>
                   <div>
-                    <div className="font-medium text-sm">Tags</div>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {model.tags.slice(0, 4).map(tag => (
+                    <div className="text-sm font-medium">Tags</div>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {model.tags.slice(0, 4).map((tag) => (
                         <Badge key={tag} variant="outline" className="text-xs">
                           {tag}
                         </Badge>
