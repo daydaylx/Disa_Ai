@@ -3,11 +3,11 @@ import * as React from "react";
 import { loadModelCatalog, type Safety } from "../config/models";
 import { cn } from "../lib/cn";
 import { getApiKey } from "../services/openrouter";
-import { Badge } from "./ui/Badge";
-import { Button } from "./ui/Button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/Card";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Icon } from "./ui/Icon";
-import { Input } from "./ui/Input";
+import { Input } from "./ui/input";
 
 // All the logic and type definitions from the original file are preserved.
 
@@ -352,7 +352,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
               aria-label="Detailfilter"
             >
               <div className="flex flex-col gap-1">
-                <label htmlFor="provider-select" className="text-sm text-text-muted">
+                <label htmlFor="provider-select" className="text-text-muted text-sm">
                   Provider
                 </label>
                 <select
@@ -360,7 +360,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                   value={provider}
                   onChange={(e) => setProvider(e.target.value)}
                   aria-label="Provider filtern"
-                  className="h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="placeholder:text-text-muted h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   {providers.map((p) => (
                     <option key={p} value={p} className="bg-bg-elevated">
@@ -371,7 +371,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
               </div>
               {/* Other selects would be styled similarly */}
               <div className="flex flex-col gap-1">
-                <label htmlFor="sort-select" className="text-sm text-text-muted">
+                <label htmlFor="sort-select" className="text-text-muted text-sm">
                   Sortieren nach
                 </label>
                 <select
@@ -381,7 +381,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                     setSortBy(e.target.value as "label" | "price" | "ctx")
                   }
                   aria-label="Sortierung"
-                  className="h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="placeholder:text-text-muted h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <option value="label" className="bg-bg-elevated">
                     Name
@@ -406,7 +406,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       >
         {loading ? (
           <div
-            className="col-span-full flex flex-col items-center justify-center p-8 text-text-muted"
+            className="text-text-muted col-span-full flex flex-col items-center justify-center p-8"
             role="status"
             aria-label="Modelle werden geladen"
           >
@@ -466,7 +466,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                   </Button>
                 </CardHeader>
                 <CardContent className="space-y-4 pt-2">
-                  <div className="flex items-center justify-between text-sm text-text-muted">
+                  <div className="text-text-muted flex items-center justify-between text-sm">
                     <span title="Kontextfenster">
                       {m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—"}
                     </span>
@@ -475,7 +475,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {isFreeModel(m) && <Badge variant="primary">Free</Badge>}
+                    {isFreeModel(m) && <Badge variant="default">Free</Badge>}
                     {isCodeModel(m) && <Badge variant="secondary">Code</Badge>}
                     <Badge>{safetyLabel(m.safety)}</Badge>
                   </div>
@@ -487,7 +487,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
 
         {!loading && filtered.length === 0 && (
           <div
-            className="col-span-full flex flex-col items-center justify-center p-8 text-text-muted"
+            className="text-text-muted col-span-full flex flex-col items-center justify-center p-8"
             role="status"
           >
             <Icon name="search-off" size={48} className="mb-4" />

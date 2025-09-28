@@ -5,7 +5,7 @@ import { GlassButton } from "../../components/glass/GlassButton";
 import { GlassCard } from "../../components/glass/GlassCard";
 import Accordion, { type AccordionItem } from "../../components/ui/Accordion";
 import BottomSheet from "../../components/ui/BottomSheet";
-import { Card, CardDescription, CardHeader, CardTitle } from "../../components/ui/Card";
+import { Card, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { useToasts } from "../../components/ui/Toast";
 import { fetchRoleTemplates, getRoleById, listRoleTemplates } from "../../config/roleStore";
 import { getTemplateId, setTemplateId } from "../../config/settings";

@@ -1,14 +1,28 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import ChatPage from "../pages/Chat";
+import ModelsPage from "../pages/Models";
+import SettingsPage from "../pages/Settings";
 import Studio from "../pages/Studio";
-import { RootLayout } from "./layouts/RootLayout";
+import { AppShell } from "./layouts/AppShell";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
+    element: <AppShell />,
     children: [
+      {
+        path: "/chat",
+        element: <ChatPage />,
+      },
+      {
+        path: "/models",
+        element: <ModelsPage />,
+      },
+      {
+        path: "/settings",
+        element: <SettingsPage />,
+      },
       {
         index: true,
         element: <ChatPage />,

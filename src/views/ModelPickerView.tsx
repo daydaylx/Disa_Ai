@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { GlassCard } from "../components/glass/GlassCard";
 import ModelPicker from "../components/ModelPicker";
-import { Button } from "../components/ui/Button";
+import { Button } from "../components/ui/button";
 import { useToasts } from "../components/ui/Toast";
 import { type Safety } from "../config/models";
 import { getRoleById } from "../config/roleStore";

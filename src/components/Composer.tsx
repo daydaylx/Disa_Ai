@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { Button } from "./ui/Button";
+import { Button } from "./ui/button";
 import { Icon } from "./ui/Icon";
-import { Textarea } from "./ui/Textarea";
+import { Textarea } from "./ui/textarea";
 
 interface ComposerProps {
   value: string;
