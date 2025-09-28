@@ -2,7 +2,37 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  content: ["./index.html", "./src/**/*.{ts,tsx}", "./src/ui/primitives/**/*.{ts,tsx}"],
+  safelist: [
+    // Professional neutral color system (dynamic in PersonaQuickBar)
+    {
+      pattern: /(slate|gray|zinc|neutral|stone)-(600|700|500)/,
+      variants: ["hover", "focus", "active", "group-hover"],
+    },
+    // Common responsive classes used in codebase
+    "sm:max-w-sm",
+    "md:max-w-md",
+    "lg:max-w-lg",
+    "sm:px-6",
+    "sm:py-5",
+    "sm:p-2.5",
+    "sm:p-2",
+    "sm:w-4",
+    "sm:h-4",
+    "sm:right-3",
+    "sm:top-3",
+    "touch:opacity-100",
+    // Legacy button compatibility for backward compatibility
+    "btn",
+    "btn-primary",
+    "btn-secondary",
+    "btn-ghost",
+    "btn-danger",
+    "btn-sm",
+    "btn-lg",
+    "input",
+    "select",
+  ],
   theme: {
     extend: {
       colors: {
