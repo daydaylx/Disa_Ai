@@ -442,7 +442,7 @@ function CorporateWelcome({ onSendMessage }: { onSendMessage?: () => void }) {
                 <div className="flex-1">
                   <textarea
                     placeholder="Describe your business challenge, strategic question, or data analysis request..."
-                    className="w-full resize-none rounded-xl border px-6 py-4 text-base transition-all placeholder:text-[var(--corp-text-muted)] focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                    className="w-full resize-none rounded-xl border px-6 py-4 text-base transition-all placeholder:text-[var(--corp-text-muted)] focus:ring-2 focus:ring-opacity-50"
                     style={{
                       backgroundColor: "var(--corp-bg-card)",
                       borderColor: "var(--corp-border-secondary)",
@@ -453,7 +453,7 @@ function CorporateWelcome({ onSendMessage }: { onSendMessage?: () => void }) {
                 </div>
                 <button
                   onClick={() => onSendMessage?.()}
-                  className="flex items-center justify-center rounded-xl px-8 py-4 font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                  className="flex items-center justify-center rounded-xl px-8 py-4 font-medium transition-all hover:scale-105 focus:ring-2 focus:ring-opacity-50"
                   style={{
                     backgroundColor: "var(--corp-accent-primary)",
                     color: "var(--corp-text-primary)",
@@ -683,7 +683,7 @@ function CorporateComposer({
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Enter your business question or request..."
-          className="w-full resize-none rounded-xl border px-4 py-3 text-base transition-all placeholder:text-[var(--corp-text-muted)] focus:outline-none focus:ring-2 focus:ring-opacity-50"
+          className="w-full resize-none rounded-xl border px-4 py-3 text-base transition-all placeholder:text-[var(--corp-text-muted)] focus:ring-2 focus:ring-opacity-50"
           style={{
             backgroundColor: "var(--corp-bg-elevated)",
             borderColor: "var(--corp-border-secondary)",
@@ -697,7 +697,7 @@ function CorporateComposer({
       <button
         onClick={streaming ? onStop : handleSubmit}
         disabled={!content.trim() && !streaming}
-        className="flex h-12 w-12 items-center justify-center rounded-xl font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-12 w-12 items-center justify-center rounded-xl font-medium transition-all hover:scale-105 focus:ring-2 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50"
         style={{
           backgroundColor: streaming ? "var(--corp-accent-danger)" : "var(--corp-accent-primary)",
           color: "var(--corp-text-primary)",
