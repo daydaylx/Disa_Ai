@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 
 import { colors } from "./styles/design-tokens";
@@ -86,26 +86,71 @@ function FallbackSettings() {
   );
 }
 
-// Direct usage of fallback components - no lazy loading, no complex shells
-const ChatApp = FallbackChat;
-const SettingsView = FallbackSettings;
+// Loading spinner component
+function LoadingSpinner() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        height: "100vh",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.neutral[900],
+        color: "white",
+      }}
+    >
+      <div>Loading...</div>
+    </div>
+  );
+}
+
+// Try to load real components first, with graceful fallback
+const ChatApp = lazy(() =>
+  import("./ui/ChatApp").catch((error) => {
+    console.warn("ChatApp failed to load, using fallback:", error);
+    return { default: FallbackChat };
+  }),
+);
+
+const SettingsView = lazy(() =>
+  import("./ui/SettingsView").catch((error) => {
+    console.warn("SettingsView failed to load, using fallback:", error);
+    return { default: FallbackSettings };
+  }),
+);
 
 const router = createHashRouter([
   {
     path: "/",
-    element: <ChatApp />,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <ChatApp />
+      </Suspense>
+    ),
   },
   {
     path: "/models",
-    element: <ChatApp />,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <ChatApp />
+      </Suspense>
+    ),
   },
   {
     path: "/settings",
-    element: <SettingsView />,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <SettingsView />
+      </Suspense>
+    ),
   },
   {
     path: "/chat/:id?",
-    element: <ChatApp />,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <ChatApp />
+      </Suspense>
+    ),
   },
 ]);
 
