@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { CodeBlock } from "./CodeBlock";
 import { MessageActions } from "./MessageActions";
+import { MessageHandlers } from "./messageHandlers";
 import { Message } from "./types";
 
 type Part = { type: "code" | "text"; content: string; lang?: string };
@@ -33,9 +34,20 @@ function splitCodeFences(text: string): Part[] {
   return out;
 }
 
-export function MessageItem({ msg, align = "left" }: { msg: Message; align?: "left" | "right" }) {
+export function MessageItem({
+  msg,
+  align = "left",
+  handlers,
+}: {
+  msg: Message;
+  align?: "left" | "right";
+  handlers?: MessageHandlers;
+}) {
   const isAssistant = msg.role === "assistant";
   const isUser = msg.role === "user";
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(msg.content);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   return (
     <div className={align === "right" ? "flex justify-end" : "flex justify-start"}>
       <article
@@ -59,9 +71,80 @@ export function MessageItem({ msg, align = "left" }: { msg: Message; align?: "le
             </p>
           ),
         )}
-        <div className="mt-2">
-          <MessageActions onCopy={() => navigator.clipboard?.writeText(msg.content)} />
-        </div>
+        {/* Edit Mode for User Messages */}
+        {isEditing && isUser ? (
+          <div className="mt-3 space-y-2">
+            <textarea
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              className="w-full resize-none rounded border border-[hsl(var(--text-muted)/0.3)] bg-[hsl(var(--bg-elevated)/0.5)] p-2 text-sm"
+              rows={Math.min(editContent.split("\n").length + 1, 10)}
+              autoFocus
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  handlers?.onEdit(msg.id, editContent);
+                  setIsEditing(false);
+                }}
+                className="rounded bg-[hsl(var(--accent-primary))] px-3 py-1 text-xs font-medium text-black hover:bg-[hsl(var(--accent-primary-weak))]"
+              >
+                Speichern
+              </button>
+              <button
+                onClick={() => {
+                  setEditContent(msg.content);
+                  setIsEditing(false);
+                }}
+                className="rounded border border-[hsl(var(--text-muted)/0.3)] px-3 py-1 text-xs font-medium hover:bg-[hsl(var(--bg-elevated)/0.5)]"
+              >
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Delete Confirmation */}
+        {showDeleteConfirm ? (
+          <div className="mt-3 rounded border border-red-500/30 bg-red-500/10 p-3">
+            <p className="mb-2 text-sm text-red-400">
+              Sind Sie sicher, dass Sie diese Nachricht löschen möchten?
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  handlers?.onDelete(msg.id);
+                  setShowDeleteConfirm(false);
+                }}
+                className="rounded bg-red-500 px-3 py-1 text-xs font-medium text-white hover:bg-red-600"
+              >
+                Löschen
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="rounded border border-[hsl(var(--text-muted)/0.3)] px-3 py-1 text-xs font-medium hover:bg-[hsl(var(--bg-elevated)/0.5)]"
+              >
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Message Actions */}
+        {!isEditing && !showDeleteConfirm && (
+          <div className="mt-2">
+            <MessageActions
+              messageId={msg.id}
+              content={msg.content}
+              role={msg.role}
+              onRegenerate={
+                handlers?.onRegenerate ? () => handlers.onRegenerate(msg.id) : undefined
+              }
+              onEdit={isUser && handlers?.onEdit ? () => setIsEditing(true) : undefined}
+              onDelete={handlers?.onDelete ? () => setShowDeleteConfirm(true) : undefined}
+            />
+          </div>
+        )}
       </article>
     </div>
   );
