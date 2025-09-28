@@ -1,53 +1,32 @@
-import { forwardRef } from "react";
+import React from "react";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
-  loading?: boolean;
-  children: React.ReactNode;
+import { cn } from "../../lib/cn";
+
+type Variant = "primary" | "ghost" | "outline";
+type Size = "sm" | "md" | "lg";
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: Variant;
+  size?: Size;
 }
-
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { variant = "primary", size = "md", loading, className = "", children, disabled, ...props },
-    ref,
-  ) => {
-    const variantClasses = {
-      primary: "glass-button--primary",
-      secondary: "glass-button--secondary",
-      ghost: "glass-button--ghost",
-      danger: "glass-button--danger",
-    };
-
-    const sizeClasses = {
-      sm: "glass-button--sm",
-      md: "",
-      lg: "glass-button--lg",
-    };
-
-    const classes = [
-      "glass-button",
-      variantClasses[variant],
-      sizeClasses[size],
-      loading && "opacity-50 cursor-wait",
-      className,
-    ]
-      .filter(Boolean)
-      .join(" ");
-
-    return (
-      <button ref={ref} className={classes} disabled={disabled || loading} {...props}>
-        {loading ? (
-          <div className="flex items-center gap-2">
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            {children}
-          </div>
-        ) : (
-          children
-        )}
-      </button>
-    );
-  },
-);
-
-Button.displayName = "Button";
+const sizeClass: Record<Size, string> = {
+  sm: "px-3 py-2 text-sm",
+  md: "px-4 py-2.5 text-[0.95rem]",
+  lg: "px-5 py-3 text-base",
+};
+const variantClass: Record<Variant, string> = {
+  primary: "btn btn-primary",
+  ghost: "btn btn-ghost",
+  outline: "btn btn-outline",
+};
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { className, variant = "primary", size = "md", ...props },
+  ref,
+) {
+  return (
+    <button
+      ref={ref}
+      className={cn(variantClass[variant], sizeClass[size], "tap-target", className)}
+      {...props}
+    />
+  );
+});

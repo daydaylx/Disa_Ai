@@ -1,0 +1,27 @@
+:root {
+  --bg-base: 250 22% 6%;
+  --bg-elevated: 250 18% 10%;
+  --text-main: 0 0% 96%;
+  --text-muted: 250 10% 70%;
+  --accent-primary: 285 85% 60%;
+  --accent-primary-weak: 285 90% 72%;
+  --success: 160 60% 45%;
+  --warn: 40 90% 55%;
+  --error: 350 80% 55%;
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --shadow-soft: 0 8px 24px hsl(var(--accent-primary) / 0.12);
+  --ring-soft: 0 0 0 1px hsl(var(--accent-primary) / 0.35) inset;
+  --glass-blur: blur(12px) saturate(1.15);
+}

@@ -10,7 +10,7 @@ export default defineConfig({
   reporter: [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]],
 
   use: {
-    baseURL: "http://localhost:5173",
+    baseURL: "http://localhost:5174",
     trace: "retain-on-failure",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
@@ -29,8 +29,8 @@ export default defineConfig({
   },
 
   webServer: {
-    command: "npm run dev -- --port=5173",
-    url: "http://localhost:5173",
+    command: "npm run dev -- --port=5174",
+    url: "http://localhost:5174",
     reuseExistingServer: true,
     timeout: 60_000,
   },

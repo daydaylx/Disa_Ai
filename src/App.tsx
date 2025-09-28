@@ -1,22 +1,13 @@
+import "./index.css";
+import "./styles/tokens.css";
 import "./styles/primitives.css";
 import "./styles/components.css";
+import "./ui/base.css";
 
-import { Outlet } from "react-router-dom";
+import React from "react";
 
-import { AuroraBackground } from "./components/glass/AuroraBackground";
-import NavBar from "./components/NavBar";
-import { ToastsProvider } from "./components/ui/Toast";
+import { Router } from "./Router";
 
 export default function App() {
-  return (
-    <ToastsProvider>
-      <div className="relative h-full">
-        <AuroraBackground />
-        <div className="relative z-10">
-          <Outlet />
-        </div>
-        <NavBar />
-      </div>
-    </ToastsProvider>
-  );
+  return <Router />;
 }

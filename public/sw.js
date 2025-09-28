@@ -1,4 +1,4 @@
-const SW_VERSION = "v1.0.0-f350cab1";
+const SW_VERSION = "v1.0.0-b9602c2c";
 const HTML_CACHE = `html-${SW_VERSION}`;
 const ASSET_CACHE = `assets-${SW_VERSION}`;
 const OFFLINE_URL = "/offline.html";
