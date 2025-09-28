@@ -1,15 +1,15 @@
 Disa AI — Professional Mobile-First AI Chat PWA
 
-Eine moderne, professionelle Chat-App für KI-Modelle mit Android-optimierter UX und offline-first Architektur. Fokus: Mobile-native Feeling, robuste Builds, reproduzierbares Deployment und nachvollziehbare Qualitätssicherung.
+Eine moderne, professionelle Chat-App für KI-Modelle mit offline-first Architektur und glassmorphism Design. Fokus: Saubere Codebase, robuste Builds und produktionsreife Performance.
 
 **Live:** https://disaai.pages.dev/
 **Repository:** https://github.com/daydaylx/Disa_Ai
 
-> Stand: 25. September 2025
+> Stand: 28. September 2025
 
 ## ✅ Production Status
 
-**Status:** Professional UI redesign completed. Core functionality stable with comprehensive testing.
+**Status:** Production-ready PWA with cleaned codebase and optimized architecture.
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Design Status](https://img.shields.io/badge/design-professional_glassmorphism-blue)
@@ -28,7 +28,7 @@ Eine moderne, professionelle Chat-App für KI-Modelle mit Android-optimierter UX
 **Testing**: Offline-first E2E mit Playwright, Unit Tests mit Vitest
 **Mobile UX**: Android-optimiert mit Material Design 3, Touch-Targets ≥44px, Edge-to-Edge Support
 **PWA Features**: Enhanced Manifest, Share Target, Protocol Handlers, Offline-First
-**Documentation**: [Vollständige Rescue-Dokumentation](docs/status/rescue-checklist.md)
+**Codebase**: Streamlined architecture with removed legacy code (113 files cleaned)
 
 ---
 
@@ -119,28 +119,23 @@ Eine moderne, professionelle Chat-App für KI-Modelle mit Android-optimierter UX
 
 ## Projektstruktur
 
-Top-Level (Auszug):
+Top-Level (Struktur):
 
 ```
-.claude/             # Projektbezogene Vorgaben/Prompts für Agenten
-.github/             # Workflows (CI)
+.claude/             # Claude Code Integration
+.github/             # CI/CD Workflows
 .husky/              # Git Hooks
-docs/                # Interne Dokumentation
-e2e/                 # End-to-End Tests (Playwright)
-ops/                 # Betriebs-/Scriptmaterial
-public/              # Statische Public-Assets (inkl. _headers)
-scripts/             # Node/Utility-Skripte (Build/Analyse)
-src/                 # App-Quellcode (React/TS, Styles, Utilities)
-tests/               # Unit-/Integrationstests (Vitest)
-.env.example         # Vorlage für lokale Umgebungsvariablen
-tailwind.config.ts   # Tailwind-Setup mit Token-Anbindung
-vite.config.ts       # Vite-Build/Dev-Konfiguration
-vitest.config.ts     # Test-Setup
+public/              # Static Assets & PWA Manifest
+src/                 # App Source Code (React/TS)
+tests/               # E2E Tests (Playwright)
+tools/               # Build Utilities
+.env.example         # Environment Variables Template
+tailwind.config.ts   # Tailwind Configuration
+vite.config.ts       # Vite Build Configuration
+vitest.config.ts     # Test Configuration
 ```
 
-Code kopieren
-
-Hilfs-Markdowns (Auswahl) im Repo: `AGENTS.md`, `ANALYSIS.md`, `REFACTOR_PLAN.md`, `UX_FINDINGS.md`, `DEPENDENCIES.md`, `DEPLOYMENT_READINESS.md`. Diese dokumentieren Analyse- und Umbaupläne, UI-Befunde und Abhängigkeiten.
+**Clean Architecture**: Legacy documentation and unused components removed for maintainability.
 
 ---
 
@@ -212,7 +207,7 @@ const hasKey = hasApiKey();
 - Unterstützt mehrere Key-Kandidaten: `disa_api_key`, `openrouter_key`, `OPENROUTER_API_KEY`
 - Keys werden bei Browser-Neustart automatisch gelöscht (session-only)
 
-**Architektur-Entscheidung:** [ADR-0004: SessionStorage für API-Keys](docs/adr/0004-sessionStorage-api-keys.md)
+**Sicherheit**: SessionStorage-only Architektur für maximale API-Key-Sicherheit
 
 ### 🛡️ Security Headers
 
@@ -365,7 +360,7 @@ npm run test:e2e
 
 **Artefakte:** Test-Reports und Coverage sind CI-only - nicht im Repository.
 
-**Architektur-Entscheidung:** [ADR-0003: Offline-First Testing](docs/adr/0003-offline-first-testing.md)
+**Testing Strategy**: Vollständig offline mit Request Interception für zuverlässige Builds
 
 **Test Coverage:**
 
@@ -585,13 +580,11 @@ export function mapError(error: unknown): AppError {
 - **Graceful Degradation** bei API-Ausfällen
 - **Offline-Modus** Anzeige bei Konnektivitätsverlust
 
-**Implementierung siehe:**
+**Implementierung:**
 
-- [Error Types](src/lib/errors/types.ts): Strukturierte Error-Klassen
-- [Error Mapper](src/lib/errors/mapper.ts): `mapError()` für einheitliche Konvertierung
-- [Human Error](src/lib/errors/humanError.ts): User-friendly UI-Meldungen
-
-**Architektur-Entscheidung:** [ADR-0001: Error Handling Strategy](docs/adr/0001-error-handling.md)
+- Strukturierte Error-Klassen in `src/lib/errors/`
+- Einheitliche Error-Konvertierung mit `mapError()`
+- User-friendly UI-Meldungen ohne technische Details
 
 ---
 
@@ -599,7 +592,7 @@ export function mapError(error: unknown): AppError {
 
 ### 🔄 Trunk-Based Development
 
-**Branch-Strategie:** [ADR-0002: Trunk-Based Development](docs/adr/0002-trunk-based-development.md)
+**Branch-Strategie:** Hauptbranch-basierte Entwicklung für schnelle Integration
 
 - Ein Hauptbranch: `main`
 - Kurze Feature-Branches (1-2 Tage max.)
@@ -659,21 +652,7 @@ Längere Beschreibung falls nötig.
 Empfohlene Required Checks (Branch‑Protection):
 `Lint`, `Typecheck`, `Unit Tests`, `E2E Tests (Stable)`, `Build`, `Deploy Gate - Cloudflare Ready`.
 
-**Detaillierte Guidelines:** [CONTRIBUTING.md](CONTRIBUTING.md)
-
----
-
-## Architektur-Entscheidungen (ADRs)
-
-**ADR-Verzeichnis:** [`docs/adr/`](docs/adr/)
-
-**Aktuelle ADRs:**
-
-- [ADR-0001: Error Handling Strategy](docs/adr/0001-error-handling.md)
-- [ADR-0002: Trunk-Based Development](docs/adr/0002-trunk-based-development.md)
-- [ADR-0003: Offline-First Testing](docs/adr/0003-offline-first-testing.md)
-
-**ADR-Template:** [`docs/adr/template.md`](docs/adr/template.md)
+**Code Quality Standards**: ESLint + TypeScript strict mode + automatische Formatierung
 
 ---
 
@@ -704,25 +683,24 @@ Empfohlene Required Checks (Branch‑Protection):
 1. Hard Refresh: `Ctrl+Shift+R` / `Cmd+Shift+R`
 2. DevTools → Network Tab → "Disable Cache"
 3. Manual: Clear site data via DevTools → Application
-   MCP/Agent-Setup (optional)
-   Das Repo enthält .mcp.json und einen .claude/ Ordner. Diese Dateien standardisieren lokale Agent-Capabilities und Regeln für toolgestützte Code-Analysen und Umbauten.
-   Nützlich, wenn du Code-Assistenten per CLI nutzt, die MCP/Agent-Profile lesen.
-   Roadmap & interne Doks
-   Umbau/Refactor: REFACTOR_PLAN.md
-   UX-Befunde: UX_FINDINGS.md
-   Abhängigkeiten: DEPENDENCIES.md
-   Deployment-Prüfungen: DEPLOYMENT_READINESS.md
-   Analyse-Notizen: ANALYSIS.md
-   Diese Dateien begleiten die Weiterentwicklung und dokumentieren Entscheidungen.
-   Troubleshooting
-   Cloudflare zeigt alten Stand
-   Pages-Cache leeren (Purge)
-   Browser-Cache / Service Worker checken
-   ESLint-Regeln inkonsistent
-   Konsolidiert: Eine Flat ESLint-Config (eslint.config.js)
-   Build schlägt lokal fehl
-   Node-Version gemäß .nvmrc setzen
-   npm verwenden (package-lock.json vorhanden)
+
+---
+
+## Troubleshooting
+
+**Cloudflare zeigt alten Stand:**
+
+- Pages-Cache leeren (Purge Everything)
+- Browser-Cache / Service Worker checken
+
+**Build schlägt lokal fehl:**
+
+- Node-Version gemäß .nvmrc setzen
+- npm verwenden (package-lock.json vorhanden)
+
+**ESLint-Probleme:**
+
+- Eine konsolidierte Flat ESLint-Config (eslint.config.mjs)
 
 ## What's Next
 
@@ -775,7 +753,7 @@ PRs und Issues sind willkommen, sofern sie:
 
 ### Changelog
 
-Siehe [Rescue-Checklist](docs/status/rescue-checklist.md) für detaillierte Projekt-Transformation und Git-History für chronologische Änderungen.
+Siehe Git-History für chronologische Änderungen. Major cleanup in Commit `3ea381f` entfernte 113 Legacy-Dateien.
 
 ## CI & Gates
 
