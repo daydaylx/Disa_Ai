@@ -1,10 +1,5 @@
-import "./styles/tailwind.css";
-import "./ui/base.css";
-import "./styles/globals.css";
-import "./styles/legacy-buttons.css";
-import "./styles/glass-components.css";
-import "./styles/brand.css";
-import "./styles/chat.css";
+import "./styles/primitives.css";
+import "./styles/components.css";
 
 import { Outlet } from "react-router-dom";
 
@@ -19,7 +14,7 @@ export default function AppV2() {
         <AuroraBackground />
 
         {/* Enhanced main content container with better responsive design */}
-        <main className="relative z-10 flex flex-col h-screen">
+        <main className="relative z-10 flex h-screen flex-col">
           <div className="flex-1 overflow-hidden">
             <Outlet />
           </div>
@@ -29,7 +24,7 @@ export default function AppV2() {
         </main>
 
         {/* Enhanced performance indicators */}
-        <div className="fixed bottom-4 left-4 z-50 pointer-events-none">
+        <div className="pointer-events-none fixed bottom-4 left-4 z-50">
           <div className="glass-backdrop rounded-lg px-3 py-1 text-xs text-glass-text-muted">
             UI V2
           </div>

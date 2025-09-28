@@ -1,10 +1,5 @@
-import "./styles/tailwind.css";
-import "./ui/base.css";
-import "./styles/globals.css";
-import "./styles/legacy-buttons.css";
-import "./styles/glass-components.css";
-import "./styles/brand.css";
-import "./styles/chat.css";
+import "./styles/primitives.css";
+import "./styles/components.css";
 
 import { Outlet } from "react-router-dom";
 
