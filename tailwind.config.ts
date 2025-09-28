@@ -123,6 +123,14 @@ export default {
       fontFamily: {
         mono: ["var(--font-mono)"],
       },
+      fontSize: {
+        "token-h1": designTokens.typography.h1.fontSize,
+        "token-h2": designTokens.typography.h2.fontSize,
+        "token-subtitle": designTokens.typography.subtitle.fontSize,
+        "token-body": designTokens.typography.body.fontSize,
+        "token-label": designTokens.typography.label.fontSize,
+        "token-mono": designTokens.typography.mono.fontSize,
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
