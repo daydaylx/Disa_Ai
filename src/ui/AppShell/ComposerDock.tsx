@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 
+import { Badge } from "../primitives/Badge";
 import { Button } from "../primitives/Button";
 import { TextArea } from "../primitives/TextArea";
+import {
+  canAbort,
+  canSendMessage,
+  getStatusBadgeText,
+  getStatusBadgeVariant,
+  UIState,
+} from "../state/uiMachine";
+
 export function ComposerDock({
   onSend,
-  disabled,
+  onAbort,
+  uiState,
   tokenCount,
 }: {
   onSend: (text: string) => void;
-  disabled?: boolean;
+  onAbort?: () => void;
+  uiState: UIState;
   tokenCount?: number;
 }) {
   const [value, setValue] = useState("");
@@ -32,22 +43,30 @@ export function ComposerDock({
               onKeyDown={handleKeyDown}
               placeholder="Nachricht eingeben… (Shift+Enter = Zeilenumbruch)"
             />
-            <Button
-              className="tap-target"
-              disabled={disabled || !value.trim()}
-              onClick={() => {
-                onSend(value.trim());
-                setValue("");
-              }}
-            >
-              Senden
-            </Button>
+            {canAbort(uiState) ? (
+              <Button variant="outline" className="tap-target" onClick={onAbort}>
+                Stop
+              </Button>
+            ) : (
+              <Button
+                className="tap-target"
+                disabled={!canSendMessage(uiState) || !value.trim()}
+                onClick={() => {
+                  if (canSendMessage(uiState) && value.trim()) {
+                    onSend(value.trim());
+                    setValue("");
+                  }
+                }}
+              >
+                Senden
+              </Button>
+            )}
           </div>
           <div className="mt-2 flex items-center justify-between text-[12px] text-[hsl(var(--text-muted))]">
             <div>Tokens: {tokenCount ?? 0}</div>
             <div className="flex items-center gap-2">
-              <span className="badge badge-accent">/help</span>
-              <span className="badge badge-muted">Model: auto</span>
+              <Badge variant={getStatusBadgeVariant(uiState)}>{getStatusBadgeText(uiState)}</Badge>
+              <Badge variant="muted">Model: Claude 3.5</Badge>
             </div>
           </div>
         </div>
