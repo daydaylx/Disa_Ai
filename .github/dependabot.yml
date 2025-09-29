@@ -1,0 +1,32 @@
+# Minimal Dependabot config for GitHub Security Advisories only
+# Primary dependency management handled by Renovate
+version: 2
+updates:
+  # GitHub Actions updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "github-actions"
+      - "dependencies"
+    commit-message:
+      prefix: "chore(ci): "
+    open-pull-requests-limit: 2
+
+  # Security-only updates for npm (Renovate handles regular updates)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 0  # Disable regular updates
+    # Only allow security updates
+    allow:
+      - dependency-type: "all"
+        update-type: "security"
+    labels:
+      - "security"
+      - "dependencies"
+    commit-message:
+      prefix: "fix(security): "
+      include: "scope"

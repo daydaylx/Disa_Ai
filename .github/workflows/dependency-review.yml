@@ -1,0 +1,63 @@
+name: 'Dependency Review'
+on:
+  pull_request:
+    branches: [main]
+    paths: ['package.json', 'package-lock.json', 'renovate.json']
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v4
+        with:
+          # Fail the action if vulnerabilities are found
+          fail-on-severity: moderate
+          # Allow GPL-licensed dependencies (common in development tools)
+          allow-licenses: GPL-2.0, GPL-3.0, LGPL-2.1, LGPL-3.0
+          # Comment on PRs with review results
+          comment-summary-in-pr: on-failure
+          # Only check production dependencies for licenses
+          license-check: true
+          vulnerability-check: true
+
+  audit-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.19.0'
+          cache: 'npm'
+
+      - name: 'Install dependencies'
+        run: npm ci
+
+      - name: 'Run npm audit'
+        run: npm audit --audit-level=moderate
+
+      - name: 'Check for known security issues'
+        run: |
+          echo "Checking for known security patterns..."
+          # Check for common security issues in package.json
+          if grep -E '(github\.com.*\.git|git\+ssh)' package.json; then
+            echo "⚠️ Git dependencies found - review for security"
+            exit 1
+          fi
+
+          # Check for pre-release versions
+          if grep -E '\-alpha|\-beta|\-rc|\-pre' package.json; then
+            echo "⚠️ Pre-release dependencies found - review stability"
+          fi
+
+          echo "✅ Basic security checks passed"

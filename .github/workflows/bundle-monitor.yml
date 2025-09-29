@@ -1,0 +1,176 @@
+name: 'Bundle Size Monitor'
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  bundle-size-monitor:
+    name: 'Monitor Bundle Size'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.19.0'
+          cache: 'npm'
+
+      - name: 'Install dependencies'
+        run: npm ci
+
+      - name: 'Build production bundle'
+        run: npm run build
+
+      - name: 'Analyze bundle composition'
+        run: |
+          echo "## 📊 Bundle Analysis Report" > bundle-report.md
+          echo "" >> bundle-report.md
+          echo "Generated on: $(date -u)" >> bundle-report.md
+          echo "" >> bundle-report.md
+
+          # Analyze JavaScript bundles
+          echo "### JavaScript Bundles" >> bundle-report.md
+          echo "| File | Size | Compressed | Type |" >> bundle-report.md
+          echo "|------|------|------------|------|" >> bundle-report.md
+
+          find dist/assets -name "*.js" | sort | while read file; do
+            size=$(stat -c%s "$file")
+            size_kb=$((size / 1024))
+            filename=$(basename "$file")
+
+            # Determine bundle type based on filename patterns
+            if [[ $filename == *"vendor"* ]] || [[ $filename == *"chunk-"* ]]; then
+              type="Vendor"
+            elif [[ $filename == *"index"* ]] || [[ $filename == *"main"* ]]; then
+              type="Main"
+            else
+              type="Chunk"
+            fi
+
+            echo "| $filename | ${size_kb}KB | ~$((size_kb * 70 / 100))KB | $type |" >> bundle-report.md
+          done
+
+          echo "" >> bundle-report.md
+
+          # Analyze CSS bundles
+          echo "### CSS Bundles" >> bundle-report.md
+          echo "| File | Size | Compressed |" >> bundle-report.md
+          echo "|------|------|------------|" >> bundle-report.md
+
+          find dist/assets -name "*.css" | sort | while read file; do
+            size=$(stat -c%s "$file")
+            size_kb=$((size / 1024))
+            filename=$(basename "$file")
+            echo "| $filename | ${size_kb}KB | ~$((size_kb * 75 / 100))KB |" >> bundle-report.md
+          done
+
+          echo "" >> bundle-report.md
+
+          # Calculate totals
+          JS_TOTAL=$(find dist/assets -name "*.js" -exec stat -c%s {} \; | awk '{sum += $1} END {print sum}')
+          CSS_TOTAL=$(find dist/assets -name "*.css" -exec stat -c%s {} \; | awk '{sum += $1} END {print sum}')
+          TOTAL_SIZE=$((JS_TOTAL + CSS_TOTAL))
+
+          JS_KB=$((JS_TOTAL / 1024))
+          CSS_KB=$((CSS_TOTAL / 1024))
+          TOTAL_KB=$((TOTAL_SIZE / 1024))
+
+          echo "### 📈 Size Summary" >> bundle-report.md
+          echo "" >> bundle-report.md
+          echo "- **JavaScript Total:** ${JS_KB}KB" >> bundle-report.md
+          echo "- **CSS Total:** ${CSS_KB}KB" >> bundle-report.md
+          echo "- **Combined Total:** ${TOTAL_KB}KB" >> bundle-report.md
+          echo "- **Estimated Compressed:** ~$((TOTAL_KB * 70 / 100))KB (gzip)" >> bundle-report.md
+          echo "" >> bundle-report.md
+
+          # Mobile performance assessment
+          echo "### 📱 Mobile Performance Assessment" >> bundle-report.md
+          echo "" >> bundle-report.md
+          if [ $TOTAL_KB -lt 200 ]; then
+            echo "🟢 **Excellent** - Very fast loading on mobile networks" >> bundle-report.md
+          elif [ $TOTAL_KB -lt 500 ]; then
+            echo "🟡 **Good** - Acceptable loading time on mobile networks" >> bundle-report.md
+          elif [ $TOTAL_KB -lt 1000 ]; then
+            echo "🟠 **Moderate** - May be slow on slower mobile connections" >> bundle-report.md
+          else
+            echo "🔴 **Attention Needed** - Bundle size may impact mobile performance" >> bundle-report.md
+          fi
+          echo "" >> bundle-report.md
+
+          # Performance recommendations
+          echo "### 💡 Mobile-First Recommendations" >> bundle-report.md
+          echo "" >> bundle-report.md
+          echo "- **Target:** Keep total bundle < 500KB for optimal mobile UX" >> bundle-report.md
+          echo "- **Critical:** Ensure essential code loads first (< 150KB)" >> bundle-report.md
+          echo "- **Progressive:** Use code splitting for non-essential features" >> bundle-report.md
+          echo "- **Caching:** Service Worker caches bundles after first load" >> bundle-report.md
+
+          # Store metrics for comparison
+          echo $TOTAL_KB > current-bundle-size.txt
+
+      - name: 'Comment on Pull Request'
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('bundle-report.md', 'utf8');
+
+            // Find existing bundle comment
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+
+            const existingComment = comments.data.find(comment =>
+              comment.body.includes('📊 Bundle Analysis Report')
+            );
+
+            const commentBody = `${report}\n\n---\n*Bundle analysis performed by GitHub Actions*`;
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }
+
+      - name: 'Upload bundle artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis-${{ github.sha }}
+          path: |
+            bundle-report.md
+            current-bundle-size.txt
+            dist/assets/
+          retention-days: 30
+
+      - name: 'Create bundle size issue on regression'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          # This is a placeholder for bundle size regression detection
+          # In a real implementation, you would compare with previous sizes
+          echo "Bundle size monitoring completed for main branch"
+          echo "Current bundle size: $(cat current-bundle-size.txt)KB"

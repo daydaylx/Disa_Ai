@@ -24,6 +24,9 @@
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
     "changeset:status": "changeset status",
+    "release:check": "npm run changeset:status",
+    "release:preview": "npm run changeset:status && npm run build",
+    "release:prepare": "npm run verify && npm run changeset:version",
     "verify": "npm run typecheck && npm run lint && npm run test:unit",
     "clean": "rm -rf dist .vite .cache .tmp coverage test-results",
     "postbuild": "cp public/404.html dist/404.html && touch dist/.nojekyll",
@@ -66,6 +69,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
+    "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
     "@eslint/js": "^9.35.0",
     "@playwright/test": "^1.55.1",
