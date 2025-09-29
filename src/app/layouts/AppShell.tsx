@@ -82,7 +82,7 @@ function BottomTabs() {
             key={item.to}
             to={item.to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-1 rounded-2xl px-3 py-2 transition-all duration-200 ${
+              `flex min-h-[48px] flex-col items-center gap-1 rounded-2xl px-3 py-3 transition-all duration-200 ${
                 isActive
                   ? "bg-gradient-to-r from-fuchsia-500/70 via-purple-500/70 to-sky-500/70 text-white shadow-[0_12px_30px_rgba(168,85,247,0.35)]"
                   : "hover:bg-white/10 hover:text-white/90"

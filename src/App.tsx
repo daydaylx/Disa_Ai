@@ -1,6 +1,5 @@
 import "./index.css"; // Tailwind base/components/utilities
 import "./styles/design-tokens.css"; // Design tokens (CSS variables)
-import "./styles/tokens.css"; // Legacy design tokens
 import "./ui/base.css"; // Reset & base styles
 
 import React from "react";

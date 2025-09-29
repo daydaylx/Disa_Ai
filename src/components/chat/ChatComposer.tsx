@@ -1,6 +1,7 @@
 import { Mic, RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { useVisualViewport } from "../../hooks/useVisualViewport";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
@@ -44,6 +45,7 @@ export function ChatComposer({
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const viewport = useVisualViewport();
 
   // Auto-resize textarea
   useEffect(() => {
@@ -95,7 +97,17 @@ export function ChatComposer({
 
   return (
     <div
-      className={cn("safe-pb px-2 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pt-4", className)}
+      className={cn(
+        "safe-pb px-2 pt-4 transition-all duration-200",
+        viewport.isKeyboardOpen
+          ? "pb-4" // Less padding when keyboard is open
+          : "pb-[calc(env(safe-area-inset-bottom)+1.5rem)]", // Normal padding
+        className,
+      )}
+      style={{
+        // Ensure composer stays above keyboard on mobile
+        transform: viewport.isKeyboardOpen ? `translateY(-${viewport.offsetTop}px)` : undefined,
+      }}
     >
       <div className="mx-auto max-w-md space-y-4">
         {(tokenCount !== undefined || maxTokens !== undefined) && (

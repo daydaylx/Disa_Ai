@@ -22,10 +22,10 @@ const buttonVariants = cva(
         link: "text-accent-500 underline-offset-4 hover:underline dark:text-accent-300",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-8 rounded-md px-3",
-        lg: "h-12 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "h-12 px-4 py-2", // 48px min-height for touch
+        sm: "h-10 rounded-md px-3", // 40px for less critical actions
+        lg: "h-14 rounded-md px-8", // 56px for primary actions
+        icon: "h-12 w-12", // 48px square for icons
       },
     },
     defaultVariants: {

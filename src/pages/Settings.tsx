@@ -1,99 +1,62 @@
-import { Key, Palette, Save, Volume2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Download, Eye, EyeOff, Key, Shield, Smartphone } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Switch } from "../components/ui/Switch";
-import { Textarea } from "../components/ui/textarea";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
-
-interface AppSettings {
-  theme: "light" | "dark" | "system";
-  language: "de";
-  fontSize: "small" | "medium" | "large";
-  enableSounds: boolean;
-  enableNotifications: boolean;
-  autoSaveDrafts: boolean;
-  note?: string;
-}
-
-const DEFAULT_SETTINGS: AppSettings = {
-  theme: "system",
-  language: "de",
-  fontSize: "medium",
-  enableSounds: true,
-  enableNotifications: true,
-  autoSaveDrafts: true,
-  note: "",
-};
+import { usePWAInstall } from "../hooks/usePWAInstall";
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const [apiKey, setApiKey] = useState("");
-  const [pendingNote, setPendingNote] = useState("");
-  const [dirty, setDirty] = useState(false);
+  const [showKey, setShowKey] = useState(false);
+  const [keyStatus, setKeyStatus] = useState<"empty" | "present" | "invalid">("empty");
   const toasts = useToasts();
+  const { canInstall, installed: isInstalled, requestInstall: promptInstall } = usePWAInstall();
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("app-settings");
-      if (stored) {
-        const parsed = JSON.parse(stored) as Partial<AppSettings>;
-        setSettings({ ...DEFAULT_SETTINGS, ...parsed });
-        setPendingNote(parsed.note ?? "");
-      }
-    } catch {
-      // ignore corrupted state
-    }
-    try {
       const storedKey = sessionStorage.getItem("openrouter-key") ?? "";
       setApiKey(storedKey);
+      setKeyStatus(storedKey.length > 0 ? "present" : "empty");
     } catch {
       /* ignore */
     }
   }, []);
 
-  const markDirty = () => setDirty(true);
-
-  const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
-    markDirty();
-  };
-
-  const handleSave = () => {
-    try {
-      localStorage.setItem("app-settings", JSON.stringify({ ...settings, note: pendingNote }));
-      setSettings((prev) => ({ ...prev, note: pendingNote }));
-      setDirty(false);
-      toasts.push({
-        kind: "success",
-        title: "Einstellungen gespeichert",
-        message: "Deine mobilen Präferenzen wurden übernommen.",
-      });
-    } catch {
-      toasts.push({
-        kind: "error",
-        title: "Speichern fehlgeschlagen",
-        message: "Die Einstellungen konnten nicht gesichert werden.",
-      });
-    }
-  };
-
   const handleSaveKey = () => {
     try {
-      if (apiKey.trim()) {
-        sessionStorage.setItem("openrouter-key", apiKey.trim());
+      const trimmedKey = apiKey.trim();
+
+      if (trimmedKey) {
+        // Basic validation
+        if (!trimmedKey.startsWith("sk-or-")) {
+          setKeyStatus("invalid");
+          toasts.push({
+            kind: "error",
+            title: "Ungültiger Schlüssel",
+            message: "OpenRouter-Schlüssel beginnen mit 'sk-or-'",
+          });
+          return;
+        }
+
+        sessionStorage.setItem("openrouter-key", trimmedKey);
+        setKeyStatus("present");
+        toasts.push({
+          kind: "success",
+          title: "Schlüssel gespeichert",
+          message: "Der API-Schlüssel wird sicher in der Session gespeichert.",
+        });
       } else {
         sessionStorage.removeItem("openrouter-key");
+        setKeyStatus("empty");
+        toasts.push({
+          kind: "success",
+          title: "Schlüssel entfernt",
+          message: "Der API-Schlüssel wurde gelöscht.",
+        });
       }
-      toasts.push({
-        kind: "success",
-        title: "API-Schlüssel aktualisiert",
-        message: "Der OpenRouter-Schlüssel wird lokal gespeichert.",
-      });
     } catch {
       toasts.push({
         kind: "error",
@@ -103,170 +66,169 @@ export default function SettingsPage() {
     }
   };
 
+  const handleInstallPWA = async () => {
+    try {
+      await promptInstall();
+      toasts.push({
+        kind: "success",
+        title: "Installation gestartet",
+        message: "Befolge die Anweisungen deines Browsers.",
+      });
+    } catch {
+      toasts.push({
+        kind: "error",
+        title: "Installation fehlgeschlagen",
+        message: "Die App konnte nicht installiert werden.",
+      });
+    }
+  };
+
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header>
-        <h1 className="text-2xl font-semibold text-on-surface">Einstellungen</h1>
-        <p className="text-text-muted text-sm">
-          Feine Abstimmung für die mobile Nutzung von Disa AI.
+        <h1 className="text-2xl font-semibold text-white">Einstellungen</h1>
+        <p className="text-sm text-white/70">
+          API-Schlüssel verwalten und die App auf deinem Gerät installieren.
         </p>
       </header>
 
-      <Card>
+      {/* API Key Section */}
+      <Card className="border-white/20 bg-white/10 backdrop-blur">
         <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2">
-            <Palette className="h-5 w-5" /> Erscheinungsbild
+          <CardTitle className="flex items-center gap-2 text-white">
+            <Key className="h-5 w-5" />
+            OpenRouter API-Schlüssel
           </CardTitle>
-          <CardDescription className="text-sm">
-            Steuere Thema, Schriftgröße und Systemklänge.
+          <CardDescription className="text-white/70">
+            Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 text-sm">
+        <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="theme">Thema</Label>
-            <div className="flex gap-2">
-              {["light", "dark", "system"].map((mode) => (
-                <Button
-                  key={mode}
-                  type="button"
-                  variant={settings.theme === mode ? "default" : "secondary"}
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => updateSetting("theme", mode as AppSettings["theme"])}
-                >
-                  {mode === "light" && "Hell"}
-                  {mode === "dark" && "Dunkel"}
-                  {mode === "system" && "System"}
-                </Button>
-              ))}
+            <Label htmlFor="apiKey" className="text-white/80">
+              API-Schlüssel
+            </Label>
+            <div className="relative">
+              <Input
+                id="apiKey"
+                type={showKey ? "text" : "password"}
+                value={apiKey}
+                onChange={(event) => setApiKey(event.target.value)}
+                placeholder="sk-or-..."
+                className="border-white/20 bg-white/10 pr-10 font-mono text-white placeholder:text-white/50"
+              />
+              <button
+                type="button"
+                onClick={() => setShowKey(!showKey)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 transition hover:text-white"
+              >
+                {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="fontSize">Schriftgröße</Label>
-            <div className="flex gap-2">
-              {["small", "medium", "large"].map((size) => (
-                <Button
-                  key={size}
-                  type="button"
-                  variant={settings.fontSize === size ? "default" : "secondary"}
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => updateSetting("fontSize", size as AppSettings["fontSize"])}
-                >
-                  {size === "small" && "Klein"}
-                  {size === "medium" && "Standard"}
-                  {size === "large" && "Groß"}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-medium">Tastentöne</div>
-              <p className="text-text-muted text-xs">Kurzes Audio-Feedback beim Senden.</p>
-            </div>
-            <Switch
-              checked={settings.enableSounds}
-              onChange={(value) => updateSetting("enableSounds", value)}
-              aria-label="Tastentöne umschalten"
+          <div className="flex items-center gap-2">
+            <div
+              className={`h-2 w-2 rounded-full ${
+                keyStatus === "present"
+                  ? "bg-green-500"
+                  : keyStatus === "invalid"
+                    ? "bg-red-500"
+                    : "bg-gray-500"
+              }`}
             />
+            <span className="text-sm text-white/70">
+              {keyStatus === "present"
+                ? "Schlüssel vorhanden"
+                : keyStatus === "invalid"
+                  ? "Ungültiger Schlüssel"
+                  : "Kein Schlüssel"}
+            </span>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-medium">Push-Hinweise</div>
-              <p className="text-text-muted text-xs">Benachrichtigung bei neuen Antworten.</p>
-            </div>
-            <Switch
-              checked={settings.enableNotifications}
-              onChange={(value) => updateSetting("enableNotifications", value)}
-              aria-label="Push-Hinweise umschalten"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-medium">Entwürfe automatisch sichern</div>
-              <p className="text-text-muted text-xs">Bewahrt Eingaben, wenn du die App verlässt.</p>
-            </div>
-            <Switch
-              checked={settings.autoSaveDrafts}
-              onChange={(value) => updateSetting("autoSaveDrafts", value)}
-              aria-label="Automatisches Speichern umschalten"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2">
-            <Volume2 className="h-5 w-5" /> Persönliche Notiz
-          </CardTitle>
-          <CardDescription className="text-sm">
-            Hinterlasse dir selbst Hinweise für Gespräche oder Prompts.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <Label htmlFor="note">Notiz</Label>
-          <Textarea
-            id="note"
-            rows={3}
-            value={pendingNote}
-            placeholder="Eigene Anweisung für jede Unterhaltung …"
-            onChange={(event) => {
-              setPendingNote(event.target.value);
-              markDirty();
-            }}
-          />
-          {settings.note && settings.note !== "" && (
-            <Badge variant="secondary">Aktuell aktiv für neue Chats</Badge>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2">
-            <Key className="h-5 w-5" /> OpenRouter API-Schlüssel
-          </CardTitle>
-          <CardDescription className="text-sm">
-            Bleibt ausschließlich im lokalen Speicher deines Geräts.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="space-y-2">
-            <Label htmlFor="apiKey">API-Schlüssel</Label>
-            <Input
-              id="apiKey"
-              type="password"
-              value={apiKey}
-              onChange={(event) => setApiKey(event.target.value)}
-              placeholder="sk-or-..."
-              className="font-mono"
-            />
-          </div>
-          <Button type="button" onClick={handleSaveKey} className="w-full">
-            Schlüssel sichern
+          <Button
+            type="button"
+            onClick={handleSaveKey}
+            className="w-full border-0 bg-white/20 text-white hover:bg-white/30"
+          >
+            Schlüssel speichern
           </Button>
-          <p className="text-text-muted text-xs">
-            Tipp: Schlüssel lässt sich im OpenRouter-Dashboard erstellen. Wir übertragen ihn niemals
-            an eigene Server.
-          </p>
+
+          <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
+            <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
+            <div className="text-xs text-blue-200">
+              <p className="mb-1 font-medium">Datenschutz:</p>
+              <p>
+                Dein Schlüssel wird nur in der Browser-Session gespeichert und automatisch beim
+                Schließen gelöscht.
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      <Button
-        type="button"
-        onClick={handleSave}
-        disabled={!dirty}
-        className="mt-auto flex items-center justify-center gap-2"
-      >
-        <Save className="h-4 w-4" />
-        Änderungen speichern
-      </Button>
+      {/* PWA Install Section */}
+      <Card className="border-white/20 bg-white/10 backdrop-blur">
+        <CardHeader className="space-y-1">
+          <CardTitle className="flex items-center gap-2 text-white">
+            <Smartphone className="h-5 w-5" />
+            App-Installation
+          </CardTitle>
+          <CardDescription className="text-white/70">
+            Installiere Disa AI als native App für bessere Performance.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-2">
+            <div
+              className={`h-2 w-2 rounded-full ${
+                isInstalled ? "bg-green-500" : canInstall ? "bg-yellow-500" : "bg-gray-500"
+              }`}
+            />
+            <span className="text-sm text-white/70">
+              {isInstalled
+                ? "App ist installiert"
+                : canInstall
+                  ? "Installation möglich"
+                  : "Bereits installiert oder nicht verfügbar"}
+            </span>
+          </div>
+
+          {canInstall && (
+            <Button
+              type="button"
+              onClick={handleInstallPWA}
+              className="hover:bg-accent-600 w-full bg-accent-500 text-white"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              App installieren
+            </Button>
+          )}
+
+          {isInstalled && (
+            <div className="py-4 text-center">
+              <div className="text-sm font-medium text-green-400">
+                ✓ App erfolgreich installiert
+              </div>
+              <p className="mt-1 text-xs text-white/60">
+                Du kannst Disa AI jetzt wie eine native App verwenden.
+              </p>
+            </div>
+          )}
+
+          <div className="space-y-2 text-xs text-white/60">
+            <p>
+              <span className="font-medium">Vorteile:</span>
+            </p>
+            <ul className="ml-4 space-y-1">
+              <li>• Schnellerer Start ohne Browser-UI</li>
+              <li>• Offline-Funktionalität</li>
+              <li>• Push-Benachrichtigungen möglich</li>
+              <li>• Bessere Performance</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

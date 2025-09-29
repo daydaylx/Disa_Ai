@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-
+import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "./ChatMessage";
 import { ChatMessage } from "./ChatMessage";
@@ -31,15 +30,10 @@ interface ChatListProps {
 }
 
 export function ChatList({ messages, isLoading, onRetry, onCopy, className }: ChatListProps) {
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages.length]);
+  const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
+    threshold: 0.8,
+    enabled: true,
+  });
 
   const handleCopy = (content: string) => {
     onCopy?.(content);
@@ -48,7 +42,7 @@ export function ChatList({ messages, isLoading, onRetry, onCopy, className }: Ch
 
   return (
     <div
-      ref={containerRef}
+      ref={scrollRef}
       className={cn(
         "flex-1 overflow-y-auto scroll-smooth px-1 pb-6",
         "[mask-image:linear-gradient(to_bottom,transparent,black_6%,black_94%,transparent)]",
@@ -160,8 +154,18 @@ export function ChatList({ messages, isLoading, onRetry, onCopy, className }: Ch
           </div>
         )}
 
-        {/* Scroll anchor */}
-        <div ref={bottomRef} className="h-1" />
+        {/* Scroll anchor and stick indicator */}
+        <div className="flex items-center justify-between px-2 pt-2">
+          <div className="h-1 flex-1" />
+          {!isSticking && (
+            <button
+              onClick={() => scrollToBottom()}
+              className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/70 backdrop-blur transition hover:bg-white/20"
+            >
+              ↓ Nach unten
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

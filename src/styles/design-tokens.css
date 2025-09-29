@@ -143,3 +143,39 @@
   --shadow-base: 0 28px 80px -32px rgba(5, 9, 15, 0.75);
   --shadow-soft: 0 18px 48px -24px rgba(5, 9, 15, 0.55);
 }
+
+/* Essential Component Styles */
+.tappable {
+  min-width: 48px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-card {
+  background: var(--glass-bg-soft);
+  backdrop-filter: blur(var(--blur-md));
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--radius-md);
+}
+
+.glass-button {
+  background: var(--glass-bg-medium);
+  backdrop-filter: blur(var(--blur-sm));
+  border: 1px solid var(--glass-border-medium);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast) ease;
+}
+
+.glass-button:hover {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+}
+
+/* Focus Styles */
+*:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
