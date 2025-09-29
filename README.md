@@ -13,7 +13,7 @@ Eine **mobile-only** AI-Chat-PWA mit **Dark-only** Design und Offline-Funktional
 
 ### 📱 Mobile-Only UX
 
-- **iPhone 12 Pro Optimiert:** Primary Target 390×844px Viewport
+- **:** Primary Target 390×844px Viewport
 - **100dvh/100svh:** Modern Viewport Units für echte Fullscreen-UX
 - **Visual Viewport API:** Intelligentes Keyboard-Handling ohne UI-Überlappung
 - **Safe Area Insets:** Vollständige iOS-Notch und Android-Gesture-Navigation
@@ -45,7 +45,7 @@ Eine **mobile-only** AI-Chat-PWA mit **Dark-only** Design und Offline-Funktional
 ### Mobile PWA
 
 - **Service Worker** mit Build-ID basiertem deterministischen Caching
-- **Native Installation** auf iOS/Android für App-like Experience
+- **Native Installation** auf  für App-like Experience
 - **Visual Viewport API** für perfektes Keyboard-Handling
 - **Offline-First** mit intelligenten Fallbacks
 
@@ -141,13 +141,12 @@ SW:      Network-first für HTML, stale-while-revalidate
 
 ### Primary Targets
 
-- **iOS Safari:** 14+ (iPhone 8/SE+, iPad OS 14+)
 - **Android Chrome:** 88+ (Android 8+)
 - **Samsung Internet:** 15+ (Galaxy S10+)
 
 ### PWA Installation
 
-- **iOS:** Safari → Teilen → "Zum Home-Bildschirm" → Native App Experience
+
 - **Android:** Chrome → Menü → "App installieren" → Home Screen Icon
 - **Features:** Offline-Modus, Push-Notifications, File-Sharing
 
@@ -185,7 +184,7 @@ SW:      Network-first für HTML, stale-while-revalidate
 ### Mobile-First Testing
 
 - **Unit Tests:** Vitest mit MSW (87 Tests, offline-first)
-- **E2E Tests:** Playwright Mobile-Szenarien (iPhone 12 Pro Viewport)
+- **E2E Tests:** Playwright Mobile-Szenarien
 - **Real-World Tests:** Touch-Targets, Keyboard-Handling, Offline-Modi
 - **Accessibility:** Mobile-optimierte a11y Tests mit @axe-core
 
