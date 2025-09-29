@@ -1,6 +1,7 @@
 import { Bot, Compass, Cpu, MessageSquare, PlusCircle, Settings } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
+import { NetworkBanner } from "../../components/NetworkBanner";
 import { Button } from "../../components/ui";
 import { useStudio } from "../state/StudioContext";
 
@@ -129,6 +130,7 @@ export function AppShell() {
         <Outlet />
       </main>
 
+      <NetworkBanner />
       <BottomTabs />
     </div>
   );
