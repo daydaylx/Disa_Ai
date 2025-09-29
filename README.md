@@ -1,6 +1,6 @@
 # Disa AI
 
-Eine mobile-first AI-Chat-Anwendung mit Offline-Funktionalität und Dark-Theme. Optimiert für deutsche Nutzer auf mobilen Geräten.
+Eine **mobile-only** AI-Chat-PWA mit **Dark-only** Design und Offline-Funktionalität. Speziell für deutsche Nutzer auf iOS/Android optimiert.
 
 ## Features
 
@@ -11,26 +11,27 @@ Eine mobile-first AI-Chat-Anwendung mit Offline-Funktionalität und Dark-Theme. 
 - **Mobile-optimiert:** Touch-freundliche Bedienung mit 48px Mindest-Touch-Targets
 - **Offline-first:** PWA mit Service Worker und Offline-Fallbacks
 
-### 📱 Mobile UX
+### 📱 Mobile-Only UX
 
-- **Responsives Design:** Optimiert für 390×844px (Mobile-first)
-- **Visual Viewport API:** Intelligentes Keyboard-Handling ohne Composer-Überschneidung
-- **Stick-to-Bottom:** Automatisches Scrollen bei neuen Nachrichten
-- **Safe Area:** Vollständige Unterstützung für iOS-Notch und Android-Gesten
+- **iPhone 12 Pro Optimiert:** Primary Target 390×844px Viewport
+- **100dvh/100svh:** Modern Viewport Units für echte Fullscreen-UX
+- **Visual Viewport API:** Intelligentes Keyboard-Handling ohne UI-Überlappung
+- **Safe Area Insets:** Vollständige iOS-Notch und Android-Gesture-Navigation
+- **Touch-Optimiert:** Minimum 44px Targets für komfortable Bedienung
 
-### 🎨 Design System
+### 🎨 Dark-Only Design System
 
-- **Dark-Only Theme:** Einheitliches dunkles Design ohne Theme-Switcher
-- **Glassmorphism:** Backdrop-Blur und transluzente Oberflächen
-- **Design Tokens:** Zentralisierte CSS Custom Properties
-- **Accessibility:** WCAG 2.1 AA konforme Kontraste und Focus-Ringe
+- **Strict Dark Mode:** Kein Light-Theme, optimiert für Mobile-Nutzung
+- **Glassmorphism UI:** Backdrop-Blur und transparente Overlays
+- **Design Tokens:** TypeScript-basierte Token → CSS Custom Properties
+- **Mobile Accessibility:** WCAG 2.1 AA + Touch-optimierte Focus-States
 
-### 🔒 Sicherheit & Datenschutz
+### 🔒 Security-First Architecture
 
-- **Session-Storage:** API-Keys werden nur temporär gespeichert
-- **Keine Server:** Direkte Kommunikation mit OpenRouter
-- **CSP-Headers:** Content Security Policy über Cloudflare
-- **Secret Scanning:** TruffleHog-Integration in CI
+- **Session-Only Storage:** API-Keys nur in sessionStorage, nie persistent
+- **Client-Only:** Direkte OpenRouter-Integration, keine eigenen Server
+- **Gehärtete Headers:** HSTS, CSP, Permissions-Policy (20+ APIs deaktiviert)
+- **CI Security:** Secret-Scanning, Dependency-Audits, deterministische Builds
 
 ## Technologie-Stack
 
@@ -41,19 +42,19 @@ Eine mobile-first AI-Chat-Anwendung mit Offline-Funktionalität und Dark-Theme. 
 - **Tailwind CSS 3.4.17** mit Design Token System
 - **Radix UI** Primitives für Accessibility
 
-### PWA & Mobile
+### Mobile PWA
 
-- **Service Worker** mit intelligentem Caching
-- **Web App Manifest** mit deutschen Shortcuts
-- **Visual Viewport API** für Keyboard-Handling
-- **File & Protocol Handlers** für Deep Links
+- **Service Worker** mit Build-ID basiertem deterministischen Caching
+- **Native Installation** auf iOS/Android für App-like Experience
+- **Visual Viewport API** für perfektes Keyboard-Handling
+- **Offline-First** mit intelligenten Fallbacks
 
 ### Entwicklung & Tests
 
 - **TypeScript strict** mit noUncheckedIndexedAccess
 - **ESLint flat config** mit Type-aware Rules
-- **Vitest** für Unit Tests (88 Tests)
-- **Playwright** für E2E Tests mit Offline-Simulation
+- **Vitest** für Unit Tests (87 Tests)
+- **Playwright** für Mobile E2E Tests (iPhone 12 Pro Viewport) + Offline-Simulation
 
 ## Schnellstart
 
@@ -136,19 +137,19 @@ SW:      Network-first für HTML, stale-while-revalidate
 
 ⚠️ **Cache-Purging:** Bei UI-Updates Cloudflare Cache manuell leeren für sofortige Updates.
 
-## Browser-Unterstützung
+## Mobile Browser Support
 
-### Minimum Requirements
+### Primary Targets
 
-- **Chrome/Edge:** 88+ (Visual Viewport API)
-- **Safari:** 14+ (iOS 14+)
-- **Firefox:** 91+
+- **iOS Safari:** 14+ (iPhone 8/SE+, iPad OS 14+)
+- **Android Chrome:** 88+ (Android 8+)
+- **Samsung Internet:** 15+ (Galaxy S10+)
 
-### PWA Features
+### PWA Installation
 
-- **Install Prompt:** Chrome/Edge Desktop & Mobile
-- **iOS:** Manuelle Installation über Safari Teilen-Menü
-- **Offline:** Vollständige Offline-Funktionalität
+- **iOS:** Safari → Teilen → "Zum Home-Bildschirm" → Native App Experience
+- **Android:** Chrome → Menü → "App installieren" → Home Screen Icon
+- **Features:** Offline-Modus, Push-Notifications, File-Sharing
 
 ## API-Integration
 
@@ -174,19 +175,19 @@ SW:      Network-first für HTML, stale-while-revalidate
 - **Import Sorting** via simple-import-sort
 - **No hardcoded hex colors** (ESLint enforced)
 
-### Performance
+### Mobile Performance
 
-- **Bundle Splitting:** React, UI, Data, Markdown
-- **Code Splitting:** Route-based mit React.lazy
-- **Tree Shaking:** Optimierte Imports
-- **Gzip Size:** ~190KB total
+- **Optimierter Bundle:** Dependency-Bereinigung (-116 Pakete)
+- **Lazy Loading:** Route-based Code Splitting
+- **Service Worker:** Intelligentes Caching mit Build-ID Invalidation
+- **Mobile-First:** 390×844px Viewport, Touch-optimierte Interaktionen
 
-### Testing
+### Mobile-First Testing
 
-- **Unit Tests:** Vitest mit MSW für API-Mocking
-- **E2E Tests:** Playwright mit Offline-Simulation
-- **Visual Tests:** Snapshot-basierte Regression Tests
-- **A11y Tests:** @axe-core/playwright Integration
+- **Unit Tests:** Vitest mit MSW (87 Tests, offline-first)
+- **E2E Tests:** Playwright Mobile-Szenarien (iPhone 12 Pro Viewport)
+- **Real-World Tests:** Touch-Targets, Keyboard-Handling, Offline-Modi
+- **Accessibility:** Mobile-optimierte a11y Tests mit @axe-core
 
 ## Lizenz
 

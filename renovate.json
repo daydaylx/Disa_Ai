@@ -1,0 +1,120 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":ignoreModulesAndTests",
+    ":autodetectPinVersions"
+  ],
+  "rangeStrategy": "bump",
+  "separateMajorMinor": true,
+  "separateMultipleMajor": true,
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 10,
+  "branchConcurrentLimit": 5,
+  "labels": ["dependencies"],
+  "assignees": [],
+  "reviewers": [],
+  "timezone": "Europe/Berlin",
+  "schedule": ["before 6am on monday"],
+  "packageRules": [
+    {
+      "description": "Security updates - high priority",
+      "matchCategories": ["security"],
+      "labels": ["security", "dependencies"],
+      "prPriority": 100,
+      "schedule": ["at any time"],
+      "automerge": false
+    },
+    {
+      "description": "Major updates - manual review required",
+      "matchUpdateTypes": ["major"],
+      "labels": ["major-update", "dependencies"],
+      "prPriority": 10,
+      "automerge": false,
+      "schedule": ["before 6am on monday"]
+    },
+    {
+      "description": "Minor and patch updates",
+      "matchUpdateTypes": ["minor", "patch"],
+      "labels": ["dependencies"],
+      "prPriority": 5,
+      "automerge": false,
+      "minimumReleaseAge": "3 days",
+      "schedule": ["before 6am on monday"]
+    },
+    {
+      "description": "TypeScript ecosystem",
+      "matchPackageNames": ["typescript", "@types/**", "@typescript-eslint/**"],
+      "labels": ["typescript", "dependencies"],
+      "groupName": "TypeScript ecosystem"
+    },
+    {
+      "description": "Testing frameworks",
+      "matchPackageNames": [
+        "vitest",
+        "@vitest/**",
+        "playwright",
+        "@playwright/**",
+        "jsdom",
+        "happy-dom",
+        "@testing-library/**"
+      ],
+      "labels": ["testing", "dependencies"],
+      "groupName": "Testing ecosystem"
+    },
+    {
+      "description": "React ecosystem",
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom",
+        "react-router-dom"
+      ],
+      "labels": ["react", "dependencies"],
+      "groupName": "React ecosystem"
+    },
+    {
+      "description": "ESLint ecosystem",
+      "matchPackageNames": ["eslint", "@eslint/**", "eslint-plugin-*", "eslint-config-*"],
+      "labels": ["linting", "dependencies"],
+      "groupName": "ESLint ecosystem"
+    },
+    {
+      "description": "Vite and build tools",
+      "matchPackageNames": ["vite", "@vitejs/**", "tailwindcss", "postcss", "autoprefixer"],
+      "labels": ["build-tools", "dependencies"],
+      "groupName": "Build tools"
+    },
+    {
+      "description": "UI/Design dependencies",
+      "matchPackageNames": [
+        "@radix-ui/**",
+        "lucide-react",
+        "clsx",
+        "class-variance-authority",
+        "tailwind-merge"
+      ],
+      "labels": ["ui", "dependencies"],
+      "groupName": "UI components"
+    },
+    {
+      "description": "Ignore frequent minor updates for stable packages",
+      "matchPackageNames": ["node", "@types/node"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": false
+    }
+  ],
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageAction": "update",
+  "commitMessageExtra": "to {{newVersion}}",
+  "commitMessagePrefix": "chore(deps): ",
+  "prTitle": "{{commitMessagePrefix}}{{commitMessageAction}} {{commitMessageTopic}}{{commitMessageExtra}}",
+  "prBody": "This PR contains the following updates:\n\n| Package | Change | Age | Adoption | Passing | Confidence |\n|---|---|---|---|---|---|\n{{#each upgrades as |upgrade|}}\n| {{#if upgrade.homepage}}[{{upgrade.depName}}]({{upgrade.homepage}}){{else}}{{upgrade.depName}}{{/if}} | `{{upgrade.currentVersion}}` -> `{{upgrade.newVersion}}` | [![age](https://badges.renovateapi.com/packages/npm/{{upgrade.depName}}/{{upgrade.newVersion}}/age-slim)](https://docs.renovatebot.com/merge-confidence/) | [![adoption](https://badges.renovateapi.com/packages/npm/{{upgrade.depName}}/{{upgrade.newVersion}}/adoption-slim)](https://docs.renovatebot.com/merge-confidence/) | [![passing](https://badges.renovateapi.com/packages/npm/{{upgrade.depName}}/{{upgrade.newVersion}}/compatibility-slim/{{upgrade.currentVersion}})](https://docs.renovatebot.com/merge-confidence/) | [![confidence](https://badges.renovateapi.com/packages/npm/{{upgrade.depName}}/{{upgrade.newVersion}}/confidence-slim/{{upgrade.currentVersion}})](https://docs.renovatebot.com/merge-confidence/) |\n{{/each}}\n\n---\n\n### Release Notes\n\n{{#each upgrades as |upgrade|}}\n{{#if upgrade.hasReleaseNotes}}\n<details>\n<summary>{{upgrade.depName}}</summary>\n\n{{upgrade.releaseNotes}}\n</details>\n\n{{/if}}\n{{/each}}\n\n### Configuration\n\n📅 **Schedule**: {{schedule}}\n\n🚦 **Automerge**: Disabled - manual review required\n\n♻ **Rebasing**: Whenever PR becomes conflicted\n\n🔕 **Ignore**: Close this PR and you won't be reminded about this update again.\n\n---\n\nThis PR has been generated by [Renovate Bot](https://github.com/renovatebot/renovate).",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"]
+  }
+}
