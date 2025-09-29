@@ -121,6 +121,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
+                aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 transition hover:text-white"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
