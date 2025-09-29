@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const PORT = process.env.PLAYWRIGHT_PORT ?? "5174";
+const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${PORT}`;
+
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: 30_000,
@@ -10,30 +13,33 @@ export default defineConfig({
   reporter: [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]],
 
   use: {
-    baseURL: "http://localhost:5174",
+    baseURL: BASE_URL,
+    locale: "de-DE",
+    timezoneId: "Europe/Berlin",
     trace: "retain-on-failure",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
-    // Fixed mobile viewport - no randomness
-    viewport: { width: 390, height: 844 },
-    // Disable device scaling and mobile emulation for consistency
-    deviceScaleFactor: 1,
-    isMobile: false,
-    hasTouch: false,
-    // Force consistent browser settings
-    ignoreHTTPSErrors: true,
-    bypassCSP: false,
-    // Consistent user agent
-    userAgent:
-      "Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36 Playwright-Test",
   },
 
   webServer: {
-    command: "npm run dev -- --port=5174",
-    url: "http://localhost:5174",
+    command: `npm run dev -- --port=${PORT}`,
+    url: BASE_URL,
     reuseExistingServer: true,
     timeout: 60_000,
   },
 
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "android-chrome",
+      use: {
+        ...devices["Pixel 7"],
+      },
+    },
+    {
+      name: "desktop-chrome",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+    },
+  ],
 });
