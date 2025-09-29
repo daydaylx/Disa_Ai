@@ -1,8 +1,7 @@
-import { RotateCcw, Send, Square, Zap } from "lucide-react";
+import { Mic, RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "../../lib/utils";
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 
@@ -22,6 +21,12 @@ interface ChatComposerProps {
   className?: string;
 }
 
+const suggestionPrompts = [
+  "Schreibe eine freundliche Antwort auf diese E-Mail",
+  "Fasse den heutigen Kundencall in Stichpunkten zusammen",
+  "Entwirf eine Social-Media-Post-Idee zum Thema KI",
+];
+
 export function ChatComposer({
   value,
   onChange,
@@ -33,7 +38,7 @@ export function ChatComposer({
   canRetry = false,
   tokenCount,
   maxTokens,
-  placeholder = "Type your message... (Enter to send, Shift+Enter for new line)",
+  placeholder = "Schreibe deine Nachricht … (Enter zum Senden, Shift+Enter für Zeilenumbruch)",
   disabled = false,
   className,
 }: ChatComposerProps) {
@@ -83,43 +88,56 @@ export function ChatComposer({
   const shouldShowStop = isLoading && onStop;
   const shouldShowRetry = canRetry && !isLoading && onRetry;
 
+  const handleSuggestionClick = (suggestion: string) => {
+    onChange(suggestion);
+    textareaRef.current?.focus();
+  };
+
   return (
     <div
-      className={cn(
-        "border-t border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900",
-        className,
-      )}
+      className={cn("safe-pb px-2 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pt-4", className)}
     >
-      <div className="mx-auto max-w-4xl">
-        {/* Token Counter */}
+      <div className="mx-auto max-w-md space-y-4">
         {(tokenCount !== undefined || maxTokens !== undefined) && (
-          <div className="mb-3 flex items-center justify-between">
+          <div className="flex items-center justify-between text-xs text-white/60">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <Badge variant="secondary" className="text-xs">
-                  <Zap className="mr-1 h-3 w-3" />
-                  {tokenCount} tokens
-                </Badge>
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-white/70">
+                  <Zap className="h-3 w-3" />
+                  {tokenCount} Token
+                </span>
               )}
               {maxTokens !== undefined && (
-                <Badge variant="outline" className="text-xs">
-                  Max: {maxTokens}
-                </Badge>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  Maximal: {maxTokens}
+                </span>
               )}
             </div>
             {tokenCount !== undefined && maxTokens !== undefined && (
-              <div className="text-xs text-neutral-500">
-                {Math.round((tokenCount / maxTokens) * 100)}% used
-              </div>
+              <div>{Math.round((tokenCount / maxTokens) * 100)}% verwendet</div>
             )}
           </div>
         )}
 
-        {/* Input Area */}
+        {value.trim().length === 0 && (
+          <div className="flex flex-wrap gap-2">
+            {suggestionPrompts.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                onClick={() => handleSuggestionClick(suggestion)}
+                className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-white/70 transition hover:bg-white/20 hover:text-white"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div
           className={cn(
-            "relative flex items-end gap-3 rounded-lg border border-neutral-200 bg-white p-3 transition-colors dark:border-neutral-700 dark:bg-neutral-800",
-            isFocused && "border-accent-500 ring-1 ring-accent-500",
+            "relative flex items-end gap-3 rounded-[28px] border border-white/10 bg-white/10 p-4 shadow-[0_20px_55px_rgba(7,15,31,0.55)] backdrop-blur-2xl transition-all",
+            isFocused && "border-fuchsia-400/60 shadow-[0_28px_70px_rgba(192,38,211,0.45)]",
             disabled && "cursor-not-allowed opacity-50",
           )}
         >
@@ -133,20 +151,19 @@ export function ChatComposer({
               onBlur={() => setIsFocused(false)}
               placeholder={placeholder}
               disabled={disabled}
-              className="min-h-[44px] resize-none border-0 bg-transparent p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-white placeholder:text-white/40 focus-visible:ring-0 focus-visible:ring-offset-0"
               style={{ height: "44px" }}
             />
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center gap-2">
             {shouldShowRetry && (
               <Button
                 onClick={handleRetry}
                 size="sm"
                 variant="ghost"
-                className="h-8 w-8 p-0"
-                title="Retry last message"
+                className="h-10 w-10 rounded-full border border-white/10 bg-white/10 p-0 text-white/70 hover:bg-white/20 hover:text-white"
+                title="Letzte Antwort erneut anfordern"
               >
                 <RotateCcw className="h-4 w-4" />
               </Button>
@@ -156,9 +173,9 @@ export function ChatComposer({
               <Button
                 onClick={handleStop}
                 size="sm"
-                variant="outline"
-                className="h-8 w-8 border-semantic-danger p-0 text-semantic-danger hover:bg-semantic-danger hover:text-white"
-                title="Stop generation"
+                variant="ghost"
+                className="h-10 w-10 rounded-full border border-red-400/70 bg-red-500/20 p-0 text-red-200 hover:bg-red-500/40 hover:text-white"
+                title="Ausgabe stoppen"
               >
                 <Square className="h-4 w-4" />
               </Button>
@@ -168,11 +185,12 @@ export function ChatComposer({
               <Button
                 onClick={handleSend}
                 size="sm"
-                className="h-8 w-8 p-0"
+                variant="ghost"
+                className="relative h-12 w-12 rounded-full border-none bg-gradient-to-br from-fuchsia-500 via-purple-500 to-sky-500 p-0 text-white shadow-[0_22px_45px_rgba(168,85,247,0.55)] transition hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_26px_55px_rgba(168,85,247,0.7)]"
                 disabled={disabled}
-                title="Send message (Enter)"
+                title="Nachricht senden (Enter)"
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-5 w-5" />
               </Button>
             )}
 
@@ -181,22 +199,23 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="sm"
                 variant="ghost"
-                className="h-8 w-8 p-0"
+                className="h-12 w-12 rounded-full border border-white/5 bg-white/5 p-0 text-white/30"
                 disabled={true}
-                title="Type a message to send"
+                title="Nachricht eingeben, um zu senden"
               >
-                <Send className="h-4 w-4" />
+                <Mic className="h-5 w-5" />
               </Button>
             )}
           </div>
         </div>
 
-        {/* Helper Text */}
-        <div className="mt-2 flex items-center justify-between text-xs text-neutral-500">
+        <div className="flex items-center justify-between text-xs text-white/50">
           <div>
-            {isLoading ? "Generating response..." : "Enter to send • Shift+Enter for new line"}
+            {isLoading
+              ? "Antwort wird erstellt …"
+              : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
           </div>
-          {value.length > 0 && <div>{value.length} characters</div>}
+          {value.length > 0 && <div>{value.length} Zeichen</div>}
         </div>
       </div>
     </div>

@@ -58,17 +58,17 @@ export function TokenBadge({
 
   const tooltipContent = (
     <div className="space-y-1 text-sm">
-      <div className="font-medium">Token Usage</div>
-      <div>Current: {current.toLocaleString()} tokens</div>
+      <div className="font-medium">Token-Nutzung</div>
+      <div>Aktuell: {current.toLocaleString()} Token</div>
       {max && (
         <>
-          <div>Limit: {max.toLocaleString()} tokens</div>
-          <div>Usage: {percentage.toFixed(1)}%</div>
+          <div>Limit: {max.toLocaleString()} Token</div>
+          <div>Auslastung: {percentage.toFixed(1)}%</div>
         </>
       )}
-      {cost !== undefined && <div>Cost: {formatCost(cost, currency)}</div>}
-      {model && <div>Model: {model}</div>}
-      {isLive && <div className="text-accent-500">● Live updating</div>}
+      {cost !== undefined && <div>Kosten: {formatCost(cost, currency)}</div>}
+      {model && <div>Modell: {model}</div>}
+      {isLive && <div className="text-accent-500">● Live-Aktualisierung</div>}
     </div>
   );
 
@@ -126,7 +126,7 @@ export function LiveTokenCounter({
       {isStreaming && (
         <div className="flex items-center gap-1 text-xs text-neutral-500">
           <div className="h-1.5 w-1.5 animate-ping rounded-full bg-accent-500" />
-          <span>Streaming...</span>
+          <span>Stream läuft …</span>
         </div>
       )}
     </div>

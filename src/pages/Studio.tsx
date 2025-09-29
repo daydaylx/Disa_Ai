@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
-import { Persona } from "../data/personas";
+import type { Persona } from "../data/personas";
 
 function PersonasTab() {
   const { personas, setActivePersona } = useStudio();

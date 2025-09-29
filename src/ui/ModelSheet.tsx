@@ -29,7 +29,7 @@ export default function ModelSheet({
   // Group models by provider for better organization
   const groupedModels = models.reduce(
     (acc, model) => {
-      const provider = model.provider || "Other";
+      const provider = model.provider || "Weitere";
       if (!acc[provider]) acc[provider] = [];
       acc[provider].push(model);
       return acc;
@@ -43,7 +43,7 @@ export default function ModelSheet({
         <div className="space-y-6">
           {Object.entries(groupedModels).map(([provider, providerModels]) => (
             <div key={provider} className="space-y-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
+              <h3 className="text-text-muted text-sm font-semibold uppercase tracking-wider">
                 {provider}
               </h3>
               <div className="space-y-2">
@@ -53,7 +53,7 @@ export default function ModelSheet({
                     onClick={() => handleSelect(model)}
                     className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ${
                       selectedId === model.id
-                        ? "bg-primary/10 border-primary text-primary"
+                        ? "border-primary bg-primary/10 text-primary"
                         : "border-border hover:bg-bg-elevated/80 bg-bg-elevated text-text-default"
                     }`}
                     data-testid={`model-option-${model.id}`}
@@ -61,11 +61,11 @@ export default function ModelSheet({
                     <div className="flex items-center justify-between">
                       <div className="min-w-0 flex-1">
                         <h4 className="truncate font-medium">{model.label || model.id}</h4>
-                        <div className="mt-1 flex items-center gap-4 text-sm text-text-muted">
-                          {model.ctx && <span>{(model.ctx / 1000).toFixed(0)}k ctx</span>}
+                        <div className="text-text-muted mt-1 flex items-center gap-4 text-sm">
+                          {model.ctx && <span>{(model.ctx / 1000).toFixed(0)}k Token</span>}
                           {model.pricing?.in !== undefined && (
                             <span>
-                              ${model.pricing.in === 0 ? "Free" : `${model.pricing.in}/1k`}
+                              ${model.pricing.in === 0 ? "Kostenlos" : `$${model.pricing.in}/1k`}
                             </span>
                           )}
                         </div>
@@ -92,7 +92,7 @@ export default function ModelSheet({
         </div>
 
         {models.length === 0 && (
-          <div className="py-8 text-center text-text-muted">
+          <div className="text-text-muted py-8 text-center">
             <p>Keine Modelle verfügbar</p>
             <p className="mt-1 text-sm">Überprüfen Sie Ihre Internetverbindung</p>
           </div>
