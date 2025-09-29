@@ -74,3 +74,13 @@ Thumbs.db
 
 *storybook.log
 storybook-static
+
+# env files (never commit)
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# local junk
+.venv/
+playwright-visual-report/
