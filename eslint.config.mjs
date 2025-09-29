@@ -1,6 +1,3 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import tsParser from "@typescript-eslint/parser";
@@ -22,7 +19,6 @@ prettier, // Global ignores
     "build/**",
     "coverage/**",
     "node_modules/**",
-    ".storybook/**", // Ignore Storybook configuration
     "src/lib/openrouter.ts", // Legacy client
     "*.config.js",
     "*.config.ts",
@@ -182,4 +178,4 @@ prettier, // Global ignores
   rules: {
     "no-restricted-syntax": "off", // Allow hex colors in design tokens
   },
-}, ...storybook.configs["flat/recommended"]];
+}];
