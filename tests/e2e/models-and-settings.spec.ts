@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 test.describe("Models and Settings Pages", () => {
@@ -26,6 +27,10 @@ test.describe("Models and Settings Pages", () => {
       await expect(page.locator("text=All Safety")).toBeVisible();
       await expect(page.locator("text=Pricing")).toBeVisible();
       await expect(page.locator("text=Context Size")).toBeVisible();
+
+      const axe = new AxeBuilder({ page }).include("main").withTags(["wcag2a", "wcag2aa"]);
+      const results = await axe.analyze();
+      expect(results.violations).toEqual([]);
     });
 
     test("should filter models by provider", async ({ page }) => {
@@ -129,6 +134,10 @@ test.describe("Models and Settings Pages", () => {
       await expect(page.locator("text=General")).toBeVisible();
       await expect(page.locator("text=Presets")).toBeVisible();
       await expect(page.locator("text=API Keys")).toBeVisible();
+
+      const axe = new AxeBuilder({ page }).include("main").withTags(["wcag2a", "wcag2aa"]);
+      const results = await axe.analyze();
+      expect(results.violations).toEqual([]);
     });
 
     test("should toggle settings switches", async ({ page }) => {

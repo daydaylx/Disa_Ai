@@ -228,8 +228,9 @@ function hello(){
   };
   return (
     <div
-      className="flex min-h-screen-dynamic flex-col bg-surface text-on-surface"
+      className="flex flex-col bg-surface text-on-surface"
       style={{
+        minHeight: "var(--vh, 100dvh)",
         background:
           "radial-gradient(circle at 20% 10%, hsl(var(--primary) / 0.1), transparent 40%), radial-gradient(circle at 80% 70%, hsl(var(--primary) / 0.1), transparent 40%)",
       }}

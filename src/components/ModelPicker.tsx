@@ -75,8 +75,10 @@ function safetyLabel(value: ModelEntry["safety"]): string {
 export default function ModelPicker({ value, onChange, policyFromRole = "any" }: Props) {
   // All the hooks (useState, useEffect, useMemo, useCallback) from the original file are preserved.
   const [all, setAll] = React.useState<ModelEntry[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [searchInput, setSearchInput] = React.useState("");
   const [q, setQ] = React.useState("");
+  const searchDebounce = React.useRef<number>();
+  const [loading, setLoading] = React.useState(true);
   const [provider, setProvider] = React.useState<string>("all");
   const [onlyFree, setOnlyFree] = React.useState<boolean>(() => !getApiKey());
   const [onlyCode, setOnlyCode] = React.useState<boolean>(false);
@@ -127,6 +129,14 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       /* ignore */
     }
   }, [favorites]);
+
+  React.useEffect(() => {
+    window.clearTimeout(searchDebounce.current);
+    searchDebounce.current = window.setTimeout(() => {
+      setQ(searchInput);
+    }, 200);
+    return () => window.clearTimeout(searchDebounce.current);
+  }, [searchInput]);
 
   const favoritesSet = React.useMemo(
     () => new Set(favorites.map((id) => normalizeId(id))),
@@ -290,8 +300,8 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
 
       <div className="space-y-4">
         <Input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Modell suchen…"
           aria-label="Modell suchen"
           data-testid="model-search"
@@ -399,14 +409,10 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </Card>
       )}
 
-      <div
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        role="listbox"
-        aria-label="Modelle"
-      >
+      <div role="listbox" aria-label="Modelle">
         {loading ? (
           <div
-            className="text-text-muted col-span-full flex flex-col items-center justify-center p-8"
+            className="text-text-muted flex flex-col items-center justify-center p-8"
             role="status"
             aria-label="Modelle werden geladen"
           >
@@ -414,80 +420,18 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             <p className="mt-4 text-sm">Modelle werden geladen...</p>
           </div>
         ) : (
-          filtered.map((m) => {
-            const isFavorite = isFavoriteModel(m);
-            const active = value
-              ? value === m.id ||
-                (m.ids && m.ids.includes(value)) ||
-                normalizeId(value) === normalizeId(m.id)
-              : false;
-
-            const handleSelect = () => onChange(m.id);
-            const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                handleSelect();
-              }
-            };
-
-            return (
-              <Card
-                key={m.id}
-                role="option"
-                aria-selected={active}
-                tabIndex={0}
-                className={cn(
-                  "cursor-pointer transition-all",
-                  active && "ring-2 ring-primary",
-                  "focus-visible:ring-2 focus-visible:ring-primary",
-                )}
-                onClick={handleSelect}
-                onKeyDown={handleKeyDown}
-                data-testid="model-option"
-              >
-                <CardHeader className="flex-row items-start justify-between pb-2">
-                  <div className="flex-1">
-                    <CardTitle>{m.label ?? m.id}</CardTitle>
-                    <CardDescription>{m.provider ?? "Unbekannter Provider"}</CardDescription>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn("rounded-full px-2 py-1", isFavorite && "text-yellow-400")}
-                    aria-pressed={isFavorite}
-                    aria-label={isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      toggleFavorite(m);
-                    }}
-                    data-testid="model-favorite-toggle"
-                  >
-                    <Icon name={isFavorite ? "star-filled" : "star"} size={18} />
-                  </Button>
-                </CardHeader>
-                <CardContent className="space-y-4 pt-2">
-                  <div className="text-text-muted flex items-center justify-between text-sm">
-                    <span title="Kontextfenster">
-                      {m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—"}
-                    </span>
-                    <span title="Kosten pro 1k Tokens">
-                      {isFreeModel(m) || m.freeBadge ? "Frei" : formatPrice(m.pricing)}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {isFreeModel(m) && <Badge variant="default">Free</Badge>}
-                    {isCodeModel(m) && <Badge variant="secondary">Code</Badge>}
-                    <Badge>{safetyLabel(m.safety)}</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
+          <ModelListVirtualized
+            items={filtered}
+            isFavoriteModel={isFavoriteModel}
+            onSelect={onChange}
+            activeValue={value}
+            toggleFavorite={toggleFavorite}
+          />
         )}
 
         {!loading && filtered.length === 0 && (
           <div
-            className="text-text-muted col-span-full flex flex-col items-center justify-center p-8"
+            className="text-text-muted flex flex-col items-center justify-center p-8"
             role="status"
           >
             <Icon name="search-off" size={48} className="mb-4" />
@@ -497,5 +441,131 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         )}
       </div>
     </section>
+  );
+}
+
+interface ModelListVirtualizedProps {
+  items: MergedEntry[];
+  isFavoriteModel: (entry: MergedEntry) => boolean;
+  toggleFavorite: (entry: MergedEntry) => void;
+  onSelect: (id: string) => void;
+  activeValue: string | null;
+}
+
+function ModelListVirtualized({
+  items,
+  isFavoriteModel,
+  toggleFavorite,
+  onSelect,
+  activeValue,
+}: ModelListVirtualizedProps) {
+  const INITIAL_BATCH = 30;
+  const BATCH_SIZE = 30;
+  const [visibleCount, setVisibleCount] = React.useState(INITIAL_BATCH);
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    setVisibleCount(INITIAL_BATCH);
+  }, [items]);
+
+  React.useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (!first?.isIntersecting) return;
+        setVisibleCount((prev) => Math.min(items.length, prev + BATCH_SIZE));
+      },
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0.1,
+      },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [items.length]);
+
+  const visibleItems = React.useMemo(() => items.slice(0, visibleCount), [items, visibleCount]);
+
+  const renderCard = (m: MergedEntry) => {
+    const isFavorite = isFavoriteModel(m);
+    const active = Boolean(
+      activeValue &&
+        (activeValue === m.id ||
+          (m.ids && m.ids.includes(activeValue)) ||
+          normalizeId(activeValue) === normalizeId(m.id)),
+    );
+
+    const handleSelect = () => onSelect(m.id);
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        handleSelect();
+      }
+    };
+
+    return (
+      <Card
+        key={m.id}
+        role="option"
+        aria-selected={active}
+        tabIndex={0}
+        className={cn(
+          "cursor-pointer transition-all",
+          active && "ring-2 ring-primary",
+          "focus-visible:ring-2 focus-visible:ring-primary",
+        )}
+        onClick={handleSelect}
+        onKeyDown={handleKeyDown}
+        data-testid="model-option"
+      >
+        <CardHeader className="flex-row items-start justify-between pb-2">
+          <div className="flex-1">
+            <CardTitle>{m.label ?? m.id}</CardTitle>
+            <CardDescription>{m.provider ?? "Unbekannter Provider"}</CardDescription>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn("rounded-full px-2 py-1", isFavorite && "text-yellow-400")}
+            aria-pressed={isFavorite}
+            aria-label={isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleFavorite(m);
+            }}
+            data-testid="model-favorite-toggle"
+          >
+            <Icon name={isFavorite ? "star-filled" : "star"} size={18} />
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-4 pt-2">
+          <div className="text-text-muted flex items-center justify-between text-sm">
+            <span title="Kontextfenster">
+              {m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—"}
+            </span>
+            <span title="Kosten pro 1k Tokens">
+              {isFreeModel(m) || m.freeBadge ? "Frei" : formatPrice(m.pricing)}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {isFreeModel(m) && <Badge variant="default">Free</Badge>}
+            {isCodeModel(m) && <Badge variant="secondary">Code</Badge>}
+            <Badge>{safetyLabel(m.safety)}</Badge>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  return (
+    <>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {visibleItems.map((m) => renderCard(m))}
+      </div>
+      <div ref={sentinelRef} aria-hidden="true" />
+    </>
   );
 }

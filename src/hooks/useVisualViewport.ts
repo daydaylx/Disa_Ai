@@ -55,7 +55,6 @@ export function useVisualViewport(): ViewportState {
       });
 
       // Update CSS custom property for components to use
-      document.documentElement.style.setProperty("--vh", `${vv.height / 100}px`);
       document.documentElement.style.setProperty(
         "--keyboard-offset",
         isKeyboardOpen ? `${window.innerHeight - vv.height}px` : "0px",
@@ -72,7 +71,6 @@ export function useVisualViewport(): ViewportState {
     return () => {
       vv.removeEventListener("resize", updateViewport);
       vv.removeEventListener("scroll", updateViewport);
-      document.documentElement.style.removeProperty("--vh");
       document.documentElement.style.removeProperty("--keyboard-offset");
     };
   }, []);

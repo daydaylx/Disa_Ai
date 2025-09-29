@@ -1,4 +1,7 @@
-const SW_VERSION = "v1.0.0-f305a31f";
+const params = new URL(self.location.href).searchParams;
+const BUILD_ID = params.get("build") ?? "dev";
+const VERSION_SUFFIX = BUILD_ID.slice(-8);
+const SW_VERSION = `v1.0.0-${VERSION_SUFFIX}`;
 const HTML_CACHE = `html-${SW_VERSION}`;
 const ASSET_CACHE = `assets-${SW_VERSION}`;
 const OFFLINE_URL = "/offline.html";

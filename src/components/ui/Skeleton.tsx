@@ -91,7 +91,7 @@ export const ChatListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) =>
 // Composer skeleton
 export const ComposerSkeleton: React.FC = () => {
   return (
-    <div className="composer-container safe-pad safe-bottom py-3" aria-hidden="true">
+    <div className="composer-container safe-x safe-bottom py-3" aria-hidden="true">
       <div className="relative flex items-end gap-2">
         <Skeleton className="h-14 w-full rounded-[14px]" />
         <Skeleton className="h-11 w-11 flex-shrink-0 rounded-[14px]" />
@@ -122,7 +122,7 @@ export const TypingIndicator: React.FC<{ className?: string }> = ({ className })
       aria-live="polite"
       aria-label="KI tippt..."
     >
-      <div className="flex items-center space-x-2 text-text-muted">
+      <div className="text-text-muted flex items-center space-x-2">
         <LoadingDots />
         <span className="text-sm">KI tippt...</span>
       </div>

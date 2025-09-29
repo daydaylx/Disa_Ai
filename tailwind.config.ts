@@ -122,13 +122,13 @@ export default {
       },
       height: {
         // Mobile viewport units
-        "screen-dynamic": "100dvh",
+        "screen-dynamic": "var(--vh, 100dvh)",
         "screen-small": "100svh",
         "screen-large": "100lvh",
       },
       minHeight: {
         // Mobile viewport units
-        "screen-dynamic": "100dvh",
+        "screen-dynamic": "var(--vh, 100dvh)",
         "screen-small": "100svh",
         "screen-large": "100lvh",
       },

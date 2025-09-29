@@ -138,7 +138,7 @@ export default function ChatPageV2() {
         </section>
 
         {/* Input Section */}
-        <section role="region" aria-label="Message Input" className="safe-pb">
+        <section role="region" aria-label="Message Input" className="safe-bottom">
           <div className="px-1">
             <div className="mx-auto w-full max-w-md">
               <ChatComposer

@@ -15,6 +15,21 @@ const BUILD_ID =
 
 export { BUILD_ID };
 
+let controllerListenerAttached = false;
+let controllerReloading = false;
+let shouldReloadOnControllerChange = false;
+
+function attachControllerChangeListener() {
+  if (controllerListenerAttached) return;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!shouldReloadOnControllerChange) return;
+    if (controllerReloading) return;
+    controllerReloading = true;
+    window.location.reload();
+  });
+  controllerListenerAttached = true;
+}
+
 /**
  * Check if the Service Worker version differs from current build
  */
@@ -60,7 +75,7 @@ export function registerSW() {
     typeof (globalThis as unknown as { importScripts?: unknown }).importScripts !== "undefined";
   const baseUrl =
     (import.meta as any)?.env?.VITE_BASE_URL ?? (import.meta as any)?.env?.BASE_URL ?? "./";
-  const swUrl = hasImportScripts ? "/sw.js" : `${baseUrl}sw.js`;
+  const swUrl = hasImportScripts ? `/sw.js?build=${BUILD_ID}` : `${baseUrl}sw.js?build=${BUILD_ID}`;
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register(swUrl)
@@ -74,16 +89,14 @@ export function registerSW() {
             // Update verfügbar: neuer SW installiert, alter aktiv → UI-Toast anbieten
             if (nw.state === "installed" && navigator.serviceWorker.controller) {
               try {
+                reg.waiting?.postMessage({ type: "SKIP_WAITING" });
+                shouldReloadOnControllerChange = true;
+                attachControllerChangeListener();
                 // Check for Build-ID mismatch
                 void checkBuildIdMismatch(reg).then((shouldForceReload) => {
                   const reload = () => {
                     try {
-                      if (shouldForceReload) {
-                        // Hard reload with cache bypass
-                        window.location.reload();
-                      } else {
-                        window.location.reload();
-                      }
+                      window.location.reload();
                     } catch (_e) {
                       void _e;
                       /* ignore */
@@ -103,6 +116,7 @@ export function registerSW() {
 
                   // Auto-reload after 3 seconds if force reload
                   if (shouldForceReload) {
+                    shouldReloadOnControllerChange = true;
                     setTimeout(reload, 3000);
                   }
                 });

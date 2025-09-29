@@ -77,7 +77,7 @@ export default function VirtualMessageList({
     <div className="relative">
       <div
         ref={containerRef}
-        className={`safe-pb h-full flex-1 overflow-y-auto ${className}`}
+        className={`safe-bottom h-full flex-1 overflow-y-auto ${className}`}
         aria-label="Chat messages"
         role="log"
       >
@@ -92,12 +92,15 @@ export default function VirtualMessageList({
           </div>
         )}
         {slice.length === 0 ? (
-          <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 py-12">
+          <div
+            className="flex flex-col items-center justify-center px-4 py-12"
+            style={{ minHeight: "calc(var(--vh, 100dvh) * 0.6)" }}
+          >
             <div className="max-w-lg space-y-8 text-center">
               {/* Professional Hero Section */}
               <div className="space-y-6">
                 <div className="relative mx-auto h-24 w-24">
-                  <div className="glass-backdrop--medium shadow-glass-medium flex h-full w-full items-center justify-center rounded-full border-2 border-glass-border-medium">
+                  <div className="glass-backdrop--medium border-glass-border-medium flex h-full w-full items-center justify-center rounded-full border-2 shadow-glass-medium">
                     <svg width="32" height="32" viewBox="0 0 24 24" className="text-slate-300">
                       <path
                         fill="currentColor"
@@ -139,7 +142,7 @@ export default function VirtualMessageList({
                     <button
                       key={index}
                       onClick={() => onSuggestionClick?.(suggestion.text)}
-                      className="glass-backdrop--soft hover:glass-backdrop--medium shadow-glass-soft hover:shadow-glass-medium group relative overflow-hidden rounded-xl border border-glass-border-soft p-4 text-white transition-all duration-300 hover:scale-105 hover:border-glass-border-medium"
+                      className="glass-backdrop--soft hover:glass-backdrop--medium border-glass-border-soft hover:border-glass-border-medium group relative overflow-hidden rounded-xl border p-4 text-white shadow-glass-soft transition-all duration-300 hover:scale-105 hover:shadow-glass-medium"
                     >
                       <div className="flex items-center gap-3 text-left">
                         <span className="text-lg">{suggestion.icon}</span>
@@ -158,7 +161,7 @@ export default function VirtualMessageList({
       {showScrollAnchor && (
         <button
           onClick={scrollToBottom}
-          className="focus-visible:ring-accent-teal/50 bg-primary/80 fixed z-20 rounded-full p-2 text-white shadow-lg hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+          className="focus-visible:ring-accent-teal/50 fixed z-20 rounded-full bg-primary/80 p-2 text-white shadow-lg hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           style={{
             bottom: `calc(var(--bottom-nav-h) + 24px + max(16px, var(--safe-bottom)))`,
             right: `max(16px, var(--safe-right))`,
