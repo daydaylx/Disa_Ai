@@ -80,13 +80,6 @@ function StylesTab() {
 
 export default function Studio() {
   const [activeTab, setActiveTab] = useState("personas");
-  const [theme, setTheme] = useState("light");
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  };
 
   return (
     <div className="flex h-full flex-col bg-surface">
@@ -104,12 +97,6 @@ export default function Studio() {
           <span className="text-on-surface">Stile</span>
         </button>
         <div className="flex-grow" />
-        <button
-          onClick={toggleTheme}
-          className="m-2 rounded-md bg-surface-variant p-2 text-on-surface"
-        >
-          {theme === "light" ? "Dark Mode" : "Light Mode"}
-        </button>
       </div>
       <div className="flex-grow">{activeTab === "personas" ? <PersonasTab /> : <StylesTab />}</div>
     </div>

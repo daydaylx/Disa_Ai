@@ -60,12 +60,6 @@ export class MobileFeaturesManager {
     if (this.isInitialized) return;
 
     try {
-      // Device-Detection
-      if (!this.isMobileDevice()) {
-        console.warn("Desktop device detected - skipping mobile optimizations");
-        return;
-      }
-
       console.warn("Initializing mobile features...");
 
       // Haptisches Feedback
