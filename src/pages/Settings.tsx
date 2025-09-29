@@ -1,4 +1,4 @@
-import { Download, Eye, EyeOff, Key, Shield, Smartphone } from "lucide-react";
+import { Download, Eye, EyeOff, Info, Key, Shield, Smartphone } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "../components/ui/button";
@@ -7,6 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { usePWAInstall } from "../hooks/usePWAInstall";
+import { BUILD_ID } from "../lib/pwa/registerSW";
 
 export default function SettingsPage() {
   const [apiKey, setApiKey] = useState("");
@@ -226,6 +227,51 @@ export default function SettingsPage() {
               <li>• Push-Benachrichtigungen möglich</li>
               <li>• Bessere Performance</li>
             </ul>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Build Info */}
+      <Card className="border-white/10 bg-white/5">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-white">
+            <Info className="h-5 w-5" />
+            Build Information
+          </CardTitle>
+          <CardDescription className="text-white/70">
+            Build-Version und Deployment-Informationen
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-white/70">Build ID:</span>
+              <span className="text-accent-400 font-mono">{BUILD_ID}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-white/70">Version:</span>
+              <span className="text-white/90">v1.0.0</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-white/70">Environment:</span>
+              <span className="text-white/90">
+                {import.meta.env.DEV ? "Development" : "Production"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-white/70">Built:</span>
+              <span className="text-white/90">
+                {(import.meta as any)?.env?.VITE_BUILD_TIME ??
+                  new Date().toLocaleDateString("de-DE")}
+              </span>
+            </div>
+          </div>
+
+          <div className="rounded border border-white/10 bg-white/5 p-3 text-xs">
+            <p className="text-white/60">
+              <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein harter Reload
+              (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.
+            </p>
           </div>
         </CardContent>
       </Card>

@@ -8,7 +8,7 @@ type AppShellProps = {
 
 export function AppShell({ children, className }: AppShellProps) {
   const shellClasses = twMerge(
-    "flex flex-col h-screen overflow-hidden",
+    "flex flex-col h-screen-dynamic overflow-hidden",
     "pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
     "pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
     className,

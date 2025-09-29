@@ -14,7 +14,6 @@ const LS = {
   ctxMax: "disa:ctx:maxTokens",
   ctxReserve: "disa:ctx:reserve",
   composerOffset: "disa:ui:composerOffset",
-  theme: "disa:ui:theme",
   fontSize: "disa:ui:fontSize",
   reduceMotion: "disa:ui:reduceMotion",
   hapticFeedback: "disa:ui:hapticFeedback",
@@ -197,30 +196,6 @@ export function setComposerOffset(n: number): void {
   try {
     const v = Math.min(96, Math.max(16, Math.floor(n || 0)));
     localStorage.setItem(LS.composerOffset, String(v));
-  } catch {
-    /* Safe: fallback to default */
-  }
-}
-
-/** UI Theme */
-export function getTheme(): "light" | "dark" | "system" {
-  try {
-    const raw = localStorage.getItem(LS.theme) as "light" | "dark" | "system" | null;
-    return raw ?? "system";
-  } catch {
-    return "system";
-  }
-}
-export function setTheme(v: "light" | "dark" | "system"): void {
-  try {
-    localStorage.setItem(LS.theme, v);
-    // Apply theme
-    if (v === "system") {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      document.documentElement.classList.toggle("dark", prefersDark);
-    } else {
-      document.documentElement.classList.toggle("dark", v === "dark");
-    }
   } catch {
     /* Safe: fallback to default */
   }

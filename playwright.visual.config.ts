@@ -18,11 +18,11 @@ export default defineConfig({
     trace: "retain-on-failure",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
-    // Fixed viewport for consistent screenshots
-    viewport: { width: 1280, height: 720 },
-    deviceScaleFactor: 1,
-    isMobile: false,
-    hasTouch: false,
+    // Mobile viewport for mobile-first app (390x844 primary target)
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 2,
+    isMobile: true,
+    hasTouch: true,
     ignoreHTTPSErrors: true,
     bypassCSP: false,
   },
@@ -36,16 +36,10 @@ export default defineConfig({
 
   projects: [
     {
-      name: "chromium-light",
+      name: "mobile-dark",
       use: {
-        ...devices["Desktop Chrome"],
-        colorScheme: "light",
-      },
-    },
-    {
-      name: "chromium-dark",
-      use: {
-        ...devices["Desktop Chrome"],
+        ...devices["iPhone 12"],
+        viewport: { width: 390, height: 844 },
         colorScheme: "dark",
       },
     },

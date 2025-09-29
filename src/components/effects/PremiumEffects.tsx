@@ -280,19 +280,7 @@ export default function PremiumEffects() {
   useScrollReveal();
   useClickExplosion();
 
-  // Only show on desktop for performance
-  const isDesktop = typeof window !== "undefined" && window.innerWidth > 768;
+  // Mobile-only app - premium effects disabled for performance
 
-  if (!isDesktop) return null;
-
-  return (
-    <>
-      <CustomCursor />
-      <ScrollProgress />
-      <MatrixRain />
-      <NeuralNetwork />
-      <div className="mesh-gradient" />
-      <ParticleSystem count={30} />
-    </>
-  );
+  return null;
 }

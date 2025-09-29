@@ -4,37 +4,48 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
 
+  # HSTS - Force HTTPS for 1 year with preload
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+  # Prevent MIME type confusion
+  X-Download-Options: noopen
+
   # Cross-origin isolation (optional but recommended)
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
 
-  # Permissions policy - restrict dangerous APIs
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
+  # Permissions policy - restrict dangerous APIs for mobile-first PWA
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), serial=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=(), ambient-light-sensor=(), battery=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(self), gamepad=(), midi=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), speaker-selection=(), xr-spatial-tracking=()
 
   # Performance & PWA headers
   Accept-CH: Viewport-Width, DPR, Width
   Critical-CH: Viewport-Width, DPR
   Vary: Accept-Encoding, Viewport-Width, DPR
 
-  # Strict CSP - Remove unsafe-inline and strengthen security
+  # Strict CSP - Mobile-first PWA security policy
   Content-Security-Policy: default-src 'self';
     base-uri 'self';
     frame-ancestors 'none';
     object-src 'none';
     img-src 'self' data: blob:;
     font-src 'self' data:;
-    style-src 'self' 'sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
-    script-src 'self' 'nonce-vite-dev' 'sha256-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=';
+    style-src 'self' 'unsafe-inline';
+    script-src 'self' 'wasm-unsafe-eval';
     connect-src 'self' https://openrouter.ai https://*.openrouter.ai wss://localhost:* ws://localhost:*;
     worker-src 'self' blob:;
+    manifest-src 'self';
     form-action 'self';
+    frame-src 'none';
+    media-src 'self' blob:;
+    child-src 'none';
+    report-uri /csp-report;
     upgrade-insecure-requests
 
 /*
   /index.html 200
 
 /index.html
-  Cache-Control: no-store, no-cache, must-revalidate
+  Cache-Control: no-store, must-revalidate
 
 /*.html
   Cache-Control: no-store, no-cache, must-revalidate
