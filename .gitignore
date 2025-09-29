@@ -84,3 +84,6 @@ storybook-static
 # local junk
 .venv/
 playwright-visual-report/
+
+# Audit artifacts (cleanup tracking)
+.audit/

@@ -34,7 +34,7 @@
   /index.html 200
 
 /index.html
-  Cache-Control: no-store, no-cache, must-revalidate
+  Cache-Control: no-store, must-revalidate
 
 /*.html
   Cache-Control: no-store, no-cache, must-revalidate

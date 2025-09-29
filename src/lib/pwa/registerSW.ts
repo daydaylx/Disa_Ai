@@ -6,6 +6,52 @@ try {
   void _e;
   /* stop SW */
 }
+
+// Build-ID from import.meta.env or fallback to timestamp
+const BUILD_ID =
+  (import.meta as any)?.env?.VITE_BUILD_ID ??
+  (import.meta as any)?.env?.VITE_BUILD_TIMESTAMP ??
+  "dev-" + Date.now().toString(36);
+
+export { BUILD_ID };
+
+/**
+ * Check if the Service Worker version differs from current build
+ */
+async function checkBuildIdMismatch(registration: ServiceWorkerRegistration): Promise<boolean> {
+  try {
+    // Send message to SW to get its version
+    const sw = registration.active;
+    if (!sw) return false;
+
+    return new Promise((resolve) => {
+      const messageChannel = new MessageChannel();
+      messageChannel.port1.onmessage = (event) => {
+        const swVersion = event.data?.version;
+        const expectedVersion = `v1.0.0-${BUILD_ID.slice(-8)}`;
+        const mismatch = swVersion !== expectedVersion;
+
+        // eslint-disable-next-line no-console
+        console.log("[SW] Build check:", {
+          current: expectedVersion,
+          service_worker: swVersion,
+          mismatch,
+        });
+
+        resolve(mismatch);
+      };
+
+      // Timeout nach 1 Sekunde
+      setTimeout(() => resolve(false), 1000);
+
+      sw.postMessage({ type: "CHECK_FOR_UPDATE" }, [messageChannel.port2]);
+    });
+  } catch (e) {
+    console.warn("[SW] Build check failed:", e);
+    return false;
+  }
+}
+
 export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) return;
@@ -28,23 +74,38 @@ export function registerSW() {
             // Update verfügbar: neuer SW installiert, alter aktiv → UI-Toast anbieten
             if (nw.state === "installed" && navigator.serviceWorker.controller) {
               try {
-                const reload = () => {
-                  try {
-                    window.location.reload();
-                  } catch (_e) {
-                    void _e;
-                    /* ignore */
+                // Check for Build-ID mismatch
+                void checkBuildIdMismatch(reg).then((shouldForceReload) => {
+                  const reload = () => {
+                    try {
+                      if (shouldForceReload) {
+                        // Hard reload with cache bypass
+                        window.location.reload();
+                      } else {
+                        window.location.reload();
+                      }
+                    } catch (_e) {
+                      void _e;
+                      /* ignore */
+                    }
+                  };
+                  const evt = new CustomEvent("disa:toast", {
+                    detail: {
+                      kind: shouldForceReload ? "warning" : "info",
+                      title: shouldForceReload ? "Update erforderlich" : "Update verfügbar",
+                      message: shouldForceReload
+                        ? "Neue Version wird geladen..."
+                        : "Eine neue Version ist bereit.",
+                      action: { label: "Neu laden", onClick: reload },
+                    },
+                  });
+                  window.dispatchEvent(evt);
+
+                  // Auto-reload after 3 seconds if force reload
+                  if (shouldForceReload) {
+                    setTimeout(reload, 3000);
                   }
-                };
-                const evt = new CustomEvent("disa:toast", {
-                  detail: {
-                    kind: "info",
-                    title: "Update verfügbar",
-                    message: "Eine neue Version ist bereit.",
-                    action: { label: "Neu laden", onClick: reload },
-                  },
                 });
-                window.dispatchEvent(evt);
               } catch {
                 /* noop */
               }
