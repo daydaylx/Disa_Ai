@@ -1,3 +1,5 @@
+import { BUILD_ID } from "./pwa/registerSW";
+
 /**
  * Deployment Optimization Utilities
  *
@@ -66,6 +68,8 @@ export function preloadCriticalAssets(): void {
 export class ServiceWorkerManager {
   private registration: ServiceWorkerRegistration | null = null;
   private updateAvailable = false;
+  private controllerListenerAttached = false;
+  private shouldReloadOnControllerChange = false;
 
   async register(): Promise<boolean> {
     if (!("serviceWorker" in navigator)) {
@@ -80,7 +84,8 @@ export class ServiceWorkerManager {
     }
 
     try {
-      this.registration = await navigator.serviceWorker.register("/sw.js", {
+      const swUrl = `/sw.js?build=${BUILD_ID}`;
+      this.registration = await navigator.serviceWorker.register(swUrl, {
         scope: "/",
       });
 
@@ -122,11 +127,31 @@ export class ServiceWorkerManager {
     if (!newWorker) return;
 
     newWorker.addEventListener("statechange", () => {
-      if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-        this.updateAvailable = true;
-        this.notifyUpdateAvailable();
+      if (newWorker.state === "installed") {
+        const hasActiveController = Boolean(navigator.serviceWorker.controller);
+        if (hasActiveController) {
+          this.updateAvailable = true;
+          this.registration?.waiting?.postMessage({ type: "SKIP_WAITING" });
+          this.shouldReloadOnControllerChange = true;
+          this.notifyUpdateAvailable();
+          this.attachControllerChangeListener();
+        }
       }
     });
+  }
+
+  private attachControllerChangeListener(): void {
+    if (this.controllerListenerAttached) return;
+    let reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!this.shouldReloadOnControllerChange) {
+        return;
+      }
+      if (reloading) return;
+      reloading = true;
+      window.location.reload();
+    });
+    this.controllerListenerAttached = true;
   }
 
   private notifyUpdateAvailable(): void {
@@ -145,9 +170,8 @@ export class ServiceWorkerManager {
     newWorker.postMessage({ type: "SKIP_WAITING" });
 
     // Reload page when new worker takes control
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      window.location.reload();
-    });
+    this.shouldReloadOnControllerChange = true;
+    this.attachControllerChangeListener();
   }
 
   isUpdateAvailable(): boolean {

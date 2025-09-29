@@ -27,7 +27,8 @@ export function setupPwaInstallCapture() {
   if ("serviceWorker" in navigator) {
     const has = navigator.serviceWorker.controller;
     if (!has) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {
+      const { BUILD_ID } = require("./registerSW");
+      navigator.serviceWorker.register(`/sw.js?build=${BUILD_ID}`).catch(() => {
         /* still ok */
       });
     }

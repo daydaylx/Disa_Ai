@@ -98,10 +98,10 @@ export function ChatComposer({
   return (
     <div
       className={cn(
-        "safe-pb px-2 pt-4 transition-all duration-200",
+        "safe-bottom px-2 pt-4 transition-all duration-200",
         viewport.isKeyboardOpen
           ? "pb-4" // Less padding when keyboard is open
-          : "pb-[calc(env(safe-area-inset-bottom)+1.5rem)]", // Normal padding
+          : "pb-[calc(var(--inset-b)+1.5rem)]", // Normal padding
         className,
       )}
       style={{

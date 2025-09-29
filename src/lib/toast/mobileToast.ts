@@ -75,7 +75,7 @@ export class MobileToastManager {
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px;
+      padding: calc(var(--inset-t, 0px) + 16px) 16px calc(var(--inset-b, 0px) + 16px) 16px;
     `;
 
     document.body.appendChild(this.container);
@@ -176,7 +176,7 @@ export class MobileToastManager {
       /* Position variants */
       .mobile-toast-container--top {
         justify-content: flex-start;
-        padding-top: calc(env(safe-area-inset-top, 16px) + 16px);
+        padding-top: calc(var(--inset-t, 0px) + 16px);
       }
 
       .mobile-toast-container--center {
@@ -185,7 +185,7 @@ export class MobileToastManager {
 
       .mobile-toast-container--bottom {
         justify-content: flex-end;
-        padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 16px);
+        padding-bottom: calc(var(--inset-b, 0px) + 16px);
       }
     `;
 

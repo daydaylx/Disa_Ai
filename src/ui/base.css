@@ -9,12 +9,14 @@
 }
 html,
 body,
-#root {
+#app {
   height: 100%;
   /* Mobile viewport fix - use dynamic viewport units */
   height: 100dvh;
   /* Fallback for older browsers */
   height: 100svh;
+  min-height: var(--vh, 100dvh);
+  height: var(--vh, 100dvh);
 }
 img,
 svg,
@@ -30,6 +32,11 @@ textarea {
   font: inherit;
 }
 :root {
+  --vh: 100dvh;
+  --inset-t: env(safe-area-inset-top, 0px);
+  --inset-r: env(safe-area-inset-right, 0px);
+  --inset-b: env(safe-area-inset-bottom, 0px);
+  --inset-l: env(safe-area-inset-left, 0px);
   scroll-behavior: smooth;
 }
 
@@ -48,52 +55,52 @@ textarea {
 /* --- Safe Area Support for mobile devices --- */
 body {
   /* iOS safe area insets */
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding-top: var(--inset-t);
+  padding-bottom: var(--inset-b);
+  padding-left: var(--inset-l);
+  padding-right: var(--inset-r);
 }
 
 /* Safe area utilities */
 .safe-top {
-  padding-top: env(safe-area-inset-top);
+  padding-top: var(--inset-t);
 }
 .safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: var(--inset-b);
 }
 .safe-left {
-  padding-left: env(safe-area-inset-left);
+  padding-left: var(--inset-l);
 }
 .safe-right {
-  padding-right: env(safe-area-inset-right);
+  padding-right: var(--inset-r);
 }
 .safe-x {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding-left: var(--inset-l);
+  padding-right: var(--inset-r);
 }
 .safe-y {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-top: var(--inset-t);
+  padding-bottom: var(--inset-b);
 }
 .safe-all {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding-top: var(--inset-t);
+  padding-bottom: var(--inset-b);
+  padding-left: var(--inset-l);
+  padding-right: var(--inset-r);
 }
 
 /* Margin variants for safe areas */
 .safe-mt {
-  margin-top: env(safe-area-inset-top);
+  margin-top: var(--inset-t);
 }
 .safe-mb {
-  margin-bottom: env(safe-area-inset-bottom);
+  margin-bottom: var(--inset-b);
 }
 .safe-ml {
-  margin-left: env(safe-area-inset-left);
+  margin-left: var(--inset-l);
 }
 .safe-mr {
-  margin-right: env(safe-area-inset-right);
+  margin-right: var(--inset-r);
 }
 
 /* --- Scrollbars (dezent) --- */
@@ -108,4 +115,14 @@ body {
 *::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 8px;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(147, 197, 253, 0.85);
+  outline-offset: 3px;
+}
+
+.dark :focus-visible {
+  outline: 2px solid rgba(129, 140, 248, 0.9);
+  outline-offset: 3px;
 }

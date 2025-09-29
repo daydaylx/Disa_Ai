@@ -83,8 +83,9 @@ function Header() {
 function BottomTabs() {
   return (
     <nav
-      className="relative z-10 mx-auto mb-[env(safe-area-inset-bottom)] mt-6 w-full max-w-xs overflow-hidden rounded-3xl border border-white/10 bg-white/5 px-2 py-3 text-[13px] text-white/70 shadow-[0_25px_65px_rgba(15,23,42,0.55)] backdrop-blur-xl"
+      className="relative z-10 mx-auto mt-6 w-full max-w-xs overflow-hidden rounded-3xl border border-white/10 bg-white/5 px-2 py-3 text-[13px] text-white/70 shadow-[0_25px_65px_rgba(15,23,42,0.55)] backdrop-blur-xl"
       aria-label="Navigation"
+      style={{ marginBottom: "var(--inset-b)" }}
     >
       <div className="grid grid-cols-3 gap-2">
         {navigationItems.map((item) => (
@@ -110,7 +111,10 @@ function BottomTabs() {
 
 export function AppShell() {
   return (
-    <div className="relative mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200">
+    <div
+      className="relative mx-auto flex w-full max-w-md flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200"
+      style={{ minHeight: "var(--vh, 100dvh)" }}
+    >
       <div className="pointer-events-none absolute inset-x-0 top-[-30%] h-[60%] bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.35),_transparent_65%)]" />
       <div className="pointer-events-none absolute inset-x-[-20%] bottom-[-35%] h-[55%] bg-[radial-gradient(circle_at_bottom,_rgba(59,130,246,0.25),_transparent_70%)]" />
 

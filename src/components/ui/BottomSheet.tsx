@@ -53,7 +53,7 @@ export default function BottomSheet({
         aria-modal="true"
         aria-label={title}
         ref={sheetRef}
-        className={`safe-px safe-pb absolute bottom-0 left-0 right-0 transition-transform duration-200 ${
+        className={`safe-x safe-bottom absolute bottom-0 left-0 right-0 transition-transform duration-200 ${
           open ? "translate-y-0" : "translate-y-full"
         }`}
       >

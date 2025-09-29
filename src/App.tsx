@@ -7,9 +7,12 @@ import React from "react";
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
+import { useViewportHeight } from "./hooks/useViewportHeight";
 // Persona system is now handled by StudioContext
 
 export default function App() {
+  useViewportHeight();
+
   return (
     <StudioProvider>
       <ToastsProvider>

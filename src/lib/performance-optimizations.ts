@@ -168,7 +168,7 @@ export const createAsyncRoute = <T extends React.ComponentType<any>>(
       {
         fallback: React.createElement(
           "div",
-          { className: "flex items-center justify-center min-h-screen" },
+          { className: "flex items-center justify-center min-h-screen-dynamic" },
           React.createElement("div", {
             className:
               "animate-spin w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full",

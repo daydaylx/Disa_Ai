@@ -75,7 +75,7 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="text-foreground bg-background flex min-h-screen items-center justify-center p-4">
+        <div className="text-foreground bg-background flex min-h-screen-dynamic items-center justify-center p-4">
           <div className="w-full max-w-md space-y-6 text-center">
             <div className="space-y-2">
               <h1 className="text-danger text-2xl font-semibold">Oops! Something went wrong</h1>
@@ -120,7 +120,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex justify-center gap-3">
               <button
                 onClick={this.handleRetry}
-                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 transition-colors"
+                className="text-primary-foreground rounded-md bg-primary px-4 py-2 transition-colors hover:bg-primary/90"
               >
                 Try Again
               </button>

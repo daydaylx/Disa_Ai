@@ -27,9 +27,9 @@ export const theme = {
     sm: "calc(var(--radius) - 4px)",
   },
   safeArea: {
-    top: "env(safe-area-inset-top, 0px)",
-    right: "env(safe-area-inset-right, 0px)",
-    bottom: "env(safe-area-inset-bottom, 0px)",
-    left: "env(safe-area-inset-left, 0px)",
+    top: "var(--inset-t)",
+    right: "var(--inset-r)",
+    bottom: "var(--inset-b)",
+    left: "var(--inset-l)",
   },
 } as const;

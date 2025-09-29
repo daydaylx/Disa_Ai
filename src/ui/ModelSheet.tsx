@@ -39,7 +39,10 @@ export default function ModelSheet({
 
   return (
     <BottomSheet open={open} title="Modell auswählen" onClose={onClose}>
-      <div className="max-h-[60vh] overflow-y-auto px-4 pb-4">
+      <div
+        className="overflow-y-auto px-4 pb-4"
+        style={{ maxHeight: "calc(var(--vh, 100dvh) * 0.6)" }}
+      >
         <div className="space-y-6">
           {Object.entries(groupedModels).map(([provider, providerModels]) => (
             <div key={provider} className="space-y-3">
