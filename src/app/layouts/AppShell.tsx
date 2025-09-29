@@ -1,7 +1,8 @@
-import { Compass, Cpu, MessageSquare, PlusCircle, Settings } from "lucide-react";
+import { Bot, Compass, Cpu, MessageSquare, PlusCircle, Settings } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
 import { Button } from "../../components/ui";
+import { useStudio } from "../state/StudioContext";
 
 interface NavigationItem {
   to: string;
@@ -28,6 +29,8 @@ const navigationItems: NavigationItem[] = [
 ];
 
 function Header() {
+  const { activePersona } = useStudio();
+
   return (
     <header className="relative z-10 px-5 pb-6 pt-12">
       <div className="mx-auto max-w-md">
@@ -37,15 +40,25 @@ function Header() {
 
           <div className="relative flex items-center justify-between">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white/80">
-                <Compass className="h-3.5 w-3.5" /> Entdecke dein persönliches KI-Studio
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white/80">
+                  <Compass className="h-3.5 w-3.5" /> KI-Studio
+                </div>
+                {activePersona && (
+                  <div className="border-accent-500/30 bg-accent-500/20 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-white/90">
+                    <Bot className="h-3.5 w-3.5" />
+                    {activePersona.name}
+                  </div>
+                )}
               </div>
               <div>
                 <h1 className="text-3xl font-semibold text-white drop-shadow-[0_4px_18px_rgba(147,51,234,0.45)]">
                   Disa AI
                 </h1>
                 <p className="mt-1 text-sm text-white/70">
-                  Deine kreative Copilotin für Texte, Bilder und Inspiration.
+                  {activePersona
+                    ? `${activePersona.category} • ${activePersona.name}`
+                    : "Deine kreative Copilotin für Texte, Bilder und Inspiration."}
                 </p>
               </div>
             </div>
