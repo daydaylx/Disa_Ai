@@ -4,8 +4,6 @@ import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
 import { PersonaSelector } from "../components/chat/PersonaSelector";
-import { TokenBadge } from "../components/chat/TokenBadge";
-import { Button } from "../components/ui/button";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import { useChat } from "../hooks/useChat";
@@ -13,69 +11,7 @@ import { humanError } from "../lib/errors/humanError";
 import ModelSelectionSheet from "../ui/ModelSheet";
 import type { Model } from "../ui/types";
 
-/** ====== UI: Header ====== */
-function Header({
-  title,
-  modelName,
-  onOpenModels,
-  activePersonaName,
-  tokenCount,
-}: {
-  title: string;
-  modelName: string;
-  onOpenModels: () => void;
-  activePersonaName: string | null;
-  tokenCount?: number;
-}) {
-  return (
-    <header className="sticky top-0 z-20 -mx-1 px-1 pt-2" role="banner">
-      <div className="mx-auto max-w-md">
-        <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/10 px-5 py-6 shadow-[0_28px_70px_rgba(12,16,35,0.65)] backdrop-blur-2xl">
-          <div className="pointer-events-none absolute -top-28 right-[-10%] h-48 w-48 rounded-full bg-[radial-gradient(circle,_rgba(236,72,153,0.35),_transparent_65%)]" />
-          <div className="pointer-events-none absolute -bottom-24 left-[-5%] h-52 w-52 rounded-full bg-[radial-gradient(circle,_rgba(56,189,248,0.35),_transparent_65%)]" />
-
-          <div className="relative flex items-start justify-between gap-5">
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-white/60">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/30 px-3 py-1">
-                  Live Chat
-                </span>
-                {activePersonaName && (
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] normal-case tracking-normal text-white/70">
-                    Persona: {activePersonaName}
-                  </span>
-                )}
-              </div>
-              <div>
-                <h2 className="text-3xl font-semibold leading-tight text-white">{title}</h2>
-                <p className="mt-2 max-w-[18rem] text-sm text-white/70">
-                  Bereit für deine nächste Idee. Stelle Fragen, plane Projekte oder lass dir Inhalte
-                  generieren.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col items-end gap-3 text-right">
-              {tokenCount !== undefined && (
-                <TokenBadge
-                  current={tokenCount}
-                  className="border-white/10 bg-white/10 px-3 py-1 text-[11px] text-white/80 backdrop-blur"
-                />
-              )}
-              <Button
-                onClick={onOpenModels}
-                data-testid="model.select"
-                variant="ghost"
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/20 hover:text-white"
-              >
-                {modelName}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
+// Header component removed - now handled by AppShell
 
 /** ====== ChatPageV2 ====== */
 export default function ChatPageV2() {
@@ -174,19 +110,11 @@ export default function ChatPageV2() {
     void reload();
   };
 
-  // Calculate token count from all messages
-  const tokenCount = messages.reduce((acc, msg) => acc + msg.content.length, 0);
+  // Calculate token count from all messages (currently unused but kept for future features)
+  const _tokenCount = messages.reduce((acc, msg) => acc + msg.content.length, 0);
 
   return (
     <>
-      <Header
-        title="Disa AI"
-        modelName={model?.label ?? "Lädt …"}
-        onOpenModels={() => setSheetOpen(true)}
-        activePersonaName={activePersona?.name ?? null}
-        tokenCount={tokenCount}
-      />
-
       <main className="relative z-10 flex h-full flex-col overflow-hidden pb-4">
         {/* Chat Area */}
         <section className="flex-1 overflow-hidden" aria-label="Chat History">

@@ -18,7 +18,7 @@ function formatContext(ctx?: number) {
 }
 
 function formatPrice(price?: number) {
-  if (price === undefined) return "unbekannt";
+  if (price === undefined || price === null || typeof price !== "number") return "unbekannt";
   if (price === 0) return "Kostenlos";
   return `$${price.toFixed(3)}/1k`;
 }
@@ -226,14 +226,14 @@ export default function ModelsPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="secondary">{SAFETY_LABELS[model.safety] ?? model.safety}</Badge>
-                  {model.tags.slice(0, 3).map((tag) => (
+                  {model.tags?.slice(0, 3).map((tag) => (
                     <Badge key={tag} variant="outline" className="text-xs">
                       {tag}
                     </Badge>
                   ))}
-                  {model.tags.length > 3 && (
+                  {(model.tags?.length ?? 0) > 3 && (
                     <Badge variant="outline" className="text-xs">
-                      +{model.tags.length - 3} weitere
+                      +{(model.tags?.length ?? 0) - 3} weitere
                     </Badge>
                   )}
                 </div>

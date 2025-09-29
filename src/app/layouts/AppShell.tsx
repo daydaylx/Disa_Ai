@@ -64,9 +64,6 @@ function Header() {
             </div>
 
             <div className="flex flex-col items-end gap-3">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-3 py-1 text-xs text-white/70">
-                <Cpu className="h-3.5 w-3.5 text-sky-300" /> Aktives Modell
-              </div>
               <Button
                 size="sm"
                 variant="ghost"
