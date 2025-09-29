@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
-import { PersonaSelector } from "../components/chat/PersonaSelector";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import { useChat } from "../hooks/useChat";
@@ -19,8 +18,7 @@ export default function ChatPageV2() {
   const [model, setModel] = useState<Model | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const toasts = useToasts();
-  const { activePersona, setActivePersona, typographyScale, borderRadius, accentColor } =
-    useStudio();
+  const { activePersona, typographyScale, borderRadius, accentColor } = useStudio();
 
   const {
     messages,
@@ -127,13 +125,6 @@ export default function ChatPageV2() {
                 isLoading={isLoading}
               />
             </div>
-          </div>
-        </section>
-
-        {/* Persona Selection */}
-        <section role="region" aria-label="Persona Selection" className="px-1 pb-4">
-          <div className="mx-auto w-full max-w-md">
-            <PersonaSelector selectedPersona={activePersona} onPersonaChange={setActivePersona} />
           </div>
         </section>
 

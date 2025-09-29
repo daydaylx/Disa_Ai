@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Design System Verification", () => {
   test("Application loads with new CSS layer structure", async ({ page }) => {
-    await page.goto("http://localhost:5173");
+    await page.goto("/");
 
     // Wait for app to load
     await page.waitForTimeout(2000);
@@ -24,7 +24,7 @@ test.describe("Design System Verification", () => {
   });
 
   test("Legacy button classes still work", async ({ page }) => {
-    await page.goto("http://localhost:5173");
+    await page.goto("/");
     await page.waitForTimeout(2000);
 
     // Check if legacy button mapping works
@@ -40,7 +40,7 @@ test.describe("Design System Verification", () => {
   });
 
   test("Professional color palette is applied", async ({ page }) => {
-    await page.goto("http://localhost:5173");
+    await page.goto("/");
     await page.waitForTimeout(2000);
 
     // Check body background color (should be dark)

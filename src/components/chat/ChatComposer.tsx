@@ -163,6 +163,7 @@ export function ChatComposer({
               onBlur={() => setIsFocused(false)}
               placeholder={placeholder}
               disabled={disabled}
+              data-testid="composer-input"
               className="min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-white placeholder:text-white/40 focus-visible:ring-0 focus-visible:ring-offset-0"
               style={{ height: "44px" }}
             />
@@ -201,6 +202,7 @@ export function ChatComposer({
                 className="relative h-12 w-12 rounded-full border-none bg-gradient-to-br from-fuchsia-500 via-purple-500 to-sky-500 p-0 text-white shadow-[0_22px_45px_rgba(168,85,247,0.55)] transition hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_26px_55px_rgba(168,85,247,0.7)]"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
+                data-testid="composer-send"
               >
                 <Send className="h-5 w-5" />
               </Button>
@@ -214,6 +216,7 @@ export function ChatComposer({
                 className="h-12 w-12 rounded-full border border-white/5 bg-white/5 p-0 text-white/30"
                 disabled={true}
                 title="Nachricht eingeben, um zu senden"
+                data-testid="composer-send"
               >
                 <Mic className="h-5 w-5" />
               </Button>

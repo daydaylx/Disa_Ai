@@ -61,13 +61,13 @@ test.describe("Design System Functionality", () => {
   });
 
   test("Settings view accessibility", async ({ page }) => {
-    await page.goto("/#/settings");
+    await page.goto("/settings");
 
     await page.waitForTimeout(1000);
     await page.waitForLoadState("networkidle");
 
     // Basic settings page functionality
-    const settingsTitle = page.getByRole("heading", { name: "Settings" });
+    const settingsTitle = page.getByRole("heading", { name: /Einstellungen|Settings/ });
     await expect(settingsTitle).toBeVisible();
   });
 
