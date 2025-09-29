@@ -1,7 +1,7 @@
-import { Cpu, MessageSquare, PlusSquare, Settings } from "lucide-react";
+import { Compass, Cpu, MessageSquare, PlusCircle, Settings } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
-import { Badge, Button } from "../../components/ui";
+import { Button } from "../../components/ui";
 
 interface NavigationItem {
   to: string;
@@ -17,39 +17,54 @@ const navigationItems: NavigationItem[] = [
   },
   {
     to: "/models",
-    label: "Models",
+    label: "Modelle",
     icon: <Cpu className="h-5 w-5" />,
   },
   {
     to: "/settings",
-    label: "Settings",
+    label: "Einstellungen",
     icon: <Settings className="h-5 w-5" />,
   },
 ];
 
-function MiniModelPicker() {
-  return (
-    <Badge variant="secondary" className="flex items-center gap-2 px-3 py-1.5">
-      <Cpu className="h-4 w-4" />
-      <span className="hidden sm:inline">GPT-4</span>
-      <span className="sm:hidden">Model</span>
-    </Badge>
-  );
-}
-
 function Header() {
   return (
-    <header className="flex h-16 items-center justify-between border-b border-neutral-200 bg-white px-4 dark:border-neutral-700 dark:bg-neutral-900">
-      <div className="flex items-center gap-4">
-        <h1 className="text-xl font-semibold text-neutral-900 dark:text-white">Disa AI</h1>
-      </div>
+    <header className="relative z-10 px-5 pb-6 pt-12">
+      <div className="mx-auto max-w-md">
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_45px_90px_rgba(134,68,255,0.22)] backdrop-blur-2xl">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.4),_transparent_60%)]" />
+          <div className="pointer-events-none absolute -bottom-20 left-16 h-48 w-48 bg-[radial-gradient(circle_at_bottom,_rgba(56,189,248,0.65),_transparent_70%)]" />
 
-      <div className="flex items-center gap-3">
-        <MiniModelPicker />
-        <Button size="sm" aria-label="New conversation">
-          <PlusSquare className="h-4 w-4" />
-          <span className="ml-2 hidden sm:inline">New</span>
-        </Button>
+          <div className="relative flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white/80">
+                <Compass className="h-3.5 w-3.5" /> Entdecke dein persönliches KI-Studio
+              </div>
+              <div>
+                <h1 className="text-3xl font-semibold text-white drop-shadow-[0_4px_18px_rgba(147,51,234,0.45)]">
+                  Disa AI
+                </h1>
+                <p className="mt-1 text-sm text-white/70">
+                  Deine kreative Copilotin für Texte, Bilder und Inspiration.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-end gap-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-3 py-1 text-xs text-white/70">
+                <Cpu className="h-3.5 w-3.5 text-sky-300" /> Aktives Modell
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                aria-label="Neues Gespräch"
+                className="inline-flex items-center gap-2 rounded-full border-0 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 px-4 py-2 text-sm font-medium text-white shadow-[0_18px_38px_rgba(168,85,247,0.4)] transition-transform hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_20px_45px_rgba(168,85,247,0.55)]"
+              >
+                <PlusCircle className="h-4 w-4" /> Neu starten
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
   );
@@ -58,50 +73,24 @@ function Header() {
 function BottomTabs() {
   return (
     <nav
-      className="flex border-t border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900 md:hidden"
-      aria-label="Bottom navigation"
+      className="relative z-10 mx-auto mb-[env(safe-area-inset-bottom)] mt-6 w-full max-w-xs overflow-hidden rounded-3xl border border-white/10 bg-white/5 px-2 py-3 text-[13px] text-white/70 shadow-[0_25px_65px_rgba(15,23,42,0.55)] backdrop-blur-xl"
+      aria-label="Navigation"
     >
-      {navigationItems.map((item) => (
-        <NavLink
-          key={item.to}
-          to={item.to}
-          className={({ isActive }) =>
-            `flex flex-1 flex-col items-center gap-1 py-3 text-xs transition-colors ${
-              isActive
-                ? "text-accent-500 dark:text-accent-300"
-                : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
-            }`
-          }
-        >
-          {item.icon}
-          <span>{item.label}</span>
-        </NavLink>
-      ))}
-    </nav>
-  );
-}
-
-function TopTabs() {
-  return (
-    <nav
-      className="hidden border-b border-neutral-200 bg-white px-4 dark:border-neutral-700 dark:bg-neutral-900 md:block"
-      aria-label="Top navigation"
-    >
-      <div className="flex gap-1">
+      <div className="grid grid-cols-3 gap-2">
         {navigationItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-t-lg px-4 py-3 text-sm transition-colors ${
+              `flex flex-col items-center gap-1 rounded-2xl px-3 py-2 transition-all duration-200 ${
                 isActive
-                  ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white"
-                  : "dark:hover:bg-neutral-800/50 text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+                  ? "bg-gradient-to-r from-fuchsia-500/70 via-purple-500/70 to-sky-500/70 text-white shadow-[0_12px_30px_rgba(168,85,247,0.35)]"
+                  : "hover:bg-white/10 hover:text-white/90"
               }`
             }
           >
-            {item.icon}
-            {item.label}
+            <span className="h-5 w-5">{item.icon}</span>
+            <span>{item.label}</span>
           </NavLink>
         ))}
       </div>
@@ -111,11 +100,13 @@ function TopTabs() {
 
 export function AppShell() {
   return (
-    <div className="flex h-screen flex-col bg-white text-neutral-900 dark:bg-neutral-900 dark:text-white">
-      <Header />
-      <TopTabs />
+    <div className="relative mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200">
+      <div className="pointer-events-none absolute inset-x-0 top-[-30%] h-[60%] bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.35),_transparent_65%)]" />
+      <div className="pointer-events-none absolute inset-x-[-20%] bottom-[-35%] h-[55%] bg-[radial-gradient(circle_at_bottom,_rgba(59,130,246,0.25),_transparent_70%)]" />
 
-      <main className="flex-1 overflow-hidden">
+      <Header />
+
+      <main className="relative z-10 flex-1 overflow-hidden px-4">
         <Outlet />
       </main>
 

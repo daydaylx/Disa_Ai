@@ -2,22 +2,22 @@ import { nanoid } from "nanoid";
 import { useCallback, useReducer, useRef } from "react";
 
 import { chatStream } from "../api/openrouter";
-import type { ChatMessage } from "../components/chat/ChatMessage";
+import type { ChatMessageType } from "../components/chat/ChatMessage";
 import { mapError } from "../lib/errors";
 
 export interface UseChatOptions {
   api?: string;
   id?: string;
-  initialMessages?: ChatMessage[];
+  initialMessages?: ChatMessageType[];
   onResponse?: (response: Response) => void | Promise<void>;
-  onFinish?: (message: ChatMessage) => void;
+  onFinish?: (message: ChatMessageType) => void;
   onError?: (error: Error) => void;
   headers?: Record<string, string> | Headers;
   body?: object;
 }
 
 interface ChatState {
-  messages: ChatMessage[];
+  messages: ChatMessageType[];
   input: string;
   isLoading: boolean;
   error: Error | null;
@@ -25,8 +25,8 @@ interface ChatState {
 }
 
 type ChatAction =
-  | { type: "SET_MESSAGES"; messages: ChatMessage[] }
-  | { type: "ADD_MESSAGE"; message: ChatMessage }
+  | { type: "SET_MESSAGES"; messages: ChatMessageType[] }
+  | { type: "ADD_MESSAGE"; message: ChatMessageType }
   | { type: "UPDATE_MESSAGE"; id: string; content: string }
   | { type: "SET_INPUT"; input: string }
   | { type: "SET_LOADING"; isLoading: boolean }
@@ -90,8 +90,8 @@ export function useChat({
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const append = useCallback(
-    async (message: Omit<ChatMessage, "id" | "timestamp">) => {
-      const userMessage: ChatMessage = {
+    async (message: Omit<ChatMessageType, "id" | "timestamp">) => {
+      const userMessage: ChatMessageType = {
         id: nanoid(),
         timestamp: Date.now(),
         ...message,
@@ -106,7 +106,7 @@ export function useChat({
       abortControllerRef.current = controller;
       dispatch({ type: "SET_ABORT_CONTROLLER", controller });
 
-      const assistantMessage: ChatMessage = {
+      const assistantMessage: ChatMessageType = {
         id: nanoid(),
         role: "assistant",
         content: "",
@@ -153,7 +153,7 @@ export function useChat({
               }
             },
             onDone: () => {
-              const finalMessage: ChatMessage = {
+              const finalMessage: ChatMessageType = {
                 ...assistantMessage,
                 content: accumulatedContent,
               };
@@ -199,14 +199,20 @@ export function useChat({
   const reload = useCallback(async () => {
     if (state.messages.length === 0) return;
 
-    const lastUserMessageIndex = state.messages.findLastIndex((msg) => msg.role === "user");
+    let lastUserMessageIndex = -1;
+    for (let i = state.messages.length - 1; i >= 0; i -= 1) {
+      if (state.messages[i]?.role === "user") {
+        lastUserMessageIndex = i;
+        break;
+      }
+    }
 
     if (lastUserMessageIndex === -1) return;
 
     const lastUserMessage = state.messages[lastUserMessageIndex];
 
-    // Remove all messages after the last user message
-    const messagesToRetry = state.messages.slice(0, lastUserMessageIndex);
+    // Alle Nachrichten nach der letzten Nutzernachricht entfernen, Eingabe beibehalten
+    const messagesToRetry = state.messages.slice(0, lastUserMessageIndex + 1);
 
     dispatch({ type: "SET_MESSAGES", messages: messagesToRetry });
 
@@ -216,7 +222,7 @@ export function useChat({
     });
   }, [state.messages, append]);
 
-  const setMessages = useCallback((messages: ChatMessage[]) => {
+  const setMessages = useCallback((messages: ChatMessageType[]) => {
     dispatch({ type: "SET_MESSAGES", messages });
   }, []);
 

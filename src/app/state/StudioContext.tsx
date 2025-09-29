@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 
-import { getPersonas, Persona } from "../../data/personas";
+import type { Persona } from "../../data/personas";
+import { getPersonas } from "../../data/personas";
 
 interface StudioContextType {
   personas: Persona[];

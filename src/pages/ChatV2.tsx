@@ -27,38 +27,45 @@ function Header({
   tokenCount?: number;
 }) {
   return (
-    <header className="safe-pt safe-px sticky top-0 z-20 backdrop-blur-2xl" role="banner">
-      <div className="mx-auto max-w-4xl">
-        <div className="group relative overflow-hidden rounded-2xl border-outline bg-surface-variant px-8 py-6 transition-all duration-300">
-          {/* Subtle gradient background */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-600/10 via-slate-500/10 to-slate-600/10"></div>
-            <div className="via-white/3 absolute inset-0 bg-gradient-to-br from-transparent to-transparent"></div>
-          </div>
+    <header className="sticky top-0 z-20 -mx-1 px-1 pt-2" role="banner">
+      <div className="mx-auto max-w-md">
+        <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/10 px-5 py-6 shadow-[0_28px_70px_rgba(12,16,35,0.65)] backdrop-blur-2xl">
+          <div className="pointer-events-none absolute -top-28 right-[-10%] h-48 w-48 rounded-full bg-[radial-gradient(circle,_rgba(236,72,153,0.35),_transparent_65%)]" />
+          <div className="pointer-events-none absolute -bottom-24 left-[-5%] h-52 w-52 rounded-full bg-[radial-gradient(circle,_rgba(56,189,248,0.35),_transparent_65%)]" />
 
-          <div className="relative flex items-center justify-between">
-            <div className="flex items-center gap-5">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-outline bg-surface shadow-[0_0_15px_rgba(71,85,105,0.2)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(71,85,105,0.3)]">
-                <svg
-                  width="26"
-                  height="26"
-                  viewBox="0 0 24 24"
-                  className="text-on-surface drop-shadow-sm"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M12 3c5.5 0 10 3.58 10 8s-4.5 8-10 8c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.13 2 11c0-4.42 4.5-8 10-8Z"
-                  />
-                </svg>
+          <div className="relative flex items-start justify-between gap-5">
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-white/60">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/30 px-3 py-1">
+                  Live Chat
+                </span>
+                {activePersonaName && (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] normal-case tracking-normal text-white/70">
+                    Persona: {activePersonaName}
+                  </span>
+                )}
               </div>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight text-on-surface">{title}</h1>
+                <h2 className="text-3xl font-semibold leading-tight text-white">{title}</h2>
+                <p className="mt-2 max-w-[18rem] text-sm text-white/70">
+                  Bereit für deine nächste Idee. Stelle Fragen, plane Projekte oder lass dir Inhalte
+                  generieren.
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              {activePersonaName && <span className="badge badge-accent">{activePersonaName}</span>}
-              {tokenCount !== undefined && <TokenBadge current={tokenCount} />}
-              <Button onClick={onOpenModels} variant="outline" data-testid="model.select">
+            <div className="flex flex-col items-end gap-3 text-right">
+              {tokenCount !== undefined && (
+                <TokenBadge
+                  current={tokenCount}
+                  className="border-white/10 bg-white/10 px-3 py-1 text-[11px] text-white/80 backdrop-blur"
+                />
+              )}
+              <Button
+                onClick={onOpenModels}
+                data-testid="model.select"
+                variant="ghost"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/20 hover:text-white"
+              >
                 {modelName}
               </Button>
             </div>
@@ -137,8 +144,8 @@ export default function ChatPageV2() {
       .catch((err) => console.error("Could not copy text: ", err));
     toasts.push({
       kind: "success",
-      title: "Copied!",
-      message: "Message copied to clipboard.",
+      title: "Kopiert!",
+      message: "Nachricht wurde in die Zwischenablage kopiert.",
     });
   };
 
@@ -149,8 +156,8 @@ export default function ChatPageV2() {
     if (!model) {
       toasts.push({
         kind: "error",
-        title: "No Model Available",
-        message: "Please select a model before sending a message.",
+        title: "Kein Modell verfügbar",
+        message: "Bitte wählen Sie vor dem Senden ein Modell aus.",
       });
       return;
     }
@@ -172,17 +179,17 @@ export default function ChatPageV2() {
     <>
       <Header
         title="Disa AI"
-        modelName={model?.label ?? "Loading..."}
+        modelName={model?.label ?? "Lädt …"}
         onOpenModels={() => setSheetOpen(true)}
         activePersonaName={activePersona?.name ?? null}
         tokenCount={tokenCount}
       />
 
-      <main className="flex h-screen flex-col overflow-hidden bg-surface text-on-surface">
+      <main className="relative z-10 flex h-full flex-col overflow-hidden pb-4">
         {/* Chat Area */}
         <section className="flex-1 overflow-hidden" aria-label="Chat History">
-          <div className="h-full px-3 sm:px-4">
-            <div className="mx-auto h-full max-w-4xl">
+          <div className="h-full px-1">
+            <div className="mx-auto h-full w-full max-w-md">
               <ChatList
                 messages={messages}
                 onCopy={handleCopy}
@@ -195,8 +202,8 @@ export default function ChatPageV2() {
 
         {/* Input Section */}
         <section role="region" aria-label="Message Input" className="safe-pb">
-          <div className="px-3 sm:px-4">
-            <div className="mx-auto max-w-4xl">
+          <div className="px-1">
+            <div className="mx-auto w-full max-w-md">
               <ChatComposer
                 value={input}
                 onChange={setInput}

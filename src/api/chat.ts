@@ -1,4 +1,4 @@
-import type { ChatMessage } from "../components/chat/ChatMessage";
+import type { ChatMessageType } from "../components/chat/ChatMessage";
 import { chatStream } from "./openrouter";
 
 export interface ChatRequest {
@@ -13,7 +13,7 @@ export function handleChatRequest(request: ChatRequest, signal?: AbortSignal): R
   const { messages, model } = request;
 
   // Convert to internal ChatMessage format
-  const formattedMessages: ChatMessage[] = messages.map((msg) => ({
+  const formattedMessages: ChatMessageType[] = messages.map((msg) => ({
     id: `temp-${Date.now()}-${Math.random()}`,
     role: msg.role,
     content: msg.content,
