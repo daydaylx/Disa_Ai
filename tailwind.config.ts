@@ -120,6 +120,18 @@ export default {
         normal: "var(--transition-normal)",
         slow: "var(--transition-slow)",
       },
+      height: {
+        // Mobile viewport units
+        "screen-dynamic": "100dvh",
+        "screen-small": "100svh",
+        "screen-large": "100lvh",
+      },
+      minHeight: {
+        // Mobile viewport units
+        "screen-dynamic": "100dvh",
+        "screen-small": "100svh",
+        "screen-large": "100lvh",
+      },
       fontFamily: {
         mono: ["var(--font-mono)"],
       },

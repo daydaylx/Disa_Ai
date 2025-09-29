@@ -11,6 +11,10 @@ html,
 body,
 #root {
   height: 100%;
+  /* Mobile viewport fix - use dynamic viewport units */
+  height: 100dvh;
+  /* Fallback for older browsers */
+  height: 100svh;
 }
 img,
 svg,
@@ -39,6 +43,57 @@ textarea {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* --- Safe Area Support for mobile devices --- */
+body {
+  /* iOS safe area insets */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Safe area utilities */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+.safe-right {
+  padding-right: env(safe-area-inset-right);
+}
+.safe-x {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+.safe-y {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-all {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Margin variants for safe areas */
+.safe-mt {
+  margin-top: env(safe-area-inset-top);
+}
+.safe-mb {
+  margin-bottom: env(safe-area-inset-bottom);
+}
+.safe-ml {
+  margin-left: env(safe-area-inset-left);
+}
+.safe-mr {
+  margin-right: env(safe-area-inset-right);
 }
 
 /* --- Scrollbars (dezent) --- */
