@@ -103,6 +103,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
         isUser && "flex-row-reverse",
         isSystem && "justify-center opacity-70",
       )}
+      data-testid="message.item"
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
@@ -191,6 +192,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
               className="h-8 w-8 rounded-full border border-white/20 bg-white/10 p-0 text-white/70 backdrop-blur hover:bg-white/20 hover:text-white"
               onClick={handleCopy}
               title="Nachricht kopieren"
+              data-testid="message.copy"
             >
               <Copy className="h-3 w-3" />
             </Button>
@@ -201,6 +203,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
                 className="h-8 w-8 rounded-full border border-white/20 bg-white/10 p-0 text-white/70 backdrop-blur hover:bg-white/20 hover:text-white"
                 onClick={handleRetry}
                 title="Antwort erneut anfordern"
+                data-testid="message.retry"
               >
                 <RotateCcw className="h-3 w-3" />
               </Button>

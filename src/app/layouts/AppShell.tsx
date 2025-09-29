@@ -8,6 +8,7 @@ interface NavigationItem {
   to: string;
   label: string;
   icon: React.ReactNode;
+  testId: string;
 }
 
 const navigationItems: NavigationItem[] = [
@@ -15,16 +16,19 @@ const navigationItems: NavigationItem[] = [
     to: "/chat",
     label: "Chat",
     icon: <MessageSquare className="h-5 w-5" />,
+    testId: "nav.chat",
   },
   {
     to: "/models",
     label: "Modelle",
     icon: <Cpu className="h-5 w-5" />,
+    testId: "nav.models",
   },
   {
     to: "/settings",
     label: "Einstellungen",
     icon: <Settings className="h-5 w-5" />,
+    testId: "nav.settings",
   },
 ];
 
@@ -92,8 +96,9 @@ function BottomTabs() {
           <NavLink
             key={item.to}
             to={item.to}
+            data-testid={item.testId}
             className={({ isActive }) =>
-              `flex min-h-[48px] flex-col items-center gap-1 rounded-2xl px-3 py-3 transition-all duration-200 ${
+              `flex min-h-[48px] flex-col items-center gap-1 rounded-2xl px-3 py-3 outline-none transition-all duration-200 ${
                 isActive
                   ? "bg-gradient-to-r from-fuchsia-500/70 via-purple-500/70 to-sky-500/70 text-white shadow-[0_12px_30px_rgba(168,85,247,0.35)]"
                   : "hover:bg-white/10 hover:text-white/90"

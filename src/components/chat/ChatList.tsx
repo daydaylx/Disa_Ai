@@ -49,6 +49,9 @@ export function ChatList({ messages, isLoading, onRetry, onCopy, className }: Ch
         "[-webkit-mask-image:linear-gradient(to_bottom,transparent,black_6%,black_94%,transparent)]",
         className,
       )}
+      role="log"
+      aria-label="Chat messages"
+      data-testid="chat-log"
     >
       <div className="mx-auto flex h-full w-full max-w-md flex-col">
         {messages.length === 0 ? (

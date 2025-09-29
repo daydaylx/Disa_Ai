@@ -2,6 +2,8 @@ import { Loader2, Search } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { getModelFallback } from "../api/openrouter";
+import { useStudio } from "../app/state/StudioContext";
+import { PersonaSelector } from "../components/chat/PersonaSelector";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
@@ -31,6 +33,7 @@ const SAFETY_LABELS: Record<string, string> = {
 };
 
 export default function ModelsPage() {
+  const { activePersona, setActivePersona } = useStudio();
   const [models, setModels] = useState<ModelEntry[]>([]);
   const [selected, setSelected] = useState<string>(
     getModelFallback() || "meta-llama/llama-3.3-70b-instruct:free",
@@ -144,6 +147,12 @@ export default function ModelsPage() {
         </p>
       </header>
 
+      <PersonaSelector
+        selectedPersona={activePersona}
+        onPersonaChange={setActivePersona}
+        className="rounded-3xl border border-white/10 bg-white/5 p-3"
+      />
+
       <div className="space-y-3">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
@@ -191,6 +200,7 @@ export default function ModelsPage() {
               key={model.id}
               role="button"
               tabIndex={0}
+              data-testid="model-card"
               onClick={() => handleSelect(model)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" || event.key === " ") {
