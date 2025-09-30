@@ -217,7 +217,7 @@ export function ChatComposer({
                 className="h-12 w-12 rounded-full border border-white/5 bg-white/5 p-0 text-white/30"
                 disabled={true}
                 title="Nachricht eingeben, um zu senden"
-                data-testid="composer-send"
+                data-testid="composer-mic"
               >
                 <Mic className="h-5 w-5" />
               </Button>

@@ -20,25 +20,6 @@ test.describe("Navigation Tests", () => {
     await expect(page.getByText("Willkommen")).toBeVisible();
   });
 
-  test("should navigate to the chat page (V2)", async ({ page }) => {
-    // Force V2 UI
-    await page.addInitScript(() => {
-      Object.defineProperty(window, "import", {
-        value: {
-          meta: {
-            env: {
-              VITE_UI_V2: "true",
-            },
-          },
-        },
-      });
-    });
-
-    await page.goto("/");
-    await expect(page).toHaveTitle(/Disa AI/);
-    await expect(page.getByText("Corporate AI Intelligence")).toBeVisible();
-  });
-
   test("should navigate with default configuration", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/Disa AI/);

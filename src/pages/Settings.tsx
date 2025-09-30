@@ -186,8 +186,10 @@ export default function SettingsPage() {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <Label className="text-white/90">18+ / NSFW-Content anzeigen</Label>
-              <p className="text-xs text-white/60">
+              <Label htmlFor="nsfw-toggle" className="text-white/90">
+                18+ / NSFW-Content anzeigen
+              </Label>
+              <p id="nsfw-description" className="text-xs text-white/60">
                 Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden Rollen.
               </p>
             </div>
@@ -195,6 +197,7 @@ export default function SettingsPage() {
               checked={settings.showNSFWContent}
               onChange={toggleNSFWContent}
               id="nsfw-toggle"
+              aria-describedby="nsfw-description"
             />
           </div>
 

@@ -7,6 +7,9 @@ test.describe("Composer Basics", () => {
     await setupTestEnvironment(page);
     await page.goto("/chat");
 
+    // Wait for the models to be loaded
+    await page.waitForResponse("**/api/v1/models");
+
     await expect(page.getByTestId("composer-input")).toBeVisible();
 
     // solange kein Text, ist senden deaktiviert
