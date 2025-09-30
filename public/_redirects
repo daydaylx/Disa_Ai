@@ -1,3 +1,32 @@
 # SPA Fallback for Cloudflare Pages
-# All non-asset requests should serve index.html for client-side routing
+# Fix für Issue #75 & #80: Verbesserte SPA-Routing-Konfiguration
+
+# Statische Assets direkt servieren (nicht umleiten)
+/assets/*  200
+/js/*      200
+/css/*     200
+/icons/*   200
+*.js       200
+*.css      200
+*.png      200
+*.jpg      200
+*.jpeg     200
+*.gif      200
+*.svg      200
+*.webp     200
+*.avif     200
+*.ico      200
+*.woff     200
+*.woff2    200
+*.ttf      200
+*.otf      200
+*.json     200
+*.webmanifest 200
+
+# Service Worker und spezielle Dateien
+/sw.js            200
+/offline.html     200
+/manifest.webmanifest 200
+
+# Alle anderen Requests auf index.html für client-side routing
 /*    /index.html   200

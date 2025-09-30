@@ -20,6 +20,8 @@ interface ChatComposerProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  // Fix für Issue #73: Autosend-Funktionalität
+  isQuickstartLoading?: boolean;
 }
 
 const suggestionPrompts = [
@@ -42,6 +44,7 @@ export function ChatComposer({
   placeholder = "Schreibe deine Nachricht … (Enter zum Senden, Shift+Enter für Zeilenumbruch)",
   disabled = false,
   className,
+  isQuickstartLoading = false,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -162,9 +165,13 @@ export function ChatComposer({
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder={placeholder}
-              disabled={disabled}
+              disabled={disabled || isQuickstartLoading}
+              readOnly={isQuickstartLoading}
               data-testid="composer-input"
-              className="min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-white placeholder:text-white/40 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className={cn(
+                "min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-white placeholder:text-white/40 focus-visible:ring-0 focus-visible:ring-offset-0",
+                isQuickstartLoading && "cursor-not-allowed text-white/80",
+              )}
               style={{ height: "44px" }}
             />
           </div>

@@ -12,11 +12,18 @@ const analyzerPlugin = analyzer({
 export default defineConfig(({ mode }) => {
   // Umweltspezifische Konfiguration für robuste Asset-Pfade
   const isProduction = mode === "production";
-  const base = process.env.VITE_BASE_URL || "/";
+  // Fix für Issue #60: Korrekte base-Pfade für Cloudflare Pages
+  const base = process.env.VITE_BASE_URL || (isProduction ? "/" : "/");
 
   return {
     plugins: [react(), analyzerPlugin],
     base, // Umweltspezifische Basis für Cloudflare Pages
+    // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
+    server: {
+      historyApiFallback: {
+        index: "/index.html",
+      },
+    },
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),

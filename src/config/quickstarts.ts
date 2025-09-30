@@ -116,6 +116,19 @@ export function getQuickstartById(id: string): QuickstartAction | undefined {
   return defaultQuickstarts.find((q) => q.id === id);
 }
 
+// Fix für Issue #79: Aktualisiere Fallback-Laden um externe Config zu nutzen
+export async function getQuickstartsWithFallback(): Promise<QuickstartAction[]> {
+  try {
+    const external = await loadQuickstarts();
+    if (external.length > 0) {
+      return external;
+    }
+  } catch (error) {
+    console.warn("External quickstarts not available, using defaults:", error);
+  }
+  return defaultQuickstarts;
+}
+
 export function validateQuickstart(data: unknown): QuickstartAction | null {
   const result = quickstartSchema.safeParse(data);
   return result.success ? result.data : null;

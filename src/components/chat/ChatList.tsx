@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
-import { loadQuickstarts } from "../../config/quickstarts";
+import { getQuickstartsWithFallback } from "../../config/quickstarts";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
@@ -65,7 +65,7 @@ export function ChatList({
       try {
         setIsLoadingQuickstarts(true);
         setQuickstartError(null);
-        const actions = await loadQuickstarts();
+        const actions = await getQuickstartsWithFallback();
 
         if (actions.length === 0) {
           setQuickstartError("Keine Schnellstarts verfügbar");

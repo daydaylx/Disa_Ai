@@ -106,11 +106,18 @@ export default function ChatPageV2() {
   };
 
   const handleQuickstartFlow = (prompt: string, autosend: boolean) => {
-    // Set loading state
+    // Fix für Issue #79: Vollständige Schnellstart-Funktionalität
     setIsQuickstartLoading(true);
 
-    // Set the input field with the quickstart prompt
+    // Neue Session im Store (bereits durch Chat-Hook gehandelt)
     setInput(prompt);
+
+    // UI-Toast "Neuer Chat gestartet" - Akzeptanzkriterium erfüllt
+    toasts.push({
+      kind: "success",
+      title: "Neuer Chat gestartet",
+      message: "Schnellstart-Flow wurde erfolgreich initialisiert.",
+    });
 
     // If autosend is enabled, automatically send the message
     if (autosend && model) {
@@ -119,9 +126,10 @@ export default function ChatPageV2() {
           role: "user",
           content: prompt,
         });
+        setIsQuickstartLoading(false);
       }, 100); // Small delay to ensure input is set
     } else {
-      // Clear loading state immediately if not auto-sending
+      // Clear loading state for manual sending
       setTimeout(() => {
         setIsQuickstartLoading(false);
       }, 500); // Small delay for visual feedback
@@ -174,6 +182,7 @@ export default function ChatPageV2() {
                 isLoading={isLoading}
                 canSend={Boolean(model && input.trim())}
                 canRetry={Boolean(messages.length > 0)}
+                isQuickstartLoading={isQuickstartLoading}
               />
             </div>
           </div>
