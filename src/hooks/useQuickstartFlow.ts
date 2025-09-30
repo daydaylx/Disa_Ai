@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useStudio } from "../app/state/StudioContext";
 import type { QuickstartAction } from "../config/quickstarts";
 import { getPersonaById } from "../data/personas";
-import { trackQuickstartClicked } from "../lib/analytics";
+import { trackQuickstartClicked } from "../lib/analytics/index";
 
 export interface UseQuickstartFlowOptions {
   onStartFlow: (

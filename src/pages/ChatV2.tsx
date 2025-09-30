@@ -6,7 +6,7 @@ import { ChatList } from "../components/chat/ChatList";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import { useChat } from "../hooks/useChat";
-import { trackQuickstartCompleted } from "../lib/analytics";
+import { trackQuickstartCompleted } from "../lib/analytics/index";
 import { humanError } from "../lib/errors/humanError";
 import ModelSelectionSheet from "../ui/ModelSheet";
 import type { Model } from "../ui/types";

@@ -21,10 +21,33 @@ export default defineConfig(({ mode }) => {
     // .env.build doesn't exist, that's fine
   }
 
-  // Umweltspezifische Konfiguration für robuste Asset-Pfade
+  // Umweltspezifische Konfiguration für robuste Asset-Pfade (Issue #60)
   const isProduction = mode === "production";
-  // Fix für Issue #60: Korrekte base-Pfade für Cloudflare Pages
-  const base = env.VITE_BASE_URL || (isProduction ? "/" : "/");
+
+  // Fix für Issue #60: Erweiterte Base-Pfad-Logik für Cloudflare Pages
+  let base = "/";
+
+  // 1. Environment Variable hat Priorität
+  if (env.VITE_BASE_URL) {
+    base = env.VITE_BASE_URL;
+    console.log(`[Vite] Using VITE_BASE_URL: ${base}`);
+  }
+  // 2. Cloudflare Pages Detection
+  else if (env.CF_PAGES && env.CF_PAGES_URL) {
+    base = "/";
+    console.log(`[Vite] Cloudflare Pages detected, using base: ${base}`);
+  }
+  // 3. GitHub Pages Detection
+  else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY) {
+    const repo = env.GITHUB_REPOSITORY.split("/")[1];
+    base = `/${repo}/`;
+    console.log(`[Vite] GitHub Pages detected, using base: ${base}`);
+  }
+  // 4. Development/Local Default
+  else {
+    base = "/";
+    console.log(`[Vite] Using default base: ${base}`);
+  }
 
   return {
     plugins: [react(), analyzerPlugin],
@@ -87,17 +110,34 @@ export default defineConfig(({ mode }) => {
             // Everything else stays in main bundle for better mobile performance
             return undefined;
           },
-          // Optimize for mobile bandwidth
+          // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,
-          entryFileNames: "js/[name]-[hash].js",
-          chunkFileNames: "js/[name]-[hash].js",
+          entryFileNames: "assets/js/[name]-[hash].js",
+          chunkFileNames: "assets/js/[name]-[hash].js",
           assetFileNames: (assetInfo) => {
+            if (!assetInfo.name) return "assets/[name]-[hash][extname]";
+
             const info = assetInfo.name.split(".");
             const ext = info[info.length - 1];
+
+            // CSS-Files in eigenen Ordner für korrekte MIME-Type-Erkennung
             if (/\.(css)$/.test(assetInfo.name)) {
-              return "css/[name]-[hash].[ext]";
+              return "assets/css/[name]-[hash].[ext]";
             }
-            return "assets/[name]-[hash].[ext]";
+            // Font-Files
+            if (/\.(woff|woff2|ttf|eot)$/.test(assetInfo.name)) {
+              return "assets/fonts/[name]-[hash].[ext]";
+            }
+            // Image-Files
+            if (/\.(png|jpg|jpeg|gif|svg|webp)$/.test(assetInfo.name)) {
+              return "assets/images/[name]-[hash].[ext]";
+            }
+            // JSON-Files (z.B. quickstarts.json)
+            if (/\.(json)$/.test(assetInfo.name)) {
+              return "assets/data/[name]-[hash].[ext]";
+            }
+            // Alle anderen Assets
+            return "assets/misc/[name]-[hash].[ext]";
           },
         },
       },
