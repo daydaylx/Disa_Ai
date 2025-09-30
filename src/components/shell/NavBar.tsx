@@ -68,7 +68,7 @@ export function NavBar() {
 
   return (
     <nav className="p-2">
-      <div className="bg-surface/70 border-border/80 shadow-drop grid grid-cols-3 gap-2 rounded-lg border p-2 backdrop-blur-xl">
+      <div className="border-border/80 shadow-drop grid grid-cols-3 gap-2 rounded-lg border bg-surface/70 p-2 backdrop-blur-xl">
         {tabs.map((t) => {
           const active = location.pathname === t.to;
           const linkClasses = twMerge(

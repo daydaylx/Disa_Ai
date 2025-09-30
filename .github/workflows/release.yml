@@ -1,4 +1,4 @@
-name: 'Release Management'
+name: "Release Management"
 
 on:
   push:
@@ -14,25 +14,25 @@ permissions:
 
 jobs:
   release-check:
-    name: 'Release Version Check'
+    name: "Release Version Check"
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
-      - name: 'Checkout Repository'
+      - name: "Checkout Repository"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 'Setup Node.js'
+      - name: "Setup Node.js"
         uses: actions/setup-node@v4
         with:
-          node-version: '22.19.0'
-          cache: 'npm'
+          node-version: "22.19.0"
+          cache: "npm"
 
-      - name: 'Install dependencies'
+      - name: "Install dependencies"
         run: npm ci
 
-      - name: 'Check changeset status'
+      - name: "Check changeset status"
         run: |
           echo "## 🔄 Release Status Check" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -60,50 +60,50 @@ jobs:
           echo "- \`npm run changeset:add\` - Changeset hinzufügen" >> $GITHUB_STEP_SUMMARY
           echo "- \`npm run changeset:status\` - Status prüfen" >> $GITHUB_STEP_SUMMARY
 
-      - name: 'Changeset status details'
+      - name: "Changeset status details"
         run: npm run changeset:status
 
   release:
-    name: 'Automated Release'
+    name: "Automated Release"
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - name: 'Checkout Repository'
+      - name: "Checkout Repository"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           # Personal Access Token für erweiterte Berechtigungen
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Setup Node.js'
+      - name: "Setup Node.js"
         uses: actions/setup-node@v4
         with:
-          node-version: '22.19.0'
-          cache: 'npm'
+          node-version: "22.19.0"
+          cache: "npm"
 
-      - name: 'Install dependencies'
+      - name: "Install dependencies"
         run: npm ci
 
-      - name: 'Build production bundle'
+      - name: "Build production bundle"
         run: npm run build
 
-      - name: 'Run quality checks'
+      - name: "Run quality checks"
         run: npm run verify
 
-      - name: 'Create Release PR or Publish'
+      - name: "Create Release PR or Publish"
         id: changesets
         uses: changesets/action@v1
         with:
           # Changeset-Befehle
           version: npm run changeset:version
           publish: npm run changeset:publish
-          commit: 'chore(release): version packages [skip ci]'
-          title: '🚀 Release: Version Bump'
+          commit: "chore(release): version packages [skip ci]"
+          title: "🚀 Release: Version Bump"
           createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Release Summary'
+      - name: "Release Summary"
         if: steps.changesets.outputs.hasChangesets == 'true'
         run: |
           echo "## 🚀 Release Pipeline Executed" >> $GITHUB_STEP_SUMMARY
@@ -117,7 +117,7 @@ jobs:
           echo "**Published:** ${{ steps.changesets.outputs.published }}" >> $GITHUB_STEP_SUMMARY
           echo "**Published Packages:** ${{ steps.changesets.outputs.publishedPackages }}" >> $GITHUB_STEP_SUMMARY
 
-      - name: 'No Release Needed'
+      - name: "No Release Needed"
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
           echo "## ℹ️ No Release Required" >> $GITHUB_STEP_SUMMARY
@@ -128,30 +128,30 @@ jobs:
           echo "**Für Release:** Führe \`npm run changeset:add\` aus" >> $GITHUB_STEP_SUMMARY
 
   create-tag:
-    name: 'Create Git Tag'
+    name: "Create Git Tag"
     runs-on: ubuntu-latest
     needs: release
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - name: 'Checkout Repository'
+      - name: "Checkout Repository"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 'Setup Node.js'
+      - name: "Setup Node.js"
         uses: actions/setup-node@v4
         with:
-          node-version: '22.19.0'
-          cache: 'npm'
+          node-version: "22.19.0"
+          cache: "npm"
 
-      - name: 'Get package version'
+      - name: "Get package version"
         id: package-version
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "version=v$VERSION" >> $GITHUB_OUTPUT
           echo "Current version: v$VERSION"
 
-      - name: 'Check if tag already exists'
+      - name: "Check if tag already exists"
         id: tag-check
         run: |
           if git rev-parse "${{ steps.package-version.outputs.version }}" >/dev/null 2>&1; then
@@ -162,7 +162,7 @@ jobs:
             echo "Tag ${{ steps.package-version.outputs.version }} does not exist"
           fi
 
-      - name: 'Create and push tag'
+      - name: "Create and push tag"
         if: steps.tag-check.outputs.exists == 'false'
         run: |
           git config user.name "GitHub Actions"
@@ -170,7 +170,7 @@ jobs:
           git tag -a "${{ steps.package-version.outputs.version }}" -m "Release ${{ steps.package-version.outputs.version }}"
           git push origin "${{ steps.package-version.outputs.version }}"
 
-      - name: 'Tag Summary'
+      - name: "Tag Summary"
         run: |
           echo "## 🏷️ Git Tag Management" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

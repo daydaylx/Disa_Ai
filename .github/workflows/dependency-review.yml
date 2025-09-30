@@ -1,8 +1,8 @@
-name: 'Dependency Review'
+name: "Dependency Review"
 on:
   pull_request:
     branches: [main]
-    paths: ['package.json', 'package-lock.json', 'renovate.json']
+    paths: ["package.json", "package-lock.json", "renovate.json"]
 
 permissions:
   contents: read
@@ -12,10 +12,10 @@ jobs:
   dependency-review:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout Repository'
+      - name: "Checkout Repository"
         uses: actions/checkout@v4
 
-      - name: 'Dependency Review'
+      - name: "Dependency Review"
         uses: actions/dependency-review-action@v4
         with:
           # Fail the action if vulnerabilities are found
@@ -31,22 +31,22 @@ jobs:
   audit-dependencies:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout Repository'
+      - name: "Checkout Repository"
         uses: actions/checkout@v4
 
-      - name: 'Setup Node.js'
+      - name: "Setup Node.js"
         uses: actions/setup-node@v4
         with:
-          node-version: '22.19.0'
-          cache: 'npm'
+          node-version: "22.19.0"
+          cache: "npm"
 
-      - name: 'Install dependencies'
+      - name: "Install dependencies"
         run: npm ci
 
-      - name: 'Run npm audit'
+      - name: "Run npm audit"
         run: npm audit --audit-level=moderate
 
-      - name: 'Check for known security issues'
+      - name: "Check for known security issues"
         run: |
           echo "Checking for known security patterns..."
           # Check for common security issues in package.json

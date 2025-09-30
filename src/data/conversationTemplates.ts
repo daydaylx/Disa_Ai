@@ -31,13 +31,13 @@ Always respond with creativity, imagination, and attention to literary quality. 
       "Write a short story about a person who discovers they can see one minute into the future",
       "Create a character backstory for a reluctant hero in a fantasy setting",
       "Help me develop a plot for a mystery novel set in Victorian London",
-      "Write a compelling opening paragraph for a science fiction story"
+      "Write a compelling opening paragraph for a science fiction story",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["creative", "writing", "storytelling", "fiction"],
     icon: "✍️",
     difficulty: "intermediate",
-    estimatedTime: "10-30 minutes"
+    estimatedTime: "10-30 minutes",
   },
 
   // Technical Assistant Templates
@@ -59,13 +59,13 @@ Always explain your reasoning and provide multiple approaches when appropriate. 
       "Review this React component and suggest improvements",
       "Help me design a RESTful API for a social media app",
       "Explain the differences between async/await and Promises",
-      "What's the best way to handle state management in a large React app?"
+      "What's the best way to handle state management in a large React app?",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["programming", "coding", "development", "technical"],
     icon: "💻",
     difficulty: "intermediate",
-    estimatedTime: "15-45 minutes"
+    estimatedTime: "15-45 minutes",
   },
 
   // Educational Templates
@@ -87,13 +87,13 @@ Always be encouraging and focus on building understanding rather than just givin
       "Explain quantum physics concepts in simple terms",
       "Help me understand calculus derivatives with real-world examples",
       "Teach me about the causes and effects of World War II",
-      "Break down how photosynthesis works step by step"
+      "Break down how photosynthesis works step by step",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["education", "learning", "tutoring", "academic"],
     icon: "🎓",
     difficulty: "beginner",
-    estimatedTime: "20-60 minutes"
+    estimatedTime: "20-60 minutes",
   },
 
   // Business Templates
@@ -115,13 +115,13 @@ Provide actionable insights backed by business principles. Ask probing questions
       "Help me create a business plan for a SaaS startup",
       "Analyze the market opportunity for sustainable fashion",
       "What are effective customer acquisition strategies for B2B companies?",
-      "How should I price my consulting services?"
+      "How should I price my consulting services?",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["business", "strategy", "entrepreneurship", "planning"],
     icon: "📊",
     difficulty: "advanced",
-    estimatedTime: "30-90 minutes"
+    estimatedTime: "30-90 minutes",
   },
 
   // Health & Wellness Templates
@@ -143,13 +143,13 @@ Always emphasize that you're providing general wellness information and recommen
       "Create a balanced meal plan for someone with a busy schedule",
       "Suggest a beginner-friendly exercise routine for home workouts",
       "What are effective stress management techniques for work?",
-      "Help me establish a better sleep routine"
+      "Help me establish a better sleep routine",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["health", "wellness", "fitness", "nutrition"],
     icon: "🏃‍♀️",
     difficulty: "beginner",
-    estimatedTime: "15-30 minutes"
+    estimatedTime: "15-30 minutes",
   },
 
   // Research Templates
@@ -171,13 +171,13 @@ Provide well-structured, evidence-based analysis. Always cite limitations and su
       "Research the impact of remote work on productivity and employee satisfaction",
       "Compare renewable energy technologies and their market potential",
       "Analyze current trends in artificial intelligence adoption",
-      "Investigate the effectiveness of different learning methodologies"
+      "Investigate the effectiveness of different learning methodologies",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["research", "analysis", "investigation", "data"],
     icon: "🔍",
     difficulty: "advanced",
-    estimatedTime: "45-120 minutes"
+    estimatedTime: "45-120 minutes",
   },
 
   // Creative Problem Solving
@@ -199,13 +199,13 @@ Foster an environment of creative exploration while maintaining focus on actiona
       "Help me brainstorm innovative solutions to reduce food waste",
       "Generate creative marketing ideas for a new mobile app",
       "What are novel approaches to improve online learning engagement?",
-      "Ideate ways to make public transportation more appealing"
+      "Ideate ways to make public transportation more appealing",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["innovation", "creativity", "problem-solving", "ideation"],
     icon: "💡",
     difficulty: "intermediate",
-    estimatedTime: "20-60 minutes"
+    estimatedTime: "20-60 minutes",
   },
 
   // Language Learning
@@ -227,13 +227,13 @@ Adapt to the learner's level and be patient with mistakes. Provide corrections i
       "Practice ordering food at a restaurant in Spanish",
       "Help me understand French verb conjugations",
       "Teach me common business phrases in Mandarin",
-      "Explain the difference between formal and informal Japanese"
+      "Explain the difference between formal and informal Japanese",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["language", "learning", "conversation", "culture"],
     icon: "🗣️",
     difficulty: "beginner",
-    estimatedTime: "20-45 minutes"
+    estimatedTime: "20-45 minutes",
   },
 
   // Productivity & Organization
@@ -255,14 +255,14 @@ Provide personalized advice based on individual needs and constraints. Focus on 
       "Design a time management system for a freelancer with multiple clients",
       "Help me organize my workspace for maximum productivity",
       "Create a morning routine that sets me up for success",
-      "What's the best way to manage and prioritize my to-do list?"
+      "What's the best way to manage and prioritize my to-do list?",
     ],
     suggestedModel: "anthropic/claude-3.5-sonnet",
     tags: ["productivity", "organization", "time management", "habits"],
     icon: "⚡",
     difficulty: "intermediate",
-    estimatedTime: "15-40 minutes"
-  }
+    estimatedTime: "15-40 minutes",
+  },
 ];
 
 export const TEMPLATE_CATEGORIES = [
@@ -275,26 +275,27 @@ export const TEMPLATE_CATEGORIES = [
   "Research",
   "Innovation",
   "Language Learning",
-  "Productivity"
+  "Productivity",
 ];
 
 export function getTemplatesByCategory(category: string): ConversationTemplate[] {
   if (category === "All") {
     return CONVERSATION_TEMPLATES;
   }
-  return CONVERSATION_TEMPLATES.filter(template => template.category === category);
+  return CONVERSATION_TEMPLATES.filter((template) => template.category === category);
 }
 
 export function getTemplateById(id: string): ConversationTemplate | undefined {
-  return CONVERSATION_TEMPLATES.find(template => template.id === id);
+  return CONVERSATION_TEMPLATES.find((template) => template.id === id);
 }
 
 export function searchTemplates(query: string): ConversationTemplate[] {
   const lowercaseQuery = query.toLowerCase();
-  return CONVERSATION_TEMPLATES.filter(template =>
-    template.name.toLowerCase().includes(lowercaseQuery) ||
-    template.description.toLowerCase().includes(lowercaseQuery) ||
-    template.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery)) ||
-    template.category.toLowerCase().includes(lowercaseQuery)
+  return CONVERSATION_TEMPLATES.filter(
+    (template) =>
+      template.name.toLowerCase().includes(lowercaseQuery) ||
+      template.description.toLowerCase().includes(lowercaseQuery) ||
+      template.tags.some((tag) => tag.toLowerCase().includes(lowercaseQuery)) ||
+      template.category.toLowerCase().includes(lowercaseQuery),
   );
 }

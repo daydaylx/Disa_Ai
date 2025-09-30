@@ -45,7 +45,7 @@ Eine **mobile-only** AI-Chat-PWA mit **Dark-only** Design und Offline-Funktional
 ### Mobile PWA
 
 - **Service Worker** mit Build-ID basiertem deterministischen Caching
-- **Native Installation** auf  für App-like Experience
+- **Native Installation** auf für App-like Experience
 - **Visual Viewport API** für perfektes Keyboard-Handling
 - **Offline-First** mit intelligenten Fallbacks
 
@@ -145,7 +145,6 @@ SW:      Network-first für HTML, stale-while-revalidate
 - **Samsung Internet:** 15+ (Galaxy S10+)
 
 ### PWA Installation
-
 
 - **Android:** Chrome → Menü → "App installieren" → Home Screen Icon
 - **Features:** Offline-Modus, Push-Notifications, File-Sharing

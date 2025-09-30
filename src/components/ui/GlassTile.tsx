@@ -59,8 +59,8 @@ export const GlassTile: React.FC<GlassTileProps> = ({
           {icon}
         </div>
       ) : null}
-      <div className="text-sm font-semibold text-text-primary">{title}</div>
-      {subtitle ? <div className="mt-1 text-xs text-text-muted">{subtitle}</div> : null}
+      <div className="text-text-primary text-sm font-semibold">{title}</div>
+      {subtitle ? <div className="text-text-muted mt-1 text-xs">{subtitle}</div> : null}
     </div>
   );
 };

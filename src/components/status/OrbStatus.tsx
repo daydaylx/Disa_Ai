@@ -6,7 +6,7 @@ type Props = {
 export default function OrbStatus({ streaming, modelLabel }: Props) {
   return (
     <div className="mx-auto mb-2 mt-1 w-full max-w-3xl">
-      <div className="shadow-soft flex items-center gap-3 rounded-xl border border-neutral-800 bg-neutral-900/70 px-3 py-2 backdrop-blur">
+      <div className="shadow-soft bg-neutral-900/70 flex items-center gap-3 rounded-xl border border-neutral-800 px-3 py-2 backdrop-blur">
         <span
           aria-hidden
           className={[

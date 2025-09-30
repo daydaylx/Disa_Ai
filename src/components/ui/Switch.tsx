@@ -21,7 +21,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
         {label && <span className="text-text-secondary text-sm">{label}</span>}
         <span
           className={cn(
-            "duration-fast relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+            "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast",
             checked ? "bg-accent" : "bg-surface-300",
             disabled && "cursor-not-allowed opacity-50",
           )}
@@ -38,7 +38,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           />
           <span
             className={cn(
-              "bg-surface-100 duration-fast inline-block h-5 w-5 transform rounded-full shadow transition-transform",
+              "bg-surface-100 inline-block h-5 w-5 transform rounded-full shadow transition-transform duration-fast",
               checked ? "translate-x-6" : "translate-x-1",
             )}
           />
