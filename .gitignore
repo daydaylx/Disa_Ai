@@ -10,13 +10,13 @@ dist/
 .env.local
 .env.*.local
 
-# Test/Reports/Logs
+# Test/Reports/Logs (Never commit these!)
 # Playwright
 playwright-report/
 test-results/
+test-results.json
 *.zip
 test-artifacts/
-test-results/
 coverage/
 coverage/.tmp/
 LOGS/
@@ -32,7 +32,17 @@ allure-results/
 allure-report/
 *.trx
 *.junit.xml
-*.zip
+
+# Visual testing
+playwright-visual-report/
+visual-report/
+screenshots-actual/
+screenshots-expected/
+screenshots-diff/
+
+# Bundle analysis
+stats.html
+bundle-analyzer-report/
 
 # IDE
 .vscode/

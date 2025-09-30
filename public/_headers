@@ -23,24 +23,24 @@
   Critical-CH: Viewport-Width, DPR
   Vary: Accept-Encoding, Viewport-Width, DPR
 
-  # Strict CSP - Mobile-first PWA security policy
+  # Hardened CSP - Enforce mode without unsafe directives
   Content-Security-Policy: default-src 'self';
     base-uri 'self';
     frame-ancestors 'none';
     object-src 'none';
     img-src 'self' data: blob:;
     font-src 'self' data:;
-    style-src 'self' 'unsafe-inline';
+    style-src 'self';
     script-src 'self' 'wasm-unsafe-eval';
     connect-src 'self' https://openrouter.ai https://*.openrouter.ai wss://localhost:* ws://localhost:*;
     worker-src 'self' blob:;
     manifest-src 'self';
     form-action 'self';
-  frame-src 'none';
-  media-src 'self' blob:;
-  child-src 'none';
-  report-uri /csp-report;
-  upgrade-insecure-requests
+    frame-src 'none';
+    media-src 'self' blob:;
+    child-src 'none';
+    report-uri /csp-report;
+    upgrade-insecure-requests
 */
 
 /*

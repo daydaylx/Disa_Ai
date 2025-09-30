@@ -1,0 +1,87 @@
+/* A11y Improvements - WCAG 2.1 AA Konformität */
+
+/* Verbesserte Kontraste für Dark Mode */
+:root {
+  /* WCAG AA konforme Farben für Dark Background */
+  --text-primary-a11y: rgba(255, 255, 255, 0.95); /* 4.5:1 Kontrast */
+  --text-secondary-a11y: rgba(255, 255, 255, 0.8); /* 3:1 Kontrast für große Texte */
+  --text-muted-a11y: rgba(255, 255, 255, 0.75); /* Mindestkontrast für UI-Elemente */
+
+  /* Touch-Target Mindestgröße */
+  --touch-target-min: 48px;
+
+  /* Fokus-Ring für bessere Sichtbarkeit */
+  --focus-ring-color: rgb(147, 51, 234); /* Accent color */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+}
+
+/* Globale Fokus-Styles für bessere Sichtbarkeit */
+*:focus {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Verbessertes Focus-Management für Touch-Geräte */
+@media (hover: none) and (pointer: coarse) {
+  *:focus {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+}
+
+/* Touch-Target Verbesserungen */
+.tap-target {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Button-spezifische Touch-Targets */
+button,
+[role="button"],
+a {
+  min-height: 44px; /* iOS Guidelines */
+  min-width: 44px;
+}
+
+/* Verbesserte Kontraste für häufige Text-Utilities */
+.text-white\/60 {
+  color: var(--text-muted-a11y) !important;
+}
+
+.text-white\/70 {
+  color: var(--text-secondary-a11y) !important;
+}
+
+.text-white\/40 {
+  color: var(--text-muted-a11y) !important;
+}
+
+/* Fokus-Verbesserungen für interaktive Elemente */
+.focus\:ring-2:focus {
+  --tw-ring-color: var(--focus-ring-color);
+  --tw-ring-offset-width: var(--focus-ring-offset);
+}
+
+/* High-Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary-a11y: rgba(255, 255, 255, 1);
+    --text-secondary-a11y: rgba(255, 255, 255, 0.9);
+    --text-muted-a11y: rgba(255, 255, 255, 0.85);
+  }
+}
+
+/* Reduzierte Animation für Benutzer mit Bewegungsempfindlichkeit */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,12 +1,14 @@
-import { Download, Eye, EyeOff, Info, Key, Shield, Smartphone } from "lucide-react";
+import { Download, Eye, EyeOff, Info, Key, Shield, Smartphone, User } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { usePWAInstall } from "../hooks/usePWAInstall";
+import { useSettings } from "../hooks/useSettings";
 import { BUILD_ID } from "../lib/pwa/registerSW";
 
 export default function SettingsPage() {
@@ -15,6 +17,7 @@ export default function SettingsPage() {
   const [keyStatus, setKeyStatus] = useState<"empty" | "present" | "invalid">("empty");
   const toasts = useToasts();
   const { canInstall, installed: isInstalled, requestInstall: promptInstall } = usePWAInstall();
+  const { settings, toggleNSFWContent } = useSettings();
 
   useEffect(() => {
     try {
@@ -163,6 +166,45 @@ export default function SettingsPage() {
               <p>
                 Dein Schlüssel wird nur in der Browser-Session gespeichert und automatisch beim
                 Schließen gelöscht.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Content Filter Section */}
+      <Card className="border-white/20 bg-white/10 backdrop-blur">
+        <CardHeader className="space-y-1">
+          <CardTitle className="flex items-center gap-2 text-white">
+            <User className="h-5 w-5" />
+            Inhaltsfilter
+          </CardTitle>
+          <CardDescription className="text-white/70">
+            Verwalte die Sichtbarkeit verschiedener Inhaltsarten.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <Label className="text-white/90">18+ / NSFW-Content anzeigen</Label>
+              <p className="text-xs text-white/60">
+                Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden Rollen.
+              </p>
+            </div>
+            <Switch
+              checked={settings.showNSFWContent}
+              onChange={toggleNSFWContent}
+              id="nsfw-toggle"
+            />
+          </div>
+
+          <div className="flex items-start gap-2 rounded-lg border border-orange-500/20 bg-orange-500/10 p-3">
+            <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-400" />
+            <div className="text-xs text-orange-200">
+              <p className="mb-1 font-medium">Hinweis:</p>
+              <p>
+                Diese Einstellung wird nur lokal in deinem Browser gespeichert. 18+ Inhalte werden
+                standardmäßig ausgeblendet.
               </p>
             </div>
           </div>

@@ -242,8 +242,67 @@ export const defaultPersonas: Persona[] = [
 ];
 
 // Helper functions
+export async function loadPersonas(): Promise<Persona[]> {
+  // Lade externe Personas aus roleStore (persona.json)
+  const { fetchRoleTemplates } = await import("../config/roleStore");
+  const externalRoles = await fetchRoleTemplates();
+
+  // Konvertiere externe Rollen zu Persona-Format
+  const externalPersonas: Persona[] = externalRoles.map((role: any) => ({
+    id: role.id,
+    name: role.name,
+    systemPrompt: role.system || "",
+    allowedModels: role.allow,
+    tags: role.tags,
+    category: categorizeRole(role),
+    styleHints: {
+      typographyScale: 1.0,
+      borderRadius: 0.5,
+      accentColor: getAccentColorForRole(role),
+    },
+  }));
+
+  return [...defaultPersonas, ...externalPersonas];
+}
+
 export function getPersonas(): Persona[] {
   return defaultPersonas;
+}
+
+// Kategorisiert externe Rollen basierend auf Tags/Namen
+function categorizeRole(role: { name: string; tags?: string[] }): string {
+  const tags = role.tags || [];
+  const name = role.name.toLowerCase();
+
+  if (tags.includes("adult") || tags.includes("nsfw") || name.includes("18+")) {
+    return "Erwachsene";
+  }
+  if (tags.includes("sexuality") || name.includes("sex")) {
+    return "Beratung";
+  }
+  if (tags.includes("business") || tags.includes("professional")) {
+    return "Beruflich";
+  }
+  if (tags.includes("creative") || tags.includes("art")) {
+    return "Kreativ";
+  }
+  return "Spezial";
+}
+
+// Bestimmt Akzentfarbe basierend auf Rolle
+function getAccentColorForRole(role: { name: string; tags?: string[] }): string {
+  const tags = role.tags || [];
+
+  if (tags.includes("adult") || tags.includes("nsfw")) {
+    return "hsl(330, 80%, 60%)"; // Pink für Adult-Content
+  }
+  if (tags.includes("sexuality")) {
+    return "hsl(300, 70%, 60%)"; // Magenta für Sexualität
+  }
+  if (tags.includes("business")) {
+    return "hsl(240, 100%, 60%)"; // Blau für Business
+  }
+  return "hsl(200, 100%, 50%)"; // Default Blau
 }
 
 export function getPersonaById(id: string): Persona | undefined {

@@ -1,9 +1,13 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
+import { RouteLoadingFallback } from "../components/RouteLoadingFallback";
 import ChatPage from "../pages/ChatV2";
-import ModelsPage from "../pages/Models";
-import SettingsPage from "../pages/Settings";
 import { AppShell } from "./layouts/AppShell";
+
+// Lazy-loaded Routes für bessere Performance
+const ModelsPage = lazy(() => import("../pages/Models"));
+const SettingsPage = lazy(() => import("../pages/Settings"));
 
 const router = createBrowserRouter(
   [
@@ -17,11 +21,19 @@ const router = createBrowserRouter(
         },
         {
           path: "/models",
-          element: <ModelsPage />,
+          element: (
+            <Suspense fallback={<RouteLoadingFallback message="Lädt Modellkatalog..." />}>
+              <ModelsPage />
+            </Suspense>
+          ),
         },
         {
           path: "/settings",
-          element: <SettingsPage />,
+          element: (
+            <Suspense fallback={<RouteLoadingFallback message="Lädt Einstellungen..." />}>
+              <SettingsPage />
+            </Suspense>
+          ),
         },
         {
           index: true,

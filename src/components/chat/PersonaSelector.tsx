@@ -1,8 +1,9 @@
 import { Bot, ChevronDown, Search, User } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Persona } from "../../data/personas";
-import { getCategories, getPersonas, getPersonasByCategory } from "../../data/personas";
+import { loadPersonas } from "../../data/personas";
+import { useSettings } from "../../hooks/useSettings";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
@@ -22,16 +23,62 @@ export function PersonaSelector({
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [allPersonas, setAllPersonas] = useState<Persona[]>([]);
+  const [isLoadingPersonas, setIsLoadingPersonas] = useState(true);
 
-  const allPersonas = getPersonas();
-  const categories = getCategories();
+  const { settings } = useSettings();
+
+  // Helper function to check if persona contains NSFW content (wrapped in useCallback)
+  const isNSFWPersona = useCallback((persona: Persona): boolean => {
+    const nsfwTags = ["adult", "nsfw", "sexuality"];
+    const nsfwCategories = ["Erwachsene"];
+
+    return (
+      nsfwCategories.includes(persona.category || "") ||
+      persona.tags?.some((tag) => nsfwTags.includes(tag.toLowerCase())) ||
+      false
+    );
+  }, []);
+
+  // Load personas asynchronously
+  useEffect(() => {
+    const loadAllPersonas = async () => {
+      try {
+        setIsLoadingPersonas(true);
+        const personas = await loadPersonas();
+        setAllPersonas(personas);
+      } catch (error) {
+        console.warn("Failed to load external personas, using defaults:", error);
+        // Fallback zu den Standard-Personas wenn das Laden fehlschlägt
+        const { getPersonas } = await import("../../data/personas");
+        setAllPersonas(getPersonas());
+      } finally {
+        setIsLoadingPersonas(false);
+      }
+    };
+
+    void loadAllPersonas();
+  }, []);
+
+  // Categories dynamisch basierend auf geladenen Personas berechnen
+  const categories = useMemo(() => {
+    const categorySet = new Set(
+      allPersonas.map((p) => p.category).filter((c): c is string => Boolean(c)),
+    );
+    return Array.from(categorySet);
+  }, [allPersonas]);
 
   const filteredPersonas = useMemo(() => {
     let personas = allPersonas;
 
+    // Filter NSFW content based on user settings
+    if (!settings.showNSFWContent) {
+      personas = personas.filter((p) => !isNSFWPersona(p));
+    }
+
     // Filter by category
     if (selectedCategory !== "all") {
-      personas = getPersonasByCategory(selectedCategory);
+      personas = personas.filter((p) => p.category === selectedCategory);
     }
 
     // Filter by search
@@ -47,7 +94,7 @@ export function PersonaSelector({
     }
 
     return personas;
-  }, [allPersonas, selectedCategory, search]);
+  }, [allPersonas, selectedCategory, search, settings.showNSFWContent, isNSFWPersona]);
 
   const handlePersonaSelect = (persona: Persona) => {
     onPersonaChange(persona);
@@ -166,7 +213,13 @@ export function PersonaSelector({
 
             {/* Persona List - Scrollable */}
             <div className="max-h-[60vh] overflow-y-auto">
-              {filteredPersonas.length === 0 ? (
+              {isLoadingPersonas ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="mb-2 text-white/40">⏳</div>
+                  <div className="text-sm text-white/60">Lade Rollen...</div>
+                  <div className="text-xs text-white/40">Einen Moment bitte</div>
+                </div>
+              ) : filteredPersonas.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
                   <div className="mb-2 text-white/40">🔍</div>
                   <div className="text-sm text-white/60">Keine Rollen gefunden</div>
@@ -179,9 +232,9 @@ export function PersonaSelector({
                       key={persona.id}
                       onClick={() => handlePersonaSelect(persona)}
                       className={cn(
-                        "tap-target flex w-full items-start gap-3 p-4 text-left transition-colors",
+                        "tap-target relative flex w-full items-start gap-3 p-4 text-left transition-colors",
                         selectedPersona?.id === persona.id
-                          ? "bg-accent-500/20"
+                          ? "bg-accent-500/20 border-l-2 border-accent-500"
                           : "hover:bg-white/5",
                       )}
                     >
@@ -215,16 +268,43 @@ export function PersonaSelector({
                           {persona.category && (
                             <Badge
                               variant="secondary"
-                              className="border-white/10 bg-white/10 text-[10px] text-white/50"
+                              className={cn(
+                                "text-[10px]",
+                                persona.category === "Erwachsene"
+                                  ? "border-pink-500/30 bg-pink-500/20 text-pink-200"
+                                  : "border-white/10 bg-white/10 text-white/50",
+                              )}
                             >
                               {persona.category}
+                            </Badge>
+                          )}
+                          {/* Spezielle Badges für Adult Content */}
+                          {persona.tags?.includes("adult") && (
+                            <Badge
+                              variant="outline"
+                              className="border-pink-500/50 bg-pink-500/10 text-[10px] text-pink-300"
+                            >
+                              18+
+                            </Badge>
+                          )}
+                          {persona.tags?.includes("nsfw") && (
+                            <Badge
+                              variant="outline"
+                              className="border-red-500/50 bg-red-500/10 text-[10px] text-red-300"
+                            >
+                              NSFW
                             </Badge>
                           )}
                           {persona.tags?.slice(0, 2).map((tag) => (
                             <Badge
                               key={tag}
                               variant="outline"
-                              className="border-white/10 text-[10px] text-white/40"
+                              className={cn(
+                                "text-[10px]",
+                                tag === "adult" || tag === "nsfw"
+                                  ? "border-pink-500/30 text-pink-300"
+                                  : "border-white/10 text-white/40",
+                              )}
                             >
                               {tag}
                             </Badge>
