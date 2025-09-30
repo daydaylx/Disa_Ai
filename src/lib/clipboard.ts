@@ -40,8 +40,7 @@ export async function copyToClipboard(text: string): Promise<CopyResult> {
 export function showCopyFeedback(success: boolean, error?: string) {
   // For now, use a simple console log - could be enhanced with toast notifications
   if (success) {
-    // eslint-disable-next-line no-console
-    console.log("✅ Text copied to clipboard");
+    // Text successfully copied to clipboard
   } else {
     console.error("❌ Failed to copy:", error);
   }

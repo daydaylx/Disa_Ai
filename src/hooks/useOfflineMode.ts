@@ -58,7 +58,7 @@ export function useOfflineMode() {
       try {
         // This would integrate with your actual API call
         // For now, we'll simulate success
-        // console.log("Processing offline message send:", payload);
+        // Process offline message send
 
         // Update sync status
         if (payload.localId) {
@@ -78,7 +78,7 @@ export function useOfflineMode() {
    * Process regenerate from queue
    */
   const processRegenerate = useCallback((_payload: any): boolean => {
-    // console.log("Processing offline regenerate:", payload);
+    // Process offline regenerate
     return true;
   }, []);
 
@@ -86,7 +86,7 @@ export function useOfflineMode() {
    * Process conversation save from queue
    */
   const processConversationSave = useCallback((_payload: any): boolean => {
-    // console.log("Processing offline conversation save:", payload);
+    // Process offline conversation save
     return true;
   }, []);
 

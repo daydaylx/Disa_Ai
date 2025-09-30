@@ -162,7 +162,7 @@ export class MobileFeaturesManager {
       const manager = TouchPerformanceManager.getInstance();
       manager.enableGlobalOptimizations();
       this.managers.touchPerformance = manager;
-      // console.log("Touch optimizations initialized");
+      // Touch optimizations initialized
     } catch (error) {
       console.warn("Failed to initialize touch optimizations:", error);
     }

@@ -512,11 +512,10 @@ export function initializeOfflineStorage(): void {
 
   // Listen for online/offline events
   window.addEventListener("online", () => {
-    // console.log("Back online - processing offline queue");
-    // Trigger queue processing (to be implemented by caller)
+    // Back online - processing offline queue
   });
 
   window.addEventListener("offline", () => {
-    // console.log("Gone offline - enabling offline mode");
+    // Gone offline - enabling offline mode
   });
 }
