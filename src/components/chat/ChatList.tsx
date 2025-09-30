@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { loadQuickstarts } from "../../config/quickstarts";
@@ -14,6 +14,7 @@ interface ChatListProps {
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
   onQuickstartFlow?: (prompt: string, autosend: boolean) => void;
+  isQuickstartLoading?: boolean;
   className?: string;
 }
 
@@ -23,10 +24,12 @@ export function ChatList({
   onRetry,
   onCopy,
   onQuickstartFlow,
+  isQuickstartLoading,
   className,
 }: ChatListProps) {
   const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
   const [isLoadingQuickstarts, setIsLoadingQuickstarts] = useState(true);
+  const [activeQuickstart, setActiveQuickstart] = useState<string | null>(null);
 
   const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
     threshold: 0.8,
@@ -36,6 +39,19 @@ export function ChatList({
   const { startQuickstartFlow } = useQuickstartFlow({
     onStartFlow: onQuickstartFlow || (() => {}),
   });
+
+  // Handle quickstart click with visual feedback
+  const handleQuickstartClick = (action: QuickstartAction) => {
+    setActiveQuickstart(action.id);
+    startQuickstartFlow(action);
+  };
+
+  // Clear active state when not loading anymore
+  React.useEffect(() => {
+    if (!isQuickstartLoading) {
+      setActiveQuickstart(null);
+    }
+  }, [isQuickstartLoading]);
 
   // Load quickstarts on mount
   useEffect(() => {
@@ -106,32 +122,70 @@ export function ChatList({
                       </div>
                     </div>
                   ))
-                : quickstarts.map((action) => (
-                    <button
-                      key={action.id}
-                      onClick={() => startQuickstartFlow(action)}
-                      className={cn(
-                        "tap-target relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-4 text-left text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl transition-all hover:scale-[1.02] hover:shadow-[0_25px_60px_rgba(12,16,35,0.65)] active:scale-[0.98]",
-                      )}
-                      data-testid={`quickstart-${action.id}`}
-                    >
-                      <div
+                : quickstarts.map((action) => {
+                    const isActive = activeQuickstart === action.id;
+                    const isDisabled = isQuickstartLoading && !isActive;
+
+                    return (
+                      <button
+                        key={action.id}
+                        onClick={() => handleQuickstartClick(action)}
+                        disabled={isDisabled}
                         className={cn(
-                          "pointer-events-none absolute inset-0 bg-gradient-to-br opacity-50",
-                          action.gradient,
+                          "tap-target relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-4 text-left text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl transition-all",
+                          // Interactive states
+                          !isDisabled &&
+                            "hover:scale-[1.02] hover:shadow-[0_25px_60px_rgba(12,16,35,0.65)] active:scale-[0.98]",
+                          // Focus state for A11y
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+                          // Loading state
+                          isActive && "scale-[0.98] opacity-80",
+                          // Disabled state
+                          isDisabled && "cursor-not-allowed opacity-40",
                         )}
-                      />
-                      <div className="relative flex items-center justify-between">
-                        <div>
-                          <h3 className="text-lg font-semibold tracking-tight">{action.title}</h3>
-                          <p className="mt-1 text-sm text-white/70">{action.subtitle}</p>
+                        data-testid={`quickstart-${action.id}`}
+                        aria-label={`${action.title}: ${action.subtitle}`}
+                        aria-disabled={isDisabled}
+                        aria-busy={isActive}
+                      >
+                        <div
+                          className={cn(
+                            "pointer-events-none absolute inset-0 bg-gradient-to-br opacity-50",
+                            action.gradient,
+                          )}
+                        />
+
+                        {/* Loading overlay for active quickstart */}
+                        {isActive && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                            <div className="flex items-center gap-2 text-white">
+                              <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                                <path
+                                  d="M12 3a9 9 0 019 9"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="opacity-60"
+                                />
+                              </svg>
+                              <span className="text-sm font-medium">Startet...</span>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="relative flex items-center justify-between">
+                          <div>
+                            <h3 className="text-lg font-semibold tracking-tight">{action.title}</h3>
+                            <p className="mt-1 text-sm text-white/70">{action.subtitle}</p>
+                          </div>
+                          <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs text-white/70">
+                            {isActive ? "Lädt..." : action.autosend ? "Auto-Start" : "Schnellstart"}
+                          </span>
                         </div>
-                        <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs text-white/70">
-                          {action.autosend ? "Auto-Start" : "Schnellstart"}
-                        </span>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    );
+                  })}
             </div>
           </div>
         ) : (

@@ -17,6 +17,7 @@ export default function ChatPageV2() {
   const [models, setModels] = useState<Model[]>([]);
   const [model, setModel] = useState<Model | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [isQuickstartLoading, setIsQuickstartLoading] = useState(false);
   const toasts = useToasts();
   const { activePersona, typographyScale, borderRadius, accentColor } = useStudio();
 
@@ -105,6 +106,9 @@ export default function ChatPageV2() {
   };
 
   const handleQuickstartFlow = (prompt: string, autosend: boolean) => {
+    // Set loading state
+    setIsQuickstartLoading(true);
+
     // Set the input field with the quickstart prompt
     setInput(prompt);
 
@@ -116,8 +120,20 @@ export default function ChatPageV2() {
           content: prompt,
         });
       }, 100); // Small delay to ensure input is set
+    } else {
+      // Clear loading state immediately if not auto-sending
+      setTimeout(() => {
+        setIsQuickstartLoading(false);
+      }, 500); // Small delay for visual feedback
     }
   };
+
+  // Clear quickstart loading when a message is sent
+  useEffect(() => {
+    if (isLoading || messages.length > 0) {
+      setIsQuickstartLoading(false);
+    }
+  }, [isLoading, messages.length]);
 
   const handleRetry = () => {
     void reload();
@@ -139,6 +155,7 @@ export default function ChatPageV2() {
                 onRetry={handleRetry}
                 onQuickstartFlow={handleQuickstartFlow}
                 isLoading={isLoading}
+                isQuickstartLoading={isQuickstartLoading}
               />
             </div>
           </div>
