@@ -1,6 +1,7 @@
 import { Bot, Compass, Cpu, MessageSquare, PlusCircle, Settings } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
+import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { Button } from "../../components/ui";
 import { useStudio } from "../state/StudioContext";
@@ -136,6 +137,13 @@ export function AppShell() {
 
       <NetworkBanner />
       <BottomTabs />
+
+      {/* Footer mit Build-Info für Issue #81 */}
+      <footer className="relative z-10 px-4 pb-2">
+        <div className="mx-auto max-w-xs text-center">
+          <BuildInfo className="opacity-60 transition-opacity hover:opacity-100" />
+        </div>
+      </footer>
     </div>
   );
 }

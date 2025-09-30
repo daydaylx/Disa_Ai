@@ -11,6 +11,10 @@
   # Prevent MIME type confusion
   X-Download-Options: noopen
 
+  # Build info for Issue #81 (debugging)
+  X-Build-Branch: main
+  X-Cache-Bust: enabled
+
   # Cross-origin isolation (optional but recommended)
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp

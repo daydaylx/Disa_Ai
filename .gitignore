@@ -9,6 +9,7 @@ dist/
 # Env
 .env.local
 .env.*.local
+.env.build
 
 # Test/Reports/Logs (Never commit these!)
 # Playwright

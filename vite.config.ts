@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 import { analyzer } from "vite-bundle-analyzer";
@@ -10,10 +10,21 @@ const analyzerPlugin = analyzer({
 });
 
 export default defineConfig(({ mode }) => {
+  // Load build environment variables for Issue #81
+  const env = loadEnv(mode, process.cwd(), "");
+
+  // Also load from .env.build if it exists
+  try {
+    const buildEnv = loadEnv("build", process.cwd(), "");
+    Object.assign(env, buildEnv);
+  } catch {
+    // .env.build doesn't exist, that's fine
+  }
+
   // Umweltspezifische Konfiguration für robuste Asset-Pfade
   const isProduction = mode === "production";
   // Fix für Issue #60: Korrekte base-Pfade für Cloudflare Pages
-  const base = process.env.VITE_BASE_URL || (isProduction ? "/" : "/");
+  const base = env.VITE_BASE_URL || (isProduction ? "/" : "/");
 
   return {
     plugins: [react(), analyzerPlugin],

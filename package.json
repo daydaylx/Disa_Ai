@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/build-info.js",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
     "preview": "vite preview",
@@ -113,5 +114,11 @@
   },
   "engines": {
     "node": ">=20.14.0 <24"
+  },
+  "buildInfo": {
+    "buildId": "v1.0.0-817c299",
+    "buildTime": "2025-09-30T23:07:30.429Z",
+    "gitSha": "817c29959268afd905466dcfe2d36058897131db",
+    "gitBranch": "main"
   }
 }
