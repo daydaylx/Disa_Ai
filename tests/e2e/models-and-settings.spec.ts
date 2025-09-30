@@ -11,9 +11,9 @@ test.describe("Models und Einstellungen", () => {
     await page.getByTestId("nav.models").click();
     await expect(page).toHaveURL("/models");
 
-    await expect(page.getByRole("heading", { name: "Modelle & Presets" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Modelle & Rollen" })).toBeVisible();
     await expect(page.getByRole("button", { name: /Rolle/ })).toBeVisible();
-    await expect(page.getByPlaceholder("Nach Modellen oder Anbietern suchen")).toBeVisible();
+    await expect(page.getByPlaceholder("Modell oder Anbieter suchen...")).toBeVisible();
     await expect(page.getByRole("button", { name: "Kostenlos" })).toBeVisible();
 
     const axe = new AxeBuilder({ page }).include("main").withTags(["wcag2a", "wcag2aa"]);
@@ -28,7 +28,7 @@ test.describe("Models und Einstellungen", () => {
     await expect(page.getByRole("button", { name: "Kostenlos" })).toHaveClass(/bg-accent-500/);
     await page.getByRole("button", { name: "Kostenlos" }).click();
 
-    await page.getByPlaceholder("Nach Modellen oder Anbietern suchen").fill("deepseek");
+    await page.getByPlaceholder("Modell oder Anbieter suchen...").fill("deepseek");
     await page.waitForTimeout(500);
 
     const matchingCard = page

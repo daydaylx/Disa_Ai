@@ -23,7 +23,7 @@ test.describe("Router Smoke Tests", () => {
 
   test("Direktaufruf /models zeigt Modellübersicht", async ({ page }) => {
     await page.goto("/models");
-    await expect(page.getByRole("heading", { name: "Modelle & Presets" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Modelle & Rollen" })).toBeVisible();
   });
 
   test("Direktaufruf /settings zeigt Einstellungen", async ({ page }) => {
@@ -54,7 +54,7 @@ test.describe("Router Smoke Tests", () => {
     await page.getByTestId("nav.models").click();
     await expect(page).toHaveURL("/models");
 
-    await expect(page.getByRole("heading", { name: "Modelle & Presets" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Modelle & Rollen" })).toBeVisible();
 
     // Navigate to settings
     await page.getByTestId("nav.settings").click();
