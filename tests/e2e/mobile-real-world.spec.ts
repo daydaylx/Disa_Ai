@@ -29,17 +29,17 @@ test.describe("Mobile Real-World Scenarios", () => {
     await page.goto("/");
 
     // Check main navigation exists
-    const navigation = page.locator("nav").first();
+    const navigation = page.locator('nav[aria-label="Navigation"]').first();
     if (await navigation.isVisible()) {
       await expect(navigation).toBeVisible();
     }
 
     // Test basic routing
-    await page.goto("/#/chat");
-    await expect(page).toHaveURL(/.*#\/chat/);
+    await page.goto("/chat");
+    await expect(page).toHaveURL(/\/chat$/);
 
-    await page.goto("/#/settings");
-    await expect(page).toHaveURL(/.*#\/settings/);
+    await page.goto("/settings");
+    await expect(page).toHaveURL(/\/settings$/);
   });
 
   test("mobile PWA manifest is present", async ({ page }) => {

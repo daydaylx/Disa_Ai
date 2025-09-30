@@ -15,7 +15,5 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run build
-      - name: Serve build
-        run: npx --yes serve -s dist & sleep 2
       - name: Run Lighthouse CI
-        run: npx --yes lhci autorun --upload.target=temporary-public-storage
+        run: npm run lh

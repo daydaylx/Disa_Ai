@@ -6,7 +6,7 @@ test.describe("Streaming stability", () => {
   test.skip("prevents double send and aborts cleanly on navigation", async ({ page }) => {
     // Set up complete test environment
     await setupTestEnvironment(page);
-    await page.goto("/#/chat");
+    await page.goto("/chat");
 
     const composer = page.locator('[data-testid="composer-input"]');
     await composer.fill("Streaming Test – einmal senden");
@@ -29,11 +29,11 @@ test.describe("Streaming stability", () => {
 
     // Navigating away should abort the stream and hide the stop button
     // Force click on navigation to bypass composer interference
-    await page.locator('[data-testid="nav-bottom-models"]').click({ force: true });
+    await page.getByTestId("nav.models").click({ force: true });
     await stopButton.waitFor({ state: "detached" });
 
     // Return to chat and ensure composer is ready again
-    await page.locator('[data-testid="nav-bottom-chat"]').click({ force: true });
+    await page.getByTestId("nav.chat").click({ force: true });
     await expect(page.locator('[data-testid="composer-send"]')).toBeVisible();
   });
 });

@@ -189,6 +189,7 @@ export function ChatComposer({
                 variant="ghost"
                 className="h-10 w-10 rounded-full border border-red-400/70 bg-red-500/20 p-0 text-red-200 hover:bg-red-500/40 hover:text-white"
                 title="Ausgabe stoppen"
+                data-testid="composer-stop"
               >
                 <Square className="h-4 w-4" />
               </Button>
