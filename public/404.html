@@ -48,11 +48,40 @@
       }
     </style>
     <script>
-      // Immediate redirect - no waiting
+      // Fix für Issue #75: Robusteres 404-Redirect für SPA-Routing
       (function () {
-        const currentUrl = window.location;
-        const targetUrl = "/" + currentUrl.search + currentUrl.hash;
-        window.location.replace(targetUrl);
+        try {
+          // Collect full path info
+          const path = window.location.pathname;
+          const search = window.location.search;
+          const hash = window.location.hash;
+
+          // Don't redirect if we're already at root to prevent loops
+          if (path === '/' || path === '/index.html') {
+            // Just reload the page to try loading the actual app
+            setTimeout(() => window.location.reload(), 1000);
+            return;
+          }
+
+          // For all other paths, redirect to root with path info preserved
+          const targetUrl = '/' + search + hash;
+
+          // Add the original path as a query parameter for debugging
+          const separator = search ? '&' : '?';
+          const fullTargetUrl = targetUrl + separator + 'from=' + encodeURIComponent(path);
+
+          console.log('[404] Redirecting from', path, 'to', fullTargetUrl);
+
+          // Use replace to avoid back button issues
+          window.location.replace(fullTargetUrl);
+
+        } catch (error) {
+          console.error('[404] Redirect failed:', error);
+          // Fallback: just go to root
+          setTimeout(() => {
+            window.location.replace('/');
+          }, 2000);
+        }
       })();
     </script>
   </head>
