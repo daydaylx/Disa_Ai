@@ -71,11 +71,7 @@ export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) return;
 
-  // Temporary fix for Issue #75: Disable SW registration to prevent loading hang
-  console.warn("[SW] Temporarily disabled to fix loading issues (Issue #75)");
-  return;
-
-  // eslint-disable-next-line no-unreachable
+  // Issue #75 behoben - Service Worker wieder aktiviert für PWA-Funktionalität
   const hasImportScripts =
     typeof (globalThis as unknown as { importScripts?: unknown }).importScripts !== "undefined";
   const baseUrl =

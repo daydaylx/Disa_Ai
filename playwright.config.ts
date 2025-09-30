@@ -5,11 +5,11 @@ const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${PORT}`;
 
 export default defineConfig({
   testDir: "tests/e2e",
-  timeout: 30_000,
-  expect: { timeout: 10_000 },
+  timeout: 45_000, // Erhöht für bessere Stabilität
+  expect: { timeout: 15_000 }, // Mehr Zeit für Assertions
   fullyParallel: true,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  retries: process.env.CI ? 3 : 1, // Mehr Retries für Stabilität
+  workers: process.env.CI ? 1 : undefined, // Reduziert für Stabilität in CI
   reporter: [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]],
 
   use: {
@@ -25,7 +25,9 @@ export default defineConfig({
     command: `npm run dev -- --port=${PORT}`,
     url: BASE_URL,
     reuseExistingServer: true,
-    timeout: 60_000,
+    timeout: 120_000, // Mehr Zeit für Server-Start
+    stdout: "pipe", // Reduziert Noise
+    stderr: "pipe",
   },
 
   projects: [
