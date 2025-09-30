@@ -1,2 +1,19 @@
 <!doctype html>
-<html lang="de"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"/><title>Disa Orion</title></head><body><div id="app"></div><script type="module" src="/src/main.tsx"></script></body></html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"/>
+  <title>Disa Orion</title>
+
+  <!-- DNS Prefetch & Preconnect for API -->
+  <link rel="dns-prefetch" href="https://openrouter.ai"/>
+  <link rel="preconnect" href="https://openrouter.ai" crossorigin/>
+
+  <!-- Module Preload for critical chunks -->
+  <link rel="modulepreload" href="/src/main.tsx"/>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

@@ -28,8 +28,16 @@ export default defineConfig({
           if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
             return "vendor-react";
           }
-          // UI/Styling libraries
-          if (id.includes("node_modules/@heroicons") || id.includes("node_modules/tailwindcss")) {
+          // Router
+          if (id.includes("node_modules/react-router-dom")) {
+            return "vendor-router";
+          }
+          // UI/Styling libraries (Radix UI + Lucide)
+          if (
+            id.includes("node_modules/@radix-ui") ||
+            id.includes("node_modules/lucide-react") ||
+            id.includes("node_modules/tailwindcss")
+          ) {
             return "vendor-ui";
           }
           // Data/API libraries

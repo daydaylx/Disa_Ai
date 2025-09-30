@@ -43,7 +43,7 @@ async function checkBuildIdMismatch(registration: ServiceWorkerRegistration): Pr
       const messageChannel = new MessageChannel();
       messageChannel.port1.onmessage = (event) => {
         const swVersion = event.data?.version;
-        const expectedVersion = `v1.0.0-${BUILD_ID.slice(-8)}`;
+        const expectedVersion = `v2.0.0-${BUILD_ID.slice(-8)}`;
         const mismatch = swVersion !== expectedVersion;
 
         // eslint-disable-next-line no-console

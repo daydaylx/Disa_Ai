@@ -30,29 +30,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Typecheck
-        run: |
-          if npm run -s typecheck; then
-            echo "typecheck ok"
-          else
-            echo "typecheck failed"; exit 1
-          fi
-
-      - name: Lint
-        run: |
-          if npm run -s lint; then
-            echo "lint ok"
-          else
-            echo "lint failed"; exit 1
-          fi
-
-      - name: Unit tests
-        run: |
-          if npm run -s test:unit; then
-            echo "unit tests ok"
-          else
-            echo "unit tests failed"; exit 1
-          fi
+      - name: Verify (typecheck + lint + unit tests)
+        run: npm run verify
 
       - name: E2E tests (with preview server)
         run: npx playwright test
