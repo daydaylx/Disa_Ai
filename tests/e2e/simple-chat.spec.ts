@@ -12,10 +12,17 @@ test.describe("Composer Basics", () => {
 
     await expect(page.getByTestId("composer-input")).toBeVisible();
 
-    // solange kein Text, ist senden deaktiviert
-    await expect(page.getByTestId("composer-send")).toBeDisabled();
+    // solange kein Text, ist das Mikrofon sichtbar und deaktiviert
+    const micButton = page.getByTestId("composer-mic");
+    await expect(micButton).toBeVisible();
+    await expect(micButton).toBeDisabled();
+    await expect(page.getByTestId("composer-send")).toHaveCount(0);
 
     await page.getByTestId("composer-input").fill("Testnachricht");
-    await expect(page.getByTestId("composer-send")).toBeEnabled();
+
+    const sendButton = page.getByTestId("composer-send");
+    await expect(sendButton).toBeVisible();
+    await expect(sendButton).toBeEnabled();
+    await expect(page.getByTestId("composer-mic")).toHaveCount(0);
   });
 });

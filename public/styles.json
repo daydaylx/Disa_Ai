@@ -1,6 +1,5 @@
 {
   "styles": [
-    // BESTAND: Existierende Disa_Ai-Personas
     {
       "id": "neutral",
       "name": "Neutral Standard",
@@ -95,7 +94,6 @@
       ]
     },
 
-    // NEU: ALLGEMEINE LEBENSBERATUNG (ohne Technik)
     {
       "id": "coach_life",
       "name": "Life Coach",
@@ -145,7 +143,6 @@
       "tags": ["life", "help", "everyday"]
     },
 
-    // NEU: KREATIVITÄT & UNTERHALTUNG
     {
       "id": "poet_lyricist",
       "name": "Poet & Lyriker",
@@ -181,7 +178,6 @@
       "tags": ["art", "design", "photography"]
     },
 
-    // NEU: WEITERBILDUNG & KARRIERE
     {
       "id": "career_advisor",
       "name": "Berufsberater",
@@ -207,7 +203,6 @@
       "tags": ["communication", "personality", "softskills"]
     },
 
-    // NEU: ERWACHSENEN-THEMEN (18+)
     {
       "id": "sexuality_educator",
       "name": "Sexualpädagoge (sachlich)",

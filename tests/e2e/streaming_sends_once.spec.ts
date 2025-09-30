@@ -11,15 +11,14 @@ test.describe("Streaming stability", () => {
     const composer = page.locator('[data-testid="composer-input"]');
     await composer.fill("Streaming Test – einmal senden");
 
-    const sendButton = page.locator('[data-testid="composer-send"]');
-    await sendButton.click();
+    await page.locator('[data-testid="composer-send"]').click();
 
     // Wait a moment for the streaming state to be set
     await page.waitForTimeout(100);
 
     const stopButton = page.locator('[data-testid="composer-stop"]');
     await expect(stopButton).toBeVisible({ timeout: 15000 });
-    await expect(sendButton).toBeHidden();
+    await expect(page.locator('[data-testid="composer-send"]')).toBeHidden();
 
     // Enter should not trigger another send while streaming
     await page.keyboard.press("Enter");
@@ -34,6 +33,6 @@ test.describe("Streaming stability", () => {
 
     // Return to chat and ensure composer is ready again
     await page.getByTestId("nav.chat").click({ force: true });
-    await expect(page.locator('[data-testid="composer-send"]')).toBeVisible();
+    await expect(page.locator('[data-testid="composer-mic"]')).toBeVisible();
   });
 });

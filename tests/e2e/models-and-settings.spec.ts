@@ -49,14 +49,9 @@ test.describe("Models und Einstellungen", () => {
   test("Modelle: Modell auswählen zeigt Bestätigung", async ({ page }) => {
     await page.getByTestId("nav.models").click();
     const cards = page.getByTestId("model-card");
-    const cardCount = await cards.count();
-
-    if (cardCount > 0) {
-      await cards.first().click();
-      await expect(page.getByText("Modell gewählt")).toBeVisible({ timeout: 5000 });
-    } else {
-      await expect(page.getByText("Keine Modelle gefunden.")).toBeVisible();
-    }
+    await expect(cards.first()).toBeVisible({ timeout: 15000 });
+    await cards.first().click();
+    await expect(page.getByText("Modell gewählt")).toBeVisible({ timeout: 5000 });
   });
 
   test("Einstellungen: API-Schlüssel speichern", async ({ page }) => {

@@ -13,12 +13,18 @@ test.describe("Design System Functionality", () => {
     await page.waitForLoadState("networkidle");
 
     // Check basic UI elements exist
-    await expect(page.getByTestId("composer-input")).toBeVisible();
+    const composerInput = page.getByTestId("composer-input");
+    await expect(composerInput).toBeVisible();
     await expect(page.getByTestId("app-title")).toBeVisible();
 
+    const micButton = page.getByTestId("composer-mic");
+    await expect(micButton).toBeVisible();
+    await expect(micButton).toBeDisabled();
+
     // Test basic input functionality
-    await page.getByTestId("composer-input").fill("Test message");
-    await expect(page.getByTestId("composer-input")).toHaveValue("Test message");
+    await composerInput.fill("Test message");
+    await expect(composerInput).toHaveValue("Test message");
+    await expect(page.getByTestId("composer-send")).toBeVisible();
   });
 
   test("Glass components render correctly", async ({ page }) => {
@@ -34,7 +40,11 @@ test.describe("Design System Functionality", () => {
     const composer = page.getByTestId("composer-input");
     await expect(composer).toBeVisible();
 
-    // Test send button
+    // Initially show mic button, then send button after input
+    const micButton = page.getByTestId("composer-mic");
+    await expect(micButton).toBeVisible();
+
+    await composer.fill("Test");
     const sendButton = page.getByTestId("composer-send");
     await expect(sendButton).toBeVisible();
   });
@@ -68,15 +78,18 @@ test.describe("Design System Functionality", () => {
     await page.waitForLoadState("networkidle");
 
     // Test send button states
-    const sendButton = page.getByTestId("composer-send");
     const input = page.getByTestId("composer-input");
+    const micButton = page.getByTestId("composer-mic");
 
-    // Button should be present
-    await expect(sendButton).toBeVisible();
+    await expect(micButton).toBeVisible();
+    await expect(micButton).toBeDisabled();
 
     await input.fill("Test");
     await expect(input).toHaveValue("Test");
+
+    const sendButton = page.getByTestId("composer-send");
     await expect(sendButton).toBeVisible();
+    await expect(sendButton).toBeEnabled();
   });
 });
 

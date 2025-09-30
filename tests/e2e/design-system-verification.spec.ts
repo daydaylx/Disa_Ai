@@ -26,7 +26,10 @@ test.describe("Design System Verification", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Check if legacy button mapping works
+    // Check if legacy button mapping works once input has content
+    const input = page.locator('[data-testid="composer-input"]');
+    await input.fill("Legacy check");
+
     const sendButton = page.locator('[data-testid="composer-send"]');
     await expect(sendButton).toBeVisible();
 

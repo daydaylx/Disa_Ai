@@ -5,7 +5,6 @@ import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
 import { PersonaSelector } from "../components/chat/PersonaSelector";
 import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
@@ -219,6 +218,8 @@ export default function ModelsPage() {
                   handleSelect(model);
                 }
               }}
+              aria-pressed={selected === model.id}
+              aria-label={`Modell ${model.label || model.id} auswählen`}
               className={cn(
                 "border-white/20 bg-white/10 backdrop-blur transition-all",
                 selected === model.id
@@ -259,21 +260,20 @@ export default function ModelsPage() {
                   )}
                 </div>
                 {selected === model.id ? (
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-full bg-accent-500 text-white"
-                    disabled
+                  <div
+                    className="bg-accent-500/90 inline-flex w-full items-center justify-center rounded-md border border-accent-500 px-3 py-2 text-sm font-semibold text-white"
+                    role="status"
+                    aria-label="Modell ist aktiv"
                   >
                     ✓ Aktiv
-                  </Button>
+                  </div>
                 ) : (
-                  <Button
-                    size="sm"
-                    className="w-full border-0 bg-white/20 text-white hover:bg-white/30"
+                  <div
+                    className="inline-flex w-full items-center justify-center rounded-md border border-white/20 bg-white/20 px-3 py-2 text-sm font-semibold text-white/90"
+                    aria-hidden="true"
                   >
                     Auswählen
-                  </Button>
+                  </div>
                 )}
               </CardContent>
             </Card>
