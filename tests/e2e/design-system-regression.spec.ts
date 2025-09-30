@@ -14,7 +14,7 @@ test.describe("Design System Functionality", () => {
 
     // Check basic UI elements exist
     await expect(page.getByTestId("composer-input")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Disa AI" })).toBeVisible();
+    await expect(page.getByTestId("app-title")).toBeVisible();
 
     // Test basic input functionality
     await page.getByTestId("composer-input").fill("Test message");
@@ -49,7 +49,7 @@ test.describe("Design System Functionality", () => {
 
     // Ensure mobile-optimized layout works
     await expect(page.getByTestId("composer-input")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Disa AI" })).toBeVisible();
+    await expect(page.getByTestId("app-title")).toBeVisible();
 
     // Test mobile input functionality
     await page.getByTestId("composer-input").fill("Mobile test");

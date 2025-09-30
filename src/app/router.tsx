@@ -5,34 +5,42 @@ import ModelsPage from "../pages/Models";
 import SettingsPage from "../pages/Settings";
 import { AppShell } from "./layouts/AppShell";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <AppShell />,
+      children: [
+        {
+          path: "/chat",
+          element: <ChatPage />,
+        },
+        {
+          path: "/models",
+          element: <ModelsPage />,
+        },
+        {
+          path: "/settings",
+          element: <SettingsPage />,
+        },
+        {
+          index: true,
+          element: <ChatPage />,
+        },
+        {
+          path: "*",
+          element: <Navigate to="/chat" replace />,
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <AppShell />,
-    children: [
-      {
-        path: "/chat",
-        element: <ChatPage />,
-      },
-      {
-        path: "/models",
-        element: <ModelsPage />,
-      },
-      {
-        path: "/settings",
-        element: <SettingsPage />,
-      },
-      {
-        index: true,
-        element: <ChatPage />,
-      },
-      {
-        path: "*",
-        element: <Navigate to="/" replace />,
-      },
-    ],
+    future: {
+      v7_skipActionErrorRevalidation: true,
+      v7_normalizeFormMethod: true,
+    },
   },
-]);
+);
 
 export function Router() {
   return <RouterProvider router={router} />;

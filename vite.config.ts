@@ -9,65 +9,80 @@ const analyzerPlugin = analyzer({
   enabled: process.env.BUNDLE_ANALYZE !== "false",
 });
 
-export default defineConfig({
-  plugins: [react(), analyzerPlugin],
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+export default defineConfig(({ mode }) => {
+  // Umweltspezifische Konfiguration für robuste Asset-Pfade
+  const isProduction = mode === "production";
+  const base = process.env.VITE_BASE_URL || "/";
+
+  return {
+    plugins: [react(), analyzerPlugin],
+    base, // Umweltspezifische Basis für Cloudflare Pages
+    resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
+      },
     },
-  },
-  build: {
-    target: "esnext",
-    minify: "esbuild",
-    cssMinify: "esbuild",
-    chunkSizeWarningLimit: 500,
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          // Core React vendors
-          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
-            return "vendor-react";
-          }
-          // Router
-          if (id.includes("node_modules/react-router-dom")) {
-            return "vendor-router";
-          }
-          // UI/Styling libraries (Radix UI + Lucide)
-          if (
-            id.includes("node_modules/@radix-ui") ||
-            id.includes("node_modules/lucide-react") ||
-            id.includes("node_modules/tailwindcss")
-          ) {
-            return "vendor-ui";
-          }
-          // Data/API libraries
-          if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
-            return "vendor-data";
-          }
-          // Markdown/Text processing (for future markdown features)
-          if (
-            id.includes("node_modules/marked") ||
-            id.includes("node_modules/highlight.js") ||
-            id.includes("node_modules/katex")
-          ) {
-            return "vendor-markdown";
-          }
-          // Everything else stays in main bundle for better mobile performance
-          return undefined;
-        },
-        // Optimize for mobile bandwidth
-        compact: true,
-        entryFileNames: "js/[name]-[hash].js",
-        chunkFileNames: "js/[name]-[hash].js",
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name.split(".");
-          const ext = info[info.length - 1];
-          if (/\.(css)$/.test(assetInfo.name)) {
-            return "css/[name]-[hash].[ext]";
-          }
-          return "assets/[name]-[hash].[ext]";
+    build: {
+      target: "esnext",
+      minify: "esbuild",
+      cssMinify: "esbuild",
+      chunkSizeWarningLimit: 500,
+      // Robuste Asset-Generation für Cloudflare Pages
+      assetsInlineLimit: 4096, // Kleine Assets inline für weniger HTTP-Requests
+      cssCodeSplit: true, // CSS-Chunks für besseres Caching
+      // Production-spezifische Optimierungen
+      ...(isProduction && {
+        sourcemap: false, // Kleinere Builds in Production
+        reportCompressedSize: false, // Schnellere Builds
+      }),
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // Core React vendors
+            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+              return "vendor-react";
+            }
+            // Router
+            if (id.includes("node_modules/react-router-dom")) {
+              return "vendor-router";
+            }
+            // UI/Styling libraries (Radix UI + Lucide)
+            if (
+              id.includes("node_modules/@radix-ui") ||
+              id.includes("node_modules/lucide-react") ||
+              id.includes("node_modules/tailwindcss")
+            ) {
+              return "vendor-ui";
+            }
+            // Data/API libraries
+            if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
+              return "vendor-data";
+            }
+            // Markdown/Text processing (for future markdown features)
+            if (
+              id.includes("node_modules/marked") ||
+              id.includes("node_modules/highlight.js") ||
+              id.includes("node_modules/katex")
+            ) {
+              return "vendor-markdown";
+            }
+            // Everything else stays in main bundle for better mobile performance
+            return undefined;
+          },
+          // Optimize for mobile bandwidth
+          compact: true,
+          entryFileNames: "js/[name]-[hash].js",
+          chunkFileNames: "js/[name]-[hash].js",
+          assetFileNames: (assetInfo) => {
+            const info = assetInfo.name.split(".");
+            const ext = info[info.length - 1];
+            if (/\.(css)$/.test(assetInfo.name)) {
+              return "css/[name]-[hash].[ext]";
+            }
+            return "assets/[name]-[hash].[ext]";
+          },
         },
       },
     },
-  },
+  };
 });

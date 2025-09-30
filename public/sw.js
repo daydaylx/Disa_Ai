@@ -1,7 +1,8 @@
 const params = new URL(self.location.href).searchParams;
 const BUILD_ID = params.get("build") ?? "dev";
 const VERSION_SUFFIX = BUILD_ID.slice(-8);
-const SW_VERSION = `v2.0.0-${VERSION_SUFFIX}`;
+// Harte Versionierung für Cache-Busting bei neuen Deployments
+const SW_VERSION = `v2.1.0-${VERSION_SUFFIX}`;
 const HTML_CACHE = `html-${SW_VERSION}`;
 const ASSET_CACHE = `assets-${SW_VERSION}`;
 const OFFLINE_URL = "/offline.html";
@@ -113,12 +114,17 @@ function shouldHandleAsAsset(request, url) {
 async function networkFirst(request) {
   const cache = await caches.open(HTML_CACHE);
   try {
+    // Für HTML/Navigation immer erst Netzwerk versuchen, um Redirect-Loops zu vermeiden
     const response = await fetch(request);
     if (response && response.ok) {
-      cache.put(request, response.clone()).catch(() => {});
+      // Nur gültige HTML-Responses cachen
+      if (response.headers.get("content-type")?.includes("text/html")) {
+        cache.put(request, response.clone()).catch(() => {});
+      }
     }
     return response;
   } catch (error) {
+    console.warn("[SW] Network failed for navigation, falling back to cache:", error);
     const cached = await cache.match(request);
     if (cached) {
       return cached;

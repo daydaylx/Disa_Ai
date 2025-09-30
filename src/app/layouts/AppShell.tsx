@@ -57,7 +57,10 @@ function Header() {
                 )}
               </div>
               <div>
-                <h1 className="text-3xl font-semibold text-white drop-shadow-[0_4px_18px_rgba(147,51,234,0.45)]">
+                <h1
+                  className="text-3xl font-semibold text-white drop-shadow-[0_4px_18px_rgba(147,51,234,0.45)]"
+                  data-testid="app-title"
+                >
                   Disa AI
                 </h1>
                 <p className="mt-1 text-sm text-white/70">

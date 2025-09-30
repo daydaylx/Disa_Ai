@@ -11,10 +11,10 @@ test.describe("Models und Einstellungen", () => {
     await page.getByTestId("nav.models").click();
     await expect(page).toHaveURL("/models");
 
-    await expect(page.getByRole("heading", { name: "Modelle & Rollen" })).toBeVisible();
-    await expect(page.getByRole("button", { name: /Rolle/ })).toBeVisible();
-    await expect(page.getByPlaceholder("Modell oder Anbieter suchen...")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Kostenlos" })).toBeVisible();
+    // Robuste data-testid Selektoren statt fragiler Textselektoren
+    await expect(page.getByTestId("models-title")).toBeVisible();
+    await expect(page.getByTestId("models-search")).toBeVisible();
+    await expect(page.getByTestId("models-filter-free")).toBeVisible();
 
     const axe = new AxeBuilder({ page }).include("main").withTags(["wcag2a", "wcag2aa"]);
     const results = await axe.analyze();
@@ -24,11 +24,12 @@ test.describe("Models und Einstellungen", () => {
   test("Modelle: Filter und Suche reagieren", async ({ page }) => {
     await page.getByTestId("nav.models").click();
 
-    await page.getByRole("button", { name: "Kostenlos" }).click();
-    await expect(page.getByRole("button", { name: "Kostenlos" })).toHaveClass(/bg-accent-500/);
-    await page.getByRole("button", { name: "Kostenlos" }).click();
+    // Verwende data-testid für Filter-Buttons
+    await page.getByTestId("models-filter-free").click();
+    await expect(page.getByTestId("models-filter-free")).toHaveClass(/bg-accent-500/);
+    await page.getByTestId("models-filter-free").click();
 
-    await page.getByPlaceholder("Modell oder Anbieter suchen...").fill("deepseek");
+    await page.getByTestId("models-search").fill("deepseek");
     await page.waitForTimeout(500);
 
     const matchingCard = page

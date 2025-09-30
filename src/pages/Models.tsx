@@ -141,7 +141,9 @@ export default function ModelsPage() {
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-1">
-        <h1 className="text-2xl font-bold text-white">Modelle & Rollen</h1>
+        <h1 className="text-2xl font-bold text-white" data-testid="models-title">
+          Modelle & Rollen
+        </h1>
         <p className="text-sm leading-relaxed text-white/60">
           Wähle ein KI-Modell und eine Rolle für optimale Ergebnisse
         </p>
@@ -163,6 +165,7 @@ export default function ModelsPage() {
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Modell oder Anbieter suchen..."
             className="focus:border-accent-500/50 border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/40"
+            data-testid="models-search"
           />
         </div>
 
@@ -171,6 +174,7 @@ export default function ModelsPage() {
             <button
               key={option.id}
               onClick={() => toggleFilter(option.id)}
+              data-testid={`models-filter-${option.id}`}
               className={cn(
                 "tap-target inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium transition-all",
                 filters.includes(option.id)
