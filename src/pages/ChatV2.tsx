@@ -185,7 +185,7 @@ export default function ChatPageV2() {
           duration_ms: duration,
         });
 
-        console.log(`[Analytics] Quickstart completed: ${quickstart.flowId} in ${duration}ms`);
+        // Quickstart completion tracked
 
         // Clear the active quickstart
         activeQuickstartRef.current = null;

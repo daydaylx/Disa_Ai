@@ -88,7 +88,7 @@ class EventStore {
 
   addEvent(event: AnalyticsEvent): void {
     if (isPrivacyModeEnabled()) {
-      console.log("[Analytics] Privacy mode enabled, skipping event:", event.event);
+      // Privacy mode enabled, skipping event tracking
       return;
     }
 
@@ -96,7 +96,7 @@ class EventStore {
     events.push(event);
     this.saveEvents(events);
 
-    console.log("[Analytics] Event tracked:", event.event, event.properties);
+    // Event tracked successfully
   }
 
   getEvents(): AnalyticsEvent[] {
@@ -174,7 +174,7 @@ export function getAnalyticsSummary() {
 
 export function clearAnalyticsData() {
   eventStore.clearEvents();
-  console.log("[Analytics] All analytics data cleared");
+  // Analytics data cleared
 }
 
 export function isAnalyticsEnabled(): boolean {
@@ -186,7 +186,7 @@ export function enablePrivacyMode(): void {
   try {
     localStorage.setItem("privacy_mode", "true");
     eventStore.clearEvents();
-    console.log("[Analytics] Privacy mode enabled, data cleared");
+    // Privacy mode enabled, data cleared
   } catch (error) {
     console.warn("[Analytics] Failed to enable privacy mode:", error);
   }
@@ -195,7 +195,7 @@ export function enablePrivacyMode(): void {
 export function disablePrivacyMode(): void {
   try {
     localStorage.removeItem("privacy_mode");
-    console.log("[Analytics] Privacy mode disabled");
+    // Privacy mode disabled
   } catch (error) {
     console.warn("[Analytics] Failed to disable privacy mode:", error);
   }
