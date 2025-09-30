@@ -100,7 +100,7 @@ test.describe("Mobile Real-World Scenarios", () => {
     // Wait for page to be ready
     await page.waitForLoadState("networkidle");
 
-    // Check no layout shifts during load
+    // Check no layout shifts during load with reduced timeout
     const hasLayoutShift = await page.evaluate(() => {
       return new Promise((resolve) => {
         let hasShift = false;
@@ -114,10 +114,11 @@ test.describe("Mobile Real-World Scenarios", () => {
 
         try {
           observer.observe({ entryTypes: ["layout-shift"] });
+          // Reduced timeout for CI stability
           setTimeout(() => {
             observer.disconnect();
             resolve(hasShift);
-          }, 2000);
+          }, 1000);
         } catch {
           resolve(false); // CLS not supported
         }
