@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
@@ -6,6 +6,7 @@ import { ChatList } from "../components/chat/ChatList";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import { useChat } from "../hooks/useChat";
+import { trackQuickstartCompleted } from "../lib/analytics";
 import { humanError } from "../lib/errors/humanError";
 import ModelSelectionSheet from "../ui/ModelSheet";
 import type { Model } from "../ui/types";
@@ -13,11 +14,20 @@ import type { Model } from "../ui/types";
 // Header component removed - now handled by AppShell
 
 /** ====== ChatPageV2 ====== */
+// Interface for tracking active quickstarts
+interface ActiveQuickstart {
+  id: string;
+  flowId: string;
+  startTime: number;
+  model?: string;
+}
+
 export default function ChatPageV2() {
   const [models, setModels] = useState<Model[]>([]);
   const [model, setModel] = useState<Model | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isQuickstartLoading, setIsQuickstartLoading] = useState(false);
+  const activeQuickstartRef = useRef<ActiveQuickstart | null>(null);
   const toasts = useToasts();
   const { activePersona, typographyScale, borderRadius, accentColor } = useStudio();
 
@@ -105,9 +115,23 @@ export default function ChatPageV2() {
     });
   };
 
-  const handleQuickstartFlow = (prompt: string, autosend: boolean) => {
+  const handleQuickstartFlow = (
+    prompt: string,
+    autosend: boolean,
+    quickstartInfo?: { id: string; flowId: string },
+  ) => {
     // Fix für Issue #79: Vollständige Schnellstart-Funktionalität
     setIsQuickstartLoading(true);
+
+    // Store quickstart info for completion tracking (Issue #71)
+    if (quickstartInfo) {
+      activeQuickstartRef.current = {
+        id: quickstartInfo.id,
+        flowId: quickstartInfo.flowId,
+        startTime: Date.now(),
+        model: model?.id,
+      };
+    }
 
     // Neue Session im Store (bereits durch Chat-Hook gehandelt)
     setInput(prompt);
@@ -143,6 +167,32 @@ export default function ChatPageV2() {
     }
   }, [isLoading, messages.length]);
 
+  // Track quickstart completion (Issue #71)
+  useEffect(() => {
+    // Check if we have an active quickstart and received a response
+    if (activeQuickstartRef.current && messages.length >= 2) {
+      const lastMessage = messages[messages.length - 1];
+
+      // If the last message is from assistant, quickstart is completed
+      if (lastMessage?.role === "assistant") {
+        const quickstart = activeQuickstartRef.current;
+        const duration = Date.now() - quickstart.startTime;
+
+        trackQuickstartCompleted({
+          id: quickstart.id,
+          flowId: quickstart.flowId,
+          model: quickstart.model,
+          duration_ms: duration,
+        });
+
+        console.log(`[Analytics] Quickstart completed: ${quickstart.flowId} in ${duration}ms`);
+
+        // Clear the active quickstart
+        activeQuickstartRef.current = null;
+      }
+    }
+  }, [messages]);
+
   const handleRetry = () => {
     void reload();
   };
@@ -164,6 +214,7 @@ export default function ChatPageV2() {
                 onQuickstartFlow={handleQuickstartFlow}
                 isLoading={isLoading}
                 isQuickstartLoading={isQuickstartLoading}
+                currentModel={model?.id}
               />
             </div>
           </div>

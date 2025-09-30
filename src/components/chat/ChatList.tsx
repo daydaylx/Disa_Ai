@@ -15,6 +15,7 @@ interface ChatListProps {
   onCopy?: (content: string) => void;
   onQuickstartFlow?: (prompt: string, autosend: boolean) => void;
   isQuickstartLoading?: boolean;
+  currentModel?: string; // For analytics tracking
   className?: string;
 }
 
@@ -25,6 +26,7 @@ export function ChatList({
   onCopy,
   onQuickstartFlow,
   isQuickstartLoading,
+  currentModel,
   className,
 }: ChatListProps) {
   const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
@@ -39,6 +41,7 @@ export function ChatList({
 
   const { startQuickstartFlow } = useQuickstartFlow({
     onStartFlow: onQuickstartFlow || (() => {}),
+    currentModel,
   });
 
   // Handle quickstart click with visual feedback
