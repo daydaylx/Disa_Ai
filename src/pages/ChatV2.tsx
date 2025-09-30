@@ -104,6 +104,21 @@ export default function ChatPageV2() {
     });
   };
 
+  const handleQuickstartFlow = (prompt: string, autosend: boolean) => {
+    // Set the input field with the quickstart prompt
+    setInput(prompt);
+
+    // If autosend is enabled, automatically send the message
+    if (autosend && model) {
+      setTimeout(() => {
+        void append({
+          role: "user",
+          content: prompt,
+        });
+      }, 100); // Small delay to ensure input is set
+    }
+  };
+
   const handleRetry = () => {
     void reload();
   };
@@ -122,6 +137,7 @@ export default function ChatPageV2() {
                 messages={messages}
                 onCopy={handleCopy}
                 onRetry={handleRetry}
+                onQuickstartFlow={handleQuickstartFlow}
                 isLoading={isLoading}
               />
             </div>

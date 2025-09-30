@@ -1,39 +1,58 @@
+import { useEffect, useState } from "react";
+
+import type { QuickstartAction } from "../../config/quickstarts";
+import { loadQuickstarts } from "../../config/quickstarts";
+import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "./ChatMessage";
 import { ChatMessage } from "./ChatMessage";
-
-const quickActions = [
-  {
-    title: "AI Text Writer",
-    subtitle: "Skizziere blitzschnell perfekte Antworten",
-    gradient: "from-fuchsia-500/70 via-purple-500/70 to-sky-500/70",
-  },
-  {
-    title: "Bildidee",
-    subtitle: "Beschreibe Visionen für dein nächstes Artwork",
-    gradient: "from-amber-400/70 via-pink-500/70 to-purple-500/70",
-  },
-  {
-    title: "Faktencheck",
-    subtitle: "Validiere Zahlen und Quellen in Sekunden",
-    gradient: "from-sky-400/70 via-cyan-500/70 to-emerald-400/70",
-  },
-];
 
 interface ChatListProps {
   messages: ChatMessageType[];
   isLoading?: boolean;
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
+  onQuickstartFlow?: (prompt: string, autosend: boolean) => void;
   className?: string;
 }
 
-export function ChatList({ messages, isLoading, onRetry, onCopy, className }: ChatListProps) {
+export function ChatList({
+  messages,
+  isLoading,
+  onRetry,
+  onCopy,
+  onQuickstartFlow,
+  className,
+}: ChatListProps) {
+  const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
+  const [isLoadingQuickstarts, setIsLoadingQuickstarts] = useState(true);
+
   const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
     threshold: 0.8,
     enabled: true,
   });
+
+  const { startQuickstartFlow } = useQuickstartFlow({
+    onStartFlow: onQuickstartFlow || (() => {}),
+  });
+
+  // Load quickstarts on mount
+  useEffect(() => {
+    const loadQuickstartActions = async () => {
+      try {
+        setIsLoadingQuickstarts(true);
+        const actions = await loadQuickstarts();
+        setQuickstarts(actions);
+      } catch (error) {
+        console.error("Failed to load quickstarts:", error);
+      } finally {
+        setIsLoadingQuickstarts(false);
+      }
+    };
+
+    void loadQuickstartActions();
+  }, []);
 
   const handleCopy = (content: string) => {
     onCopy?.(content);
@@ -74,30 +93,45 @@ export function ChatList({ messages, isLoading, onRetry, onCopy, className }: Ch
             </div>
 
             <div className="grid grid-cols-1 gap-3">
-              {quickActions.map((action) => (
-                <div
-                  key={action.title}
-                  className={cn(
-                    "relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-4 text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl",
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "pointer-events-none absolute inset-0 bg-gradient-to-br opacity-50",
-                      action.gradient,
-                    )}
-                  />
-                  <div className="relative flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold tracking-tight">{action.title}</h3>
-                      <p className="mt-1 text-sm text-white/70">{action.subtitle}</p>
+              {isLoadingQuickstarts
+                ? // Loading skeleton
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-4 text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl"
+                    >
+                      <div className="animate-pulse">
+                        <div className="h-6 w-32 rounded bg-white/20"></div>
+                        <div className="mt-2 h-4 w-48 rounded bg-white/10"></div>
+                      </div>
                     </div>
-                    <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs text-white/70">
-                      Schnellstart
-                    </span>
-                  </div>
-                </div>
-              ))}
+                  ))
+                : quickstarts.map((action) => (
+                    <button
+                      key={action.id}
+                      onClick={() => startQuickstartFlow(action)}
+                      className={cn(
+                        "tap-target relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-4 text-left text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl transition-all hover:scale-[1.02] hover:shadow-[0_25px_60px_rgba(12,16,35,0.65)] active:scale-[0.98]",
+                      )}
+                      data-testid={`quickstart-${action.id}`}
+                    >
+                      <div
+                        className={cn(
+                          "pointer-events-none absolute inset-0 bg-gradient-to-br opacity-50",
+                          action.gradient,
+                        )}
+                      />
+                      <div className="relative flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold tracking-tight">{action.title}</h3>
+                          <p className="mt-1 text-sm text-white/70">{action.subtitle}</p>
+                        </div>
+                        <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs text-white/70">
+                          {action.autosend ? "Auto-Start" : "Schnellstart"}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
             </div>
           </div>
         ) : (
