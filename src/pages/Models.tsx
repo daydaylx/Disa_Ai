@@ -140,27 +140,29 @@ export default function ModelsPage() {
 
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
-      <header>
-        <h1 className="text-2xl font-semibold text-white">Modelle & Presets</h1>
-        <p className="text-sm text-white/70">
-          Wähle ein Modell und verwalte deine Chat-Presets für verschiedene Anwendungsfälle.
+      <header className="space-y-1">
+        <h1 className="text-2xl font-bold text-white">Modelle & Rollen</h1>
+        <p className="text-sm leading-relaxed text-white/60">
+          Wähle ein KI-Modell und eine Rolle für optimale Ergebnisse
         </p>
       </header>
 
-      <PersonaSelector
-        selectedPersona={activePersona}
-        onPersonaChange={setActivePersona}
-        className="rounded-3xl border border-white/10 bg-white/5 p-3"
-      />
+      {/* Rollenauswahl Section */}
+      <section className="space-y-2">
+        <h2 className="text-sm font-semibold text-white/80">Chat-Rolle</h2>
+        <PersonaSelector selectedPersona={activePersona} onPersonaChange={setActivePersona} />
+      </section>
 
-      <div className="space-y-3">
+      {/* Modell-Suche Section */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold text-white/80">KI-Modell wählen</h2>
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
           <Input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Nach Modellen oder Anbietern suchen"
-            className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/50"
+            placeholder="Modell oder Anbieter suchen..."
+            className="focus:border-accent-500/50 border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/40"
           />
         </div>
 
@@ -170,20 +172,25 @@ export default function ModelsPage() {
               key={option.id}
               onClick={() => toggleFilter(option.id)}
               className={cn(
-                "tappable inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition",
+                "tap-target inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium transition-all",
                 filters.includes(option.id)
-                  ? "bg-accent-500 text-white"
-                  : "border border-white/20 bg-white/10 text-white/70 hover:bg-white/20",
+                  ? "shadow-accent-500/25 bg-accent-500 text-white shadow-lg"
+                  : "border border-white/20 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",
               )}
             >
               {option.label}
-              <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px]">
+              <span
+                className={cn(
+                  "rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                  filters.includes(option.id) ? "bg-white/20" : "bg-white/10",
+                )}
+              >
                 {option.count}
               </span>
             </button>
           ))}
         </div>
-      </div>
+      </section>
 
       {loading ? (
         <div className="flex flex-1 items-center justify-center">

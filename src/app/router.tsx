@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import ChatPage from "../pages/ChatV2";
 import ModelsPage from "../pages/Models";
@@ -25,6 +25,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <ChatPage />,
+      },
+      {
+        path: "*",
+        element: <Navigate to="/" replace />,
       },
     ],
   },

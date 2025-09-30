@@ -1,27 +1,66 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Redirecting...</title>
-
-    <!--
-  SPA Deep-Link Fallback:
-  Cloudflare Pages can handle this server-side via _headers with:
-    /* /index.html 200
-  This 404.html serves as client-side backup for any hosting provider.
-  -->
-
+    <title>Disa Orion</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .loader {
+        text-align: center;
+      }
+      .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid rgba(148, 163, 184, 0.2);
+        border-top-color: #60a5fa;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 24px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #f1f5f9;
+      }
+      p {
+        font-size: 14px;
+        color: #94a3b8;
+      }
+    </style>
     <script>
-      // Preserve query parameters and hash fragment when redirecting to SPA
-      const currentUrl = window.location;
-      const targetUrl = "/" + currentUrl.search + currentUrl.hash;
-
-      // Replace current history entry to avoid back-button loop
-      window.location.replace(targetUrl);
+      // Immediate redirect - no waiting
+      (function () {
+        const currentUrl = window.location;
+        const targetUrl = "/" + currentUrl.search + currentUrl.hash;
+        window.location.replace(targetUrl);
+      })();
     </script>
   </head>
   <body>
-    <p>Redirecting to app...</p>
+    <div class="loader">
+      <div class="spinner"></div>
+      <h1>Disa Orion</h1>
+      <p>Wird geladen...</p>
+    </div>
   </body>
 </html>
