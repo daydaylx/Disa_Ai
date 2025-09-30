@@ -126,7 +126,7 @@ export function ChatList({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:gap-4">
               {isLoadingQuickstarts ? (
                 // Loading skeleton
                 Array.from({ length: 3 }).map((_, index) => (
@@ -235,7 +235,9 @@ export function ChatList({
                       onClick={() => handleQuickstartClick(action)}
                       disabled={isDisabled}
                       className={cn(
-                        "tap-target relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-4 text-left text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl transition-all",
+                        "tap-target relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 text-left text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl transition-all",
+                        // Mobile-optimized padding and height (Issue #72)
+                        "min-h-[48px] p-3 sm:p-4",
                         // Interactive states
                         !isDisabled &&
                           "hover:scale-[1.02] hover:shadow-[0_25px_60px_rgba(12,16,35,0.65)] active:scale-[0.98]",
@@ -277,12 +279,16 @@ export function ChatList({
                         </div>
                       )}
 
-                      <div className="relative flex items-center justify-between">
-                        <div>
-                          <h3 className="text-lg font-semibold tracking-tight">{action.title}</h3>
-                          <p className="mt-1 text-sm text-white/70">{action.subtitle}</p>
+                      <div className="relative flex items-center justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-base font-semibold tracking-tight sm:text-lg">
+                            {action.title}
+                          </h3>
+                          <p className="mt-0.5 truncate text-sm text-white/70 sm:mt-1">
+                            {action.subtitle}
+                          </p>
                         </div>
-                        <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs text-white/70">
+                        <span className="flex-shrink-0 rounded-full border border-white/20 bg-black/40 px-2 py-0.5 text-xs text-white/70 sm:px-3 sm:py-1">
                           {isActive ? "Lädt..." : action.autosend ? "Auto-Start" : "Schnellstart"}
                         </span>
                       </div>
