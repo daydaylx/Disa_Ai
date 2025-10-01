@@ -38,21 +38,29 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            // Core React vendors
-            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+            // Core React vendors (strict separation)
+            if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/")) {
               return "vendor-react";
             }
-            // Router
-            if (id.includes("node_modules/react-router-dom")) {
+            // Router separate (contains @remix-run packages)
+            if (
+              id.includes("node_modules/react-router") ||
+              id.includes("node_modules/@remix-run")
+            ) {
               return "vendor-router";
             }
-            // UI/Styling libraries (Radix UI + Lucide)
+            // Radix UI separate (large component library)
+            if (id.includes("node_modules/@radix-ui")) {
+              return "vendor-radix";
+            }
+            // Other UI utilities (icons, styling)
             if (
-              id.includes("node_modules/@radix-ui") ||
               id.includes("node_modules/lucide-react") ||
-              id.includes("node_modules/tailwindcss")
+              id.includes("node_modules/class-variance-authority") ||
+              id.includes("node_modules/tailwind-merge") ||
+              id.includes("node_modules/clsx")
             ) {
-              return "vendor-ui";
+              return "vendor-ui-utils";
             }
             // Data/API libraries
             if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
