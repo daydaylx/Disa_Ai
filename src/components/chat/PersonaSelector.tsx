@@ -6,7 +6,6 @@ import { loadPersonas } from "../../data/personas";
 import { useSettings } from "../../hooks/useSettings";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
-import { BottomSheet } from "../ui/bottom-sheet";
 import { Input } from "../ui/input";
 
 interface PersonaSelectorProps {
@@ -147,175 +146,150 @@ export function PersonaSelector({
         />
       </button>
 
-      {/* BottomSheet für Rollen-Auswahl */}
-      <BottomSheet isOpen={isOpen} onClose={() => setIsOpen(false)} title="Chat-Rolle auswählen">
-        {/* Search Bar - Sticky */}
-        <div className="sticky top-0 border-b border-white/10 bg-black/95 p-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rolle suchen..."
-              className="focus:border-accent-500/50 border-white/20 bg-white/5 pl-12 text-base text-white placeholder:text-white/40"
-            />
+      {/* Inline Rollen-Auswahl - Nahtlos integriert */}
+      {isOpen && (
+        <div className="mt-4 space-y-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+          {/* Search Bar */}
+          <div className="p-4 pb-0">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Rolle suchen..."
+                className="focus:border-accent-500/50 border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/40"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Category Pills - Horizontal Scroll */}
-        <div className="overflow-x-auto border-b border-white/10 bg-black/50 px-6 py-4">
-          <div className="flex gap-3">
-            <button
-              onClick={() => setSelectedCategory("all")}
-              className={cn(
-                "tap-target whitespace-nowrap rounded-full px-6 py-3 text-sm font-medium transition-all",
-                selectedCategory === "all"
-                  ? "shadow-accent-500/25 bg-accent-500 text-white shadow-lg"
-                  : "border border-white/20 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",
-              )}
-            >
-              Alle
-            </button>
-            {categories.map((category) => (
+          {/* Category Pills - Horizontal Scroll */}
+          <div className="overflow-x-auto px-4">
+            <div className="flex gap-2">
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => setSelectedCategory("all")}
                 className={cn(
-                  "tap-target whitespace-nowrap rounded-full px-6 py-3 text-sm font-medium transition-all",
-                  selectedCategory === category
-                    ? "shadow-accent-500/25 bg-accent-500 text-white shadow-lg"
+                  "tap-target whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
+                  selectedCategory === "all"
+                    ? "bg-accent-500 text-white shadow-lg"
                     : "border border-white/20 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",
                 )}
               >
-                {category}
+                Alle
               </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Clear Selection Option */}
-        {selectedPersona && (
-          <button
-            onClick={handleClearPersona}
-            className="tap-target flex w-full items-center gap-4 border-b border-white/10 bg-white/5 p-6 transition-colors hover:bg-white/10"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
-              <User className="h-6 w-6 text-white/60" />
-            </div>
-            <div className="flex-1 text-left">
-              <div className="text-base font-medium text-white">Standard (Keine Rolle)</div>
-              <div className="text-sm text-white/50">Zurücksetzen auf Standardverhalten</div>
-            </div>
-          </button>
-        )}
-
-        {/* Persona List - Scrollable */}
-        <div className="max-h-[50vh] overflow-y-auto">
-          {isLoadingPersonas ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="mb-3 text-2xl text-white/40">⏳</div>
-              <div className="text-base text-white/60">Lade Rollen...</div>
-              <div className="text-sm text-white/40">Einen Moment bitte</div>
-            </div>
-          ) : filteredPersonas.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="mb-3 text-2xl text-white/40">🔍</div>
-              <div className="text-base text-white/60">Keine Rollen gefunden</div>
-              <div className="text-sm text-white/40">
-                Versuche einen anderen Filter oder Suchbegriff
-              </div>
-            </div>
-          ) : (
-            <div className="divide-y divide-white/5">
-              {filteredPersonas.map((persona) => (
+              {categories.map((category) => (
                 <button
-                  key={persona.id}
-                  onClick={() => handlePersonaSelect(persona)}
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
                   className={cn(
-                    "tap-target relative flex w-full items-start gap-4 p-6 text-left transition-colors",
-                    "min-h-[80px]", // Mindesthöhe für bessere Touch-Targets
-                    selectedPersona?.id === persona.id
-                      ? "bg-accent-500/20 border-l-4 border-accent-500"
-                      : "hover:bg-white/5",
+                    "tap-target whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
+                    selectedCategory === category
+                      ? "bg-accent-500 text-white shadow-lg"
+                      : "border border-white/20 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",
                   )}
                 >
-                  <div
-                    className={cn(
-                      "mt-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full",
-                      selectedPersona?.id === persona.id ? "bg-accent-500/30" : "bg-white/10",
-                    )}
-                  >
-                    <Bot
-                      className={cn(
-                        "h-6 w-6",
-                        selectedPersona?.id === persona.id ? "text-accent-400" : "text-white/60",
-                      )}
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-2 flex items-center gap-2">
-                      <span className="text-base font-medium text-white">{persona.name}</span>
-                      {selectedPersona?.id === persona.id && (
-                        <span className="text-accent-400 text-lg">✓</span>
-                      )}
-                    </div>
-                    <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-white/70">
-                      {persona.systemPrompt.slice(0, 120)}
-                      {persona.systemPrompt.length > 120 && "..."}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {persona.category && (
-                        <Badge
-                          variant="secondary"
-                          className={cn(
-                            "text-xs",
-                            persona.category === "Erwachsene"
-                              ? "border-pink-500/30 bg-pink-500/20 text-pink-200"
-                              : "border-white/10 bg-white/10 text-white/50",
-                          )}
-                        >
-                          {persona.category}
-                        </Badge>
-                      )}
-                      {/* Spezielle Badges für Adult Content */}
-                      {persona.tags?.includes("adult") && (
-                        <Badge
-                          variant="outline"
-                          className="border-pink-500/50 bg-pink-500/10 text-xs text-pink-300"
-                        >
-                          18+
-                        </Badge>
-                      )}
-                      {persona.tags?.includes("nsfw") && (
-                        <Badge
-                          variant="outline"
-                          className="border-red-500/50 bg-red-500/10 text-xs text-red-300"
-                        >
-                          NSFW
-                        </Badge>
-                      )}
-                      {persona.tags?.slice(0, 2).map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="outline"
-                          className={cn(
-                            "text-xs",
-                            tag === "adult" || tag === "nsfw"
-                              ? "border-pink-500/30 text-pink-300"
-                              : "border-white/10 text-white/40",
-                          )}
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
+                  {category}
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Clear Selection Option */}
+          {selectedPersona && (
+            <div className="border-t border-white/10 px-4 pt-4">
+              <button
+                onClick={handleClearPersona}
+                className="tap-target flex w-full items-center gap-3 rounded-xl bg-white/5 p-3 transition-colors hover:bg-white/10"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
+                  <User className="h-4 w-4 text-white/60" />
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="text-sm font-medium text-white">Standard (Keine Rolle)</div>
+                  <div className="text-xs text-white/50">Zurücksetzen</div>
+                </div>
+              </button>
+            </div>
           )}
+
+          {/* Persona List - Compact & Scrollable */}
+          <div className="max-h-96 overflow-y-auto px-4 pb-4">
+            {isLoadingPersonas ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="mb-2 text-lg text-white/40">⏳</div>
+                <div className="text-sm text-white/60">Lade Rollen...</div>
+              </div>
+            ) : filteredPersonas.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="mb-2 text-lg text-white/40">🔍</div>
+                <div className="text-sm text-white/60">Keine Rollen gefunden</div>
+                <div className="text-xs text-white/40">Versuche einen anderen Filter</div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {filteredPersonas.map((persona) => (
+                  <button
+                    key={persona.id}
+                    onClick={() => handlePersonaSelect(persona)}
+                    className={cn(
+                      "tap-target relative flex w-full items-center gap-3 rounded-xl p-3 text-left transition-all",
+                      selectedPersona?.id === persona.id
+                        ? "bg-accent-500/20 ring-accent-500/50 ring-1"
+                        : "hover:bg-white/10",
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
+                        selectedPersona?.id === persona.id ? "bg-accent-500/30" : "bg-white/10",
+                      )}
+                    >
+                      <Bot
+                        className={cn(
+                          "h-5 w-5",
+                          selectedPersona?.id === persona.id ? "text-accent-400" : "text-white/60",
+                        )}
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate text-sm font-medium text-white">
+                          {persona.name}
+                        </span>
+                        {selectedPersona?.id === persona.id && (
+                          <span className="text-accent-400 text-sm">✓</span>
+                        )}
+                      </div>
+                      <div className="mt-1 flex items-center gap-2">
+                        {persona.category && (
+                          <Badge
+                            variant="secondary"
+                            className={cn(
+                              "px-2 py-0.5 text-xs",
+                              persona.category === "Erwachsene"
+                                ? "border-pink-500/30 bg-pink-500/20 text-pink-200"
+                                : "border-white/10 bg-white/5 text-white/50",
+                            )}
+                          >
+                            {persona.category}
+                          </Badge>
+                        )}
+                        {persona.tags?.includes("adult") && (
+                          <Badge
+                            variant="outline"
+                            className="border-pink-500/50 bg-pink-500/10 px-1.5 py-0.5 text-xs text-pink-300"
+                          >
+                            18+
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </BottomSheet>
+      )}
     </div>
   );
 }
