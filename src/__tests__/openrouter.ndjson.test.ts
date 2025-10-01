@@ -14,6 +14,9 @@ function ndjsonBody(lines: string[]) {
 
 describe("openrouter chatStream – NDJSON support", () => {
   it("verarbeitet JSON-Zeilen und [DONE]", async () => {
+    // Setup API key for test
+    localStorage.setItem("disa_api_key", "sk-test");
+
     // @ts-expect-error stub fetch
     global.fetch = vi.fn(() =>
       Promise.resolve({

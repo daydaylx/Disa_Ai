@@ -29,13 +29,14 @@ function isTestEnv(): boolean {
 function getHeaders() {
   const apiKey = readApiKey(); // Only use secure keyStore, no localStorage fallback
 
-  // SECURITY: Never use hardcoded keys, even in test environments
-  // Instead, require proper environment variables or mock the API completely
-  if (isTestEnv()) {
-    throw mapError(new Error("API_CALLS_NOT_ALLOWED_IN_TESTS"));
+  // SECURITY: In test environment, require valid API key (no hardcoded fallbacks)
+  // Tests should use mocked fetch instead of real API calls
+  if (!apiKey) {
+    if (isTestEnv()) {
+      throw mapError(new Error("NO_API_KEY_IN_TESTS"));
+    }
+    throw mapError(new Error("NO_API_KEY"));
   }
-
-  if (!apiKey) throw mapError(new Error("NO_API_KEY"));
   const referer = (() => {
     try {
       return location.origin;
@@ -44,7 +45,7 @@ function getHeaders() {
     }
   })();
   return {
-    Authorization: `Bearer ${key}`,
+    Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
     "HTTP-Referer": referer,
     "X-Title": "Disa AI",
