@@ -28,8 +28,14 @@ function isTestEnv(): boolean {
 
 function getHeaders() {
   const apiKey = readApiKey(); // Only use secure keyStore, no localStorage fallback
-  const key = apiKey || (isTestEnv() ? "test" : "");
-  if (!key) throw mapError(new Error("NO_API_KEY"));
+
+  // SECURITY: Never use hardcoded keys, even in test environments
+  // Instead, require proper environment variables or mock the API completely
+  if (isTestEnv()) {
+    throw mapError(new Error("API_CALLS_NOT_ALLOWED_IN_TESTS"));
+  }
+
+  if (!apiKey) throw mapError(new Error("NO_API_KEY"));
   const referer = (() => {
     try {
       return location.origin;
@@ -189,13 +195,30 @@ export async function chatStream(
 }
 
 function combineSignals(signals: AbortSignal[]): AbortSignal {
+  // Use native AbortSignal.any() to avoid race conditions
+  // Available in Node.js v20.7.0+ and modern browsers
+  if ("any" in AbortSignal && typeof AbortSignal.any === "function") {
+    return AbortSignal.any(signals);
+  }
+
+  // Fallback for older environments with improved race condition handling
   const controller = new AbortController();
+  const cleanup: (() => void)[] = [];
+
   for (const signal of signals) {
     if (signal.aborted) {
       controller.abort();
-      return controller.signal;
+      break;
     }
-    signal.addEventListener("abort", () => controller.abort(), { once: true });
+
+    const abortHandler = () => {
+      cleanup.forEach((fn) => fn());
+      controller.abort();
+    };
+
+    signal.addEventListener("abort", abortHandler, { once: true });
+    cleanup.push(() => signal.removeEventListener("abort", abortHandler));
   }
+
   return controller.signal;
 }

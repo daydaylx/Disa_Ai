@@ -89,45 +89,15 @@ export default defineConfig(({ mode }) => {
           return false;
         },
         output: {
-          // Optimized chunking strategy - combines stability with performance
+          // Simplified chunking strategy for better caching and HTTP/2 performance
+          // Based on security analysis recommendation to reduce granular chunking
           manualChunks: (id) => {
-            // Core React vendors (strict separation for loading order)
-            if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/")) {
-              return "vendor-react";
+            // Single vendor chunk for all node_modules
+            // More stable caching strategy - hash only changes when dependencies update
+            if (id.includes("node_modules/")) {
+              return "vendor";
             }
-            // Router separate (contains @remix-run packages)
-            if (
-              id.includes("node_modules/react-router") ||
-              id.includes("node_modules/@remix-run")
-            ) {
-              return "vendor-router";
-            }
-            // Radix UI separate (large component library)
-            if (id.includes("node_modules/@radix-ui")) {
-              return "vendor-radix";
-            }
-            // Other UI utilities (icons, styling)
-            if (
-              id.includes("node_modules/lucide-react") ||
-              id.includes("node_modules/class-variance-authority") ||
-              id.includes("node_modules/tailwind-merge") ||
-              id.includes("node_modules/clsx")
-            ) {
-              return "vendor-ui-utils";
-            }
-            // Data/API libraries
-            if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
-              return "vendor-data";
-            }
-            // Markdown/Text processing (for future markdown features)
-            if (
-              id.includes("node_modules/marked") ||
-              id.includes("node_modules/highlight.js") ||
-              id.includes("node_modules/katex")
-            ) {
-              return "vendor-markdown";
-            }
-            // Everything else stays in main bundle for better mobile performance
+            // Application code stays in main bundle
             return undefined;
           },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
