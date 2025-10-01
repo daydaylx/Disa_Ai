@@ -2,9 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Schnellstart-Kacheln Funktionalität", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/");
-    // Warten bis die Seite vollständig geladen ist
-    await page.waitForLoadState("networkidle");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
   });
 
   test("sollte Schnellstart-Kacheln anzeigen wenn keine Nachrichten vorhanden", async ({
@@ -15,9 +13,9 @@ test.describe("Schnellstart-Kacheln Funktionalität", () => {
     await expect(quickstartButtons.first()).toBeVisible();
 
     // Prüfen ob Standard-Schnellstarts geladen wurden
-    await expect(page.getByText("AI Text Writer")).toBeVisible();
-    await expect(page.getByText("Bildidee")).toBeVisible();
-    await expect(page.getByText("Faktencheck")).toBeVisible();
+    await expect(page.getByText("Kurzantwort verfassen")).toBeVisible();
+    await expect(page.getByText("Bildprompt bauen")).toBeVisible();
+    await expect(page.getByText("Faktencheck (mit Quellen)")).toBeVisible();
   });
 
   test("sollte Chat mit Prompt starten wenn Kachel geklickt wird", async ({ page }) => {
@@ -88,21 +86,37 @@ test.describe("Schnellstart-Kacheln Funktionalität", () => {
   });
 
   test("sollte Fallback für leere Konfiguration zeigen", async ({ page }) => {
-    // Mock leere quickstarts.json
-    await page.route("/quickstarts.json", (route) => {
-      route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify([]),
-      });
+    // Seite auf blank setzen, um init-script für nächsten Load zu injizieren
+    await page.goto("about:blank");
+
+    await page.addInitScript(() => {
+      const originalFetch = window.fetch;
+      window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url =
+          typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+        if (url.endsWith("/quickstarts.json")) {
+          return new Response(JSON.stringify([]), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        return originalFetch(input, init);
+      };
     });
 
-    await page.reload();
+    await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Fallback-Button sollte angezeigt werden
-    await expect(page.locator('[data-testid="start-standard-chat"]')).toBeVisible();
-    await expect(page.getByText("Standard-Chat starten")).toBeVisible();
+    // Hero sollte wieder erscheinen → bestätigt, dass Suspense gelöst wurde
+    await expect(page.getByText("Was möchtest du heute erschaffen?")).toBeVisible();
+
+    // Warten bis Quickstart-Liste gerendert wurde
+    const quickstartList = page.locator('[data-testid^="quickstart-"]');
+    await expect(quickstartList.first()).toBeVisible();
+
+    // Should fall back auf die Standard-Quickstarts
+    await expect(page.locator('[data-testid="quickstart-text-writer"]')).toBeVisible();
+    await expect(page.getByText("AI Text Writer")).toBeVisible();
   });
 
   test("sollte Standard-Chat als Fallback starten", async ({ page }) => {

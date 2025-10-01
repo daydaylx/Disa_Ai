@@ -1,50 +1,25 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Smoke Tests", () => {
-  test("App loads and shows initial state (V1 UI)", async ({ page }) => {
-    // Force V1 UI
-    await page.addInitScript(() => {
-      Object.defineProperty(window, "import", {
-        value: {
-          meta: {
-            env: {
-              VITE_UI_V2: "false",
-            },
-          },
-        },
-      });
-    });
-
-    // Starte die App. Passe ggf. baseURL in playwright.config an.
+  test("App loads and shows hero", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    // Titel: robust und case-insensitive
     await expect(page).toHaveTitle(/disa ai/i);
 
-    // Root-Container: akzeptiere #main oder #root, je nach Build/HTML
     const hasMain = await page.locator("#main").count();
     const target = hasMain ? page.locator("#main") : page.locator("#app");
     await expect(target).toBeVisible();
 
-    // V1 specific content check
-    await expect(page.getByText("Willkommen")).toBeVisible();
+    await expect(page.getByText("Was möchtest du heute erschaffen?")).toBeVisible();
+    await expect(page.getByText("Willkommen zurück")).toBeVisible();
   });
 
-  test("App loads with default configuration", async ({ page }) => {
-    // No UI version forced - use default
+  test("App loads quickstart overview", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    // Titel: robust und case-insensitive
     await expect(page).toHaveTitle(/disa ai/i);
 
-    // Root-Container: akzeptiere #main oder #root, je nach Build/HTML
-    const hasMain = await page.locator("#main").count();
-    const target = hasMain ? page.locator("#main") : page.locator("#app");
-    await expect(target).toBeVisible();
-
-    // Check that at least some content is loaded (could be either V1 or V2)
-    const hasWillkommen = await page.getByText("Willkommen").count();
-    const hasCorporate = await page.getByText("Corporate AI Intelligence").count();
-    expect(hasWillkommen + hasCorporate).toBeGreaterThan(0);
+    await expect(page.locator('[data-testid^="quickstart-"]').first()).toBeVisible();
+    await expect(page.getByText("Kurzantwort verfassen")).toBeVisible();
   });
 });

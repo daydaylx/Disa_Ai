@@ -19,13 +19,15 @@ function execGitCommand(command, fallback = "unknown") {
 }
 
 function generateBuildInfo() {
-  const gitSha = execGitCommand("git rev-parse HEAD", "dev-unknown");
-  const gitBranch = execGitCommand("git rev-parse --abbrev-ref HEAD", "main");
-  const gitShort = gitSha.slice(0, 7);
-
   // Build timestamp
   const buildTime = new Date().toISOString();
   const buildTimestamp = Date.now().toString(36);
+
+  const fallbackSha = `dev-${buildTimestamp}`;
+  const gitShaRaw = execGitCommand("git rev-parse HEAD", fallbackSha);
+  const gitSha = gitShaRaw || fallbackSha;
+  const gitBranch = execGitCommand("git rev-parse --abbrev-ref HEAD", "main");
+  const gitShort = gitSha.slice(0, 7);
 
   // Version from package.json
   let version = "2.0.0";
