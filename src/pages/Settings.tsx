@@ -23,6 +23,30 @@ import { usePWAInstall } from "../hooks/usePWAInstall";
 import { useSettings } from "../hooks/useSettings";
 import { BUILD_ID } from "../lib/pwa/registerSW";
 
+function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> }) {
+  const [stats, setStats] = useState({ chatCount: 0, totalMessages: 0, storageUsed: 0 });
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const data = await getMemoryStats();
+        setStats(data);
+      } catch (error) {
+        console.warn("Failed to load memory stats:", error);
+      }
+    };
+    void loadStats();
+  }, [getMemoryStats]);
+
+  return (
+    <>
+      <div>Gespeicherte Chats: {stats.chatCount}</div>
+      <div>Gesamte Nachrichten: {stats.totalMessages}</div>
+      <div>Speicherverbrauch: ~{Math.round(stats.storageUsed / 1024)}KB</div>
+    </>
+  );
+}
+
 type InitState = "loading" | "ready" | "error";
 
 export default function SettingsPage() {
@@ -348,29 +372,20 @@ export default function SettingsPage() {
               <div className="space-y-2 border-t border-white/10 pt-4">
                 <Label className="text-white/90">Statistiken</Label>
                 <div className="space-y-1 text-xs text-white/60">
-                  {(() => {
-                    const stats = getMemoryStats();
-                    return (
-                      <>
-                        <div>Gespeicherte Chats: {stats.chatCount}</div>
-                        <div>Gesamte Nachrichten: {stats.totalMessages}</div>
-                        <div>Speicherverbrauch: ~{Math.round(stats.storageUsed / 1024)}KB</div>
-                      </>
-                    );
-                  })()}
+                  <MemoryStats getMemoryStats={getMemoryStats} />
                 </div>
               </div>
 
               {/* Clear Memory */}
               <div className="border-t border-white/10 pt-4">
                 <Button
-                  onClick={() => {
+                  onClick={async () => {
                     if (
                       confirm(
                         "Alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
                       )
                     ) {
-                      clearAllMemory();
+                      await clearAllMemory();
                       toasts.push({
                         kind: "success",
                         title: "Gedächtnis gelöscht",

@@ -189,7 +189,7 @@ SW:      Network-first für HTML, stale-while-revalidate
 
 ## Lizenz
 
-Bis jetzt keine Lizenzen 
+Bis jetzt keine Lizenzen
 
 ---
 

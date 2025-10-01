@@ -1,82 +1,166 @@
 import { useCallback, useEffect, useState } from "react";
 
 import type { ChatMemory, GlobalMemory, MemorySettings } from "../lib/memory/memoryService";
-import { memoryService } from "../lib/memory/memoryService";
+
+// Lazy-load memory service instance
+let memoryServiceInstance: any = null;
+const getMemoryService = async () => {
+  if (!memoryServiceInstance) {
+    const module = await import("../lib/memory/memoryService");
+    memoryServiceInstance = module.memoryService;
+  }
+  return memoryServiceInstance;
+};
 
 export function useMemory() {
-  const [settings, setSettings] = useState<MemorySettings>(memoryService.getSettings());
+  const [settings, setSettings] = useState<MemorySettings>({
+    enabled: false,
+    maxChatMessages: 50,
+    maxChatHistory: 20,
+    retentionDays: 30,
+  });
   const [globalMemory, setGlobalMemory] = useState<GlobalMemory | null>(null);
 
   // Load initial data
   useEffect(() => {
-    setGlobalMemory(memoryService.getGlobalMemory());
-  }, [settings.enabled]);
+    const loadService = async () => {
+      try {
+        const service = await getMemoryService();
+        setSettings(service.getSettings());
+        setGlobalMemory(service.getGlobalMemory());
+      } catch (error) {
+        console.warn("Failed to load memory service:", error);
+      }
+    };
+    void loadService();
+  }, []);
 
   // Settings management
-  const updateSettings = useCallback((newSettings: Partial<MemorySettings>) => {
-    memoryService.updateSettings(newSettings);
-    const updated = memoryService.getSettings();
-    setSettings(updated);
+  const updateSettings = useCallback(async (newSettings: Partial<MemorySettings>) => {
+    try {
+      const service = await getMemoryService();
+      service.updateSettings(newSettings);
+      const updated = service.getSettings();
+      setSettings(updated);
 
-    // Reload global memory when enabling/disabling
-    if ("enabled" in newSettings) {
-      setGlobalMemory(memoryService.getGlobalMemory());
+      // Reload global memory when enabling/disabling
+      if ("enabled" in newSettings) {
+        setGlobalMemory(service.getGlobalMemory());
+      }
+    } catch (error) {
+      console.warn("Failed to update settings:", error);
     }
   }, []);
 
   const toggleMemory = useCallback(() => {
-    updateSettings({ enabled: !settings.enabled });
+    void updateSettings({ enabled: !settings.enabled });
   }, [settings.enabled, updateSettings]);
 
   // Global memory management
   const updateGlobalMemory = useCallback(
-    (updates: Partial<Omit<GlobalMemory, "lastUpdated">>) => {
+    async (updates: Partial<Omit<GlobalMemory, "lastUpdated">>) => {
       if (!settings.enabled) return;
 
-      memoryService.updateGlobalMemory(updates);
-      setGlobalMemory(memoryService.getGlobalMemory());
+      try {
+        const service = await getMemoryService();
+        service.updateGlobalMemory(updates);
+        setGlobalMemory(service.getGlobalMemory());
+      } catch (error) {
+        console.warn("Failed to update global memory:", error);
+      }
     },
     [settings.enabled],
   );
 
-  const clearGlobalMemory = useCallback(() => {
-    memoryService.clearGlobalMemory();
-    setGlobalMemory(null);
+  const clearGlobalMemory = useCallback(async () => {
+    try {
+      const service = await getMemoryService();
+      service.clearGlobalMemory();
+      setGlobalMemory(null);
+    } catch (error) {
+      console.warn("Failed to clear global memory:", error);
+    }
   }, []);
 
   // Chat memory management
-  const getChatMemory = useCallback((chatId: string): ChatMemory | null => {
-    return memoryService.getChatMemory(chatId);
+  const getChatMemory = useCallback(async (chatId: string): Promise<ChatMemory | null> => {
+    try {
+      const service = await getMemoryService();
+      return service.getChatMemory(chatId);
+    } catch (error) {
+      console.warn("Failed to get chat memory:", error);
+      return null;
+    }
   }, []);
 
   const updateChatMemory = useCallback(
-    (chatId: string, messages: ChatMemory["messages"], context?: string) => {
+    async (chatId: string, messages: ChatMemory["messages"], context?: string) => {
       if (!settings.enabled) return;
-      memoryService.updateChatMemory(chatId, messages, context);
+
+      try {
+        const service = await getMemoryService();
+        service.updateChatMemory(chatId, messages, context);
+      } catch (error) {
+        console.warn("Failed to update chat memory:", error);
+      }
     },
     [settings.enabled],
   );
 
-  const deleteChatMemory = useCallback((chatId: string) => {
-    memoryService.deleteChatMemory(chatId);
+  const deleteChatMemory = useCallback(async (chatId: string) => {
+    try {
+      const service = await getMemoryService();
+      service.deleteChatMemory(chatId);
+    } catch (error) {
+      console.warn("Failed to delete chat memory:", error);
+    }
   }, []);
 
   // Utility functions
-  const getChatList = useCallback(() => {
-    return memoryService.getChatList();
+  const getChatList = useCallback(async () => {
+    try {
+      const service = await getMemoryService();
+      return service.getChatList();
+    } catch (error) {
+      console.warn("Failed to get chat list:", error);
+      return [];
+    }
   }, []);
 
-  const exportMemory = useCallback(() => {
-    return memoryService.exportAllMemory();
+  const exportMemory = useCallback(async () => {
+    try {
+      const service = await getMemoryService();
+      return service.exportAllMemory();
+    } catch (error) {
+      console.warn("Failed to export memory:", error);
+      return {};
+    }
   }, []);
 
-  const clearAllMemory = useCallback(() => {
-    memoryService.clearAllMemory();
-    setGlobalMemory(null);
+  const clearAllMemory = useCallback(async () => {
+    try {
+      const service = await getMemoryService();
+      service.clearAllMemory();
+      setGlobalMemory(null);
+    } catch (error) {
+      console.warn("Failed to clear all memory:", error);
+    }
   }, []);
 
-  const getMemoryStats = useCallback(() => {
-    return memoryService.getMemoryStats();
+  const getMemoryStats = useCallback(async () => {
+    try {
+      const service = await getMemoryService();
+      return service.getMemoryStats();
+    } catch (error) {
+      console.warn("Failed to get memory stats:", error);
+      return {
+        enabled: false,
+        chatCount: 0,
+        totalMessages: 0,
+        globalMemoryExists: false,
+        storageUsed: 0,
+      };
+    }
   }, []);
 
   return {

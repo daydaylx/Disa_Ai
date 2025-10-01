@@ -77,6 +77,12 @@ export default defineConfig(({ mode }) => {
         reportCompressedSize: false, // Schnellere Builds
       }),
       rollupOptions: {
+        treeshake: {
+          preset: "recommended",
+          propertyReadSideEffects: false,
+          tryCatchDeoptimization: false,
+          unknownGlobalSideEffects: false,
+        },
         output: {
           manualChunks: (id) => {
             // Core React vendors - kleinere Chunks für besseres Caching
@@ -90,9 +96,22 @@ export default defineConfig(({ mode }) => {
             if (id.includes("node_modules/react-router-dom")) {
               return "vendor-router";
             }
-            // UI Komponenten - größere Sammlung aufteilen
+            // UI Komponenten - größere Sammlung weiter aufteilen
+            if (
+              id.includes("node_modules/@radix-ui/react-dialog") ||
+              id.includes("node_modules/@radix-ui/react-tabs") ||
+              id.includes("node_modules/@radix-ui/react-tooltip")
+            ) {
+              return "vendor-radix-overlays";
+            }
+            if (
+              id.includes("node_modules/@radix-ui/react-select") ||
+              id.includes("node_modules/@radix-ui/react-dropdown-menu")
+            ) {
+              return "vendor-radix-inputs";
+            }
             if (id.includes("node_modules/@radix-ui")) {
-              return "vendor-radix";
+              return "vendor-radix-core";
             }
             if (id.includes("node_modules/lucide-react")) {
               return "vendor-icons";
