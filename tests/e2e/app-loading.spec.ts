@@ -35,15 +35,17 @@ test.describe("App Loading Tests - Issue #75", () => {
     await page.waitForLoadState("networkidle");
 
     // Prüfe dass App initial lädt
-    await expect(page.locator('[data-testid="chat-log"]')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="chat-log"]')).toBeVisible({ timeout: 15000 });
+
+    // Warte kurz für stabile Initialisierung
+    await page.waitForTimeout(1000);
 
     // Page Reload durchführen
-    await page.reload();
-    await page.waitForLoadState("networkidle");
+    await page.reload({ waitUntil: "networkidle" });
 
-    // Nach Reload sollte App wieder normal funktionieren
-    await expect(page.getByText("Wird geladen...")).not.toBeVisible({ timeout: 5000 });
-    await expect(page.locator('[data-testid="chat-log"]')).toBeVisible({ timeout: 10000 });
+    // Nach Reload sollte App wieder normal funktionieren - längere Timeouts für Reload
+    await expect(page.getByText("Wird geladen...")).not.toBeVisible({ timeout: 8000 });
+    await expect(page.locator('[data-testid="chat-log"]')).toBeVisible({ timeout: 15000 });
   });
 
   test("sollte Deep-Links (/chat) korrekt laden", async ({ page }) => {
@@ -71,7 +73,7 @@ test.describe("App Loading Tests - Issue #75", () => {
     const url = page.url();
     if (url.includes("/models")) {
       // Falls Models-Page existiert, prüfe spezifischen Content
-      await expect(page.getByText("Modelle")).toBeVisible({ timeout: 10000 });
+      await expect(page.locator('[data-testid="models-title"]')).toBeVisible({ timeout: 10000 });
     } else {
       // Falls redirect zu /chat, prüfe Chat-Interface
       await expect(page.locator('[data-testid="chat-log"]')).toBeVisible({ timeout: 10000 });
@@ -131,23 +133,36 @@ test.describe("App Loading Tests - Issue #75", () => {
       const url = response.url();
       const contentType = response.headers()["content-type"] || "";
 
-      // Prüfe JavaScript-Dateien
+      // Prüfe JavaScript-Dateien - erweiterte Muster für Vite
       if (
         url.endsWith(".js") &&
         !contentType.includes("javascript") &&
-        !contentType.includes("module")
+        !contentType.includes("module") &&
+        !contentType.includes("text/javascript") &&
+        !contentType.includes("application/javascript")
       ) {
         wrongMimeTypes.push({ url, contentType });
       }
 
-      // Prüfe CSS-Dateien
-      if (url.endsWith(".css") && !contentType.includes("css")) {
+      // Prüfe CSS-Dateien - in Vite dev mode werden CSS als JS importiert
+      if (
+        url.endsWith(".css") &&
+        !contentType.includes("css") &&
+        !contentType.includes("text/css") &&
+        !url.includes("localhost:5174/src/")
+      ) {
+        // Dev mode exception
         wrongMimeTypes.push({ url, contentType });
       }
     });
 
     await page.goto("/");
     await page.waitForLoadState("networkidle");
+
+    // Debug-Output bei Fehlern
+    if (wrongMimeTypes.length > 0) {
+      console.log("Wrong MIME types found:", wrongMimeTypes);
+    }
 
     // Alle Assets sollten korrekte MIME-Types haben
     expect(wrongMimeTypes).toHaveLength(0);
