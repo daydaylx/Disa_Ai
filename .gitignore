@@ -34,6 +34,12 @@ allure-report/
 *.trx
 *.junit.xml
 
+# Lighthouse CI (CRITICAL - prevents language detection issues)
+.lighthouseci/
+lighthouse-report/
+*.lhr.html
+*.lhr.json
+
 # Visual testing
 playwright-visual-report/
 visual-report/
