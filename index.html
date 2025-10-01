@@ -20,8 +20,8 @@
     <script>
       // Loading indicator nur wenn React nicht innerhalb 1 Sekunde lädt
       let loadingTimeout = setTimeout(() => {
-        const app = document.getElementById('app');
-        if (app && app.innerHTML.trim() === '') {
+        const app = document.getElementById("app");
+        if (app && app.innerHTML.trim() === "") {
           app.innerHTML = `
             <div id="loading-indicator" style="
               display: flex;
@@ -55,7 +55,7 @@
 
           // Error fallback nach 8 Sekunden
           setTimeout(() => {
-            const loadingIndicator = document.getElementById('loading-indicator');
+            const loadingIndicator = document.getElementById("loading-indicator");
             if (loadingIndicator) {
               app.innerHTML = `
                 <div style="
@@ -97,13 +97,13 @@
 
       // React App Mount Detection - clear loading wenn React lädt
       const observer = new MutationObserver(() => {
-        const app = document.getElementById('app');
-        if (app && app.children.length > 0 && !app.querySelector('#loading-indicator')) {
+        const app = document.getElementById("app");
+        if (app && app.children.length > 0 && !app.querySelector("#loading-indicator")) {
           clearTimeout(loadingTimeout);
           observer.disconnect();
         }
       });
-      observer.observe(document.getElementById('app'), { childList: true, subtree: true });
+      observer.observe(document.getElementById("app"), { childList: true, subtree: true });
     </script>
   </body>
 </html>
