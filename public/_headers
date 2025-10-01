@@ -27,24 +27,8 @@
   Critical-CH: Viewport-Width, DPR
   Vary: Accept-Encoding, Viewport-Width, DPR
 
-  # Fix für Issue #75: Erweiterte CSP für SPA-Funktionalität
-  Content-Security-Policy: default-src 'self';
-    base-uri 'self';
-    frame-ancestors 'none';
-    object-src 'none';
-    img-src 'self' data: blob:;
-    font-src 'self' data:;
-    style-src 'self' 'unsafe-inline';
-    script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline';
-    connect-src 'self' https://openrouter.ai https://*.openrouter.ai wss://localhost:* ws://localhost:*;
-    worker-src 'self' blob:;
-    manifest-src 'self';
-    form-action 'self';
-    frame-src 'none';
-    media-src 'self' blob:;
-    child-src 'none';
-    report-uri /csp-report;
-    upgrade-insecure-requests
+  # Fix für Issue #75: Optimierte CSP für SPA + ES Module Kompatibilität
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline'; connect-src 'self' https://openrouter.ai https://*.openrouter.ai wss://localhost:* ws://localhost:*; worker-src 'self' blob:; manifest-src 'self'; form-action 'self'; frame-src 'none'; media-src 'self' blob:; child-src 'none'; upgrade-insecure-requests
 */
 
 /*
