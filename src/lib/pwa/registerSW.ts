@@ -106,19 +106,20 @@ export function registerSW() {
                   const evt = new CustomEvent("disa:toast", {
                     detail: {
                       kind: shouldForceReload ? "warning" : "info",
-                      title: shouldForceReload ? "Update erforderlich" : "Update verfügbar",
+                      title: shouldForceReload ? "Kritisches Update" : "Update verfügbar",
                       message: shouldForceReload
-                        ? "Neue Version wird geladen..."
-                        : "Eine neue Version ist bereit.",
-                      action: { label: "Neu laden", onClick: reload },
+                        ? "Ein kritisches Update ist verfügbar. Bitte laden Sie die Seite neu."
+                        : "Eine neue Version ist verfügbar. Möchten Sie jetzt neu laden?",
+                      action: { label: "Jetzt neu laden", onClick: reload },
+                      durationMs: shouldForceReload ? 0 : 8000, // Critical updates stay visible
                     },
                   });
                   window.dispatchEvent(evt);
 
-                  // Auto-reload after 3 seconds if force reload
+                  // User-controlled reload only - no automatic reload to prevent loops
                   if (shouldForceReload) {
                     shouldReloadOnControllerChange = true;
-                    setTimeout(reload, 3000);
+                    // Note: Auto-reload removed to fix infinite reload loop issue #125
                   }
                 });
               } catch {

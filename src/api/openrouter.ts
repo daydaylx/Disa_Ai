@@ -202,20 +202,42 @@ function combineSignals(signals: AbortSignal[]): AbortSignal {
     return AbortSignal.any(signals);
   }
 
-  // Fallback for older environments with improved race condition handling
+  // Fallback for older environments with race condition protection
   const controller = new AbortController();
+  let aborted = false;
   const cleanup: (() => void)[] = [];
 
+  // Check if already aborted before setting up listeners
   for (const signal of signals) {
     if (signal.aborted) {
       controller.abort();
-      break;
+      return controller.signal;
     }
+  }
 
-    const abortHandler = () => {
-      cleanup.forEach((fn) => fn());
-      controller.abort();
-    };
+  // Set up listeners with race condition protection
+  const abortHandler = () => {
+    if (aborted) return; // Prevent double abort
+    aborted = true;
+
+    // Clean up all listeners
+    cleanup.forEach((fn) => {
+      try {
+        fn();
+      } catch {
+        // Ignore cleanup errors
+      }
+    });
+
+    controller.abort();
+  };
+
+  for (const signal of signals) {
+    // Double-check in case signal was aborted between checks
+    if (signal.aborted) {
+      abortHandler();
+      return controller.signal;
+    }
 
     signal.addEventListener("abort", abortHandler, { once: true });
     cleanup.push(() => signal.removeEventListener("abort", abortHandler));
