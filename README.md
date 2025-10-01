@@ -1,4 +1,4 @@
-# Disa AI
+o# Disa AI
 
 Eine **mobile-only** AI-Chat-PWA mit **Dark-only** Design und Offline-Funktionalität. Speziell für deutsche Nutzer auf /Android optimiert.
 
@@ -189,7 +189,7 @@ SW:      Network-first für HTML, stale-while-revalidate
 
 ## Lizenz
 
-Dieses Projekt ist privat und nicht für öffentliche Nutzung bestimmt.
+Bis jetzt keine Lizenzen 
 
 ---
 
