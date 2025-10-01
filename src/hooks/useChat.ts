@@ -90,7 +90,10 @@ export function useChat({
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const append = useCallback(
-    async (message: Omit<ChatMessageType, "id" | "timestamp">) => {
+    async (
+      message: Omit<ChatMessageType, "id" | "timestamp">,
+      customMessages?: ChatMessageType[],
+    ) => {
       const userMessage: ChatMessageType = {
         id: nanoid(),
         timestamp: Date.now(),
@@ -118,8 +121,9 @@ export function useChat({
       try {
         let accumulatedContent = "";
 
-        // Convert messages to the format expected by OpenRouter API
-        const apiMessages = [...state.messages, userMessage].map((msg) => ({
+        // Use custom messages if provided (for reload), otherwise use current state
+        const baseMessages = customMessages || state.messages;
+        const apiMessages = [...baseMessages, userMessage].map((msg) => ({
           role: msg.role,
           content: msg.content,
         }));
@@ -212,14 +216,18 @@ export function useChat({
     const lastUserMessage = state.messages[lastUserMessageIndex];
 
     // Alle Nachrichten nach der letzten Nutzernachricht entfernen, Eingabe beibehalten
-    const messagesToRetry = state.messages.slice(0, lastUserMessageIndex + 1);
+    const messagesToRetry = state.messages.slice(0, lastUserMessageIndex);
 
     dispatch({ type: "SET_MESSAGES", messages: messagesToRetry });
 
-    await append({
-      role: lastUserMessage.role,
-      content: lastUserMessage.content,
-    });
+    // Übergebe die gekürzten Messages an append, um Race Condition zu vermeiden
+    await append(
+      {
+        role: lastUserMessage.role,
+        content: lastUserMessage.content,
+      },
+      messagesToRetry,
+    );
   }, [state.messages, append]);
 
   const setMessages = useCallback((messages: ChatMessageType[]) => {

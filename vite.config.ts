@@ -89,10 +89,46 @@ export default defineConfig(({ mode }) => {
           return false;
         },
         output: {
-          // Simplified chunking to avoid dependency issues
-          manualChunks: {
-            // Keep React together to avoid loading order issues
-            vendor: ["react", "react-dom", "react-router-dom"],
+          // Optimized chunking strategy - combines stability with performance
+          manualChunks: (id) => {
+            // Core React vendors (strict separation for loading order)
+            if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/")) {
+              return "vendor-react";
+            }
+            // Router separate (contains @remix-run packages)
+            if (
+              id.includes("node_modules/react-router") ||
+              id.includes("node_modules/@remix-run")
+            ) {
+              return "vendor-router";
+            }
+            // Radix UI separate (large component library)
+            if (id.includes("node_modules/@radix-ui")) {
+              return "vendor-radix";
+            }
+            // Other UI utilities (icons, styling)
+            if (
+              id.includes("node_modules/lucide-react") ||
+              id.includes("node_modules/class-variance-authority") ||
+              id.includes("node_modules/tailwind-merge") ||
+              id.includes("node_modules/clsx")
+            ) {
+              return "vendor-ui-utils";
+            }
+            // Data/API libraries
+            if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
+              return "vendor-data";
+            }
+            // Markdown/Text processing (for future markdown features)
+            if (
+              id.includes("node_modules/marked") ||
+              id.includes("node_modules/highlight.js") ||
+              id.includes("node_modules/katex")
+            ) {
+              return "vendor-markdown";
+            }
+            // Everything else stays in main bundle for better mobile performance
+            return undefined;
           },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,

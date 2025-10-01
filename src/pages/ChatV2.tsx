@@ -30,6 +30,7 @@ export default function ChatPageV2() {
   const activeQuickstartRef = useRef<ActiveQuickstart | null>(null);
   const toasts = useToasts();
   const { activePersona, typographyScale, borderRadius, accentColor } = useStudio();
+  const isMountedRef = useRef(true);
 
   const {
     messages,
@@ -54,15 +55,24 @@ export default function ChatPageV2() {
     },
   });
 
+  // Track if persona system prompt has been added to prevent re-adding on chat reset
+  const [personaInitialized, setPersonaInitialized] = useState<string | null>(null);
+
   useEffect(() => {
-    if (activePersona && messages.length === 0) {
+    // Only add system prompt when persona changes, not when chat is reset
+    if (activePersona && activePersona.id !== personaInitialized && messages.length === 0) {
       // Add system message for persona
       void append({
         role: "system",
         content: activePersona.systemPrompt,
       });
+      setPersonaInitialized(activePersona.id);
     }
-  }, [activePersona, messages.length, append]);
+    // Reset tracking when persona changes
+    else if (activePersona?.id !== personaInitialized) {
+      setPersonaInitialized(null);
+    }
+  }, [activePersona, append, personaInitialized, messages.length]);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--font-scale", `${typographyScale}`);
@@ -82,6 +92,13 @@ export default function ChatPageV2() {
     })();
     return () => {
       alive = false;
+    };
+  }, []);
+
+  // Cleanup effect to prevent race conditions on unmount
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
     };
   }, []);
 
@@ -145,18 +162,28 @@ export default function ChatPageV2() {
 
     // If autosend is enabled, automatically send the message
     if (autosend && model) {
-      setTimeout(() => {
-        void append({
-          role: "user",
-          content: prompt,
-        });
-        setIsQuickstartLoading(false);
+      const timeoutId = setTimeout(() => {
+        // Check if component is still mounted before calling append
+        if (isMountedRef.current) {
+          void append({
+            role: "user",
+            content: prompt,
+          });
+          setIsQuickstartLoading(false);
+        }
       }, 100); // Small delay to ensure input is set
+
+      // Store timeout ID for potential cleanup (optional improvement)
+      return () => clearTimeout(timeoutId);
     } else {
-      // Clear loading state for manual sending
-      setTimeout(() => {
-        setIsQuickstartLoading(false);
+      // Clear loading state immediately if not auto-sending
+      const timeoutId = setTimeout(() => {
+        if (isMountedRef.current) {
+          setIsQuickstartLoading(false);
+        }
       }, 500); // Small delay for visual feedback
+
+      return () => clearTimeout(timeoutId);
     }
   };
 
