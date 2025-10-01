@@ -79,35 +79,51 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            // Core React vendors
-            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+            // Core React vendors - kleinere Chunks für besseres Caching
+            if (id.includes("node_modules/react-dom")) {
+              return "vendor-react-dom";
+            }
+            if (id.includes("node_modules/react") && !id.includes("react-dom")) {
               return "vendor-react";
             }
-            // Router
+            // Router separat
             if (id.includes("node_modules/react-router-dom")) {
               return "vendor-router";
             }
-            // UI/Styling libraries (Radix UI + Lucide)
+            // UI Komponenten - größere Sammlung aufteilen
+            if (id.includes("node_modules/@radix-ui")) {
+              return "vendor-radix";
+            }
+            if (id.includes("node_modules/lucide-react")) {
+              return "vendor-icons";
+            }
+            // Utility Libraries
             if (
-              id.includes("node_modules/@radix-ui") ||
-              id.includes("node_modules/lucide-react") ||
-              id.includes("node_modules/tailwindcss")
+              id.includes("node_modules/clsx") ||
+              id.includes("node_modules/tailwind-merge") ||
+              id.includes("node_modules/class-variance-authority")
             ) {
-              return "vendor-ui";
+              return "vendor-utils";
             }
             // Data/API libraries
             if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
               return "vendor-data";
             }
-            // Markdown/Text processing (for future markdown features)
-            if (
-              id.includes("node_modules/marked") ||
-              id.includes("node_modules/highlight.js") ||
-              id.includes("node_modules/katex")
-            ) {
-              return "vendor-markdown";
+            // App-spezifische große Chunks
+            if (id.includes("/src/pages/ChatV2")) {
+              return "page-chat";
             }
-            // Everything else stays in main bundle for better mobile performance
+            if (id.includes("/src/pages/Models")) {
+              return "page-models";
+            }
+            if (id.includes("/src/pages/Settings")) {
+              return "page-settings";
+            }
+            // Async features
+            if (id.includes("/src/components/chat/") || id.includes("/src/components/message/")) {
+              return "features-chat";
+            }
+            // Kleine dependencies ins main bundle für bessere mobile performance
             return undefined;
           },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types

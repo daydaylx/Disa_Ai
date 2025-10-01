@@ -31,6 +31,8 @@ const SAFETY_LABELS: Record<string, string> = {
   any: "Unbekannt",
 };
 
+type LoadingState = "idle" | "loading" | "success" | "error" | "timeout";
+
 export default function ModelsPage() {
   const { activePersona, setActivePersona } = useStudio();
   const [models, setModels] = useState<ModelEntry[]>([]);
@@ -38,7 +40,8 @@ export default function ModelsPage() {
     getModelFallback() || "meta-llama/llama-3.3-70b-instruct:free",
   );
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loadingState, setLoadingState] = useState<LoadingState>("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [filters, setFilters] = useState<string[]>([]);
   const toasts = useToasts();
 
@@ -59,25 +62,66 @@ export default function ModelsPage() {
 
   useEffect(() => {
     let mounted = true;
-    (async () => {
+    let timeoutId: NodeJS.Timeout;
+
+    const loadModels = async () => {
+      if (loadingState === "loading") return; // Prevent duplicate calls
+
+      setLoadingState("loading");
+      setErrorMessage("");
+
+      // Global timeout für die gesamte Operation
+      timeoutId = setTimeout(() => {
+        if (mounted) {
+          setLoadingState("timeout");
+          setErrorMessage(
+            "Das Laden der Modelle dauert ungewöhnlich lange. Bitte überprüfe deine Internetverbindung.",
+          );
+        }
+      }, 20000); // 20s globaler Timeout
+
       try {
         const catalog = await loadModelCatalog();
+
         if (!mounted) return;
+
+        clearTimeout(timeoutId);
         setModels(catalog);
-      } catch {
+        setLoadingState("success");
+
+        if (catalog.length === 0) {
+          setErrorMessage("Keine Modelle verfügbar. Das System läuft im Offline-Modus.");
+        }
+      } catch (error) {
+        if (!mounted) return;
+
+        clearTimeout(timeoutId);
+        setLoadingState("error");
+
+        const errorMsg = error instanceof Error ? error.message : "Unbekannter Fehler";
+        setErrorMessage(`Modelle konnten nicht geladen werden: ${errorMsg}`);
+
         toasts.push({
           kind: "error",
-          title: "Modelle konnten nicht geladen werden",
-          message: "Bitte überprüfe deine Verbindung und versuche es erneut.",
+          title: "Lade-Fehler",
+          message:
+            "Modelle konnten nicht geladen werden. Versuche es erneut oder prüfe deine Verbindung.",
         });
-      } finally {
-        if (mounted) setLoading(false);
       }
-    })();
+    };
+
+    void loadModels();
+
     return () => {
       mounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [toasts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toasts]); // einmaliger Call beim Mount
+
+  const retryLoadModels = () => {
+    setLoadingState("idle"); // Reset state to trigger reload
+  };
 
   const filtered = useMemo(() => {
     let result = models;
@@ -195,13 +239,32 @@ export default function ModelsPage() {
         </div>
       </section>
 
-      {loading ? (
+      {loadingState === "loading" ? (
         <div className="flex flex-1 items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+            <p className="text-sm text-white/60">Lädt Modellkatalog...</p>
+          </div>
+        </div>
+      ) : loadingState === "error" || loadingState === "timeout" ? (
+        <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="text-red-400">⚠️</div>
+            <div className="space-y-2">
+              <p className="text-sm text-white/80">Fehler beim Laden</p>
+              <p className="max-w-xs text-xs text-white/60">{errorMessage}</p>
+            </div>
+            <button
+              onClick={retryLoadModels}
+              className="tap-target hover:bg-accent-600 rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-white transition-colors"
+            >
+              Erneut versuchen
+            </button>
+          </div>
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-1 items-center justify-center text-sm text-white/60">
-          Keine Modelle gefunden.
+          {models.length === 0 ? "Keine Modelle verfügbar." : "Keine Modelle gefunden."}
         </div>
       ) : (
         <div className="flex-1 space-y-3 overflow-y-auto pb-4">

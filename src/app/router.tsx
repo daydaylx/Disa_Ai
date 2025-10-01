@@ -2,10 +2,10 @@ import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import { RouteLoadingFallback } from "../components/RouteLoadingFallback";
-import ChatPage from "../pages/ChatV2";
 import { AppShell } from "./layouts/AppShell";
 
 // Lazy-loaded Routes für bessere Performance
+const ChatPage = lazy(() => import("../pages/ChatV2"));
 const ModelsPage = lazy(() => import("../pages/Models"));
 const SettingsPage = lazy(() => import("../pages/Settings"));
 
@@ -17,7 +17,11 @@ const router = createBrowserRouter(
       children: [
         {
           path: "/chat",
-          element: <ChatPage />,
+          element: (
+            <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
+              <ChatPage />
+            </Suspense>
+          ),
         },
         {
           path: "/models",
@@ -37,7 +41,11 @@ const router = createBrowserRouter(
         },
         {
           index: true,
-          element: <ChatPage />,
+          element: (
+            <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
+              <ChatPage />
+            </Suspense>
+          ),
         },
         {
           path: "*",

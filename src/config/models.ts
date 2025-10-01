@@ -72,8 +72,19 @@ function byLabel(a: ModelEntry, b: ModelEntry) {
 
 /** Sammelt alle erlaubten Modell-IDs aus styles.json */
 async function getAllowedModelIds(): Promise<string[]> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
   try {
-    const response = await fetch("/styles.json");
+    const response = await fetch("/styles.json", {
+      signal: controller.signal,
+      cache: "force-cache", // Aggressive caching für statische Datei
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
     const stylesData = await response.json();
     const allowed = new Set<string>();
 
@@ -88,7 +99,18 @@ async function getAllowedModelIds(): Promise<string[]> {
     return Array.from(allowed);
   } catch (error) {
     console.warn("Failed to load allowed models from styles.json:", error);
-    return [];
+    // Fallback: Erlaube alle populären Modelle wenn styles.json nicht lädt
+    return [
+      "meta-llama/llama-3.3-70b-instruct:free",
+      "meta-llama/llama-3.1-8b-instruct:free",
+      "mistralai/mistral-7b-instruct:free",
+      "openai/gpt-4o-mini",
+      "openai/o1-mini",
+      "anthropic/claude-3.5-haiku",
+      "google/gemini-flash-1.5",
+    ];
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
