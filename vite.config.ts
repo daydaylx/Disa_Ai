@@ -83,67 +83,16 @@ export default defineConfig(({ mode }) => {
           tryCatchDeoptimization: false,
           unknownGlobalSideEffects: false,
         },
+        // Fix: Ensure React loads before any components that depend on it
+        external: (id) => {
+          // Don't externalize anything in production build
+          return false;
+        },
         output: {
-          manualChunks: (id) => {
-            // Core React vendors - kleinere Chunks für besseres Caching
-            if (id.includes("node_modules/react-dom")) {
-              return "vendor-react-dom";
-            }
-            if (id.includes("node_modules/react") && !id.includes("react-dom")) {
-              return "vendor-react";
-            }
-            // Router separat
-            if (id.includes("node_modules/react-router-dom")) {
-              return "vendor-router";
-            }
-            // UI Komponenten - größere Sammlung weiter aufteilen
-            if (
-              id.includes("node_modules/@radix-ui/react-dialog") ||
-              id.includes("node_modules/@radix-ui/react-tabs") ||
-              id.includes("node_modules/@radix-ui/react-tooltip")
-            ) {
-              return "vendor-radix-overlays";
-            }
-            if (
-              id.includes("node_modules/@radix-ui/react-select") ||
-              id.includes("node_modules/@radix-ui/react-dropdown-menu")
-            ) {
-              return "vendor-radix-inputs";
-            }
-            if (id.includes("node_modules/@radix-ui")) {
-              return "vendor-radix-core";
-            }
-            if (id.includes("node_modules/lucide-react")) {
-              return "vendor-icons";
-            }
-            // Utility Libraries
-            if (
-              id.includes("node_modules/clsx") ||
-              id.includes("node_modules/tailwind-merge") ||
-              id.includes("node_modules/class-variance-authority")
-            ) {
-              return "vendor-utils";
-            }
-            // Data/API libraries
-            if (id.includes("node_modules/zod") || id.includes("node_modules/js-yaml")) {
-              return "vendor-data";
-            }
-            // App-spezifische große Chunks
-            if (id.includes("/src/pages/ChatV2")) {
-              return "page-chat";
-            }
-            if (id.includes("/src/pages/Models")) {
-              return "page-models";
-            }
-            if (id.includes("/src/pages/Settings")) {
-              return "page-settings";
-            }
-            // Async features
-            if (id.includes("/src/components/chat/") || id.includes("/src/components/message/")) {
-              return "features-chat";
-            }
-            // Kleine dependencies ins main bundle für bessere mobile performance
-            return undefined;
+          // Simplified chunking to avoid dependency issues
+          manualChunks: {
+            // Keep React together to avoid loading order issues
+            vendor: ["react", "react-dom", "react-router-dom"],
           },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,
