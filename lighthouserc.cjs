@@ -12,7 +12,7 @@ module.exports = {
       numberOfRuns: 3, // More reliable results with multiple runs
       settings: {
         // Mobile emulation for realistic performance testing
-        preset: "desktop", // Start with desktop, can be changed to mobile
+        preset: "mobile", // Start with desktop, can be changed to mobile
         chromeFlags: ["--no-sandbox", "--disable-dev-shm-usage"],
       },
     },

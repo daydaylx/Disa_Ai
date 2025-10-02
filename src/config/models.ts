@@ -115,8 +115,11 @@ async function getAllowedModelIds(): Promise<string[]> {
 }
 
 /** Lädt und transformiert das OpenRouter-Model-Listing, gefiltert nach erlaubten Modellen. */
-export async function loadModelCatalog(_opts?: CatalogOptions | boolean): Promise<ModelEntry[]> {
-  const [data, allowedIds] = await Promise.all([getRawModels(), getAllowedModelIds()]);
+export async function loadModelCatalog(
+  _opts?: CatalogOptions | boolean,
+  toasts?: any,
+): Promise<ModelEntry[]> {
+  const [data, allowedIds] = await Promise.all([getRawModels(undefined, undefined, toasts), getAllowedModelIds()]);
 
   const list: ORModel[] = Array.isArray(data) ? data : [];
 

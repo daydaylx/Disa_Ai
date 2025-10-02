@@ -1,12 +1,15 @@
 import { Loader2, Search } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
+import { FixedSizeList as List } from 'react-window';
 
 import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
-import { PersonaSelector } from "../components/chat/PersonaSelector";
+import { RoleSelector } from "../components/chat/RoleSelector";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Switch } from "../components/ui/switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { loadModelCatalog, type ModelEntry } from "../config/models";
 import { cn } from "../lib/utils";
@@ -34,7 +37,7 @@ const SAFETY_LABELS: Record<string, string> = {
 type LoadingState = "idle" | "loading" | "success" | "error" | "timeout";
 
 export default function ModelsPage() {
-  const { activePersona, setActivePersona } = useStudio();
+  const { activeRole, setActiveRole } = useStudio();
   const [models, setModels] = useState<ModelEntry[]>([]);
   const [selected, setSelected] = useState<string>(
     getModelFallback() || "meta-llama/llama-3.3-70b-instruct:free",
@@ -43,6 +46,7 @@ export default function ModelsPage() {
   const [loadingState, setLoadingState] = useState<LoadingState>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [filters, setFilters] = useState<string[]>([]);
+  const [showNsfw, setShowNsfw] = useState(false);
   const toasts = useToasts();
 
   const filterOptions = [
@@ -81,7 +85,7 @@ export default function ModelsPage() {
       }, 20000); // 20s globaler Timeout
 
       try {
-        const catalog = await loadModelCatalog();
+        const catalog = await loadModelCatalog(undefined, toasts);
 
         if (!mounted) return;
 
@@ -158,8 +162,12 @@ export default function ModelsPage() {
       });
     }
 
+    if (!showNsfw) {
+      result = result.filter((model) => model.safety !== "strict");
+    }
+
     return result;
-  }, [models, search, filters]);
+  }, [models, search, filters, showNsfw]);
 
   const toggleFilter = (filterId: string) => {
     setFilters((prev) =>
@@ -181,6 +189,85 @@ export default function ModelsPage() {
     });
   };
 
+  const Row = ({ index, style }) => {
+    const model = filtered[index];
+    return (
+      <div style={style}>
+        <Card
+          key={model.id}
+          role="button"
+          tabIndex={0}
+          data-testid="model-card"
+          onClick={() => handleSelect(model)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              handleSelect(model);
+            }
+          }}
+          aria-pressed={selected === model.id}
+          aria-label={`Modell ${model.label || model.id} auswählen`}
+          className={cn(
+            "border-white/20 bg-white/10 backdrop-blur transition-all",
+            selected === model.id
+              ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
+              : "hover:border-white/30 hover:bg-white/20",
+          )}
+        >
+          <CardHeader className="space-y-1 pb-3">
+            <CardTitle className="text-base font-semibold text-white">
+              {model.label || model.id}
+            </CardTitle>
+            <CardDescription className="text-white/70">
+              {model.provider ?? "Unbekannter Anbieter"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-white/60">Kontext</span>
+              <span className="font-medium text-white">{formatContext(model.ctx)}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-white/60">Prompt / Completion</span>
+              <span className="font-medium text-white">
+                {formatPrice(model.pricing?.in)} / {formatPrice(model.pricing?.out)}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary">{SAFETY_LABELS[model.safety] ?? model.safety}</Badge>
+              {model.tags?.slice(0, 3).map((tag) => (
+                <Badge key={tag} variant="outline" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+              {(model.tags?.length ?? 0) > 3 && (
+                <Badge variant="outline" className="text-xs">
+                  +{(model.tags?.length ?? 0) - 3} weitere
+                </Badge>
+              )}
+            </div>
+            {selected === model.id ? (
+              <div
+                className="bg-accent-500/90 inline-flex w-full items-center justify-center rounded-md border border-accent-500 px-3 py-2 text-sm font-semibold text-white"
+                role="status"
+                aria-label="Modell ist aktiv"
+              >
+                ✓ Aktiv
+              </div>
+            ) : (
+              <div
+                className="inline-flex w-full items-center justify-center rounded-md border border-white/20 bg-white/20 px-3 py-2 text-sm font-semibold text-white/90"
+                aria-hidden="true"
+              >
+                Übernehmen
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-1">
@@ -195,7 +282,7 @@ export default function ModelsPage() {
       {/* Rollenauswahl Section */}
       <section className="space-y-2">
         <h2 className="text-sm font-semibold text-white/80">Chat-Rolle</h2>
-        <PersonaSelector selectedPersona={activePersona} onPersonaChange={setActivePersona} />
+        <RoleSelector selectedRole={activeRole} onRoleChange={setActiveRole} />
       </section>
 
       {/* Modell-Suche Section */}
@@ -236,6 +323,10 @@ export default function ModelsPage() {
               </span>
             </button>
           ))}
+          <div className="flex items-center space-x-2">
+            <Switch id="nsfw-toggle" checked={showNsfw} onCheckedChange={setShowNsfw} />
+            <Label htmlFor="nsfw-toggle">18+ anzeigen</Label>
+          </div>
         </div>
       </section>
 
@@ -263,84 +354,27 @@ export default function ModelsPage() {
           </div>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-1 items-center justify-center text-sm text-white/60">
-          {models.length === 0 ? "Keine Modelle verfügbar." : "Keine Modelle gefunden."}
+        <div className="flex flex-1 items-center justify-center text-center text-sm text-white/60">
+          <div>
+            <p className="font-semibold text-white">Keine Modelle gefunden</p>
+            <p className="mt-2">
+              {models.length === 0
+                ? "Es sind keine Modelle verfügbar. Bitte überprüfe deine Verbindung."
+                : "Deine Suche ergab keine Treffer. Versuche es mit anderen Suchbegriffen oder Filtern."}
+            </p>
+          </div>
         </div>
       ) : (
         <div className="flex-1 space-y-3 overflow-y-auto pb-4">
-          {filtered.map((model) => (
-            <Card
-              key={model.id}
-              role="button"
-              tabIndex={0}
-              data-testid="model-card"
-              onClick={() => handleSelect(model)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  handleSelect(model);
-                }
-              }}
-              aria-pressed={selected === model.id}
-              aria-label={`Modell ${model.label || model.id} auswählen`}
-              className={cn(
-                "border-white/20 bg-white/10 backdrop-blur transition-all",
-                selected === model.id
-                  ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
-                  : "hover:border-white/30 hover:bg-white/20",
-              )}
-            >
-              <CardHeader className="space-y-1 pb-3">
-                <CardTitle className="text-base font-semibold text-white">
-                  {model.label || model.id}
-                </CardTitle>
-                <CardDescription className="text-white/70">
-                  {model.provider ?? "Unbekannter Anbieter"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-white/60">Kontext</span>
-                  <span className="font-medium text-white">{formatContext(model.ctx)}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-white/60">Prompt / Completion</span>
-                  <span className="font-medium text-white">
-                    {formatPrice(model.pricing?.in)} / {formatPrice(model.pricing?.out)}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">{SAFETY_LABELS[model.safety] ?? model.safety}</Badge>
-                  {model.tags?.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {(model.tags?.length ?? 0) > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{(model.tags?.length ?? 0) - 3} weitere
-                    </Badge>
-                  )}
-                </div>
-                {selected === model.id ? (
-                  <div
-                    className="bg-accent-500/90 inline-flex w-full items-center justify-center rounded-md border border-accent-500 px-3 py-2 text-sm font-semibold text-white"
-                    role="status"
-                    aria-label="Modell ist aktiv"
-                  >
-                    ✓ Aktiv
-                  </div>
-                ) : (
-                  <div
-                    className="inline-flex w-full items-center justify-center rounded-md border border-white/20 bg-white/20 px-3 py-2 text-sm font-semibold text-white/90"
-                    aria-hidden="true"
-                  >
-                    Auswählen
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+          <List
+            height={600} // This should be dynamic based on the container height
+            itemCount={filtered.length}
+            itemSize={250} // This should be the estimated height of a card
+            width="100%"
+            itemData={filtered}
+          >
+            {Row}
+          </List>
         </div>
       )}
     </div>

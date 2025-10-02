@@ -1,38 +1,10 @@
-import { Bot, Compass, Cpu, MessageSquare, PlusCircle, Settings } from "lucide-react";
+import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { Button } from "../../components/ui";
 import { useStudio } from "../state/StudioContext";
-
-interface NavigationItem {
-  to: string;
-  label: string;
-  icon: React.ReactNode;
-  testId: string;
-}
-
-const navigationItems: NavigationItem[] = [
-  {
-    to: "/chat",
-    label: "Chat",
-    icon: <MessageSquare className="h-5 w-5" />,
-    testId: "nav.chat",
-  },
-  {
-    to: "/models",
-    label: "Modelle",
-    icon: <Cpu className="h-5 w-5" />,
-    testId: "nav.models",
-  },
-  {
-    to: "/settings",
-    label: "Einstellungen",
-    icon: <Settings className="h-5 w-5" />,
-    testId: "nav.settings",
-  },
-];
 
 function Header() {
   const { activePersona } = useStudio();
@@ -89,33 +61,27 @@ function Header() {
   );
 }
 
-function BottomTabs() {
+function BottomNav() {
+  // TODO: Change to /roles when the route is available
+  const navigationItems = [
+    { to: '/chat', label: 'Chat', icon: <MessageSquare /> },
+    { to: '/models', label: 'Rollen', icon: <Users /> },
+    { to: '/settings', label: 'Einstellungen', icon: <Settings /> },
+  ];
+
   return (
-    <nav
-      className="relative z-10 mx-auto mt-6 w-full max-w-xs overflow-hidden rounded-3xl border border-white/10 bg-white/5 px-2 py-3 text-[13px] text-white/70 shadow-[0_25px_65px_rgba(15,23,42,0.55)] backdrop-blur-xl"
-      aria-label="Navigation"
-      style={{ marginBottom: "var(--inset-b)" }}
-    >
-      <div className="grid grid-cols-3 gap-2">
-        {navigationItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            data-testid={item.testId}
-            aria-label={`Zu ${item.label} wechseln`}
-            className={({ isActive }) =>
-              `flex min-h-[48px] flex-col items-center gap-1 rounded-2xl px-3 py-3 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-black ${
-                isActive
-                  ? "bg-gradient-to-r from-fuchsia-500/70 via-purple-500/70 to-sky-500/70 text-white shadow-[0_12px_30px_rgba(168,85,247,0.35)]"
-                  : "hover:bg-white/10 hover:text-white/90"
-              }`
-            }
-          >
-            <span className="h-5 w-5">{item.icon}</span>
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
-      </div>
+    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border h-16 flex justify-around items-center pb-safe-bottom">
+      {navigationItems.map(item => (
+        <NavLink
+          key={item.to}
+          to={item.to}
+          className="flex flex-col items-center text-muted-foreground"
+          style={({ isActive }) => ({ color: isActive ? 'hsl(var(--primary))' : '' })}
+        >
+          {item.icon}
+          <span>{item.label}</span>
+        </NavLink>
+      ))}
     </nav>
   );
 }
@@ -131,12 +97,12 @@ export function AppShell() {
 
       <Header />
 
-      <main className="relative z-10 flex-1 overflow-hidden px-4">
+      <main className="relative z-10 flex-1 overflow-hidden px-4 pb-16">
         <Outlet />
       </main>
 
       <NetworkBanner />
-      <BottomTabs />
+      <BottomNav />
 
       {/* Footer mit Build-Info für Issue #81 */}
       <footer className="relative z-10 px-4 pb-2">

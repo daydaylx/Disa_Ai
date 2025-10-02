@@ -1,108 +1,102 @@
 import { Bot, ChevronDown, Search, User } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import type { Persona } from "../../data/personas";
-import { loadPersonas } from "../../data/personas";
-import { useSettings } from "../../hooks/useSettings";
+import type { Role } from "../../data/roles";
+import { getAllRoles, loadRoles } from "../../data/roles";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
 
-interface PersonaSelectorProps {
-  selectedPersona: Persona | null;
-  onPersonaChange: (persona: Persona | null) => void;
+interface RoleSelectorProps {
+  selectedRole: Role | null;
+  onRoleChange: (role: Role | null) => void;
   className?: string;
 }
 
-export function PersonaSelector({
-  selectedPersona,
-  onPersonaChange,
+export function RoleSelector({
+  selectedRole,
+  onRoleChange,
   className,
-}: PersonaSelectorProps) {
+}: RoleSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [allPersonas, setAllPersonas] = useState<Persona[]>([]);
-  const [isLoadingPersonas, setIsLoadingPersonas] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [allRoles, setAllRoles] = useState<Role[]>([]);
+  const [isLoadingRoles, setIsLoadingRoles] = useState(true);
 
-  const { settings } = useSettings();
+  // This should come from settings
+  const settings = { showNSFWContent: false };
 
-  // Helper function to check if persona contains NSFW content (wrapped in useCallback)
-  const isNSFWPersona = useCallback((persona: Persona): boolean => {
-    const nsfwTags = ["adult", "nsfw", "sexuality"];
-    const nsfwCategories = ["Erwachsene"];
-
+  // Helper function to check if role contains NSFW content (wrapped in useCallback)
+  const isNSFWRole = useCallback((role: Role): boolean => {
+    const nsfwCategories = ["erwachsene"];
+    const nsfwTags = ["adult", "nsfw"];
     return (
-      nsfwCategories.includes(persona.category || "") ||
-      persona.tags?.some((tag) => nsfwTags.includes(tag.toLowerCase())) ||
+      nsfwCategories.includes(role.category?.toLowerCase() || "") ||
+      role.tags?.some((tag) => nsfwTags.includes(tag.toLowerCase())) ||
       false
     );
   }, []);
 
-  // Load personas asynchronously
+  // Load roles asynchronously
   useEffect(() => {
-    const loadAllPersonas = async () => {
+    const loadAllRoles = async () => {
       try {
-        setIsLoadingPersonas(true);
-        const personas = await loadPersonas();
-        setAllPersonas(personas);
+        setIsLoadingRoles(true);
+        const roles = await loadRoles();
+        setAllRoles(roles);
       } catch (error) {
-        console.warn("Failed to load external personas, using defaults:", error);
-        // Fallback zu den Standard-Personas wenn das Laden fehlschlägt
-        const { getPersonas } = await import("../../data/personas");
-        setAllPersonas(getPersonas());
+        console.warn("Failed to load external roles, using defaults:", error);
+        // Fallback to default roles if loading fails
+        setAllRoles(getAllRoles());
       } finally {
-        setIsLoadingPersonas(false);
+        setIsLoadingRoles(false);
       }
     };
 
-    void loadAllPersonas();
+    void loadAllRoles();
   }, []);
 
-  // Categories dynamisch basierend auf geladenen Personas berechnen
+  // Categories are calculated dynamically based on loaded roles
   const categories = useMemo(() => {
-    const categorySet = new Set(
-      allPersonas.map((p) => p.category).filter((c): c is string => Boolean(c)),
+    const cats = new Set(
+      allRoles.map((p) => p.category).filter((c): c is string => Boolean(c)),
     );
-    return Array.from(categorySet);
-  }, [allPersonas]);
+    return Array.from(cats);
+  }, [allRoles]);
 
-  const filteredPersonas = useMemo(() => {
-    let personas = allPersonas;
+  const filteredRoles = useMemo(() => {
+    let roles = allRoles;
 
-    // Filter NSFW content based on user settings
+    // Filter by NSFW content
     if (!settings.showNSFWContent) {
-      personas = personas.filter((p) => !isNSFWPersona(p));
+      roles = roles.filter((p) => !isNSFWRole(p));
     }
 
     // Filter by category
     if (selectedCategory !== "all") {
-      personas = personas.filter((p) => p.category === selectedCategory);
+      roles = roles.filter((p) => p.category === selectedCategory);
     }
 
-    // Filter by search
+    // Filter by search term
     if (search.trim()) {
-      const searchTerm = search.toLowerCase();
-      personas = personas.filter(
+      roles = roles.filter(
         (p) =>
-          p.name.toLowerCase().includes(searchTerm) ||
-          p.systemPrompt.toLowerCase().includes(searchTerm) ||
-          p.tags?.some((tag) => tag.toLowerCase().includes(searchTerm)) ||
-          p.category?.toLowerCase().includes(searchTerm),
+          p.name.toLowerCase().includes(search.toLowerCase()) ||
+          p.description?.toLowerCase().includes(search.toLowerCase()),
       );
     }
 
-    return personas;
-  }, [allPersonas, selectedCategory, search, settings.showNSFWContent, isNSFWPersona]);
+    return roles;
+  }, [allRoles, selectedCategory, search, settings.showNSFWContent, isNSFWRole]);
 
-  const handlePersonaSelect = (persona: Persona) => {
-    onPersonaChange(persona);
+  const handleRoleSelect = (role: Role) => {
+    onRoleChange(role);
     setIsOpen(false);
-    setSearch("");
   };
 
-  const handleClearPersona = () => {
-    onPersonaChange(null);
+  const handleClearRole = () => {
+    onRoleChange(null);
     setIsOpen(false);
   };
 
@@ -122,19 +116,19 @@ export function PersonaSelector({
           <div
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-full",
-              selectedPersona ? "bg-accent-500/20" : "bg-white/10",
+              selectedRole ? "bg-accent-500/20" : "bg-white/10",
             )}
           >
-            {selectedPersona ? (
+            {selectedRole ? (
               <Bot className="text-accent-400 h-5 w-5" />
             ) : (
               <User className="h-5 w-5 text-white/60" />
             )}
           </div>
           <div className="flex flex-col items-start text-left">
-            <span className="font-semibold text-white">{selectedPersona?.name || "Standard"}</span>
+            <span className="font-semibold text-white">{selectedRole?.name || "Standard"}</span>
             <span className="text-xs text-white/50">
-              {selectedPersona?.category || "Keine Rolle gewählt"}
+              {selectedRole?.category || "Keine Rolle gewählt"}
             </span>
           </div>
         </div>
@@ -146,7 +140,7 @@ export function PersonaSelector({
         />
       </button>
 
-      {/* Inline Rollen-Auswahl - Nahtlos integriert */}
+      {/* Inline Role Selection - Seamlessly integrated */}
       {isOpen && (
         <div className="mt-4 space-y-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
           {/* Search Bar */}
@@ -194,10 +188,10 @@ export function PersonaSelector({
           </div>
 
           {/* Clear Selection Option */}
-          {selectedPersona && (
+          {selectedRole && (
             <div className="border-t border-white/10 px-4 pt-4">
               <button
-                onClick={handleClearPersona}
+                onClick={handleClearRole}
                 className="tap-target flex w-full items-center gap-3 rounded-xl bg-white/5 p-3 transition-colors hover:bg-white/10"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
@@ -211,14 +205,14 @@ export function PersonaSelector({
             </div>
           )}
 
-          {/* Persona List - Compact & Scrollable */}
+          {/* Role List - Compact & Scrollable */}
           <div className="max-h-96 overflow-y-auto px-4 pb-4">
-            {isLoadingPersonas ? (
+            {isLoadingRoles ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <div className="mb-2 text-lg text-white/40">⏳</div>
                 <div className="text-sm text-white/60">Lade Rollen...</div>
               </div>
-            ) : filteredPersonas.length === 0 ? (
+            ) : filteredRoles.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <div className="mb-2 text-lg text-white/40">🔍</div>
                 <div className="text-sm text-white/60">Keine Rollen gefunden</div>
@@ -226,13 +220,13 @@ export function PersonaSelector({
               </div>
             ) : (
               <div className="space-y-2">
-                {filteredPersonas.map((persona) => (
+                {filteredRoles.map((role) => (
                   <button
-                    key={persona.id}
-                    onClick={() => handlePersonaSelect(persona)}
+                    key={role.id}
+                    onClick={() => handleRoleSelect(role)}
                     className={cn(
                       "tap-target relative flex w-full items-center gap-3 rounded-xl p-3 text-left transition-all",
-                      selectedPersona?.id === persona.id
+                      selectedRole?.id === role.id
                         ? "bg-accent-500/20 ring-accent-500/50 ring-1"
                         : "hover:bg-white/10",
                     )}
@@ -240,40 +234,40 @@ export function PersonaSelector({
                     <div
                       className={cn(
                         "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
-                        selectedPersona?.id === persona.id ? "bg-accent-500/30" : "bg-white/10",
+                        selectedRole?.id === role.id ? "bg-accent-500/30" : "bg-white/10",
                       )}
                     >
                       <Bot
                         className={cn(
                           "h-5 w-5",
-                          selectedPersona?.id === persona.id ? "text-accent-400" : "text-white/60",
+                          selectedRole?.id === role.id ? "text-accent-400" : "text-white/60",
                         )}
                       />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <span className="truncate text-sm font-medium text-white">
-                          {persona.name}
+                          {role.name}
                         </span>
-                        {selectedPersona?.id === persona.id && (
+                        {selectedRole?.id === role.id && (
                           <span className="text-accent-400 text-sm">✓</span>
                         )}
                       </div>
                       <div className="mt-1 flex items-center gap-2">
-                        {persona.category && (
+                        {role.category && (
                           <Badge
                             variant="secondary"
                             className={cn(
                               "px-2 py-0.5 text-xs",
-                              persona.category === "Erwachsene"
+                              role.category === "Erwachsene"
                                 ? "border-pink-500/30 bg-pink-500/20 text-pink-200"
                                 : "border-white/10 bg-white/5 text-white/50",
                             )}
                           >
-                            {persona.category}
+                            {role.category}
                           </Badge>
                         )}
-                        {persona.tags?.includes("adult") && (
+                        {role.tags?.includes("adult") && (
                           <Badge
                             variant="outline"
                             className="border-pink-500/50 bg-pink-500/10 px-1.5 py-0.5 text-xs text-pink-300"

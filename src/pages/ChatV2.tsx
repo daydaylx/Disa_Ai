@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
+import { StartTiles } from "../components/chat/StartTiles";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import { useChat } from "../hooks/useChat";
@@ -29,7 +30,7 @@ export default function ChatPageV2() {
   const [isQuickstartLoading, setIsQuickstartLoading] = useState(false);
   const activeQuickstartRef = useRef<ActiveQuickstart | null>(null);
   const toasts = useToasts();
-  const { activePersona, typographyScale, borderRadius, accentColor } = useStudio();
+  const { activeRole, setActiveRole, typographyScale, borderRadius, accentColor } = useStudio();
   const isMountedRef = useRef(true);
 
   const {
@@ -55,24 +56,24 @@ export default function ChatPageV2() {
     },
   });
 
-  // Track if persona system prompt has been added to prevent re-adding on chat reset
-  const [personaInitialized, setPersonaInitialized] = useState<string | null>(null);
+  // Track if role system prompt has been added to prevent re-adding on chat reset
+  const [roleInitialized, setRoleInitialized] = useState<string | null>(null);
 
   useEffect(() => {
-    // Only add system prompt when persona changes, not when chat is reset
-    if (activePersona && activePersona.id !== personaInitialized && messages.length === 0) {
-      // Add system message for persona
+    // Only add system prompt when role changes, not when chat is reset
+    if (activeRole && activeRole.id !== roleInitialized && messages.length === 0) {
+      // Add system message for role
       void append({
         role: "system",
-        content: activePersona.systemPrompt,
+        content: activeRole.systemPrompt,
       });
-      setPersonaInitialized(activePersona.id);
+      setRoleInitialized(activeRole.id);
     }
-    // Reset tracking when persona changes
-    else if (activePersona?.id !== personaInitialized) {
-      setPersonaInitialized(null);
+    // Reset tracking when role changes
+    else if (activeRole?.id !== roleInitialized) {
+      setRoleInitialized(null);
     }
-  }, [activePersona, append, personaInitialized, messages.length]);
+  }, [activeRole, append, roleInitialized, messages.length]);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--font-scale", `${typographyScale}`);
@@ -224,6 +225,17 @@ export default function ChatPageV2() {
     void reload();
   };
 
+  const handleTileClick = (action: any) => {
+    if (action.type === "new-chat") {
+      // Already in a new chat, do nothing
+    } else if (action.type === "set-role") {
+      // Find the role and set it
+      // This is a simplified implementation. In a real app, you would fetch the role from a store.
+      const role = { id: action.role, name: action.role, systemPrompt: `You are a ${action.role}` };
+      setActiveRole(role);
+    }
+  };
+
   // Calculate token count from all messages (currently unused but kept for future features)
   const _tokenCount = messages.reduce((acc, msg) => acc + msg.content.length, 0);
 
@@ -234,15 +246,19 @@ export default function ChatPageV2() {
         <section className="flex-1 overflow-hidden" aria-label="Chat History">
           <div className="h-full px-1">
             <div className="mx-auto h-full w-full max-w-md">
-              <ChatList
-                messages={messages}
-                onCopy={handleCopy}
-                onRetry={handleRetry}
-                onQuickstartFlow={handleQuickstartFlow}
-                isLoading={isLoading}
-                isQuickstartLoading={isQuickstartLoading}
-                currentModel={model?.id}
-              />
+              {messages.length === 0 ? (
+                <StartTiles onTileClick={handleTileClick} />
+              ) : (
+                <ChatList
+                  messages={messages}
+                  onCopy={handleCopy}
+                  onRetry={handleRetry}
+                  onQuickstartFlow={handleQuickstartFlow}
+                  isLoading={isLoading}
+                  isQuickstartLoading={isQuickstartLoading}
+                  currentModel={model?.id}
+                />
+              )}
             </div>
           </div>
         </section>

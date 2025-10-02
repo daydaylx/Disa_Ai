@@ -42,6 +42,7 @@ const DEFAULT_TTL_MS = 20 * 60 * 1000; // 20 Minuten
 export async function getRawModels(
   explicitKey?: string,
   ttlMs = DEFAULT_TTL_MS,
+  toasts?: any,
 ): Promise<ORModel[]> {
   try {
     const tsRaw = localStorage.getItem(LS_MODELS_TS);
@@ -76,6 +77,19 @@ export async function getRawModels(
   } catch (error) {
     // Log but don't throw - return empty array for graceful degradation
     console.warn("Failed to fetch models:", mapError(error));
+    if (toasts) {
+      toasts.push({
+        kind: "error",
+        title: "Fehler beim Laden der Modelle",
+        message: "Die Modelle konnten nicht geladen werden. Bitte versuche es erneut.",
+        actions: [
+          {
+            label: "Erneut versuchen",
+            onClick: () => getRawModels(explicitKey, ttlMs, toasts),
+          },
+        ],
+      });
+    }
     return [];
   }
 }

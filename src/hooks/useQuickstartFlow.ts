@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
 import type { QuickstartAction } from "../config/quickstarts";
-import { getPersonaById } from "../data/personas";
+import { getRoleById } from "../data/roles";
 import { trackQuickstartClicked } from "../lib/analytics/index";
 
 export interface UseQuickstartFlowOptions {
@@ -30,9 +30,9 @@ export function useQuickstartFlow({ onStartFlow, currentModel }: UseQuickstartFl
 
         // 2. Set persona if specified
         if (action.persona) {
-          const persona = getPersonaById(action.persona);
-          if (persona) {
-            setActivePersona(persona);
+          const role = getRoleById(action.persona);
+          if (role) {
+            setActivePersona(role);
           }
         }
 

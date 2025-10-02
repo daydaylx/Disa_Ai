@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
+import { ErrorBoundary } from "../components/ErrorBoundary";
 import { RouteLoadingFallback } from "../components/RouteLoadingFallback";
 import { AppShell } from "./layouts/AppShell";
 
@@ -18,33 +19,41 @@ const router = createBrowserRouter(
         {
           path: "/chat",
           element: (
-            <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
-              <ChatPage />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
+                <ChatPage />
+              </Suspense>
+            </ErrorBoundary>
           ),
         },
         {
           path: "/models",
           element: (
-            <Suspense fallback={<RouteLoadingFallback message="Lädt Modellkatalog..." />}>
-              <ModelsPage />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<RouteLoadingFallback message="Lädt Modellkatalog..." />}>
+                <ModelsPage />
+              </Suspense>
+            </ErrorBoundary>
           ),
         },
         {
           path: "/settings",
           element: (
-            <Suspense fallback={<RouteLoadingFallback message="Lädt Einstellungen..." />}>
-              <SettingsPage />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<RouteLoadingFallback message="Lädt Einstellungen..." />}>
+                <SettingsPage />
+              </Suspense>
+            </ErrorBoundary>
           ),
         },
         {
           index: true,
           element: (
-            <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
-              <ChatPage />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
+                <ChatPage />
+              </Suspense>
+            </ErrorBoundary>
           ),
         },
         {

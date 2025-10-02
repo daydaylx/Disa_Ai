@@ -1,4 +1,4 @@
-export interface Persona {
+export interface Role {
   id: string;
   name: string;
   systemPrompt: string;
@@ -12,7 +12,7 @@ export interface Persona {
   };
 }
 
-export const defaultPersonas: Persona[] = [
+export const defaultRoles: Role[] = [
   {
     id: "neutral",
     name: "Neutral Standard",
@@ -242,13 +242,13 @@ export const defaultPersonas: Persona[] = [
 ];
 
 // Helper functions
-export async function loadPersonas(): Promise<Persona[]> {
-  // Lade externe Personas aus roleStore (persona.json)
+export async function loadRoles(): Promise<Role[]> {
+  // Lade externe Rollen aus roleStore (persona.json)
   const { fetchRoleTemplates } = await import("../config/roleStore");
   const externalRoles = await fetchRoleTemplates();
 
-  // Konvertiere externe Rollen zu Persona-Format
-  const externalPersonas: Persona[] = externalRoles.map((role: any) => ({
+  // Konvertiere externe Rollen zu Role-Format
+  const externalRolesFormatted: Role[] = externalRoles.map((role: any) => ({
     id: role.id,
     name: role.name,
     systemPrompt: role.system || "",
@@ -262,11 +262,11 @@ export async function loadPersonas(): Promise<Persona[]> {
     },
   }));
 
-  return [...defaultPersonas, ...externalPersonas];
+  return [...defaultRoles, ...externalRolesFormatted];
 }
 
-export function getPersonas(): Persona[] {
-  return defaultPersonas;
+export function getRoles(): Role[] {
+  return defaultRoles;
 }
 
 // Kategorisiert externe Rollen basierend auf Tags/Namen
@@ -305,17 +305,17 @@ function getAccentColorForRole(role: { name: string; tags?: string[] }): string 
   return "hsl(200, 100%, 50%)"; // Default Blau
 }
 
-export function getPersonaById(id: string): Persona | undefined {
-  return defaultPersonas.find((p) => p.id === id);
+export function getRoleById(id: string): Role | undefined {
+  return defaultRoles.find((p) => p.id === id);
 }
 
-export function getPersonasByCategory(category: string): Persona[] {
-  return defaultPersonas.filter((p) => p.category === category);
+export function getRolesByCategory(category: string): Role[] {
+  return defaultRoles.filter((p) => p.category === category);
 }
 
 export function getCategories(): string[] {
   const categories = new Set(
-    defaultPersonas.map((p) => p.category).filter((c): c is string => Boolean(c)),
+    defaultRoles.map((p) => p.category).filter((c): c is string => Boolean(c)),
   );
   return Array.from(categories);
 }
