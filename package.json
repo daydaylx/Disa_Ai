@@ -36,7 +36,8 @@
     "test:visual": "playwright test --config=playwright.visual.config.ts",
     "test:visual:update": "playwright test --config=playwright.visual.config.ts --update-snapshots",
     "lh": "lhci autorun --config=./lighthouserc.cjs",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "playwright": "playwright"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

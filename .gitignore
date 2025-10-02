@@ -104,3 +104,4 @@ playwright-visual-report/
 
 # Audit artifacts (cleanup tracking)
 .audit/
+autopilot.log
