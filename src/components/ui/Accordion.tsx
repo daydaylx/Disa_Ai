@@ -56,7 +56,9 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
         return (
           <div key={it.id ?? i} className="mb-2">
             <button
-              ref={(el) => (headerRefs.current[i] = el)}
+              ref={(el) => {
+                headerRefs.current[i] = el;
+              }}
               id={hid}
               aria-controls={pid}
               aria-expanded={isOpen}

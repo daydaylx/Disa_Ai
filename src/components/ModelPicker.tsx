@@ -77,7 +77,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
   const [all, setAll] = React.useState<ModelEntry[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
   const [q, setQ] = React.useState("");
-  const searchDebounce = React.useRef<number>();
+  const searchDebounce = React.useRef<number | undefined>(undefined);
   const [loading, setLoading] = React.useState(true);
   const [provider, setProvider] = React.useState<string>("all");
   const [onlyFree, setOnlyFree] = React.useState<boolean>(() => !getApiKey());

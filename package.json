@@ -64,7 +64,7 @@
     "js-yaml": "^4.1.0",
     "lucide-react": "^0.544.0",
     "nanoid": "^5.1.6",
-    "react": "^18.3.1",
+    "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.3",
     "react-window": "^2.2.0",
@@ -83,7 +83,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.3.0",
-    "@types/react": "18.3.12",
+    "@types/react": "19.2.0",
     "@types/react-dom": "19.2.0",
     "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@typescript-eslint/parser": "^8.45.0",
@@ -119,9 +119,9 @@
     "node": ">=20.14.0 <24"
   },
   "buildInfo": {
-    "buildId": "v1.0.0-4d4190c",
-    "buildTime": "2025-10-02T16:45:18.644Z",
-    "gitSha": "4d4190cf0e6f075dae094b4ab3661bff3f54855b",
-    "gitBranch": "refactor/router-mode"
+    "buildId": "v1.0.0-f9d8eb5",
+    "buildTime": "2025-10-02T22:50:03.344Z",
+    "gitSha": "f9d8eb5c39f287a3e2ed57601e8dcd88f45841a9",
+    "gitBranch": "autopilot/18182412982"
   }
 }
