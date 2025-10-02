@@ -2,7 +2,11 @@ import * as React from "react";
 
 import { Skeleton } from "./Loader";
 
-export const PageSkeleton: React.FC = () => {
+interface PageSkeletonProps {
+  message?: string;
+}
+
+export const PageSkeleton: React.FC<PageSkeletonProps> = ({ message }) => {
   return (
     <div className="mx-auto w-full max-w-5xl px-3 py-4">
       <div className="flex items-center justify-between">
@@ -14,6 +18,7 @@ export const PageSkeleton: React.FC = () => {
         <Skeleton className="h-4 w-[80%]" />
         <Skeleton className="h-4 w-[65%]" />
       </div>
+      {message ? <p className="mt-6 text-sm text-white/60">{message}</p> : null}
     </div>
   );
 };

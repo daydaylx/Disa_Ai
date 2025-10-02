@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 
 import type { Role } from "../../data/roles";
-import { getAllRoles } from "../../data/roles";
+import { getRoles } from "../../data/roles";
 
 interface StudioContextType {
   roles: Role[];
@@ -18,11 +18,30 @@ interface StudioContextType {
 const StudioContext = createContext<StudioContextType | undefined>(undefined);
 
 export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [roles] = useState<Role[]>(getAllRoles());
-  const [activeRole, setActiveRole] = useState<Role | null>(null);
+  const [roles] = useState<Role[]>(() => getRoles());
+  const [activeRole, setActiveRoleState] = useState<Role | null>(null);
   const [typographyScale, setTypographyScale] = useState(1);
   const [borderRadius, setBorderRadius] = useState(0.5);
   const [accentColor, setAccentColor] = useState("hsl(var(--primary))");
+
+  const setActiveRole = useCallback(
+    (role: Role | null) => {
+      setActiveRoleState(role);
+
+      if (!role) {
+        setTypographyScale(1);
+        setBorderRadius(0.5);
+        setAccentColor("hsl(var(--primary))");
+        return;
+      }
+
+      const { typographyScale: scale, borderRadius: radius, accentColor: color } = role.styleHints;
+      setTypographyScale(scale ?? 1);
+      setBorderRadius(radius ?? 0.5);
+      setAccentColor(color ?? "hsl(var(--primary))");
+    },
+    [setAccentColor, setBorderRadius, setTypographyScale],
+  );
 
   const value = {
     roles,

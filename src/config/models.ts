@@ -119,7 +119,10 @@ export async function loadModelCatalog(
   _opts?: CatalogOptions | boolean,
   toasts?: any,
 ): Promise<ModelEntry[]> {
-  const [data, allowedIds] = await Promise.all([getRawModels(undefined, undefined, toasts), getAllowedModelIds()]);
+  const [data, allowedIds] = await Promise.all([
+    getRawModels(undefined, undefined, toasts),
+    getAllowedModelIds(),
+  ]);
 
   const list: ORModel[] = Array.isArray(data) ? data : [];
 

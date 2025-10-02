@@ -2,7 +2,7 @@ import { Bot, ChevronDown, Search, User } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Role } from "../../data/roles";
-import { getAllRoles, loadRoles } from "../../data/roles";
+import { getRoles, loadRoles } from "../../data/roles";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
@@ -13,16 +13,12 @@ interface RoleSelectorProps {
   className?: string;
 }
 
-export function RoleSelector({
-  selectedRole,
-  onRoleChange,
-  className,
-}: RoleSelectorProps) {
+export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [allRoles, setAllRoles] = useState<Role[]>([]);
-  const [isLoadingRoles, setIsLoadingRoles] = useState(true);
+  const [allRoles, setAllRoles] = useState<Role[]>(() => getRoles());
+  const [isLoadingRoles, setIsLoadingRoles] = useState(false);
 
   // This should come from settings
   const settings = { showNSFWContent: false };
@@ -48,7 +44,7 @@ export function RoleSelector({
       } catch (error) {
         console.warn("Failed to load external roles, using defaults:", error);
         // Fallback to default roles if loading fails
-        setAllRoles(getAllRoles());
+        setAllRoles(getRoles());
       } finally {
         setIsLoadingRoles(false);
       }
@@ -59,9 +55,7 @@ export function RoleSelector({
 
   // Categories are calculated dynamically based on loaded roles
   const categories = useMemo(() => {
-    const cats = new Set(
-      allRoles.map((p) => p.category).filter((c): c is string => Boolean(c)),
-    );
+    const cats = new Set(allRoles.map((p) => p.category).filter((c): c is string => Boolean(c)));
     return Array.from(cats);
   }, [allRoles]);
 
@@ -80,11 +74,12 @@ export function RoleSelector({
 
     // Filter by search term
     if (search.trim()) {
-      roles = roles.filter(
-        (p) =>
-          p.name.toLowerCase().includes(search.toLowerCase()) ||
-          p.description?.toLowerCase().includes(search.toLowerCase()),
-      );
+      const term = search.toLowerCase();
+      roles = roles.filter((p) => {
+        const nameMatch = p.name.toLowerCase().includes(term);
+        const descriptionMatch = p.description?.toLowerCase().includes(term) ?? false;
+        return nameMatch || descriptionMatch;
+      });
     }
 
     return roles;
@@ -246,9 +241,7 @@ export function RoleSelector({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate text-sm font-medium text-white">
-                          {role.name}
-                        </span>
+                        <span className="truncate text-sm font-medium text-white">{role.name}</span>
                         {selectedRole?.id === role.id && (
                           <span className="text-accent-400 text-sm">✓</span>
                         )}
