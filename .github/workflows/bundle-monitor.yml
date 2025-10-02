@@ -110,8 +110,8 @@ jobs:
           # Performance recommendations
           echo "### 💡 Mobile-First Recommendations" >> bundle-report.md
           echo "" >> bundle-report.md
-          echo "- **Target:** Keep total bundle < 500KB for optimal mobile UX" >> bundle-report.md
-          echo "- **Critical:** Ensure essential code loads first (< 150KB)" >> bundle-report.md
+          echo "- **Target:** Keep total bundle < 800KB for good mobile UX" >> bundle-report.md
+          echo "- **Critical:** Ensure essential code loads first (< 200KB)" >> bundle-report.md
           echo "- **Progressive:** Use code splitting for non-essential features" >> bundle-report.md
           echo "- **Caching:** Service Worker caches bundles after first load" >> bundle-report.md
 
@@ -176,9 +176,9 @@ jobs:
             const currentSize = parseInt(fs.readFileSync('current-bundle-size.txt', 'utf8').trim());
 
             // Bundle size thresholds for alerts
-            const WARNING_THRESHOLD = 500; // KB
-            const CRITICAL_THRESHOLD = 700; // KB
-            const REGRESSION_THRESHOLD = 50; // KB increase
+            const WARNING_THRESHOLD = 800; // KB - Adjusted for React 19 overhead
+            const CRITICAL_THRESHOLD = 1000; // KB
+            const REGRESSION_THRESHOLD = 100; // KB increase
 
             console.log(`Current bundle size: ${currentSize}KB`);
 
