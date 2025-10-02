@@ -10,12 +10,8 @@ gh api repos/:owner/:repo/branches/main/protection \
   --field required_status_checks='{
     "strict": true,
     "contexts": [
-      "setup",
-      "lint",
-      "typecheck",
-      "unit-tests",
-      "build",
-      "e2e-tests"
+      "verify",
+      "Analyze (JS/TS)"
     ]
   }' \
   --field enforce_admins=true \

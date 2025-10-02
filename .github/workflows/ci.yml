@@ -1,12 +1,24 @@
 name: CI
 on: [push, pull_request]
 jobs:
-  e2e:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '18' }
-      - run: npm ci || pnpm i
-      - run: npx playwright install --with-deps
-      - run: npx playwright test
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run lint
+        run: npm run lint
+      - name: Run typecheck
+        run: npm run typecheck
+      - name: Run unit tests
+        run: npm run test:unit
+      - name: Run build
+        run: npm run build
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+      - name: Run e2e tests
+        run: npm run test:e2e
