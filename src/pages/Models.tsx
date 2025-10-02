@@ -1,6 +1,6 @@
 import { Loader2, Search } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-import { FixedSizeList as List } from 'react-window';
+import { FixedSizeList as List } from "react-window";
 
 import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";

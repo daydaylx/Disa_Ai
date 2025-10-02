@@ -64,19 +64,19 @@ function Header() {
 function BottomNav() {
   // TODO: Change to /roles when the route is available
   const navigationItems = [
-    { to: '/chat', label: 'Chat', icon: <MessageSquare /> },
-    { to: '/models', label: 'Rollen', icon: <Users /> },
-    { to: '/settings', label: 'Einstellungen', icon: <Settings /> },
+    { to: "/chat", label: "Chat", icon: <MessageSquare /> },
+    { to: "/models", label: "Rollen", icon: <Users /> },
+    { to: "/settings", label: "Einstellungen", icon: <Settings /> },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border h-16 flex justify-around items-center pb-safe-bottom">
-      {navigationItems.map(item => (
+    <nav className="bg-background border-border pb-safe-bottom fixed bottom-0 left-0 right-0 flex h-16 items-center justify-around border-t">
+      {navigationItems.map((item) => (
         <NavLink
           key={item.to}
           to={item.to}
-          className="flex flex-col items-center text-muted-foreground"
-          style={({ isActive }) => ({ color: isActive ? 'hsl(var(--primary))' : '' })}
+          className="text-muted-foreground flex flex-col items-center"
+          style={({ isActive }) => ({ color: isActive ? "hsl(var(--primary))" : "" })}
         >
           {item.icon}
           <span>{item.label}</span>

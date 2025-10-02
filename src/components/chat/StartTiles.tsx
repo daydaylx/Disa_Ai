@@ -1,4 +1,5 @@
-import { MessageSquare, Code, Book } from "lucide-react";
+import { Book, Code, MessageSquare } from "lucide-react";
+
 import { GlassTile } from "../ui/GlassTile";
 
 const startTiles = [

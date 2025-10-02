@@ -13,11 +13,7 @@ interface RoleSelectorProps {
   className?: string;
 }
 
-export function RoleSelector({
-  selectedRole,
-  onRoleChange,
-  className,
-}: RoleSelectorProps) {
+export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -59,9 +55,7 @@ export function RoleSelector({
 
   // Categories are calculated dynamically based on loaded roles
   const categories = useMemo(() => {
-    const cats = new Set(
-      allRoles.map((p) => p.category).filter((c): c is string => Boolean(c)),
-    );
+    const cats = new Set(allRoles.map((p) => p.category).filter((c): c is string => Boolean(c)));
     return Array.from(cats);
   }, [allRoles]);
 
@@ -246,9 +240,7 @@ export function RoleSelector({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate text-sm font-medium text-white">
-                          {role.name}
-                        </span>
+                        <span className="truncate text-sm font-medium text-white">{role.name}</span>
                         {selectedRole?.id === role.id && (
                           <span className="text-accent-400 text-sm">✓</span>
                         )}
