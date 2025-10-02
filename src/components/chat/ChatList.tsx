@@ -5,6 +5,7 @@ import { getQuickstartsWithFallback } from "../../config/quickstarts";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
+import { GlassTile } from "../ui/GlassTile";
 import type { ChatMessageType } from "./ChatMessage";
 import { ChatMessage } from "./ChatMessage";
 
@@ -126,18 +127,17 @@ export function ChatList({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {isLoadingQuickstarts ? (
                 // Loading skeleton
-                Array.from({ length: 3 }).map((_, index) => (
+                Array.from({ length: 4 }).map((_, index) => (
                   <div
                     key={index}
-                    className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-4 text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl"
+                    className="tile flex min-h-[120px] animate-pulse flex-col items-center justify-center"
                   >
-                    <div className="animate-pulse">
-                      <div className="h-6 w-32 rounded bg-white/20"></div>
-                      <div className="mt-2 h-4 w-48 rounded bg-white/10"></div>
-                    </div>
+                    <div className="mb-2 h-8 w-8 rounded-full bg-white/20"></div>
+                    <div className="h-4 w-20 rounded bg-white/20"></div>
+                    <div className="mt-2 h-3 w-24 rounded bg-white/10"></div>
                   </div>
                 ))
               ) : quickstartError ? (
@@ -227,72 +227,16 @@ export function ChatList({
               ) : (
                 quickstarts.map((action) => {
                   const isActive = activeQuickstart === action.id;
-                  const isDisabled = isQuickstartLoading && !isActive;
 
                   return (
-                    <button
+                    <GlassTile
                       key={action.id}
-                      onClick={() => handleQuickstartClick(action)}
-                      disabled={isDisabled}
-                      className={cn(
-                        "tap-target relative overflow-hidden rounded-3xl border border-white/10 bg-white/10 text-left text-white shadow-[0_20px_50px_rgba(12,16,35,0.55)] backdrop-blur-2xl transition-all",
-                        // Mobile-optimized padding and height (Issue #72)
-                        "min-h-[48px] p-3 sm:p-4",
-                        // Interactive states
-                        !isDisabled &&
-                          "hover:scale-[1.02] hover:shadow-[0_25px_60px_rgba(12,16,35,0.65)] active:scale-[0.98]",
-                        // Focus state for A11y
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-                        // Loading state
-                        isActive && "scale-[0.98] opacity-80",
-                        // Disabled state
-                        isDisabled && "cursor-not-allowed opacity-40",
-                      )}
-                      data-testid={`quickstart-${action.id}`}
-                      aria-label={`${action.title}: ${action.subtitle}`}
-                      aria-disabled={isDisabled}
-                      aria-busy={isActive}
-                    >
-                      <div
-                        className={cn(
-                          "pointer-events-none absolute inset-0 bg-gradient-to-br opacity-50",
-                          action.gradient,
-                        )}
-                      />
-
-                      {/* Loading overlay for active quickstart */}
-                      {isActive && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                          <div className="flex items-center gap-2 text-white">
-                            <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
-                              <path
-                                d="M12 3a9 9 0 019 9"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="opacity-60"
-                              />
-                            </svg>
-                            <span className="text-sm font-medium">Startet...</span>
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="relative flex items-center justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <h3 className="text-base font-semibold tracking-tight sm:text-lg">
-                            {action.title}
-                          </h3>
-                          <p className="mt-0.5 truncate text-sm text-white/70 sm:mt-1">
-                            {action.subtitle}
-                          </p>
-                        </div>
-                        <span className="flex-shrink-0 rounded-full border border-white/20 bg-black/40 px-2 py-0.5 text-xs text-white/70 sm:px-3 sm:py-1">
-                          {isActive ? "Lädt..." : action.autosend ? "Auto-Start" : "Schnellstart"}
-                        </span>
-                      </div>
-                    </button>
+                      icon={action.icon || "✨"}
+                      title={action.title}
+                      subtitle={action.subtitle}
+                      onPress={() => handleQuickstartClick(action)}
+                      disabled={isQuickstartLoading && !isActive}
+                    />
                   );
                 })
               )}
