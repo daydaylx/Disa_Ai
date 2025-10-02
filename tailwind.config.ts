@@ -167,6 +167,9 @@ export default {
     "bubble-assistant",
     "bubble-user",
     "bubble-system",
+    "tile",
+    "tile--primary",
+    "card",
   ],
   plugins: [],
 } satisfies Config;

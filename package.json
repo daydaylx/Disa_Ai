@@ -119,9 +119,9 @@
     "node": ">=20.14.0 <24"
   },
   "buildInfo": {
-    "buildId": "v1.0.0-f9d8eb5",
-    "buildTime": "2025-10-02T22:50:03.344Z",
-    "gitSha": "f9d8eb5c39f287a3e2ed57601e8dcd88f45841a9",
-    "gitBranch": "autopilot/18182412982"
+    "buildId": "v1.0.0-76df392",
+    "buildTime": "2025-10-02T23:09:13.213Z",
+    "gitSha": "76df392c56145c3636eb4ff3666d6b301371db26",
+    "gitBranch": "main"
   }
 }
