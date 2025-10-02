@@ -1,32 +1,12 @@
 name: CI
-
-on:
-  push:
-    branches: [ "**" ]
-  pull_request:
-    branches: [ "**" ]
-
+on: [push, pull_request]
 jobs:
-  test-e2e:
+  e2e:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-      - name: Install deps
-        run: |
-          if command -v pnpm >/dev/null 2>&1; then
-            corepack enable
-            pnpm i
-          else
-            npm ci
-          fi
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-      - name: Run E2E
-        env:
-          PLAYWRIGHT_WEB_SERVER: npm run dev
-          PLAYWRIGHT_WEB_PORT: "5173"
-          PLAYWRIGHT_BASE_URL: http://localhost:5173
-        run: npx playwright test
+        with: { node-version: '18' }
+      - run: npm ci || pnpm i
+      - run: npx playwright install --with-deps
+      - run: npx playwright test
