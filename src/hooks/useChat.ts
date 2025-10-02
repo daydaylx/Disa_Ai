@@ -201,34 +201,42 @@ export function useChat({
   }, []);
 
   const reload = useCallback(async () => {
-    if (state.messages.length === 0) return;
+    try {
+      if (state.messages.length === 0) return;
 
-    let lastUserMessageIndex = -1;
-    for (let i = state.messages.length - 1; i >= 0; i -= 1) {
-      if (state.messages[i]?.role === "user") {
-        lastUserMessageIndex = i;
-        break;
+      let lastUserMessageIndex = -1;
+      for (let i = state.messages.length - 1; i >= 0; i -= 1) {
+        if (state.messages[i]?.role === "user") {
+          lastUserMessageIndex = i;
+          break;
+        }
+      }
+
+      if (lastUserMessageIndex === -1) return;
+
+      const lastUserMessage = state.messages[lastUserMessageIndex];
+
+      // Alle Nachrichten nach der letzten Nutzernachricht entfernen, Eingabe beibehalten
+      const messagesToRetry = state.messages.slice(0, lastUserMessageIndex);
+
+      dispatch({ type: "SET_MESSAGES", messages: messagesToRetry });
+
+      // Übergebe die gekürzten Messages an append, um Race Condition zu vermeiden
+      await append(
+        {
+          role: lastUserMessage.role,
+          content: lastUserMessage.content,
+        },
+        messagesToRetry,
+      );
+    } catch (error) {
+      const mappedError = mapError(error);
+      dispatch({ type: "SET_ERROR", error: mappedError });
+      if (onError) {
+        onError(mappedError);
       }
     }
-
-    if (lastUserMessageIndex === -1) return;
-
-    const lastUserMessage = state.messages[lastUserMessageIndex];
-
-    // Alle Nachrichten nach der letzten Nutzernachricht entfernen, Eingabe beibehalten
-    const messagesToRetry = state.messages.slice(0, lastUserMessageIndex);
-
-    dispatch({ type: "SET_MESSAGES", messages: messagesToRetry });
-
-    // Übergebe die gekürzten Messages an append, um Race Condition zu vermeiden
-    await append(
-      {
-        role: lastUserMessage.role,
-        content: lastUserMessage.content,
-      },
-      messagesToRetry,
-    );
-  }, [state.messages, append]);
+  }, [state.messages, append, onError]);
 
   const setMessages = useCallback((messages: ChatMessageType[]) => {
     dispatch({ type: "SET_MESSAGES", messages });
