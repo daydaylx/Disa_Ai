@@ -30,7 +30,16 @@ export function useServiceWorker() {
                       label: "Neu laden",
                       onClick: () => {
                         void installingWorker.postMessage({ type: "SKIP_WAITING" });
-                        window.location.reload();
+
+                        // Use centralized reload manager
+                        import("../lib/utils/reload-manager")
+                          .then(({ reloadHelpers }) => {
+                            reloadHelpers.serviceWorkerUpdate(100);
+                          })
+                          .catch(() => {
+                            // Fallback
+                            window.location.reload();
+                          });
                       },
                     },
                   });

@@ -8,11 +8,8 @@ import React from "react";
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
-import { useServiceWorker } from "./hooks/useServiceWorker";
 
 export default function App() {
-  useServiceWorker();
-
   // Initialize viewport height after React mounts to avoid loading race conditions
   React.useEffect(() => {
     if (typeof window === "undefined") return;
