@@ -1,6 +1,5 @@
+import { Mic, RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-import { Mic, RotateCcw, Send, Square, Zap } from "@/components/ui/icons";
 
 // This component addresses the issue `04-composer-keyboard.md`
 import { useVisualViewport } from "../../hooks/useVisualViewport";

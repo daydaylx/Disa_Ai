@@ -1,6 +1,5 @@
+import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
-
-import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "@/components/ui/icons";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";

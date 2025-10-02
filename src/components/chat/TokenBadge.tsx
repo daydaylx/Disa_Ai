@@ -1,6 +1,5 @@
+import { AlertTriangle, Clock, Zap } from "lucide-react";
 import { useMemo } from "react";
-
-import { AlertTriangle, Clock, Zap } from "@/components/ui/icons";
 
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";

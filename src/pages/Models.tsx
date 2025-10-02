@@ -1,6 +1,5 @@
+import { Loader2, Search } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-
-import { Loader2, Search } from "@/components/ui/icons";
 
 import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
