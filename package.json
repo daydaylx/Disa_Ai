@@ -58,7 +58,6 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@types/react-window": "^1.8.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "js-yaml": "^4.1.0",
@@ -67,7 +66,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.3",
-    "react-window": "^2.2.0",
     "tailwind-merge": "^3.3.1",
     "zod": "^4.1.0"
   },
@@ -119,9 +117,9 @@
     "node": ">=20.14.0 <24"
   },
   "buildInfo": {
-    "buildId": "v1.0.0-76df392",
-    "buildTime": "2025-10-02T23:09:13.213Z",
-    "gitSha": "76df392c56145c3636eb4ff3666d6b301371db26",
+    "buildId": "v1.0.0-ac17f71",
+    "buildTime": "2025-10-02T23:40:38.906Z",
+    "gitSha": "ac17f71c835e8b0542de7b732ccfe6428c16158c",
     "gitBranch": "main"
   }
 }

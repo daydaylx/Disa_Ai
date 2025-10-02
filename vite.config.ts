@@ -89,11 +89,23 @@ export default defineConfig(({ mode }) => {
           return false;
         },
         output: {
-          // Simplified chunking strategy for better caching and HTTP/2 performance
-          // Based on security analysis recommendation to reduce granular chunking
+          // Optimized chunking strategy for better bundle size
           manualChunks: (id) => {
-            // Single vendor chunk for all node_modules
-            // More stable caching strategy - hash only changes when dependencies update
+            // Split large UI libraries into separate chunks
+            if (id.includes("node_modules/@radix-ui/")) {
+              return "radix-ui";
+            }
+            if (id.includes("node_modules/react-router")) {
+              return "react-router";
+            }
+            if (id.includes("node_modules/lucide-react")) {
+              return "icons";
+            }
+            // Core React libraries
+            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+              return "react-vendor";
+            }
+            // All other node_modules
             if (id.includes("node_modules/")) {
               return "vendor";
             }
