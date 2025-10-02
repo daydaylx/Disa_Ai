@@ -64,12 +64,12 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      target: "esnext",
+      target: "es2020",
       minify: "esbuild",
       cssMinify: "esbuild",
       chunkSizeWarningLimit: 500,
       // Robuste Asset-Generation für Cloudflare Pages
-      assetsInlineLimit: 4096, // Kleine Assets inline für weniger HTTP-Requests
+      assetsInlineLimit: 2048, // Reduce inline threshold
       cssCodeSplit: true, // CSS-Chunks für besseres Caching
       // Production-spezifische Optimierungen
       ...(isProduction && {

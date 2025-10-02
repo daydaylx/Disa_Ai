@@ -1,5 +1,6 @@
-import { Book, Code, MessageSquare } from "lucide-react";
 import type { ReactNode } from "react";
+
+import { Book, Code, MessageSquare } from "@/components/ui/icons";
 
 import { GlassTile } from "../ui/GlassTile";
 

@@ -1,5 +1,6 @@
-import { Bot, ChevronDown, Search, User } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { Bot, ChevronDown, Search, User } from "@/components/ui/icons";
 
 import type { Role } from "../../data/roles";
 import { getRoles, loadRoles } from "../../data/roles";

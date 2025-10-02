@@ -1,5 +1,6 @@
-import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
+
+import { X } from "@/components/ui/icons";
 
 import { cn } from "../../lib/utils";
 

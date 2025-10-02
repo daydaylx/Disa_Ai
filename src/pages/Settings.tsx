@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import {
   Brain,
   Download,
@@ -9,8 +11,7 @@ import {
   Smartphone,
   Trash2,
   User,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+} from "@/components/ui/icons";
 
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
