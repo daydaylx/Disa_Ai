@@ -1,6 +1,5 @@
 import "./index.css"; // Tailwind base/components/utilities
 import "./styles/design-tokens.css"; // Design tokens (CSS variables)
-import "./theme.css"; // Custom theme styles
 import "./ui/base.css"; // Reset & base styles
 import "./styles/a11y-improvements.css"; // A11y improvements
 
