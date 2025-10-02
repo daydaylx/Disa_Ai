@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
-        with: { node-version: '18' }
+        with: { node-version: "18" }
       - run: npm ci || pnpm i
       - run: npx playwright install --with-deps
       - run: npx playwright test
