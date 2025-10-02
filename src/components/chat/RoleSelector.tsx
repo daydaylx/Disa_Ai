@@ -2,7 +2,7 @@ import { Bot, ChevronDown, Search, User } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Role } from "../../data/roles";
-import { getAllRoles, loadRoles } from "../../data/roles";
+import { getRoles, loadRoles } from "../../data/roles";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
@@ -44,7 +44,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
       } catch (error) {
         console.warn("Failed to load external roles, using defaults:", error);
         // Fallback to default roles if loading fails
-        setAllRoles(getAllRoles());
+        setAllRoles(getRoles());
       } finally {
         setIsLoadingRoles(false);
       }

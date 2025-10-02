@@ -66,7 +66,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.9.2",
-    "react-window": "^2.2.0",
+    "react-window": "~1.8.8",
     "tailwind-merge": "^3.3.1",
     "zod": "^4.1.0"
   },
@@ -118,9 +118,9 @@
     "node": ">=20.14.0 <24"
   },
   "buildInfo": {
-    "buildId": "v1.0.0-b1fc744",
-    "buildTime": "2025-10-01T22:51:11.007Z",
-    "gitSha": "b1fc7440b09a113ba6dc9b60b7aa9d1d22dc232b",
-    "gitBranch": "main"
+    "buildId": "v1.0.0-890071f",
+    "buildTime": "2025-10-02T22:41:59.635Z",
+    "gitSha": "890071f500ce20f42fd2105fe1da6667f753c3d4",
+    "gitBranch": "autopilot/18182412982"
   }
 }
