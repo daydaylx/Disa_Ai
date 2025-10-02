@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 
 export function useServiceWorker() {
@@ -7,10 +8,13 @@ export function useServiceWorker() {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       const swUrl = `/sw.js?build=${import.meta.env.VITE_BUILD_ID}`;
-      navigator.serviceWorker.register(swUrl).then(registration => {
-        setInterval(() => {
-          registration.update();
-        }, 1000 * 60 * 60); // Check for updates every hour
+      void navigator.serviceWorker.register(swUrl).then((registration) => {
+        setInterval(
+          () => {
+            void registration.update();
+          },
+          1000 * 60 * 60,
+        ); // Check for updates every hour
 
         registration.onupdatefound = () => {
           const installingWorker = registration.installing;
@@ -26,7 +30,7 @@ export function useServiceWorker() {
                       {
                         label: "Neu laden",
                         onClick: () => {
-                          installingWorker.postMessage({ type: "SKIP_WAITING" });
+                          void installingWorker.postMessage({ type: "SKIP_WAITING" });
                           window.location.reload();
                         },
                       },
