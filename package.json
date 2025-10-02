@@ -119,9 +119,9 @@
     "node": ">=20.14.0 <24"
   },
   "buildInfo": {
-    "buildId": "v1.0.0-9771853",
-    "buildTime": "2025-10-02T16:27:39.924Z",
-    "gitSha": "97718539a140e4ce495ff55af1e3d4e585c1fddc",
-    "gitBranch": "refactor/tile-layer"
+    "buildId": "v1.0.0-4d4190c",
+    "buildTime": "2025-10-02T17:10:52.288Z",
+    "gitSha": "4d4190cf0e6f075dae094b4ab3661bff3f54855b",
+    "gitBranch": "fix/tailwind-safelist"
   }
 }

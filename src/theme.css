@@ -1,0 +1,9 @@
+/* src/theme.css */
+@layer components {
+  .tile {
+    @apply rounded-2xl p-4 shadow-xl backdrop-blur;
+  }
+  .tile--primary {
+    @apply shadow-2xl;
+  }
+}
