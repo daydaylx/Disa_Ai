@@ -15,7 +15,7 @@ export interface UseQuickstartFlowOptions {
 }
 
 export function useQuickstartFlow({ onStartFlow, currentModel }: UseQuickstartFlowOptions) {
-  const { setActivePersona } = useStudio();
+  const { setActiveRole } = useStudio();
 
   const startQuickstartFlow = useCallback(
     (action: QuickstartAction) => {
@@ -32,7 +32,7 @@ export function useQuickstartFlow({ onStartFlow, currentModel }: UseQuickstartFl
         if (action.persona) {
           const role = getRoleById(action.persona);
           if (role) {
-            setActivePersona(role);
+            setActiveRole(role);
           }
         }
 
@@ -44,7 +44,7 @@ export function useQuickstartFlow({ onStartFlow, currentModel }: UseQuickstartFl
         console.error("Failed to start quickstart flow:", error);
       }
     },
-    [onStartFlow, setActivePersona, currentModel],
+    [onStartFlow, setActiveRole, currentModel],
   );
 
   return {

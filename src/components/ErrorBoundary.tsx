@@ -56,7 +56,13 @@ export class ErrorBoundary extends Component<Props, State> {
     });
 
     // Force page reload to recover from error state
-    window.location.reload();
+    import("../lib/utils/reload-manager")
+      .then(({ reloadHelpers }) => {
+        reloadHelpers.criticalError();
+      })
+      .catch(() => {
+        window.location.reload();
+      });
   };
 
   private handleRetry = (): void => {

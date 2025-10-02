@@ -17,8 +17,8 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [allRoles, setAllRoles] = useState<Role[]>([]);
-  const [isLoadingRoles, setIsLoadingRoles] = useState(true);
+  const [allRoles, setAllRoles] = useState<Role[]>(() => getRoles());
+  const [isLoadingRoles, setIsLoadingRoles] = useState(false);
 
   // This should come from settings
   const settings = { showNSFWContent: false };
@@ -74,11 +74,12 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
 
     // Filter by search term
     if (search.trim()) {
-      roles = roles.filter(
-        (p) =>
-          p.name.toLowerCase().includes(search.toLowerCase()) ||
-          p.description?.toLowerCase().includes(search.toLowerCase()),
-      );
+      const term = search.toLowerCase();
+      roles = roles.filter((p) => {
+        const nameMatch = p.name.toLowerCase().includes(term);
+        const descriptionMatch = p.description?.toLowerCase().includes(term) ?? false;
+        return nameMatch || descriptionMatch;
+      });
     }
 
     return roles;

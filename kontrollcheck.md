@@ -55,6 +55,7 @@ Eine tiefgehende Analyse des Projekts hat eine außergewöhnlich hohe Codequalit
 - **Fundort(e):** `src/components/PWAInstallPrompt.tsx`
 - **Auswirkung:** Unnötig aufgeblähte Codebasis, die die Wartung erschwert. Kein Einfluss auf die Produktions-App dank Tree Shaking.
 - **Empfehlung:** Sicherstellen, dass die Funktionalität von einer anderen Komponente abgedeckt wird (vermutlich `PWAIntegration.tsx`) und die Datei `PWAInstallPrompt.tsx` anschließend löschen.
+- ✅ **Erledigt:** Die Datei wurde entfernt; PWA-Integration läuft über `usePWAHandlers`.
 
 ### 2.2. Verwendung von Legacy-Farbdefinitionen
 

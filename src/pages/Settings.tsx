@@ -169,7 +169,13 @@ export default function SettingsPage() {
             <p className="text-xs text-white/60">Browser-Storage nicht verfügbar</p>
           </div>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              import("../lib/utils/reload-manager")
+                .then(({ reloadHelpers }) => {
+                  reloadHelpers.userRequested();
+                })
+                .catch(() => window.location.reload());
+            }}
             className="tap-target hover:bg-accent-600 rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-white transition-colors"
           >
             Seite neu laden

@@ -36,7 +36,8 @@
     "test:visual": "playwright test --config=playwright.visual.config.ts",
     "test:visual:update": "playwright test --config=playwright.visual.config.ts --update-snapshots",
     "lh": "lhci autorun --config=./lighthouserc.cjs",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "playwright": "playwright"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -64,9 +65,9 @@
     "lucide-react": "^0.544.0",
     "nanoid": "^5.1.6",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^7.9.2",
-    "react-window": "~1.8.8",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.3",
+    "react-window": "^2.2.0",
     "tailwind-merge": "^3.3.1",
     "zod": "^4.1.0"
   },
@@ -74,7 +75,7 @@
     "@axe-core/playwright": "^4.10.2",
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
-    "@eslint/js": "^9.35.0",
+    "@eslint/js": "^9.36.0",
     "@lhci/cli": "^0.14.0",
     "@playwright/test": "^1.55.1",
     "@testing-library/jest-dom": "^6.8.0",
@@ -83,33 +84,33 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.3.0",
     "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1",
+    "@types/react-dom": "19.2.0",
     "@typescript-eslint/eslint-plugin": "^8.40.0",
-    "@typescript-eslint/parser": "^8.40.0",
+    "@typescript-eslint/parser": "^8.45.0",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/browser": "3.2.4",
     "autoprefixer": "^10.4.21",
-    "eslint": "^9.35.0",
+    "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "^6.1.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.2.0",
     "globals": "^16.3.0",
-    "happy-dom": "^18.0.1",
+    "happy-dom": "^19.0.2",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
-    "lint-staged": "^16.1.6",
-    "msw": "^2.10.5",
+    "lint-staged": "^16.2.3",
+    "msw": "^2.11.3",
     "playwright": "^1.55.1",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.43.0",
+    "typescript-eslint": "^8.45.0",
     "vite": "^7.1.6",
     "vite-bundle-analyzer": "^1.2.3",
     "vitest": "^3.2.4"
@@ -118,9 +119,9 @@
     "node": ">=20.14.0 <24"
   },
   "buildInfo": {
-    "buildId": "v1.0.0-890071f",
-    "buildTime": "2025-10-02T22:41:59.635Z",
-    "gitSha": "890071f500ce20f42fd2105fe1da6667f753c3d4",
-    "gitBranch": "autopilot/18182412982"
+    "buildId": "v1.0.0-4d4190c",
+    "buildTime": "2025-10-02T16:45:18.644Z",
+    "gitSha": "4d4190cf0e6f075dae094b4ab3661bff3f54855b",
+    "gitBranch": "refactor/router-mode"
   }
 }

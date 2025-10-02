@@ -26,15 +26,22 @@ export function useServiceWorker() {
                     kind: "info",
                     title: "Update verfügbar",
                     message: "Eine neue Version der App ist verfügbar.",
-                    actions: [
-                      {
-                        label: "Neu laden",
-                        onClick: () => {
-                          void installingWorker.postMessage({ type: "SKIP_WAITING" });
-                          window.location.reload();
-                        },
+                    action: {
+                      label: "Neu laden",
+                      onClick: () => {
+                        void installingWorker.postMessage({ type: "SKIP_WAITING" });
+
+                        // Use centralized reload manager
+                        import("../lib/utils/reload-manager")
+                          .then(({ reloadHelpers }) => {
+                            reloadHelpers.serviceWorkerUpdate(100);
+                          })
+                          .catch(() => {
+                            // Fallback
+                            window.location.reload();
+                          });
                       },
-                    ],
+                    },
                   });
                 }
               }

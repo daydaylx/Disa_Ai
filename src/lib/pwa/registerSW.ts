@@ -15,9 +15,18 @@ const BUILD_ID =
 
 export { BUILD_ID };
 
+// Cleanup function for memory leak prevention
+export function cleanupServiceWorkerTimers(): void {
+  if (updateCheckInterval) {
+    clearInterval(updateCheckInterval);
+    updateCheckInterval = null;
+  }
+}
+
 let controllerListenerAttached = false;
 let controllerReloading = false;
 let shouldReloadOnControllerChange = false;
+let updateCheckInterval: ReturnType<typeof setInterval> | null = null;
 
 function attachControllerChangeListener() {
   if (controllerListenerAttached) return;
@@ -25,7 +34,16 @@ function attachControllerChangeListener() {
     if (!shouldReloadOnControllerChange) return;
     if (controllerReloading) return;
     controllerReloading = true;
-    window.location.reload();
+
+    // Use centralized reload manager
+    import("../utils/reload-manager")
+      .then(({ reloadHelpers }) => {
+        reloadHelpers.serviceWorkerUpdate(0);
+      })
+      .catch(() => {
+        // Fallback
+        window.location.reload();
+      });
   });
   controllerListenerAttached = true;
 }
@@ -81,8 +99,9 @@ export function registerSW() {
     navigator.serviceWorker
       .register(swUrl)
       .then((reg) => {
-        // alle 30min nach Updates schauen
-        setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
+        // alle 30min nach Updates schauen (mit cleanup für Memory Leak Prevention)
+        if (updateCheckInterval) clearInterval(updateCheckInterval);
+        updateCheckInterval = setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
 
         reg.addEventListener("updatefound", () => {
           const nw = reg.installing;
@@ -96,12 +115,20 @@ export function registerSW() {
                 // Check for Build-ID mismatch
                 void checkBuildIdMismatch(reg).then((shouldForceReload) => {
                   const reload = () => {
-                    try {
-                      window.location.reload();
-                    } catch (_e) {
-                      void _e;
-                      /* ignore */
-                    }
+                    // Use centralized reload manager to prevent race conditions
+                    import("../utils/reload-manager")
+                      .then(({ reloadHelpers }) => {
+                        reloadHelpers.serviceWorkerUpdate(100);
+                      })
+                      .catch(() => {
+                        // Fallback if module fails to load
+                        try {
+                          window.location.reload();
+                        } catch (_e) {
+                          void _e;
+                          /* ignore */
+                        }
+                      });
                   };
                   const evt = new CustomEvent("disa:toast", {
                     detail: {

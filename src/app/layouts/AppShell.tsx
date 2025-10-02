@@ -7,7 +7,7 @@ import { Button } from "../../components/ui";
 import { useStudio } from "../state/StudioContext";
 
 function Header() {
-  const { activePersona } = useStudio();
+  const { activeRole } = useStudio();
 
   return (
     <header className="relative z-10 px-5 pb-6 pt-12">
@@ -22,10 +22,10 @@ function Header() {
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white/80">
                   <Compass className="h-3.5 w-3.5" /> KI-Studio
                 </div>
-                {activePersona && (
+                {activeRole && (
                   <div className="border-accent-500/30 bg-accent-500/20 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-white/90">
                     <Bot className="h-3.5 w-3.5" />
-                    {activePersona.name}
+                    {activeRole.name}
                   </div>
                 )}
               </div>
@@ -37,8 +37,8 @@ function Header() {
                   Disa AI
                 </h1>
                 <p className="mt-1 text-sm text-white/70">
-                  {activePersona
-                    ? `${activePersona.category} • ${activePersona.name}`
+                  {activeRole
+                    ? `${activeRole.category ?? "Rolle"} • ${activeRole.name}`
                     : "Deine kreative Copilotin für Texte, Bilder und Inspiration."}
                 </p>
               </div>

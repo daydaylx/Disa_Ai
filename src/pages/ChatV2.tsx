@@ -3,9 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
-import { StartTiles } from "../components/chat/StartTiles";
+import { type StartTileAction, StartTiles } from "../components/chat/StartTiles";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
+import { getRoleById } from "../data/roles";
 import { useChat } from "../hooks/useChat";
 import { trackQuickstartCompleted } from "../lib/analytics/index";
 import { humanError } from "../lib/errors/humanError";
@@ -225,14 +226,12 @@ export default function ChatPageV2() {
     void reload();
   };
 
-  const handleTileClick = (action: any) => {
+  const handleTileClick = (action: StartTileAction) => {
     if (action.type === "new-chat") {
       // Already in a new chat, do nothing
     } else if (action.type === "set-role") {
-      // Find the role and set it
-      // This is a simplified implementation. In a real app, you would fetch the role from a store.
-      const role = { id: action.role, name: action.role, systemPrompt: `You are a ${action.role}` };
-      setActiveRole(role);
+      const role = getRoleById(action.roleId);
+      setActiveRole(role ?? null);
     }
   };
 

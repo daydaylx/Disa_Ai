@@ -1,6 +1,5 @@
 import { Loader2, Search } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-import { FixedSizeList as List } from "react-window";
 
 import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
@@ -189,85 +188,6 @@ export default function ModelsPage() {
     });
   };
 
-  const Row = ({ index, style }) => {
-    const model = filtered[index];
-    return (
-      <div style={style}>
-        <Card
-          key={model.id}
-          role="button"
-          tabIndex={0}
-          data-testid="model-card"
-          onClick={() => handleSelect(model)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              handleSelect(model);
-            }
-          }}
-          aria-pressed={selected === model.id}
-          aria-label={`Modell ${model.label || model.id} auswählen`}
-          className={cn(
-            "border-white/20 bg-white/10 backdrop-blur transition-all",
-            selected === model.id
-              ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
-              : "hover:border-white/30 hover:bg-white/20",
-          )}
-        >
-          <CardHeader className="space-y-1 pb-3">
-            <CardTitle className="text-base font-semibold text-white">
-              {model.label || model.id}
-            </CardTitle>
-            <CardDescription className="text-white/70">
-              {model.provider ?? "Unbekannter Anbieter"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-white/60">Kontext</span>
-              <span className="font-medium text-white">{formatContext(model.ctx)}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white/60">Prompt / Completion</span>
-              <span className="font-medium text-white">
-                {formatPrice(model.pricing?.in)} / {formatPrice(model.pricing?.out)}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">{SAFETY_LABELS[model.safety] ?? model.safety}</Badge>
-              {model.tags?.slice(0, 3).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-              {(model.tags?.length ?? 0) > 3 && (
-                <Badge variant="outline" className="text-xs">
-                  +{(model.tags?.length ?? 0) - 3} weitere
-                </Badge>
-              )}
-            </div>
-            {selected === model.id ? (
-              <div
-                className="bg-accent-500/90 inline-flex w-full items-center justify-center rounded-md border border-accent-500 px-3 py-2 text-sm font-semibold text-white"
-                role="status"
-                aria-label="Modell ist aktiv"
-              >
-                ✓ Aktiv
-              </div>
-            ) : (
-              <div
-                className="inline-flex w-full items-center justify-center rounded-md border border-white/20 bg-white/20 px-3 py-2 text-sm font-semibold text-white/90"
-                aria-hidden="true"
-              >
-                Übernehmen
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    );
-  };
-
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-1">
@@ -324,7 +244,7 @@ export default function ModelsPage() {
             </button>
           ))}
           <div className="flex items-center space-x-2">
-            <Switch id="nsfw-toggle" checked={showNsfw} onCheckedChange={setShowNsfw} />
+            <Switch id="nsfw-toggle" checked={showNsfw} onChange={setShowNsfw} />
             <Label htmlFor="nsfw-toggle">18+ anzeigen</Label>
           </div>
         </div>
@@ -366,15 +286,79 @@ export default function ModelsPage() {
         </div>
       ) : (
         <div className="flex-1 space-y-3 overflow-y-auto pb-4">
-          <List
-            height={600} // This should be dynamic based on the container height
-            itemCount={filtered.length}
-            itemSize={250} // This should be the estimated height of a card
-            width="100%"
-            itemData={filtered}
-          >
-            {Row}
-          </List>
+          {filtered.map((model) => (
+            <Card
+              key={model.id}
+              role="button"
+              tabIndex={0}
+              data-testid="model-card"
+              onClick={() => handleSelect(model)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  handleSelect(model);
+                }
+              }}
+              aria-pressed={selected === model.id}
+              aria-label={`Modell ${model.label || model.id} auswählen`}
+              className={cn(
+                "border-white/20 bg-white/10 backdrop-blur transition-all",
+                selected === model.id
+                  ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
+                  : "hover:border-white/30 hover:bg-white/20",
+              )}
+            >
+              <CardHeader className="space-y-1 pb-3">
+                <CardTitle className="text-base font-semibold text-white">
+                  {model.label || model.id}
+                </CardTitle>
+                <CardDescription className="text-white/70">
+                  {model.provider ?? "Unbekannter Anbieter"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-white/60">Kontext</span>
+                  <span className="font-medium text-white">{formatContext(model.ctx)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-white/60">Prompt / Completion</span>
+                  <span className="font-medium text-white">
+                    {formatPrice(model.pricing?.in)} / {formatPrice(model.pricing?.out)}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">{SAFETY_LABELS[model.safety] ?? model.safety}</Badge>
+                  {model.tags?.slice(0, 3).map((tag: string) => (
+                    <Badge key={tag} variant="outline" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                  {(model.tags?.length ?? 0) > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{(model.tags?.length ?? 0) - 3} weitere
+                    </Badge>
+                  )}
+                </div>
+                {selected === model.id ? (
+                  <div
+                    className="bg-accent-500/90 inline-flex w-full items-center justify-center rounded-md border border-accent-500 px-3 py-2 text-sm font-semibold text-white"
+                    role="status"
+                    aria-label="Modell ist aktiv"
+                  >
+                    ✓ Aktiv
+                  </div>
+                ) : (
+                  <div
+                    className="inline-flex w-full items-center justify-center rounded-md border border-white/20 bg-white/20 px-3 py-2 text-sm font-semibold text-white/90"
+                    aria-hidden="true"
+                  >
+                    Übernehmen
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
         </div>
       )}
     </div>

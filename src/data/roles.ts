@@ -1,6 +1,7 @@
 export interface Role {
   id: string;
   name: string;
+  description?: string;
   systemPrompt: string;
   allowedModels?: string[];
   tags?: string[];
@@ -251,6 +252,7 @@ export async function loadRoles(): Promise<Role[]> {
   const externalRolesFormatted: Role[] = externalRoles.map((role: any) => ({
     id: role.id,
     name: role.name,
+    description: role.description ?? role.summary,
     systemPrompt: role.system || "",
     allowedModels: role.allow,
     tags: role.tags,
