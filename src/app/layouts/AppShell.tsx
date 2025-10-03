@@ -71,16 +71,19 @@ function BottomNav() {
   ];
 
   return (
-    <nav className="bg-background border-border pb-safe-bottom fixed bottom-0 left-0 right-0 flex h-16 items-center justify-around border-t">
+    <nav className="bg-background border-border fixed bottom-0 left-0 right-0 z-20 flex h-16 items-center justify-around border-t pb-safe-bottom">
       {navigationItems.map((item) => (
         <NavLink
           key={item.to}
           to={item.to}
-          className="text-muted-foreground flex flex-col items-center"
-          style={({ isActive }) => ({ color: isActive ? "hsl(var(--primary))" : "" })}
+          className="text-muted-foreground flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors hover:text-primary active:text-primary"
+          style={({ isActive }) => ({
+            color: isActive ? "hsl(var(--primary))" : "",
+            background: isActive ? "rgba(var(--primary-rgb, 147 51 234), 0.1)" : "transparent",
+          })}
         >
-          {item.icon}
-          <span>{item.label}</span>
+          <span className="flex h-6 w-6 items-center justify-center">{item.icon}</span>
+          <span className="text-[10px] leading-none">{item.label}</span>
         </NavLink>
       ))}
     </nav>
@@ -94,21 +97,23 @@ interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
   return (
     <div
-      className="relative mx-auto flex w-full max-w-md flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200"
-      style={{ minHeight: "var(--vh, 100dvh)" }}
+      className="relative mx-auto flex w-full max-w-sm flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200 sm:max-w-md"
+      style={{ minHeight: "var(--vh, 100dvh)", height: "var(--vh, 100dvh)" }}
     >
       <div className="pointer-events-none absolute inset-x-0 top-[-30%] h-[60%] bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.35),_transparent_65%)]" />
       <div className="pointer-events-none absolute inset-x-[-20%] bottom-[-35%] h-[55%] bg-[radial-gradient(circle_at_bottom,_rgba(59,130,246,0.25),_transparent_70%)]" />
 
       <Header />
 
-      <main className="relative z-10 flex-1 overflow-hidden px-4 pb-16">{children}</main>
+      <main className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden px-4 pb-20">
+        {children}
+      </main>
 
       <NetworkBanner />
       <BottomNav />
 
       {/* Footer mit Build-Info für Issue #81 */}
-      <footer className="relative z-10 px-4 pb-2">
+      <footer className="relative z-10 px-4 pb-2 pb-safe-bottom">
         <div className="mx-auto max-w-xs text-center">
           <BuildInfo className="opacity-60 transition-opacity hover:opacity-100" />
         </div>
