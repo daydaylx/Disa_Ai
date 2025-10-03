@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   e2e:
     runs-on: ubuntu-latest
-    timeout-minutes: 15  # Maximum 15 minutes for entire job
+    timeout-minutes: 15 # Maximum 15 minutes for entire job
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
