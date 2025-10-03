@@ -3,9 +3,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
-import { type StartTileAction, StartTiles } from "../components/chat/StartTiles";
+import { QuickstartGrid } from "../components/chat/QuickstartGrid";
+import { type StartTileAction } from "../components/chat/StartTiles";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
+import type { QuickstartAction } from "../config/quickstarts";
 import { getRoleById } from "../data/roles";
 import { useChat } from "../hooks/useChat";
 import { trackQuickstartCompleted } from "../lib/analytics/index";
@@ -226,13 +228,42 @@ export default function ChatPageV2() {
     void reload();
   };
 
-  const handleTileClick = (action: StartTileAction) => {
+  const _handleTileClick = (action: StartTileAction) => {
     if (action.type === "new-chat") {
       // Already in a new chat, do nothing
     } else if (action.type === "set-role") {
       const role = getRoleById(action.roleId);
       setActiveRole(role ?? null);
     }
+  };
+
+  // New handler for QuickstartGrid - implements Issue #105
+  const handleQuickstartTap = (action: QuickstartAction) => {
+    // Set role if specified
+    if (action.persona) {
+      const role = getRoleById(action.persona);
+      setActiveRole(role ?? null);
+    }
+
+    // Set model if specified
+    if (action.model && models.length > 0) {
+      const targetModel = models.find((m) => m.id === action.model);
+      if (targetModel) {
+        setModel(targetModel);
+      }
+    }
+
+    // Execute the quickstart flow
+    handleQuickstartFlow(action.prompt, action.autosend, {
+      id: action.id,
+      flowId: action.flowId,
+    });
+  };
+
+  const handleQuickstartLongPress = (action: QuickstartAction) => {
+    // For now, just log the long press - future: show edit dialog
+    console.warn("Long pressed quickstart:", action.title);
+    // TODO: Implement edit dialog for quickstart configuration
   };
 
   // Calculate token count from all messages (currently unused but kept for future features)
@@ -246,7 +277,11 @@ export default function ChatPageV2() {
           <div className="h-full px-1">
             <div className="mx-auto h-full w-full max-w-md">
               {messages.length === 0 ? (
-                <StartTiles onTileClick={handleTileClick} />
+                <QuickstartGrid
+                  onQuickstartTap={handleQuickstartTap}
+                  onQuickstartLongPress={handleQuickstartLongPress}
+                  isLoading={isQuickstartLoading}
+                />
               ) : (
                 <ChatList
                   messages={messages}
