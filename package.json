@@ -74,7 +74,7 @@
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
     "@eslint/js": "^9.36.0",
-    "@lhci/cli": "^0.14.0",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.55.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
@@ -99,7 +99,7 @@
     "globals": "^16.3.0",
     "happy-dom": "^19.0.2",
     "husky": "^9.1.7",
-    "jsdom": "^26.1.0",
+    "jsdom": "^27.0.0",
     "lint-staged": "^16.2.3",
     "msw": "^2.11.3",
     "playwright": "^1.55.1",
@@ -117,9 +117,9 @@
     "node": ">=20.14.0 <24"
   },
   "buildInfo": {
-    "buildId": "v1.0.0-5d78e89",
-    "buildTime": "2025-10-03T09:11:56.553Z",
-    "gitSha": "5d78e8953f705ce11d9723c4c8314584c7443fd1",
+    "buildId": "v1.0.0-185b5bc",
+    "buildTime": "2025-10-03T14:19:36.699Z",
+    "gitSha": "185b5bcca473782ad56571d18a94a06b8d7be46b",
     "gitBranch": "main"
   }
 }
