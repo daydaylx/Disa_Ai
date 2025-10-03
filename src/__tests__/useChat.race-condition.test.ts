@@ -1,6 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { chatStream } from "../api/openrouter";
 import { type ChatMessageType } from "../components/chat/ChatMessage";
 import { useChat } from "../hooks/useChat";
 
@@ -37,7 +38,7 @@ describe("useChat Race Condition Tests", () => {
     // Verify that append captures state atomically
     act(() => {
       // Start append operation
-      const appendPromise = result.current.append({
+      const _appendPromise = result.current.append({
         role: "user" as const,
         content: "Test message",
       });
@@ -96,8 +97,7 @@ describe("useChat Race Condition Tests", () => {
     const { result } = renderHook(() => useChat());
 
     // Mock chatStream to throw an AbortError
-    // chatStream is already mocked at module level
-    (chatStream as any).mockRejectedValueOnce(new DOMException("Aborted", "AbortError"));
+    vi.mocked(chatStream).mockRejectedValueOnce(new DOMException("Aborted", "AbortError"));
 
     const initialMessages: ChatMessageType[] = [
       { id: "1", role: "user", content: "Base message", timestamp: Date.now() },
