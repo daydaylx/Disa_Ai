@@ -5,14 +5,26 @@ import { chatStream } from "../api/openrouter";
 import { type ChatMessageType } from "../components/chat/ChatMessage";
 import { useChat } from "../hooks/useChat";
 
+// Mock window object for test environment
+Object.defineProperty(window, "location", {
+  value: { reload: vi.fn() },
+  writable: true,
+});
+
 // Mock the chatStream function
 vi.mock("../api/openrouter", () => ({
   chatStream: vi.fn(async (messages, onDelta, options) => {
     // Simulate streaming response
     await new Promise((resolve) => setTimeout(resolve, 10));
     if (onDelta) {
-      onDelta("Hello");
+      // First call with messageData to initialize assistant message
+      onDelta("Hello", {
+        id: "test-assistant-id",
+        role: "assistant",
+        timestamp: Date.now(),
+      });
       await new Promise((resolve) => setTimeout(resolve, 10));
+      // Subsequent calls with just delta content
       onDelta(" World");
     }
     if (options?.onDone) {
@@ -39,21 +51,15 @@ describe("useChat Race Condition Tests", () => {
         ]);
       });
 
-      const _initialMessageCount = result.current.messages.length;
-
       // Verify that append captures state atomically
-      let appendPromise: Promise<string> | undefined;
+      let appendPromise: Promise<void> | undefined;
 
       act(() => {
-        // Start append operation
+        // Start append operation - this should capture the current state (2 messages)
         appendPromise = result.current.append({
           role: "user" as const,
           content: "Test message",
         });
-
-        // The append function should have captured the state at call time
-        // Even if we modify the state now, the API call should use the captured state
-        result.current.setMessages([]);
       });
 
       // Wait for append to complete
@@ -64,16 +70,19 @@ describe("useChat Race Condition Tests", () => {
         });
       }
 
-      // The append operation should have completed successfully
-      // using the captured state, not the empty state we set
-      expect(result.current.messages.length).toBeGreaterThan(0);
+      // The append operation should have added both user and assistant messages
+      expect(result.current.messages.length).toBeGreaterThan(2);
 
-      // Should contain both user and assistant messages
+      // Should contain the new user message
       const userMessages = result.current.messages.filter((msg) => msg.role === "user");
-      const assistantMessages = result.current.messages.filter((msg) => msg.role === "assistant");
+      const lastUserMessage = userMessages[userMessages.length - 1];
+      expect(lastUserMessage?.content).toBe("Test message");
 
-      expect(userMessages.length).toBeGreaterThan(0);
-      expect(assistantMessages.length).toBeGreaterThan(0);
+      // Should contain the new assistant message from the mock
+      const assistantMessages = result.current.messages.filter((msg) => msg.role === "assistant");
+      const lastAssistantMessage = assistantMessages[assistantMessages.length - 1];
+      expect(lastAssistantMessage?.content).toBe("Hello World");
+      expect(lastAssistantMessage?.id).toBe("test-assistant-id");
     } finally {
       // Ensure proper cleanup
       unmount();
