@@ -65,7 +65,12 @@ export function getAllConversations(): Conversation[] {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return [];
 
-    const conversations = JSON.parse(stored) as Conversation[];
+    const conversations = (JSON.parse(stored) as Conversation[]).map((conv) => {
+      if (conv && typeof conv.lastActivity !== "number") {
+        conv.lastActivity = conv.updatedAt || conv.createdAt || Date.now();
+      }
+      return conv;
+    });
 
     // Sort by last activity (most recent first)
     return conversations.sort((a, b) => b.lastActivity - a.lastActivity);
@@ -234,6 +239,16 @@ export function importConversations(
 
     const existingConversations = getAllConversations();
     let finalConversations: Conversation[] = [];
+
+    // Sanitize imported data to prevent crashes
+    exportData.conversations = exportData.conversations
+      .filter(Boolean) // Remove null/undefined entries
+      .map((conv) => {
+        if (typeof conv.lastActivity !== "number") {
+          conv.lastActivity = conv.updatedAt || conv.createdAt || Date.now();
+        }
+        return conv;
+      });
 
     switch (options.mergeStrategy) {
       case "replace":
