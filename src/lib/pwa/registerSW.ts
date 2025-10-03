@@ -130,18 +130,7 @@ export function registerSW() {
                         }
                       });
                   };
-                  const evt = new CustomEvent("disa:toast", {
-                    detail: {
-                      kind: shouldForceReload ? "warning" : "info",
-                      title: shouldForceReload ? "Kritisches Update" : "Update verfügbar",
-                      message: shouldForceReload
-                        ? "Ein kritisches Update ist verfügbar. Bitte laden Sie die Seite neu."
-                        : "Eine neue Version ist verfügbar. Möchten Sie jetzt neu laden?",
-                      action: { label: "Jetzt neu laden", onClick: reload },
-                      durationMs: shouldForceReload ? 0 : 8000, // Critical updates stay visible
-                    },
-                  });
-                  window.dispatchEvent(evt);
+                  // Update-Banner entfernt - kein Toast mehr anzeigen
 
                   // User-controlled reload only - no automatic reload to prevent loops
                   if (shouldForceReload) {

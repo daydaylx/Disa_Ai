@@ -1,5 +1,6 @@
 import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
-import { NavLink, Outlet } from "react-router-dom";
+import { ReactNode } from "react";
+import { NavLink } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -86,7 +87,11 @@ function BottomNav() {
   );
 }
 
-export function AppShell() {
+interface AppShellProps {
+  children: ReactNode;
+}
+
+export function AppShell({ children }: AppShellProps) {
   return (
     <div
       className="relative mx-auto flex w-full max-w-md flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200"
@@ -97,9 +102,7 @@ export function AppShell() {
 
       <Header />
 
-      <main className="relative z-10 flex-1 overflow-hidden px-4 pb-16">
-        <Outlet />
-      </main>
+      <main className="relative z-10 flex-1 overflow-hidden px-4 pb-16">{children}</main>
 
       <NetworkBanner />
       <BottomNav />

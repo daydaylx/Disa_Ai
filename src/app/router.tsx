@@ -14,53 +14,47 @@ const router = createBrowserRouter(
   [
     {
       path: "/",
-      element: <AppShell />,
-      children: [
-        {
-          path: "/chat",
-          element: (
-            <ErrorBoundary>
-              <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
-                <ChatPage />
-              </Suspense>
-            </ErrorBoundary>
-          ),
-        },
-        {
-          path: "/models",
-          element: (
-            <ErrorBoundary>
-              <Suspense fallback={<RouteLoadingFallback message="Lädt Modellkatalog..." />}>
-                <ModelsPage />
-              </Suspense>
-            </ErrorBoundary>
-          ),
-        },
-        {
-          path: "/settings",
-          element: (
-            <ErrorBoundary>
-              <Suspense fallback={<RouteLoadingFallback message="Lädt Einstellungen..." />}>
-                <SettingsPage />
-              </Suspense>
-            </ErrorBoundary>
-          ),
-        },
-        {
-          index: true,
-          element: (
-            <ErrorBoundary>
-              <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
-                <ChatPage />
-              </Suspense>
-            </ErrorBoundary>
-          ),
-        },
-        {
-          path: "*",
-          element: <Navigate to="/chat" replace />,
-        },
-      ],
+      element: <Navigate to="/chat" replace />,
+    },
+    {
+      path: "/chat",
+      element: (
+        <AppShell>
+          <ErrorBoundary>
+            <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
+              <ChatPage />
+            </Suspense>
+          </ErrorBoundary>
+        </AppShell>
+      ),
+    },
+    {
+      path: "/models",
+      element: (
+        <AppShell>
+          <ErrorBoundary>
+            <Suspense fallback={<RouteLoadingFallback message="Lädt Modellkatalog..." />}>
+              <ModelsPage />
+            </Suspense>
+          </ErrorBoundary>
+        </AppShell>
+      ),
+    },
+    {
+      path: "/settings",
+      element: (
+        <AppShell>
+          <ErrorBoundary>
+            <Suspense fallback={<RouteLoadingFallback message="Lädt Einstellungen..." />}>
+              <SettingsPage />
+            </Suspense>
+          </ErrorBoundary>
+        </AppShell>
+      ),
+    },
+    {
+      path: "*",
+      element: <Navigate to="/chat" replace />,
     },
   ],
   {
