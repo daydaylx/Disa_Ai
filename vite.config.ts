@@ -100,35 +100,7 @@ export default defineConfig(({ mode }) => {
         // Robust solution: No externalization needed for bundled app
         // Dependencies will be properly ordered through manualChunks priority
         output: {
-          // Ultra-conservative chunking to prevent React initialization issues
-          manualChunks: (id) => {
-            // CRITICAL: Keep ALL React ecosystem in single chunk to prevent race conditions
-            if (
-              id.includes("node_modules/react") ||
-              id.includes("node_modules/react-dom") ||
-              id.includes("node_modules/react-router") ||
-              id.includes("node_modules/@types/react") ||
-              id.includes("node_modules/scheduler")
-            ) {
-              return "react-ecosystem";
-            }
-
-            // UI libraries in separate chunk
-            if (
-              id.includes("node_modules/@radix-ui/") ||
-              id.includes("node_modules/lucide-react")
-            ) {
-              return "ui-vendor";
-            }
-
-            // All other vendor libraries
-            if (id.includes("node_modules/")) {
-              return "vendor";
-            }
-
-            // Application code loads last (main bundle)
-            return undefined;
-          },
+          manualChunks: undefined,
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,
           entryFileNames: "assets/js/[name]-[hash].js",
