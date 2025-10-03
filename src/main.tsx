@@ -37,7 +37,31 @@ function initializeApp() {
 }
 
 // Start the app
-initializeApp();
+try {
+  initializeApp();
+
+  // Remove loading fallback when React app successfully mounts
+  setTimeout(() => {
+    const fallback = document.getElementById("loading-fallback");
+    if (fallback) {
+      fallback.style.opacity = "0";
+      fallback.style.transition = "opacity 0.3s ease";
+      setTimeout(() => fallback.remove(), 300);
+    }
+  }, 100);
+} catch (error) {
+  console.error("Failed to initialize app:", error);
+
+  // Show error in loading fallback
+  const fallback = document.getElementById("loading-fallback");
+  if (fallback) {
+    const message = fallback.querySelector("div:last-child");
+    if (message) {
+      message.textContent = "Fehler beim Laden. Seite wird neu geladen...";
+      setTimeout(() => window.location.reload(), 2000);
+    }
+  }
+}
 
 // PWA Service Worker
 registerSW();
