@@ -71,21 +71,26 @@ function BottomNav() {
   ];
 
   return (
-    <nav className="bg-background border-border fixed bottom-0 left-0 right-0 z-20 flex h-16 items-center justify-around border-t pb-safe-bottom">
-      {navigationItems.map((item) => (
-        <NavLink
-          key={item.to}
-          to={item.to}
-          className="text-muted-foreground flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors hover:text-primary active:text-primary"
-          style={({ isActive }) => ({
-            color: isActive ? "hsl(var(--primary))" : "",
-            background: isActive ? "rgba(var(--primary-rgb, 147 51 234), 0.1)" : "transparent",
-          })}
-        >
-          <span className="flex h-6 w-6 items-center justify-center">{item.icon}</span>
-          <span className="text-[10px] leading-none">{item.label}</span>
-        </NavLink>
-      ))}
+    <nav className="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-around border-t border-white/20 bg-slate-900/95 backdrop-blur-md">
+      <div
+        className="flex h-16 w-full items-center justify-around"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      >
+        {navigationItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className="flex min-h-12 min-w-12 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200"
+            style={({ isActive }) => ({
+              color: isActive ? "var(--color-purple)" : "var(--color-neutral-300)",
+              background: isActive ? "var(--color-accent-subtle)" : "transparent",
+            })}
+          >
+            <span className="flex h-6 w-6 items-center justify-center">{item.icon}</span>
+            <span className="text-[10px] leading-none">{item.label}</span>
+          </NavLink>
+        ))}
+      </div>
     </nav>
   );
 }
@@ -98,7 +103,11 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div
       className="relative mx-auto flex w-full max-w-sm flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200 sm:max-w-md"
-      style={{ minHeight: "var(--vh, 100dvh)", height: "var(--vh, 100dvh)" }}
+      style={{
+        minHeight: "var(--vh, 100dvh)",
+        height: "var(--vh, 100dvh)",
+        maxHeight: "var(--vh, 100dvh)",
+      }}
     >
       <div className="pointer-events-none absolute inset-x-0 top-[-30%] h-[60%] bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.35),_transparent_65%)]" />
       <div className="pointer-events-none absolute inset-x-[-20%] bottom-[-35%] h-[55%] bg-[radial-gradient(circle_at_bottom,_rgba(59,130,246,0.25),_transparent_70%)]" />
@@ -113,7 +122,10 @@ export function AppShell({ children }: AppShellProps) {
       <BottomNav />
 
       {/* Footer mit Build-Info für Issue #81 */}
-      <footer className="relative z-10 px-4 pb-2 pb-safe-bottom">
+      <footer
+        className="relative z-10 px-4 pb-2"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
+      >
         <div className="mx-auto max-w-xs text-center">
           <BuildInfo className="opacity-60 transition-opacity hover:opacity-100" />
         </div>

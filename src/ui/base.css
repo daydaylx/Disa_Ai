@@ -59,6 +59,23 @@ body {
   padding-bottom: var(--inset-b);
   padding-left: var(--inset-l);
   padding-right: var(--inset-r);
+  /* Prevent zoom on mobile when focusing inputs */
+  touch-action: manipulation;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  * {
+    /* Improve touch targets */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent horizontal scroll on mobile */
+  html,
+  body {
+    overflow-x: hidden;
+    position: relative;
+  }
 }
 
 /* Safe area utilities */

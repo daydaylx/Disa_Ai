@@ -183,6 +183,15 @@ export default {
     "tile",
     "tile--primary",
     "card",
+    // Safe area classes
+    "pb-safe-bottom",
+    "pt-safe-top",
+    "pl-safe-left",
+    "pr-safe-right",
+    "mb-safe-bottom",
+    "mt-safe-top",
+    "ml-safe-left",
+    "mr-safe-right",
   ],
   plugins: [],
 } satisfies Config;
