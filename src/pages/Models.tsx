@@ -10,6 +10,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { VirtualList } from "../components/ui/VirtualList";
 import { loadModelCatalog, type ModelEntry } from "../config/models";
 import { cn } from "../lib/utils";
 
@@ -188,6 +189,79 @@ export default function ModelsPage() {
     });
   };
 
+  // Render function for virtual list
+  const renderModelCard = (model: ModelEntry) => (
+    <Card
+      key={model.id}
+      role="button"
+      tabIndex={0}
+      data-testid="model-card"
+      onClick={() => handleSelect(model)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleSelect(model);
+        }
+      }}
+      aria-pressed={selected === model.id}
+      aria-label={`Modell ${model.label || model.id} auswählen`}
+      className={cn(
+        "mb-3 border-white/20 bg-white/10 backdrop-blur transition-all",
+        selected === model.id
+          ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
+          : "hover:border-white/30 hover:bg-white/20",
+      )}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div className="space-y-1">
+          <CardTitle className="text-sm font-medium text-white">
+            {model.label || model.id}
+          </CardTitle>
+          <CardDescription className="text-xs text-white/60">
+            {model.provider || "Unbekannter Anbieter"}
+          </CardDescription>
+        </div>
+        <div className="flex items-center gap-2">
+          {selected === model.id && <div className="text-accent-400 h-4 w-4">✓</div>}
+          {model.pricing?.in === 0 && (
+            <Badge
+              variant="secondary"
+              className="border-green-500/30 bg-green-500/20 text-xs text-green-400"
+            >
+              Kostenlos
+            </Badge>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-4 text-xs">
+          <div>
+            <p className="text-white/50">Kontext</p>
+            <p className="text-white">{formatContext(model.ctx)}</p>
+          </div>
+          <div>
+            <p className="text-white/50">Preis</p>
+            <p className="text-white">{formatPrice(model.pricing?.in)}</p>
+          </div>
+        </div>
+        {model.tags && model.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1">
+            {model.tags.slice(0, 3).map((tag) => (
+              <Badge key={tag} variant="outline" className="border-white/20 text-xs text-white/60">
+                {tag}
+              </Badge>
+            ))}
+            {model.tags.length > 3 && (
+              <Badge variant="outline" className="border-white/20 text-xs text-white/60">
+                +{model.tags.length - 3}
+              </Badge>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-1">
@@ -285,81 +359,19 @@ export default function ModelsPage() {
           </div>
         </div>
       ) : (
-        <div className="flex-1 space-y-3 overflow-y-auto pb-4">
-          {filtered.map((model) => (
-            <Card
-              key={model.id}
-              role="button"
-              tabIndex={0}
-              data-testid="model-card"
-              onClick={() => handleSelect(model)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  handleSelect(model);
-                }
-              }}
-              aria-pressed={selected === model.id}
-              aria-label={`Modell ${model.label || model.id} auswählen`}
-              className={cn(
-                "border-white/20 bg-white/10 backdrop-blur transition-all",
-                selected === model.id
-                  ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
-                  : "hover:border-white/30 hover:bg-white/20",
-              )}
-            >
-              <CardHeader className="space-y-1 pb-3">
-                <CardTitle className="text-base font-semibold text-white">
-                  {model.label || model.id}
-                </CardTitle>
-                <CardDescription className="text-white/70">
-                  {model.provider ?? "Unbekannter Anbieter"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-white/60">Kontext</span>
-                  <span className="font-medium text-white">{formatContext(model.ctx)}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-white/60">Prompt / Completion</span>
-                  <span className="font-medium text-white">
-                    {formatPrice(model.pricing?.in)} / {formatPrice(model.pricing?.out)}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">{SAFETY_LABELS[model.safety] ?? model.safety}</Badge>
-                  {model.tags?.slice(0, 3).map((tag: string) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {(model.tags?.length ?? 0) > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{(model.tags?.length ?? 0) - 3} weitere
-                    </Badge>
-                  )}
-                </div>
-                {selected === model.id ? (
-                  <div
-                    className="bg-accent-500/90 inline-flex w-full items-center justify-center rounded-md border border-accent-500 px-3 py-2 text-sm font-semibold text-white"
-                    role="status"
-                    aria-label="Modell ist aktiv"
-                  >
-                    ✓ Aktiv
-                  </div>
-                ) : (
-                  <div
-                    className="inline-flex w-full items-center justify-center rounded-md border border-white/20 bg-white/20 px-3 py-2 text-sm font-semibold text-white/90"
-                    aria-hidden="true"
-                  >
-                    Übernehmen
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <VirtualList
+          items={filtered}
+          renderItem={renderModelCard}
+          keyExtractor={(model) => model.id}
+          itemHeight={140}
+          virtualizationThreshold={20}
+          className="flex-1 pb-4"
+          emptyComponent={
+            <div className="text-center text-white/60">
+              <p>Keine Modelle gefunden</p>
+            </div>
+          }
+        />
       )}
     </div>
   );

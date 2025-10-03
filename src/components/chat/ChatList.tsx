@@ -7,7 +7,7 @@ import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
 import { GlassTile } from "../ui/GlassTile";
 import type { ChatMessageType } from "./ChatMessage";
-import { ChatMessage } from "./ChatMessage";
+import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
 interface ChatListProps {
   messages: ChatMessageType[];
@@ -244,58 +244,12 @@ export function ChatList({
           </div>
         ) : (
           <div className="flex-1">
-            {messages.map((message, index) => (
-              <ChatMessage
-                key={message.id}
-                message={message}
-                isLast={index === messages.length - 1}
-                onRetry={onRetry}
-                onCopy={handleCopy}
-              />
-            ))}
-
-            {isLoading && (
-              <div className="flex items-start gap-3 px-3 py-5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/80 shadow-[0_10px_28px_rgba(8,15,31,0.45)]">
-                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 3a9 9 0 019 9"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="opacity-60"
-                    />
-                    <path
-                      d="M21 12a9 9 0 01-9 9"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="opacity-20"
-                    />
-                  </svg>
-                </div>
-                <div className="flex-1 rounded-3xl border border-white/10 bg-white/10 p-4 text-sm text-white/70 shadow-[0_18px_40px_rgba(8,15,31,0.45)] backdrop-blur-xl">
-                  <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/50">
-                    <span>Assistent</span>
-                    <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-white/60" />
-                    <span>Schreibt …</span>
-                  </div>
-                  <div className="mt-3 flex gap-1">
-                    <div className="h-2 w-2 animate-pulse rounded-full bg-white/70" />
-                    <div
-                      className="h-2 w-2 animate-pulse rounded-full bg-white/70"
-                      style={{ animationDelay: "0.15s" }}
-                    />
-                    <div
-                      className="h-2 w-2 animate-pulse rounded-full bg-white/70"
-                      style={{ animationDelay: "0.3s" }}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
+            <VirtualizedMessageList
+              messages={messages}
+              onRetry={onRetry}
+              onCopy={handleCopy}
+              isLoading={isLoading}
+            />
           </div>
         )}
 
