@@ -38,8 +38,8 @@ export default defineConfig(({ mode }) => {
     base = "/";
     console.log(`[Vite] Cloudflare Pages detected, using base: ${base}`);
   }
-  // 3. GitHub Pages Detection
-  else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY) {
+  // 3. GitHub Pages Detection (only for production builds)
+  else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY && isProduction) {
     const repo = env.GITHUB_REPOSITORY.split("/")[1];
     base = `/${repo}/`;
     console.log(`[Vite] GitHub Pages detected, using base: ${base}`);
@@ -68,9 +68,9 @@ export default defineConfig(({ mode }) => {
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
     server: {
-      historyApiFallback: {
-        index: "/index.html",
-      },
+      // Vite handles SPA routing automatically, no need for historyApiFallback
+      port: parseInt(env.VITE_PORT || "5173"),
+      strictPort: false,
     },
     resolve: {
       alias: {
