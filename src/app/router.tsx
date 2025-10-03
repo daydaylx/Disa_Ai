@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import { ErrorBoundary } from "../components/ErrorBoundary";
-import { RouteLoadingFallback } from "../components/RouteLoadingFallback";
 import { AppShell } from "./layouts/AppShell";
 
 // Lazy-loaded Routes für bessere Performance
