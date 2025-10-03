@@ -71,11 +71,11 @@ module.exports = {
       // Store results for comparison
       target: "temporary-public-storage",
     },
-    server: {
-      // Start local server for testing
-      command: "npm run build && npm run preview",
-      port: 4173,
-      wait: 10000, // Wait 10s for server to start in CI
-    },
+    // Server configuration removed - let CI workflow handle server startup
+    // server: {
+    //   command: "npm run build && npm run preview",
+    //   port: 4173,
+    //   wait: 10000,
+    // },
   },
 };
