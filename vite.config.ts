@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 import { analyzer } from "vite-bundle-analyzer";
+import { VitePWA } from "vite-plugin-pwa";
 
 const analyzerPlugin = analyzer({
   analyzerMode: process.env.BUNDLE_ANALYZE_MODE ?? "static",
@@ -50,7 +51,20 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react(), analyzerPlugin],
+    plugins: [
+      react(),
+      analyzerPlugin,
+      VitePWA({
+        registerType: "autoUpdate",
+        injectRegister: "auto",
+        devOptions: {
+          enabled: true,
+        },
+        workbox: {
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2}"],
+        },
+      }),
+    ],
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
     server: {
@@ -83,33 +97,35 @@ export default defineConfig(({ mode }) => {
           tryCatchDeoptimization: false,
           unknownGlobalSideEffects: false,
         },
-        // Fix: Ensure React loads before any components that depend on it
-        external: (id) => {
-          // Don't externalize anything in production build
-          return false;
-        },
+        // Robust solution: No externalization needed for bundled app
+        // Dependencies will be properly ordered through manualChunks priority
         output: {
-          // Optimized chunking strategy for better bundle size
+          // Fixed chunking strategy to prevent initialization race conditions
           manualChunks: (id) => {
-            // Split large UI libraries into separate chunks
-            if (id.includes("node_modules/@radix-ui/")) {
-              return "radix-ui";
-            }
-            if (id.includes("node_modules/react-router")) {
-              return "react-router";
-            }
-            if (id.includes("node_modules/lucide-react")) {
-              return "icons";
-            }
-            // Core React libraries
+            // Keep all React dependencies together to avoid initialization issues
             if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
               return "react-vendor";
             }
-            // All other node_modules
+
+            // UI component libraries
+            if (
+              id.includes("node_modules/@radix-ui/") ||
+              id.includes("node_modules/lucide-react")
+            ) {
+              return "ui-vendor";
+            }
+
+            // Router separately
+            if (id.includes("node_modules/react-router")) {
+              return "router-vendor";
+            }
+
+            // All other vendor libraries
             if (id.includes("node_modules/")) {
               return "vendor";
             }
-            // Application code stays in main bundle
+
+            // Application code loads last (main bundle)
             return undefined;
           },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types

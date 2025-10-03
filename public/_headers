@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.openrouter.ai https://static.cloudflareinsights.com;
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.openrouter.ai https://openrouter.ai https://static.cloudflareinsights.com https://cloudflareinsights.com;
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   Referrer-Policy: no-referrer
   X-Content-Type-Options: nosniff
