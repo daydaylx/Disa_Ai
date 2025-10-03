@@ -108,18 +108,18 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.45.0",
     "vite": "^7.1.6",
     "vite-bundle-analyzer": "^1.2.3",
+    "vite-plugin-pwa": "^1.0.3",
     "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20.14.0 <24"
   },
   "buildInfo": {
-    "buildId": "v1.0.0-c387138",
-    "buildTime": "2025-10-02T23:51:20.315Z",
-    "gitSha": "c38713814e0c3e478f9bec55489e57ce63fbd358",
+    "buildId": "v1.0.0-59393ec",
+    "buildTime": "2025-10-03T08:08:39.664Z",
+    "gitSha": "59393ec744df62dae612d276948b8ae92dd7fc9e",
     "gitBranch": "main"
   }
 }
