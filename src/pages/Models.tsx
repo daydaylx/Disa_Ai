@@ -27,7 +27,7 @@ function formatPrice(price?: number) {
   return `$${price.toFixed(3)}/1k`;
 }
 
-const SAFETY_LABELS: Record<string, string> = {
+const _SAFETY_LABELS: Record<string, string> = {
   free: "Kostenlos",
   moderate: "Mittel",
   strict: "Strikt",

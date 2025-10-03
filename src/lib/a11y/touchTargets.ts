@@ -147,7 +147,7 @@ export function enforceA11yStandards(container: Element = document.body): {
   violations: A11yViolation[];
   fixedCount: number;
 } {
-  const violations = scanDocumentA11y(container);
+  const _violations = scanDocumentA11y(container);
   let fixedCount = 0;
 
   // Attempt auto-fixes
@@ -360,16 +360,15 @@ export function initializeA11yEnforcement(): void {
   document.addEventListener("DOMContentLoaded", () => {
     const result = enforceA11yStandards();
     if (result.violations.length > 0) {
-      console.group("🔍 Accessibility Violations Detected");
+      console.warn("🔍 Accessibility Violations Detected");
       result.violations.forEach((violation) => {
         console.warn(violation.message, violation.element);
-        console.info("💡 Suggestion:", violation.suggestion);
+        console.warn("💡 Suggestion:", violation.suggestion);
       });
-      console.groupEnd();
     }
 
     if (result.fixedCount > 0) {
-      console.info(`✅ Auto-fixed ${result.fixedCount} accessibility issues`);
+      console.warn(`✅ Auto-fixed ${result.fixedCount} accessibility issues`);
     }
   });
 
