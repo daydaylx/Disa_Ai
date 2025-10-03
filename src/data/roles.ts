@@ -249,10 +249,9 @@ export async function loadRoles(): Promise<Role[]> {
   const externalRoles = await fetchRoleTemplates();
 
   // Konvertiere externe Rollen zu Role-Format
-  const externalRolesFormatted: Role[] = externalRoles.map((role: any) => ({
+  const externalRolesFormatted: Role[] = externalRoles.map((role) => ({
     id: role.id,
     name: role.name,
-    description: role.description ?? role.summary,
     systemPrompt: role.system || "",
     allowedModels: role.allow,
     tags: role.tags,

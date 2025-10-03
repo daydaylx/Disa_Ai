@@ -100,24 +100,25 @@ export default defineConfig(({ mode }) => {
         // Robust solution: No externalization needed for bundled app
         // Dependencies will be properly ordered through manualChunks priority
         output: {
-          // Fixed chunking strategy to prevent initialization race conditions
+          // Ultra-conservative chunking to prevent React initialization issues
           manualChunks: (id) => {
-            // Keep all React dependencies together to avoid initialization issues
-            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
-              return "react-vendor";
+            // CRITICAL: Keep ALL React ecosystem in single chunk to prevent race conditions
+            if (
+              id.includes("node_modules/react") ||
+              id.includes("node_modules/react-dom") ||
+              id.includes("node_modules/react-router") ||
+              id.includes("node_modules/@types/react") ||
+              id.includes("node_modules/scheduler")
+            ) {
+              return "react-ecosystem";
             }
 
-            // UI component libraries
+            // UI libraries in separate chunk
             if (
               id.includes("node_modules/@radix-ui/") ||
               id.includes("node_modules/lucide-react")
             ) {
               return "ui-vendor";
-            }
-
-            // Router separately
-            if (id.includes("node_modules/react-router")) {
-              return "router-vendor";
             }
 
             // All other vendor libraries

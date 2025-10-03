@@ -1,9 +1,25 @@
 /* eslint-disable no-empty */
+import { getEnvConfigSafe } from "../config/env";
 import { mapError } from "../lib/errors";
 import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey, writeApiKey } from "../lib/openrouter/key";
 
-const BASE = "https://openrouter.ai/api/v1";
+interface ToastItem {
+  kind: "error" | "success" | "warning" | "info";
+  title: string;
+  message: string;
+  actions?: Array<{ label: string; onClick: () => void }>;
+}
+
+interface ToastsArray {
+  push: (toast: ToastItem) => void;
+}
+
+// Use environment configuration for API base URL
+function getApiBase(): string {
+  const config = getEnvConfigSafe();
+  return config.VITE_OPENROUTER_BASE_URL;
+}
 
 export type ORModel = {
   id: string;
@@ -42,7 +58,7 @@ const DEFAULT_TTL_MS = 20 * 60 * 1000; // 20 Minuten
 export async function getRawModels(
   explicitKey?: string,
   ttlMs = DEFAULT_TTL_MS,
-  toasts?: any,
+  toasts?: ToastsArray,
 ): Promise<ORModel[]> {
   try {
     const tsRaw = localStorage.getItem(LS_MODELS_TS);
@@ -55,7 +71,7 @@ export async function getRawModels(
   } catch {}
 
   try {
-    const res = await fetchWithTimeoutAndRetry(`${BASE}/models`, {
+    const res = await fetchWithTimeoutAndRetry(`${getApiBase()}/models`, {
       timeoutMs: 15000,
       maxRetries: 2,
       retryDelayMs: 1000,
