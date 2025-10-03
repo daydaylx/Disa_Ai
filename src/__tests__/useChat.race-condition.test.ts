@@ -10,10 +10,15 @@ vi.mock("../api/openrouter", () => ({
   chatStream: vi.fn(async (messages, onDelta, options) => {
     // Simulate streaming response
     await new Promise((resolve) => setTimeout(resolve, 10));
-    onDelta("Hello");
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    onDelta(" World");
-    options?.onDone?.();
+    if (onDelta) {
+      onDelta("Hello");
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      onDelta(" World");
+    }
+    if (options?.onDone) {
+      options.onDone();
+    }
+    return Promise.resolve("Hello World");
   }),
 }));
 
@@ -22,45 +27,57 @@ describe("useChat Race Condition Tests", () => {
     vi.clearAllMocks();
   });
 
-  it("should capture state atomically at function call time", () => {
-    const { result } = renderHook(() => useChat());
+  it("should capture state atomically at function call time", async () => {
+    const { result, unmount } = renderHook(() => useChat());
 
-    // Set initial messages
-    act(() => {
-      result.current.setMessages([
-        { id: "1", role: "user", content: "Initial message", timestamp: Date.now() },
-        { id: "2", role: "assistant", content: "Initial response", timestamp: Date.now() },
-      ]);
-    });
-
-    const _initialMessageCount = result.current.messages.length;
-
-    // Verify that append captures state atomically
-    act(() => {
-      // Start append operation
-      const _appendPromise = result.current.append({
-        role: "user" as const,
-        content: "Test message",
+    try {
+      // Set initial messages
+      act(() => {
+        result.current.setMessages([
+          { id: "1", role: "user", content: "Initial message", timestamp: Date.now() },
+          { id: "2", role: "assistant", content: "Initial response", timestamp: Date.now() },
+        ]);
       });
 
-      // The append function should have captured the state at call time
-      // Even if we modify the state now, the API call should use the captured state
-      result.current.setMessages([]);
+      const _initialMessageCount = result.current.messages.length;
+
+      // Verify that append captures state atomically
+      let appendPromise: Promise<string> | undefined;
+
+      act(() => {
+        // Start append operation
+        appendPromise = result.current.append({
+          role: "user" as const,
+          content: "Test message",
+        });
+
+        // The append function should have captured the state at call time
+        // Even if we modify the state now, the API call should use the captured state
+        result.current.setMessages([]);
+      });
 
       // Wait for append to complete
-      // appendPromise resolves when streaming is done
-    });
+      expect(appendPromise).toBeDefined();
+      if (appendPromise) {
+        await act(async () => {
+          await appendPromise;
+        });
+      }
 
-    // The append operation should have completed successfully
-    // using the captured state, not the empty state we set
-    expect(result.current.messages.length).toBeGreaterThan(0);
+      // The append operation should have completed successfully
+      // using the captured state, not the empty state we set
+      expect(result.current.messages.length).toBeGreaterThan(0);
 
-    // Should contain both user and assistant messages
-    const userMessages = result.current.messages.filter((msg) => msg.role === "user");
-    const assistantMessages = result.current.messages.filter((msg) => msg.role === "assistant");
+      // Should contain both user and assistant messages
+      const userMessages = result.current.messages.filter((msg) => msg.role === "user");
+      const assistantMessages = result.current.messages.filter((msg) => msg.role === "assistant");
 
-    expect(userMessages.length).toBeGreaterThan(0);
-    expect(assistantMessages.length).toBeGreaterThan(0);
+      expect(userMessages.length).toBeGreaterThan(0);
+      expect(assistantMessages.length).toBeGreaterThan(0);
+    } finally {
+      // Ensure proper cleanup
+      unmount();
+    }
   });
 
   it("should handle reload operation with atomic state capture", () => {

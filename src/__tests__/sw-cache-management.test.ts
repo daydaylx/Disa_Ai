@@ -28,20 +28,32 @@ function shouldPreserveCache(cacheName: string): boolean {
     // Extract version from cache name for intelligent cleanup
     const versionMatch = cacheName.match(/v(\d+)\.(\d+)\.(\d+)/);
     if (versionMatch) {
-      const [, major, minor] = versionMatch;
+      const [, major, minor, patch] = versionMatch;
       const currentVersionMatch = SW_VERSION.match(/v(\d+)\.(\d+)\.(\d+)/);
 
       if (currentVersionMatch) {
-        const [, currentMajor, currentMinor] = currentVersionMatch;
+        const [, currentMajor, currentMinor, currentPatch] = currentVersionMatch;
 
-        // Preserve caches from same major version (forwards compatibility)
+        // Preserve caches from same major version ONLY if within reasonable range
         if (major === currentMajor) {
-          return true;
-        }
+          const minorGap = parseInt(currentMinor) - parseInt(minor);
+          const patchInt = parseInt(patch);
+          const currentPatchInt = parseInt(currentPatch);
 
-        // Only preserve older versions within 1 minor version for rollback safety
-        if (major === currentMajor && parseInt(currentMinor) - parseInt(minor) <= 1) {
-          return true;
+          // For same major version:
+          if (minorGap === 0) {
+            // Same minor version - preserve if patch is recent enough (within current or one behind)
+            return patchInt >= currentPatchInt - 1;
+          } else if (minorGap === 1) {
+            // One minor version behind - only preserve if it's a recent patch (>= 5)
+            return patchInt >= 5;
+          } else if (minorGap <= 1) {
+            // Should not reach here due to above conditions, but kept for safety
+            return true;
+          }
+
+          // If major is same but minor is too far behind, delete it
+          return false;
         }
 
         // Preserve newer versions (rollback safety)

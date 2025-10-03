@@ -236,8 +236,14 @@ export async function loadModelCatalog(
     // If still no matches, return the top available free models
     const fallbackModels = list.filter((model) => model.id.includes(":free")).slice(0, 10); // Limit to prevent overwhelming UI
 
-    console.warn(`[Models] Using ${fallbackModels.length} fallback free models`);
-    return fallbackModels.map(toEntry).sort(byLabel);
+    if (fallbackModels.length > 0) {
+      console.warn(`[Models] Using ${fallbackModels.length} fallback free models`);
+      return fallbackModels.map(toEntry).sort(byLabel);
+    }
+
+    // If API returned empty or no free models, use emergency fallback
+    console.warn("[Models] No models available from API, using emergency fallback");
+    throw new Error("Empty API response - triggering emergency fallback");
   } catch (error) {
     console.error("[Models] Failed to load model catalog:", error);
 
