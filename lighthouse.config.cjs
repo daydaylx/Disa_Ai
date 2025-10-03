@@ -8,9 +8,9 @@ module.exports = {
     collect: {
       // URLs to test
       url: [
-        "http://localhost:5173",
-        "http://localhost:5173/models",
-        "http://localhost:5173/settings",
+        "http://localhost:4173",
+        "http://localhost:4173/models",
+        "http://localhost:4173/settings",
       ],
       // Number of runs per URL for more stable results
       numberOfRuns: 3,
