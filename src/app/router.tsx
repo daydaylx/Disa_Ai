@@ -20,7 +20,7 @@ const router = createBrowserRouter(
       element: (
         <AppShell>
           <ErrorBoundary>
-            <Suspense fallback={<RouteLoadingFallback message="Lädt Chat..." />}>
+            <Suspense fallback={null}>
               <ChatPage />
             </Suspense>
           </ErrorBoundary>
@@ -32,7 +32,7 @@ const router = createBrowserRouter(
       element: (
         <AppShell>
           <ErrorBoundary>
-            <Suspense fallback={<RouteLoadingFallback message="Lädt Modellkatalog..." />}>
+            <Suspense fallback={null}>
               <ModelsPage />
             </Suspense>
           </ErrorBoundary>
@@ -44,7 +44,7 @@ const router = createBrowserRouter(
       element: (
         <AppShell>
           <ErrorBoundary>
-            <Suspense fallback={<RouteLoadingFallback message="Lädt Einstellungen..." />}>
+            <Suspense fallback={null}>
               <SettingsPage />
             </Suspense>
           </ErrorBoundary>
