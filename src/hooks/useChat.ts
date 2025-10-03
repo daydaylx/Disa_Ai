@@ -100,6 +100,10 @@ export function useChat({
         ...message,
       };
 
+      // ATOMIC OPERATION: Capture current state before any async operations
+      // This prevents race conditions by freezing the state at function call time
+      const capturedMessages = customMessages || [...state.messages];
+
       dispatch({ type: "ADD_MESSAGE", message: userMessage });
       dispatch({ type: "SET_LOADING", isLoading: true });
       dispatch({ type: "SET_ERROR", error: null });
@@ -109,34 +113,62 @@ export function useChat({
       abortControllerRef.current = controller;
       dispatch({ type: "SET_ABORT_CONTROLLER", controller });
 
-      const assistantMessage: ChatMessageType = {
-        id: nanoid(),
-        role: "assistant",
-        content: "",
-        timestamp: Date.now(),
-      };
-
-      dispatch({ type: "ADD_MESSAGE", message: assistantMessage });
+      // Assistant message will be created with server-provided ID
+      let assistantMessage: ChatMessageType | null = null;
 
       try {
         let accumulatedContent = "";
 
-        // Use custom messages if provided (for reload), otherwise use current state
-        const baseMessages = customMessages || state.messages;
-        const apiMessages = [...baseMessages, userMessage].map((msg) => ({
+        // Use captured messages to prevent race conditions during async operations
+        const apiMessages = [...capturedMessages, userMessage].map((msg) => ({
           role: msg.role,
           content: msg.content,
         }));
 
         await chatStream(
           apiMessages,
-          (delta: string) => {
-            accumulatedContent += delta;
-            dispatch({
-              type: "UPDATE_MESSAGE",
-              id: assistantMessage.id,
-              content: accumulatedContent,
-            });
+          (
+            delta: string,
+            messageData?: { id?: string; role?: string; timestamp?: number; model?: string },
+          ) => {
+            // Initialize assistant message with server-provided metadata on first delta
+            if (!assistantMessage) {
+              if (messageData?.id) {
+                // Use server-provided ID and metadata
+                assistantMessage = {
+                  id: messageData.id,
+                  role: "assistant",
+                  content: "",
+                  timestamp: messageData.timestamp || Date.now(),
+                  model: messageData.model,
+                };
+              } else if (delta) {
+                // Fallback: create with client-generated ID if we have content but no server metadata
+                assistantMessage = {
+                  id: `fallback-${nanoid()}`,
+                  role: "assistant",
+                  content: "",
+                  timestamp: Date.now(),
+                };
+              }
+
+              if (assistantMessage) {
+                dispatch({ type: "ADD_MESSAGE", message: assistantMessage });
+              }
+            }
+
+            if (delta) {
+              accumulatedContent += delta;
+
+              // Update message if we have one
+              if (assistantMessage) {
+                dispatch({
+                  type: "UPDATE_MESSAGE",
+                  id: assistantMessage.id,
+                  content: accumulatedContent,
+                });
+              }
+            }
           },
           {
             signal: controller.signal,
@@ -157,13 +189,15 @@ export function useChat({
               }
             },
             onDone: () => {
-              const finalMessage: ChatMessageType = {
-                ...assistantMessage,
-                content: accumulatedContent,
-              };
+              if (assistantMessage) {
+                const finalMessage: ChatMessageType = {
+                  ...assistantMessage,
+                  content: accumulatedContent,
+                };
 
-              if (onFinish) {
-                onFinish(finalMessage);
+                if (onFinish) {
+                  onFinish(finalMessage);
+                }
               }
             },
           },
@@ -173,12 +207,21 @@ export function useChat({
 
         if (mappedError.name === "AbortError") {
           // Remove the incomplete assistant message on abort
-          dispatch({
-            type: "SET_MESSAGES",
-            messages: [...state.messages, userMessage].filter(
-              (msg) => msg.id !== assistantMessage.id,
-            ),
-          });
+          // Use captured messages to maintain consistency
+          if (assistantMessage) {
+            dispatch({
+              type: "SET_MESSAGES",
+              messages: [...capturedMessages, userMessage].filter(
+                (msg) => msg.id !== assistantMessage!.id,
+              ),
+            });
+          } else {
+            // If no assistant message was created, just keep user message
+            dispatch({
+              type: "SET_MESSAGES",
+              messages: [...capturedMessages, userMessage],
+            });
+          }
         } else {
           dispatch({ type: "SET_ERROR", error: mappedError });
           if (onError) {
@@ -191,7 +234,7 @@ export function useChat({
         abortControllerRef.current = null;
       }
     },
-    [state.messages, onResponse, onFinish, onError, body],
+    [onResponse, onFinish, onError, body, state.messages], // Include state.messages dependency as required
   );
 
   const stop = useCallback(() => {
@@ -202,11 +245,14 @@ export function useChat({
 
   const reload = useCallback(async () => {
     try {
-      if (state.messages.length === 0) return;
+      // ATOMIC OPERATION: Capture current messages at function start
+      const currentMessages = [...state.messages];
+
+      if (currentMessages.length === 0) return;
 
       let lastUserMessageIndex = -1;
-      for (let i = state.messages.length - 1; i >= 0; i -= 1) {
-        if (state.messages[i]?.role === "user") {
+      for (let i = currentMessages.length - 1; i >= 0; i -= 1) {
+        if (currentMessages[i]?.role === "user") {
           lastUserMessageIndex = i;
           break;
         }
@@ -214,14 +260,14 @@ export function useChat({
 
       if (lastUserMessageIndex === -1) return;
 
-      const lastUserMessage = state.messages[lastUserMessageIndex];
+      const lastUserMessage = currentMessages[lastUserMessageIndex];
 
-      // Alle Nachrichten nach der letzten Nutzernachricht entfernen, Eingabe beibehalten
-      const messagesToRetry = state.messages.slice(0, lastUserMessageIndex);
+      // Use captured messages to prevent race conditions
+      const messagesToRetry = currentMessages.slice(0, lastUserMessageIndex);
 
       dispatch({ type: "SET_MESSAGES", messages: messagesToRetry });
 
-      // Übergebe die gekürzten Messages an append, um Race Condition zu vermeiden
+      // Pass the captured and sliced messages to append for consistency
       await append(
         {
           role: lastUserMessage.role,
@@ -236,7 +282,7 @@ export function useChat({
         onError(mappedError);
       }
     }
-  }, [state.messages, append, onError]);
+  }, [append, onError, state.messages]); // Include state.messages dependency as required
 
   const setMessages = useCallback((messages: ChatMessageType[]) => {
     dispatch({ type: "SET_MESSAGES", messages });

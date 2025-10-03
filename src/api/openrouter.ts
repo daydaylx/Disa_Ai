@@ -98,7 +98,10 @@ export async function chatOnce(
 
 export async function chatStream(
   messages: ChatMessage[],
-  onDelta: (textDelta: string) => void,
+  onDelta: (
+    textDelta: string,
+    messageData?: { id?: string; role?: string; timestamp?: number; model?: string },
+  ) => void,
   opts?: {
     model?: string;
     signal?: AbortSignal;
@@ -163,12 +166,13 @@ export async function chatStream(
                   throw new Error(json.error?.message || "Unbekannter API-Fehler");
                 }
                 const delta = json?.choices?.[0]?.delta?.content ?? "";
+                const messageData = json?.choices?.[0]?.message;
                 if (!started) {
                   started = true;
                   opts?.onStart?.();
                 }
-                if (delta) {
-                  onDelta(delta);
+                if (delta || messageData) {
+                  onDelta(delta, messageData);
                   full += delta;
                 }
               } catch (err) {

@@ -12,13 +12,16 @@ export interface ChatRequest {
 export function handleChatRequest(request: ChatRequest, signal?: AbortSignal): Response {
   const { messages, model } = request;
 
-  // Convert to internal ChatMessage format
+  // Convert to internal ChatMessage format with consistent ID generation
   const formattedMessages: ChatMessageType[] = messages.map((msg) => ({
     id: `temp-${Date.now()}-${Math.random()}`,
     role: msg.role,
     content: msg.content,
     timestamp: Date.now(),
   }));
+
+  // Generate consistent assistant message ID for client-server synchronization
+  const assistantMessageId = `assistant-${Date.now()}-${Math.random()}`;
 
   // Create SSE stream response
   const encoder = new TextEncoder();
@@ -28,12 +31,17 @@ export function handleChatRequest(request: ChatRequest, signal?: AbortSignal): R
         await chatStream(
           formattedMessages,
           (delta: string) => {
-            // Send SSE formatted data
+            // Send SSE formatted data with message metadata for client sync
             const data = JSON.stringify({
               choices: [
                 {
                   delta: {
                     content: delta,
+                  },
+                  message: {
+                    id: assistantMessageId,
+                    role: "assistant",
+                    timestamp: Date.now(),
                   },
                 },
               ],
@@ -45,13 +53,36 @@ export function handleChatRequest(request: ChatRequest, signal?: AbortSignal): R
             model,
             signal,
             onStart: () => {
-              // Send initial response
-              controller.enqueue(
-                encoder.encode('data: {"choices":[{"delta":{"content":""}}]}\n\n'),
-              );
+              // Send initial response with message metadata
+              const initialData = JSON.stringify({
+                choices: [
+                  {
+                    delta: { content: "" },
+                    message: {
+                      id: assistantMessageId,
+                      role: "assistant",
+                      timestamp: Date.now(),
+                      model: model,
+                    },
+                  },
+                ],
+              });
+              controller.enqueue(encoder.encode(`data: ${initialData}\n\n`));
             },
             onDone: () => {
-              // Send completion marker
+              // Send completion marker with final message metadata
+              const completionData = JSON.stringify({
+                choices: [
+                  {
+                    message: {
+                      id: assistantMessageId,
+                      role: "assistant",
+                      finish_reason: "stop",
+                    },
+                  },
+                ],
+              });
+              controller.enqueue(encoder.encode(`data: ${completionData}\n\n`));
               controller.enqueue(encoder.encode("data: [DONE]\n\n"));
               controller.close();
             },
