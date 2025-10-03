@@ -15,7 +15,8 @@ module.exports = {
         // Mobile simulation for performance testing
         preset: "desktop", // Can be 'mobile' or 'desktop'
         // Chrome flags for CI environment
-        chromeFlags: "--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-renderer-backgrounding --disable-features=TranslateUI --no-first-run",
+        chromeFlags:
+          "--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-renderer-backgrounding --disable-features=TranslateUI --no-first-run",
       },
     },
     assert: {
