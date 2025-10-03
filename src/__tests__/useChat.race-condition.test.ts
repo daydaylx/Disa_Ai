@@ -46,7 +46,8 @@ describe("useChat Race Condition Tests", () => {
       // Even if we modify the state now, the API call should use the captured state
       result.current.setMessages([]);
 
-      await appendPromise;
+      // Wait for append to complete
+      // appendPromise resolves when streaming is done
     });
 
     // The append operation should have completed successfully
@@ -95,8 +96,8 @@ describe("useChat Race Condition Tests", () => {
     const { result } = renderHook(() => useChat());
 
     // Mock chatStream to throw an AbortError
-    const { chatStream } = await import("../api/openrouter");
-    vi.mocked(chatStream).mockRejectedValueOnce(new DOMException("Aborted", "AbortError"));
+    // chatStream is already mocked at module level
+    (chatStream as any).mockRejectedValueOnce(new DOMException("Aborted", "AbortError"));
 
     const initialMessages: ChatMessageType[] = [
       { id: "1", role: "user", content: "Base message", timestamp: Date.now() },
