@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
 import { initEnvironment } from "./config/env";
+import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 import { registerSW } from "./lib/pwa/registerSW";
 
 // Initialize environment configuration
@@ -40,3 +41,6 @@ initializeApp();
 
 // PWA Service Worker
 registerSW();
+
+// Initialize accessibility enforcement
+initializeA11yEnforcement();
