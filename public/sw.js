@@ -1,11 +1,38 @@
 const params = new URL(self.location.href).searchParams;
 const BUILD_ID = params.get("build") ?? "dev";
 const VERSION_SUFFIX = BUILD_ID.slice(-8);
-// Harte Versionierung für Cache-Busting bei neuen Deployments
-const SW_VERSION = `v2.1.0-${VERSION_SUFFIX}`;
+// Dynamic cache versioning with forward compatibility
+const SW_VERSION = `v2.2.0-${VERSION_SUFFIX}`;
 const HTML_CACHE = `html-${SW_VERSION}`;
 const ASSET_CACHE = `assets-${SW_VERSION}`;
 const OFFLINE_URL = "/offline.html";
+
+// Future-proof cache naming patterns
+const CACHE_PATTERNS = {
+  // Current cache types
+  HTML: /^html-v\d+\.\d+\.\d+-\w+$/,
+  ASSETS: /^assets-v\d+\.\d+\.\d+-\w+$/,
+
+  // Reserved patterns for future cache types
+  API: /^api-v\d+\.\d+\.\d+-\w+$/,
+  USER_DATA: /^userdata-v\d+\.\d+\.\d+-\w+$/,
+  STATIC: /^static-v\d+\.\d+\.\d+-\w+$/,
+  DYNAMIC: /^dynamic-v\d+\.\d+\.\d+-\w+$/,
+
+  // Generic pattern for any app-versioned cache
+  APP_VERSIONED: /^[\w-]+-v\d+\.\d+\.\d+-\w+$/,
+};
+
+// Current version's expected caches (dynamic generation)
+const CURRENT_CACHES = new Set([HTML_CACHE, ASSET_CACHE]);
+
+// Enhanced cache busting configuration
+const FORCE_UPDATE_TIMESTAMP = Date.now();
+const CACHE_STRATEGY = {
+  HTML: "network-first",
+  ASSETS: "stale-while-revalidate",
+  API: "network-only",
+};
 
 const ASSET_DESTINATIONS = new Set([
   "style",
@@ -49,25 +76,134 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
+/**
+ * Determines if a cache should be preserved during cleanup
+ * @param {string} cacheName - The cache name to evaluate
+ * @returns {boolean} - True if cache should be preserved
+ */
+function shouldPreserveCache(cacheName) {
+  // 1. Always preserve current version caches
+  if (CURRENT_CACHES.has(cacheName)) {
+    return true;
+  }
+
+  // 2. Preserve any cache matching known patterns (future compatibility)
+  const isAppVersioned = Object.values(CACHE_PATTERNS).some((pattern) => pattern.test(cacheName));
+
+  if (isAppVersioned) {
+    // Extract version from cache name for intelligent cleanup
+    const versionMatch = cacheName.match(/v(\d+)\.(\d+)\.(\d+)/);
+    if (versionMatch) {
+      const [, major, minor] = versionMatch;
+      const currentVersionMatch = SW_VERSION.match(/v(\d+)\.(\d+)\.(\d+)/);
+
+      if (currentVersionMatch) {
+        const [, currentMajor, currentMinor] = currentVersionMatch;
+
+        // Preserve caches from same major version (forwards compatibility)
+        if (major === currentMajor) {
+          // But only preserve if version is not too far behind
+          const currentMinorInt = parseInt(currentMinor);
+          const minorInt = parseInt(minor);
+
+          // Keep caches within reasonable minor version range (e.g., ±2 versions)
+          if (Math.abs(currentMinorInt - minorInt) <= 2) {
+            console.log(`[SW] Preserving recent same-major cache: ${cacheName}`);
+            return true;
+          } else {
+            console.log(
+              `[SW] Deleting old minor version: ${cacheName} (too far behind current ${SW_VERSION})`,
+            );
+            return false;
+          }
+        }
+
+        // Preserve newer versions (rollback safety)
+        if (
+          parseInt(major) > parseInt(currentMajor) ||
+          (major === currentMajor && parseInt(minor) > parseInt(currentMinor))
+        ) {
+          console.log(`[SW] Preserving newer cache for rollback: ${cacheName}`);
+          return true;
+        }
+      }
+    }
+  }
+
+  // 3. Preserve non-versioned caches (might be from other apps or manual caches)
+  if (!cacheName.includes("-v") && !cacheName.includes("workbox")) {
+    console.log(`[SW] Preserving non-versioned cache: ${cacheName}`);
+    return true;
+  }
+
+  return false;
+}
+
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      // Clean old caches
-      const expected = new Set([HTML_CACHE, ASSET_CACHE]);
+      // Intelligent cache cleanup with forward/backward compatibility
       const keys = await caches.keys();
-      const deletePromises = keys
-        .filter((key) => !expected.has(key))
-        .map((key) => {
-          console.log("[SW] Deleting old cache:", key);
-          return caches.delete(key);
-        });
 
-      await Promise.all(deletePromises);
+      // Categorize caches for cleanup decision
+      const cachesToDelete = [];
+      const cachesToPreserve = [];
 
-      // Claim all clients immediately
+      for (const key of keys) {
+        if (shouldPreserveCache(key)) {
+          cachesToPreserve.push(key);
+        } else {
+          cachesToDelete.push(key);
+        }
+      }
+
+      console.log(
+        `[SW] Cache analysis: ${cachesToPreserve.length} to preserve, ${cachesToDelete.length} to delete`,
+      );
+
+      // Delete only truly stale caches
+      const deletePromises = cachesToDelete.map(async (key) => {
+        console.log("[SW] Deleting stale cache:", key);
+        try {
+          await caches.delete(key);
+          return { key, success: true };
+        } catch (error) {
+          console.warn("[SW] Failed to delete cache:", key, error);
+          return { key, success: false };
+        }
+      });
+
+      const results = await Promise.allSettled(deletePromises);
+      const deletedCount = results.filter(
+        (r) => r.status === "fulfilled" && r.value.success,
+      ).length;
+
+      console.log(
+        `[SW] Smart cleanup: ${deletedCount}/${cachesToDelete.length} stale caches removed, ${cachesToPreserve.length} preserved`,
+      );
+
+      // Claim all clients immediately to ensure fresh assets
       await self.clients.claim();
 
-      console.log("[SW] Activated with version:", SW_VERSION);
+      // Notify clients about the activation with detailed cache info
+      const clients = await self.clients.matchAll({ type: "window" });
+      clients.forEach((client) => {
+        client.postMessage({
+          type: "SW_ACTIVATED",
+          version: SW_VERSION,
+          cachesCleaned: deletedCount,
+          cachesPreserved: cachesToPreserve.length,
+          cacheStrategy: "smart-versioned",
+        });
+      });
+
+      console.log(
+        "[SW] Activated with version:",
+        SW_VERSION,
+        "and claimed",
+        clients.length,
+        "clients",
+      );
     })(),
   );
 });
@@ -114,10 +250,34 @@ function shouldHandleAsAsset(request, url) {
 async function networkFirst(request) {
   const cache = await caches.open(HTML_CACHE);
   try {
-    // Für HTML/Navigation immer erst Netzwerk versuchen, um Redirect-Loops zu vermeiden
+    // Enhanced network-first strategy with cache busting
+    const url = new URL(request.url);
+
+    // Add cache-busting parameter for HTML requests to ensure fresh content
+    if (!url.searchParams.has("sw-bust")) {
+      url.searchParams.set("sw-bust", FORCE_UPDATE_TIMESTAMP.toString());
+      const bustRequest = new Request(url.toString(), {
+        method: request.method,
+        headers: request.headers,
+        body: request.body,
+        mode: request.mode,
+        credentials: request.credentials,
+        cache: "no-cache", // Force fresh fetch
+      });
+
+      const response = await fetch(bustRequest);
+      if (response && response.ok) {
+        // Cache the original request (without cache-busting param)
+        if (response.headers.get("content-type")?.includes("text/html")) {
+          cache.put(request, response.clone()).catch(() => {});
+        }
+      }
+      return response;
+    }
+
+    // Fallback to normal fetch if cache-busting param already exists
     const response = await fetch(request);
     if (response && response.ok) {
-      // Nur gültige HTML-Responses cachen
       if (response.headers.get("content-type")?.includes("text/html")) {
         cache.put(request, response.clone()).catch(() => {});
       }
