@@ -109,18 +109,13 @@ export function ChatList({
     >
       <div className="mx-auto flex h-full w-full max-w-md flex-col">
         {messages.length === 0 ? (
-          <div className="flex-1 space-y-6 px-2 pt-2">
-            <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/10 p-6 text-left text-white shadow-[0_25px_60px_rgba(15,23,42,0.55)] backdrop-blur-2xl">
-              <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[radial-gradient(circle,_rgba(236,72,153,0.35),_transparent_65%)]" />
-              <div className="pointer-events-none absolute bottom-[-40%] right-10 h-48 w-48 rounded-full bg-[radial-gradient(circle,_rgba(59,130,246,0.35),_transparent_65%)]" />
-              <div className="relative space-y-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/30 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/60">
-                  Willkommen zurück
-                </span>
-                <h2 className="text-2xl font-semibold leading-tight text-white">
+          <div className="flex-1 space-y-4 px-2 pt-2">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left text-white backdrop-blur-lg">
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold text-white">
                   Was möchtest du heute erschaffen?
                 </h2>
-                <p className="max-w-[18rem] text-sm text-white/65">
+                <p className="text-sm text-white/65">
                   Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
                   in Sekunden.
                 </p>
@@ -259,9 +254,21 @@ export function ChatList({
           {!isSticking && (
             <button
               onClick={() => scrollToBottom()}
-              className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/70 backdrop-blur transition hover:bg-white/20"
+              className="inline-flex animate-bounce items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70 backdrop-blur-lg transition hover:bg-white/10"
             >
-              ↓ Nach unten
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3 w-3"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Nach unten
             </button>
           )}
         </div>

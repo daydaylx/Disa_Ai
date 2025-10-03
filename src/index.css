@@ -1,5 +1,60 @@
-@import "./styles/components.css";
-
 @tailwind base;
+
+/* Base layer overrides and additions */
+@layer base {
+  html {
+    -webkit-text-size-adjust: none; /* Safari */
+    text-size-adjust: none; /* Other browsers */
+    scroll-behavior: smooth;
+  }
+}
+
 @tailwind components;
+
+/**
+ * Component layer styles
+ * Provides reusable component classes like .tile, .card, etc.
+ */
+
+@layer components {
+  /* Glass Tile Component - Original beautiful design with scale hover */
+  .tile {
+    @apply rounded-2xl p-4 shadow-xl backdrop-blur;
+    background: var(--glass-bg-soft);
+    border: 1px solid var(--glass-border-soft);
+    transition: all var(--transition-normal) ease;
+  }
+
+  .tile--primary {
+    @apply shadow-2xl;
+    background: var(--glass-bg-medium);
+    border-color: var(--glass-border-medium);
+  }
+
+  /* Card Component - Alternative to tile */
+  .card {
+    @apply rounded-lg p-4 backdrop-blur;
+    background: var(--glass-bg-soft);
+    border: 1px solid var(--glass-border-soft);
+  }
+}
+
 @tailwind utilities;
+
+/* Page transition animations */
+@layer utilities {
+  @keyframes slide-up-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-page-transition {
+    animation: slide-up-fade-in 0.4s cubic-bezier(0.3, 0, 0.2, 1);
+  }
+}

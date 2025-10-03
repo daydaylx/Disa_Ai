@@ -1,6 +1,6 @@
 import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
 import { ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -11,12 +11,9 @@ function Header() {
   const { activeRole } = useStudio();
 
   return (
-    <header className="relative z-10 px-5 pb-6 pt-12">
+    <header className="relative z-10 px-4 pb-4 pt-10">
       <div className="mx-auto max-w-md">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_45px_90px_rgba(134,68,255,0.22)] backdrop-blur-2xl">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.4),_transparent_60%)]" />
-          <div className="pointer-events-none absolute -bottom-20 left-16 h-48 w-48 bg-[radial-gradient(circle_at_bottom,_rgba(56,189,248,0.65),_transparent_70%)]" />
-
+        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-lg">
           <div className="relative flex items-center justify-between">
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
@@ -71,20 +68,23 @@ function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-around border-t border-white/20 bg-slate-900/95 backdrop-blur-md">
+    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-slate-950/80 backdrop-blur-lg">
       <div
-        className="flex h-16 w-full items-center justify-around"
+        className="mx-auto flex h-16 max-w-md items-center justify-around"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         {navigationItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
-            className="flex min-h-12 min-w-12 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200"
-            style={({ isActive }) => ({
-              color: isActive ? "var(--color-purple)" : "var(--color-neutral-300)",
-              background: isActive ? "var(--color-accent-subtle)" : "transparent",
-            })}
+            title={item.label}
+            className={({ isActive }) =>
+              `relative flex h-12 w-16 flex-col items-center justify-center gap-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
+                isActive
+                  ? "bg-white/10 text-purple-400"
+                  : "text-neutral-400 hover:bg-white/5 hover:text-white"
+              }`
+            }
           >
             <span className="flex h-6 w-6 items-center justify-center">{item.icon}</span>
             <span className="text-[10px] leading-none">{item.label}</span>
@@ -100,9 +100,11 @@ interface AppShellProps {
 }
 
 export function AppShell({ children }: AppShellProps) {
+  const location = useLocation();
+
   return (
     <div
-      className="relative mx-auto flex w-full max-w-sm flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200 sm:max-w-md"
+      className="relative flex w-full flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200"
       style={{
         minHeight: "var(--vh, 100dvh)",
         height: "var(--vh, 100dvh)",
@@ -114,7 +116,10 @@ export function AppShell({ children }: AppShellProps) {
 
       <Header />
 
-      <main className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden px-4 pb-20">
+      <main
+        key={location.pathname}
+        className="animate-page-transition relative z-10 mx-auto w-full max-w-md flex-1 overflow-y-auto overflow-x-hidden px-4 pb-20"
+      >
         {children}
       </main>
 

@@ -26,10 +26,10 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   disabled = false,
 }) => {
   const baseClasses =
-    "tile group flex min-h-[120px] flex-col items-center justify-center text-center transition-transform duration-200";
+    "tile group flex min-h-[110px] flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 p-4 text-center transition-all duration-200";
   const interactiveClasses =
     onPress && !disabled
-      ? "cursor-pointer hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(9,11,17,0.75)]"
+      ? "cursor-pointer hover:border-white/20 hover:bg-white/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
       : "";
   const disabledClasses = disabled ? "cursor-not-allowed opacity-50" : "";
 

@@ -136,13 +136,14 @@ export function ChatComposer({
         )}
 
         {value.trim().length === 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-white/50">Vorschläge:</span>
             {suggestionPrompts.map((suggestion) => (
               <button
                 key={suggestion}
                 type="button"
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-white/70 transition hover:bg-white/20 hover:text-white"
+                className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/70 transition-colors hover:bg-white/10 hover:text-white"
               >
                 {suggestion}
               </button>
@@ -152,9 +153,9 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "relative flex items-end gap-3 rounded-[28px] border border-white/10 bg-white/10 p-4 shadow-[0_20px_55px_rgba(7,15,31,0.55)] backdrop-blur-2xl transition-all",
-            isFocused && "border-fuchsia-400/60 shadow-[0_28px_70px_rgba(192,38,211,0.45)]",
-            disabled && "cursor-not-allowed opacity-50",
+            "relative flex items-end gap-2 rounded-2xl border border-white/10 bg-white/5 p-2 transition-colors",
+            isFocused && "border-purple-500/50",
+            disabled && "cursor-not-allowed opacity-60",
           )}
         >
           <div className="flex-1">
@@ -170,10 +171,10 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-white placeholder:text-white/40 focus-visible:ring-0 focus-visible:ring-offset-0",
+                "max-h-[200px] min-h-[40px] resize-none border-0 bg-transparent p-2 text-base leading-relaxed text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0",
                 isQuickstartLoading && "cursor-not-allowed text-white/80",
               )}
-              style={{ height: "44px" }}
+              style={{ height: "40px" }}
             />
           </div>
 
@@ -181,34 +182,33 @@ export function ChatComposer({
             {shouldShowRetry && (
               <Button
                 onClick={handleRetry}
-                size="sm"
+                size="icon"
                 variant="ghost"
-                className="h-10 w-10 rounded-full border border-white/10 bg-white/10 p-0 text-white/70 hover:bg-white/20 hover:text-white"
+                className="h-10 w-10 rounded-full bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
                 title="Letzte Antwort erneut anfordern"
               >
-                <RotateCcw className="h-4 w-4" />
+                <RotateCcw className="h-5 w-5" />
               </Button>
             )}
 
             {shouldShowStop && (
               <Button
                 onClick={handleStop}
-                size="sm"
+                size="icon"
                 variant="ghost"
-                className="h-10 w-10 rounded-full border border-red-400/70 bg-red-500/20 p-0 text-red-200 hover:bg-red-500/40 hover:text-white"
+                className="h-10 w-10 rounded-full bg-red-500/20 text-red-200 hover:bg-red-500/30 hover:text-white"
                 title="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
-                <Square className="h-4 w-4" />
+                <Square className="h-5 w-5" />
               </Button>
             )}
 
             {shouldShowSend && (
               <Button
                 onClick={handleSend}
-                size="sm"
-                variant="ghost"
-                className="relative h-12 w-12 rounded-full border-none bg-gradient-to-br from-fuchsia-500 via-purple-500 to-sky-500 p-0 text-white shadow-[0_22px_45px_rgba(168,85,247,0.55)] transition hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_26px_55px_rgba(168,85,247,0.7)]"
+                size="icon"
+                className="relative h-10 w-10 rounded-full bg-gradient-to-br from-purple-500 to-sky-500 text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 data-testid="composer-send"
@@ -220,9 +220,9 @@ export function ChatComposer({
             {!shouldShowSend && !shouldShowStop && !shouldShowRetry && (
               <Button
                 onClick={handleSend}
-                size="sm"
+                size="icon"
                 variant="ghost"
-                className="h-12 w-12 rounded-full border border-white/5 bg-white/5 p-0 text-white/30"
+                className="h-10 w-10 rounded-full bg-white/5 text-white/40"
                 disabled={true}
                 title="Nachricht eingeben, um zu senden"
                 data-testid="composer-mic"

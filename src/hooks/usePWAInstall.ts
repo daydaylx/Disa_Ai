@@ -54,6 +54,7 @@ export function usePWAInstall() {
         setDeferred(be);
       }
     };
+
     const onAppInstalled = () => {
       setInstalled(true);
       setDeferred(null);
@@ -61,6 +62,7 @@ export function usePWAInstall() {
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     window.addEventListener("appinstalled", onAppInstalled);
+
     return () => {
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
       window.removeEventListener("appinstalled", onAppInstalled);

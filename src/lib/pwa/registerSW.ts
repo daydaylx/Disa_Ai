@@ -114,22 +114,6 @@ export function registerSW() {
                 attachControllerChangeListener();
                 // Check for Build-ID mismatch
                 void checkBuildIdMismatch(reg).then((shouldForceReload) => {
-                  const reload = () => {
-                    // Use centralized reload manager to prevent race conditions
-                    import("../utils/reload-manager")
-                      .then(({ reloadHelpers }) => {
-                        reloadHelpers.serviceWorkerUpdate(100);
-                      })
-                      .catch(() => {
-                        // Fallback if module fails to load
-                        try {
-                          window.location.reload();
-                        } catch (_e) {
-                          void _e;
-                          /* ignore */
-                        }
-                      });
-                  };
                   // Update-Banner entfernt - kein Toast mehr anzeigen
 
                   // User-controlled reload only - no automatic reload to prevent loops
