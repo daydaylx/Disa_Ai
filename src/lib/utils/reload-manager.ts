@@ -69,8 +69,11 @@ class ReloadManager {
           }),
         );
 
-        // Perform the actual reload
-        window.location.reload();
+        // Add small delay to allow React cleanup
+        setTimeout(() => {
+          // Perform the actual reload
+          window.location.reload();
+        }, 150);
       } catch (error) {
         console.error(`[ReloadManager] Failed to reload for reason: ${reason}`, error);
         this.isReloading = false;

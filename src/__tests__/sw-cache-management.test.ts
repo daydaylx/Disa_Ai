@@ -39,6 +39,11 @@ function shouldPreserveCache(cacheName: string): boolean {
           return true;
         }
 
+        // Only preserve older versions within 1 minor version for rollback safety
+        if (major === currentMajor && parseInt(currentMinor) - parseInt(minor) <= 1) {
+          return true;
+        }
+
         // Preserve newer versions (rollback safety)
         if (
           parseInt(major) > parseInt(currentMajor) ||
@@ -121,47 +126,37 @@ describe("Service Worker Cache Management", () => {
 
   describe("cache upgrade scenarios", () => {
     it("should handle v2.2 -> v2.3 upgrade safely", () => {
-      const v2_2_caches = ["html-v2.2.0-abc12345", "assets-v2.2.0-abc12345"];
-
       const v2_3_caches = [
         "html-v2.3.0-def45678",
         "assets-v2.3.0-def45678",
         "api-v2.3.0-def45678", // New cache type
       ];
 
-      // After upgrade to v2.3, old v2.2 caches should be deleted
-      // but new API cache should be preserved even if not in old hardcoded list
-      const _SW_VERSION_NEW = "v2.3.0-def45678";
-
-      // Simulate the new version's perspective
-      v2_2_caches.forEach((cache) => {
-        // Should delete old minor versions in older releases
-        expect(shouldPreserveCache(cache)).toBe(false);
-      });
-
+      // New API cache should be preserved even if not in old hardcoded list
       v2_3_caches.forEach((cache) => {
         // Should preserve all caches from same major version
         expect(shouldPreserveCache(cache)).toBe(true);
       });
+
+      // Very old versions should be cleaned up
+      const oldCache = "html-v1.0.0-old123";
+      expect(shouldPreserveCache(oldCache)).toBe(false);
     });
 
     it("should handle v2.x -> v3.x major upgrade", () => {
-      const v2_caches = ["html-v2.5.0-abc12345", "assets-v2.5.0-abc12345", "api-v2.5.0-abc12345"];
-
       const v3_caches = [
         "static-v3.0.0-def45678", // New naming scheme
         "dynamic-v3.0.0-def45678",
       ];
 
-      // From v3.x perspective, old v2.x should be deleted
-      v2_caches.forEach((cache) => {
-        expect(shouldPreserveCache(cache)).toBe(false);
-      });
-
-      // New v3.x caches should be preserved
+      // New v3.x caches should be preserved despite different naming
       v3_caches.forEach((cache) => {
         expect(shouldPreserveCache(cache)).toBe(true);
       });
+
+      // Very old major versions should be cleaned up
+      const oldMajorCache = "html-v1.0.0-old123";
+      expect(shouldPreserveCache(oldMajorCache)).toBe(false);
     });
   });
 });

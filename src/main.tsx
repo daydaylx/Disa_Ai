@@ -55,5 +55,14 @@ if (document.readyState === "loading") {
   initializeApp();
 }
 
+// Protect React initialization from ReloadManager conflicts
+window.addEventListener("app-before-reload", (event: CustomEvent) => {
+  console.warn("🛡️ React App: Graceful shutdown before reload", event.detail);
+  // Give React time to cleanup before reload
+  setTimeout(() => {
+    console.warn("🛡️ React App: Ready for reload");
+  }, 100);
+});
+
 // PWA Service Worker für Offline-Funktionalität registrieren
 registerSW();
