@@ -130,7 +130,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Default error UI
       return (
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-50 to-red-100 p-4">
+        <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-red-50 to-red-100 p-4">
           <div className="w-full max-w-2xl rounded-lg bg-white p-8 shadow-xl">
             <div className="mb-8 text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
@@ -305,7 +305,7 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
 
   if (!isReady) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="flex min-h-dvh items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
           <p className="text-gray-600">Anwendung wird initialisiert...</p>
@@ -316,7 +316,7 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
 
   if (errors.length > 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-yellow-50 p-4">
+      <div className="flex min-h-dvh items-center justify-center bg-yellow-50 p-4">
         <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
           <div className="mb-4 text-center">
             <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100">
