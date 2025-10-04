@@ -30,7 +30,6 @@ export interface ConversationExport {
 
 const STORAGE_KEY = "disa:conversations";
 const MAX_CONVERSATIONS = 100; // Limit to prevent storage bloat
-const _AUTO_TITLE_THRESHOLD = 3; // Generate title after 3+ messages (reserved for future use)
 
 /**
  * Generate conversation title from messages
@@ -101,11 +100,13 @@ export function saveConversation(messages: Message[], conversationId?: string): 
   // Find existing conversation or create new one
   const existingIndex = conversations.findIndex((c) => c.id === id);
 
+  const existingConversation = existingIndex >= 0 ? conversations[existingIndex] : undefined;
+
   const conversation: Conversation = {
     id,
     title: generateConversationTitle(messages),
     messages: [...messages], // Deep copy to avoid mutations
-    createdAt: existingIndex >= 0 ? conversations[existingIndex].createdAt : now,
+    createdAt: existingConversation?.createdAt ?? now,
     updatedAt: now,
     model: messages.find((m) => m.model)?.model,
     messageCount: messages.length,

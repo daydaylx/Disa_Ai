@@ -1,4 +1,3 @@
-import React from "react";
 export function SidebarLeft() {
   return (
     <aside className="hidden shrink-0 border-r border-[color:var(--color-corporate-border-secondary)] bg-[color:var(--color-corporate-bg-elevated)] md:flex md:w-[280px]">

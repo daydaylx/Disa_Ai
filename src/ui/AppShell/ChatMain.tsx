@@ -1,8 +1,6 @@
-import React from "react";
-
-import { MessageHandlers } from "../chat/messageHandlers";
+import type { MessageHandlers } from "../chat/messageHandlers";
 import { MessageItem } from "../chat/MessageItem";
-import { Message } from "../chat/types";
+import type { Message } from "../chat/types";
 
 export function ChatMain({
   messages,

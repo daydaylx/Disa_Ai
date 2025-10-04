@@ -204,7 +204,13 @@ export const getAllPersonas = (): Persona[] => PERSONAS;
 export const getPersonaById = (id: string): Persona | undefined =>
   PERSONAS.find((p) => p.id === id);
 
-export const getDefaultPersona = (): Persona => getPersonaById("neutral") || PERSONAS[0];
+export const getDefaultPersona = (): Persona => {
+  const persona = getPersonaById("neutral") ?? PERSONAS[0];
+  if (!persona) {
+    throw new Error("Persona configuration is missing a default entry");
+  }
+  return persona;
+};
 
 export const getPersonasByCategory = (categoryId: string): Persona[] =>
   PERSONA_CATEGORIES.find((c) => c.id === categoryId)?.personas || [];

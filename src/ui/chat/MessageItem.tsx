@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { CodeBlock } from "./CodeBlock";
 import { MessageActions } from "./MessageActions";
-import { MessageHandlers } from "./messageHandlers";
-import { Message } from "./types";
+import type { MessageHandlers } from "./messageHandlers";
+import type { Message } from "./types";
 
 type Part = { type: "code" | "text"; content: string; lang?: string };
 function splitCodeFences(text: string): Part[] {

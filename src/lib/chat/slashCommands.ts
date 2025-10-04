@@ -71,7 +71,9 @@ const styleCommand: SlashCommand = {
   usage: "/style [stil] oder /style list",
   aliases: ["s"],
   execute: (args: string[]) => {
-    if (args.length === 0) {
+    const [rawArg] = args;
+
+    if (!rawArg) {
       const current = getStyle();
       return {
         success: true,
@@ -79,7 +81,7 @@ const styleCommand: SlashCommand = {
       };
     }
 
-    const arg = args[0].toLowerCase();
+    const arg = rawArg.toLowerCase();
 
     if (arg === "list" || arg === "liste") {
       const current = getStyle();
@@ -96,7 +98,7 @@ const styleCommand: SlashCommand = {
     if (!targetStyle) {
       return {
         success: false,
-        message: `Unbekannter Stil: "${args[0]}"\nNutze \`/style list\` für alle verfügbaren Stile.`,
+        message: `Unbekannter Stil: "${rawArg}"\nNutze \`/style list\` für alle verfügbaren Stile.`,
       };
     }
 
@@ -191,14 +193,16 @@ const nsfwCommand: SlashCommand = {
   execute: (args: string[]) => {
     const current = getNSFW();
 
-    if (args.length === 0) {
+    const [rawArg] = args;
+
+    if (!rawArg) {
       return {
         success: true,
         message: `NSFW-Inhalte: **${current ? "Aktiviert" : "Deaktiviert"}**\nNutze \`/nsfw toggle\` zum Umschalten.`,
       };
     }
 
-    const arg = args[0].toLowerCase();
+    const arg = rawArg.toLowerCase();
     let newValue: boolean;
 
     if (arg === "on" || arg === "true" || arg === "1" || arg === "an") {
@@ -210,7 +214,7 @@ const nsfwCommand: SlashCommand = {
     } else {
       return {
         success: false,
-        message: `Ungültiger Parameter: "${args[0]}"\nNutze: \`/nsfw on\`, \`/nsfw off\` oder \`/nsfw toggle\``,
+        message: `Ungültiger Parameter: "${rawArg}"\nNutze: \`/nsfw on\`, \`/nsfw off\` oder \`/nsfw toggle\``,
       };
     }
 
@@ -232,14 +236,16 @@ const modelCommand: SlashCommand = {
   execute: (args: string[]) => {
     const current = getSelectedModelId();
 
-    if (args.length === 0) {
+    const [rawArg] = args;
+
+    if (!rawArg) {
       return {
         success: true,
         message: `Aktuelles Modell: **${current || "Standard"}**\nNutze \`/model list\` oder gehe zu den Einstellungen für die Modell-Auswahl.`,
       };
     }
 
-    if (args[0].toLowerCase() === "list") {
+    if (rawArg.toLowerCase() === "list") {
       return {
         success: true,
         message: "Für die Modell-Auswahl gehe zu den **Einstellungen** → **Modell-Auswahl**",
@@ -261,14 +267,16 @@ const helpCommand: SlashCommand = {
   usage: "/help [befehl]",
   aliases: ["h", "?"],
   execute: (args: string[]) => {
-    if (args.length > 0) {
-      const cmdName = args[0].toLowerCase();
+    const [rawArg] = args;
+
+    if (rawArg) {
+      const cmdName = rawArg.toLowerCase();
       const cmd = COMMANDS.find((c) => c.name === cmdName || c.aliases?.includes(cmdName));
 
       if (!cmd) {
         return {
           success: false,
-          message: `Befehl "${args[0]}" nicht gefunden.\nNutze \`/help\` für alle Befehle.`,
+          message: `Befehl "${rawArg}" nicht gefunden.\nNutze \`/help\` für alle Befehle.`,
         };
       }
 
@@ -308,7 +316,7 @@ export function parseSlashCommand(input: string): {
   }
 
   const parts = trimmed.slice(1).split(/\s+/);
-  const commandName = parts[0].toLowerCase();
+  const commandName = (parts[0] ?? "").toLowerCase();
   const args = parts.slice(1);
 
   const command = COMMANDS.find(

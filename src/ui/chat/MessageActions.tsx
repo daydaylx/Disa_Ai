@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { copyToClipboard, showCopyFeedback } from "../../lib/clipboard";
 import { Button } from "../primitives/Button";
-import { Role } from "./types";
+import type { Role } from "./types";
 
 export interface ActionsProps {
   messageId: string;

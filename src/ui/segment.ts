@@ -15,7 +15,8 @@ export function segmentMessage(raw: string): Segment[] {
     if (start > lastIndex) {
       out.push({ type: "text", content: raw.slice(lastIndex, start) });
     }
-    out.push({ type: "code", lang: lang ?? null, content: body.replace(/\n$/, "") });
+    const content = (body ?? "").replace(/\n$/, "");
+    out.push({ type: "code", lang: lang ?? null, content });
     lastIndex = start + full.length;
   }
   if (lastIndex < raw.length) {

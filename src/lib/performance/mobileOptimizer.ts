@@ -42,10 +42,6 @@ export class MobilePerformanceOptimizer {
   private observers: { [key: string]: any } = {};
   private isEnabled = true;
 
-  private fpsCounter = 0;
-  private lastFPSTime = 0;
-  private renderStartTime = 0;
-
   static getInstance(options: OptimizationOptions = {}): MobilePerformanceOptimizer {
     if (!MobilePerformanceOptimizer.instance) {
       MobilePerformanceOptimizer.instance = new MobilePerformanceOptimizer(options);

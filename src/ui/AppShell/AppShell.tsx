@@ -1,8 +1,8 @@
-import React, { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 import { chatAdapter } from "../../data/adapter/chat";
-import { MessageHandlers } from "../chat/messageHandlers";
-import { Message } from "../chat/types";
+import type { MessageHandlers } from "../chat/messageHandlers";
+import type { Message } from "../chat/types";
 import { ErrorBanner } from "../components/ErrorBanner";
 import { ModelProvider, useModel } from "../state/modelContext";
 import { canAbort, canSendMessage, hasError, initialUIState, uiReducer } from "../state/uiMachine";
@@ -138,7 +138,10 @@ function hello(){
     onRegenerate: async (messageId: string) => {
       // Find the assistant message and regenerate response
       const messageIndex = messages.findIndex((m) => m.id === messageId);
-      if (messageIndex === -1 || messages[messageIndex].role !== "assistant") return;
+      if (messageIndex === -1) return;
+
+      const targetMessage = messages[messageIndex];
+      if (!targetMessage || targetMessage.role !== "assistant") return;
 
       // Get all messages up to (but not including) the message to regenerate
       const messagesToSend = messages.slice(0, messageIndex);

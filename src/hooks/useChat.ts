@@ -261,6 +261,7 @@ export function useChat({
       if (lastUserMessageIndex === -1) return;
 
       const lastUserMessage = currentMessages[lastUserMessageIndex];
+      if (!lastUserMessage) return;
 
       // Use captured messages to prevent race conditions
       const messagesToRetry = currentMessages.slice(0, lastUserMessageIndex);

@@ -118,9 +118,17 @@ describe("Analytics System - Issue #71", () => {
 
       trackQuickstartClicked(eventData);
 
-      const savedData = localStorageMock.setItem.mock.calls[0][1];
-      const events = JSON.parse(savedData);
-      const event = events[0];
+      const firstCall = localStorageMock.setItem.mock.calls[0];
+      expect(firstCall).toBeDefined();
+
+      const [, savedData] = firstCall ?? [];
+      expect(typeof savedData).toBe("string");
+
+      const events = JSON.parse(savedData as string) as Array<Record<string, unknown>>;
+
+      expect(events).not.toHaveLength(0);
+
+      const event = events[0]!;
 
       expect(event).toMatchObject({
         event: "quickstart_clicked",
@@ -204,14 +212,25 @@ describe("Analytics System - Issue #71", () => {
         autosend: false,
       });
 
-      const savedData = localStorageMock.setItem.mock.calls[0][1];
-      const events = JSON.parse(savedData);
+      const firstCall = localStorageMock.setItem.mock.calls[0];
+      expect(firstCall).toBeDefined();
+
+      const [, savedData] = firstCall ?? [];
+      expect(typeof savedData).toBe("string");
+
+      const events = JSON.parse(savedData as string) as Array<{
+        event: string;
+        timestamp: number;
+        properties?: { id?: string };
+      }>;
 
       // Should keep only last 100 events
       expect(events.length).toBe(100);
 
+      const lastEvent = events.at(-1);
+
       // Should contain the new event
-      expect(events[events.length - 1].properties.id).toBe("new-event");
+      expect(lastEvent?.properties?.id).toBe("new-event");
     });
 
     it("sollte graceful mit localStorage Fehlern umgehen", () => {

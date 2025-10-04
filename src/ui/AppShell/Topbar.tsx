@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ModelPicker } from "../components/ModelPicker";
 import { Badge } from "../primitives/Badge";
 import { useModel } from "../state/modelContext";

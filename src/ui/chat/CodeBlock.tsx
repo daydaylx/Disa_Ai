@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Button } from "../primitives/Button";
 export function CodeBlock({
   code,

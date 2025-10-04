@@ -1,5 +1,5 @@
 import { Loader2, Search } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
@@ -26,13 +26,6 @@ function formatPrice(price?: number) {
   if (price === 0) return "Kostenlos";
   return `$${price.toFixed(3)}/1k`;
 }
-
-const _SAFETY_LABELS: Record<string, string> = {
-  free: "Kostenlos",
-  moderate: "Mittel",
-  strict: "Strikt",
-  any: "Unbekannt",
-};
 
 type LoadingState = "idle" | "loading" | "success" | "error" | "timeout";
 

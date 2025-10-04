@@ -171,7 +171,6 @@ describe("TouchGestureHandler", () => {
 
   describe("Pinch Gestures", () => {
     it("should detect pinch zoom in", () => {
-      const _onPinch = vi.fn();
       // Note: onPinchGesture not implemented yet, skip test
       // gestureHandler.onPinchGesture(onPinch);
 
@@ -194,7 +193,6 @@ describe("TouchGestureHandler", () => {
     });
 
     it("should detect pinch zoom out", () => {
-      const _onPinch = vi.fn();
       // Note: onPinchGesture not implemented yet, skip test
       // gestureHandler.onPinchGesture(onPinch);
 

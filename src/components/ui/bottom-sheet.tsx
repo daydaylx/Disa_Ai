@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 
 import { cn } from "../../lib/utils";
@@ -7,7 +8,7 @@ interface BottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
@@ -16,12 +17,12 @@ export function BottomSheet({ isOpen, onClose, title, children, className }: Bot
 
   // Body scroll lock when sheet is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = "";
-      };
-    }
+    if (!isOpen) return undefined;
+
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   // Focus trap and ESC key handling

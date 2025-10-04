@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
-import { type StartTileAction } from "../components/chat/StartTiles";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
-import { getRoleById } from "../data/roles";
 import { useChat } from "../hooks/useChat";
 import { trackQuickstartCompleted } from "../lib/analytics/index";
 import { humanError } from "../lib/errors/humanError";
@@ -31,7 +29,7 @@ export default function ChatPageV2() {
   const [isQuickstartLoading, setIsQuickstartLoading] = useState(false);
   const activeQuickstartRef = useRef<ActiveQuickstart | null>(null);
   const toasts = useToasts();
-  const { activeRole, setActiveRole, typographyScale, borderRadius, accentColor } = useStudio();
+  const { activeRole, typographyScale, borderRadius, accentColor } = useStudio();
   const isMountedRef = useRef(true);
 
   const {
@@ -225,18 +223,6 @@ export default function ChatPageV2() {
   const handleRetry = () => {
     void reload();
   };
-
-  const _handleTileClick = (action: StartTileAction) => {
-    if (action.type === "new-chat") {
-      // Already in a new chat, do nothing
-    } else if (action.type === "set-role") {
-      const role = getRoleById(action.roleId);
-      setActiveRole(role ?? null);
-    }
-  };
-
-  // Calculate token count from all messages (currently unused but kept for future features)
-  const _tokenCount = messages.reduce((acc, msg) => acc + msg.content.length, 0);
 
   return (
     <>

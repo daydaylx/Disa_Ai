@@ -294,7 +294,7 @@ export class TouchPerformanceManager {
  * Hook für Performance-optimierte Touch-Events
  */
 export function usePerformantTouch(
-  elementRef: { current: HTMLElement | null },
+  _elementRef: { current: HTMLElement | null },
   _options: TouchPerformanceOptions = {},
 ): PerformantTouchHandler | null {
   // React Hook-Implementierung würde hier hin

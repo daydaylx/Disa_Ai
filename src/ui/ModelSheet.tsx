@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import BottomSheet from "../components/ui/BottomSheet";
 import type { Model } from "./types";

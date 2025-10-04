@@ -239,13 +239,18 @@ export class PerformanceReporter {
     new PerformanceObserver((list) => {
       const entries = list.getEntries();
       const lastEntry = entries[entries.length - 1];
-      vitals.LCP = lastEntry.startTime;
+      if (lastEntry) {
+        vitals.LCP = lastEntry.startTime;
+      }
     }).observe({ entryTypes: ["largest-contentful-paint"] });
 
     // Observer for First Input Delay
     new PerformanceObserver((list) => {
-      const firstEntry = list.getEntries()[0] as any;
-      vitals.FID = firstEntry.processingStart - firstEntry.startTime;
+      const firstEntry = list.getEntries()[0] as PerformanceEntry | undefined;
+      if (firstEntry) {
+        const typedEntry = firstEntry as any;
+        vitals.FID = typedEntry.processingStart - typedEntry.startTime;
+      }
     }).observe({ entryTypes: ["first-input"] });
 
     // Observer for Cumulative Layout Shift

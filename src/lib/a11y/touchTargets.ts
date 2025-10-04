@@ -147,7 +147,6 @@ export function enforceA11yStandards(container: Element = document.body): {
   violations: A11yViolation[];
   fixedCount: number;
 } {
-  const _violations = scanDocumentA11y(container);
   let fixedCount = 0;
 
   // Attempt auto-fixes

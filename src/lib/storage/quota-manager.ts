@@ -284,7 +284,7 @@ class StorageQuotaManager {
 
     if (quota.available < estimatedBytes) {
       // Versuche Cleanup um Platz zu schaffen
-      const _cleanupResult = await this.performSmartCleanup();
+      await this.performSmartCleanup();
 
       const newQuota = await this.getQuotaInfo();
       if (newQuota.available < estimatedBytes) {
