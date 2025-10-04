@@ -61,7 +61,7 @@ function parseMessageContent(content: string) {
     // Add code block
     parts.push({
       type: "code",
-      content: match[2],
+      content: match[2] || "",
       language: match[1] || "text",
     });
 

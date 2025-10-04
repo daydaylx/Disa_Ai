@@ -37,7 +37,7 @@ describe("Message ID Synchronization", () => {
       };
 
       // Mock chatStream to simulate server behavior
-      mockChatStream.mockImplementation((messages, onDelta, opts) => {
+      mockChatStream.mockImplementation((_messages, onDelta, opts) => {
         // Simulate onStart callback
         opts?.onStart?.();
 
@@ -91,7 +91,7 @@ describe("Message ID Synchronization", () => {
   describe("Client-side ID synchronization in useChat", () => {
     it("should use server-provided message ID when available", async () => {
       // Mock chatStream to provide message metadata
-      mockChatStream.mockImplementation((messages, onDelta, opts) => {
+      mockChatStream.mockImplementation((_messages, onDelta, opts) => {
         opts?.onStart?.();
 
         // First call with message metadata (initializes assistant message)
@@ -141,7 +141,7 @@ describe("Message ID Synchronization", () => {
 
     it("should fallback to client-generated ID when server metadata unavailable", async () => {
       // Mock chatStream without message metadata - only content deltas
-      mockChatStream.mockImplementation((messages, onDelta, opts) => {
+      mockChatStream.mockImplementation((_messages, onDelta, opts) => {
         opts?.onStart?.();
 
         // Only content, no metadata (this simulates legacy behavior)
@@ -171,7 +171,7 @@ describe("Message ID Synchronization", () => {
     });
 
     it("should handle message updates with correct ID", async () => {
-      mockChatStream.mockImplementation((messages, onDelta, opts) => {
+      mockChatStream.mockImplementation((_messages, onDelta, opts) => {
         opts?.onStart?.();
 
         // Initialize with server ID
@@ -209,7 +209,7 @@ describe("Message ID Synchronization", () => {
       const abortError = new Error("AbortError");
       abortError.name = "AbortError";
 
-      mockChatStream.mockImplementation((messages, onDelta, opts) => {
+      mockChatStream.mockImplementation((_messages, onDelta, opts) => {
         opts?.onStart?.();
 
         // Initialize message with server ID
@@ -271,7 +271,7 @@ describe("Message ID Synchronization", () => {
     });
 
     it("should handle malformed message metadata", async () => {
-      mockChatStream.mockImplementation((messages, onDelta, opts) => {
+      mockChatStream.mockImplementation((_messages, onDelta, opts) => {
         opts?.onStart?.();
 
         // Send content with malformed metadata (no ID)
@@ -307,7 +307,7 @@ describe("Message ID Synchronization", () => {
     it("should maintain ID consistency across message operations", async () => {
       const serverMessageId = "server-integration-test-123";
 
-      mockChatStream.mockImplementation((messages, onDelta, opts) => {
+      mockChatStream.mockImplementation((_messages, onDelta, opts) => {
         opts?.onStart?.();
 
         onDelta("", {

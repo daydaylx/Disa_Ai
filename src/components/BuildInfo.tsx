@@ -1,5 +1,3 @@
-import React from "react";
-
 import { BUILD_ID } from "../lib/pwa/registerSW";
 
 interface BuildInfoProps {

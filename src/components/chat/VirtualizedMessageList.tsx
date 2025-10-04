@@ -3,7 +3,7 @@
  * Implements Issue #106 - Virtual scrolling for large message lists
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/cn";

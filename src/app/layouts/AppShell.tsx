@@ -1,5 +1,5 @@
 import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";

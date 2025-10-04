@@ -106,7 +106,6 @@ export default [
       "simple-import-sort/exports": "error",
 
       // TypeScript specific
-      "@typescript-eslint/quotes": ["warn", "double"],
       "@typescript-eslint/await-thenable": "error",
       "@typescript-eslint/no-floating-promises": ["error", { ignoreIIFE: true }],
       "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],

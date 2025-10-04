@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import type { ErrorInfo, ReactNode } from "react";
+import React, { Component } from "react";
 
 import { getEnvConfig, getEnvironmentErrors, isEnvironmentValid } from "../config/env";
 
@@ -40,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ errorInfo });
 
     // Log detailed error information
@@ -119,7 +120,7 @@ export class ErrorBoundary extends Component<Props, State> {
     alert("Fehlerbericht wurde in die Zwischenablage kopiert");
   };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       const { error, errorInfo, errorId } = this.state;
 

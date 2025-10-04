@@ -13,7 +13,7 @@ Object.defineProperty(window, "location", {
 
 // Mock the chatStream function
 vi.mock("../api/openrouter", () => ({
-  chatStream: vi.fn(async (messages, onDelta, options) => {
+  chatStream: vi.fn(async (_messages, onDelta, options) => {
     // Simulate streaming response
     await new Promise((resolve) => setTimeout(resolve, 10));
     if (onDelta) {

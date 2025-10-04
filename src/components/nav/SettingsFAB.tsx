@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { hapticFeedback } from "../../lib/touch/haptics";
 
 export default function SettingsFAB() {

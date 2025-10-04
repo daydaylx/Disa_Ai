@@ -36,9 +36,9 @@ function shouldPreserveCache(cacheName: string): boolean {
 
         // Preserve caches from same major version ONLY if within reasonable range
         if (major === currentMajor) {
-          const minorGap = parseInt(currentMinor) - parseInt(minor);
-          const patchInt = parseInt(patch);
-          const currentPatchInt = parseInt(currentPatch);
+          const minorGap = parseInt(currentMinor!) - parseInt(minor!);
+          const patchInt = parseInt(patch!);
+          const currentPatchInt = parseInt(currentPatch!);
 
           // For same major version:
           if (minorGap === 0) {
@@ -58,8 +58,8 @@ function shouldPreserveCache(cacheName: string): boolean {
 
         // Preserve newer versions (rollback safety)
         if (
-          parseInt(major) > parseInt(currentMajor) ||
-          (major === currentMajor && parseInt(minor) > parseInt(currentMinor))
+          parseInt(major!) > parseInt(currentMajor!) ||
+          (major === currentMajor && parseInt(minor!) > parseInt(currentMinor!))
         ) {
           return true;
         }

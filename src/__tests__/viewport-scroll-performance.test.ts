@@ -160,7 +160,7 @@ describe("Viewport Scroll Performance Optimization", () => {
       expect(rafId).not.toBe(null); // RAF pending
 
       // Execute the RAF callback
-      rafCallbacks[0]();
+      rafCallbacks[0]!();
 
       expect(callCount).toBe(1);
       expect(rafId).toBe(null); // Should be reset after execution
@@ -170,7 +170,7 @@ describe("Viewport Scroll Performance Optimization", () => {
       expect(mockRequestAnimationFrame).toHaveBeenCalledTimes(2);
 
       // Execute second RAF
-      rafCallbacks[1]();
+      rafCallbacks[1]!();
       expect(callCount).toBe(2);
     });
   });
