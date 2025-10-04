@@ -110,7 +110,7 @@ export function ChatList({
       <div className="mx-auto flex h-full w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex-1 space-y-4 px-2 pt-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left text-white backdrop-blur-lg">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-left text-white backdrop-blur-lg">
               <div className="space-y-2">
                 <h2 className="text-xl font-semibold text-white">
                   Was möchtest du heute erschaffen?

@@ -176,7 +176,7 @@ export default function SettingsPage() {
                 })
                 .catch(() => window.location.reload());
             }}
-            className="tap-target hover:bg-accent-600 rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-white transition-colors"
+            className="hover:bg-accent-600 min-h-touch-rec rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent transition-colors"
           >
             Seite neu laden
           </button>
@@ -187,27 +187,27 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
-      <header>
-        <h1 className="text-2xl font-semibold text-white">Einstellungen</h1>
-        <p className="text-sm text-white/70">
+      <header className="space-y-2">
+        <h1 className="text-token-h1 font-semibold text-corporate-text-primary">Einstellungen</h1>
+        <p className="text-token-body leading-relaxed text-corporate-text-secondary">
           API-Schlüssel verwalten und die App auf deinem Gerät installieren.
         </p>
       </header>
 
       {/* API Key Section */}
-      <Card className="border-white/20 bg-white/10 backdrop-blur">
-        <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-white">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
             <Key className="h-5 w-5" />
             OpenRouter API-Schlüssel
           </CardTitle>
-          <CardDescription className="text-white/70">
+          <CardDescription>
             Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="apiKey" className="text-white/80">
+            <Label htmlFor="apiKey" className="text-corporate-text-secondary">
               API-Schlüssel
             </Label>
             <div className="relative">
@@ -217,13 +217,13 @@ export default function SettingsPage() {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 placeholder="sk-or-..."
-                className="border-white/20 bg-white/10 pr-10 font-mono text-white placeholder:text-white/50"
+                className="border-white/20 bg-white/10 pr-10 font-mono text-corporate-text-primary placeholder:text-corporate-text-muted"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                className="focus-visible:ring-accent-400 absolute right-2 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2"
+                className="focus-visible:ring-accent-400 absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-corporate-text-secondary transition hover:bg-white/10 hover:text-corporate-text-primary focus-visible:outline-none focus-visible:ring-2"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -240,7 +240,7 @@ export default function SettingsPage() {
                     : "bg-gray-500"
               }`}
             />
-            <span className="text-sm text-white/70">
+            <span className="text-sm text-corporate-text-secondary">
               {keyStatus === "present"
                 ? "Schlüssel vorhanden"
                 : keyStatus === "invalid"
@@ -252,12 +252,12 @@ export default function SettingsPage() {
           <Button
             type="button"
             onClick={handleSaveKey}
-            className="w-full border-0 bg-white/20 text-white hover:bg-white/30"
+            className="min-h-touch-rec w-full border-0 bg-white/20 text-corporate-text-onSurface hover:bg-white/30"
           >
             Schlüssel speichern
           </Button>
 
-          <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
+          <div className="flex items-start gap-4 rounded-lg border border-blue-500/20 bg-blue-500/10 p-4">
             <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
             <div className="text-xs text-blue-200">
               <p className="mb-1 font-medium">Datenschutz:</p>
@@ -374,13 +374,15 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {/* Memory Stats */}
-              <div className="space-y-2 border-t border-white/10 pt-4">
-                <Label className="text-white/90">Statistiken</Label>
-                <div className="space-y-1 text-xs text-white/60">
-                  <MemoryStats getMemoryStats={getMemoryStats} />
+              {/* Memory Stats - nur in Entwicklung */}
+              {import.meta.env.DEV && (
+                <div className="space-y-2 border-t border-white/10 pt-4">
+                  <Label className="text-corporate-text-secondary">Debug-Statistiken</Label>
+                  <div className="space-y-1 text-xs text-corporate-text-muted">
+                    <MemoryStats getMemoryStats={getMemoryStats} />
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Clear Memory */}
               <div className="border-t border-white/10 pt-4">
@@ -498,27 +500,36 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
+            {/* Build ID nur in Entwicklung anzeigen */}
+            {import.meta.env.DEV && (
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-corporate-text-secondary">Build ID:</span>
+                <span className="text-accent-400 font-mono">{BUILD_ID}</span>
+              </div>
+            )}
             <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Build ID:</span>
-              <span className="text-accent-400 font-mono">{BUILD_ID}</span>
+              <span className="text-corporate-text-secondary">Version:</span>
+              <span className="text-corporate-text-primary">v1.0.0</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Version:</span>
-              <span className="text-white/90">v1.0.0</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Environment:</span>
-              <span className="text-white/90">
-                {import.meta.env.DEV ? "Development" : "Production"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Built:</span>
-              <span className="text-white/90">
-                {(import.meta as any)?.env?.VITE_BUILD_TIME ??
-                  new Date().toLocaleDateString("de-DE")}
-              </span>
-            </div>
+            {/* Environment nur in Entwicklung anzeigen */}
+            {import.meta.env.DEV && (
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-corporate-text-secondary">Environment:</span>
+                <span className="text-corporate-text-primary">
+                  {import.meta.env.DEV ? "Development" : "Production"}
+                </span>
+              </div>
+            )}
+            {/* Build-Zeit nur in Entwicklung anzeigen */}
+            {import.meta.env.DEV && (
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-corporate-text-secondary">Built:</span>
+                <span className="text-corporate-text-primary">
+                  {(import.meta as any)?.env?.VITE_BUILD_TIME ??
+                    new Date().toLocaleDateString("de-DE")}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="rounded border border-white/10 bg-white/5 p-3 text-xs">

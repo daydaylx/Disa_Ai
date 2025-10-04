@@ -186,7 +186,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
             )}
 
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-4 sm:flex-row">
               <button
                 onClick={this.handleReload}
                 className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
@@ -212,7 +212,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 <summary className="cursor-pointer text-gray-600 hover:text-gray-900">
                   Technische Details anzeigen
                 </summary>
-                <div className="mt-3 max-h-40 overflow-auto rounded bg-gray-900 p-3 font-mono text-xs text-gray-100">
+                <div className="mt-4 max-h-40 overflow-auto rounded bg-gray-900 p-4 font-mono text-xs text-gray-100">
                   <div>
                     <strong>Stack Trace:</strong>
                   </div>
@@ -320,7 +320,7 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
     <>
       {/* Non-blocking warning banner */}
       {showWarnings && warnings.length > 0 && (
-        <div className="fixed left-0 right-0 top-0 z-50 border-b border-yellow-200 bg-yellow-100 p-3">
+        <div className="fixed left-0 right-0 top-0 z-50 border-b border-yellow-200 bg-yellow-100 p-4">
           <div className="mx-auto flex max-w-7xl items-center justify-between">
             <div className="flex items-center space-x-2">
               <svg

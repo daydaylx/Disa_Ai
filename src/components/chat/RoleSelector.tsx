@@ -107,7 +107,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
             : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10",
         )}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <div
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-full",
@@ -157,10 +157,10 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
               <button
                 onClick={() => setSelectedCategory("all")}
                 className={cn(
-                  "tap-target whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
+                  "min-h-touch-rec whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
                   selectedCategory === "all"
-                    ? "bg-accent-500 text-white shadow-lg"
-                    : "border border-white/20 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",
+                    ? "bg-accent-500 text-corporate-text-onAccent shadow-lg"
+                    : "border border-white/20 bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary",
                 )}
               >
                 Alle
@@ -170,10 +170,10 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
                   key={category}
                   onClick={() => setSelectedCategory(category)}
                   className={cn(
-                    "tap-target whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
+                    "min-h-touch-rec whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
                     selectedCategory === category
-                      ? "bg-accent-500 text-white shadow-lg"
-                      : "border border-white/20 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",
+                      ? "bg-accent-500 text-corporate-text-onAccent shadow-lg"
+                      : "border border-white/20 bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary",
                   )}
                 >
                   {category}
@@ -187,7 +187,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
             <div className="border-t border-white/10 px-4 pt-4">
               <button
                 onClick={handleClearRole}
-                className="tap-target flex w-full items-center gap-3 rounded-xl bg-white/5 p-3 transition-colors hover:bg-white/10"
+                className="tap-target flex w-full items-center gap-4 rounded-xl bg-white/5 p-4 transition-colors hover:bg-white/10"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
                   <User className="h-4 w-4 text-white/60" />
@@ -220,7 +220,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
                     key={role.id}
                     onClick={() => handleRoleSelect(role)}
                     className={cn(
-                      "tap-target relative flex w-full items-center gap-3 rounded-xl p-3 text-left transition-all",
+                      "tap-target relative flex w-full items-center gap-4 rounded-xl p-4 text-left transition-all",
                       selectedRole?.id === role.id
                         ? "bg-accent-500/20 ring-accent-500/50 ring-1"
                         : "hover:bg-white/10",

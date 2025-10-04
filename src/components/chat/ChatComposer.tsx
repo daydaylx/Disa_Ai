@@ -118,13 +118,13 @@ export function ChatComposer({
           <div className="flex items-center justify-between text-xs text-white/60">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-white/70">
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-corporate-text-onSurface">
                   <Zap className="h-3 w-3" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-corporate-text-secondary">
                   Maximal: {maxTokens}
                 </span>
               )}
@@ -143,7 +143,7 @@ export function ChatComposer({
                 key={suggestion}
                 type="button"
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                className="min-h-touch-rec rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-corporate-text-secondary transition-colors hover:bg-white/10 hover:text-corporate-text-primary"
               >
                 {suggestion}
               </button>
@@ -184,7 +184,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="h-10 w-10 rounded-full bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                className="min-h-touch-rec min-w-touch-rec rounded-full bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary"
                 title="Letzte Antwort erneut anfordern"
               >
                 <RotateCcw className="h-5 w-5" />
@@ -196,7 +196,7 @@ export function ChatComposer({
                 onClick={handleStop}
                 size="icon"
                 variant="ghost"
-                className="h-10 w-10 rounded-full bg-red-500/20 text-red-200 hover:bg-red-500/30 hover:text-white"
+                className="min-h-touch-rec min-w-touch-rec rounded-full bg-red-500/20 text-red-200 hover:bg-red-500/30 hover:text-corporate-text-onAccent"
                 title="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
@@ -208,7 +208,7 @@ export function ChatComposer({
               <Button
                 onClick={handleSend}
                 size="icon"
-                className="relative h-10 w-10 rounded-full bg-gradient-to-br from-purple-500 to-sky-500 text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+                className="relative min-h-touch-rec min-w-touch-rec rounded-full bg-gradient-to-br from-purple-500 to-sky-500 text-corporate-text-onAccent shadow-lg transition-transform hover:scale-105 active:scale-95"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 data-testid="composer-send"
@@ -222,7 +222,7 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="ghost"
-                className="h-10 w-10 rounded-full bg-white/5 text-white/40"
+                className="min-h-touch-rec min-w-touch-rec rounded-full bg-white/5 text-corporate-text-subtle"
                 disabled={true}
                 title="Nachricht eingeben, um zu senden"
                 data-testid="composer-mic"

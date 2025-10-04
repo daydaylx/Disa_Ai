@@ -50,9 +50,17 @@ export function BuildInfo({ className = "", showFullInfo = false }: BuildInfoPro
   const formattedSha = formatCommitSha(GIT_SHA);
   const formattedTime = formatBuildTime(BUILD_TIME);
 
+  // Nur in Entwicklungsumgebung oder wenn explizit aktiviert anzeigen
+  const isDevelopment = import.meta.env.DEV;
+  const showDebugInfo = isDevelopment || localStorage.getItem("show-debug-info") === "true";
+
+  if (!showDebugInfo) {
+    return null;
+  }
+
   if (showFullInfo) {
     return (
-      <div className={`space-y-1 text-xs text-white/40 ${className}`}>
+      <div className={`space-y-1 text-xs text-corporate-text-subtle ${className}`}>
         <div className="flex items-center gap-2">
           <span className="font-mono">{formattedBuildId}</span>
           <span>•</span>
@@ -68,7 +76,7 @@ export function BuildInfo({ className = "", showFullInfo = false }: BuildInfoPro
   }
 
   return (
-    <div className={`font-mono text-xs text-white/40 ${className}`}>
+    <div className={`font-mono text-xs text-corporate-text-subtle ${className}`}>
       {formattedBuildId} • {formattedSha}
     </div>
   );

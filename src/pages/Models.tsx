@@ -206,7 +206,7 @@ export default function ModelsPage() {
       aria-pressed={selected === model.id}
       aria-label={`Modell ${model.label || model.id} auswählen`}
       className={cn(
-        "mb-3 border-white/20 bg-white/10 backdrop-blur transition-all",
+        "mb-3 min-h-touch-rec border-white/20 bg-white/10 backdrop-blur transition-all",
         selected === model.id
           ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
           : "hover:border-white/30 hover:bg-white/20",
@@ -214,10 +214,10 @@ export default function ModelsPage() {
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="space-y-1">
-          <CardTitle className="text-sm font-medium text-white">
+          <CardTitle className="text-sm font-medium text-corporate-text-primary">
             {model.label || model.id}
           </CardTitle>
-          <CardDescription className="text-xs text-white/60">
+          <CardDescription className="text-xs text-corporate-text-secondary">
             {model.provider || "Unbekannter Anbieter"}
           </CardDescription>
         </div>
@@ -247,12 +247,19 @@ export default function ModelsPage() {
         {model.tags && model.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1">
             {model.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="outline" className="border-white/20 text-xs text-white/60">
+              <Badge
+                key={tag}
+                variant="outline"
+                className="border-white/20 text-xs text-corporate-text-secondary"
+              >
                 {tag}
               </Badge>
             ))}
             {model.tags.length > 3 && (
-              <Badge variant="outline" className="border-white/20 text-xs text-white/60">
+              <Badge
+                variant="outline"
+                className="border-white/20 text-xs text-corporate-text-secondary"
+              >
                 +{model.tags.length - 3}
               </Badge>
             )}
@@ -300,17 +307,19 @@ export default function ModelsPage() {
               onClick={() => toggleFilter(option.id)}
               data-testid={`models-filter-${option.id}`}
               className={cn(
-                "tap-target inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium transition-all",
+                "inline-flex min-h-touch-rec items-center gap-2 rounded-full px-4 py-2 text-xs font-medium transition-all",
                 filters.includes(option.id)
-                  ? "shadow-accent-500/25 bg-accent-500 text-white shadow-lg"
-                  : "border border-white/20 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",
+                  ? "shadow-accent-500/25 bg-accent-500 text-corporate-text-onAccent shadow-lg"
+                  : "border border-white/20 bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary",
               )}
             >
               {option.label}
               <span
                 className={cn(
                   "rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                  filters.includes(option.id) ? "bg-white/20" : "bg-white/10",
+                  filters.includes(option.id)
+                    ? "bg-white/20 text-corporate-text-onAccent"
+                    : "bg-white/10 text-corporate-text-secondary",
                 )}
               >
                 {option.count}
@@ -341,7 +350,7 @@ export default function ModelsPage() {
             </div>
             <button
               onClick={retryLoadModels}
-              className="tap-target hover:bg-accent-600 rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-white transition-colors"
+              className="hover:bg-accent-600 min-h-touch-rec rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent transition-colors"
             >
               Erneut versuchen
             </button>

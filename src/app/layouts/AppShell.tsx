@@ -11,17 +11,17 @@ function Header() {
   const { activeRole } = useStudio();
 
   return (
-    <header className="relative z-10 px-4 pb-4 pt-10">
+    <header className="relative z-10 px-4 pb-6 pt-10">
       <div className="mx-auto max-w-md">
-        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-lg">
+        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-lg">
           <div className="relative flex items-center justify-between">
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white/80">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-corporate-text-onSurface">
                   <Compass className="h-3.5 w-3.5" /> KI-Studio
                 </div>
                 {activeRole && (
-                  <div className="border-accent-500/30 bg-accent-500/20 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-white/90">
+                  <div className="border-accent-500/30 bg-accent-500/20 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-corporate-text-onAccent">
                     <Bot className="h-3.5 w-3.5" />
                     {activeRole.name}
                   </div>
@@ -42,12 +42,12 @@ function Header() {
               </div>
             </div>
 
-            <div className="flex flex-col items-end gap-3">
+            <div className="flex flex-col items-end gap-4">
               <Button
                 size="sm"
                 variant="ghost"
                 aria-label="Neues Gespräch"
-                className="inline-flex items-center gap-2 rounded-full border-0 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 px-4 py-2 text-sm font-medium text-white shadow-[0_18px_38px_rgba(168,85,247,0.4)] transition-transform hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_20px_45px_rgba(168,85,247,0.55)]"
+                className="inline-flex min-h-touch-rec min-w-touch-rec items-center gap-2 rounded-full border-0 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent shadow-[0_18px_38px_rgba(168,85,247,0.4)] transition-transform hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_20px_45px_rgba(168,85,247,0.55)]"
               >
                 <PlusCircle className="h-4 w-4" /> Neu starten
               </Button>
@@ -79,10 +79,10 @@ function BottomNav() {
             to={item.to}
             title={item.label}
             className={({ isActive }) =>
-              `relative flex h-14 w-20 touch-manipulation flex-col items-center justify-center gap-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
+              `relative flex min-h-touch-rec min-w-touch-rec touch-manipulation flex-col items-center justify-center gap-1 rounded-lg p-2 text-xs font-medium transition-colors duration-200 ${
                 isActive
-                  ? "bg-white/10 text-purple-400"
-                  : "text-neutral-400 hover:bg-white/5 hover:text-white"
+                  ? "bg-white/10 text-corporate-accent-purpleHC"
+                  : "text-corporate-text-secondary hover:bg-white/5 hover:text-corporate-text-primary"
               }`
             }
           >

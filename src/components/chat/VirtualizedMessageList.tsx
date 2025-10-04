@@ -144,7 +144,7 @@ export function VirtualizedMessageList({
 
       {/* Loading indicator */}
       {isLoading && (
-        <div className="flex items-start gap-3 px-3 py-5">
+        <div className="flex items-start gap-4 px-4 py-6">
           <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/80 shadow-[0_10px_28px_rgba(8,15,31,0.45)]">
             <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
               <path
