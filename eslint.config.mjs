@@ -26,6 +26,7 @@ export default [
       "*.config.ts",
       "tailwind.config.ts", // Ignore Tailwind config
       "src/styles/**/*.css", // Ignore CSS files (not parsed by ESLint)
+      "**/*.d.ts", // Ignore TypeScript declaration files
     ],
   }, // Configuration files (Node.js environment)
   {
