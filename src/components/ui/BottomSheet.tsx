@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export default function BottomSheet({
   open,
@@ -31,10 +31,10 @@ export default function BottomSheet({
         const last = focusables[focusables.length - 1];
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
-          last.focus();
+          last!.focus();
         } else if (!e.shiftKey && document.activeElement === last) {
           e.preventDefault();
-          first.focus();
+          first!.focus();
         }
       }
     };

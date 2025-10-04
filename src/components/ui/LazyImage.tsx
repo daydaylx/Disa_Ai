@@ -3,7 +3,7 @@
  * Implements Issue #106 - Lazy loading for images and avatars
  */
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "../../lib/cn";
 
@@ -64,7 +64,7 @@ export function LazyImage({
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && loadState === "idle") {
+        if (entry && entry.isIntersecting && loadState === "idle") {
           setLoadState("loading");
           setCurrentSrc(src);
         }

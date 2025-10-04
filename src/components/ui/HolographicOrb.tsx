@@ -1,5 +1,3 @@
-import React from "react";
-
 interface HolographicOrbProps {
   variant?: "purple" | "teal";
   size?: "sm" | "md" | "lg";
