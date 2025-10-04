@@ -1,4 +1,5 @@
 import "./styles/layers.css";
+import "./styles/mobile-fixes.css";
 
 import { createRoot } from "react-dom/client";
 

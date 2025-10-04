@@ -1,4 +1,1 @@
 @layer reset, primitives, components, utilities;
-
-/* Import mobile-specific fixes */
-@import "./mobile-fixes.css";

@@ -4,9 +4,12 @@
  */
 
 /* Reset and prevent zoom/scaling issues */
-* {
+*,
+*::before,
+*::after {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
 /* Viewport height fixes for mobile browsers */
