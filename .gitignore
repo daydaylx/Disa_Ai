@@ -88,6 +88,8 @@ Thumbs.db
 
 # Build artifacts
 *.tsbuildinfo
+build-info.json
+dev-dist/
 
 *storybook.log
 storybook-static

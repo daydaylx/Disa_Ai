@@ -61,7 +61,7 @@ export default defineConfig(({ mode }) => {
         registerType: "autoUpdate",
         injectRegister: "auto",
         devOptions: {
-          enabled: true,
+          enabled: !isProduction, // Only enable in development
           type: "module",
         },
         injectManifest: {

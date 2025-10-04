@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 import { designTokens } from "./src/styles/design-tokens";
 
 export default {
-  content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+  content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: ["class"],
   theme: {
     extend: {

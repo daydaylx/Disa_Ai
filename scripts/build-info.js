@@ -70,23 +70,22 @@ function writeBuildInfoFile(buildInfo) {
   console.log(envContent);
 }
 
-function injectIntoPackageJson(buildInfo) {
+function writeBuildInfoArtifact(buildInfo) {
   try {
-    const packagePath = "package.json";
-    const packageJson = JSON.parse(readFileSync(packagePath, "utf8"));
-
-    // Add build info to package.json metadata
-    packageJson.buildInfo = {
+    // Write build info as a JSON artifact that can be included in dist
+    const buildInfoArtifact = {
       buildId: buildInfo.VITE_BUILD_ID,
       buildTime: buildInfo.VITE_BUILD_TIME,
       gitSha: buildInfo.VITE_GIT_SHA,
       gitBranch: buildInfo.VITE_GIT_BRANCH,
+      version: buildInfo.VITE_VERSION,
     };
 
-    writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
-    console.log("✅ Build info injected into package.json");
+    // Create build-info.json for the app to read
+    writeFileSync("build-info.json", JSON.stringify(buildInfoArtifact, null, 2));
+    console.log("✅ Build info written to build-info.json");
   } catch (error) {
-    console.warn("Could not inject build info into package.json:", error.message);
+    console.warn("Could not write build info artifact:", error.message);
   }
 }
 
@@ -95,7 +94,7 @@ console.log("🔧 Generating build info for Issue #81...");
 
 const buildInfo = generateBuildInfo();
 writeBuildInfoFile(buildInfo);
-injectIntoPackageJson(buildInfo);
+writeBuildInfoArtifact(buildInfo);
 
 console.log(`\n🚀 Build ID: ${buildInfo.VITE_BUILD_ID}`);
 console.log(`📅 Build Time: ${buildInfo.VITE_BUILD_TIME}`);

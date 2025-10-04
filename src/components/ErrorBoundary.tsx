@@ -254,74 +254,71 @@ export function useErrorReporting() {
 
 /**
  * Startup diagnostics component
- * Runs initial checks and reports problems
+ * Runs initial checks and reports problems as non-blocking warnings
  */
 export function StartupDiagnostics({ children }: { children: ReactNode }) {
-  const [isReady, setIsReady] = React.useState(false);
-  const [errors, setErrors] = React.useState<string[]>([]);
+  const [warnings, setWarnings] = React.useState<string[]>([]);
+  const [showWarnings, setShowWarnings] = React.useState(false);
 
   React.useEffect(() => {
-    const runDiagnostics = async () => {
-      const diagnosticErrors: string[] = [];
+    const runDiagnostics = () => {
+      const diagnosticWarnings: string[] = [];
 
       try {
-        // Environment validation
+        // Environment validation (non-critical)
         if (!isEnvironmentValid()) {
-          diagnosticErrors.push(...getEnvironmentErrors());
+          diagnosticWarnings.push(...getEnvironmentErrors());
         }
 
-        // Network connectivity check
+        // Network connectivity check (informational only)
         if (!navigator.onLine) {
-          diagnosticErrors.push("Keine Internetverbindung");
+          diagnosticWarnings.push("Offline-Modus aktiv");
         }
 
-        // API availability check (with timeout)
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
+        // API availability check (delayed, non-blocking)
+        // Only check if we have an API key configured
+        setTimeout(async () => {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
 
-          const config = getEnvConfig();
-          await fetch(config.VITE_OPENROUTER_BASE_URL + "/models", {
-            method: "GET",
-            signal: controller.signal,
-          });
+            const config = getEnvConfig();
+            if (config.VITE_OPENROUTER_BASE_URL) {
+              await fetch(config.VITE_OPENROUTER_BASE_URL + "/models", {
+                method: "GET",
+                signal: controller.signal,
+              });
+            }
 
-          clearTimeout(timeoutId);
-        } catch {
-          diagnosticErrors.push("API-Service nicht erreichbar");
+            clearTimeout(timeoutId);
+          } catch {
+            // API issues are handled by the existing error system
+            console.warn("API connectivity check failed - using existing error handling");
+          }
+        }, 1000);
+
+        if (diagnosticWarnings.length > 0) {
+          setWarnings(diagnosticWarnings);
+          setShowWarnings(true);
         }
-
-        setErrors(diagnosticErrors);
-        setIsReady(true);
-      } catch {
-        diagnosticErrors.push("Startup-Diagnose fehlgeschlagen");
-        setErrors(diagnosticErrors);
-        setIsReady(true);
+      } catch (error) {
+        // Log but don't block
+        console.warn("Startup diagnostics failed:", error);
       }
     };
 
-    void runDiagnostics();
+    runDiagnostics();
   }, []);
 
-  if (!isReady) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-          <p className="text-gray-600">Anwendung wird initialisiert...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (errors.length > 0) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-yellow-50 p-4">
-        <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-          <div className="mb-4 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100">
+  return (
+    <>
+      {/* Non-blocking warning banner */}
+      {showWarnings && warnings.length > 0 && (
+        <div className="fixed left-0 right-0 top-0 z-50 border-b border-yellow-200 bg-yellow-100 p-3">
+          <div className="mx-auto flex max-w-7xl items-center justify-between">
+            <div className="flex items-center space-x-2">
               <svg
-                className="h-6 w-6 text-yellow-600"
+                className="h-5 w-5 text-yellow-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -333,31 +330,23 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 14.5c-.77.833.192 2.5 1.732 2.5z"
                 />
               </svg>
+              <span className="text-sm text-yellow-800">
+                {warnings.length === 1 ? warnings[0] : `${warnings.length} Konfigurationswarnungen`}
+              </span>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Konfigurationsprobleme</h2>
+            <button
+              onClick={() => setShowWarnings(false)}
+              className="text-xl font-bold text-yellow-600 hover:text-yellow-800"
+              aria-label="Warning schließen"
+            >
+              ×
+            </button>
           </div>
-
-          <div className="mb-4">
-            <ul className="space-y-1 text-sm text-gray-700">
-              {errors.map((error, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="mr-2 text-red-500">•</span>
-                  {error}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <button
-            onClick={() => window.location.reload()}
-            className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
-          >
-            Erneut versuchen
-          </button>
         </div>
-      </div>
-    );
-  }
+      )}
 
-  return <>{children}</>;
+      {/* App always renders */}
+      <div className={showWarnings && warnings.length > 0 ? "pt-12" : ""}>{children}</div>
+    </>
+  );
 }
