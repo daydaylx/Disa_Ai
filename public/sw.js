@@ -1,8 +1,14 @@
+import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
+
+// vite-plugin-pwa will inject precache manifest here
+precacheAndRoute(self.__WB_MANIFEST);
+cleanupOutdatedCaches();
+
 const params = new URL(self.location.href).searchParams;
 const BUILD_ID = params.get("build") ?? "dev";
 const VERSION_SUFFIX = BUILD_ID.slice(-8);
 // Dynamic cache versioning with forward compatibility
-const SW_VERSION = `v2.2.0-${VERSION_SUFFIX}`;
+const SW_VERSION = `v2.3.0-${VERSION_SUFFIX}`;
 const HTML_CACHE = `html-${SW_VERSION}`;
 const ASSET_CACHE = `assets-${SW_VERSION}`;
 const OFFLINE_URL = "/offline.html";

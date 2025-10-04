@@ -55,14 +55,20 @@ export default defineConfig(({ mode }) => {
       react(),
       analyzerPlugin,
       VitePWA({
+        strategies: "injectManifest",
+        srcDir: "public",
+        filename: "sw.js",
         registerType: "autoUpdate",
         injectRegister: "auto",
         devOptions: {
           enabled: true,
+          type: "module",
         },
-        workbox: {
-          globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2}"],
+        injectManifest: {
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,json,webmanifest}"],
+          globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js"],
         },
+        manifest: false, // We have our own manifest.webmanifest
       }),
     ],
     base, // Umweltspezifische Basis für Cloudflare Pages
