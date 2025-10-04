@@ -79,7 +79,7 @@ function BottomNav() {
             to={item.to}
             title={item.label}
             className={({ isActive }) =>
-              `relative flex h-12 w-16 flex-col items-center justify-center gap-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
+              `relative flex h-14 w-20 touch-manipulation flex-col items-center justify-center gap-1 rounded-lg text-xs font-medium transition-colors duration-200 ${
                 isActive
                   ? "bg-white/10 text-purple-400"
                   : "text-neutral-400 hover:bg-white/5 hover:text-white"

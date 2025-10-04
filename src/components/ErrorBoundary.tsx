@@ -276,26 +276,32 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
         }
 
         // API availability check (delayed, non-blocking)
-        // Only check if we have an API key configured
-        setTimeout(async () => {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 3000);
+        // Only check if we have an API key configured and not on mobile to prevent crashes
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
 
-            const config = getEnvConfig();
-            if (config.VITE_OPENROUTER_BASE_URL) {
-              await fetch(config.VITE_OPENROUTER_BASE_URL + "/models", {
-                method: "GET",
-                signal: controller.signal,
-              });
+        if (!isMobile) {
+          setTimeout(async () => {
+            try {
+              const controller = new AbortController();
+              const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+              const config = getEnvConfig();
+              if (config.VITE_OPENROUTER_BASE_URL) {
+                await fetch(config.VITE_OPENROUTER_BASE_URL + "/models", {
+                  method: "GET",
+                  signal: controller.signal,
+                });
+              }
+
+              clearTimeout(timeoutId);
+            } catch {
+              // API issues are handled by the existing error system
+              console.warn("API connectivity check failed - using existing error handling");
             }
-
-            clearTimeout(timeoutId);
-          } catch {
-            // API issues are handled by the existing error system
-            console.warn("API connectivity check failed - using existing error handling");
-          }
-        }, 1000);
+          }, 2000); // Longer delay for stability
+        }
 
         if (diagnosticWarnings.length > 0) {
           setWarnings(diagnosticWarnings);
