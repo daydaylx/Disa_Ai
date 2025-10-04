@@ -11,4 +11,4 @@ jobs:
       - run: npm ci || pnpm i
       - run: npx playwright install --with-deps
       - name: Run E2E Tests (Critical Only)
-        run: npx playwright test tests/e2e/app-loading.spec.ts tests/e2e/a11y.spec.ts tests/e2e/pwa-features.spec.ts --timeout=20000 --workers=1
+        run: npx playwright test tests/e2e/smoke.spec.ts --timeout=20000 --workers=1

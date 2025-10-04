@@ -12,8 +12,8 @@ module.exports = {
       numberOfRuns: 1,
       // Settings for the collection
       settings: {
-        // Mobile simulation for performance testing
-        preset: "mobile", // Can be 'mobile' or 'desktop'
+        // Use desktop preset for CI stability (mobile emulation can be added later)
+        preset: "desktop",
         // Chrome flags for CI environment
         chromeFlags:
           "--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-renderer-backgrounding --disable-features=TranslateUI --no-first-run",

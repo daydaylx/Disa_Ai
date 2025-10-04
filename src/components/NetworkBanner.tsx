@@ -10,14 +10,17 @@ export function NetworkBanner() {
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    // Also check current status in case it changed before the listener was attached
-    setIsOnline(navigator.onLine);
+    // Only update if the value has actually changed to prevent test issues
+    const currentOnlineStatus = navigator.onLine;
+    if (currentOnlineStatus !== isOnline) {
+      setIsOnline(currentOnlineStatus);
+    }
 
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);
+  }, [isOnline]); // Include isOnline to prevent unnecessary updates
 
   if (isOnline) {
     return null;
