@@ -67,6 +67,7 @@ export default defineConfig(({ mode }) => {
         injectManifest: {
           globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,json,webmanifest}"],
           globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js"],
+          rollupFormat: "es",
         },
         manifest: false, // We have our own manifest.webmanifest
       }),
