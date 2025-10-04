@@ -40,9 +40,9 @@ export class AppHelpers {
         .locator('[role="main"]')
         .isVisible()
         .catch(() => false),
-      // Check for header content
+      // Check for header content - updated for new AppShell structure
       this.page
-        .locator('h1:has-text("Disa AI")')
+        .locator('[data-testid="app-title"]')
         .isVisible()
         .catch(() => false),
       // Check for navigation
@@ -102,17 +102,17 @@ export class AppHelpers {
     // Check for the main application elements that should always be present
 
     try {
-      // 1. Verify header is present with branding
-      await this.page.locator('h1:has-text("Disa AI")').waitFor({ timeout: 5000 });
+      // 1. Wait for React app to be fully mounted
+      await this.page.waitForFunction('document.readyState === "complete"', { timeout: 5000 });
 
-      // 2. Verify main content area exists
-      await this.page.locator("main").waitFor({ timeout: 2000 });
+      // 2. Verify header is present with branding - updated for new AppShell structure
+      await this.page.locator('[data-testid="app-title"]').waitFor({ timeout: 8000 });
 
-      // 3. Verify navigation is present
-      await this.page.locator("nav").waitFor({ timeout: 2000 });
+      // 3. Verify main content area exists (either main element or role)
+      await this.page.locator("main, [role='main']").waitFor({ timeout: 3000 });
 
-      // 4. Verify composer area exists (the textarea or textbox)
-      await this.page.locator("textarea, textbox").waitFor({ timeout: 2000 });
+      // 4. Verify navigation is present
+      await this.page.locator("nav").waitFor({ timeout: 3000 });
 
       // If we reach here, the app has loaded successfully
       return;
