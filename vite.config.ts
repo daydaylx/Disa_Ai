@@ -31,23 +31,19 @@ export default defineConfig(({ mode }) => {
   // 1. Environment Variable hat Priorität
   if (env.VITE_BASE_URL) {
     base = env.VITE_BASE_URL;
-    console.log(`[Vite] Using VITE_BASE_URL: ${base}`);
   }
   // 2. Cloudflare Pages Detection
   else if (env.CF_PAGES && env.CF_PAGES_URL) {
     base = "/";
-    console.log(`[Vite] Cloudflare Pages detected, using base: ${base}`);
   }
   // 3. GitHub Pages Detection (only for production builds)
   else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY && isProduction) {
     const repo = env.GITHUB_REPOSITORY.split("/")[1];
     base = `/${repo}/`;
-    console.log(`[Vite] GitHub Pages detected, using base: ${base}`);
   }
   // 4. Development/Local Default
   else {
     base = "/";
-    console.log(`[Vite] Using default base: ${base}`);
   }
 
   return {

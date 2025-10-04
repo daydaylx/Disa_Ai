@@ -1,31 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "moduleResolution": "bundler",
-
-    // Type Checking
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": false,
-    "noImplicitOverride": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "useUnknownInCatchVariables": true,
-
-    // Module Resolution
-    "forceConsistentCasingInFileNames": true,
-    "resolvePackageJsonExports": true,
-    "verbatimModuleSyntax": true,
-
-    // Performance
-    "allowJs": false,
-    "checkJs": false,
-    "isolatedModules": true
-  },
-
   "include": ["src/**/*.ts", "src/**/*.tsx", "vite-env.d.ts"],
-
   "exclude": ["node_modules", "dist", "build", "coverage", "e2e", "tests", "src/lib/openrouter.ts"]
 }

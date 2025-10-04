@@ -101,12 +101,12 @@ export default [
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "import/first": "error",
-      "import/no-duplicates": "off",
       "import/no-mutable-exports": "error",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
 
       // TypeScript specific
+      "@typescript-eslint/quotes": ["warn", "double"],
       "@typescript-eslint/await-thenable": "error",
       "@typescript-eslint/no-floating-promises": ["error", { ignoreIIFE: true }],
       "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],

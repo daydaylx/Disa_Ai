@@ -13,7 +13,7 @@ module.exports = {
       // Settings for the collection
       settings: {
         // Mobile simulation for performance testing
-        preset: "desktop", // Can be 'mobile' or 'desktop'
+        preset: "mobile", // Can be 'mobile' or 'desktop'
         // Chrome flags for CI environment
         chromeFlags:
           "--no-sandbox --disable-dev-shm-usage --disable-background-timer-throttling --disable-renderer-backgrounding --disable-features=TranslateUI --no-first-run",
@@ -24,7 +24,7 @@ module.exports = {
       assertions: {
         // Core Web Vitals - relaxed for CI stability
         "categories:performance": ["warn", { minScore: 0.7 }], // 70+ performance score
-        "categories:accessibility": ["warn", { minScore: 0.8 }], // 80+ accessibility score
+        "categories:accessibility": ["error", { minScore: 0.9 }], // 90+ accessibility score
         "categories:best-practices": ["warn", { minScore: 0.7 }], // 70+ best practices
         "categories:seo": ["warn", { minScore: 0.6 }], // 60+ SEO (warning only)
 
