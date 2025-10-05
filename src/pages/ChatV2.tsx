@@ -158,7 +158,7 @@ export default function ChatPageV2() {
       };
     }
 
-    // Neue Session im Store (bereits durch Chat-Hook gehandelt)
+    // Set input immediately - React batches state updates
     setInput(prompt);
 
     // UI-Toast "Neuer Chat gestartet" - Akzeptanzkriterium erfüllt
@@ -168,30 +168,20 @@ export default function ChatPageV2() {
       message: "Schnellstart-Flow wurde erfolgreich initialisiert.",
     });
 
-    // If autosend is enabled, automatically send the message
     if (autosend && model) {
-      const timeoutId = setTimeout(() => {
-        // Check if component is still mounted before calling append
+      // Use microtask to ensure state updates are processed
+      void Promise.resolve().then(() => {
         if (isMountedRef.current) {
           void append({
             role: "user",
             content: prompt,
           });
-          setIsQuickstartLoading(false);
+          // Loading state will be cleared by useEffect when isLoading changes
         }
-      }, 100); // Small delay to ensure input is set
-
-      // Store timeout ID for potential cleanup (optional improvement)
-      return () => clearTimeout(timeoutId);
+      });
     } else {
-      // Clear loading state immediately if not auto-sending
-      const timeoutId = setTimeout(() => {
-        if (isMountedRef.current) {
-          setIsQuickstartLoading(false);
-        }
-      }, 500); // Small delay for visual feedback
-
-      return () => clearTimeout(timeoutId);
+      // No autosend - clear loading state immediately since user needs to manually send
+      setIsQuickstartLoading(false);
     }
   };
 

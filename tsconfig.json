@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "vite-env.d.ts"],
-  "exclude": ["node_modules", "dist", "build", "coverage", "e2e", "tests", "src/lib/openrouter.ts"]
+  "exclude": ["node_modules", "dist", "build", "coverage", "e2e", "tests"]
 }

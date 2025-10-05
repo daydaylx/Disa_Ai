@@ -13,7 +13,7 @@ describe("API Key Migration", () => {
     sessionStorage.clear();
   });
 
-  it("sollte einen Schlüssel von localStorage nach sessionStorage migrieren", () => {
+  it("sollte einen Legacy-Schlüssel zum kanonischen Schlüssel migrieren", () => {
     const testKey = "sk-test-key-from-localstorage";
     localStorage.setItem("disa_api_key", testKey);
 
@@ -21,19 +21,27 @@ describe("API Key Migration", () => {
     const key = readApiKey();
 
     expect(key).toBe(testKey);
-    expect(sessionStorage.getItem("disa_api_key")).toBe(testKey);
+    // Migriert zum kanonischen Schlüssel
+    expect(sessionStorage.getItem("openrouter-key")).toBe(testKey);
+    // Legacy-Schlüssel werden gelöscht
+    expect(sessionStorage.getItem("disa_api_key")).toBeNull();
     expect(localStorage.getItem("disa_api_key")).toBeNull();
   });
 
-  it("sollte einen Schlüssel direkt aus sessionStorage lesen, wenn vorhanden", () => {
-    const testKey = "sk-test-key-from-sessionstorage";
-    sessionStorage.setItem("disa_api_key", testKey);
+  it("sollte kanonischen Schlüssel bevorzugen und Legacy-Schlüssel ignorieren", () => {
+    const canonicalKey = "sk-canonical-key";
+    const legacyKey = "sk-legacy-key";
+
+    sessionStorage.setItem("openrouter-key", canonicalKey);
+    sessionStorage.setItem("disa_api_key", legacyKey);
     localStorage.setItem("disa_api_key", "old-key");
 
     const key = readApiKey();
 
-    expect(key).toBe(testKey);
-    expect(localStorage.getItem("disa_api_key")).toBe("old-key"); // Sollte nicht angetastet werden, wenn session-Key da ist
+    expect(key).toBe(canonicalKey);
+    // Legacy-Schlüssel bleiben unberührt, wenn kanonischer Schlüssel existiert
+    expect(sessionStorage.getItem("disa_api_key")).toBe(legacyKey);
+    expect(localStorage.getItem("disa_api_key")).toBe("old-key");
   });
 
   it("sollte null zurückgeben, wenn kein Schlüssel vorhanden ist", () => {
@@ -41,11 +49,14 @@ describe("API Key Migration", () => {
     expect(key).toBeNull();
   });
 
-  it("sollte einen neuen Schlüssel in sessionStorage schreiben", () => {
+  it("sollte einen neuen Schlüssel nur in kanonischen Schlüssel schreiben", () => {
     const testKey = "new-key";
     writeApiKey(testKey);
 
-    expect(sessionStorage.getItem("disa_api_key")).toBe(testKey);
+    // Nur kanonischer Schlüssel wird gesetzt
+    expect(sessionStorage.getItem("openrouter-key")).toBe(testKey);
+    // Legacy-Schlüssel bleiben leer
+    expect(sessionStorage.getItem("disa_api_key")).toBeNull();
     expect(localStorage.getItem("disa_api_key")).toBeNull();
   });
 });

@@ -10,31 +10,35 @@ describe("API Key Lifecycle & Security", () => {
   });
 
   describe("Secure Storage Migration", () => {
-    it("should migrate from localStorage to sessionStorage", () => {
+    it("should migrate from localStorage to canonical sessionStorage key", () => {
       const testKey = "sk-test-migration-key";
 
       // Start with key in localStorage (legacy state)
       localStorage.setItem("disa_api_key", testKey);
 
-      // Reading key should migrate it to sessionStorage
+      // Reading key should migrate it to canonical sessionStorage key
       const retrievedKey = readApiKey();
 
       expect(retrievedKey).toBe(testKey);
-      expect(sessionStorage.getItem("disa_api_key")).toBe(testKey);
+      expect(sessionStorage.getItem("openrouter-key")).toBe(testKey);
+      expect(sessionStorage.getItem("disa_api_key")).toBeNull();
       expect(localStorage.getItem("disa_api_key")).toBeNull();
     });
 
-    it("should prefer sessionStorage over localStorage", () => {
-      const sessionKey = "sk-session-key";
+    it("should prefer canonical key over legacy keys", () => {
+      const canonicalKey = "sk-canonical-key";
+      const legacyKey = "sk-legacy-key";
       const localKey = "sk-local-key";
 
       localStorage.setItem("disa_api_key", localKey);
-      sessionStorage.setItem("disa_api_key", sessionKey);
+      sessionStorage.setItem("disa_api_key", legacyKey);
+      sessionStorage.setItem("openrouter-key", canonicalKey);
 
       const retrievedKey = readApiKey();
 
-      expect(retrievedKey).toBe(sessionKey);
-      // localStorage should remain untouched when sessionStorage has a key
+      expect(retrievedKey).toBe(canonicalKey);
+      // Legacy keys should remain untouched when canonical key exists
+      expect(sessionStorage.getItem("disa_api_key")).toBe(legacyKey);
       expect(localStorage.getItem("disa_api_key")).toBe(localKey);
     });
 
@@ -58,12 +62,13 @@ describe("API Key Lifecycle & Security", () => {
   });
 
   describe("Key Expiry & Session Behavior", () => {
-    it("should store keys only in sessionStorage", () => {
+    it("should store keys only in canonical sessionStorage key", () => {
       const testKey = "sk-new-session-key";
 
       writeApiKey(testKey);
 
-      expect(sessionStorage.getItem("disa_api_key")).toBe(testKey);
+      expect(sessionStorage.getItem("openrouter-key")).toBe(testKey);
+      expect(sessionStorage.getItem("disa_api_key")).toBeNull();
       expect(localStorage.getItem("disa_api_key")).toBeNull();
     });
 
