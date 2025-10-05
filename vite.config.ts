@@ -28,23 +28,39 @@ export default defineConfig(({ mode }) => {
   // Fix für Issue #60: Erweiterte Base-Pfad-Logik für Cloudflare Pages
   let base = "/";
 
+  // Debug-Ausgaben für Base-Pfad-Erkennung
+  console.log(`[BUILD] Mode: ${mode}`);
+  console.log(`[BUILD] Environment variables:`, {
+    CF_PAGES: env.CF_PAGES,
+    CF_PAGES_URL: env.CF_PAGES_URL,
+    GITHUB_ACTIONS: env.GITHUB_ACTIONS,
+    GITHUB_REPOSITORY: env.GITHUB_REPOSITORY,
+    VITE_BASE_URL: env.VITE_BASE_URL,
+  });
+
   // 1. Environment Variable hat Priorität
   if (env.VITE_BASE_URL) {
     base = env.VITE_BASE_URL;
+    console.log(`[BUILD] Using VITE_BASE_URL: ${base}`);
   }
   // 2. Cloudflare Pages Detection
   else if (env.CF_PAGES && env.CF_PAGES_URL) {
     base = "/";
+    console.log(`[BUILD] Detected Cloudflare Pages, using base: ${base}`);
   }
   // 3. GitHub Pages Detection (only for production builds)
   else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY && isProduction) {
     const repo = env.GITHUB_REPOSITORY.split("/")[1];
     base = `/${repo}/`;
+    console.log(`[BUILD] Detected GitHub Pages, using base: ${base}`);
   }
   // 4. Development/Local Default
   else {
     base = "/";
+    console.log(`[BUILD] Using default base: ${base}`);
   }
+
+  console.log(`[BUILD] Final base path: ${base}`);
 
   return {
     plugins: [
