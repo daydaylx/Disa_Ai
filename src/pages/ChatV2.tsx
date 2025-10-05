@@ -1,11 +1,8 @@
-import { Brain } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
-import { MemoryPanel } from "../components/memory/MemoryPanel";
-import { Button } from "../components/ui/button";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import { useChat } from "../hooks/useChat";
@@ -32,8 +29,6 @@ export default function ChatPageV2() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isQuickstartLoading, setIsQuickstartLoading] = useState(false);
   const activeQuickstartRef = useRef<ActiveQuickstart | null>(null);
-  const [memoryPanelVisible, setMemoryPanelVisible] = useState(true);
-  const [showMemoryPanel, setShowMemoryPanel] = useState(true);
   const toasts = useToasts();
   const { activeRole, typographyScale, borderRadius, accentColor } = useStudio();
   const isMountedRef = useRef(true);
@@ -61,7 +56,12 @@ export default function ChatPageV2() {
     },
   });
 
-  const { globalMemory, isUpdating: isMemoryUpdating, addNote, updateFromMessages } = useMemory();
+  const { updateFromMessages, updateSettings } = useMemory();
+
+  // Auto-enable memory system in background
+  useEffect(() => {
+    void updateSettings({ enabled: true });
+  }, [updateSettings]);
 
   // Track if role system prompt has been added to prevent re-adding on chat reset
   const [roleInitialized, setRoleInitialized] = useState<string | null>(null);
@@ -228,44 +228,19 @@ export default function ChatPageV2() {
     }
   }, [messages]);
 
-  const handleRetry = () => {
-    void reload();
-  };
-
-  const handleAddMemoryNote = async (note: string) => {
-    try {
-      await addNote(note, model?.id);
-      toasts.push({
-        kind: "success",
-        title: "Notiz gespeichert",
-        message: "Die Notiz wurde erfolgreich zum Gedächtnis hinzugefügt.",
-      });
-    } catch {
-      toasts.push({
-        kind: "error",
-        title: "Fehler",
-        message: "Die Notiz konnte nicht gespeichert werden.",
-      });
-    }
-  };
-
-  const handleUpdateMemoryFromChat = async () => {
-    if (messages.length > 0) {
-      try {
-        await updateFromMessages(messages, model?.id);
-        toasts.push({
-          kind: "success",
-          title: "Gedächtnis aktualisiert",
-          message: "Das Gedächtnis wurde aus dem Chat-Verlauf aktualisiert.",
-        });
-      } catch {
-        toasts.push({
-          kind: "error",
-          title: "Fehler",
-          message: "Das Gedächtnis konnte nicht aktualisiert werden.",
-        });
+  // Auto-update memory from chat messages in background
+  useEffect(() => {
+    if (messages.length >= 2) {
+      const lastMessage = messages[messages.length - 1];
+      // Only update memory when assistant responds (conversation is complete)
+      if (lastMessage?.role === "assistant") {
+        updateFromMessages(messages, model?.id).catch(console.warn);
       }
     }
+  }, [messages, model?.id, updateFromMessages]);
+
+  const handleRetry = () => {
+    void reload();
   };
 
   // Calculate token count from all messages (currently unused but kept for future features)
@@ -274,18 +249,6 @@ export default function ChatPageV2() {
   return (
     <>
       <main className="relative z-10 flex h-full overflow-hidden pb-4">
-        {/* Memory Toggle Button - Mobile */}
-        <div className="fixed right-4 top-16 z-20 md:hidden">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowMemoryPanel(!showMemoryPanel)}
-            className="border-white/20 bg-white/10 backdrop-blur"
-          >
-            <Brain className="h-4 w-4" />
-          </Button>
-        </div>
-
         <div className="flex h-full w-full">
           {/* Chat Area */}
           <div className="flex flex-1 flex-col overflow-hidden">
@@ -401,9 +364,7 @@ export default function ChatPageV2() {
             ) : (
               <section className="flex-1 overflow-hidden" aria-label="Chat History">
                 <div className="h-full px-1">
-                  <div
-                    className={`mx-auto h-full w-full ${showMemoryPanel ? "max-w-sm md:max-w-md" : "max-w-md"}`}
-                  >
+                  <div className="mx-auto h-full w-full max-w-md">
                     <ChatList
                       messages={messages}
                       onCopy={handleCopy}
@@ -421,9 +382,7 @@ export default function ChatPageV2() {
             {/* Input Section */}
             <section role="region" aria-label="Message Input" className="safe-bottom">
               <div className="px-1">
-                <div
-                  className={`mx-auto w-full ${showMemoryPanel ? "max-w-sm md:max-w-md" : "max-w-md"}`}
-                >
+                <div className="mx-auto w-full max-w-md">
                   <ChatComposer
                     value={input}
                     onChange={setInput}
@@ -435,71 +394,11 @@ export default function ChatPageV2() {
                     canRetry={Boolean(messages.length > 0)}
                     isQuickstartLoading={isQuickstartLoading}
                   />
-
-                  {/* Memory Quick Actions */}
-                  {showMemoryPanel && messages.length > 0 && (
-                    <div className="mt-2 flex justify-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleUpdateMemoryFromChat}
-                        disabled={isMemoryUpdating}
-                        className="border-white/10 bg-white/5 text-xs"
-                      >
-                        {isMemoryUpdating ? "Aktualisiere..." : "Gedächtnis aktualisieren"}
-                      </Button>
-                    </div>
-                  )}
                 </div>
               </div>
             </section>
           </div>
-
-          {/* Memory Panel - Desktop sidebar */}
-          {showMemoryPanel && (
-            <div className="hidden w-80 overflow-hidden border-l border-white/10 bg-black/20 md:block">
-              <div className="h-full p-4">
-                <MemoryPanel
-                  memory={globalMemory?.summary || ""}
-                  threadTitle="Aktueller Chat"
-                  isVisible={memoryPanelVisible}
-                  onToggle={() => setMemoryPanelVisible(!memoryPanelVisible)}
-                  onAddNote={handleAddMemoryNote}
-                  isLoading={isMemoryUpdating}
-                />
-              </div>
-            </div>
-          )}
         </div>
-
-        {/* Memory Panel - Mobile overlay */}
-        {showMemoryPanel && (
-          <div className="fixed inset-0 z-30 flex items-end bg-black/50 backdrop-blur-sm md:hidden">
-            <div className="max-h-[70vh] w-full overflow-hidden rounded-t-lg border-t border-white/10 bg-black/90">
-              <div className="p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-white">Gedächtnis</h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowMemoryPanel(false)}
-                    className="h-8 w-8 p-0"
-                  >
-                    ×
-                  </Button>
-                </div>
-                <MemoryPanel
-                  memory={globalMemory?.summary || ""}
-                  threadTitle="Aktueller Chat"
-                  isVisible={true}
-                  onToggle={() => {}}
-                  onAddNote={handleAddMemoryNote}
-                  isLoading={isMemoryUpdating}
-                />
-              </div>
-            </div>
-          </div>
-        )}
       </main>
 
       {/* Model Selection Sheet */}
