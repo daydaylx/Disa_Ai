@@ -38,11 +38,11 @@ export async function clearServiceWorkerCache(page: Page) {
     }
 
     // Clear localStorage and sessionStorage except API key
-    const apiKey = sessionStorage.getItem("disa:api-key");
+    const apiKey = sessionStorage.getItem("openrouter-key");
     localStorage.clear();
     sessionStorage.clear();
     if (apiKey) {
-      sessionStorage.setItem("disa:api-key", apiKey);
+      sessionStorage.setItem("openrouter-key", apiKey);
     }
   });
 }

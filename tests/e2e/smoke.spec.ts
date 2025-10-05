@@ -30,7 +30,7 @@ test.describe("Smoke Tests", () => {
     await page.locator('[data-testid="composer-send"]').click();
 
     // The user message should be visible
-    await expect(page.locator(".chat-bubble", { hasText: "Hallo Welt" })).toBeVisible();
+    await expect(page.getByText("Hallo Welt")).toBeVisible();
 
     // The stop button should appear during streaming
     const stopButton = page.locator('[data-testid="composer-stop"]');
