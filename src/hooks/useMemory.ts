@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { addExplicitMemory, updateMemorySummary } from "../api/memory";
 import type { ChatMemory, GlobalMemory, MemorySettings } from "../lib/memory/memoryService";
+import type { ChatMessage } from "../types/chat";
 
 // Lazy-load memory service instance
 let memoryServiceInstance: any = null;
@@ -20,6 +22,8 @@ export function useMemory() {
     retentionDays: 30,
   });
   const [globalMemory, setGlobalMemory] = useState<GlobalMemory | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Load initial data
   useEffect(() => {
@@ -30,6 +34,7 @@ export function useMemory() {
         setGlobalMemory(service.getGlobalMemory());
       } catch (error) {
         console.warn("Failed to load memory service:", error);
+        setError("Failed to load memory service");
       }
     };
     void loadService();
@@ -49,6 +54,7 @@ export function useMemory() {
       }
     } catch (error) {
       console.warn("Failed to update settings:", error);
+      setError("Failed to update settings");
     }
   }, []);
 
@@ -67,6 +73,7 @@ export function useMemory() {
         setGlobalMemory(service.getGlobalMemory());
       } catch (error) {
         console.warn("Failed to update global memory:", error);
+        setError("Failed to update global memory");
       }
     },
     [settings.enabled],
@@ -79,6 +86,7 @@ export function useMemory() {
       setGlobalMemory(null);
     } catch (error) {
       console.warn("Failed to clear global memory:", error);
+      setError("Failed to clear global memory");
     }
   }, []);
 
@@ -89,6 +97,7 @@ export function useMemory() {
       return service.getChatMemory(chatId);
     } catch (error) {
       console.warn("Failed to get chat memory:", error);
+      setError("Failed to get chat memory");
       return null;
     }
   }, []);
@@ -102,6 +111,7 @@ export function useMemory() {
         service.updateChatMemory(chatId, messages, context);
       } catch (error) {
         console.warn("Failed to update chat memory:", error);
+        setError("Failed to update chat memory");
       }
     },
     [settings.enabled],
@@ -113,6 +123,7 @@ export function useMemory() {
       service.deleteChatMemory(chatId);
     } catch (error) {
       console.warn("Failed to delete chat memory:", error);
+      setError("Failed to delete chat memory");
     }
   }, []);
 
@@ -123,6 +134,7 @@ export function useMemory() {
       return service.getChatList();
     } catch (error) {
       console.warn("Failed to get chat list:", error);
+      setError("Failed to get chat list");
       return [];
     }
   }, []);
@@ -133,6 +145,7 @@ export function useMemory() {
       return service.exportAllMemory();
     } catch (error) {
       console.warn("Failed to export memory:", error);
+      setError("Failed to export memory");
       return {};
     }
   }, []);
@@ -144,6 +157,7 @@ export function useMemory() {
       setGlobalMemory(null);
     } catch (error) {
       console.warn("Failed to clear all memory:", error);
+      setError("Failed to clear all memory");
     }
   }, []);
 
@@ -153,6 +167,7 @@ export function useMemory() {
       return service.getMemoryStats();
     } catch (error) {
       console.warn("Failed to get memory stats:", error);
+      setError("Failed to get memory stats");
       return {
         enabled: false,
         chatCount: 0,
@@ -162,6 +177,68 @@ export function useMemory() {
       };
     }
   }, []);
+
+  const addNote = useCallback(
+    async (note: string, model?: string) => {
+      if (!note.trim() || !settings.enabled) return;
+
+      setIsUpdating(true);
+      setError(null);
+
+      try {
+        const previousMemory = globalMemory?.summary || "";
+        const updatedMemory = await addExplicitMemory({
+          previousMemory,
+          note: note.trim(),
+          model,
+        });
+        await updateGlobalMemory({ summary: updatedMemory });
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to add note";
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setIsUpdating(false);
+      }
+    },
+    [globalMemory, settings.enabled, updateGlobalMemory],
+  );
+
+  const updateFromMessages = useCallback(
+    async (messages: ChatMessage[], model?: string) => {
+      if (messages.length === 0 || !settings.enabled) return;
+
+      setIsUpdating(true);
+      setError(null);
+
+      try {
+        const recentWindow = messages
+          .filter((msg) => msg.role === "user" || msg.role === "assistant")
+          .slice(-6)
+          .map((msg) => ({
+            role: msg.role as "user" | "assistant",
+            content: msg.content,
+          }));
+
+        if (recentWindow.length > 0) {
+          const previousMemory = globalMemory?.summary || "";
+          const updatedMemory = await updateMemorySummary({
+            previousMemory,
+            recentWindow,
+            model,
+          });
+          await updateGlobalMemory({ summary: updatedMemory });
+        }
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to update memory";
+        setError(errorMessage);
+        console.error("Memory update failed:", err);
+      } finally {
+        setIsUpdating(false);
+      }
+    },
+    [globalMemory, settings.enabled, updateGlobalMemory],
+  );
 
   return {
     // Settings
@@ -184,6 +261,12 @@ export function useMemory() {
     exportMemory,
     clearAllMemory,
     getMemoryStats,
+
+    // New memory functions
+    addNote,
+    updateFromMessages,
+    isUpdating,
+    error,
 
     // Computed
     isEnabled: settings.enabled,

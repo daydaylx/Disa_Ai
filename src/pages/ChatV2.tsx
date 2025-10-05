@@ -1,11 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { Brain } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
+import { MemoryPanel } from "../components/memory/MemoryPanel";
+import { Button } from "../components/ui/button";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import { useChat } from "../hooks/useChat";
+import { useMemory } from "../hooks/useMemory";
 import { trackQuickstartCompleted } from "../lib/analytics/index";
 import { humanError } from "../lib/errors/humanError";
 import ModelSelectionSheet from "../ui/ModelSheet";
@@ -28,6 +32,8 @@ export default function ChatPageV2() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isQuickstartLoading, setIsQuickstartLoading] = useState(false);
   const activeQuickstartRef = useRef<ActiveQuickstart | null>(null);
+  const [memoryPanelVisible, setMemoryPanelVisible] = useState(true);
+  const [showMemoryPanel, setShowMemoryPanel] = useState(true);
   const toasts = useToasts();
   const { activeRole, typographyScale, borderRadius, accentColor } = useStudio();
   const isMountedRef = useRef(true);
@@ -54,6 +60,8 @@ export default function ChatPageV2() {
       model: model?.id,
     },
   });
+
+  const { globalMemory, isUpdating: isMemoryUpdating, addNote, updateFromMessages } = useMemory();
 
   // Track if role system prompt has been added to prevent re-adding on chat reset
   const [roleInitialized, setRoleInitialized] = useState<string | null>(null);
@@ -224,153 +232,275 @@ export default function ChatPageV2() {
     void reload();
   };
 
+  const handleAddMemoryNote = async (note: string) => {
+    try {
+      await addNote(note, model?.id);
+      toasts.push({
+        kind: "success",
+        title: "Notiz gespeichert",
+        message: "Die Notiz wurde erfolgreich zum Gedächtnis hinzugefügt.",
+      });
+    } catch (error) {
+      toasts.push({
+        kind: "error",
+        title: "Fehler",
+        message: "Die Notiz konnte nicht gespeichert werden.",
+      });
+    }
+  };
+
+  const handleUpdateMemoryFromChat = async () => {
+    if (messages.length > 0) {
+      try {
+        await updateFromMessages(messages, model?.id);
+        toasts.push({
+          kind: "success",
+          title: "Gedächtnis aktualisiert",
+          message: "Das Gedächtnis wurde aus dem Chat-Verlauf aktualisiert.",
+        });
+      } catch (error) {
+        toasts.push({
+          kind: "error",
+          title: "Fehler",
+          message: "Das Gedächtnis konnte nicht aktualisiert werden.",
+        });
+      }
+    }
+  };
+
+  // Calculate token count from all messages (currently unused but kept for future features)
+  const _tokenCount = messages.reduce((acc, msg) => acc + msg.content.length, 0);
+
   return (
     <>
-      <div className="relative z-10 flex h-full flex-col overflow-hidden">
-        {messages.length === 0 ? (
-          <div className="flex-1 overflow-y-auto px-4 py-6">
-            {/* Willkommen zurück Bereich */}
-            <div className="mb-8">
-              <h2 className="mb-2 text-lg font-medium text-white/80">WILLKOMMEN ZURÜCK</h2>
-              <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-                <h3 className="mb-3 text-xl font-semibold text-white">
-                  Was möchtest du heute erschaffen?
-                </h3>
-                <p className="text-white/70">
-                  Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
-                  in Sekunden.
-                </p>
+      <main className="relative z-10 flex h-full overflow-hidden pb-4">
+        {/* Memory Toggle Button - Mobile */}
+        <div className="fixed right-4 top-16 z-20 md:hidden">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowMemoryPanel(!showMemoryPanel)}
+            className="border-white/20 bg-white/10 backdrop-blur"
+          >
+            <Brain className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="flex h-full w-full">
+          {/* Chat Area */}
+          <div className="flex flex-1 flex-col overflow-hidden">
+            {messages.length === 0 ? (
+              <div className="flex-1 overflow-y-auto px-4 py-6">
+                {/* Willkommen zurück Bereich */}
+                <div className="mb-8">
+                  <h2 className="mb-2 text-lg font-medium text-white/80">WILLKOMMEN ZURÜCK</h2>
+                  <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+                    <h3 className="mb-3 text-xl font-semibold text-white">
+                      Was möchtest du heute erschaffen?
+                    </h3>
+                    <p className="text-white/70">
+                      Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI
+                      reagiert in Sekunden.
+                    </p>
+                  </div>
+                </div>
+
+                {/* AI Flow Kacheln */}
+                <div className="space-y-4">
+                  {/* Kurze Antwort verfassen */}
+                  <button
+                    onClick={() =>
+                      handleQuickstartFlow(
+                        "Schreibe eine freundliche Antwort auf diese E-Mail: ",
+                        false,
+                      )
+                    }
+                    className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-sky-500/10 via-cyan-500/10 to-blue-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 text-left">
+                        <h4 className="mb-1 font-medium text-white">Kurzantwort verfassen</h4>
+                        <p className="text-sm text-white/60">
+                          Professionelle Antworten auf kurze Nachrichten
+                        </p>
+                      </div>
+                      <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
+                        Schnellstart
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Ideen-Generator */}
+                  <button
+                    onClick={() =>
+                      handleQuickstartFlow(
+                        "Gib mir 10 kreative Ideen in Bulletpoints zu folgendem Thema: ",
+                        false,
+                      )
+                    }
+                    className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-red-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 text-left">
+                        <h4 className="mb-1 font-medium text-white">Ideen-Generator (DE)</h4>
+                        <p className="text-sm text-white/60">10 kreative Ideen in Bulletpoints</p>
+                      </div>
+                      <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
+                        Auto-Start
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Faktencheck */}
+                  <button
+                    onClick={() =>
+                      handleQuickstartFlow(
+                        "Führe einen Faktencheck durch und liste 3 vertrauenswürdige Quellen auf für folgende Behauptung: ",
+                        false,
+                      )
+                    }
+                    className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 text-left">
+                        <h4 className="mb-1 font-medium text-white">Faktencheck (mit Quellen)</h4>
+                        <p className="text-sm text-white/60">
+                          Prüft Behauptungen, listet 3 Quellen
+                        </p>
+                      </div>
+                      <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
+                        Schnellstart
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Code-Snippet erklären */}
+                  <button
+                    onClick={() =>
+                      handleQuickstartFlow(
+                        "Erkläre diesen Code und liefere eine vereinfachte Version: ",
+                        false,
+                      )
+                    }
+                    className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-yellow-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 text-left">
+                        <h4 className="mb-1 font-medium text-white">Code-Snippet erklären</h4>
+                        <p className="text-sm text-white/60">
+                          Erklärt Code und liefert vereinfachte Version
+                        </p>
+                      </div>
+                      <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
+                        Schnellstart
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <section className="flex-1 overflow-hidden" aria-label="Chat History">
+                <div className="h-full px-1">
+                  <div
+                    className={`mx-auto h-full w-full ${showMemoryPanel ? "max-w-sm md:max-w-md" : "max-w-md"}`}
+                  >
+                    <ChatList
+                      messages={messages}
+                      onCopy={handleCopy}
+                      onRetry={handleRetry}
+                      onQuickstartFlow={handleQuickstartFlow}
+                      isLoading={isLoading}
+                      isQuickstartLoading={isQuickstartLoading}
+                      currentModel={model?.id}
+                    />
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* Input Section */}
+            <section role="region" aria-label="Message Input" className="safe-bottom">
+              <div className="px-1">
+                <div
+                  className={`mx-auto w-full ${showMemoryPanel ? "max-w-sm md:max-w-md" : "max-w-md"}`}
+                >
+                  <ChatComposer
+                    value={input}
+                    onChange={setInput}
+                    onSend={handleSend}
+                    onStop={stop}
+                    onRetry={handleRetry}
+                    isLoading={isLoading}
+                    canSend={Boolean(model && input.trim())}
+                    canRetry={Boolean(messages.length > 0)}
+                    isQuickstartLoading={isQuickstartLoading}
+                  />
+
+                  {/* Memory Quick Actions */}
+                  {showMemoryPanel && messages.length > 0 && (
+                    <div className="mt-2 flex justify-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleUpdateMemoryFromChat}
+                        disabled={isMemoryUpdating}
+                        className="border-white/10 bg-white/5 text-xs"
+                      >
+                        {isMemoryUpdating ? "Aktualisiere..." : "Gedächtnis aktualisieren"}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+          </div>
+
+          {/* Memory Panel - Desktop sidebar */}
+          {showMemoryPanel && (
+            <div className="hidden w-80 overflow-hidden border-l border-white/10 bg-black/20 md:block">
+              <div className="h-full p-4">
+                <MemoryPanel
+                  memory={globalMemory?.summary || ""}
+                  threadTitle="Aktueller Chat"
+                  isVisible={memoryPanelVisible}
+                  onToggle={() => setMemoryPanelVisible(!memoryPanelVisible)}
+                  onAddNote={handleAddMemoryNote}
+                  isLoading={isMemoryUpdating}
+                />
               </div>
             </div>
+          )}
+        </div>
 
-            {/* AI Flow Kacheln */}
-            <div className="space-y-4">
-              {/* Kurze Antwort verfassen */}
-              <button
-                onClick={() =>
-                  handleQuickstartFlow(
-                    "Schreibe eine freundliche Antwort auf diese E-Mail: ",
-                    false,
-                  )
-                }
-                className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-sky-500/10 via-cyan-500/10 to-blue-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 text-left">
-                    <h4 className="mb-1 font-medium text-white">Kurzantwort verfassen</h4>
-                    <p className="text-sm text-white/60">
-                      Professionelle Antworten auf kurze Nachrichten
-                    </p>
-                  </div>
-                  <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
-                    Schnellstart
-                  </div>
+        {/* Memory Panel - Mobile overlay */}
+        {showMemoryPanel && (
+          <div className="fixed inset-0 z-30 flex items-end bg-black/50 backdrop-blur-sm md:hidden">
+            <div className="max-h-[70vh] w-full overflow-hidden rounded-t-lg border-t border-white/10 bg-black/90">
+              <div className="p-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-white">Gedächtnis</h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowMemoryPanel(false)}
+                    className="h-8 w-8 p-0"
+                  >
+                    ×
+                  </Button>
                 </div>
-              </button>
-
-              {/* Ideen-Generator */}
-              <button
-                onClick={() =>
-                  handleQuickstartFlow(
-                    "Gib mir 10 kreative Ideen in Bulletpoints zu folgendem Thema: ",
-                    false,
-                  )
-                }
-                className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-red-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 text-left">
-                    <h4 className="mb-1 font-medium text-white">Ideen-Generator (DE)</h4>
-                    <p className="text-sm text-white/60">10 kreative Ideen in Bulletpoints</p>
-                  </div>
-                  <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
-                    Auto-Start
-                  </div>
-                </div>
-              </button>
-
-              {/* Faktencheck */}
-              <button
-                onClick={() =>
-                  handleQuickstartFlow(
-                    "Führe einen Faktencheck durch und liste 3 vertrauenswürdige Quellen auf für folgende Behauptung: ",
-                    false,
-                  )
-                }
-                className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 text-left">
-                    <h4 className="mb-1 font-medium text-white">Faktencheck (mit Quellen)</h4>
-                    <p className="text-sm text-white/60">Prüft Behauptungen, listet 3 Quellen</p>
-                  </div>
-                  <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
-                    Schnellstart
-                  </div>
-                </div>
-              </button>
-
-              {/* Code-Snippet erklären */}
-              <button
-                onClick={() =>
-                  handleQuickstartFlow(
-                    "Erkläre diesen Code und liefere eine vereinfachte Version: ",
-                    false,
-                  )
-                }
-                className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-yellow-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 text-left">
-                    <h4 className="mb-1 font-medium text-white">Code-Snippet erklären</h4>
-                    <p className="text-sm text-white/60">
-                      Erklärt Code und liefert vereinfachte Version
-                    </p>
-                  </div>
-                  <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
-                    Schnellstart
-                  </div>
-                </div>
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex-1 overflow-hidden">
-            <div className="h-full px-1">
-              <div className="mx-auto h-full w-full max-w-md">
-                <ChatList
-                  messages={messages}
-                  onCopy={handleCopy}
-                  onRetry={handleRetry}
-                  onQuickstartFlow={handleQuickstartFlow}
-                  isLoading={isLoading}
-                  isQuickstartLoading={isQuickstartLoading}
-                  currentModel={model?.id}
+                <MemoryPanel
+                  memory={globalMemory?.summary || ""}
+                  threadTitle="Aktueller Chat"
+                  isVisible={true}
+                  onToggle={() => {}}
+                  onAddNote={handleAddMemoryNote}
+                  isLoading={isMemoryUpdating}
                 />
               </div>
             </div>
           </div>
         )}
-
-        {/* Input Section */}
-        <section role="region" aria-label="Message Input" className="safe-bottom">
-          <div className="px-1">
-            <div className="mx-auto w-full max-w-md">
-              <ChatComposer
-                value={input}
-                onChange={setInput}
-                onSend={handleSend}
-                onStop={stop}
-                onRetry={handleRetry}
-                isLoading={isLoading}
-                canSend={Boolean(model && input.trim())}
-                canRetry={Boolean(messages.length > 0)}
-                isQuickstartLoading={isQuickstartLoading}
-              />
-            </div>
-          </div>
-        </section>
-      </div>
+      </main>
 
       {/* Model Selection Sheet */}
       <ModelSelectionSheet
