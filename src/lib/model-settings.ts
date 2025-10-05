@@ -346,7 +346,11 @@ export function getPreset(presetId: string): ModelSettingsPreset | null {
  * Get default preset
  */
 export function getDefaultPreset(): ModelSettingsPreset {
-  return BUILTIN_PRESETS.find((p) => p.isDefault) || BUILTIN_PRESETS[0];
+  const preset = BUILTIN_PRESETS.find((p) => p.isDefault) ?? BUILTIN_PRESETS[0];
+  if (!preset) {
+    throw new Error("No default model settings preset configured");
+  }
+  return preset;
 }
 
 /**

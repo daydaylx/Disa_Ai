@@ -17,6 +17,7 @@ export default [
   {
     ignores: [
       "dist/**",
+      "dev-dist/**",
       "build/**",
       "coverage/**",
       "node_modules/**",
@@ -25,6 +26,7 @@ export default [
       "*.config.ts",
       "tailwind.config.ts", // Ignore Tailwind config
       "src/styles/**/*.css", // Ignore CSS files (not parsed by ESLint)
+      "**/*.d.ts", // Ignore TypeScript declaration files
     ],
   }, // Configuration files (Node.js environment)
   {
@@ -99,7 +101,6 @@ export default [
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "import/first": "error",
-      "import/no-duplicates": "off",
       "import/no-mutable-exports": "error",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
@@ -115,7 +116,7 @@ export default [
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/exhaustive-deps": "error",
 
       // Accessibility
       "jsx-a11y/alt-text": "warn",

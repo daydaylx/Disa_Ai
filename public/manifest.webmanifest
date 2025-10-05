@@ -1,8 +1,9 @@
 {
+  "id": "/",
   "name": "Disa AI",
   "short_name": "Disa",
   "description": "AI-powered chat assistant with offline-first architecture",
-  "start_url": "./",
+  "start_url": "/",
   "display": "standalone",
   "display_override": ["standalone"],
   "orientation": "portrait-primary",
@@ -11,7 +12,7 @@
   "theme_color": "#22d3ee",
   "categories": ["productivity", "utilities"],
   "lang": "de",
-  "scope": "./",
+  "scope": "/",
   "icons": [
     { "src": "/icons/icon-72.png", "sizes": "72x72", "type": "image/png" },
     { "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" },
@@ -38,19 +39,19 @@
       "name": "Neuer Chat",
       "short_name": "Chat",
       "description": "Starte eine neue Unterhaltung",
-      "url": "./#/chat",
+      "url": "/chat",
       "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "Einstellungen",
       "short_name": "Settings",
       "description": "App-Einstellungen öffnen",
-      "url": "./#/settings",
+      "url": "/settings",
       "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
     }
   ],
   "share_target": {
-    "action": "./",
+    "action": "/",
     "method": "GET",
     "params": {
       "title": "title",
@@ -61,7 +62,7 @@
   "protocol_handlers": [
     {
       "protocol": "web+disa",
-      "url": "./?handler=%s"
+      "url": "/?handler=%s"
     }
   ],
   "launch_handler": {
@@ -69,7 +70,7 @@
   },
   "file_handlers": [
     {
-      "action": "./",
+      "action": "/",
       "accept": {
         "text/plain": [".txt", ".md"],
         "application/json": [".json"]

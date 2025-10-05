@@ -1,13 +1,16 @@
 import { Loader2, Search } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
-import { PersonaSelector } from "../components/chat/PersonaSelector";
+import { RoleSelector } from "../components/chat/RoleSelector";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { VirtualList } from "../components/ui/VirtualList";
 import { loadModelCatalog, type ModelEntry } from "../config/models";
 import { cn } from "../lib/utils";
 
@@ -24,22 +27,19 @@ function formatPrice(price?: number) {
   return `$${price.toFixed(3)}/1k`;
 }
 
-const SAFETY_LABELS: Record<string, string> = {
-  free: "Kostenlos",
-  moderate: "Mittel",
-  strict: "Strikt",
-  any: "Unbekannt",
-};
+type LoadingState = "idle" | "loading" | "success" | "error" | "timeout";
 
 export default function ModelsPage() {
-  const { activePersona, setActivePersona } = useStudio();
+  const { activeRole, setActiveRole } = useStudio();
   const [models, setModels] = useState<ModelEntry[]>([]);
   const [selected, setSelected] = useState<string>(
     getModelFallback() || "meta-llama/llama-3.3-70b-instruct:free",
   );
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loadingState, setLoadingState] = useState<LoadingState>("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [filters, setFilters] = useState<string[]>([]);
+  const [showNsfw, setShowNsfw] = useState(false);
   const toasts = useToasts();
 
   const filterOptions = [
@@ -59,25 +59,66 @@ export default function ModelsPage() {
 
   useEffect(() => {
     let mounted = true;
-    (async () => {
+    let timeoutId: NodeJS.Timeout;
+
+    const loadModels = async () => {
+      if (loadingState === "loading") return; // Prevent duplicate calls
+
+      setLoadingState("loading");
+      setErrorMessage("");
+
+      // Global timeout für die gesamte Operation
+      timeoutId = setTimeout(() => {
+        if (mounted) {
+          setLoadingState("timeout");
+          setErrorMessage(
+            "Das Laden der Modelle dauert ungewöhnlich lange. Bitte überprüfe deine Internetverbindung.",
+          );
+        }
+      }, 20000); // 20s globaler Timeout
+
       try {
-        const catalog = await loadModelCatalog();
+        const catalog = await loadModelCatalog(undefined, toasts);
+
         if (!mounted) return;
+
+        clearTimeout(timeoutId);
         setModels(catalog);
-      } catch {
+        setLoadingState("success");
+
+        if (catalog.length === 0) {
+          setErrorMessage("Keine Modelle verfügbar. Das System läuft im Offline-Modus.");
+        }
+      } catch (error) {
+        if (!mounted) return;
+
+        clearTimeout(timeoutId);
+        setLoadingState("error");
+
+        const errorMsg = error instanceof Error ? error.message : "Unbekannter Fehler";
+        setErrorMessage(`Modelle konnten nicht geladen werden: ${errorMsg}`);
+
         toasts.push({
           kind: "error",
-          title: "Modelle konnten nicht geladen werden",
-          message: "Bitte überprüfe deine Verbindung und versuche es erneut.",
+          title: "Lade-Fehler",
+          message:
+            "Modelle konnten nicht geladen werden. Versuche es erneut oder prüfe deine Verbindung.",
         });
-      } finally {
-        if (mounted) setLoading(false);
       }
-    })();
+    };
+
+    void loadModels();
+
     return () => {
       mounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [toasts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toasts]); // einmaliger Call beim Mount
+
+  const retryLoadModels = () => {
+    setLoadingState("idle"); // Reset state to trigger reload
+  };
 
   const filtered = useMemo(() => {
     let result = models;
@@ -114,8 +155,12 @@ export default function ModelsPage() {
       });
     }
 
+    if (!showNsfw) {
+      result = result.filter((model) => model.safety !== "strict");
+    }
+
     return result;
-  }, [models, search, filters]);
+  }, [models, search, filters, showNsfw]);
 
   const toggleFilter = (filterId: string) => {
     setFilters((prev) =>
@@ -137,6 +182,86 @@ export default function ModelsPage() {
     });
   };
 
+  // Render function for virtual list
+  const renderModelCard = (model: ModelEntry) => (
+    <Card
+      key={model.id}
+      role="button"
+      tabIndex={0}
+      data-testid="model-card"
+      onClick={() => handleSelect(model)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleSelect(model);
+        }
+      }}
+      aria-pressed={selected === model.id}
+      aria-label={`Modell ${model.label || model.id} auswählen`}
+      className={cn(
+        "mb-3 min-h-touch-rec border-white/20 bg-white/10 backdrop-blur transition-all",
+        selected === model.id
+          ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
+          : "hover:border-white/30 hover:bg-white/20",
+      )}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div className="space-y-1">
+          <CardTitle className="text-sm font-medium text-corporate-text-primary">
+            {model.label || model.id}
+          </CardTitle>
+          <CardDescription className="text-xs text-corporate-text-secondary">
+            {model.provider || "Unbekannter Anbieter"}
+          </CardDescription>
+        </div>
+        <div className="flex items-center gap-2">
+          {selected === model.id && <div className="text-accent-400 h-4 w-4">✓</div>}
+          {model.pricing?.in === 0 && (
+            <Badge
+              variant="secondary"
+              className="border-green-500/30 bg-green-500/20 text-xs text-green-400"
+            >
+              Kostenlos
+            </Badge>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-4 text-xs">
+          <div>
+            <p className="text-white/50">Kontext</p>
+            <p className="text-white">{formatContext(model.ctx)}</p>
+          </div>
+          <div>
+            <p className="text-white/50">Preis</p>
+            <p className="text-white">{formatPrice(model.pricing?.in)}</p>
+          </div>
+        </div>
+        {model.tags && model.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1">
+            {model.tags.slice(0, 3).map((tag) => (
+              <Badge
+                key={tag}
+                variant="outline"
+                className="border-white/20 text-xs text-corporate-text-secondary"
+              >
+                {tag}
+              </Badge>
+            ))}
+            {model.tags.length > 3 && (
+              <Badge
+                variant="outline"
+                className="border-white/20 text-xs text-corporate-text-secondary"
+              >
+                +{model.tags.length - 3}
+              </Badge>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-1">
@@ -151,7 +276,7 @@ export default function ModelsPage() {
       {/* Rollenauswahl Section */}
       <section className="space-y-2">
         <h2 className="text-sm font-semibold text-white/80">Chat-Rolle</h2>
-        <PersonaSelector selectedPersona={activePersona} onPersonaChange={setActivePersona} />
+        <RoleSelector selectedRole={activeRole} onRoleChange={setActiveRole} />
       </section>
 
       {/* Modell-Suche Section */}
@@ -175,110 +300,80 @@ export default function ModelsPage() {
               onClick={() => toggleFilter(option.id)}
               data-testid={`models-filter-${option.id}`}
               className={cn(
-                "tap-target inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium transition-all",
+                "inline-flex min-h-touch-rec items-center gap-2 rounded-full px-4 py-2 text-xs font-medium transition-all",
                 filters.includes(option.id)
-                  ? "shadow-accent-500/25 bg-accent-500 text-white shadow-lg"
-                  : "border border-white/20 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",
+                  ? "shadow-accent-500/25 bg-accent-500 text-corporate-text-onAccent shadow-lg"
+                  : "border border-white/20 bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary",
               )}
             >
               {option.label}
               <span
                 className={cn(
                   "rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                  filters.includes(option.id) ? "bg-white/20" : "bg-white/10",
+                  filters.includes(option.id)
+                    ? "bg-white/20 text-corporate-text-onAccent"
+                    : "bg-white/10 text-corporate-text-secondary",
                 )}
               >
                 {option.count}
               </span>
             </button>
           ))}
+          <div className="flex items-center space-x-2">
+            <Switch id="nsfw-toggle" checked={showNsfw} onChange={setShowNsfw} />
+            <Label htmlFor="nsfw-toggle">18+ anzeigen</Label>
+          </div>
         </div>
       </section>
 
-      {loading ? (
+      {loadingState === "loading" ? (
         <div className="flex flex-1 items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+            <p className="text-sm text-white/60">Lädt Modellkatalog...</p>
+          </div>
+        </div>
+      ) : loadingState === "error" || loadingState === "timeout" ? (
+        <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="text-red-400">⚠️</div>
+            <div className="space-y-2">
+              <p className="text-sm text-white/80">Fehler beim Laden</p>
+              <p className="max-w-xs text-xs text-white/60">{errorMessage}</p>
+            </div>
+            <button
+              onClick={retryLoadModels}
+              className="hover:bg-accent-600 min-h-touch-rec rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent transition-colors"
+            >
+              Erneut versuchen
+            </button>
+          </div>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-1 items-center justify-center text-sm text-white/60">
-          Keine Modelle gefunden.
+        <div className="flex flex-1 items-center justify-center text-center text-sm text-white/60">
+          <div>
+            <p className="font-semibold text-white">Keine Modelle gefunden</p>
+            <p className="mt-2">
+              {models.length === 0
+                ? "Es sind keine Modelle verfügbar. Bitte überprüfe deine Verbindung."
+                : "Deine Suche ergab keine Treffer. Versuche es mit anderen Suchbegriffen oder Filtern."}
+            </p>
+          </div>
         </div>
       ) : (
-        <div className="flex-1 space-y-3 overflow-y-auto pb-4">
-          {filtered.map((model) => (
-            <Card
-              key={model.id}
-              role="button"
-              tabIndex={0}
-              data-testid="model-card"
-              onClick={() => handleSelect(model)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  handleSelect(model);
-                }
-              }}
-              aria-pressed={selected === model.id}
-              aria-label={`Modell ${model.label || model.id} auswählen`}
-              className={cn(
-                "border-white/20 bg-white/10 backdrop-blur transition-all",
-                selected === model.id
-                  ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
-                  : "hover:border-white/30 hover:bg-white/20",
-              )}
-            >
-              <CardHeader className="space-y-1 pb-3">
-                <CardTitle className="text-base font-semibold text-white">
-                  {model.label || model.id}
-                </CardTitle>
-                <CardDescription className="text-white/70">
-                  {model.provider ?? "Unbekannter Anbieter"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-white/60">Kontext</span>
-                  <span className="font-medium text-white">{formatContext(model.ctx)}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-white/60">Prompt / Completion</span>
-                  <span className="font-medium text-white">
-                    {formatPrice(model.pricing?.in)} / {formatPrice(model.pricing?.out)}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">{SAFETY_LABELS[model.safety] ?? model.safety}</Badge>
-                  {model.tags?.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {(model.tags?.length ?? 0) > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{(model.tags?.length ?? 0) - 3} weitere
-                    </Badge>
-                  )}
-                </div>
-                {selected === model.id ? (
-                  <div
-                    className="bg-accent-500/90 inline-flex w-full items-center justify-center rounded-md border border-accent-500 px-3 py-2 text-sm font-semibold text-white"
-                    role="status"
-                    aria-label="Modell ist aktiv"
-                  >
-                    ✓ Aktiv
-                  </div>
-                ) : (
-                  <div
-                    className="inline-flex w-full items-center justify-center rounded-md border border-white/20 bg-white/20 px-3 py-2 text-sm font-semibold text-white/90"
-                    aria-hidden="true"
-                  >
-                    Auswählen
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <VirtualList
+          items={filtered}
+          renderItem={renderModelCard}
+          keyExtractor={(model) => model.id}
+          itemHeight={140}
+          virtualizationThreshold={20}
+          className="flex-1 pb-4"
+          emptyComponent={
+            <div className="text-center text-white/60">
+              <p>Keine Modelle gefunden</p>
+            </div>
+          }
+        />
       )}
     </div>
   );

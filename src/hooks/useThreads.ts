@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { Thread, ThreadStorage, ThreadSummary } from "../data/threads";
-import { Message } from "../ui/chat/types";
+import type { Thread, ThreadSummary } from "../data/threads";
+import { ThreadStorage } from "../data/threads";
+import type { Message } from "../ui/chat/types";
 
 export function useThreads() {
   const [threads, setThreads] = useState<ThreadSummary[]>([]);

@@ -189,7 +189,6 @@ export class MobileShortcutsManager {
    * Dokument-weite Gesten einrichten
    */
   private setupDocumentGestures(): void {
-    let _touchStartTime = 0;
     let touchCount = 0;
     let threeFingerTimeout: number | null = null;
 
@@ -197,7 +196,6 @@ export class MobileShortcutsManager {
       "touchstart",
       (event) => {
         touchCount = event.touches.length;
-        _touchStartTime = Date.now();
 
         // Drei-Finger-Geste erkennen
         if (touchCount === 3) {

@@ -1,4 +1,15 @@
-import { Download, Eye, EyeOff, Info, Key, Shield, Smartphone, User } from "lucide-react";
+import {
+  Brain,
+  Download,
+  Eye,
+  EyeOff,
+  Info,
+  Key,
+  Shield,
+  Smartphone,
+  Trash2,
+  User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "../components/ui/button";
@@ -7,27 +18,77 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { useMemory } from "../hooks/useMemory";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { useSettings } from "../hooks/useSettings";
 import { BUILD_ID } from "../lib/pwa/registerSW";
+
+function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> }) {
+  const [stats, setStats] = useState({ chatCount: 0, totalMessages: 0, storageUsed: 0 });
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const data = await getMemoryStats();
+        setStats(data);
+      } catch (error) {
+        console.warn("Failed to load memory stats:", error);
+      }
+    };
+    void loadStats();
+  }, [getMemoryStats]);
+
+  return (
+    <>
+      <div>Gespeicherte Chats: {stats.chatCount}</div>
+      <div>Gesamte Nachrichten: {stats.totalMessages}</div>
+      <div>Speicherverbrauch: ~{Math.round(stats.storageUsed / 1024)}KB</div>
+    </>
+  );
+}
+
+type InitState = "loading" | "ready" | "error";
 
 export default function SettingsPage() {
   const [apiKey, setApiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
   const [keyStatus, setKeyStatus] = useState<"empty" | "present" | "invalid">("empty");
+  const [initState, setInitState] = useState<InitState>("loading");
   const toasts = useToasts();
   const { canInstall, installed: isInstalled, requestInstall: promptInstall } = usePWAInstall();
   const { settings, toggleNSFWContent } = useSettings();
+  const {
+    toggleMemory,
+    globalMemory,
+    updateGlobalMemory,
+    clearAllMemory,
+    getMemoryStats,
+    isEnabled: memoryEnabled,
+  } = useMemory();
 
   useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setInitState("error");
+    }, 5000); // 5s Timeout für Settings-Load
+
     try {
       const storedKey = sessionStorage.getItem("openrouter-key") ?? "";
       setApiKey(storedKey);
       setKeyStatus(storedKey.length > 0 ? "present" : "empty");
+      setInitState("ready");
+      clearTimeout(timeoutId);
     } catch {
-      /* ignore */
+      setInitState("error");
+      clearTimeout(timeoutId);
+      toasts.push({
+        kind: "error",
+        title: "Einstellungen nicht verfügbar",
+        message: "Browser-Storage nicht zugänglich.",
+      });
     }
-  }, []);
+
+    return () => clearTimeout(timeoutId);
+  }, [toasts]);
 
   const handleSaveKey = () => {
     try {
@@ -87,29 +148,66 @@ export default function SettingsPage() {
     }
   };
 
+  if (initState === "loading") {
+    return (
+      <div className="mx-auto flex h-full w-full max-w-md flex-col items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <p className="text-sm text-white/60">Lädt Einstellungen...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (initState === "error") {
+    return (
+      <div className="mx-auto flex h-full w-full max-w-md flex-col items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="text-red-400">⚠️</div>
+          <div className="space-y-2">
+            <p className="text-sm text-white/80">Fehler beim Laden der Einstellungen</p>
+            <p className="text-xs text-white/60">Browser-Storage nicht verfügbar</p>
+          </div>
+          <button
+            onClick={() => {
+              import("../lib/utils/reload-manager")
+                .then(({ reloadHelpers }) => {
+                  reloadHelpers.userRequested();
+                })
+                .catch(() => window.location.reload());
+            }}
+            className="hover:bg-accent-600 min-h-touch-rec rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent transition-colors"
+          >
+            Seite neu laden
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
-      <header>
-        <h1 className="text-2xl font-semibold text-white">Einstellungen</h1>
-        <p className="text-sm text-white/70">
+      <header className="space-y-2">
+        <h1 className="text-token-h1 font-semibold text-corporate-text-primary">Einstellungen</h1>
+        <p className="text-token-body leading-relaxed text-corporate-text-secondary">
           API-Schlüssel verwalten und die App auf deinem Gerät installieren.
         </p>
       </header>
 
       {/* API Key Section */}
-      <Card className="border-white/20 bg-white/10 backdrop-blur">
-        <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-white">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
             <Key className="h-5 w-5" />
             OpenRouter API-Schlüssel
           </CardTitle>
-          <CardDescription className="text-white/70">
+          <CardDescription>
             Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="apiKey" className="text-white/80">
+            <Label htmlFor="apiKey" className="text-corporate-text-secondary">
               API-Schlüssel
             </Label>
             <div className="relative">
@@ -119,13 +217,13 @@ export default function SettingsPage() {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 placeholder="sk-or-..."
-                className="border-white/20 bg-white/10 pr-10 font-mono text-white placeholder:text-white/50"
+                className="border-white/20 bg-white/10 pr-10 font-mono text-corporate-text-primary placeholder:text-corporate-text-muted"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                className="focus-visible:ring-accent-400 absolute right-2 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2"
+                className="focus-visible:ring-accent-400 absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-corporate-text-secondary transition hover:bg-white/10 hover:text-corporate-text-primary focus-visible:outline-none focus-visible:ring-2"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -142,7 +240,7 @@ export default function SettingsPage() {
                     : "bg-gray-500"
               }`}
             />
-            <span className="text-sm text-white/70">
+            <span className="text-sm text-corporate-text-secondary">
               {keyStatus === "present"
                 ? "Schlüssel vorhanden"
                 : keyStatus === "invalid"
@@ -154,12 +252,12 @@ export default function SettingsPage() {
           <Button
             type="button"
             onClick={handleSaveKey}
-            className="w-full border-0 bg-white/20 text-white hover:bg-white/30"
+            className="min-h-touch-rec w-full border-0 bg-white/20 text-corporate-text-onSurface hover:bg-white/30"
           >
             Schlüssel speichern
           </Button>
 
-          <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
+          <div className="flex items-start gap-4 rounded-lg border border-blue-500/20 bg-blue-500/10 p-4">
             <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
             <div className="text-xs text-blue-200">
               <p className="mb-1 font-medium">Datenschutz:</p>
@@ -208,6 +306,118 @@ export default function SettingsPage() {
               <p>
                 Diese Einstellung wird nur lokal in deinem Browser gespeichert. 18+ Inhalte werden
                 standardmäßig ausgeblendet.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Memory Settings Section */}
+      <Card className="border-white/20 bg-white/10 backdrop-blur">
+        <CardHeader className="space-y-1">
+          <CardTitle className="flex items-center gap-2 text-white">
+            <Brain className="h-5 w-5" />
+            Gedächtnis-Funktion
+          </CardTitle>
+          <CardDescription className="text-white/70">
+            Speichere Chat-Verläufe und persönliche Informationen für zukünftige Gespräche.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <Label htmlFor="memory-toggle" className="text-white/90">
+                Gedächtnis aktivieren
+              </Label>
+              <p id="memory-description" className="text-xs text-white/60">
+                Wenn aktiviert, werden Chat-Verläufe und globale Infos lokal gespeichert.
+              </p>
+            </div>
+            <Switch
+              checked={memoryEnabled}
+              onChange={toggleMemory}
+              id="memory-toggle"
+              aria-describedby="memory-description"
+            />
+          </div>
+
+          {memoryEnabled && (
+            <>
+              {/* Global Memory Input */}
+              <div className="space-y-3 border-t border-white/10 pt-4">
+                <Label className="text-white/90">Persönliche Informationen</Label>
+                <div className="space-y-2">
+                  <Input
+                    placeholder="Dein Name (optional)"
+                    value={globalMemory?.name || ""}
+                    onChange={(e) => updateGlobalMemory({ name: e.target.value })}
+                    className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+                  />
+                  <Input
+                    placeholder="Hobbys, Interessen (optional)"
+                    value={globalMemory?.hobbies?.join(", ") || ""}
+                    onChange={(e) =>
+                      updateGlobalMemory({
+                        hobbies: e.target.value
+                          ? e.target.value.split(",").map((h) => h.trim())
+                          : [],
+                      })
+                    }
+                    className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+                  />
+                  <Input
+                    placeholder="Hintergrund, Beruf (optional)"
+                    value={globalMemory?.background || ""}
+                    onChange={(e) => updateGlobalMemory({ background: e.target.value })}
+                    className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+                  />
+                </div>
+              </div>
+
+              {/* Memory Stats - nur in Entwicklung */}
+              {import.meta.env.DEV && (
+                <div className="space-y-2 border-t border-white/10 pt-4">
+                  <Label className="text-corporate-text-secondary">Debug-Statistiken</Label>
+                  <div className="space-y-1 text-xs text-corporate-text-muted">
+                    <MemoryStats getMemoryStats={getMemoryStats} />
+                  </div>
+                </div>
+              )}
+
+              {/* Clear Memory */}
+              <div className="border-t border-white/10 pt-4">
+                <Button
+                  onClick={async () => {
+                    if (
+                      confirm(
+                        "Alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+                      )
+                    ) {
+                      await clearAllMemory();
+                      toasts.push({
+                        kind: "success",
+                        title: "Gedächtnis gelöscht",
+                        message: "Alle gespeicherten Chat-Verläufe und Infos wurden entfernt.",
+                      });
+                    }
+                  }}
+                  variant="outline"
+                  className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Alle Erinnerungen löschen
+                </Button>
+              </div>
+            </>
+          )}
+
+          <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
+            <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
+            <div className="text-xs text-blue-200">
+              <p className="mb-1 font-medium">Datenschutz:</p>
+              <p>
+                Alle Daten werden nur lokal in deinem Browser gespeichert und niemals an Server
+                übertragen. Das Gedächtnis kann jederzeit deaktiviert oder gelöscht werden.
               </p>
             </div>
           </div>
@@ -290,27 +500,36 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
+            {/* Build ID nur in Entwicklung anzeigen */}
+            {import.meta.env.DEV && (
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-corporate-text-secondary">Build ID:</span>
+                <span className="text-accent-400 font-mono">{BUILD_ID}</span>
+              </div>
+            )}
             <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Build ID:</span>
-              <span className="text-accent-400 font-mono">{BUILD_ID}</span>
+              <span className="text-corporate-text-secondary">Version:</span>
+              <span className="text-corporate-text-primary">v1.0.0</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Version:</span>
-              <span className="text-white/90">v1.0.0</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Environment:</span>
-              <span className="text-white/90">
-                {import.meta.env.DEV ? "Development" : "Production"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">Built:</span>
-              <span className="text-white/90">
-                {(import.meta as any)?.env?.VITE_BUILD_TIME ??
-                  new Date().toLocaleDateString("de-DE")}
-              </span>
-            </div>
+            {/* Environment nur in Entwicklung anzeigen */}
+            {import.meta.env.DEV && (
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-corporate-text-secondary">Environment:</span>
+                <span className="text-corporate-text-primary">
+                  {import.meta.env.DEV ? "Development" : "Production"}
+                </span>
+              </div>
+            )}
+            {/* Build-Zeit nur in Entwicklung anzeigen */}
+            {import.meta.env.DEV && (
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-corporate-text-secondary">Built:</span>
+                <span className="text-corporate-text-primary">
+                  {(import.meta as any)?.env?.VITE_BUILD_TIME ??
+                    new Date().toLocaleDateString("de-DE")}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="rounded border border-white/10 bg-white/5 p-3 text-xs">

@@ -1,4 +1,5 @@
-import React, { createContext, type ReactNode, useContext, useState } from "react";
+import type { ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
 
 import { getModelById } from "../../data/models";
 

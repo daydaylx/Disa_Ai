@@ -5,6 +5,9 @@ import { AbortError } from "../lib/errors";
 
 describe("openrouter chatStream abort", () => {
   it("bricht sauber mit AbortError ab", async () => {
+    // Setup API key for test
+    localStorage.setItem("disa_api_key", "sk-test");
+
     // @ts-expect-error stub fetch
     global.fetch = vi.fn(async (_url: string, init: RequestInit = {}) => {
       const signal = init.signal as AbortSignal | undefined;

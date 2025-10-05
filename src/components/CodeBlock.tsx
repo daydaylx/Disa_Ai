@@ -66,8 +66,8 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
           </CopyButton>
         </div>
       </div>
-      <div className="overflow-x-auto p-4">
-        <pre className={cn("", wrap && "whitespace-pre-wrap")}>
+      <div className="max-w-full overflow-x-auto p-4">
+        <pre className={cn("min-w-0", wrap && "whitespace-pre-wrap")}>
           <code data-lang={normalizedLang || undefined}>{code}</code>
         </pre>
       </div>

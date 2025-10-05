@@ -34,18 +34,26 @@
   --color-purple: #8b5cf6;
   --color-mint: #6ee7b7;
 
-  /* Spacing Scale */
+  /* Spacing Scale - 8dp Grid System */
   --spacing-0: 0px;
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-5: 20px;
-  --spacing-6: 24px;
-  --spacing-8: 32px;
-  --spacing-10: 40px;
-  --spacing-12: 48px;
-  --spacing-16: 64px;
+  --spacing-1: 4px; /* 0.5 * 8dp */
+  --spacing-2: 8px; /* 1 * 8dp - base unit */
+  --spacing-3: 12px; /* 1.5 * 8dp */
+  --spacing-4: 16px; /* 2 * 8dp */
+  --spacing-5: 20px; /* 2.5 * 8dp - non-standard, avoid */
+  --spacing-6: 24px; /* 3 * 8dp */
+  --spacing-8: 32px; /* 4 * 8dp */
+  --spacing-10: 40px; /* 5 * 8dp */
+  --spacing-12: 48px; /* 6 * 8dp - minimum touch target */
+  --spacing-16: 64px; /* 8 * 8dp */
+  --spacing-20: 80px; /* 10 * 8dp */
+  --spacing-24: 96px; /* 12 * 8dp */
+
+  /* Touch Targets & Accessibility */
+  --touch-minimum: 44px; /* iOS guideline minimum */
+  --touch-recommended: 48px; /* Material Design recommended */
+  --touch-comfortable: 56px; /* Comfortable for all users */
+  --touch-large: 64px; /* Large touch targets for better UX */
 
   /* Border Radius */
   --radius-none: 0px;
@@ -101,6 +109,14 @@
   --color-corporate-text-secondary: #cbd5e1;
   --color-corporate-text-muted: #94a3b8;
   --color-corporate-text-accent: #60a5fa;
+  --color-corporate-text-on-violet: #ffffff;
+  --color-corporate-text-on-blue: #ffffff;
+  --color-corporate-text-on-teal: #000000;
+  --color-corporate-text-on-accent: #ffffff;
+  --color-corporate-text-on-dark: #ffffff;
+  --color-corporate-text-on-light: #0f172a;
+  --color-corporate-text-on-surface: #f1f5f9;
+  --color-corporate-text-subtle: #64748b;
 
   --color-corporate-border-primary: #1e293b;
   --color-corporate-border-secondary: #334155;
@@ -112,6 +128,9 @@
   --color-corporate-accent-warning: #f59e0b;
   --color-corporate-accent-danger: #ef4444;
   --color-corporate-accent-purple: #8b5cf6;
+  --color-corporate-accent-purple-hc: #a855f7;
+  --color-corporate-accent-blue-hc: #60a5fa;
+  --color-corporate-accent-teal-hc: #06b6d4;
 
   --color-corporate-glow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
   --color-corporate-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);

@@ -330,7 +330,7 @@ export class SwipeNavigationManager {
  * React Hook für Swipe-Navigation
  */
 export function useSwipeNavigation(
-  containerRef: { current: HTMLElement | null },
+  _containerRef: { current: HTMLElement | null },
   _options: SwipeNavigationOptions = {},
 ): SwipeNavigationManager | null {
   // React Hook-Implementierung würde hier hin

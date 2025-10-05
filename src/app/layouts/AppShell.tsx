@@ -1,58 +1,29 @@
-import { Bot, Compass, Cpu, MessageSquare, PlusCircle, Settings } from "lucide-react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
+import type { ReactNode } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
+import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { Button } from "../../components/ui";
 import { useStudio } from "../state/StudioContext";
 
-interface NavigationItem {
-  to: string;
-  label: string;
-  icon: React.ReactNode;
-  testId: string;
-}
-
-const navigationItems: NavigationItem[] = [
-  {
-    to: "/chat",
-    label: "Chat",
-    icon: <MessageSquare className="h-5 w-5" />,
-    testId: "nav.chat",
-  },
-  {
-    to: "/models",
-    label: "Modelle",
-    icon: <Cpu className="h-5 w-5" />,
-    testId: "nav.models",
-  },
-  {
-    to: "/settings",
-    label: "Einstellungen",
-    icon: <Settings className="h-5 w-5" />,
-    testId: "nav.settings",
-  },
-];
-
 function Header() {
-  const { activePersona } = useStudio();
+  const { activeRole } = useStudio();
 
   return (
-    <header className="relative z-10 px-5 pb-6 pt-12">
+    <header className="relative z-10 px-4 pb-6 pt-10">
       <div className="mx-auto max-w-md">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_45px_90px_rgba(134,68,255,0.22)] backdrop-blur-2xl">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.4),_transparent_60%)]" />
-          <div className="pointer-events-none absolute -bottom-20 left-16 h-48 w-48 bg-[radial-gradient(circle_at_bottom,_rgba(56,189,248,0.65),_transparent_70%)]" />
-
+        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-lg">
           <div className="relative flex items-center justify-between">
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white/80">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-corporate-text-onSurface">
                   <Compass className="h-3.5 w-3.5" /> KI-Studio
                 </div>
-                {activePersona && (
-                  <div className="border-accent-500/30 bg-accent-500/20 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-white/90">
+                {activeRole && (
+                  <div className="border-accent-500/30 bg-accent-500/20 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-corporate-text-onAccent">
                     <Bot className="h-3.5 w-3.5" />
-                    {activePersona.name}
+                    {activeRole.name}
                   </div>
                 )}
               </div>
@@ -64,19 +35,19 @@ function Header() {
                   Disa AI
                 </h1>
                 <p className="mt-1 text-sm text-white/70">
-                  {activePersona
-                    ? `${activePersona.category} • ${activePersona.name}`
+                  {activeRole
+                    ? `${activeRole.category ?? "Rolle"} • ${activeRole.name}`
                     : "Deine kreative Copilotin für Texte, Bilder und Inspiration."}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-col items-end gap-3">
+            <div className="flex flex-col items-end gap-4">
               <Button
                 size="sm"
                 variant="ghost"
                 aria-label="Neues Gespräch"
-                className="inline-flex items-center gap-2 rounded-full border-0 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 px-4 py-2 text-sm font-medium text-white shadow-[0_18px_38px_rgba(168,85,247,0.4)] transition-transform hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_20px_45px_rgba(168,85,247,0.55)]"
+                className="inline-flex min-h-touch-rec min-w-touch-rec items-center gap-2 rounded-full border-0 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent shadow-[0_18px_38px_rgba(168,85,247,0.4)] transition-transform hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_20px_45px_rgba(168,85,247,0.55)]"
               >
                 <PlusCircle className="h-4 w-4" /> Neu starten
               </Button>
@@ -88,30 +59,35 @@ function Header() {
   );
 }
 
-function BottomTabs() {
+function BottomNav() {
+  // TODO: Change to /roles when the route is available
+  const navigationItems = [
+    { to: "/chat", label: "Chat", icon: <MessageSquare /> },
+    { to: "/models", label: "Rollen", icon: <Users /> },
+    { to: "/settings", label: "Einstellungen", icon: <Settings /> },
+  ];
+
   return (
-    <nav
-      className="relative z-10 mx-auto mt-6 w-full max-w-xs overflow-hidden rounded-3xl border border-white/10 bg-white/5 px-2 py-3 text-[13px] text-white/70 shadow-[0_25px_65px_rgba(15,23,42,0.55)] backdrop-blur-xl"
-      aria-label="Navigation"
-      style={{ marginBottom: "var(--inset-b)" }}
-    >
-      <div className="grid grid-cols-3 gap-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-slate-950/80 backdrop-blur-lg">
+      <div
+        className="mx-auto flex h-16 max-w-md items-center justify-around"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      >
         {navigationItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
-            data-testid={item.testId}
-            aria-label={`Zu ${item.label} wechseln`}
+            title={item.label}
             className={({ isActive }) =>
-              `flex min-h-[48px] flex-col items-center gap-1 rounded-2xl px-3 py-3 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 focus:ring-offset-black ${
+              `relative flex min-h-touch-rec min-w-touch-rec touch-manipulation flex-col items-center justify-center gap-1 rounded-lg p-2 text-xs font-medium transition-colors duration-200 ${
                 isActive
-                  ? "bg-gradient-to-r from-fuchsia-500/70 via-purple-500/70 to-sky-500/70 text-white shadow-[0_12px_30px_rgba(168,85,247,0.35)]"
-                  : "hover:bg-white/10 hover:text-white/90"
+                  ? "bg-white/10 text-corporate-accent-purpleHC"
+                  : "text-corporate-text-secondary hover:bg-white/5 hover:text-corporate-text-primary"
               }`
             }
           >
-            <span className="h-5 w-5">{item.icon}</span>
-            <span>{item.label}</span>
+            <span className="flex h-6 w-6 items-center justify-center">{item.icon}</span>
+            <span className="text-[10px] leading-none">{item.label}</span>
           </NavLink>
         ))}
       </div>
@@ -119,23 +95,46 @@ function BottomTabs() {
   );
 }
 
-export function AppShell() {
+interface AppShellProps {
+  children: ReactNode;
+}
+
+export function AppShell({ children }: AppShellProps) {
+  const location = useLocation();
+
   return (
     <div
-      className="relative mx-auto flex w-full max-w-md flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200"
-      style={{ minHeight: "var(--vh, 100dvh)" }}
+      className="relative flex w-full flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200"
+      style={{
+        minHeight: "var(--vh, 100dvh)",
+        height: "var(--vh, 100dvh)",
+        maxHeight: "var(--vh, 100dvh)",
+      }}
     >
       <div className="pointer-events-none absolute inset-x-0 top-[-30%] h-[60%] bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.35),_transparent_65%)]" />
       <div className="pointer-events-none absolute inset-x-[-20%] bottom-[-35%] h-[55%] bg-[radial-gradient(circle_at_bottom,_rgba(59,130,246,0.25),_transparent_70%)]" />
 
       <Header />
 
-      <main className="relative z-10 flex-1 overflow-hidden px-4">
-        <Outlet />
+      <main
+        key={location.pathname}
+        className="animate-page-transition relative z-10 mx-auto w-full max-w-md flex-1 overflow-y-auto overflow-x-hidden px-4 pb-20"
+      >
+        {children}
       </main>
 
       <NetworkBanner />
-      <BottomTabs />
+      <BottomNav />
+
+      {/* Footer mit Build-Info für Issue #81 */}
+      <footer
+        className="relative z-10 px-4 pb-2"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
+      >
+        <div className="mx-auto max-w-xs text-center">
+          <BuildInfo className="opacity-60 transition-opacity hover:opacity-100" />
+        </div>
+      </footer>
     </div>
   );
 }

@@ -198,9 +198,12 @@ export function updateMessageSyncStatus(
 
     if (messageIndex === -1) return false;
 
-    messages[messageIndex].syncStatus = status;
+    const message = messages[messageIndex];
+    if (!message) return false;
+
+    message.syncStatus = status;
     if (status === "synced") {
-      messages[messageIndex].sentOffline = false;
+      message.sentOffline = false;
     }
 
     localStorage.setItem(STORAGE_KEYS.messages, JSON.stringify(messages));
@@ -354,6 +357,7 @@ export function processQueueItem(itemId: string, success: boolean): boolean {
     if (itemIndex === -1) return false;
 
     const item = queue[itemIndex];
+    if (!item) return false;
 
     if (success) {
       // Remove successful item
@@ -362,7 +366,8 @@ export function processQueueItem(itemId: string, success: boolean): boolean {
       // Increment retry count and set next retry time
       item.retryCount++;
       if (item.retryCount < item.maxRetries) {
-        const delay = RETRY_DELAYS[Math.min(item.retryCount - 1, RETRY_DELAYS.length - 1)];
+        const delayIndex = Math.min(item.retryCount - 1, RETRY_DELAYS.length - 1);
+        const delay = RETRY_DELAYS[delayIndex] ?? RETRY_DELAYS[RETRY_DELAYS.length - 1] ?? 0;
         item.nextRetry = Date.now() + delay;
       }
     }

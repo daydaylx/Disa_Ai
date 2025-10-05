@@ -59,6 +59,61 @@ body {
   padding-bottom: var(--inset-b);
   padding-left: var(--inset-l);
   padding-right: var(--inset-r);
+  /* Prevent zoom on mobile when focusing inputs */
+  touch-action: manipulation;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  * {
+    /* Improve touch targets */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent horizontal scroll on mobile */
+  html,
+  body {
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Minimum touch target sizes (44px minimum for accessibility) */
+  button,
+  [role="button"],
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Ensure interactive elements have sufficient padding */
+  button:not(.btn-icon),
+  [role="button"]:not(.btn-icon) {
+    padding: 12px 16px;
+  }
+
+  /* Icon-only buttons need special handling */
+  .btn-icon {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px;
+  }
+
+  /* Improve text readability on mobile */
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Prevent zoom on form inputs */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
 }
 
 /* Safe area utilities */

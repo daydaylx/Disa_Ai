@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 
-import type { Persona } from "../../data/personas";
-import { getPersonas } from "../../data/personas";
+import type { Role } from "../../data/roles";
+import { getRoles } from "../../data/roles";
 
 interface StudioContextType {
-  personas: Persona[];
-  activePersona: Persona | null;
-  setActivePersona: (persona: Persona | null) => void;
+  roles: Role[];
+  activeRole: Role | null;
+  setActiveRole: (role: Role | null) => void;
   typographyScale: number;
   setTypographyScale: (scale: number) => void;
   borderRadius: number;
@@ -18,16 +18,35 @@ interface StudioContextType {
 const StudioContext = createContext<StudioContextType | undefined>(undefined);
 
 export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [personas] = useState<Persona[]>(getPersonas());
-  const [activePersona, setActivePersona] = useState<Persona | null>(null);
+  const [roles] = useState<Role[]>(() => getRoles());
+  const [activeRole, setActiveRoleState] = useState<Role | null>(null);
   const [typographyScale, setTypographyScale] = useState(1);
   const [borderRadius, setBorderRadius] = useState(0.5);
   const [accentColor, setAccentColor] = useState("hsl(var(--primary))");
 
+  const setActiveRole = useCallback(
+    (role: Role | null) => {
+      setActiveRoleState(role);
+
+      if (!role) {
+        setTypographyScale(1);
+        setBorderRadius(0.5);
+        setAccentColor("hsl(var(--primary))");
+        return;
+      }
+
+      const { typographyScale: scale, borderRadius: radius, accentColor: color } = role.styleHints;
+      setTypographyScale(scale ?? 1);
+      setBorderRadius(radius ?? 0.5);
+      setAccentColor(color ?? "hsl(var(--primary))");
+    },
+    [setAccentColor, setBorderRadius, setTypographyScale],
+  );
+
   const value = {
-    personas,
-    activePersona,
-    setActivePersona,
+    roles,
+    activeRole,
+    setActiveRole,
     typographyScale,
     setTypographyScale,
     borderRadius,

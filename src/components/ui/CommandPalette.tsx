@@ -193,7 +193,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               {filteredCommands.map((command, index) => (
                 <li
                   key={command.id}
-                  ref={(el) => (itemRefs.current[index] = el)}
+                  ref={(el) => {
+                    itemRefs.current[index] = el;
+                  }}
                   id={`command-${command.id}`}
                   className={cn(
                     "group flex cursor-pointer select-none items-center rounded-lg px-3 py-2",

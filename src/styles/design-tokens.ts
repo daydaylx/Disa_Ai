@@ -77,8 +77,17 @@ export const colors = {
     text: {
       primary: "#f8fafc",
       secondary: "#cbd5e1",
-      muted: "#94a3b8",
       accent: "#60a5fa",
+      // WCAG AAA contrast-compliant text colors
+      onViolet: "#ffffff", // 100% white on violet for 7:1 contrast
+      onBlue: "#ffffff", // 100% white on blue for 7:1 contrast
+      onTeal: "#000000", // Black on teal for optimal contrast
+      onAccent: "#ffffff", // White on accent colors
+      onDark: "#ffffff", // White on dark backgrounds
+      onLight: "#0f172a", // Dark slate on light backgrounds
+      onSurface: "#f1f5f9", // Very light text on glass surfaces
+      muted: "#94a3b8", // Muted text (4.52:1 on dark)
+      subtle: "#64748b", // Subtle text (3.1:1 on dark) - use sparingly
     },
     border: {
       primary: "#1e293b",
@@ -92,6 +101,10 @@ export const colors = {
       warning: "#f59e0b",
       danger: "#ef4444",
       purple: "#8b5cf6",
+      // High contrast accent colors for accessibility
+      purpleHC: "#a855f7", // Higher contrast purple
+      blueHC: "#60a5fa", // Higher contrast blue
+      tealHC: "#06b6d4", // Higher contrast teal
     },
     glow: {
       blue: "0 0 20px rgba(59, 130, 246, 0.3)",
@@ -104,19 +117,30 @@ export const colors = {
 export type ColorRamp = typeof colors.neutral;
 export type AccentRamp = typeof colors.accent;
 
-// Spacing scale (4 / 8 / 12 / 16 / 24 / 32 …)
+// Spacing scale (4 / 8 / 12 / 16 / 24 / 32 …) - 8dp grid system
 export const spacing = {
   0: "0px",
-  1: "4px",
-  2: "8px",
-  3: "12px",
-  4: "16px",
-  5: "20px",
-  6: "24px",
-  8: "32px",
-  10: "40px",
-  12: "48px",
-  16: "64px",
+  1: "4px", // 0.5 * 8dp
+  2: "8px", // 1 * 8dp - base unit
+  3: "12px", // 1.5 * 8dp
+  4: "16px", // 2 * 8dp
+  5: "20px", // 2.5 * 8dp - non-standard, avoid
+  6: "24px", // 3 * 8dp
+  8: "32px", // 4 * 8dp
+  10: "40px", // 5 * 8dp
+  12: "48px", // 6 * 8dp - minimum touch target
+  16: "64px", // 8 * 8dp
+  20: "80px", // 10 * 8dp
+  24: "96px", // 12 * 8dp
+} as const;
+
+// Touch targets and accessibility
+export const touchTargets = {
+  // Material Design minimum touch targets
+  minimum: "44px", // iOS guideline minimum
+  recommended: "48px", // Material Design recommended
+  comfortable: "56px", // Comfortable for all users
+  large: "64px", // Large touch targets for better UX
 } as const;
 
 // Typography scale
@@ -226,6 +250,7 @@ export const breakpoints = {
 export const designTokens = {
   colors,
   spacing,
+  touchTargets,
   typography,
   radii,
   elevation,

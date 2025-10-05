@@ -1,7 +1,6 @@
-import React from "react";
-
 import { Badge } from "../primitives/Badge";
-import { hasError, UIState } from "../state/uiMachine";
+import type { UIState } from "../state/uiMachine";
+import { hasError } from "../state/uiMachine";
 
 interface ErrorBannerProps {
   uiState: UIState;

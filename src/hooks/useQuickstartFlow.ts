@@ -2,41 +2,49 @@ import { useCallback } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
 import type { QuickstartAction } from "../config/quickstarts";
-import { getPersonaById } from "../data/personas";
+import { getRoleById } from "../data/roles";
+import { trackQuickstartClicked } from "../lib/analytics/index";
 
 export interface UseQuickstartFlowOptions {
-  onStartFlow: (prompt: string, autosend: boolean) => void;
+  onStartFlow: (
+    prompt: string,
+    autosend: boolean,
+    quickstartInfo?: { id: string; flowId: string },
+  ) => void;
+  currentModel?: string; // For analytics tracking
 }
 
-export function useQuickstartFlow({ onStartFlow }: UseQuickstartFlowOptions) {
-  const { setActivePersona } = useStudio();
+export function useQuickstartFlow({ onStartFlow, currentModel }: UseQuickstartFlowOptions) {
+  const { setActiveRole } = useStudio();
 
   const startQuickstartFlow = useCallback(
     (action: QuickstartAction) => {
       try {
-        // 1. Set persona if specified
+        // 1. Track analytics (Issue #71)
+        trackQuickstartClicked({
+          id: action.id,
+          flowId: action.flowId,
+          model: currentModel,
+          autosend: action.autosend,
+        });
+
+        // 2. Set persona if specified
         if (action.persona) {
-          const persona = getPersonaById(action.persona);
-          if (persona) {
-            setActivePersona(persona);
+          const role = getRoleById(action.persona);
+          if (role) {
+            setActiveRole(role);
           }
         }
 
-        // 2. Start the flow with the prompt
-        onStartFlow(action.prompt, action.autosend);
+        // 3. Start the flow with the prompt
+        onStartFlow(action.prompt, action.autosend, { id: action.id, flowId: action.flowId });
 
-        // 3. Log analytics (future feature)
-        console.warn(`Quickstart flow started: ${action.flowId}`, {
-          id: action.id,
-          title: action.title,
-          autosend: action.autosend,
-          persona: action.persona,
-        });
+        // Flow started successfully
       } catch (error) {
         console.error("Failed to start quickstart flow:", error);
       }
     },
-    [onStartFlow, setActivePersona],
+    [onStartFlow, setActiveRole, currentModel],
   );
 
   return {

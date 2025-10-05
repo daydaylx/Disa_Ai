@@ -1,0 +1,54 @@
+import { useEffect } from "react";
+
+import { useToasts } from "../components/ui/toast/ToastsProvider";
+
+export function useServiceWorker() {
+  const toasts = useToasts();
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      const swUrl = `/sw.js?build=${import.meta.env.VITE_BUILD_ID}`;
+      void navigator.serviceWorker.register(swUrl).then((registration) => {
+        setInterval(
+          () => {
+            void registration.update();
+          },
+          1000 * 60 * 60,
+        ); // Check for updates every hour
+
+        registration.onupdatefound = () => {
+          const installingWorker = registration.installing;
+          if (installingWorker) {
+            installingWorker.onstatechange = () => {
+              if (installingWorker.state === "installed") {
+                if (navigator.serviceWorker.controller) {
+                  toasts.push({
+                    kind: "info",
+                    title: "Update verfügbar",
+                    message: "Eine neue Version der App ist verfügbar.",
+                    action: {
+                      label: "Neu laden",
+                      onClick: () => {
+                        void installingWorker.postMessage({ type: "SKIP_WAITING" });
+
+                        // Use centralized reload manager
+                        import("../lib/utils/reload-manager")
+                          .then(({ reloadHelpers }) => {
+                            reloadHelpers.serviceWorkerUpdate(100);
+                          })
+                          .catch(() => {
+                            // Fallback
+                            window.location.reload();
+                          });
+                      },
+                    },
+                  });
+                }
+              }
+            };
+          }
+        };
+      });
+    }
+  }, [toasts]);
+}

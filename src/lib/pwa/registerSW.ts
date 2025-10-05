@@ -15,9 +15,18 @@ const BUILD_ID =
 
 export { BUILD_ID };
 
+// Cleanup function for memory leak prevention
+export function cleanupServiceWorkerTimers(): void {
+  if (updateCheckInterval) {
+    clearInterval(updateCheckInterval);
+    updateCheckInterval = null;
+  }
+}
+
 let controllerListenerAttached = false;
 let controllerReloading = false;
 let shouldReloadOnControllerChange = false;
+let updateCheckInterval: ReturnType<typeof setInterval> | null = null;
 
 function attachControllerChangeListener() {
   if (controllerListenerAttached) return;
@@ -25,7 +34,16 @@ function attachControllerChangeListener() {
     if (!shouldReloadOnControllerChange) return;
     if (controllerReloading) return;
     controllerReloading = true;
-    window.location.reload();
+
+    // Use centralized reload manager
+    import("../utils/reload-manager")
+      .then(({ reloadHelpers }) => {
+        reloadHelpers.serviceWorkerUpdate(0);
+      })
+      .catch(() => {
+        // Fallback
+        window.location.reload();
+      });
   });
   controllerListenerAttached = true;
 }
@@ -43,12 +61,12 @@ async function checkBuildIdMismatch(registration: ServiceWorkerRegistration): Pr
       const messageChannel = new MessageChannel();
       messageChannel.port1.onmessage = (event) => {
         const swVersion = event.data?.version;
-        const expectedVersion = `v2.0.0-${BUILD_ID.slice(-8)}`;
+        const expectedVersion = `v2.1.0-${BUILD_ID.slice(-8)}`;
         const mismatch = swVersion !== expectedVersion;
 
         // eslint-disable-next-line no-console
         console.log("[SW] Build check:", {
-          current: expectedVersion,
+          expectedVersion,
           service_worker: swVersion,
           mismatch,
         });
@@ -71,6 +89,7 @@ export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) return;
 
+  // Issue #75 behoben - Service Worker wieder aktiviert für PWA-Funktionalität
   const hasImportScripts =
     typeof (globalThis as unknown as { importScripts?: unknown }).importScripts !== "undefined";
   const baseUrl =
@@ -80,8 +99,9 @@ export function registerSW() {
     navigator.serviceWorker
       .register(swUrl)
       .then((reg) => {
-        // alle 30min nach Updates schauen
-        setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
+        // alle 30min nach Updates schauen (mit cleanup für Memory Leak Prevention)
+        if (updateCheckInterval) clearInterval(updateCheckInterval);
+        updateCheckInterval = setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
 
         reg.addEventListener("updatefound", () => {
           const nw = reg.installing;
@@ -94,30 +114,12 @@ export function registerSW() {
                 attachControllerChangeListener();
                 // Check for Build-ID mismatch
                 void checkBuildIdMismatch(reg).then((shouldForceReload) => {
-                  const reload = () => {
-                    try {
-                      window.location.reload();
-                    } catch (_e) {
-                      void _e;
-                      /* ignore */
-                    }
-                  };
-                  const evt = new CustomEvent("disa:toast", {
-                    detail: {
-                      kind: shouldForceReload ? "warning" : "info",
-                      title: shouldForceReload ? "Update erforderlich" : "Update verfügbar",
-                      message: shouldForceReload
-                        ? "Neue Version wird geladen..."
-                        : "Eine neue Version ist bereit.",
-                      action: { label: "Neu laden", onClick: reload },
-                    },
-                  });
-                  window.dispatchEvent(evt);
+                  // Update-Banner entfernt - kein Toast mehr anzeigen
 
-                  // Auto-reload after 3 seconds if force reload
+                  // User-controlled reload only - no automatic reload to prevent loops
                   if (shouldForceReload) {
                     shouldReloadOnControllerChange = true;
-                    setTimeout(reload, 3000);
+                    // Note: Auto-reload removed to fix infinite reload loop issue #125
                   }
                 });
               } catch {

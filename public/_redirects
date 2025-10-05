@@ -1,3 +1,1 @@
-# SPA Fallback for Cloudflare Pages
-# All non-asset requests should serve index.html for client-side routing
-/*    /index.html   200
+/* /index.html 200

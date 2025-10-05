@@ -28,8 +28,15 @@ function isTestEnv(): boolean {
 
 function getHeaders() {
   const apiKey = readApiKey(); // Only use secure keyStore, no localStorage fallback
-  const key = apiKey || (isTestEnv() ? "test" : "");
-  if (!key) throw mapError(new Error("NO_API_KEY"));
+
+  // SECURITY: In test environment, require valid API key (no hardcoded fallbacks)
+  // Tests should use mocked fetch instead of real API calls
+  if (!apiKey) {
+    if (isTestEnv()) {
+      throw mapError(new Error("NO_API_KEY_IN_TESTS"));
+    }
+    throw mapError(new Error("NO_API_KEY"));
+  }
   const referer = (() => {
     try {
       return location.origin;
@@ -38,7 +45,7 @@ function getHeaders() {
     }
   })();
   return {
-    Authorization: `Bearer ${key}`,
+    Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
     "HTTP-Referer": referer,
     "X-Title": "Disa AI",
@@ -91,7 +98,10 @@ export async function chatOnce(
 
 export async function chatStream(
   messages: ChatMessage[],
-  onDelta: (textDelta: string) => void,
+  onDelta: (
+    textDelta: string,
+    messageData?: { id?: string; role?: string; timestamp?: number; model?: string },
+  ) => void,
   opts?: {
     model?: string;
     signal?: AbortSignal;
@@ -156,12 +166,13 @@ export async function chatStream(
                   throw new Error(json.error?.message || "Unbekannter API-Fehler");
                 }
                 const delta = json?.choices?.[0]?.delta?.content ?? "";
+                const messageData = json?.choices?.[0]?.message;
                 if (!started) {
                   started = true;
                   opts?.onStart?.();
                 }
-                if (delta) {
-                  onDelta(delta);
+                if (delta || messageData) {
+                  onDelta(delta, messageData);
                   full += delta;
                 }
               } catch (err) {
@@ -189,13 +200,52 @@ export async function chatStream(
 }
 
 function combineSignals(signals: AbortSignal[]): AbortSignal {
+  // Use native AbortSignal.any() to avoid race conditions
+  // Available in Node.js v20.7.0+ and modern browsers
+  if ("any" in AbortSignal && typeof AbortSignal.any === "function") {
+    return AbortSignal.any(signals);
+  }
+
+  // Fallback for older environments with race condition protection
   const controller = new AbortController();
+  let aborted = false;
+  const cleanup: (() => void)[] = [];
+
+  // Check if already aborted before setting up listeners
   for (const signal of signals) {
     if (signal.aborted) {
       controller.abort();
       return controller.signal;
     }
-    signal.addEventListener("abort", () => controller.abort(), { once: true });
   }
+
+  // Set up listeners with race condition protection
+  const abortHandler = () => {
+    if (aborted) return; // Prevent double abort
+    aborted = true;
+
+    // Clean up all listeners
+    cleanup.forEach((fn) => {
+      try {
+        fn();
+      } catch {
+        // Ignore cleanup errors
+      }
+    });
+
+    controller.abort();
+  };
+
+  for (const signal of signals) {
+    // Double-check in case signal was aborted between checks
+    if (signal.aborted) {
+      abortHandler();
+      return controller.signal;
+    }
+
+    signal.addEventListener("abort", abortHandler, { once: true });
+    cleanup.push(() => signal.removeEventListener("abort", abortHandler));
+  }
+
   return controller.signal;
 }

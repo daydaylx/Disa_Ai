@@ -82,9 +82,10 @@ function setupPredictiveBack() {
   let startTime = 0;
 
   document.addEventListener("touchstart", (e) => {
-    if (e.touches[0]?.clientX < 20) {
+    const touch = e.touches[0];
+    if (touch && touch.clientX < 20) {
       // Edge area
-      startX = e.touches[0].clientX;
+      startX = touch.clientX;
       startTime = Date.now();
       backGestureActive = true;
       indicator.classList.add("active");
@@ -92,8 +93,9 @@ function setupPredictiveBack() {
   });
 
   document.addEventListener("touchmove", (e) => {
-    if (backGestureActive && e.touches[0]) {
-      const deltaX = e.touches[0].clientX - startX;
+    const touch = e.touches[0];
+    if (backGestureActive && touch) {
+      const deltaX = touch.clientX - startX;
       const deltaTime = Date.now() - startTime;
 
       if (deltaX > 50 && deltaTime < 500) {

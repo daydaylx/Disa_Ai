@@ -1,3 +1,5 @@
+import { vi } from "vitest";
+
 class Touch {
   identifier: number;
   target: EventTarget;

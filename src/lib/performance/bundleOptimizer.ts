@@ -189,7 +189,7 @@ export class BundleOptimizer {
   private extractChunkName(src: string): string {
     const filename = src.split("/").pop() || "";
     const match = filename.match(/^(.+?)\./);
-    return match ? match[1] : filename;
+    return match?.[1] ?? filename;
   }
 
   /**

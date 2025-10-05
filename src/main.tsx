@@ -1,26 +1,45 @@
 import "./styles/layers.css";
 
-import React from "react";
 import { createRoot } from "react-dom/client";
 
 import App from "./App";
+import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
+import { initEnvironment } from "./config/env";
+import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
+import { registerSW } from "./lib/pwa/registerSW";
 
-// Mobile viewport height fix for iOS Safari
-function setViewportHeight() {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--vh", `${vh}px`);
+// Initialize environment configuration
+try {
+  const envResult = initEnvironment();
+  if (!envResult.success) {
+    console.error("Environment initialization failed:", envResult.errors);
+  }
+} catch (error) {
+  console.error("Critical environment error:", error);
 }
 
-// Set initial viewport height
-setViewportHeight();
+// Initialize app
+function initializeApp() {
+  const el = document.getElementById("app");
+  if (!el) throw new Error("#app element not found");
 
-// Update on resize and orientation change
-window.addEventListener("resize", setViewportHeight);
-window.addEventListener("orientationchange", () => {
-  // Small delay for orientation change to complete
-  setTimeout(setViewportHeight, 100);
-});
+  const root = createRoot(el);
+  root.render(
+    <ErrorBoundary>
+      <StartupDiagnostics>
+        <App />
+      </StartupDiagnostics>
+    </ErrorBoundary>,
+  );
 
-const el = document.getElementById("app");
-if (!el) throw new Error("#app not found");
-createRoot(el).render(<App />);
+  return root;
+}
+
+// Start the app
+initializeApp();
+
+// PWA Service Worker
+registerSW();
+
+// Initialize accessibility enforcement
+initializeA11yEnforcement();

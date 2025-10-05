@@ -9,6 +9,7 @@ dist/
 # Env
 .env.local
 .env.*.local
+.env.build
 
 # Test/Reports/Logs (Never commit these!)
 # Playwright
@@ -32,6 +33,12 @@ allure-results/
 allure-report/
 *.trx
 *.junit.xml
+
+# Lighthouse CI (CRITICAL - prevents language detection issues)
+.lighthouseci/
+lighthouse-report/
+*.lhr.html
+*.lhr.json
 
 # Visual testing
 playwright-visual-report/
@@ -81,6 +88,8 @@ Thumbs.db
 
 # Build artifacts
 *.tsbuildinfo
+build-info.json
+dev-dist/
 
 *storybook.log
 storybook-static
@@ -97,3 +106,4 @@ playwright-visual-report/
 
 # Audit artifacts (cleanup tracking)
 .audit/
+autopilot.log

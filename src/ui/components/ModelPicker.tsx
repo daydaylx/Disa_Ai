@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import { AIModel, formatContext, formatPrice, getModelById, MODELS } from "../../data/models";
+import type { AIModel } from "../../data/models";
+import { formatContext, formatPrice, getModelById, MODELS } from "../../data/models";
 
 interface ModelPickerProps {
   selectedModelId: string;
@@ -17,15 +18,13 @@ export function ModelPicker({ selectedModelId, onModelChange, className = "" }: 
     setIsOpen(false);
   };
 
-  const groupedModels = MODELS.reduce(
-    (acc, model) => {
-      const provider = model.id.split("/")[0];
-      if (!acc[provider]) acc[provider] = [];
-      acc[provider].push(model);
-      return acc;
-    },
-    {} as Record<string, AIModel[]>,
-  );
+  const groupedModels = MODELS.reduce<Record<string, AIModel[]>>((acc, model) => {
+    const provider = model.id.split("/")[0] ?? "other";
+    const group = acc[provider] ?? [];
+    group.push(model);
+    acc[provider] = group;
+    return acc;
+  }, {});
 
   const getProviderName = (provider: string): string => {
     const names: Record<string, string> = {

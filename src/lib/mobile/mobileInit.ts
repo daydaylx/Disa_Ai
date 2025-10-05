@@ -121,28 +121,6 @@ export class MobileFeaturesManager {
   }
 
   /**
-   * Mobile-Device erkennen
-   */
-  private isMobileDevice(): boolean {
-    const userAgent = navigator.userAgent.toLowerCase();
-    const mobileKeywords = [
-      "mobile",
-      "android",
-      "iphone",
-      "ipad",
-      "ipod",
-      "blackberry",
-      "windows phone",
-    ];
-
-    const isMobileUA = mobileKeywords.some((keyword) => userAgent.includes(keyword));
-    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-    const isSmallScreen = window.innerWidth <= 768;
-
-    return isMobileUA || (isTouchDevice && isSmallScreen);
-  }
-
-  /**
    * Haptisches Feedback initialisieren
    */
   private initializeHapticFeedback(): void {

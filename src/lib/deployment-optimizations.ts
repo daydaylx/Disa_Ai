@@ -70,6 +70,7 @@ export class ServiceWorkerManager {
   private updateAvailable = false;
   private controllerListenerAttached = false;
   private shouldReloadOnControllerChange = false;
+  private updateCheckInterval: ReturnType<typeof setInterval> | null = null;
 
   async register(): Promise<boolean> {
     if (!("serviceWorker" in navigator)) {
@@ -94,7 +95,7 @@ export class ServiceWorkerManager {
       });
 
       // Check for updates every 30 minutes
-      setInterval(
+      this.updateCheckInterval = setInterval(
         () => {
           void this.checkForUpdates();
         },
@@ -149,7 +150,16 @@ export class ServiceWorkerManager {
       }
       if (reloading) return;
       reloading = true;
-      window.location.reload();
+
+      // Use centralized reload manager
+      import("./utils/reload-manager")
+        .then(({ reloadHelpers }) => {
+          reloadHelpers.serviceWorkerUpdate(0);
+        })
+        .catch(() => {
+          // Fallback
+          window.location.reload();
+        });
     });
     this.controllerListenerAttached = true;
   }
@@ -176,6 +186,13 @@ export class ServiceWorkerManager {
 
   isUpdateAvailable(): boolean {
     return this.updateAvailable;
+  }
+
+  destroy(): void {
+    if (this.updateCheckInterval) {
+      clearInterval(this.updateCheckInterval);
+      this.updateCheckInterval = null;
+    }
   }
 }
 
@@ -222,13 +239,18 @@ export class PerformanceReporter {
     new PerformanceObserver((list) => {
       const entries = list.getEntries();
       const lastEntry = entries[entries.length - 1];
-      vitals.LCP = lastEntry.startTime;
+      if (lastEntry) {
+        vitals.LCP = lastEntry.startTime;
+      }
     }).observe({ entryTypes: ["largest-contentful-paint"] });
 
     // Observer for First Input Delay
     new PerformanceObserver((list) => {
-      const firstEntry = list.getEntries()[0] as any;
-      vitals.FID = firstEntry.processingStart - firstEntry.startTime;
+      const firstEntry = list.getEntries()[0] as PerformanceEntry | undefined;
+      if (firstEntry) {
+        const typedEntry = firstEntry as any;
+        vitals.FID = typedEntry.processingStart - typedEntry.startTime;
+      }
     }).observe({ entryTypes: ["first-input"] });
 
     // Observer for Cumulative Layout Shift
@@ -343,11 +365,8 @@ const config = getDeploymentConfig();
 const serviceWorkerManager = new ServiceWorkerManager();
 const performanceReporter = new PerformanceReporter();
 
-// Auto-initialize on load
+// Auto-initialize on load (Service Worker registration removed to prevent conflicts with registerSW.ts)
 if (typeof window !== "undefined") {
-  // Register service worker
-  void serviceWorkerManager.register();
-
   // Setup error reporting
   setupErrorReporting();
 

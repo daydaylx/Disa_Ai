@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 import { designTokens } from "./src/styles/design-tokens";
 
 export default {
-  content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+  content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: ["class"],
   theme: {
     extend: {
@@ -63,6 +63,14 @@ export default {
             secondary: "var(--color-corporate-text-secondary)",
             muted: "var(--color-corporate-text-muted)",
             accent: "var(--color-corporate-text-accent)",
+            onViolet: "var(--color-corporate-text-on-violet)",
+            onBlue: "var(--color-corporate-text-on-blue)",
+            onTeal: "var(--color-corporate-text-on-teal)",
+            onAccent: "var(--color-corporate-text-on-accent)",
+            onDark: "var(--color-corporate-text-on-dark)",
+            onLight: "var(--color-corporate-text-on-light)",
+            onSurface: "var(--color-corporate-text-on-surface)",
+            subtle: "var(--color-corporate-text-subtle)",
           },
           border: {
             primary: "var(--color-corporate-border-primary)",
@@ -76,6 +84,9 @@ export default {
             warning: "var(--color-corporate-accent-warning)",
             danger: "var(--color-corporate-accent-danger)",
             purple: "var(--color-corporate-accent-purple)",
+            purpleHC: "var(--color-corporate-accent-purple-hc)",
+            blueHC: "var(--color-corporate-accent-blue-hc)",
+            tealHC: "var(--color-corporate-accent-teal-hc)",
           },
         },
       },
@@ -90,6 +101,13 @@ export default {
         10: "var(--spacing-10)",
         12: "var(--spacing-12)",
         16: "var(--spacing-16)",
+        20: "var(--spacing-20)",
+        24: "var(--spacing-24)",
+        // Touch target sizes
+        "touch-min": "var(--touch-minimum)",
+        "touch-rec": "var(--touch-recommended)",
+        "touch-com": "var(--touch-comfortable)",
+        "touch-lg": "var(--touch-large)",
       },
       borderRadius: {
         none: "var(--radius-none)",
@@ -157,6 +175,19 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // Safe area insets for mobile devices
+      padding: {
+        "safe-top": "env(safe-area-inset-top)",
+        "safe-bottom": "env(safe-area-inset-bottom)",
+        "safe-left": "env(safe-area-inset-left)",
+        "safe-right": "env(safe-area-inset-right)",
+      },
+      margin: {
+        "safe-top": "env(safe-area-inset-top)",
+        "safe-bottom": "env(safe-area-inset-bottom)",
+        "safe-left": "env(safe-area-inset-left)",
+        "safe-right": "env(safe-area-inset-right)",
+      },
     },
   },
   safelist: [
@@ -167,6 +198,18 @@ export default {
     "bubble-assistant",
     "bubble-user",
     "bubble-system",
+    "tile",
+    "tile--primary",
+    "card",
+    // Safe area classes
+    "pb-safe-bottom",
+    "pt-safe-top",
+    "pl-safe-left",
+    "pr-safe-right",
+    "mb-safe-bottom",
+    "mt-safe-top",
+    "ml-safe-left",
+    "mr-safe-right",
   ],
   plugins: [],
 } satisfies Config;

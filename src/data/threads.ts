@@ -1,4 +1,4 @@
-import { Message } from "../ui/chat/types";
+import type { Message } from "../ui/chat/types";
 
 export interface Thread {
   id: string;
@@ -91,19 +91,20 @@ export class ThreadStorage {
   }
 
   getThreadSummaries(): ThreadSummary[] {
-    return this.getAllThreads().map((thread) => ({
-      id: thread.id,
-      title: thread.title,
-      lastMessage:
-        thread.messages.length > 0
-          ? thread.messages[thread.messages.length - 1].content.slice(0, 100) + "..."
-          : "Keine Nachrichten",
-      messageCount: thread.messages.length,
-      createdAt: thread.createdAt,
-      updatedAt: thread.updatedAt,
-      isPinned: thread.isPinned,
-      tags: thread.tags,
-    }));
+    return this.getAllThreads().map((thread) => {
+      const lastMessage = thread.messages.at(-1);
+
+      return {
+        id: thread.id,
+        title: thread.title,
+        lastMessage: lastMessage ? `${lastMessage.content.slice(0, 100)}...` : "Keine Nachrichten",
+        messageCount: thread.messages.length,
+        createdAt: thread.createdAt,
+        updatedAt: thread.updatedAt,
+        isPinned: thread.isPinned,
+        tags: thread.tags,
+      };
+    });
   }
 
   updateThread(id: string, updates: Partial<Omit<Thread, "id" | "createdAt">>): Thread | null {
@@ -154,19 +155,20 @@ export class ThreadStorage {
       return false;
     });
 
-    return filtered.map((thread) => ({
-      id: thread.id,
-      title: thread.title,
-      lastMessage:
-        thread.messages.length > 0
-          ? thread.messages[thread.messages.length - 1].content.slice(0, 100) + "..."
-          : "Keine Nachrichten",
-      messageCount: thread.messages.length,
-      createdAt: thread.createdAt,
-      updatedAt: thread.updatedAt,
-      isPinned: thread.isPinned,
-      tags: thread.tags,
-    }));
+    return filtered.map((thread) => {
+      const lastMessage = thread.messages.at(-1);
+
+      return {
+        id: thread.id,
+        title: thread.title,
+        lastMessage: lastMessage ? `${lastMessage.content.slice(0, 100)}...` : "Keine Nachrichten",
+        messageCount: thread.messages.length,
+        createdAt: thread.createdAt,
+        updatedAt: thread.updatedAt,
+        isPinned: thread.isPinned,
+        tags: thread.tags,
+      };
+    });
   }
 
   addMessageToThread(threadId: string, message: Message): Thread | null {

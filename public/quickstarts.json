@@ -1,59 +1,57 @@
 [
   {
-    "id": "text-writer-pro",
-    "title": "AI Text Writer Pro",
-    "subtitle": "Skizziere blitzschnell perfekte Antworten",
-    "gradient": "from-fuchsia-500/70 via-purple-500/70 to-sky-500/70",
-    "icon": "edit-3",
-    "flowId": "writer.v2",
+    "id": "quick-reply",
+    "title": "Kurzantwort verfassen",
+    "subtitle": "Professionelle Antworten auf kurze Nachrichten",
+    "gradient": "from-blue-500/70 via-cyan-500/70 to-sky-500/70",
+    "icon": "💬",
+    "flowId": "quickreply.v1",
     "autosend": false,
-    "persona": "creative_writer",
-    "prompt": "Hilf mir beim Schreiben eines kreativen Textes. Welches Thema interessiert dich?",
-    "tags": ["text", "kreativ", "schreiben"]
+    "prompt": "Ich möchte eine professionelle, kurze Antwort verfassen. Zeige mir die Nachricht, auf die ich antworten soll, und ich formuliere eine passende Antwort.",
+    "tags": ["antwort", "professionell", "kommunikation"]
   },
   {
-    "id": "image-idea-advanced",
-    "title": "Bildidee Generator",
-    "subtitle": "Beschreibe Visionen für dein nächstes Artwork",
-    "gradient": "from-amber-400/70 via-pink-500/70 to-purple-500/70",
-    "icon": "image",
-    "flowId": "image.v2",
-    "autosend": false,
-    "prompt": "Ich möchte eine kreative Bildidee entwickeln. Beschreibe mir ein faszinierendes visuelles Konzept!",
-    "tags": ["kunst", "bild", "kreativ"]
-  },
-  {
-    "id": "fact-check-expert",
-    "title": "Faktencheck Expert",
-    "subtitle": "Validiere Zahlen und Quellen in Sekunden",
-    "gradient": "from-sky-400/70 via-cyan-500/70 to-emerald-400/70",
-    "icon": "search-check",
-    "flowId": "factcheck.v2",
+    "id": "ideas-generator-de",
+    "title": "Ideen-Generator",
+    "subtitle": "10 kreative Ideen in Bulletpoints",
+    "gradient": "from-purple-500/70 via-pink-500/70 to-fuchsia-500/70",
+    "icon": "💡",
+    "flowId": "ideas.v1",
     "autosend": true,
-    "prompt": "Ich möchte Fakten überprüfen. Was soll ich für dich recherchieren und verifizieren?",
-    "tags": ["fakten", "recherche", "validierung"]
+    "prompt": "Generiere mir 10 kreative Ideen zu einem Thema deiner Wahl. Präsentiere sie als übersichtliche Bulletpoints mit kurzen, prägnanten Beschreibungen.",
+    "tags": ["ideen", "kreativität", "brainstorming"]
   },
   {
-    "id": "email-wizard",
-    "title": "E-Mail Wizard",
-    "subtitle": "Formuliere professionelle E-Mails mühelos",
-    "gradient": "from-blue-500/70 via-indigo-500/70 to-purple-500/70",
-    "icon": "mail",
-    "flowId": "email.v2",
+    "id": "fact-check-sources",
+    "title": "Faktencheck",
+    "subtitle": "Prüft Behauptungen mit Quellen",
+    "gradient": "from-emerald-500/70 via-green-500/70 to-teal-500/70",
+    "icon": "🔍",
+    "flowId": "factcheck.v3",
     "autosend": false,
-    "persona": "email_professional",
-    "prompt": "Lass uns eine professionelle E-Mail verfassen. Worum geht es und wer ist der Empfänger?",
-    "tags": ["email", "business", "kommunikation"]
+    "prompt": "Ich möchte eine Behauptung oder Information überprüfen. Nenne mir die Aussage, und ich prüfe sie auf Richtigkeit und liste dir 3 verlässliche Quellen auf.",
+    "tags": ["fakten", "quellen", "validierung"]
   },
   {
-    "id": "code-helper",
-    "title": "Code Assistent",
-    "subtitle": "Programmierung und Debugging leicht gemacht",
-    "gradient": "from-green-500/70 via-teal-500/70 to-blue-500/70",
-    "icon": "code",
-    "flowId": "code.v1",
+    "id": "code-explainer",
+    "title": "Code erklären",
+    "subtitle": "Erklärt und vereinfacht Code",
+    "gradient": "from-amber-500/70 via-orange-500/70 to-red-500/70",
+    "icon": "👨‍💻",
+    "flowId": "codeexplain.v1",
     "autosend": false,
-    "prompt": "Ich benötige Hilfe beim Programmieren. Welche Sprache oder welches Problem beschäftigt dich?",
-    "tags": ["code", "programmierung", "debugging"]
+    "prompt": "Zeige mir ein Code-Snippet und ich erkläre dir, was es macht. Zusätzlich erstelle ich eine vereinfachte Version mit Kommentaren für besseres Verständnis.",
+    "tags": ["code", "erklärung", "vereinfachung"]
+  },
+  {
+    "id": "image-prompt-builder",
+    "title": "Bildprompt bauen",
+    "subtitle": "Perfekte Prompts für KI-Bildgeneratoren",
+    "gradient": "from-indigo-500/70 via-violet-500/70 to-purple-500/70",
+    "icon": "🎨",
+    "flowId": "imageprompt.v1",
+    "autosend": false,
+    "prompt": "Ich helfe dir dabei, einen detaillierten und effektiven Prompt für Bild-Generatoren wie DALL-E, Midjourney oder Stable Diffusion zu erstellen. Beschreibe deine Bildidee und ich optimiere sie für bestmögliche Ergebnisse.",
+    "tags": ["bild", "prompt", "ki-generierung"]
   }
 ]

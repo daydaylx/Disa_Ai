@@ -246,7 +246,9 @@ class WebVitalsReporter {
       TTFB: [800, 1800],
     };
 
-    const [good, poor] = thresholds[metricName as keyof typeof thresholds] || [0, 0];
+    const threshold = thresholds[metricName as keyof typeof thresholds];
+    const good = threshold?.[0] ?? 0;
+    const poor = threshold?.[1] ?? 0;
 
     if (value <= good) return "good";
     if (value <= poor) return "needs-improvement";
@@ -257,13 +259,15 @@ class WebVitalsReporter {
     if (!performance.navigation) return "unknown";
 
     const types = ["navigate", "reload", "back_forward", "prerender"];
-    return types[performance.navigation.type] || "unknown";
+    const navType = performance.navigation.type;
+    return types[navType] ?? "unknown";
   }
 
   private generateId(): string {
     const randomArray = new Uint32Array(1);
     crypto.getRandomValues(randomArray);
-    return `${Date.now()}-${randomArray[0].toString(36)}`;
+    const randomValue = randomArray[0] ?? 0;
+    return `${Date.now()}-${randomValue.toString(36)}`;
   }
 
   private shouldSample(): boolean {

@@ -70,10 +70,78 @@ function byLabel(a: ModelEntry, b: ModelEntry) {
 
 /* ---- Public API ---- */
 
-/** Sammelt alle erlaubten Modell-IDs aus styles.json */
+/**
+ * Generates dynamic fallback models based on OpenRouter API response
+ * This creates a more resilient fallback that adapts to available models
+ */
+function generateIntelligentFallback(availableModels: ORModel[]): string[] {
+  if (!availableModels || availableModels.length === 0) {
+    // Ultimate fallback - known stable models (updated as of 2025)
+    return [
+      "meta-llama/llama-3.3-70b-instruct:free",
+      "mistralai/mistral-nemo:free",
+      "qwen/qwen-2.5-72b-instruct:free",
+    ];
+  }
+
+  const fallbackModels: string[] = [];
+  const priorities = [
+    // High priority: Free models from major providers
+    { pattern: /^meta-llama\/.*:free$/, limit: 2 },
+    { pattern: /^mistralai\/.*:free$/, limit: 2 },
+    { pattern: /^qwen\/.*:free$/, limit: 2 },
+    { pattern: /^cognitivecomputations\/.*:free$/, limit: 1 },
+
+    // Medium priority: Affordable commercial models
+    { pattern: /^openai\/gpt-4o-mini/, limit: 1 },
+    { pattern: /^anthropic\/claude-3/, limit: 1 },
+    { pattern: /^google\/gemini/, limit: 1 },
+  ];
+
+  // Select models based on priority patterns
+  for (const priority of priorities) {
+    const matching = availableModels
+      .filter((model) => priority.pattern.test(model.id))
+      .slice(0, priority.limit)
+      .map((model) => model.id);
+
+    fallbackModels.push(...matching);
+  }
+
+  // If still not enough models, add top-rated free models
+  if (fallbackModels.length < 5) {
+    const additionalFree = availableModels
+      .filter((model) => model.id.includes(":free") && !fallbackModels.includes(model.id))
+      .slice(0, 5 - fallbackModels.length)
+      .map((model) => model.id);
+
+    fallbackModels.push(...additionalFree);
+  }
+
+  return fallbackModels.length > 0
+    ? fallbackModels
+    : [
+        // Last resort hardcoded fallback
+        "meta-llama/llama-3.3-70b-instruct:free",
+      ];
+}
+
+/** Multi-layer resilient model ID retrieval with intelligent fallbacks */
 async function getAllowedModelIds(): Promise<string[]> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000); // Reduced timeout
+
   try {
-    const response = await fetch("/styles.json");
+    // Layer 1: Try to load styles.json
+    const response = await fetch("/styles.json", {
+      signal: controller.signal,
+      cache: "default", // Allow fresher data
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
     const stylesData = await response.json();
     const allowed = new Set<string>();
 
@@ -85,23 +153,121 @@ async function getAllowedModelIds(): Promise<string[]> {
       }
     }
 
-    return Array.from(allowed);
+    const styleBasedModels = Array.from(allowed);
+
+    // Validate that we have reasonable model coverage
+    if (styleBasedModels.length > 0) {
+      console.warn(`[Models] Loaded ${styleBasedModels.length} models from styles.json`);
+      return styleBasedModels;
+    } else {
+      throw new Error("No models found in styles.json");
+    }
   } catch (error) {
-    console.warn("Failed to load allowed models from styles.json:", error);
-    return [];
+    console.warn("Failed to load styles.json, attempting dynamic fallback:", error);
+
+    // Layer 2: Try to get dynamic fallback from OpenRouter API
+    try {
+      const availableModels = await getRawModels(undefined, 5000); // 5s timeout for API
+      const intelligentFallback = generateIntelligentFallback(availableModels);
+
+      console.warn(`[Models] Using intelligent fallback: ${intelligentFallback.length} models`);
+      return intelligentFallback;
+    } catch (apiError) {
+      console.warn("OpenRouter API also failed, using static fallback:", apiError);
+
+      // Layer 3: Static fallback (last resort)
+      const staticFallback = [
+        "meta-llama/llama-3.3-70b-instruct:free",
+        "mistralai/mistral-nemo:free",
+        "qwen/qwen-2.5-72b-instruct:free",
+        "meta-llama/llama-3.1-405b-instruct:free",
+      ];
+
+      console.warn(`[Models] Using static fallback: ${staticFallback.length} models`);
+      return staticFallback;
+    }
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
-/** Lädt und transformiert das OpenRouter-Model-Listing, gefiltert nach erlaubten Modellen. */
-export async function loadModelCatalog(_opts?: CatalogOptions | boolean): Promise<ModelEntry[]> {
-  const [data, allowedIds] = await Promise.all([getRawModels(), getAllowedModelIds()]);
+/** Enhanced model catalog loading with resilient fallback handling */
+export async function loadModelCatalog(
+  _opts?: CatalogOptions | boolean,
+  toasts?: Parameters<typeof getRawModels>[2],
+): Promise<ModelEntry[]> {
+  try {
+    const [data, allowedIds] = await Promise.all([
+      getRawModels(undefined, undefined, toasts),
+      getAllowedModelIds(),
+    ]);
 
-  const list: ORModel[] = Array.isArray(data) ? data : [];
+    const list: ORModel[] = Array.isArray(data) ? data : [];
 
-  // Filtere nur die Modelle, die in styles.json erlaubt sind
-  const filtered = list.filter((model) => allowedIds.includes(model.id));
+    // Filter models that are both available in API and allowed by configuration
+    const availableAllowed = list.filter((model) => allowedIds.includes(model.id));
 
-  return filtered.map(toEntry).sort(byLabel);
+    if (availableAllowed.length > 0) {
+      console.warn(`[Models] Successfully loaded ${availableAllowed.length} available models`);
+      return availableAllowed.map(toEntry).sort(byLabel);
+    }
+
+    // If no configured models are available, try intelligent intersection
+    console.warn("[Models] No configured models available, attempting intelligent matching");
+
+    const intelligentMatches = list.filter((model) => {
+      // Match common patterns from allowedIds
+      return allowedIds.some((allowedId) => {
+        const allowedBase = allowedId.replace(/:free$/, "");
+        const modelBase = model.id.replace(/:free$/, "");
+        return (
+          allowedBase === modelBase ||
+          allowedId.includes(model.id) ||
+          model.id.includes(allowedBase)
+        );
+      });
+    });
+
+    if (intelligentMatches.length > 0) {
+      console.warn(`[Models] Found ${intelligentMatches.length} intelligent matches`);
+      return intelligentMatches.map(toEntry).sort(byLabel);
+    }
+
+    // If still no matches, return the top available free models
+    const fallbackModels = list.filter((model) => model.id.includes(":free")).slice(0, 10); // Limit to prevent overwhelming UI
+
+    if (fallbackModels.length > 0) {
+      console.warn(`[Models] Using ${fallbackModels.length} fallback free models`);
+      return fallbackModels.map(toEntry).sort(byLabel);
+    }
+
+    // If API returned empty or no free models, use emergency fallback
+    console.warn("[Models] No models available from API, using emergency fallback");
+    throw new Error("Empty API response - triggering emergency fallback");
+  } catch (error) {
+    console.error("[Models] Failed to load model catalog:", error);
+
+    // Emergency fallback: Return minimal model set
+    const emergencyModels: ModelEntry[] = [
+      {
+        id: "meta-llama/llama-3.3-70b-instruct:free",
+        label: "Llama 3.3 70B (Free)",
+        provider: "meta-llama",
+        tags: ["free", "large"],
+        safety: "free",
+      },
+      {
+        id: "mistralai/mistral-nemo:free",
+        label: "Mistral Nemo (Free)",
+        provider: "mistralai",
+        tags: ["free", "medium"],
+        safety: "free",
+      },
+    ];
+
+    console.warn(`[Models] Using emergency fallback: ${emergencyModels.length} models`);
+    return emergencyModels;
+  }
 }
 
 /** Wählt ein Default-Modell aus der Liste. */

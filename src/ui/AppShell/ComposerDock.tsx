@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import type { KeyboardEvent } from "react";
+import { useState } from "react";
 
 import { Badge } from "../primitives/Badge";
 import { Button } from "../primitives/Button";
 import { TextArea } from "../primitives/TextArea";
 import { useModel } from "../state/modelContext";
+import type { UIState } from "../state/uiMachine";
 import {
   canAbort,
   canSendMessage,
   getStatusBadgeText,
   getStatusBadgeVariant,
-  UIState,
 } from "../state/uiMachine";
 
 export function ComposerDock({
@@ -25,7 +26,7 @@ export function ComposerDock({
 }) {
   const [value, setValue] = useState("");
   const { selectedModel } = useModel();
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+  function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (value.trim()) {
