@@ -364,7 +364,7 @@ export default function ChatPageV2() {
             ) : (
               <section className="flex-1 overflow-hidden" aria-label="Chat History">
                 <div className="h-full px-1">
-                  <div className="mx-auto h-full w-full max-w-md">
+                  <div className="h-full w-full">
                     <ChatList
                       messages={messages}
                       onCopy={handleCopy}
@@ -382,7 +382,7 @@ export default function ChatPageV2() {
             {/* Input Section */}
             <section role="region" aria-label="Message Input" className="safe-bottom">
               <div className="px-1">
-                <div className="mx-auto w-full max-w-md">
+                <div className="w-full">
                   <ChatComposer
                     value={input}
                     onChange={setInput}

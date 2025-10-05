@@ -103,16 +103,14 @@ select {
   touch-action: manipulation;
 }
 
-/* Fix for mobile Safari input zoom */
-@media screen and (max-width: 768px) {
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="search"],
-  textarea {
-    font-size: 16px !important;
-    transform: scale(1);
-  }
+/* Fix for mobile Safari input zoom - Applied globally since we're mobile-only */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea {
+  font-size: 16px !important;
+  transform: scale(1);
 }
 
 /* Scrollable areas */
