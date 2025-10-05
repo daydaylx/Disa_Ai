@@ -29,8 +29,8 @@ test.describe("Smoke Tests", () => {
     await composer.fill("Hallo Welt");
     await page.locator('[data-testid="composer-send"]').click();
 
-    // The user message should be visible
-    await expect(page.getByText("Hallo Welt")).toBeVisible();
+    // The user message should be visible in the chat messages area
+    await expect(page.getByTestId("message.item").getByText("Hallo Welt")).toBeVisible();
 
     // The stop button should appear during streaming
     const stopButton = page.locator('[data-testid="composer-stop"]');
