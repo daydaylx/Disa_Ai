@@ -153,12 +153,12 @@ export class ChatAdapter {
 
   // Helper method to get API key from session storage
   static getApiKey(): string | null {
-    return sessionStorage.getItem("openrouter-api-key");
+    return sessionStorage.getItem("openrouter-key");
   }
 
   // Helper method to set API key in session storage
   static setApiKey(key: string): void {
-    sessionStorage.setItem("openrouter-api-key", key);
+    sessionStorage.setItem("openrouter-key", key);
   }
 }
 
