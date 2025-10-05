@@ -54,6 +54,10 @@ textarea {
 
 /* --- Safe Area Support for mobile devices --- */
 body {
+  /* Dark gradient background for the application */
+  background: linear-gradient(135deg, #0b0f14 0%, #1a1a2e 50%, #16213e 100%);
+  background-attachment: fixed;
+  color: #f8fafc;
   /* iOS safe area insets */
   padding-top: var(--inset-t);
   padding-bottom: var(--inset-b);
