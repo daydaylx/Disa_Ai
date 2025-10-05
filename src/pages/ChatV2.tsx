@@ -240,7 +240,7 @@ export default function ChatPageV2() {
         title: "Notiz gespeichert",
         message: "Die Notiz wurde erfolgreich zum Gedächtnis hinzugefügt.",
       });
-    } catch (error) {
+    } catch {
       toasts.push({
         kind: "error",
         title: "Fehler",
@@ -258,7 +258,7 @@ export default function ChatPageV2() {
           title: "Gedächtnis aktualisiert",
           message: "Das Gedächtnis wurde aus dem Chat-Verlauf aktualisiert.",
         });
-      } catch (error) {
+      } catch {
         toasts.push({
           kind: "error",
           title: "Fehler",

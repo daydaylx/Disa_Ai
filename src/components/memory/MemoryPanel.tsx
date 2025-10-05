@@ -22,7 +22,7 @@ export function MemoryPanel({
   isVisible,
   onToggle,
   onAddNote,
-  onUpdateMemory,
+  onUpdateMemory: _onUpdateMemory,
   isLoading = false,
 }: MemoryPanelProps) {
   const [showAddNote, setShowAddNote] = useState(false);
