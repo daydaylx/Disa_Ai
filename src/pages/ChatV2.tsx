@@ -252,132 +252,21 @@ export default function ChatPageV2() {
         <div className="flex h-full w-full">
           {/* Chat Area */}
           <div className="flex flex-1 flex-col overflow-hidden">
-            {messages.length === 0 ? (
-              <div className="flex-1 overflow-y-auto px-4 py-6">
-                {/* Willkommen zurück Bereich */}
-                <div className="mb-8">
-                  <h2 className="mb-2 text-lg font-medium text-white/80">WILLKOMMEN ZURÜCK</h2>
-                  <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-                    <h3 className="mb-3 text-xl font-semibold text-white">
-                      Was möchtest du heute erschaffen?
-                    </h3>
-                    <p className="text-white/70">
-                      Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI
-                      reagiert in Sekunden.
-                    </p>
-                  </div>
-                </div>
-
-                {/* AI Flow Kacheln */}
-                <div className="space-y-4">
-                  {/* Kurze Antwort verfassen */}
-                  <button
-                    onClick={() =>
-                      handleQuickstartFlow(
-                        "Schreibe eine freundliche Antwort auf diese E-Mail: ",
-                        false,
-                      )
-                    }
-                    className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-sky-500/10 via-cyan-500/10 to-blue-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 text-left">
-                        <h4 className="mb-1 font-medium text-white">Kurzantwort verfassen</h4>
-                        <p className="text-sm text-white/60">
-                          Professionelle Antworten auf kurze Nachrichten
-                        </p>
-                      </div>
-                      <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
-                        Schnellstart
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* Ideen-Generator */}
-                  <button
-                    onClick={() =>
-                      handleQuickstartFlow(
-                        "Gib mir 10 kreative Ideen in Bulletpoints zu folgendem Thema: ",
-                        false,
-                      )
-                    }
-                    className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-red-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 text-left">
-                        <h4 className="mb-1 font-medium text-white">Ideen-Generator (DE)</h4>
-                        <p className="text-sm text-white/60">10 kreative Ideen in Bulletpoints</p>
-                      </div>
-                      <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
-                        Auto-Start
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* Faktencheck */}
-                  <button
-                    onClick={() =>
-                      handleQuickstartFlow(
-                        "Führe einen Faktencheck durch und liste 3 vertrauenswürdige Quellen auf für folgende Behauptung: ",
-                        false,
-                      )
-                    }
-                    className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 text-left">
-                        <h4 className="mb-1 font-medium text-white">Faktencheck (mit Quellen)</h4>
-                        <p className="text-sm text-white/60">
-                          Prüft Behauptungen, listet 3 Quellen
-                        </p>
-                      </div>
-                      <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
-                        Schnellstart
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* Code-Snippet erklären */}
-                  <button
-                    onClick={() =>
-                      handleQuickstartFlow(
-                        "Erkläre diesen Code und liefere eine vereinfachte Version: ",
-                        false,
-                      )
-                    }
-                    className="group w-full rounded-2xl border border-white/10 bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-yellow-500/10 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 text-left">
-                        <h4 className="mb-1 font-medium text-white">Code-Snippet erklären</h4>
-                        <p className="text-sm text-white/60">
-                          Erklärt Code und liefert vereinfachte Version
-                        </p>
-                      </div>
-                      <div className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:bg-white/20">
-                        Schnellstart
-                      </div>
-                    </div>
-                  </button>
+            <section className="flex-1 overflow-hidden" aria-label="Chat History">
+              <div className="h-full px-1">
+                <div className="h-full w-full">
+                  <ChatList
+                    messages={messages}
+                    onCopy={handleCopy}
+                    onRetry={handleRetry}
+                    onQuickstartFlow={handleQuickstartFlow}
+                    isLoading={isLoading}
+                    isQuickstartLoading={isQuickstartLoading}
+                    currentModel={model?.id}
+                  />
                 </div>
               </div>
-            ) : (
-              <section className="flex-1 overflow-hidden" aria-label="Chat History">
-                <div className="h-full px-1">
-                  <div className="h-full w-full">
-                    <ChatList
-                      messages={messages}
-                      onCopy={handleCopy}
-                      onRetry={handleRetry}
-                      onQuickstartFlow={handleQuickstartFlow}
-                      isLoading={isLoading}
-                      isQuickstartLoading={isQuickstartLoading}
-                      currentModel={model?.id}
-                    />
-                  </div>
-                </div>
-              </section>
-            )}
+            </section>
 
             {/* Input Section */}
             <section role="region" aria-label="Message Input" className="safe-bottom">

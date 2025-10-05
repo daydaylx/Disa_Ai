@@ -15,6 +15,8 @@ export interface GlassTileProps {
   className?: string;
   /** Disabled state */
   disabled?: boolean;
+  /** Test ID for e2e tests */
+  "data-testid"?: string;
 }
 
 export const GlassTile: React.FC<GlassTileProps> = ({
@@ -24,6 +26,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   onPress,
   className = "",
   disabled = false,
+  "data-testid": dataTestId,
 }) => {
   const baseClasses =
     "tile group flex min-h-[110px] flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 p-4 text-center transition-all duration-200";
@@ -48,6 +51,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
 
   return (
     <div
+      data-testid={dataTestId}
       className={cn(baseClasses, interactiveClasses, disabledClasses, className)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}

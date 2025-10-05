@@ -9,7 +9,7 @@ export async function setupTestEnvironment(page: Page) {
 
   // Set up API key before navigation
   await page.addInitScript(() => {
-    sessionStorage.setItem("disa:api-key", "mock-api-key-for-testing");
+    sessionStorage.setItem("openrouter-key", "mock-api-key-for-testing");
   });
 
   // Set up API mocking

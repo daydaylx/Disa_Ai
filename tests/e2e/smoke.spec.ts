@@ -13,7 +13,6 @@ test.describe("Smoke Tests", () => {
     await expect(target).toBeVisible();
 
     await expect(page.getByText("Was möchtest du heute erschaffen?")).toBeVisible();
-    await expect(page.getByText("Willkommen zurück")).toBeVisible();
     await expect(page.locator('[data-testid^="quickstart-"]').first()).toBeVisible();
   });
 

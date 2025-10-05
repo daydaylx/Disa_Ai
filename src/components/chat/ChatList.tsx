@@ -226,6 +226,7 @@ export function ChatList({
                   return (
                     <GlassTile
                       key={action.id}
+                      data-testid={`quickstart-${action.id}`}
                       icon={action.icon || "✨"}
                       title={action.title}
                       subtitle={action.subtitle}

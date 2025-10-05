@@ -1,4 +1,5 @@
 const CANDIDATES = [
+  "openrouter-key", // Standard key used by the app
   "disa_api_key",
   "openrouter_key",
   "OPENROUTER_API_KEY",
