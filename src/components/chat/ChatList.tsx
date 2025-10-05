@@ -110,18 +110,6 @@ export function ChatList({
       <div className="mx-auto flex h-full w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex-1 space-y-4 px-2 pt-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-left text-white backdrop-blur-lg">
-              <div className="space-y-2">
-                <h2 className="text-xl font-semibold text-white">
-                  Was möchtest du heute erschaffen?
-                </h2>
-                <p className="text-sm text-white/65">
-                  Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
-                  in Sekunden.
-                </p>
-              </div>
-            </div>
-
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {isLoadingQuickstarts ? (
                 // Loading skeleton
