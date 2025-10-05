@@ -9,9 +9,8 @@
   Cache-Control: public, max-age=0, must-revalidate
   Service-Worker-Allowed: /
 
-# All other files
+# All other files - Temporarily relaxed CSP for debugging
 /*
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.openrouter.ai https://openrouter.ai; manifest-src 'self'; worker-src 'self' blob:;
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   Referrer-Policy: no-referrer
   X-Content-Type-Options: nosniff
