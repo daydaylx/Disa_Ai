@@ -13,6 +13,7 @@ export interface GlobalMemory {
   preferences?: Record<string, unknown>;
   hobbies?: string[];
   background?: string;
+  summary?: string;
   lastUpdated: number;
 }
 

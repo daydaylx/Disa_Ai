@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
@@ -244,7 +244,7 @@ export default function ChatPageV2() {
   };
 
   // Calculate token count from all messages (currently unused but kept for future features)
-  const _tokenCount = messages.reduce((acc, msg) => acc + msg.content.length, 0);
+  // const _tokenCount = messages.reduce((acc, msg) => acc + msg.content.length, 0);
 
   return (
     <>
