@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Role } from "../../data/roles";
 import { getRoles, loadRoles } from "../../data/roles";
+import { useSettings } from "../../hooks/useSettings";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
@@ -20,8 +21,9 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
   const [allRoles, setAllRoles] = useState<Role[]>(() => getRoles());
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
 
-  // This should come from settings
-  const settings = { showNSFWContent: false };
+  const {
+    settings: { showNSFWContent },
+  } = useSettings();
 
   // Helper function to check if role contains NSFW content (wrapped in useCallback)
   const isNSFWRole = useCallback((role: Role): boolean => {
@@ -63,7 +65,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
     let roles = allRoles;
 
     // Filter by NSFW content
-    if (!settings.showNSFWContent) {
+    if (!showNSFWContent) {
       roles = roles.filter((p) => !isNSFWRole(p));
     }
 
@@ -83,7 +85,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
     }
 
     return roles;
-  }, [allRoles, selectedCategory, search, settings.showNSFWContent, isNSFWRole]);
+  }, [allRoles, selectedCategory, search, showNSFWContent, isNSFWRole]);
 
   const handleRoleSelect = (role: Role) => {
     onRoleChange(role);
