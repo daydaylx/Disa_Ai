@@ -97,31 +97,38 @@ export function ChatList({
   return (
     <div
       ref={scrollRef}
-      className={cn("scroll-smooth px-1 pb-20", className)}
+      className={cn("scroll-smooth px-1 pb-16", className)}
       role="log"
       aria-label="Chat messages"
       data-testid="chat-log"
     >
       <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
-          <div className="flex flex-col space-y-4 px-2 py-4 pb-40">
-            {/* Welcome Card - Large glassmorphism card like in screenshot */}
-            <div className="bg-white/7 relative rounded-3xl border border-white/20 p-6 shadow-[0_8px_30px_rgba(0,0,0,0.28)] backdrop-blur-md backdrop-saturate-150 before:pointer-events-none before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']">
+          <div className="flex flex-col gap-5 px-1 py-3">
+            <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-gradient-to-br from-[#2c1a65]/90 via-[#141235]/95 to-[#070615]/95 p-6 shadow-[0_20px_60px_rgba(14,6,45,0.55)] backdrop-blur-xl">
+              <div className="pointer-events-none absolute inset-x-0 -top-32 h-48 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_70%)]" />
+              <div
+                className="pointer-events-none absolute inset-0 opacity-30 mix-blend-screen"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(120% 120% at 110% 0%, rgba(20,104,255,0.45), transparent), radial-gradient(120% 120% at -10% 10%, rgba(236,72,153,0.55), transparent)",
+                }}
+              />
               <div className="relative">
-                <div className="bg-white/4 mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-white/70 backdrop-blur-sm">
+                <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-[0.2em] text-white/75 shadow-[0_3px_12px_rgba(58,30,120,0.35)]">
                   WILLKOMMEN ZURÜCK
-                </div>
-                <h1 className="mb-3 text-[24px] font-bold leading-tight text-white">
+                </span>
+                <h1 className="mb-3 text-[26px] font-semibold leading-tight text-white">
                   Was möchtest du heute erschaffen?
                 </h1>
-                <p className="text-[14px] leading-[1.5] text-white/80">
+                <p className="text-[14px] leading-relaxed text-white/85">
                   Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
                   in Sekunden.
                 </p>
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 px-1">
               {isLoadingQuickstarts ? (
                 // Loading skeleton
                 Array.from({ length: 3 }).map((_, index) => (
@@ -240,12 +247,12 @@ export function ChatList({
             </div>
 
             {/* Suggestion Buttons */}
-            <div className="space-y-2 px-2">
+            <div className="space-y-2 px-1">
               <button
                 onClick={() =>
                   onQuickstartFlow?.("Schreibe eine freundliche Antwort auf diese E-Mail", false)
                 }
-                className="w-full rounded-full border border-white/15 bg-white/5 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:bg-white/10 hover:text-white"
+                className="bg-white/8 hover:bg-white/12 w-full rounded-full border border-white/15 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:text-white"
               >
                 Schreibe eine freundliche Antwort auf diese E-Mail
               </button>
@@ -256,7 +263,7 @@ export function ChatList({
                     false,
                   )
                 }
-                className="w-full rounded-full border border-white/15 bg-white/5 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:bg-white/10 hover:text-white"
+                className="bg-white/8 hover:bg-white/12 w-full rounded-full border border-white/15 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:text-white"
               >
                 Fasse den heutigen Kundencall in Stichpunkten zusammen
               </button>
@@ -264,30 +271,11 @@ export function ChatList({
                 onClick={() =>
                   onQuickstartFlow?.("Entwirf eine Social-Media-Post-Idee zum Thema KI", false)
                 }
-                className="w-full rounded-full border border-white/15 bg-white/5 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:bg-white/10 hover:text-white"
+                className="bg-white/8 hover:bg-white/12 w-full rounded-full border border-white/15 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:text-white"
               >
                 Entwirf eine Social-Media-Post-Idee zum Thema KI
               </button>
             </div>
-
-            {/* Extra Spacer für Scroll-Test */}
-            <div className="h-96 w-full"></div>
-
-            {/* Weiterer Content zum Testen */}
-            <div className="space-y-4 px-2">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-white/60">Scroll-Test Content</p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-white/60">Mehr Content zum Scrollen</p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-white/60">Diese Seite sollte scrollbar sein</p>
-              </div>
-            </div>
-
-            {/* Noch mehr Platz */}
-            <div className="h-64 w-full"></div>
           </div>
         ) : (
           <div className="flex-1">

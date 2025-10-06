@@ -213,7 +213,7 @@ export function ChatComposer({
         <div className="mt-1 text-[12px] text-white/45">
           {isLoading
             ? "Antwort wird erstellt …"
-            : "Enter zum Senden, Shift+Enter für Zeilenumbruch"}
+            : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
         </div>
       </div>
     </div>

@@ -20,6 +20,11 @@ export interface GlassTileProps {
   gradient?: string;
 }
 
+// Safelist gradient utilities for Tailwind (keeps variants during build)
+const gradientSafelist =
+  "before:from-purple-500 before:via-fuchsia-500 before:to-cyan-400 before:from-orange-400 before:via-pink-500 before:to-purple-600 before:from-cyan-400 before:via-blue-500 before:to-indigo-600";
+void gradientSafelist;
+
 export const GlassTile: React.FC<GlassTileProps> = ({
   icon,
   title,
@@ -40,8 +45,17 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     transition-[transform,background,box-shadow] duration-200 ease-out`;
 
   // Gradient overlay for visual depth
+  const gradientOverlayClasses = gradient
+    ? gradient
+        .split(" ")
+        .map((token) => token.trim())
+        .filter(Boolean)
+        .map((token) => `before:${token}`)
+        .join(" ")
+    : "";
+
   const gradientClasses = gradient
-    ? `before:absolute before:inset-0 before:bg-gradient-to-br before:${gradient} before:opacity-60 before:rounded-2xl before:sm:rounded-3xl`
+    ? `bg-white/8 before:absolute before:inset-0 before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-70 before:rounded-2xl before:sm:rounded-3xl before:content-['']`
     : "bg-white/8";
 
   // Interactive classes for hover, active, and focus states
@@ -61,7 +75,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     >
       {/* Glass highlight effect */}
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/10 to-transparent"
+        className="from-white/12 pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b via-transparent to-transparent"
         style={{ clipPath: "inset(0 0 72% 0)" }}
       />
 
@@ -78,7 +92,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
         </div>
 
         {/* Quickstart Pill */}
-        <span className="bg-white/6 border-white/12 hover:bg-white/8 inline-flex h-7 items-center rounded-full border px-3 text-[12px] text-white/85 transition-colors duration-150">
+        <span className="bg-white/8 hover:bg-white/12 inline-flex h-7 items-center rounded-full border border-white/15 px-3 text-[12px] font-medium text-white/90 transition-colors duration-150">
           Schnellstart
         </span>
       </div>
