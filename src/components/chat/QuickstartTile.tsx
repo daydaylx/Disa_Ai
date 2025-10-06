@@ -80,6 +80,7 @@ export function QuickstartTile({
       data-testid={`quickstart-${action.id}`}
       className={cn(
         "tile group relative flex min-h-[120px] flex-col items-center justify-center p-4 text-center transition-all duration-200",
+        action.glow ?? "shadow-[0_20px_55px_rgba(8,7,24,0.45)]",
         isActive && "scale-95 opacity-70",
         isLoading && "pointer-events-none",
         !isLoading && "hover:scale-[1.02] active:scale-[0.98]",
@@ -96,9 +97,9 @@ export function QuickstartTile({
       {/* Gradient Background */}
       <div
         className={cn(
-          "absolute inset-0 rounded-2xl bg-gradient-to-br opacity-10 transition-opacity",
+          "absolute inset-0 rounded-2xl bg-gradient-to-br opacity-15 transition-opacity",
           action.gradient,
-          "group-hover:opacity-20",
+          "group-hover:opacity-25",
         )}
       />
 

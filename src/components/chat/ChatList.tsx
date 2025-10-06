@@ -9,6 +9,41 @@ import { GlassTile } from "../ui/GlassTile";
 import type { ChatMessageType } from "./ChatMessage";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
+const quickstartColorPresets = [
+  {
+    gradient: "from-amber-400/80 via-yellow-300/65 to-orange-400/70",
+    glow: "shadow-[0_25px_70px_rgba(250,204,21,0.28)]",
+  },
+  {
+    gradient: "from-sky-500/80 via-blue-500/65 to-indigo-500/70",
+    glow: "shadow-[0_25px_70px_rgba(56,189,248,0.32)]",
+  },
+  {
+    gradient: "from-emerald-400/75 via-teal-500/60 to-lime-500/60",
+    glow: "shadow-[0_25px_70px_rgba(34,197,94,0.3)]",
+  },
+  {
+    gradient: "from-orange-500/80 via-amber-500/65 to-rose-500/60",
+    glow: "shadow-[0_25px_70px_rgba(249,115,22,0.3)]",
+  },
+  {
+    gradient: "from-fuchsia-500/80 via-purple-500/65 to-violet-500/70",
+    glow: "shadow-[0_25px_70px_rgba(168,85,247,0.32)]",
+  },
+];
+
+function decorateQuickstarts(list: QuickstartAction[]): QuickstartAction[] {
+  return list.map((action, index) => {
+    const preset = quickstartColorPresets[index % quickstartColorPresets.length];
+    if (!preset) return action;
+    return {
+      ...action,
+      gradient: preset.gradient,
+      glow: preset.glow,
+    };
+  });
+}
+
 interface ChatListProps {
   messages: ChatMessageType[];
   isLoading?: boolean;
@@ -75,7 +110,7 @@ export function ChatList({
           setQuickstartError("Keine Schnellstarts verfügbar");
           console.warn("Quickstarts configuration is empty");
         } else {
-          setQuickstarts(actions);
+          setQuickstarts(decorateQuickstarts(actions));
         }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : "Unbekannter Fehler";
@@ -238,6 +273,7 @@ export function ChatList({
                       title={action.title}
                       subtitle={action.subtitle}
                       gradient={action.gradient}
+                      glowClassName={action.glow}
                       onPress={() => handleQuickstartClick(action)}
                       disabled={isQuickstartLoading && !isActive}
                     />

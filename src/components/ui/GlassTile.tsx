@@ -18,11 +18,13 @@ export interface GlassTileProps {
   "data-testid"?: string;
   /** Gradient background from quickstart config */
   gradient?: string;
+  /** Optional glow/shadow class for subtle colour accent */
+  glowClassName?: string;
 }
 
 // Safelist gradient utilities for Tailwind (keeps variants during build)
 const gradientSafelist =
-  "before:from-purple-500 before:via-fuchsia-500 before:to-cyan-400 before:from-orange-400 before:via-pink-500 before:to-purple-600 before:from-cyan-400 before:via-blue-500 before:to-indigo-600";
+  "before:from-amber-400/80 before:via-yellow-300/65 before:to-orange-400/70 before:from-sky-500/80 before:via-blue-500/65 before:to-indigo-500/70 before:from-emerald-400/75 before:via-teal-500/60 before:to-lime-500/60 before:from-orange-500/80 before:via-amber-500/65 before:to-rose-500/60 before:from-fuchsia-500/80 before:via-purple-500/65 before:to-violet-500/70";
 void gradientSafelist;
 
 export const GlassTile: React.FC<GlassTileProps> = ({
@@ -34,12 +36,12 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   disabled = false,
   "data-testid": dataTestId,
   gradient,
+  glowClassName,
 }) => {
   // Base classes for the glassmorphism effect and layout
   const baseClasses = `glass-card relative overflow-hidden w-full text-left
-    border border-white/20 rounded-2xl sm:rounded-3xl
+    border border-white/15 rounded-2xl sm:rounded-3xl
     backdrop-blur-md backdrop-saturate-150
-    shadow-[0_8px_30px_rgba(0,0,0,0.32)]
     px-4 py-4 sm:px-5 sm:py-5
     min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
     transition-[transform,background,box-shadow] duration-200 ease-out`;
@@ -55,8 +57,13 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     : "";
 
   const gradientClasses = gradient
-    ? `bg-white/8 before:absolute before:inset-0 before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-70 before:rounded-2xl before:sm:rounded-3xl before:content-['']`
-    : "bg-white/8";
+    ? `bg-white/12 before:absolute before:inset-0 before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-75 before:rounded-2xl before:sm:rounded-3xl before:content-['']`
+    : "bg-white/12";
+
+  const highlightClasses =
+    "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.28),_transparent_68%)] after:opacity-80 after:content-['']";
+
+  const glowClasses = glowClassName ?? "shadow-[0_20px_55px_rgba(8,7,24,0.45)]";
 
   // Interactive classes for hover, active, and focus states
   const interactiveClasses = onPress
@@ -69,7 +76,15 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   return (
     <button
       data-testid={dataTestId}
-      className={cn(baseClasses, gradientClasses, interactiveClasses, disabledClasses, className)}
+      className={cn(
+        baseClasses,
+        gradientClasses,
+        highlightClasses,
+        glowClasses,
+        interactiveClasses,
+        disabledClasses,
+        className,
+      )}
       onClick={onPress}
       disabled={disabled}
     >

@@ -5,6 +5,7 @@ export interface QuickstartAction {
   title: string;
   subtitle: string;
   gradient: string;
+  glow?: string;
   icon?: string;
   flowId: string;
   autosend: boolean;
@@ -20,6 +21,7 @@ const quickstartSchema = z.object({
   title: z.string().min(1),
   subtitle: z.string().min(1),
   gradient: z.string().min(1),
+  glow: z.string().optional(),
   icon: z.string().optional(),
   flowId: z.string().min(1),
   autosend: z.boolean(),
@@ -37,7 +39,8 @@ export const defaultQuickstarts: QuickstartAction[] = [
     id: "text-writer",
     title: "AI Text Writer",
     subtitle: "Skizziere blitzschnell perfekte Antworten",
-    gradient: "from-purple-500 via-fuchsia-500 to-cyan-400",
+    gradient: "from-amber-400/80 via-yellow-300/65 to-orange-400/70",
+    glow: "shadow-[0_25px_70px_rgba(250,204,21,0.28)]",
     icon: "edit-3",
     flowId: "writer.v1",
     autosend: false,
@@ -49,7 +52,8 @@ export const defaultQuickstarts: QuickstartAction[] = [
     id: "image-idea",
     title: "Bildidee",
     subtitle: "Beschreibe Visionen für dein nächstes Artwork",
-    gradient: "from-orange-400 via-pink-500 to-purple-600",
+    gradient: "from-sky-500/80 via-blue-500/65 to-indigo-500/70",
+    glow: "shadow-[0_25px_70px_rgba(56,189,248,0.32)]",
     icon: "image",
     flowId: "image.v1",
     autosend: false,
@@ -61,7 +65,8 @@ export const defaultQuickstarts: QuickstartAction[] = [
     id: "fact-check",
     title: "Faktencheck",
     subtitle: "Validiere Zahlen und Quellen in Sekunden",
-    gradient: "from-cyan-400 via-blue-500 to-indigo-600",
+    gradient: "from-emerald-400/75 via-teal-500/60 to-lime-500/60",
+    glow: "shadow-[0_25px_70px_rgba(34,197,94,0.3)]",
     icon: "search-check",
     flowId: "factcheck.v1",
     autosend: false,
