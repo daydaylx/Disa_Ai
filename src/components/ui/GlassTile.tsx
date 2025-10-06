@@ -3,9 +3,10 @@ import * as React from "react";
 import { cn } from "../../lib/cn";
 
 export interface GlassTileProps {
+  /** Icon element or component */
+  icon?: React.ReactNode;
   /** Tile title */
   title: string;
-  /** Optional subtitle or description */
   subtitle?: string;
   /** Click handler */
   onPress?: () => void;
@@ -20,6 +21,7 @@ export interface GlassTileProps {
 }
 
 export const GlassTile: React.FC<GlassTileProps> = ({
+  icon,
   title,
   subtitle,
   onPress,
@@ -82,11 +84,14 @@ export const GlassTile: React.FC<GlassTileProps> = ({
 
       {/* Layout nach neuer Spezifikation */}
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="text-[17px] font-medium text-white">{title}</div>
-          {subtitle && (
-            <div className="mt-1.5 text-[13.5px] leading-[1.55] text-white/70">{subtitle}</div>
-          )}
+        <div className="flex items-start gap-4">
+          {icon && <div className="pt-0.5 text-white/80">{icon}</div>}
+          <div>
+            <div className="text-[17px] font-medium text-white">{title}</div>
+            {subtitle && (
+              <div className="mt-1.5 text-[13.5px] leading-[1.55] text-white/70">{subtitle}</div>
+            )}
+          </div>
         </div>
 
         {/* Schnellstart-Pill nach neuer Spezifikation */}
