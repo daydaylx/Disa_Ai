@@ -2,8 +2,8 @@ import { nanoid } from "nanoid";
 import { useCallback, useReducer, useRef } from "react";
 
 import { chatStream } from "../api/openrouter";
-import type { ChatMessageType } from "../components/chat/ChatMessage";
 import { mapError } from "../lib/errors";
+import type { ChatMessageType } from "../types/chatMessage";
 
 export interface UseChatOptions {
   api?: string;
@@ -14,6 +14,7 @@ export interface UseChatOptions {
   onError?: (error: Error) => void;
   headers?: Record<string, string> | Headers;
   body?: object;
+  prepareMessages?: (history: ChatMessageType[]) => ChatMessageType[];
 }
 
 interface ChatState {
@@ -78,7 +79,17 @@ export function useChat({
   onError,
   headers: _headers,
   body,
+  prepareMessages: prepareMessagesOpt,
 }: UseChatOptions = {}) {
+  const prepareMessages = useCallback(
+    (history: ChatMessageType[]): ChatMessageType[] => {
+      if (prepareMessagesOpt) {
+        return prepareMessagesOpt([...history]);
+      }
+      return history;
+    },
+    [prepareMessagesOpt],
+  );
   const [state, dispatch] = useReducer(chatReducer, {
     messages: initialMessages,
     input: "",
@@ -102,11 +113,15 @@ export function useChat({
 
       // ATOMIC OPERATION: Capture current state before any async operations
       // This prevents race conditions by freezing the state at function call time
-      const capturedMessages = customMessages || [...state.messages];
+      const baseHistory: ChatMessageType[] = customMessages
+        ? [...customMessages]
+        : [...state.messages];
+      const requestHistory = prepareMessages(baseHistory);
 
       dispatch({ type: "ADD_MESSAGE", message: userMessage });
       dispatch({ type: "SET_LOADING", isLoading: true });
       dispatch({ type: "SET_ERROR", error: null });
+      dispatch({ type: "SET_INPUT", input: "" });
 
       // Create abort controller
       const controller = new AbortController();
@@ -120,7 +135,7 @@ export function useChat({
         let accumulatedContent = "";
 
         // Use captured messages to prevent race conditions during async operations
-        const apiMessages = [...capturedMessages, userMessage].map((msg) => ({
+        const apiMessages = [...requestHistory, userMessage].map((msg) => ({
           role: msg.role,
           content: msg.content,
         }));
@@ -207,21 +222,17 @@ export function useChat({
 
         if (mappedError.name === "AbortError") {
           // Remove the incomplete assistant message on abort
-          // Use captured messages to maintain consistency
-          if (assistantMessage) {
-            dispatch({
-              type: "SET_MESSAGES",
-              messages: [...capturedMessages, userMessage].filter(
-                (msg) => msg.id !== assistantMessage!.id,
-              ),
-            });
-          } else {
-            // If no assistant message was created, just keep user message
-            dispatch({
-              type: "SET_MESSAGES",
-              messages: [...capturedMessages, userMessage],
-            });
+          const baseWithUser: ChatMessageType[] = [...baseHistory, userMessage];
+          const assistantId = (assistantMessage as { id?: string } | null)?.id;
+          if (assistantId) {
+            const assistantIndex = (baseWithUser as Array<{ id: string }>).findIndex(
+              (msg) => msg.id === assistantId,
+            );
+            if (assistantIndex !== -1) {
+              baseWithUser.splice(assistantIndex, 1);
+            }
           }
+          dispatch({ type: "SET_MESSAGES", messages: baseWithUser });
         } else {
           dispatch({ type: "SET_ERROR", error: mappedError });
           if (onError) {
@@ -234,7 +245,7 @@ export function useChat({
         abortControllerRef.current = null;
       }
     },
-    [onResponse, onFinish, onError, body, state.messages], // Include state.messages dependency as required
+    [onResponse, onFinish, onError, body, state.messages, prepareMessages],
   );
 
   const stop = useCallback(() => {

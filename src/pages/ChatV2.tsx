@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
@@ -6,10 +6,15 @@ import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
+import { buildSystemPrompt } from "../config/promptStyles";
+import { getStyle, getUseRoleStyle } from "../config/settings";
+import { generateRoleStyleText } from "../config/styleEngine";
 import { useChat } from "../hooks/useChat";
 import { useMemory } from "../hooks/useMemory";
+import { useSettings } from "../hooks/useSettings";
 import { trackQuickstartCompleted } from "../lib/analytics/index";
 import { humanError } from "../lib/errors/humanError";
+import type { ChatMessageType } from "../types/chatMessage";
 import ModelSelectionSheet from "../ui/ModelSheet";
 import type { Model } from "../ui/types";
 
@@ -34,6 +39,98 @@ export default function ChatPageV2() {
   const { activeRole, typographyScale, borderRadius, accentColor } = useStudio();
   const isMountedRef = useRef(true);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const newChatTokenRef = useRef<number | null>(null);
+
+  const {
+    updateFromMessages,
+    updateSettings,
+    globalMemory,
+    settings: memorySettings,
+  } = useMemory();
+  const { settings: userSettings } = useSettings();
+
+  const memoryContext = useMemo(() => {
+    if (!memorySettings.enabled || !globalMemory) {
+      return null;
+    }
+
+    const segments: string[] = [];
+    if (globalMemory.summary) {
+      segments.push(globalMemory.summary);
+    }
+    if (globalMemory.name) {
+      segments.push(`Name: ${globalMemory.name}`);
+    }
+    if (globalMemory.background) {
+      segments.push(`Hintergrund: ${globalMemory.background}`);
+    }
+    if (Array.isArray(globalMemory.hobbies) && globalMemory.hobbies.length > 0) {
+      segments.push(`Hobbys: ${globalMemory.hobbies.join(", ")}`);
+    }
+    if (globalMemory.preferences && Object.keys(globalMemory.preferences).length > 0) {
+      segments.push(`Präferenzen: ${JSON.stringify(globalMemory.preferences)}`);
+    }
+
+    if (segments.length === 0) {
+      return null;
+    }
+
+    return `Merk dir folgende Nutzer-Informationen für künftige Antworten:\n${segments.join(
+      "\n\n",
+    )}`;
+  }, [globalMemory, memorySettings.enabled]);
+
+  const buildSystemContext = useCallback(
+    (history: ChatMessageType[]) => {
+      const context: ChatMessageType[] = [];
+      const styleKey = getStyle();
+      const useRoleStyle = getUseRoleStyle();
+      const basePrompt = buildSystemPrompt({
+        nsfw: userSettings.showNSFWContent,
+        style: styleKey,
+      });
+      const styleText = generateRoleStyleText(
+        activeRole?.id ?? null,
+        styleKey,
+        useRoleStyle,
+      ).trim();
+      const combinedBase = [basePrompt, styleText].filter(Boolean).join("\n\n").trim();
+      const timestamp = Date.now();
+
+      if (combinedBase) {
+        context.push({
+          id: "system-base",
+          role: "system",
+          content: combinedBase,
+          timestamp,
+        });
+      }
+
+      if (activeRole?.systemPrompt) {
+        context.push({
+          id: "system-role",
+          role: "system",
+          content: activeRole.systemPrompt,
+          timestamp,
+        });
+      }
+
+      if (memoryContext) {
+        context.push({
+          id: "system-memory",
+          role: "system",
+          content: memoryContext,
+          timestamp,
+        });
+      }
+
+      return [...context, ...history];
+    },
+    [activeRole, memoryContext, userSettings.showNSFWContent],
+  );
+
   const {
     messages,
     input,
@@ -56,37 +153,13 @@ export default function ChatPageV2() {
     body: {
       model: model?.id,
     },
+    prepareMessages: buildSystemContext,
   });
-
-  const location = useLocation();
-  const navigate = useNavigate();
-  const newChatTokenRef = useRef<number | null>(null);
-
-  const { updateFromMessages, updateSettings } = useMemory();
 
   // Auto-enable memory system in background
   useEffect(() => {
     void updateSettings({ enabled: true });
   }, [updateSettings]);
-
-  // Track if role system prompt has been added to prevent re-adding on chat reset
-  const [roleInitialized, setRoleInitialized] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Only add system prompt when role changes, not when chat is reset
-    if (activeRole && activeRole.id !== roleInitialized && messages.length === 0) {
-      // Add system message for role
-      void append({
-        role: "system",
-        content: activeRole.systemPrompt,
-      });
-      setRoleInitialized(activeRole.id);
-    }
-    // Reset tracking when role changes
-    else if (activeRole?.id !== roleInitialized) {
-      setRoleInitialized(null);
-    }
-  }, [activeRole, append, roleInitialized, messages.length]);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--font-scale", `${typographyScale}`);
@@ -204,7 +277,6 @@ export default function ChatPageV2() {
     stop();
     activeQuickstartRef.current = null;
     setIsQuickstartLoading(false);
-    setRoleInitialized(null);
     setMessages([]);
     setInput("");
 

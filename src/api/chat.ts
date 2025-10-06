@@ -1,4 +1,4 @@
-import type { ChatMessageType } from "../components/chat/ChatMessage";
+import type { ChatMessageType } from "../types/chatMessage";
 import { chatStream } from "./openrouter";
 
 export interface ChatRequest {

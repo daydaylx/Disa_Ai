@@ -6,9 +6,9 @@ import { getRoles } from "../../data/roles";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
+import type { ChatMessageType } from "../../types/chatMessage";
 import { GlassBackdrop } from "../ui/GlassBackdrop";
 import { GlassTile } from "../ui/GlassTile";
-import type { ChatMessageType } from "./ChatMessage";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
 type QuickstartTone = "warm" | "cool" | "fresh" | "sunset" | "violet" | "default";

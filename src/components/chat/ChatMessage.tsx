@@ -2,18 +2,12 @@ import { Bot, Copy, RotateCcw, User } from "lucide-react";
 import { useState } from "react";
 
 import { cn } from "../../lib/utils";
+import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
-export interface ChatMessageType {
-  id: string;
-  role: "user" | "assistant" | "system";
-  content: string;
-  timestamp: number;
-  tokens?: number;
-  model?: string;
-}
+export type { ChatMessageType } from "../../types/chatMessage";
 
 interface ChatMessageProps {
   message: ChatMessageType;

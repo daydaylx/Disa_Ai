@@ -2,8 +2,8 @@ import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { chatStream } from "../api/openrouter";
-import { type ChatMessageType } from "../components/chat/ChatMessage";
 import { useChat } from "../hooks/useChat";
+import type { ChatMessageType } from "../types/chatMessage";
 
 // Mock window object for test environment
 Object.defineProperty(window, "location", {

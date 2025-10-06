@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/cn";
-import type { ChatMessageType } from "./ChatMessage";
+import type { ChatMessageType } from "../../types/chatMessage";
 import { ChatMessage } from "./ChatMessage";
 
 interface VirtualizedMessageListProps {
