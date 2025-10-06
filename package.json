@@ -111,6 +111,9 @@
     "vite-plugin-pwa": "^1.0.3",
     "vitest": "^3.2.4"
   },
+  "overrides": {
+    "tmp": "0.2.5"
+  },
   "engines": {
     "node": ">=20.14.0 <24"
   },
