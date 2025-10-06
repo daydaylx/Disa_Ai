@@ -3,8 +3,6 @@ import * as React from "react";
 import { cn } from "../../lib/cn";
 
 export interface GlassTileProps {
-  /** Icon element or component */
-  icon?: React.ReactNode;
   /** Tile title */
   title: string;
   /** Optional subtitle or description */
@@ -22,7 +20,6 @@ export interface GlassTileProps {
 }
 
 export const GlassTile: React.FC<GlassTileProps> = ({
-  icon,
   title,
   subtitle,
   onPress,
@@ -93,9 +90,9 @@ export const GlassTile: React.FC<GlassTileProps> = ({
         </div>
 
         {/* Schnellstart-Pill nach neuer Spezifikation */}
-        <button className="bg-white/6 border-white/12 hover:bg-white/8 inline-flex h-7 items-center rounded-full border px-3 text-[12px] text-white/85 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-white/20">
+        <span className="bg-white/6 border-white/12 hover:bg-white/8 inline-flex h-7 items-center rounded-full border px-3 text-[12px] text-white/85 transition-colors duration-150">
           Schnellstart
-        </button>
+        </span>
       </div>
     </div>
   );
