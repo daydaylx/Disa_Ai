@@ -55,6 +55,37 @@ export default [
     },
   }, // Main source files
   {
+    files: ["functions/**/*.{ts,tsx}"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+      globals: {
+        ...globals.serviceworker,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+      "unused-imports": unused,
+      "simple-import-sort": sort,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      "no-undef": "off",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
+      "unused-imports/no-unused-imports": "error",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+    },
+  },
+  {
     files: ["src/**/*.{ts,tsx,js,jsx}"],
     languageOptions: {
       parser: tsParser,
