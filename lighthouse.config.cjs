@@ -55,10 +55,10 @@ module.exports = {
 
         // Accessibility requirements
         "color-contrast": "error", // Require sufficient contrast
-        "focus-traps": ["warn", { minScore: 0.9 }], // Warn when audit is applicable
-        "focusable-controls": ["warn", { minScore: 0.9 }],
-        "interactive-element-affordance": ["warn", { minScore: 0.9 }],
-        "logical-tab-order": ["warn", { minScore: 0.9 }],
+        "focus-traps": "warn", // Manual audit
+        "focusable-controls": "warn",
+        "interactive-element-affordance": "warn",
+        "logical-tab-order": "warn",
 
         // Security and best practices
         "is-on-https": "off", // Skip HTTPS check for localhost
