@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import BottomSheet from "../components/ui/BottomSheet";
+import { Input } from "../components/ui/input";
 import type { Model } from "./types";
 
 interface ModelSheetProps {
@@ -19,6 +20,22 @@ export default function ModelSheet({
   models,
 }: ModelSheetProps) {
   const [selectedId, setSelectedId] = useState(currentId);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeProvider, setActiveProvider] = useState<string>("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setSelectedId(currentId);
+  }, [currentId]);
+
+  useEffect(() => {
+    if (!open) return;
+    const timer = window.setTimeout(() => {
+      searchInputRef.current?.focus();
+      searchInputRef.current?.select();
+    }, 60);
+    return () => window.clearTimeout(timer);
+  }, [open]);
 
   const handleSelect = (model: Model) => {
     setSelectedId(model.id);
@@ -27,71 +44,197 @@ export default function ModelSheet({
   };
 
   // Group models by provider for better organization
-  const groupedModels = models.reduce(
-    (acc, model) => {
-      const provider = model.provider || "Weitere";
-      if (!acc[provider]) acc[provider] = [];
-      acc[provider].push(model);
-      return acc;
-    },
-    {} as Record<string, Model[]>,
+  const groupedModels = useMemo(() => {
+    return models.reduce(
+      (acc, model) => {
+        const provider = model.provider || "Weitere";
+        if (!acc[provider]) acc[provider] = [];
+        acc[provider].push(model);
+        return acc;
+      },
+      {} as Record<string, Model[]>,
+    );
+  }, [models]);
+
+  const providerEntries = useMemo(
+    () =>
+      Object.entries(groupedModels)
+        .map(
+          ([provider, items]) =>
+            [
+              provider,
+              [...items].sort((a, b) => (a.label ?? a.id).localeCompare(b.label ?? b.id)),
+            ] as const,
+        )
+        .sort(([a], [b]) => a.localeCompare(b, "de-DE")),
+    [groupedModels],
   );
+
+  useEffect(() => {
+    if (providerEntries.length === 0) {
+      setActiveProvider("");
+      return;
+    }
+
+    setActiveProvider((prev) => {
+      if (!prev || !providerEntries.find(([provider]) => provider === prev)) {
+        return providerEntries[0]?.[0] ?? prev;
+      }
+      return prev;
+    });
+  }, [providerEntries]);
+
+  useEffect(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return;
+
+    for (const [provider, providerModels] of providerEntries) {
+      const hasMatch = providerModels.some((model) => {
+        const haystack = [model.label ?? model.id, model.id, provider, ...(model.tags ?? [])]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(term);
+      });
+      if (hasMatch && provider !== activeProvider) {
+        setActiveProvider(provider);
+        break;
+      }
+    }
+  }, [activeProvider, providerEntries, searchTerm]);
 
   return (
     <BottomSheet open={open} title="Modell auswählen" onClose={onClose}>
       <div
         className="overflow-y-auto px-4 pb-4"
-        style={{ maxHeight: "calc(var(--vh, 100dvh) * 0.6)" }}
+        style={{ maxHeight: "calc(var(--vh, 100dvh) * 0.65)" }}
       >
-        <div className="space-y-6">
-          {Object.entries(groupedModels).map(([provider, providerModels]) => (
-            <div key={provider} className="space-y-3">
-              <h3 className="text-text-muted text-sm font-semibold uppercase tracking-wider">
-                {provider}
-              </h3>
-              <div className="space-y-2">
-                {providerModels.map((model) => (
+        <div className="bg-[#07080f]/92 sticky top-0 z-10 -mx-4 mb-4 space-y-3 px-4 pb-3 pt-2 backdrop-blur-lg">
+          <Input
+            ref={searchInputRef}
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Modelle durchsuchen"
+            className="glass h-11 rounded-xl bg-transparent px-3 py-2 text-sm placeholder:text-zinc-500 focus-visible:ring-2 focus-visible:ring-accent-500"
+          />
+
+          {providerEntries.length > 1 && (
+            <div
+              className="flex gap-2 overflow-x-auto pb-1"
+              role="tablist"
+              aria-label="Modelle nach Anbieter"
+            >
+              {providerEntries.map(([provider]) => {
+                const isActive = provider === activeProvider;
+                return (
                   <button
-                    key={model.id}
-                    onClick={() => handleSelect(model)}
-                    className={`w-full rounded-xl border p-4 text-left transition-all duration-200 ${
-                      selectedId === model.id
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border hover:bg-bg-elevated/80 bg-bg-elevated text-text-default"
+                    key={provider}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`shrink-0 rounded-full px-4 py-2 text-sm transition-colors ${
+                      isActive
+                        ? "glass-strong border-white/15 text-zinc-100"
+                        : "glass text-zinc-300 hover:text-zinc-100"
                     }`}
-                    data-testid={`model-option-${model.id}`}
+                    onClick={() => setActiveProvider(provider)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="min-w-0 flex-1">
-                        <h4 className="truncate font-medium">{model.label || model.id}</h4>
-                        <div className="text-text-muted mt-1 flex items-center gap-4 text-sm">
-                          {model.ctx && <span>{(model.ctx / 1000).toFixed(0)}k Token</span>}
-                          {model.pricing?.in !== undefined && (
-                            <span>
-                              ${model.pricing.in === 0 ? "Kostenlos" : `$${model.pricing.in}/1k`}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      {selectedId === model.id && (
-                        <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary">
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <path
-                              d="M10 3L4.5 8.5L2 6"
-                              stroke="white"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
+                    {provider}
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          ))}
+          )}
+        </div>
+
+        <div className="space-y-5">
+          {providerEntries.map(([provider, providerModels]) => {
+            const isVisible =
+              provider === activeProvider ||
+              (!activeProvider && providerEntries[0]?.[0] === provider);
+            if (!isVisible) return null;
+
+            const trimmedTerm = searchTerm.trim().toLowerCase();
+            const filteredModels = providerModels.filter((model) => {
+              if (!trimmedTerm) return true;
+              const haystack = [model.label ?? model.id, model.id, provider, ...(model.tags ?? [])]
+                .join(" ")
+                .toLowerCase();
+              return haystack.includes(trimmedTerm);
+            });
+
+            return (
+              <section key={provider} aria-label={`Modelle von ${provider}`} className="space-y-3">
+                <header className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-zinc-200">{provider}</h3>
+                  <span className="text-xs text-zinc-500">{filteredModels.length} Modelle</span>
+                </header>
+
+                <div className="space-y-2">
+                  {filteredModels.length === 0 ? (
+                    <div className="glass rounded-xl px-4 py-6 text-center text-sm text-zinc-300">
+                      Keine Treffer für „{searchTerm.trim()}“
+                    </div>
+                  ) : (
+                    filteredModels.map((model) => {
+                      const isSelected = selectedId === model.id;
+                      return (
+                        <button
+                          key={model.id}
+                          onClick={() => handleSelect(model)}
+                          className={`w-full rounded-xl px-4 py-3 text-left transition-all duration-200 ${
+                            isSelected
+                              ? "glass-strong border-white/15 text-zinc-100 shadow-[0_12px_32px_rgba(8,8,18,0.45)]"
+                              : "glass text-zinc-200 hover:bg-white/10"
+                          }`}
+                          data-testid={`model-option-${model.id}`}
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="min-w-0 flex-1">
+                              <h4 className="truncate text-sm font-medium text-zinc-100">
+                                {model.label || model.id}
+                              </h4>
+                              <div className="mt-1 flex flex-wrap items-center gap-3 text-[12px] text-zinc-400">
+                                {model.ctx && (
+                                  <span className="text-zinc-300">
+                                    {(model.ctx / 1000).toFixed(0)}k Token
+                                  </span>
+                                )}
+                                {model.pricing?.in !== undefined && (
+                                  <span className="text-zinc-300">
+                                    {model.pricing.in === 0
+                                      ? "Kostenlos"
+                                      : `$${model.pricing.in}/1k`}
+                                  </span>
+                                )}
+                                {model.tags.length > 0 && (
+                                  <span className="truncate text-zinc-500">
+                                    {model.tags.slice(0, 2).join(" • ")}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            {isSelected && (
+                              <div className="glass inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-zinc-900">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                  <path
+                                    d="M10 3L4.5 8.5L2 6"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              </section>
+            );
+          })}
         </div>
 
         {models.length === 0 && (

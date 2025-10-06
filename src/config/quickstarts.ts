@@ -7,6 +7,7 @@ export interface QuickstartAction {
   gradient: string;
   glow?: string;
   icon?: string;
+  tone?: "warm" | "cool" | "fresh" | "sunset" | "violet" | "default";
   flowId: string;
   autosend: boolean;
   persona?: string;
@@ -23,6 +24,7 @@ const quickstartSchema = z.object({
   gradient: z.string().min(1),
   glow: z.string().optional(),
   icon: z.string().optional(),
+  tone: z.enum(["warm", "cool", "fresh", "sunset", "violet", "default"] as const).optional(),
   flowId: z.string().min(1),
   autosend: z.boolean(),
   persona: z.string().optional(),
@@ -42,6 +44,7 @@ export const defaultQuickstarts: QuickstartAction[] = [
     gradient: "from-amber-400/80 via-yellow-300/65 to-orange-400/70",
     glow: "shadow-[0_25px_70px_rgba(250,204,21,0.28)]",
     icon: "edit-3",
+    tone: "warm",
     flowId: "writer.v1",
     autosend: false,
     persona: "creative_writer",
@@ -55,6 +58,7 @@ export const defaultQuickstarts: QuickstartAction[] = [
     gradient: "from-sky-500/80 via-blue-500/65 to-indigo-500/70",
     glow: "shadow-[0_25px_70px_rgba(56,189,248,0.32)]",
     icon: "image",
+    tone: "cool",
     flowId: "image.v1",
     autosend: false,
     prompt:
@@ -68,6 +72,7 @@ export const defaultQuickstarts: QuickstartAction[] = [
     gradient: "from-emerald-400/75 via-teal-500/60 to-lime-500/60",
     glow: "shadow-[0_25px_70px_rgba(34,197,94,0.3)]",
     icon: "search-check",
+    tone: "fresh",
     flowId: "factcheck.v1",
     autosend: false,
     prompt: "Ich möchte Fakten überprüfen. Was soll ich für dich recherchieren und verifizieren?",

@@ -13,29 +13,40 @@
 
 /**
  * Component layer styles
- * Provides reusable component classes like .tile, .card, etc.
+ * Provides reusable component classes like .glass, .tile, .card, etc.
  */
 
 @layer components {
-  /* Glass Tile Component - Original beautiful design with scale hover */
+  /* Base glass utilities aligned with design cheat sheet */
+  .glass {
+    @apply bg-white/6 outline-white/8 border border-white/10 text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline outline-1 backdrop-blur-md;
+  }
+
+  .glass-strong {
+    @apply glass relative;
+  }
+
+  .glass-strong::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+  }
+
+  /* Glass Tile Component */
   .tile {
-    @apply rounded-2xl p-4 shadow-xl backdrop-blur;
-    background: var(--glass-bg-soft);
-    border: 1px solid var(--glass-border-soft);
-    transition: all var(--transition-normal) ease;
+    @apply glass rounded-2xl p-4 transition-all duration-200 ease-out;
   }
 
   .tile--primary {
-    @apply shadow-2xl;
-    background: var(--glass-bg-medium);
-    border-color: var(--glass-border-medium);
+    @apply glass-strong shadow-2xl;
   }
 
-  /* Card Component - Alternative to tile */
+  /* Card Component */
   .card {
-    @apply rounded-lg p-4 backdrop-blur;
-    background: var(--glass-bg-soft);
-    border: 1px solid var(--glass-border-soft);
+    @apply glass rounded-lg p-4;
   }
 }
 

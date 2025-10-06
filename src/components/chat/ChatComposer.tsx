@@ -1,4 +1,4 @@
-import { Mic, RotateCcw, Send, Square, Zap } from "lucide-react";
+import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 // This component addresses the issue `04-composer-keyboard.md`
@@ -86,9 +86,13 @@ export function ChatComposer({
     }
   };
 
-  const shouldShowSend = !isLoading && value.trim() && canSend;
+  const trimmedValue = value.trim();
+  const shouldShowSend = !isLoading && trimmedValue && canSend;
   const shouldShowStop = isLoading && onStop;
   const shouldShowRetry = canRetry && !isLoading && onRetry;
+  const isEmpty = trimmedValue.length === 0;
+  const isComposerDisabled = disabled || isQuickstartLoading;
+  const showHelperState = !isLoading && (isComposerDisabled || isEmpty);
 
   // Suggestion handling removed to match new design
 
@@ -130,9 +134,10 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "relative flex items-end gap-2 rounded-2xl border border-white/15 bg-white/5 px-3.5 py-2.5 backdrop-blur-md backdrop-saturate-150 transition-colors",
-            isFocused && "border-white/25",
-            disabled && "cursor-not-allowed opacity-60",
+            "glass relative flex items-end gap-2 overflow-hidden rounded-2xl px-3.5 py-2.5 transition-colors",
+            isFocused && "border-white/20 outline-white/20",
+            !isComposerDisabled && isEmpty && "bg-white/8",
+            isComposerDisabled && "cursor-not-allowed border-dashed border-white/20 opacity-60",
           )}
         >
           <div className="flex-1">
@@ -144,12 +149,12 @@ export function ChatComposer({
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder={placeholder}
-              disabled={disabled || isQuickstartLoading}
+              disabled={isComposerDisabled}
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "max-h-[200px] min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-white/90 placeholder:text-white/40 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                isQuickstartLoading && "cursor-not-allowed text-white/80",
+                "max-h-[200px] min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                isQuickstartLoading && "cursor-not-allowed text-zinc-400",
               )}
               style={{ height: "44px" }}
             />
@@ -161,7 +166,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="min-h-touch-rec min-w-touch-rec rounded-full bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary"
+                className="bg-white/8 hover:bg-white/12 min-h-touch-rec min-w-touch-rec rounded-full border border-white/10 text-zinc-300 hover:text-zinc-100"
                 title="Letzte Antwort erneut anfordern"
               >
                 <RotateCcw className="h-5 w-5" />
@@ -173,7 +178,7 @@ export function ChatComposer({
                 onClick={handleStop}
                 size="icon"
                 variant="ghost"
-                className="min-h-touch-rec min-w-touch-rec rounded-full bg-red-500/20 text-red-200 hover:bg-red-500/30 hover:text-corporate-text-onAccent"
+                className="min-h-touch-rec min-w-touch-rec rounded-full border border-red-300/30 bg-red-500/20 text-red-100 hover:bg-red-500/30"
                 title="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
@@ -185,7 +190,7 @@ export function ChatComposer({
               <Button
                 onClick={handleSend}
                 size="icon"
-                className="relative min-h-touch-rec min-w-touch-rec rounded-full bg-gradient-to-br from-purple-500 to-sky-500 text-corporate-text-onAccent shadow-lg transition-transform hover:scale-105 active:scale-95"
+                className="relative min-h-touch-rec min-w-touch-rec rounded-full border border-white/15 bg-white/15 text-zinc-100 shadow-[0_12px_30px_rgba(8,8,18,0.45)] transition-transform hover:scale-105 active:scale-95"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 data-testid="composer-send"
@@ -199,21 +204,25 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="ghost"
-                className="bg-white/6 border-white/12 hover:bg-white/8 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-white/70 focus:ring-2 focus:ring-white/15"
+                className="glass inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-transparent text-zinc-400"
                 disabled={true}
-                title="Nachricht eingeben, um zu senden"
+                title="Nachricht erforderlich"
                 data-testid="composer-mic"
               >
-                <Mic className="h-5 w-5" />
+                <Send className="h-5 w-5" />
               </Button>
             )}
           </div>
         </div>
 
-        <div className="mt-1 text-[12px] text-white/45">
+        <div className="mt-1 text-[12px] text-zinc-500">
           {isLoading
             ? "Antwort wird erstellt …"
-            : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
+            : showHelperState
+              ? isComposerDisabled
+                ? "Eingabe gesperrt, bitte warte einen Moment."
+                : "Schreibe eine Nachricht, um zu starten."
+              : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
         </div>
       </div>
     </div>

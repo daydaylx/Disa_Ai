@@ -6,32 +6,55 @@ import { getRoles } from "../../data/roles";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
+import { GlassBackdrop } from "../ui/GlassBackdrop";
 import { GlassTile } from "../ui/GlassTile";
 import type { ChatMessageType } from "./ChatMessage";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
+
+const toneFallbackOrder = ["warm", "cool", "fresh", "sunset", "violet"] as const;
+type QuickstartTone = (typeof toneFallbackOrder)[number] | "default";
+
+const toneClassNameMap: Record<QuickstartTone, string> = {
+  warm: "hover:border-amber-200/60 focus-visible:ring-amber-300/40",
+  cool: "hover:border-sky-200/60 focus-visible:ring-sky-300/40",
+  fresh: "hover:border-emerald-200/60 focus-visible:ring-emerald-300/40",
+  sunset: "hover:border-orange-200/60 focus-visible:ring-orange-300/30",
+  violet: "hover:border-fuchsia-200/60 focus-visible:ring-fuchsia-300/40",
+  default: "hover:border-white/25 focus-visible:ring-white/30",
+};
 
 const quickstartColorPresets = [
   {
     gradient: "from-amber-400/80 via-yellow-300/65 to-orange-400/70",
     glow: "shadow-[0_25px_70px_rgba(250,204,21,0.28)]",
+    tone: "warm" as QuickstartTone,
   },
   {
     gradient: "from-sky-500/80 via-blue-500/65 to-indigo-500/70",
     glow: "shadow-[0_25px_70px_rgba(56,189,248,0.32)]",
+    tone: "cool" as QuickstartTone,
   },
   {
     gradient: "from-emerald-400/75 via-teal-500/60 to-lime-500/60",
     glow: "shadow-[0_25px_70px_rgba(34,197,94,0.3)]",
+    tone: "fresh" as QuickstartTone,
   },
   {
     gradient: "from-orange-500/80 via-amber-500/65 to-rose-500/60",
     glow: "shadow-[0_25px_70px_rgba(249,115,22,0.3)]",
+    tone: "sunset" as QuickstartTone,
   },
   {
     gradient: "from-fuchsia-500/80 via-purple-500/65 to-violet-500/70",
     glow: "shadow-[0_25px_70px_rgba(168,85,247,0.32)]",
+    tone: "violet" as QuickstartTone,
   },
 ];
+
+const formatQuickstartTag = (tag: string) => {
+  const normalised = tag.replace(/[-_]/g, " ");
+  return normalised.charAt(0).toUpperCase() + normalised.slice(1);
+};
 
 function applyColorPresets(list: QuickstartAction[]): QuickstartAction[] {
   return list.map((action, index) => {
@@ -41,6 +64,7 @@ function applyColorPresets(list: QuickstartAction[]): QuickstartAction[] {
       ...action,
       gradient: preset.gradient,
       glow: preset.glow,
+      tone: preset.tone,
     };
   });
 }
@@ -60,6 +84,7 @@ function createRoleQuickstarts(): QuickstartAction[] {
     persona: role.id,
     prompt: `Starte ein Gespräch als ${role.name}.`,
     tags: role.tags,
+    tone: "default",
   }));
 }
 
@@ -165,7 +190,7 @@ export function ChatList({
       <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-5 px-1 py-3">
-            <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-gradient-to-br from-[#2c1a65]/90 via-[#141235]/95 to-[#070615]/95 p-6 shadow-[0_20px_60px_rgba(14,6,45,0.55)] backdrop-blur-xl">
+            <div className="glass-strong relative overflow-hidden rounded-[28px] p-6">
               <div className="pointer-events-none absolute inset-x-0 -top-32 h-48 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_70%)]" />
               <div
                 className="pointer-events-none absolute inset-0 opacity-30 mix-blend-screen"
@@ -174,14 +199,15 @@ export function ChatList({
                     "radial-gradient(120% 120% at 110% 0%, rgba(20,104,255,0.45), transparent), radial-gradient(120% 120% at -10% 10%, rgba(236,72,153,0.55), transparent)",
                 }}
               />
+              <GlassBackdrop variant="panel" />
               <div className="relative">
-                <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-[0.2em] text-white/75 shadow-[0_3px_12px_rgba(58,30,120,0.35)]">
-                  WILLKOMMEN ZURÜCK
+                <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-zinc-200">
+                  Willkommen zurück
                 </span>
-                <h1 className="mb-3 text-[26px] font-semibold leading-tight text-white">
+                <h1 className="mb-3 text-[26px] font-semibold leading-tight text-zinc-100">
                   Was möchtest du heute erschaffen?
                 </h1>
-                <p className="text-[14px] leading-relaxed text-white/85">
+                <p className="text-[14px] leading-relaxed text-zinc-400">
                   Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
                   in Sekunden.
                 </p>
@@ -194,7 +220,7 @@ export function ChatList({
                 Array.from({ length: 3 }).map((_, index) => (
                   <div
                     key={index}
-                    className="tile flex min-h-[84px] animate-pulse flex-col justify-between rounded-2xl border border-white/15 bg-white/5 px-4 py-4"
+                    className="tile flex min-h-[84px] animate-pulse flex-col justify-between"
                   >
                     <div className="flex items-center justify-between">
                       <div className="h-5 w-32 rounded bg-white/20"></div>
@@ -288,8 +314,13 @@ export function ChatList({
                   </button>
                 </div>
               ) : (
-                quickstarts.map((action) => {
+                quickstarts.map((action, index) => {
                   const isActive = activeQuickstart === action.id;
+                  const tone = action.tone ?? toneFallbackOrder[index % toneFallbackOrder.length];
+                  const badgeLabel =
+                    action.tags && action.tags.length > 0
+                      ? formatQuickstartTag(action.tags[0])
+                      : "Schnellstart";
 
                   return (
                     <GlassTile
@@ -301,6 +332,9 @@ export function ChatList({
                       glowClassName={action.glow}
                       onPress={() => handleQuickstartClick(action)}
                       disabled={isQuickstartLoading && !isActive}
+                      className={toneClassNameMap[tone]}
+                      badgeLabel={badgeLabel}
+                      badgeTone={tone}
                     />
                   );
                 })
@@ -313,7 +347,7 @@ export function ChatList({
                 onClick={() =>
                   onQuickstartFlow?.("Schreibe eine freundliche Antwort auf diese E-Mail", false)
                 }
-                className="bg-white/8 hover:bg-white/12 w-full rounded-full border border-white/15 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:text-white"
+                className="glass w-full rounded-full px-6 py-3 text-[14px] text-zinc-200 transition-colors hover:bg-white/10 hover:text-zinc-100"
               >
                 Schreibe eine freundliche Antwort auf diese E-Mail
               </button>
@@ -324,7 +358,7 @@ export function ChatList({
                     false,
                   )
                 }
-                className="bg-white/8 hover:bg-white/12 w-full rounded-full border border-white/15 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:text-white"
+                className="glass w-full rounded-full px-6 py-3 text-[14px] text-zinc-200 transition-colors hover:bg-white/10 hover:text-zinc-100"
               >
                 Fasse den heutigen Kundencall in Stichpunkten zusammen
               </button>
@@ -332,7 +366,7 @@ export function ChatList({
                 onClick={() =>
                   onQuickstartFlow?.("Entwirf eine Social-Media-Post-Idee zum Thema KI", false)
                 }
-                className="bg-white/8 hover:bg-white/12 w-full rounded-full border border-white/15 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:border-white/25 hover:text-white"
+                className="glass w-full rounded-full px-6 py-3 text-[14px] text-zinc-200 transition-colors hover:bg-white/10 hover:text-zinc-100"
               >
                 Entwirf eine Social-Media-Post-Idee zum Thema KI
               </button>
@@ -355,7 +389,7 @@ export function ChatList({
           {!isSticking && (
             <button
               onClick={() => scrollToBottom()}
-              className="inline-flex animate-bounce items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70 backdrop-blur-lg transition hover:bg-white/10"
+              className="glass inline-flex animate-bounce items-center gap-1 rounded-full px-3 py-1 text-xs text-zinc-300 transition hover:bg-white/10"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -20,6 +20,10 @@ export interface GlassTileProps {
   gradient?: string;
   /** Optional glow/shadow class for subtle colour accent */
   glowClassName?: string;
+  /** Label for the pill badge in the top-right corner */
+  badgeLabel?: string;
+  /** Visual tone to derive accent colours */
+  badgeTone?: "warm" | "cool" | "fresh" | "sunset" | "violet" | "default";
 }
 
 // Safelist gradient utilities for Tailwind (keeps variants during build)
@@ -37,11 +41,42 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   "data-testid": dataTestId,
   gradient,
   glowClassName,
+  badgeLabel,
+  badgeTone = "default",
 }) => {
-  // Base classes for the glassmorphism effect and layout
-  const baseClasses = `glass-card relative overflow-hidden w-full text-left
-    border border-white/15 rounded-2xl sm:rounded-3xl
-    backdrop-blur-md backdrop-saturate-150
+  const toneStyles: Record<
+    NonNullable<GlassTileProps["badgeTone"]>,
+    { badge: string; stripe: string }
+  > = {
+    warm: {
+      badge: "border-amber-300/40 text-amber-200",
+      stripe: "from-amber-400/35 via-orange-400/25 to-transparent",
+    },
+    cool: {
+      badge: "border-sky-300/40 text-sky-200",
+      stripe: "from-sky-400/35 via-blue-400/25 to-transparent",
+    },
+    fresh: {
+      badge: "border-emerald-300/40 text-emerald-200",
+      stripe: "from-emerald-400/35 via-teal-400/25 to-transparent",
+    },
+    sunset: {
+      badge: "border-orange-300/40 text-orange-200",
+      stripe: "from-orange-400/30 via-amber-400/25 to-transparent",
+    },
+    violet: {
+      badge: "border-fuchsia-300/40 text-fuchsia-200",
+      stripe: "from-fuchsia-400/35 via-purple-400/25 to-transparent",
+    },
+    default: {
+      badge: "border-white/20 text-zinc-200",
+      stripe: "from-white/25 via-white/10 to-transparent",
+    },
+  };
+
+  const accents = toneStyles[badgeTone] ?? toneStyles.default;
+  const baseClasses = `glass relative overflow-hidden w-full text-left
+    rounded-2xl sm:rounded-3xl
     px-4 py-4 sm:px-5 sm:py-5
     min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
     transition-[transform,background,box-shadow] duration-200 ease-out`;
@@ -57,13 +92,13 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     : "";
 
   const gradientClasses = gradient
-    ? `bg-white/12 before:absolute before:inset-0 before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-75 before:rounded-2xl before:sm:rounded-3xl before:content-['']`
-    : "bg-white/12";
+    ? `before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-45 before:content-['']`
+    : "";
 
   const highlightClasses =
-    "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.28),_transparent_68%)] after:opacity-80 after:content-['']";
+    "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.22),_transparent_70%)] after:opacity-80 after:content-['']";
 
-  const glowClasses = glowClassName ?? "shadow-[0_20px_55px_rgba(8,7,24,0.45)]";
+  const glowClasses = glowClassName ?? "shadow-[0_16px_40px_rgba(5,8,18,0.45)]";
 
   // Interactive classes for hover, active, and focus states
   const interactiveClasses = onPress
@@ -88,27 +123,33 @@ export const GlassTile: React.FC<GlassTileProps> = ({
       onClick={onPress}
       disabled={disabled}
     >
-      {/* Glass highlight effect */}
       <div
-        className="from-white/12 pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b via-transparent to-transparent"
-        style={{ clipPath: "inset(0 0 72% 0)" }}
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-x-5 top-2 h-px rounded-full bg-gradient-to-r opacity-70",
+          accents.stripe,
+        )}
       />
-
       {/* Content Layout */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-4">
-          {icon && <div className="pt-0.5 text-white/80">{icon}</div>}
+          {icon && <div className="pt-0.5 text-zinc-300">{icon}</div>}
           <div>
-            <div className="text-[17px] font-medium text-white">{title}</div>
+            <div className="text-[17px] font-medium text-zinc-100">{title}</div>
             {subtitle && (
-              <div className="mt-1.5 text-[13.5px] leading-[1.55] text-white/70">{subtitle}</div>
+              <div className="mt-1.5 text-[13.5px] leading-[1.55] text-zinc-400">{subtitle}</div>
             )}
           </div>
         </div>
 
         {/* Quickstart Pill */}
-        <span className="bg-white/8 hover:bg-white/12 inline-flex h-7 items-center rounded-full border border-white/15 px-3 text-[12px] font-medium text-white/90 transition-colors duration-150">
-          Schnellstart
+        <span
+          className={cn(
+            "bg-white/8 inline-flex h-7 items-center rounded-full border px-3 text-[12px] font-medium text-zinc-200 transition-colors duration-150",
+            accents.badge,
+          )}
+        >
+          {badgeLabel ?? "Schnellstart"}
         </span>
       </div>
     </button>

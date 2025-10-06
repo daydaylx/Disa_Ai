@@ -5,6 +5,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { Button } from "../../components/ui";
+import { cn } from "../../lib/utils";
 import { useStudio } from "../state/StudioContext";
 
 function Header() {
@@ -39,12 +40,12 @@ function Header() {
               </div>
               <div>
                 <h1
-                  className="text-3xl font-semibold text-white drop-shadow-[0_4px_18px_rgba(147,51,234,0.45)]"
+                  className="text-3xl font-semibold text-zinc-100 drop-shadow-[0_4px_18px_rgba(147,51,234,0.35)]"
                   data-testid="app-title"
                 >
                   Disa AI
                 </h1>
-                <p className="mt-1 text-sm text-white/70">
+                <p className="mt-1 text-sm text-zinc-400">
                   {activeRole
                     ? `${activeRole.category ?? "Rolle"} • ${activeRole.name}`
                     : "Texte, Bilder und Ideen in Sekunden, direkt im Chat."}
@@ -79,28 +80,56 @@ function BottomNav() {
   ];
 
   return (
-    <nav className="sticky bottom-0 z-20 border-t border-white/10 bg-white/5 backdrop-blur-lg">
+    <nav className="sticky bottom-0 z-20 border-t border-white/10 bg-[#040513]/90 backdrop-blur-2xl">
       <div
-        className="mx-auto flex h-16 max-w-md items-center justify-around"
+        className="mx-auto w-full max-w-md px-4"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
-        {navigationItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            title={item.label}
-            className={({ isActive }) =>
-              `relative flex min-h-touch-rec min-w-touch-rec touch-manipulation flex-col items-center justify-center gap-1 rounded-xl p-2 text-xs font-medium transition-colors duration-150 ease-out ${
-                isActive
-                  ? "bg-white/8 border-white/12 rounded-xl border font-medium text-white"
-                  : "text-white/65 hover:text-white/85"
-              }`
-            }
-          >
-            <span className="flex h-6 w-6 items-center justify-center">{item.icon}</span>
-            <span className="text-[10px] leading-none">{item.label}</span>
-          </NavLink>
-        ))}
+        <div className="glass-strong flex items-center justify-between gap-2 rounded-2xl px-2 py-2 shadow-[0_18px_40px_rgba(5,8,18,0.45)]">
+          {navigationItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              title={item.label}
+              className={({ isActive }) =>
+                cn(
+                  "group relative flex min-h-touch-rec min-w-[94px] touch-manipulation flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 text-xs font-medium transition-colors duration-150 ease-out",
+                  isActive ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200",
+                )
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "via-accent-500/80 pointer-events-none absolute inset-x-2 top-1 h-0.5 rounded-full bg-gradient-to-r from-transparent to-transparent transition-opacity duration-200",
+                      isActive ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "flex h-6 w-6 items-center justify-center rounded-lg transition-colors",
+                      isActive
+                        ? "bg-white/12 text-zinc-100"
+                        : "bg-white/8 group-hover:bg-white/12 text-zinc-400 group-hover:text-zinc-100",
+                    )}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="text-[10px] leading-none tracking-[0.08em]">{item.label}</span>
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "bg-accent-500/70 pointer-events-none absolute inset-x-6 bottom-1 h-1 rounded-full blur-[2px] transition-opacity duration-200",
+                      isActive ? "opacity-90" : "opacity-0",
+                    )}
+                  />
+                </>
+              )}
+            </NavLink>
+          ))}
+        </div>
       </div>
     </nav>
   );
@@ -148,8 +177,16 @@ export function AppShell({ children }: AppShellProps) {
         className="relative z-10 px-4 pb-2"
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
       >
-        <div className="mx-auto max-w-xs text-center">
-          <BuildInfo className="opacity-60 transition-opacity hover:opacity-100" />
+        <div className="mx-auto w-full max-w-md">
+          <div className="glass-strong rounded-2xl px-5 py-4 text-center shadow-[0_16px_48px_rgba(5,8,18,0.35)]">
+            <p className="text-[13px] font-medium text-zinc-100">
+              Disa AI Beta • Experimentelle Oberfläche
+            </p>
+            <p className="mt-1 text-[12px] text-zinc-400">
+              Feedback hilft uns, die Experience kontinuierlich zu verfeinern.
+            </p>
+            <BuildInfo className="mt-3 inline-flex items-center justify-center gap-1 rounded-full bg-white/10 px-3 py-1 font-mono text-[11px] text-zinc-300 transition-opacity hover:opacity-100" />
+          </div>
         </div>
       </footer>
     </div>
