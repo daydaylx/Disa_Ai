@@ -8,7 +8,7 @@
     "prebuild": "node scripts/build-info.js",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
-    "preview": "vite preview",
+    "preview": "node ./scripts/run-preview.mjs",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:css": "node ./tools/check-css-hex.mjs",
