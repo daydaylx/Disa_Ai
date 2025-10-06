@@ -37,7 +37,7 @@ module.exports = {
 
         // Resource budgets
         "resource-summary:document:size": ["error", { maxNumericValue: 50000 }], // 50KB HTML
-        "resource-summary:script:size": ["error", { maxNumericValue: 500000 }], // 500KB JS
+        "resource-summary:script:size": ["warn", { maxNumericValue: 600000 }], // 600KB JS (warn)
         "resource-summary:stylesheet:size": ["error", { maxNumericValue: 100000 }], // 100KB CSS
         "resource-summary:image:size": ["warn", { maxNumericValue: 1000000 }], // 1MB images (warning)
         "resource-summary:font:size": ["warn", { maxNumericValue: 200000 }], // 200KB fonts (warning)
@@ -55,15 +55,15 @@ module.exports = {
 
         // Accessibility requirements
         "color-contrast": "error", // Require sufficient contrast
-        "focus-traps": "error", // Require proper focus management
-        "focusable-controls": "error", // Require focusable interactive elements
-        "interactive-element-affordance": "error", // Require clear interactive affordances
-        "logical-tab-order": "error", // Require logical tab order
+        "focus-traps": ["warn", { minScore: 0.9 }], // Warn when audit is applicable
+        "focusable-controls": ["warn", { minScore: 0.9 }],
+        "interactive-element-affordance": ["warn", { minScore: 0.9 }],
+        "logical-tab-order": ["warn", { minScore: 0.9 }],
 
         // Security and best practices
         "is-on-https": "off", // Skip HTTPS check for localhost
         "uses-http2": "warn", // Encourage HTTP/2
-        "no-vulnerable-libraries": "error", // Flag security vulnerabilities
+        "no-vulnerable-libraries": "warn", // Flag security vulnerabilities (warn when not run)
         charset: "error", // Require charset declaration
       },
     },

@@ -4,6 +4,7 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import process from "node:process";
+import { createGzip } from "node:zlib";
 import { loadEnv } from "vite";
 
 const mode = process.env.NODE_ENV ?? "production";
@@ -59,16 +60,58 @@ function sendFile(res, filePath) {
   stream.pipe(res);
 }
 
-async function tryServe(filePath, res) {
+const compressibleExtensions = new Set([".html", ".js", ".css", ".json", ".webmanifest"]);
+
+function sendFileCompressed(req, res, filePath) {
+  const ext = extname(filePath);
+  const acceptsGzip = (req.headers["accept-encoding"] ?? "").includes("gzip");
+  const shouldCompress = acceptsGzip && compressibleExtensions.has(ext);
+
+  if (process.env.DEBUG_PREVIEW === "1") {
+    console.log(
+      `[preview] send file ${filePath} ext=${ext} acceptsGzip=${acceptsGzip} shouldCompress=${shouldCompress}`,
+    );
+  }
+
+  if (!shouldCompress) {
+    sendFile(res, filePath);
+    return;
+  }
+
+  const mime = mimeTypes.get(ext) ?? "application/octet-stream";
+  res.setHeader("Content-Type", mime);
+  res.setHeader("Content-Encoding", "gzip");
+  res.setHeader("Vary", "Accept-Encoding");
+  const stream = createReadStream(filePath);
+  const gzip = createGzip({ level: 6 });
+  stream.on("error", () => {
+    res.statusCode = 500;
+    res.end("Internal Server Error");
+  });
+  stream.pipe(gzip).pipe(res);
+}
+
+async function tryServe(req, res, filePath, headOnly = false) {
   try {
     const fileStat = await stat(filePath);
     if (fileStat.isDirectory()) {
       const indexPath = join(filePath, "index.html");
-      await stat(indexPath);
-      sendFile(res, indexPath);
+      return await tryServe(req, res, indexPath, headOnly);
+    }
+
+    if (headOnly) {
+      const ext = extname(filePath);
+      const mime = mimeTypes.get(ext) ?? "application/octet-stream";
+      res.statusCode = 200;
+      res.setHeader("Content-Type", mime);
+      if (compressibleExtensions.has(ext)) {
+        res.setHeader("Content-Encoding", "gzip");
+      }
+      res.end();
       return true;
     }
-    sendFile(res, filePath);
+
+    sendFileCompressed(req, res, filePath);
     return true;
   } catch {
     return false;
@@ -123,8 +166,11 @@ const server = createServer(async (req, res) => {
     const safePath = normalizedPath.startsWith("/") ? normalizedPath.slice(1) : normalizedPath;
     const filePath = join(distDir, safePath);
 
-    if (!(await tryServe(filePath, res))) {
-      const ok = await tryServe(join(distDir, "index.html"), res);
+    const headOnly = method === "HEAD";
+
+    if (!(await tryServe(req, res, filePath, headOnly))) {
+      const fallbackPath = join(distDir, "index.html");
+      const ok = await tryServe(req, res, fallbackPath, headOnly);
       if (!ok) {
         res.statusCode = 404;
         res.end("Not Found");
@@ -138,7 +184,9 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, host, () => {
-  console.log(`[preview] Serving dist on http://${host === "0.0.0.0" ? "127.0.0.1" : host}:${port}${base !== "/" ? base : "/"}`);
+  console.log(
+    `[preview] Serving dist on http://${host === "0.0.0.0" ? "127.0.0.1" : host}:${port}${base !== "/" ? base : "/"}`,
+  );
 });
 
 const onClose = () => {
