@@ -13,7 +13,7 @@ function Header() {
   return (
     <header className="relative z-10 px-4 pb-6 pt-10">
       <div className="mx-auto max-w-md">
-        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-lg">
+        <div className="glass-2 bg-white/7 relative rounded-2xl border border-white/20 p-6 shadow-[0_8px_30px_rgba(0,0,0,0.28)] backdrop-blur-md backdrop-saturate-150 before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']">
           <div className="relative flex items-center justify-between">
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
@@ -37,7 +37,7 @@ function Header() {
                 <p className="mt-1 text-sm text-white/70">
                   {activeRole
                     ? `${activeRole.category ?? "Rolle"} • ${activeRole.name}`
-                    : "Deine kreative Copilotin für Texte, Bilder und Inspiration."}
+                    : "Texte, Bilder und Ideen in Sekunden, direkt im Chat."}
                 </p>
               </div>
             </div>
@@ -47,7 +47,7 @@ function Header() {
                 size="sm"
                 variant="ghost"
                 aria-label="Neues Gespräch"
-                className="inline-flex min-h-touch-rec min-w-touch-rec items-center gap-2 rounded-full border-0 bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent shadow-[0_18px_38px_rgba(168,85,247,0.4)] transition-transform hover:translate-y-[-1px] hover:bg-transparent hover:shadow-[0_20px_45px_rgba(168,85,247,0.55)]"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border-0 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 px-5 font-medium tracking-wide text-white shadow-[0_6px_24px_rgba(32,0,72,0.45)] transition-transform hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/20 active:scale-[0.98]"
               >
                 <PlusCircle className="h-4 w-4" /> Neu starten
               </Button>
@@ -68,7 +68,7 @@ function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-slate-950/80 backdrop-blur-lg">
+    <nav className="sticky bottom-0 z-20 border-t border-white/10 bg-white/5 backdrop-blur-lg">
       <div
         className="mx-auto flex h-16 max-w-md items-center justify-around"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
@@ -79,10 +79,10 @@ function BottomNav() {
             to={item.to}
             title={item.label}
             className={({ isActive }) =>
-              `relative flex min-h-touch-rec min-w-touch-rec touch-manipulation flex-col items-center justify-center gap-1 rounded-lg p-2 text-xs font-medium transition-colors duration-200 ${
+              `relative flex min-h-touch-rec min-w-touch-rec touch-manipulation flex-col items-center justify-center gap-1 rounded-xl p-2 text-xs font-medium transition-colors duration-150 ease-out ${
                 isActive
-                  ? "bg-white/10 text-corporate-accent-purpleHC"
-                  : "text-corporate-text-secondary hover:bg-white/5 hover:text-corporate-text-primary"
+                  ? "bg-white/8 border-white/12 rounded-xl border font-medium text-white"
+                  : "text-white/65 hover:text-white/85"
               }`
             }
           >
@@ -104,15 +104,22 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div
-      className="relative flex w-full flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-[#160037] to-[#060112] text-slate-200"
+      className="stage relative flex w-full flex-col overflow-hidden text-slate-200"
       style={{
         minHeight: "var(--vh, 100dvh)",
         height: "var(--vh, 100dvh)",
         maxHeight: "var(--vh, 100dvh)",
+        background:
+          "radial-gradient(1200px 700px at 20% -10%, #121327 0%, #0B0820 60%, #080714 100%)",
       }}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-[-30%] h-[60%] bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.35),_transparent_65%)]" />
-      <div className="pointer-events-none absolute inset-x-[-20%] bottom-[-35%] h-[55%] bg-[radial-gradient(circle_at_bottom,_rgba(59,130,246,0.25),_transparent_70%)]" />
+      {/* Noise overlay */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.02'/></svg>")`,
+        }}
+      />
 
       <Header />
 

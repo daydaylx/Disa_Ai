@@ -130,8 +130,8 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "relative flex items-end gap-2 rounded-2xl border border-white/10 bg-white/5 p-2 transition-colors",
-            isFocused && "border-purple-500/50",
+            "relative flex items-end gap-2 rounded-2xl border border-white/15 bg-white/5 px-3.5 py-2.5 backdrop-blur-md backdrop-saturate-150 transition-colors",
+            isFocused && "border-white/25",
             disabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -148,10 +148,10 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "max-h-[200px] min-h-[40px] resize-none border-0 bg-transparent p-2 text-base leading-relaxed text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0",
+                "max-h-[200px] min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-white/90 placeholder:text-white/40 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
                 isQuickstartLoading && "cursor-not-allowed text-white/80",
               )}
-              style={{ height: "40px" }}
+              style={{ height: "44px" }}
             />
           </div>
 
@@ -199,7 +199,7 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="ghost"
-                className="min-h-touch-rec min-w-touch-rec rounded-full bg-white/5 text-corporate-text-subtle"
+                className="bg-white/6 border-white/12 hover:bg-white/8 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-white/70 focus:ring-2 focus:ring-white/15"
                 disabled={true}
                 title="Nachricht eingeben, um zu senden"
                 data-testid="composer-mic"
@@ -210,13 +210,10 @@ export function ChatComposer({
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-white/50">
-          <div>
-            {isLoading
-              ? "Antwort wird erstellt …"
-              : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
-          </div>
-          {value.length > 0 && <div>{value.length} Zeichen</div>}
+        <div className="mt-1 text-[12px] text-white/45">
+          {isLoading
+            ? "Antwort wird erstellt …"
+            : "Enter zum Senden, Shift+Enter für Zeilenumbruch"}
         </div>
       </div>
     </div>

@@ -29,10 +29,10 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   "data-testid": dataTestId,
 }) => {
   const baseClasses =
-    "tile group flex min-h-[140px] flex-col items-start justify-between rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-6 text-left transition-all duration-300 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)]";
+    "tile group flex min-h-[84px] flex-col justify-between rounded-2xl border border-white/15 bg-white/5 px-4 py-4 text-left backdrop-blur-md backdrop-saturate-150 shadow-[0_8px_30px_rgba(0,0,0,0.28)] transition-transform duration-150 ease-out";
   const interactiveClasses =
     onPress && !disabled
-      ? "cursor-pointer hover:border-white/30 hover:bg-gradient-to-br hover:from-white/15 hover:to-white/8 hover:shadow-[0_12px_40px_rgba(255,255,255,0.1)] hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+      ? "cursor-pointer hover:bg-white/7 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
       : "";
   const disabledClasses = disabled ? "cursor-not-allowed opacity-50" : "";
 
@@ -59,16 +59,16 @@ export const GlassTile: React.FC<GlassTileProps> = ({
       tabIndex={onPress && !disabled ? 0 : undefined}
       aria-disabled={disabled}
     >
-      <div className="flex w-full flex-col">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white">{title}</h3>
-          <div className="text-right">
-            <button className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20">
+      <div className="flex w-full flex-col gap-1.5">
+        <div className="flex items-center justify-between">
+          <h3 className="text-[17px] font-medium text-white">{title}</h3>
+          <div className="shrink-0">
+            <span className="border-white/12 bg-white/6 rounded-full border px-3 py-1 text-[12px] text-white/85">
               Schnellstart
-            </button>
+            </span>
           </div>
         </div>
-        {subtitle ? <p className="text-sm leading-relaxed text-white/80">{subtitle}</p> : null}
+        {subtitle ? <p className="mt-1 text-[13.5px] text-white/65">{subtitle}</p> : null}
       </div>
     </div>
   );

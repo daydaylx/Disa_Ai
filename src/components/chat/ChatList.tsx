@@ -111,32 +111,32 @@ export function ChatList({
         {messages.length === 0 ? (
           <div className="flex-1 space-y-6 px-2 pt-6">
             {/* Welcome Back Section */}
-            <div className="mb-8 text-center">
-              <div className="mb-4 inline-block rounded-full bg-white/10 px-4 py-2 text-sm text-white/70">
+            <div className="mt-5 text-center md:mt-6">
+              <div className="bg-white/4 mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-white/70 backdrop-blur-sm">
                 WILLKOMMEN ZURÜCK
               </div>
-              <h1 className="mb-3 text-2xl font-bold text-white">
+              <h1 className="mb-2 text-[28px] font-semibold leading-tight text-white md:text-[32px]">
                 Was möchtest du heute erschaffen?
               </h1>
-              <p className="text-sm leading-relaxed text-white/70">
+              <p className="mb-6 mt-2 text-[14.5px] leading-[1.6] text-white/70">
                 Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
                 Sekunden.
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {isLoadingQuickstarts ? (
                 // Loading skeleton
                 Array.from({ length: 3 }).map((_, index) => (
                   <div
                     key={index}
-                    className="tile flex min-h-[140px] animate-pulse flex-col justify-between rounded-2xl border border-white/20 bg-white/5 p-6"
+                    className="tile flex min-h-[84px] animate-pulse flex-col justify-between rounded-2xl border border-white/15 bg-white/5 px-4 py-4"
                   >
-                    <div className="mb-4 flex items-center justify-between">
-                      <div className="h-6 w-32 rounded bg-white/20"></div>
-                      <div className="h-8 w-20 rounded-full bg-white/10"></div>
+                    <div className="flex items-center justify-between">
+                      <div className="h-5 w-32 rounded bg-white/20"></div>
+                      <div className="h-6 w-20 rounded-full bg-white/10"></div>
                     </div>
-                    <div className="h-4 w-full rounded bg-white/10"></div>
+                    <div className="mt-1 h-3 w-full rounded bg-white/10"></div>
                   </div>
                 ))
               ) : quickstartError ? (
