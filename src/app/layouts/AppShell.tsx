@@ -1,6 +1,6 @@
 import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
 import type { ReactNode } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -9,6 +9,16 @@ import { useStudio } from "../state/StudioContext";
 
 function Header() {
   const { activeRole } = useStudio();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNewChatClick = () => {
+    const timestamp = Date.now();
+    void navigate("/chat", {
+      state: { newChat: timestamp },
+      replace: location.pathname === "/chat",
+    });
+  };
 
   return (
     <header className="relative z-10 px-4 pb-6 pt-10">
@@ -48,6 +58,7 @@ function Header() {
                 variant="ghost"
                 aria-label="Neues Gespräch"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-full border-0 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 px-5 font-medium tracking-wide text-white shadow-[0_6px_24px_rgba(32,0,72,0.45)] transition-transform hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/20 active:scale-[0.98]"
+                onClick={handleNewChatClick}
               >
                 <PlusCircle className="h-4 w-4" /> Neu starten
               </Button>

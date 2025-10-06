@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { getQuickstartsWithFallback } from "../../config/quickstarts";
+import { getRoles } from "../../data/roles";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
@@ -32,7 +33,7 @@ const quickstartColorPresets = [
   },
 ];
 
-function decorateQuickstarts(list: QuickstartAction[]): QuickstartAction[] {
+function applyColorPresets(list: QuickstartAction[]): QuickstartAction[] {
   return list.map((action, index) => {
     const preset = quickstartColorPresets[index % quickstartColorPresets.length];
     if (!preset) return action;
@@ -42,6 +43,24 @@ function decorateQuickstarts(list: QuickstartAction[]): QuickstartAction[] {
       glow: preset.glow,
     };
   });
+}
+
+function createRoleQuickstarts(): QuickstartAction[] {
+  const roles = getRoles();
+  if (roles.length === 0) return [];
+
+  const shuffled = [...roles].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, quickstartColorPresets.length).map((role) => ({
+    id: `role-${role.id}`,
+    title: role.name,
+    subtitle: role.description ?? "Aktiviere diese Chat-Rolle und starte mit einer ersten Frage.",
+    gradient: "", // Wird durch applyColorPresets überschrieben
+    flowId: `role.${role.id}`,
+    autosend: false,
+    persona: role.id,
+    prompt: `Starte ein Gespräch als ${role.name}.`,
+    tags: role.tags,
+  }));
 }
 
 interface ChatListProps {
@@ -104,13 +123,19 @@ export function ChatList({
       try {
         setIsLoadingQuickstarts(true);
         setQuickstartError(null);
-        const actions = await getQuickstartsWithFallback();
+        const roleQuickstarts = applyColorPresets(createRoleQuickstarts());
 
-        if (actions.length === 0) {
-          setQuickstartError("Keine Schnellstarts verfügbar");
-          console.warn("Quickstarts configuration is empty");
+        if (roleQuickstarts.length > 0) {
+          setQuickstarts(roleQuickstarts);
         } else {
-          setQuickstarts(decorateQuickstarts(actions));
+          const actions = await getQuickstartsWithFallback();
+
+          if (actions.length === 0) {
+            setQuickstartError("Keine Schnellstarts verfügbar");
+            console.warn("Quickstarts configuration is empty");
+          } else {
+            setQuickstarts(applyColorPresets(actions));
+          }
         }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : "Unbekannter Fehler";

@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
@@ -40,6 +41,7 @@ export default function ChatPageV2() {
     append,
     reload,
     stop,
+    setMessages,
     isLoading,
     error: _error,
   } = useChat({
@@ -55,6 +57,10 @@ export default function ChatPageV2() {
       model: model?.id,
     },
   });
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const newChatTokenRef = useRef<number | null>(null);
 
   const { updateFromMessages, updateSettings } = useMemory();
 
@@ -191,6 +197,42 @@ export default function ChatPageV2() {
       setIsQuickstartLoading(false);
     }
   }, [isLoading, messages.length]);
+
+  const handleNewChat = useCallback(() => {
+    const hadConversation = messages.length > 0 || input.trim().length > 0;
+
+    stop();
+    activeQuickstartRef.current = null;
+    setIsQuickstartLoading(false);
+    setRoleInitialized(null);
+    setMessages([]);
+    setInput("");
+
+    if (hadConversation) {
+      toasts.push({
+        kind: "success",
+        title: "Neuer Chat gestartet",
+        message: "Chatverlauf wurde zurückgesetzt.",
+      });
+    }
+  }, [input, messages.length, setInput, setMessages, stop, toasts]);
+
+  useEffect(() => {
+    const state = (location.state as { newChat?: number } | null) ?? null;
+    const newChatValue = state?.newChat;
+
+    if (newChatValue && newChatValue !== newChatTokenRef.current) {
+      newChatTokenRef.current = newChatValue;
+      handleNewChat();
+
+      const nextState: Record<string, unknown> = { ...(state ?? {}) };
+      delete nextState.newChat;
+      void navigate(location.pathname, {
+        replace: true,
+        state: Object.keys(nextState).length > 0 ? nextState : null,
+      });
+    }
+  }, [handleNewChat, location.pathname, location.state, navigate]);
 
   // Track quickstart completion (Issue #71)
   useEffect(() => {
