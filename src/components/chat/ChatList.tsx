@@ -109,18 +109,34 @@ export function ChatList({
     >
       <div className="mx-auto flex h-full w-full max-w-md flex-col">
         {messages.length === 0 ? (
-          <div className="flex-1 space-y-4 px-2 pt-2">
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="flex-1 space-y-6 px-2 pt-6">
+            {/* Welcome Back Section */}
+            <div className="mb-8 text-center">
+              <div className="mb-4 inline-block rounded-full bg-white/10 px-4 py-2 text-sm text-white/70">
+                WILLKOMMEN ZURÜCK
+              </div>
+              <h1 className="mb-3 text-2xl font-bold text-white">
+                Was möchtest du heute erschaffen?
+              </h1>
+              <p className="text-sm leading-relaxed text-white/70">
+                Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
+                Sekunden.
+              </p>
+            </div>
+
+            <div className="space-y-4">
               {isLoadingQuickstarts ? (
                 // Loading skeleton
-                Array.from({ length: 4 }).map((_, index) => (
+                Array.from({ length: 3 }).map((_, index) => (
                   <div
                     key={index}
-                    className="tile flex min-h-[120px] animate-pulse flex-col items-center justify-center"
+                    className="tile flex min-h-[140px] animate-pulse flex-col justify-between rounded-2xl border border-white/20 bg-white/5 p-6"
                   >
-                    <div className="mb-2 h-8 w-8 rounded-full bg-white/20"></div>
-                    <div className="h-4 w-20 rounded bg-white/20"></div>
-                    <div className="mt-2 h-3 w-24 rounded bg-white/10"></div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="h-6 w-32 rounded bg-white/20"></div>
+                      <div className="h-8 w-20 rounded-full bg-white/10"></div>
+                    </div>
+                    <div className="h-4 w-full rounded bg-white/10"></div>
                   </div>
                 ))
               ) : quickstartError ? (
@@ -215,7 +231,6 @@ export function ChatList({
                     <GlassTile
                       key={action.id}
                       data-testid={`quickstart-${action.id}`}
-                      icon={action.icon || "✨"}
                       title={action.title}
                       subtitle={action.subtitle}
                       onPress={() => handleQuickstartClick(action)}

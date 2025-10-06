@@ -68,19 +68,6 @@ export const defaultQuickstarts: QuickstartAction[] = [
     prompt: "Ich möchte Fakten überprüfen. Was soll ich für dich recherchieren und verifizieren?",
     tags: ["fakten", "recherche", "validierung"],
   },
-  {
-    id: "email-helper",
-    title: "E-Mail Assistent",
-    subtitle: "Formuliere professionelle E-Mails mühelos",
-    gradient: "from-blue-500/70 via-indigo-500/70 to-purple-500/70",
-    icon: "mail",
-    flowId: "email.v1",
-    autosend: false,
-    persona: "email_professional",
-    prompt:
-      "Lass uns eine professionelle E-Mail verfassen. Worum geht es und wer ist der Empfänger?",
-    tags: ["email", "business", "kommunikation"],
-  },
 ];
 
 // Helper functions for loading and validation

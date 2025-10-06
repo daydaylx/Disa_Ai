@@ -25,11 +25,7 @@ interface ChatComposerProps {
   isQuickstartLoading?: boolean;
 }
 
-const suggestionPrompts = [
-  "Schreibe eine freundliche Antwort auf diese E-Mail",
-  "Fasse den heutigen Kundencall in Stichpunkten zusammen",
-  "Entwirf eine Social-Media-Post-Idee zum Thema KI",
-];
+// Suggestion prompts removed to match new design
 
 export function ChatComposer({
   value,
@@ -94,10 +90,7 @@ export function ChatComposer({
   const shouldShowStop = isLoading && onStop;
   const shouldShowRetry = canRetry && !isLoading && onRetry;
 
-  const handleSuggestionClick = (suggestion: string) => {
-    onChange(suggestion);
-    textareaRef.current?.focus();
-  };
+  // Suggestion handling removed to match new design
 
   return (
     <div
@@ -132,22 +125,6 @@ export function ChatComposer({
             {tokenCount !== undefined && maxTokens !== undefined && (
               <div>{Math.round((tokenCount / maxTokens) * 100)}% verwendet</div>
             )}
-          </div>
-        )}
-
-        {value.trim().length === 0 && (
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-white/50">Vorschläge:</span>
-            {suggestionPrompts.map((suggestion) => (
-              <button
-                key={suggestion}
-                type="button"
-                onClick={() => handleSuggestionClick(suggestion)}
-                className="min-h-touch-rec rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-corporate-text-secondary transition-colors hover:bg-white/10 hover:text-corporate-text-primary"
-              >
-                {suggestion}
-              </button>
-            ))}
           </div>
         )}
 
