@@ -11,8 +11,14 @@ import { GlassTile } from "../ui/GlassTile";
 import type { ChatMessageType } from "./ChatMessage";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
-const toneFallbackOrder = ["warm", "cool", "fresh", "sunset", "violet"] as const;
-type QuickstartTone = (typeof toneFallbackOrder)[number] | "default";
+type QuickstartTone = "warm" | "cool" | "fresh" | "sunset" | "violet" | "default";
+const toneFallbackOrder: ReadonlyArray<Exclude<QuickstartTone, "default">> = [
+  "warm",
+  "cool",
+  "fresh",
+  "sunset",
+  "violet",
+] as const;
 
 const toneClassNameMap: Record<QuickstartTone, string> = {
   warm: "hover:border-amber-200/60 focus-visible:ring-amber-300/40",
@@ -22,6 +28,9 @@ const toneClassNameMap: Record<QuickstartTone, string> = {
   violet: "hover:border-fuchsia-200/60 focus-visible:ring-fuchsia-300/40",
   default: "hover:border-white/25 focus-visible:ring-white/30",
 };
+
+const isQuickstartTone = (value: unknown): value is QuickstartTone =>
+  typeof value === "string" && value in toneClassNameMap;
 
 const quickstartColorPresets = [
   {
@@ -316,11 +325,14 @@ export function ChatList({
               ) : (
                 quickstarts.map((action, index) => {
                   const isActive = activeQuickstart === action.id;
-                  const tone = action.tone ?? toneFallbackOrder[index % toneFallbackOrder.length];
-                  const badgeLabel =
-                    action.tags && action.tags.length > 0
-                      ? formatQuickstartTag(action.tags[0])
-                      : "Schnellstart";
+                  const fallbackTone =
+                    toneFallbackOrder[index % toneFallbackOrder.length] ?? "default";
+                  let tone: QuickstartTone = fallbackTone;
+                  if (isQuickstartTone(action.tone)) {
+                    tone = action.tone;
+                  }
+                  const primaryTag = action.tags?.[0];
+                  const badgeLabel = primaryTag ? formatQuickstartTag(primaryTag) : "Schnellstart";
 
                   return (
                     <GlassTile
