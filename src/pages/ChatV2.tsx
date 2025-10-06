@@ -238,7 +238,7 @@ export default function ChatPageV2() {
 
   return (
     <>
-      <main className="relative z-10 flex h-full overflow-hidden pb-4">
+      <main className="relative z-10 mx-auto flex h-full max-w-screen-2xl overflow-hidden pb-4">
         <div className="flex h-full w-full">
           {/* Chat Area */}
           <div className="flex flex-1 flex-col overflow-hidden">

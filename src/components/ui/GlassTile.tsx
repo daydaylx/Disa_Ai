@@ -31,21 +31,25 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   "data-testid": dataTestId,
   gradient,
 }) => {
-  // Base GlassCard system nach Spezifikation
-  const baseClasses = `glass-card relative
-    bg-white/5 border border-white/15 rounded-2xl
+  // Responsive glassmorphism system mit verbesserter Skalierung
+  const baseClasses = `glass-card relative overflow-hidden
+    border border-white/20 rounded-2xl sm:rounded-3xl
     backdrop-blur-md backdrop-saturate-150
     shadow-[0_8px_30px_rgba(0,0,0,0.32)]
-    px-5 py-4 min-h-[84px]
-    transition-[transform,background] duration-150 ease-out`;
+    px-4 py-4 sm:px-5 sm:py-5
+    min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
+    transition-[transform,background,box-shadow] duration-200 ease-out`;
 
-  // Gradient-System für Farbvarianten
-  const gradientClasses = gradient ? `bg-gradient-to-tr ${gradient}` : "";
+  // Improved gradient system that works with glassmorphism
+  // Use a base layer with alpha transparency and overlay gradient
+  const gradientClasses = gradient
+    ? `before:absolute before:inset-0 before:bg-gradient-to-br before:${gradient} before:opacity-60 before:rounded-2xl before:sm:rounded-3xl`
+    : "bg-white/8";
 
-  // Interaktive Klassen nach neuer Spezifikation
+  // Enhanced interactive classes with better scaling
   const interactiveClasses =
     onPress && !disabled
-      ? "cursor-pointer hover:bg-white/7 hover:-translate-y-0.5 active:translate-y-[0.125rem] active:shadow-[0_4px_18px_rgba(0,0,0,0.26)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+      ? "cursor-pointer hover:scale-[1.02] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:border-white/25 active:scale-[0.98] active:shadow-[0_6px_20px_rgba(0,0,0,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       : "";
 
   const disabledClasses = disabled ? "cursor-not-allowed opacity-50" : "";

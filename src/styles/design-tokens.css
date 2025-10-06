@@ -75,15 +75,15 @@
   --blur-xl: 32px;
   --blur-2xl: 40px;
 
-  --glass-bg-subtle: rgba(255, 255, 255, 0.05);
-  --glass-bg-soft: rgba(255, 255, 255, 0.08);
-  --glass-bg-medium: rgba(255, 255, 255, 0.12);
-  --glass-bg-strong: rgba(255, 255, 255, 0.16);
+  --glass-bg-subtle: hsla(220, 25%, 95%, 0.05);
+  --glass-bg-soft: hsla(220, 25%, 95%, 0.08);
+  --glass-bg-medium: hsla(220, 20%, 90%, 0.12);
+  --glass-bg-strong: hsla(220, 20%, 90%, 0.18);
 
-  --glass-border-subtle: rgba(255, 255, 255, 0.08);
-  --glass-border-soft: rgba(255, 255, 255, 0.12);
-  --glass-border-medium: rgba(255, 255, 255, 0.16);
-  --glass-border-strong: rgba(255, 255, 255, 0.24);
+  --glass-border-subtle: hsla(220, 25%, 95%, 0.08);
+  --glass-border-soft: hsla(220, 25%, 95%, 0.12);
+  --glass-border-medium: hsla(220, 20%, 90%, 0.16);
+  --glass-border-strong: hsla(220, 20%, 90%, 0.24);
 
   --glass-glow-subtle: 0 0 20px rgba(34, 211, 238, 0.15);
   --glass-glow-soft: 0 0 30px rgba(34, 211, 238, 0.2);
