@@ -104,11 +104,9 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div
-      className="stage relative flex w-full flex-col overflow-hidden text-slate-200"
+      className="stage relative flex w-full flex-col text-slate-200"
       style={{
-        minHeight: "var(--vh, 100dvh)",
-        height: "var(--vh, 100dvh)",
-        maxHeight: "var(--vh, 100dvh)",
+        minHeight: "100vh",
         background:
           "radial-gradient(1200px 700px at 20% -10%, #121327 0%, #0B0820 60%, #080714 100%)",
       }}
@@ -121,12 +119,16 @@ export function AppShell({ children }: AppShellProps) {
         }}
       />
 
+      <Header />
+
       <main
         key={location.pathname}
-        className="animate-page-transition relative z-10 mx-auto w-full max-w-md flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4"
+        className="animate-page-transition relative z-10 mx-auto w-full max-w-md px-4 py-4"
       >
         {children}
       </main>
+
+      <BottomNav />
 
       <NetworkBanner />
 

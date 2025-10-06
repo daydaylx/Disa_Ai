@@ -97,14 +97,14 @@ export function ChatList({
   return (
     <div
       ref={scrollRef}
-      className={cn("flex-1 overflow-y-auto scroll-smooth px-1 pb-6", className)}
+      className={cn("scroll-smooth px-1 pb-20", className)}
       role="log"
       aria-label="Chat messages"
       data-testid="chat-log"
     >
-      <div className="mx-auto flex h-full w-full max-w-md flex-col">
+      <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
-          <div className="flex h-full flex-col space-y-4 px-2 py-4">
+          <div className="flex flex-col space-y-4 px-2 py-4 pb-40">
             {/* Welcome Card - Large glassmorphism card like in screenshot */}
             <div className="bg-white/7 relative rounded-3xl border border-white/20 p-6 shadow-[0_8px_30px_rgba(0,0,0,0.28)] backdrop-blur-md backdrop-saturate-150 before:pointer-events-none before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']">
               <div className="relative">
@@ -269,6 +269,25 @@ export function ChatList({
                 Entwirf eine Social-Media-Post-Idee zum Thema KI
               </button>
             </div>
+
+            {/* Extra Spacer für Scroll-Test */}
+            <div className="h-96 w-full"></div>
+
+            {/* Weiterer Content zum Testen */}
+            <div className="space-y-4 px-2">
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
+                <p className="text-white/60">Scroll-Test Content</p>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
+                <p className="text-white/60">Mehr Content zum Scrollen</p>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
+                <p className="text-white/60">Diese Seite sollte scrollbar sein</p>
+              </div>
+            </div>
+
+            {/* Noch mehr Platz */}
+            <div className="h-64 w-full"></div>
           </div>
         ) : (
           <div className="flex-1">
