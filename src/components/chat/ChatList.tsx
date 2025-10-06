@@ -97,34 +97,31 @@ export function ChatList({
   return (
     <div
       ref={scrollRef}
-      className={cn(
-        "flex-1 overflow-y-auto scroll-smooth px-1 pb-6",
-        "[mask-image:linear-gradient(to_bottom,transparent,black_6%,black_94%,transparent)]",
-        "[-webkit-mask-image:linear-gradient(to_bottom,transparent,black_6%,black_94%,transparent)]",
-        className,
-      )}
+      className={cn("flex-1 overflow-y-auto scroll-smooth px-1 pb-6", className)}
       role="log"
       aria-label="Chat messages"
       data-testid="chat-log"
     >
       <div className="mx-auto flex h-full w-full max-w-md flex-col">
         {messages.length === 0 ? (
-          <div className="flex-1 space-y-6 px-2 pt-6">
-            {/* Welcome Back Section */}
-            <div className="mt-5 text-center md:mt-6">
-              <div className="bg-white/4 mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-white/70 backdrop-blur-sm">
-                WILLKOMMEN ZURÜCK
+          <div className="flex h-full flex-col space-y-4 px-2 py-4">
+            {/* Welcome Card - Large glassmorphism card like in screenshot */}
+            <div className="bg-white/7 relative rounded-3xl border border-white/20 p-6 shadow-[0_8px_30px_rgba(0,0,0,0.28)] backdrop-blur-md backdrop-saturate-150 before:pointer-events-none before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']">
+              <div className="relative">
+                <div className="bg-white/4 mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-white/70 backdrop-blur-sm">
+                  WILLKOMMEN ZURÜCK
+                </div>
+                <h1 className="mb-3 text-[24px] font-bold leading-tight text-white">
+                  Was möchtest du heute erschaffen?
+                </h1>
+                <p className="text-[14px] leading-[1.5] text-white/80">
+                  Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
+                  in Sekunden.
+                </p>
               </div>
-              <h1 className="mb-2 text-[28px] font-semibold leading-tight text-white md:text-[32px]">
-                Was möchtest du heute erschaffen?
-              </h1>
-              <p className="mb-6 mt-2 text-[14.5px] leading-[1.6] text-white/70">
-                Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
-                Sekunden.
-              </p>
             </div>
 
-            <div className="space-y-3.5">
+            <div className="space-y-3">
               {isLoadingQuickstarts ? (
                 // Loading skeleton
                 Array.from({ length: 3 }).map((_, index) => (
@@ -233,12 +230,44 @@ export function ChatList({
                       data-testid={`quickstart-${action.id}`}
                       title={action.title}
                       subtitle={action.subtitle}
+                      gradient={action.gradient}
                       onPress={() => handleQuickstartClick(action)}
                       disabled={isQuickstartLoading && !isActive}
                     />
                   );
                 })
               )}
+            </div>
+
+            {/* Suggestion Buttons */}
+            <div className="space-y-2 px-2">
+              <button
+                onClick={() =>
+                  onQuickstartFlow?.("Schreibe eine freundliche Antwort auf diese E-Mail", false)
+                }
+                className="w-full rounded-full border border-white/15 bg-white/5 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:bg-white/10 hover:text-white"
+              >
+                Schreibe eine freundliche Antwort auf diese E-Mail
+              </button>
+              <button
+                onClick={() =>
+                  onQuickstartFlow?.(
+                    "Fasse den heutigen Kundencall in Stichpunkten zusammen",
+                    false,
+                  )
+                }
+                className="w-full rounded-full border border-white/15 bg-white/5 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:bg-white/10 hover:text-white"
+              >
+                Fasse den heutigen Kundencall in Stichpunkten zusammen
+              </button>
+              <button
+                onClick={() =>
+                  onQuickstartFlow?.("Entwirf eine Social-Media-Post-Idee zum Thema KI", false)
+                }
+                className="w-full rounded-full border border-white/15 bg-white/5 px-6 py-3 text-[14px] text-white/80 backdrop-blur-md transition-colors hover:bg-white/10 hover:text-white"
+              >
+                Entwirf eine Social-Media-Post-Idee zum Thema KI
+              </button>
             </div>
           </div>
         ) : (

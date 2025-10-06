@@ -121,17 +121,14 @@ export function AppShell({ children }: AppShellProps) {
         }}
       />
 
-      <Header />
-
       <main
         key={location.pathname}
-        className="animate-page-transition relative z-10 mx-auto w-full max-w-md flex-1 overflow-y-auto overflow-x-hidden px-4 pb-20"
+        className="animate-page-transition relative z-10 mx-auto w-full max-w-md flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4"
       >
         {children}
       </main>
 
       <NetworkBanner />
-      <BottomNav />
 
       {/* Footer mit Build-Info für Issue #81 */}
       <footer
