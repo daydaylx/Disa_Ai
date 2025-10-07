@@ -1,10 +1,11 @@
 import { ArrowRight, RotateCcw } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
 import { RoleCard, type RoleTint } from "../components/studio/RoleCard";
 import type { Role } from "../data/roles";
+import { loadRoles } from "../data/roles";
 
 type RoleVisualConfig = {
   tint: RoleTint;
@@ -64,7 +65,47 @@ function summariseRole(role: Role): string {
 
 function RolesTab() {
   const { roles, activeRole, setActiveRole } = useStudio();
+  const [roleList, setRoleList] = useState<Role[]>(roles);
+  const [isLoadingRoles, setIsLoadingRoles] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchRoles = async () => {
+      try {
+        setIsLoadingRoles(true);
+        const loaded = await loadRoles();
+        if (!mounted) return;
+        const merged = [...roles, ...loaded];
+        const uniqueById = merged.reduce<Role[]>((acc, entry) => {
+          if (!acc.some((item) => item.id === entry.id)) {
+            acc.push(entry);
+          }
+          return acc;
+        }, []);
+        setRoleList(uniqueById);
+      } catch (error) {
+        console.warn("Konnte zusätzliche Rollen nicht laden:", error);
+        setRoleList(roles);
+      } finally {
+        if (mounted) {
+          setIsLoadingRoles(false);
+        }
+      }
+    };
+
+    void fetchRoles();
+    return () => {
+      mounted = false;
+    };
+  }, [roles]);
+
+  const availableRoles = useMemo(() => {
+    if (activeRole && !roleList.some((role) => role.id === activeRole.id)) {
+      return [...roleList, activeRole];
+    }
+    return roleList;
+  }, [roleList, activeRole]);
 
   const orderedRoles = useMemo(() => {
     // Highlight the curated set first, keep remaining order for discoverability
@@ -75,7 +116,7 @@ function RolesTab() {
       "songwriter",
       "creative_writer",
     ];
-    return [...roles].sort((a, b) => {
+    return [...availableRoles].sort((a, b) => {
       const indexA = featuredOrder.indexOf(a.id);
       const indexB = featuredOrder.indexOf(b.id);
       if (indexA === -1 && indexB === -1) return 0;
@@ -83,7 +124,7 @@ function RolesTab() {
       if (indexB === -1) return -1;
       return indexA - indexB;
     });
-  }, [roles]);
+  }, [availableRoles]);
 
   const handleResetRole = () => {
     setActiveRole(null);
@@ -103,6 +144,11 @@ function RolesTab() {
       </header>
 
       <div className="grid grid-cols-1 gap-3 pb-8" data-testid="role-card-grid">
+        {isLoadingRoles && orderedRoles.length === 0 ? (
+          <div className="flex items-center justify-center rounded-2xl border border-white/[0.12] bg-white/[0.04] p-6 text-sm text-white/70">
+            Rollen werden geladen ...
+          </div>
+        ) : null}
         {orderedRoles.map((role) => {
           const visual = ROLE_TINTS[role.id] ?? { tint: DEFAULT_TINT };
           return (

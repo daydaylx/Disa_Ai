@@ -1,9 +1,9 @@
-import { Loader2, MessageCircle, PiggyBank, Search } from "lucide-react";
+import { Bot, Flame, Loader2, MessageCircle, PiggyBank, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
-import { RoleSelector } from "../components/chat/RoleSelector";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -30,7 +30,7 @@ function formatPrice(price?: number) {
 type LoadingState = "idle" | "loading" | "success" | "error" | "timeout";
 
 export default function ModelsPage() {
-  const { activeRole, setActiveRole } = useStudio();
+  const { activeRole } = useStudio();
   const [models, setModels] = useState<ModelEntry[]>([]);
   const [selected, setSelected] = useState<string>(
     getModelFallback() || "meta-llama/llama-3.3-70b-instruct:free",
@@ -41,7 +41,53 @@ export default function ModelsPage() {
   const [filters, setFilters] = useState<string[]>([]);
   const [showNsfw, setShowNsfw] = useState(false);
   const toasts = useToasts();
-  const budgetModelId = "mistralai/mistral-small-3.2-24b-instruct:free";
+  const recommendedChatModels = [
+    {
+      id: "meta-llama/llama-3.1-8b-instruct",
+      label: "Llama 3.1 8B",
+      provider: "OpenRouter",
+      priceIn: 0.02,
+      priceOut: 0.03,
+      description:
+        "Sehr guter Allrounder für Gespräche, stabil und vorhersehbar – mein Standardtipp für produktive Chats.",
+    },
+    {
+      id: "mistralai/mistral-7b-instruct",
+      label: "Mistral 7B",
+      provider: "OpenRouter",
+      priceIn: 0.028,
+      priceOut: 0.054,
+      description:
+        "Schlank und schnell – perfekt für Dialoge und leichtere Aufgaben, wenn es besonders flott gehen soll.",
+    },
+    {
+      id: "deepseek/deepseek-r1-distill-llama-8b",
+      label: "DeepSeek R1 Distill 8B",
+      provider: "OpenRouter",
+      priceIn: 0.04,
+      priceOut: 0.04,
+      description:
+        "Günstiges Reasoning-Light: angenehme Plauderei mit solider Struktur, symmetrische Kosten.",
+    },
+    {
+      id: "qwen/qwen-2.5-7b-instruct",
+      label: "Qwen 2.5 7B",
+      provider: "OpenRouter",
+      priceIn: 0.04,
+      priceOut: 0.1,
+      description:
+        "Preiswert und wortgewandt, oft etwas direkter Ton – ideal für schnelle Brainstorms.",
+    },
+    {
+      id: "meta-llama/llama-3.3-8b-instruct:free",
+      label: "Llama 3.3 8B (Free)",
+      provider: "OpenRouter",
+      priceIn: 0,
+      priceOut: 0,
+      description:
+        "Kostenloses Test-Pferd für lockere Chats. Wenn es hakt, wechsel auf Llama 3.1 8B.",
+    },
+  ] as const;
 
   const filterOptions = [
     { id: "free", label: "Kostenlos", count: models.filter((m) => m.pricing?.in === 0).length },
@@ -163,29 +209,28 @@ export default function ModelsPage() {
     return result;
   }, [models, search, filters, showNsfw]);
 
-  const budgetFriendlyModel = useMemo(
-    () => models.find((model) => model.id === budgetModelId),
-    [models, budgetModelId],
-  );
-
   const toggleFilter = (filterId: string) => {
     setFilters((prev) =>
       prev.includes(filterId) ? prev.filter((f) => f !== filterId) : [...prev, filterId],
     );
   };
 
-  const handleSelect = (model: ModelEntry) => {
-    setSelected(model.id);
+  const selectModelById = (modelId: string, label?: string) => {
+    setSelected(modelId);
     try {
-      localStorage.setItem("disa_model", model.id);
+      localStorage.setItem("disa_model", modelId);
     } catch {
       /* ignore */
     }
     toasts.push({
       kind: "success",
       title: "Modell gewählt",
-      message: `${model.label || model.id} wird für neue Gespräche verwendet.`,
+      message: `${label || modelId} wird für neue Gespräche verwendet.`,
     });
+  };
+
+  const handleSelect = (model: ModelEntry) => {
+    selectModelById(model.id, model.label);
   };
 
   // Render function for virtual list
@@ -272,17 +317,104 @@ export default function ModelsPage() {
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-1">
         <h1 className="text-2xl font-bold text-white" data-testid="models-title">
-          Modelle & Rollen
+          Modellkatalog
         </h1>
         <p className="text-sm leading-relaxed text-white/60">
-          Wähle ein KI-Modell und eine Rolle für optimale Ergebnisse
+          Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich jetzt im{" "}
+          <Link to="/roles" className="decoration-accent-300/60 text-accent-300 underline">
+            Rollen-Studio
+          </Link>{" "}
+          auswählen.
         </p>
       </header>
 
-      {/* Rollenauswahl Section */}
-      <section className="space-y-2">
-        <h2 className="text-sm font-semibold text-white/80">Chat-Rolle</h2>
-        <RoleSelector selectedRole={activeRole} onRoleChange={setActiveRole} />
+      <section className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-white/80 backdrop-blur-lg">
+        <div className="flex-1">
+          <p className="text-xs font-semibold uppercase tracking-wide text-white/60">
+            Aktive Rolle
+          </p>
+          <p className="mt-0.5 text-sm font-medium text-white">
+            {activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"}
+          </p>
+          <p className="text-xs text-white/60">
+            Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.
+          </p>
+        </div>
+        <Link
+          to="/roles"
+          className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+        >
+          Rollen öffnen
+        </Link>
+      </section>
+
+      <section className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-lg">
+        <div className="flex items-start gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
+            <PiggyBank className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wide text-emerald-300">
+                Budget-Empfehlungen
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-white/75">
+                <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                Gesprächsstark
+              </span>
+            </div>
+            <p className="text-sm text-white/70">
+              Diese Modelle liefern gute Gespräche zum kleinen Preis. Tippen, um das Modell direkt
+              zu übernehmen.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {recommendedChatModels.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => selectModelById(item.id, item.label)}
+              className={cn(
+                "group flex w-full flex-col gap-2 rounded-2xl border border-white/10 bg-white/5 p-4 text-left text-white/85 transition duration-150 hover:border-white/20 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+                selected === item.id && "border-emerald-300/60 bg-emerald-400/15 text-white",
+              )}
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Bot className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                  <span className="font-semibold">{item.label}</span>
+                </div>
+                <span className="bg-white/8 rounded-full border border-white/15 px-2 py-0.5 text-[11px] text-white/70">
+                  {item.provider}
+                </span>
+              </div>
+              <p className="text-sm text-white/70">{item.description}</p>
+              <div className="flex flex-wrap items-center gap-3 text-xs text-white/60">
+                <span>
+                  Eingabe:{" "}
+                  {item.priceIn === 0 ? "Kostenlos" : `$${item.priceIn.toFixed(3)} / 1M Tokens`}
+                </span>
+                <span>
+                  Ausgabe:{" "}
+                  {item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)} / 1M Tokens`}
+                </span>
+                {selected === item.id ? (
+                  <span className="rounded-full border border-emerald-300/40 bg-emerald-400/20 px-2 py-0.5 text-emerald-100">
+                    Aktiv
+                  </span>
+                ) : null}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <p className="flex items-center gap-2 rounded-xl bg-white/5 p-3 text-xs text-white/60">
+          <Flame className="h-4 w-4 text-orange-300" aria-hidden="true" />
+          Tipp: Temperature um ~0.6 halten – höher bedeutet mehr Kreativität, aber auch mehr
+          Halluzinationen.
+        </p>
       </section>
 
       {/* Modell-Suche Section */}
@@ -331,46 +463,6 @@ export default function ModelsPage() {
           </div>
         </div>
       </section>
-
-      {budgetFriendlyModel && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/90 backdrop-blur-lg">
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
-              <PiggyBank className="h-6 w-6" aria-hidden="true" />
-            </div>
-            <div className="flex-1 space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wide text-emerald-300">
-                  Budget-Tipp
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-white/75">
-                  <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                  Gesprächsstark
-                </span>
-              </div>
-              <h3 className="text-lg font-semibold text-white">{budgetFriendlyModel.label}</h3>
-              <p className="text-sm text-white/70">
-                Sehr gute Dialogqualität mit 24B Parametern bei null Kosten. Ideal für längere
-                Gespräche, Brainstorming oder strukturierte Antworten.
-              </p>
-              <div className="flex flex-wrap items-center gap-3 pt-2 text-sm text-white/60">
-                <span>Eingabe: {formatPrice(budgetFriendlyModel.pricing?.in)}</span>
-                <span>Ausgabe: {formatPrice(budgetFriendlyModel.pricing?.out)}</span>
-                {budgetFriendlyModel.ctx ? (
-                  <span>Kontext: {formatContext(budgetFriendlyModel.ctx)}</span>
-                ) : null}
-              </div>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleSelect(budgetFriendlyModel)}
-            className="mt-4 w-full rounded-full border border-emerald-300/30 bg-emerald-400/10 py-2.5 text-sm font-semibold text-emerald-200 transition duration-150 hover:border-emerald-200/60 hover:bg-emerald-400/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200/60"
-          >
-            Dieses Modell verwenden
-          </button>
-        </div>
-      )}
 
       {loadingState === "loading" ? (
         <div className="flex flex-1 items-center justify-center">
