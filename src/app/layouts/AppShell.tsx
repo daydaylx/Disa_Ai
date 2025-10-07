@@ -72,10 +72,9 @@ function Header() {
 }
 
 function BottomNav() {
-  // TODO: Change to /roles when the route is available
   const navigationItems = [
     { to: "/chat", label: "Chat", icon: <MessageSquare /> },
-    { to: "/models", label: "Rollen", icon: <Users /> },
+    { to: "/roles", label: "Rollen", icon: <Users /> },
     { to: "/settings", label: "Einstellungen", icon: <Settings /> },
   ];
 

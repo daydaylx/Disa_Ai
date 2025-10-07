@@ -8,12 +8,25 @@ import { AppShell } from "./layouts/AppShell";
 const ChatPage = lazy(() => import("../pages/ChatV2"));
 const ModelsPage = lazy(() => import("../pages/Models"));
 const SettingsPage = lazy(() => import("../pages/Settings"));
+const RolesPage = lazy(() => import("../pages/Studio"));
 
 const router = createBrowserRouter(
   [
     {
       path: "/",
       element: <Navigate to="/chat" replace />,
+    },
+    {
+      path: "/roles",
+      element: (
+        <AppShell>
+          <ErrorBoundary>
+            <Suspense fallback={null}>
+              <RolesPage />
+            </Suspense>
+          </ErrorBoundary>
+        </AppShell>
+      ),
     },
     {
       path: "/chat",

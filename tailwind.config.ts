@@ -210,6 +210,10 @@ export default {
     "mt-safe-top",
     "ml-safe-left",
     "mr-safe-right",
+    {
+      pattern:
+        /(from|via|to)-(sky|yellow|emerald|cyan|orange|rose|violet)-(100|200|300|400|500|600)/,
+    },
   ],
   plugins: [],
 } satisfies Config;
