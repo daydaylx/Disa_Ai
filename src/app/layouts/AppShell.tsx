@@ -1,4 +1,4 @@
-import { Bot, Compass, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
+import { Bot, Compass, Cpu, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
@@ -74,6 +74,7 @@ function Header() {
 function BottomNav() {
   const navigationItems = [
     { to: "/chat", label: "Chat", icon: <MessageSquare /> },
+    { to: "/models", label: "Modelle", icon: <Cpu /> },
     { to: "/roles", label: "Rollen", icon: <Users /> },
     { to: "/settings", label: "Einstellungen", icon: <Settings /> },
   ];

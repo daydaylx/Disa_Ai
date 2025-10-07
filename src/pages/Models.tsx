@@ -1,4 +1,4 @@
-import { Loader2, Search } from "lucide-react";
+import { Loader2, MessageCircle, PiggyBank, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { getModelFallback } from "../api/openrouter";
@@ -41,6 +41,7 @@ export default function ModelsPage() {
   const [filters, setFilters] = useState<string[]>([]);
   const [showNsfw, setShowNsfw] = useState(false);
   const toasts = useToasts();
+  const budgetModelId = "mistralai/mistral-small-3.2-24b-instruct:free";
 
   const filterOptions = [
     { id: "free", label: "Kostenlos", count: models.filter((m) => m.pricing?.in === 0).length },
@@ -161,6 +162,11 @@ export default function ModelsPage() {
 
     return result;
   }, [models, search, filters, showNsfw]);
+
+  const budgetFriendlyModel = useMemo(
+    () => models.find((model) => model.id === budgetModelId),
+    [models, budgetModelId],
+  );
 
   const toggleFilter = (filterId: string) => {
     setFilters((prev) =>
@@ -325,6 +331,46 @@ export default function ModelsPage() {
           </div>
         </div>
       </section>
+
+      {budgetFriendlyModel && (
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/90 backdrop-blur-lg">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
+              <PiggyBank className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wide text-emerald-300">
+                  Budget-Tipp
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-white/75">
+                  <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                  Gesprächsstark
+                </span>
+              </div>
+              <h3 className="text-lg font-semibold text-white">{budgetFriendlyModel.label}</h3>
+              <p className="text-sm text-white/70">
+                Sehr gute Dialogqualität mit 24B Parametern bei null Kosten. Ideal für längere
+                Gespräche, Brainstorming oder strukturierte Antworten.
+              </p>
+              <div className="flex flex-wrap items-center gap-3 pt-2 text-sm text-white/60">
+                <span>Eingabe: {formatPrice(budgetFriendlyModel.pricing?.in)}</span>
+                <span>Ausgabe: {formatPrice(budgetFriendlyModel.pricing?.out)}</span>
+                {budgetFriendlyModel.ctx ? (
+                  <span>Kontext: {formatContext(budgetFriendlyModel.ctx)}</span>
+                ) : null}
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleSelect(budgetFriendlyModel)}
+            className="mt-4 w-full rounded-full border border-emerald-300/30 bg-emerald-400/10 py-2.5 text-sm font-semibold text-emerald-200 transition duration-150 hover:border-emerald-200/60 hover:bg-emerald-400/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200/60"
+          >
+            Dieses Modell verwenden
+          </button>
+        </div>
+      )}
 
       {loadingState === "loading" ? (
         <div className="flex flex-1 items-center justify-center">
