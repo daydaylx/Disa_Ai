@@ -1,14 +1,10 @@
 # Disa AI
 
-<!--
-**Hinweis für den Entwickler:** Bitte ersetze `daydaylx/Disa_Ai` in den Badge-URLs, falls das Repository öffentlich wird.
--->
-
 [![Build & Test CI](https://img.shields.io/github/actions/workflow/status/daydaylx/Disa_Ai/ci.yml?branch=main&label=Build%20%26%20Test&style=for-the-badge)](https://github.com/daydaylx/Disa_Ai/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/npm/v/disa-ai?label=version&style=for-the-badge)](package.json)
 [![License](https://img.shields.io/badge/license-Private-blue?style=for-the-badge)](#-lizenz)
 
-**Disa AI** ist eine professionelle, mobile-first AI-Chat Progressive Web App (PWA). Die Anwendung ist speziell für Smartphones optimiert, setzt auf ein klares Glassmorphism-Dark-Design und legt großen Wert auf Sicherheit, Performance und eine konsistente User Experience.
+**Disa AI** ist eine professionelle, mobile-first AI-Chat Progressive Web App (PWA), die mit React, Vite, TypeScript und Tailwind CSS entwickelt wurde. Die Anwendung ist speziell für eine optimale Darstellung auf mobilen Endgeräten (insbesondere Android) konzipiert und zeichnet sich durch ein modernes Glassmorphism-Design, eine robuste Codebasis und eine auf Sicherheit und Performance ausgerichtete Architektur aus.
 
 ---
 
@@ -16,111 +12,168 @@
 
 - [✨ Features](#-features)
   - [Kernfunktionen](#kernfunktionen)
-  - [Mobile-First UX](#mobile-first-ux)
+  - [Mobile-First User Experience](#mobile-first-user-experience)
   - [Design & UI](#design--ui)
-  - [Sicherheit & Architektur](#sicherheit--architektur)
+  - [Sicherheit & Datenschutz](#sicherheit--datenschutz)
 - [🛠️ Tech Stack](#-tech-stack)
-- [🏛️ Projektstruktur & Architektur](#️-projektstruktur--architektur)
-- [🚀 Installation & Entwicklung](#-installation--entwicklung)
+- [🏛️ Projektarchitektur](#️-projektarchitektur)
+- [🚀 Erste Schritte](#-erste-schritte)
+  - [Voraussetzungen](#voraussetzungen)
+  - [Installation](#installation)
+- [📜 Verfügbare Skripte](#-verfügbare-skripte)
 - [🧪 Qualitätssicherung & Testing](#-qualitätssicherung--testing)
-- [☁️ Deployment & Caching](#️-deployment--caching)
+  - [Unit-Tests](#unit-tests)
+  - [End-to-End-Tests](#end-to-end-tests)
+  - [Code-Qualität](#code-qualität)
+- [☁️ Deployment](#️-deployment)
 - [🤝 Contributing](#-contributing)
+- [🔒 Sicherheit](#-sicherheit)
 - [📜 Lizenz](#-lizenz)
 
 ## ✨ Features
 
 ### Kernfunktionen
 
-- **Flexible AI-Integration**: OpenRouter-Anbindung mit Streaming (NDJSON) für zahlreiche Sprachmodelle.
-- **Modell-Katalog**: Filterbare Ansicht (Preis, Kontextgröße, Provider) zur schnellen Modellauswahl.
-- **Rollensystem**: Vordefinierte Rollen (z. B. E-Mail-Profi, Kreativ-Autor) plus extern geladene Templates; NSFW-Rollen lassen sich per Einstellung ein-/ausblenden.
-- **Gedächtnis-Funktion (optional)**: Benutzerpräferenzen werden lokal gespeichert und als „system“-Kontext an das Modell übermittelt, ohne den Chatverlauf zu fluten.
-- **PWA & Offline-Modus**: Installierbare App mit Service-Worker-Caching und Offline-Fallbacks.
+- **Flexible AI-Integration**: Anbindung an OpenRouter.ai mit Unterstützung für NDJSON-Streaming, was eine breite Palette von Sprachmodellen zugänglich macht.
+- **Dynamischer Modell-Katalog**: Eine filterbare Ansicht ermöglicht die schnelle Auswahl von Modellen nach Kriterien wie Preis, Kontextfenster oder Anbieter.
+- **Erweitertes Rollensystem**: Vordefinierte und extern geladene Persona-Templates (z.B. "E-Mail-Profi", "Kreativ-Autor") passen das Verhalten der KI an. NSFW-Rollen können in den Einstellungen aktiviert werden.
+- **Kontext-Gedächtnis (Optional)**: Die App kann sich Benutzerpräferenzen merken und diese als Systemkontext bei jeder Anfrage mitsenden, ohne den sichtbaren Chatverlauf zu überladen.
+- **Progressive Web App (PWA)**: Vollständig installierbar mit Offline-Fähigkeiten dank eines Service Workers, der Caching-Strategien wie Network-First und Stale-While-Revalidate nutzt.
 
-### Mobile-First UX
+### Mobile-First User Experience
 
-- **Primärer Viewport 390×844** (iPhone 12/13/14) – Layout reagiert dennoch auf größere Displays.
-- **Keyboard-safe Composer**: `VisualViewport` & `100dvh` verhindern, dass Eingabefelder von der Tastatur verdeckt werden.
-- **Touch-Optimierung**: Mindestens `48×48px` für alle Touch-Ziele (WCAG 2.1).
-- **Safe-Area-Unterstützung**: Korrekte Insets für iOS-Notches und Android-Gesten.
+- **Optimiert für Smartphones**: Das primäre Design zielt auf einen Viewport von 390x844px (iPhone 12/13/14), ist aber vollständig responsiv.
+- **Tastatur-sicheres Layout**: Durch die Nutzung von `VisualViewport` und `100dvh` wird verhindert, dass das Eingabefeld von der virtuellen Tastatur verdeckt wird.
+- **Barrierefreiheit**: Alle interaktiven Elemente haben eine Mindestgröße von 48x48px, um die WCAG 2.1-Richtlinien für Touch-Ziele zu erfüllen.
+- **Safe-Area-Unterstützung**: Das Layout berücksichtigt die "Notch" bei iPhones und die Gestensteuerung bei Android-Geräten.
 
 ### Design & UI
 
-- **Dark-Mode only**: Gedämpfte Farbpalette, optimiert für OLED-Displays.
-- **Glassmorphism**: Konsistente `glass`-/`glass-strong`-Utilities für transparente Paneele.
-- **Design Tokens**: TypeScript-basierte Token sorgen für konsistente Farben, Typografie und Abstände.
+- **Konsistenter Dark Mode**: Eine sorgfältig ausgewählte, augenschonende Farbpalette, die für OLED-Displays optimiert ist.
+- **Glassmorphism-Effekte**: Wiederverwendbare `glass`- und `glass-strong`-Utilities sorgen für ein durchgängiges, modernes Design mit transparenten Ebenen.
+- **Design-Token-System**: Farben, Typografie, Abstände und Radien sind als TypeScript-basierte Design-Tokens in `src/styles/design-tokens.ts` definiert und werden über Tailwind CSS konsistent angewendet.
 
-### Sicherheit & Architektur
+### Sicherheit & Datenschutz
 
-- **Client-Schlüsselverwaltung**: API Keys werden ausschließlich in `sessionStorage` gehalten.
-- **Strikte Header**: CSP, HSTS, `Permissions-Policy` & Co. minimieren Risiken.
-- **System-Kontext außerhalb des Chat-Logs**: Rollen- und Memory-Prompts werden beim Senden injiziert, erscheinen aber nicht in der UI – weniger Rauschen, mehr Übersicht.
+- **Client-seitige Schlüsselverwaltung**: API-Schlüssel werden ausschließlich im `sessionStorage` des Browsers gespeichert und bei Beendigung der Sitzung automatisch gelöscht.
+- **Strikte Content Security Policy (CSP)**: Eine umfassende CSP, die in `public/_headers` konfiguriert ist, minimiert das Risiko von XSS-Angriffen, indem sie unsichere Skripte blockiert und Ressourcen auf vertrauenswürdige Quellen beschränkt.
+- **Getrennter Systemkontext**: Rollen- und Gedächtnis-Prompts werden zur Laufzeit injiziert und erscheinen nicht im Chat-Log, was für eine klare und aufgeräumte Benutzeroberfläche sorgt.
 
 ## 🛠️ Tech Stack
 
-| Kategorie            | Technologien                                                       |
-| -------------------- | ------------------------------------------------------------------ |
-| **Framework**        | React 19, TypeScript 5.9, Vite 7                                   |
-| **Styling**          | Tailwind CSS, Radix Primitives, Lucide Icons, clsx, tailwind-merge |
-| **Routing / Schema** | React Router v6, Zod                                               |
-| **PWA / Offline**    | Vite PWA Plugin (Workbox)                                          |
-| **Testing**          | Vitest, Happy DOM, MSW, Playwright, @axe-core/playwright           |
-| **Codequalität**     | ESLint, Prettier, Husky, lint-staged                               |
-| **Deployment**       | Cloudflare Pages                                                   |
+| Kategorie           | Technologien                                                              |
+| ------------------- | ------------------------------------------------------------------------- |
+| **Framework**       | React 19, TypeScript 5.9, Vite 7                                          |
+| **Styling**         | Tailwind CSS, Radix UI Primitives, Lucide Icons, `clsx`, `tailwind-merge` |
+| **State & Routing** | React Router v6, Zod (für Schema-Validierung)                             |
+| **PWA / Offline**   | Vite PWA Plugin (Workbox)                                                 |
+| **Unit-Testing**    | Vitest, Happy DOM, MSW (Mock Service Worker)                              |
+| **E2E-Testing**     | Playwright, @axe-core/playwright (für Accessibility-Tests)                |
+| **Code-Qualität**   | ESLint, Prettier, Husky, lint-staged                                      |
+| **Deployment**      | Cloudflare Pages                                                          |
 
-## 🏛️ Projektstruktur & Architektur
+## 🏛️ Projektarchitektur
+
+Das Projekt folgt einer klaren Ordnerstruktur, die auf der Trennung von Zuständigkeiten basiert.
 
 ```
 src/
-├── api/          # OpenRouter u. ä.
-├── app/          # Router, Layouts, Kontext
-├── components/   # UI-Komponenten
-├── config/       # Modelle, Prompt-Stile, Settings
-├── hooks/        # Business-Logik (useChat, useMemory, …)
-├── lib/          # Utilities
-├── pages/        # Routen / Screens
-├── styles/       # Tailwind-Layer, Tokens
-└── types/        # Gemeinsame Typdefinitionen
+├── api/          # API-Aufrufe (z.B. OpenRouter)
+├── app/          # App-Setup: Router, Layouts, globale Zustände
+├── components/   # Wiederverwendbare UI-Komponenten
+├── config/       # Konfiguration: Modelle, Prompts, Feature-Flags, Einstellungen
+├── data/         # Daten-Adapter und Transformationen
+├── hooks/        # Zentrale Business-Logik (z.B. useChat, useMemory)
+├── lib/          # Allgemeine Hilfsfunktionen
+├── pages/        # Ansichten für einzelne Routen (z.B. Chat, Einstellungen)
+├── services/     # Hintergrunddienste
+├── state/        # Zustandsmanagement
+├── styles/       # Globale Stile und Tailwind-Layer
+└── types/        # Globale Typdefinitionen
 ```
 
-**Routen**: `/chat`, `/models`, `/settings`
+## 🚀 Erste Schritte
 
-## 🚀 Installation & Entwicklung
+### Voraussetzungen
 
-1. Repository klonen & Abhängigkeiten installieren
-   ```bash
-   git clone https://github.com/daydaylx/Disa_Ai.git
-   cd Disa_Ai
-   npm ci
-   ```
-2. Lokalen Dev-Server starten
-   ```bash
-   npm run dev
-   ```
-   Server läuft auf `http://localhost:5173`.
+- Node.js: `^20.14.0` (wie in `package.json` und `.nvmrc` definiert)
+- npm (oder ein kompatibler Paketmanager)
+
+### Installation
+
+1.  **Repository klonen:**
+
+    ```bash
+    git clone https://github.com/daydaylx/Disa_Ai.git
+    cd Disa_Ai
+    ```
+
+2.  **Abhängigkeiten installieren:**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Entwicklungsserver starten:**
+    ```bash
+    npm run dev
+    ```
+    Die Anwendung ist anschließend unter `http://localhost:5173` erreichbar.
+
+## 📜 Verfügbare Skripte
+
+| Befehl              | Beschreibung                                                                                       |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| `npm run dev`       | Startet den Vite-Entwicklungsserver.                                                               |
+| `npm run build`     | Erstellt einen optimierten Produktions-Build im `dist`-Ordner.                                     |
+| `npm run preview`   | Startet einen lokalen Server, um den Produktions-Build zu testen.                                  |
+| `npm run typecheck` | Überprüft das gesamte Projekt auf TypeScript-Fehler.                                               |
+| `npm run lint`      | Führt ESLint aus, um Code-Stil-Probleme zu finden.                                                 |
+| `npm run format`    | Überprüft den Code mit Prettier auf Formatierungsfehler.                                           |
+| `npm run test:unit` | Führt alle Vitest-Unit-Tests einmalig aus.                                                         |
+| `npm run test:e2e`  | Führt alle Playwright-End-to-End-Tests aus.                                                        |
+| `npm run verify`    | Führt `typecheck`, `lint` und `test:unit` nacheinander aus. Ein wichtiger Befehl vor jedem Commit. |
 
 ## 🧪 Qualitätssicherung & Testing
 
-| Befehl              | Beschreibung                            |
-| ------------------- | --------------------------------------- |
-| `npm run verify`    | Typecheck + Lint + Unit-Tests           |
-| `npm run lint`      | ESLint (`--ext .ts,.tsx`)               |
-| `npm run test:unit` | Vitest (headless)                       |
-| `npm run test:e2e`  | Playwright End-to-End (mobile Viewport) |
-| `npm run build`     | Produktionsbuild (Vite)                 |
+Das Projekt verfügt über eine umfassende Test-Suite, um eine hohe Code-Qualität sicherzustellen.
 
-## ☁️ Deployment & Caching
+### Unit-Tests
 
-- **Cloudflare Pages** deployt automatisch beim Push auf `main`.
-- HTML: `no-store`; Assets mit Hash: `max-age=31536000`.
-- Service Worker: `network-first` für HTML, `stale-while-revalidate` für Assets.
+- **Framework**: [Vitest](https://vitest.dev/) mit [Happy DOM](https://github.com/capricorn86/happy-dom) für eine schnelle und browser-ähnliche Testumgebung.
+- **Mocking**: Netzwerk-Anfragen werden mit [Mock Service Worker (MSW)](https://mswjs.io/) abgefangen, um Tests deterministisch und offline-fähig zu machen.
+- **Struktur**: Testdateien (`*.test.ts(x)`) befinden sich direkt neben den zu testenden Quelldateien.
+
+### End-to-End-Tests
+
+- **Framework**: [Playwright](https://playwright.dev/) wird für E2E-Tests verwendet.
+- **Konfiguration**: Die Tests sind für einen mobilen Viewport ("Pixel 7") konfiguriert und laufen offline, indem Netzwerk-Anfragen abgefangen werden.
+- **Accessibility**: Barrierefreiheitstests werden mit `@axe-core/playwright` in die E2E-Suite integriert.
+
+### Code-Qualität
+
+- **Linting & Formatting**: ESLint und Prettier sind konfiguriert, um einen einheitlichen und fehlerfreien Code-Stil zu gewährleisten.
+- **Pre-Commit-Hooks**: [Husky](https://typicode.github.io/husky/) und [lint-staged](https://github.com/okonet/lint-staged) führen vor jedem Commit automatisch Linting und Formatierung für die geänderten Dateien aus.
+
+## ☁️ Deployment
+
+- **Hosting**: Die Anwendung wird auf [Cloudflare Pages](https://pages.cloudflare.com/) gehostet.
+- **Continuous Deployment**: Jeder Push auf den `main`-Branch löst automatisch einen neuen Build und ein Deployment aus.
+- **Caching**:
+  - Assets mit Hash-Namen (JS, CSS) werden mit `max-age=31536000` (ein Jahr) aggressiv gecacht.
+  - Der Service Worker verwendet eine `Network-First`-Strategie für HTML-Dokumente und `Stale-While-Revalidate` für andere Assets.
+- **Sicherheit**: Eine strikte Content Security Policy (CSP) wird über eine `_headers`-Datei ausgeliefert. **Wichtig:** Cloudflare Web Analytics muss deaktiviert sein, da das Skript von der CSP blockiert wird.
 
 ## 🤝 Contributing
 
-- **Commit-Stil**: Conventional Commits (durch Husky erzwungen).
-- **Branches**: Kurzlebige Feature-Branches; Merge nach Review.
-- **Templates**: Issue-/PR-Templates in `.github/` verwenden.
+- **Commit-Konvention**: Das Projekt folgt der [Conventional Commits](https://www.conventionalcommits.org/) Spezifikation. Dies wird durch Pre-Commit-Hooks erzwungen.
+- **Entwicklungsmodell**: Es wird ein Trunk-Based Development-Modell mit kurzlebigen Feature-Branches verfolgt, die nach einem Review in den `main`-Branch gemerged werden.
+- **Templates**: Für Issues und Pull Requests stehen in `.github/` Vorlagen zur Verfügung.
+
+## 🔒 Sicherheit
+
+Dieses Projekt legt großen Wert auf Sicherheit. Eine detaillierte Übersicht über die Sicherheitsarchitektur, die Handhabung von API-Schlüsseln und die Meldung von Schwachstellen finden Sie im Dokument [SECURITY.md](SECURITY.md).
 
 ## 📜 Lizenz
 
-Dieses Projekt ist privat. Keine Weitergabe oder Modifikation ohne schriftliche Zustimmung.
+Dieses Projekt ist privat und urheberrechtlich geschützt. Eine Weitergabe, Vervielfältigung oder Modifikation des Quellcodes ist ohne ausdrückliche schriftliche Zustimmung des Autors nicht gestattet.
