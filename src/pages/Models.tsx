@@ -1,4 +1,4 @@
-import { Bot, Flame, Loader2, MessageCircle, PiggyBank, Search } from "lucide-react";
+import { Bot, Flame, Loader2, MessageCircle, PiggyBank, Search, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -41,7 +41,7 @@ export default function ModelsPage() {
   const [filters, setFilters] = useState<string[]>([]);
   const [showNsfw, setShowNsfw] = useState(false);
   const toasts = useToasts();
-  const recommendedChatModels = [
+  const budgetChatModels = [
     {
       id: "meta-llama/llama-3.1-8b-instruct",
       label: "Llama 3.1 8B",
@@ -86,6 +86,44 @@ export default function ModelsPage() {
       priceOut: 0,
       description:
         "Kostenloses Test-Pferd für lockere Chats. Wenn es hakt, wechsel auf Llama 3.1 8B.",
+    },
+  ] as const;
+  const reliableChatModels = [
+    {
+      id: "meta-llama/llama-3.3-70b-instruct:free",
+      label: "Llama 3.3 70B (Free)",
+      provider: "OpenRouter",
+      priceIn: 0,
+      priceOut: 0,
+      description:
+        "Freies 70B-Flaggschiff – sehr stabil mit großer Kontexttiefe, wenn du etwas mehr Reserven willst.",
+    },
+    {
+      id: "mistralai/mistral-nemo:free",
+      label: "Mistral Nemo (Free)",
+      provider: "OpenRouter",
+      priceIn: 0,
+      priceOut: 0,
+      description:
+        "Robustes Long-Context-Modell von Mistral. Solide Qualität bei null Kosten – super Standardwahl.",
+    },
+    {
+      id: "openai/gpt-4o-mini",
+      label: "GPT-4o mini",
+      provider: "OpenRouter",
+      priceIn: 0.15,
+      priceOut: 0.6,
+      description:
+        "OpenAI-Allrounder: sehr verlässlich, starker Kontext und Toolsupport – ideal, wenn es einfach laufen soll.",
+    },
+    {
+      id: "anthropic/claude-3-haiku-20240307",
+      label: "Claude 3 Haiku",
+      provider: "OpenRouter",
+      priceIn: 0.25,
+      priceOut: 1.25,
+      description:
+        "Anthropic-Qualität in schnell: präzise, kaum Halluzinationen, großartig für produktive Sessions.",
     },
   ] as const;
 
@@ -371,7 +409,7 @@ export default function ModelsPage() {
         </div>
 
         <div className="space-y-3">
-          {recommendedChatModels.map((item) => (
+          {budgetChatModels.map((item) => (
             <button
               key={item.id}
               type="button"
@@ -414,6 +452,74 @@ export default function ModelsPage() {
           <Flame className="h-4 w-4 text-orange-300" aria-hidden="true" />
           Tipp: Temperature um ~0.6 halten – höher bedeutet mehr Kreativität, aber auch mehr
           Halluzinationen.
+        </p>
+      </section>
+
+      <section className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-lg">
+        <div className="flex items-start gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-100">
+            <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wide text-cyan-100">
+                Stabile Premium-Modelle
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-white/75">
+                <Bot className="h-3.5 w-3.5" aria-hidden="true" />
+                Failsafe
+              </span>
+            </div>
+            <p className="text-sm text-white/70">
+              Wenn nichts schiefgehen darf: Diese Modelle liefern konstant hochwertige Antworten.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {reliableChatModels.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => selectModelById(item.id, item.label)}
+              className={cn(
+                "group flex w-full flex-col gap-2 rounded-2xl border border-white/10 bg-white/5 p-4 text-left text-white/85 transition duration-150 hover:border-white/20 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+                selected === item.id && "border-cyan-300/60 bg-cyan-400/15 text-white",
+              )}
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-cyan-100" aria-hidden="true" />
+                  <span className="font-semibold">{item.label}</span>
+                </div>
+                <span className="bg-white/8 rounded-full border border-white/15 px-2 py-0.5 text-[11px] text-white/70">
+                  {item.provider}
+                </span>
+              </div>
+              <p className="text-sm text-white/70">{item.description}</p>
+              <div className="flex flex-wrap items-center gap-3 text-xs text-white/60">
+                <span>
+                  Eingabe:{" "}
+                  {item.priceIn === 0 ? "Kostenlos" : `$${item.priceIn.toFixed(3)} / 1M Tokens`}
+                </span>
+                <span>
+                  Ausgabe:{" "}
+                  {item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)} / 1M Tokens`}
+                </span>
+                {selected === item.id ? (
+                  <span className="rounded-full border border-cyan-300/40 bg-cyan-400/20 px-2 py-0.5 text-cyan-50">
+                    Aktiv
+                  </span>
+                ) : null}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <p className="flex items-center gap-2 rounded-xl bg-white/5 p-3 text-xs text-white/60">
+          <Flame className="h-4 w-4 text-orange-300" aria-hidden="true" />
+          Hinweis: Hochwertige Modelle reagieren sensibel auf Provider-Limits. Bei 429-Fehlern kurz
+          warten oder auf eine Budget-Option wechseln.
         </p>
       </section>
 

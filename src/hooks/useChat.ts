@@ -3,6 +3,7 @@ import { useCallback, useReducer, useRef } from "react";
 
 import { chatStream } from "../api/openrouter";
 import { mapError } from "../lib/errors";
+import { RateLimitError } from "../lib/errors/types";
 import type { ChatMessageType } from "../types/chatMessage";
 
 export interface UseChatOptions {
@@ -99,12 +100,30 @@ export function useChat({
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
+  const rateLimitUntilRef = useRef<number>(0);
 
   const append = useCallback(
     async (
       message: Omit<ChatMessageType, "id" | "timestamp">,
       customMessages?: ChatMessageType[],
     ) => {
+      const now = Date.now();
+      if (rateLimitUntilRef.current > now) {
+        const remainingSeconds = Math.ceil((rateLimitUntilRef.current - now) / 1000);
+        const cooldownError = new RateLimitError(
+          remainingSeconds > 1
+            ? `Rate-Limit aktiv. Warte bitte ${remainingSeconds} Sekunden, bevor du es erneut versuchst.`
+            : "Rate-Limit aktiv. Einen Moment bitte …",
+          429,
+          "Too Many Requests",
+        );
+        dispatch({ type: "SET_ERROR", error: cooldownError });
+        if (onError) {
+          onError(cooldownError);
+        }
+        return;
+      }
+
       const userMessage: ChatMessageType = {
         id: nanoid(),
         timestamp: Date.now(),
@@ -219,6 +238,9 @@ export function useChat({
         );
       } catch (error) {
         const mappedError = mapError(error);
+        if (mappedError instanceof RateLimitError) {
+          rateLimitUntilRef.current = Date.now() + 8000;
+        }
 
         if (mappedError.name === "AbortError") {
           // Remove the incomplete assistant message on abort
