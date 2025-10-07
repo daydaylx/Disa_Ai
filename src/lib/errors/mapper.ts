@@ -19,26 +19,33 @@ import {
  * @returns An HttpError instance with appropriate subtype
  */
 function fromResponse(res: Response): HttpError {
-  const { status, statusText } = res;
-  const message = `HTTP-Fehler ${status} (${statusText})`;
+  const { status, statusText, headers } = res;
+  const options = { headers };
 
   switch (status) {
     case 401:
-      return new AuthenticationError(message, status, statusText);
+      return new AuthenticationError(
+        "Authentifizierung fehlgeschlagen",
+        status,
+        statusText,
+        options,
+      );
     case 403:
-      return new PermissionError(message, status, statusText);
+      return new PermissionError("Zugriff verweigert", status, statusText, options);
     case 404:
-      return new NotFoundError(message, status, statusText);
+      return new NotFoundError("Ressource nicht gefunden", status, statusText, options);
     case 429:
-      return new RateLimitError(message, status, statusText);
-    default:
+      return new RateLimitError("Rate-Limit erreicht", status, statusText, options);
+    default: {
+      const message = `HTTP-Fehler ${status} (${statusText})`;
       if (status >= 400 && status < 500) {
-        return new ApiClientError(message, status, statusText);
+        return new ApiClientError(message, status, statusText, options);
       }
       if (status >= 500 && status < 600) {
-        return new ApiServerError(message, status, statusText);
+        return new ApiServerError(message, status, statusText, options);
       }
-      return new HttpError(message, status, statusText);
+      return new HttpError(message, status, statusText, options);
+    }
   }
 }
 

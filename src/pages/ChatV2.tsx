@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
@@ -173,8 +174,14 @@ export default function ChatPageV2() {
       const catalog = await loadModelCatalog();
       if (!alive) return;
       setModels(catalog);
-      const defaultModelId = chooseDefaultModel(catalog, { preferFree: true });
-      const defaultModel = catalog.find((m) => m.id === defaultModelId);
+      const storedModelId = getModelFallback();
+      const defaultModelId = chooseDefaultModel(catalog, {
+        allow: storedModelId ? [storedModelId] : null,
+        preferFree: true,
+      });
+      const defaultModel =
+        catalog.find((m) => m.id === defaultModelId) ??
+        (storedModelId ? catalog.find((m) => m.id === storedModelId) : null);
       setModel(defaultModel ?? catalog[0] ?? null);
     })();
     return () => {
@@ -350,6 +357,15 @@ export default function ChatPageV2() {
   // Calculate token count from all messages (currently unused but kept for future features)
   // const _tokenCount = messages.reduce((acc, msg) => acc + msg.content.length, 0);
 
+  const handleSelectModel = useCallback((next: Model) => {
+    setModel(next);
+    try {
+      localStorage.setItem("disa_model", next.id);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   return (
     <>
       <main className="relative z-10 mx-auto flex h-full max-w-screen-2xl overflow-hidden pb-4">
@@ -398,7 +414,7 @@ export default function ChatPageV2() {
       <ModelSelectionSheet
         open={sheetOpen}
         onClose={() => setSheetOpen(false)}
-        onSelect={setModel}
+        onSelect={handleSelectModel}
         currentId={model?.id ?? ""}
         models={models}
       />

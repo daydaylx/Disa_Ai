@@ -98,8 +98,15 @@ export async function fetchWithTimeoutAndRetry(
     try {
       const response = await fetchWithTimeout(url, fetchOptions);
 
-      if (!response.ok && !retryOn(response)) {
-        return response;
+      if (!response.ok) {
+        if (!retryOn(response)) {
+          return response;
+        }
+
+        const retryAfterMs = parseRetryAfterHeader(response.headers);
+        if (retryAfterMs !== undefined) {
+          delayMs = Math.max(delayMs, retryAfterMs);
+        }
       }
 
       if (response.ok || attempt === maxRetries) {
@@ -143,4 +150,21 @@ export async function fetchWithTimeoutAndRetry(
   }
 
   throw mapError(lastError);
+}
+
+function parseRetryAfterHeader(headers: Headers): number | undefined {
+  const raw = headers.get("retry-after");
+  if (!raw) return undefined;
+
+  const numeric = Number(raw);
+  if (Number.isFinite(numeric) && numeric >= 0) {
+    return Math.ceil(numeric * 1000);
+  }
+
+  const absolute = Date.parse(raw);
+  if (Number.isNaN(absolute)) return undefined;
+
+  const diff = absolute - Date.now();
+  if (diff <= 0) return undefined;
+  return diff;
 }

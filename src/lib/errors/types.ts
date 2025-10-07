@@ -64,13 +64,21 @@ export class AbortError extends ApiError {
 export class HttpError extends ApiError {
   public readonly status: number;
   public readonly statusText: string;
+  public readonly headers?: Headers;
 
-  constructor(message: string, status: number, statusText: string, options?: ErrorOptions) {
-    super(message, options);
+  constructor(
+    message: string,
+    status: number,
+    statusText: string,
+    options?: (ErrorOptions & { headers?: Headers }) | undefined,
+  ) {
+    const { headers, ...rest } = options ?? {};
+    super(message, rest);
     Object.setPrototypeOf(this, HttpError.prototype);
     this.name = this.constructor.name;
     this.status = status;
     this.statusText = statusText;
+    this.headers = headers;
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, HttpError);
     }
@@ -82,10 +90,18 @@ export class HttpError extends ApiError {
  * Tritt auf, wenn ein Rate-Limit oder ein Quota überschritten wurde.
  */
 export class RateLimitError extends HttpError {
-  constructor(message: string, status: number, statusText: string, options?: ErrorOptions) {
+  public readonly retryAfterSeconds?: number;
+
+  constructor(
+    message: string,
+    status: number,
+    statusText: string,
+    options?: (ErrorOptions & { headers?: Headers }) | undefined,
+  ) {
     super(message, status, statusText, options);
     Object.setPrototypeOf(this, RateLimitError.prototype);
     this.name = this.constructor.name;
+    this.retryAfterSeconds = parseRetryAfterSeconds(this.headers);
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, RateLimitError);
     }
@@ -97,7 +113,12 @@ export class RateLimitError extends HttpError {
  * Tritt auf, wenn ein API-Key fehlt oder ungültig ist.
  */
 export class AuthenticationError extends HttpError {
-  constructor(message: string, status: number, statusText: string, options?: ErrorOptions) {
+  constructor(
+    message: string,
+    status: number,
+    statusText: string,
+    options?: (ErrorOptions & { headers?: Headers }) | undefined,
+  ) {
     super(message, status, statusText, options);
     Object.setPrototypeOf(this, AuthenticationError.prototype);
     this.name = this.constructor.name;
@@ -112,7 +133,12 @@ export class AuthenticationError extends HttpError {
  * Tritt auf, wenn der Zugriff auf eine Ressource verweigert wird.
  */
 export class PermissionError extends HttpError {
-  constructor(message: string, status: number, statusText: string, options?: ErrorOptions) {
+  constructor(
+    message: string,
+    status: number,
+    statusText: string,
+    options?: (ErrorOptions & { headers?: Headers }) | undefined,
+  ) {
     super(message, status, statusText, options);
     Object.setPrototypeOf(this, PermissionError.prototype);
     this.name = this.constructor.name;
@@ -126,7 +152,12 @@ export class PermissionError extends HttpError {
  * Fehler für HTTP 404 "Not Found".
  */
 export class NotFoundError extends HttpError {
-  constructor(message: string, status: number, statusText: string, options?: ErrorOptions) {
+  constructor(
+    message: string,
+    status: number,
+    statusText: string,
+    options?: (ErrorOptions & { headers?: Headers }) | undefined,
+  ) {
     super(message, status, statusText, options);
     Object.setPrototypeOf(this, NotFoundError.prototype);
     this.name = this.constructor.name;
@@ -140,7 +171,12 @@ export class NotFoundError extends HttpError {
  * Catch-all für andere 4xx-Client-Fehler.
  */
 export class ApiClientError extends HttpError {
-  constructor(message: string, status: number, statusText: string, options?: ErrorOptions) {
+  constructor(
+    message: string,
+    status: number,
+    statusText: string,
+    options?: (ErrorOptions & { headers?: Headers }) | undefined,
+  ) {
     super(message, status, statusText, options);
     Object.setPrototypeOf(this, ApiClientError.prototype);
     this.name = this.constructor.name;
@@ -154,7 +190,12 @@ export class ApiClientError extends HttpError {
  * Catch-all für 5xx-Server-Fehler.
  */
 export class ApiServerError extends HttpError {
-  constructor(message: string, status: number, statusText: string, options?: ErrorOptions) {
+  constructor(
+    message: string,
+    status: number,
+    statusText: string,
+    options?: (ErrorOptions & { headers?: Headers }) | undefined,
+  ) {
     super(message, status, statusText, options);
     Object.setPrototypeOf(this, ApiServerError.prototype);
     this.name = this.constructor.name;
@@ -162,6 +203,25 @@ export class ApiServerError extends HttpError {
       Error.captureStackTrace(this, ApiServerError);
     }
   }
+}
+
+function parseRetryAfterSeconds(headers?: Headers): number | undefined {
+  if (!headers) return undefined;
+  const raw = headers.get("retry-after");
+  if (!raw) return undefined;
+
+  const numeric = Number(raw);
+  if (Number.isFinite(numeric) && numeric >= 0) {
+    return numeric;
+  }
+
+  const dateValue = Date.parse(raw);
+  if (Number.isNaN(dateValue)) return undefined;
+
+  const diffMs = dateValue - Date.now();
+  if (diffMs <= 0) return undefined;
+
+  return Math.ceil(diffMs / 1000);
 }
 
 /**

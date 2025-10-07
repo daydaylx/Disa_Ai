@@ -238,11 +238,26 @@ export function useChat({
         );
       } catch (error) {
         const mappedError = mapError(error);
-        if (mappedError instanceof RateLimitError) {
-          rateLimitUntilRef.current = Date.now() + 8000;
-        }
 
-        if (mappedError.name === "AbortError") {
+        if (mappedError instanceof RateLimitError) {
+          const retryAfterSeconds = Math.max(mappedError.retryAfterSeconds ?? 8, 3);
+          const cooldownMs = retryAfterSeconds * 1000;
+          rateLimitUntilRef.current = Date.now() + cooldownMs;
+
+          const friendlyError = new RateLimitError(
+            retryAfterSeconds > 1
+              ? `Rate-Limit aktiv. Bitte warte ${retryAfterSeconds} Sekunden.`
+              : "Rate-Limit aktiv. Einen Moment bitte …",
+            mappedError.status,
+            mappedError.statusText,
+            { headers: mappedError.headers },
+          );
+
+          dispatch({ type: "SET_ERROR", error: friendlyError });
+          if (onError) {
+            onError(friendlyError);
+          }
+        } else if (mappedError.name === "AbortError") {
           // Remove the incomplete assistant message on abort
           const baseWithUser: ChatMessageType[] = [...baseHistory, userMessage];
           const assistantId = (assistantMessage as { id?: string } | null)?.id;

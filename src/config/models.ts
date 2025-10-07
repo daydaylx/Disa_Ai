@@ -33,6 +33,17 @@ export type CatalogOptions = {
 
 /* ---- interne Helfer ---- */
 
+const RECOMMENDED_MODEL_IDS = [
+  "meta-llama/llama-3.1-8b-instruct",
+  "mistralai/mistral-7b-instruct",
+  "deepseek/deepseek-r1-distill-llama-8b",
+  "qwen/qwen-2.5-7b-instruct",
+  "meta-llama/llama-3.3-8b-instruct:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "mistralai/mistral-nemo:free",
+  "openai/gpt-4o-mini",
+] as const;
+
 function deriveProvider(id: string): string | undefined {
   const ix = id.indexOf("/");
   return ix > 0 ? id.slice(0, ix) : undefined;
@@ -153,6 +164,8 @@ async function getAllowedModelIds(): Promise<string[]> {
       }
     }
 
+    RECOMMENDED_MODEL_IDS.forEach((id) => allowed.add(id));
+
     const styleBasedModels = Array.from(allowed);
 
     // Validate that we have reasonable model coverage
@@ -169,9 +182,12 @@ async function getAllowedModelIds(): Promise<string[]> {
     try {
       const availableModels = await getRawModels(undefined, 5000); // 5s timeout for API
       const intelligentFallback = generateIntelligentFallback(availableModels);
+      const combined = Array.from(
+        new Set<string>([...intelligentFallback, ...RECOMMENDED_MODEL_IDS]),
+      );
 
-      console.warn(`[Models] Using intelligent fallback: ${intelligentFallback.length} models`);
-      return intelligentFallback;
+      console.warn(`[Models] Using intelligent fallback: ${combined.length} models`);
+      return combined;
     } catch (apiError) {
       console.warn("OpenRouter API also failed, using static fallback:", apiError);
 
@@ -181,10 +197,13 @@ async function getAllowedModelIds(): Promise<string[]> {
         "mistralai/mistral-nemo:free",
         "qwen/qwen-2.5-72b-instruct:free",
         "meta-llama/llama-3.1-405b-instruct:free",
+        ...RECOMMENDED_MODEL_IDS,
       ];
 
-      console.warn(`[Models] Using static fallback: ${staticFallback.length} models`);
-      return staticFallback;
+      const uniqueStatic = Array.from(new Set(staticFallback));
+
+      console.warn(`[Models] Using static fallback: ${uniqueStatic.length} models`);
+      return uniqueStatic;
     }
   } finally {
     clearTimeout(timeoutId);
