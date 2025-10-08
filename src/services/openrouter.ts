@@ -24,9 +24,20 @@ function getApiBase(): string {
 export type ORModel = {
   id: string;
   name?: string;
+  description?: string;
+  architecture?: {
+    modality?: string;
+    tokenizer?: string;
+    instruct_type?: string;
+  };
   context_length?: number;
   pricing?: { prompt?: number; completion?: number };
   tags?: string[];
+  top_provider?: {
+    context_length?: number;
+    max_completion_tokens?: number;
+    is_moderated?: boolean;
+  };
 };
 
 export function getApiKey(): string | null {

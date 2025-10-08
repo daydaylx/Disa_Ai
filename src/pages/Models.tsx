@@ -1,4 +1,4 @@
-import { Bot, Flame, Loader2, MessageCircle, PiggyBank, Search, ShieldCheck } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -6,9 +6,7 @@ import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
 import { Badge } from "../components/ui/badge";
 import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
 import { StaticGlassCard } from "../components/ui/StaticGlassCard";
-import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { VirtualList } from "../components/ui/VirtualList";
 import { loadModelCatalog, type ModelEntry } from "../config/models";
@@ -49,89 +47,179 @@ export default function ModelsPage() {
   const [showNsfw, setShowNsfw] = useState(false);
   const toasts = useToasts();
   const palette = useGlassPalette();
-  const budgetChatModels = [
-    {
-      id: "meta-llama/llama-3.1-8b-instruct",
-      label: "Llama 3.1 8B",
-      provider: "OpenRouter",
-      priceIn: 0.02,
-      priceOut: 0.03,
-      description:
-        "Sehr guter Allrounder für Gespräche, stabil und vorhersehbar – mein Standardtipp für produktive Chats.",
-    },
-    {
-      id: "mistralai/mistral-7b-instruct",
-      label: "Mistral 7B",
-      provider: "OpenRouter",
-      priceIn: 0.028,
-      priceOut: 0.054,
-      description:
-        "Schlank und schnell – perfekt für Dialoge und leichtere Aufgaben, wenn es besonders flott gehen soll.",
-    },
-    {
-      id: "deepseek/deepseek-r1-distill-llama-8b",
-      label: "DeepSeek R1 Distill 8B",
-      provider: "OpenRouter",
-      priceIn: 0.04,
-      priceOut: 0.04,
-      description:
-        "Günstiges Reasoning-Light: angenehme Plauderei mit solider Struktur, symmetrische Kosten.",
-    },
-    {
-      id: "qwen/qwen-2.5-7b-instruct",
-      label: "Qwen 2.5 7B",
-      provider: "OpenRouter",
-      priceIn: 0.04,
-      priceOut: 0.1,
-      description:
-        "Preiswert und wortgewandt, oft etwas direkter Ton – ideal für schnelle Brainstorms.",
-    },
-    {
-      id: "meta-llama/llama-3.3-8b-instruct:free",
-      label: "Llama 3.3 8B (Free)",
-      provider: "OpenRouter",
-      priceIn: 0,
-      priceOut: 0,
-      description:
-        "Kostenloses Test-Pferd für lockere Chats. Wenn es hakt, wechsel auf Llama 3.1 8B.",
-    },
-  ] as const;
-  const reliableChatModels = [
-    {
-      id: "meta-llama/llama-3.3-70b-instruct:free",
-      label: "Llama 3.3 70B (Free)",
-      provider: "OpenRouter",
-      priceIn: 0,
-      priceOut: 0,
-      description:
-        "Freies 70B-Flaggschiff – sehr stabil mit großer Kontexttiefe, wenn du etwas mehr Reserven willst.",
-    },
-    {
-      id: "mistralai/mistral-nemo:free",
-      label: "Mistral Nemo (Free)",
-      provider: "OpenRouter",
-      priceIn: 0,
-      priceOut: 0,
-      description:
-        "Robustes Long-Context-Modell von Mistral. Solide Qualität bei null Kosten – super Standardwahl.",
-    },
+
+  // === Premium Modelle ===
+  const premiumModels = [
     {
       id: "openai/gpt-4o-mini",
       label: "GPT-4o mini",
-      provider: "OpenRouter",
+      provider: "OpenAI",
       priceIn: 0.15,
       priceOut: 0.6,
+      ctx: 128000,
       description:
         "OpenAI-Allrounder: sehr verlässlich, starker Kontext und Toolsupport – ideal, wenn es einfach laufen soll.",
     },
     {
       id: "anthropic/claude-3-haiku-20240307",
       label: "Claude 3 Haiku",
-      provider: "OpenRouter",
+      provider: "Anthropic",
       priceIn: 0.25,
       priceOut: 1.25,
+      ctx: 200000,
       description:
         "Anthropic-Qualität in schnell: präzise, kaum Halluzinationen, großartig für produktive Sessions.",
+    },
+    {
+      id: "deepseek/deepseek-chat-v3.1",
+      label: "DeepSeek V3.1",
+      provider: "DeepSeek",
+      priceIn: 0.27,
+      priceOut: 1.1,
+      ctx: 64000,
+      description:
+        "Logisches Denken, lange Begründungen – denkt erst, antwortet dann. Für knifflige Fragen und mehrstufige Erklärungen stark.",
+    },
+    {
+      id: "x-ai/grok-4-fast",
+      label: "Grok 4 Fast",
+      provider: "X.AI",
+      priceIn: 5.0,
+      priceOut: 15.0,
+      ctx: 131072,
+      description:
+        "Sehr lange Chats, schneller Witz + Wissen-Allrounder. Gute Wahl für viel Kontext und flotte Antworten.",
+    },
+  ] as const;
+
+  // === Alltags Modelle ===
+  const everydayModels = [
+    {
+      id: "meta-llama/llama-3.1-8b-instruct",
+      label: "Llama 3.1 8B",
+      provider: "Meta",
+      priceIn: 0.02,
+      priceOut: 0.03,
+      ctx: 131072,
+      description:
+        "Sehr guter Allrounder für Gespräche, stabil und vorhersehbar – mein Standardtipp für produktive Chats.",
+    },
+    {
+      id: "mistralai/mistral-7b-instruct",
+      label: "Mistral 7B",
+      provider: "Mistral",
+      priceIn: 0.028,
+      priceOut: 0.054,
+      ctx: 32768,
+      description:
+        "Schlank und schnell – perfekt für Dialoge und leichtere Aufgaben, wenn es besonders flott gehen soll.",
+    },
+    {
+      id: "qwen/qwen-2.5-7b-instruct",
+      label: "Qwen 2.5 7B",
+      provider: "Qwen",
+      priceIn: 0.04,
+      priceOut: 0.1,
+      ctx: 32768,
+      description:
+        "Preiswert und wortgewandt, oft etwas direkter Ton – ideal für schnelle Brainstorms.",
+    },
+    {
+      id: "deepseek/deepseek-r1-distill-llama-8b",
+      label: "DeepSeek R1 Distill 8B",
+      provider: "DeepSeek",
+      priceIn: 0.04,
+      priceOut: 0.04,
+      ctx: 65536,
+      description:
+        "Günstiges Reasoning-Light: angenehme Plauderei mit solider Struktur, symmetrische Kosten.",
+    },
+  ] as const;
+
+  // === Free Modelle ===
+  const freeModels = [
+    {
+      id: "meta-llama/llama-3.3-70b-instruct:free",
+      label: "Llama 3.3 70B (Free)",
+      provider: "Meta",
+      priceIn: 0,
+      priceOut: 0,
+      ctx: 131072,
+      description:
+        "Freies 70B-Flaggschiff – sehr stabil mit großer Kontexttiefe, wenn du etwas mehr Reserven willst.",
+    },
+    {
+      id: "mistralai/mistral-nemo:free",
+      label: "Mistral Nemo (Free)",
+      provider: "Mistral",
+      priceIn: 0,
+      priceOut: 0,
+      ctx: 131072,
+      description:
+        "Robustes Long-Context-Modell von Mistral. Solide Qualität bei null Kosten – super Standardwahl.",
+    },
+    {
+      id: "meta-llama/llama-3.3-8b-instruct:free",
+      label: "Llama 3.3 8B (Free)",
+      provider: "Meta",
+      priceIn: 0,
+      priceOut: 0,
+      ctx: 131072,
+      description:
+        "Kostenloses Test-Pferd für lockere Chats. Wenn es hakt, wechsel auf Llama 3.1 8B.",
+    },
+    {
+      id: "qwen/qwen-2.5-7b-instruct:free",
+      label: "Qwen 2.5 7B (Free)",
+      provider: "Qwen",
+      priceIn: 0,
+      priceOut: 0,
+      ctx: 32768,
+      description: "Kostenlose Qwen-Variante für schnelle Experimente und einfache Aufgaben.",
+    },
+  ] as const;
+
+  // === Unzensiert Modelle ===
+  const uncensoredModels = [
+    {
+      id: "thedrummer/cydonia-24b-v4.1",
+      label: "Cydonia 24B v4.1",
+      provider: "TheDrummer",
+      priceIn: 1.2,
+      priceOut: 1.2,
+      ctx: 32768,
+      description:
+        "Kreatives Schreiben, Rollenspiel, wenig Filter. Klingt freier und fantasievoller als übliche Schulbuch-Bots.",
+    },
+    {
+      id: "cognitivecomputations/dolphin3.0-mistral-24b",
+      label: "Dolphin 3.0 Mistral 24B",
+      provider: "CognitiveComputations",
+      priceIn: 0.3,
+      priceOut: 0.3,
+      ctx: 32768,
+      description:
+        "Unkompliziertes Rollenspiel-Modell mit wenig Einschränkungen. Gut für kreative Szenarien.",
+    },
+    {
+      id: "sao10k/l3.3-euryale-70b",
+      label: "Euryale L3.3 70B",
+      provider: "Sao10k",
+      priceIn: 0.8,
+      priceOut: 0.8,
+      ctx: 131072,
+      description:
+        "Unzensiertes 70B-Modell für kreative Geschichten und Rollenspiel mit großem Kontext.",
+    },
+    {
+      id: "venice/uncensored:free",
+      label: "Venice Uncensored (Free)",
+      provider: "Venice",
+      priceIn: 0,
+      priceOut: 0,
+      ctx: 8192,
+      description:
+        "Kostenlose unzensierte Variante für Experimente. Qualität schwankt, aber ein guter Einstieg.",
     },
   ] as const;
 
@@ -279,6 +367,69 @@ export default function ModelsPage() {
     selectModelById(model.id, model.label);
   };
 
+  // Helper für einheitliche Featured-Model-Karten
+  const renderFeaturedCard = (
+    item: {
+      id: string;
+      label: string;
+      provider: string;
+      priceIn: number;
+      priceOut: number;
+      ctx?: number;
+      description: string;
+    },
+    index: number,
+    paletteOffset: number,
+  ) => {
+    const isSelected = selected === item.id;
+    const tint = palette[(index + paletteOffset) % palette.length] ?? DEFAULT_TINT;
+
+    return (
+      <div
+        key={item.id}
+        role="button"
+        tabIndex={0}
+        onClick={() => selectModelById(item.id, item.label)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            selectModelById(item.id, item.label);
+          }
+        }}
+        className={cn(
+          "cursor-pointer rounded-2xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+          isSelected && "ring-2 ring-white/30",
+        )}
+      >
+        <StaticGlassCard tint={tint} padding="md">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-base font-semibold text-white">{item.label}</h3>
+              <span className="shrink-0 rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[11px] text-white/70">
+                {item.provider}
+              </span>
+            </div>
+
+            <p className="text-sm leading-relaxed text-white/75">{item.description}</p>
+
+            <div className="flex flex-wrap items-center gap-3 text-xs text-white/65">
+              <span>In: {item.priceIn === 0 ? "Kostenlos" : `$${item.priceIn.toFixed(3)}/1M`}</span>
+              <span>
+                Out: {item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)}/1M`}
+              </span>
+              {item.ctx && <span>Kontext: {formatContext(item.ctx)}</span>}
+              {isSelected && (
+                <span className="ml-auto rounded-full border border-white/30 bg-white/20 px-2 py-0.5 font-medium text-white">
+                  ✓ Aktiv
+                </span>
+              )}
+            </div>
+          </div>
+        </StaticGlassCard>
+      </div>
+    );
+  };
+
   const renderModelCard = (model: ModelEntry, index: number) => {
     const tint = palette[index % palette.length] ?? DEFAULT_TINT;
     const isSelected = selected === model.id;
@@ -300,41 +451,54 @@ export default function ModelsPage() {
         aria-label={`Modell ${model.label || model.id} auswählen`}
         className={cn(
           "mb-3 rounded-2xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
-          isSelected && "ring-accent-500/80 ring-2",
+          isSelected && "ring-2 ring-white/30",
         )}
       >
         <StaticGlassCard tint={tint} padding="md" className="h-full">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="space-y-1">
-              <h3 className="text-sm font-medium text-white">{model.label || model.id}</h3>
-              <p className="text-xs text-white/70">{model.provider || "Unbekannter Anbieter"}</p>
+          <div className="space-y-3">
+            {/* Header mit Name und Provider */}
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-base font-semibold text-white">{model.label || model.id}</h3>
+              <span className="shrink-0 rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[11px] text-white/70">
+                {model.provider || "Unknown"}
+              </span>
             </div>
-            <div className="flex items-center gap-2">
-              {isSelected && <div className="text-accent-400 h-4 w-4">✓</div>}
-              {model.pricing?.in === 0 && (
-                <Badge
-                  variant="secondary"
-                  className="border-green-500/30 bg-green-500/20 text-xs text-green-400"
-                >
-                  Kostenlos
-                </Badge>
+
+            {/* Beschreibung - falls vorhanden in description oder aus architecture */}
+            {model.description && (
+              <p className="text-sm leading-relaxed text-white/75">{model.description}</p>
+            )}
+
+            {/* Preis-Informationen */}
+            <div className="flex flex-wrap items-center gap-3 text-xs text-white/65">
+              <span>
+                In:{" "}
+                {model.pricing?.in === 0
+                  ? "Kostenlos"
+                  : model.pricing?.in && typeof model.pricing.in === "number"
+                    ? `$${model.pricing.in.toFixed(3)}/1M`
+                    : "—"}
+              </span>
+              <span>
+                Out:{" "}
+                {model.pricing?.out === 0
+                  ? "Kostenlos"
+                  : model.pricing?.out && typeof model.pricing.out === "number"
+                    ? `$${model.pricing.out.toFixed(3)}/1M`
+                    : "—"}
+              </span>
+              {model.ctx && <span>Kontext: {formatContext(model.ctx)}</span>}
+              {isSelected && (
+                <span className="ml-auto rounded-full border border-white/30 bg-white/20 px-2 py-0.5 font-medium text-white">
+                  ✓ Aktiv
+                </span>
               )}
             </div>
-          </div>
-          <div className="space-y-4 pt-4">
-            <div className="grid grid-cols-2 gap-4 text-xs">
-              <div>
-                <p className="text-white/50">Kontext</p>
-                <p className="text-white">{formatContext(model.ctx)}</p>
-              </div>
-              <div>
-                <p className="text-white/50">Preis</p>
-                <p className="text-white">{formatPrice(model.pricing?.in)}</p>
-              </div>
-            </div>
+
+            {/* Tags */}
             {model.tags && model.tags.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-1">
-                {model.tags.slice(0, 3).map((tag) => (
+              <div className="flex flex-wrap gap-1">
+                {model.tags.slice(0, 4).map((tag) => (
                   <Badge
                     key={tag}
                     variant="outline"
@@ -343,9 +507,9 @@ export default function ModelsPage() {
                     {tag}
                   </Badge>
                 ))}
-                {model.tags.length > 3 && (
+                {model.tags.length > 4 && (
                   <Badge variant="outline" className="border-white/20 text-xs text-white/70">
-                    +{model.tags.length - 3}
+                    +{model.tags.length - 4}
                   </Badge>
                 )}
               </div>
@@ -393,142 +557,57 @@ export default function ModelsPage() {
         </div>
       </StaticGlassCard>
 
-      <StaticGlassCard tint={palette[1] ?? DEFAULT_TINT} padding="md" className="space-y-3">
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
-            <PiggyBank className="h-5 w-5" aria-hidden="true" />
-          </div>
-          <div className="flex-1 space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-emerald-300">
-                Budget-Empfehlungen
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-white/75">
-                <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                Gesprächsstark
-              </span>
-            </div>
-            <p className="text-sm text-white/70">
-              Diese Modelle liefern gute Gespräche zum kleinen Preis. Tippen, um das Modell direkt
-              zu übernehmen.
-            </p>
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          {budgetChatModels.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => selectModelById(item.id, item.label)}
-              className={cn(
-                "group flex w-full flex-col gap-2 rounded-2xl border border-white/10 bg-white/5 p-4 text-left text-white/85 transition duration-150 hover:border-white/20 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
-                selected === item.id && "border-emerald-300/60 bg-emerald-400/15 text-white",
-              )}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <Bot className="h-4 w-4 text-emerald-300" aria-hidden="true" />
-                  <span className="font-semibold">{item.label}</span>
-                </div>
-                <span className="bg-white/8 rounded-full border border-white/15 px-2 py-0.5 text-[11px] text-white/70">
-                  {item.provider}
-                </span>
-              </div>
-              <p className="text-sm text-white/70">{item.description}</p>
-              <div className="flex flex-wrap items-center gap-3 text-xs text-white/60">
-                <span>
-                  Eingabe:{" "}
-                  {item.priceIn === 0 ? "Kostenlos" : `$${item.priceIn.toFixed(3)} / 1M Tokens`}
-                </span>
-                <span>
-                  Ausgabe:{" "}
-                  {item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)} / 1M Tokens`}
-                </span>
-                {selected === item.id ? (
-                  <span className="rounded-full border border-emerald-300/40 bg-emerald-400/20 px-2 py-0.5 text-emerald-100">
-                    Aktiv
-                  </span>
-                ) : null}
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <p className="flex items-center gap-2 rounded-xl bg-white/5 p-3 text-xs text-white/60">
-          <Flame className="h-4 w-4 text-orange-300" aria-hidden="true" />
-          Tipp: Temperature um ~0.6 halten – höher bedeutet mehr Kreativität, aber auch mehr
-          Halluzinationen.
+      {/* Premium Modelle */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+          🏆 Premium Modelle
+        </h2>
+        <p className="text-xs text-white/60">
+          Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3
         </p>
-      </StaticGlassCard>
-
-      <StaticGlassCard tint={palette[2] ?? DEFAULT_TINT} padding="md" className="space-y-3">
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-100">
-            <ShieldCheck className="h-5 w-5" aria-hidden="true" />
-          </div>
-          <div className="flex-1 space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-cyan-100">
-                Stabile Premium-Modelle
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-white/75">
-                <Bot className="h-3.5 w-3.5" aria-hidden="true" />
-                Failsafe
-              </span>
-            </div>
-            <p className="text-sm text-white/70">
-              Wenn nichts schiefgehen darf: Diese Modelle liefern konstant hochwertige Antworten.
-            </p>
-          </div>
-        </div>
-
         <div className="space-y-3">
-          {reliableChatModels.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => selectModelById(item.id, item.label)}
-              className={cn(
-                "group flex w-full flex-col gap-2 rounded-2xl border border-white/10 bg-white/5 p-4 text-left text-white/85 transition duration-150 hover:border-white/20 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
-                selected === item.id && "border-cyan-300/60 bg-cyan-400/15 text-white",
-              )}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-cyan-100" aria-hidden="true" />
-                  <span className="font-semibold">{item.label}</span>
-                </div>
-                <span className="bg-white/8 rounded-full border border-white/15 px-2 py-0.5 text-[11px] text-white/70">
-                  {item.provider}
-                </span>
-              </div>
-              <p className="text-sm text-white/70">{item.description}</p>
-              <div className="flex flex-wrap items-center gap-3 text-xs text-white/60">
-                <span>
-                  Eingabe:{" "}
-                  {item.priceIn === 0 ? "Kostenlos" : `$${item.priceIn.toFixed(3)} / 1M Tokens`}
-                </span>
-                <span>
-                  Ausgabe:{" "}
-                  {item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)} / 1M Tokens`}
-                </span>
-                {selected === item.id ? (
-                  <span className="rounded-full border border-cyan-300/40 bg-cyan-400/20 px-2 py-0.5 text-cyan-50">
-                    Aktiv
-                  </span>
-                ) : null}
-              </div>
-            </button>
-          ))}
+          {premiumModels.map((item, idx) => renderFeaturedCard(item, idx, 1))}
         </div>
+      </section>
 
-        <p className="flex items-center gap-2 rounded-xl bg-white/5 p-3 text-xs text-white/60">
-          <Flame className="h-4 w-4 text-orange-300" aria-hidden="true" />
-          Hinweis: Hochwertige Modelle reagieren sensibel auf Provider-Limits. Bei 429-Fehlern kurz
-          warten oder auf eine Budget-Option wechseln.
+      {/* Alltags Modelle */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+          💼 Alltags Modelle
+        </h2>
+        <p className="text-xs text-white/60">
+          Zuverlässige Modelle für tägliche Aufgaben – gutes Preis-Leistungs-Verhältnis
         </p>
-      </StaticGlassCard>
+        <div className="space-y-3">
+          {everydayModels.map((item, idx) => renderFeaturedCard(item, idx, 5))}
+        </div>
+      </section>
+
+      {/* Free Modelle */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+          🎁 Free Modelle
+        </h2>
+        <p className="text-xs text-white/60">
+          Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität
+        </p>
+        <div className="space-y-3">
+          {freeModels.map((item, idx) => renderFeaturedCard(item, idx, 9))}
+        </div>
+      </section>
+
+      {/* Unzensiert Modelle */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+          🎭 Unzensiert Modelle
+        </h2>
+        <p className="text-xs text-white/60">
+          Kreatives Schreiben & Rollenspiel – weniger Filter, mehr Freiheit
+        </p>
+        <div className="space-y-3">
+          {uncensoredModels.map((item, idx) => renderFeaturedCard(item, idx, 13))}
+        </div>
+      </section>
 
       {/* Modell-Suche Section */}
       <section className="space-y-3">
@@ -542,38 +621,6 @@ export default function ModelsPage() {
             className="focus:border-accent-500/50 border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/40"
             data-testid="models-search"
           />
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {filterOptions.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => toggleFilter(option.id)}
-              data-testid={`models-filter-${option.id}`}
-              className={cn(
-                "inline-flex min-h-touch-rec items-center gap-2 rounded-full px-4 py-2 text-xs font-medium transition-all",
-                filters.includes(option.id)
-                  ? "shadow-accent-500/25 bg-accent-500 text-corporate-text-onAccent shadow-lg"
-                  : "border border-white/20 bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary",
-              )}
-            >
-              {option.label}
-              <span
-                className={cn(
-                  "rounded-full px-2 py-0.5 text-[10px] font-semibold",
-                  filters.includes(option.id)
-                    ? "bg-white/20 text-corporate-text-onAccent"
-                    : "bg-white/10 text-corporate-text-secondary",
-                )}
-              >
-                {option.count}
-              </span>
-            </button>
-          ))}
-          <div className="flex items-center space-x-2">
-            <Switch id="nsfw-toggle" checked={showNsfw} onChange={setShowNsfw} />
-            <Label htmlFor="nsfw-toggle">18+ anzeigen</Label>
-          </div>
         </div>
       </section>
 
@@ -616,7 +663,7 @@ export default function ModelsPage() {
           items={filtered}
           renderItem={(model, index) => renderModelCard(model, index)}
           keyExtractor={(model) => model.id}
-          itemHeight={152}
+          itemHeight={220}
           virtualizationThreshold={20}
           className="flex-1 pb-4"
           emptyComponent={
