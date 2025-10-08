@@ -5,6 +5,8 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { Button } from "../../components/ui";
+import { StaticGlassCard } from "../../components/ui/StaticGlassCard";
+import { useGlassPalette } from "../../hooks/useGlassPalette";
 import { cn } from "../../lib/utils";
 import { useStudio } from "../state/StudioContext";
 
@@ -12,6 +14,8 @@ function Header() {
   const { activeRole } = useStudio();
   const location = useLocation();
   const navigate = useNavigate();
+  const palette = useGlassPalette();
+  const headerTint = palette[0] ?? { from: "hsla(0, 0%, 100%, 0.1)", to: "hsla(0, 0%, 100%, 0.0)" };
 
   const handleNewChatClick = () => {
     const timestamp = Date.now();
@@ -24,7 +28,7 @@ function Header() {
   return (
     <header className="relative z-10 px-4 pb-6 pt-10">
       <div className="mx-auto max-w-md">
-        <div className="glass-2 bg-white/7 relative rounded-2xl border border-white/20 p-6 shadow-[0_8px_30px_rgba(0,0,0,0.28)] backdrop-blur-md backdrop-saturate-150 before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']">
+        <StaticGlassCard tint={headerTint} padding="lg">
           <div className="relative flex items-center justify-between">
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
@@ -65,7 +69,7 @@ function Header() {
               </Button>
             </div>
           </div>
-        </div>
+        </StaticGlassCard>
       </div>
     </header>
   );
