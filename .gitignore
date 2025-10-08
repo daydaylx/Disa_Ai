@@ -107,3 +107,9 @@ playwright-visual-report/
 # Audit artifacts (cleanup tracking)
 .audit/
 autopilot.log
+
+# Databases
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
