@@ -1,5 +1,5 @@
 import { RotateCcw, Send, Square, Zap } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";
 // This component addresses the issue `04-composer-keyboard.md`
@@ -47,7 +47,6 @@ export function ChatComposer({
   isQuickstartLoading = false,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
   const viewport = useVisualViewport();
   const { accentColor } = useStudio();
   const tint = createRoleTint(accentColor);
@@ -152,8 +151,6 @@ export function ChatComposer({
               value={value}
               onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
               placeholder={placeholder}
               disabled={isComposerDisabled}
               readOnly={isQuickstartLoading}
