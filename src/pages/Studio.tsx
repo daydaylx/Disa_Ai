@@ -9,43 +9,14 @@ import { loadRoles } from "../data/roles";
 import { useGlassPalette } from "../hooks/useGlassPalette";
 import type { GlassTint } from "../lib/theme/glass";
 
-type RoleVisualConfig = {
-  tint: RoleTint;
-  contrastOverlay?: boolean;
-};
-
-const _ROLE_TINTS: Record<string, RoleVisualConfig> = {
-  neutral: {
-    tint: {
-      from: "hsl(210 90% 60% / 0.22)",
-      to: "hsl(50 95% 55% / 0.22)",
-    },
-  },
-  email_professional: {
-    tint: {
-      from: "hsl(195 100% 55% / 0.22)",
-      to: "hsl(245 90% 60% / 0.22)",
-    },
-  },
-  sarcastic_direct: {
-    tint: {
-      from: "hsl(160 85% 45% / 0.22)",
-      to: "hsl(190 85% 50% / 0.22)",
-    },
-  },
-  songwriter: {
-    tint: {
-      from: "hsl(30 95% 55% / 0.22)",
-      to: "hsl(345 90% 60% / 0.22)",
-    },
-  },
-  creative_writer: {
-    tint: {
-      from: "hsl(265 90% 62% / 0.22)",
-      to: "hsl(320 90% 62% / 0.22)",
-    },
-  },
-};
+// Removed unused ROLE_TINTS and RoleVisualConfig - now using useGlassPalette for consistent theming
+// const _ROLE_TINTS: Record<string, RoleVisualConfig> = {
+//   neutral: { tint: { from: "hsl(210 90% 60% / 0.22)", to: "hsl(50 95% 55% / 0.22)" } },
+//   email_professional: { tint: { from: "hsl(195 100% 55% / 0.22)", to: "hsl(245 90% 60% / 0.22)" } },
+//   sarcastic_direct: { tint: { from: "hsl(160 85% 45% / 0.22)", to: "hsl(190 85% 50% / 0.22)" } },
+//   songwriter: { tint: { from: "hsl(30 95% 55% / 0.22)", to: "hsl(345 90% 60% / 0.22)" } },
+//   creative_writer: { tint: { from: "hsl(265 90% 62% / 0.22)", to: "hsl(320 90% 62% / 0.22)" } },
+// };
 
 const DEFAULT_TINT: RoleTint = {
   from: "hsl(210 45% 55% / 0.20)",

@@ -21,11 +21,12 @@ function formatContext(ctx?: number) {
   return `${ctx.toLocaleString()} Token`;
 }
 
-function formatPrice(price?: number) {
-  if (price === undefined || price === null || typeof price !== "number") return "unbekannt";
-  if (price === 0) return "Kostenlos";
-  return `$${price.toFixed(3)}/1k`;
-}
+// Unused - keeping for potential future use
+// function formatPrice(price?: number) {
+//   if (price === undefined || price === null || typeof price !== "number") return "unbekannt";
+//   if (price === 0) return "Kostenlos";
+//   return `$${price.toFixed(3)}/1k`;
+// }
 
 const DEFAULT_TINT: GlassTint = {
   from: "hsl(210 45% 55% / 0.20)",
@@ -43,8 +44,8 @@ export default function ModelsPage() {
   const [search, setSearch] = useState("");
   const [loadingState, setLoadingState] = useState<LoadingState>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [filters, setFilters] = useState<string[]>([]);
-  const [showNsfw, setShowNsfw] = useState(false);
+  const [filters] = useState<string[]>([]);
+  const showNsfw = false; // NSFW filtering disabled for now
   const toasts = useToasts();
   const palette = useGlassPalette();
 
@@ -223,20 +224,13 @@ export default function ModelsPage() {
     },
   ] as const;
 
-  const filterOptions = [
-    { id: "free", label: "Kostenlos", count: models.filter((m) => m.pricing?.in === 0).length },
-    {
-      id: "coding",
-      label: "Coding",
-      count: models.filter((m) => m.tags?.includes("coding")).length,
-    },
-    { id: "fast", label: "Schnell", count: models.filter((m) => m.tags?.includes("fast")).length },
-    {
-      id: "large",
-      label: "Large Context",
-      count: models.filter((m) => (m.ctx || 0) > 100000).length,
-    },
-  ];
+  // Removed filterOptions - filter UI not implemented yet
+  // const filterOptions = [
+  //   { id: "free", label: "Kostenlos", count: models.filter((m) => m.pricing?.in === 0).length },
+  //   { id: "coding", label: "Coding", count: models.filter((m) => m.tags?.includes("coding")).length },
+  //   { id: "fast", label: "Schnell", count: models.filter((m) => m.tags?.includes("fast")).length },
+  //   { id: "large", label: "Large Context", count: models.filter((m) => (m.ctx || 0) > 100000).length },
+  // ];
 
   useEffect(() => {
     let mounted = true;
@@ -343,11 +337,12 @@ export default function ModelsPage() {
     return result;
   }, [models, search, filters, showNsfw]);
 
-  const toggleFilter = (filterId: string) => {
-    setFilters((prev) =>
-      prev.includes(filterId) ? prev.filter((f) => f !== filterId) : [...prev, filterId],
-    );
-  };
+  // Removed toggleFilter - filter UI not implemented yet
+  // const toggleFilter = (filterId: string) => {
+  //   setFilters((prev) =>
+  //     prev.includes(filterId) ? prev.filter((f) => f !== filterId) : [...prev, filterId],
+  //   );
+  // };
 
   const selectModelById = (modelId: string, label?: string) => {
     setSelected(modelId);

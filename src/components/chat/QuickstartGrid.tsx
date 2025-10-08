@@ -33,12 +33,13 @@ export function QuickstartGrid({
   };
 
   const getTintForIndex = (index: number): GlassTint => {
-    const gradients = palette.length > 0 ? palette : DEFAULT_GLASS_VARIANTS;
-    const gradient = gradients[index % gradients.length];
-    if (!gradient) {
-      return fallbackTint;
+    // palette is already GlassTint[], no need to convert
+    if (palette.length > 0) {
+      return palette[index % palette.length] ?? fallbackTint;
     }
-    return gradientToTint(gradient) ?? fallbackTint;
+    // Fallback to converting DEFAULT_GLASS_VARIANTS
+    const gradient = DEFAULT_GLASS_VARIANTS[index % DEFAULT_GLASS_VARIANTS.length];
+    return gradientToTint(gradient!) ?? fallbackTint;
   };
 
   // Load and sort quickstarts on mount

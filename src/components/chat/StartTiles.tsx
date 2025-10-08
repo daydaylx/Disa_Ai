@@ -1,8 +1,8 @@
 import { Book, Code, MessageSquare } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { useGlassPalette } from "../../hooks/useGlassPalette";
-import { DEFAULT_GLASS_VARIANTS } from "../../lib/theme/glass";
+import { createGlassGradientVariants, DEFAULT_GLASS_VARIANTS } from "../../lib/theme/glass";
+import { colors } from "../../styles/design-tokens";
 import { GlassTile } from "../ui/GlassTile";
 
 export type StartTileAction = { type: "new-chat" } | { type: "set-role"; roleId: string };
@@ -42,11 +42,10 @@ interface StartTilesProps {
 }
 
 export function StartTiles({ onTileClick }: StartTilesProps) {
-  const palette = useGlassPalette();
-
+  // Generate gradient strings for GlassTile (which expects string, not GlassTint)
   const getTileGradient = (index: number): string => {
-    const gradients = palette.length > 0 ? palette : DEFAULT_GLASS_VARIANTS;
-    return gradients[index % gradients.length] ?? DEFAULT_GLASS_VARIANTS[0]!;
+    const gradientStrings = createGlassGradientVariants(colors.semantic.purple);
+    return gradientStrings[index % gradientStrings.length] ?? DEFAULT_GLASS_VARIANTS[0]!;
   };
 
   const badgeTones: Array<"warm" | "cool" | "fresh"> = ["warm", "cool", "fresh"];

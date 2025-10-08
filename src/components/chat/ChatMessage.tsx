@@ -106,8 +106,10 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
   const assistantTint = useMemo(() => {
     const roleAccent = activeRole?.styleHints?.accentColor;
     if (roleAccent) return createRoleTint(roleAccent);
-    const gradient: string = palette[1] ?? palette[0] ?? DEFAULT_GLASS_VARIANTS[0]!;
-    return gradientToTint(gradient) ?? createRoleTint();
+    // palette is already GlassTint[], no need to convert
+    return (
+      palette[1] ?? palette[0] ?? gradientToTint(DEFAULT_GLASS_VARIANTS[0]!) ?? createRoleTint()
+    );
   }, [activeRole?.styleHints?.accentColor, palette]);
 
   const systemTint: GlassTint = {

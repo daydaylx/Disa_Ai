@@ -35,12 +35,13 @@ export function ConversationHistorySheet({
   };
 
   const getTintForIndex = (index: number): GlassTint => {
-    const gradients = cardPalette.length > 0 ? cardPalette : DEFAULT_GLASS_VARIANTS;
-    const gradient = gradients[index % gradients.length];
-    if (!gradient) {
-      return fallbackTint;
+    // cardPalette is already GlassTint[], no need to convert
+    if (cardPalette.length > 0) {
+      return cardPalette[index % cardPalette.length] ?? fallbackTint;
     }
-    return gradientToTint(gradient) ?? fallbackTint;
+    // Fallback to converting DEFAULT_GLASS_VARIANTS
+    const gradient = DEFAULT_GLASS_VARIANTS[index % DEFAULT_GLASS_VARIANTS.length];
+    return gradientToTint(gradient!) ?? fallbackTint;
   };
 
   const activeTint = getTintForIndex(0);
