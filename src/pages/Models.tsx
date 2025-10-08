@@ -35,6 +35,237 @@ const DEFAULT_TINT: GlassTint = {
 
 type LoadingState = "idle" | "loading" | "success" | "error" | "timeout";
 
+// === Premium Modelle ===
+const premiumModels = [
+  {
+    id: "perplexity/llama-3.1-sonar-large-128k-online",
+    label: "Sonar Large Online",
+    provider: "Perplexity",
+    priceIn: 1.0,
+    priceOut: 1.0,
+    ctx: 128000,
+    description: "Llama mit Online-Zugang. Kann aktuelle Infos aus dem Internet holen.",
+  },
+  {
+    id: "openai/gpt-4o-mini",
+    label: "GPT-4o mini",
+    provider: "OpenAI",
+    priceIn: 0.15,
+    priceOut: 0.6,
+    ctx: 128000,
+    description:
+      "OpenAI-Allrounder: sehr verlässlich, starker Kontext und Toolsupport – ideal, wenn es einfach laufen soll.",
+  },
+  {
+    id: "google/gemini-2.0-flash-exp",
+    label: "Gemini 2.0 Flash",
+    provider: "Google",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 1000000,
+    description:
+      "Googles neuestes Modell mit riesigem Kontext (1M Tokens!). Experimentell, aber sehr leistungsfähig.",
+  },
+  {
+    id: "deepseek/deepseek-chat-v3.1",
+    label: "DeepSeek V3.1",
+    provider: "DeepSeek",
+    priceIn: 0.27,
+    priceOut: 1.1,
+    ctx: 64000,
+    description:
+      "Logisches Denken, lange Begründungen – denkt erst, antwortet dann. Für knifflige Fragen und mehrstufige Erklärungen stark.",
+  },
+] as const;
+
+// === Alltags Modelle ===
+const everydayModels = [
+  {
+    id: "meta-llama/llama-3.1-8b-instruct",
+    label: "Llama 3.1 8B",
+    provider: "Meta",
+    priceIn: 0.02,
+    priceOut: 0.03,
+    ctx: 131072,
+    description:
+      "Sehr guter Allrounder für Gespräche, stabil und vorhersehbar – mein Standardtipp für produktive Chats.",
+  },
+  {
+    id: "mistralai/mistral-small-3.2-24b-instruct",
+    label: "Mistral Small 24B",
+    provider: "Mistral",
+    priceIn: 0.2,
+    priceOut: 0.8,
+    ctx: 32000,
+    description:
+      "Kompaktes Mistral mit 24B – schnell, präzise, gut für Analysen und strukturierte Antworten.",
+  },
+  {
+    id: "mistralai/mistral-7b-instruct",
+    label: "Mistral 7B",
+    provider: "Mistral",
+    priceIn: 0.028,
+    priceOut: 0.054,
+    ctx: 32768,
+    description:
+      "Schlank und schnell – perfekt für Dialoge und leichtere Aufgaben, wenn es besonders flott gehen soll.",
+  },
+  {
+    id: "qwen/qwen-2.5-7b-instruct",
+    label: "Qwen 2.5 7B",
+    provider: "Qwen",
+    priceIn: 0.04,
+    priceOut: 0.1,
+    ctx: 32768,
+    description:
+      "Preiswert und wortgewandt, oft etwas direkter Ton – ideal für schnelle Brainstorms.",
+  },
+  {
+    id: "deepseek/deepseek-r1-distill-llama-8b",
+    label: "DeepSeek R1 Distill 8B",
+    provider: "DeepSeek",
+    priceIn: 0.04,
+    priceOut: 0.04,
+    ctx: 65536,
+    description:
+      "Günstiges Reasoning-Light: angenehme Plauderei mit solider Struktur, symmetrische Kosten.",
+  },
+] as const;
+
+// === Free Modelle ===
+const freeModels = [
+  {
+    id: "meta-llama/llama-3.3-70b-instruct:free",
+    label: "Llama 3.3 70B (Free)",
+    provider: "Meta",
+    priceIn: 0,
+    priceOut: 0,
+    ctx: 131072,
+    description:
+      "Freies 70B-Flaggschiff – sehr stabil mit großer Kontexttiefe, wenn du etwas mehr Reserven willst.",
+  },
+  {
+    id: "mistralai/mistral-nemo:free",
+    label: "Mistral Nemo (Free)",
+    provider: "Mistral",
+    priceIn: 0,
+    priceOut: 0,
+    ctx: 131072,
+    description:
+      "Robustes Long-Context-Modell von Mistral. Solide Qualität bei null Kosten – super Standardwahl.",
+  },
+  {
+    id: "qwen/qwen-2.5-72b-instruct:free",
+    label: "Qwen 2.5 72B (Free)",
+    provider: "Qwen",
+    priceIn: 0,
+    priceOut: 0,
+    ctx: 32768,
+    description:
+      "Kostenlose 72B-Version. Premium-Qualität ohne Kosten – einer der besten Free-Modelle.",
+  },
+  {
+    id: "meta-llama/llama-3.3-8b-instruct:free",
+    label: "Llama 3.3 8B (Free)",
+    provider: "Meta",
+    priceIn: 0,
+    priceOut: 0,
+    ctx: 131072,
+    description:
+      "Kostenloses Test-Pferd für lockere Chats. Wenn es hakt, wechsel auf Llama 3.1 8B.",
+  },
+  {
+    id: "qwen/qwen-2.5-7b-instruct:free",
+    label: "Qwen 2.5 7B (Free)",
+    provider: "Qwen",
+    priceIn: 0,
+    priceOut: 0,
+    ctx: 32768,
+    description: "Kostenlose Qwen-Variante für schnelle Experimente und einfache Aufgaben.",
+  },
+] as const;
+
+// === Unzensiert Modelle ===
+const uncensoredModels = [
+  {
+    id: "thedrummer/cydonia-24b-v4.1",
+    label: "Cydonia 24B v4.1",
+    provider: "TheDrummer",
+    priceIn: 1.2,
+    priceOut: 1.2,
+    ctx: 32768,
+    description:
+      "Kreatives Schreiben, Rollenspiel, wenig Filter. Klingt freier und fantasievoller als übliche Schulbuch-Bots.",
+  },
+  {
+    id: "cognitivecomputations/dolphin3.0-mistral-24b",
+    label: "Dolphin 3.0 Mistral 24B",
+    provider: "CognitiveComputations",
+    priceIn: 0.3,
+    priceOut: 0.3,
+    ctx: 32768,
+    description:
+      "Unkompliziertes Rollenspiel-Modell mit wenig Einschränkungen. Gut für kreative Szenarien.",
+  },
+  {
+    id: "sao10k/l3.3-euryale-70b",
+    label: "Euryale L3.3 70B",
+    provider: "Sao10k",
+    priceIn: 0.8,
+    priceOut: 0.8,
+    ctx: 131072,
+    description:
+      "Unzensiertes 70B-Modell für kreative Geschichten und Rollenspiel mit großem Kontext.",
+  },
+  {
+    id: "venice/uncensored:free",
+    label: "Venice Uncensored (Free)",
+    provider: "Venice",
+    priceIn: 0,
+    priceOut: 0,
+    ctx: 8192,
+    description:
+      "Kostenlose unzensierte Variante für Experimente. Qualität schwankt, aber ein guter Einstieg.",
+  },
+] as const;
+
+// === Code-Modelle ===
+const codeModels = [
+  {
+    id: "deepseek/deepseek-coder",
+    label: "DeepSeek Coder",
+    provider: "DeepSeek",
+    priceIn: 0.2,
+    priceOut: 0.8,
+    ctx: 32768,
+    description:
+      "Spezialisiert auf Programmierung. Versteht Code-Kontext gut, erklärt und debuggt sauber.",
+  },
+  {
+    id: "qwen/qwen-2.5-coder-32b-instruct",
+    label: "Qwen 2.5 Coder 32B",
+    provider: "Qwen",
+    priceIn: 0.3,
+    priceOut: 0.9,
+    ctx: 32768,
+    description:
+      "Spezialisiertes Code-Qwen. Versteht Programmierung ausgezeichnet, erklärt und debuggt präzise.",
+  },
+] as const;
+
+// === Visuelle Modelle ===
+const visualModels = [
+  {
+    id: "mistralai/pixtral-12b",
+    label: "Pixtral 12B",
+    provider: "Mistral",
+    priceIn: 0.4,
+    priceOut: 1.2,
+    ctx: 32768,
+    description: "Mistral mit Bildverständnis. Kann Fotos analysieren und darüber sprechen.",
+  },
+] as const;
+
 export default function ModelsPage() {
   const { activeRole } = useStudio();
   const [models, setModels] = useState<ModelEntry[]>([]);
@@ -48,211 +279,6 @@ export default function ModelsPage() {
   const showNsfw = false; // NSFW filtering disabled for now
   const toasts = useToasts();
   const palette = useGlassPalette();
-
-  // === Premium Modelle ===
-  const premiumModels = [
-    {
-      id: "anthropic/claude-3.5-sonnet",
-      label: "Claude 3.5 Sonnet",
-      provider: "Anthropic",
-      priceIn: 3.0,
-      priceOut: 15.0,
-      ctx: 200000,
-      description:
-        "Anthropics Flaggschiff: Top-Qualität für komplexe Aufgaben, exzellentes Reasoning und lange Kontexte.",
-    },
-    {
-      id: "openai/gpt-4o",
-      label: "GPT-4o",
-      provider: "OpenAI",
-      priceIn: 2.5,
-      priceOut: 10.0,
-      ctx: 128000,
-      description:
-        "OpenAIs stärkstes Multimodal-Modell. Hervorragend für komplexe Analysen, Code und kreative Aufgaben.",
-    },
-    {
-      id: "openai/o1-mini",
-      label: "o1-mini",
-      provider: "OpenAI",
-      priceIn: 3.0,
-      priceOut: 12.0,
-      ctx: 128000,
-      description:
-        "Reasoning-Modell von OpenAI. Denkt systematisch durch komplexe Probleme – ideal für Logik und Mathematik.",
-    },
-    {
-      id: "openai/gpt-4o-mini",
-      label: "GPT-4o mini",
-      provider: "OpenAI",
-      priceIn: 0.15,
-      priceOut: 0.6,
-      ctx: 128000,
-      description:
-        "OpenAI-Allrounder: sehr verlässlich, starker Kontext und Toolsupport – ideal, wenn es einfach laufen soll.",
-    },
-    {
-      id: "anthropic/claude-3-haiku-20240307",
-      label: "Claude 3 Haiku",
-      provider: "Anthropic",
-      priceIn: 0.25,
-      priceOut: 1.25,
-      ctx: 200000,
-      description:
-        "Anthropic-Qualität in schnell: präzise, kaum Halluzinationen, großartig für produktive Sessions.",
-    },
-    {
-      id: "google/gemini-2.0-flash-exp",
-      label: "Gemini 2.0 Flash",
-      provider: "Google",
-      priceIn: 0.0,
-      priceOut: 0.0,
-      ctx: 1000000,
-      description:
-        "Googles neuestes Modell mit riesigem Kontext (1M Tokens!). Experimentell, aber sehr leistungsfähig.",
-    },
-    {
-      id: "deepseek/deepseek-chat-v3.1",
-      label: "DeepSeek V3.1",
-      provider: "DeepSeek",
-      priceIn: 0.27,
-      priceOut: 1.1,
-      ctx: 64000,
-      description:
-        "Logisches Denken, lange Begründungen – denkt erst, antwortet dann. Für knifflige Fragen und mehrstufige Erklärungen stark.",
-    },
-  ] as const;
-
-  // === Alltags Modelle ===
-  const everydayModels = [
-    {
-      id: "meta-llama/llama-3.1-8b-instruct",
-      label: "Llama 3.1 8B",
-      provider: "Meta",
-      priceIn: 0.02,
-      priceOut: 0.03,
-      ctx: 131072,
-      description:
-        "Sehr guter Allrounder für Gespräche, stabil und vorhersehbar – mein Standardtipp für produktive Chats.",
-    },
-    {
-      id: "mistralai/mistral-7b-instruct",
-      label: "Mistral 7B",
-      provider: "Mistral",
-      priceIn: 0.028,
-      priceOut: 0.054,
-      ctx: 32768,
-      description:
-        "Schlank und schnell – perfekt für Dialoge und leichtere Aufgaben, wenn es besonders flott gehen soll.",
-    },
-    {
-      id: "qwen/qwen-2.5-7b-instruct",
-      label: "Qwen 2.5 7B",
-      provider: "Qwen",
-      priceIn: 0.04,
-      priceOut: 0.1,
-      ctx: 32768,
-      description:
-        "Preiswert und wortgewandt, oft etwas direkter Ton – ideal für schnelle Brainstorms.",
-    },
-    {
-      id: "deepseek/deepseek-r1-distill-llama-8b",
-      label: "DeepSeek R1 Distill 8B",
-      provider: "DeepSeek",
-      priceIn: 0.04,
-      priceOut: 0.04,
-      ctx: 65536,
-      description:
-        "Günstiges Reasoning-Light: angenehme Plauderei mit solider Struktur, symmetrische Kosten.",
-    },
-  ] as const;
-
-  // === Free Modelle ===
-  const freeModels = [
-    {
-      id: "meta-llama/llama-3.3-70b-instruct:free",
-      label: "Llama 3.3 70B (Free)",
-      provider: "Meta",
-      priceIn: 0,
-      priceOut: 0,
-      ctx: 131072,
-      description:
-        "Freies 70B-Flaggschiff – sehr stabil mit großer Kontexttiefe, wenn du etwas mehr Reserven willst.",
-    },
-    {
-      id: "mistralai/mistral-nemo:free",
-      label: "Mistral Nemo (Free)",
-      provider: "Mistral",
-      priceIn: 0,
-      priceOut: 0,
-      ctx: 131072,
-      description:
-        "Robustes Long-Context-Modell von Mistral. Solide Qualität bei null Kosten – super Standardwahl.",
-    },
-    {
-      id: "meta-llama/llama-3.3-8b-instruct:free",
-      label: "Llama 3.3 8B (Free)",
-      provider: "Meta",
-      priceIn: 0,
-      priceOut: 0,
-      ctx: 131072,
-      description:
-        "Kostenloses Test-Pferd für lockere Chats. Wenn es hakt, wechsel auf Llama 3.1 8B.",
-    },
-    {
-      id: "qwen/qwen-2.5-7b-instruct:free",
-      label: "Qwen 2.5 7B (Free)",
-      provider: "Qwen",
-      priceIn: 0,
-      priceOut: 0,
-      ctx: 32768,
-      description: "Kostenlose Qwen-Variante für schnelle Experimente und einfache Aufgaben.",
-    },
-  ] as const;
-
-  // === Unzensiert Modelle ===
-  const uncensoredModels = [
-    {
-      id: "thedrummer/cydonia-24b-v4.1",
-      label: "Cydonia 24B v4.1",
-      provider: "TheDrummer",
-      priceIn: 1.2,
-      priceOut: 1.2,
-      ctx: 32768,
-      description:
-        "Kreatives Schreiben, Rollenspiel, wenig Filter. Klingt freier und fantasievoller als übliche Schulbuch-Bots.",
-    },
-    {
-      id: "cognitivecomputations/dolphin3.0-mistral-24b",
-      label: "Dolphin 3.0 Mistral 24B",
-      provider: "CognitiveComputations",
-      priceIn: 0.3,
-      priceOut: 0.3,
-      ctx: 32768,
-      description:
-        "Unkompliziertes Rollenspiel-Modell mit wenig Einschränkungen. Gut für kreative Szenarien.",
-    },
-    {
-      id: "sao10k/l3.3-euryale-70b",
-      label: "Euryale L3.3 70B",
-      provider: "Sao10k",
-      priceIn: 0.8,
-      priceOut: 0.8,
-      ctx: 131072,
-      description:
-        "Unzensiertes 70B-Modell für kreative Geschichten und Rollenspiel mit großem Kontext.",
-    },
-    {
-      id: "venice/uncensored:free",
-      label: "Venice Uncensored (Free)",
-      provider: "Venice",
-      priceIn: 0,
-      priceOut: 0,
-      ctx: 8192,
-      description:
-        "Kostenlose unzensierte Variante für Experimente. Qualität schwankt, aber ein guter Einstieg.",
-    },
-  ] as const;
 
   // Removed filterOptions - filter UI not implemented yet
   // const filterOptions = [
@@ -343,10 +369,27 @@ export default function ModelsPage() {
       from: "hsl(30 95% 60% / 0.22)", // Orange/Rot - Kreativ/Frei
       to: "hsl(345 90% 65% / 0.22)",
     },
+    code: {
+      from: "hsl(210 80% 60% / 0.22)", // Blau - Code
+      to: "hsl(220 85% 65% / 0.22)",
+    },
+    visual: {
+      from: "hsl(145 80% 60% / 0.22)", // Grün - Visuell
+      to: "hsl(160 85% 55% / 0.22)",
+    },
   };
 
   const filtered = useMemo(() => {
-    let result = models;
+    const featuredModelIds = new Set<string>([
+      ...premiumModels.map((m) => m.id),
+      ...everydayModels.map((m) => m.id),
+      ...freeModels.map((m) => m.id),
+      ...uncensoredModels.map((m) => m.id),
+      ...codeModels.map((m) => m.id),
+      ...visualModels.map((m) => m.id),
+    ]);
+
+    let result = models.filter((model) => !featuredModelIds.has(model.id));
 
     // Apply search filter
     const term = search.trim().toLowerCase();
@@ -423,7 +466,7 @@ export default function ModelsPage() {
       ctx?: number;
       description: string;
     },
-    categoryKey: "premium" | "everyday" | "free" | "uncensored",
+    categoryKey: "premium" | "everyday" | "free" | "uncensored" | "code" | "visual",
   ) => {
     const isSelected = selected === item.id;
     // Use category-specific tint instead of palette offset
@@ -651,6 +694,30 @@ export default function ModelsPage() {
         </p>
         <div className="space-y-3">
           {uncensoredModels.map((item) => renderFeaturedCard(item, "uncensored"))}
+        </div>
+      </section>
+
+      {/* Code-Modelle */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+          💻 Code-Modelle
+        </h2>
+        <p className="text-xs text-white/60">
+          Spezialisierte Modelle für Programmierung und Code-Analyse
+        </p>
+        <div className="space-y-3">
+          {codeModels.map((item) => renderFeaturedCard(item, "code"))}
+        </div>
+      </section>
+
+      {/* Visuelle Modelle */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+          🖼️ Visuelle Modelle
+        </h2>
+        <p className="text-xs text-white/60">Modelle mit Bildverständnis für visuelle Aufgaben</p>
+        <div className="space-y-3">
+          {visualModels.map((item) => renderFeaturedCard(item, "visual"))}
         </div>
       </section>
 

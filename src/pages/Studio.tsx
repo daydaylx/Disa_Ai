@@ -111,32 +111,44 @@ function RolesTab() {
   // Kategorie-spezifische Farben für bessere Übersichtlichkeit
   const categoryTints: Record<string, GlassTint> = {
     Standard: {
-      from: "hsl(200 85% 55% / 0.22)", // Blau - Neutral/Standard
-      to: "hsl(210 80% 60% / 0.22)",
+      from: "hsl(210 80% 65% / 0.22)", // Helleres Blau
+      to: "hsl(220 75% 70% / 0.22)",
     },
     Beruflich: {
-      from: "hsl(240 90% 60% / 0.22)", // Dunkelblau - Professionell
-      to: "hsl(220 85% 65% / 0.22)",
+      from: "hsl(180 80% 45% / 0.22)", // Teal
+      to: "hsl(190 75% 50% / 0.22)",
+    },
+    Erwachsene: {
+      from: "hsl(290 70% 50% / 0.22)", // Dunkelviolett
+      to: "hsl(300 65% 55% / 0.22)",
+    },
+    Beratung: {
+      from: "hsl(160 60% 50% / 0.22)", // Mintgrün
+      to: "hsl(170 55% 55% / 0.22)",
+    },
+    Spezial: {
+      from: "hsl(45 100% 50% / 0.22)", // Gold
+      to: "hsl(55 95% 55% / 0.22)",
     },
     Experten: {
-      from: "hsl(0 85% 55% / 0.22)", // Rot - Expert/Wichtig
+      from: "hsl(0 85% 55% / 0.22)", // Rot
       to: "hsl(15 80% 60% / 0.22)",
     },
     Kreativ: {
-      from: "hsl(280 90% 60% / 0.22)", // Violett - Kreativ/Künstlerisch
+      from: "hsl(280 90% 60% / 0.22)", // Violett
       to: "hsl(300 85% 65% / 0.22)",
     },
     Lernen: {
-      from: "hsl(40 95% 55% / 0.22)", // Gelb/Orange - Lernen/Bildung
+      from: "hsl(40 95% 55% / 0.22)", // Gelb/Orange
       to: "hsl(50 90% 60% / 0.22)",
     },
     Persönlichkeit: {
-      from: "hsl(330 90% 60% / 0.22)", // Pink - Persönlich
+      from: "hsl(330 90% 60% / 0.22)", // Pink
       to: "hsl(345 85% 65% / 0.22)",
     },
     Praktisch: {
-      from: "hsl(160 85% 55% / 0.22)", // Grün - Praktisch/Hilfreich
-      to: "hsl(145 80% 60% / 0.22)",
+      from: "hsl(120 85% 55% / 0.22)", // Grün
+      to: "hsl(135 80% 60% / 0.22)",
     },
   };
 
