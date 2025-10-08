@@ -590,7 +590,7 @@ export default function ChatPageV2() {
         <div className="flex h-full w-full">
           {/* Chat Area */}
           <div className="flex flex-1 flex-col overflow-hidden">
-            <div className="flex items-center justify-end px-1 pb-3">
+            <div className="flex items-center justify-end px-4 pb-3">
               <Button
                 type="button"
                 size="sm"
@@ -606,30 +606,26 @@ export default function ChatPageV2() {
                 Verlauf
               </Button>
             </div>
-            <section className="flex-1 overflow-hidden" aria-label="Chat History">
-              <div className="h-full px-1">
-                <div className="h-full w-full">
-                  <ChatList
-                    messages={messages}
-                    onCopy={handleCopy}
-                    onRetry={handleRetry}
-                    onQuickstartFlow={handleQuickstartFlow}
-                    isLoading={isLoading}
-                    isQuickstartLoading={isQuickstartLoading}
-                    currentModel={model?.id}
-                    conversations={conversations}
-                    onSelectConversation={handleSelectConversation}
-                    onDeleteConversation={handleDeleteConversation}
-                    onShowHistory={() => setHistoryOpen(true)}
-                    activeConversationId={conversationId}
-                  />
-                </div>
-              </div>
+            <section className="flex-1 overflow-y-auto px-4" aria-label="Chat History">
+              <ChatList
+                messages={messages}
+                onCopy={handleCopy}
+                onRetry={handleRetry}
+                onQuickstartFlow={handleQuickstartFlow}
+                isLoading={isLoading}
+                isQuickstartLoading={isQuickstartLoading}
+                currentModel={model?.id}
+                conversations={conversations}
+                onSelectConversation={handleSelectConversation}
+                onDeleteConversation={handleDeleteConversation}
+                onShowHistory={() => setHistoryOpen(true)}
+                activeConversationId={conversationId}
+              />
             </section>
 
             {/* Input Section */}
             <section role="region" aria-label="Message Input" className="safe-bottom">
-              <div className="px-1">
+              <div className="px-4">
                 <div className="w-full">
                   <ChatComposer
                     value={input}
