@@ -13,15 +13,17 @@ import {
 import { useEffect, useState } from "react";
 
 import { Button } from "../components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { StaticGlassCard } from "../components/ui/StaticGlassCard";
 import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { useGlassPalette } from "../hooks/useGlassPalette";
 import { useMemory } from "../hooks/useMemory";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { useSettings } from "../hooks/useSettings";
 import { BUILD_ID } from "../lib/pwa/registerSW";
+import type { GlassTint } from "../lib/theme/glass";
 
 function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> }) {
   const [stats, setStats] = useState({ chatCount: 0, totalMessages: 0, storageUsed: 0 });
@@ -47,6 +49,11 @@ function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> })
   );
 }
 
+const DEFAULT_TINT: GlassTint = {
+  from: "hsl(210 45% 55% / 0.20)",
+  to: "hsl(250 60% 52% / 0.18)",
+};
+
 type InitState = "loading" | "ready" | "error";
 
 export default function SettingsPage() {
@@ -65,6 +72,7 @@ export default function SettingsPage() {
     getMemoryStats,
     isEnabled: memoryEnabled,
   } = useMemory();
+  const palette = useGlassPalette();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -195,17 +203,17 @@ export default function SettingsPage() {
       </header>
 
       {/* API Key Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <StaticGlassCard tint={palette[0] ?? DEFAULT_TINT} padding="lg">
+        <div className="flex flex-col space-y-1 pb-4">
+          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-corporate-text-primary">
             <Key className="h-5 w-5" />
             OpenRouter API-Schlüssel
-          </CardTitle>
-          <CardDescription>
+          </h2>
+          <p className="text-token-body leading-relaxed text-corporate-text-secondary">
             Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="apiKey" className="text-corporate-text-secondary">
               API-Schlüssel
@@ -267,21 +275,21 @@ export default function SettingsPage() {
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </StaticGlassCard>
 
       {/* Content Filter Section */}
-      <Card className="border-white/20 bg-white/10 backdrop-blur">
-        <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-white">
+      <StaticGlassCard tint={palette[1] ?? DEFAULT_TINT} padding="lg">
+        <div className="space-y-1 pb-4">
+          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <User className="h-5 w-5" />
             Inhaltsfilter
-          </CardTitle>
-          <CardDescription className="text-white/70">
+          </h2>
+          <p className="text-token-body leading-relaxed text-white/70">
             Verwalte die Sichtbarkeit verschiedener Inhaltsarten.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label htmlFor="nsfw-toggle" className="text-white/90">
@@ -309,21 +317,21 @@ export default function SettingsPage() {
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </StaticGlassCard>
 
       {/* Memory Settings Section */}
-      <Card className="border-white/20 bg-white/10 backdrop-blur">
-        <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-white">
+      <StaticGlassCard tint={palette[2] ?? DEFAULT_TINT} padding="lg">
+        <div className="space-y-1 pb-4">
+          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Brain className="h-5 w-5" />
             Gedächtnis-Funktion
-          </CardTitle>
-          <CardDescription className="text-white/70">
+          </h2>
+          <p className="text-token-body leading-relaxed text-white/70">
             Speichere Chat-Verläufe und persönliche Informationen für zukünftige Gespräche.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label htmlFor="memory-toggle" className="text-white/90">
@@ -421,21 +429,21 @@ export default function SettingsPage() {
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </StaticGlassCard>
 
       {/* PWA Install Section */}
-      <Card className="border-white/20 bg-white/10 backdrop-blur">
-        <CardHeader className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-white">
+      <StaticGlassCard tint={palette[3] ?? DEFAULT_TINT} padding="lg">
+        <div className="space-y-1 pb-4">
+          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Smartphone className="h-5 w-5" />
             App-Installation
-          </CardTitle>
-          <CardDescription className="text-white/70">
+          </h2>
+          <p className="text-token-body leading-relaxed text-white/70">
             Installiere Disa AI als native App für bessere Performance.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <div className="space-y-4">
           <div className="flex items-center gap-2">
             <div
               className={`h-2 w-2 rounded-full ${
@@ -484,21 +492,21 @@ export default function SettingsPage() {
               <li>• Bessere Performance</li>
             </ul>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </StaticGlassCard>
 
       {/* Build Info */}
-      <Card className="border-white/10 bg-white/5">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
+      <StaticGlassCard tint={palette[4] ?? DEFAULT_TINT} padding="lg">
+        <div className="space-y-1 pb-4">
+          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Info className="h-5 w-5" />
             Build Information
-          </CardTitle>
-          <CardDescription className="text-white/70">
+          </h2>
+          <p className="text-token-body leading-relaxed text-white/70">
             Build-Version und Deployment-Informationen
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </p>
+        </div>
+        <div className="space-y-4">
           <div className="space-y-2">
             {/* Build ID nur in Entwicklung anzeigen */}
             {import.meta.env.DEV && (
@@ -538,8 +546,8 @@ export default function SettingsPage() {
               (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </StaticGlassCard>
     </div>
   );
 }

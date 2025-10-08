@@ -5,13 +5,15 @@ import { Link } from "react-router-dom";
 import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
 import { Badge } from "../components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { StaticGlassCard } from "../components/ui/StaticGlassCard";
 import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { VirtualList } from "../components/ui/VirtualList";
 import { loadModelCatalog, type ModelEntry } from "../config/models";
+import { useGlassPalette } from "../hooks/useGlassPalette";
+import type { GlassTint } from "../lib/theme/glass";
 import { cn } from "../lib/utils";
 
 function formatContext(ctx?: number) {
@@ -27,6 +29,11 @@ function formatPrice(price?: number) {
   return `$${price.toFixed(3)}/1k`;
 }
 
+const DEFAULT_TINT: GlassTint = {
+  from: "hsl(210 45% 55% / 0.20)",
+  to: "hsl(250 60% 52% / 0.18)",
+};
+
 type LoadingState = "idle" | "loading" | "success" | "error" | "timeout";
 
 export default function ModelsPage() {
@@ -41,6 +48,7 @@ export default function ModelsPage() {
   const [filters, setFilters] = useState<string[]>([]);
   const [showNsfw, setShowNsfw] = useState(false);
   const toasts = useToasts();
+  const palette = useGlassPalette();
   const budgetChatModels = [
     {
       id: "meta-llama/llama-3.1-8b-instruct",
@@ -271,85 +279,82 @@ export default function ModelsPage() {
     selectModelById(model.id, model.label);
   };
 
-  // Render function for virtual list
-  const renderModelCard = (model: ModelEntry) => (
-    <Card
-      key={model.id}
-      role="button"
-      tabIndex={0}
-      data-testid="model-card"
-      onClick={() => handleSelect(model)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          handleSelect(model);
-        }
-      }}
-      aria-pressed={selected === model.id}
-      aria-label={`Modell ${model.label || model.id} auswählen`}
-      className={cn(
-        "mb-3 min-h-touch-rec border-white/20 bg-white/10 backdrop-blur transition-all",
-        selected === model.id
-          ? "bg-accent-500/20 shadow-accent-500/25 border-accent-500 shadow-lg"
-          : "hover:border-white/30 hover:bg-white/20",
-      )}
-    >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div className="space-y-1">
-          <CardTitle className="text-sm font-medium text-corporate-text-primary">
-            {model.label || model.id}
-          </CardTitle>
-          <CardDescription className="text-xs text-corporate-text-secondary">
-            {model.provider || "Unbekannter Anbieter"}
-          </CardDescription>
-        </div>
-        <div className="flex items-center gap-2">
-          {selected === model.id && <div className="text-accent-400 h-4 w-4">✓</div>}
-          {model.pricing?.in === 0 && (
-            <Badge
-              variant="secondary"
-              className="border-green-500/30 bg-green-500/20 text-xs text-green-400"
-            >
-              Kostenlos
-            </Badge>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-4 text-xs">
-          <div>
-            <p className="text-white/50">Kontext</p>
-            <p className="text-white">{formatContext(model.ctx)}</p>
+  const renderModelCard = (model: ModelEntry, index: number) => {
+    const tint = palette[index % palette.length] ?? DEFAULT_TINT;
+    const isSelected = selected === model.id;
+
+    return (
+      <div
+        key={model.id}
+        role="button"
+        tabIndex={0}
+        data-testid="model-card"
+        onClick={() => handleSelect(model)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleSelect(model);
+          }
+        }}
+        aria-pressed={isSelected}
+        aria-label={`Modell ${model.label || model.id} auswählen`}
+        className={cn(
+          "mb-3 rounded-2xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+          isSelected && "ring-accent-500/80 ring-2",
+        )}
+      >
+        <StaticGlassCard tint={tint} padding="md" className="h-full">
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium text-white">{model.label || model.id}</h3>
+              <p className="text-xs text-white/70">{model.provider || "Unbekannter Anbieter"}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              {isSelected && <div className="text-accent-400 h-4 w-4">✓</div>}
+              {model.pricing?.in === 0 && (
+                <Badge
+                  variant="secondary"
+                  className="border-green-500/30 bg-green-500/20 text-xs text-green-400"
+                >
+                  Kostenlos
+                </Badge>
+              )}
+            </div>
           </div>
-          <div>
-            <p className="text-white/50">Preis</p>
-            <p className="text-white">{formatPrice(model.pricing?.in)}</p>
-          </div>
-        </div>
-        {model.tags && model.tags.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1">
-            {model.tags.slice(0, 3).map((tag) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="border-white/20 text-xs text-corporate-text-secondary"
-              >
-                {tag}
-              </Badge>
-            ))}
-            {model.tags.length > 3 && (
-              <Badge
-                variant="outline"
-                className="border-white/20 text-xs text-corporate-text-secondary"
-              >
-                +{model.tags.length - 3}
-              </Badge>
+          <div className="space-y-4 pt-4">
+            <div className="grid grid-cols-2 gap-4 text-xs">
+              <div>
+                <p className="text-white/50">Kontext</p>
+                <p className="text-white">{formatContext(model.ctx)}</p>
+              </div>
+              <div>
+                <p className="text-white/50">Preis</p>
+                <p className="text-white">{formatPrice(model.pricing?.in)}</p>
+              </div>
+            </div>
+            {model.tags && model.tags.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-1">
+                {model.tags.slice(0, 3).map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="outline"
+                    className="border-white/20 text-xs text-white/70"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+                {model.tags.length > 3 && (
+                  <Badge variant="outline" className="border-white/20 text-xs text-white/70">
+                    +{model.tags.length - 3}
+                  </Badge>
+                )}
+              </div>
             )}
           </div>
-        )}
-      </CardContent>
-    </Card>
-  );
+        </StaticGlassCard>
+      </div>
+    );
+  };
 
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
@@ -366,27 +371,29 @@ export default function ModelsPage() {
         </p>
       </header>
 
-      <section className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-white/80 backdrop-blur-lg">
-        <div className="flex-1">
-          <p className="text-xs font-semibold uppercase tracking-wide text-white/60">
-            Aktive Rolle
-          </p>
-          <p className="mt-0.5 text-sm font-medium text-white">
-            {activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"}
-          </p>
-          <p className="text-xs text-white/60">
-            Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.
-          </p>
+      <StaticGlassCard tint={palette[0] ?? DEFAULT_TINT} padding="md">
+        <div className="flex items-center gap-3 text-white/80">
+          <div className="flex-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-white/60">
+              Aktive Rolle
+            </p>
+            <p className="mt-0.5 text-sm font-medium text-white">
+              {activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"}
+            </p>
+            <p className="text-xs text-white/60">
+              Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.
+            </p>
+          </div>
+          <Link
+            to="/roles"
+            className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          >
+            Rollen öffnen
+          </Link>
         </div>
-        <Link
-          to="/roles"
-          className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-        >
-          Rollen öffnen
-        </Link>
-      </section>
+      </StaticGlassCard>
 
-      <section className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-lg">
+      <StaticGlassCard tint={palette[1] ?? DEFAULT_TINT} padding="md" className="space-y-3">
         <div className="flex items-start gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
             <PiggyBank className="h-5 w-5" aria-hidden="true" />
@@ -453,9 +460,9 @@ export default function ModelsPage() {
           Tipp: Temperature um ~0.6 halten – höher bedeutet mehr Kreativität, aber auch mehr
           Halluzinationen.
         </p>
-      </section>
+      </StaticGlassCard>
 
-      <section className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-lg">
+      <StaticGlassCard tint={palette[2] ?? DEFAULT_TINT} padding="md" className="space-y-3">
         <div className="flex items-start gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-100">
             <ShieldCheck className="h-5 w-5" aria-hidden="true" />
@@ -521,7 +528,7 @@ export default function ModelsPage() {
           Hinweis: Hochwertige Modelle reagieren sensibel auf Provider-Limits. Bei 429-Fehlern kurz
           warten oder auf eine Budget-Option wechseln.
         </p>
-      </section>
+      </StaticGlassCard>
 
       {/* Modell-Suche Section */}
       <section className="space-y-3">
@@ -607,9 +614,9 @@ export default function ModelsPage() {
       ) : (
         <VirtualList
           items={filtered}
-          renderItem={renderModelCard}
+          renderItem={(model, index) => renderModelCard(model, index)}
           keyExtractor={(model) => model.id}
-          itemHeight={140}
+          itemHeight={152}
           virtualizationThreshold={20}
           className="flex-1 pb-4"
           emptyComponent={
