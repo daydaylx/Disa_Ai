@@ -284,6 +284,7 @@ export function ChatList({
                     return (
                       <RoleCard
                         key={action.id}
+                        data-testid={`quickstart-${action.id}`}
                         title={action.title}
                         description={action.subtitle ?? QUICKSTART_FALLBACK_SUBTITLE}
                         badge={badge}
