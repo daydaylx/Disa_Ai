@@ -34,14 +34,21 @@ export type CatalogOptions = {
 /* ---- interne Helfer ---- */
 
 const RECOMMENDED_MODEL_IDS = [
-  "meta-llama/llama-3.1-8b-instruct",
-  "mistralai/mistral-7b-instruct",
-  "deepseek/deepseek-r1-distill-llama-8b",
-  "qwen/qwen-2.5-7b-instruct",
-  "meta-llama/llama-3.3-8b-instruct:free",
-  "meta-llama/llama-3.3-70b-instruct:free",
-  "mistralai/mistral-nemo:free",
-  "openai/gpt-4o-mini",
+  "cognitivecomputations/dolphin3.0-mistral-24b",
+  "cognitivecomputations/dolphin3.0-mistral-24b:free",
+  "cognitivecomputations/dolphin3.0-r1-mistral-24b",
+  "venice/uncensored:free",
+  "teknium/openhermes-2.5-mistral-7b",
+  "huggingfaceh4/zephyr-7b-beta",
+  "undi95/toppy-m-7b",
+  "pygmalionai/mythalion-13b",
+  "gryphe/mythomax-l2-13b",
+  "gryphe/mythomist-7b",
+  "nousresearch/nous-capybara-7b",
+  "jondurbin/airoboros-l2-70b",
+  "undi95/remm-slerp-l2-13b",
+  "sao10k/l3.3-euryale-70b",
+  "sao10k/l3.1-euryale-70b",
 ] as const;
 
 function deriveProvider(id: string): string | undefined {
@@ -86,55 +93,14 @@ function byLabel(a: ModelEntry, b: ModelEntry) {
  * This creates a more resilient fallback that adapts to available models
  */
 function generateIntelligentFallback(availableModels: ORModel[]): string[] {
+  const preferred = Array.from(RECOMMENDED_MODEL_IDS);
   if (!availableModels || availableModels.length === 0) {
-    // Ultimate fallback - known stable models (updated as of 2025)
-    return [
-      "meta-llama/llama-3.3-70b-instruct:free",
-      "mistralai/mistral-nemo:free",
-      "qwen/qwen-2.5-72b-instruct:free",
-    ];
+    return preferred;
   }
 
-  const fallbackModels: string[] = [];
-  const priorities = [
-    // High priority: Free models from major providers
-    { pattern: /^meta-llama\/.*:free$/, limit: 2 },
-    { pattern: /^mistralai\/.*:free$/, limit: 2 },
-    { pattern: /^qwen\/.*:free$/, limit: 2 },
-    { pattern: /^cognitivecomputations\/.*:free$/, limit: 1 },
-
-    // Medium priority: Affordable commercial models
-    { pattern: /^openai\/gpt-4o-mini/, limit: 1 },
-    { pattern: /^anthropic\/claude-3/, limit: 1 },
-    { pattern: /^google\/gemini/, limit: 1 },
-  ];
-
-  // Select models based on priority patterns
-  for (const priority of priorities) {
-    const matching = availableModels
-      .filter((model) => priority.pattern.test(model.id))
-      .slice(0, priority.limit)
-      .map((model) => model.id);
-
-    fallbackModels.push(...matching);
-  }
-
-  // If still not enough models, add top-rated free models
-  if (fallbackModels.length < 5) {
-    const additionalFree = availableModels
-      .filter((model) => model.id.includes(":free") && !fallbackModels.includes(model.id))
-      .slice(0, 5 - fallbackModels.length)
-      .map((model) => model.id);
-
-    fallbackModels.push(...additionalFree);
-  }
-
-  return fallbackModels.length > 0
-    ? fallbackModels
-    : [
-        // Last resort hardcoded fallback
-        "meta-llama/llama-3.3-70b-instruct:free",
-      ];
+  const availableSet = new Set(availableModels.map((m) => m.id));
+  const intersection = preferred.filter((id) => availableSet.has(id));
+  return intersection.length > 0 ? intersection : preferred;
 }
 
 /** Multi-layer resilient model ID retrieval with intelligent fallbacks */
@@ -182,23 +148,13 @@ async function getAllowedModelIds(): Promise<string[]> {
     try {
       const availableModels = await getRawModels(undefined, 5000); // 5s timeout for API
       const intelligentFallback = generateIntelligentFallback(availableModels);
-      const combined = Array.from(
-        new Set<string>([...intelligentFallback, ...RECOMMENDED_MODEL_IDS]),
-      );
-
-      console.warn(`[Models] Using intelligent fallback: ${combined.length} models`);
-      return combined;
+      console.warn(`[Models] Using intelligent fallback: ${intelligentFallback.length} models`);
+      return intelligentFallback;
     } catch (apiError) {
       console.warn("OpenRouter API also failed, using static fallback:", apiError);
 
       // Layer 3: Static fallback (last resort)
-      const staticFallback = [
-        "meta-llama/llama-3.3-70b-instruct:free",
-        "mistralai/mistral-nemo:free",
-        "qwen/qwen-2.5-72b-instruct:free",
-        "meta-llama/llama-3.1-405b-instruct:free",
-        ...RECOMMENDED_MODEL_IDS,
-      ];
+      const staticFallback = Array.from(RECOMMENDED_MODEL_IDS);
 
       const uniqueStatic = Array.from(new Set(staticFallback));
 

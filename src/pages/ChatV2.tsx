@@ -171,6 +171,13 @@ export default function ChatPageV2() {
         });
       }
 
+      context.push({
+        id: "system-language",
+        role: "system",
+        content: "Bitte ausschließlich auf Deutsch antworten.",
+        timestamp,
+      });
+
       if (activeRole?.systemPrompt) {
         context.push({
           id: "system-role",
