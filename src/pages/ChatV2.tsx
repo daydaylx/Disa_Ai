@@ -1,12 +1,14 @@
-import { Send } from "lucide-react";
+import { History, Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { ConversationHistorySheet } from "../components/chat/ConversationHistorySheet";
 import { Button } from "../components/ui/button";
 import { StaticGlassCard } from "../components/ui/StaticGlassCard";
 import { Textarea } from "../components/ui/textarea";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { useChat } from "../hooks/useChat";
 import { useGlassPalette } from "../hooks/useGlassPalette";
+import { deleteConversation, getAllConversations } from "../lib/conversation-manager";
 import type { GlassTint } from "../lib/theme/glass";
 import type { ChatMessageType } from "../types/chatMessage";
 
@@ -17,6 +19,9 @@ const DEFAULT_TINT: GlassTint = {
 
 export default function ChatV2() {
   const [input, setInput] = useState("");
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [conversations, setConversations] = useState(() => getAllConversations());
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const palette = useGlassPalette();
   const toasts = useToasts();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -31,6 +36,13 @@ export default function ChatV2() {
       });
     },
   });
+
+  // Update conversations list when history opens
+  useEffect(() => {
+    if (isHistoryOpen) {
+      setConversations(getAllConversations());
+    }
+  }, [isHistoryOpen]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -57,6 +69,30 @@ export default function ChatV2() {
     }
   };
 
+  const handleSelectConversation = (id: string) => {
+    setActiveConversationId(id);
+    setIsHistoryOpen(false);
+    // TODO: Load conversation messages
+    toasts.push({
+      kind: "info",
+      title: "Konversation geladen",
+      message: `Konversation ${id} wurde geladen`,
+    });
+  };
+
+  const handleDeleteConversation = (id: string) => {
+    deleteConversation(id);
+    setConversations(getAllConversations());
+    if (activeConversationId === id) {
+      setActiveConversationId(null);
+    }
+    toasts.push({
+      kind: "success",
+      title: "Gel\u00f6scht",
+      message: "Konversation wurde gel\u00f6scht",
+    });
+  };
+
   const quickstartOptions = [
     {
       title: "Code Review",
@@ -81,11 +117,22 @@ export default function ChatV2() {
       {messages.length === 0 ? (
         /* Empty State - Im Stil der Models-Seite */
         <>
-          <header className="space-y-1">
-            <h1 className="text-2xl font-bold text-white">Chat</h1>
-            <p className="text-sm leading-relaxed text-white/60">
-              Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.
-            </p>
+          <header className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-bold text-white">Chat</h1>
+              <p className="text-sm leading-relaxed text-white/60">
+                Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.
+              </p>
+            </div>
+            <Button
+              onClick={() => setIsHistoryOpen(true)}
+              variant="ghost"
+              size="sm"
+              className="h-10 w-10 rounded-xl border border-white/10 bg-white/5 p-0 text-white transition-all hover:bg-white/10"
+              aria-label="Chat-Verlauf öffnen"
+            >
+              <History className="h-5 w-5" />
+            </Button>
           </header>
 
           {/* Hero Card */}
@@ -132,29 +179,43 @@ export default function ChatV2() {
         </>
       ) : (
         /* Chat Messages */
-        <div className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto pb-4">
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <MessageBubble key={message.id} message={message} />
-              ))}
-              {isLoading && (
-                <div className="flex justify-start">
-                  <StaticGlassCard tint={palette[0] ?? DEFAULT_TINT} padding="sm">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex space-x-1">
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-white/70"></div>
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.15s]"></div>
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.3s]"></div>
+        <>
+          <header className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">Unterhaltung</h2>
+            <Button
+              onClick={() => setIsHistoryOpen(true)}
+              variant="ghost"
+              size="sm"
+              className="h-10 w-10 rounded-xl border border-white/10 bg-white/5 p-0 text-white transition-all hover:bg-white/10"
+              aria-label="Chat-Verlauf öffnen"
+            >
+              <History className="h-5 w-5" />
+            </Button>
+          </header>
+          <div className="flex-1 overflow-hidden">
+            <div className="h-full overflow-y-auto pb-4">
+              <div className="space-y-4">
+                {messages.map((message) => (
+                  <MessageBubble key={message.id} message={message} />
+                ))}
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <StaticGlassCard tint={palette[0] ?? DEFAULT_TINT} padding="sm">
+                      <div className="flex items-center space-x-2">
+                        <div className="flex space-x-1">
+                          <div className="h-2 w-2 animate-bounce rounded-full bg-white/70"></div>
+                          <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.15s]"></div>
+                          <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.3s]"></div>
+                        </div>
+                        <span className="text-sm text-white/70">Denkt nach...</span>
                       </div>
-                      <span className="text-sm text-white/70">Denkt nach...</span>
-                    </div>
-                  </StaticGlassCard>
-                </div>
-              )}
+                    </StaticGlassCard>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Input Composer - Im Stil der Models-Seite */}
@@ -178,6 +239,16 @@ export default function ChatV2() {
           </Button>
         </div>
       </StaticGlassCard>
+
+      {/* Conversation History Sheet */}
+      <ConversationHistorySheet
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        conversations={conversations}
+        activeId={activeConversationId}
+        onSelect={handleSelectConversation}
+        onDelete={handleDeleteConversation}
+      />
     </div>
   );
 }

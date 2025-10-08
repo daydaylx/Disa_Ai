@@ -295,6 +295,26 @@ export default function ModelsPage() {
     setLoadingState("idle"); // Reset state to trigger reload
   };
 
+  // Kategorie-spezifische Base-Tints für bessere Übersichtlichkeit
+  const categoryTints: Record<string, GlassTint> = {
+    premium: {
+      from: "hsl(280 90% 60% / 0.22)", // Violett - Premium/Hochwertig
+      to: "hsl(260 85% 65% / 0.22)",
+    },
+    everyday: {
+      from: "hsl(195 85% 55% / 0.22)", // Blau - Zuverlässig/Alltäglich
+      to: "hsl(210 80% 60% / 0.22)",
+    },
+    free: {
+      from: "hsl(160 85% 55% / 0.22)", // Grün - Kostenlos
+      to: "hsl(145 80% 60% / 0.22)",
+    },
+    uncensored: {
+      from: "hsl(30 95% 60% / 0.22)", // Orange/Rot - Kreativ/Frei
+      to: "hsl(345 90% 65% / 0.22)",
+    },
+  };
+
   const filtered = useMemo(() => {
     let result = models;
 
@@ -373,11 +393,11 @@ export default function ModelsPage() {
       ctx?: number;
       description: string;
     },
-    index: number,
-    paletteOffset: number,
+    categoryKey: "premium" | "everyday" | "free" | "uncensored",
   ) => {
     const isSelected = selected === item.id;
-    const tint = palette[(index + paletteOffset) % palette.length] ?? DEFAULT_TINT;
+    // Use category-specific tint instead of palette offset
+    const tint = categoryTints[categoryKey] ?? DEFAULT_TINT;
 
     return (
       <div
@@ -561,7 +581,7 @@ export default function ModelsPage() {
           Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3
         </p>
         <div className="space-y-3">
-          {premiumModels.map((item, idx) => renderFeaturedCard(item, idx, 1))}
+          {premiumModels.map((item) => renderFeaturedCard(item, "premium"))}
         </div>
       </section>
 
@@ -574,7 +594,7 @@ export default function ModelsPage() {
           Zuverlässige Modelle für tägliche Aufgaben – gutes Preis-Leistungs-Verhältnis
         </p>
         <div className="space-y-3">
-          {everydayModels.map((item, idx) => renderFeaturedCard(item, idx, 5))}
+          {everydayModels.map((item) => renderFeaturedCard(item, "everyday"))}
         </div>
       </section>
 
@@ -587,7 +607,7 @@ export default function ModelsPage() {
           Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität
         </p>
         <div className="space-y-3">
-          {freeModels.map((item, idx) => renderFeaturedCard(item, idx, 9))}
+          {freeModels.map((item) => renderFeaturedCard(item, "free"))}
         </div>
       </section>
 
@@ -600,7 +620,7 @@ export default function ModelsPage() {
           Kreatives Schreiben & Rollenspiel – weniger Filter, mehr Freiheit
         </p>
         <div className="space-y-3">
-          {uncensoredModels.map((item, idx) => renderFeaturedCard(item, idx, 13))}
+          {uncensoredModels.map((item) => renderFeaturedCard(item, "uncensored"))}
         </div>
       </section>
 

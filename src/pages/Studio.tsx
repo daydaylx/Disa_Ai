@@ -108,6 +108,38 @@ function RolesTab() {
     void navigate("/chat");
   };
 
+  // Kategorie-spezifische Farben für bessere Übersichtlichkeit
+  const categoryTints: Record<string, GlassTint> = {
+    Standard: {
+      from: "hsl(200 85% 55% / 0.22)", // Blau - Neutral/Standard
+      to: "hsl(210 80% 60% / 0.22)",
+    },
+    Beruflich: {
+      from: "hsl(240 90% 60% / 0.22)", // Dunkelblau - Professionell
+      to: "hsl(220 85% 65% / 0.22)",
+    },
+    Experten: {
+      from: "hsl(0 85% 55% / 0.22)", // Rot - Expert/Wichtig
+      to: "hsl(15 80% 60% / 0.22)",
+    },
+    Kreativ: {
+      from: "hsl(280 90% 60% / 0.22)", // Violett - Kreativ/Künstlerisch
+      to: "hsl(300 85% 65% / 0.22)",
+    },
+    Lernen: {
+      from: "hsl(40 95% 55% / 0.22)", // Gelb/Orange - Lernen/Bildung
+      to: "hsl(50 90% 60% / 0.22)",
+    },
+    Persönlichkeit: {
+      from: "hsl(330 90% 60% / 0.22)", // Pink - Persönlich
+      to: "hsl(345 85% 65% / 0.22)",
+    },
+    Praktisch: {
+      from: "hsl(160 85% 55% / 0.22)", // Grün - Praktisch/Hilfreich
+      to: "hsl(145 80% 60% / 0.22)",
+    },
+  };
+
   return (
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
       <header className="mb-4">
@@ -123,9 +155,10 @@ function RolesTab() {
             Rollen werden geladen ...
           </div>
         ) : null}
-        {orderedRoles.map((role, index) => {
-          // Verwende useGlassPalette für konsistente farbige Glaseffekte
-          const tint = palette[index % palette.length] ?? (DEFAULT_TINT as GlassTint);
+        {orderedRoles.map((role) => {
+          // Use category-specific tint for better visual organization
+          const categoryKey = role.category || "Standard";
+          const tint = categoryTints[categoryKey] ?? (DEFAULT_TINT as GlassTint);
           return (
             <RoleCard
               key={role.id}
