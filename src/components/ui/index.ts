@@ -1,4 +1,3 @@
-// Central export for all shadcn/ui components
 export * from "./avatar";
 export * from "./badge";
 export * from "./button";
@@ -7,6 +6,7 @@ export * from "./dialog";
 export * from "./dropdown-menu";
 export * from "./input";
 export * from "./select";
+export * from "./StaticGlassCard";
 export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";

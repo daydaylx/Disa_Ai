@@ -6,7 +6,10 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { defaultQuickstarts, type QuickstartAction } from "../../config/quickstarts";
+import { useGlassPalette } from "../../hooks/useGlassPalette";
 import { quickstartPersistence } from "../../lib/quickstarts/persistence";
+import { gradientToTint } from "../../lib/theme/glass";
+import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { QuickstartTile } from "./QuickstartTile";
 
 interface QuickstartGridProps {
@@ -22,6 +25,7 @@ export function QuickstartGrid({
 }: QuickstartGridProps) {
   const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
   const [pinnedStates, setPinnedStates] = useState<Record<string, boolean>>({});
+  const palette = useGlassPalette();
 
   // Load and sort quickstarts on mount
   useEffect(() => {
@@ -78,9 +82,16 @@ export function QuickstartGrid({
   if (quickstarts.length === 0) {
     return (
       <div className="grid grid-cols-2 gap-4 p-4">
-        {/* Loading skeleton */}
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-32 animate-pulse rounded-2xl bg-white/10 backdrop-blur-sm" />
+        {Array.from({ length: 4 }).map((_, index) => (
+          <StaticGlassCard
+            key={index}
+            tint={gradientToTint(palette[index % palette.length]) ?? gradientToTint(palette[0])!}
+            padding="sm"
+            className="h-32 animate-pulse"
+          >
+            <div className="h-4 w-24 rounded bg-white/25" />
+            <div className="mt-2 h-3 w-20 rounded bg-white/20" />
+          </StaticGlassCard>
         ))}
       </div>
     );

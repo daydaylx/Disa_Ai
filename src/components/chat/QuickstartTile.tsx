@@ -79,8 +79,8 @@ export function QuickstartTile({
     <button
       data-testid={`quickstart-${action.id}`}
       className={cn(
-        "tile group relative flex min-h-[120px] flex-col items-center justify-center p-4 text-center transition-all duration-200",
-        action.glow ?? "shadow-[0_20px_55px_rgba(8,7,24,0.45)]",
+        "card-glass border-white/12 group relative flex min-h-[120px] flex-col items-center justify-center overflow-hidden rounded-2xl border px-4 py-4 text-center text-white shadow-[0_20px_55px_rgba(8,7,24,0.45)] transition-all duration-200",
+        action.glow ?? "",
         isActive && "scale-95 opacity-70",
         isLoading && "pointer-events-none",
         !isLoading && "hover:scale-[1.02] active:scale-[0.98]",
@@ -97,11 +97,12 @@ export function QuickstartTile({
       {/* Gradient Background */}
       <div
         className={cn(
-          "absolute inset-0 rounded-2xl bg-gradient-to-br opacity-15 transition-opacity",
+          "absolute inset-0 rounded-2xl bg-gradient-to-br opacity-25 transition-opacity",
           action.gradient,
-          "group-hover:opacity-25",
+          "group-hover:opacity-35",
         )}
       />
+      <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-white/15 opacity-60 mix-blend-screen" />
 
       {/* Pin Badge */}
       {isPinned && (

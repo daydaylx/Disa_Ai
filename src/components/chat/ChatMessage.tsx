@@ -1,11 +1,15 @@
 import { Bot, Copy, RotateCcw, User } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
+import { useStudio } from "../../app/state/StudioContext";
+import { useGlassPalette } from "../../hooks/useGlassPalette";
+import { createRoleTint, type GlassTint, gradientToTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { StaticGlassCard } from "../ui/StaticGlassCard";
 
 export type { ChatMessageType } from "../../types/chatMessage";
 
@@ -75,11 +79,35 @@ function parseMessageContent(content: string) {
 
 export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessageProps) {
   const [showActions, setShowActions] = useState(false);
+  const { accentColor, activeRole } = useStudio();
+  const palette = useGlassPalette();
+
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
   const parsedContent = parseMessageContent(message.content);
+
+  const userTint = useMemo(() => createRoleTint(accentColor), [accentColor]);
+  const assistantTint = useMemo(() => {
+    const roleAccent = activeRole?.styleHints?.accentColor;
+    if (roleAccent) return createRoleTint(roleAccent);
+    const gradient = palette[1] ?? palette[0];
+    return gradientToTint(gradient) ?? createRoleTint();
+  }, [activeRole?.styleHints?.accentColor, palette]);
+
+  const systemTint: GlassTint = {
+    from: "hsla(220, 26%, 28%, 0.9)",
+    to: "hsla(220, 28%, 20%, 0.78)",
+  };
+
+  const bubbleTint = isUser ? userTint : isAssistant ? assistantTint : systemTint;
+
+  const bubbleClass = cn(
+    "max-w-[85%] text-left",
+    isUser && "ml-auto text-right",
+    isSystem && "mx-auto max-w-[70%] text-center",
+  );
 
   const handleCopy = () => {
     onCopy?.(message.content);
@@ -106,12 +134,12 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
         className={cn("h-9 w-9 shadow-[0_8px_24px_rgba(15,23,42,0.45)]", isSystem && "hidden")}
       >
         <AvatarFallback
-          className={cn(
-            "bg-white/10 text-white",
+          className={cn("border border-white/15 bg-black/30 text-white", isUser && "text-zinc-900")}
+          style={
             isUser
-              ? "bg-gradient-to-br from-fuchsia-500 via-purple-500 to-sky-500 text-white"
-              : "border border-white/20 bg-black/40",
-          )}
+              ? { background: `linear-gradient(135deg, ${userTint.from} 0%, ${userTint.to} 100%)` }
+              : undefined
+          }
         >
           {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4 text-sky-200" />}
         </AvatarFallback>
@@ -146,31 +174,26 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
         )}
 
         {/* Message Content */}
-        <div
-          className={cn(
-            "relative w-full overflow-hidden rounded-3xl border p-4 text-sm leading-relaxed shadow-[0_16px_38px_rgba(8,15,31,0.45)]",
-            isUser
-              ? "ml-12 border-transparent bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 text-white"
-              : "border-white/10 bg-white/10 text-white/90 backdrop-blur-xl",
-            isSystem &&
-              "mx-auto max-w-xs border-white/10 bg-white/5 text-center text-white/70 backdrop-blur",
-          )}
+        <StaticGlassCard
+          tint={bubbleTint}
+          contrastOverlay={isSystem}
+          padding="sm"
+          className={bubbleClass}
         >
-          {!isUser && !isSystem && (
-            <div className="pointer-events-none absolute -top-8 right-6 h-20 w-20 rounded-full bg-[radial-gradient(circle,_rgba(168,85,247,0.25),_transparent_60%)]" />
-          )}
-          {parsedContent.map((part, index) => (
-            <div key={index}>
-              {part.type === "text" ? (
-                <div className="whitespace-pre-wrap text-[15px] leading-relaxed">
-                  {part.content}
-                </div>
-              ) : (
-                <CodeBlock language={part.language}>{part.content}</CodeBlock>
-              )}
-            </div>
-          ))}
-        </div>
+          <div className="space-y-3">
+            {parsedContent.map((part, index) => (
+              <div key={index}>
+                {part.type === "text" ? (
+                  <div className="whitespace-pre-wrap text-[15px] leading-relaxed">
+                    {part.content}
+                  </div>
+                ) : (
+                  <CodeBlock language={part.language}>{part.content}</CodeBlock>
+                )}
+              </div>
+            ))}
+          </div>
+        </StaticGlassCard>
 
         {/* Action Buttons */}
         {!isSystem && showActions && (

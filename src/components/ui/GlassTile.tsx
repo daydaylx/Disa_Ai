@@ -75,8 +75,8 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   };
 
   const accents = toneStyles[badgeTone] ?? toneStyles.default;
-  const baseClasses = `glass relative overflow-hidden w-full text-left
-    rounded-2xl sm:rounded-3xl
+  const baseClasses = `card-glass relative overflow-hidden w-full text-left
+    rounded-2xl sm:rounded-3xl border border-white/12
     px-4 py-4 sm:px-5 sm:py-5
     min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
     transition-[transform,background,box-shadow] duration-200 ease-out`;

@@ -1,3 +1,4 @@
+import { History } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -5,19 +6,31 @@ import { getModelFallback } from "../api/openrouter";
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
+import { ConversationHistorySheet } from "../components/chat/ConversationHistorySheet";
+import { Button } from "../components/ui";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { chooseDefaultModel, loadModelCatalog } from "../config/models";
 import { buildSystemPrompt } from "../config/promptStyles";
 import { getStyle, getUseRoleStyle } from "../config/settings";
 import { generateRoleStyleText } from "../config/styleEngine";
 import { useChat } from "../hooks/useChat";
+import { useGlassPalette } from "../hooks/useGlassPalette";
 import { useMemory } from "../hooks/useMemory";
 import { useSettings } from "../hooks/useSettings";
 import { trackQuickstartCompleted } from "../lib/analytics/index";
+import type { Conversation } from "../lib/conversation-manager";
+import {
+  deleteConversation,
+  getAllConversations,
+  getConversation,
+  saveConversation,
+} from "../lib/conversation-manager";
 import { humanError } from "../lib/errors/humanError";
 import type { ChatMessageType } from "../types/chatMessage";
 import ModelSelectionSheet from "../ui/ModelSheet";
-import type { Model } from "../ui/types";
+import type { Message as ConversationMessage, Model } from "../ui/types";
+
+const ACTIVE_CONVERSATION_KEY = "disa:activeConversation";
 
 // Header component removed - now handled by AppShell
 
@@ -39,10 +52,57 @@ export default function ChatPageV2() {
   const toasts = useToasts();
   const { activeRole, typographyScale, borderRadius, accentColor } = useStudio();
   const isMountedRef = useRef(true);
+  const glassPalette = useGlassPalette();
+  const historyButtonGradient = glassPalette[0];
 
   const location = useLocation();
   const navigate = useNavigate();
   const newChatTokenRef = useRef<number | null>(null);
+
+  const initialConversationRef = useRef<{ id: string | null; messages: ChatMessageType[] } | null>(
+    null,
+  );
+  if (initialConversationRef.current === null) {
+    initialConversationRef.current = (() => {
+      if (typeof window === "undefined") {
+        return { id: null, messages: [] };
+      }
+
+      try {
+        const storedId = window.localStorage.getItem(ACTIVE_CONVERSATION_KEY);
+        if (!storedId) {
+          return { id: null, messages: [] };
+        }
+
+        const conversation = getConversation(storedId);
+        if (!conversation) {
+          window.localStorage.removeItem(ACTIVE_CONVERSATION_KEY);
+          return { id: null, messages: [] };
+        }
+
+        return {
+          id: conversation.id,
+          messages: conversation.messages as ChatMessageType[],
+        };
+      } catch {
+        return { id: null, messages: [] };
+      }
+    })();
+  }
+  const [conversationId, setConversationId] = useState<string | null>(
+    initialConversationRef.current.id,
+  );
+  const conversationIdRef = useRef<string | null>(initialConversationRef.current.id);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [conversations, setConversations] = useState<Conversation[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      return getAllConversations();
+    } catch {
+      return [];
+    }
+  });
+  const saveDebounceRef = useRef<number | null>(null);
 
   const {
     updateFromMessages,
@@ -51,6 +111,8 @@ export default function ChatPageV2() {
     settings: memorySettings,
   } = useMemory();
   const { settings: userSettings } = useSettings();
+
+  const initialMessages = initialConversationRef.current.messages;
 
   const memoryContext = useMemo(() => {
     if (!memorySettings.enabled || !globalMemory) {
@@ -143,6 +205,7 @@ export default function ChatPageV2() {
     isLoading,
     error: _error,
   } = useChat({
+    initialMessages,
     onError: (error) => {
       const { title, message } = humanError(error);
       toasts.push({
@@ -157,6 +220,10 @@ export default function ChatPageV2() {
     prepareMessages: buildSystemContext,
   });
 
+  useEffect(() => {
+    conversationIdRef.current = conversationId;
+  }, [conversationId]);
+
   // Auto-enable memory system in background
   useEffect(() => {
     void updateSettings({ enabled: true });
@@ -167,6 +234,17 @@ export default function ChatPageV2() {
     document.documentElement.style.setProperty("--border-radius", `${borderRadius}rem`);
     document.documentElement.style.setProperty("--accent-color", accentColor);
   }, [typographyScale, borderRadius, accentColor]);
+
+  useEffect(() => {
+    if (!historyOpen) return;
+    if (typeof window === "undefined") return;
+
+    try {
+      setConversations(getAllConversations());
+    } catch {
+      /* ignore */
+    }
+  }, [historyOpen]);
 
   useEffect(() => {
     let alive = true;
@@ -188,6 +266,43 @@ export default function ChatPageV2() {
       alive = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (messages.length === 0) return;
+
+    if (saveDebounceRef.current) {
+      window.clearTimeout(saveDebounceRef.current);
+    }
+
+    saveDebounceRef.current = window.setTimeout(() => {
+      try {
+        const nextId = saveConversation(
+          messages as unknown as ConversationMessage[],
+          conversationIdRef.current ?? undefined,
+        );
+        conversationIdRef.current = nextId;
+        setConversationId(nextId);
+        try {
+          window.localStorage.setItem(ACTIVE_CONVERSATION_KEY, nextId);
+        } catch {
+          /* ignore */
+        }
+        setConversations(getAllConversations());
+      } catch {
+        /* ignore */
+      } finally {
+        saveDebounceRef.current = null;
+      }
+    }, 220);
+
+    return () => {
+      if (saveDebounceRef.current) {
+        window.clearTimeout(saveDebounceRef.current);
+        saveDebounceRef.current = null;
+      }
+    };
+  }, [messages, setConversationId, setConversations]);
 
   // Cleanup effect to prevent race conditions on unmount
   useEffect(() => {
@@ -286,6 +401,15 @@ export default function ChatPageV2() {
     setIsQuickstartLoading(false);
     setMessages([]);
     setInput("");
+    setConversationId(null);
+    conversationIdRef.current = null;
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem(ACTIVE_CONVERSATION_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
 
     if (hadConversation) {
       toasts.push({
@@ -295,6 +419,93 @@ export default function ChatPageV2() {
       });
     }
   }, [input, messages.length, setInput, setMessages, stop, toasts]);
+
+  const handleSelectConversation = useCallback(
+    (id: string) => {
+      const conversation = getConversation(id);
+      if (!conversation) {
+        toasts.push({
+          kind: "error",
+          title: "Verlauf nicht gefunden",
+          message: "Die ausgewählte Unterhaltung ist nicht mehr verfügbar.",
+        });
+        setConversations(getAllConversations());
+        return;
+      }
+
+      stop();
+      activeQuickstartRef.current = null;
+      setIsQuickstartLoading(false);
+      setMessages(conversation.messages as ChatMessageType[]);
+      setInput("");
+      setConversationId(conversation.id);
+      conversationIdRef.current = conversation.id;
+      setHistoryOpen(false);
+      try {
+        window.localStorage.setItem(ACTIVE_CONVERSATION_KEY, conversation.id);
+      } catch {
+        /* ignore */
+      }
+      setConversations(getAllConversations());
+    },
+    [
+      setInput,
+      setMessages,
+      stop,
+      toasts,
+      setIsQuickstartLoading,
+      setConversations,
+      setConversationId,
+      setHistoryOpen,
+    ],
+  );
+
+  const handleDeleteConversation = useCallback(
+    (id: string) => {
+      const removed = deleteConversation(id);
+      const next = getAllConversations();
+      setConversations(next);
+
+      if (!removed) {
+        toasts.push({
+          kind: "error",
+          title: "Löschen fehlgeschlagen",
+          message: "Der Chatverlauf konnte nicht gelöscht werden.",
+        });
+        return;
+      }
+
+      if (conversationIdRef.current === id) {
+        conversationIdRef.current = null;
+        setConversationId(null);
+        setMessages([]);
+        setInput("");
+        stop();
+        activeQuickstartRef.current = null;
+        setIsQuickstartLoading(false);
+        try {
+          window.localStorage.removeItem(ACTIVE_CONVERSATION_KEY);
+        } catch {
+          /* ignore */
+        }
+      }
+
+      toasts.push({
+        kind: "success",
+        title: "Verlauf gelöscht",
+        message: "Der Chat wurde aus deinem Verlauf entfernt.",
+      });
+    },
+    [
+      setInput,
+      setMessages,
+      stop,
+      toasts,
+      setIsQuickstartLoading,
+      setConversations,
+      setConversationId,
+    ],
+  );
 
   useEffect(() => {
     const state = (location.state as { newChat?: number } | null) ?? null;
@@ -372,6 +583,22 @@ export default function ChatPageV2() {
         <div className="flex h-full w-full">
           {/* Chat Area */}
           <div className="flex flex-1 flex-col overflow-hidden">
+            <div className="flex items-center justify-end px-1 pb-3">
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={() => setHistoryOpen(true)}
+                className="min-h-[42px] gap-2 rounded-full border border-white/15 px-4 text-xs font-medium text-white shadow-[0_18px_42px_-18px_rgba(9,11,28,0.65)] transition-transform hover:-translate-y-[1px]"
+                style={{
+                  backgroundImage: historyButtonGradient,
+                  borderColor: "rgba(255,255,255,0.18)",
+                }}
+              >
+                <History className="h-4 w-4" />
+                Verlauf
+              </Button>
+            </div>
             <section className="flex-1 overflow-hidden" aria-label="Chat History">
               <div className="h-full px-1">
                 <div className="h-full w-full">
@@ -383,6 +610,11 @@ export default function ChatPageV2() {
                     isLoading={isLoading}
                     isQuickstartLoading={isQuickstartLoading}
                     currentModel={model?.id}
+                    conversations={conversations}
+                    onSelectConversation={handleSelectConversation}
+                    onDeleteConversation={handleDeleteConversation}
+                    onShowHistory={() => setHistoryOpen(true)}
+                    activeConversationId={conversationId}
                   />
                 </div>
               </div>
@@ -417,6 +649,14 @@ export default function ChatPageV2() {
         onSelect={handleSelectModel}
         currentId={model?.id ?? ""}
         models={models}
+      />
+      <ConversationHistorySheet
+        isOpen={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        conversations={conversations}
+        activeId={conversationId}
+        onSelect={handleSelectConversation}
+        onDelete={handleDeleteConversation}
       />
     </>
   );

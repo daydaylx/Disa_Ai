@@ -1,10 +1,13 @@
 import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { useStudio } from "../../app/state/StudioContext";
 // This component addresses the issue `04-composer-keyboard.md`
 import { useVisualViewport } from "../../hooks/useVisualViewport";
+import { createRoleTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
+import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { Textarea } from "../ui/textarea";
 
 interface ChatComposerProps {
@@ -46,6 +49,8 @@ export function ChatComposer({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const viewport = useVisualViewport();
+  const { accentColor } = useStudio();
+  const tint = createRoleTint(accentColor);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -132,12 +137,13 @@ export function ChatComposer({
           </div>
         )}
 
-        <div
+        <StaticGlassCard
+          tint={tint}
+          contrastOverlay
+          padding="sm"
           className={cn(
-            "glass relative flex items-end gap-2 overflow-hidden rounded-2xl px-3.5 py-2.5 transition-colors",
-            isFocused && "border-white/20 outline-white/20",
-            !isComposerDisabled && isEmpty && "bg-white/8",
-            isComposerDisabled && "cursor-not-allowed border-dashed border-white/20 opacity-60",
+            "flex items-end gap-2",
+            isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
           <div className="flex-1">
@@ -199,21 +205,11 @@ export function ChatComposer({
               </Button>
             )}
 
-            {!shouldShowSend && !shouldShowStop && !shouldShowRetry && (
-              <Button
-                onClick={handleSend}
-                size="icon"
-                variant="ghost"
-                className="glass inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-transparent text-zinc-400"
-                disabled={true}
-                title="Nachricht erforderlich"
-                data-testid="composer-mic"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+            {!shouldShowRetry && !shouldShowStop && !shouldShowSend && (
+              <span className="block h-10 w-10" aria-hidden="true" />
             )}
           </div>
-        </div>
+        </StaticGlassCard>
 
         <div className="mt-1 text-[12px] text-zinc-500">
           {isLoading

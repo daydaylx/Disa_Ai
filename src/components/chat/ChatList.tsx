@@ -1,100 +1,73 @@
-import React, { useEffect, useState } from "react";
+import { Clock, MessageSquare, Trash2 } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
 
+import { useStudio } from "../../app/state/StudioContext";
 import type { QuickstartAction } from "../../config/quickstarts";
 import { getQuickstartsWithFallback } from "../../config/quickstarts";
 import { getRoles } from "../../data/roles";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
+import type { Conversation } from "../../lib/conversation-manager";
+import { formatRelativeTime } from "../../lib/formatRelativeTime";
+import {
+  createGlassGradientVariants,
+  createRoleTint,
+  type GlassTint,
+  gradientToTint,
+} from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
-import { GlassBackdrop } from "../ui/GlassBackdrop";
-import { GlassTile } from "../ui/GlassTile";
+import { RoleCard } from "../studio/RoleCard";
+import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
-type QuickstartTone = "warm" | "cool" | "fresh" | "sunset" | "violet" | "default";
-const toneFallbackOrder: ReadonlyArray<Exclude<QuickstartTone, "default">> = [
-  "warm",
-  "cool",
-  "fresh",
-  "sunset",
-  "violet",
-] as const;
+const QUICKSTART_TINTS: GlassTint[] = [
+  { from: "hsla(32, 96%, 67%, 0.92)", to: "hsla(20, 92%, 54%, 0.72)" },
+  { from: "hsla(210, 92%, 70%, 0.92)", to: "hsla(255, 74%, 52%, 0.72)" },
+  { from: "hsla(158, 72%, 62%, 0.92)", to: "hsla(190, 68%, 48%, 0.72)" },
+  { from: "hsla(320, 85%, 68%, 0.92)", to: "hsla(280, 78%, 52%, 0.72)" },
+  { from: "hsla(200, 84%, 72%, 0.92)", to: "hsla(220, 70%, 50%, 0.72)" },
+];
 
-const toneClassNameMap: Record<QuickstartTone, string> = {
-  warm: "hover:border-amber-200/60 focus-visible:ring-amber-300/40",
-  cool: "hover:border-sky-200/60 focus-visible:ring-sky-300/40",
-  fresh: "hover:border-emerald-200/60 focus-visible:ring-emerald-300/40",
-  sunset: "hover:border-orange-200/60 focus-visible:ring-orange-300/30",
-  violet: "hover:border-fuchsia-200/60 focus-visible:ring-fuchsia-300/40",
-  default: "hover:border-white/25 focus-visible:ring-white/30",
-};
-
-const isQuickstartTone = (value: unknown): value is QuickstartTone =>
-  typeof value === "string" && value in toneClassNameMap;
-
-const quickstartColorPresets = [
+const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
   {
-    gradient: "from-amber-400/80 via-yellow-300/65 to-orange-400/70",
-    glow: "shadow-[0_25px_70px_rgba(250,204,21,0.28)]",
-    tone: "warm" as QuickstartTone,
+    label: "Schreibe eine freundliche Antwort auf diese E-Mail",
+    prompt: "Schreibe eine freundliche Antwort auf diese E-Mail",
   },
   {
-    gradient: "from-sky-500/80 via-blue-500/65 to-indigo-500/70",
-    glow: "shadow-[0_25px_70px_rgba(56,189,248,0.32)]",
-    tone: "cool" as QuickstartTone,
+    label: "Fasse den heutigen Kundencall in Stichpunkten zusammen",
+    prompt: "Fasse den heutigen Kundencall in Stichpunkten zusammen",
   },
   {
-    gradient: "from-emerald-400/75 via-teal-500/60 to-lime-500/60",
-    glow: "shadow-[0_25px_70px_rgba(34,197,94,0.3)]",
-    tone: "fresh" as QuickstartTone,
-  },
-  {
-    gradient: "from-orange-500/80 via-amber-500/65 to-rose-500/60",
-    glow: "shadow-[0_25px_70px_rgba(249,115,22,0.3)]",
-    tone: "sunset" as QuickstartTone,
-  },
-  {
-    gradient: "from-fuchsia-500/80 via-purple-500/65 to-violet-500/70",
-    glow: "shadow-[0_25px_70px_rgba(168,85,247,0.32)]",
-    tone: "violet" as QuickstartTone,
+    label: "Entwirf eine Social-Media-Post-Idee zum Thema KI",
+    prompt: "Entwirf eine Social-Media-Post-Idee zum Thema KI",
   },
 ];
 
-const formatQuickstartTag = (tag: string) => {
+const QUICKSTART_FALLBACK_SUBTITLE =
+  "Starte mit einer vorgefertigten Idee und komm sofort ins Schreiben.";
+
+function formatQuickstartTag(tag: string) {
   const normalised = tag.replace(/[-_]/g, " ");
   return normalised.charAt(0).toUpperCase() + normalised.slice(1);
-};
-
-function applyColorPresets(list: QuickstartAction[]): QuickstartAction[] {
-  return list.map((action, index) => {
-    const preset = quickstartColorPresets[index % quickstartColorPresets.length];
-    if (!preset) return action;
-    return {
-      ...action,
-      gradient: preset.gradient,
-      glow: preset.glow,
-      tone: preset.tone,
-    };
-  });
 }
 
 function createRoleQuickstarts(): QuickstartAction[] {
   const roles = getRoles();
   if (roles.length === 0) return [];
-
-  const shuffled = [...roles].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, quickstartColorPresets.length).map((role) => ({
-    id: `role-${role.id}`,
-    title: role.name,
-    subtitle: role.description ?? "Aktiviere diese Chat-Rolle und starte mit einer ersten Frage.",
-    gradient: "", // Wird durch applyColorPresets überschrieben
-    flowId: `role.${role.id}`,
-    autosend: false,
-    persona: role.id,
-    prompt: `Starte ein Gespräch als ${role.name}.`,
-    tags: role.tags,
-    tone: "default",
-  }));
+  return [...roles]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, QUICKSTART_TINTS.length)
+    .map((role) => ({
+      id: `role-${role.id}`,
+      title: role.name,
+      subtitle: role.description ?? "Aktiviere diese Chat-Rolle und starte mit einer ersten Frage.",
+      flowId: `role.${role.id}`,
+      autosend: false,
+      persona: role.id,
+      prompt: `Starte ein Gespräch als ${role.name}.`,
+      tags: role.tags,
+    }));
 }
 
 interface ChatListProps {
@@ -104,8 +77,13 @@ interface ChatListProps {
   onCopy?: (content: string) => void;
   onQuickstartFlow?: (prompt: string, autosend: boolean) => void;
   isQuickstartLoading?: boolean;
-  currentModel?: string; // For analytics tracking
+  currentModel?: string;
   className?: string;
+  conversations?: Conversation[];
+  onSelectConversation?: (id: string) => void;
+  onDeleteConversation?: (id: string) => void;
+  onShowHistory?: () => void;
+  activeConversationId?: string | null;
 }
 
 export function ChatList({
@@ -117,11 +95,33 @@ export function ChatList({
   isQuickstartLoading,
   currentModel,
   className,
+  conversations = [],
+  onSelectConversation,
+  onDeleteConversation,
+  onShowHistory,
+  activeConversationId,
 }: ChatListProps) {
   const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
   const [isLoadingQuickstarts, setIsLoadingQuickstarts] = useState(true);
   const [quickstartError, setQuickstartError] = useState<string | null>(null);
   const [activeQuickstart, setActiveQuickstart] = useState<string | null>(null);
+
+  const { accentColor } = useStudio();
+  const heroTint = useMemo(() => createRoleTint(accentColor), [accentColor]);
+
+  const palette = useMemo(() => {
+    const base = accentColor ?? "hsl(220, 80%, 60%)";
+    const gradients = createGlassGradientVariants(base);
+    const mapped = gradients
+      .map((gradient) => gradientToTint(gradient))
+      .filter((tint): tint is GlassTint => Boolean(tint));
+    return mapped.length > 0 ? mapped : QUICKSTART_TINTS;
+  }, [accentColor]);
+
+  const quickstartTintFor = (index: number): GlassTint => palette[index % palette.length];
+
+  const suggestionTintFor = (index: number): GlassTint =>
+    quickstartTintFor(index + quickstarts.length);
 
   const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
     threshold: 0.8,
@@ -133,60 +133,49 @@ export function ChatList({
     currentModel,
   });
 
-  // Handle quickstart click with visual feedback
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        setIsLoadingQuickstarts(true);
+        setQuickstartError(null);
+        const actions = await getQuickstartsWithFallback();
+        if (!mounted) return;
+        if (actions.length > 0) {
+          setQuickstarts(actions);
+        } else {
+          setQuickstarts(createRoleQuickstarts());
+        }
+      } catch (error) {
+        if (!mounted) return;
+        const message = error instanceof Error ? error.message : "Unbekannter Fehler";
+        setQuickstartError(message);
+        setQuickstarts(createRoleQuickstarts());
+      } finally {
+        if (mounted) {
+          setIsLoadingQuickstarts(false);
+        }
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const handleQuickstartClick = (action: QuickstartAction) => {
     setActiveQuickstart(action.id);
     startQuickstartFlow(action);
   };
 
-  // Handle fallback to standard chat
   const handleStartStandardChat = () => {
     onQuickstartFlow?.("Hallo! Wie kann ich dir heute helfen?", false);
   };
 
-  // Clear active state when not loading anymore
-  React.useEffect(() => {
-    if (!isQuickstartLoading) {
-      setActiveQuickstart(null);
-    }
-  }, [isQuickstartLoading]);
-
-  // Load quickstarts on mount
-  useEffect(() => {
-    const loadQuickstartActions = async () => {
-      try {
-        setIsLoadingQuickstarts(true);
-        setQuickstartError(null);
-        const roleQuickstarts = applyColorPresets(createRoleQuickstarts());
-
-        if (roleQuickstarts.length > 0) {
-          setQuickstarts(roleQuickstarts);
-        } else {
-          const actions = await getQuickstartsWithFallback();
-
-          if (actions.length === 0) {
-            setQuickstartError("Keine Schnellstarts verfügbar");
-            console.warn("Quickstarts configuration is empty");
-          } else {
-            setQuickstarts(applyColorPresets(actions));
-          }
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "Unbekannter Fehler";
-        setQuickstartError(`Fehler beim Laden der Schnellstarts: ${errorMessage}`);
-        console.error("Failed to load quickstarts:", error);
-      } finally {
-        setIsLoadingQuickstarts(false);
-      }
-    };
-
-    void loadQuickstartActions();
-  }, []);
-
   const handleCopy = (content: string) => {
     onCopy?.(content);
-    // Could add toast notification here
   };
+
+  const recentConversations = useMemo(() => conversations.slice(0, 4), [conversations]);
 
   return (
     <div
@@ -199,190 +188,209 @@ export function ChatList({
       <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-5 px-1 py-3">
-            <div className="glass-strong relative overflow-hidden rounded-[28px] p-6">
-              <div className="pointer-events-none absolute inset-x-0 -top-32 h-48 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_70%)]" />
-              <div
-                className="pointer-events-none absolute inset-0 opacity-30 mix-blend-screen"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(120% 120% at 110% 0%, rgba(20,104,255,0.45), transparent), radial-gradient(120% 120% at -10% 10%, rgba(236,72,153,0.55), transparent)",
-                }}
-              />
-              <GlassBackdrop variant="panel" />
-              <div className="relative">
-                <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-zinc-200">
+            <StaticGlassCard tint={heroTint} padding="lg" className="space-y-4">
+              <div className="space-y-3">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/85">
                   Willkommen zurück
                 </span>
-                <h1 className="mb-3 text-[26px] font-semibold leading-tight text-zinc-100">
+                <h1 className="text-[26px] font-semibold leading-tight text-white">
                   Was möchtest du heute erschaffen?
                 </h1>
-                <p className="text-[14px] leading-relaxed text-zinc-400">
+                <p className="text-[14px] leading-relaxed text-white/80">
                   Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
                   in Sekunden.
                 </p>
               </div>
-            </div>
+              <button
+                type="button"
+                onClick={handleStartStandardChat}
+                className="bg-white/12 inline-flex w-full items-center justify-center rounded-full border border-white/15 px-5 py-3 text-sm font-medium text-white shadow-[0_16px_36px_rgba(8,11,28,0.45)] transition-transform duration-200 hover:-translate-y-[1px]"
+              >
+                Neues Gespräch beginnen
+              </button>
+            </StaticGlassCard>
 
             <div className="space-y-3 px-1">
               {isLoadingQuickstarts ? (
-                // Loading skeleton
-                Array.from({ length: 3 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="tile flex min-h-[84px] animate-pulse flex-col justify-between"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="h-5 w-32 rounded bg-white/20"></div>
-                      <div className="h-6 w-20 rounded-full bg-white/10"></div>
-                    </div>
-                    <div className="mt-1 h-3 w-full rounded bg-white/10"></div>
-                  </div>
-                ))
+                <div className="grid gap-3">
+                  {Array.from({ length: 4 }).map((_, index) => {
+                    const tint = quickstartTintFor(index);
+                    return (
+                      <StaticGlassCard
+                        key={`quickstart-skeleton-${index}`}
+                        tint={tint}
+                        padding="sm"
+                        className="animate-pulse"
+                      >
+                        <div className="h-4 w-32 rounded bg-white/25" />
+                        <div className="mt-2 h-3 w-48 rounded bg-white/20" />
+                      </StaticGlassCard>
+                    );
+                  })}
+                </div>
               ) : quickstartError ? (
-                // Error/Empty state
-                <div className="rounded-3xl border border-yellow-500/20 bg-yellow-500/10 p-6 text-center">
-                  <div className="mb-4">
-                    <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-yellow-500/20">
-                      <svg
-                        className="h-6 w-6 text-yellow-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833-.23 2.5 1.31 2.5z"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-semibold text-yellow-100">
-                      {quickstartError.includes("verfügbar")
-                        ? "Keine Schnellstarts verfügbar"
-                        : "Konfigurationsfehler"}
-                    </h3>
-                    <p className="mt-2 text-sm text-yellow-200/80">{quickstartError}</p>
-                  </div>
-                  <button
-                    onClick={handleStartStandardChat}
-                    className="tap-target inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 px-6 py-3 font-medium text-white shadow-[0_18px_38px_rgba(168,85,247,0.4)] transition-transform hover:translate-y-[-1px] hover:shadow-[0_20px_45px_rgba(168,85,247,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                    data-testid="start-standard-chat"
-                  >
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <StaticGlassCard tint={quickstartTintFor(0)} padding="md" className="text-center">
+                  <div className="bg-white/12 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
+                    <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
                       <path
+                        stroke="currentColor"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.97 8.97 0 01-4.906-1.442l-3.657 1.082a1 1 0 01-1.28-1.28l1.082-3.657A8.97 8.97 0 013 12a8 8 0 1118 0z"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833-.23 2.5 1.31 2.5z"
                       />
                     </svg>
-                    Standard-Chat starten
-                  </button>
-                </div>
-              ) : quickstarts.length === 0 ? (
-                // No quickstarts but no error (shouldn't happen with defaults)
-                <div className="rounded-3xl border border-blue-500/20 bg-blue-500/10 p-6 text-center">
-                  <div className="mb-4">
-                    <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20">
-                      <svg
-                        className="h-6 w-6 text-blue-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-semibold text-blue-100">
-                      Keine Schnellstarts verfügbar
-                    </h3>
-                    <p className="mt-2 text-sm text-blue-200/80">
-                      Du kannst trotzdem direkt mit dem Chat beginnen.
-                    </p>
                   </div>
+                  <h3 className="text-lg font-semibold text-white">
+                    {quickstartError.includes("verfügbar")
+                      ? "Keine Schnellstarts verfügbar"
+                      : "Konfigurationsfehler"}
+                  </h3>
+                  <p className="mt-2 text-sm text-white/70">{quickstartError}</p>
                   <button
+                    type="button"
                     onClick={handleStartStandardChat}
-                    className="tap-target inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 px-6 py-3 font-medium text-white shadow-[0_18px_38px_rgba(168,85,247,0.4)] transition-transform hover:translate-y-[-1px] hover:shadow-[0_20px_45px_rgba(168,85,247,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-medium text-white"
                     data-testid="start-standard-chat"
                   >
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.97 8.97 0 01-4.906-1.442l-3.657 1.082a1 1 0 01-1.28-1.28l1.082-3.657A8.97 8.97 0 113 12a8 8 0 1118 0z"
-                      />
-                    </svg>
-                    Standard-Chat starten
+                    Direkt im Chat starten
                   </button>
-                </div>
+                </StaticGlassCard>
               ) : (
-                quickstarts.map((action, index) => {
-                  const isActive = activeQuickstart === action.id;
-                  const fallbackTone =
-                    toneFallbackOrder[index % toneFallbackOrder.length] ?? "default";
-                  let tone: QuickstartTone = fallbackTone;
-                  if (isQuickstartTone(action.tone)) {
-                    tone = action.tone;
-                  }
-                  const primaryTag = action.tags?.[0];
-                  const badgeLabel = primaryTag ? formatQuickstartTag(primaryTag) : "Schnellstart";
-
-                  return (
-                    <GlassTile
-                      key={action.id}
-                      data-testid={`quickstart-${action.id}`}
-                      title={action.title}
-                      subtitle={action.subtitle}
-                      gradient={action.gradient}
-                      glowClassName={action.glow}
-                      onPress={() => handleQuickstartClick(action)}
-                      disabled={isQuickstartLoading && !isActive}
-                      className={toneClassNameMap[tone]}
-                      badgeLabel={badgeLabel}
-                      badgeTone={tone}
-                    />
-                  );
-                })
+                <div className="space-y-3">
+                  {quickstarts.map((action, index) => {
+                    const tint = quickstartTintFor(index);
+                    const badge = action.tags?.[0]
+                      ? formatQuickstartTag(action.tags[0]!)
+                      : "Schnellstart";
+                    return (
+                      <RoleCard
+                        key={action.id}
+                        title={action.title}
+                        description={action.subtitle ?? QUICKSTART_FALLBACK_SUBTITLE}
+                        badge={badge}
+                        tint={tint}
+                        isActive={activeQuickstart === action.id}
+                        disabled={isQuickstartLoading && activeQuickstart !== action.id}
+                        onClick={() => handleQuickstartClick(action)}
+                        className="min-h-[140px]"
+                      />
+                    );
+                  })}
+                </div>
               )}
             </div>
 
-            {/* Suggestion Buttons */}
             <div className="space-y-2 px-1">
-              <button
-                onClick={() =>
-                  onQuickstartFlow?.("Schreibe eine freundliche Antwort auf diese E-Mail", false)
-                }
-                className="glass w-full rounded-full px-6 py-3 text-[14px] text-zinc-200 transition-colors hover:bg-white/10 hover:text-zinc-100"
-              >
-                Schreibe eine freundliche Antwort auf diese E-Mail
-              </button>
-              <button
-                onClick={() =>
-                  onQuickstartFlow?.(
-                    "Fasse den heutigen Kundencall in Stichpunkten zusammen",
-                    false,
-                  )
-                }
-                className="glass w-full rounded-full px-6 py-3 text-[14px] text-zinc-200 transition-colors hover:bg-white/10 hover:text-zinc-100"
-              >
-                Fasse den heutigen Kundencall in Stichpunkten zusammen
-              </button>
-              <button
-                onClick={() =>
-                  onQuickstartFlow?.("Entwirf eine Social-Media-Post-Idee zum Thema KI", false)
-                }
-                className="glass w-full rounded-full px-6 py-3 text-[14px] text-zinc-200 transition-colors hover:bg-white/10 hover:text-zinc-100"
-              >
-                Entwirf eine Social-Media-Post-Idee zum Thema KI
-              </button>
+              {SUGGESTION_ACTIONS.map((item, index) => {
+                const tint = suggestionTintFor(index);
+                return (
+                  <StaticGlassCard
+                    key={item.label}
+                    tint={tint}
+                    padding="sm"
+                    className="transition-transform duration-150 hover:-translate-y-[1px]"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => onQuickstartFlow?.(item.prompt, false)}
+                      className="flex w-full items-center justify-between gap-3 text-sm font-medium text-white"
+                    >
+                      <span>{item.label}</span>
+                      <MessageSquare className="h-4 w-4 opacity-75" />
+                    </button>
+                  </StaticGlassCard>
+                );
+              })}
             </div>
+
+            {recentConversations.length > 0 && (
+              <div className="space-y-3 px-1 pt-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-white/70">
+                    Letzte Chats
+                  </h2>
+                  {onShowHistory && (
+                    <button
+                      type="button"
+                      onClick={onShowHistory}
+                      className="text-[12px] font-medium text-white/80 transition hover:text-white"
+                    >
+                      Alle ansehen
+                    </button>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  {recentConversations.map((conversation, index) => {
+                    const tint = quickstartTintFor(index);
+                    const isActive = activeConversationId === conversation.id;
+                    const messageCount =
+                      conversation.messageCount ?? conversation.messages?.length ?? 0;
+                    const lastMessage =
+                      conversation.messages?.[conversation.messages.length - 1]?.content ?? "";
+                    const preview = lastMessage.trim() || "Noch keine Nachrichten gespeichert.";
+                    const lastActivity = conversation.lastActivity ?? conversation.updatedAt;
+
+                    return (
+                      <StaticGlassCard
+                        key={conversation.id}
+                        tint={tint}
+                        padding="sm"
+                        className={cn(
+                          "group relative flex items-start gap-3",
+                          isActive && "border-white/20 ring-2 ring-white/15",
+                        )}
+                      >
+                        <button
+                          type="button"
+                          className="flex-1 text-left"
+                          onClick={() => onSelectConversation?.(conversation.id)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold text-white">
+                              {conversation.title}
+                            </span>
+                          </div>
+                          <p
+                            className="mt-1 text-xs text-white/80"
+                            style={{
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {preview}
+                          </p>
+                          <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-white/75">
+                            {Number.isFinite(lastActivity) && (
+                              <span className="inline-flex items-center gap-1">
+                                <Clock className="h-3.5 w-3.5" />
+                                {formatRelativeTime(lastActivity)}
+                              </span>
+                            )}
+                            <span className="inline-flex items-center gap-1">
+                              <MessageSquare className="h-3.5 w-3.5" />
+                              {messageCount} Nachricht{messageCount === 1 ? "" : "en"}
+                            </span>
+                          </div>
+                        </button>
+                        {onDeleteConversation && (
+                          <button
+                            type="button"
+                            onClick={() => onDeleteConversation(conversation.id)}
+                            className="bg-white/12 relative z-10 mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-white opacity-0 transition-all duration-150 hover:bg-red-500/35 hover:text-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black group-hover:opacity-100"
+                            aria-label="Verlauf löschen"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
+                      </StaticGlassCard>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="flex-1">
@@ -395,27 +403,15 @@ export function ChatList({
           </div>
         )}
 
-        {/* Scroll anchor and stick indicator */}
         <div className="flex items-center justify-between px-2 pt-2">
           <div className="h-1 flex-1" />
           {!isSticking && (
             <button
+              type="button"
               onClick={() => scrollToBottom()}
-              className="glass inline-flex animate-bounce items-center gap-1 rounded-full px-3 py-1 text-xs text-zinc-300 transition hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-white/80 shadow-[0_10px_24px_-14px_rgba(8,11,28,0.7)] transition hover:-translate-y-[1px]"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-3 w-3"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Nach unten
+              <span>Nach unten</span>
             </button>
           )}
         </div>
