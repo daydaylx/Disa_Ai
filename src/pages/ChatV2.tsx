@@ -586,64 +586,57 @@ export default function ChatPageV2() {
 
   return (
     <>
-      <main className="relative z-10 mx-auto flex h-full max-w-screen-2xl overflow-hidden pb-4">
-        <div className="flex h-full w-full">
-          {/* Chat Area */}
-          <div className="flex flex-1 flex-col overflow-hidden">
-            <div className="flex items-center justify-end px-4 pb-3">
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                onClick={() => setHistoryOpen(true)}
-                className="min-h-[42px] gap-2 rounded-full border border-white/15 px-4 text-xs font-medium text-white shadow-[0_18px_42px_-18px_rgba(9,11,28,0.65)] transition-transform hover:-translate-y-[1px]"
-                style={{
-                  backgroundImage: historyButtonGradient,
-                  borderColor: "rgba(255,255,255,0.18)",
-                }}
-              >
-                <History className="h-4 w-4" />
-                Verlauf
-              </Button>
-            </div>
-            <section className="flex-1 overflow-y-auto px-4" aria-label="Chat History">
-              <ChatList
-                messages={messages}
-                onCopy={handleCopy}
-                onRetry={handleRetry}
-                onQuickstartFlow={handleQuickstartFlow}
-                isLoading={isLoading}
-                isQuickstartLoading={isQuickstartLoading}
-                currentModel={model?.id}
-                conversations={conversations}
-                onSelectConversation={handleSelectConversation}
-                onDeleteConversation={handleDeleteConversation}
-                onShowHistory={() => setHistoryOpen(true)}
-                activeConversationId={conversationId}
-              />
-            </section>
-
-            {/* Input Section */}
-            <section role="region" aria-label="Message Input" className="safe-bottom">
-              <div className="px-4">
-                <div className="w-full">
-                  <ChatComposer
-                    value={input}
-                    onChange={setInput}
-                    onSend={handleSend}
-                    onStop={stop}
-                    onRetry={handleRetry}
-                    isLoading={isLoading}
-                    canSend={Boolean(model && input.trim())}
-                    canRetry={Boolean(messages.length > 0)}
-                    isQuickstartLoading={isQuickstartLoading}
-                  />
-                </div>
-              </div>
-            </section>
-          </div>
+      <div className="flex h-full flex-1 flex-col overflow-hidden">
+        <div className="flex items-center justify-end px-4 pb-3">
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() => setHistoryOpen(true)}
+            className="min-h-[42px] gap-2 rounded-full border border-white/15 px-4 text-xs font-medium text-white shadow-[0_18px_42px_-18px_rgba(9,11,28,0.65)] transition-transform hover:-translate-y-[1px]"
+            style={{
+              backgroundImage: historyButtonGradient,
+              borderColor: "rgba(255,255,255,0.18)",
+            }}
+          >
+            <History className="h-4 w-4" />
+            Verlauf
+          </Button>
         </div>
-      </main>
+        <section className="flex-1 overflow-y-auto px-4" aria-label="Chat History">
+          <ChatList
+            messages={messages}
+            onCopy={handleCopy}
+            onRetry={handleRetry}
+            onQuickstartFlow={handleQuickstartFlow}
+            isLoading={isLoading}
+            isQuickstartLoading={isQuickstartLoading}
+            currentModel={model?.id}
+            conversations={conversations}
+            onSelectConversation={handleSelectConversation}
+            onDeleteConversation={handleDeleteConversation}
+            onShowHistory={() => setHistoryOpen(true)}
+            activeConversationId={conversationId}
+          />
+        </section>
+
+        {/* Input Section */}
+        <section role="region" aria-label="Message Input" className="safe-bottom">
+          <div className="px-4">
+            <ChatComposer
+              value={input}
+              onChange={setInput}
+              onSend={handleSend}
+              onStop={stop}
+              onRetry={handleRetry}
+              isLoading={isLoading}
+              canSend={Boolean(model && input.trim())}
+              canRetry={Boolean(messages.length > 0)}
+              isQuickstartLoading={isQuickstartLoading}
+            />
+          </div>
+        </section>
+      </div>
 
       {/* Model Selection Sheet */}
       <ModelSelectionSheet

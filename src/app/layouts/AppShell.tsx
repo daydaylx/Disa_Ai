@@ -163,7 +163,7 @@ export function AppShell({ children }: AppShellProps) {
 
       <main
         key={location.pathname}
-        className="animate-page-transition relative z-10 mx-auto w-full max-w-md px-4 py-4"
+        className="animate-page-transition relative z-10 mx-auto w-full max-w-md flex-1 px-4 py-4"
       >
         {children}
       </main>
