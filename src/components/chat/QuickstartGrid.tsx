@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { defaultQuickstarts, type QuickstartAction } from "../../config/quickstarts";
 import { useGlassPalette } from "../../hooks/useGlassPalette";
 import { quickstartPersistence } from "../../lib/quickstarts/persistence";
-import { gradientToTint } from "../../lib/theme/glass";
+import { DEFAULT_GLASS_VARIANTS, type GlassTint, gradientToTint } from "../../lib/theme/glass";
 import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { QuickstartTile } from "./QuickstartTile";
 
@@ -26,6 +26,20 @@ export function QuickstartGrid({
   const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
   const [pinnedStates, setPinnedStates] = useState<Record<string, boolean>>({});
   const palette = useGlassPalette();
+
+  const fallbackTint: GlassTint = gradientToTint(DEFAULT_GLASS_VARIANTS[0]!) ?? {
+    from: "hsla(220, 26%, 28%, 0.9)",
+    to: "hsla(220, 30%, 20%, 0.78)",
+  };
+
+  const getTintForIndex = (index: number): GlassTint => {
+    const gradients = palette.length > 0 ? palette : DEFAULT_GLASS_VARIANTS;
+    const gradient = gradients[index % gradients.length];
+    if (!gradient) {
+      return fallbackTint;
+    }
+    return gradientToTint(gradient) ?? fallbackTint;
+  };
 
   // Load and sort quickstarts on mount
   useEffect(() => {
@@ -85,7 +99,7 @@ export function QuickstartGrid({
         {Array.from({ length: 4 }).map((_, index) => (
           <StaticGlassCard
             key={index}
-            tint={gradientToTint(palette[index % palette.length]) ?? gradientToTint(palette[0])!}
+            tint={getTintForIndex(index)}
             padding="sm"
             className="h-32 animate-pulse"
           >

@@ -3,7 +3,12 @@ import { useMemo, useState } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useGlassPalette } from "../../hooks/useGlassPalette";
-import { createRoleTint, type GlassTint, gradientToTint } from "../../lib/theme/glass";
+import {
+  createRoleTint,
+  DEFAULT_GLASS_VARIANTS,
+  type GlassTint,
+  gradientToTint,
+} from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -92,7 +97,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
   const assistantTint = useMemo(() => {
     const roleAccent = activeRole?.styleHints?.accentColor;
     if (roleAccent) return createRoleTint(roleAccent);
-    const gradient = palette[1] ?? palette[0];
+    const gradient: string = palette[1] ?? palette[0] ?? DEFAULT_GLASS_VARIANTS[0]!;
     return gradientToTint(gradient) ?? createRoleTint();
   }, [activeRole?.styleHints?.accentColor, palette]);
 

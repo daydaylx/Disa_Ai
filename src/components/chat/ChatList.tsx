@@ -1,5 +1,5 @@
 import { Clock, MessageSquare, Trash2 } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";
 import type { QuickstartAction } from "../../config/quickstarts";
@@ -28,6 +28,14 @@ const QUICKSTART_TINTS: GlassTint[] = [
   { from: "hsla(320, 85%, 68%, 0.92)", to: "hsla(280, 78%, 52%, 0.72)" },
   { from: "hsla(200, 84%, 72%, 0.92)", to: "hsla(220, 70%, 50%, 0.72)" },
 ];
+
+const QUICKSTART_GRADIENTS = [
+  "from-orange-400/80 via-amber-300/70 to-rose-400/75",
+  "from-sky-500/80 via-blue-500/70 to-indigo-500/75",
+  "from-emerald-400/80 via-teal-400/70 to-cyan-500/75",
+  "from-fuchsia-400/80 via-pink-400/70 to-purple-500/75",
+  "from-blue-400/80 via-indigo-400/70 to-slate-500/75",
+] as const;
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
   {
@@ -58,7 +66,7 @@ function createRoleQuickstarts(): QuickstartAction[] {
   return [...roles]
     .sort(() => Math.random() - 0.5)
     .slice(0, QUICKSTART_TINTS.length)
-    .map((role) => ({
+    .map((role, index) => ({
       id: `role-${role.id}`,
       title: role.name,
       subtitle: role.description ?? "Aktiviere diese Chat-Rolle und starte mit einer ersten Frage.",
@@ -67,6 +75,8 @@ function createRoleQuickstarts(): QuickstartAction[] {
       persona: role.id,
       prompt: `Starte ein Gespräch als ${role.name}.`,
       tags: role.tags,
+      gradient:
+        QUICKSTART_GRADIENTS[index % QUICKSTART_GRADIENTS.length] ?? QUICKSTART_GRADIENTS[0],
     }));
 }
 
@@ -118,10 +128,18 @@ export function ChatList({
     return mapped.length > 0 ? mapped : QUICKSTART_TINTS;
   }, [accentColor]);
 
-  const quickstartTintFor = (index: number): GlassTint => palette[index % palette.length];
+  const getPaletteTint = (index: number): GlassTint => {
+    if (palette.length > 0) {
+      const tint = palette[index % palette.length];
+      if (tint) return tint;
+    }
+    return QUICKSTART_TINTS[index % QUICKSTART_TINTS.length] ?? QUICKSTART_TINTS[0]!;
+  };
+
+  const quickstartTintFor = (index: number): GlassTint => getPaletteTint(index);
 
   const suggestionTintFor = (index: number): GlassTint =>
-    quickstartTintFor(index + quickstarts.length);
+    getPaletteTint(index + quickstarts.length);
 
   const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
     threshold: 0.8,

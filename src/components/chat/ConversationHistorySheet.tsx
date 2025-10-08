@@ -34,7 +34,16 @@ export function ConversationHistorySheet({
     to: "hsla(220, 30%, 20%, 0.78)",
   };
 
-  const activeTint = gradientToTint(cardPalette[0] ?? DEFAULT_GLASS_VARIANTS[0]) ?? fallbackTint;
+  const getTintForIndex = (index: number): GlassTint => {
+    const gradients = cardPalette.length > 0 ? cardPalette : DEFAULT_GLASS_VARIANTS;
+    const gradient = gradients[index % gradients.length];
+    if (!gradient) {
+      return fallbackTint;
+    }
+    return gradientToTint(gradient) ?? fallbackTint;
+  };
+
+  const activeTint = getTintForIndex(0);
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Chat-Verlauf">
@@ -55,8 +64,7 @@ export function ConversationHistorySheet({
               const lastActivity = conversation.lastActivity ?? conversation.updatedAt;
               const preview = lastMessage.trim() || EMPTY_PREVIEW;
               const isActive = conversation.id === activeId;
-              const baseTint =
-                gradientToTint(cardPalette[index % cardPalette.length]) ?? fallbackTint;
+              const baseTint = getTintForIndex(index);
               const appliedTint = isActive ? activeTint : baseTint;
 
               return (
