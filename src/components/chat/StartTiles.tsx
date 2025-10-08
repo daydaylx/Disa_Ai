@@ -1,6 +1,8 @@
 import { Book, Code, MessageSquare } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { useGlassPalette } from "../../hooks/useGlassPalette";
+import { DEFAULT_GLASS_VARIANTS } from "../../lib/theme/glass";
 import { GlassTile } from "../ui/GlassTile";
 
 export type StartTileAction = { type: "new-chat" } | { type: "set-role"; roleId: string };
@@ -40,14 +42,25 @@ interface StartTilesProps {
 }
 
 export function StartTiles({ onTileClick }: StartTilesProps) {
+  const palette = useGlassPalette();
+
+  const getTileGradient = (index: number): string => {
+    const gradients = palette.length > 0 ? palette : DEFAULT_GLASS_VARIANTS;
+    return gradients[index % gradients.length] ?? DEFAULT_GLASS_VARIANTS[0]!;
+  };
+
+  const badgeTones: Array<"warm" | "cool" | "fresh"> = ["warm", "cool", "fresh"];
+
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
-      {startTiles.map((tile) => (
+      {startTiles.map((tile, index) => (
         <GlassTile
           key={tile.id}
           title={tile.title}
           subtitle={tile.subtitle}
           icon={tile.icon}
+          gradient={getTileGradient(index)}
+          badgeTone={badgeTones[index % badgeTones.length]}
           onPress={() => onTileClick(tile.action)}
         />
       ))}

@@ -49,12 +49,19 @@ export function ConversationHistorySheet({
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Chat-Verlauf">
       <div className="max-h-[65vh] overflow-y-auto px-6 py-4">
         {conversations.length === 0 ? (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center text-sm text-zinc-300">
-            <p className="font-medium text-zinc-100">Noch kein Verlauf gespeichert</p>
-            <p className="mt-2 text-xs text-zinc-400">
-              Unterhaltungen werden automatisch gesichert, sobald du Nachrichten austauschst.
-            </p>
-          </div>
+          <StaticGlassCard tint={fallbackTint} contrastOverlay padding="lg" className="text-center">
+            <div className="space-y-3">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/10">
+                <MessageSquare className="h-6 w-6 text-white/70" />
+              </div>
+              <div>
+                <p className="font-medium text-white">Noch kein Verlauf gespeichert</p>
+                <p className="mt-2 text-sm text-white/70">
+                  Unterhaltungen werden automatisch gesichert, sobald du Nachrichten austauschst.
+                </p>
+              </div>
+            </div>
+          </StaticGlassCard>
         ) : (
           <ul className="space-y-3">
             {conversations.map((conversation, index) => {
@@ -74,8 +81,9 @@ export function ConversationHistorySheet({
                     contrastOverlay={false}
                     padding="sm"
                     className={cn(
-                      "px-5 py-4 text-left text-white",
-                      isActive && "border-white/20 ring-2 ring-white/15",
+                      "px-5 py-4 text-left text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
+                      isActive &&
+                        "border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.5)] ring-2 ring-white/20",
                     )}
                   >
                     <button
@@ -128,7 +136,7 @@ export function ConversationHistorySheet({
                         event.stopPropagation();
                         onDelete(conversation.id);
                       }}
-                      className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white opacity-80 transition-all duration-150 hover:bg-red-500/30 hover:text-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black group-hover:opacity-100"
+                      className="bg-white/8 absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white opacity-0 backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-red-400/40 hover:bg-red-500/25 hover:text-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent group-hover:opacity-100"
                       aria-label="Konversation löschen"
                     >
                       <Trash2 className="h-4 w-4" />

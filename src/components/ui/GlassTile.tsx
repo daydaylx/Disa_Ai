@@ -75,10 +75,10 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   };
 
   const accents = toneStyles[badgeTone] ?? toneStyles.default;
-  const baseClasses = `card-glass relative overflow-hidden w-full text-left
-    rounded-2xl sm:rounded-3xl border border-white/12
-    px-4 py-4 sm:px-5 sm:py-5
+  const baseClasses = `relative overflow-hidden w-full text-left bg-white/[0.06] border border-white/12 backdrop-blur-md text-white
+    rounded-2xl sm:rounded-3xl px-4 py-4 sm:px-5 sm:py-5
     min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
+    shadow-[0_8px_28px_-8px_rgba(0,0,0,0.55),_inset_0_1px_0_rgba(255,255,255,0.22)]
     transition-[transform,background,box-shadow] duration-200 ease-out`;
 
   // Gradient overlay for visual depth

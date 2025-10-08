@@ -6,13 +6,15 @@ import { useStudio } from "../app/state/StudioContext";
 import { RoleCard, type RoleTint } from "../components/studio/RoleCard";
 import type { Role } from "../data/roles";
 import { loadRoles } from "../data/roles";
+import { useGlassPalette } from "../hooks/useGlassPalette";
+import type { GlassTint } from "../lib/theme/glass";
 
 type RoleVisualConfig = {
   tint: RoleTint;
   contrastOverlay?: boolean;
 };
 
-const ROLE_TINTS: Record<string, RoleVisualConfig> = {
+const _ROLE_TINTS: Record<string, RoleVisualConfig> = {
   neutral: {
     tint: {
       from: "hsl(210 90% 60% / 0.22)",
@@ -68,6 +70,7 @@ function RolesTab() {
   const [roleList, setRoleList] = useState<Role[]>(roles);
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
   const navigate = useNavigate();
+  const palette = useGlassPalette();
 
   useEffect(() => {
     let mounted = true;
@@ -149,16 +152,17 @@ function RolesTab() {
             Rollen werden geladen ...
           </div>
         ) : null}
-        {orderedRoles.map((role) => {
-          const visual = ROLE_TINTS[role.id] ?? { tint: DEFAULT_TINT };
+        {orderedRoles.map((role, index) => {
+          // Verwende useGlassPalette für konsistente farbige Glaseffekte
+          const tint = palette[index % palette.length] ?? (DEFAULT_TINT as GlassTint);
           return (
             <RoleCard
               key={role.id}
               title={role.name}
               description={summariseRole(role)}
               badge={role.category}
-              tint={visual.tint}
-              contrastOverlay={visual.contrastOverlay}
+              tint={tint}
+              contrastOverlay={false}
               isActive={activeRole?.id === role.id}
               onClick={() => setActiveRole(role)}
               aria-label={`Rolle ${role.name} auswählen`}
@@ -172,20 +176,34 @@ function RolesTab() {
         <button
           type="button"
           onClick={handleNavigateToChat}
-          className="card-cta flex h-12 items-center justify-center gap-2 rounded-full border border-white/[0.10] bg-white/[0.03] text-sm font-medium text-white/90 backdrop-blur-sm transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]"
+          className="bg-white/6 relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full border border-white/10 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_4px_16px_rgba(0,0,0,0.35)] ring-1 ring-white/5 saturate-150 transition-all duration-200 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.18),rgba(255,255,255,0.06)_40%,rgba(255,255,255,0)_70%)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] supports-[backdrop-filter]:backdrop-blur-md"
         >
-          <span>Zum Chat mit aktueller Rolle</span>
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
+            style={{
+              background: `linear-gradient(135deg, ${palette[0]?.from ?? "hsl(210 45% 55% / 0.20)"} 0%, ${palette[0]?.to ?? "hsl(250 60% 52% / 0.18)"} 100%)`,
+            }}
+          />
+          <span className="relative z-10">Zum Chat mit aktueller Rolle</span>
+          <ArrowRight className="relative z-10 h-4 w-4" aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={handleResetRole}
           disabled={!activeRole}
-          className="card-cta flex h-12 items-center justify-center gap-2 rounded-full border border-white/[0.10] bg-white/[0.03] text-sm font-medium text-white/80 backdrop-blur-sm transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100"
+          className="bg-white/6 relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full border border-white/10 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_4px_16px_rgba(0,0,0,0.35)] ring-1 ring-white/5 saturate-150 transition-all duration-200 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.18),rgba(255,255,255,0.06)_40%,rgba(255,255,255,0)_70%)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100 supports-[backdrop-filter]:backdrop-blur-md"
           aria-disabled={!activeRole}
         >
-          <RotateCcw className="h-4 w-4" aria-hidden="true" />
-          <span>Rolle zurücksetzen</span>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
+            style={{
+              background: `linear-gradient(135deg, ${palette[1]?.from ?? "hsl(210 45% 55% / 0.20)"} 0%, ${palette[1]?.to ?? "hsl(250 60% 52% / 0.18)"} 100%)`,
+            }}
+          />
+          <RotateCcw className="relative z-10 h-4 w-4" aria-hidden="true" />
+          <span className="relative z-10">Rolle zurücksetzen</span>
         </button>
       </div>
     </div>

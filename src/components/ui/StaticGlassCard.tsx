@@ -12,7 +12,7 @@ interface StaticGlassCardProps {
 }
 
 const baseClass =
-  "card-glass relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] text-left text-white shadow-[0_8px_28px_-8px_rgba(0,0,0,0.55),_inset_0_1px_0_rgba(255,255,255,0.22)] backdrop-blur-md transition-colors duration-200";
+  "relative flex flex-col overflow-hidden rounded-2xl bg-white/6 supports-[backdrop-filter]:backdrop-blur-md saturate-150 border border-white/10 ring-1 ring-white/5 text-left text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_10px_30px_rgba(0,0,0,0.45)] before:pointer-events-none before:absolute before:inset-0 before:rounded-inherit before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.22),rgba(255,255,255,0.08)_35%,rgba(255,255,255,0)_70%)] transition-all duration-300";
 
 const paddingMap: Record<Required<StaticGlassCardProps>["padding"], string> = {
   sm: "p-4",
@@ -29,9 +29,10 @@ export function StaticGlassCard({
 }: StaticGlassCardProps) {
   return (
     <div className={cn(baseClass, paddingMap[padding], className)}>
+      {/* Color gradient layer with radial highlight */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-80"
+        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
         style={{
           background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`,
         }}
@@ -39,7 +40,7 @@ export function StaticGlassCard({
       {contrastOverlay ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-[inherit] bg-black/20"
+          className="pointer-events-none absolute inset-0 rounded-[inherit] bg-black/10"
         />
       ) : null}
       <div className="relative z-10">{children}</div>

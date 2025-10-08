@@ -208,13 +208,13 @@ export function ChatList({
           <div className="flex flex-col gap-5 px-1 py-3">
             <StaticGlassCard tint={heroTint} padding="lg" className="space-y-4">
               <div className="space-y-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/85">
+                <span className="bg-white/8 inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/90 backdrop-blur-sm">
                   Willkommen zurück
                 </span>
                 <h1 className="text-[26px] font-semibold leading-tight text-white">
                   Was möchtest du heute erschaffen?
                 </h1>
-                <p className="text-[14px] leading-relaxed text-white/80">
+                <p className="text-[14px] leading-relaxed text-white/85">
                   Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
                   in Sekunden.
                 </p>
@@ -222,7 +222,7 @@ export function ChatList({
               <button
                 type="button"
                 onClick={handleStartStandardChat}
-                className="bg-white/12 inline-flex w-full items-center justify-center rounded-full border border-white/15 px-5 py-3 text-sm font-medium text-white shadow-[0_16px_36px_rgba(8,11,28,0.45)] transition-transform duration-200 hover:-translate-y-[1px]"
+                className="inline-flex w-full items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-medium text-white shadow-[0_16px_36px_rgba(8,11,28,0.45)] backdrop-blur-md transition-all duration-200 hover:-translate-y-[1px] hover:bg-white/15 active:scale-[0.98]"
               >
                 Neues Gespräch beginnen
               </button>
@@ -308,15 +308,15 @@ export function ChatList({
                     key={item.label}
                     tint={tint}
                     padding="sm"
-                    className="transition-transform duration-150 hover:-translate-y-[1px]"
+                    className="group transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
                   >
                     <button
                       type="button"
                       onClick={() => onQuickstartFlow?.(item.prompt, false)}
-                      className="flex w-full items-center justify-between gap-3 text-sm font-medium text-white"
+                      className="flex w-full items-center justify-between gap-3 text-sm font-medium text-white transition-colors"
                     >
-                      <span>{item.label}</span>
-                      <MessageSquare className="h-4 w-4 opacity-75" />
+                      <span className="text-left">{item.label}</span>
+                      <MessageSquare className="h-4 w-4 opacity-75 transition-all group-hover:scale-110 group-hover:opacity-100" />
                     </button>
                   </StaticGlassCard>
                 );
@@ -356,8 +356,9 @@ export function ChatList({
                         tint={tint}
                         padding="sm"
                         className={cn(
-                          "group relative flex items-start gap-3",
-                          isActive && "border-white/20 ring-2 ring-white/15",
+                          "group relative flex items-start gap-3 transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
+                          isActive &&
+                            "border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.5)] ring-2 ring-white/20",
                         )}
                       >
                         <button
@@ -398,7 +399,7 @@ export function ChatList({
                           <button
                             type="button"
                             onClick={() => onDeleteConversation(conversation.id)}
-                            className="bg-white/12 relative z-10 mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-white opacity-0 transition-all duration-150 hover:bg-red-500/35 hover:text-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black group-hover:opacity-100"
+                            className="bg-white/8 relative z-10 mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 text-white opacity-0 backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-red-400/40 hover:bg-red-500/25 hover:text-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent group-hover:opacity-100"
                             aria-label="Verlauf löschen"
                           >
                             <Trash2 className="h-4 w-4" />

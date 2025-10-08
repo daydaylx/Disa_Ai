@@ -113,10 +113,11 @@ export function QuickstartGrid({
 
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
-      {quickstarts.map((action) => (
+      {quickstarts.map((action, index) => (
         <QuickstartTile
           key={action.id}
           action={action}
+          index={index}
           onTap={handleQuickstartTap}
           onLongPress={handleLongPress}
           onTogglePin={handleTogglePin}

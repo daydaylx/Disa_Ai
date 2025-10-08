@@ -147,14 +147,7 @@ export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
 
   return (
-    <div
-      className="stage relative flex w-full flex-col text-slate-200"
-      style={{
-        minHeight: "100vh",
-        background:
-          "radial-gradient(1200px 700px at 20% -10%, #121327 0%, #0B0820 60%, #080714 100%)",
-      }}
-    >
+    <div className="stage relative flex min-h-dvh w-full flex-col bg-gradient-to-b from-[#0b0f1a] via-[#0a0d18] to-[#090b12] text-slate-200">
       {/* Noise overlay */}
       <div
         className="pointer-events-none absolute inset-0"

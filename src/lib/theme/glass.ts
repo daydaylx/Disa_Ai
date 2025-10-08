@@ -63,10 +63,10 @@ export function createGlassGradient(
   const {
     hueShiftStart = 0,
     hueShiftEnd = 28,
-    lightnessStart = 12,
-    lightnessEnd = -6,
-    alphaStart = 0.3,
-    alphaEnd = 0.2,
+    lightnessStart = 18,
+    lightnessEnd = -8,
+    alphaStart = 0.45,
+    alphaEnd = 0.28,
   } = options ?? {};
 
   const start: Hsl = {
@@ -97,10 +97,10 @@ export function createGlassGradientVariants(accentColor: string): string[] {
   return shifts.map((shift, index) =>
     createGlassGradient(accentColor, {
       ...shift,
-      lightnessStart: 14 + index * 1.5,
-      lightnessEnd: -4 - index,
-      alphaStart: 0.3,
-      alphaEnd: 0.22,
+      lightnessStart: 20 + index * 2,
+      lightnessEnd: -6 - index * 1.5,
+      alphaStart: 0.5,
+      alphaEnd: 0.3,
     }),
   );
 }
