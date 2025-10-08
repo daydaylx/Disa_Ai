@@ -52,6 +52,36 @@ export default function ModelsPage() {
   // === Premium Modelle ===
   const premiumModels = [
     {
+      id: "anthropic/claude-3.5-sonnet",
+      label: "Claude 3.5 Sonnet",
+      provider: "Anthropic",
+      priceIn: 3.0,
+      priceOut: 15.0,
+      ctx: 200000,
+      description:
+        "Anthropics Flaggschiff: Top-Qualität für komplexe Aufgaben, exzellentes Reasoning und lange Kontexte.",
+    },
+    {
+      id: "openai/gpt-4o",
+      label: "GPT-4o",
+      provider: "OpenAI",
+      priceIn: 2.5,
+      priceOut: 10.0,
+      ctx: 128000,
+      description:
+        "OpenAIs stärkstes Multimodal-Modell. Hervorragend für komplexe Analysen, Code und kreative Aufgaben.",
+    },
+    {
+      id: "openai/o1-mini",
+      label: "o1-mini",
+      provider: "OpenAI",
+      priceIn: 3.0,
+      priceOut: 12.0,
+      ctx: 128000,
+      description:
+        "Reasoning-Modell von OpenAI. Denkt systematisch durch komplexe Probleme – ideal für Logik und Mathematik.",
+    },
+    {
       id: "openai/gpt-4o-mini",
       label: "GPT-4o mini",
       provider: "OpenAI",
@@ -72,6 +102,16 @@ export default function ModelsPage() {
         "Anthropic-Qualität in schnell: präzise, kaum Halluzinationen, großartig für produktive Sessions.",
     },
     {
+      id: "google/gemini-2.0-flash-exp",
+      label: "Gemini 2.0 Flash",
+      provider: "Google",
+      priceIn: 0.0,
+      priceOut: 0.0,
+      ctx: 1000000,
+      description:
+        "Googles neuestes Modell mit riesigem Kontext (1M Tokens!). Experimentell, aber sehr leistungsfähig.",
+    },
+    {
       id: "deepseek/deepseek-chat-v3.1",
       label: "DeepSeek V3.1",
       provider: "DeepSeek",
@@ -80,16 +120,6 @@ export default function ModelsPage() {
       ctx: 64000,
       description:
         "Logisches Denken, lange Begründungen – denkt erst, antwortet dann. Für knifflige Fragen und mehrstufige Erklärungen stark.",
-    },
-    {
-      id: "x-ai/grok-4-fast",
-      label: "Grok 4 Fast",
-      provider: "X.AI",
-      priceIn: 5.0,
-      priceOut: 15.0,
-      ctx: 131072,
-      description:
-        "Sehr lange Chats, schneller Witz + Wissen-Allrounder. Gute Wahl für viel Kontext und flotte Antworten.",
     },
   ] as const;
 
