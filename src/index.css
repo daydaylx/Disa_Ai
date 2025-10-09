@@ -9,24 +9,9 @@
     color-scheme: dark;
   }
 
-  /* App-wide background with glassmorphism support */
+  /* App-wide background - reiner schwarzer Hintergrund */
   body {
-    background-color: #000000; /* Tiefschwarz als Basis */
-    /* Kombiniert bereitgestelltes Sternburst-Bild mit soften Farbglows */
-    background-image:
-      radial-gradient(140% 120% at 80% 40%, rgba(139, 92, 246, 0.14), rgba(0, 0, 0, 0)),
-      radial-gradient(130% 140% at 15% 70%, rgba(59, 130, 246, 0.12), rgba(0, 0, 0, 0)),
-      linear-gradient(160deg, rgba(14, 16, 34, 0.7), rgba(5, 6, 15, 0.9)),
-      url("/images/pwa-background.png");
-    background-blend-mode: screen, screen, soft-light, normal;
-    background-repeat: no-repeat;
-    background-position: center, center, center, center;
-    background-size:
-      155% 140%,
-      170% 160%,
-      cover,
-      cover;
-    background-attachment: fixed;
+    background-color: #000000; /* Reiner schwarzer Hintergrund */
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
@@ -34,28 +19,7 @@
   /* Mobile-optimized background */
   @media (max-width: 768px) {
     body {
-      background-attachment: scroll; /* Better performance on mobile */
-      background-size:
-        220% 200%,
-        240% 220%,
-        cover,
-        cover;
-      background-position:
-        center 20%,
-        center 40%,
-        center,
-        center;
-    }
-  }
-
-  /* High-resolution displays */
-  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    body {
-      background-size:
-        140% 130%,
-        160% 150%,
-        cover,
-        cover;
+      /* Keine zusätzlichen Styles nötig - reiner schwarzer Hintergrund */
     }
   }
 
@@ -74,16 +38,16 @@
  */
 
 @layer components {
-  /* Unified Glass Design System - Liquid-Glass Token */
+  /* Unified Glass Design System - Transparent mit verschwommenem, hellerem Hintergrund */
   .card-glass {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    @apply relative overflow-hidden rounded-2xl text-zinc-200 ring-1 ring-white/5 saturate-150;
+    background: rgba(255, 255, 255, 0.08); /* Hellerer Hintergrund für bessere Sichtbarkeit */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px) brightness(1.2); /* Stärkerer Blur + Helligkeit */
+    -webkit-backdrop-filter: blur(20px) brightness(1.2);
+    @apply relative overflow-hidden rounded-2xl text-zinc-100 ring-1 ring-white/10 saturate-150;
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 8px 32px rgba(0, 0, 0, 0.22);
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
   .card-glass::before {
@@ -93,9 +57,10 @@
     border-radius: inherit;
     background: linear-gradient(
       to bottom,
-      rgba(255, 255, 255, 0.12),
-      rgba(255, 255, 255, 0.05) 35%,
-      rgba(255, 255, 255, 0) 70%
+      rgba(255, 255, 255, 0.15),
+      /* Hellerer Gradient für bessere Definition */ rgba(255, 255, 255, 0.08) 35%,
+      rgba(255, 255, 255, 0.02) 70%,
+      rgba(255, 255, 255, 0) 100%
     );
     pointer-events: none;
   }
@@ -147,35 +112,35 @@
     }
   }
 
-  /* Glassmorphismus-Klassen mit erhöhter Transparenz für bessere Sichtbarkeit des Hintergrundmusters */
+  /* Glassmorphismus-Klassen mit verschwommenem, hellerem Hintergrund */
   .glass-strong {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.1); /* Hellerer Hintergrund */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(24px) brightness(1.3); /* Starker Blur + Helligkeit */
+    -webkit-backdrop-filter: blur(24px) brightness(1.3);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 8px 32px rgba(0, 0, 0, 0.22);
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 8px 32px rgba(0, 0, 0, 0.25);
   }
 
   .glass-medium {
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 255, 255, 0.035);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.07); /* Mittlerer heller Hintergrund */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px) brightness(1.2); /* Mittlerer Blur + Helligkeit */
+    -webkit-backdrop-filter: blur(20px) brightness(1.2);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
       0 6px 24px rgba(0, 0, 0, 0.2);
   }
 
   .glass-soft {
-    background: rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.05); /* Sanfter heller Hintergrund */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px) brightness(1.1); /* Sanfter Blur + Helligkeit */
+    -webkit-backdrop-filter: blur(16px) brightness(1.1);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.03),
-      0 4px 16px rgba(0, 0, 0, 0.16);
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 4px 16px rgba(0, 0, 0, 0.15);
   }
 }
 

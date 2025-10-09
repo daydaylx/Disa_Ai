@@ -68,22 +68,22 @@
   --shadow-2: 0 20px 48px -18px rgba(5, 11, 20, 0.55);
   --shadow-3: 0 32px 64px -24px rgba(5, 11, 20, 0.65);
 
-  /* Glassmorphism - Erhöhte Transparenz für bessere Sichtbarkeit des Hintergrundmusters */
+  /* Glassmorphism - Verschwommener, hellerer Hintergrund */
   --blur-sm: 8px;
   --blur-md: 16px;
   --blur-lg: 24px;
   --blur-xl: 32px;
   --blur-2xl: 40px;
 
-  --glass-bg-subtle: hsla(220, 25%, 95%, 0.03);
-  --glass-bg-soft: hsla(220, 25%, 95%, 0.05);
-  --glass-bg-medium: hsla(220, 20%, 90%, 0.08);
-  --glass-bg-strong: hsla(220, 20%, 90%, 0.12);
+  --glass-bg-subtle: hsla(0, 0%, 100%, 0.05); /* Hellerer Hintergrund */
+  --glass-bg-soft: hsla(0, 0%, 100%, 0.07); /* Mittlerer heller Hintergrund */
+  --glass-bg-medium: hsla(0, 0%, 100%, 0.08); /* Starker heller Hintergrund */
+  --glass-bg-strong: hsla(0, 0%, 100%, 0.1); /* Sehr starker heller Hintergrund */
 
-  --glass-border-subtle: hsla(220, 25%, 95%, 0.08);
-  --glass-border-soft: hsla(220, 25%, 95%, 0.12);
-  --glass-border-medium: hsla(220, 20%, 90%, 0.16);
-  --glass-border-strong: hsla(220, 20%, 90%, 0.24);
+  --glass-border-subtle: hsla(0, 0%, 100%, 0.08); /* Hellere Ränder */
+  --glass-border-soft: hsla(0, 0%, 100%, 0.12); /* Mittlere helle Ränder */
+  --glass-border-medium: hsla(0, 0%, 100%, 0.15); /* Starke helle Ränder */
+  --glass-border-strong: hsla(0, 0%, 100%, 0.18); /* Sehr starke helle Ränder */
 
   --glass-glow-subtle: 0 0 20px rgba(34, 211, 238, 0.15);
   --glass-glow-soft: 0 0 30px rgba(34, 211, 238, 0.2);
@@ -174,14 +174,14 @@
 
 .glass-card {
   background: var(--glass-bg-soft);
-  backdrop-filter: blur(var(--blur-md));
+  backdrop-filter: blur(var(--blur-md)) brightness(1.15);
   border: 1px solid var(--glass-border-soft);
   border-radius: var(--radius-md);
 }
 
 .glass-button {
   background: var(--glass-bg-medium);
-  backdrop-filter: blur(var(--blur-sm));
+  backdrop-filter: blur(var(--blur-sm)) brightness(1.1);
   border: 1px solid var(--glass-border-medium);
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast) ease;
@@ -190,6 +190,7 @@
 .glass-button:hover {
   background: var(--glass-bg-strong);
   border-color: var(--glass-border-strong);
+  backdrop-filter: blur(var(--blur-md)) brightness(1.2);
 }
 
 /* Focus Styles */

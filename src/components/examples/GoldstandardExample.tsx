@@ -56,7 +56,7 @@ export function GoldstandardExample() {
       </div>
 
       {/* Verwendungshinweise */}
-      <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-4">
+      <div className="mt-8 rounded-xl border border-white/[0.02] bg-white/[0.008] p-4">
         <h4 className="mb-2 text-sm font-semibold text-white">💡 Verwendungshinweise</h4>
         <ul className="space-y-1 text-sm text-white/70">
           <li>• Immer GOLDSTANDARD.utils.createGlassStyle() für Glassmorphismus verwenden</li>

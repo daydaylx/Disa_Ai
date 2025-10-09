@@ -52,7 +52,7 @@ export function MemoryPanel({
   };
 
   return (
-    <Card className="h-full border-white/10 bg-white/5">
+    <Card className="h-full border-white/[0.02] bg-white/[0.008]">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-sm">
@@ -94,7 +94,10 @@ export function MemoryPanel({
             {memoryPoints.length > 0 ? (
               <div className="max-h-48 space-y-1 overflow-y-auto">
                 {memoryPoints.map((point, index) => (
-                  <div key={index} className="rounded border border-white/5 bg-white/5 p-2 text-xs">
+                  <div
+                    key={index}
+                    className="rounded border border-white/[0.012] bg-white/[0.008] p-2 text-xs"
+                  >
                     <span className="text-white/90">• {point}</span>
                   </div>
                 ))}
@@ -108,7 +111,7 @@ export function MemoryPanel({
 
           {/* Add Note Form */}
           {showAddNote && onAddNote && (
-            <div className="space-y-2 rounded-lg border border-white/10 bg-white/5 p-3">
+            <div className="space-y-2 rounded-lg border border-white/[0.02] bg-white/[0.008] p-3">
               <div className="flex items-center justify-between">
                 <h5 className="text-xs font-medium text-white/80">Notiz hinzufügen</h5>
                 <Button
@@ -124,7 +127,7 @@ export function MemoryPanel({
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
                 placeholder="Was soll ich mir merken?"
-                className="min-h-[60px] border-white/10 bg-white/5 text-xs"
+                className="min-h-[60px] border-white/[0.02] bg-white/[0.008] text-xs"
                 disabled={isAddingNote}
               />
               <div className="flex gap-2">
@@ -161,7 +164,7 @@ export function MemoryPanel({
           )}
 
           {/* Stats */}
-          <div className="border-t border-white/10 pt-2">
+          <div className="border-t border-white/[0.02] pt-2">
             <div className="flex gap-2">
               <Badge variant="secondary" className="text-xs">
                 {memoryPoints.length} Punkte

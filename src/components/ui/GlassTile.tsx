@@ -75,11 +75,12 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   };
 
   const accents = toneStyles[badgeTone] ?? toneStyles.default;
-  const baseClasses = `relative overflow-hidden w-full text-left bg-white/[0.06] border border-white/12 backdrop-blur-md text-white
+  const baseClasses = `relative overflow-hidden w-full text-left bg-white/[0.06] border border-white/[0.1] text-white
     rounded-2xl sm:rounded-3xl px-4 py-4 sm:px-5 sm:py-5
     min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
-    shadow-[0_8px_28px_-8px_rgba(0,0,0,0.55),_inset_0_1px_0_rgba(255,255,255,0.22)]
-    transition-[transform,background,box-shadow] duration-200 ease-out`;
+    shadow-[0_8px_28px_-8px_rgba(0,0,0,0.3),_inset_0_1px_0_rgba(255,255,255,0.15)]
+    transition-[transform,background,box-shadow] duration-200 ease-out
+    backdrop-blur-[20px] backdrop-brightness-[1.15]`;
 
   // Gradient overlay for visual depth
   const gradientOverlayClasses = gradient
@@ -92,11 +93,11 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     : "";
 
   const gradientClasses = gradient
-    ? `before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-45 before:content-['']`
+    ? `before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-15 before:content-['']`
     : "";
 
   const highlightClasses =
-    "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.22),_transparent_70%)] after:opacity-80 after:content-['']";
+    "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.12),_transparent_70%)] after:opacity-70 after:content-['']";
 
   const glowClasses = glowClassName ?? "shadow-[0_16px_40px_rgba(5,8,18,0.45)]";
 
@@ -145,7 +146,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
         {/* Quickstart Pill */}
         <span
           className={cn(
-            "bg-white/8 inline-flex h-7 items-center rounded-full border px-3 text-[12px] font-medium text-zinc-200 transition-colors duration-150",
+            "inline-flex h-7 items-center rounded-full border border-white/[0.12] bg-white/[0.08] px-3 text-[12px] font-medium text-zinc-100 backdrop-blur-sm backdrop-brightness-110 transition-colors duration-150",
             accents.badge,
           )}
         >
