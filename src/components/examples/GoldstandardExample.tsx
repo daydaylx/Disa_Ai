@@ -5,8 +5,6 @@
  * korrekt verwendet wird.
  */
 
-import React from "react";
-
 import { GOLDSTANDARD } from "../../lib/design/goldstandard";
 
 export function GoldstandardExample() {
