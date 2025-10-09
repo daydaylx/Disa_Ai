@@ -11,11 +11,33 @@
 
   /* App-wide background with glassmorphism support */
   body {
-    background-color: #0a0a0a; /* Reines Schwarz als Basis für das dunkle Theme */
-    background-image: url("/images/pwa-background.jpg");
+    background-color: #040507; /* Tiefes Schwarzblau als Basis für den Glas-Look */
+    /* Mehrschichtiger Aurora-Hintergrund, abgestimmt auf Glasmorphismus */
+    background-image:
+      radial-gradient(900px 700px at 18% 20%, rgba(59, 130, 246, 0.18), rgba(4, 5, 7, 0) 65%),
+      radial-gradient(750px 620px at 82% 18%, rgba(244, 114, 182, 0.16), rgba(4, 5, 7, 0) 70%),
+      radial-gradient(1100px 900px at 50% 115%, rgba(16, 185, 129, 0.14), rgba(4, 5, 7, 0) 75%),
+      radial-gradient(1200px 600px at 50% -10%, rgba(255, 255, 255, 0.05), rgba(4, 5, 7, 0) 80%),
+      linear-gradient(
+        155deg,
+        rgba(20, 24, 42, 0.92) 0%,
+        rgba(7, 9, 21, 0.94) 50%,
+        rgba(6, 7, 16, 0.9) 100%
+      );
+    background-blend-mode: screen, screen, screen, overlay, normal;
     background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    background-position:
+      left -10% top -12%,
+      right -5% top -6%,
+      center 115%,
+      center top,
+      center;
+    background-size:
+      1200px 900px,
+      1100px 850px,
+      1500px 1300px,
+      1800px 900px,
+      cover;
     background-attachment: fixed;
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
@@ -25,15 +47,30 @@
   @media (max-width: 768px) {
     body {
       background-attachment: scroll; /* Better performance on mobile */
-      background-size: cover;
-      background-position: center top; /* Focus on top area for mobile */
+      background-size:
+        220% 180%,
+        200% 170%,
+        240% 210%,
+        260% 140%,
+        cover;
+      background-position:
+        left -25%,
+        right -12% top,
+        center 150%,
+        center top -8%,
+        center;
     }
   }
 
   /* High-resolution displays */
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     body {
-      background-size: cover;
+      background-size:
+        1400px 1050px,
+        1300px 1000px,
+        1700px 1500px,
+        2000px 1000px,
+        cover;
     }
   }
 

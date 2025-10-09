@@ -7,6 +7,46 @@ import type { ChatMessage } from "../types/chat";
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const MODEL_KEY = "disa_model";
 
+function normalizeContent(content: unknown): string {
+  if (typeof content === "string") {
+    return content;
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((item) => {
+        if (typeof item === "string") {
+          return item;
+        }
+        if (item && typeof item === "object") {
+          const maybeText = (item as { text?: unknown }).text;
+          if (typeof maybeText === "string") {
+            return maybeText;
+          }
+          const nested = (item as { content?: unknown }).content;
+          if (nested !== undefined) {
+            return normalizeContent(nested);
+          }
+        }
+        return "";
+      })
+      .join("");
+  }
+
+  if (content && typeof content === "object") {
+    const maybeText = (content as { text?: unknown }).text;
+    if (typeof maybeText === "string") {
+      return maybeText;
+    }
+    const nested = (content as { content?: unknown }).content;
+    if (nested !== undefined) {
+      return normalizeContent(nested);
+    }
+  }
+
+  return "";
+}
+
 function isTestEnv(): boolean {
   const viaImportMeta = (() => {
     try {
@@ -165,15 +205,45 @@ export async function chatStream(
                 if (json?.error) {
                   throw new Error(json.error?.message || "Unbekannter API-Fehler");
                 }
-                const delta = json?.choices?.[0]?.delta?.content ?? "";
-                const messageData = json?.choices?.[0]?.message;
+                const choice = json?.choices?.[0];
+                const deltaText = normalizeContent(choice?.delta?.content);
+                const message = choice?.message;
+                let meta:
+                  | { id?: string; role?: string; timestamp?: number; model?: string }
+                  | undefined;
+                if (message && typeof message === "object") {
+                  const { id, role, timestamp, created, model } = message as {
+                    id?: unknown;
+                    role?: unknown;
+                    timestamp?: unknown;
+                    created?: unknown;
+                    model?: unknown;
+                  };
+                  meta = {
+                    id: typeof id === "string" ? id : undefined,
+                    role: typeof role === "string" ? role : undefined,
+                    timestamp:
+                      typeof timestamp === "number"
+                        ? timestamp
+                        : typeof created === "number"
+                          ? created * 1000
+                          : undefined,
+                    model:
+                      typeof model === "string"
+                        ? model
+                        : typeof json?.model === "string"
+                          ? json.model
+                          : undefined,
+                  };
+                }
+
                 if (!started) {
                   started = true;
                   opts?.onStart?.();
                 }
-                if (delta || messageData) {
-                  onDelta(delta, messageData);
-                  full += delta;
+                if (deltaText || meta) {
+                  onDelta(deltaText, meta);
+                  full += deltaText;
                 }
               } catch (err) {
                 throw mapError(err);
