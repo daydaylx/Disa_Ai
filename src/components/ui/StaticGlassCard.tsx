@@ -20,16 +20,19 @@ export function StaticGlassCard({
   };
 
   const tintStyle = tint
-    ? { background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)` }
+    ? {
+        background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`,
+        opacity: 0.4,
+      }
     : {};
 
   return (
     <div
       className={cn(
         "relative overflow-hidden rounded-2xl",
-        "border border-white/15",
+        "border-white/8 border",
         "backdrop-blur-xl backdrop-filter",
-        "bg-black/10", // A fallback background if no tint is provided
+        "bg-black/5", // A fallback background if no tint is provided
         className,
       )}
       {...props}
@@ -43,7 +46,7 @@ export function StaticGlassCard({
         className="pointer-events-none absolute inset-0 rounded-2xl"
         style={{
           background:
-            "linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%)",
+            "linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
         }}
       />
 
