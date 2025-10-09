@@ -12,7 +12,7 @@ interface StaticGlassCardProps {
 }
 
 const baseClass =
-  "relative flex flex-col overflow-hidden rounded-2xl bg-white/6 supports-[backdrop-filter]:backdrop-blur-md saturate-150 border border-white/10 ring-1 ring-white/5 text-left text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_10px_30px_rgba(0,0,0,0.45)] before:pointer-events-none before:absolute before:inset-0 before:rounded-inherit before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.22),rgba(255,255,255,0.08)_35%,rgba(255,255,255,0)_70%)] transition-all duration-300";
+  "relative flex flex-col overflow-hidden rounded-2xl bg-white/4 supports-[backdrop-filter]:backdrop-blur-xl saturate-150 border border-white/15 ring-1 ring-white/8 text-left text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_15px_40px_rgba(0,0,0,0.5),0_4px_12px_rgba(0,0,0,0.3)] before:pointer-events-none before:absolute before:inset-0 before:rounded-inherit before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.25),rgba(255,255,255,0.12)_35%,rgba(255,255,255,0.02)_70%)] transition-all duration-300";
 
 const paddingMap: Record<Required<StaticGlassCardProps>["padding"], string> = {
   sm: "p-4",
@@ -32,7 +32,7 @@ export function StaticGlassCard({
       {/* Color gradient layer with radial highlight */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
+        className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-30"
         style={{
           background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`,
         }}

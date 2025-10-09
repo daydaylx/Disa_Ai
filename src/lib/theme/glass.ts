@@ -9,6 +9,16 @@ export const DEFAULT_GLASS_VARIANTS = [
   "linear-gradient(135deg, rgba(251,191,36,0.28) 0%, rgba(244,114,182,0.22) 100%)",
 ];
 
+// Freundlichere, wärmere Farbpalette für bessere Glassmorphismus-Integration
+export const FRIENDLY_GLASS_VARIANTS = [
+  "linear-gradient(135deg, rgba(139,92,246,0.25) 0%, rgba(59,130,246,0.20) 100%)", // Warm Purple to Blue
+  "linear-gradient(135deg, rgba(236,72,153,0.25) 0%, rgba(251,146,60,0.20) 100%)", // Pink to Orange
+  "linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(34,197,94,0.20) 100%)", // Emerald to Green
+  "linear-gradient(135deg, rgba(251,191,36,0.25) 0%, rgba(249,115,22,0.20) 100%)", // Yellow to Orange
+  "linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.20) 100%)", // Purple to Fuchsia
+  "linear-gradient(135deg, rgba(14,165,233,0.25) 0%, rgba(6,182,212,0.20) 100%)", // Sky to Cyan
+];
+
 export const GOLDEN_GLASS_VARIANTS = [
   "linear-gradient(135deg, rgba(255,223,120,0.42) 0%, rgba(255,179,71,0.32) 100%)",
   "linear-gradient(135deg, rgba(255,215,141,0.36) 0%, rgba(255,190,92,0.28) 100%)",
@@ -145,4 +155,37 @@ export function gradientToTint(gradient: string): GlassTint | null {
   const [, from, to] = match;
   if (!from || !to) return null;
   return { from: from.trim(), to: to.trim() };
+}
+
+// Freundliche Tint-Farbkombinationen für bessere Lesbarkeit und wärmere Ausstrahlung
+export const FRIENDLY_TINTS: GlassTint[] = [
+  {
+    from: "hsla(262, 83%, 58%, 0.85)", // Warm Purple
+    to: "hsla(217, 91%, 60%, 0.65)", // Soft Blue
+  },
+  {
+    from: "hsla(330, 81%, 60%, 0.85)", // Warm Pink
+    to: "hsla(25, 95%, 53%, 0.65)", // Gentle Orange
+  },
+  {
+    from: "hsla(160, 84%, 39%, 0.85)", // Fresh Emerald
+    to: "hsla(142, 76%, 36%, 0.65)", // Deep Green
+  },
+  {
+    from: "hsla(43, 96%, 56%, 0.85)", // Bright Yellow
+    to: "hsla(20, 90%, 48%, 0.65)", // Warm Orange
+  },
+  {
+    from: "hsla(271, 91%, 65%, 0.85)", // Light Purple
+    to: "hsla(292, 84%, 61%, 0.65)", // Soft Fuchsia
+  },
+  {
+    from: "hsla(199, 89%, 48%, 0.85)", // Sky Blue
+    to: "hsla(188, 94%, 43%, 0.65)", // Cyan
+  },
+];
+
+// Hilfsfunktion um einen zufälligen freundlichen Tint zu erhalten
+export function getRandomFriendlyTint(): GlassTint {
+  return FRIENDLY_TINTS[Math.floor(Math.random() * FRIENDLY_TINTS.length)] ?? FRIENDLY_TINTS[0]!;
 }

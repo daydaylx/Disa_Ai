@@ -7,6 +7,40 @@
     text-size-adjust: none; /* Other browsers */
     scroll-behavior: smooth;
   }
+
+  /* App-wide background with glassmorphism support */
+  body {
+    background-image: url("/images/app-background.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #1a1a2e; /* Fallback color matching the gradient */
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
+  }
+
+  /* Mobile-optimized background */
+  @media (max-width: 768px) {
+    body {
+      background-attachment: scroll; /* Better performance on mobile */
+      background-size: cover;
+      background-position: center top; /* Focus on top area for mobile */
+    }
+  }
+
+  /* High-resolution displays */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    body {
+      background-size: cover;
+    }
+  }
+
+  /* Ensure the root element fills the viewport */
+  #root {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
 }
 
 @tailwind components;
@@ -48,6 +82,19 @@
       border-color 0.2s ease,
       background-color 0.2s ease,
       transform 0.2s ease;
+  }
+
+  /* Freundliche Button-Stile für wärmere Interaktionen */
+  .btn-friendly {
+    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-violet-500/20 to-blue-500/20 px-6 py-3 text-white/90 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:from-violet-400/30 hover:to-blue-400/30 hover:text-white active:scale-95;
+  }
+
+  .btn-friendly-warm {
+    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-pink-500/20 to-orange-400/20 px-6 py-3 text-white/90 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:from-pink-400/30 hover:to-orange-300/30 hover:text-white active:scale-95;
+  }
+
+  .btn-friendly-fresh {
+    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-emerald-500/20 to-green-500/20 px-6 py-3 text-white/90 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:from-emerald-400/30 hover:to-green-400/30 hover:text-white active:scale-95;
   }
 }
 
