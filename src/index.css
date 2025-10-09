@@ -12,6 +12,11 @@
   /* App-wide background with glassmorphism support */
   body {
     background-color: #0a0a0a; /* Reines Schwarz als Basis für das dunkle Theme */
+    background-image: url("/images/pwa-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
