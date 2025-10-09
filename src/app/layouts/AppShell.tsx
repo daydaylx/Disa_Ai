@@ -4,6 +4,8 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
+import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
+import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { Button } from "../../components/ui";
 import { StaticGlassCard } from "../../components/ui/StaticGlassCard";
 import { useGlassPalette } from "../../hooks/useGlassPalette";
@@ -168,6 +170,12 @@ export function AppShell({ children }: AppShellProps) {
       <BottomNav />
 
       <NetworkBanner />
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
+
+      {/* PWA Debug Info (Development) */}
+      {process.env.NODE_ENV === "development" && <PWADebugInfo />}
 
       {/* Footer mit Build-Info für Issue #81 */}
       <footer

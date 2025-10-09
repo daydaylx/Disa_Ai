@@ -106,9 +106,8 @@ export function usePWAInstall() {
     setDismissed(true);
   }
 
-  const canInstall = !!deferred && !installed && !dismissed && !isIOS(); // Chromium prompt()
-  const showIOSHowTo = isIOS() && !installed && !dismissed; // iOS: kein prompt()
-  const visible = canInstall || showIOSHowTo; // Banner-Sichtbarkeit
+  const canInstall = !!deferred && !installed && !dismissed && !isIOS(); // Nur Android/Chrome
+  const visible = canInstall; // Nur bei Android sichtbar
   const canPrompt = canInstall; // Alias für Alt-Code
 
   return {
@@ -121,6 +120,5 @@ export function usePWAInstall() {
     // Abwärtskompatibilität
     visible,
     canPrompt,
-    showIOSHowTo,
   } as const;
 }

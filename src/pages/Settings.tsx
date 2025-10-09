@@ -44,7 +44,7 @@ function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> })
       try {
         const data = await getMemoryStats();
         setStats(data);
-      } catch {
+      } catch (error) {
         console.warn("Failed to load memory stats:", error);
       }
     };
@@ -691,43 +691,62 @@ export default function SettingsPage() {
             App-Installation
           </h2>
           <p className="text-token-body leading-relaxed text-white/70">
-            Installiere Disa AI als native App für bessere Performance.
+            Installiere Disa AI als native App für bessere Performance und schnelleren Zugriff.
           </p>
         </div>
         <div className="space-y-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <div
-              className={`h-2 w-2 rounded-full ${
-                isInstalled ? "bg-green-500" : canInstall ? "bg-yellow-500" : "bg-gray-500"
+              className={`h-3 w-3 rounded-full ${
+                isInstalled
+                  ? "bg-green-500"
+                  : canInstall
+                    ? "animate-pulse bg-blue-500"
+                    : "bg-gray-500"
               }`}
             />
-            <span className="text-sm text-white/70">
+            <span className="text-sm font-medium text-white/90">
               {isInstalled
-                ? "App ist installiert"
+                ? "✅ App ist installiert"
                 : canInstall
-                  ? "Installation möglich"
-                  : "Bereits installiert oder nicht verfügbar"}
+                  ? "📱 Installation verfügbar"
+                  : "❌ Installation nicht verfügbar"}
             </span>
           </div>
+
+          {!isInstalled && (
+            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+              <div className="space-y-2 text-xs text-white/70">
+                <p className="font-medium">Vorteile der App-Installation:</p>
+                <ul className="list-disc space-y-1 pl-4">
+                  <li>Schneller direkter Zugriff vom Home-Screen</li>
+                  <li>Bessere Performance ohne Browser-Overhead</li>
+                  <li>Funktioniert auch bei schwacher Internetverbindung</li>
+                  <li>Native App-Erfahrung auf Android</li>
+                </ul>
+              </div>
+            </div>
+          )}
 
           {canInstall && (
             <Button
               type="button"
               onClick={handleInstallPWA}
-              className="hover:bg-accent-600 w-full bg-accent-500 text-white"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600"
             >
               <Download className="mr-2 h-4 w-4" />
-              App installieren
+              Jetzt als App installieren
             </Button>
           )}
 
           {isInstalled && (
             <div className="py-4 text-center">
-              <div className="text-sm font-medium text-green-400">
-                ✓ App erfolgreich installiert
+              <div className="mb-2 text-lg font-medium text-green-400">
+                🎉 App erfolgreich installiert!
               </div>
-              <p className="mt-1 text-xs text-white/60">
-                Du kannst Disa AI jetzt wie eine native App verwenden.
+              <p className="text-sm text-white/60">
+                Du kannst Disa AI jetzt direkt vom Home-Screen starten und wie eine native App
+                verwenden.
               </p>
             </div>
           )}
