@@ -99,6 +99,7 @@
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "Menlo", monospace;
 
   /* Corporate Theme Colors */
+  --color-corporate-bg-pure: #000000;
   --color-corporate-bg-primary: #000711;
   --color-corporate-bg-secondary: #0a0f1c;
   --color-corporate-bg-elevated: #0f1729;

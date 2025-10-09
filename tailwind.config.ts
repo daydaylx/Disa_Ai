@@ -52,6 +52,7 @@ export default {
         },
         corporate: {
           bg: {
+            pure: "var(--color-corporate-bg-pure)",
             primary: "var(--color-corporate-bg-primary)",
             secondary: "var(--color-corporate-bg-secondary)",
             elevated: "var(--color-corporate-bg-elevated)",

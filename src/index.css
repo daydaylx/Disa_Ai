@@ -11,7 +11,7 @@
 
   /* App-wide background - reiner schwarzer Hintergrund */
   body {
-    background-color: #000000; /* Reiner schwarzer Hintergrund */
+    background-color: var(--color-corporate-bg-pure); /* Token für reinen schwarzen Hintergrund */
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
