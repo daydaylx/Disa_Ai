@@ -66,24 +66,23 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       analyzerPlugin,
-      // Temporarily disable PWA to debug loading issues
-      // VitePWA({
-      //   strategies: "injectManifest",
-      //   srcDir: "public",
-      //   filename: "sw.js",
-      //   registerType: "autoUpdate",
-      //   injectRegister: "auto",
-      //   devOptions: {
-      //     enabled: !isProduction, // Only enable in development
-      //     type: "module",
-      //   },
-      //   injectManifest: {
-      //     globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,json,webmanifest}"],
-      //     globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js"],
-      //     rollupFormat: "es",
-      //   },
-      //   manifest: false, // We have our own manifest.webmanifest
-      // }),
+      VitePWA({
+        strategies: "injectManifest",
+        srcDir: "public",
+        filename: "sw.js",
+        registerType: "autoUpdate",
+        injectRegister: "auto",
+        devOptions: {
+          enabled: !isProduction, // Only enable in development
+          type: "module",
+        },
+        injectManifest: {
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,json,webmanifest}"],
+          globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js"],
+          rollupFormat: "es",
+        },
+        manifest: false, // We have our own manifest.webmanifest
+      }),
     ],
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
