@@ -68,17 +68,17 @@
   --shadow-2: 0 20px 48px -18px rgba(5, 11, 20, 0.55);
   --shadow-3: 0 32px 64px -24px rgba(5, 11, 20, 0.65);
 
-  /* Glassmorphism */
+  /* Glassmorphism - Erhöhte Transparenz für bessere Sichtbarkeit des Hintergrundmusters */
   --blur-sm: 8px;
   --blur-md: 16px;
   --blur-lg: 24px;
   --blur-xl: 32px;
   --blur-2xl: 40px;
 
-  --glass-bg-subtle: hsla(220, 25%, 95%, 0.05);
-  --glass-bg-soft: hsla(220, 25%, 95%, 0.08);
-  --glass-bg-medium: hsla(220, 20%, 90%, 0.12);
-  --glass-bg-strong: hsla(220, 20%, 90%, 0.18);
+  --glass-bg-subtle: hsla(220, 25%, 95%, 0.03);
+  --glass-bg-soft: hsla(220, 25%, 95%, 0.05);
+  --glass-bg-medium: hsla(220, 20%, 90%, 0.08);
+  --glass-bg-strong: hsla(220, 20%, 90%, 0.12);
 
   --glass-border-subtle: hsla(220, 25%, 95%, 0.08);
   --glass-border-soft: hsla(220, 25%, 95%, 0.12);

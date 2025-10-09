@@ -150,11 +150,12 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="stage relative flex min-h-dvh w-full flex-col bg-transparent text-slate-200">
-      {/* Noise overlay */}
+      {/* Dot pattern background */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.02'/></svg>")`,
+          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><circle cx='10' cy='10' r='1' fill='%23ffffff' opacity='0.15'/></svg>")`,
+          backgroundSize: "20px 20px",
         }}
       />
 
