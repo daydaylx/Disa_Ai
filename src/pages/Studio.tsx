@@ -10,6 +10,34 @@ import { useGlassPalette } from "../hooks/useGlassPalette";
 import type { GlassTint } from "../lib/theme/glass";
 import { FRIENDLY_TINTS } from "../lib/theme/glass";
 
+// Statische Kategorie-Farbpalette - unabhängig von der globalen Theme-Steuerung
+const STATIC_CATEGORY_TINTS: GlassTint[] = [
+  {
+    from: "hsla(262, 82%, 74%, 0.78)", // Lavender
+    to: "hsla(200, 87%, 68%, 0.55)", // Soft Sky
+  },
+  {
+    from: "hsla(335, 86%, 72%, 0.78)", // Blossom Pink
+    to: "hsla(24, 92%, 67%, 0.55)", // Peach Glow
+  },
+  {
+    from: "hsla(160, 82%, 66%, 0.78)", // Mint
+    to: "hsla(188, 84%, 62%, 0.55)", // Aqua
+  },
+  {
+    from: "hsla(42, 92%, 70%, 0.78)", // Golden Light
+    to: "hsla(16, 86%, 64%, 0.55)", // Amber Coral
+  },
+  {
+    from: "hsla(280, 88%, 74%, 0.78)", // Orchid
+    to: "hsla(312, 84%, 68%, 0.55)", // Fuchsia Mist
+  },
+  {
+    from: "hsla(202, 86%, 70%, 0.78)", // Daybreak Blue
+    to: "hsla(186, 88%, 64%, 0.55)", // Lagoon
+  },
+];
+
 // Removed unused ROLE_TINTS and RoleVisualConfig - now using useGlassPalette for consistent theming
 // const _ROLE_TINTS: Record<string, RoleVisualConfig> = {
 //   neutral: { tint: { from: "hsl(210 90% 60% / 0.22)", to: "hsl(50 95% 55% / 0.22)" } },
@@ -43,6 +71,8 @@ function RolesTab() {
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
   const navigate = useNavigate();
   const palette = useGlassPalette();
+  // Verwende statische Farbpalette für RoleCards, um Farbänderungen bei Rollen-Auswahl zu vermeiden
+  const staticPalette = STATIC_CATEGORY_TINTS;
   const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
 
   useEffect(() => {
@@ -129,7 +159,8 @@ function RolesTab() {
   }, [availableRoles, categoryOrder]);
   const categoryTints: Record<string, GlassTint> = categoryOrder.reduce(
     (acc, category, index) => {
-      acc[category] = friendlyPalette[index % friendlyPalette.length] ?? DEFAULT_TINT;
+      // Verwende statische Farbpalette, damit sich RoleCard-Farben nicht bei Rollen-Auswahl ändern
+      acc[category] = staticPalette[index % staticPalette.length] ?? DEFAULT_TINT;
       return acc;
     },
     {} as Record<string, GlassTint>,

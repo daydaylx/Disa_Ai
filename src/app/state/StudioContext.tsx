@@ -31,16 +31,18 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (!role) {
         setTypographyScale(1);
         setBorderRadius(0.5);
-        setAccentColor("hsl(var(--primary))");
+        // Behalte accentColor bei Rolle-Zurücksetzen bei, um globale Farbänderungen zu vermeiden
+        // setAccentColor("hsl(var(--primary))");
         return;
       }
 
-      const { typographyScale: scale, borderRadius: radius, accentColor: color } = role.styleHints;
+      const { typographyScale: scale, borderRadius: radius } = role.styleHints;
       setTypographyScale(scale ?? 1);
       setBorderRadius(radius ?? 0.5);
-      setAccentColor(color ?? "hsl(var(--primary))");
+      // Aktualisiere accentColor nicht automatisch bei Rollen-Auswahl, um ungewollte globale Farbänderungen zu vermeiden
+      // setAccentColor(color ?? "hsl(var(--primary))");
     },
-    [setAccentColor, setBorderRadius, setTypographyScale],
+    [setBorderRadius, setTypographyScale],
   );
 
   const value = {
