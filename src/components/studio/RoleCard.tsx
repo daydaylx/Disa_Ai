@@ -42,7 +42,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          "bg-white/6 before:rounded-inherit relative flex min-h-[152px] flex-col overflow-hidden rounded-2xl border border-white/10 p-5 text-left text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_10px_30px_rgba(0,0,0,0.45)] ring-1 ring-white/5 saturate-150 transition-all duration-300 before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.22),rgba(255,255,255,0.08)_35%,rgba(255,255,255,0)_70%)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_14px_40px_rgba(0,0,0,0.55)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] supports-[backdrop-filter]:backdrop-blur-md",
+          "glass-strong before:rounded-inherit relative flex min-h-[152px] flex-col overflow-hidden rounded-2xl p-5 text-left text-zinc-200 transition-all duration-300 before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.22),rgba(255,255,255,0.08)_35%,rgba(255,255,255,0)_70%)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_14px_40px_rgba(0,0,0,0.55)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]",
           isActive && "border-white/30 ring-2 ring-white/25",
           className,
         )}
