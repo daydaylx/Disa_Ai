@@ -8,6 +8,7 @@ import type { Role } from "../data/roles";
 import { loadRoles } from "../data/roles";
 import { useGlassPalette } from "../hooks/useGlassPalette";
 import type { GlassTint } from "../lib/theme/glass";
+import { FRIENDLY_TINTS } from "../lib/theme/glass";
 
 // Removed unused ROLE_TINTS and RoleVisualConfig - now using useGlassPalette for consistent theming
 // const _ROLE_TINTS: Record<string, RoleVisualConfig> = {
@@ -18,9 +19,9 @@ import type { GlassTint } from "../lib/theme/glass";
 //   creative_writer: { tint: { from: "hsl(265 90% 62% / 0.22)", to: "hsl(320 90% 62% / 0.22)" } },
 // };
 
-const DEFAULT_TINT: RoleTint = {
-  from: "hsl(210 45% 55% / 0.20)",
-  to: "hsl(250 60% 52% / 0.18)",
+const DEFAULT_TINT: RoleTint = FRIENDLY_TINTS[0] ?? {
+  from: "hsla(262, 82%, 74%, 0.78)",
+  to: "hsla(200, 87%, 68%, 0.55)",
 };
 
 function summariseRole(role: Role): string {
@@ -42,6 +43,7 @@ function RolesTab() {
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
   const navigate = useNavigate();
   const palette = useGlassPalette();
+  const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
 
   useEffect(() => {
     let mounted = true;
@@ -81,25 +83,6 @@ function RolesTab() {
     return roleList;
   }, [roleList, activeRole]);
 
-  const orderedRoles = useMemo(() => {
-    // Highlight the curated set first, keep remaining order for discoverability
-    const featuredOrder = [
-      "neutral",
-      "email_professional",
-      "sarcastic_direct",
-      "songwriter",
-      "creative_writer",
-    ];
-    return [...availableRoles].sort((a, b) => {
-      const indexA = featuredOrder.indexOf(a.id);
-      const indexB = featuredOrder.indexOf(b.id);
-      if (indexA === -1 && indexB === -1) return 0;
-      if (indexA === -1) return 1;
-      if (indexB === -1) return -1;
-      return indexA - indexB;
-    });
-  }, [availableRoles]);
-
   const handleResetRole = () => {
     setActiveRole(null);
   };
@@ -108,49 +91,49 @@ function RolesTab() {
     void navigate("/chat");
   };
 
-  // Kategorie-spezifische Farben für bessere Übersichtlichkeit
-  const categoryTints: Record<string, GlassTint> = {
-    Standard: {
-      from: "hsl(210 80% 65% / 0.22)", // Helleres Blau
-      to: "hsl(220 75% 70% / 0.22)",
+  // Optimierte Kategorie-Reihenfolge für bessere Benutzerführung
+  const categoryOrder = useMemo(
+    () =>
+      [
+        "Alltag",
+        "Business & Karriere",
+        "Kreativ & Unterhaltung",
+        "Lernen & Bildung",
+        "Leben & Familie",
+        "Experten & Beratung",
+        "Erwachsene",
+        "Spezial",
+      ] as const,
+    [],
+  );
+
+  const orderedRoles = useMemo(() => {
+    // Sortiere Rollen nach optimierten Kategorien für bessere Benutzerführung
+    return [...availableRoles].sort((a, b) => {
+      const categoryA = a.category || "Spezial";
+      const categoryB = b.category || "Spezial";
+
+      const indexA = categoryOrder.indexOf(categoryA as any);
+      const indexB = categoryOrder.indexOf(categoryB as any);
+
+      // Kategorien sortieren
+      if (indexA !== indexB) {
+        const orderA = indexA === -1 ? categoryOrder.length : indexA;
+        const orderB = indexB === -1 ? categoryOrder.length : indexB;
+        return orderA - orderB;
+      }
+
+      // Innerhalb der Kategorie alphabetisch sortieren
+      return a.name.localeCompare(b.name);
+    });
+  }, [availableRoles, categoryOrder]);
+  const categoryTints: Record<string, GlassTint> = categoryOrder.reduce(
+    (acc, category, index) => {
+      acc[category] = friendlyPalette[index % friendlyPalette.length] ?? DEFAULT_TINT;
+      return acc;
     },
-    Beruflich: {
-      from: "hsl(180 80% 45% / 0.22)", // Teal
-      to: "hsl(190 75% 50% / 0.22)",
-    },
-    Erwachsene: {
-      from: "hsl(290 70% 50% / 0.22)", // Dunkelviolett
-      to: "hsl(300 65% 55% / 0.22)",
-    },
-    Beratung: {
-      from: "hsl(160 60% 50% / 0.22)", // Mintgrün
-      to: "hsl(170 55% 55% / 0.22)",
-    },
-    Spezial: {
-      from: "hsl(45 100% 50% / 0.22)", // Gold
-      to: "hsl(55 95% 55% / 0.22)",
-    },
-    Experten: {
-      from: "hsl(0 85% 55% / 0.22)", // Rot
-      to: "hsl(15 80% 60% / 0.22)",
-    },
-    Kreativ: {
-      from: "hsl(280 90% 60% / 0.22)", // Violett
-      to: "hsl(300 85% 65% / 0.22)",
-    },
-    Lernen: {
-      from: "hsl(40 95% 55% / 0.22)", // Gelb/Orange
-      to: "hsl(50 90% 60% / 0.22)",
-    },
-    Persönlichkeit: {
-      from: "hsl(330 90% 60% / 0.22)", // Pink
-      to: "hsl(345 85% 65% / 0.22)",
-    },
-    Praktisch: {
-      from: "hsl(120 85% 55% / 0.22)", // Grün
-      to: "hsl(135 80% 60% / 0.22)",
-    },
-  };
+    {} as Record<string, GlassTint>,
+  );
 
   return (
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
@@ -161,31 +144,72 @@ function RolesTab() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 gap-3 pb-8" data-testid="role-card-grid">
+      <div className="space-y-6 pb-8" data-testid="role-card-grid">
         {isLoadingRoles && orderedRoles.length === 0 ? (
           <div className="flex items-center justify-center rounded-2xl border border-white/[0.12] bg-white/[0.04] p-6 text-sm text-white/70">
             Rollen werden geladen ...
           </div>
         ) : null}
-        {orderedRoles.map((role) => {
-          // Use category-specific tint for better visual organization
-          const categoryKey = role.category || "Standard";
-          const tint = categoryTints[categoryKey] ?? (DEFAULT_TINT as GlassTint);
-          return (
-            <RoleCard
-              key={role.id}
-              title={role.name}
-              description={summariseRole(role)}
-              badge={role.category}
-              tint={tint}
-              contrastOverlay={false}
-              isActive={activeRole?.id === role.id}
-              onClick={() => setActiveRole(role)}
-              aria-label={`Rolle ${role.name} auswählen`}
-              data-testid={`role-card-${role.id}`}
-            />
+        {(() => {
+          // Gruppiere Rollen nach Kategorien für bessere Übersichtlichkeit
+          const groupedRoles = orderedRoles.reduce<Record<string, typeof orderedRoles>>(
+            (acc, role) => {
+              const category = role.category || "Spezial";
+              if (!acc[category]) acc[category] = [];
+              acc[category].push(role);
+              return acc;
+            },
+            {},
           );
-        })}
+
+          // Kategorie-Icons für visuelle Differenzierung
+          const categoryIcons: Record<string, string> = {
+            Alltag: "🚀",
+            "Business & Karriere": "💼",
+            "Kreativ & Unterhaltung": "🎨",
+            "Lernen & Bildung": "🎓",
+            "Leben & Familie": "🏠",
+            "Experten & Beratung": "🩺",
+            Erwachsene: "🔒",
+            Spezial: "⭐",
+          };
+
+          return categoryOrder
+            .map((category) => {
+              const roles = groupedRoles[category];
+              if (!roles || roles.length === 0) return null;
+
+              return (
+                <section key={category} className="space-y-3">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-white/90">
+                    <span>{categoryIcons[category] || "📋"}</span>
+                    {category}
+                    <span className="text-xs font-normal text-white/60">({roles.length})</span>
+                  </h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    {roles.map((role) => {
+                      const tint = categoryTints[category] ?? (DEFAULT_TINT as GlassTint);
+                      return (
+                        <RoleCard
+                          key={role.id}
+                          title={role.name}
+                          description={summariseRole(role)}
+                          badge={role.category}
+                          tint={tint}
+                          contrastOverlay={false}
+                          isActive={activeRole?.id === role.id}
+                          onClick={() => setActiveRole(role)}
+                          aria-label={`Rolle ${role.name} auswählen`}
+                          data-testid={`role-card-${role.id}`}
+                        />
+                      );
+                    })}
+                  </div>
+                </section>
+              );
+            })
+            .filter(Boolean);
+        })()}
       </div>
 
       <div className="mt-4 flex flex-col gap-2">
@@ -198,7 +222,7 @@ function RolesTab() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
             style={{
-              background: `linear-gradient(135deg, ${palette[0]?.from ?? "hsl(210 45% 55% / 0.20)"} 0%, ${palette[0]?.to ?? "hsl(250 60% 52% / 0.18)"} 100%)`,
+              background: `linear-gradient(135deg, ${friendlyPalette[0]?.from ?? DEFAULT_TINT.from} 0%, ${friendlyPalette[0]?.to ?? DEFAULT_TINT.to} 100%)`,
             }}
           />
           <span className="relative z-10">Zum Chat mit aktueller Rolle</span>
@@ -215,7 +239,7 @@ function RolesTab() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
             style={{
-              background: `linear-gradient(135deg, ${palette[1]?.from ?? "hsl(210 45% 55% / 0.20)"} 0%, ${palette[1]?.to ?? "hsl(250 60% 52% / 0.18)"} 100%)`,
+              background: `linear-gradient(135deg, ${friendlyPalette[1]?.from ?? DEFAULT_TINT.from} 0%, ${friendlyPalette[1]?.to ?? DEFAULT_TINT.to} 100%)`,
             }}
           />
           <RotateCcw className="relative z-10 h-4 w-4" aria-hidden="true" />

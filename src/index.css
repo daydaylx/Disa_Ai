@@ -6,16 +6,12 @@
     -webkit-text-size-adjust: none; /* Safari */
     text-size-adjust: none; /* Other browsers */
     scroll-behavior: smooth;
+    color-scheme: dark;
   }
 
   /* App-wide background with glassmorphism support */
   body {
-    background-image: url("/images/app-background.jpg");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-color: #1a1a2e; /* Fallback color matching the gradient */
+    background-color: #0a0a0a; /* Reines Schwarz als Basis für das dunkle Theme */
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
@@ -86,15 +82,15 @@
 
   /* Freundliche Button-Stile für wärmere Interaktionen */
   .btn-friendly {
-    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-violet-500/20 to-blue-500/20 px-6 py-3 text-white/90 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:from-violet-400/30 hover:to-blue-400/30 hover:text-white active:scale-95;
+    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-rose-400/25 via-orange-300/20 to-amber-200/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
   }
 
   .btn-friendly-warm {
-    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-pink-500/20 to-orange-400/20 px-6 py-3 text-white/90 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:from-pink-400/30 hover:to-orange-300/30 hover:text-white active:scale-95;
+    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-amber-300/30 via-orange-300/20 to-rose-400/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
   }
 
   .btn-friendly-fresh {
-    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-emerald-500/20 to-green-500/20 px-6 py-3 text-white/90 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:from-emerald-400/30 hover:to-green-400/30 hover:text-white active:scale-95;
+    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-emerald-300/30 via-teal-300/20 to-cyan-300/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
   }
 }
 

@@ -18,13 +18,13 @@
   --color-neutral-950: #05070d;
 
   /* Accent Colors */
-  --color-accent-300: #7dd3fc;
-  --color-accent-500: #22d3ee;
-  --color-accent-700: #0a8aae;
-  --color-accent-subtle: rgba(34, 211, 238, 0.08);
-  --color-accent-low: rgba(34, 211, 238, 0.16);
-  --color-accent-outline: rgba(34, 211, 238, 0.38);
-  --color-accent-foreground: #03141c;
+  --color-accent-300: #f9a8d4;
+  --color-accent-500: #f472b6;
+  --color-accent-700: #db2777;
+  --color-accent-subtle: rgba(244, 114, 182, 0.12);
+  --color-accent-low: rgba(244, 114, 182, 0.22);
+  --color-accent-outline: rgba(244, 114, 182, 0.4);
+  --color-accent-foreground: #2f0a1e;
 
   /* Semantic Colors */
   --color-danger: #ef4444;
@@ -108,7 +108,7 @@
   --color-corporate-text-primary: #f8fafc;
   --color-corporate-text-secondary: #cbd5e1;
   --color-corporate-text-muted: #94a3b8;
-  --color-corporate-text-accent: #60a5fa;
+  --color-corporate-text-accent: #f8b4d9;
   --color-corporate-text-on-violet: #ffffff;
   --color-corporate-text-on-blue: #ffffff;
   --color-corporate-text-on-teal: #000000;
@@ -122,15 +122,15 @@
   --color-corporate-border-secondary: #334155;
   --color-corporate-border-accent: #475569;
 
-  --color-corporate-accent-primary: #3b82f6;
-  --color-corporate-accent-secondary: #1d4ed8;
+  --color-corporate-accent-primary: #f472b6;
+  --color-corporate-accent-secondary: #fb7185;
   --color-corporate-accent-success: #10b981;
   --color-corporate-accent-warning: #f59e0b;
   --color-corporate-accent-danger: #ef4444;
-  --color-corporate-accent-purple: #8b5cf6;
+  --color-corporate-accent-purple: #c084fc;
   --color-corporate-accent-purple-hc: #a855f7;
   --color-corporate-accent-blue-hc: #60a5fa;
-  --color-corporate-accent-teal-hc: #06b6d4;
+  --color-corporate-accent-teal-hc: #2dd4bf;
 
   --color-corporate-glow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
   --color-corporate-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
@@ -147,9 +147,9 @@
   --color-text-secondary: #b8bec4;
   --color-text-muted: #9aa0a6;
 
-  --color-accent-teal: #26c6da;
-  --color-accent-violet: #7c4dff;
-  --color-accent-pink: #ff4d8b;
+  --color-accent-teal: #34d399;
+  --color-accent-violet: #c084fc;
+  --color-accent-pink: #fb7185;
 
   --color-border-soft: rgba(255, 255, 255, 0.12);
   --color-border-strong: rgba(255, 255, 255, 0.18);

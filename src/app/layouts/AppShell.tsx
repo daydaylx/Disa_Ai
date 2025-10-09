@@ -32,11 +32,11 @@ function Header() {
           <div className="relative flex items-center justify-between">
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-corporate-text-onSurface">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r from-rose-400/35 via-orange-300/30 to-amber-200/35 px-3 py-1 text-xs font-medium tracking-wide text-white shadow-[0_4px_16px_rgba(248,191,88,0.25)]">
                   <Compass className="h-3.5 w-3.5" /> KI-Studio
                 </div>
                 {activeRole && (
-                  <div className="border-accent-500/30 bg-accent-500/20 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-corporate-text-onAccent">
+                  <div className="from-accent-500/35 inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r via-amber-300/30 to-rose-400/30 px-3 py-1 text-xs font-medium text-white shadow-[0_4px_18px_rgba(244,114,182,0.3)]">
                     <Bot className="h-3.5 w-3.5" />
                     {activeRole.name}
                   </div>
@@ -62,7 +62,7 @@ function Header() {
                 size="sm"
                 variant="ghost"
                 aria-label="Neues Gespräch"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border-0 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 px-5 font-medium tracking-wide text-white shadow-[0_6px_24px_rgba(32,0,72,0.45)] transition-transform hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/20 active:scale-[0.98]"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border-0 bg-gradient-to-r from-rose-400 via-orange-300 to-amber-200 px-5 font-medium tracking-wide text-white shadow-[0_10px_32px_rgba(249,168,212,0.45)] transition-transform hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/25 active:scale-[0.98]"
                 onClick={handleNewChatClick}
               >
                 <PlusCircle className="h-4 w-4" /> Neu starten
@@ -147,7 +147,7 @@ export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
 
   return (
-    <div className="stage relative flex min-h-dvh w-full flex-col bg-gradient-to-b from-[#0b0f1a] via-[#0a0d18] to-[#090b12] text-slate-200">
+    <div className="stage relative flex min-h-dvh w-full flex-col bg-transparent text-slate-200">
       {/* Noise overlay */}
       <div
         className="pointer-events-none absolute inset-0"

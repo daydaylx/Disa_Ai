@@ -3,11 +3,14 @@ import {
   Download,
   Eye,
   EyeOff,
+  FileText,
   Info,
   Key,
+  MessageSquare,
   Shield,
   Smartphone,
   Trash2,
+  Upload,
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -22,6 +25,14 @@ import { useGlassPalette } from "../hooks/useGlassPalette";
 import { useMemory } from "../hooks/useMemory";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { useSettings } from "../hooks/useSettings";
+import {
+  cleanupOldConversations,
+  deleteConversation,
+  exportConversations,
+  getAllConversations,
+  getConversationStats,
+  importConversations,
+} from "../lib/conversation-manager";
 import { BUILD_ID } from "../lib/pwa/registerSW";
 import type { GlassTint } from "../lib/theme/glass";
 
@@ -33,7 +44,7 @@ function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> })
       try {
         const data = await getMemoryStats();
         setStats(data);
-      } catch (error) {
+      } catch {
         console.warn("Failed to load memory stats:", error);
       }
     };
@@ -46,6 +57,39 @@ function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> })
       <div>Gesamte Nachrichten: {stats.totalMessages}</div>
       <div>Speicherverbrauch: ~{Math.round(stats.storageUsed / 1024)}KB</div>
     </>
+  );
+}
+
+function ChatStats() {
+  const [stats, setStats] = useState(() => getConversationStats());
+
+  const refreshStats = () => {
+    setStats(getConversationStats());
+  };
+
+  useEffect(() => {
+    refreshStats();
+  }, []);
+
+  return (
+    <div className="grid grid-cols-2 gap-4 text-sm">
+      <div className="space-y-1">
+        <span className="text-white/60">Konversationen:</span>
+        <div className="font-medium text-white">{stats.totalConversations}</div>
+      </div>
+      <div className="space-y-1">
+        <span className="text-white/60">Nachrichten:</span>
+        <div className="font-medium text-white">{stats.totalMessages}</div>
+      </div>
+      <div className="space-y-1">
+        <span className="text-white/60">Ø pro Chat:</span>
+        <div className="font-medium text-white">{stats.averageMessagesPerConversation}</div>
+      </div>
+      <div className="space-y-1">
+        <span className="text-white/60">Verwendete Modelle:</span>
+        <div className="font-medium text-white">{stats.modelsUsed.length}</div>
+      </div>
+    </div>
   );
 }
 
@@ -152,6 +196,122 @@ export default function SettingsPage() {
         kind: "error",
         title: "Installation fehlgeschlagen",
         message: "Die App konnte nicht installiert werden.",
+      });
+    }
+  };
+
+  const handleExportChats = () => {
+    try {
+      const exportData = exportConversations();
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
+
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `disa-ai-chats-${new Date().toISOString().split("T")[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toasts.push({
+        kind: "success",
+        title: "Export erfolgreich",
+        message: `${exportData.metadata.totalConversations} Konversationen exportiert`,
+      });
+    } catch {
+      toasts.push({
+        kind: "error",
+        title: "Export fehlgeschlagen",
+        message: "Die Chats konnten nicht exportiert werden.",
+      });
+    }
+  };
+
+  const handleImportChats = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importData = JSON.parse(content);
+
+        const result = importConversations(importData, {
+          mergeStrategy: "skip-duplicates",
+          createBackup: true,
+        });
+
+        if (result.success) {
+          toasts.push({
+            kind: "success",
+            title: "Import erfolgreich",
+            message: `${result.importedCount} neue Konversationen importiert`,
+          });
+        } else {
+          toasts.push({
+            kind: "error",
+            title: "Import fehlgeschlagen",
+            message: result.errors.join(", "),
+          });
+        }
+      } catch {
+        toasts.push({
+          kind: "error",
+          title: "Import fehlgeschlagen",
+          message: "Die Datei konnte nicht gelesen werden.",
+        });
+      }
+    };
+    reader.readAsText(file);
+
+    // Reset input
+    event.target.value = "";
+  };
+
+  const handleCleanupOldChats = () => {
+    if (!confirm("Alle Konversationen älter als 30 Tage löschen?")) return;
+
+    try {
+      const deletedCount = cleanupOldConversations(30);
+      toasts.push({
+        kind: "success",
+        title: "Aufräumen abgeschlossen",
+        message: `${deletedCount} alte Konversationen gelöscht`,
+      });
+    } catch {
+      toasts.push({
+        kind: "error",
+        title: "Aufräumen fehlgeschlagen",
+        message: "Die alten Chats konnten nicht gelöscht werden.",
+      });
+    }
+  };
+
+  const handleDeleteAllChats = () => {
+    if (
+      !confirm(
+        "ALLE Konversationen unwiderruflich löschen? Diese Aktion kann nicht rückgängig gemacht werden!",
+      )
+    )
+      return;
+
+    try {
+      const conversations = getAllConversations();
+      conversations.forEach((conv) => deleteConversation(conv.id));
+
+      toasts.push({
+        kind: "success",
+        title: "Alle Chats gelöscht",
+        message: "Alle Konversationen wurden entfernt",
+      });
+    } catch {
+      toasts.push({
+        kind: "error",
+        title: "Löschen fehlgeschlagen",
+        message: "Die Chats konnten nicht gelöscht werden.",
       });
     }
   };
@@ -432,8 +592,99 @@ export default function SettingsPage() {
         </div>
       </StaticGlassCard>
 
-      {/* PWA Install Section */}
+      {/* Chat Management Section */}
       <StaticGlassCard tint={palette[3] ?? DEFAULT_TINT} padding="lg">
+        <div className="space-y-1 pb-4">
+          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
+            <MessageSquare className="h-5 w-5" />
+            Chat-Verwaltung
+          </h2>
+          <p className="text-token-body leading-relaxed text-white/70">
+            Exportiere, importiere und verwalte deine gespeicherten Konversationen.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {/* Chat Statistics */}
+          <div className="space-y-3">
+            <Label className="text-white/90">Statistiken</Label>
+            <ChatStats />
+          </div>
+
+          {/* Export/Import Actions */}
+          <div className="space-y-3 border-t border-white/10 pt-4">
+            <Label className="text-white/90">Import & Export</Label>
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={handleExportChats}
+                variant="outline"
+                className="w-full border-blue-500/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Exportieren
+              </Button>
+
+              <div className="relative">
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={handleImportChats}
+                  className="absolute inset-0 cursor-pointer opacity-0"
+                  id="import-chats"
+                />
+                <Button
+                  variant="outline"
+                  className="w-full border-green-500/30 bg-green-500/10 text-green-300 hover:bg-green-500/20"
+                  asChild
+                >
+                  <label htmlFor="import-chats" className="cursor-pointer">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Importieren
+                  </label>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Cleanup Actions */}
+          <div className="space-y-3 border-t border-white/10 pt-4">
+            <Label className="text-white/90">Aufräumen</Label>
+            <div className="space-y-2">
+              <Button
+                onClick={handleCleanupOldChats}
+                variant="outline"
+                className="w-full border-yellow-500/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20"
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                Alte Chats löschen (30+ Tage)
+              </Button>
+
+              <Button
+                onClick={handleDeleteAllChats}
+                variant="outline"
+                className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Alle Chats löschen
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
+            <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
+            <div className="text-xs text-blue-200">
+              <p className="mb-1 font-medium">Sicherheit:</p>
+              <p>
+                Alle Chat-Daten werden nur lokal gespeichert. Export-Dateien enthalten vollständige
+                Konversationsverläufe - behandle sie entsprechend vertraulich.
+              </p>
+            </div>
+          </div>
+        </div>
+      </StaticGlassCard>
+
+      {/* PWA Install Section */}
+      <StaticGlassCard tint={palette[4] ?? DEFAULT_TINT} padding="lg">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Smartphone className="h-5 w-5" />
@@ -496,7 +747,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Build Info */}
-      <StaticGlassCard tint={palette[4] ?? DEFAULT_TINT} padding="lg">
+      <StaticGlassCard tint={palette[5] ?? DEFAULT_TINT} padding="lg">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Info className="h-5 w-5" />

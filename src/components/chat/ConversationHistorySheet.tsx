@@ -50,7 +50,7 @@ export function ConversationHistorySheet({
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Chat-Verlauf">
       <div className="max-h-[65vh] overflow-y-auto px-6 py-4">
         {conversations.length === 0 ? (
-          <StaticGlassCard tint={fallbackTint} contrastOverlay padding="lg" className="text-center">
+          <StaticGlassCard tint={fallbackTint} padding="lg" className="text-center">
             <div className="space-y-3">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/10">
                 <MessageSquare className="h-6 w-6 text-white/70" />
@@ -79,7 +79,6 @@ export function ConversationHistorySheet({
                 <li key={conversation.id} className="group relative">
                   <StaticGlassCard
                     tint={appliedTint}
-                    contrastOverlay={false}
                     padding="sm"
                     className={cn(
                       "px-5 py-4 text-left text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",

@@ -21,7 +21,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein sachlicher, hilfreicher Assistent. Antworte klar und strukturiert. Keine Umschweife, keine Floskeln. Bei Unsicherheiten sage es direkt. Deutsch als Standard, außer explizit anders gewünscht. Schreibe in normaler, verständlicher Sprache – keine Codes oder verschlüsselten Nachrichten.",
     allowedModels: ["mistralai/mistral-nemo:free", "qwen/qwen-2.5-7b-instruct:free"],
     tags: ["standard", "neutral"],
-    category: "Standard",
+    category: "Alltag",
     styleHints: {
       typographyScale: 1,
       borderRadius: 0.5,
@@ -37,7 +37,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein professioneller Schreibassistent für Geschäftskommunikation. Formuliere höflich aber prägnant. Struktur: Betreff, Anrede, Hauptteil, höflicher Schluss. Passe den Ton an: formal für Business, freundlich für private Kontakte. Korrigiere automatisch Grammatik und Rechtschreibung. Schreibe in klarer, verständlicher Sprache.",
     allowedModels: ["mistralai/mistral-nemo:free", "mistralai/mistral-small-3.2-24b-instruct:free"],
     tags: ["business", "communication"],
-    category: "Beruflich",
+    category: "Alltag",
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.25,
@@ -55,7 +55,7 @@ export const defaultRoles: Role[] = [
       "mistralai/mistral-nemo:free",
     ],
     tags: ["business", "productivity"],
-    category: "Beruflich",
+    category: "Business & Karriere",
     styleHints: {
       typographyScale: 1.05,
       borderRadius: 0.3,
@@ -72,7 +72,7 @@ export const defaultRoles: Role[] = [
       "mistralai/mistral-small-3.2-24b-instruct:free",
     ],
     tags: ["career", "business"],
-    category: "Beruflich",
+    category: "Business & Karriere",
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.4,
@@ -92,7 +92,7 @@ export const defaultRoles: Role[] = [
       "meta-llama/llama-3.1-405b-instruct:free",
     ],
     tags: ["expert", "legal"],
-    category: "Experten",
+    category: "Experten & Beratung",
     styleHints: {
       typographyScale: 1.1,
       borderRadius: 0.2,
@@ -106,7 +106,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein einfühlsamer, kompetenter Therapeut für alle Lebensbereiche – Sexualtherapie, Paartherapie und allgemeine psychologische Beratung. Höre aktiv zu und stelle gezielte Nachfragen. Behandle intime und sexuelle Themen professionell und ohne Scham. Gib fundierte, evidenzbasierte Ratschläge zu Beziehungen, Sexualität und psychischen Problemen. Erkläre Techniken und Übungen verständlich. Bei ernsten Themen: 'Ersetzt keinen Arztbesuch – professionelle Hilfe suchen.' Bleibe empathisch, professionell und tabu-frei. Antworte in klarer, normaler Sprache.",
     allowedModels: ["qwen/qwen-2.5-72b-instruct:free", "meta-llama/llama-3.1-405b-instruct:free"],
     tags: ["expert", "therapy", "health"],
-    category: "Experten",
+    category: "Experten & Beratung",
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.6,
@@ -120,7 +120,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein erfahrener Fitness- und Ernährungsberater. Erstelle individuelle Trainingspläne und Ernährungsempfehlungen basierend auf Zielen, Fitness-Level und Vorlieben. Erkläre Übungen, Nährstoffe und gesunde Gewohnheiten verständlich. Motiviere und gib realistische, umsetzbare Ratschläge. Bei gesundheitlichen Problemen: 'Konsultiere einen Arzt oder Ernährungsberater.'",
     allowedModels: ["meta-llama/llama-3.3-70b-instruct:free", "qwen/qwen-2.5-72b-instruct:free"],
     tags: ["expert", "health", "fitness"],
-    category: "Experten",
+    category: "Experten & Beratung",
     styleHints: {
       typographyScale: 1.05,
       borderRadius: 0.4,
@@ -136,7 +136,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein kreativer Autor für alle Textarten. Schreibe Geschichten, Gedichte, Drehbücher, Romane, Artikel. Entwickle Charaktere, Plots, Dialoge. Passe Stil und Ton an das gewünschte Genre an. Sei inspirierend, experimentell und originell.",
     allowedModels: ["meta-llama/llama-3.1-405b-instruct:free", "qwen/qwen-2.5-72b-instruct:free"],
     tags: ["creative", "writing"],
-    category: "Kreativ",
+    category: "Kreativ & Unterhaltung",
     styleHints: {
       typographyScale: 1.15,
       borderRadius: 0.8,
@@ -153,7 +153,7 @@ export const defaultRoles: Role[] = [
       "meta-llama/llama-3.1-405b-instruct:free",
     ],
     tags: ["creative", "music"],
-    category: "Kreativ",
+    category: "Kreativ & Unterhaltung",
     styleHints: {
       typographyScale: 1.1,
       borderRadius: 0.7,
@@ -173,7 +173,7 @@ export const defaultRoles: Role[] = [
       "meta-llama/llama-3.1-405b-instruct:free",
     ],
     tags: ["education", "languages"],
-    category: "Lernen",
+    category: "Lernen & Bildung",
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.3,
@@ -187,7 +187,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein Bildungsberater für Kurse, Bücher, Zertifikate, Sprachen, Berufsbildung, Online-Learning. Erkläre verschiedene Fachgebiete und Weiterbildungswege. Empfehle Tools, Lernmethoden, Zertifikate. Bleibe realistisch, keine Werbung.",
     allowedModels: ["meta-llama/llama-3.3-70b-instruct:free", "qwen/qwen-2.5-72b-instruct:free"],
     tags: ["education", "career"],
-    category: "Lernen",
+    category: "Lernen & Bildung",
     styleHints: {
       typographyScale: 1.05,
       borderRadius: 0.3,
@@ -203,7 +203,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein direkter Gesprächspartner mit trockenem Humor. Sei ironisch aber respektvoll. Decke Widersprüche auf, ohne persönlich zu werden. Kein Motivationsgeschwäfel. Bleibe intelligent und bissig, aber verständlich. Schreibe in normaler Sprache – keine Codes oder Verschlüsselungen.",
     allowedModels: ["meta-llama/llama-3.1-405b-instruct:free", "qwen/qwen-2.5-72b-instruct:free"],
     tags: ["personality", "humor"],
-    category: "Persönlichkeit",
+    category: "Kreativ & Unterhaltung",
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.2,
@@ -217,7 +217,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein erfahrener Personal- & Sozialkompetenz-Coach. Hilf bei Kommunikation, Selbstbewusstsein, Körpersprache, Konfliktlösung, Teamarbeit, Präsentationstechniken. Erkläre psychologische Grundlagen und praktische Übungen.",
     allowedModels: ["qwen/qwen-2.5-72b-instruct:free", "meta-llama/llama-3.1-405b-instruct:free"],
     tags: ["personality", "communication"],
-    category: "Persönlichkeit",
+    category: "Lernen & Bildung",
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.5,
@@ -233,7 +233,7 @@ export const defaultRoles: Role[] = [
       "Du bist ein kreativer Verkaufsberater für Online-Marktplätze. Schreibe attraktive, verkaufsfördernde Angebotsbeschreibungen für gebrauchte Gegenstände, besonders Möbel und Haushaltswaren. Formuliere prägnant, ehrlich und ansprechend. Betone Vorteile, erwähne relevante Details und erstelle überzeugende Titel. Gib Preisempfehlungen und Verkaufstipps.",
     allowedModels: ["meta-llama/llama-3.3-70b-instruct:free", "mistralai/mistral-nemo:free"],
     tags: ["practical", "sales"],
-    category: "Praktisch",
+    category: "Alltag",
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.4,
@@ -275,18 +275,101 @@ function categorizeRole(role: { name: string; tags?: string[] }): string {
   const tags = role.tags || [];
   const name = role.name.toLowerCase();
 
-  if (tags.includes("adult") || tags.includes("nsfw") || name.includes("18+")) {
+  // Erwachsene (18+) - höchste Priorität
+  if (
+    tags.includes("adult") ||
+    tags.includes("nsfw") ||
+    tags.includes("erotic") ||
+    tags.includes("bdsm") ||
+    tags.includes("kink") ||
+    tags.includes("roleplay") ||
+    name.includes("18+") ||
+    name.includes("nsfw") ||
+    name.includes("adult")
+  ) {
     return "Erwachsene";
   }
-  if (tags.includes("sexuality") || name.includes("sex")) {
-    return "Beratung";
+
+  // Business & Karriere
+  if (
+    tags.includes("business") ||
+    tags.includes("professional") ||
+    tags.includes("career") ||
+    tags.includes("job") ||
+    tags.includes("planning")
+  ) {
+    return "Business & Karriere";
   }
-  if (tags.includes("business") || tags.includes("professional")) {
-    return "Beruflich";
+
+  // Kreativ & Unterhaltung
+  if (
+    tags.includes("creative") ||
+    tags.includes("art") ||
+    tags.includes("music") ||
+    tags.includes("entertainment") ||
+    tags.includes("movies") ||
+    tags.includes("series") ||
+    tags.includes("literature") ||
+    tags.includes("songwriting") ||
+    tags.includes("design") ||
+    tags.includes("photography") ||
+    tags.includes("humor")
+  ) {
+    return "Kreativ & Unterhaltung";
   }
-  if (tags.includes("creative") || tags.includes("art")) {
-    return "Kreativ";
+
+  // Lernen & Bildung
+  if (
+    tags.includes("education") ||
+    tags.includes("learning") ||
+    tags.includes("languages") ||
+    tags.includes("communication") ||
+    tags.includes("personality") ||
+    tags.includes("softskills")
+  ) {
+    return "Lernen & Bildung";
   }
+
+  // Leben & Familie
+  if (
+    tags.includes("lifestyle") ||
+    tags.includes("family") ||
+    tags.includes("kids") ||
+    tags.includes("seniors") ||
+    tags.includes("crisis") ||
+    tags.includes("help") ||
+    tags.includes("food") ||
+    tags.includes("recipes") ||
+    tags.includes("motivation") ||
+    tags.includes("empathy") ||
+    tags.includes("everyday")
+  ) {
+    return "Leben & Familie";
+  }
+
+  // Experten & Beratung
+  if (
+    tags.includes("expert") ||
+    tags.includes("legal") ||
+    tags.includes("therapy") ||
+    tags.includes("health") ||
+    tags.includes("fitness") ||
+    tags.includes("sexuality")
+  ) {
+    return "Experten & Beratung";
+  }
+
+  // Alltag (Standard und praktische Helfer)
+  if (
+    tags.includes("standard") ||
+    tags.includes("neutral") ||
+    tags.includes("practical") ||
+    tags.includes("sales") ||
+    tags.includes("life")
+  ) {
+    return "Alltag";
+  }
+
   return "Spezial";
 }
 

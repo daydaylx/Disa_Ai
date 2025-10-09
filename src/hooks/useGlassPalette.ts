@@ -1,14 +1,19 @@
 import { useMemo } from "react";
 
 import { useStudio } from "../app/state/StudioContext";
-import { createGlassGradientVariants, type GlassTint, gradientToTint } from "../lib/theme/glass";
+import {
+  createGlassGradientVariants,
+  FRIENDLY_TINTS,
+  type GlassTint,
+  gradientToTint,
+} from "../lib/theme/glass";
 
 export function useGlassPalette(): GlassTint[] {
   const { accentColor } = useStudio();
 
   return useMemo(() => {
     const gradients = createGlassGradientVariants(accentColor);
-    return gradients.map((gradient) => {
+    const mapped = gradients.map((gradient) => {
       const tint = gradientToTint(gradient);
       return (
         tint || {
@@ -17,5 +22,6 @@ export function useGlassPalette(): GlassTint[] {
         }
       );
     });
+    return mapped.length > 0 ? mapped : FRIENDLY_TINTS;
   }, [accentColor]);
 }

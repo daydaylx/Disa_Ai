@@ -11,12 +11,12 @@ export const DEFAULT_GLASS_VARIANTS = [
 
 // Freundlichere, wärmere Farbpalette für bessere Glassmorphismus-Integration
 export const FRIENDLY_GLASS_VARIANTS = [
-  "linear-gradient(135deg, rgba(139,92,246,0.25) 0%, rgba(59,130,246,0.20) 100%)", // Warm Purple to Blue
-  "linear-gradient(135deg, rgba(236,72,153,0.25) 0%, rgba(251,146,60,0.20) 100%)", // Pink to Orange
-  "linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(34,197,94,0.20) 100%)", // Emerald to Green
-  "linear-gradient(135deg, rgba(251,191,36,0.25) 0%, rgba(249,115,22,0.20) 100%)", // Yellow to Orange
-  "linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.20) 100%)", // Purple to Fuchsia
-  "linear-gradient(135deg, rgba(14,165,233,0.25) 0%, rgba(6,182,212,0.20) 100%)", // Sky to Cyan
+  "linear-gradient(135deg, rgba(192,132,252,0.32) 0%, rgba(14,165,233,0.22) 100%)", // Lavender to Sky
+  "linear-gradient(135deg, rgba(244,114,182,0.32) 0%, rgba(251,191,36,0.22) 100%)", // Blossom Peach
+  "linear-gradient(135deg, rgba(52,211,153,0.30) 0%, rgba(110,231,183,0.20) 100%)", // Mint Meadow
+  "linear-gradient(135deg, rgba(251,191,36,0.32) 0%, rgba(249,115,22,0.22) 100%)", // Golden Honey
+  "linear-gradient(135deg, rgba(236,72,153,0.30) 0%, rgba(168,85,247,0.22) 100%)", // Fuchsia Glow
+  "linear-gradient(135deg, rgba(56,189,248,0.30) 0%, rgba(129,140,248,0.22) 100%)", // Sky Evening
 ];
 
 export const GOLDEN_GLASS_VARIANTS = [
@@ -160,28 +160,28 @@ export function gradientToTint(gradient: string): GlassTint | null {
 // Freundliche Tint-Farbkombinationen für bessere Lesbarkeit und wärmere Ausstrahlung
 export const FRIENDLY_TINTS: GlassTint[] = [
   {
-    from: "hsla(262, 83%, 58%, 0.85)", // Warm Purple
-    to: "hsla(217, 91%, 60%, 0.65)", // Soft Blue
+    from: "hsla(262, 82%, 74%, 0.78)", // Lavender
+    to: "hsla(200, 87%, 68%, 0.55)", // Soft Sky
   },
   {
-    from: "hsla(330, 81%, 60%, 0.85)", // Warm Pink
-    to: "hsla(25, 95%, 53%, 0.65)", // Gentle Orange
+    from: "hsla(335, 86%, 72%, 0.78)", // Blossom Pink
+    to: "hsla(24, 92%, 67%, 0.55)", // Peach Glow
   },
   {
-    from: "hsla(160, 84%, 39%, 0.85)", // Fresh Emerald
-    to: "hsla(142, 76%, 36%, 0.65)", // Deep Green
+    from: "hsla(160, 82%, 66%, 0.78)", // Mint
+    to: "hsla(188, 84%, 62%, 0.55)", // Aqua
   },
   {
-    from: "hsla(43, 96%, 56%, 0.85)", // Bright Yellow
-    to: "hsla(20, 90%, 48%, 0.65)", // Warm Orange
+    from: "hsla(42, 92%, 70%, 0.78)", // Golden Light
+    to: "hsla(16, 86%, 64%, 0.55)", // Amber Coral
   },
   {
-    from: "hsla(271, 91%, 65%, 0.85)", // Light Purple
-    to: "hsla(292, 84%, 61%, 0.65)", // Soft Fuchsia
+    from: "hsla(280, 88%, 74%, 0.78)", // Orchid
+    to: "hsla(312, 84%, 68%, 0.55)", // Fuchsia Mist
   },
   {
-    from: "hsla(199, 89%, 48%, 0.85)", // Sky Blue
-    to: "hsla(188, 94%, 43%, 0.65)", // Cyan
+    from: "hsla(202, 86%, 70%, 0.78)", // Daybreak Blue
+    to: "hsla(186, 88%, 64%, 0.55)", // Lagoon
   },
 ];
 

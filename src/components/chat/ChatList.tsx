@@ -12,6 +12,7 @@ import { formatRelativeTime } from "../../lib/formatRelativeTime";
 import {
   createGlassGradientVariants,
   createRoleTint,
+  FRIENDLY_TINTS,
   type GlassTint,
   gradientToTint,
 } from "../../lib/theme/glass";
@@ -21,20 +22,15 @@ import { RoleCard } from "../studio/RoleCard";
 import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
-const QUICKSTART_TINTS: GlassTint[] = [
-  { from: "hsla(32, 96%, 67%, 0.92)", to: "hsla(20, 92%, 54%, 0.72)" },
-  { from: "hsla(210, 92%, 70%, 0.92)", to: "hsla(255, 74%, 52%, 0.72)" },
-  { from: "hsla(158, 72%, 62%, 0.92)", to: "hsla(190, 68%, 48%, 0.72)" },
-  { from: "hsla(320, 85%, 68%, 0.92)", to: "hsla(280, 78%, 52%, 0.72)" },
-  { from: "hsla(200, 84%, 72%, 0.92)", to: "hsla(220, 70%, 50%, 0.72)" },
-];
+const QUICKSTART_TINTS: GlassTint[] = FRIENDLY_TINTS;
 
 const QUICKSTART_GRADIENTS = [
-  "from-orange-400/80 via-amber-300/70 to-rose-400/75",
-  "from-sky-500/80 via-blue-500/70 to-indigo-500/75",
-  "from-emerald-400/80 via-teal-400/70 to-cyan-500/75",
-  "from-fuchsia-400/80 via-pink-400/70 to-purple-500/75",
-  "from-blue-400/80 via-indigo-400/70 to-slate-500/75",
+  "from-rose-400/70 via-orange-300/60 to-amber-300/50",
+  "from-sky-400/70 via-indigo-300/60 to-purple-300/50",
+  "from-emerald-400/70 via-teal-300/60 to-cyan-300/50",
+  "from-fuchsia-400/70 via-pink-400/60 to-violet-300/50",
+  "from-blue-400/70 via-sky-300/60 to-cyan-200/50",
+  "from-amber-300/70 via-orange-300/60 to-rose-400/50",
 ] as const;
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
@@ -208,7 +204,7 @@ export function ChatList({
           <div className="flex flex-col gap-5 px-1 py-3">
             <StaticGlassCard tint={heroTint} padding="lg" className="space-y-4">
               <div className="space-y-3">
-                <span className="bg-white/8 inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/90 backdrop-blur-sm">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r from-rose-400/35 via-orange-300/30 to-amber-200/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white shadow-[0_6px_18px_rgba(249,168,212,0.35)] backdrop-blur-sm">
                   Willkommen zurück
                 </span>
                 <h1 className="text-[26px] font-semibold leading-tight text-white">
@@ -222,7 +218,7 @@ export function ChatList({
               <button
                 type="button"
                 onClick={handleStartStandardChat}
-                className="inline-flex w-full items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-medium text-white shadow-[0_16px_36px_rgba(8,11,28,0.45)] backdrop-blur-md transition-all duration-200 hover:-translate-y-[1px] hover:bg-white/15 active:scale-[0.98]"
+                className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-gradient-to-r from-rose-400/25 via-orange-300/20 to-amber-200/20 px-5 py-3 text-sm font-medium text-white shadow-[0_16px_40px_rgba(250,204,171,0.35)] backdrop-blur-md transition-all duration-200 hover:-translate-y-[1px] hover:brightness-110 active:scale-[0.98]"
               >
                 Neues Gespräch beginnen
               </button>

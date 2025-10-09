@@ -138,7 +138,6 @@ export function ChatComposer({
 
         <StaticGlassCard
           tint={tint}
-          contrastOverlay
           padding="sm"
           className={cn(
             "flex items-end gap-2",

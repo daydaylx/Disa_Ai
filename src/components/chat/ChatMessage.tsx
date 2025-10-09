@@ -33,7 +33,7 @@ function CodeBlock({ children, language }: { children: string; language?: string
 
   return (
     <div className="relative my-4 overflow-hidden">
-      <StaticGlassCard tint={codeTint} contrastOverlay padding="sm" className="space-y-0">
+      <StaticGlassCard tint={codeTint} padding="sm" className="space-y-0">
         <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
           <span className="text-xs font-medium uppercase tracking-wide text-white/70">
             {language || "Text"}
@@ -198,12 +198,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
         )}
 
         {/* Message Content */}
-        <StaticGlassCard
-          tint={bubbleTint}
-          contrastOverlay={isSystem}
-          padding="sm"
-          className={bubbleClass}
-        >
+        <StaticGlassCard tint={bubbleTint} padding="sm" className={bubbleClass}>
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
