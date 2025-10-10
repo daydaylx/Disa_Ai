@@ -1,8 +1,7 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: ["main"]
+  # Manual deployment only - Cloudflare Pages handles automatic deployments
   workflow_dispatch:
 
 permissions:

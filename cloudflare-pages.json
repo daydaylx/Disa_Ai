@@ -1,0 +1,23 @@
+{
+  "name": "disaai",
+  "build": {
+    "command": "npm run build",
+    "destination": "dist",
+    "root_dir": ".",
+    "environment_variables": {
+      "NODE_VERSION": "20",
+      "CF_PAGES": "true"
+    }
+  },
+  "preview": {
+    "command": "npm run preview"
+  },
+  "compatibility_flags": ["nodejs_compat"],
+  "functions": {
+    "_routes.json": {
+      "version": 1,
+      "include": ["/*"],
+      "exclude": ["/assets/*", "/images/*", "/icons/*"]
+    }
+  }
+}
