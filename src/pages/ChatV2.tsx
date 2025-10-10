@@ -343,6 +343,8 @@ export default function ChatV2() {
                 placeholder="Nachricht an Disa AI schreiben..."
                 className="max-h-[200px] min-h-[52px] w-full resize-none rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white backdrop-blur-sm transition-all duration-200 placeholder:text-white/50 focus:border-blue-400/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
                 rows={1}
+                aria-label="Nachricht an Disa AI eingeben"
+                aria-describedby="input-help-text"
               />
 
               {/* Typing Indicator */}
@@ -362,14 +364,16 @@ export default function ChatV2() {
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
               className="h-12 w-12 shrink-0 rounded-xl border border-blue-400/30 bg-gradient-to-r from-blue-500/80 to-purple-500/80 p-0 text-white transition-all duration-200 hover:scale-105 hover:from-blue-500 hover:to-purple-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
+              aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
+              title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
             >
-              <Send className="h-5 w-5" />
+              <Send className="h-5 w-5" aria-hidden="true" />
             </Button>
           </div>
 
           {/* Info Text */}
           <div className="mt-2 flex items-center justify-between text-xs text-white/50">
-            <span>↵ Senden • Shift+↵ Neue Zeile</span>
+            <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
             {isLoading && (
               <span className="flex items-center gap-1">
                 <div className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></div>

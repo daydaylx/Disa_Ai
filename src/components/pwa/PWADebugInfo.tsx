@@ -69,8 +69,10 @@ export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
         variant="ghost"
         size="sm"
         className="fixed right-4 top-4 z-50 h-8 w-8 p-0 text-white/60 hover:bg-white/10 hover:text-white"
+        aria-label="PWA Debug-Informationen anzeigen"
+        title="PWA Debug-Informationen anzeigen"
       >
-        <Info className="h-4 w-4" />
+        <Info className="h-4 w-4" aria-hidden="true" />
       </Button>
     );
   }
@@ -90,6 +92,8 @@ export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
               variant="ghost"
               size="sm"
               className="h-6 w-6 p-0 text-white/60 hover:text-white"
+              aria-label="PWA Debug-Informationen schließen"
+              title="Schließen"
             >
               ×
             </Button>
