@@ -9,9 +9,10 @@
   Cache-Control: public, max-age=0, must-revalidate
   Service-Worker-Allowed: /
 
-# All other files - Temporarily relaxed CSP for debugging
+# All other files - Strict security headers
 /*
-  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Referrer-Policy: no-referrer
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://openrouter.ai; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()

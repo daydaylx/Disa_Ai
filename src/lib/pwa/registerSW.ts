@@ -89,6 +89,10 @@ export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) return;
 
+  // Setup cleanup listeners for memory leak prevention
+  window.addEventListener("beforeunload", cleanupServiceWorkerTimers);
+  window.addEventListener("pagehide", cleanupServiceWorkerTimers);
+
   // Issue #75 behoben - Service Worker wieder aktiviert für PWA-Funktionalität
   const hasImportScripts =
     typeof (globalThis as unknown as { importScripts?: unknown }).importScripts !== "undefined";

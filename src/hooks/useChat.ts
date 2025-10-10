@@ -132,9 +132,16 @@ export function useChat({
 
       // ATOMIC OPERATION: Capture current state before any async operations
       // This prevents race conditions by freezing the state at function call time
-      const baseHistory: ChatMessageType[] = customMessages
-        ? [...customMessages]
-        : [...state.messages];
+      let baseHistory: ChatMessageType[] = [];
+      if (customMessages) {
+        baseHistory = [...customMessages];
+      } else {
+        // Use functional setState to access latest state
+        dispatch((prevState) => {
+          baseHistory = [...prevState.messages];
+          return prevState; // No state change
+        });
+      }
       const requestHistory = prepareMessages(baseHistory);
 
       dispatch({ type: "ADD_MESSAGE", message: userMessage });
@@ -258,18 +265,9 @@ export function useChat({
             onError(friendlyError);
           }
         } else if (mappedError.name === "AbortError") {
-          // Remove the incomplete assistant message on abort
-          const baseWithUser: ChatMessageType[] = [...baseHistory, userMessage];
-          const assistantId = (assistantMessage as { id?: string } | null)?.id;
-          if (assistantId) {
-            const assistantIndex = (baseWithUser as Array<{ id: string }>).findIndex(
-              (msg) => msg.id === assistantId,
-            );
-            if (assistantIndex !== -1) {
-              baseWithUser.splice(assistantIndex, 1);
-            }
-          }
-          dispatch({ type: "SET_MESSAGES", messages: baseWithUser });
+          // On abort, restore to the original baseHistory state
+          // Do not include userMessage or any assistant messages that were added during this operation
+          dispatch({ type: "SET_MESSAGES", messages: baseHistory });
         } else {
           dispatch({ type: "SET_ERROR", error: mappedError });
           if (onError) {
@@ -282,7 +280,8 @@ export function useChat({
         abortControllerRef.current = null;
       }
     },
-    [onResponse, onFinish, onError, body, state.messages, prepareMessages],
+
+    [onResponse, onFinish, onError, body, prepareMessages], // Remove state.messages from dependencies to prevent stale closures
   );
 
   const stop = useCallback(() => {

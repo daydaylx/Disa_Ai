@@ -501,7 +501,18 @@ export function autoSaveDraft(content: string, conversationId?: string): void {
     if (content.trim().length > 0) {
       saveDraft(content, conversationId, true);
     }
+    autoSaveTimeout = null; // Clear reference after execution
   }, AUTO_SAVE_DELAY);
+}
+
+/**
+ * Cleanup auto-save timers to prevent memory leaks
+ */
+export function cleanupAutoSaveTimers(): void {
+  if (autoSaveTimeout) {
+    clearTimeout(autoSaveTimeout);
+    autoSaveTimeout = null;
+  }
 }
 
 /**

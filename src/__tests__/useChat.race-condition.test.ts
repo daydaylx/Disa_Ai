@@ -144,9 +144,14 @@ describe("useChat Race Condition Tests", () => {
         { id: "1", role: "user", content: "Base message", timestamp: Date.now() },
       ];
 
+      // Set messages and wait for state update
       act(() => {
         result.current.setMessages(initialMessages);
       });
+
+      // Ensure state has been updated before proceeding
+      expect(result.current.messages).toHaveLength(1);
+      expect(result.current.messages[0]?.content).toBe("Base message");
 
       // Start append operation that will be aborted
       let appendPromise: Promise<void> | undefined;
