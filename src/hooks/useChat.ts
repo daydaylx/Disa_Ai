@@ -136,11 +136,8 @@ export function useChat({
       if (customMessages) {
         baseHistory = [...customMessages];
       } else {
-        // Use functional setState to access latest state
-        dispatch((prevState) => {
-          baseHistory = [...prevState.messages];
-          return prevState; // No state change
-        });
+        // Access current state directly from useReducer
+        baseHistory = [...state.messages];
       }
       const requestHistory = prepareMessages(baseHistory);
 
@@ -281,7 +278,7 @@ export function useChat({
       }
     },
 
-    [onResponse, onFinish, onError, body, prepareMessages], // Remove state.messages from dependencies to prevent stale closures
+    [onResponse, onFinish, onError, body, prepareMessages, state.messages], // Include state.messages as dependency
   );
 
   const stop = useCallback(() => {
