@@ -6,7 +6,6 @@ export * from "./dialog";
 export * from "./dropdown-menu";
 export * from "./input";
 export * from "./select";
-export * from "./StaticGlassCard";
 export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";

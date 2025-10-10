@@ -75,12 +75,12 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   };
 
   const accents = toneStyles[badgeTone] ?? toneStyles.default;
-  const baseClasses = `relative overflow-hidden w-full text-left bg-white/[0.06] border border-white/[0.1] text-white
+  const baseClasses = `relative overflow-hidden w-full text-left text-white
     rounded-2xl sm:rounded-3xl px-4 py-4 sm:px-5 sm:py-5
     min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
-    shadow-[0_8px_28px_-8px_rgba(0,0,0,0.3),_inset_0_1px_0_rgba(255,255,255,0.15)]
+    shadow-[0_8px_28px_-8px_rgba(0,0,0,0.3),_inset_0_1px_0_rgba(255,255,255,0.08)]
     transition-[transform,background,box-shadow] duration-200 ease-out
-    backdrop-blur-[20px] backdrop-brightness-[1.15]`;
+    glass-card-primary`;
 
   // Gradient overlay for visual depth
   const gradientOverlayClasses = gradient
@@ -146,7 +146,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
         {/* Quickstart Pill */}
         <span
           className={cn(
-            "inline-flex h-7 items-center rounded-full border border-white/[0.12] bg-white/[0.08] px-3 text-[12px] font-medium text-zinc-100 backdrop-blur-sm backdrop-brightness-110 transition-colors duration-150",
+            "glass-card-tertiary inline-flex h-7 items-center px-3 text-[12px] font-medium text-zinc-100 transition-colors duration-150",
             accents.badge,
           )}
         >

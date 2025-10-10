@@ -100,7 +100,7 @@ export default function VirtualMessageList({
               {/* Professional Hero Section */}
               <div className="space-y-6">
                 <div className="relative mx-auto h-24 w-24">
-                  <div className="glass-backdrop--medium border-glass-border-medium flex h-full w-full items-center justify-center rounded-full border-2 shadow-glass-medium">
+                  <div className="glass-card-secondary flex h-full w-full items-center justify-center rounded-full">
                     <svg width="32" height="32" viewBox="0 0 24 24" className="text-slate-300">
                       <path
                         fill="currentColor"
@@ -142,7 +142,7 @@ export default function VirtualMessageList({
                     <button
                       key={index}
                       onClick={() => onSuggestionClick?.(suggestion.text)}
-                      className="glass-backdrop--soft hover:glass-backdrop--medium border-glass-border-soft hover:border-glass-border-medium group relative overflow-hidden rounded-xl border p-4 text-white shadow-glass-soft transition-all duration-300 hover:scale-105 hover:shadow-glass-medium"
+                      className="glass-card-tertiary group relative overflow-hidden rounded-xl p-4 text-white transition-all duration-300 hover:scale-105"
                     >
                       <div className="flex items-center gap-3 text-left">
                         <span className="text-lg">{suggestion.icon}</span>

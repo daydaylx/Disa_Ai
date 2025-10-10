@@ -42,8 +42,8 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          "glass-strong before:rounded-inherit relative flex min-h-[152px] flex-col overflow-hidden rounded-2xl p-5 text-left text-zinc-200 transition-all duration-300 before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.12),rgba(255,255,255,0.05)_35%,rgba(255,255,255,0)_70%)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_14px_40px_rgba(0,0,0,0.45)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]",
-          isActive && "border-white/30 ring-2 ring-white/25",
+          "glass-strong glass-hover-glow-primary relative flex min-h-[152px] flex-col overflow-hidden rounded-2xl p-5 text-left text-zinc-200 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/40 active:scale-[0.995]",
+          isActive && "border-cyan-400/30 ring-2 ring-cyan-400/25",
           className,
         )}
         {...props}
@@ -63,7 +63,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
               <p className="mt-1.5 text-sm leading-6 text-white/70">{description}</p>
             </div>
             {badge ? (
-              <span className="pointer-events-none shrink-0 rounded-full border border-white/[0.14] bg-white/[0.06] px-2.5 py-1 text-[11px] leading-4 text-white/85 backdrop-blur-sm">
+              <span className="glass-card-tertiary pointer-events-none shrink-0 px-2.5 py-1 text-[11px] leading-4 text-white/85">
                 {badge}
               </span>
             ) : null}

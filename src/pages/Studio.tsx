@@ -177,7 +177,7 @@ function RolesTab() {
 
       <div className="space-y-6 pb-8" data-testid="role-card-grid">
         {isLoadingRoles && orderedRoles.length === 0 ? (
-          <div className="flex items-center justify-center rounded-2xl border border-white/[0.12] bg-white/[0.04] p-6 text-sm text-white/70">
+          <div className="glass-card-secondary flex items-center justify-center rounded-2xl p-6 text-sm text-white/70">
             Rollen werden geladen ...
           </div>
         ) : null}
@@ -336,7 +336,7 @@ function StylesTab() {
           type="color"
           value={accentColor}
           onChange={(event) => setAccentColor(event.target.value)}
-          className="h-12 w-20 cursor-pointer rounded-xl border border-white/[0.14] bg-white/[0.04]"
+          className="glass-card-secondary h-12 w-20 cursor-pointer rounded-xl"
         />
       </label>
     </div>
@@ -353,7 +353,7 @@ export default function Studio() {
           type="button"
           onClick={() => setActiveTab("roles")}
           className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "roles" ? "bg-white/15 text-white" : "bg-white/[0.05] text-white/70"
+            activeTab === "roles" ? "bg-white/15 text-white" : "glass-card-secondary text-white/70"
           }`}
         >
           Rollen
@@ -362,7 +362,7 @@ export default function Studio() {
           type="button"
           onClick={() => setActiveTab("styles")}
           className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "styles" ? "bg-white/15 text-white" : "bg-white/[0.05] text-white/70"
+            activeTab === "styles" ? "bg-white/15 text-white" : "glass-card-secondary text-white/70"
           }`}
         >
           Stile
