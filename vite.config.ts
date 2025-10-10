@@ -25,8 +25,62 @@ export default defineConfig(({ mode }) => {
   // Umweltspezifische Konfiguration für robuste Asset-Pfade (Issue #60)
   const isProduction = mode === "production";
 
-  // Fix für Issue #60: Erweiterte Base-Pfad-Logik für Cloudflare Pages
+  // Fix für Issue #60: Robuste Base-Pfad-Logik mit Validierung und Fallbacks
   let base = "/";
+
+  /**
+   * Validates and normalizes a base path
+   * @param {string} path - The base path to validate
+   * @returns {string} - Normalized and validated base path
+   */
+  function validateBasePath(path) {
+    if (!path || typeof path !== "string") return "/";
+
+    // Remove any trailing slash except for root
+    let normalized = path.replace(/\/+$/, "") || "/";
+
+    // Ensure it starts with a slash
+    if (!normalized.startsWith("/")) {
+      normalized = "/" + normalized;
+    }
+
+    // Ensure it ends with a slash (except for root)
+    if (normalized !== "/" && !normalized.endsWith("/")) {
+      normalized += "/";
+    }
+
+    // Basic security check - no relative paths or dangerous characters
+    if (normalized.includes("..") || normalized.includes("//") || /[<>:"|?*]/.test(normalized)) {
+      console.warn(`[BUILD] Invalid base path detected: ${path}, falling back to /`);
+      return "/";
+    }
+
+    return normalized;
+  }
+
+  /**
+   * Safely extracts repository name from GITHUB_REPOSITORY
+   * @param {string} repository - The repository string (format: "owner/repo")
+   * @returns {string|null} - Repository name or null if invalid
+   */
+  function extractRepositoryName(repository) {
+    if (!repository || typeof repository !== "string") return null;
+
+    const parts = repository.split("/");
+    if (parts.length !== 2 || !parts[0] || !parts[1]) {
+      console.warn(`[BUILD] Invalid GITHUB_REPOSITORY format: ${repository}`);
+      return null;
+    }
+
+    const repoName = parts[1];
+    // Basic validation - only alphanumeric, hyphens, underscores, dots
+    if (!/^[a-zA-Z0-9._-]+$/.test(repoName)) {
+      console.warn(`[BUILD] Invalid repository name: ${repoName}`);
+      return null;
+    }
+
+    return repoName;
+  }
 
   // Debug-Ausgaben für Base-Pfad-Erkennung
   console.log(`[BUILD] Mode: ${mode}`);
@@ -38,26 +92,45 @@ export default defineConfig(({ mode }) => {
     VITE_BASE_URL: env.VITE_BASE_URL,
   });
 
-  // 1. Environment Variable hat Priorität
-  if (env.VITE_BASE_URL) {
-    base = env.VITE_BASE_URL;
-    console.log(`[BUILD] Using VITE_BASE_URL: ${base}`);
-  }
-  // 2. Cloudflare Pages Detection
-  else if (env.CF_PAGES && env.CF_PAGES_URL) {
+  // Robuste Base-Pfad-Bestimmung mit Validierung
+  try {
+    // 1. Environment Variable hat Priorität (mit Validierung)
+    if (env.VITE_BASE_URL) {
+      const validatedBase = validateBasePath(env.VITE_BASE_URL);
+      if (validatedBase !== "/") {
+        base = validatedBase;
+        console.log(`[BUILD] Using validated VITE_BASE_URL: ${base}`);
+      } else {
+        console.warn(
+          `[BUILD] VITE_BASE_URL validation failed, using default: ${env.VITE_BASE_URL} -> ${base}`,
+        );
+      }
+    }
+    // 2. Cloudflare Pages Detection
+    else if (env.CF_PAGES && env.CF_PAGES_URL) {
+      base = "/";
+      console.log(`[BUILD] Detected Cloudflare Pages, using base: ${base}`);
+    }
+    // 3. GitHub Pages Detection (only for production builds, with validation)
+    else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY && isProduction) {
+      const repoName = extractRepositoryName(env.GITHUB_REPOSITORY);
+      if (repoName) {
+        base = validateBasePath(`/${repoName}/`);
+        console.log(`[BUILD] Detected GitHub Pages, using validated base: ${base}`);
+      } else {
+        base = "/";
+        console.warn(`[BUILD] GitHub Pages detection failed, using default base: ${base}`);
+      }
+    }
+    // 4. Development/Local Default
+    else {
+      base = "/";
+      console.log(`[BUILD] Using default base: ${base}`);
+    }
+  } catch (error) {
+    console.error(`[BUILD] Base path determination failed:`, error);
     base = "/";
-    console.log(`[BUILD] Detected Cloudflare Pages, using base: ${base}`);
-  }
-  // 3. GitHub Pages Detection (only for production builds)
-  else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY && isProduction) {
-    const repo = env.GITHUB_REPOSITORY.split("/")[1];
-    base = `/${repo}/`;
-    console.log(`[BUILD] Detected GitHub Pages, using base: ${base}`);
-  }
-  // 4. Development/Local Default
-  else {
-    base = "/";
-    console.log(`[BUILD] Using default base: ${base}`);
+    console.log(`[BUILD] Fallback to safe default: ${base}`);
   }
 
   console.log(`[BUILD] Final base path: ${base}`);

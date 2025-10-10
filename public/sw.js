@@ -69,18 +69,60 @@ const ASSET_EXTENSIONS = [
 ];
 
 self.addEventListener("install", (event) => {
+  console.log(`[SW] Installing version ${SW_VERSION}`);
+
   event.waitUntil(
     (async () => {
       try {
+        // Pre-cache essential resources
         const cache = await caches.open(HTML_CACHE);
-        await cache.addAll([OFFLINE_URL]);
+
+        // Try to pre-cache offline page
+        try {
+          await cache.add(OFFLINE_URL);
+          console.log("[SW] Successfully pre-cached offline page");
+        } catch (offlineError) {
+          console.warn("[SW] Failed to pre-cache offline page:", offlineError);
+          // Don't fail installation if offline page can't be cached
+        }
+
+        // Pre-cache other essential resources if needed
+        // Note: Main app resources are handled by workbox-precaching
+
+        console.log(`[SW] Installation completed for version ${SW_VERSION}`);
       } catch (error) {
-        console.warn("[SW] precache failed", error);
+        console.error("[SW] Installation failed:", error);
+        // Don't prevent installation - let it continue even with cache errors
       }
     })(),
   );
+
+  // Immediately take control of the page
   self.skipWaiting();
 });
+
+/**
+ * Safely parses version from a cache name
+ * @param {string} cacheName - The cache name to parse
+ * @returns {Object|null} - Version object {major, minor, patch} or null if invalid
+ */
+function parseVersion(cacheName) {
+  try {
+    const versionMatch = cacheName.match(/v(\d+)\.(\d+)\.(\d+)/);
+    if (!versionMatch) return null;
+
+    const [, major, minor, patch] = versionMatch;
+    return {
+      major: parseInt(major, 10),
+      minor: parseInt(minor, 10),
+      patch: parseInt(patch, 10),
+      toString: () => `${major}.${minor}.${patch}`,
+    };
+  } catch (error) {
+    console.warn(`[SW] Failed to parse version from cache name: ${cacheName}`, error);
+    return null;
+  }
+}
 
 /**
  * Determines if a cache should be preserved during cleanup
@@ -88,128 +130,174 @@ self.addEventListener("install", (event) => {
  * @returns {boolean} - True if cache should be preserved
  */
 function shouldPreserveCache(cacheName) {
-  // 1. Always preserve current version caches
-  if (CURRENT_CACHES.has(cacheName)) {
-    return true;
-  }
+  try {
+    // 1. Always preserve current version caches
+    if (CURRENT_CACHES.has(cacheName)) {
+      return true;
+    }
 
-  // 2. Preserve any cache matching known patterns (future compatibility)
-  const isAppVersioned = Object.values(CACHE_PATTERNS).some((pattern) => pattern.test(cacheName));
+    // 2. Preserve workbox-managed caches (unless they're very old)
+    if (cacheName.includes("workbox-precache")) {
+      return true;
+    }
 
-  if (isAppVersioned) {
-    // Extract version from cache name for intelligent cleanup
-    const versionMatch = cacheName.match(/v(\d+)\.(\d+)\.(\d+)/);
-    if (versionMatch) {
-      const [, major, minor] = versionMatch;
-      const currentVersionMatch = SW_VERSION.match(/v(\d+)\.(\d+)\.(\d+)/);
+    // 3. Check if it's an app-versioned cache
+    const isAppVersioned = Object.values(CACHE_PATTERNS).some((pattern) => {
+      try {
+        return pattern.test(cacheName);
+      } catch (error) {
+        console.warn(`[SW] Invalid cache pattern test for ${cacheName}:`, error);
+        return false;
+      }
+    });
 
-      if (currentVersionMatch) {
-        const [, currentMajor, currentMinor] = currentVersionMatch;
+    if (isAppVersioned) {
+      const cacheVersion = parseVersion(cacheName);
+      const currentVersion = parseVersion(SW_VERSION);
 
-        // Preserve caches from same major version (forwards compatibility)
-        if (major === currentMajor) {
-          // But only preserve if version is not too far behind
-          const currentMinorInt = parseInt(currentMinor);
-          const minorInt = parseInt(minor);
+      if (!cacheVersion || !currentVersion) {
+        console.warn(`[SW] Version parsing failed for cache: ${cacheName}`);
+        return false; // Delete unparseable versioned caches
+      }
 
-          // Keep caches within reasonable minor version range (e.g., ±2 versions)
-          if (Math.abs(currentMinorInt - minorInt) <= 2) {
-            console.log(`[SW] Preserving recent same-major cache: ${cacheName}`);
-            return true;
-          } else {
-            console.log(
-              `[SW] Deleting old minor version: ${cacheName} (too far behind current ${SW_VERSION})`,
-            );
-            return false;
-          }
-        }
+      // Simplified version comparison logic
+      const versionDiff = {
+        major: currentVersion.major - cacheVersion.major,
+        minor: currentVersion.minor - cacheVersion.minor,
+      };
 
-        // Preserve newer versions (rollback safety)
-        if (
-          parseInt(major) > parseInt(currentMajor) ||
-          (major === currentMajor && parseInt(minor) > parseInt(currentMinor))
-        ) {
-          console.log(`[SW] Preserving newer cache for rollback: ${cacheName}`);
-          return true;
-        }
+      // Preserve current and future major versions
+      if (versionDiff.major <= 0) {
+        console.log(`[SW] Preserving current/future major version cache: ${cacheName}`);
+        return true;
+      }
+
+      // Delete old major versions (breaking changes expected)
+      if (versionDiff.major > 0) {
+        console.log(
+          `[SW] Deleting old major version cache: ${cacheName} (current: ${currentVersion.toString()})`,
+        );
+        return false;
       }
     }
-  }
 
-  // 3. Preserve non-versioned caches (might be from other apps or manual caches)
-  if (!cacheName.includes("-v") && !cacheName.includes("workbox")) {
-    console.log(`[SW] Preserving non-versioned cache: ${cacheName}`);
+    // 4. Preserve non-versioned caches (might be from other apps or manual caches)
+    if (!cacheName.includes("-v") && !cacheName.includes("workbox")) {
+      console.log(`[SW] Preserving non-versioned cache: ${cacheName}`);
+      return true;
+    }
+
+    // 5. Default: preserve unknown caches to avoid breaking other apps
+    console.log(`[SW] Preserving unknown cache (safety): ${cacheName}`);
     return true;
+  } catch (error) {
+    console.error(`[SW] Error in shouldPreserveCache for ${cacheName}:`, error);
+    return true; // Preserve on error to be safe
   }
-
-  return false;
 }
 
 self.addEventListener("activate", (event) => {
+  console.log(`[SW] Activating version ${SW_VERSION}`);
+
   event.waitUntil(
     (async () => {
-      // Intelligent cache cleanup with forward/backward compatibility
-      const keys = await caches.keys();
-
-      // Categorize caches for cleanup decision
-      const cachesToDelete = [];
-      const cachesToPreserve = [];
-
-      for (const key of keys) {
-        if (shouldPreserveCache(key)) {
-          cachesToPreserve.push(key);
-        } else {
-          cachesToDelete.push(key);
-        }
-      }
-
-      console.log(
-        `[SW] Cache analysis: ${cachesToPreserve.length} to preserve, ${cachesToDelete.length} to delete`,
-      );
-
-      // Delete only truly stale caches
-      const deletePromises = cachesToDelete.map(async (key) => {
-        console.log("[SW] Deleting stale cache:", key);
+      try {
+        // Intelligent cache cleanup with forward/backward compatibility
+        let keys;
         try {
-          await caches.delete(key);
-          return { key, success: true };
+          keys = await caches.keys();
         } catch (error) {
-          console.warn("[SW] Failed to delete cache:", key, error);
-          return { key, success: false };
+          console.error("[SW] Failed to get cache keys:", error);
+          keys = []; // Continue with empty array
         }
-      });
 
-      const results = await Promise.allSettled(deletePromises);
-      const deletedCount = results.filter(
-        (r) => r.status === "fulfilled" && r.value.success,
-      ).length;
+        // Categorize caches for cleanup decision
+        const cachesToDelete = [];
+        const cachesToPreserve = [];
 
-      console.log(
-        `[SW] Smart cleanup: ${deletedCount}/${cachesToDelete.length} stale caches removed, ${cachesToPreserve.length} preserved`,
-      );
+        for (const key of keys) {
+          try {
+            if (shouldPreserveCache(key)) {
+              cachesToPreserve.push(key);
+            } else {
+              cachesToDelete.push(key);
+            }
+          } catch (error) {
+            console.warn(`[SW] Error categorizing cache ${key}:`, error);
+            cachesToPreserve.push(key); // Preserve on error to be safe
+          }
+        }
 
-      // Claim all clients immediately to ensure fresh assets
-      await self.clients.claim();
+        console.log(
+          `[SW] Cache analysis: ${cachesToPreserve.length} to preserve, ${cachesToDelete.length} to delete`,
+        );
 
-      // Notify clients about the activation with detailed cache info
-      const clients = await self.clients.matchAll({ type: "window" });
-      clients.forEach((client) => {
-        client.postMessage({
-          type: "SW_ACTIVATED",
-          version: SW_VERSION,
-          cachesCleaned: deletedCount,
-          cachesPreserved: cachesToPreserve.length,
-          cacheStrategy: "smart-versioned",
-        });
-      });
+        // Delete only truly stale caches with error handling
+        let deletedCount = 0;
+        if (cachesToDelete.length > 0) {
+          const deletePromises = cachesToDelete.map(async (key) => {
+            console.log("[SW] Deleting stale cache:", key);
+            try {
+              const deleted = await caches.delete(key);
+              return { key, success: deleted };
+            } catch (error) {
+              console.warn("[SW] Failed to delete cache:", key, error);
+              return { key, success: false };
+            }
+          });
 
-      console.log(
-        "[SW] Activated with version:",
-        SW_VERSION,
-        "and claimed",
-        clients.length,
-        "clients",
-      );
+          try {
+            const results = await Promise.allSettled(deletePromises);
+            deletedCount = results.filter(
+              (r) => r.status === "fulfilled" && r.value?.success === true,
+            ).length;
+          } catch (error) {
+            console.error("[SW] Error during cache cleanup:", error);
+          }
+        }
+
+        console.log(
+          `[SW] Smart cleanup: ${deletedCount}/${cachesToDelete.length} stale caches removed, ${cachesToPreserve.length} preserved`,
+        );
+
+        // Claim all clients immediately to ensure fresh assets
+        try {
+          await self.clients.claim();
+          console.log("[SW] Successfully claimed all clients");
+        } catch (error) {
+          console.error("[SW] Failed to claim clients:", error);
+        }
+
+        // Notify clients about the activation with detailed cache info
+        try {
+          const clients = await self.clients.matchAll({ type: "window" });
+          const activationMessage = {
+            type: "SW_ACTIVATED",
+            version: SW_VERSION,
+            cachesCleaned: deletedCount,
+            cachesPreserved: cachesToPreserve.length,
+            cacheStrategy: "smart-versioned",
+            timestamp: Date.now(),
+          };
+
+          clients.forEach((client) => {
+            try {
+              client.postMessage(activationMessage);
+            } catch (error) {
+              console.warn("[SW] Failed to notify client:", error);
+            }
+          });
+
+          console.log(
+            `[SW] Activated version ${SW_VERSION} and notified ${clients.length} clients`,
+          );
+        } catch (error) {
+          console.error("[SW] Failed to get clients for notification:", error);
+        }
+      } catch (error) {
+        console.error("[SW] Activation failed:", error);
+        // Don't prevent activation - let it continue even with errors
+      }
     })(),
   );
 });
@@ -254,77 +342,157 @@ function shouldHandleAsAsset(request, url) {
 }
 
 async function networkFirst(request) {
-  const cache = await caches.open(HTML_CACHE);
+  let cache;
+
   try {
-    // Enhanced network-first strategy with cache busting
+    cache = await caches.open(HTML_CACHE);
+  } catch (error) {
+    console.error("[SW] Failed to open HTML cache:", error);
+    // Continue without caching if cache fails
+  }
+
+  try {
+    // Network-first strategy with robust error handling
     const url = new URL(request.url);
+    let response;
 
     // Add cache-busting parameter for HTML requests to ensure fresh content
     if (!url.searchParams.has("sw-bust")) {
       url.searchParams.set("sw-bust", FORCE_UPDATE_TIMESTAMP.toString());
-      const bustRequest = new Request(url.toString(), {
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
-        mode: request.mode,
-        credentials: request.credentials,
-        cache: "no-cache", // Force fresh fetch
-      });
 
-      const response = await fetch(bustRequest);
-      if (response && response.ok) {
-        // Cache the original request (without cache-busting param)
-        if (response.headers.get("content-type")?.includes("text/html")) {
-          cache.put(request, response.clone()).catch(() => {});
+      try {
+        const bustRequest = new Request(url.toString(), {
+          method: request.method,
+          headers: request.headers,
+          body: request.body,
+          mode: request.mode,
+          credentials: request.credentials,
+          cache: "no-cache", // Force fresh fetch
+        });
+
+        response = await fetch(bustRequest);
+      } catch (fetchError) {
+        console.warn("[SW] Cache-busting fetch failed, trying original:", fetchError);
+        // Fallback to original request
+        response = await fetch(request);
+      }
+    } else {
+      // Direct fetch if cache-busting param already exists
+      response = await fetch(request);
+    }
+
+    // Cache successful HTML responses
+    if (response && response.ok && cache) {
+      try {
+        const contentType = response.headers.get("content-type");
+        if (contentType?.includes("text/html")) {
+          // Clone before caching to avoid stream consumption
+          const responseClone = response.clone();
+          cache.put(request, responseClone).catch((cacheError) => {
+            console.warn("[SW] Failed to cache HTML response:", cacheError);
+          });
         }
+      } catch (cacheError) {
+        console.warn("[SW] Error processing response for caching:", cacheError);
       }
-      return response;
     }
 
-    // Fallback to normal fetch if cache-busting param already exists
-    const response = await fetch(request);
-    if (response && response.ok) {
-      if (response.headers.get("content-type")?.includes("text/html")) {
-        cache.put(request, response.clone()).catch(() => {});
-      }
-    }
     return response;
-  } catch (error) {
-    console.warn("[SW] Network failed for navigation, falling back to cache:", error);
-    const cached = await cache.match(request);
-    if (cached) {
-      return cached;
+  } catch (networkError) {
+    console.warn("[SW] Network failed for navigation, falling back to cache:", networkError);
+
+    if (!cache) {
+      throw new Error("Network failed and cache unavailable");
     }
-    const offline = await cache.match(OFFLINE_URL);
-    if (offline) {
-      return offline;
+
+    try {
+      // Try to find cached version of the request
+      const cached = await cache.match(request);
+      if (cached) {
+        console.log("[SW] Serving cached HTML for:", request.url);
+        return cached;
+      }
+
+      // Try offline page as last resort
+      const offline = await cache.match(OFFLINE_URL);
+      if (offline) {
+        console.log("[SW] Serving offline page for:", request.url);
+        return offline;
+      }
+
+      // No fallback available
+      throw new Error("No cached fallback available");
+    } catch (cacheError) {
+      console.error("[SW] Cache fallback failed:", cacheError);
+      throw networkError; // Throw original network error
     }
-    throw error;
   }
 }
 
 async function staleWhileRevalidate(request) {
-  const cache = await caches.open(ASSET_CACHE);
-  const cached = await cache.match(request);
+  let cache;
 
+  try {
+    cache = await caches.open(ASSET_CACHE);
+  } catch (error) {
+    console.error("[SW] Failed to open asset cache:", error);
+    // Continue without caching if cache fails
+    return fetch(request);
+  }
+
+  let cached;
+  try {
+    cached = await cache.match(request);
+  } catch (error) {
+    console.warn("[SW] Failed to match request in cache:", error);
+    cached = null;
+  }
+
+  // Background fetch with robust error handling
   const fetchPromise = fetch(request)
     .then((response) => {
-      if (response && response.ok && response.status < 400) {
-        // Clone response before caching to avoid stream consumption
-        const responseClone = response.clone();
-        cache.put(request, responseClone).catch(() => {});
+      if (!response) return undefined;
+
+      // Only cache successful responses
+      if (response.ok && response.status < 400 && cache) {
+        try {
+          // Clone response before caching to avoid stream consumption
+          const responseClone = response.clone();
+          cache.put(request, responseClone).catch((cacheError) => {
+            console.warn("[SW] Failed to update cache for asset:", request.url, cacheError);
+          });
+        } catch (cloneError) {
+          console.warn("[SW] Failed to clone response for caching:", cloneError);
+        }
       }
       return response;
     })
-    .catch(() => undefined);
+    .catch((networkError) => {
+      console.warn("[SW] Network fetch failed for asset:", request.url, networkError);
+      return undefined;
+    });
 
   // Return cached version immediately if available, then update in background
   if (cached) {
     // Update cache in background without waiting
-    fetchPromise.catch(() => {});
+    fetchPromise.catch(() => {
+      // Silent fail for background updates
+    });
     return cached;
   }
 
-  // No cached version, wait for network
-  return (await fetchPromise) || fetch(request);
+  // No cached version, wait for network with fallback
+  try {
+    const networkResponse = await fetchPromise;
+    if (networkResponse) {
+      return networkResponse;
+    }
+
+    // Network failed and no cache, try one more direct fetch
+    console.log("[SW] Retrying direct fetch for asset:", request.url);
+    return await fetch(request);
+  } catch (finalError) {
+    console.error("[SW] All asset fetch attempts failed:", request.url, finalError);
+    throw finalError;
+  }
 }
