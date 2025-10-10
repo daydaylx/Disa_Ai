@@ -48,11 +48,11 @@ export default defineConfig(({ mode }) => {
     base = "/";
     console.log(`[BUILD] Detected Cloudflare Pages, using base: ${base}`);
   }
-  // 3. GitHub Pages Detection (only for production builds)
+  // 3. GitHub Pages Detection - use root path for custom domain
   else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY && isProduction) {
-    const repo = env.GITHUB_REPOSITORY.split("/")[1];
-    base = `/${repo}/`;
-    console.log(`[BUILD] Detected GitHub Pages, using base: ${base}`);
+    // Use root path instead of repo path for GitHub Pages
+    base = "/";
+    console.log(`[BUILD] Detected GitHub Pages, using root base: ${base}`);
   }
   // 4. Development/Local Default
   else {
