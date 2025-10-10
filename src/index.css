@@ -11,7 +11,7 @@
 
   /* App-wide background with glassmorphism support */
   body {
-    background-color: #0a0a0a; /* Reines Schwarz als Basis für das dunkle Theme */
+    background-color: var(--color-neutral-950); /* Reines Schwarz als Basis für das dunkle Theme */
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
