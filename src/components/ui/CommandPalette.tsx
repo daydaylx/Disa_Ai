@@ -101,6 +101,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     } else {
       setQuery("");
       setSelectedIndex(0);
+      // Return undefined explicitly for consistency
+      return undefined;
     }
   }, [isOpen]);
 
