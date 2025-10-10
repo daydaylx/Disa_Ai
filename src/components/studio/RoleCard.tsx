@@ -11,7 +11,7 @@ export interface RoleCardProps extends React.ButtonHTMLAttributes<HTMLButtonElem
   title: string;
   description: string;
   badge?: string;
-  tint: RoleTint;
+  tint?: RoleTint;
   isActive?: boolean;
   contrastOverlay?: boolean;
 }
@@ -26,7 +26,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       title,
       description,
       badge,
-      tint,
+      tint = { from: "hsla(220, 26%, 28%, 0.9)", to: "hsla(220, 30%, 20%, 0.78)" },
       isActive = false,
       contrastOverlay: _contrastOverlay = false,
       className,
@@ -42,7 +42,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          "glass-strong glass-hover-glow-primary relative flex min-h-[152px] flex-col overflow-hidden rounded-2xl p-5 text-left text-zinc-200 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/40 active:scale-[0.995]",
+          "glass-card-secondary glass-hover-glow-primary relative flex min-h-[152px] flex-col overflow-hidden rounded-2xl p-5 text-left text-zinc-200 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/40 active:scale-[0.995]",
           isActive && "border-cyan-400/30 ring-2 ring-cyan-400/25",
           className,
         )}

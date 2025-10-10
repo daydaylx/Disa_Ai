@@ -77,7 +77,7 @@ function parseMessageContent(content: string) {
 
 export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessageProps) {
   const [showActions, setShowActions] = useState(false);
-  const { activeRole } = useStudio();
+  const { accentColor } = useStudio();
 
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";

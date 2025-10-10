@@ -36,13 +36,22 @@ function formatQuickstartTag(tag: string) {
   return normalised.charAt(0).toUpperCase() + normalised.slice(1);
 }
 
+const QUICKSTART_GRADIENTS = [
+  "from-rose-400/70 via-orange-300/60 to-amber-300/50",
+  "from-sky-400/70 via-indigo-300/60 to-purple-300/50",
+  "from-emerald-400/70 via-teal-300/60 to-cyan-300/50",
+  "from-fuchsia-400/70 via-pink-400/60 to-violet-300/50",
+  "from-blue-400/70 via-sky-300/60 to-cyan-200/50",
+  "from-amber-300/70 via-orange-300/60 to-rose-400/50",
+] as const;
+
 function createRoleQuickstarts(): QuickstartAction[] {
   const roles = getRoles();
   if (roles.length === 0) return [];
   return [...roles]
     .sort(() => Math.random() - 0.5)
     .slice(0, 4)
-    .map((role) => ({
+    .map((role, index) => ({
       id: `role-${role.id}`,
       title: role.name,
       subtitle: role.description ?? "Aktiviere diese Chat-Rolle und starte mit einer ersten Frage.",
@@ -51,6 +60,7 @@ function createRoleQuickstarts(): QuickstartAction[] {
       persona: role.id,
       prompt: `Starte ein Gespräch als ${role.name}.`,
       tags: role.tags,
+      gradient: QUICKSTART_GRADIENTS[index % QUICKSTART_GRADIENTS.length] as string,
     }));
 }
 
@@ -231,6 +241,7 @@ export function ChatList({
                         title={action.title}
                         description={action.subtitle ?? QUICKSTART_FALLBACK_SUBTITLE}
                         badge={badge}
+                        tint={{ from: "hsla(220, 26%, 28%, 0.9)", to: "hsla(220, 30%, 20%, 0.78)" }}
                         isActive={activeQuickstart === action.id}
                         disabled={isQuickstartLoading && activeQuickstart !== action.id}
                         onClick={() => handleQuickstartClick(action)}

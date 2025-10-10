@@ -81,7 +81,7 @@ export function QuickstartGrid({
 
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
-      {quickstarts.map((action, index) => (
+      {quickstarts.map((action) => (
         <QuickstartTile
           key={action.id}
           action={action}
