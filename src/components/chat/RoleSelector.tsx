@@ -117,7 +117,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
             )}
           >
             {selectedRole ? (
-              <Bot className="text-accent-400 h-5 w-5" />
+              <Bot className="h-5 w-5 text-accent-400" />
             ) : (
               <User className="h-5 w-5 text-white/60" />
             )}
@@ -132,7 +132,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
         <ChevronDown
           className={cn(
             "h-5 w-5 text-white/40 transition-transform group-hover:text-white/60",
-            isOpen && "text-accent-400 rotate-180",
+            isOpen && "rotate-180 text-accent-400",
           )}
         />
       </button>
@@ -161,7 +161,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
                 className={cn(
                   "min-h-touch-rec whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
                   selectedCategory === "all"
-                    ? "bg-accent-500 text-corporate-text-onAccent shadow-lg"
+                    ? "text-corporate-text-onAccent bg-accent-500 shadow-lg"
                     : "border border-white/20 bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary",
                 )}
               >
@@ -174,7 +174,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
                   className={cn(
                     "min-h-touch-rec whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
                     selectedCategory === category
-                      ? "bg-accent-500 text-corporate-text-onAccent shadow-lg"
+                      ? "text-corporate-text-onAccent bg-accent-500 shadow-lg"
                       : "border border-white/20 bg-white/5 text-corporate-text-secondary hover:bg-white/10 hover:text-corporate-text-primary",
                   )}
                 >
@@ -245,7 +245,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
                       <div className="flex items-center gap-2">
                         <span className="truncate text-sm font-medium text-white">{role.name}</span>
                         {selectedRole?.id === role.id && (
-                          <span className="text-accent-400 text-sm">✓</span>
+                          <span className="text-sm text-accent-400">✓</span>
                         )}
                       </div>
                       <div className="mt-1 flex items-center gap-2">

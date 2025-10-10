@@ -344,7 +344,7 @@ export default function SettingsPage() {
                 })
                 .catch(() => window.location.reload());
             }}
-            className="hover:bg-accent-600 min-h-touch-rec rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent transition-colors"
+            className="hover:bg-accent-600 text-corporate-text-onAccent min-h-touch-rec rounded-md bg-accent-500 px-4 py-2 text-sm font-medium transition-colors"
           >
             Seite neu laden
           </button>
@@ -391,7 +391,7 @@ export default function SettingsPage() {
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                className="focus-visible:ring-accent-400 absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-corporate-text-secondary transition hover:bg-white/10 hover:text-corporate-text-primary focus-visible:outline-none focus-visible:ring-2"
+                className="absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-corporate-text-secondary transition hover:bg-white/10 hover:text-corporate-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -420,7 +420,7 @@ export default function SettingsPage() {
           <Button
             type="button"
             onClick={handleSaveKey}
-            className="min-h-touch-rec w-full border-0 bg-white/20 text-corporate-text-onSurface hover:bg-white/30"
+            className="text-corporate-text-onSurface min-h-touch-rec w-full border-0 bg-white/20 hover:bg-white/30"
           >
             Schlüssel speichern
           </Button>
@@ -782,7 +782,7 @@ export default function SettingsPage() {
             {import.meta.env.DEV && (
               <div className="flex items-center justify-between text-sm">
                 <span className="text-corporate-text-secondary">Build ID:</span>
-                <span className="text-accent-400 font-mono">{BUILD_ID}</span>
+                <span className="font-mono text-accent-400">{BUILD_ID}</span>
               </div>
             )}
             <div className="flex items-center justify-between text-sm">

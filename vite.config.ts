@@ -101,9 +101,9 @@ export default defineConfig(({ mode }) => {
       target: "es2020",
       minify: "esbuild",
       cssMinify: "esbuild",
-      chunkSizeWarningLimit: 800,
+      chunkSizeWarningLimit: 500, // Reduce from 800 to 500KB
       // Robuste Asset-Generation für Cloudflare Pages
-      assetsInlineLimit: 2048, // Reduce inline threshold
+      assetsInlineLimit: 1024, // Reduce from 2048 to 1KB for better caching
       cssCodeSplit: true, // CSS-Chunks für besseres Caching
       // Production-spezifische Optimierungen
       ...(isProduction && {
@@ -120,16 +120,61 @@ export default defineConfig(({ mode }) => {
         // Robust solution: No externalization needed for bundled app
         // Dependencies will be properly ordered through manualChunks priority
         output: {
-          // Optimized chunk splitting to reduce unused JavaScript loading
-          manualChunks: {
-            vendor: ["react", "react-dom"],
-            ui: [
-              "@radix-ui/react-avatar",
-              "@radix-ui/react-dialog",
-              "@radix-ui/react-dropdown-menu",
-            ],
-            router: ["react-router-dom"],
-            utils: ["clsx", "tailwind-merge", "class-variance-authority"],
+          // Enable modern features for smaller bundles
+          generatedCode: {
+            arrowFunctions: true,
+            constBindings: true,
+            objectShorthand: true,
+          },
+          // Advanced chunk splitting for better caching and reduced initial load
+          manualChunks: (id) => {
+            // Vendor chunks - split by logical groups
+            if (id.includes("node_modules")) {
+              // React core
+              if (id.includes("react") || id.includes("react-dom")) {
+                return "vendor-react";
+              }
+              // UI framework
+              if (id.includes("@radix-ui")) {
+                return "vendor-ui";
+              }
+              // Router
+              if (id.includes("react-router")) {
+                return "vendor-router";
+              }
+              // Utilities
+              if (
+                id.includes("clsx") ||
+                id.includes("tailwind-merge") ||
+                id.includes("class-variance-authority")
+              ) {
+                return "vendor-utils";
+              }
+              // Icons
+              if (id.includes("lucide-react")) {
+                return "vendor-icons";
+              }
+              // Validation
+              if (id.includes("zod")) {
+                return "vendor-validation";
+              }
+              // Other vendor libs
+              return "vendor-misc";
+            }
+
+            // App chunks - split by feature
+            if (id.includes("/pages/")) {
+              return "pages";
+            }
+            if (id.includes("/components/")) {
+              return "components";
+            }
+            if (id.includes("/config/") || id.includes("/data/")) {
+              return "config-data";
+            }
+            if (id.includes("/lib/") || id.includes("/utils/")) {
+              return "utils";
+            }
           },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,

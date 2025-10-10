@@ -119,7 +119,7 @@ export function ChatComposer({
           <div className="flex items-center justify-between text-xs text-white/60">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-corporate-text-onSurface">
+                <span className="text-corporate-text-onSurface inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-3 py-1">
                   <Zap className="h-3 w-3" />
                   {tokenCount} Token
                 </span>

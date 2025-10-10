@@ -231,7 +231,7 @@ function hello(){
   };
   return (
     <div
-      className="flex flex-col bg-surface text-on-surface"
+      className="text-on-surface flex flex-col bg-surface"
       style={{
         minHeight: "var(--vh, 100dvh)",
         background:
