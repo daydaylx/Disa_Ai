@@ -8,6 +8,20 @@ export default {
   theme: {
     extend: {
       colors: {
+        glass: {
+          primary: {
+            surface: "var(--glass-primary-bg)",
+            border: "var(--glass-primary-border)",
+          },
+          secondary: {
+            surface: "var(--glass-secondary-bg)",
+            border: "var(--glass-secondary-border)",
+          },
+          tertiary: {
+            surface: "var(--glass-tertiary-bg)",
+            border: "var(--glass-tertiary-border)",
+          },
+        },
         // Legacy colors for backward compatibility
         primary: "hsl(var(--primary))",
         "on-primary": "hsl(var(--on-primary))",
@@ -52,6 +66,7 @@ export default {
         },
         corporate: {
           bg: {
+            pure: "var(--color-corporate-bg-pure)",
             primary: "var(--color-corporate-bg-primary)",
             secondary: "var(--color-corporate-bg-secondary)",
             elevated: "var(--color-corporate-bg-elevated)",
@@ -191,6 +206,25 @@ export default {
     },
   },
   safelist: [
+    "glass-card-primary",
+    "glass-card-secondary",
+    "glass-card-tertiary",
+    "glass-tooltip",
+    "glass-sheet",
+    "glass-toast",
+    "glass-select",
+    "glass-backdrop--soft",
+    "glass-backdrop--medium",
+    "btn",
+    "btn-primary",
+    "btn-outline",
+    "btn-ghost",
+    "btn-danger",
+    "btn-sm",
+    "tap-target",
+    "u-card",
+    "u-glass",
+    "u-ring",
     "badge",
     "badge-muted",
     "badge-accent",

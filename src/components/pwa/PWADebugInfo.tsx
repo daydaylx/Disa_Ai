@@ -2,18 +2,7 @@ import { Info } from "lucide-react";
 import { useState } from "react";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
-import type { GlassTint } from "../../lib/theme/glass";
 import { Button } from "../ui/button";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
-
-interface PWADebugInfoProps {
-  tint?: GlassTint;
-}
-
-const DEFAULT_TINT: GlassTint = {
-  from: "hsla(300, 100%, 65%, 0.1)",
-  to: "hsla(260, 90%, 60%, 0.08)",
-};
 
 function isStandalone(): boolean {
   try {
@@ -43,7 +32,7 @@ function isChrome(): boolean {
   return /chrome/i.test(ua) && !/edg/i.test(ua);
 }
 
-export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
+export function PWADebugInfo() {
   const [isVisible, setIsVisible] = useState(false);
   const { canInstall, installed, dismissed } = usePWAInstall();
 
@@ -68,7 +57,7 @@ export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
         onClick={() => setIsVisible(true)}
         variant="ghost"
         size="sm"
-        className="fixed right-4 top-4 z-50 h-8 w-8 p-0 text-white/60 hover:bg-white/10 hover:text-white"
+        className="btn-ghost fixed right-4 top-4 z-50 h-8 w-8 p-0"
       >
         <Info className="h-4 w-4" />
       </Button>
@@ -77,11 +66,7 @@ export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
 
   return (
     <div className="fixed right-4 top-4 z-50 max-w-sm">
-      <StaticGlassCard
-        tint={tint}
-        padding="sm"
-        className="border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-      >
+      <div className="glass-card-secondary p-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-white">PWA Debug Info</h3>
@@ -89,7 +74,7 @@ export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
               onClick={() => setIsVisible(false)}
               variant="ghost"
               size="sm"
-              className="h-6 w-6 p-0 text-white/60 hover:text-white"
+              className="btn-ghost h-6 w-6 p-0"
             >
               ×
             </Button>
@@ -144,7 +129,7 @@ export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
             </ul>
           </div>
         </div>
-      </StaticGlassCard>
+      </div>
     </div>
   );
 }

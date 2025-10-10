@@ -308,21 +308,17 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         />
         <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Schnellfilter">
           <Button
-            variant={onlyFavorites ? "default" : "secondary"}
-            size="sm"
             onClick={() => setOnlyFavorites((prev) => !prev)}
             data-testid="model-filter-chip-favorite"
-            className="rounded-full"
+            className={cn("btn-outline rounded-full", onlyFavorites && "btn-primary")}
           >
             <Icon name={onlyFavorites ? "star-filled" : "star"} size={16} className="mr-2" />
             Favoriten
           </Button>
           <Button
-            variant={onlyFree ? "default" : "secondary"}
-            size="sm"
             onClick={() => setOnlyFree((prev) => !prev)}
             data-testid="model-filter-chip-free"
-            className="rounded-full"
+            className={cn("btn-outline rounded-full", onlyFree && "btn-primary")}
           >
             <span aria-hidden className="mr-2">
               💸
@@ -330,11 +326,9 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
             Frei
           </Button>
           <Button
-            variant={onlyCode ? "default" : "secondary"}
-            size="sm"
             onClick={() => setOnlyCode((prev) => !prev)}
             data-testid="model-filter-chip-code"
-            className="rounded-full"
+            className={cn("btn-outline rounded-full", onlyCode && "btn-primary")}
           >
             <span aria-hidden className="mr-2">
               💻
@@ -354,7 +348,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       </div>
 
       {showAdvanced && (
-        <Card className="bg-white/5">
+        <Card className="glass-card-secondary">
           <CardContent className="pt-6">
             <div
               className="grid grid-cols-2 gap-4 md:grid-cols-3"
@@ -370,7 +364,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                   value={provider}
                   onChange={(e) => setProvider(e.target.value)}
                   aria-label="Provider filtern"
-                  className="placeholder:text-text-muted h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="glass-select"
                 >
                   {providers.map((p) => (
                     <option key={p} value={p} className="bg-bg-elevated">
@@ -391,7 +385,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                     setSortBy(e.target.value as "label" | "price" | "ctx")
                   }
                   aria-label="Sortierung"
-                  className="placeholder:text-text-muted h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="glass-select"
                 >
                   <option value="label" className="bg-bg-elevated">
                     Name

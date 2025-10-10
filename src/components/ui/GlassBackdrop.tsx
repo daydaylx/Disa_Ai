@@ -60,7 +60,7 @@ export function GlassBackdrop({
       {config.beam && (
         <div
           className={cn(
-            "via-white/8 absolute bg-gradient-to-br from-white/20 to-transparent opacity-55 blur-2xl",
+            "absolute bg-gradient-to-br from-white/[0.05] via-white/[0.02] to-transparent opacity-30 blur-2xl",
             config.beam,
           )}
         />
@@ -68,7 +68,7 @@ export function GlassBackdrop({
       {config.top && (
         <div
           className={cn(
-            "absolute bg-gradient-to-r from-transparent via-white/45 to-transparent opacity-70",
+            "absolute bg-gradient-to-r from-transparent via-white/[0.12] to-transparent opacity-40",
             config.top,
           )}
         />
@@ -76,7 +76,7 @@ export function GlassBackdrop({
       {config.bottom && (
         <div
           className={cn(
-            "from-white/16 via-white/6 absolute bg-gradient-to-t to-transparent opacity-75",
+            "absolute bg-gradient-to-t from-white/[0.04] via-white/[0.015] to-transparent opacity-50",
             config.bottom,
           )}
         />

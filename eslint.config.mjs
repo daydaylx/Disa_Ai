@@ -21,7 +21,6 @@ export default [
       "build/**",
       "coverage/**",
       "node_modules/**",
-      "src/lib/openrouter.ts", // Legacy client
       "*.config.js",
       "*.config.ts",
       "tailwind.config.ts", // Ignore Tailwind config

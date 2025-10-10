@@ -68,6 +68,7 @@ export const colors = {
   },
   corporate: {
     background: {
+      pure: "#000000",
       primary: "#000711",
       secondary: "#0a0f1c",
       elevated: "#0f1729",

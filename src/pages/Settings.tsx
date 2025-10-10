@@ -18,10 +18,8 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { StaticGlassCard } from "../components/ui/StaticGlassCard";
 import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
-import { useGlassPalette } from "../hooks/useGlassPalette";
 import { useMemory } from "../hooks/useMemory";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { useSettings } from "../hooks/useSettings";
@@ -34,7 +32,6 @@ import {
   importConversations,
 } from "../lib/conversation-manager";
 import { BUILD_ID } from "../lib/pwa/registerSW";
-import type { GlassTint } from "../lib/theme/glass";
 
 function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> }) {
   const [stats, setStats] = useState({ chatCount: 0, totalMessages: 0, storageUsed: 0 });
@@ -93,11 +90,6 @@ function ChatStats() {
   );
 }
 
-const DEFAULT_TINT: GlassTint = {
-  from: "hsl(210 45% 55% / 0.20)",
-  to: "hsl(250 60% 52% / 0.18)",
-};
-
 type InitState = "loading" | "ready" | "error";
 
 export default function SettingsPage() {
@@ -116,12 +108,11 @@ export default function SettingsPage() {
     getMemoryStats,
     isEnabled: memoryEnabled,
   } = useMemory();
-  const palette = useGlassPalette();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setInitState("error");
-    }, 5000); // 5s Timeout für Settings-Load
+    }, 5000);
 
     try {
       const storedKey = sessionStorage.getItem("openrouter-key") ?? "";
@@ -147,7 +138,6 @@ export default function SettingsPage() {
       const trimmedKey = apiKey.trim();
 
       if (trimmedKey) {
-        // Basic validation
         if (!trimmedKey.startsWith("sk-or-")) {
           setKeyStatus("invalid");
           toasts.push({
@@ -267,7 +257,6 @@ export default function SettingsPage() {
     };
     reader.readAsText(file);
 
-    // Reset input
     event.target.value = "";
   };
 
@@ -344,7 +333,7 @@ export default function SettingsPage() {
                 })
                 .catch(() => window.location.reload());
             }}
-            className="hover:bg-accent-600 min-h-touch-rec rounded-md bg-accent-500 px-4 py-2 text-sm font-medium text-corporate-text-onAccent transition-colors"
+            className="btn-primary"
           >
             Seite neu laden
           </button>
@@ -363,7 +352,7 @@ export default function SettingsPage() {
       </header>
 
       {/* API Key Section */}
-      <StaticGlassCard tint={palette[0] ?? DEFAULT_TINT} padding="lg">
+      <div className="glass-card-primary p-6">
         <div className="flex flex-col space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-corporate-text-primary">
             <Key className="h-5 w-5" />
@@ -385,13 +374,13 @@ export default function SettingsPage() {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 placeholder="sk-or-..."
-                className="border-white/20 bg-white/10 pr-10 font-mono text-corporate-text-primary placeholder:text-corporate-text-muted"
+                className="glass-select pr-10 font-mono"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                className="focus-visible:ring-accent-400 absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-corporate-text-secondary transition hover:bg-white/10 hover:text-corporate-text-primary focus-visible:outline-none focus-visible:ring-2"
+                className="absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -417,11 +406,7 @@ export default function SettingsPage() {
             </span>
           </div>
 
-          <Button
-            type="button"
-            onClick={handleSaveKey}
-            className="min-h-touch-rec w-full border-0 bg-white/20 text-corporate-text-onSurface hover:bg-white/30"
-          >
+          <Button type="button" onClick={handleSaveKey} className="btn-primary w-full">
             Schlüssel speichern
           </Button>
 
@@ -436,10 +421,10 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </StaticGlassCard>
+      </div>
 
       {/* Content Filter Section */}
-      <StaticGlassCard tint={palette[1] ?? DEFAULT_TINT} padding="lg">
+      <div className="glass-card-secondary p-6">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <User className="h-5 w-5" />
@@ -478,10 +463,10 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </StaticGlassCard>
+      </div>
 
       {/* Memory Settings Section */}
-      <StaticGlassCard tint={palette[2] ?? DEFAULT_TINT} padding="lg">
+      <div className="glass-card-secondary p-6">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Brain className="h-5 w-5" />
@@ -519,7 +504,7 @@ export default function SettingsPage() {
                     placeholder="Dein Name (optional)"
                     value={globalMemory?.name || ""}
                     onChange={(e) => updateGlobalMemory({ name: e.target.value })}
-                    className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+                    className="glass-select"
                   />
                   <Input
                     placeholder="Hobbys, Interessen (optional)"
@@ -531,13 +516,13 @@ export default function SettingsPage() {
                           : [],
                       })
                     }
-                    className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+                    className="glass-select"
                   />
                   <Input
                     placeholder="Hintergrund, Beruf (optional)"
                     value={globalMemory?.background || ""}
                     onChange={(e) => updateGlobalMemory({ background: e.target.value })}
-                    className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+                    className="glass-select"
                   />
                 </div>
               </div>
@@ -569,8 +554,7 @@ export default function SettingsPage() {
                       });
                     }
                   }}
-                  variant="outline"
-                  className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+                  className="btn-danger w-full"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Alle Erinnerungen löschen
@@ -590,10 +574,10 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </StaticGlassCard>
+      </div>
 
       {/* Chat Management Section */}
-      <StaticGlassCard tint={palette[3] ?? DEFAULT_TINT} padding="lg">
+      <div className="glass-card-secondary p-6">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <MessageSquare className="h-5 w-5" />
@@ -615,11 +599,7 @@ export default function SettingsPage() {
           <div className="space-y-3 border-t border-white/10 pt-4">
             <Label className="text-white/90">Import & Export</Label>
             <div className="grid grid-cols-2 gap-3">
-              <Button
-                onClick={handleExportChats}
-                variant="outline"
-                className="w-full border-blue-500/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20"
-              >
+              <Button onClick={handleExportChats} className="btn-outline w-full">
                 <Download className="mr-2 h-4 w-4" />
                 Exportieren
               </Button>
@@ -632,11 +612,7 @@ export default function SettingsPage() {
                   className="absolute inset-0 cursor-pointer opacity-0"
                   id="import-chats"
                 />
-                <Button
-                  variant="outline"
-                  className="w-full border-green-500/30 bg-green-500/10 text-green-300 hover:bg-green-500/20"
-                  asChild
-                >
+                <Button className="btn-outline w-full" asChild>
                   <label htmlFor="import-chats" className="cursor-pointer">
                     <Upload className="mr-2 h-4 w-4" />
                     Importieren
@@ -650,20 +626,12 @@ export default function SettingsPage() {
           <div className="space-y-3 border-t border-white/10 pt-4">
             <Label className="text-white/90">Aufräumen</Label>
             <div className="space-y-2">
-              <Button
-                onClick={handleCleanupOldChats}
-                variant="outline"
-                className="w-full border-yellow-500/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20"
-              >
+              <Button onClick={handleCleanupOldChats} className="btn-danger w-full">
                 <FileText className="mr-2 h-4 w-4" />
                 Alte Chats löschen (30+ Tage)
               </Button>
 
-              <Button
-                onClick={handleDeleteAllChats}
-                variant="outline"
-                className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
-              >
+              <Button onClick={handleDeleteAllChats} className="btn-danger w-full">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Alle Chats löschen
               </Button>
@@ -681,10 +649,10 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </StaticGlassCard>
+      </div>
 
       {/* PWA Install Section */}
-      <StaticGlassCard tint={palette[4] ?? DEFAULT_TINT} padding="lg">
+      <div className="glass-card-secondary p-6">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Smartphone className="h-5 w-5" />
@@ -715,7 +683,7 @@ export default function SettingsPage() {
           </div>
 
           {!isInstalled && (
-            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+            <div className="glass-card-secondary rounded-lg p-3">
               <div className="space-y-2 text-xs text-white/70">
                 <p className="font-medium">Vorteile der App-Installation:</p>
                 <ul className="list-disc space-y-1 pl-4">
@@ -729,11 +697,7 @@ export default function SettingsPage() {
           )}
 
           {canInstall && (
-            <Button
-              type="button"
-              onClick={handleInstallPWA}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600"
-            >
+            <Button type="button" onClick={handleInstallPWA} className="btn-primary w-full">
               <Download className="mr-2 h-4 w-4" />
               Jetzt als App installieren
             </Button>
@@ -763,10 +727,10 @@ export default function SettingsPage() {
             </ul>
           </div>
         </div>
-      </StaticGlassCard>
+      </div>
 
       {/* Build Info */}
-      <StaticGlassCard tint={palette[5] ?? DEFAULT_TINT} padding="lg">
+      <div className="glass-card-secondary p-6">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Info className="h-5 w-5" />
@@ -810,14 +774,14 @@ export default function SettingsPage() {
             )}
           </div>
 
-          <div className="rounded border border-white/10 bg-white/5 p-3 text-xs">
+          <div className="glass-card-secondary rounded p-3 text-xs">
             <p className="text-white/60">
               <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein harter Reload
               (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.
             </p>
           </div>
         </div>
-      </StaticGlassCard>
+      </div>
     </div>
   );
 }

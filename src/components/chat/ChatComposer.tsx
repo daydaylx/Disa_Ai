@@ -1,13 +1,10 @@
 import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-import { useStudio } from "../../app/state/StudioContext";
 // This component addresses the issue `04-composer-keyboard.md`
 import { useVisualViewport } from "../../hooks/useVisualViewport";
-import { createRoleTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { Textarea } from "../ui/textarea";
 
 interface ChatComposerProps {
@@ -48,16 +45,12 @@ export function ChatComposer({
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
-  const { accentColor } = useStudio();
-  const tint = createRoleTint(accentColor);
 
   // Auto-resize textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      // Reset height to auto to get the correct scrollHeight
       textarea.style.height = "auto";
-      // Set height based on scrollHeight, with min and max limits
       const newHeight = Math.min(Math.max(textarea.scrollHeight, 44), 200);
       textarea.style.height = `${newHeight}px`;
     }
@@ -98,19 +91,14 @@ export function ChatComposer({
   const isComposerDisabled = disabled || isQuickstartLoading;
   const showHelperState = !isLoading && (isComposerDisabled || isEmpty);
 
-  // Suggestion handling removed to match new design
-
   return (
     <div
       className={cn(
         "safe-bottom px-2 pt-4 transition-all duration-200",
-        viewport.isKeyboardOpen
-          ? "pb-4" // Less padding when keyboard is open
-          : "pb-[calc(var(--inset-b)+1.5rem)]", // Normal padding
+        viewport.isKeyboardOpen ? "pb-4" : "pb-[calc(var(--inset-b)+1.5rem)]",
         className,
       )}
       style={{
-        // Ensure composer stays above keyboard on mobile
         transform: viewport.isKeyboardOpen ? `translateY(-${viewport.offsetTop}px)` : undefined,
       }}
     >
@@ -119,13 +107,13 @@ export function ChatComposer({
           <div className="flex items-center justify-between text-xs text-white/60">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-corporate-text-onSurface">
+                <span className="glass-card-tertiary inline-flex items-center gap-1 rounded-full px-3 py-1">
                   <Zap className="h-3 w-3" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-corporate-text-secondary">
+                <span className="glass-card-tertiary inline-flex items-center gap-2 rounded-full px-3 py-1 opacity-80">
                   Maximal: {maxTokens}
                 </span>
               )}
@@ -136,11 +124,9 @@ export function ChatComposer({
           </div>
         )}
 
-        <StaticGlassCard
-          tint={tint}
-          padding="sm"
+        <div
           className={cn(
-            "flex items-end gap-2",
+            "glass-card-secondary flex items-end gap-2 p-2",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -168,7 +154,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="bg-white/8 hover:bg-white/12 min-h-touch-rec min-w-touch-rec rounded-full border border-white/10 text-zinc-300 hover:text-zinc-100"
+                className="btn-outline tap-target rounded-full"
                 title="Letzte Antwort erneut anfordern"
               >
                 <RotateCcw className="h-5 w-5" />
@@ -180,7 +166,7 @@ export function ChatComposer({
                 onClick={handleStop}
                 size="icon"
                 variant="ghost"
-                className="min-h-touch-rec min-w-touch-rec rounded-full border border-red-300/30 bg-red-500/20 text-red-100 hover:bg-red-500/30"
+                className="btn-danger tap-target rounded-full"
                 title="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
@@ -192,7 +178,7 @@ export function ChatComposer({
               <Button
                 onClick={handleSend}
                 size="icon"
-                className="relative min-h-touch-rec min-w-touch-rec rounded-full border border-white/15 bg-white/15 text-zinc-100 shadow-[0_12px_30px_rgba(8,8,18,0.45)] transition-transform hover:scale-105 active:scale-95"
+                className="btn-primary tap-target rounded-full"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 data-testid="composer-send"
@@ -205,7 +191,7 @@ export function ChatComposer({
               <span className="block h-10 w-10" aria-hidden="true" />
             )}
           </div>
-        </StaticGlassCard>
+        </div>
 
         <div className="mt-1 text-[12px] text-zinc-500">
           {isLoading

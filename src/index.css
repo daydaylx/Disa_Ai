@@ -9,26 +9,34 @@
     color-scheme: dark;
   }
 
-  /* App-wide background with glassmorphism support */
+  /* App-wide background - Dark navy blue mit subtilen Akzenten */
   body {
-    background-color: #0a0a0a; /* Reines Schwarz als Basis für das dunkle Theme */
+    background-color: #0a0e1a; /* Dark navy blue base */
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(34, 211, 238, 0.06) 0%, transparent 35%),
+      radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.04) 0%, transparent 35%),
+      radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.03) 0%, transparent 30%);
+    background-attachment: fixed;
+    background-size: 100% 100%;
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
 
-  /* Mobile-optimized background */
-  @media (max-width: 768px) {
+  /* Mobile-optimized background - Reduzierte Animation */
+  @media (max-width: 768px) and (prefers-reduced-motion: no-preference) {
     body {
-      background-attachment: scroll; /* Better performance on mobile */
-      background-size: cover;
-      background-position: center top; /* Focus on top area for mobile */
+      /* Weniger intensive Gradienten für bessere Performance */
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(34, 211, 238, 0.04) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.03) 0%, transparent 30%);
     }
   }
 
-  /* High-resolution displays */
-  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Reduced Motion - Dark navy ohne Gradienten */
+  @media (prefers-reduced-motion: reduce) {
     body {
-      background-size: cover;
+      background-image: none;
+      background-color: #0a0e1a;
     }
   }
 
@@ -47,52 +55,6 @@
  */
 
 @layer components {
-  /* Unified Glass Design System - Liquid-Glass Token */
-  .card-glass {
-    @apply bg-white/6 relative overflow-hidden rounded-2xl border border-white/10 text-zinc-200 ring-1 ring-white/5 saturate-150 supports-[backdrop-filter]:backdrop-blur-md;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 10px 30px rgba(0, 0, 0, 0.45);
-  }
-
-  .card-glass::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.22),
-      rgba(255, 255, 255, 0.08) 35%,
-      rgba(255, 255, 255, 0) 70%
-    );
-    pointer-events: none;
-  }
-
-  .card-hover {
-    transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
-  }
-
-  .card-cta {
-    transition:
-      border-color 0.2s ease,
-      background-color 0.2s ease,
-      transform 0.2s ease;
-  }
-
-  /* Freundliche Button-Stile für wärmere Interaktionen */
-  .btn-friendly {
-    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-rose-400/25 via-orange-300/20 to-amber-200/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
-  }
-
-  .btn-friendly-warm {
-    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-amber-300/30 via-orange-300/20 to-rose-400/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
-  }
-
-  .btn-friendly-fresh {
-    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-emerald-300/30 via-teal-300/20 to-cyan-300/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
-  }
-
   /* PWA Install Prompt Animations */
   .animate-bounce-in {
     animation: bounceIn 0.6s ease-out forwards;
@@ -115,13 +77,109 @@
       transform: translateY(0%) scale(1);
     }
   }
+
+  /* Glass Content Wrapper - Ensures content appears above ::before reflection */
+  .glass-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Glass Hover Enhancement - Cyan glow on interaction */
+  .glass-hover-glow-primary:hover {
+    box-shadow: var(--glass-primary-shadow), var(--glass-edge-glow-primary);
+    border-color: var(--glass-primary-border-top);
+    transform: translateY(-1px);
+  }
+
+  .glass-hover-glow-secondary:hover {
+    box-shadow: var(--glass-secondary-shadow), var(--glass-edge-glow-secondary);
+    border-color: var(--glass-secondary-border-top);
+    transform: translateY(-1px);
+  }
+
+  .glass-hover-glow-tertiary:hover {
+    box-shadow: var(--glass-tertiary-shadow), var(--glass-edge-glow-tertiary);
+    border-color: var(--glass-tertiary-border-top);
+  }
+
+  /* Permanenter Glow - Für wichtige Elemente wie Navigation */
+  .glass-with-glow {
+    box-shadow:
+      var(--glass-secondary-shadow),
+      0 0 20px rgba(34, 211, 238, 0.06);
+  }
+
+  /* Legacy classes - DEPRECATED - Use GlassCard component or design-tokens.css classes instead */
+  /* These are kept for backwards compatibility but should be migrated away from */
+  .card-glass {
+    background: var(--glass-secondary-bg);
+    backdrop-filter: blur(var(--glass-secondary-blur)) brightness(var(--glass-secondary-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-secondary-blur))
+      brightness(var(--glass-secondary-brightness));
+    border: 1px solid var(--glass-secondary-border);
+    @apply rounded-2xl;
+  }
+
+  .glass-strong {
+    background: var(--glass-primary-bg);
+    backdrop-filter: blur(var(--glass-primary-blur)) brightness(var(--glass-primary-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-primary-blur))
+      brightness(var(--glass-primary-brightness));
+    border: 1px solid var(--glass-primary-border);
+    border-top-color: var(--glass-primary-border-top);
+    box-shadow: var(--glass-primary-shadow);
+    @apply rounded-2xl;
+  }
+
+  .glass-medium {
+    background: var(--glass-primary-bg);
+    backdrop-filter: blur(var(--glass-primary-blur)) brightness(var(--glass-primary-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-primary-blur))
+      brightness(var(--glass-primary-brightness));
+    border: 1px solid var(--glass-primary-border);
+    @apply rounded-2xl;
+  }
+
+  .glass-soft {
+    background: var(--glass-secondary-bg);
+    backdrop-filter: blur(var(--glass-secondary-blur)) brightness(var(--glass-secondary-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-secondary-blur))
+      brightness(var(--glass-secondary-brightness));
+    border: 1px solid var(--glass-secondary-border);
+    @apply rounded-2xl;
+  }
+
+  .card-hover {
+    transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
+  }
+
+  .card-cta {
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  /* Freundliche Button-Stile - Consider migrating to Button component variants */
+  .btn-friendly {
+    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-rose-400/20 via-orange-300/15 to-amber-200/20 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/25 hover:brightness-105 active:scale-95;
+  }
+
+  .btn-friendly-warm {
+    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-amber-300/25 via-orange-300/15 to-rose-400/20 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/25 hover:brightness-105 active:scale-95;
+  }
+
+  .btn-friendly-fresh {
+    @apply relative overflow-hidden rounded-xl border border-white/20 bg-gradient-to-r from-emerald-300/25 via-teal-300/15 to-cyan-300/20 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/25 hover:brightness-105 active:scale-95;
+  }
 }
 
 @supports not (backdrop-filter: blur(8px)) {
-  .card-glass {
+  .card-glass,
+  .glass-strong {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: var(--glass-primary-bg);
   }
 }
 

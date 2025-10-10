@@ -7,22 +7,22 @@ import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { Button } from "../../components/ui";
-import { StaticGlassCard } from "../../components/ui/StaticGlassCard";
-import { useGlassPalette } from "../../hooks/useGlassPalette";
 import { cn } from "../../lib/utils";
 import { useStudio } from "../state/StudioContext";
 
 function Header() {
   const { activeRole } = useStudio();
+
   const location = useLocation();
+
   const navigate = useNavigate();
-  const palette = useGlassPalette();
-  const headerTint = palette[0] ?? { from: "hsla(0, 0%, 100%, 0.1)", to: "hsla(0, 0%, 100%, 0.0)" };
 
   const handleNewChatClick = () => {
     const timestamp = Date.now();
+
     void navigate("/chat", {
       state: { newChat: timestamp },
+
       replace: location.pathname === "/chat",
     });
   };
@@ -30,20 +30,23 @@ function Header() {
   return (
     <header className="relative z-10 px-4 pb-6 pt-10">
       <div className="mx-auto max-w-md">
-        <StaticGlassCard tint={headerTint} padding="lg">
+        <div className="glass-card-primary p-4 md:p-6">
           <div className="relative flex items-center justify-between">
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r from-rose-400/35 via-orange-300/30 to-amber-200/35 px-3 py-1 text-xs font-medium tracking-wide text-white shadow-[0_4px_16px_rgba(248,191,88,0.25)]">
+                <div className="glass-card-tertiary inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium tracking-wide">
                   <Compass className="h-3.5 w-3.5" /> KI-Studio
                 </div>
+
                 {activeRole && (
-                  <div className="from-accent-500/35 inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r via-amber-300/30 to-rose-400/30 px-3 py-1 text-xs font-medium text-white shadow-[0_4px_18px_rgba(244,114,182,0.3)]">
+                  <div className="glass-card-tertiary inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium">
                     <Bot className="h-3.5 w-3.5" />
+
                     {activeRole.name}
                   </div>
                 )}
               </div>
+
               <div>
                 <h1
                   className="text-3xl font-semibold text-zinc-100 drop-shadow-[0_4px_18px_rgba(147,51,234,0.35)]"
@@ -51,6 +54,7 @@ function Header() {
                 >
                   Disa AI
                 </h1>
+
                 <p className="mt-1 text-sm text-zinc-400">
                   {activeRole
                     ? `${activeRole.category ?? "Rolle"} • ${activeRole.name}`
@@ -62,16 +66,15 @@ function Header() {
             <div className="flex flex-col items-end gap-4">
               <Button
                 size="sm"
-                variant="ghost"
                 aria-label="Neues Gespräch"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border-0 bg-gradient-to-r from-rose-400 via-orange-300 to-amber-200 px-5 font-medium tracking-wide text-white shadow-[0_10px_32px_rgba(249,168,212,0.45)] transition-transform hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/25 active:scale-[0.98]"
+                className="btn-primary rounded-full"
                 onClick={handleNewChatClick}
               >
                 <PlusCircle className="h-4 w-4" /> Neu starten
               </Button>
             </div>
           </div>
-        </StaticGlassCard>
+        </div>
       </div>
     </header>
   );
@@ -86,12 +89,12 @@ function BottomNav() {
   ];
 
   return (
-    <nav className="sticky bottom-0 z-20 border-t border-white/10 bg-[#040513]/90 backdrop-blur-2xl">
+    <nav className="sticky bottom-0 z-20 border-t border-cyan-500/10 bg-[#0a0e1a]/90 backdrop-blur-2xl">
       <div
         className="mx-auto w-full max-w-md px-4"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
-        <div className="glass-strong flex items-center justify-between gap-2 rounded-2xl px-2 py-2 shadow-[0_18px_40px_rgba(5,8,18,0.45)]">
+        <div className="glass-card-secondary flex items-center justify-between gap-2 rounded-2xl px-2 py-2">
           {navigationItems.map((item) => (
             <NavLink
               key={item.to}
@@ -117,8 +120,8 @@ function BottomNav() {
                     className={cn(
                       "flex h-6 w-6 items-center justify-center rounded-lg transition-colors",
                       isActive
-                        ? "bg-white/12 text-zinc-100"
-                        : "bg-white/8 group-hover:bg-white/12 text-zinc-400 group-hover:text-zinc-100",
+                        ? "glass-card-tertiary text-zinc-100"
+                        : "glass-card-tertiary text-zinc-400 opacity-80 group-hover:text-zinc-100 group-hover:opacity-100",
                     )}
                   >
                     {item.icon}
@@ -150,13 +153,7 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="stage relative flex min-h-dvh w-full flex-col bg-transparent text-slate-200">
-      {/* Noise overlay */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.02'/></svg>")`,
-        }}
-      />
+      {/* Glassmorphism Background - Defined in index.css body styles */}
 
       <Header />
 
@@ -183,14 +180,14 @@ export function AppShell({ children }: AppShellProps) {
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
       >
         <div className="mx-auto w-full max-w-md">
-          <div className="glass-strong rounded-2xl px-5 py-4 text-center shadow-[0_16px_48px_rgba(5,8,18,0.35)]">
+          <div className="glass-card-secondary rounded-2xl px-5 py-4 text-center">
             <p className="text-[13px] font-medium text-zinc-100">
               Disa AI Beta • Experimentelle Oberfläche
             </p>
             <p className="mt-1 text-[12px] text-zinc-400">
               Feedback hilft uns, die Experience kontinuierlich zu verfeinern.
             </p>
-            <BuildInfo className="mt-3 inline-flex items-center justify-center gap-1 rounded-full bg-white/10 px-3 py-1 font-mono text-[11px] text-zinc-300 transition-opacity hover:opacity-100" />
+            <BuildInfo className="glass-card-tertiary mt-3 inline-flex items-center justify-center gap-1 rounded-full px-3 py-1 font-mono text-[11px] text-zinc-300 transition-opacity hover:opacity-100" />
           </div>
         </div>
       </footer>

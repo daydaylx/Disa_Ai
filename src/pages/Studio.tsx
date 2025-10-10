@@ -177,7 +177,7 @@ function RolesTab() {
 
       <div className="space-y-6 pb-8" data-testid="role-card-grid">
         {isLoadingRoles && orderedRoles.length === 0 ? (
-          <div className="flex items-center justify-center rounded-2xl border border-white/[0.12] bg-white/[0.04] p-6 text-sm text-white/70">
+          <div className="glass-card-secondary flex items-center justify-center rounded-2xl p-6 text-sm text-white/70">
             Rollen werden geladen ...
           </div>
         ) : null}
@@ -247,7 +247,7 @@ function RolesTab() {
         <button
           type="button"
           onClick={handleNavigateToChat}
-          className="bg-white/6 relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full border border-white/10 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_4px_16px_rgba(0,0,0,0.35)] ring-1 ring-white/5 saturate-150 transition-all duration-200 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.18),rgba(255,255,255,0.06)_40%,rgba(255,255,255,0)_70%)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] supports-[backdrop-filter]:backdrop-blur-md"
+          className="glass-strong relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.18),rgba(255,255,255,0.06)_40%,rgba(255,255,255,0)_70%)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]"
         >
           <div
             aria-hidden="true"
@@ -263,7 +263,7 @@ function RolesTab() {
           type="button"
           onClick={handleResetRole}
           disabled={!activeRole}
-          className="bg-white/6 relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full border border-white/10 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_4px_16px_rgba(0,0,0,0.35)] ring-1 ring-white/5 saturate-150 transition-all duration-200 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.18),rgba(255,255,255,0.06)_40%,rgba(255,255,255,0)_70%)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100 supports-[backdrop-filter]:backdrop-blur-md"
+          className="glass-strong relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.18),rgba(255,255,255,0.06)_40%,rgba(255,255,255,0)_70%)] hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100"
           aria-disabled={!activeRole}
         >
           <div
@@ -336,7 +336,7 @@ function StylesTab() {
           type="color"
           value={accentColor}
           onChange={(event) => setAccentColor(event.target.value)}
-          className="h-12 w-20 cursor-pointer rounded-xl border border-white/[0.14] bg-white/[0.04]"
+          className="glass-card-secondary h-12 w-20 cursor-pointer rounded-xl"
         />
       </label>
     </div>
@@ -353,7 +353,7 @@ export default function Studio() {
           type="button"
           onClick={() => setActiveTab("roles")}
           className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "roles" ? "bg-white/15 text-white" : "bg-white/[0.05] text-white/70"
+            activeTab === "roles" ? "bg-white/15 text-white" : "glass-card-secondary text-white/70"
           }`}
         >
           Rollen
@@ -362,7 +362,7 @@ export default function Studio() {
           type="button"
           onClick={() => setActiveTab("styles")}
           className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "styles" ? "bg-white/15 text-white" : "bg-white/[0.05] text-white/70"
+            activeTab === "styles" ? "bg-white/15 text-white" : "glass-card-secondary text-white/70"
           }`}
         >
           Stile

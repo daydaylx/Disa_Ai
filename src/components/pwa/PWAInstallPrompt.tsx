@@ -2,30 +2,21 @@ import { Download, Smartphone, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
-import type { GlassTint } from "../../lib/theme/glass";
 import { Button } from "../ui/button";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
 interface PWAInstallPromptProps {
-  tint?: GlassTint;
   className?: string;
 }
 
-const DEFAULT_TINT: GlassTint = {
-  from: "hsla(220, 100%, 65%, 0.15)",
-  to: "hsla(280, 90%, 60%, 0.12)",
-};
-
-export function PWAInstallPrompt({ tint = DEFAULT_TINT, className }: PWAInstallPromptProps) {
+export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
   const { canInstall, requestInstall, dismiss, installed } = usePWAInstall();
   const [isVisible, setIsVisible] = useState(false);
   const toasts = useToasts();
 
-  // Verzögerte Anzeige für bessere UX (nur bei Android)
   useEffect(() => {
     if (canInstall) {
-      const timer = setTimeout(() => setIsVisible(true), 3000); // 3s Verzögerung für weniger aufdringlich
+      const timer = setTimeout(() => setIsVisible(true), 3000);
       return () => clearTimeout(timer);
     }
     return undefined;
@@ -54,7 +45,6 @@ export function PWAInstallPrompt({ tint = DEFAULT_TINT, className }: PWAInstallP
     setIsVisible(false);
   };
 
-  // Nur für Android anzeigen, wenn Installation möglich ist
   if (installed || !canInstall || !isVisible) {
     return null;
   }
@@ -63,11 +53,7 @@ export function PWAInstallPrompt({ tint = DEFAULT_TINT, className }: PWAInstallP
     <div
       className={`fixed bottom-4 left-4 right-4 z-50 md:left-auto md:max-w-sm ${className || ""}`}
     >
-      <StaticGlassCard
-        tint={tint}
-        padding="lg"
-        className="animate-bounce-in border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-      >
+      <div className="glass-card-primary animate-bounce-in p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">
@@ -79,20 +65,11 @@ export function PWAInstallPrompt({ tint = DEFAULT_TINT, className }: PWAInstallP
             </p>
 
             <div className="flex gap-2">
-              <Button
-                onClick={handleInstall}
-                size="sm"
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600"
-              >
+              <Button onClick={handleInstall} size="sm" className="btn-primary flex-1">
                 <Download className="mr-2 h-4 w-4" />
                 Jetzt installieren
               </Button>
-              <Button
-                onClick={handleDismiss}
-                size="sm"
-                variant="outline"
-                className="border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
-              >
+              <Button onClick={handleDismiss} size="sm" className="btn-outline">
                 Später
               </Button>
             </div>
@@ -102,12 +79,12 @@ export function PWAInstallPrompt({ tint = DEFAULT_TINT, className }: PWAInstallP
             onClick={handleDismiss}
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 text-white/60 hover:bg-white/10 hover:text-white"
+            className="btn-ghost h-8 w-8 p-0"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
-      </StaticGlassCard>
+      </div>
     </div>
   );
 }

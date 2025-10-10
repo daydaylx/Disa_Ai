@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { AIModel } from "../../data/models";
 import { formatContext, formatPrice, getModelById, MODELS } from "../../data/models";
@@ -17,6 +17,20 @@ export function ModelPicker({ selectedModelId, onModelChange, className = "" }: 
     onModelChange(modelId);
     setIsOpen(false);
   };
+
+  // Close dropdown on Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
 
   const groupedModels = MODELS.reduce<Record<string, AIModel[]>>((acc, model) => {
     const provider = model.id.split("/")[0] ?? "other";
@@ -89,7 +103,13 @@ export function ModelPicker({ selectedModelId, onModelChange, className = "" }: 
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+          <button
+            type="button"
+            className="fixed inset-0 z-40 cursor-default"
+            onClick={() => setIsOpen(false)}
+            aria-label="Modell-Auswahl schließen"
+            tabIndex={-1}
+          />
 
           {/* Menu */}
           <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-96 overflow-y-auto rounded-lg border border-[hsl(var(--text-muted)/0.2)] bg-[hsl(var(--bg-base)/0.95)] p-1 backdrop-blur-xl">

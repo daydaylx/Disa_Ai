@@ -2,28 +2,30 @@ type Hsl = { h: number; s: number; l: number };
 
 export type GlassTint = { from: string; to: string };
 
+// Recommended opacity range: 0.12-0.22 for optimal glass effect
 export const DEFAULT_GLASS_VARIANTS = [
-  "linear-gradient(135deg, rgba(110,72,255,0.28) 0%, rgba(13,148,255,0.24) 100%)",
-  "linear-gradient(135deg, rgba(236,72,153,0.28) 0%, rgba(245,158,11,0.24) 100%)",
-  "linear-gradient(135deg, rgba(16,185,129,0.28) 0%, rgba(59,130,246,0.22) 100%)",
-  "linear-gradient(135deg, rgba(251,191,36,0.28) 0%, rgba(244,114,182,0.22) 100%)",
+  "linear-gradient(135deg, rgba(110,72,255,0.18) 0%, rgba(13,148,255,0.15) 100%)",
+  "linear-gradient(135deg, rgba(236,72,153,0.18) 0%, rgba(245,158,11,0.15) 100%)",
+  "linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(59,130,246,0.15) 100%)",
+  "linear-gradient(135deg, rgba(251,191,36,0.18) 0%, rgba(244,114,182,0.15) 100%)",
 ];
 
-// Freundlichere, wärmere Farbpalette für bessere Glassmorphismus-Integration
+// Friendly warm color palette - unified as primary palette
 export const FRIENDLY_GLASS_VARIANTS = [
-  "linear-gradient(135deg, rgba(192,132,252,0.32) 0%, rgba(14,165,233,0.22) 100%)", // Lavender to Sky
-  "linear-gradient(135deg, rgba(244,114,182,0.32) 0%, rgba(251,191,36,0.22) 100%)", // Blossom Peach
-  "linear-gradient(135deg, rgba(52,211,153,0.30) 0%, rgba(110,231,183,0.20) 100%)", // Mint Meadow
-  "linear-gradient(135deg, rgba(251,191,36,0.32) 0%, rgba(249,115,22,0.22) 100%)", // Golden Honey
-  "linear-gradient(135deg, rgba(236,72,153,0.30) 0%, rgba(168,85,247,0.22) 100%)", // Fuchsia Glow
-  "linear-gradient(135deg, rgba(56,189,248,0.30) 0%, rgba(129,140,248,0.22) 100%)", // Sky Evening
+  "linear-gradient(135deg, rgba(192,132,252,0.20) 0%, rgba(14,165,233,0.15) 100%)", // Lavender to Sky
+  "linear-gradient(135deg, rgba(244,114,182,0.20) 0%, rgba(251,191,36,0.15) 100%)", // Blossom Peach
+  "linear-gradient(135deg, rgba(52,211,153,0.18) 0%, rgba(110,231,183,0.12) 100%)", // Mint Meadow
+  "linear-gradient(135deg, rgba(251,191,36,0.20) 0%, rgba(249,115,22,0.15) 100%)", // Golden Honey
+  "linear-gradient(135deg, rgba(236,72,153,0.18) 0%, rgba(168,85,247,0.15) 100%)", // Fuchsia Glow
+  "linear-gradient(135deg, rgba(56,189,248,0.18) 0%, rgba(129,140,248,0.15) 100%)", // Sky Evening
 ];
 
+// Deprecated - Use FRIENDLY_GLASS_VARIANTS instead
 export const GOLDEN_GLASS_VARIANTS = [
-  "linear-gradient(135deg, rgba(255,223,120,0.42) 0%, rgba(255,179,71,0.32) 100%)",
-  "linear-gradient(135deg, rgba(255,215,141,0.36) 0%, rgba(255,190,92,0.28) 100%)",
-  "linear-gradient(135deg, rgba(255,240,190,0.34) 0%, rgba(255,203,122,0.26) 100%)",
-  "linear-gradient(135deg, rgba(255,230,160,0.38) 0%, rgba(255,192,100,0.28) 100%)",
+  "linear-gradient(135deg, rgba(255,223,120,0.25) 0%, rgba(255,179,71,0.18) 100%)",
+  "linear-gradient(135deg, rgba(255,215,141,0.22) 0%, rgba(255,190,92,0.16) 100%)",
+  "linear-gradient(135deg, rgba(255,240,190,0.20) 0%, rgba(255,203,122,0.15) 100%)",
+  "linear-gradient(135deg, rgba(255,230,160,0.22) 0%, rgba(255,192,100,0.16) 100%)",
 ];
 
 function clamp(value: number, min: number, max: number) {
@@ -75,8 +77,8 @@ export function createGlassGradient(
     hueShiftEnd = 28,
     lightnessStart = 18,
     lightnessEnd = -8,
-    alphaStart = 0.45,
-    alphaEnd = 0.28,
+    alphaStart = 0.22,
+    alphaEnd = 0.15,
   } = options ?? {};
 
   const start: Hsl = {
@@ -127,8 +129,8 @@ export function createRoleTint(accentColor?: string): GlassTint {
   const parsed = accentColor ? parseHsl(accentColor) : null;
   if (!parsed) {
     return {
-      from: "hsla(32, 96%, 67%, 0.92)",
-      to: "hsla(20, 92%, 54%, 0.72)",
+      from: "hsla(32, 96%, 67%, 0.20)",
+      to: "hsla(20, 92%, 54%, 0.15)",
     };
   }
 
@@ -144,8 +146,8 @@ export function createRoleTint(accentColor?: string): GlassTint {
   };
 
   return {
-    from: toHsla(start, 0.92),
-    to: toHsla(end, 0.72),
+    from: toHsla(start, 0.2),
+    to: toHsla(end, 0.15),
   };
 }
 
@@ -157,31 +159,31 @@ export function gradientToTint(gradient: string): GlassTint | null {
   return { from: from.trim(), to: to.trim() };
 }
 
-// Freundliche Tint-Farbkombinationen für bessere Lesbarkeit und wärmere Ausstrahlung
+// Friendly tint combinations - reduced opacity for subtlety
 export const FRIENDLY_TINTS: GlassTint[] = [
   {
-    from: "hsla(262, 82%, 74%, 0.78)", // Lavender
-    to: "hsla(200, 87%, 68%, 0.55)", // Soft Sky
+    from: "hsla(262, 82%, 74%, 0.20)", // Lavender
+    to: "hsla(200, 87%, 68%, 0.15)", // Soft Sky
   },
   {
-    from: "hsla(335, 86%, 72%, 0.78)", // Blossom Pink
-    to: "hsla(24, 92%, 67%, 0.55)", // Peach Glow
+    from: "hsla(335, 86%, 72%, 0.20)", // Blossom Pink
+    to: "hsla(24, 92%, 67%, 0.15)", // Peach Glow
   },
   {
-    from: "hsla(160, 82%, 66%, 0.78)", // Mint
-    to: "hsla(188, 84%, 62%, 0.55)", // Aqua
+    from: "hsla(160, 82%, 66%, 0.18)", // Mint
+    to: "hsla(188, 84%, 62%, 0.12)", // Aqua
   },
   {
-    from: "hsla(42, 92%, 70%, 0.78)", // Golden Light
-    to: "hsla(16, 86%, 64%, 0.55)", // Amber Coral
+    from: "hsla(42, 92%, 70%, 0.20)", // Golden Light
+    to: "hsla(16, 86%, 64%, 0.15)", // Amber Coral
   },
   {
-    from: "hsla(280, 88%, 74%, 0.78)", // Orchid
-    to: "hsla(312, 84%, 68%, 0.55)", // Fuchsia Mist
+    from: "hsla(280, 88%, 74%, 0.18)", // Orchid
+    to: "hsla(312, 84%, 68%, 0.15)", // Fuchsia Mist
   },
   {
-    from: "hsla(202, 86%, 70%, 0.78)", // Daybreak Blue
-    to: "hsla(186, 88%, 64%, 0.55)", // Lagoon
+    from: "hsla(202, 86%, 70%, 0.18)", // Daybreak Blue
+    to: "hsla(186, 88%, 64%, 0.15)", // Lagoon
   },
 ];
 

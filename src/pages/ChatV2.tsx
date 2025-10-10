@@ -228,7 +228,7 @@ export default function ChatV2() {
               onClick={() => setIsHistoryOpen(true)}
               variant="ghost"
               size="sm"
-              className="h-10 w-10 rounded-xl border border-white/10 bg-white/5 p-0 text-white transition-all hover:bg-white/10"
+              className="glass-card-secondary h-10 w-10 rounded-xl p-0 text-white transition-all hover:bg-white/10"
               aria-label="Chat-Verlauf öffnen"
             >
               <History className="h-5 w-5" />
@@ -274,7 +274,7 @@ export default function ChatV2() {
                 onClick={handleNewConversation}
                 variant="ghost"
                 size="sm"
-                className="h-10 w-10 rounded-xl border border-white/10 bg-white/5 p-0 text-white transition-all hover:bg-white/10"
+                className="glass-card-secondary h-10 w-10 rounded-xl p-0 text-white transition-all hover:bg-white/10"
                 aria-label="Neue Unterhaltung starten"
               >
                 <MessageSquare className="h-5 w-5" />
@@ -283,7 +283,7 @@ export default function ChatV2() {
                 onClick={() => setIsHistoryOpen(true)}
                 variant="ghost"
                 size="sm"
-                className="h-10 w-10 rounded-xl border border-white/10 bg-white/5 p-0 text-white transition-all hover:bg-white/10"
+                className="glass-card-secondary h-10 w-10 rounded-xl p-0 text-white transition-all hover:bg-white/10"
                 aria-label="Chat-Verlauf öffnen"
               >
                 <History className="h-5 w-5" />
@@ -328,7 +328,7 @@ export default function ChatV2() {
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 opacity-80 blur-sm"></div>
 
         {/* Haupt-Container */}
-        <div className="relative rounded-2xl border border-white/20 bg-white/10 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl">
+        <div className="glass-card-secondary relative rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
           {/* Glanz-Effekt oben */}
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
 
@@ -341,7 +341,7 @@ export default function ChatV2() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Nachricht an Disa AI schreiben..."
-                className="max-h-[200px] min-h-[52px] w-full resize-none rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white backdrop-blur-sm transition-all duration-200 placeholder:text-white/50 focus:border-blue-400/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
+                className="glass-card-secondary max-h-[200px] min-h-[52px] w-full resize-none rounded-xl px-4 py-3 text-white transition-all duration-200 placeholder:text-white/50 focus:border-blue-400/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
                 rows={1}
               />
 
