@@ -8,85 +8,53 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Legacy colors for backward compatibility
+        // Core colors only - keeping most used tokens
         primary: "hsl(var(--primary))",
-        "on-primary": "hsl(var(--on-primary))",
         surface: "hsl(var(--surface))",
-        "on-surface": "hsl(var(--on-surface))",
-        "surface-variant": "hsl(var(--surface-variant))",
         outline: "hsl(var(--outline))",
         error: "hsl(var(--error))",
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
 
-        // Design Token Colors
+        // Most used neutral variants only
         neutral: {
-          50: "var(--color-neutral-50)",
-          100: "var(--color-neutral-100)",
           200: "var(--color-neutral-200)",
-          300: "var(--color-neutral-300)",
-          400: "var(--color-neutral-400)",
           500: "var(--color-neutral-500)",
-          600: "var(--color-neutral-600)",
-          700: "var(--color-neutral-700)",
           800: "var(--color-neutral-800)",
           900: "var(--color-neutral-900)",
           950: "var(--color-neutral-950)",
         },
+
+        // Core accent colors
         accent: {
           300: "var(--color-accent-300)",
+          400: "var(--color-accent-400)", // Keeping this as it's used
           500: "var(--color-accent-500)",
-          700: "var(--color-accent-700)",
-          subtle: "var(--color-accent-subtle)",
-          low: "var(--color-accent-low)",
-          outline: "var(--color-accent-outline)",
-          foreground: "var(--color-accent-foreground)",
         },
+
+        // Minimal semantic colors
         semantic: {
           danger: "var(--color-danger)",
           success: "var(--color-success)",
           warning: "var(--color-warning)",
-          info: "var(--color-info)",
           purple: "var(--color-purple)",
-          mint: "var(--color-mint)",
         },
+
+        // Reduced corporate colors - keeping only frequently used
         corporate: {
           bg: {
             primary: "var(--color-corporate-bg-primary)",
             secondary: "var(--color-corporate-bg-secondary)",
-            elevated: "var(--color-corporate-bg-elevated)",
-            card: "var(--color-corporate-bg-card)",
             hover: "var(--color-corporate-bg-hover)",
           },
           text: {
             primary: "var(--color-corporate-text-primary)",
             secondary: "var(--color-corporate-text-secondary)",
             muted: "var(--color-corporate-text-muted)",
-            accent: "var(--color-corporate-text-accent)",
-            onViolet: "var(--color-corporate-text-on-violet)",
-            onBlue: "var(--color-corporate-text-on-blue)",
-            onTeal: "var(--color-corporate-text-on-teal)",
-            onAccent: "var(--color-corporate-text-on-accent)",
-            onDark: "var(--color-corporate-text-on-dark)",
-            onLight: "var(--color-corporate-text-on-light)",
-            onSurface: "var(--color-corporate-text-on-surface)",
-            subtle: "var(--color-corporate-text-subtle)",
-          },
-          border: {
-            primary: "var(--color-corporate-border-primary)",
-            secondary: "var(--color-corporate-border-secondary)",
-            accent: "var(--color-corporate-border-accent)",
           },
           accent: {
             primary: "var(--color-corporate-accent-primary)",
-            secondary: "var(--color-corporate-accent-secondary)",
-            success: "var(--color-corporate-accent-success)",
-            warning: "var(--color-corporate-accent-warning)",
             danger: "var(--color-corporate-accent-danger)",
-            purple: "var(--color-corporate-accent-purple)",
-            purpleHC: "var(--color-corporate-accent-purple-hc)",
-            blueHC: "var(--color-corporate-accent-blue-hc)",
-            tealHC: "var(--color-corporate-accent-teal-hc)",
           },
         },
       },
@@ -191,28 +159,20 @@ export default {
     },
   },
   safelist: [
+    // Core component classes only
     "badge",
     "badge-muted",
-    "badge-accent",
     "bubble",
     "bubble-assistant",
     "bubble-user",
-    "bubble-system",
     "tile",
-    "tile--primary",
     "card",
-    // Safe area classes
+    // Essential safe area classes
     "pb-safe-bottom",
     "pt-safe-top",
-    "pl-safe-left",
-    "pr-safe-right",
-    "mb-safe-bottom",
-    "mt-safe-top",
-    "ml-safe-left",
-    "mr-safe-right",
+    // Only keep commonly used gradient color variants
     {
-      pattern:
-        /(from|via|to)-(sky|yellow|emerald|cyan|orange|rose|violet)-(100|200|300|400|500|600)/,
+      pattern: /(from|via|to)-(rose|orange|amber|emerald|cyan)-(200|300|400|500)/,
     },
   ],
   plugins: [],

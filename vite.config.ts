@@ -120,7 +120,17 @@ export default defineConfig(({ mode }) => {
         // Robust solution: No externalization needed for bundled app
         // Dependencies will be properly ordered through manualChunks priority
         output: {
-          manualChunks: undefined,
+          // Optimized chunk splitting to reduce unused JavaScript loading
+          manualChunks: {
+            vendor: ["react", "react-dom"],
+            ui: [
+              "@radix-ui/react-avatar",
+              "@radix-ui/react-dialog",
+              "@radix-ui/react-dropdown-menu",
+            ],
+            router: ["react-router-dom"],
+            utils: ["clsx", "tailwind-merge", "class-variance-authority"],
+          },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,
           entryFileNames: "assets/js/[name]-[hash].js",

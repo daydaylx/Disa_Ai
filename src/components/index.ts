@@ -1,10 +1,10 @@
-// Main components export
-export * from "./ui";
-
-// Re-export commonly used components for convenience
-export { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-export { Badge } from "./ui/badge";
+// Export most commonly used UI components - optimized based on actual usage
 export { Button } from "./ui/button";
+export { Input } from "./ui/input";
+export { Textarea } from "./ui/textarea";
+
+// Re-export components that are imported via index in other files
+export { Badge } from "./ui/badge";
 export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 export {
   Dialog,
@@ -21,7 +21,5 @@ export {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-export { Input } from "./ui/input";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-export { Textarea } from "./ui/textarea";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";

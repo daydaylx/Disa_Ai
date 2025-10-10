@@ -295,49 +295,32 @@ export default function ModelsPage() {
     const tint = categoryTints[categoryKey] ?? DEFAULT_TINT;
 
     return (
-      <div
+      <RoleCard
         key={item.id}
-        role="button"
-        tabIndex={0}
+        title={item.label}
+        description={`${item.description}\n\nIn: ${
+          item.priceIn === 0 ? "Kostenlos" : `$${item.priceIn.toFixed(3)}/1M`
+        } | Out: ${
+          item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)}/1M`
+        }${item.ctx ? ` | Kontext: ${formatContext(item.ctx)}` : ""}`}
+        tint={tint}
         onClick={() => selectModelById(item.id, item.label)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            selectModelById(item.id, item.label);
-          }
-        }}
+        badge={item.provider}
+        isActive={isSelected}
         className={cn(
-          "cursor-pointer rounded-2xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+          "min-h-[140px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
           isSelected && "ring-2 ring-white/30",
         )}
-      >
-        <RoleCard
-          title={item.label}
-          description={`${item.description}\n\nIn: ${item.priceIn === 0 ? "Kostenlos" : `$${item.priceIn.toFixed(3)}/1M`} | Out: ${item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)}/1M`}${item.ctx ? ` | Kontext: ${formatContext(item.ctx)}` : ""}`}
-          tint={tint}
-          onClick={() => selectModelById(item.id, item.label)}
-          badge={item.provider}
-          isActive={isSelected}
-          className="min-h-[140px]"
-        >
-          {isSelected && (
-            <div className="flex justify-end">
-              <span className="rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-xs font-medium text-white">
-                ✓ Aktiv
-              </span>
-            </div>
-          )}
-        </RoleCard>
-      </div>
+      />
     );
   };
 
   return (
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
       <header className="mb-4">
-        <h2 className="text-lg font-semibold text-white" data-testid="models-title">
+        <h1 className="text-lg font-semibold text-white" data-testid="models-title">
           Modellkatalog
-        </h2>
+        </h1>
         <p className="mt-1 text-sm leading-6 text-white/70">
           Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich jetzt im{" "}
           <Link to="/roles" className="decoration-accent-300/60 text-accent-300 underline">
@@ -347,77 +330,102 @@ export default function ModelsPage() {
         </p>
       </header>
 
-      <RoleCard
-        title="Aktive Rolle"
-        description={`${activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"} - Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.`}
-        tint={friendlyPalette[0] ?? DEFAULT_TINT}
-        onClick={() => {}}
-        badge="Rollen-Studio"
-        className="min-h-[100px]"
-      >
-        <div className="flex items-center justify-end">
-          <Link
-            to="/roles"
-            className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-          >
-            Rollen öffnen
-          </Link>
-        </div>
-      </RoleCard>
+      <section aria-labelledby="active-role-heading" className="mb-6">
+        <h2 id="active-role-heading" className="sr-only">
+          Aktive Rolle
+        </h2>
+        <RoleCard
+          title="Aktive Rolle"
+          description={`${activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"} - Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.`}
+          tint={friendlyPalette[0] ?? DEFAULT_TINT}
+          onClick={() => {}}
+          badge="Rollen-Studio"
+          className="min-h-[100px]"
+        >
+          <div className="flex items-center justify-end">
+            <Link
+              to="/roles"
+              className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            >
+              Rollen öffnen
+            </Link>
+          </div>
+        </RoleCard>
+      </section>
 
-      {/* Premium Modelle */}
-      <section className="grid grid-cols-1 gap-3 pb-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+      <section aria-labelledby="premium-models-heading" className="grid grid-cols-1 gap-3 pb-8">
+        <h2
+          id="premium-models-heading"
+          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+        >
           🏆 Premium Modelle
         </h2>
         <p className="text-xs text-white/60">
           Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3
         </p>
-        {premiumModels.map((item) => renderFeaturedCard(item, "premium"))}
+        <div role="group" aria-labelledby="premium-models-heading">
+          {premiumModels.map((item) => renderFeaturedCard(item, "premium"))}
+        </div>
       </section>
 
-      {/* Alltags Modelle */}
-      <section className="grid grid-cols-1 gap-3 pb-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+      <section aria-labelledby="everyday-models-heading" className="grid grid-cols-1 gap-3 pb-8">
+        <h2
+          id="everyday-models-heading"
+          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+        >
           💼 Alltags Modelle
         </h2>
         <p className="text-xs text-white/60">
           Zuverlässige Modelle für tägliche Aufgaben – gutes Preis-Leistungs-Verhältnis
         </p>
-        {everydayModels.map((item) => renderFeaturedCard(item, "everyday"))}
+        <div role="group" aria-labelledby="everyday-models-heading">
+          {everydayModels.map((item) => renderFeaturedCard(item, "everyday"))}
+        </div>
       </section>
 
-      {/* Free Modelle */}
-      <section className="grid grid-cols-1 gap-3 pb-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+      <section aria-labelledby="free-models-heading" className="grid grid-cols-1 gap-3 pb-8">
+        <h2
+          id="free-models-heading"
+          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+        >
           🎁 Free Modelle
         </h2>
         <p className="text-xs text-white/60">
           Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität
         </p>
-        {freeModels.map((item) => renderFeaturedCard(item, "free"))}
+        <div role="group" aria-labelledby="free-models-heading">
+          {freeModels.map((item) => renderFeaturedCard(item, "free"))}
+        </div>
       </section>
 
-      {/* Unzensiert Modelle */}
-      <section className="grid grid-cols-1 gap-3 pb-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+      <section aria-labelledby="uncensored-models-heading" className="grid grid-cols-1 gap-3 pb-8">
+        <h2
+          id="uncensored-models-heading"
+          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+        >
           🎭 Unzensiert Modelle
         </h2>
         <p className="text-xs text-white/60">
           Kreatives Schreiben & Rollenspiel – weniger Filter, mehr Freiheit
         </p>
-        {uncensoredModels.map((item) => renderFeaturedCard(item, "uncensored"))}
+        <div role="group" aria-labelledby="uncensored-models-heading">
+          {uncensoredModels.map((item) => renderFeaturedCard(item, "uncensored"))}
+        </div>
       </section>
 
-      {/* Code-Modelle */}
-      <section className="grid grid-cols-1 gap-3 pb-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-white/90">
+      <section aria-labelledby="code-models-heading" className="grid grid-cols-1 gap-3 pb-8">
+        <h2
+          id="code-models-heading"
+          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+        >
           💻 Code-Modelle
         </h2>
         <p className="text-xs text-white/60">
           Spezialisierte Modelle für Programmierung und Code-Analyse
         </p>
-        {codeModels.map((item) => renderFeaturedCard(item, "code"))}
+        <div role="group" aria-labelledby="code-models-heading">
+          {codeModels.map((item) => renderFeaturedCard(item, "code"))}
+        </div>
       </section>
     </div>
   );
