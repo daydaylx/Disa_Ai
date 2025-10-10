@@ -66,7 +66,7 @@ export function NavBar() {
   const location = useLocation();
 
   return (
-    <nav className="p-2">
+    <nav className="p-2" role="navigation" aria-label="Hauptnavigation">
       <div className="border-border/80 shadow-drop grid grid-cols-3 gap-2 rounded-lg border bg-surface/70 p-2 backdrop-blur-xl">
         {tabs.map((t) => {
           const active = location.pathname === t.to;
@@ -80,12 +80,20 @@ export function NavBar() {
           );
 
           return (
-            <Link key={t.to} to={t.to} data-testid={t.testId} className={linkClasses}>
+            <Link
+              key={t.to}
+              to={t.to}
+              data-testid={t.testId}
+              className={linkClasses}
+              aria-label={`${t.label} ${active ? "(aktuell)" : ""}`}
+              aria-current={active ? "page" : undefined}
+            >
               <div
                 className={twMerge(
                   "relative transition-all duration-200",
                   active ? "scale-110" : "group-hover:scale-105",
                 )}
+                aria-hidden="true"
               >
                 {t.icon}
               </div>

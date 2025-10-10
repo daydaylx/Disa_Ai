@@ -58,37 +58,11 @@ export default defineConfig(({ mode }) => {
     return normalized;
   }
 
-  /**
-   * Safely extracts repository name from GITHUB_REPOSITORY
-   * @param {string} repository - The repository string (format: "owner/repo")
-   * @returns {string|null} - Repository name or null if invalid
-   */
-  function extractRepositoryName(repository) {
-    if (!repository || typeof repository !== "string") return null;
-
-    const parts = repository.split("/");
-    if (parts.length !== 2 || !parts[0] || !parts[1]) {
-      console.warn(`[BUILD] Invalid GITHUB_REPOSITORY format: ${repository}`);
-      return null;
-    }
-
-    const repoName = parts[1];
-    // Basic validation - only alphanumeric, hyphens, underscores, dots
-    if (!/^[a-zA-Z0-9._-]+$/.test(repoName)) {
-      console.warn(`[BUILD] Invalid repository name: ${repoName}`);
-      return null;
-    }
-
-    return repoName;
-  }
-
   // Debug-Ausgaben für Base-Pfad-Erkennung
   console.log(`[BUILD] Mode: ${mode}`);
   console.log(`[BUILD] Environment variables:`, {
     CF_PAGES: env.CF_PAGES,
     CF_PAGES_URL: env.CF_PAGES_URL,
-    GITHUB_ACTIONS: env.GITHUB_ACTIONS,
-    GITHUB_REPOSITORY: env.GITHUB_REPOSITORY,
     VITE_BASE_URL: env.VITE_BASE_URL,
   });
 
@@ -111,18 +85,7 @@ export default defineConfig(({ mode }) => {
       base = "/";
       console.log(`[BUILD] Detected Cloudflare Pages, using base: ${base}`);
     }
-    // 3. GitHub Pages Detection (only for production builds, with validation)
-    else if (env.GITHUB_ACTIONS && env.GITHUB_REPOSITORY && isProduction) {
-      const repoName = extractRepositoryName(env.GITHUB_REPOSITORY);
-      if (repoName) {
-        base = validateBasePath(`/${repoName}/`);
-        console.log(`[BUILD] Detected GitHub Pages, using validated base: ${base}`);
-      } else {
-        base = "/";
-        console.warn(`[BUILD] GitHub Pages detection failed, using default base: ${base}`);
-      }
-    }
-    // 4. Development/Local Default
+    // 3. Development/Local Default
     else {
       base = "/";
       console.log(`[BUILD] Using default base: ${base}`);
@@ -175,7 +138,7 @@ export default defineConfig(({ mode }) => {
       cssMinify: "esbuild",
       chunkSizeWarningLimit: 800,
       // Robuste Asset-Generation für Cloudflare Pages
-      assetsInlineLimit: 2048, // Reduce inline threshold
+      assetsInlineLimit: 4096, // Inline small assets to reduce requests
       cssCodeSplit: true, // CSS-Chunks für besseres Caching
       // Production-spezifische Optimierungen
       ...(isProduction && {
@@ -192,11 +155,35 @@ export default defineConfig(({ mode }) => {
         // Robust solution: No externalization needed for bundled app
         // Dependencies will be properly ordered through manualChunks priority
         output: {
-          manualChunks: {
-            // Separate vendor chunks for better caching
-            vendor: ["react", "react-dom", "react-router-dom"],
-            ui: ["@radix-ui/react-dialog", "@radix-ui/react-slot", "lucide-react"],
-            utils: ["nanoid", "clsx", "tailwind-merge"],
+          manualChunks: (id) => {
+            // Vendor libraries (largest first for better caching)
+            if (id.includes("node_modules")) {
+              if (id.includes("react-dom")) return "react-dom";
+              if (id.includes("react")) return "react";
+              if (id.includes("react-router")) return "router";
+              if (id.includes("@radix-ui") || id.includes("lucide-react")) return "ui-libs";
+              if (id.includes("nanoid") || id.includes("clsx") || id.includes("tailwind-merge"))
+                return "utils";
+              // Other smaller vendor libs
+              return "vendor-misc";
+            }
+
+            // App code splitting by feature for better lazy loading
+            if (id.includes("/pages/")) {
+              if (id.includes("Chat")) return "page-chat";
+              if (id.includes("Models")) return "page-models";
+              if (id.includes("Settings")) return "page-settings";
+              if (id.includes("Studio")) return "page-studio";
+            }
+
+            // Component libraries by usage frequency
+            if (id.includes("/components/ui/") && !id.includes("button") && !id.includes("Icon")) {
+              return "ui-components";
+            }
+            if (id.includes("/components/chat/")) return "chat-features";
+
+            // Core components stay in main bundle for fastest loading
+            return undefined;
           },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,

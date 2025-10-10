@@ -21,7 +21,14 @@ const router = createBrowserRouter(
       element: (
         <AppShell>
           <ErrorBoundary>
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
               <RolesPage />
             </Suspense>
           </ErrorBoundary>
@@ -33,7 +40,14 @@ const router = createBrowserRouter(
       element: (
         <AppShell>
           <ErrorBoundary>
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
               <ChatPage />
             </Suspense>
           </ErrorBoundary>
@@ -45,7 +59,14 @@ const router = createBrowserRouter(
       element: (
         <AppShell>
           <ErrorBoundary>
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
               <ModelsPage />
             </Suspense>
           </ErrorBoundary>
@@ -57,7 +78,14 @@ const router = createBrowserRouter(
       element: (
         <AppShell>
           <ErrorBoundary>
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
               <SettingsPage />
             </Suspense>
           </ErrorBoundary>
