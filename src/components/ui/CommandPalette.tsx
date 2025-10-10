@@ -32,6 +32,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const searchRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Filter commands based on query
   const filteredCommands = React.useMemo(() => {
@@ -50,12 +51,53 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     setSelectedIndex(0);
   }, [filteredCommands]);
 
-  // Focus search input when opened
+  // Focus management and focus trap
   useEffect(() => {
     if (isOpen) {
+      // Store previously focused element
+      const previouslyFocused = document.activeElement as HTMLElement;
+
       requestAnimationFrame(() => {
         searchRef.current?.focus();
       });
+
+      // Focus trap implementation
+      const handleTabKey = (e: KeyboardEvent) => {
+        if (e.key !== "Tab") return;
+
+        const focusableElements = dialogRef.current?.querySelectorAll(
+          'input, button, [tabindex]:not([tabindex="-1"])',
+        );
+
+        if (!focusableElements || focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (e.shiftKey) {
+          // Shift + Tab
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          // Tab
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      };
+
+      document.addEventListener("keydown", handleTabKey);
+
+      return () => {
+        document.removeEventListener("keydown", handleTabKey);
+        // Restore focus when closing
+        if (previouslyFocused && previouslyFocused.focus) {
+          previouslyFocused.focus();
+        }
+      };
     } else {
       setQuery("");
       setSelectedIndex(0);
@@ -134,6 +176,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
       {/* Command Palette */}
       <div
+        ref={dialogRef}
         className="fixed inset-x-4 z-50 mx-auto max-w-2xl"
         style={{ top: "calc(var(--vh, 100dvh) * 0.2)" }}
         role="dialog"

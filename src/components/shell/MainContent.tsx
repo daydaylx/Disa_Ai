@@ -9,5 +9,9 @@ type MainContentProps = {
 export function MainContent({ children, className }: MainContentProps) {
   const mainContentClasses = twMerge("flex-1 overflow-y-auto p-4", className);
 
-  return <main className={mainContentClasses}>{children}</main>;
+  return (
+    <main id="main" className={mainContentClasses}>
+      {children}
+    </main>
+  );
 }

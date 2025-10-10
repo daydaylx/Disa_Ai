@@ -111,10 +111,10 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         "btn",
         variantClasses[variant],
         sizeClasses[size],
-        "focus-visible:ring-focus",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
         className,
       )}
-      aria-label="Text kopieren"
+      aria-label={`Text kopieren: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}`}
       {...buttonProps}
     >
       {children || "Kopieren"}
