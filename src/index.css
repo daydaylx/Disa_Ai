@@ -9,11 +9,37 @@
     color-scheme: dark;
   }
 
-  /* App-wide background with glassmorphism support */
+  /* ========================================================= */
+  /* Hintergrund-Layout-Konzept: "Synthwave Liquid-Neon Abyss" */
+  /* ========================================================= */
   body {
-    background-color: var(--color-neutral-950); /* Reines Schwarz als Basis für das dunkle Theme */
+    /* Synthwave-Hintergrundbild mit Fallback-Verlauf */
+    background:
+      url("/images/synthwave-bg.jpg") center center / cover no-repeat,
+      radial-gradient(at top left, #1a1e2b 0%, #0d0f1a 100%);
+    background-attachment: fixed; /* Hintergrund scrollt nicht mit */
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
+    color: #e0e0e0; /* Standardtextfarbe anpassen */
+    overflow-x: hidden; /* Horizontales Scrollen verhindern */
+    position: relative; /* Für Positionierung der Pseudo-Elemente */
+  }
+
+  /* Erster leuchtender Akzent (oben links) */
+  body::before {
+    content: "";
+    position: fixed; /* Positionierung unabhängig vom Scrollen */
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -150px;
+    border-radius: 50%; /* Runde Form */
+    background: radial-gradient(circle, #5b21b6 0%, transparent 70%); /* Lila-Ton */
+    filter: blur(80px); /* Starker Weichzeichner für "Glow"-Effekt */
+    opacity: 0.2; /* Subtile Präsenz */
+    z-index: -2; /* Unterhalb der Glass-Elemente und Noise-Overlay */
+    pointer-events: none; /* Nicht interaktiv */
+    animation: pulse-glow-one 15s infinite alternate ease-in-out; /* Subtile Animation */
   }
 
   /* Mobile-optimized background */
@@ -21,7 +47,16 @@
     body {
       background-attachment: scroll; /* Better performance on mobile */
       background-size: cover;
-      background-position: center top; /* Focus on top area for mobile */
+      background-position: center center; /* Center the synthwave image on mobile */
+    }
+
+    /* Reduzierte Glow-Effekte auf mobil für bessere Performance */
+    body::before {
+      width: 250px;
+      height: 250px;
+      top: -50px;
+      left: -100px;
+      opacity: 0.15; /* Reduziert für subtileren Effekt über dem Synthwave-Bild */
     }
   }
 
@@ -47,26 +82,61 @@
  */
 
 @layer components {
-  /* Unified Glass Design System - Liquid-Glass Token */
+  /* Verbesserter Unified Glass Design System - Liquid-Glass Token */
   .card-glass {
-    @apply bg-white/6 relative overflow-hidden rounded-2xl border border-white/10 text-zinc-200 ring-1 ring-white/5 saturate-150 supports-[backdrop-filter]:backdrop-blur-md;
+    /* HINTERGRUND-BLUR & BASIS-TRANSPARENZ: Angepasst für Liquid-Neon Abyss */
+    @apply relative overflow-hidden rounded-2xl saturate-150 supports-[backdrop-filter]:backdrop-blur-xl;
+    background-color: rgba(255, 255, 255, 0.12);
+
+    /* VERSTÄRKTE Glaskante für besseren Kontrast gegen Glow-Effekte */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    /* DRAMATISCHER SCHATTEN: Optimiert für den neuen Liquid-Hintergrund */
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 10px 30px rgba(0, 0, 0, 0.45);
+      0 12px 40px 0 rgba(0, 0, 0, 0.6),
+      /* Stärkerer Schatten für mehr Separation */ inset 0 1px 2px 0 rgba(255, 255, 255, 0.35),
+      /* Verstärkte Lichtkante */ 0 0 0 1px rgba(255, 255, 255, 0.08); /* Zusätzlicher äußerer Glow-Ring */
   }
 
+  /* NEU: Lichtreflexion auf der Oberfläche (Sheen-Effekt) */
   .card-glass::before {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.22),
-      rgba(255, 255, 255, 0.08) 35%,
-      rgba(255, 255, 255, 0) 70%
-    );
+    /* VERSTÄRKTE Lichtreflexion für Liquid-Neon Abyss Hintergrund */
+    background:
+      linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.12) 50%,
+        rgba(255, 255, 255, 0.03) 100%
+      ),
+      radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
     pointer-events: none;
+  }
+
+  /* Ambient Glow-Reflexion von den Hintergrund-Glow-Effekten auf Glass-Elementen */
+  .card-glass::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(91, 33, 182, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(14, 116, 144, 0.08) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+    animation: ambient-glow 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes ambient-glow {
+    0% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 0.6;
+    }
   }
 
   .card-hover {
@@ -156,4 +226,79 @@
     background-color: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.95);
   }
+}
+
+/* Zweiter leuchtender Akzent (unten rechts) mit separatem Element */
+#root::before {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  bottom: -150px;
+  right: -200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #0e7490 0%, transparent 70%); /* Türkis-Ton */
+  filter: blur(80px);
+  opacity: 0.2;
+  z-index: -2;
+  pointer-events: none;
+  animation: pulse-glow-two 18s infinite alternate-reverse ease-in-out;
+}
+
+/* Mobile-Anpassungen für den zweiten Glow */
+@media (max-width: 768px) {
+  #root::before {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    right: -150px;
+    opacity: 0.15; /* Reduziert für subtileren Effekt über dem Synthwave-Bild */
+  }
+}
+
+/* Animationen für die Glow-Effekte */
+@keyframes pulse-glow-one {
+  0% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+}
+
+@keyframes pulse-glow-two {
+  0% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.26;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+}
+
+/* Noise-Overlay */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39sbGxvb29o RagehJTz_AAAAEXRSTlMAwObRxqs8PS8j2dDV0tT5/L4l+wAAAAlwSFlzAAALEwAACxMBAJqcGAAAAKtJREFUeJx900sSwyAMBFE06r5v3f+w8oOQTs105iMJIOTg93rPo2l1eX8p0359TxeXgXJ1d30wMDw+PjY2NzM3NDE1NTQ1MDIyMjA5OTk4OTE4ODg4ODc3Nzc3NDQyNjYyNTU2NbY2NjY2ODg4NjY5OTk5OTY2NTU1NTU2NjY2NjY1NDQ0NDQ0NDQyMjI5OTk5OTk4ODg4ODg2NjY1NTQ0NTQ1MDIyMjA4ODg9+1g4ODw8Pj4+Pj4+Pj4+Pj4+Pj45OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk... [truncated]");
+  z-index: -1;
+  opacity: 0.04; /* Noise-Textur verstärkt für mehr physische Qualität */
 }

@@ -363,7 +363,11 @@ export default function ModelsPage() {
         <p className="text-xs text-white/60">
           Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3
         </p>
-        <div role="group" aria-labelledby="premium-models-heading">
+        <div
+          role="group"
+          aria-labelledby="premium-models-heading"
+          className="grid grid-cols-1 gap-4"
+        >
           {premiumModels.map((item) => renderFeaturedCard(item, "premium"))}
         </div>
       </section>
@@ -378,7 +382,11 @@ export default function ModelsPage() {
         <p className="text-xs text-white/60">
           Zuverlässige Modelle für tägliche Aufgaben – gutes Preis-Leistungs-Verhältnis
         </p>
-        <div role="group" aria-labelledby="everyday-models-heading">
+        <div
+          role="group"
+          aria-labelledby="everyday-models-heading"
+          className="grid grid-cols-1 gap-4"
+        >
           {everydayModels.map((item) => renderFeaturedCard(item, "everyday"))}
         </div>
       </section>
@@ -393,7 +401,7 @@ export default function ModelsPage() {
         <p className="text-xs text-white/60">
           Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität
         </p>
-        <div role="group" aria-labelledby="free-models-heading">
+        <div role="group" aria-labelledby="free-models-heading" className="grid grid-cols-1 gap-4">
           {freeModels.map((item) => renderFeaturedCard(item, "free"))}
         </div>
       </section>
@@ -408,7 +416,11 @@ export default function ModelsPage() {
         <p className="text-xs text-white/60">
           Kreatives Schreiben & Rollenspiel – weniger Filter, mehr Freiheit
         </p>
-        <div role="group" aria-labelledby="uncensored-models-heading">
+        <div
+          role="group"
+          aria-labelledby="uncensored-models-heading"
+          className="grid grid-cols-1 gap-4"
+        >
           {uncensoredModels.map((item) => renderFeaturedCard(item, "uncensored"))}
         </div>
       </section>
@@ -423,7 +435,7 @@ export default function ModelsPage() {
         <p className="text-xs text-white/60">
           Spezialisierte Modelle für Programmierung und Code-Analyse
         </p>
-        <div role="group" aria-labelledby="code-models-heading">
+        <div role="group" aria-labelledby="code-models-heading" className="grid grid-cols-1 gap-4">
           {codeModels.map((item) => renderFeaturedCard(item, "code"))}
         </div>
       </section>

@@ -20,32 +20,21 @@ export function StaticGlassCard({
   };
 
   const tintStyle = tint
-    ? { background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)` }
+    ? { background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`, opacity: 0.5 } // Opazität leicht reduziert
     : {};
 
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl",
-        "border border-white/15",
-        "backdrop-blur-xl backdrop-filter",
-        "bg-black/10", // A fallback background if no tint is provided
+        "card-glass", // HIER die neue, zentrale Klasse verwenden
         className,
       )}
       {...props}
     >
-      {/* Tint gradient layer */}
+      {/* Tint gradient layer - bleibt wie es ist */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={tintStyle} />
 
-      {/* Sheen/Reflection overlay for a more realistic glass feel */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-2xl"
-        style={{
-          background:
-            "linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%)",
-        }}
-      />
+      {/* Sheen/Reflection wird jetzt von .card-glass::before gehandhabt, kann entfernt werden */}
 
       {/* Content container */}
       <div className={cn("relative z-10", paddingClasses[padding])}>{children}</div>

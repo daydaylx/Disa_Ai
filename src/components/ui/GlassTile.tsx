@@ -75,11 +75,10 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   };
 
   const accents = toneStyles[badgeTone] ?? toneStyles.default;
-  const baseClasses = `relative overflow-hidden w-full text-left bg-white/[0.06] border border-white/12 backdrop-blur-md text-white
+  const baseClasses = `card-glass w-full text-left text-white
     rounded-2xl sm:rounded-3xl px-4 py-4 sm:px-5 sm:py-5
     min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
-    shadow-[0_8px_28px_-8px_rgba(0,0,0,0.55),_inset_0_1px_0_rgba(255,255,255,0.22)]
-    transition-[transform,background,box-shadow] duration-200 ease-out`;
+    transition-[transform,background,box-shadow,border-color] duration-200 ease-out`;
 
   // Gradient overlay for visual depth
   const gradientOverlayClasses = gradient
@@ -95,14 +94,13 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     ? `before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-45 before:content-['']`
     : "";
 
-  const highlightClasses =
-    "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.22),_transparent_70%)] after:opacity-80 after:content-['']";
+  // Surface reflection is now handled by .card-glass::before - no additional highlight needed
 
   const glowClasses = glowClassName ?? "shadow-[0_16px_40px_rgba(5,8,18,0.45)]";
 
-  // Interactive classes for hover, active, and focus states
+  // Enhanced interactive effects with improved glass feedback
   const interactiveClasses = onPress
-    ? "hover:scale-[1.02] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:border-white/25 active:scale-[0.98] active:shadow-[0_6px_20px_rgba(0,0,0,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+    ? "hover:scale-[1.03] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:border-white/40 hover:bg-white/[0.12] active:scale-[0.98] active:shadow-[0_6px_20px_rgba(0,0,0,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
     : "";
 
   // Disabled state classes
@@ -114,7 +112,6 @@ export const GlassTile: React.FC<GlassTileProps> = ({
       className={cn(
         baseClasses,
         gradientClasses,
-        highlightClasses,
         glowClasses,
         interactiveClasses,
         disabledClasses,
