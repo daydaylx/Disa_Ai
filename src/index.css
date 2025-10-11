@@ -202,11 +202,55 @@
 
   /* Neue Glass-Klasse mit benutzerdefinierten Parametern */
   .glass {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(3px) saturate(100%);
-    -webkit-backdrop-filter: blur(3px) saturate(100%);
-    border-radius: 18px;
-    border: 3px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border-radius: 28px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    background-color: rgba(255, 115, 0, 0.369);
+    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
+    border: 4px rgba(255, 255, 255, 0.4) solid;
+    border-bottom: 4px rgba(40, 40, 40, 0.35) solid;
+    border-right: 4px rgba(40, 40, 40, 0.35) solid;
+  }
+
+  /* Spezifische Glass-Container-Klasse mit festen Abmessungen */
+  .glass-container {
+    width: 700px;
+    height: 375px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border-radius: 28px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    background-color: rgba(255, 115, 0, 0.369);
+    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
+    border: 4px rgba(255, 255, 255, 0.4) solid;
+    border-bottom: 4px rgba(40, 40, 40, 0.35) solid;
+    border-right: 4px rgba(40, 40, 40, 0.35) solid;
+  }
+
+  /* Neue Klasse für Kacheln mit den gewünschten Parametern */
+  .tile-glass {
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border-radius: 28px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    background-color: rgba(255, 115, 0, 0.369);
+    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
+    border: 4px rgba(255, 255, 255, 0.4) solid;
+    border-bottom: 4px rgba(40, 40, 40, 0.35) solid;
+    border-right: 4px rgba(40, 40, 40, 0.35) solid;
   }
 
   @keyframes gradient {
