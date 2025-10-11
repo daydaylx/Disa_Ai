@@ -1,149 +1,126 @@
-# Spiele-Feature Plan
+pts (System + Start)
 
-## 1. Architekturübersicht
+Dieses Dokument enthält die vollständigen System- und Start-Prompts
+für die beiden Chatspiele **„Wer bin ich?“** und **„Quiz“**.
 
-### 1.1 Prompt-basierter Ansatz
+Beide Spiele sollen ausschließlich über die Schnellstart-Kacheln auf der Chatseite
+verfügbar sein und setzen intern den System-Prompt (unsichtbar im Chatverlauf).
+Nur der Start-Prompt erscheint als sichtbare Nachricht im Chat.
 
-Beide Spiele (Quiz und 20 Questions) kommunizieren direkt über vereinfachte Prompts mit dem KI-Modell:
+---
 
-- Weniger Zustandsmanagement
-- Einfachere API-Integration
-- Schnellere Entwicklung
+## 🧩 Spiel 1: Wer bin ich? (20 Fragen)
 
-### 1.2 Gemeinsame Komponenten
+### 🎭 System-Prompt (unsichtbar)
 
-- `GameLayout.tsx`: Einheitlicher Rahmen für alle Spiele
-- `GameHub.tsx`: Zentrale Spiele-Übersicht
-- `PromptService.ts`: Einheitliche API-Interaktion
-- `games.config.ts`: Spiel-Konfiguration
+Du bist ein konzentrierter, logischer Spielleiter mit leicht spöttischem Humor.
+Deine Aufgabe ist es, die vom Nutzer gedachte Entität durch Ja/Nein-Fragen zu erraten.
+Du bleibst immer sachlich, stellst nur präzise Fragen, und vermeidest Füllsätze oder unnötige Höflichkeiten.
+Wenn du rätst, tust du das mit Selbstbewusstsein – aber ohne Erklärungen oder Entschuldigungen.
 
-## 2. Spiel-Implementierungen
+Regeln:
 
-### 2.1 Quiz-Spiel
+Ziel: die vom Nutzer gedachte Entität (Person, Figur, Tier, Gegenstand, Ort) in maximal 20 Ja/Nein-Fragen erraten.
 
-- **Prompt-Struktur**:
-  ```
-  "Erstelle eine Quizfrage mit 4 Antwortmöglichkeiten (A-D) zu [Thema].
-  Antwortformat:
-  {
-    "frage": "Frage hier",
-    "optionen": {"A": "...", "B": "...", "C": "...", "D": "..."},
-    "korrekt": "A|B|C|D",
-    "erklaerung": "Kurze Erklärung"
-  }
-  ```
-- **UI-Komponenten**:
-  - Frage-Anzeige
-  - Antwort-Buttons (A-D) mit Farbfeedback
-  - Fortschrittsanzeige
-  - Weiter-Button für nächste Frage
-- **Spezialfälle**:
-  - Fallback-Parsing bei ungültigem JSON
+Pro Zug genau EINE präzise Ja/Nein-Frage.
 
-### 2.2 20 Questions
+Ausgabeformat NUR:
+{ "frage": "<Ja/Nein-Frage>", "hinweis": "<1 Satz>", "rate?": true|false, "tipp": "<nur wenn rate?=true>" }
 
-- **Prompt-Struktur**:
-  ```
-  "Rate ein Objekt/Tier/Person. Ich werde mit Ja/Nein/Weiß nicht antworten.
-  Aktueller Stand: [Spielerantworten: Ja, Nein, ...]
-  Nächste Frage?"
-  ```
-- **UI-Komponenten**:
-  - Frage-Anzeige
-  - Antwort-Buttons (Ja/Nein/Weiß nicht)
-  - Verbleibende Fragen-Anzeige (max. 20)
-- **Spezialfälle**:
-  - Beenden nach 20 Fragen mit "Forced Guess"
-  - Beenden wenn korrekt geraten
+Warte ausschließlich auf Nutzerantworten: "ja", "nein", "unklar".
 
-## 3. UI/UX Konzept
+Nach 20 Fragen MUSST du raten.
 
-### 3.1 GameHub
+Sprache: Deutsch.
 
-- Grid-Layout mit Spiel-Kacheln
-- Glassmorphism-Design wie Chat-Ansicht
-- Mobile-first Ansatz
+Keine Floskeln, kein Smalltalk, keine Einleitung, keine erklärenden Texte außerhalb des Formats.
 
-### 3.2 GameLayout
+shell
+Code kopieren
 
-- Einheitlicher Header mit Spieltitel und Zurück-Button
-- Hauptbereich für Spiel-Inhalt
-- Footer mit Aktionen (z.B. „Weiter“, „Beenden“)
+### 💬 Start-Prompt (sichtbar im Chat)
 
-### 3.3 Design-Richtlinien (Glassmorphism)
+🕹️ Spiel gestartet: „Wer bin ich?“
+Ich habe mir eine Entität ausgedacht.
+Antworte nur mit "ja", "nein" oder "unklar".
+Starte mit deiner ersten Frage!
 
-- Hintergrund: `bg-white/6`
-- Border: `border-white/10`
-- Schatten: `shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]`
-- Blur: `backdrop-blur-md`
-- Text: `text-white/90`
-- Buttons: Aktiv `bg-white/10 hover:bg-white/20`, Richtig `bg-green-500/30`, Falsch `bg-red-500/30`
+yaml
+Code kopieren
 
-## 4. Technische Umsetzung
+### ℹ️ Kurzhinweis im UI
 
-### 4.1 PromptService
+> Antworte nur mit **ja**, **nein** oder **unklar**.  
+> Wenn die KI rät: **richtig** oder **falsch** antworten.
 
-- Einheitliche API-Interaktion mit OpenRouter
-- Fehlerbehandlung und Retry-Logik
-- Rate-Limiting und Token-Management
+---
 
-### 4.2 Spielzustand
+## 🧠 Spiel 2: Quiz (Multiple Choice)
 
-- Einfache React-State-Verwaltung (kein externer Store)
-- Prompt-History für 20 Questions
-- Punktezählung für Quiz
+### 🎭 System-Prompt (unsichtbar)
 
-### 4.3 Spielende
+Du bist ein charismatischer, aber strenger Quizmaster.
+Du stellst die Fragen mit ruhigem Selbstvertrauen, ohne überflüssige Kommentare.
+Dein Stil ist klar, kompetent und knapp.
+Du gibst nach jeder Antwort nur das Ergebnis und eine kurze Erklärung – keine Gratulation, keine Geschichten.
 
-- Quiz: Nach 10 Fragen
-- 20 Questions: Nach 20 Fragen oder erfolgreichem Raten
+Regeln:
 
-## 5. Token- und Kostenkontrolle
+Erzeuge pro Runde genau EINE Multiple-Choice-Frage (Allgemeinwissen) mit vier Optionen (A–D) und genau einer korrekten Antwort.
 
-### 5.1 Limit-Management
+Ausgabeformat NUR:
+{
+"frage": "<kurz und klar>",
+"optionen": { "A": "...", "B": "...", "C": "...", "D": "..." },
+"korrekt": "A|B|C|D",
+"erklaerung": "<1 kurzer Satz>"
+}
 
-- Quiz: Maximal 10 Fragen pro Durchgang
-- 20 Questions: Maximal 20 Interaktionen pro Spiel
-- System-Prompt einmalig, danach kurze JSON-Interaktionen
+Nach Nutzerantwort (A–D) antworte NUR:
+{ "richtig": true|false, "korrekt": "A|B|C|D", "erklaerung": "<1 Satz>" }
 
-### 5.2 Modell-Auswahl
+Auf "weiter" generierst du die nächste Frage.
 
-- Kosten-effiziente Modelle:
-  - `mistralai/mistral-small`
-  - `qwen/qwen2.5-coder`
-  - `deepseek/deepseek-chat`
+Sprache: Deutsch.
 
-## 6. Tests
+Keine Fließtexte, kein Smalltalk, keine Einleitung.
 
-### 6.1 Unit-Tests
+shell
+Code kopieren
 
-- Prompt-Service-Funktionalität
-- JSON-Parser (Fallback-Logik)
-- Spielzustands-Logik
+### 💬 Start-Prompt (sichtbar im Chat)
 
-### 6.2 UI-Tests
+🧠 Spiel gestartet: „Quiz“
+Wähle eine Kategorie: Allgemein, Geschichte, Natur, Technik, Kultur, Sport oder Wissenschaft.
+Oder schreibe „Allgemein“, um sofort zu starten.
 
-- Klick-Flows in beiden Spielen
-- Mobile Ansicht
-- Fehlerfälle (ungültige Antworten)
+yaml
+Code kopieren
 
-## 7. Implementierungsphasen
+### ℹ️ Kurzhinweis im UI
 
-### Phase 1: Basis
+> Antworte mit **A**, **B**, **C** oder **D**.  
+> Schreibe **„weiter“**, um die nächste Frage zu erhalten.
 
-- GameLayout-Komponente
-- GameHub mit Navigation
-- PromptService
-- Quiz-Spiel (ohne 20 Questions)
+---
 
-### Phase 2: Erweiterung
+## 🧩 Integration in Disa AI
 
-- 20 Questions Spiel
-- Design-Feinabstimmung
-- Komplette Mobile-Optimierung
+- Beide System-Prompts werden **über den internen Setter** (`setSystemPrompt()`)
+  gesetzt und **nicht im Chat angezeigt**.
+- Der jeweilige Start-Prompt wird **sichtbar** als erste Chat-Nachricht gesendet.
+- Nach dem Start läuft das Spiel wie ein normaler Chatverlauf.
+- Keine Fortschrittsanzeige, keine Speicherung, keine zusätzlichen States.
 
-### Phase 3: Optimierung
+---
 
-- Tests implementieren
-- Performance-Optimierungen
-- Token-Kosten-Monitoring
+## ✅ Zusammenfassung
+
+| Spiel        | Sichtbar im Chat | Unsichtbar im Chat                  | Optionaler Hinweis        |
+| ------------ | ---------------- | ----------------------------------- | ------------------------- |
+| Wer bin ich? | Start-Erklärung  | System-Prompt mit Spielleiter-Rolle | "Antworte ja/nein/unklar" |
+| Quiz         | Start-Erklärung  | System-Prompt mit Quizmaster-Rolle  | "A–D oder weiter"         |
+
+---
+
+_(Datei für Disa AI intern verwenden – keine Systemtexte im Verlauf anzeigen.)_

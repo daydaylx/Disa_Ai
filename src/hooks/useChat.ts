@@ -16,6 +16,7 @@ export interface UseChatOptions {
   headers?: Record<string, string> | Headers;
   body?: object;
   prepareMessages?: (history: ChatMessageType[]) => ChatMessageType[];
+  systemPrompt?: string;
 }
 
 interface ChatState {
@@ -81,6 +82,7 @@ export function useChat({
   headers: _headers,
   body,
   prepareMessages: prepareMessagesOpt,
+  systemPrompt: _systemPrompt,
 }: UseChatOptions = {}) {
   const prepareMessages = useCallback(
     (history: ChatMessageType[]): ChatMessageType[] => {
@@ -98,6 +100,8 @@ export function useChat({
     error: null,
     abortController: null,
   });
+
+  const systemPromptRef = useRef<string | undefined>(_systemPrompt);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const rateLimitUntilRef = useRef<number>(0);
@@ -157,10 +161,16 @@ export function useChat({
         let accumulatedContent = "";
 
         // Use captured messages to prevent race conditions during async operations
-        const apiMessages = [...requestHistory, userMessage].map((msg) => ({
+        let apiMessages = [...requestHistory, userMessage].map((msg) => ({
           role: msg.role,
           content: msg.content,
         }));
+
+        // Add system prompt as the first message if it exists and not already present
+        const systemPrompt = systemPromptRef.current;
+        if (systemPrompt && apiMessages.length > 0 && apiMessages[0]?.role !== "system") {
+          apiMessages = [{ role: "system", content: systemPrompt }, ...apiMessages];
+        }
 
         await chatStream(
           apiMessages,
