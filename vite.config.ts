@@ -61,8 +61,8 @@ export default defineConfig(({ mode }) => {
   // Debug-Ausgaben für Base-Pfad-Erkennung
   console.log(`[BUILD] Mode: ${mode}`);
   console.log(`[BUILD] Environment variables:`, {
-    NETLIFY: env.NETLIFY,
-    DEPLOY_URL: env.DEPLOY_URL,
+    CF_PAGES: env.CF_PAGES,
+    CF_PAGES_URL: env.CF_PAGES_URL,
     VITE_BASE_URL: env.VITE_BASE_URL,
   });
 
@@ -80,10 +80,10 @@ export default defineConfig(({ mode }) => {
         );
       }
     }
-    // 2. Netlify Detection
-    else if (env.NETLIFY) {
+    // 2. Cloudflare Pages Detection
+    else if (env.CF_PAGES && env.CF_PAGES_URL) {
       base = "/";
-      console.log(`[BUILD] Detected Netlify deployment, using base: ${base}`);
+      console.log(`[BUILD] Detected Cloudflare Pages, using base: ${base}`);
     }
     // 3. Development/Local Default
     else {
@@ -120,7 +120,7 @@ export default defineConfig(({ mode }) => {
         manifest: false,
       }),
     ],
-    base, // Umweltspezifische Basis für Netlify
+    base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
     server: {
       // Vite handles SPA routing automatically, no need for historyApiFallback
@@ -137,7 +137,7 @@ export default defineConfig(({ mode }) => {
       minify: "esbuild",
       cssMinify: "esbuild",
       chunkSizeWarningLimit: 800,
-      // Robuste Asset-Generation für Netlify
+      // Robuste Asset-Generation für Cloudflare Pages
       assetsInlineLimit: 4096, // Inline small assets to reduce requests
       cssCodeSplit: true, // CSS-Chunks für besseres Caching
       // Production-spezifische Optimierungen
