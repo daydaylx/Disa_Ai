@@ -32,10 +32,8 @@
     "clean": "rm -rf dist .vite .cache .tmp coverage test-results",
     "postbuild": "cp public/_redirects dist/_redirects && cp public/_headers dist/_headers",
     "prepare": "husky",
-    "test:e2e": "playwright test",
     "lh": "lhci autorun --config=./lighthouserc.cjs",
-    "lint-staged": "lint-staged",
-    "playwright": "playwright"
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
