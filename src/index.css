@@ -16,11 +16,15 @@
     /* Synthwave-Hintergrundbild mit Fallback-Verlauf */
     background:
       url("/images/synthwave-bg.jpg") center center / cover no-repeat,
-      radial-gradient(at top left, #1a1e2b 0%, #0d0f1a 100%);
+      radial-gradient(
+        at top left,
+        var(--color-synthwave-bg-dark) 0%,
+        var(--color-synthwave-bg-deeper) 100%
+      );
     background-attachment: fixed; /* Hintergrund scrollt nicht mit */
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
-    color: #e0e0e0; /* Standardtextfarbe anpassen */
+    color: var(--color-synthwave-text); /* Standardtextfarbe anpassen */
     overflow-x: hidden; /* Horizontales Scrollen verhindern */
     position: relative; /* Für Positionierung der Pseudo-Elemente */
   }
@@ -34,7 +38,11 @@
     top: -100px;
     left: -150px;
     border-radius: 50%; /* Runde Form */
-    background: radial-gradient(circle, #5b21b6 0%, transparent 70%); /* Lila-Ton */
+    background: radial-gradient(
+      circle,
+      var(--color-synthwave-accent-purple) 0%,
+      transparent 70%
+    ); /* Lila-Ton */
     filter: blur(80px); /* Starker Weichzeichner für "Glow"-Effekt */
     opacity: 0.2; /* Subtile Präsenz */
     z-index: -2; /* Unterhalb der Glass-Elemente und Noise-Overlay */
@@ -285,7 +293,11 @@
   bottom: -150px;
   right: -200px;
   border-radius: 50%;
-  background: radial-gradient(circle, #0e7490 0%, transparent 70%); /* Türkis-Ton */
+  background: radial-gradient(
+    circle,
+    var(--color-synthwave-accent-teal) 0%,
+    transparent 70%
+  ); /* Türkis-Ton */
   filter: blur(80px);
   opacity: 0.2;
   z-index: -2;

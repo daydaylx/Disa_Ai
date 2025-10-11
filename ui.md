@@ -79,6 +79,7 @@ const tintStyle = tint
 : {};
 
 return (
+
 <div
 className={cn(
 "card-glass", // HIER die neue, zentrale Klasse verwenden

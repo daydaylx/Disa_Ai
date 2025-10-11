@@ -105,6 +105,13 @@
   --color-corporate-bg-card: #141b2e;
   --color-corporate-bg-hover: #1a2235;
 
+  /* Synthwave Background Colors */
+  --color-synthwave-bg-dark: #1a1e2b;
+  --color-synthwave-bg-deeper: #0d0f1a;
+  --color-synthwave-text: #e0e0e0;
+  --color-synthwave-accent-purple: #5b21b6;
+  --color-synthwave-accent-teal: #0e7490;
+
   --color-corporate-text-primary: #f8fafc;
   --color-corporate-text-secondary: #cbd5e1;
   --color-corporate-text-muted: #94a3b8;
