@@ -90,11 +90,11 @@
       255,
       255,
       255,
-      0.04
-    ); /* Noch transparenter für bessere Farbsichtbarkeit */
+      0.01
+    ); /* Fast komplett durchsichtig für maximale Transparenz */
 
     /* VERSTÄRKTE Glaskante für besseren Kontrast gegen Glow-Effekte */
-    border: 1px solid rgba(255, 255, 255, 0.25); /* Subtilerer Rand */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Sehr subtiler Rand für maximale Transparenz */
 
     /* DRAMATISCHER SCHATTEN: Optimiert für den neuen Liquid-Hintergrund */
     box-shadow:
