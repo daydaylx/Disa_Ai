@@ -102,23 +102,24 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       analyzerPlugin,
-      VitePWA({
-        strategies: "injectManifest",
-        srcDir: "public",
-        filename: "sw.js",
-        registerType: "prompt",
-        injectRegister: false,
-        devOptions: {
-          enabled: false,
-          type: "module",
-        },
-        injectManifest: {
-          globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,json,webmanifest}"],
-          globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js"],
-          rollupFormat: "es",
-        },
-        manifest: false,
-      }),
+      // Temporarily disable PWA to debug loading issues
+      // VitePWA({
+      //   strategies: "injectManifest",
+      //   srcDir: "public",
+      //   filename: "sw.js",
+      //   registerType: "autoUpdate",
+      //   injectRegister: "auto",
+      //   devOptions: {
+      //     enabled: !isProduction, // Only enable in development
+      //     type: "module",
+      //   },
+      //   injectManifest: {
+      //     globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,json,webmanifest}"],
+      //     globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js"],
+      //     rollupFormat: "es",
+      //   },
+      //   manifest: false, // We have our own manifest.webmanifest
+      // }),
     ],
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
@@ -155,36 +156,7 @@ export default defineConfig(({ mode }) => {
         // Robust solution: No externalization needed for bundled app
         // Dependencies will be properly ordered through manualChunks priority
         output: {
-          manualChunks: (id) => {
-            // Vendor libraries (largest first for better caching)
-            if (id.includes("node_modules")) {
-              if (id.includes("react-dom")) return "react-dom";
-              if (id.includes("react")) return "react";
-              if (id.includes("react-router")) return "router";
-              if (id.includes("@radix-ui") || id.includes("lucide-react")) return "ui-libs";
-              if (id.includes("nanoid") || id.includes("clsx") || id.includes("tailwind-merge"))
-                return "utils";
-              // Other smaller vendor libs
-              return "vendor-misc";
-            }
-
-            // App code splitting by feature for better lazy loading
-            if (id.includes("/pages/")) {
-              if (id.includes("Chat")) return "page-chat";
-              if (id.includes("Models")) return "page-models";
-              if (id.includes("Settings")) return "page-settings";
-              if (id.includes("Studio")) return "page-studio";
-            }
-
-            // Component libraries by usage frequency
-            if (id.includes("/components/ui/") && !id.includes("button") && !id.includes("Icon")) {
-              return "ui-components";
-            }
-            if (id.includes("/components/chat/")) return "chat-features";
-
-            // Core components stay in main bundle for fastest loading
-            return undefined;
-          },
+          manualChunks: undefined,
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,
           entryFileNames: "assets/js/[name]-[hash].js",
