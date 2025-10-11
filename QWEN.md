@@ -4,6 +4,12 @@
 
 Disa AI is a professional, mobile-first AI Chat Progressive Web App (PWA) built with React, Vite, TypeScript, and Tailwind CSS. The application is specifically designed for optimal display on mobile devices (especially Android) and features a modern Glassmorphism design, a robust codebase, and a security and performance-focused architecture.
 
+## Sprachrichtlinien
+
+- **Sprache**: Die primäre Sprache für alle Benutzeroberflächen, Dokumentationen und Benutzerinteraktionen ist Deutsch.
+- **Benutzerkommunikation**: Alle Antworten und Mitteilungen an den Endbenutzer erfolgen auf Deutsch.
+- **Entwicklerdokumentation**: Technische Dokumentation kann in Englisch verfasst sein, aber Benutzeroberflächenkommentare sollten auf Deutsch erfolgen.
+
 ## Key Features
 
 - **Flexible AI Integration**: Integration with OpenRouter.ai supporting NDJSON streaming for a wide range of language models

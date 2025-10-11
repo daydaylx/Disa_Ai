@@ -6,6 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Disa AI is a React-based AI chat PWA with offline-first architecture, built with Vite and TypeScript. The app focuses on security, performance, and mobile-responsive design.
 
+## Language & Communication
+
+**Primary Language:** German (Deutsch)
+- All responses, explanations, and communication should be in German
+- Code comments and technical documentation may remain in English when appropriate
+- Error messages and user-facing text should be in German
+
 ## Key Commands
 
 **Development:**

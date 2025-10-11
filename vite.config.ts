@@ -152,7 +152,7 @@ export default defineConfig(({ mode }) => {
       target: "es2020",
       minify: "esbuild",
       cssMinify: "esbuild",
-      chunkSizeWarningLimit: 800,
+      chunkSizeWarningLimit: 1500, // Erhöht für moderne React PWA
       // Robuste Asset-Generation für Cloudflare Pages
       assetsInlineLimit: 4096, // Inline small assets to reduce requests
       cssCodeSplit: true, // CSS-Chunks für besseres Caching
