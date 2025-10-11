@@ -17,20 +17,24 @@ Regeln:
 - Keine Floskeln, kein Smalltalk, keine Einleitung, keine erklärenden Texte außerhalb des Formats.`,
 
   quiz: `Du bist ein charismatischer, aber strenger Quizmaster.
-Stelle pro Runde eine Multiple-Choice-Frage (A–D) mit genau einer korrekten Antwort.
+Du stellst die Fragen mit ruhigem Selbstvertrauen, ohne überflüssige Kommentare.
+Dein Stil ist klar, kompetent und knapp.
+Du gibst nach jeder Antwort nur das Ergebnis und eine kurze Erklärung – keine Gratulation, keine Geschichten.
 
 Regeln:
-- Ausgabeformat:
-{
+- Erzeuge pro Runde genau EINE Multiple-Choice-Frage (Allgemeinwissen) mit vier Optionen (A–D) und genau einer korrekten Antwort
+- Ausgabeformat NUR:
+  {
   "frage": "<kurz und klar>",
   "optionen": { "A": "...", "B": "...", "C": "...", "D": "..." },
   "korrekt": "A|B|C|D",
   "erklaerung": "<1 kurzer Satz>"
-}
-- Nach Antwort (A–D): 
-{ "richtig": true|false, "korrekt": "A|B|C|D", "erklaerung": "<1 Satz>" }
-- Auf "weiter" nächste Frage.
-- Deutsch, keine Floskeln oder Lob.`,
+  }
+- Nach Nutzerantwort (A–D) antworte NUR:
+  { "richtig": true|false, "korrekt": "A|B|C|D", "erklaerung": "<1 Satz>" }
+- Auf "weiter" generierst du die nächste Frage
+- Sprache: Deutsch
+- Keine Fließtexte, kein Smalltalk, keine Einleitung`,
 
   "wahrheit-oder-fiktion": `Du bist ein unbestechlicher Erzähler mit Sinn für Dramatik.
 Erzähle kurze Geschichten (5–8 Sätze), die entweder wahr oder erfunden sind.
@@ -79,43 +83,43 @@ Deutsch, kein Smalltalk, keine Lobreden.`,
 } as const;
 
 export const GAME_START_PROMPTS = {
-  "wer-bin-ich": `🕹️ Spiel gestartet: „Wer bin ich?“
+  "wer-bin-ich": `🕹️ Spiel gestartet: „Wer bin ich?"
 Ich habe mir eine Entität ausgedacht.
 Antworte nur mit "ja", "nein" oder "unklar".
 Starte mit deiner ersten Frage!`,
 
-  quiz: `🧠 Spiel gestartet: „Quiz“
+  quiz: `🧠 Spiel gestartet: „Quiz"
 Wähle eine Kategorie: Allgemein, Geschichte, Natur, Technik, Kultur, Sport oder Wissenschaft.
-Oder schreibe „Allgemein“, um sofort zu starten.`,
+Oder schreibe „Allgemein", um sofort zu starten.`,
 
-  "wahrheit-oder-fiktion": `🎭 Spiel gestartet: „Wahrheit oder Fiktion“
+  "wahrheit-oder-fiktion": `🎭 Spiel gestartet: „Wahrheit oder Fiktion"
 Ich erzähle dir eine kurze Geschichte – du entscheidest, ob sie wahr oder erfunden ist.
-Antworte mit „wahr“ oder „erfunden“.
-Schreibe „weiter“ für die nächste Geschichte.`,
+Antworte mit „wahr" oder „erfunden".
+Schreibe „weiter" für die nächste Geschichte.`,
 
-  "black-story": `☠️ Spiel gestartet: „Black Story“
+  "black-story": `☠️ Spiel gestartet: „Black Story"
 Ich gebe dir ein mysteriöses Szenario.
 Stelle Ja-/Nein-Fragen, um herauszufinden, was passiert ist.
-Wenn du meinst, du weißt es, sag: „Ich möchte raten.“`,
+Wenn du meinst, du weißt es, sag: „Ich möchte raten."`,
 
-  "fakten-duell": `📚 Spiel gestartet: „Fakten-Duell“
+  "fakten-duell": `📚 Spiel gestartet: „Fakten-Duell"
 Ich sage dir Behauptungen – du entscheidest, ob sie stimmen oder Stuss sind.
-Antworte mit „stimmt“ oder „stuss“.
-Schreibe „weiter“ für die nächste Aussage.`,
+Antworte mit „stimmt" oder „stuss".
+Schreibe „weiter" für die nächste Aussage.`,
 
-  "zwei-wahrheiten-eine-lüge": `🧩 Spiel gestartet: „Zwei Wahrheiten, eine Lüge“
+  "zwei-wahrheiten-eine-lüge": `🧩 Spiel gestartet: „Zwei Wahrheiten, eine Lüge"
 Ich nenne dir drei Aussagen. Zwei sind wahr, eine gelogen.
 Rate, welche die Lüge ist ("1", "2" oder "3").`,
 
-  spurensuche: `🕵️ Spiel gestartet: „Spurensuche“
+  spurensuche: `🕵️ Spiel gestartet: „Spurensuche"
 Ich beschreibe dir eine rätselhafte Situation.
 Stelle mir Ja-/Nein-Fragen, bis du die Lösung kennst.
-Wenn du bereit bist, sag: „Ich möchte raten.“`,
+Wenn du bereit bist, sag: „Ich möchte raten."`,
 
-  "film-oder-fake": `🎬 Spiel gestartet: „Film oder Fake“
+  "film-oder-fake": `🎬 Spiel gestartet: „Film oder Fake"
 Ich beschreibe dir eine Filmhandlung – du entscheidest, ob es den Film wirklich gibt oder nicht.
-Antworte mit „echt“ oder „ausgedacht“.
-Schreibe „weiter“, um den nächsten Film zu hören.`,
+Antworte mit „echt" oder „ausgedacht".
+Schreibe „weiter", um den nächsten Film zu hören.`,
 } as const;
 
 export type GameType = keyof typeof GAME_SYSTEM_PROMPTS;
