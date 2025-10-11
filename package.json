@@ -30,12 +30,10 @@
     "release:prepare": "npm run verify && npm run changeset:version",
     "verify": "npm run typecheck && npm run lint && npm run test:unit",
     "clean": "rm -rf dist .vite .cache .tmp coverage test-results",
-    "postbuild": "echo 'Build completed for Netlify deployment'",
+    "postbuild": "cp public/_redirects dist/_redirects && cp public/_headers dist/_headers",
     "prepare": "husky",
-    "test:e2e": "playwright test",
     "lh": "lhci autorun --config=./lighthouserc.cjs",
-    "lint-staged": "lint-staged",
-    "playwright": "playwright"
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
