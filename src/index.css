@@ -13,9 +13,9 @@
   /* Hintergrund-Layout-Konzept: "Synthwave Liquid-Neon Abyss" */
   /* ========================================================= */
   body {
-    /* Synthwave-Hintergrundbild mit Fallback-Verlauf */
+    /* Hintergrundbild mit Fallback-Verlauf */
     background:
-      url("/images/synthwave-bg.jpg") center center / cover no-repeat,
+      url("/images/background-bg.jpg") center center / cover no-repeat,
       radial-gradient(
         at top left,
         var(--color-synthwave-bg-dark) 0%,
@@ -29,9 +29,9 @@
     position: relative; /* Für Positionierung der Pseudo-Elemente */
   }
 
-  /* Additional background optimization for synthwave image */
+  /* Additional background optimization */
   body.background-optimized {
-    background-image: url("/images/synthwave-bg.jpg");
+    background-image: url("/images/background-bg.jpg");
   }
 
   /* Erster leuchtender Akzent (oben links) */
