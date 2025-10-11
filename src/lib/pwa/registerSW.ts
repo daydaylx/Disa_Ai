@@ -15,76 +15,6 @@ const BUILD_ID =
 
 export { BUILD_ID };
 
-// Cleanup function for memory leak prevention
-export function cleanupServiceWorkerTimers(): void {
-  if (updateCheckInterval) {
-    clearInterval(updateCheckInterval);
-    updateCheckInterval = null;
-  }
-}
-
-let controllerListenerAttached = false;
-let controllerReloading = false;
-let shouldReloadOnControllerChange = false;
-let updateCheckInterval: ReturnType<typeof setInterval> | null = null;
-
-function attachControllerChangeListener() {
-  if (controllerListenerAttached) return;
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (!shouldReloadOnControllerChange) return;
-    if (controllerReloading) return;
-    controllerReloading = true;
-
-    // Use centralized reload manager
-    import("../utils/reload-manager")
-      .then(({ reloadHelpers }) => {
-        reloadHelpers.serviceWorkerUpdate(0);
-      })
-      .catch(() => {
-        // Fallback
-        window.location.reload();
-      });
-  });
-  controllerListenerAttached = true;
-}
-
-/**
- * Check if the Service Worker version differs from current build
- */
-async function checkBuildIdMismatch(registration: ServiceWorkerRegistration): Promise<boolean> {
-  try {
-    // Send message to SW to get its version
-    const sw = registration.active;
-    if (!sw) return false;
-
-    return new Promise((resolve) => {
-      const messageChannel = new MessageChannel();
-      messageChannel.port1.onmessage = (event) => {
-        const swVersion = event.data?.version;
-        const expectedVersion = `v2.1.0-${BUILD_ID.slice(-8)}`;
-        const mismatch = swVersion !== expectedVersion;
-
-        // eslint-disable-next-line no-console
-        console.log("[SW] Build check:", {
-          expectedVersion,
-          service_worker: swVersion,
-          mismatch,
-        });
-
-        resolve(mismatch);
-      };
-
-      // Timeout nach 1 Sekunde
-      setTimeout(() => resolve(false), 1000);
-
-      sw.postMessage({ type: "CHECK_FOR_UPDATE" }, [messageChannel.port2]);
-    });
-  } catch (e) {
-    console.warn("[SW] Build check failed:", e);
-    return false;
-  }
-}
-
 export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) {
@@ -111,10 +41,6 @@ export function registerSW() {
 
   window.onerror = swErrorHandler;
 
-  // Setup cleanup listeners for memory leak prevention
-  window.addEventListener("beforeunload", cleanupServiceWorkerTimers);
-  window.addEventListener("pagehide", cleanupServiceWorkerTimers);
-
   // Issue #75 behoben - Service Worker wieder aktiviert für PWA-Funktionalität
   const hasImportScripts =
     typeof (globalThis as unknown as { importScripts?: unknown }).importScripts !== "undefined";
@@ -125,32 +51,15 @@ export function registerSW() {
     navigator.serviceWorker
       .register(swUrl)
       .then((reg) => {
-        // alle 30min nach Updates schauen (mit cleanup für Memory Leak Prevention)
-        if (updateCheckInterval) clearInterval(updateCheckInterval);
-        updateCheckInterval = setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
-
         reg.addEventListener("updatefound", () => {
           const nw = reg.installing;
           nw?.addEventListener("statechange", () => {
-            // Update verfügbar: neuer SW installiert, alter aktiv → UI-Toast anbieten
             if (nw.state === "installed" && navigator.serviceWorker.controller) {
-              try {
-                reg.waiting?.postMessage({ type: "SKIP_WAITING" });
-                shouldReloadOnControllerChange = true;
-                attachControllerChangeListener();
-                // Check for Build-ID mismatch
-                void checkBuildIdMismatch(reg).then((shouldForceReload) => {
-                  // Update-Banner entfernt - kein Toast mehr anzeigen
-
-                  // User-controlled reload only - no automatic reload to prevent loops
-                  if (shouldForceReload) {
-                    shouldReloadOnControllerChange = true;
-                    // Note: Auto-reload removed to fix infinite reload loop issue #125
-                  }
-                });
-              } catch {
-                /* noop */
-              }
+              // New content is available, and the new service worker has been installed.
+              // The 'autoUpdate' strategy will handle the update automatically.
+              console.log(
+                "[SW] New content is available and will be used when all tabs for this scope are closed.",
+              );
             }
           });
         });

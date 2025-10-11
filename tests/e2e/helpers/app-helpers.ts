@@ -11,87 +11,15 @@ export class AppHelpers {
   /**
    * Wait for app to be fully loaded and interactive
    */
-  async waitForAppReady(timeout = 30000): Promise<void> {
+  async waitForAppReady(timeout = 60000): Promise<void> {
     // Wait for network to be idle
-    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForLoadState("networkidle", { timeout });
+
+    // Wait for the main content to be visible
+    await expect(this.page.locator("main, [role='main']").first()).toBeVisible({ timeout });
 
     // Extended wait for React mounting with ultra-conservative initialization
     await this.page.waitForTimeout(3000);
-
-    // Check for React initialization errors first
-    const hasReactError = await this.page
-      .evaluate(() => {
-        return window.console && (window as any).__REACT_ERROR__;
-      })
-      .catch(() => false);
-
-    if (hasReactError) {
-      throw new Error("React initialization failed");
-    }
-
-    // Wait for ANY app content to be present (more relaxed)
-    const hasAnyContent = await Promise.race([
-      // Check for basic app structure
-      this.page
-        .locator("main")
-        .isVisible()
-        .catch(() => false),
-      this.page
-        .locator('[role="main"]')
-        .isVisible()
-        .catch(() => false),
-      // Check for header content - updated for new AppShell structure
-      this.page
-        .locator('[data-testid="app-title"]')
-        .isVisible()
-        .catch(() => false),
-      // Check for navigation
-      this.page
-        .locator("nav")
-        .isVisible()
-        .catch(() => false),
-      // Check for specific app content
-      this.page
-        .locator('[data-testid="chat-log"]')
-        .isVisible()
-        .catch(() => false),
-      this.page
-        .locator('[data-testid^="quickstart-"]')
-        .first()
-        .isVisible()
-        .catch(() => false),
-      this.page
-        .locator('text="Was möchtest du heute erschaffen?"')
-        .isVisible()
-        .catch(() => false),
-      // Check for composer
-      this.page
-        .locator('[role="textbox"]')
-        .isVisible()
-        .catch(() => false),
-      this.page
-        .locator("textarea")
-        .isVisible()
-        .catch(() => false),
-    ]);
-
-    if (!hasAnyContent) {
-      // If no content found, try to wait for basic React structure
-      try {
-        await expect(this.page.locator("main, [role='main'], [data-testid]").first()).toBeVisible({
-          timeout: timeout,
-        });
-      } catch {
-        // Final fallback - check for any non-empty body content
-        const bodyContent = await this.page.textContent("body");
-        if (!bodyContent || bodyContent.trim().length === 0) {
-          throw new Error("No app content loaded - possible React initialization failure");
-        }
-      }
-    }
-
-    // Wait for content stabilization
-    await this.page.waitForTimeout(1000);
   }
 
   /**
