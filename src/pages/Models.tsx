@@ -321,7 +321,7 @@ export default function ModelsPage() {
         <h1 className="text-lg font-semibold text-white" data-testid="models-title">
           Modellkatalog
         </h1>
-        <p className="mt-1 text-sm leading-6 text-white/70">
+        <p className="mt-1 text-sm leading-6 text-white/85">
           Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich jetzt im{" "}
           <Link to="/roles" className="decoration-accent-300/60 text-accent-300 underline">
             Rollen-Studio
@@ -360,7 +360,7 @@ export default function ModelsPage() {
         >
           🏆 Premium Modelle
         </h2>
-        <p className="text-xs text-white/60">
+        <p className="text-xs text-white/75">
           Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3
         </p>
         <div
@@ -379,7 +379,7 @@ export default function ModelsPage() {
         >
           💼 Alltags Modelle
         </h2>
-        <p className="text-xs text-white/60">
+        <p className="text-xs text-white/75">
           Zuverlässige Modelle für tägliche Aufgaben – gutes Preis-Leistungs-Verhältnis
         </p>
         <div
@@ -398,7 +398,7 @@ export default function ModelsPage() {
         >
           🎁 Free Modelle
         </h2>
-        <p className="text-xs text-white/60">
+        <p className="text-xs text-white/75">
           Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität
         </p>
         <div role="group" aria-labelledby="free-models-heading" className="grid grid-cols-1 gap-4">
@@ -413,7 +413,7 @@ export default function ModelsPage() {
         >
           🎭 Unzensiert Modelle
         </h2>
-        <p className="text-xs text-white/60">
+        <p className="text-xs text-white/75">
           Kreatives Schreiben & Rollenspiel – weniger Filter, mehr Freiheit
         </p>
         <div
@@ -432,7 +432,7 @@ export default function ModelsPage() {
         >
           💻 Code-Modelle
         </h2>
-        <p className="text-xs text-white/60">
+        <p className="text-xs text-white/75">
           Spezialisierte Modelle für Programmierung und Code-Analyse
         </p>
         <div role="group" aria-labelledby="code-models-heading" className="grid grid-cols-1 gap-4">

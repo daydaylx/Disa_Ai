@@ -20,7 +20,7 @@ export function StaticGlassCard({
   };
 
   const tintStyle = tint
-    ? { background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`, opacity: 0.5 } // Opazität leicht reduziert
+    ? { background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`, opacity: 0.7 } // Opazität verstärkt für bessere Farbunterscheidung
     : {};
 
   return (

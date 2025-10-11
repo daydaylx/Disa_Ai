@@ -86,10 +86,15 @@
   .card-glass {
     /* HINTERGRUND-BLUR & BASIS-TRANSPARENZ: Angepasst für Liquid-Neon Abyss */
     @apply relative overflow-hidden rounded-2xl saturate-150 supports-[backdrop-filter]:backdrop-blur-xl;
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.04
+    ); /* Noch transparenter für bessere Farbsichtbarkeit */
 
     /* VERSTÄRKTE Glaskante für besseren Kontrast gegen Glow-Effekte */
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.25); /* Subtilerer Rand */
 
     /* DRAMATISCHER SCHATTEN: Optimiert für den neuen Liquid-Hintergrund */
     box-shadow:
@@ -104,15 +109,15 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    /* VERSTÄRKTE Lichtreflexion für Liquid-Neon Abyss Hintergrund */
+    /* SUBTILERE Lichtreflexion für authentischeren Glaseffekt */
     background:
       linear-gradient(
         145deg,
-        rgba(255, 255, 255, 0.4) 0%,
-        rgba(255, 255, 255, 0.12) 50%,
-        rgba(255, 255, 255, 0.03) 100%
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.02) 100%
       ),
-      radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+      radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
     pointer-events: none;
   }
 
@@ -137,6 +142,16 @@
     100% {
       opacity: 0.6;
     }
+  }
+
+  /* Verbesserte Textlesbarkeit auf transparentem Glas */
+  .card-glass h1,
+  .card-glass h2,
+  .card-glass h3,
+  .card-glass h4,
+  .card-glass h5,
+  .card-glass h6 {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
   .card-hover {

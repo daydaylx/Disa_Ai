@@ -42,7 +42,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          "card-glass flex min-h-[152px] flex-col p-5 text-left text-zinc-200 transition-all duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]",
+          "card-glass flex min-h-[152px] flex-col p-5 text-left text-white transition-all duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]",
           isActive && "border-white/30 ring-2 ring-white/25",
           className,
         )}
@@ -50,7 +50,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
+          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-70"
           style={{
             background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`,
           }}
@@ -60,7 +60,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
               <h3 className="text-base font-semibold tracking-tight text-white">{title}</h3>
-              <p className="mt-1.5 text-sm leading-6 text-white/70">{description}</p>
+              <p className="mt-1.5 text-sm leading-6 text-white/85">{description}</p>
             </div>
             {badge ? (
               <span className="pointer-events-none shrink-0 rounded-full border border-white/[0.14] bg-white/[0.06] px-2.5 py-1 text-[11px] leading-4 text-white/85 backdrop-blur-sm">

@@ -91,7 +91,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     : "";
 
   const gradientClasses = gradient
-    ? `before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-45 before:content-['']`
+    ? `before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-70 before:content-['']`
     : "";
 
   // Surface reflection is now handled by .card-glass::before - no additional highlight needed
