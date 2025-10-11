@@ -200,6 +200,27 @@
     border-color: rgba(255, 255, 255, 0.3);
   }
 
+  /* Neue Glass-Klasse mit benutzerdefinierten Parametern */
+  .glass {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(3px) saturate(100%);
+    -webkit-backdrop-filter: blur(3px) saturate(100%);
+    border-radius: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.25);
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
   .card-hover {
     transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
   }
