@@ -17,7 +17,7 @@ let installPromptShown = false;
 export function initPWAInstallPrompt(): void {
   // Handle beforeinstallprompt event
   window.addEventListener("beforeinstallprompt", (e: Event) => {
-    console.log("[PWA] Install prompt available");
+    console.warn("[PWA] Install prompt available");
 
     // Prevent the default mini-infobar from appearing
     e.preventDefault();
@@ -31,7 +31,7 @@ export function initPWAInstallPrompt(): void {
 
   // Handle successful app installation
   window.addEventListener("appinstalled", () => {
-    console.log("[PWA] App successfully installed");
+    console.warn("[PWA] App successfully installed");
     deferredPrompt = null;
     installPromptShown = false;
 
@@ -110,7 +110,7 @@ function showInstallPrompt(): void {
       await deferredPrompt.prompt();
       const choiceResult = await deferredPrompt.userChoice;
 
-      console.log("[PWA] User choice:", choiceResult.outcome);
+      console.warn("[PWA] User choice:", choiceResult.outcome);
 
       if (choiceResult.outcome === "accepted") {
         localStorage.setItem("pwa-installed", "true");
