@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { useCallback, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 
 import { chatStream } from "../api/openrouter";
 import { mapError } from "../lib/errors";
@@ -101,6 +101,12 @@ export function useChat({
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const rateLimitUntilRef = useRef<number>(0);
+  const stateRef = useRef(state);
+
+  // Update ref when state changes
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const append = useCallback(
     async (
@@ -130,16 +136,9 @@ export function useChat({
         ...message,
       };
 
-      // ATOMIC OPERATION: Capture current state before any async operations
-      // This prevents race conditions by freezing the state at function call time
-      let baseHistory: ChatMessageType[] = [];
-      if (customMessages) {
-        baseHistory = [...customMessages];
-      } else {
-        // Access current state directly from useReducer
-        baseHistory = [...state.messages];
-      }
-      const requestHistory = prepareMessages(baseHistory);
+      // Capture current messages to avoid stale closures
+      const currentMessages = customMessages || [...stateRef.current.messages];
+      const requestHistory = prepareMessages(currentMessages);
 
       dispatch({ type: "ADD_MESSAGE", message: userMessage });
       dispatch({ type: "SET_LOADING", isLoading: true });
@@ -264,7 +263,10 @@ export function useChat({
         } else if (mappedError.name === "AbortError") {
           // On abort, restore to the original baseHistory state
           // Do not include userMessage or any assistant messages that were added during this operation
-          dispatch({ type: "SET_MESSAGES", messages: baseHistory });
+          dispatch({
+            type: "SET_MESSAGES",
+            messages: customMessages || [...stateRef.current.messages],
+          });
         } else {
           dispatch({ type: "SET_ERROR", error: mappedError });
           if (onError) {
@@ -278,7 +280,7 @@ export function useChat({
       }
     },
 
-    [onResponse, onFinish, onError, body, prepareMessages, state.messages], // Include state.messages as dependency
+    [onResponse, onFinish, onError, body, prepareMessages, stateRef], // Remove state.messages from dependencies to prevent stale closures
   );
 
   const stop = useCallback(() => {
