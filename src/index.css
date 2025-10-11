@@ -29,6 +29,11 @@
     position: relative; /* Für Positionierung der Pseudo-Elemente */
   }
 
+  /* Additional background optimization for synthwave image */
+  body.background-optimized {
+    background-image: url("/images/synthwave-bg.jpg");
+  }
+
   /* Erster leuchtender Akzent (oben links) */
   body::before {
     content: "";
