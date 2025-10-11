@@ -6,6 +6,12 @@ import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import {
+  GAME_SYSTEM_PROMPTS,
+  type GameType,
+  getGameStartPrompt,
+  getGameSystemPrompt,
+} from "../features/prompt/gamePrompts";
 import { useChat } from "../hooks/useChat";
 import { useGlassPalette } from "../hooks/useGlassPalette";
 import {
@@ -25,6 +31,7 @@ export default function ChatV2() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState(() => getAllConversations());
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [currentSystemPrompt, setCurrentSystemPrompt] = useState<string | undefined>(undefined);
   const palette = useGlassPalette();
   const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
   const toasts = useToasts();
@@ -44,7 +51,24 @@ export default function ChatV2() {
       });
     },
     onFinish: (message) => onFinishRef.current?.(message),
+    systemPrompt: currentSystemPrompt,
   });
+
+  // Function to start a game
+  const startGame = (gameType: GameType) => {
+    const systemPrompt = getGameSystemPrompt(gameType);
+    const startMessage = getGameStartPrompt(gameType);
+
+    // Set the system prompt for the new game
+    setCurrentSystemPrompt(systemPrompt);
+
+    // Reset messages and start the game with the start message
+    setMessages([]);
+    void append({
+      role: "user",
+      content: startMessage,
+    });
+  };
 
   // Update ref bei messages-Änderungen
   useEffect(() => {
@@ -152,6 +176,15 @@ export default function ChatV2() {
 
     setMessages(chatMessages);
     setActiveConversationId(id);
+
+    // Check if there's a system prompt in the conversation and set it
+    const systemMessage = chatMessages.find((msg) => msg.role === "system");
+    if (systemMessage) {
+      setCurrentSystemPrompt(systemMessage.content);
+    } else {
+      setCurrentSystemPrompt(undefined);
+    }
+
     setIsHistoryOpen(false);
 
     toasts.push({
@@ -174,6 +207,7 @@ export default function ChatV2() {
     setConversations(getAllConversations());
     if (activeConversationId === id) {
       setActiveConversationId(null);
+      setCurrentSystemPrompt(undefined); // Clear system prompt as well
       setMessages([]); // Clear current messages if active conversation is deleted
     }
     toasts.push({
@@ -186,6 +220,7 @@ export default function ChatV2() {
   const handleNewConversation = () => {
     setMessages([]);
     setActiveConversationId(null);
+    setCurrentSystemPrompt(undefined); // Clear the system prompt when starting a new conversation
     toasts.push({
       kind: "info",
       title: "Neue Unterhaltung",
@@ -195,20 +230,12 @@ export default function ChatV2() {
 
   const quickstartOptions = [
     {
-      title: "Code Review",
-      description: "Lass deinen Code überprüfen und optimieren",
+      title: "Wer bin ich?",
+      description: "Errate die von mir gedachte Entität in 20 Ja/Nein-Fragen",
     },
     {
-      title: "Brainstorming",
-      description: "Entwickle kreative Ideen und Lösungsansätze",
-    },
-    {
-      title: "Erklärung",
-      description: "Verstehe komplexe Themen einfach erklärt",
-    },
-    {
-      title: "Übersetzung",
-      description: "Übersetze Texte präzise und natürlich",
+      title: "Quiz",
+      description: "Teste dein Wissen mit Multiple-Choice-Fragen",
     },
   ];
 
@@ -257,12 +284,47 @@ export default function ChatV2() {
                   title={option.title}
                   description={option.description}
                   tint={tint}
-                  onClick={() => setInput(option.title + ": ")}
+                  onClick={() => {
+                    if (option.title === "Wer bin ich?") {
+                      startGame("wer-bin-ich");
+                    } else if (option.title === "Quiz") {
+                      startGame("quiz");
+                    } else {
+                      setInput(option.title + ": ");
+                    }
+                  }}
                   className="min-h-[152px] cursor-pointer"
                 />
               );
             })}
           </div>
+
+          {/* Game Hints - shown when game system prompts are active */}
+          {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
+            <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-white">
+              <p className="font-medium">Spiel-Hinweis:</p>
+              <p>
+                Antworte nur mit <strong>ja</strong>, <strong>nein</strong> oder{" "}
+                <strong>unklar</strong>.
+              </p>
+              <p>
+                Wenn die KI rät: Antwort mit <strong>richtig</strong> oder <strong>falsch</strong>.
+              </p>
+            </div>
+          )}
+
+          {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
+            <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-white">
+              <p className="font-medium">Spiel-Hinweis:</p>
+              <p>
+                Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
+                <strong>D</strong>.
+              </p>
+              <p>
+                Schreibe <strong>„weiter“</strong>, um die nächste Frage zu erhalten.
+              </p>
+            </div>
+          )}
         </>
       ) : (
         /* Chat Messages */
