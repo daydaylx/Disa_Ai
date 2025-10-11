@@ -102,24 +102,39 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       analyzerPlugin,
-      // Temporarily disable PWA to debug loading issues
-      // VitePWA({
-      //   strategies: "injectManifest",
-      //   srcDir: "public",
-      //   filename: "sw.js",
-      //   registerType: "autoUpdate",
-      //   injectRegister: "auto",
-      //   devOptions: {
-      //     enabled: !isProduction, // Only enable in development
-      //     type: "module",
-      //   },
-      //   injectManifest: {
-      //     globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,json,webmanifest}"],
-      //     globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js"],
-      //     rollupFormat: "es",
-      //   },
-      //   manifest: false, // We have our own manifest.webmanifest
-      // }),
+      // Progressive PWA re-enablement - start conservative
+      VitePWA({
+        strategies: "injectManifest",
+        srcDir: "public",
+        filename: "sw.js",
+        registerType: "prompt", // Manual registration to avoid auto-conflicts
+        injectRegister: false, // We control registration manually
+        devOptions: {
+          enabled: false, // Keep disabled in dev to avoid conflicts
+          type: "module",
+        },
+        injectManifest: {
+          // Conservative glob patterns - only essential files
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2}"],
+          globIgnores: [
+            "**/node_modules/**/*",
+            "sw.js",
+            "workbox-*.js",
+            "**/*.map", // Skip source maps
+            "stats.html", // Skip analyzer output
+          ],
+          rollupFormat: "es",
+          // Defensive caching - don't cache everything immediately
+          maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB limit
+        },
+        manifest: false, // We have our own manifest.webmanifest
+        // Workbox configuration for stability
+        workbox: {
+          cleanupOutdatedCaches: true,
+          skipWaiting: false, // Don't force update immediately
+          clientsClaim: false, // Don't take control immediately
+        },
+      }),
     ],
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing

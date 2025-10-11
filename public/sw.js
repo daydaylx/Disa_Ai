@@ -1,8 +1,15 @@
 import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 
-// vite-plugin-pwa will inject precache manifest here
-precacheAndRoute(self.__WB_MANIFEST);
-cleanupOutdatedCaches();
+// Enhanced error handling for PWA stability
+try {
+  // vite-plugin-pwa will inject precache manifest here
+  precacheAndRoute(self.__WB_MANIFEST || []);
+  cleanupOutdatedCaches();
+  console.log("[SW] Precaching initialized successfully");
+} catch (error) {
+  console.error("[SW] Precaching failed:", error);
+  // Graceful degradation - SW still works without precaching
+}
 
 const params = new URL(self.location.href).searchParams;
 const BUILD_ID = params.get("build") ?? "dev";

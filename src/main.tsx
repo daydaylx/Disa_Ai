@@ -6,6 +6,8 @@ import App from "./App";
 import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
 import { initEnvironment } from "./config/env";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
+// PWA Installation Prompt
+import { initPWAInstallPrompt } from "./lib/pwa/installPrompt";
 import { registerSW } from "./lib/pwa/registerSW";
 
 // Initialize environment configuration
@@ -40,6 +42,7 @@ initializeApp();
 
 // PWA Service Worker
 registerSW();
+initPWAInstallPrompt();
 
 // Initialize accessibility enforcement
 initializeA11yEnforcement();

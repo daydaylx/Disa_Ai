@@ -87,7 +87,29 @@ async function checkBuildIdMismatch(registration: ServiceWorkerRegistration): Pr
 
 export function registerSW() {
   if (typeof window === "undefined") return;
-  if (!("serviceWorker" in navigator)) return;
+  if (!("serviceWorker" in navigator)) {
+    console.warn("[SW] Service Worker not supported in this browser");
+    return;
+  }
+
+  // Enhanced error boundary for PWA stability
+  const originalErrorHandler = window.onerror;
+  const swErrorHandler = (
+    message: any,
+    source?: string,
+    lineno?: number,
+    colno?: number,
+    error?: Error,
+  ) => {
+    if (source?.includes("sw.js") || error?.stack?.includes("sw.js")) {
+      console.error("[SW] Service Worker error caught:", { message, source, error });
+      // Don't let SW errors crash the main app
+      return true;
+    }
+    return originalErrorHandler?.(message, source, lineno, colno, error) || false;
+  };
+
+  window.onerror = swErrorHandler;
 
   // Setup cleanup listeners for memory leak prevention
   window.addEventListener("beforeunload", cleanupServiceWorkerTimers);
