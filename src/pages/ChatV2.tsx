@@ -237,6 +237,30 @@ export default function ChatV2() {
       title: "Quiz",
       description: "Teste dein Wissen mit Multiple-Choice-Fragen",
     },
+    {
+      title: "Wahrheit oder Fiktion",
+      description: "Entscheide, ob Geschichten wahr oder erfunden sind",
+    },
+    {
+      title: "Black Story",
+      description: "Löse mysteriöse Szenarien durch Ja/Nein-Fragen",
+    },
+    {
+      title: "Fakten-Duell",
+      description: "Prüfe Behauptungen auf Richtigkeit",
+    },
+    {
+      title: "Zwei Wahrheiten, eine Lüge",
+      description: "Finde die falsche Aussage unter dreien",
+    },
+    {
+      title: "Spurensuche",
+      description: "Ermittle die Lösung durch gezielte Fragen",
+    },
+    {
+      title: "Film oder Fake",
+      description: "Entscheide, ob Filmhandlungen echt oder erfunden sind",
+    },
   ];
 
   return (
@@ -289,6 +313,18 @@ export default function ChatV2() {
                       startGame("wer-bin-ich");
                     } else if (option.title === "Quiz") {
                       startGame("quiz");
+                    } else if (option.title === "Wahrheit oder Fiktion") {
+                      startGame("wahrheit-oder-fiktion");
+                    } else if (option.title === "Black Story") {
+                      startGame("black-story");
+                    } else if (option.title === "Fakten-Duell") {
+                      startGame("fakten-duell");
+                    } else if (option.title === "Zwei Wahrheiten, eine Lüge") {
+                      startGame("zwei-wahrheiten-eine-lüge");
+                    } else if (option.title === "Spurensuche") {
+                      startGame("spurensuche");
+                    } else if (option.title === "Film oder Fake") {
+                      startGame("film-oder-fake");
                     } else {
                       setInput(option.title + ": ");
                     }
