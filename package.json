@@ -30,7 +30,7 @@
     "release:prepare": "npm run verify && npm run changeset:version",
     "verify": "npm run typecheck && npm run lint && npm run test:unit",
     "clean": "rm -rf dist .vite .cache .tmp coverage test-results",
-    "postbuild": "cp public/_redirects dist/_redirects && cp public/_headers dist/_headers",
+    "postbuild": "cp public/_redirects dist/_redirects && cp public/_headers dist/_headers && node scripts/generate-routes.js",
     "prepare": "husky",
     "lh": "lhci autorun --config=./lighthouserc.cjs",
     "lint-staged": "lint-staged"

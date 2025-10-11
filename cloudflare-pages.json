@@ -17,7 +17,7 @@
     "_routes.json": {
       "version": 1,
       "include": ["/*"],
-      "exclude": ["/assets/*", "/images/*", "/icons/*"]
+      "exclude": ["/api/*"]
     }
   }
 }
