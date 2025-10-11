@@ -107,7 +107,7 @@ export default defineConfig(({ mode }) => {
         strategies: "injectManifest",
         srcDir: "public",
         filename: "sw.js",
-        registerType: "prompt", // Manual registration to avoid auto-conflicts
+        registerType: "autoUpdate",
         injectRegister: false, // We control registration manually
         devOptions: {
           enabled: false, // Keep disabled in dev to avoid conflicts
@@ -131,8 +131,8 @@ export default defineConfig(({ mode }) => {
         // Workbox configuration for stability
         workbox: {
           cleanupOutdatedCaches: true,
-          skipWaiting: false, // Don't force update immediately
-          clientsClaim: false, // Don't take control immediately
+          skipWaiting: true,
+          clientsClaim: true,
         },
       }),
     ],
