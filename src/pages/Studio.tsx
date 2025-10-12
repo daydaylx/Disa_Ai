@@ -181,7 +181,7 @@ function RolesTab() {
 
       <div className="space-y-6 pb-8" data-testid="role-card-grid">
         {isLoadingRoles && orderedRoles.length === 0 ? (
-          <div className="card-glass flex items-center justify-center p-6 text-sm text-white/70">
+          <div className="glass-card flex items-center justify-center p-6 text-sm text-white/70">
             Rollen werden geladen ...
           </div>
         ) : null}
@@ -251,7 +251,7 @@ function RolesTab() {
         <button
           type="button"
           onClick={handleNavigateToChat}
-          className="tile-glass relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]"
+          className="glass-card relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]"
         >
           <div
             aria-hidden="true"
@@ -267,7 +267,7 @@ function RolesTab() {
           type="button"
           onClick={handleResetRole}
           disabled={!activeRole}
-          className="tile-glass relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100"
+          className="glass-card relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100"
           aria-disabled={!activeRole}
         >
           <div
@@ -340,7 +340,7 @@ function StylesTab() {
           type="color"
           value={accentColor}
           onChange={(event) => setAccentColor(event.target.value)}
-          className="tile-glass h-12 w-20 cursor-pointer rounded-xl"
+          className="glass-card h-12 w-20 cursor-pointer rounded-xl"
         />
       </label>
     </div>
@@ -357,7 +357,7 @@ export default function Studio() {
           type="button"
           onClick={() => setActiveTab("roles")}
           className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "roles" ? "tile-glass text-white" : "tile-glass text-white/70"
+            activeTab === "roles" ? "glass-card text-white" : "glass-card text-white/70"
           }`}
         >
           Rollen
@@ -366,7 +366,7 @@ export default function Studio() {
           type="button"
           onClick={() => setActiveTab("styles")}
           className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "styles" ? "tile-glass text-white" : "tile-glass text-white/70"
+            activeTab === "styles" ? "glass-card text-white" : "glass-card text-white/70"
           }`}
         >
           Stile

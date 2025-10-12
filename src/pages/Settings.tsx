@@ -385,13 +385,13 @@ export default function SettingsPage() {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 placeholder="sk-or-..."
-                className="tile-glass pr-10 font-mono text-corporate-text-primary placeholder:text-corporate-text-muted"
+                className="glass-card pr-10 font-mono text-corporate-text-primary placeholder:text-corporate-text-muted"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                className="tile-glass absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-corporate-text-secondary transition hover:text-corporate-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
+                className="glass-card absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-corporate-text-secondary transition hover:text-corporate-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -420,7 +420,7 @@ export default function SettingsPage() {
           <Button
             type="button"
             onClick={handleSaveKey}
-            className="tile-glass text-corporate-text-onSurface min-h-touch-rec w-full border-0"
+            className="glass-card text-corporate-text-onSurface min-h-touch-rec w-full border-0"
           >
             Schlüssel speichern
           </Button>
@@ -519,7 +519,7 @@ export default function SettingsPage() {
                     placeholder="Dein Name (optional)"
                     value={globalMemory?.name || ""}
                     onChange={(e) => updateGlobalMemory({ name: e.target.value })}
-                    className="tile-glass text-white placeholder:text-white/40"
+                    className="glass-card text-white placeholder:text-white/40"
                   />
                   <Input
                     placeholder="Hobbys, Interessen (optional)"
@@ -531,13 +531,13 @@ export default function SettingsPage() {
                           : [],
                       })
                     }
-                    className="tile-glass text-white placeholder:text-white/40"
+                    className="glass-card text-white placeholder:text-white/40"
                   />
                   <Input
                     placeholder="Hintergrund, Beruf (optional)"
                     value={globalMemory?.background || ""}
                     onChange={(e) => updateGlobalMemory({ background: e.target.value })}
-                    className="tile-glass text-white placeholder:text-white/40"
+                    className="glass-card text-white placeholder:text-white/40"
                   />
                 </div>
               </div>
@@ -715,7 +715,7 @@ export default function SettingsPage() {
           </div>
 
           {!isInstalled && (
-            <div className="tile-glass rounded-lg p-3">
+            <div className="glass-card rounded-lg p-3">
               <div className="space-y-2 text-xs text-white/70">
                 <p className="font-medium">Vorteile der App-Installation:</p>
                 <ul className="list-disc space-y-1 pl-4">
@@ -810,7 +810,7 @@ export default function SettingsPage() {
             )}
           </div>
 
-          <div className="tile-glass rounded p-3 text-xs">
+          <div className="glass-card rounded p-3 text-xs">
             <p className="text-white/60">
               <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein harter Reload
               (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.
