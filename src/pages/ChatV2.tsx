@@ -1,5 +1,6 @@
 import { History, MessageSquare, Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
 import { RoleCard } from "../components/studio/RoleCard";
@@ -54,21 +55,49 @@ export default function ChatV2() {
     systemPrompt: currentSystemPrompt,
   });
 
+  const location = useLocation();
+  const { gameId } = (location.state as { gameId?: GameType }) || {};
+
   // Function to start a game
-  const startGame = (gameType: GameType) => {
-    const systemPrompt = getGameSystemPrompt(gameType);
-    const startMessage = getGameStartPrompt(gameType);
+  const startGame = useCallback(
+    (gameType: GameType) => {
+      const systemPrompt = getGameSystemPrompt(gameType);
+      const startMessage = getGameStartPrompt(gameType);
 
-    // Set the system prompt for the new game
-    setCurrentSystemPrompt(systemPrompt);
+      // Set the system prompt for the new game
+      setCurrentSystemPrompt(systemPrompt);
 
-    // Reset messages and start the game with the start message
+      // Reset messages and start the game with the start message
+      setMessages([]);
+      void append({
+        role: "user",
+        content: startMessage,
+      }).catch((error) => {
+        console.error("Failed to start game:", error);
+      });
+    },
+    [append, setCurrentSystemPrompt, setMessages],
+  );
+
+  // Function to start a discussion
+  const startDiscussion = (topicPrompt: string) => {
+    // Reset messages and start the discussion with the topic prompt
     setMessages([]);
+    setCurrentSystemPrompt(""); // No special system prompt for discussions
     void append({
       role: "user",
-      content: startMessage,
+      content: topicPrompt,
+    }).catch((error) => {
+      console.error("Failed to start discussion:", error);
     });
   };
+
+  // Effect to start a game when a gameId is passed in location state
+  useEffect(() => {
+    if (gameId) {
+      startGame(gameId);
+    }
+  }, [gameId, startGame]);
 
   // Update ref bei messages-Änderungen
   useEffect(() => {
@@ -228,38 +257,31 @@ export default function ChatV2() {
     });
   };
 
-  const quickstartOptions = [
+  const discussionTopics = [
     {
-      title: "Wer bin ich?",
-      description: "Errate die von mir gedachte Entität in 20 Ja/Nein-Fragen",
+      title: "Gibt es Außerirdische?",
+      prompt:
+        "Starte eine offene Diskussion über die Wahrscheinlichkeit außerirdischen Lebens. Nenne Pro/Contra, Unsicherheiten und heutige Evidenz.",
     },
     {
-      title: "Quiz",
-      description: "Teste dein Wissen mit Multiple-Choice-Fragen",
+      title: "Wie wird die Zukunft aussehen?",
+      prompt:
+        "Diskussion über plausible gesellschaftlich-technische Entwicklungen in 5–10 Jahren. Treiber, Risiken, Sollbruchstellen.",
     },
     {
-      title: "Wahrheit oder Fiktion",
-      description: "Entscheide, ob Geschichten wahr oder erfunden sind",
+      title: "Wird KI die Weltherrschaft übernehmen?",
+      prompt:
+        "Diskussion über realistische KI-Risiken vs. Hype. Trenne kurz-/mittel-/langfristige Szenarien.",
     },
     {
-      title: "Black Story",
-      description: "Löse mysteriöse Szenarien durch Ja/Nein-Fragen",
+      title: "Gibt es ein Leben nach dem Tod?",
+      prompt:
+        "Diskussion über philosophische, religiöse und naturwissenschaftliche Perspektiven. Unsicherheiten klar benennen.",
     },
     {
-      title: "Fakten-Duell",
-      description: "Prüfe Behauptungen auf Richtigkeit",
-    },
-    {
-      title: "Zwei Wahrheiten, eine Lüge",
-      description: "Finde die falsche Aussage unter dreien",
-    },
-    {
-      title: "Spurensuche",
-      description: "Ermittle die Lösung durch gezielte Fragen",
-    },
-    {
-      title: "Film oder Fake",
-      description: "Entscheide, ob Filmhandlungen echt oder erfunden sind",
+      title: "Warum glauben Menschen an Schicksal?",
+      prompt:
+        "Diskussion über kognitive Verzerrungen, Kultur und Psychologie. Beispiele und Gegenbeispiele.",
     },
   ];
 
@@ -310,39 +332,22 @@ export default function ChatV2() {
               className="flex h-[152px] items-center justify-center text-center"
             />
 
-            {/* Quickstart Section */}
+            {/* Discussion Topics Section */}
             <div className="grid grid-cols-1 gap-3 pb-8">
               <h3 className="px-1 text-xs font-semibold uppercase tracking-wide text-white/60">
-                Schnellstart
+                Diskussionen
               </h3>
-              {quickstartOptions.map((option, index) => {
+              {discussionTopics.map((topic, index) => {
                 const tint = friendlyPalette[(index + 1) % friendlyPalette.length] ?? DEFAULT_TINT;
                 return (
                   <RoleCard
-                    key={option.title}
-                    title={option.title}
-                    description={option.description}
+                    key={topic.title}
+                    title={topic.title}
+                    description={topic.prompt}
                     tint={tint}
                     onClick={() => {
-                      if (option.title === "Wer bin ich?") {
-                        startGame("wer-bin-ich");
-                      } else if (option.title === "Quiz") {
-                        startGame("quiz");
-                      } else if (option.title === "Wahrheit oder Fiktion") {
-                        startGame("wahrheit-oder-fiktion");
-                      } else if (option.title === "Black Story") {
-                        startGame("black-story");
-                      } else if (option.title === "Fakten-Duell") {
-                        startGame("fakten-duell");
-                      } else if (option.title === "Zwei Wahrheiten, eine Lüge") {
-                        startGame("zwei-wahrheiten-eine-lüge");
-                      } else if (option.title === "Spurensuche") {
-                        startGame("spurensuche");
-                      } else if (option.title === "Film oder Fake") {
-                        startGame("film-oder-fake");
-                      } else {
-                        setInput(option.title + ": ");
-                      }
+                      // Start a new discussion with the topic prompt
+                      startDiscussion(topic.prompt);
                     }}
                     className="flex h-[152px] cursor-pointer items-center justify-center"
                   />

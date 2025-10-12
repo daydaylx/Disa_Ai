@@ -122,7 +122,9 @@ function RolesTab() {
   };
 
   const handleNavigateToChat = () => {
-    void navigate("/chat");
+    navigate("/chat").catch((error) => {
+      console.error("Navigation failed:", error);
+    });
   };
 
   // Optimierte Kategorie-Reihenfolge für bessere Benutzerführung
@@ -285,64 +287,66 @@ function RolesTab() {
   );
 }
 
-function StylesTab() {
-  const {
-    typographyScale,
-    setTypographyScale,
-    borderRadius,
-    setBorderRadius,
-    accentColor,
-    setAccentColor,
-  } = useStudio();
+function GamesTab() {
+  const navigate = useNavigate();
+
+  // Define the games that will be displayed
+  const games = [
+    {
+      id: "wer-bin-ich" as const,
+      title: "Wer bin ich?",
+      description: "Errate die von mir gedachte Entität in 20 Ja/Nein-Fragen",
+    },
+    {
+      id: "quiz" as const,
+      title: "Quiz",
+      description: "Teste dein Wissen mit Multiple-Choice-Fragen",
+    },
+    {
+      id: "zwei-wahrheiten-eine-lüge" as const,
+      title: "Zwei Wahrheiten, eine Lüge",
+      description: "Finde die falsche Aussage unter dreien",
+    },
+    {
+      id: "black-story" as const,
+      title: "Black Story",
+      description: "Löse mysteriöse Szenarien durch Ja/Nein-Fragen",
+    },
+    {
+      id: "film-oder-fake" as const,
+      title: "Film oder Fake?",
+      description: "Entscheide, ob Filmhandlungen echt oder erfunden sind",
+    },
+  ];
+
+  const handleGameStart = (gameId: (typeof games)[number]["id"]) => {
+    // Navigate to chat with the game
+    navigate("/chat", { state: { gameId } }).catch((error) => {
+      console.error("Navigation failed:", error);
+    });
+  };
 
   return (
     <div className="flex h-full flex-col gap-6 px-5 pb-8 pt-5 text-white">
       <div>
-        <h2 className="text-lg font-semibold text-white">Stile</h2>
+        <h2 className="text-lg font-semibold text-white">Spiele</h2>
         <p className="mt-1 text-sm leading-6 text-white/70">
-          Passe Typografie, Rundungen und Akzentfarbe an – Änderungen sind sofort sichtbar.
+          Wähle ein Spiel aus, um eine neue Spielrunde zu starten.
         </p>
       </div>
 
-      <label className="flex flex-col gap-2 text-sm text-white/70">
-        <span className="font-medium text-white/90">
-          Schriftgröße <span className="text-white/60">({typographyScale.toFixed(1)})</span>
-        </span>
-        <input
-          type="range"
-          min="0.8"
-          max="1.5"
-          step="0.1"
-          value={typographyScale}
-          onChange={(event) => setTypographyScale(parseFloat(event.target.value))}
-          className="w-full accent-white/80"
-        />
-      </label>
-
-      <label className="flex flex-col gap-2 text-sm text-white/70">
-        <span className="font-medium text-white/90">
-          Eckenradius <span className="text-white/60">({borderRadius.toFixed(1)})</span>
-        </span>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          value={borderRadius}
-          onChange={(event) => setBorderRadius(parseFloat(event.target.value))}
-          className="w-full accent-white/80"
-        />
-      </label>
-
-      <label className="flex flex-col gap-2 text-sm text-white/70">
-        <span className="font-medium text-white/90">Akzentfarbe</span>
-        <input
-          type="color"
-          value={accentColor}
-          onChange={(event) => setAccentColor(event.target.value)}
-          className="glass-card h-12 w-20 cursor-pointer rounded-xl"
-        />
-      </label>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {games.map((game) => (
+          <div
+            key={game.id}
+            className="glass-card flex cursor-pointer flex-col gap-2 p-4 transition-all hover:scale-[1.02]"
+            onClick={() => handleGameStart(game.id)}
+          >
+            <h3 className="font-semibold text-white">{game.title}</h3>
+            <p className="text-sm text-white/80">{game.description}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -369,11 +373,11 @@ export default function Studio() {
             activeTab === "styles" ? "glass-card text-white" : "glass-card text-white/70"
           }`}
         >
-          Stile
+          Spiele
         </button>
       </div>
       <div className="mt-2 flex flex-1 flex-col overflow-y-auto">
-        {activeTab === "roles" ? <RolesTab /> : <StylesTab />}
+        {activeTab === "roles" ? <RolesTab /> : <GamesTab />}
       </div>
     </div>
   );
