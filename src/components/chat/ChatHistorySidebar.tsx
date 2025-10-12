@@ -105,7 +105,7 @@ export function ChatHistorySidebar({
                 size="sm"
                 onClick={onClose}
                 aria-label="Zurück zum Chat"
-                className="glass-button h-10 w-10 rounded-xl p-0 text-white"
+                className="tile-glass h-10 w-10 rounded-xl p-0 text-white"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
@@ -116,7 +116,7 @@ export function ChatHistorySidebar({
               size="sm"
               onClick={onClose}
               aria-label="Chat-Verlauf schließen"
-              className="glass-button h-10 w-10 rounded-xl p-0 text-white"
+              className="tile-glass h-10 w-10 rounded-xl p-0 text-white"
             >
               <X className="h-5 w-5" />
             </Button>

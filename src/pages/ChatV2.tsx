@@ -279,7 +279,7 @@ export default function ChatV2() {
               onClick={() => setIsHistoryOpen(true)}
               variant="ghost"
               size="sm"
-              className="glass-button h-10 w-10 rounded-xl p-0 text-white transition-all"
+              className="tile-glass h-10 w-10 rounded-xl p-0 text-white transition-all"
               aria-label="Chat-Verlauf öffnen"
             >
               <History className="h-5 w-5" />
@@ -371,7 +371,7 @@ export default function ChatV2() {
                 onClick={handleNewConversation}
                 variant="ghost"
                 size="sm"
-                className="glass-button h-10 w-10 rounded-xl p-0 text-white transition-all"
+                className="tile-glass h-10 w-10 rounded-xl p-0 text-white transition-all"
                 aria-label="Neue Unterhaltung starten"
               >
                 <MessageSquare className="h-5 w-5" />
@@ -380,7 +380,7 @@ export default function ChatV2() {
                 onClick={() => setIsHistoryOpen(true)}
                 variant="ghost"
                 size="sm"
-                className="glass-button h-10 w-10 rounded-xl p-0 text-white transition-all"
+                className="tile-glass h-10 w-10 rounded-xl p-0 text-white transition-all"
                 aria-label="Chat-Verlauf öffnen"
               >
                 <History className="h-5 w-5" />
@@ -438,7 +438,7 @@ export default function ChatV2() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Nachricht an Disa AI schreiben..."
-                className="glass-input max-h-[200px] min-h-[52px] w-full resize-none rounded-xl px-4 py-3 text-white transition-all duration-200 placeholder:text-white/50 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
+                className="tile-glass max-h-[200px] min-h-[52px] w-full resize-none rounded-xl px-4 py-3 text-white transition-all duration-200 placeholder:text-white/50 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
                 rows={1}
                 aria-label="Nachricht an Disa AI eingeben"
                 aria-describedby="input-help-text"

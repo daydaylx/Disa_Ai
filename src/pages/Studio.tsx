@@ -247,7 +247,7 @@ function RolesTab() {
         <button
           type="button"
           onClick={handleNavigateToChat}
-          className="glass-button relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]"
+          className="tile-glass relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]"
         >
           <div
             aria-hidden="true"
@@ -263,7 +263,7 @@ function RolesTab() {
           type="button"
           onClick={handleResetRole}
           disabled={!activeRole}
-          className="glass-button relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100"
+          className="tile-glass relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100"
           aria-disabled={!activeRole}
         >
           <div
@@ -336,7 +336,7 @@ function StylesTab() {
           type="color"
           value={accentColor}
           onChange={(event) => setAccentColor(event.target.value)}
-          className="glass-ultra-transparent h-12 w-20 cursor-pointer rounded-xl"
+          className="tile-glass h-12 w-20 cursor-pointer rounded-xl"
         />
       </label>
     </div>
@@ -353,9 +353,7 @@ export default function Studio() {
           type="button"
           onClick={() => setActiveTab("roles")}
           className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "roles"
-              ? "glass-button text-white"
-              : "glass-ultra-transparent text-white/70"
+            activeTab === "roles" ? "tile-glass text-white" : "tile-glass text-white/70"
           }`}
         >
           Rollen
@@ -364,9 +362,7 @@ export default function Studio() {
           type="button"
           onClick={() => setActiveTab("styles")}
           className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "styles"
-              ? "glass-button text-white"
-              : "glass-ultra-transparent text-white/70"
+            activeTab === "styles" ? "tile-glass text-white" : "tile-glass text-white/70"
           }`}
         >
           Stile

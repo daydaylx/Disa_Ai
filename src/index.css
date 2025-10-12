@@ -13,21 +13,9 @@
   /* Hintergrund-Layout-Konzept: "Synthwave Liquid-Neon Abyss" */
   /* ========================================================= */
   body {
-    /* Glasmorphismus-optimierter Gradient-Hintergrund */
-    background:
-      linear-gradient(
-        135deg,
-        #0a0e1a 0%,
-        #1a1f35 15%,
-        #0f1424 35%,
-        #2d1b69 55%,
-        #1e2a4a 75%,
-        #0d1117 100%
-      ),
-      radial-gradient(ellipse at top right, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom left, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+    /* Premium Glasmorphismus Base Background */
+    background: linear-gradient(to bottom, #101318 0%, #0b0d10 100%);
     background-attachment: fixed;
-    background-size: 100% 100%;
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
     color: var(--color-synthwave-text);
@@ -35,30 +23,80 @@
     position: relative;
   }
 
+  /* Colored Glow Elements as Pseudo-Elements */
+  body::before {
+    content: "";
+    position: fixed;
+    top: -20vh;
+    left: -10vw;
+    width: 75vw;
+    height: 50vh;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    background: #6fd3ff;
+    z-index: -20;
+    pointer-events: none;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    bottom: -10vh;
+    right: -10vw;
+    width: 65vw;
+    height: 45vh;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+    background: #ff9f6f;
+    z-index: -20;
+    pointer-events: none;
+  }
+
   /* Mobile-optimierte Hintergrund-Variante */
   body.background-optimized {
     background-attachment: scroll; /* Better performance on mobile */
   }
 
-  /* Erster leuchtender Akzent (oben links) */
-  body::before {
+  /* Global Glass Backdrop Layer - Applied to all content */
+  #root {
+    position: relative;
+  }
+
+  #root::before {
     content: "";
-    position: fixed; /* Positionierung unabhängig vom Scrollen */
-    width: 400px;
-    height: 400px;
-    top: -100px;
-    left: -150px;
-    border-radius: 50%; /* Runde Form */
-    background: radial-gradient(
-      circle,
-      var(--color-synthwave-accent-purple) 0%,
-      transparent 70%
-    ); /* Lila-Ton */
-    filter: blur(80px); /* Starker Weichzeichner für "Glow"-Effekt */
-    opacity: 0.2; /* Subtile Präsenz */
-    z-index: -2; /* Unterhalb der Glass-Elemente und Noise-Overlay */
-    pointer-events: none; /* Nicht interaktiv */
-    animation: pulse-glow-one 15s infinite alternate ease-in-out; /* Subtile Animation */
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+    /* Enhanced glassmorphism backdrop with noise texture */
+    background:
+      /* Subtle noise texture */
+      radial-gradient(
+        circle at 25% 25%,
+        transparent 0%,
+        rgba(255, 255, 255, 0.003) 50%,
+        transparent 100%
+      ),
+      radial-gradient(
+        circle at 75% 75%,
+        transparent 0%,
+        rgba(255, 255, 255, 0.003) 50%,
+        transparent 100%
+      ),
+      /* Fine grain pattern */
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 1px,
+          rgba(255, 255, 255, 0.008) 1px,
+          rgba(255, 255, 255, 0.008) 2px
+        ),
+      /* Base overlay */
+        linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(1px) saturate(1.8);
+    -webkit-backdrop-filter: blur(1px) saturate(1.8);
   }
 
   /* Mobile-optimized background */
@@ -220,91 +258,75 @@
     @apply tile-glass;
   }
 
-  /* Enhanced Glassmorphismus für Kacheln - Android OLED optimiert */
+  /* Premium Glass Tile - Modern Glassmorphismus */
   .tile-glass {
     position: relative;
-    color: white;
-    backdrop-filter: blur(2px) saturate(1.8);
-    -webkit-backdrop-filter: blur(2px) saturate(1.8);
-
-    /* Enhanced glass background with better visibility on OLED */
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.25) 0%,
-      rgba(255, 255, 255, 0.12) 50%,
-      rgba(255, 255, 255, 0.08) 100%
-    );
-
-    /* Multi-layer shadows for depth */
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      0 2px 8px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-
-    /* Gradient border for realistic glass edge */
-    border: 1.5px solid transparent;
-    background-clip: padding-box;
-    border-image: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.7) 0%,
-        rgba(255, 255, 255, 0.3) 50%,
-        rgba(255, 255, 255, 0.1) 100%
-      )
-      1;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    content-visibility: auto;
+    contain-intrinsic-size: 300px 200px;
+    transition: all 0.3s ease;
   }
 
-  /* Glass reflection highlight */
+  /* Scrim for readability */
   .tile-glass::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.4) 0%,
-      rgba(255, 255, 255, 0.1) 70%,
-      transparent 100%
-    );
-    border-radius: inherit;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.25) 100%);
     pointer-events: none;
     z-index: 1;
   }
 
+  /* Top highlight */
+  .tile-glass::after {
+    content: "";
+    position: absolute;
+    inset-x: 0;
+    top: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    z-index: 2;
+  }
+
   /* Enhanced hover effects */
   .tile-glass:hover {
-    backdrop-filter: blur(3px) saturate(2.2);
-    -webkit-backdrop-filter: blur(3px) saturate(2.2);
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.35) 0%,
-      rgba(255, 255, 255, 0.18) 50%,
-      rgba(255, 255, 255, 0.12) 100%
-    );
-    box-shadow:
-      0 12px 48px rgba(0, 0, 0, 0.4),
-      0 4px 12px rgba(0, 0, 0, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
   }
 
   /* Active state for touch feedback */
   .tile-glass:active {
-    backdrop-filter: blur(1px) saturate(1.5);
-    -webkit-backdrop-filter: blur(1px) saturate(1.5);
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      rgba(255, 255, 255, 0.06) 100%
-    );
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.25),
-      0 1px 4px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(0);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Text styling for glass content */
+  .tile-glass h1,
+  .tile-glass h2,
+  .tile-glass h3,
+  .tile-glass h4,
+  .tile-glass h5,
+  .tile-glass h6 {
+    color: rgb(235, 243, 255);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 10;
+  }
+
+  .tile-glass p,
+  .tile-glass span,
+  .tile-glass div {
+    color: rgb(198, 210, 222);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
   }
 
   @keyframes gradient {
