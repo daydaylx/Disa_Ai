@@ -9,23 +9,8 @@
     color-scheme: dark;
   }
 
-  /* ========================================================= */
-  /* Hintergrund-Layout-Konzept: "Synthwave Liquid-Neon Abyss" */
-  /* ========================================================= */
+  /* Background handled via design-tokens.css */
   body {
-    /* Premium Glasmorphismus Base Background - NEU: Prozeduraler CSS-Hintergrund */
-    background-color: var(--color-corporate-bg-primary); /* Dunkle Basis für den Weltraum-Effekt */
-    background-image:
-      /* Top-left glow */
-      radial-gradient(ellipse at 10% 20%, hsla(198, 100%, 72%, 0.15) 0%, transparent 50%),
-      /* Bottom-right glow */
-        radial-gradient(ellipse at 90% 80%, hsla(28, 100%, 72%, 0.12) 0%, transparent 50%),
-      /* Central subtle aurora */
-        linear-gradient(160deg, hsla(194, 84%, 42%, 0.1) 0%, hsla(265, 62%, 42%, 0.1) 100%);
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
     color: var(--color-synthwave-text);
@@ -33,36 +18,7 @@
     position: relative;
   }
 
-  /* Optimized Glow Elements as Pseudo-Elements - Reduced Complexity */
-  body::before {
-    content: "";
-    position: fixed;
-    top: -20vh;
-    left: -10vw;
-    width: 75vw;
-    height: 50vh;
-    border-radius: 50%;
-    filter: blur(60px); /* Reduced blur for better performance */
-    opacity: 0.12; /* Reduced opacity for better performance */
-    background: var(--color-accent-500);
-    z-index: -20;
-    pointer-events: none;
-  }
-
-  body::after {
-    content: "";
-    position: fixed;
-    bottom: -10vh;
-    right: -10vw;
-    width: 65vw;
-    height: 45vh;
-    border-radius: 50%;
-    filter: blur(60px); /* Reduced blur for better performance */
-    opacity: 0.1; /* Reduced opacity for better performance */
-    background: var(--color-warning);
-    z-index: -20;
-    pointer-events: none;
-  }
+  /* Additional body styles if needed */
 
   /* Mobile-optimierte Hintergrund-Variante */
   body.background-optimized {
@@ -239,36 +195,9 @@
   }
 }
 
-/* Zweiter leuchtender Akzent (unten rechts) mit separatem Element - Optimized */
-#root::before {
-  content: "";
-  position: fixed;
-  width: 400px; /* Reduced size for better performance */
-  height: 400px; /* Reduced size for better performance */
-  bottom: -150px;
-  right: -200px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    var(--color-synthwave-accent-teal) 0%,
-    transparent 70%
-  ); /* Türkis-Ton */
-  filter: blur(60px); /* Reduced blur for better performance */
-  opacity: 0.15; /* Reduced opacity for better performance */
-  z-index: -2;
-  pointer-events: none;
-  animation: pulse-glow-two 18s infinite alternate-reverse ease-in-out;
-}
-
-/* Mobile-Anpassungen für den zweiten Glow */
+/* Additional responsive styles if needed */
 @media (max-width: 768px) {
-  #root::before {
-    width: 300px;
-    height: 300px;
-    bottom: -100px;
-    right: -150px;
-    opacity: 0.15; /* Reduziert für subtileren Effekt über dem Synthwave-Bild */
-  }
+  /* Mobile-specific adjustments */
 }
 
 /* Animationen für die Glow-Effekte */

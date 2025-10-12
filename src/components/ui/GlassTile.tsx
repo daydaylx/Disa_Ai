@@ -77,7 +77,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     <button
       data-testid={dataTestId}
       className={cn(
-        "glass-surface w-full text-left text-white",
+        "glass-card w-full text-left text-white",
         "px-4 py-4 sm:px-5 sm:py-5",
         "min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]",
         disabledClasses,
