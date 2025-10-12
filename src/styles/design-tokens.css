@@ -80,26 +80,76 @@
   --blur-xl: 1px;
   --blur-2xl: 1px;
 
-  --glass-bg-subtle: hsla(220, 1%, 95%, 0.03); /* Fast farblos, fast durchsichtiges Glas */
-  --glass-bg-soft: hsla(220, 1%, 95%, 0.05); /* Fast farblos, fast durchsichtiges Glas */
-  --glass-bg-medium: hsla(220, 1%, 90%, 0.07); /* Fast farblos, fast durchsichtiges Glas */
-  --glass-bg-strong: hsla(220, 1%, 90%, 0.1); /* Fast farblos, fast durchsichtiges Glas */
+  --glass-bg-subtle: hsla(
+    220,
+    0.35%,
+    95%,
+    0.03
+  ); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-bg-soft: hsla(220, 0.35%, 95%, 0.05); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-bg-medium: hsla(
+    220,
+    0.35%,
+    90%,
+    0.07
+  ); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-bg-strong: hsla(
+    220,
+    0.35%,
+    90%,
+    0.1
+  ); /* Noch weniger Farbintensität (um 65% reduziert) */
 
-  --glass-border-subtle: hsla(220, 1%, 95%, 0.05); /* Fast farblos, fast durchsichtiges Glas */
-  --glass-border-soft: hsla(220, 1%, 95%, 0.07); /* Fast farblos, fast durchsichtiges Glas */
-  --glass-border-medium: hsla(220, 1%, 90%, 0.1); /* Fast farblos, fast durchsichtiges Glas */
-  --glass-border-strong: hsla(220, 1%, 90%, 0.12); /* Fast farblos, fast durchsichtiges Glas */
+  --glass-border-subtle: hsla(
+    220,
+    0.35%,
+    95%,
+    0.05
+  ); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-border-soft: hsla(
+    220,
+    0.35%,
+    95%,
+    0.07
+  ); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-border-medium: hsla(
+    220,
+    0.35%,
+    90%,
+    0.1
+  ); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-border-strong: hsla(
+    220,
+    0.35%,
+    90%,
+    0.12
+  ); /* Noch weniger Farbintensität (um 65% reduziert) */
 
-  --glass-glow-subtle: 0 0 8px rgba(220, 220, 220, 0.05); /* Fast farbloses Glühen */
-  --glass-glow-soft: 0 0 12px rgba(220, 220, 220, 0.08); /* Fast farbloses Glühen */
-  --glass-glow-medium: 0 0 16px rgba(220, 220, 220, 0.1); /* Fast farbloses Glühen */
-  --glass-glow-strong: 0 0 24px rgba(220, 220, 220, 0.15); /* Fast farbloses Glühen */
+  --glass-glow-subtle: 0 0 8px rgba(200, 200, 200, 0.03); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-glow-soft: 0 0 12px rgba(200, 200, 200, 0.05); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-glow-medium: 0 0 16px rgba(200, 200, 200, 0.07); /* Noch weniger Farbintensität (um 65% reduziert) */
+  --glass-glow-strong: 0 0 24px rgba(200, 200, 200, 0.1); /* Noch weniger Farbintensität (um 65% reduziert) */
 
-  --glass-overlay-weak: rgba(255, 255, 255, 0.02); /* Sehr subtil */
-  --glass-overlay-soft: rgba(255, 255, 255, 0.03); /* Sehr subtil */
-  --glass-overlay-medium: rgba(255, 255, 255, 0.05); /* Sehr subtil */
-  --glass-overlay-strong: rgba(255, 255, 255, 0.07); /* Subtil */
-  --glass-overlay-intense: rgba(255, 255, 255, 0.1); /* Subtil */
+  --glass-overlay-weak: rgba(255, 255, 255, 0.01); /* Noch weniger Intensität (um 65% reduziert) */
+  --glass-overlay-soft: rgba(255, 255, 255, 0.02); /* Noch weniger Intensität (um 65% reduziert) */
+  --glass-overlay-medium: rgba(
+    255,
+    255,
+    255,
+    0.03
+  ); /* Noch weniger Intensität (um 65% reduziert) */
+  --glass-overlay-strong: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ); /* Noch weniger Intensität (um 65% reduziert) */
+  --glass-overlay-intense: rgba(
+    255,
+    255,
+    255,
+    0.07
+  ); /* Noch weniger Intensität (um 65% reduziert) */
 
   /* Transitions */
   --transition-fast: 150ms;
@@ -233,7 +283,9 @@
 
 /* Enhanced glass card with overlay management */
 .glass-card {
-  @apply relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-glass-soft backdrop-blur-lg;
+  @apply relative overflow-hidden rounded-2xl border bg-transparent shadow-glass-soft backdrop-blur-md;
+  border-color: var(--glass-border-transparent);
+  background-color: var(--glass-bg-transparent);
   transition: all 0.25s ease-out;
 }
 
@@ -242,14 +294,17 @@
   @apply pointer-events-none absolute inset-0 rounded-[inherit];
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.02) 100%
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.01) 100%
   );
+  opacity: 0.6; /* Reduzierte Deckkraft für weniger Interferenz mit Farbverläufen */
 }
 
 .glass-card:hover {
-  @apply border-white/30 bg-white/15 shadow-glass-strong;
+  border-color: var(--glass-border-alpha-14);
+  background-color: var(--glass-bg-alpha-10);
+  @apply shadow-glass-strong;
   transform: translateY(-2px);
 }
 
@@ -259,11 +314,22 @@
 }
 
 .glass-card.active {
-  @apply border-white/30 bg-white/15 shadow-glass-strong ring-2 ring-white/20;
+  border-color: var(--glass-border-alpha-14);
+  background-color: var(--glass-bg-alpha-10);
+  @apply shadow-glass-strong ring-2 ring-white/20;
 }
 
 .glass-card.disabled {
   @apply cursor-not-allowed opacity-50;
+}
+
+/* Glass card variant for use with color tint overlays (like RoleCard) */
+.glass-card.tinted {
+  background-color: transparent;
+  border-color: transparent;
+  backdrop-filter: blur(1px) saturate(100%);
+  -webkit-backdrop-filter: blur(1px) saturate(100%);
+  box-shadow: none;
 }
 
 /* Overlay variants for different content requirements */
