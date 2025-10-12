@@ -13,26 +13,31 @@
   /* Hintergrund-Layout-Konzept: "Synthwave Liquid-Neon Abyss" */
   /* ========================================================= */
   body {
-    /* Hintergrundbild mit Fallback-Verlauf */
+    /* Glasmorphismus-optimierter Gradient-Hintergrund */
     background:
-      url("/images/dark-background-abstract-background-network-3d-background-2560x1440-8324.png")
-        center center / cover no-repeat,
-      radial-gradient(
-        at top left,
-        var(--color-synthwave-bg-dark) 0%,
-        var(--color-synthwave-bg-deeper) 100%
-      );
-    background-attachment: scroll; /* Fixed problematic on mobile */
+      linear-gradient(
+        135deg,
+        #0a0e1a 0%,
+        #1a1f35 15%,
+        #0f1424 35%,
+        #2d1b69 55%,
+        #1e2a4a 75%,
+        #0d1117 100%
+      ),
+      radial-gradient(ellipse at top right, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom left, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+    background-attachment: fixed;
+    background-size: 100% 100%;
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
-    color: var(--color-synthwave-text); /* Standardtextfarbe anpassen */
-    overflow-x: hidden; /* Horizontales Scrollen verhindern */
-    position: relative; /* Für Positionierung der Pseudo-Elemente */
+    color: var(--color-synthwave-text);
+    overflow-x: hidden;
+    position: relative;
   }
 
-  /* Additional background optimization */
+  /* Mobile-optimierte Hintergrund-Variante */
   body.background-optimized {
-    background-image: url("/images/dark-background-abstract-background-network-3d-background-2560x1440-8324.png");
+    background-attachment: scroll; /* Better performance on mobile */
   }
 
   /* Erster leuchtender Akzent (oben links) */
@@ -60,8 +65,11 @@
   @media (max-width: 768px) {
     body {
       background-attachment: scroll; /* Better performance on mobile */
-      background-size: cover;
-      background-position: center center; /* Center the synthwave image on mobile */
+      background-size: 100% 100%;
+      /* Vereinfachter Gradient für mobile Performance */
+      background:
+        linear-gradient(135deg, #0a0e1a 0%, #1e2a4a 50%, #0d1117 100%),
+        radial-gradient(ellipse at center, rgba(147, 51, 234, 0.08) 0%, transparent 70%);
     }
 
     /* Reduzierte Glow-Effekte auf mobil für bessere Performance */
@@ -70,7 +78,7 @@
       height: 250px;
       top: -50px;
       left: -100px;
-      opacity: 0.15; /* Reduziert für subtileren Effekt über dem Synthwave-Bild */
+      opacity: 0.12; /* Reduziert für optimalen Glaseffekt-Kontrast */
     }
   }
 

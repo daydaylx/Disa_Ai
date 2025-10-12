@@ -75,20 +75,20 @@
   --blur-xl: 1px;
   --blur-2xl: 1px;
 
-  --glass-bg-subtle: hsla(220, 25%, 95%, 0.05);
-  --glass-bg-soft: hsla(220, 25%, 95%, 0.08);
-  --glass-bg-medium: hsla(220, 20%, 90%, 0.12);
-  --glass-bg-strong: hsla(220, 20%, 90%, 0.18);
+  --glass-bg-subtle: hsla(220, 25%, 95%, 0.08);
+  --glass-bg-soft: hsla(220, 25%, 95%, 0.12);
+  --glass-bg-medium: hsla(220, 20%, 90%, 0.16);
+  --glass-bg-strong: hsla(220, 20%, 90%, 0.22);
 
-  --glass-border-subtle: hsla(220, 25%, 95%, 0.08);
-  --glass-border-soft: hsla(220, 25%, 95%, 0.12);
-  --glass-border-medium: hsla(220, 20%, 90%, 0.16);
-  --glass-border-strong: hsla(220, 20%, 90%, 0.24);
+  --glass-border-subtle: hsla(220, 25%, 95%, 0.12);
+  --glass-border-soft: hsla(220, 25%, 95%, 0.18);
+  --glass-border-medium: hsla(220, 20%, 90%, 0.22);
+  --glass-border-strong: hsla(220, 20%, 90%, 0.28);
 
-  --glass-glow-subtle: 0 0 20px rgba(34, 211, 238, 0.15);
-  --glass-glow-soft: 0 0 30px rgba(34, 211, 238, 0.2);
-  --glass-glow-medium: 0 0 40px rgba(34, 211, 238, 0.25);
-  --glass-glow-strong: 0 0 60px rgba(34, 211, 238, 0.3);
+  --glass-glow-subtle: 0 0 20px rgba(34, 211, 238, 0.2);
+  --glass-glow-soft: 0 0 30px rgba(34, 211, 238, 0.25);
+  --glass-glow-medium: 0 0 40px rgba(34, 211, 238, 0.3);
+  --glass-glow-strong: 0 0 60px rgba(34, 211, 238, 0.4);
 
   /* Transitions */
   --transition-fast: 150ms;
