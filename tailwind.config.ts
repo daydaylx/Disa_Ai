@@ -109,6 +109,14 @@ export default {
         xl: "var(--blur-xl)",
         "2xl": "var(--blur-2xl)",
       },
+      backgroundColor: {
+        // Glass overlay variants
+        "glass-overlay-weak": "var(--glass-overlay-weak)",
+        "glass-overlay-soft": "var(--glass-overlay-soft)",
+        "glass-overlay-medium": "var(--glass-overlay-medium)",
+        "glass-overlay-strong": "var(--glass-overlay-strong)",
+        "glass-overlay-intense": "var(--glass-overlay-intense)",
+      },
       transitionDuration: {
         fast: "var(--transition-fast)",
         normal: "var(--transition-normal)",
