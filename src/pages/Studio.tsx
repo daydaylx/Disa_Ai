@@ -2,7 +2,6 @@ import { ArrowRight, RotateCcw } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { colors } from "../../styles/design-tokens";
 import { useStudio } from "../app/state/StudioContext";
 import { RoleCard, type RoleTint } from "../components/studio/RoleCard";
 import type { Role } from "../data/roles";
@@ -11,15 +10,36 @@ import { useGlassPalette } from "../hooks/useGlassPalette";
 import type { GlassTint } from "../lib/theme/glass";
 import { FRIENDLY_TINTS } from "../lib/theme/glass";
 
-// Statische Kategorie-Farbpalette - jetzt mit Farben aus dem Design System für einen konsistenten Look
+// Palette angepasst für einen dunkleren, transparenteren Glas-Effekt
 const STATIC_CATEGORY_TINTS: GlassTint[] = [
-  { from: colors.semantic.purple, to: colors.accent[500] },
-  { from: colors.corporate.accent.primary, to: colors.semantic.info },
-  { from: colors.semantic.success, to: colors.semantic.mint },
-  { from: colors.semantic.warning, to: colors.accent[300] },
-  { from: colors.corporate.accent.danger, to: colors.semantic.danger },
-  { from: colors.darkGlass.accent.violet, to: colors.darkGlass.accent.pink },
-  { from: colors.accent[700], to: colors.darkGlass.accent.teal },
+  {
+    from: "hsla(262, 75%, 65%, 0.6)", // Darker Lavender
+    to: "hsla(200, 80%, 58%, 0.45)", // Darker, more transparent Sky
+  },
+  {
+    from: "hsla(335, 80%, 62%, 0.6)", // Darker Blossom Pink
+    to: "hsla(24, 85%, 55%, 0.45)", // Darker, more transparent Peach
+  },
+  {
+    from: "hsla(160, 75%, 56%, 0.6)", // Darker Mint
+    to: "hsla(188, 78%, 52%, 0.45)", // Darker, more transparent Aqua
+  },
+  {
+    from: "hsla(42, 85%, 60%, 0.6)", // Darker Golden Light
+    to: "hsla(16, 80%, 54%, 0.45)", // Darker, more transparent Amber
+  },
+  {
+    from: "hsla(280, 80%, 64%, 0.6)", // Darker Orchid
+    to: "hsla(312, 78%, 58%, 0.45)", // Darker, more transparent Fuchsia
+  },
+  {
+    from: "hsla(202, 80%, 60%, 0.6)", // Darker Daybreak Blue
+    to: "hsla(186, 82%, 54%, 0.45)", // Darker, more transparent Lagoon
+  },
+  {
+    from: "hsla(220, 75%, 65%, 0.6)", // A new blueish tint
+    to: "hsla(280, 80%, 58%, 0.45)", // A new purple tint
+  },
 ];
 
 // Removed unused ROLE_TINTS and RoleVisualConfig - now using useGlassPalette for consistent theming
