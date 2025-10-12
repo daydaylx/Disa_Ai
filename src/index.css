@@ -21,7 +21,7 @@
         var(--color-synthwave-bg-dark) 0%,
         var(--color-synthwave-bg-deeper) 100%
       );
-    background-attachment: fixed; /* Hintergrund scrollt nicht mit */
+    background-attachment: scroll; /* Fixed problematic on mobile */
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
     color: var(--color-synthwave-text); /* Standardtextfarbe anpassen */
