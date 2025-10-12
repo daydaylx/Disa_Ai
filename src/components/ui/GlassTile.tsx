@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { cn } from "../../lib/cn";
 
+// The props are simplified: `gradient` and `glowClassName` are removed as the new
+// .glass-surface class handles these aspects centrally.
 export interface GlassTileProps {
   /** Icon element or component */
   icon?: React.ReactNode;
@@ -16,20 +18,11 @@ export interface GlassTileProps {
   disabled?: boolean;
   /** Test ID for e2e tests */
   "data-testid"?: string;
-  /** Gradient background from quickstart config */
-  gradient?: string;
-  /** Optional glow/shadow class for subtle colour accent */
-  glowClassName?: string;
   /** Label for the pill badge in the top-right corner */
   badgeLabel?: string;
   /** Visual tone to derive accent colours */
   badgeTone?: "warm" | "cool" | "fresh" | "sunset" | "violet" | "default";
 }
-
-// Safelist gradient utilities for Tailwind (keeps variants during build)
-const gradientSafelist =
-  "before:from-amber-400/80 before:via-yellow-300/65 before:to-orange-400/70 before:from-sky-500/80 before:via-blue-500/65 before:to-indigo-500/70 before:from-emerald-400/75 before:via-teal-500/60 before:to-lime-500/60 before:from-orange-500/80 before:via-amber-500/65 before:to-rose-500/60 before:from-fuchsia-500/80 before:via-purple-500/65 before:to-violet-500/70";
-void gradientSafelist;
 
 export const GlassTile: React.FC<GlassTileProps> = ({
   icon,
@@ -39,34 +32,34 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   className = "",
   disabled = false,
   "data-testid": dataTestId,
-  gradient,
-  glowClassName,
   badgeLabel,
   badgeTone = "default",
 }) => {
+  // The toneStyles are now mapped to the semantic colors from the design system,
+  // ensuring consistency with the rest of the application.
   const toneStyles: Record<
     NonNullable<GlassTileProps["badgeTone"]>,
     { badge: string; stripe: string }
   > = {
     warm: {
-      badge: "border-amber-300/40 text-amber-200",
-      stripe: "from-amber-400/35 via-orange-400/25 to-transparent",
+      badge: "border-semantic-warning/40 text-semantic-warning",
+      stripe: "from-semantic-warning/35 via-semantic-warning/25 to-transparent",
     },
     cool: {
-      badge: "border-sky-300/40 text-sky-200",
-      stripe: "from-sky-400/35 via-blue-400/25 to-transparent",
+      badge: "border-accent-500/40 text-accent-500",
+      stripe: "from-accent-500/35 via-accent-500/25 to-transparent",
     },
     fresh: {
-      badge: "border-emerald-300/40 text-emerald-200",
-      stripe: "from-emerald-400/35 via-teal-400/25 to-transparent",
+      badge: "border-semantic-success/40 text-semantic-success",
+      stripe: "from-semantic-success/35 via-semantic-success/25 to-transparent",
     },
     sunset: {
-      badge: "border-orange-300/40 text-orange-200",
-      stripe: "from-orange-400/30 via-amber-400/25 to-transparent",
+      badge: "border-semantic-danger/40 text-semantic-danger",
+      stripe: "from-semantic-danger/30 via-semantic-danger/25 to-transparent",
     },
     violet: {
-      badge: "border-fuchsia-300/40 text-fuchsia-200",
-      stripe: "from-fuchsia-400/35 via-purple-400/25 to-transparent",
+      badge: "border-semantic-purple/40 text-semantic-purple",
+      stripe: "from-semantic-purple/35 via-semantic-purple/25 to-transparent",
     },
     default: {
       badge: "border-white/20 text-zinc-200",
@@ -75,45 +68,18 @@ export const GlassTile: React.FC<GlassTileProps> = ({
   };
 
   const accents = toneStyles[badgeTone] ?? toneStyles.default;
-  const baseClasses = `tile-glass w-full text-left text-white
-    rounded-2xl sm:rounded-3xl px-4 py-4 sm:px-5 sm:py-5
-    min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]
-    transition-[transform,background,box-shadow,border-color] duration-200 ease-out`;
 
-  // Gradient overlay for visual depth
-  const gradientOverlayClasses = gradient
-    ? gradient
-        .split(" ")
-        .map((token) => token.trim())
-        .filter(Boolean)
-        .map((token) => `before:${token}`)
-        .join(" ")
-    : "";
-
-  const gradientClasses = gradient
-    ? `before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br ${gradientOverlayClasses} before:opacity-70 before:content-['']`
-    : "";
-
-  // Surface reflection is now handled by .card-glass::before - no additional highlight needed
-
-  const glowClasses = glowClassName ?? "shadow-[0_16px_40px_rgba(5,8,18,0.45)]";
-
-  // Enhanced interactive effects with improved glass feedback
-  const interactiveClasses = onPress
-    ? "hover:scale-[1.03] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:border-white/40 hover:bg-white/[0.12] active:scale-[0.98] active:shadow-[0_6px_20px_rgba(0,0,0,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
-    : "";
-
-  // Disabled state classes
+  // The component now uses the unified .glass-surface class.
+  // All custom hover, shadow, and gradient logic has been removed in favor of the central system.
   const disabledClasses = disabled ? "cursor-not-allowed opacity-50" : "";
 
   return (
     <button
       data-testid={dataTestId}
       className={cn(
-        baseClasses,
-        gradientClasses,
-        glowClasses,
-        interactiveClasses,
+        "glass-surface w-full text-left text-white",
+        "px-4 py-4 sm:px-5 sm:py-5",
+        "min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]",
         disabledClasses,
         className,
       )}

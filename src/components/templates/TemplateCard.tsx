@@ -17,13 +17,13 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
   const getDifficultyColor = (difficulty?: string) => {
     switch (difficulty) {
       case "beginner":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        return "bg-semantic-success/10 text-semantic-success border-semantic-success/30";
       case "intermediate":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+        return "bg-semantic-warning/10 text-semantic-warning border-semantic-warning/30";
       case "advanced":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+        return "bg-semantic-danger/10 text-semantic-danger border-semantic-danger/30";
       default:
-        return "bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200";
+        return "bg-neutral-500/10 text-neutral-200 border-neutral-500/30";
     }
   };
 

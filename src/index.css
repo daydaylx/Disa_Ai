@@ -13,10 +13,15 @@
   /* Hintergrund-Layout-Konzept: "Synthwave Liquid-Neon Abyss" */
   /* ========================================================= */
   body {
-    /* Premium Glasmorphismus Base Background mit Hintergrundbild */
-    background:
-      linear-gradient(to bottom, rgba(16, 19, 24, 0.85) 0%, rgba(11, 13, 16, 0.9) 100%),
-      url("/images/ChatGPT Image 12. Okt. 2025, 04_50_01.png");
+    /* Premium Glasmorphismus Base Background - NEU: Prozeduraler CSS-Hintergrund */
+    background-color: #0b0d10; /* Dunkle Basis für den Weltraum-Effekt */
+    background-image:
+      /* Top-left glow */
+      radial-gradient(ellipse at 10% 20%, hsla(198, 100%, 72%, 0.15) 0%, transparent 50%),
+      /* Bottom-right glow */
+        radial-gradient(ellipse at 90% 80%, hsla(28, 100%, 72%, 0.12) 0%, transparent 50%),
+      /* Central subtle aurora */
+        linear-gradient(160deg, hsla(194, 84%, 42%, 0.1) 0%, hsla(265, 62%, 42%, 0.1) 100%);
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
@@ -147,191 +152,41 @@
  */
 
 @layer components {
-  /* Verbesserter Unified Glass Design System - Liquid-Glass Token */
-  .card-glass {
-    position: relative;
-    overflow: hidden;
-    border-radius: 1rem;
-    backdrop-filter: blur(1px) saturate(1.8);
-    -webkit-backdrop-filter: blur(1px) saturate(1.8);
+  /* =================================================================== */
+  /* NEU: Einheitliches Glass-Design-System - ".glass-surface" */
+  /* =================================================================== */
+  .glass-surface {
+    @apply relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-glass-soft backdrop-blur-lg;
+    transition: all 0.25s ease-out;
+  }
 
-    /* Enhanced glass background for better OLED visibility */
+  /* Sheen-Effekt (Lichtreflexion) */
+  .glass-surface::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 rounded-[inherit];
     background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.18) 0%,
+      145deg,
+      rgba(255, 255, 255, 0.25) 0%,
       rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.04) 100%
+      rgba(255, 255, 255, 0.02) 100%
     );
-
-    /* Multi-layer glass border and shadows */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      0 2px 8px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   }
 
-  /* NEU: Lichtreflexion auf der Oberfläche (Sheen-Effekt) */
-  .card-glass::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    /* SUBTILERE Lichtreflexion für authentischeren Glaseffekt */
-    background:
-      linear-gradient(
-        145deg,
-        rgba(255, 255, 255, 0.25) 0%,
-        rgba(255, 255, 255, 0.08) 50%,
-        rgba(255, 255, 255, 0.02) 100%
-      ),
-      radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  /* Ambient Glow-Reflexion von den Hintergrund-Glow-Effekten auf Glass-Elementen */
-  .card-glass::after {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: inherit;
-    background:
-      radial-gradient(circle at 0% 0%, rgba(91, 33, 182, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 100% 100%, rgba(14, 116, 144, 0.08) 0%, transparent 50%);
-    z-index: -1;
-    pointer-events: none;
-    animation: ambient-glow 8s ease-in-out infinite alternate;
-  }
-
-  @keyframes ambient-glow {
-    0% {
-      opacity: 0.3;
-    }
-    100% {
-      opacity: 0.6;
-    }
-  }
-
-  /* Verbesserte Textlesbarkeit auf transparentem Glas */
-  .card-glass h1,
-  .card-glass h2,
-  .card-glass h3,
-  .card-glass h4,
-  .card-glass h5,
-  .card-glass h6 {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  }
-
-  /* Konsistente Ultra-Transparente Glaselemente für alle Seiten */
-  .glass-ultra-transparent {
-    background-color: rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
-  }
-
-  .glass-button {
-    background-color: rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
-    transition: all 0.2s ease;
-  }
-
-  .glass-button:hover {
-    background-color: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  .glass-input {
-    background-color: rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
-  }
-
-  .glass-input:focus {
-    background-color: rgba(255, 255, 255, 0.02);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  /* Legacy glass classes - keeping for potential backwards compatibility */
-  .glass,
-  .glass-container {
-    /* Redirect to enhanced tile-glass for consistency */
-    @apply tile-glass;
-  }
-
-  /* Premium Glass Tile - Modern Glassmorphismus */
-  .tile-glass {
-    position: relative;
-    overflow: hidden;
-    border-radius: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-    content-visibility: auto;
-    contain-intrinsic-size: 300px 200px;
-    transition: all 0.3s ease;
-  }
-
-  /* Scrim for readability */
-  .tile-glass::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.25) 100%);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* Top highlight */
-  .tile-glass::after {
-    content: "";
-    position: absolute;
-    inset-x: 0;
-    top: 0;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.3);
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  /* Enhanced hover effects */
-  .tile-glass:hover {
+  /* Verbesserte Interaktions-Effekte */
+  .glass-surface:hover {
+    @apply border-white/30 bg-white/15 shadow-glass-strong;
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.15);
   }
 
-  /* Active state for touch feedback */
-  .tile-glass:active {
+  .glass-surface:active {
     transform: translateY(0);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition-duration: 50ms;
   }
 
-  /* Text styling for glass content */
-  .tile-glass h1,
-  .tile-glass h2,
-  .tile-glass h3,
-  .tile-glass h4,
-  .tile-glass h5,
-  .tile-glass h6 {
-    color: rgb(235, 243, 255);
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-    position: relative;
-    z-index: 10;
-  }
-
-  .tile-glass p,
-  .tile-glass span,
-  .tile-glass div {
-    color: rgb(198, 210, 222);
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 10;
+  /* Legacy-Klassen für Abwärtskompatibilität */
+  .card-glass,
+  .tile-glass {
+    @apply glass-surface;
   }
 
   @keyframes gradient {
