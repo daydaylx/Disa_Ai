@@ -267,7 +267,7 @@ export default function ChatV2() {
     <div className="relative flex h-full flex-col px-5 pb-8 pt-5">
       {/* Sanfter Farbverlauf-Overlay nur für Chat-Seite */}
       <div
-        className="pointer-events-none absolute inset-0 z-[-1] opacity-[0.15]"
+        className="pointer-events-none absolute inset-0 z-[-1] opacity-20"
         style={{
           background: `linear-gradient(
             to bottom,
@@ -307,7 +307,7 @@ export default function ChatV2() {
               description="Dein intelligenter Assistent für Gespräche, Analysen und kreative Aufgaben"
               tint={friendlyPalette[0] ?? DEFAULT_TINT}
               onClick={() => {}}
-              className="min-h-[152px] text-center"
+              className="flex h-[152px] items-center justify-center text-center"
             />
 
             {/* Quickstart Section */}
@@ -344,7 +344,7 @@ export default function ChatV2() {
                         setInput(option.title + ": ");
                       }
                     }}
-                    className="min-h-[152px] cursor-pointer"
+                    className="flex h-[152px] cursor-pointer items-center justify-center"
                   />
                 );
               })}
@@ -415,7 +415,7 @@ export default function ChatV2() {
                         description="Denkt nach..."
                         tint={friendlyPalette[0] ?? DEFAULT_TINT}
                         onClick={() => {}}
-                        className="min-h-[152px] flex-col justify-center"
+                        className="h-[152px] flex-col justify-center"
                       >
                         <div className="flex items-center space-x-2">
                           <div className="flex space-x-1">
@@ -453,7 +453,7 @@ export default function ChatV2() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Nachricht an Disa AI schreiben..."
-                  className="tile-glass max-h-[200px] min-h-[52px] w-full resize-none rounded-xl px-4 py-3 text-white transition-all duration-200 placeholder:text-white/50 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
+                  className="tile-glass max-h-[200px] min-h-[52px] w-full resize-none rounded-xl px-4 py-3 text-white transition-all duration-200 placeholder:text-white/70 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
                   rows={1}
                   aria-label="Nachricht an Disa AI eingeben"
                   aria-describedby="input-help-text"
@@ -528,7 +528,7 @@ function MessageBubble({ message }: { message: ChatMessageType }) {
           tint={tint}
           onClick={() => {}}
           badge={message.timestamp ? new Date(message.timestamp).toLocaleTimeString() : undefined}
-          className="min-h-[152px]"
+          className="flex h-[152px] items-center justify-center"
         />
       </div>
     </div>

@@ -108,7 +108,7 @@ export default function ModelSheet({
         className="overflow-y-auto px-4 pb-4"
         style={{ maxHeight: "calc(var(--vh, 100dvh) * 0.65)" }}
       >
-        <div className="bg-[#07080f]/92 sticky top-0 z-10 -mx-4 mb-4 space-y-3 px-4 pb-3 pt-2 backdrop-blur-lg">
+        <div className="sticky top-0 z-10 -mx-4 mb-4 space-y-3 bg-slate-900/90 px-4 pb-3 pt-2 backdrop-blur-lg">
           <Input
             ref={searchInputRef}
             value={searchTerm}

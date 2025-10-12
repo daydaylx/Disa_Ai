@@ -340,7 +340,7 @@ export default function ModelsPage() {
           tint={friendlyPalette[0] ?? DEFAULT_TINT}
           onClick={() => {}}
           badge="Rollen-Studio"
-          className="min-h-[100px]"
+          className="flex h-[100px] items-center justify-center"
         >
           <div className="flex items-center justify-end">
             <Link
