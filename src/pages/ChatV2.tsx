@@ -340,12 +340,11 @@ export default function ChatV2() {
             <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-white">
               <p className="font-medium">Spiel-Hinweis:</p>
               <p>
-                Stelle Ja/Nein-Fragen: <strong>ja</strong>, <strong>nein</strong> oder{" "}
+                Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
+                <strong>ja</strong>, <strong>nein</strong>, <strong>unklar</strong> oder{" "}
                 <strong>teilweise</strong>.
               </p>
-              <p>
-                Wenn du die Antwort kennst, schreibe sie direkt (z.B. "Einstein" oder "Eiffelturm").
-              </p>
+              <p>Die KI wird versuchen, deine gewählte Entität zu erraten!</p>
             </div>
           )}
 
