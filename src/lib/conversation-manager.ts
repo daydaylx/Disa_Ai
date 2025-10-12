@@ -15,6 +15,8 @@ export interface Conversation {
   model?: string;
   messageCount: number;
   lastActivity: number;
+  isFavorite?: boolean;
+  tags?: string[];
 }
 
 export interface ConversationExport {
@@ -30,6 +32,68 @@ export interface ConversationExport {
 
 const STORAGE_KEY = "disa:conversations";
 const MAX_CONVERSATIONS = 100; // Limit to prevent storage bloat
+
+/**
+ * Toggle favorite status of a conversation
+ */
+export function toggleFavorite(conversationId: string): boolean {
+  const conversations = getAllConversations();
+  const conversation = conversations.find((c) => c.id === conversationId);
+
+  if (!conversation) return false;
+
+  // Toggle favorite status
+  conversation.isFavorite = !conversation.isFavorite;
+  conversation.updatedAt = Date.now();
+
+  // Save updated conversations
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+
+  return conversation.isFavorite;
+}
+
+/**
+ * Add a tag to a conversation
+ */
+export function addTag(conversationId: string, tag: string): void {
+  const conversations = getAllConversations();
+  const conversation = conversations.find((c) => c.id === conversationId);
+
+  if (!conversation) return;
+
+  if (!conversation.tags) {
+    conversation.tags = [];
+  }
+
+  // Add tag if it doesn't exist
+  if (!conversation.tags.includes(tag)) {
+    conversation.tags.push(tag);
+    conversation.updatedAt = Date.now();
+
+    // Save updated conversations
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+  }
+}
+
+/**
+ * Remove a tag from a conversation
+ */
+export function removeTag(conversationId: string, tag: string): void {
+  const conversations = getAllConversations();
+  const conversation = conversations.find((c) => c.id === conversationId);
+
+  if (!conversation || !conversation.tags) return;
+
+  // Remove tag if it exists
+  const index = conversation.tags.indexOf(tag);
+  if (index !== -1) {
+    conversation.tags.splice(index, 1);
+    conversation.updatedAt = Date.now();
+
+    // Save updated conversations
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+  }
+}
 
 /**
  * Generate conversation title from messages
