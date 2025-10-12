@@ -98,23 +98,27 @@
 @layer components {
   /* Verbesserter Unified Glass Design System - Liquid-Glass Token */
   .card-glass {
-    /* HINTERGRUND-BLUR & BASIS-TRANSPARENZ: Angepasst für Liquid-Neon Abyss */
-    @apply relative overflow-hidden rounded-2xl saturate-150 supports-[backdrop-filter]:backdrop-blur-xl;
-    background-color: rgba(
-      255,
-      255,
-      255,
-      0.005
-    ); /* Extrem durchsichtig - optimiert für Mobile-Darstellung */
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    backdrop-filter: blur(2px) saturate(1.8);
+    -webkit-backdrop-filter: blur(2px) saturate(1.8);
 
-    /* VERSTÄRKTE Glaskante für besseren Kontrast gegen Glow-Effekte */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Extrem subtiler Rand für Mobile-Optimierung */
+    /* Enhanced glass background for better OLED visibility */
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
 
-    /* DRAMATISCHER SCHATTEN: Optimiert für den neuen Liquid-Hintergrund */
+    /* Multi-layer glass border and shadows */
+    border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow:
-      0 12px 40px 0 rgba(0, 0, 0, 0.6),
-      /* Stärkerer Schatten für mehr Separation */ inset 0 1px 2px 0 rgba(255, 255, 255, 0.35),
-      /* Verstärkte Lichtkante */ 0 0 0 1px rgba(255, 255, 255, 0.08); /* Zusätzlicher äußerer Glow-Ring */
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   }
 
   /* NEU: Lichtreflexion auf der Oberfläche (Sheen-Effekt) */
@@ -201,57 +205,98 @@
     border-color: rgba(255, 255, 255, 0.3);
   }
 
-  /* Neue Glass-Klasse mit benutzerdefinierten Parametern */
-  .glass {
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    border-radius: 28px;
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
-    background-color: rgba(255, 115, 0, 0.369);
-    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
-    border: 4px rgba(255, 255, 255, 0.4) solid;
-    border-bottom: 4px rgba(40, 40, 40, 0.35) solid;
-    border-right: 4px rgba(40, 40, 40, 0.35) solid;
-  }
-
-  /* Spezifische Glass-Container-Klasse mit festen Abmessungen */
+  /* Legacy glass classes - keeping for potential backwards compatibility */
+  .glass,
   .glass-container {
-    width: 700px;
-    height: 375px;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    border-radius: 28px;
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
-    background-color: rgba(255, 115, 0, 0.369);
-    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
-    border: 4px rgba(255, 255, 255, 0.4) solid;
-    border-bottom: 4px rgba(40, 40, 40, 0.35) solid;
-    border-right: 4px rgba(40, 40, 40, 0.35) solid;
+    /* Redirect to enhanced tile-glass for consistency */
+    @apply tile-glass;
   }
 
-  /* Neue Klasse für Kacheln mit den gewünschten Parametern */
+  /* Enhanced Glassmorphismus für Kacheln - Android OLED optimiert */
   .tile-glass {
+    position: relative;
     color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    border-radius: 28px;
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
-    background-color: rgba(255, 115, 0, 0.369);
-    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
-    border: 4px rgba(255, 255, 255, 0.4) solid;
-    border-bottom: 4px rgba(40, 40, 40, 0.35) solid;
-    border-right: 4px rgba(40, 40, 40, 0.35) solid;
+    backdrop-filter: blur(2px) saturate(1.8);
+    -webkit-backdrop-filter: blur(2px) saturate(1.8);
+
+    /* Enhanced glass background with better visibility on OLED */
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+
+    /* Multi-layer shadows for depth */
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+
+    /* Gradient border for realistic glass edge */
+    border: 1.5px solid transparent;
+    background-clip: padding-box;
+    border-image: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.1) 100%
+      )
+      1;
+  }
+
+  /* Glass reflection highlight */
+  .tile-glass::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.1) 70%,
+      transparent 100%
+    );
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Enhanced hover effects */
+  .tile-glass:hover {
+    backdrop-filter: blur(3px) saturate(2.2);
+    -webkit-backdrop-filter: blur(3px) saturate(2.2);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.18) 50%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+    box-shadow:
+      0 12px 48px rgba(0, 0, 0, 0.4),
+      0 4px 12px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* Active state for touch feedback */
+  .tile-glass:active {
+    backdrop-filter: blur(1px) saturate(1.5);
+    -webkit-backdrop-filter: blur(1px) saturate(1.5);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.06) 100%
+    );
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.25),
+      0 1px 4px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.08);
   }
 
   @keyframes gradient {
