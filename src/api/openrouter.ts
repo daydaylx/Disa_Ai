@@ -178,13 +178,6 @@ export async function chatStream(
               } catch (err) {
                 throw mapError(err);
               }
-            } else {
-              if (!started) {
-                started = true;
-                opts?.onStart?.();
-              }
-              onDelta(payload);
-              full += payload;
             }
           }
         }
