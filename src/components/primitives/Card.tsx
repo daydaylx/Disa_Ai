@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 type CardProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(({ className, ...props }, ref) => {
-  const cardClasses = twMerge("glass-surface rounded-lg", className);
+  const cardClasses = twMerge("glass-card rounded-lg", className);
 
   return <div ref={ref} className={cardClasses} {...props} />;
 });

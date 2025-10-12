@@ -94,6 +94,14 @@ export default {
         "glass-medium": "var(--glass-glow-medium)",
         "glass-strong": "var(--glass-glow-strong)",
       },
+      backgroundColor: {
+        // Glass overlay variants
+        "glass-overlay-weak": "var(--glass-overlay-weak)",
+        "glass-overlay-soft": "var(--glass-overlay-soft)",
+        "glass-overlay-medium": "var(--glass-overlay-medium)",
+        "glass-overlay-strong": "var(--glass-overlay-strong)",
+        "glass-overlay-intense": "var(--glass-overlay-intense)",
+      },
       backdropBlur: {
         sm: "var(--blur-sm)",
         md: "var(--blur-md)",

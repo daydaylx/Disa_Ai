@@ -33,7 +33,7 @@
     position: relative;
   }
 
-  /* Colored Glow Elements as Pseudo-Elements */
+  /* Optimized Glow Elements as Pseudo-Elements - Reduced Complexity */
   body::before {
     content: "";
     position: fixed;
@@ -42,8 +42,8 @@
     width: 75vw;
     height: 50vh;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.15;
+    filter: blur(60px); /* Reduced blur for better performance */
+    opacity: 0.12; /* Reduced opacity for better performance */
     background: var(--color-accent-500);
     z-index: -20;
     pointer-events: none;
@@ -57,8 +57,8 @@
     width: 65vw;
     height: 45vh;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.12;
+    filter: blur(60px); /* Reduced blur for better performance */
+    opacity: 0.1; /* Reduced opacity for better performance */
     background: var(--color-warning);
     z-index: -20;
     pointer-events: none;
@@ -80,33 +80,14 @@
     inset: 0;
     z-index: -10;
     pointer-events: none;
-    /* Enhanced glassmorphism backdrop with noise texture */
-    background:
-      /* Subtle noise texture */
-      radial-gradient(
-        circle at 25% 25%,
-        transparent 0%,
-        rgba(255, 255, 255, 0.003) 50%,
-        transparent 100%
-      ),
-      radial-gradient(
-        circle at 75% 75%,
-        transparent 0%,
-        rgba(255, 255, 255, 0.003) 50%,
-        transparent 100%
-      ),
-      /* Fine grain pattern */
-        repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 1px,
-          rgba(255, 255, 255, 0.008) 1px,
-          rgba(255, 255, 255, 0.008) 2px
-        ),
-      /* Base overlay */
-        linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
-    backdrop-filter: blur(1px) saturate(1.8);
-    -webkit-backdrop-filter: blur(1px) saturate(1.8);
+    /* Simplified glassmorphism backdrop */
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.015) 0%,
+      rgba(255, 255, 255, 0.008) 100%
+    );
+    backdrop-filter: blur(1px) saturate(1.5); /* Reduced saturation for better performance */
+    -webkit-backdrop-filter: blur(1px) saturate(1.5);
   }
 
   /* Mobile-optimized background */
@@ -157,43 +138,6 @@
  */
 
 @layer components {
-  /* =================================================================== */
-  /* NEU: Einheitliches Glass-Design-System - ".glass-surface" */
-  /* =================================================================== */
-  .glass-surface {
-    @apply relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-glass-soft backdrop-blur-lg;
-    transition: all 0.25s ease-out;
-  }
-
-  /* Sheen-Effekt (Lichtreflexion) */
-  .glass-surface::before {
-    content: "";
-    @apply pointer-events-none absolute inset-0 rounded-[inherit];
-    background: linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.25) 0%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.02) 100%
-    );
-  }
-
-  /* Verbesserte Interaktions-Effekte */
-  .glass-surface:hover {
-    @apply border-white/30 bg-white/15 shadow-glass-strong;
-    transform: translateY(-2px);
-  }
-
-  .glass-surface:active {
-    transform: translateY(0);
-    transition-duration: 50ms;
-  }
-
-  /* Legacy-Klassen für Abwärtskompatibilität */
-  .card-glass,
-  .tile-glass {
-    @apply glass-surface;
-  }
-
   @keyframes gradient {
     0% {
       background-position: 0% 50%;
@@ -295,12 +239,12 @@
   }
 }
 
-/* Zweiter leuchtender Akzent (unten rechts) mit separatem Element */
+/* Zweiter leuchtender Akzent (unten rechts) mit separatem Element - Optimized */
 #root::before {
   content: "";
   position: fixed;
-  width: 500px;
-  height: 500px;
+  width: 400px; /* Reduced size for better performance */
+  height: 400px; /* Reduced size for better performance */
   bottom: -150px;
   right: -200px;
   border-radius: 50%;
@@ -309,8 +253,8 @@
     var(--color-synthwave-accent-teal) 0%,
     transparent 70%
   ); /* Türkis-Ton */
-  filter: blur(80px);
-  opacity: 0.2;
+  filter: blur(60px); /* Reduced blur for better performance */
+  opacity: 0.15; /* Reduced opacity for better performance */
   z-index: -2;
   pointer-events: none;
   animation: pulse-glow-two 18s infinite alternate-reverse ease-in-out;

@@ -42,7 +42,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          "tile-glass flex min-h-[152px] flex-col p-5 text-left text-white transition-all duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]",
+          "glass-card flex min-h-[152px] flex-col p-5 text-left text-white transition-all duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]",
           isActive && "border-white/30 ring-2 ring-white/25",
           className,
         )}
@@ -50,7 +50,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-70"
+          className="pointer-events-none absolute inset-0 rounded-[inherit]"
           style={{
             background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`,
           }}

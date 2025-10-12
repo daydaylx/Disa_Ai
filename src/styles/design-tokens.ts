@@ -218,6 +218,13 @@ export const glassmorphism = {
     medium: "rgba(255, 255, 255, 0.16)",
     strong: "rgba(255, 255, 255, 0.24)",
   },
+  overlay: {
+    weak: "rgba(255, 255, 255, 0.05)", // Sehr subtil
+    soft: "rgba(255, 255, 255, 0.10)", // Subtil
+    medium: "rgba(255, 255, 255, 0.15)", // Moderat
+    strong: "rgba(255, 255, 255, 0.20)", // Stark
+    intense: "rgba(255, 255, 255, 0.30)", // Sehr stark
+  },
   tint: {
     cyan: "rgba(34, 211, 238, 0.1)",
     purple: "rgba(168, 85, 247, 0.1)",

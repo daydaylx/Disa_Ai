@@ -20,21 +20,23 @@ export function StaticGlassCard({
   };
 
   const tintStyle = tint
-    ? { background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`, opacity: 0.7 } // Opazität verstärkt für bessere Farbunterscheidung
+    ? { background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)` }
     : {};
 
   return (
     <div
       className={cn(
-        "card-glass", // HIER die neue, zentrale Klasse verwenden
+        "glass-card", // Neue, zentrale Klasse
         className,
       )}
       {...props}
     >
-      {/* Tint gradient layer - bleibt wie es ist */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={tintStyle} />
-
-      {/* Sheen/Reflection wird jetzt von .card-glass::before gehandhabt, kann entfernt werden */}
+      {/* Tint gradient layer */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[inherit]"
+        style={tintStyle}
+      />
 
       {/* Content container */}
       <div className={cn("relative z-10", paddingClasses[padding])}>{children}</div>

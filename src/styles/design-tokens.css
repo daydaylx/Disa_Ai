@@ -90,6 +90,12 @@
   --glass-glow-medium: 0 0 40px rgba(34, 211, 238, 0.3);
   --glass-glow-strong: 0 0 60px rgba(34, 211, 238, 0.4);
 
+  --glass-overlay-weak: rgba(255, 255, 255, 0.05); /* Sehr subtil */
+  --glass-overlay-soft: rgba(255, 255, 255, 0.1); /* Subtil */
+  --glass-overlay-medium: rgba(255, 255, 255, 0.15); /* Moderat */
+  --glass-overlay-strong: rgba(255, 255, 255, 0.2); /* Stark */
+  --glass-overlay-intense: rgba(255, 255, 255, 0.3); /* Sehr stark */
+
   /* Transitions */
   --transition-fast: 150ms;
   --transition-normal: 200ms;
@@ -179,11 +185,111 @@
   justify-content: center;
 }
 
+/* Legacy classes for backward compatibility - to be phased out */
+.tile-glass,
+.card-glass {
+  @apply glass-card;
+}
+
+/* Enhanced glass surface with state variants */
+.glass-surface {
+  @apply relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-glass-soft backdrop-blur-lg;
+  transition: all 0.25s ease-out;
+}
+
+.glass-surface::before {
+  content: "";
+  @apply pointer-events-none absolute inset-0 rounded-[inherit];
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+
+.glass-surface:hover {
+  @apply border-white/30 bg-white/15 shadow-glass-strong;
+  transform: translateY(-2px);
+}
+
+.glass-surface:active {
+  transform: translateY(0);
+  transition-duration: 50ms;
+}
+
+.glass-surface.active {
+  @apply border-white/30 bg-white/15 shadow-glass-strong ring-2 ring-white/20;
+}
+
+.glass-surface.disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+/* Enhanced glass card with overlay management */
 .glass-card {
-  background: var(--glass-bg-soft);
-  backdrop-filter: blur(var(--blur-md));
-  border: 1px solid var(--glass-border-soft);
-  border-radius: var(--radius-md);
+  @apply relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-glass-soft backdrop-blur-lg;
+  transition: all 0.25s ease-out;
+}
+
+.glass-card::before {
+  content: "";
+  @apply pointer-events-none absolute inset-0 rounded-[inherit];
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+
+.glass-card:hover {
+  @apply border-white/30 bg-white/15 shadow-glass-strong;
+  transform: translateY(-2px);
+}
+
+.glass-card:active {
+  transform: translateY(0);
+  transition-duration: 50ms;
+}
+
+.glass-card.active {
+  @apply border-white/30 bg-white/15 shadow-glass-strong ring-2 ring-white/20;
+}
+
+.glass-card.disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+/* Overlay variants for different content requirements */
+.glass-card.overlay-weak::after {
+  content: "";
+  @apply pointer-events-none absolute inset-0 rounded-[inherit];
+  background: var(--glass-overlay-weak);
+}
+
+.glass-card.overlay-soft::after {
+  content: "";
+  @apply pointer-events-none absolute inset-0 rounded-[inherit];
+  background: var(--glass-overlay-soft);
+}
+
+.glass-card.overlay-medium::after {
+  content: "";
+  @apply pointer-events-none absolute inset-0 rounded-[inherit];
+  background: var(--glass-overlay-medium);
+}
+
+.glass-card.overlay-strong::after {
+  content: "";
+  @apply pointer-events-none absolute inset-0 rounded-[inherit];
+  background: var(--glass-overlay-strong);
+}
+
+.glass-card.overlay-intense::after {
+  content: "";
+  @apply pointer-events-none absolute inset-0 rounded-[inherit];
+  background: var(--glass-overlay-intense);
 }
 
 .glass-button {
