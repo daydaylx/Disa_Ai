@@ -1,7 +1,7 @@
 import { History, MessageSquare, Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { ConversationHistorySheet } from "../components/chat/ConversationHistorySheet";
+import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
 import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
@@ -482,8 +482,8 @@ export default function ChatV2() {
         </div>
       </div>
 
-      {/* Conversation History Sheet */}
-      <ConversationHistorySheet
+      {/* Chat History Sidebar */}
+      <ChatHistorySidebar
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
         conversations={conversations}
