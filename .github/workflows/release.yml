@@ -22,6 +22,12 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          # Ensure we have all branches and remotes for changesets
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: "Fetch main branch"
+        run: |
+          git fetch origin main:main || echo "Main branch already available"
 
       - name: "Setup Node.js"
         uses: actions/setup-node@v5
