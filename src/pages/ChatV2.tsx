@@ -340,11 +340,11 @@ export default function ChatV2() {
             <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-white">
               <p className="font-medium">Spiel-Hinweis:</p>
               <p>
-                Antworte nur mit <strong>ja</strong>, <strong>nein</strong> oder{" "}
-                <strong>unklar</strong>.
+                Stelle Ja/Nein-Fragen: <strong>ja</strong>, <strong>nein</strong> oder{" "}
+                <strong>teilweise</strong>.
               </p>
               <p>
-                Wenn die KI rät: Antwort mit <strong>richtig</strong> oder <strong>falsch</strong>.
+                Wenn du die Antwort kennst, schreibe sie direkt (z.B. "Einstein" oder "Eiffelturm").
               </p>
             </div>
           )}
