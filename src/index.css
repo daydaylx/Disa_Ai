@@ -171,15 +171,15 @@
   .glass-ultra-transparent {
     background-color: rgba(255, 255, 255, 0.01);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
   }
 
   .glass-button {
     background-color: rgba(255, 255, 255, 0.01);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
     transition: all 0.2s ease;
   }
 
@@ -191,8 +191,8 @@
   .glass-input {
     background-color: rgba(255, 255, 255, 0.01);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
   }
 
   .glass-input:focus {
@@ -208,8 +208,8 @@
     align-items: center;
     gap: 20px;
     border-radius: 28px;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
     background-color: rgba(255, 115, 0, 0.369);
     box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
     border: 4px rgba(255, 255, 255, 0.4) solid;
@@ -227,8 +227,8 @@
     align-items: center;
     gap: 20px;
     border-radius: 28px;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
     background-color: rgba(255, 115, 0, 0.369);
     box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
     border: 4px rgba(255, 255, 255, 0.4) solid;
@@ -244,8 +244,8 @@
     align-items: center;
     gap: 20px;
     border-radius: 28px;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
     background-color: rgba(255, 115, 0, 0.369);
     box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
     border: 4px rgba(255, 255, 255, 0.4) solid;
@@ -313,7 +313,7 @@
   }
 }
 
-@supports not (backdrop-filter: blur(8px)) {
+@supports not (backdrop-filter: blur(1px)) {
   .card-glass {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
