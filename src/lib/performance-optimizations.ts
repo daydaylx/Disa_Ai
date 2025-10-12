@@ -10,10 +10,12 @@
 // React import (needed for createAsyncRoute)
 import React from "react";
 
+import { logger } from "./utils/production-logger";
+
 export function createLazyImport<T>(importFn: () => Promise<T>) {
   return () => {
     return importFn().catch((error) => {
-      console.error("Failed to load module:", error);
+      logger.error("Failed to load module:", error);
       // Return a fallback or rethrow based on requirements
       throw error;
     });
@@ -192,14 +194,14 @@ export class PerformanceMonitor {
   static measure(name: string, startMark: string): number {
     const startTime = this.marks.get(startMark);
     if (!startTime) {
-      console.warn(`Start mark "${startMark}" not found`);
+      logger.warn(`Start mark "${startMark}" not found`);
       return 0;
     }
 
     const endTime = performance.now();
     const duration = endTime - startTime;
 
-    console.warn(`${name}: ${duration.toFixed(2)}ms`);
+    logger.info(`${name}: ${duration.toFixed(2)}ms`);
     return duration;
   }
 
