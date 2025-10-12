@@ -1,3 +1,5 @@
+import { logger } from "../utils/production-logger";
+
 try {
   if ((navigator as any).webdriver) {
     /* test → kein SW */ throw new Error("__PW_TEST__");
@@ -18,7 +20,7 @@ export { BUILD_ID };
 export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) {
-    console.warn("[SW] Service Worker not supported in this browser");
+    logger.warn("[SW] Service Worker not supported in this browser");
     return;
   }
 
@@ -32,7 +34,7 @@ export function registerSW() {
     error?: Error,
   ) => {
     if (source?.includes("sw.js") || error?.stack?.includes("sw.js")) {
-      console.error("[SW] Service Worker error caught:", { message, source, error });
+      logger.error("[SW] Service Worker error caught:", { message, source, error });
       // Don't let SW errors crash the main app
       return true;
     }
@@ -57,7 +59,7 @@ export function registerSW() {
             if (nw.state === "installed" && navigator.serviceWorker.controller) {
               // New content is available, and the new service worker has been installed.
               // The 'autoUpdate' strategy will handle the update automatically.
-              console.log(
+              logger.info(
                 "[SW] New content is available and will be used when all tabs for this scope are closed.",
               );
             }
@@ -74,7 +76,7 @@ try {
   const isE2E =
     (navigator as any).webdriver || params.has("no-sw") || /playwright/i.test(navigator.userAgent);
   if (isE2E) {
-    console.warn("[SW] disabled in E2E");
+    logger.warn("[SW] disabled in E2E");
     // Frühzeitiger Return aus jeglicher Registrierung
     // (falls oben eine auto-registrierende Routine existiert, bitte direkt dort guarden)
   }

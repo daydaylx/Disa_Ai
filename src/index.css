@@ -14,7 +14,7 @@
   /* ========================================================= */
   body {
     /* Premium Glasmorphismus Base Background - NEU: Prozeduraler CSS-Hintergrund */
-    background-color: #0b0d10; /* Dunkle Basis für den Weltraum-Effekt */
+    background-color: var(--color-corporate-bg-primary); /* Dunkle Basis für den Weltraum-Effekt */
     background-image:
       /* Top-left glow */
       radial-gradient(ellipse at 10% 20%, hsla(198, 100%, 72%, 0.15) 0%, transparent 50%),
@@ -44,7 +44,7 @@
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.15;
-    background: #6fd3ff;
+    background: var(--color-accent-500);
     z-index: -20;
     pointer-events: none;
   }
@@ -59,7 +59,7 @@
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.12;
-    background: #ff9f6f;
+    background: var(--color-warning);
     z-index: -20;
     pointer-events: none;
   }
@@ -116,7 +116,12 @@
       background-size: 100% 100%;
       /* Vereinfachter Gradient für mobile Performance */
       background:
-        linear-gradient(135deg, #0a0e1a 0%, #1e2a4a 50%, #0d1117 100%),
+        linear-gradient(
+          135deg,
+          var(--color-synthwave-bg-deeper) 0%,
+          var(--color-synthwave-accent-purple) 50%,
+          var(--color-corporate-bg-primary) 100%
+        ),
         radial-gradient(ellipse at center, rgba(147, 51, 234, 0.08) 0%, transparent 70%);
     }
 

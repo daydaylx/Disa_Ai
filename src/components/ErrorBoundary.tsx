@@ -2,6 +2,7 @@ import type { ErrorInfo, ReactNode } from "react";
 import React, { Component } from "react";
 
 import { getEnvConfig, getEnvironmentErrors, isEnvironmentValid } from "../config/env";
+import { logger } from "../lib/utils/production-logger";
 
 interface Props {
   children: ReactNode;
@@ -45,47 +46,47 @@ export class ErrorBoundary extends Component<Props, State> {
     this.setState({ errorInfo });
 
     // Log detailed error information
-    console.error("🚨 Application Error Boundary");
-    console.error("Error:", error);
-    console.error("Error Info:", errorInfo);
-    console.error("Component Stack:", errorInfo.componentStack);
+    logger.error("🚨 Application Error Boundary");
+    logger.error("Error:", error);
+    logger.error("Error Info:", errorInfo);
+    logger.error("Component Stack:", errorInfo.componentStack);
 
     // Log environment diagnostics
     this.logEnvironmentDiagnostics();
   }
 
   private logEnvironmentDiagnostics() {
-    console.error("🔍 Environment Diagnostics");
+    logger.error("🔍 Environment Diagnostics");
 
     try {
       const envValid = isEnvironmentValid();
-      console.error("Environment Valid:", envValid);
+      logger.error("Environment Valid:", envValid);
 
       if (!envValid) {
         const errors = getEnvironmentErrors();
-        console.error("Environment Errors:", errors);
+        logger.error("Environment Errors:", errors);
       }
 
       const config = getEnvConfig();
-      console.error("Environment Config:", config);
+      logger.error("Environment Config:", config);
     } catch (envError) {
-      console.error("Environment Configuration Error:", envError);
+      logger.error("Environment Configuration Error:", envError);
     }
 
     // Check network connectivity
     if (navigator.onLine) {
-      console.error("Network Status: Online");
+      logger.error("Network Status: Online");
     } else {
-      console.error("Network Status: Offline");
+      logger.error("Network Status: Offline");
     }
 
     // Check localStorage availability
     try {
       localStorage.setItem("test", "test");
       localStorage.removeItem("test");
-      console.error("LocalStorage: Available");
+      logger.error("LocalStorage: Available");
     } catch {
-      console.error("LocalStorage: Not available");
+      logger.error("LocalStorage: Not available");
     }
   }
 
@@ -243,9 +244,9 @@ export class ErrorBoundary extends Component<Props, State> {
  */
 export function useErrorReporting() {
   const reportError = (error: Error, context?: string) => {
-    console.error("🚨 Manual Error Report");
-    console.error("Error:", error);
-    if (context) console.error("Context:", context);
+    logger.error("🚨 Manual Error Report");
+    logger.error("Error:", error);
+    if (context) logger.error("Context:", context);
 
     // You could send this to an error tracking service
   };
@@ -299,7 +300,7 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
               clearTimeout(timeoutId);
             } catch {
               // API issues are handled by the existing error system
-              console.warn("API connectivity check failed - using existing error handling");
+              logger.warn("API connectivity check failed - using existing error handling");
             }
           }, 2000); // Longer delay for stability
         }
@@ -310,7 +311,7 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         // Log but don't block
-        console.warn("Startup diagnostics failed:", error);
+        logger.warn("Startup diagnostics failed:", error);
       }
     };
 

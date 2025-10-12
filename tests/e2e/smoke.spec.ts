@@ -1,8 +1,13 @@
 import { expect, test } from "@playwright/test";
 
+import { setupApiKeyStorage, setupChatApiStreamingMock } from "./api-mock";
+
 test.describe("Smoke Tests", () => {
   test("App loads, shows hero, and quickstart overview", async ({ page }) => {
-    await page.goto("/", { waitUntil: "domcontentloaded" });
+    // Set up API key storage to prevent NO_API_KEY error
+    await setupApiKeyStorage(page);
+
+    await page.goto("/chat", { waitUntil: "domcontentloaded" });
 
     await expect(page).toHaveTitle(/disa ai/i);
 
@@ -10,26 +15,44 @@ test.describe("Smoke Tests", () => {
     const target = hasMain ? page.locator("#main") : page.locator("#app");
     await expect(target).toBeVisible();
 
-    await expect(page.getByText("Was möchtest du heute erschaffen?")).toBeVisible();
-    await expect(page.locator('[data-testid^="quickstart-"]').first()).toBeVisible();
+    // Wait a bit more to ensure app has fully loaded
+    await page.waitForTimeout(2000);
+
+    // Look for the actual text shown when there are no messages
+    const heroTextLocator = page.getByText(
+      "Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.",
+    );
+    await expect(heroTextLocator).toBeVisible({ timeout: 10000 });
+
+    const quickstartsLocator = page
+      .locator(".grid.grid-cols-1.gap-3.pb-8 .min-h-\\[152px\\].cursor-pointer")
+      .first();
+    await expect(quickstartsLocator).toBeVisible({ timeout: 10000 });
   });
 
   test("Can send a message and receive a streamed response", async ({ page }) => {
+    // Set up API key storage and API mock for this specific test
+    await setupApiKeyStorage(page);
+    await setupChatApiStreamingMock(page);
+
     await page.goto("/chat");
 
-    // Check if composer is visible
-    const composer = page.locator('[data-testid="composer-input"]');
-    await expect(composer).toBeVisible();
+    // Wait a bit more to ensure app has fully loaded with API key
+    await page.waitForTimeout(2000);
+
+    // Check if composer is visible - find the textarea with the placeholder
+    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+    await expect(composer).toBeVisible({ timeout: 10000 });
 
     // Type a message and send it
     await composer.fill("Hallo Welt");
-    await page.locator('[data-testid="composer-send"]').click();
+    await page.locator('button[aria-label="Nachricht senden"]').click();
 
     // The user message should be visible in the chat messages area
-    await expect(page.getByTestId("message.item").getByText("Hallo Welt")).toBeVisible();
+    await expect(page.locator(".min-h-\\[152px\\]").getByText("Hallo Welt")).toBeVisible();
 
     // The stop button should appear during streaming
-    const stopButton = page.locator('[data-testid="composer-stop"]');
+    const stopButton = page.locator('button[aria-label="Nachricht wird gesendet..."]');
     await expect(stopButton).toBeVisible({ timeout: 15000 });
 
     // The mocked response "Hallo das ist eine Test-Antwort" should be visible

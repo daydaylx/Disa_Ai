@@ -4,6 +4,17 @@
 
 Disa AI is a professional, mobile-first AI Chat Progressive Web App (PWA) built with React, Vite, TypeScript, and Tailwind CSS. The application is specifically designed for optimal display on mobile devices (especially Android) and features a modern Glassmorphism design, a robust codebase, and a security and performance-focused architecture.
 
+## Key Improvements in Stability and Robustness
+
+Recent improvements have focused on making the application more stable and robust:
+
+- **Enhanced Error Handling**: Improved error boundaries with proper error reporting using the application's logger system instead of raw console.log statements
+- **UI Consistency**: Updated UI components to consistently use design tokens for better visual consistency across the application
+- **Performance Optimizations**: Optimized viewport handling, scroll performance, and component rendering
+- **Cleaned Dependencies**: Removed unused dependencies and fixed incorrect imports
+- **Code Quality**: Replaced console.log statements with proper logging system throughout the codebase
+- **Build Process**: Fixed build issues by removing large assets that exceeded PWA cache limits
+
 ## Sprachrichtlinien
 
 - **Sprache**: Die primäre Sprache für alle Benutzeroberflächen, Dokumentationen und Benutzerinteraktionen ist Deutsch.
