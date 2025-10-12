@@ -228,6 +228,18 @@ export default function ChatV2() {
     });
   };
 
+  // Harmonischer Farbverlauf für Chat-Spiele-Kacheln - sanfte Progression von warm zu kühl
+  const chatGameTints: GlassTint[] = [
+    { from: "hsla(340, 75%, 68%, 0.78)", to: "hsla(20, 82%, 65%, 0.55)" }, // Warm Pink zu Orange
+    { from: "hsla(25, 85%, 68%, 0.78)", to: "hsla(45, 88%, 70%, 0.55)" }, // Orange zu Gold
+    { from: "hsla(50, 90%, 72%, 0.78)", to: "hsla(75, 85%, 68%, 0.55)" }, // Gold zu Lime
+    { from: "hsla(80, 82%, 70%, 0.78)", to: "hsla(160, 80%, 65%, 0.55)" }, // Lime zu Mint
+    { from: "hsla(165, 85%, 68%, 0.78)", to: "hsla(190, 85%, 68%, 0.55)" }, // Mint zu Aqua
+    { from: "hsla(195, 88%, 70%, 0.78)", to: "hsla(220, 85%, 72%, 0.55)" }, // Aqua zu Sky
+    { from: "hsla(225, 82%, 74%, 0.78)", to: "hsla(250, 85%, 72%, 0.55)" }, // Sky zu Blau
+    { from: "hsla(255, 88%, 74%, 0.78)", to: "hsla(280, 82%, 70%, 0.55)" }, // Blau zu Violett
+  ];
+
   const quickstartOptions = [
     {
       title: "Wer bin ich?",
@@ -301,7 +313,7 @@ export default function ChatV2() {
               Schnellstart
             </h3>
             {quickstartOptions.map((option, index) => {
-              const tint = friendlyPalette[(index + 1) % friendlyPalette.length] ?? DEFAULT_TINT;
+              const tint = chatGameTints[index] ?? DEFAULT_TINT;
               return (
                 <RoleCard
                   key={option.title}
