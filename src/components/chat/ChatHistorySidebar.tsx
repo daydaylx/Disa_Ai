@@ -1,4 +1,4 @@
-import { Clock, MessageSquare, Search, Star, X } from "lucide-react";
+import { ArrowLeft, Clock, MessageSquare, Search, Star, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { useGlassPalette } from "../../hooks/useGlassPalette";
@@ -91,18 +91,32 @@ export function ChatHistorySidebar({
       {/* Backdrop - only visible on mobile */}
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm md:hidden" onClick={onClose} />
 
-      {/* Sidebar - responsive design */}
-      <div className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#0a0d25] shadow-2xl md:relative md:right-auto md:top-auto md:h-auto md:max-w-none md:rounded-2xl md:shadow-none">
+      {/* Sidebar - responsive design with bottom padding for navigation */}
+      <div
+        className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#0a0d25] shadow-2xl md:relative md:right-auto md:top-auto md:h-auto md:max-w-none md:rounded-2xl md:shadow-none"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 80px)" }}
+      >
         {/* Header */}
         <div className="sticky top-0 z-10 border-b border-white/10 bg-[#0a0d25]/80 backdrop-blur-xl">
           <div className="flex items-center justify-between p-4">
-            <h2 className="text-lg font-semibold text-white">Chat-Verlauf</h2>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                aria-label="Zurück zum Chat"
+                className="glass-button h-10 w-10 rounded-xl p-0 text-white transition-all hover:bg-white/20"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <h2 className="text-lg font-semibold text-white">Chat-Verlauf</h2>
+            </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              aria-label="Schließen"
-              className="md:hidden"
+              aria-label="Chat-Verlauf schließen"
+              className="glass-button h-10 w-10 rounded-xl p-0 text-white transition-all hover:bg-white/20"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -164,7 +178,7 @@ export function ChatHistorySidebar({
         </div>
 
         {/* Content */}
-        <div className="h-[calc(100vh-140px)] overflow-y-auto px-4 pb-4 md:h-[calc(100%-140px)]">
+        <div className="h-[calc(100vh-220px)] overflow-y-auto px-4 pb-4 md:h-[calc(100%-140px)]">
           {Object.entries(groupedConversations).map(([groupName, groupConversations]) => (
             <div key={groupName} className="mb-6">
               <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-white/50">
