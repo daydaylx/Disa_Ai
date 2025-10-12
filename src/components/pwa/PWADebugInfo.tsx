@@ -2,18 +2,7 @@ import { Info } from "lucide-react";
 import { useState } from "react";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
-import type { GlassTint } from "../../lib/theme/glass";
 import { Button } from "../ui/button";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
-
-interface PWADebugInfoProps {
-  tint?: GlassTint;
-}
-
-const DEFAULT_TINT: GlassTint = {
-  from: "hsla(300, 100%, 65%, 0.1)",
-  to: "hsla(260, 90%, 60%, 0.08)",
-};
 
 function isStandalone(): boolean {
   try {
@@ -43,7 +32,7 @@ function isChrome(): boolean {
   return /chrome/i.test(ua) && !/edg/i.test(ua);
 }
 
-export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
+export function PWADebugInfo() {
   const [isVisible, setIsVisible] = useState(false);
   const { canInstall, installed, dismissed } = usePWAInstall();
 
@@ -79,11 +68,7 @@ export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
 
   return (
     <div className="fixed right-4 top-4 z-50 max-w-sm">
-      <StaticGlassCard
-        tint={tint}
-        padding="sm"
-        className="border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-      >
+      <div className="glass-card rounded-2xl border border-white/20 bg-white/10 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-white">PWA Debug Info</h3>
@@ -148,7 +133,7 @@ export function PWADebugInfo({ tint = DEFAULT_TINT }: PWADebugInfoProps) {
             </ul>
           </div>
         </div>
-      </StaticGlassCard>
+      </div>
     </div>
   );
 }

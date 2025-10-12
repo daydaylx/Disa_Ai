@@ -1,13 +1,10 @@
 import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-import { useStudio } from "../../app/state/StudioContext";
 // This component addresses the issue `04-composer-keyboard.md`
 import { useVisualViewport } from "../../hooks/useVisualViewport";
-import { createRoleTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { Textarea } from "../ui/textarea";
 
 interface ChatComposerProps {
@@ -48,8 +45,6 @@ export function ChatComposer({
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
-  const { accentColor } = useStudio();
-  const tint = createRoleTint(accentColor);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -136,11 +131,9 @@ export function ChatComposer({
           </div>
         )}
 
-        <StaticGlassCard
-          tint={tint}
-          padding="sm"
+        <div
           className={cn(
-            "flex items-end gap-2",
+            "glass-card flex items-end gap-2 border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -205,7 +198,7 @@ export function ChatComposer({
               <span className="block h-10 w-10" aria-hidden="true" />
             )}
           </div>
-        </StaticGlassCard>
+        </div>
 
         <div className="mt-1 text-[12px] text-zinc-500">
           {isLoading

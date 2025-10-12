@@ -1,14 +1,11 @@
 import { ArrowLeft, Clock, MessageSquare, Search, Star, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { useGlassPalette } from "../../hooks/useGlassPalette";
 import type { Conversation } from "../../lib/conversation-manager";
 import { groupConversationsByDate } from "../../lib/conversation-utils";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
-import { DEFAULT_GLASS_VARIANTS, type GlassTint, gradientToTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 
 interface ChatHistorySidebarProps {
   isOpen: boolean;
@@ -32,12 +29,6 @@ export function ChatHistorySidebar({
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "favorites" | "recent">("all");
   const [filteredConversations, setFilteredConversations] = useState<Conversation[]>(conversations);
-  const cardPalette = useGlassPalette();
-
-  const fallbackTint: GlassTint = {
-    from: "hsla(220, 26%, 28%, 0.9)",
-    to: "hsla(220, 30%, 20%, 0.78)",
-  };
 
   // Filter conversations based on search query and filter type
   useEffect(() => {
@@ -73,14 +64,6 @@ export function ChatHistorySidebar({
 
     setFilteredConversations(filtered);
   }, [searchQuery, filterType, conversations]);
-
-  const getTintForIndex = (index: number): GlassTint => {
-    if (cardPalette.length > 0) {
-      return cardPalette[index % cardPalette.length] ?? fallbackTint;
-    }
-    const gradient = DEFAULT_GLASS_VARIANTS[index % DEFAULT_GLASS_VARIANTS.length];
-    return gradientToTint(gradient!) ?? fallbackTint;
-  };
 
   const groupedConversations = groupConversationsByDate(filteredConversations);
 
@@ -185,7 +168,7 @@ export function ChatHistorySidebar({
                 {groupName}
               </h3>
               <ul className="space-y-2">
-                {groupConversations.map((conversation, index) => {
+                {groupConversations.map((conversation) => {
                   const messageCount =
                     conversation.messageCount ?? conversation.messages?.length ?? 0;
                   const lastMessage =
@@ -193,16 +176,12 @@ export function ChatHistorySidebar({
                   const lastActivity = conversation.lastActivity ?? conversation.updatedAt;
                   const preview = lastMessage.trim() || EMPTY_PREVIEW;
                   const isActive = conversation.id === activeId;
-                  const baseTint = getTintForIndex(index);
-                  const appliedTint = isActive ? getTintForIndex(0) : baseTint;
 
                   return (
                     <li key={conversation.id}>
-                      <StaticGlassCard
-                        tint={appliedTint}
-                        padding="sm"
+                      <div
                         className={cn(
-                          "group relative cursor-pointer px-4 py-3 text-left text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
+                          "glass-card group relative cursor-pointer border border-white/20 bg-white/10 p-4 px-4 py-3 text-left text-white shadow-lg backdrop-blur-lg transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
                           isActive &&
                             "border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.5)] ring-2 ring-white/20",
                         )}
@@ -257,7 +236,7 @@ export function ChatHistorySidebar({
                         >
                           <X className="h-3 w-3" />
                         </button>
-                      </StaticGlassCard>
+                      </div>
                     </li>
                   );
                 })}

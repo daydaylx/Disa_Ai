@@ -2,22 +2,10 @@ import { Download, Smartphone, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
-import type { GlassTint } from "../../lib/theme/glass";
 import { Button } from "../ui/button";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
-interface PWAInstallPromptProps {
-  tint?: GlassTint;
-  className?: string;
-}
-
-const DEFAULT_TINT: GlassTint = {
-  from: "hsla(220, 100%, 65%, 0.15)",
-  to: "hsla(280, 90%, 60%, 0.12)",
-};
-
-export function PWAInstallPrompt({ tint = DEFAULT_TINT, className }: PWAInstallPromptProps) {
+export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
   const { canInstall, requestInstall, dismiss, installed } = usePWAInstall();
   const [isVisible, setIsVisible] = useState(false);
   const toasts = useToasts();
@@ -63,11 +51,7 @@ export function PWAInstallPrompt({ tint = DEFAULT_TINT, className }: PWAInstallP
     <div
       className={`fixed bottom-4 left-4 right-4 z-50 md:left-auto md:max-w-sm ${className || ""}`}
     >
-      <StaticGlassCard
-        tint={tint}
-        padding="lg"
-        className="animate-bounce-in border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-      >
+      <div className="glass-card animate-bounce-in rounded-2xl border border-white/20 bg-white/10 p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">
@@ -107,7 +91,7 @@ export function PWAInstallPrompt({ tint = DEFAULT_TINT, className }: PWAInstallP
             <X className="h-4 w-4" />
           </Button>
         </div>
-      </StaticGlassCard>
+      </div>
     </div>
   );
 }

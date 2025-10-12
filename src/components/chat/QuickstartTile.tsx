@@ -2,10 +2,7 @@ import { Pin, PinOff } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
-import { useGlassPalette } from "../../hooks/useGlassPalette";
-import { DEFAULT_GLASS_VARIANTS, type GlassTint, gradientToTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 
 interface QuickstartTileProps {
   action: QuickstartAction;
@@ -32,30 +29,10 @@ export function QuickstartTile({
   isPinned = false,
   isActive = false,
   isLoading = false,
-  index = 0,
 }: QuickstartTileProps) {
   const [showActions, setShowActions] = useState(false);
   const longPressTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isLongPressRef = useRef(false);
-  const palette = useGlassPalette();
-
-  // Generate consistent tint for this tile
-  const fallbackTint: GlassTint = gradientToTint(DEFAULT_GLASS_VARIANTS[0]!) ?? {
-    from: "hsla(220, 26%, 28%, 0.9)",
-    to: "hsla(220, 30%, 20%, 0.78)",
-  };
-
-  const getTintForIndex = (idx: number): GlassTint => {
-    // palette is already GlassTint[], no need to convert
-    if (palette.length > 0) {
-      return palette[idx % palette.length] ?? fallbackTint;
-    }
-    // Fallback to converting DEFAULT_GLASS_VARIANTS
-    const gradient = DEFAULT_GLASS_VARIANTS[idx % DEFAULT_GLASS_VARIANTS.length];
-    return gradientToTint(gradient!) ?? fallbackTint;
-  };
-
-  const tileTint = getTintForIndex(index);
 
   const handleTouchStart = useCallback(() => {
     isLongPressRef.current = false;
@@ -100,11 +77,9 @@ export function QuickstartTile({
   );
 
   return (
-    <StaticGlassCard
-      tint={tileTint}
-      padding="sm"
+    <div
       className={cn(
-        "group relative min-h-[120px] transition-all duration-200",
+        "glass-card group relative min-h-[120px] border border-white/20 bg-white/10 shadow-lg backdrop-blur-lg transition-all duration-200",
         isActive && "scale-95 opacity-70",
         isLoading && "pointer-events-none",
         !isLoading &&
@@ -170,6 +145,6 @@ export function QuickstartTile({
           </div>
         )}
       </button>
-    </StaticGlassCard>
+    </div>
   );
 }

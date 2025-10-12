@@ -1,25 +1,16 @@
 import { Clock, MessageSquare, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-import { useStudio } from "../../app/state/StudioContext";
 import type { QuickstartAction } from "../../config/quickstarts";
 import { getQuickstartsWithFallback } from "../../config/quickstarts";
 import { getRoles } from "../../data/roles";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
-import { useStickToBottom } from "../../hooks/useStickToBottom";
 import type { Conversation } from "../../lib/conversation-manager";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
-import {
-  createGlassGradientVariants,
-  createRoleTint,
-  FRIENDLY_TINTS,
-  type GlassTint,
-  gradientToTint,
-} from "../../lib/theme/glass";
+import { FRIENDLY_TINTS, type GlassTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { RoleCard } from "../studio/RoleCard";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
 const QUICKSTART_TINTS: GlassTint[] = FRIENDLY_TINTS;
@@ -112,36 +103,6 @@ export function ChatList({
   const [quickstartError, setQuickstartError] = useState<string | null>(null);
   const [activeQuickstart, setActiveQuickstart] = useState<string | null>(null);
 
-  const { accentColor } = useStudio();
-  const heroTint = useMemo(() => createRoleTint(accentColor), [accentColor]);
-
-  const palette = useMemo(() => {
-    const base = accentColor ?? "hsl(220, 80%, 60%)";
-    const gradients = createGlassGradientVariants(base);
-    const mapped = gradients
-      .map((gradient) => gradientToTint(gradient))
-      .filter((tint): tint is GlassTint => Boolean(tint));
-    return mapped.length > 0 ? mapped : QUICKSTART_TINTS;
-  }, [accentColor]);
-
-  const getPaletteTint = (index: number): GlassTint => {
-    if (palette.length > 0) {
-      const tint = palette[index % palette.length];
-      if (tint) return tint;
-    }
-    return QUICKSTART_TINTS[index % QUICKSTART_TINTS.length] ?? QUICKSTART_TINTS[0]!;
-  };
-
-  const quickstartTintFor = (index: number): GlassTint => getPaletteTint(index);
-
-  const suggestionTintFor = (index: number): GlassTint =>
-    getPaletteTint(index + quickstarts.length);
-
-  const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
-    threshold: 0.8,
-    enabled: true,
-  });
-
   const { startQuickstartFlow } = useQuickstartFlow({
     onStartFlow: onQuickstartFlow || (() => {}),
     currentModel,
@@ -202,7 +163,7 @@ export function ChatList({
       <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-5 px-1 py-3">
-            <StaticGlassCard tint={heroTint} padding="lg" className="space-y-4">
+            <div className="glass-card space-y-4 rounded-2xl border border-white/20 bg-white/10 p-6 shadow-lg backdrop-blur-lg">
               <div className="space-y-3">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r from-rose-400/35 via-orange-300/30 to-amber-200/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white shadow-[0_6px_18px_rgba(249,168,212,0.35)] backdrop-blur-sm">
                   Willkommen zurück
@@ -222,28 +183,25 @@ export function ChatList({
               >
                 Neues Gespräch beginnen
               </button>
-            </StaticGlassCard>
+            </div>
 
             <div className="space-y-3 px-1">
               {isLoadingQuickstarts ? (
                 <div className="grid gap-3">
-                  {Array.from({ length: 4 }).map((_, index) => {
-                    const tint = quickstartTintFor(index);
+                  {Array.from({ length: 4 }).map((_) => {
                     return (
-                      <StaticGlassCard
+                      <div
                         key={`quickstart-skeleton-${index}`}
-                        tint={tint}
-                        padding="sm"
-                        className="animate-pulse"
+                        className="glass-card animate-pulse rounded-2xl border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg"
                       >
                         <div className="h-4 w-32 rounded bg-white/25" />
                         <div className="mt-2 h-3 w-48 rounded bg-white/20" />
-                      </StaticGlassCard>
+                      </div>
                     );
                   })}
                 </div>
               ) : quickstartError ? (
-                <StaticGlassCard tint={quickstartTintFor(0)} padding="md" className="text-center">
+                <div className="glass-card rounded-2xl border border-white/20 bg-white/10 p-6 text-center shadow-lg backdrop-blur-lg">
                   <div className="bg-white/12 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
                       <path
@@ -269,11 +227,10 @@ export function ChatList({
                   >
                     Direkt im Chat starten
                   </button>
-                </StaticGlassCard>
+                </div>
               ) : (
                 <div className="space-y-3">
-                  {quickstarts.map((action, index) => {
-                    const tint = quickstartTintFor(index);
+                  {quickstarts.map((action) => {
                     const badge = action.tags?.[0]
                       ? formatQuickstartTag(action.tags[0]!)
                       : "Schnellstart";
@@ -297,14 +254,11 @@ export function ChatList({
             </div>
 
             <div className="space-y-2 px-1">
-              {SUGGESTION_ACTIONS.map((item, index) => {
-                const tint = suggestionTintFor(index);
+              {SUGGESTION_ACTIONS.map((item) => {
                 return (
-                  <StaticGlassCard
+                  <div
                     key={item.label}
-                    tint={tint}
-                    padding="sm"
-                    className="group transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
+                    className="glass-card group rounded-2xl border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
                   >
                     <button
                       type="button"
@@ -314,7 +268,7 @@ export function ChatList({
                       <span className="text-left">{item.label}</span>
                       <MessageSquare className="h-4 w-4 opacity-75 transition-all group-hover:scale-110 group-hover:opacity-100" />
                     </button>
-                  </StaticGlassCard>
+                  </div>
                 );
               })}
             </div>
@@ -336,8 +290,7 @@ export function ChatList({
                   )}
                 </div>
                 <div className="space-y-2">
-                  {recentConversations.map((conversation, index) => {
-                    const tint = quickstartTintFor(index);
+                  {recentConversations.map((conversation) => {
                     const isActive = activeConversationId === conversation.id;
                     const messageCount =
                       conversation.messageCount ?? conversation.messages?.length ?? 0;
@@ -347,12 +300,10 @@ export function ChatList({
                     const lastActivity = conversation.lastActivity ?? conversation.updatedAt;
 
                     return (
-                      <StaticGlassCard
+                      <div
                         key={conversation.id}
-                        tint={tint}
-                        padding="sm"
                         className={cn(
-                          "group relative flex items-start gap-3 transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
+                          "glass-card group relative flex items-start gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
                           isActive &&
                             "border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.5)] ring-2 ring-white/20",
                         )}
@@ -401,7 +352,7 @@ export function ChatList({
                             <Trash2 className="h-4 w-4" />
                           </button>
                         )}
-                      </StaticGlassCard>
+                      </div>
                     );
                   })}
                 </div>

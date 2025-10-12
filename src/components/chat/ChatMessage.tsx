@@ -3,18 +3,12 @@ import { useMemo, useState } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useGlassPalette } from "../../hooks/useGlassPalette";
-import {
-  createRoleTint,
-  DEFAULT_GLASS_VARIANTS,
-  type GlassTint,
-  gradientToTint,
-} from "../../lib/theme/glass";
+import { createRoleTint, DEFAULT_GLASS_VARIANTS, gradientToTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 
 export type { ChatMessageType } from "../../types/chatMessage";
 
@@ -26,14 +20,9 @@ interface ChatMessageProps {
 }
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
-  const codeTint: GlassTint = {
-    from: "hsla(220, 26%, 18%, 0.95)",
-    to: "hsla(220, 28%, 12%, 0.85)",
-  };
-
   return (
     <div className="relative my-4 overflow-hidden">
-      <StaticGlassCard tint={codeTint} padding="sm" className="space-y-0">
+      <div className="glass-card space-y-0 border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg">
         <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
           <span className="text-xs font-medium uppercase tracking-wide text-white/70">
             {language || "Text"}
@@ -50,7 +39,7 @@ function CodeBlock({ children, language }: { children: string; language?: string
         <pre className="overflow-x-auto">
           <code className="text-sm leading-relaxed text-white/95">{children}</code>
         </pre>
-      </StaticGlassCard>
+      </div>
     </div>
   );
 }
@@ -111,13 +100,6 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
       palette[1] ?? palette[0] ?? gradientToTint(DEFAULT_GLASS_VARIANTS[0]!) ?? createRoleTint()
     );
   }, [activeRole?.styleHints?.accentColor, palette]);
-
-  const systemTint: GlassTint = {
-    from: "hsla(220, 26%, 28%, 0.9)",
-    to: "hsla(220, 28%, 20%, 0.78)",
-  };
-
-  const bubbleTint = isUser ? userTint : isAssistant ? assistantTint : systemTint;
 
   const bubbleClass = cn(
     "max-w-[85%] text-left",
@@ -198,7 +180,13 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
         )}
 
         {/* Message Content */}
-        <StaticGlassCard tint={bubbleTint} padding="sm" className={bubbleClass}>
+        <div
+          className={cn(
+            "glass-card",
+            bubbleClass,
+            "border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg",
+          )}
+        >
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
@@ -212,7 +200,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
               </div>
             ))}
           </div>
-        </StaticGlassCard>
+        </div>
 
         {/* Action Buttons */}
         {!isSystem && showActions && (

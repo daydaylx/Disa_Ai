@@ -6,10 +6,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { defaultQuickstarts, type QuickstartAction } from "../../config/quickstarts";
-import { useGlassPalette } from "../../hooks/useGlassPalette";
 import { quickstartPersistence } from "../../lib/quickstarts/persistence";
-import { DEFAULT_GLASS_VARIANTS, type GlassTint, gradientToTint } from "../../lib/theme/glass";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 import { QuickstartTile } from "./QuickstartTile";
 
 interface QuickstartGridProps {
@@ -25,22 +22,6 @@ export function QuickstartGrid({
 }: QuickstartGridProps) {
   const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
   const [pinnedStates, setPinnedStates] = useState<Record<string, boolean>>({});
-  const palette = useGlassPalette();
-
-  const fallbackTint: GlassTint = gradientToTint(DEFAULT_GLASS_VARIANTS[0]!) ?? {
-    from: "hsla(220, 26%, 28%, 0.9)",
-    to: "hsla(220, 30%, 20%, 0.78)",
-  };
-
-  const getTintForIndex = (index: number): GlassTint => {
-    // palette is already GlassTint[], no need to convert
-    if (palette.length > 0) {
-      return palette[index % palette.length] ?? fallbackTint;
-    }
-    // Fallback to converting DEFAULT_GLASS_VARIANTS
-    const gradient = DEFAULT_GLASS_VARIANTS[index % DEFAULT_GLASS_VARIANTS.length];
-    return gradientToTint(gradient!) ?? fallbackTint;
-  };
 
   // Load and sort quickstarts on mount
   useEffect(() => {
@@ -98,15 +79,13 @@ export function QuickstartGrid({
     return (
       <div className="grid grid-cols-2 gap-4 p-4">
         {Array.from({ length: 4 }).map((_, index) => (
-          <StaticGlassCard
+          <div
             key={index}
-            tint={getTintForIndex(index)}
-            padding="sm"
-            className="h-32 animate-pulse"
+            className="glass-card h-32 animate-pulse border border-white/20 bg-white/10 shadow-lg backdrop-blur-lg"
           >
             <div className="h-4 w-24 rounded bg-white/25" />
             <div className="mt-2 h-3 w-20 rounded bg-white/20" />
-          </StaticGlassCard>
+          </div>
         ))}
       </div>
     );

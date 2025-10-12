@@ -1,12 +1,9 @@
 import { Clock, MessageSquare, Trash2 } from "lucide-react";
 
-import { useGlassPalette } from "../../hooks/useGlassPalette";
 import type { Conversation } from "../../lib/conversation-manager";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
-import { DEFAULT_GLASS_VARIANTS, type GlassTint, gradientToTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import { BottomSheet } from "../ui/bottom-sheet";
-import { StaticGlassCard } from "../ui/StaticGlassCard";
 
 interface ConversationHistorySheetProps {
   isOpen: boolean;
@@ -27,30 +24,11 @@ export function ConversationHistorySheet({
   onSelect,
   onDelete,
 }: ConversationHistorySheetProps) {
-  const cardPalette = useGlassPalette();
-
-  const fallbackTint: GlassTint = {
-    from: "hsla(220, 26%, 28%, 0.9)",
-    to: "hsla(220, 30%, 20%, 0.78)",
-  };
-
-  const getTintForIndex = (index: number): GlassTint => {
-    // cardPalette is already GlassTint[], no need to convert
-    if (cardPalette.length > 0) {
-      return cardPalette[index % cardPalette.length] ?? fallbackTint;
-    }
-    // Fallback to converting DEFAULT_GLASS_VARIANTS
-    const gradient = DEFAULT_GLASS_VARIANTS[index % DEFAULT_GLASS_VARIANTS.length];
-    return gradientToTint(gradient!) ?? fallbackTint;
-  };
-
-  const activeTint = getTintForIndex(0);
-
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Chat-Verlauf">
       <div className="max-h-[65vh] overflow-y-auto px-6 py-4">
         {conversations.length === 0 ? (
-          <StaticGlassCard tint={fallbackTint} padding="lg" className="text-center">
+          <div className="glass-card rounded-2xl border border-white/20 bg-white/10 p-6 text-center shadow-lg backdrop-blur-lg">
             <div className="space-y-3">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/10">
                 <MessageSquare className="h-6 w-6 text-white/70" />
@@ -62,26 +40,22 @@ export function ConversationHistorySheet({
                 </p>
               </div>
             </div>
-          </StaticGlassCard>
+          </div>
         ) : (
           <ul className="space-y-3">
-            {conversations.map((conversation, index) => {
+            {conversations.map((conversation) => {
               const messageCount = conversation.messageCount ?? conversation.messages?.length ?? 0;
               const lastMessage =
                 conversation.messages?.[conversation.messages.length - 1]?.content ?? "";
               const lastActivity = conversation.lastActivity ?? conversation.updatedAt;
               const preview = lastMessage.trim() || EMPTY_PREVIEW;
               const isActive = conversation.id === activeId;
-              const baseTint = getTintForIndex(index);
-              const appliedTint = isActive ? activeTint : baseTint;
 
               return (
                 <li key={conversation.id} className="group relative">
-                  <StaticGlassCard
-                    tint={appliedTint}
-                    padding="sm"
+                  <div
                     className={cn(
-                      "px-5 py-4 text-left text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
+                      "glass-card rounded-2xl border border-white/20 bg-white/10 p-4 px-5 py-4 text-left text-white shadow-lg backdrop-blur-lg transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
                       isActive &&
                         "border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.5)] ring-2 ring-white/20",
                     )}
@@ -141,7 +115,7 @@ export function ConversationHistorySheet({
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
-                  </StaticGlassCard>
+                  </div>
                 </li>
               );
             })}
