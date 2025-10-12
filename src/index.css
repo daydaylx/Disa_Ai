@@ -15,7 +15,8 @@
   body {
     /* Hintergrundbild mit Fallback-Verlauf */
     background:
-      url("/images/background-bg.jpg") center center / cover no-repeat,
+      url("/images/dark-background-abstract-background-network-3d-background-2560x1440-8324.png")
+        center center / cover no-repeat,
       radial-gradient(
         at top left,
         var(--color-synthwave-bg-dark) 0%,
@@ -31,7 +32,7 @@
 
   /* Additional background optimization */
   body.background-optimized {
-    background-image: url("/images/background-bg.jpg");
+    background-image: url("/images/dark-background-abstract-background-network-3d-background-2560x1440-8324.png");
   }
 
   /* Erster leuchtender Akzent (oben links) */
