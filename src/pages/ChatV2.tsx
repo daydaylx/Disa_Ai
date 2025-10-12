@@ -228,18 +228,6 @@ export default function ChatV2() {
     });
   };
 
-  // Harmonischer Farbverlauf für Chat-Spiele-Kacheln - sanfte Progression von warm zu kühl
-  const chatGameTints: GlassTint[] = [
-    { from: "hsla(340, 75%, 68%, 0.78)", to: "hsla(20, 82%, 65%, 0.55)" }, // Warm Pink zu Orange
-    { from: "hsla(25, 85%, 68%, 0.78)", to: "hsla(45, 88%, 70%, 0.55)" }, // Orange zu Gold
-    { from: "hsla(50, 90%, 72%, 0.78)", to: "hsla(75, 85%, 68%, 0.55)" }, // Gold zu Lime
-    { from: "hsla(80, 82%, 70%, 0.78)", to: "hsla(160, 80%, 65%, 0.55)" }, // Lime zu Mint
-    { from: "hsla(165, 85%, 68%, 0.78)", to: "hsla(190, 85%, 68%, 0.55)" }, // Mint zu Aqua
-    { from: "hsla(195, 88%, 70%, 0.78)", to: "hsla(220, 85%, 72%, 0.55)" }, // Aqua zu Sky
-    { from: "hsla(225, 82%, 74%, 0.78)", to: "hsla(250, 85%, 72%, 0.55)" }, // Sky zu Blau
-    { from: "hsla(255, 88%, 74%, 0.78)", to: "hsla(280, 82%, 70%, 0.55)" }, // Blau zu Violett
-  ];
-
   const quickstartOptions = [
     {
       title: "Wer bin ich?",
@@ -276,118 +264,32 @@ export default function ChatV2() {
   ];
 
   return (
-    <div className="flex h-full flex-col px-5 pb-8 pt-5">
-      {messages.length === 0 ? (
-        /* Empty State - Im Stil der Models-Seite */
-        <>
-          <header className="mb-4 flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-white">Chat</h2>
-              <p className="mt-1 text-sm leading-6 text-white/70">
-                Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.
-              </p>
-            </div>
-            <Button
-              onClick={() => setIsHistoryOpen(true)}
-              variant="ghost"
-              size="sm"
-              className="tile-glass h-10 w-10 rounded-xl p-0 text-white transition-all"
-              aria-label="Chat-Verlauf öffnen"
-            >
-              <History className="h-5 w-5" />
-            </Button>
-          </header>
-
-          {/* Hero Card */}
-          <RoleCard
-            title="Willkommen bei Disa AI"
-            description="Dein intelligenter Assistent für Gespräche, Analysen und kreative Aufgaben"
-            tint={friendlyPalette[0] ?? DEFAULT_TINT}
-            onClick={() => {}}
-            className="min-h-[152px] text-center"
-          />
-
-          {/* Quickstart Section */}
-          <div className="grid grid-cols-1 gap-3 pb-8">
-            <h3 className="px-1 text-xs font-semibold uppercase tracking-wide text-white/60">
-              Schnellstart
-            </h3>
-            {quickstartOptions.map((option, index) => {
-              const tint = chatGameTints[index] ?? DEFAULT_TINT;
-              return (
-                <RoleCard
-                  key={option.title}
-                  title={option.title}
-                  description={option.description}
-                  tint={tint}
-                  onClick={() => {
-                    if (option.title === "Wer bin ich?") {
-                      startGame("wer-bin-ich");
-                    } else if (option.title === "Quiz") {
-                      startGame("quiz");
-                    } else if (option.title === "Wahrheit oder Fiktion") {
-                      startGame("wahrheit-oder-fiktion");
-                    } else if (option.title === "Black Story") {
-                      startGame("black-story");
-                    } else if (option.title === "Fakten-Duell") {
-                      startGame("fakten-duell");
-                    } else if (option.title === "Zwei Wahrheiten, eine Lüge") {
-                      startGame("zwei-wahrheiten-eine-lüge");
-                    } else if (option.title === "Spurensuche") {
-                      startGame("spurensuche");
-                    } else if (option.title === "Film oder Fake") {
-                      startGame("film-oder-fake");
-                    } else {
-                      setInput(option.title + ": ");
-                    }
-                  }}
-                  className="min-h-[152px] cursor-pointer"
-                />
-              );
-            })}
-          </div>
-
-          {/* Game Hints - shown when game system prompts are active */}
-          {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
-            <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-white">
-              <p className="font-medium">Spiel-Hinweis:</p>
-              <p>
-                Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
-                <strong>ja</strong>, <strong>nein</strong>, <strong>unklar</strong> oder{" "}
-                <strong>teilweise</strong>.
-              </p>
-              <p>Die KI wird versuchen, deine gewählte Entität zu erraten!</p>
-            </div>
-          )}
-
-          {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
-            <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-white">
-              <p className="font-medium">Spiel-Hinweis:</p>
-              <p>
-                Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
-                <strong>D</strong>.
-              </p>
-              <p>
-                Schreibe <strong>„weiter“</strong>, um die nächste Frage zu erhalten.
-              </p>
-            </div>
-          )}
-        </>
-      ) : (
-        /* Chat Messages */
-        <>
-          <header className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Unterhaltung</h2>
-            <div className="flex gap-2">
-              <Button
-                onClick={handleNewConversation}
-                variant="ghost"
-                size="sm"
-                className="tile-glass h-10 w-10 rounded-xl p-0 text-white transition-all"
-                aria-label="Neue Unterhaltung starten"
-              >
-                <MessageSquare className="h-5 w-5" />
-              </Button>
+    <div className="relative flex h-full flex-col px-5 pb-8 pt-5">
+      {/* Sanfter Farbverlauf-Overlay nur für Chat-Seite */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[-1] opacity-[0.15]"
+        style={{
+          background: `linear-gradient(
+            to bottom,
+            hsla(340, 60%, 70%, 0.12) 0%,
+            hsla(280, 55%, 65%, 0.08) 25%,
+            hsla(220, 60%, 70%, 0.06) 50%,
+            hsla(190, 65%, 68%, 0.04) 75%,
+            transparent 100%
+          )`,
+        }}
+      />
+      <div className="relative z-10">
+        {messages.length === 0 ? (
+          /* Empty State - Im Stil der Models-Seite */
+          <>
+            <header className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold text-white">Chat</h2>
+                <p className="mt-1 text-sm leading-6 text-white/70">
+                  Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.
+                </p>
+              </div>
               <Button
                 onClick={() => setIsHistoryOpen(true)}
                 variant="ghost"
@@ -397,111 +299,213 @@ export default function ChatV2() {
               >
                 <History className="h-5 w-5" />
               </Button>
+            </header>
+
+            {/* Hero Card */}
+            <RoleCard
+              title="Willkommen bei Disa AI"
+              description="Dein intelligenter Assistent für Gespräche, Analysen und kreative Aufgaben"
+              tint={friendlyPalette[0] ?? DEFAULT_TINT}
+              onClick={() => {}}
+              className="min-h-[152px] text-center"
+            />
+
+            {/* Quickstart Section */}
+            <div className="grid grid-cols-1 gap-3 pb-8">
+              <h3 className="px-1 text-xs font-semibold uppercase tracking-wide text-white/60">
+                Schnellstart
+              </h3>
+              {quickstartOptions.map((option, index) => {
+                const tint = friendlyPalette[(index + 1) % friendlyPalette.length] ?? DEFAULT_TINT;
+                return (
+                  <RoleCard
+                    key={option.title}
+                    title={option.title}
+                    description={option.description}
+                    tint={tint}
+                    onClick={() => {
+                      if (option.title === "Wer bin ich?") {
+                        startGame("wer-bin-ich");
+                      } else if (option.title === "Quiz") {
+                        startGame("quiz");
+                      } else if (option.title === "Wahrheit oder Fiktion") {
+                        startGame("wahrheit-oder-fiktion");
+                      } else if (option.title === "Black Story") {
+                        startGame("black-story");
+                      } else if (option.title === "Fakten-Duell") {
+                        startGame("fakten-duell");
+                      } else if (option.title === "Zwei Wahrheiten, eine Lüge") {
+                        startGame("zwei-wahrheiten-eine-lüge");
+                      } else if (option.title === "Spurensuche") {
+                        startGame("spurensuche");
+                      } else if (option.title === "Film oder Fake") {
+                        startGame("film-oder-fake");
+                      } else {
+                        setInput(option.title + ": ");
+                      }
+                    }}
+                    className="min-h-[152px] cursor-pointer"
+                  />
+                );
+              })}
             </div>
-          </header>
-          <div className="flex-1 overflow-hidden">
-            <div className="h-full overflow-y-auto pb-4">
-              <div className="space-y-4">
-                {messages.map((message) => (
-                  <MessageBubble key={message.id} message={message} />
-                ))}
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <RoleCard
-                      title=""
-                      description="Denkt nach..."
-                      tint={friendlyPalette[0] ?? DEFAULT_TINT}
-                      onClick={() => {}}
-                      className="min-h-[152px] flex-col justify-center"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <div className="flex space-x-1">
-                          <div className="h-2 w-2 animate-bounce rounded-full bg-white/70"></div>
-                          <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.15s]"></div>
-                          <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.3s]"></div>
+
+            {/* Game Hints - shown when game system prompts are active */}
+            {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
+              <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-white">
+                <p className="font-medium">Spiel-Hinweis:</p>
+                <p>
+                  Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
+                  <strong>ja</strong>, <strong>nein</strong>, <strong>unklar</strong> oder{" "}
+                  <strong>teilweise</strong>.
+                </p>
+                <p>Die KI wird versuchen, deine gewählte Entität zu erraten!</p>
+              </div>
+            )}
+
+            {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
+              <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-white">
+                <p className="font-medium">Spiel-Hinweis:</p>
+                <p>
+                  Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
+                  <strong>D</strong>.
+                </p>
+                <p>
+                  Schreibe <strong>„weiter“</strong>, um die nächste Frage zu erhalten.
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          /* Chat Messages */
+          <>
+            <header className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-white">Unterhaltung</h2>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleNewConversation}
+                  variant="ghost"
+                  size="sm"
+                  className="tile-glass h-10 w-10 rounded-xl p-0 text-white transition-all"
+                  aria-label="Neue Unterhaltung starten"
+                >
+                  <MessageSquare className="h-5 w-5" />
+                </Button>
+                <Button
+                  onClick={() => setIsHistoryOpen(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="tile-glass h-10 w-10 rounded-xl p-0 text-white transition-all"
+                  aria-label="Chat-Verlauf öffnen"
+                >
+                  <History className="h-5 w-5" />
+                </Button>
+              </div>
+            </header>
+            <div className="flex-1 overflow-hidden">
+              <div className="h-full overflow-y-auto pb-4">
+                <div className="space-y-4">
+                  {messages.map((message) => (
+                    <MessageBubble key={message.id} message={message} />
+                  ))}
+                  {isLoading && (
+                    <div className="flex justify-start">
+                      <RoleCard
+                        title=""
+                        description="Denkt nach..."
+                        tint={friendlyPalette[0] ?? DEFAULT_TINT}
+                        onClick={() => {}}
+                        className="min-h-[152px] flex-col justify-center"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <div className="flex space-x-1">
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-white/70"></div>
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.15s]"></div>
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.3s]"></div>
+                          </div>
+                          <span className="text-sm text-white/70">Denkt nach...</span>
                         </div>
-                        <span className="text-sm text-white/70">Denkt nach...</span>
-                      </div>
-                    </RoleCard>
+                      </RoleCard>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Input Composer - Prominent und gut erkennbar */}
+        <div className="relative">
+          {/* Hintergrund-Blur Effekt */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 opacity-80 blur-sm"></div>
+
+          {/* Haupt-Container */}
+          <div className="card-glass relative p-4">
+            {/* Glanz-Effekt oben */}
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+
+            <div className="flex items-end gap-3">
+              <div className="relative flex-1">
+                {/* Input-Bereich */}
+                <Textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Nachricht an Disa AI schreiben..."
+                  className="tile-glass max-h-[200px] min-h-[52px] w-full resize-none rounded-xl px-4 py-3 text-white transition-all duration-200 placeholder:text-white/50 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
+                  rows={1}
+                  aria-label="Nachricht an Disa AI eingeben"
+                  aria-describedby="input-help-text"
+                />
+
+                {/* Typing Indicator */}
+                {input.trim() && (
+                  <div className="absolute bottom-2 right-3">
+                    <div className="flex space-x-1">
+                      <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-400"></div>
+                      <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-purple-400 [animation-delay:0.2s]"></div>
+                      <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-pink-400 [animation-delay:0.4s]"></div>
+                    </div>
                   </div>
                 )}
               </div>
+
+              {/* Send Button */}
+              <Button
+                onClick={handleSend}
+                disabled={!input.trim() || isLoading}
+                className="h-12 w-12 shrink-0 rounded-xl border border-blue-400/30 bg-gradient-to-r from-blue-500/80 to-purple-500/80 p-0 text-white transition-all duration-200 hover:scale-105 hover:from-blue-500 hover:to-purple-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
+                aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
+                title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
+              >
+                <Send className="h-5 w-5" aria-hidden="true" />
+              </Button>
             </div>
-          </div>
-        </>
-      )}
 
-      {/* Input Composer - Prominent und gut erkennbar */}
-      <div className="relative">
-        {/* Hintergrund-Blur Effekt */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 opacity-80 blur-sm"></div>
-
-        {/* Haupt-Container */}
-        <div className="card-glass relative p-4">
-          {/* Glanz-Effekt oben */}
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-
-          <div className="flex items-end gap-3">
-            <div className="relative flex-1">
-              {/* Input-Bereich */}
-              <Textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Nachricht an Disa AI schreiben..."
-                className="tile-glass max-h-[200px] min-h-[52px] w-full resize-none rounded-xl px-4 py-3 text-white transition-all duration-200 placeholder:text-white/50 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
-                rows={1}
-                aria-label="Nachricht an Disa AI eingeben"
-                aria-describedby="input-help-text"
-              />
-
-              {/* Typing Indicator */}
-              {input.trim() && (
-                <div className="absolute bottom-2 right-3">
-                  <div className="flex space-x-1">
-                    <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-400"></div>
-                    <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-purple-400 [animation-delay:0.2s]"></div>
-                    <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-pink-400 [animation-delay:0.4s]"></div>
-                  </div>
-                </div>
+            {/* Info Text */}
+            <div className="mt-2 flex items-center justify-between text-xs text-white/50">
+              <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
+              {isLoading && (
+                <span className="flex items-center gap-1">
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></div>
+                  Tippt...
+                </span>
               )}
             </div>
-
-            {/* Send Button */}
-            <Button
-              onClick={handleSend}
-              disabled={!input.trim() || isLoading}
-              className="h-12 w-12 shrink-0 rounded-xl border border-blue-400/30 bg-gradient-to-r from-blue-500/80 to-purple-500/80 p-0 text-white transition-all duration-200 hover:scale-105 hover:from-blue-500 hover:to-purple-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
-              aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
-              title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
-            >
-              <Send className="h-5 w-5" aria-hidden="true" />
-            </Button>
-          </div>
-
-          {/* Info Text */}
-          <div className="mt-2 flex items-center justify-between text-xs text-white/50">
-            <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
-            {isLoading && (
-              <span className="flex items-center gap-1">
-                <div className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></div>
-                Tippt...
-              </span>
-            )}
           </div>
         </div>
-      </div>
 
-      {/* Chat History Sidebar */}
-      <ChatHistorySidebar
-        isOpen={isHistoryOpen}
-        onClose={() => setIsHistoryOpen(false)}
-        conversations={conversations}
-        activeId={activeConversationId}
-        onSelect={handleSelectConversation}
-        onDelete={handleDeleteConversation}
-      />
+        {/* Chat History Sidebar */}
+        <ChatHistorySidebar
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          conversations={conversations}
+          activeId={activeConversationId}
+          onSelect={handleSelectConversation}
+          onDelete={handleDeleteConversation}
+        />
+      </div>
     </div>
   );
 }
