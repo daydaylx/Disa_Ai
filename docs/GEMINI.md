@@ -35,7 +35,7 @@ npm run test:unit
 To run end-to-end tests:
 
 ```bash
-npm run test:e2e
+npm run e2e
 ```
 
 ## Development Conventions
@@ -46,7 +46,7 @@ The project enforces a strict coding style using ESLint and Prettier. Configurat
 
 ### Testing
 
-- **Unit Tests:** Vitest is used for unit testing. Test files are located alongside the source files (e.g., `src/**/*.test.ts`).
+- **Unit Tests:** Vitest is used for unit testing. Test files are located in the `src/__tests__` directory.
 - **End-to-End Tests:** Playwright is used for E2E testing. E2E tests are located in the `tests/e2e` directory. The tests are designed to run offline, with network requests intercepted and mocked.
 
 ### Commits and Contributions

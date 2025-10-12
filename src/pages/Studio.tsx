@@ -2,6 +2,7 @@ import { ArrowRight, RotateCcw } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { colors } from "../../styles/design-tokens";
 import { useStudio } from "../app/state/StudioContext";
 import { RoleCard, type RoleTint } from "../components/studio/RoleCard";
 import type { Role } from "../data/roles";
@@ -10,32 +11,15 @@ import { useGlassPalette } from "../hooks/useGlassPalette";
 import type { GlassTint } from "../lib/theme/glass";
 import { FRIENDLY_TINTS } from "../lib/theme/glass";
 
-// Statische Kategorie-Farbpalette - unabhängig von der globalen Theme-Steuerung
+// Statische Kategorie-Farbpalette - jetzt mit Farben aus dem Design System für einen konsistenten Look
 const STATIC_CATEGORY_TINTS: GlassTint[] = [
-  {
-    from: "hsla(262, 82%, 74%, 0.78)", // Lavender
-    to: "hsla(200, 87%, 68%, 0.55)", // Soft Sky
-  },
-  {
-    from: "hsla(335, 86%, 72%, 0.78)", // Blossom Pink
-    to: "hsla(24, 92%, 67%, 0.55)", // Peach Glow
-  },
-  {
-    from: "hsla(160, 82%, 66%, 0.78)", // Mint
-    to: "hsla(188, 84%, 62%, 0.55)", // Aqua
-  },
-  {
-    from: "hsla(42, 92%, 70%, 0.78)", // Golden Light
-    to: "hsla(16, 86%, 64%, 0.55)", // Amber Coral
-  },
-  {
-    from: "hsla(280, 88%, 74%, 0.78)", // Orchid
-    to: "hsla(312, 84%, 68%, 0.55)", // Fuchsia Mist
-  },
-  {
-    from: "hsla(202, 86%, 70%, 0.78)", // Daybreak Blue
-    to: "hsla(186, 88%, 64%, 0.55)", // Lagoon
-  },
+  { from: colors.semantic.purple, to: colors.accent[500] },
+  { from: colors.corporate.accent.primary, to: colors.semantic.info },
+  { from: colors.semantic.success, to: colors.semantic.mint },
+  { from: colors.semantic.warning, to: colors.accent[300] },
+  { from: colors.corporate.accent.danger, to: colors.semantic.danger },
+  { from: colors.darkGlass.accent.violet, to: colors.darkGlass.accent.pink },
+  { from: colors.accent[700], to: colors.darkGlass.accent.teal },
 ];
 
 // Removed unused ROLE_TINTS and RoleVisualConfig - now using useGlassPalette for consistent theming
