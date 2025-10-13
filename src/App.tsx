@@ -8,6 +8,7 @@ import React from "react";
 
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
+import { MobileOnlyGate } from "./components/layout/MobileOnlyGate";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
 
 export default function App() {
@@ -92,7 +93,9 @@ export default function App() {
   return (
     <StudioProvider>
       <ToastsProvider>
-        <Router />
+        <MobileOnlyGate>
+          <Router />
+        </MobileOnlyGate>
       </ToastsProvider>
     </StudioProvider>
   );

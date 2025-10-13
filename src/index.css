@@ -36,39 +36,24 @@
     inset: 0;
     z-index: -10;
     pointer-events: none;
-    /* Simplified glassmorphism backdrop */
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.015) 0%,
-      rgba(255, 255, 255, 0.008) 100%
-    );
-    backdrop-filter: blur(1px) saturate(1.5); /* Reduced saturation for better performance */
-    -webkit-backdrop-filter: blur(1px) saturate(1.5);
+    background:
+      radial-gradient(circle at 12% 18%, rgba(177, 197, 255, 0.14) 0%, transparent 55%),
+      radial-gradient(circle at 88% 12%, rgba(111, 209, 255, 0.12) 0%, transparent 50%),
+      linear-gradient(140deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 75%);
+    opacity: 0.9;
+    backdrop-filter: blur(var(--blur-xl)) saturate(1.45);
+    -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(1.45);
   }
 
   /* Mobile-optimized background */
   @media (max-width: 768px) {
     body {
       background-attachment: scroll; /* Better performance on mobile */
-      background-size: 100% 100%;
-      /* Vereinfachter Gradient für mobile Performance */
+      background-size: cover;
       background:
-        linear-gradient(
-          135deg,
-          var(--color-synthwave-bg-deeper) 0%,
-          var(--color-synthwave-accent-purple) 50%,
-          var(--color-corporate-bg-primary) 100%
-        ),
-        radial-gradient(ellipse at center, rgba(147, 51, 234, 0.08) 0%, transparent 70%);
-    }
-
-    /* Reduzierte Glow-Effekte auf mobil für bessere Performance */
-    body::before {
-      width: 250px;
-      height: 250px;
-      top: -50px;
-      left: -100px;
-      opacity: 0.12; /* Reduziert für optimalen Glaseffekt-Kontrast */
+        linear-gradient(175deg, #04070f 0%, #0d1422 45%, #172131 100%),
+        radial-gradient(780px circle at 50% -10%, rgba(142, 172, 255, 0.22) 0%, transparent 70%),
+        var(--bg-noise-overlay);
     }
   }
 
