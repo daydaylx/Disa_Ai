@@ -201,22 +201,32 @@ export const elevation = {
 export const glassmorphism = {
   blur: {
     sm: "8px",
-    md: "16px",
+    md: "12px",
     lg: "24px",
     xl: "32px",
     "2xl": "40px",
   },
   background: {
+    "alpha-6": "rgba(255, 255, 255, 0.06)",
+    "alpha-8": "rgba(255, 255, 255, 0.08)",
+    "alpha-10": "rgba(255, 255, 255, 0.10)",
     subtle: "rgba(255, 255, 255, 0.05)",
     soft: "rgba(255, 255, 255, 0.08)",
     medium: "rgba(255, 255, 255, 0.12)",
     strong: "rgba(255, 255, 255, 0.16)",
   },
   border: {
+    "alpha-10": "rgba(255, 255, 255, 0.10)",
+    "alpha-12": "rgba(255, 255, 255, 0.12)",
+    "alpha-14": "rgba(255, 255, 255, 0.14)",
     subtle: "rgba(255, 255, 255, 0.08)",
     soft: "rgba(255, 255, 255, 0.12)",
     medium: "rgba(255, 255, 255, 0.16)",
     strong: "rgba(255, 255, 255, 0.24)",
+  },
+  saturation: {
+    110: "1.1",
+    150: "1.5",
   },
   overlay: {
     weak: "rgba(255, 255, 255, 0.05)", // Sehr subtil

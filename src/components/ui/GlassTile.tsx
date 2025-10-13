@@ -42,27 +42,27 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     { badge: string; stripe: string }
   > = {
     warm: {
-      badge: "border-semantic-warning/40 text-semantic-warning",
+      badge: "border-semantic-warning/25 text-semantic-warning",
       stripe: "from-semantic-warning/35 via-semantic-warning/25 to-transparent",
     },
     cool: {
-      badge: "border-accent-500/40 text-accent-500",
+      badge: "border-accent-500/25 text-accent-500",
       stripe: "from-accent-500/35 via-accent-500/25 to-transparent",
     },
     fresh: {
-      badge: "border-semantic-success/40 text-semantic-success",
+      badge: "border-semantic-success/25 text-semantic-success",
       stripe: "from-semantic-success/35 via-semantic-success/25 to-transparent",
     },
     sunset: {
-      badge: "border-semantic-danger/40 text-semantic-danger",
+      badge: "border-semantic-danger/25 text-semantic-danger",
       stripe: "from-semantic-danger/30 via-semantic-danger/25 to-transparent",
     },
     violet: {
-      badge: "border-semantic-purple/40 text-semantic-purple",
+      badge: "border-semantic-purple/25 text-semantic-purple",
       stripe: "from-semantic-purple/35 via-semantic-purple/25 to-transparent",
     },
     default: {
-      badge: "border-white/20 text-zinc-200",
+      badge: "border-white/18 text-white/70",
       stripe: "from-white/25 via-white/10 to-transparent",
     },
   };
@@ -77,7 +77,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
     <button
       data-testid={dataTestId}
       className={cn(
-        "glass-card w-full text-left text-white",
+        "glass-card overlay-weak w-full text-left text-white/85",
         "px-4 py-4 sm:px-5 sm:py-5",
         "min-h-[84px] sm:min-h-[96px] lg:min-h-[104px]",
         disabledClasses,
@@ -89,18 +89,18 @@ export const GlassTile: React.FC<GlassTileProps> = ({
       <div
         aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute inset-x-5 top-2 h-px rounded-full bg-gradient-to-r opacity-70",
+          "pointer-events-none absolute inset-x-5 top-2 h-px rounded-full bg-gradient-to-r opacity-25",
           accents.stripe,
         )}
       />
       {/* Content Layout */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-4">
-          {icon && <div className="pt-0.5 text-zinc-300">{icon}</div>}
+          {icon && <div className="pt-0.5 text-white/65">{icon}</div>}
           <div>
-            <div className="text-[17px] font-medium text-zinc-100">{title}</div>
+            <div className="text-[17px] font-medium text-white">{title}</div>
             {subtitle && (
-              <div className="mt-1.5 text-[13.5px] leading-[1.55] text-zinc-400">{subtitle}</div>
+              <div className="mt-1.5 text-[13.5px] leading-[1.55] text-white/60">{subtitle}</div>
             )}
           </div>
         </div>
@@ -108,7 +108,7 @@ export const GlassTile: React.FC<GlassTileProps> = ({
         {/* Quickstart Pill */}
         <span
           className={cn(
-            "bg-white/8 inline-flex h-7 items-center rounded-full border px-3 text-[12px] font-medium text-zinc-200 transition-colors duration-150",
+            "bg-white/8 inline-flex h-7 items-center rounded-full border px-3 text-[12px] font-medium text-white/70 transition-all duration-150",
             accents.badge,
           )}
         >

@@ -47,43 +47,43 @@ const CATEGORY_TINT_MAP: Record<
 > = {
   Alltag: {
     overlay:
-      "linear-gradient(145deg, hsla(45, 85%, 70%, 0.36) 0%, hsla(265, 80%, 65%, 0.34) 40%, hsla(188, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(188, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(45, 85%, 70%, 0.26) 0%, hsla(265, 80%, 65%, 0.24) 40%, hsla(188, 80%, 60%, 0.18) 100%)",
+    glow: "0 16px 40px -18px hsla(188, 82%, 58%, 0.2)",
   },
   "Business & Karriere": {
     overlay:
-      "linear-gradient(145deg, hsla(138, 85%, 70%, 0.36) 0%, hsla(52, 80%, 65%, 0.34) 40%, hsla(70, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(70, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(138, 85%, 70%, 0.26) 0%, hsla(52, 80%, 65%, 0.24) 40%, hsla(70, 80%, 60%, 0.18) 100%)",
+    glow: "0 16px 40px -18px hsla(70, 82%, 58%, 0.2)",
   },
   "Kreativ & Unterhaltung": {
     overlay:
-      "linear-gradient(145deg, hsla(320, 85%, 70%, 0.36) 0%, hsla(260, 80%, 65%, 0.34) 40%, hsla(300, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(300, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(320, 85%, 70%, 0.26) 0%, hsla(260, 80%, 65%, 0.24) 40%, hsla(300, 80%, 60%, 0.18) 100%)",
+    glow: "0 16px 40px -18px hsla(300, 82%, 58%, 0.2)",
   },
   "Lernen & Bildung": {
     overlay:
-      "linear-gradient(145deg, hsla(180, 85%, 70%, 0.36) 0%, hsla(60, 80%, 65%, 0.34) 40%, hsla(210, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(210, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(180, 85%, 70%, 0.26) 0%, hsla(60, 80%, 65%, 0.24) 40%, hsla(210, 80%, 60%, 0.18) 100%)",
+    glow: "0 16px 40px -18px hsla(210, 82%, 58%, 0.2)",
   },
   "Leben & Familie": {
     overlay:
-      "linear-gradient(145deg, hsla(120, 85%, 70%, 0.36) 0%, hsla(50, 80%, 65%, 0.34) 40%, hsla(15, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(15, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(120, 85%, 70%, 0.26) 0%, hsla(50, 80%, 65%, 0.24) 40%, hsla(15, 80%, 60%, 0.18) 100%)",
+    glow: "0 16px 40px -18px hsla(15, 82%, 58%, 0.2)",
   },
   "Experten & Beratung": {
     overlay:
-      "linear-gradient(145deg, hsla(300, 85%, 70%, 0.36) 0%, hsla(210, 80%, 65%, 0.34) 40%, hsla(240, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(240, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(300, 85%, 70%, 0.26) 0%, hsla(210, 80%, 65%, 0.24) 40%, hsla(240, 80%, 60%, 0.18) 100%)",
+    glow: "0 16px 40px -18px hsla(240, 82%, 58%, 0.2)",
   },
   Erwachsene: {
     overlay:
-      "linear-gradient(145deg, hsla(220, 85%, 70%, 0.36) 0%, hsla(305, 80%, 65%, 0.34) 40%, hsla(275, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(275, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(220, 85%, 70%, 0.26) 0%, hsla(305, 80%, 65%, 0.24) 40%, hsla(275, 80%, 60%, 0.18) 100%)",
+    glow: "0 16px 40px -18px hsla(275, 82%, 58%, 0.2)",
   },
   Spezial: {
     overlay:
-      "linear-gradient(145deg, hsla(150, 85%, 70%, 0.36) 0%, hsla(30, 80%, 65%, 0.34) 40%, hsla(200, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(200, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(150, 85%, 70%, 0.26) 0%, hsla(30, 80%, 65%, 0.24) 40%, hsla(200, 80%, 60%, 0.18) 100%)",
+    glow: "0 16px 40px -18px hsla(200, 82%, 58%, 0.2)",
   },
 };
 
@@ -96,58 +96,58 @@ const CATEGORY_BADGE_STYLES: Record<
 > = {
   Alltag: {
     style: {
-      background: "linear-gradient(135deg, rgba(120, 99, 255, 0.24), rgba(82, 227, 255, 0.22))",
-      borderColor: "rgba(163, 194, 255, 0.45)",
-      color: "rgba(248, 249, 255, 0.95)",
+      background: "linear-gradient(135deg, rgba(120, 99, 255, 0.18), rgba(82, 227, 255, 0.16))",
+      borderColor: "rgba(163, 194, 255, 0.3)",
+      color: "rgba(248, 249, 255, 0.9)",
     },
   },
   "Business & Karriere": {
     style: {
-      background: "linear-gradient(135deg, rgba(255, 216, 115, 0.24), rgba(120, 255, 168, 0.22))",
-      borderColor: "rgba(255, 226, 155, 0.5)",
-      color: "rgba(16, 18, 20, 0.9)",
+      background: "linear-gradient(135deg, rgba(255, 216, 115, 0.18), rgba(120, 255, 168, 0.16))",
+      borderColor: "rgba(255, 226, 155, 0.35)",
+      color: "rgba(16, 18, 20, 0.85)",
     },
   },
   "Kreativ & Unterhaltung": {
     style: {
-      background: "linear-gradient(135deg, rgba(255, 166, 207, 0.26), rgba(168, 126, 255, 0.24))",
-      borderColor: "rgba(242, 190, 255, 0.45)",
-      color: "rgba(255, 248, 251, 0.96)",
+      background: "linear-gradient(135deg, rgba(255, 166, 207, 0.2), rgba(168, 126, 255, 0.18))",
+      borderColor: "rgba(242, 190, 255, 0.3)",
+      color: "rgba(255, 248, 251, 0.9)",
     },
   },
   "Lernen & Bildung": {
     style: {
-      background: "linear-gradient(135deg, rgba(120, 210, 255, 0.22), rgba(255, 210, 120, 0.22))",
-      borderColor: "rgba(185, 230, 255, 0.5)",
-      color: "rgba(238, 248, 255, 0.96)",
+      background: "linear-gradient(135deg, rgba(120, 210, 255, 0.16), rgba(255, 210, 120, 0.16))",
+      borderColor: "rgba(185, 230, 255, 0.35)",
+      color: "rgba(238, 248, 255, 0.9)",
     },
   },
   "Leben & Familie": {
     style: {
-      background: "linear-gradient(135deg, rgba(120, 255, 188, 0.24), rgba(255, 215, 140, 0.26))",
-      borderColor: "rgba(190, 255, 210, 0.45)",
-      color: "rgba(10, 26, 15, 0.88)",
+      background: "linear-gradient(135deg, rgba(120, 255, 188, 0.18), rgba(255, 215, 140, 0.2))",
+      borderColor: "rgba(190, 255, 210, 0.3)",
+      color: "rgba(10, 26, 15, 0.8)",
     },
   },
   "Experten & Beratung": {
     style: {
-      background: "linear-gradient(135deg, rgba(200, 160, 255, 0.26), rgba(120, 210, 255, 0.22))",
-      borderColor: "rgba(210, 190, 255, 0.45)",
-      color: "rgba(246, 242, 255, 0.96)",
+      background: "linear-gradient(135deg, rgba(200, 160, 255, 0.2), rgba(120, 210, 255, 0.16))",
+      borderColor: "rgba(210, 190, 255, 0.3)",
+      color: "rgba(246, 242, 255, 0.9)",
     },
   },
   Erwachsene: {
     style: {
-      background: "linear-gradient(135deg, rgba(120, 210, 255, 0.24), rgba(240, 160, 255, 0.24))",
-      borderColor: "rgba(170, 210, 255, 0.5)",
-      color: "rgba(13, 16, 24, 0.9)",
+      background: "linear-gradient(135deg, rgba(120, 210, 255, 0.18), rgba(240, 160, 255, 0.18))",
+      borderColor: "rgba(170, 210, 255, 0.35)",
+      color: "rgba(13, 16, 24, 0.85)",
     },
   },
   Spezial: {
     style: {
-      background: "linear-gradient(135deg, rgba(90, 250, 210, 0.24), rgba(255, 210, 120, 0.24))",
-      borderColor: "rgba(166, 255, 226, 0.45)",
-      color: "rgba(5, 22, 18, 0.88)",
+      background: "linear-gradient(135deg, rgba(90, 250, 210, 0.18), rgba(255, 210, 120, 0.18))",
+      borderColor: "rgba(166, 255, 226, 0.3)",
+      color: "rgba(5, 22, 18, 0.8)",
     },
   },
 };

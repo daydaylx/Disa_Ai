@@ -12,7 +12,6 @@ import { formatRelativeTime } from "../../lib/formatRelativeTime";
 import { FRIENDLY_TINTS, type GlassTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
-import { RoleCard } from "../studio/RoleCard";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
 const QUICKSTART_TINTS: GlassTint[] = FRIENDLY_TINTS;
@@ -32,13 +31,13 @@ type CardTintStyle = CSSProperties & {
 };
 
 const HERO_CARD_TINT: CardTintStyle = {
-  "--card-tint-from": "rgba(249, 168, 212, 0.35)",
-  "--card-tint-to": "rgba(129, 140, 248, 0.3)",
+  "--card-tint-from": "rgba(249, 168, 212, 0.14)",
+  "--card-tint-to": "rgba(129, 140, 248, 0.1)",
 };
 
 const QUICKSTART_ERROR_TINT: CardTintStyle = {
-  "--card-tint-from": "rgba(96, 165, 250, 0.32)",
-  "--card-tint-to": "rgba(59, 130, 246, 0.26)",
+  "--card-tint-from": "rgba(96, 165, 250, 0.16)",
+  "--card-tint-to": "rgba(59, 130, 246, 0.12)",
 };
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
@@ -58,6 +57,8 @@ const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
 
 const QUICKSTART_FALLBACK_SUBTITLE =
   "Starte mit einer vorgefertigten Idee und komm sofort ins Schreiben.";
+
+const MAX_VISIBLE_QUICKSTARTS = 4;
 
 function formatQuickstartTag(tag: string) {
   const normalised = tag.replace(/[-_]/g, " ");
@@ -119,9 +120,15 @@ export function ChatList({
   const [isLoadingQuickstarts, setIsLoadingQuickstarts] = useState(true);
   const [quickstartError, setQuickstartError] = useState<string | null>(null);
   const [activeQuickstart, setActiveQuickstart] = useState<string | null>(null);
+  const [showAllQuickstarts, setShowAllQuickstarts] = useState(false);
 
   const palette = useGlassPalette();
   const friendlyPalette = palette.length > 0 ? palette : QUICKSTART_TINTS;
+  const visibleQuickstarts = useMemo(
+    () => (showAllQuickstarts ? quickstarts : quickstarts.slice(0, MAX_VISIBLE_QUICKSTARTS)),
+    [quickstarts, showAllQuickstarts],
+  );
+  const hasHiddenQuickstarts = quickstarts.length > MAX_VISIBLE_QUICKSTARTS;
 
   const { startQuickstartFlow } = useQuickstartFlow({
     onStartFlow: onQuickstartFlow || (() => {}),
@@ -188,15 +195,15 @@ export function ChatList({
       <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-5 px-1 py-3">
-            <div className="glass-card tinted space-y-4 p-6" style={HERO_CARD_TINT}>
+            <div className="glass-card overlay-weak space-y-4 p-6" style={HERO_CARD_TINT}>
               <div className="space-y-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r from-rose-400/35 via-orange-300/30 to-amber-200/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white shadow-[0_6px_18px_rgba(249,168,212,0.35)] backdrop-blur-sm">
+                <span className="border-white/14 bg-white/8 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/80 shadow-[0_4px_14px_rgba(12,18,28,0.3)] backdrop-blur-sm">
                   Willkommen zurück
                 </span>
-                <h1 className="text-[26px] font-semibold leading-tight text-white">
+                <h1 className="text-[26px] font-semibold leading-tight text-white/90">
                   Was möchtest du heute erschaffen?
                 </h1>
-                <p className="text-[14px] leading-relaxed text-white/85">
+                <p className="text-[14px] leading-relaxed text-white/70">
                   Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
                   in Sekunden.
                 </p>
@@ -204,7 +211,7 @@ export function ChatList({
               <button
                 type="button"
                 onClick={handleStartStandardChat}
-                className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-gradient-to-r from-rose-400/25 via-orange-300/20 to-amber-200/20 px-5 py-3 text-sm font-medium text-white shadow-[0_16px_40px_rgba(250,204,171,0.35)] backdrop-blur-md transition-all duration-200 hover:-translate-y-[1px] hover:brightness-110 active:scale-[0.98]"
+                className="inline-flex w-full items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-medium text-white/90 backdrop-blur-sm transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.99]"
               >
                 Neues Gespräch beginnen
               </button>
@@ -226,8 +233,11 @@ export function ChatList({
                   })}
                 </div>
               ) : quickstartError ? (
-                <div className="glass-card tinted p-6 text-center" style={QUICKSTART_ERROR_TINT}>
-                  <div className="bg-white/12 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
+                <div
+                  className="glass-card overlay-weak p-6 text-center"
+                  style={QUICKSTART_ERROR_TINT}
+                >
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
                       <path
                         stroke="currentColor"
@@ -254,29 +264,79 @@ export function ChatList({
                   </button>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {quickstarts.map((action, index) => {
-                    const badge = action.tags?.[0]
-                      ? formatQuickstartTag(action.tags[0]!)
-                      : "Schnellstart";
-                    const tint =
-                      friendlyPalette[index % friendlyPalette.length] ?? FRIENDLY_TINTS[0]!;
+                <div className="space-y-4">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {visibleQuickstarts.map((action, index) => {
+                      const badge = action.tags?.[0]
+                        ? formatQuickstartTag(action.tags[0]!)
+                        : "Schnellstart";
+                      const tint =
+                        friendlyPalette[index % friendlyPalette.length] ?? FRIENDLY_TINTS[0]!;
+                      const accentStyle: CSSProperties | undefined = tint
+                        ? {
+                            backgroundImage: `linear-gradient(90deg, ${tint.from}, ${tint.to})`,
+                          }
+                        : undefined;
+                      const description = action.subtitle ?? QUICKSTART_FALLBACK_SUBTITLE;
+                      const isActive = activeQuickstart === action.id;
+                      const isDisabled = isQuickstartLoading && !isActive;
 
-                    return (
-                      <RoleCard
-                        key={action.id}
-                        data-testid={`quickstart-${action.id}`}
-                        title={action.title}
-                        description={action.subtitle ?? QUICKSTART_FALLBACK_SUBTITLE}
-                        badge={badge}
-                        tint={tint}
-                        isActive={activeQuickstart === action.id}
-                        disabled={isQuickstartLoading && activeQuickstart !== action.id}
-                        onClick={() => handleQuickstartClick(action)}
-                        className="min-h-[140px]"
-                      />
-                    );
-                  })}
+                      return (
+                        <button
+                          key={action.id}
+                          type="button"
+                          data-testid={`quickstart-${action.id}`}
+                          onClick={() => handleQuickstartClick(action)}
+                          disabled={isDisabled}
+                          className={cn(
+                            "glass-card overlay-weak flex h-full flex-col gap-3 p-4 text-left text-white/85 transition-colors duration-200",
+                            "focus-visible:ring-white/18 focus-visible:outline-none focus-visible:ring-2",
+                            !isDisabled && "hover:border-white/14",
+                            isActive && "ring-white/18 ring-2",
+                            isDisabled && "opacity-55",
+                          )}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="h-1 w-10 rounded-full opacity-45"
+                            style={accentStyle}
+                          />
+                          <div className="space-y-2">
+                            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/55">
+                              {badge}
+                            </span>
+                            <div>
+                              <h3 className="text-base font-semibold text-white/90">
+                                {action.title}
+                              </h3>
+                              <p
+                                className="mt-1 text-sm leading-6 text-white/65"
+                                style={{
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 3,
+                                  WebkitBoxOrient: "vertical",
+                                  overflow: "hidden",
+                                }}
+                              >
+                                {description}
+                              </p>
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {hasHiddenQuickstarts ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowAllQuickstarts((prev) => !prev)}
+                      className="glass-card overlay-weak focus-visible:ring-white/18 inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-white/70 transition hover:text-white focus-visible:outline-none focus-visible:ring-2"
+                    >
+                      {showAllQuickstarts
+                        ? "Weniger Vorschläge anzeigen"
+                        : "Mehr Vorschläge anzeigen"}
+                    </button>
+                  ) : null}
                 </div>
               )}
             </div>
@@ -286,15 +346,15 @@ export function ChatList({
                 return (
                   <div
                     key={item.label}
-                    className="glass-card tinted group p-4 transition-all duration-200 hover:-translate-y-[1px]"
+                    className="glass-card overlay-weak hover:border-white/14 group p-4 transition-colors duration-200"
                   >
                     <button
                       type="button"
                       onClick={() => onQuickstartFlow?.(item.prompt, false)}
-                      className="flex w-full items-center justify-between gap-3 text-sm font-medium text-white transition-colors"
+                      className="flex w-full items-center justify-between gap-3 text-sm font-medium text-white/80"
                     >
-                      <span className="text-left">{item.label}</span>
-                      <MessageSquare className="h-4 w-4 opacity-75 transition-all group-hover:scale-110 group-hover:opacity-100" />
+                      <span className="text-left text-white/75">{item.label}</span>
+                      <MessageSquare className="h-4 w-4 text-white/55 transition group-hover:text-white/80" />
                     </button>
                   </div>
                 );

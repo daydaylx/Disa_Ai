@@ -110,8 +110,8 @@ export function createRoleTint(accentColor?: string): GlassTint {
   const parsed = accentColor ? parseHsl(accentColor) : null;
   if (!parsed) {
     return {
-      from: "hsla(32, 25%, 67%, 0.8)",
-      to: "hsla(20, 25%, 54%, 0.8)",
+      from: "hsla(32, 25%, 67%, 0.5)",
+      to: "hsla(20, 25%, 54%, 0.5)",
     };
   }
 
@@ -127,8 +127,8 @@ export function createRoleTint(accentColor?: string): GlassTint {
   };
 
   return {
-    from: toHsla(start, 0.8),
-    to: toHsla(end, 0.8),
+    from: toHsla(start, 0.5),
+    to: toHsla(end, 0.5),
   };
 }
 
@@ -143,28 +143,28 @@ export function gradientToTint(gradient: string): GlassTint | null {
 // Freundliche Tint-Farbkombinationen für bessere Lesbarkeit und wärmere Ausstrahlung
 export const FRIENDLY_TINTS: GlassTint[] = [
   {
-    from: "hsla(262, 25%, 74%, 0.8)", // Lavender
-    to: "hsla(200, 25%, 68%, 0.8)", // Soft Sky
+    from: "hsla(262, 25%, 74%, 0.45)", // Lavender
+    to: "hsla(200, 25%, 68%, 0.45)", // Soft Sky
   },
   {
-    from: "hsla(335, 25%, 72%, 0.8)", // Blossom Pink
-    to: "hsla(24, 25%, 67%, 0.8)", // Peach Glow
+    from: "hsla(335, 25%, 72%, 0.45)", // Blossom Pink
+    to: "hsla(24, 25%, 67%, 0.45)", // Peach Glow
   },
   {
-    from: "hsla(160, 25%, 66%, 0.8)", // Mint
-    to: "hsla(188, 25%, 62%, 0.8)", // Aqua
+    from: "hsla(160, 25%, 66%, 0.45)", // Mint
+    to: "hsla(188, 25%, 62%, 0.45)", // Aqua
   },
   {
-    from: "hsla(42, 25%, 70%, 0.8)", // Golden Light
-    to: "hsla(16, 25%, 64%, 0.8)", // Amber Coral
+    from: "hsla(42, 25%, 70%, 0.45)", // Golden Light
+    to: "hsla(16, 25%, 64%, 0.45)", // Amber Coral
   },
   {
-    from: "hsla(280, 25%, 74%, 0.8)", // Orchid
-    to: "hsla(312, 25%, 68%, 0.8)", // Fuchsia Mist
+    from: "hsla(280, 25%, 74%, 0.45)", // Orchid
+    to: "hsla(312, 25%, 68%, 0.45)", // Fuchsia Mist
   },
   {
-    from: "hsla(202, 25%, 70%, 0.8)", // Daybreak Blue
-    to: "hsla(186, 25%, 64%, 0.8)", // Lagoon
+    from: "hsla(202, 25%, 70%, 0.45)", // Daybreak Blue
+    to: "hsla(186, 25%, 64%, 0.45)", // Lagoon
   },
 ];
 
