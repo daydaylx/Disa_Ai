@@ -328,10 +328,9 @@ export default function ChatV2() {
               title="Willkommen bei Disa AI"
               description="Dein intelligenter Assistent für Gespräche, Analysen und kreative Aufgaben"
               tint={friendlyPalette[0] ?? DEFAULT_TINT}
-              onClick={() => {}}
+              onClick={handleNewConversation}
               className="flex h-[152px] items-center justify-center text-center"
             />
-
             {/* Discussion Topics Section */}
             <div className="grid grid-cols-1 gap-3 pb-8">
               <h3 className="px-1 text-xs font-semibold uppercase tracking-wide text-white/60">
