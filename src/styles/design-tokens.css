@@ -84,6 +84,7 @@
   --blur-lg: 18px;
   --blur-xl: 26px;
   --blur-2xl: 36px;
+  --glass-blur: 8px; /* Specific for GlassCard component */
 
   --glass-bg-transparent: rgba(10, 16, 24, 0.28);
   --glass-bg-subtle: rgba(255, 255, 255, 0.04);
@@ -93,6 +94,7 @@
   --glass-bg-alpha-6: rgba(255, 255, 255, 0.06);
   --glass-bg-alpha-8: rgba(255, 255, 255, 0.08);
   --glass-bg-alpha-10: rgba(255, 255, 255, 0.1);
+  --glass-alpha: 0.08; /* Specific for GlassCard component */
 
   --glass-border-transparent: rgba(255, 255, 255, 0.08);
   --glass-border-subtle: rgba(255, 255, 255, 0.12);
@@ -112,6 +114,8 @@
   --glass-overlay-medium: rgba(255, 255, 255, 0.09);
   --glass-overlay-strong: rgba(13, 19, 32, 0.18);
   --glass-overlay-intense: rgba(9, 14, 26, 0.28);
+  --stroke-in: 0.08; /* For inner stroke effect on GlassCard */
+  --shadow: 0.08; /* For shadow effect on GlassCard */
   --card-highlight-overlay:
     radial-gradient(120% 140% at 12% 15%, rgba(255, 255, 255, 0.42) 0%, transparent 62%),
     radial-gradient(140% 140% at 88% 10%, rgba(255, 255, 255, 0.16) 0%, transparent 72%);

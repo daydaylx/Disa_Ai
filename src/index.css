@@ -16,6 +16,11 @@
     color: var(--color-synthwave-text);
     overflow-x: hidden;
     position: relative;
+    background:
+      radial-gradient(1000px circle at 15% 6%, rgba(92, 134, 214, 0.18) 0%, transparent 58%),
+      radial-gradient(900px circle at 86% 10%, rgba(166, 118, 255, 0.16) 0%, transparent 62%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 78%);
+    animation: liquid 24s ease-in-out infinite alternate;
   }
 
   /* Additional body styles if needed */
