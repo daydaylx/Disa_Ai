@@ -38,15 +38,53 @@ const STATIC_CATEGORY_TINTS: GlassTint[] = [
   },
 ];
 
-const CATEGORY_TINT_MAP: Record<string, GlassTint> = {
-  Alltag: { from: "hsla(265, 88%, 64%, 0.62)", to: "hsla(188, 92%, 58%, 0.42)" },
-  "Business & Karriere": { from: "hsla(52, 92%, 62%, 0.58)", to: "hsla(138, 88%, 58%, 0.38)" },
-  "Kreativ & Unterhaltung": { from: "hsla(320, 90%, 65%, 0.58)", to: "hsla(260, 88%, 60%, 0.42)" },
-  "Lernen & Bildung": { from: "hsla(185, 90%, 60%, 0.6)", to: "hsla(45, 92%, 62%, 0.4)" },
-  "Leben & Familie": { from: "hsla(110, 90%, 58%, 0.58)", to: "hsla(24, 88%, 58%, 0.4)" },
-  "Experten & Beratung": { from: "hsla(300, 92%, 66%, 0.6)", to: "hsla(200, 88%, 58%, 0.42)" },
-  Erwachsene: { from: "hsla(210, 92%, 62%, 0.6)", to: "hsla(320, 88%, 60%, 0.42)" },
-  Spezial: { from: "hsla(170, 92%, 60%, 0.6)", to: "hsla(44, 88%, 58%, 0.42)" },
+const CATEGORY_TINT_MAP: Record<
+  string,
+  {
+    overlay: string;
+    glow: string;
+  }
+> = {
+  Alltag: {
+    overlay:
+      "linear-gradient(145deg, hsla(45, 85%, 70%, 0.36) 0%, hsla(265, 80%, 65%, 0.34) 40%, hsla(188, 80%, 60%, 0.28) 100%)",
+    glow: "0 32px 60px -24px hsla(188, 82%, 58%, 0.35)",
+  },
+  "Business & Karriere": {
+    overlay:
+      "linear-gradient(145deg, hsla(138, 85%, 70%, 0.36) 0%, hsla(52, 80%, 65%, 0.34) 40%, hsla(70, 80%, 60%, 0.28) 100%)",
+    glow: "0 32px 60px -24px hsla(70, 82%, 58%, 0.35)",
+  },
+  "Kreativ & Unterhaltung": {
+    overlay:
+      "linear-gradient(145deg, hsla(320, 85%, 70%, 0.36) 0%, hsla(260, 80%, 65%, 0.34) 40%, hsla(300, 80%, 60%, 0.28) 100%)",
+    glow: "0 32px 60px -24px hsla(300, 82%, 58%, 0.35)",
+  },
+  "Lernen & Bildung": {
+    overlay:
+      "linear-gradient(145deg, hsla(180, 85%, 70%, 0.36) 0%, hsla(60, 80%, 65%, 0.34) 40%, hsla(210, 80%, 60%, 0.28) 100%)",
+    glow: "0 32px 60px -24px hsla(210, 82%, 58%, 0.35)",
+  },
+  "Leben & Familie": {
+    overlay:
+      "linear-gradient(145deg, hsla(120, 85%, 70%, 0.36) 0%, hsla(50, 80%, 65%, 0.34) 40%, hsla(15, 80%, 60%, 0.28) 100%)",
+    glow: "0 32px 60px -24px hsla(15, 82%, 58%, 0.35)",
+  },
+  "Experten & Beratung": {
+    overlay:
+      "linear-gradient(145deg, hsla(300, 85%, 70%, 0.36) 0%, hsla(210, 80%, 65%, 0.34) 40%, hsla(240, 80%, 60%, 0.28) 100%)",
+    glow: "0 32px 60px -24px hsla(240, 82%, 58%, 0.35)",
+  },
+  Erwachsene: {
+    overlay:
+      "linear-gradient(145deg, hsla(220, 85%, 70%, 0.36) 0%, hsla(305, 80%, 65%, 0.34) 40%, hsla(275, 80%, 60%, 0.28) 100%)",
+    glow: "0 32px 60px -24px hsla(275, 82%, 58%, 0.35)",
+  },
+  Spezial: {
+    overlay:
+      "linear-gradient(145deg, hsla(150, 85%, 70%, 0.36) 0%, hsla(30, 80%, 65%, 0.34) 40%, hsla(200, 80%, 60%, 0.28) 100%)",
+    glow: "0 32px 60px -24px hsla(200, 82%, 58%, 0.35)",
+  },
 };
 
 const CATEGORY_BADGE_STYLES: Record<
@@ -235,9 +273,7 @@ function RolesTab() {
   }, [availableRoles, categoryOrder]);
   const categoryTints: Record<string, GlassTint> = categoryOrder.reduce(
     (acc, category, index) => {
-      // Verwende statische Farbpalette, damit sich RoleCard-Farben nicht bei Rollen-Auswahl ändern
-      acc[category] =
-        CATEGORY_TINT_MAP[category] ?? staticPalette[index % staticPalette.length] ?? DEFAULT_TINT;
+      acc[category] = staticPalette[index % staticPalette.length] ?? DEFAULT_TINT;
       return acc;
     },
     {} as Record<string, GlassTint>,
@@ -294,10 +330,18 @@ function RolesTab() {
                     {category}
                     <span className="text-xs font-normal text-white/60">({roles.length})</span>
                   </h3>
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-1 gap-2.5">
                     {roles.map((role) => {
+                      const accent = CATEGORY_TINT_MAP[category];
                       const tint = categoryTints[category] ?? (DEFAULT_TINT as GlassTint);
                       const badgeAccent = CATEGORY_BADGE_STYLES[category];
+                      const style = accent
+                        ? ({
+                            "--card-overlay-gradient": accent.overlay,
+                            "--card-glow-shadow": accent.glow,
+                          } as CSSProperties & Record<string, string>)
+                        : undefined;
+
                       return (
                         <RoleCard
                           key={role.id}
@@ -305,6 +349,7 @@ function RolesTab() {
                           description={summariseRole(role)}
                           badge={role.category}
                           tint={tint}
+                          style={style}
                           contrastOverlay={false}
                           showDescriptionOnToggle
                           badgeStyle={badgeAccent?.style}

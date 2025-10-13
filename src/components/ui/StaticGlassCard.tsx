@@ -37,15 +37,7 @@ export function StaticGlassCard({
   const mergedStyle = accentVariables ? { ...style, ...accentVariables } : style;
 
   return (
-    <div
-      className={cn(
-        "glass-card", // Neue, zentrale Klasse
-        tint && "tinted",
-        className,
-      )}
-      style={mergedStyle}
-      {...props}
-    >
+    <div className={cn("glass-card", tint && "tinted", className)} style={mergedStyle} {...props}>
       {/* Content container */}
       <div className={cn("relative z-10", paddingClasses[padding])}>{children}</div>
     </div>

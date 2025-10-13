@@ -313,6 +313,37 @@ export default function ModelsPage() {
     },
   };
 
+  const MODEL_CARD_ACCENTS: Record<
+    (typeof categoryKeys)[number],
+    { overlay: string; glow: string }
+  > = {
+    premium: {
+      overlay:
+        "linear-gradient(145deg, hsla(280, 85%, 68%, 0.34) 0%, hsla(200, 80%, 63%, 0.32) 45%, hsla(260, 78%, 58%, 0.26) 100%)",
+      glow: "0 32px 58px -24px hsla(260, 80%, 62%, 0.32)",
+    },
+    everyday: {
+      overlay:
+        "linear-gradient(145deg, hsla(52, 85%, 68%, 0.34) 0%, hsla(138, 80%, 63%, 0.32) 45%, hsla(85, 78%, 58%, 0.26) 100%)",
+      glow: "0 32px 58px -24px hsla(85, 80%, 62%, 0.32)",
+    },
+    free: {
+      overlay:
+        "linear-gradient(145deg, hsla(120, 85%, 68%, 0.34) 0%, hsla(160, 80%, 63%, 0.32) 45%, hsla(295, 78%, 58%, 0.26) 100%)",
+      glow: "0 32px 58px -24px hsla(295, 80%, 62%, 0.32)",
+    },
+    uncensored: {
+      overlay:
+        "linear-gradient(145deg, hsla(320, 85%, 68%, 0.34) 0%, hsla(260, 80%, 63%, 0.32) 45%, hsla(30, 78%, 58%, 0.26) 100%)",
+      glow: "0 32px 58px -24px hsla(30, 80%, 62%, 0.32)",
+    },
+    code: {
+      overlay:
+        "linear-gradient(145deg, hsla(200, 85%, 68%, 0.34) 0%, hsla(150, 80%, 63%, 0.32) 45%, hsla(230, 78%, 58%, 0.26) 100%)",
+      glow: "0 32px 58px -24px hsla(230, 80%, 62%, 0.32)",
+    },
+  };
+
   const selectModelById = (modelId: string, label?: string) => {
     setSelected(modelId);
     try {
@@ -344,6 +375,13 @@ export default function ModelsPage() {
     // Use category-specific tint instead of palette offset
     const tint = categoryTints[categoryKey] ?? DEFAULT_TINT;
     const badgeAccent = MODEL_BADGE_STYLES[categoryKey];
+    const accent = MODEL_CARD_ACCENTS[categoryKey];
+    const style = accent
+      ? ({
+          "--card-overlay-gradient": accent.overlay,
+          "--card-glow-shadow": accent.glow,
+        } as CSSProperties & Record<string, string>)
+      : undefined;
 
     return (
       <RoleCard
@@ -360,6 +398,7 @@ export default function ModelsPage() {
         showDescriptionOnToggle
         badgeStyle={badgeAccent?.style}
         badgeClassName={badgeAccent?.className}
+        style={style}
         isActive={isSelected}
         className={cn(
           "min-h-[140px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
@@ -394,6 +433,7 @@ export default function ModelsPage() {
           tint={friendlyPalette[0] ?? DEFAULT_TINT}
           onClick={() => {}}
           badge="Rollen-Studio"
+          variant="surface"
           className="flex h-[100px] items-center justify-center"
         >
           <div className="flex items-center justify-end">

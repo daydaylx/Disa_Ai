@@ -1,4 +1,6 @@
-// Safe localStorage operations with defensive error handling
+import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
+
+// Safe localStorage operations mit defensivem Fehlerhandling
 /**
  * Zentrale UI/Feature-Settings (lokal, kein Server).
  * Robust gegen exactOptionalPropertyTypes.
@@ -17,6 +19,9 @@ const LS = {
   fontSize: "disa:ui:fontSize",
   reduceMotion: "disa:ui:reduceMotion",
   hapticFeedback: "disa:ui:hapticFeedback",
+  discussionPreset: "disa:discussion:preset",
+  discussionStrict: "disa:discussion:strict",
+  discussionMaxSentences: "disa:discussion:maxSentences",
 } as const;
 
 /** Antwortstil-Presets */
@@ -250,6 +255,64 @@ export function getHapticFeedback(): boolean {
 export function setHapticFeedback(v: boolean): void {
   try {
     localStorage.setItem(LS.hapticFeedback, v ? "true" : "false");
+  } catch {
+    /* Safe: fallback to default */
+  }
+}
+
+/** Diskussionseinstellungen */
+export function getDiscussionPreset(): DiscussionPresetKey {
+  try {
+    const raw = localStorage.getItem(LS.discussionPreset) as DiscussionPresetKey | null;
+    if (raw === "locker_neugierig" || raw === "edgy_provokant" || raw === "nuechtern_pragmatisch") {
+      return raw;
+    }
+    return "locker_neugierig";
+  } catch {
+    return "locker_neugierig";
+  }
+}
+
+export function setDiscussionPreset(preset: DiscussionPresetKey): void {
+  try {
+    localStorage.setItem(LS.discussionPreset, preset);
+  } catch {
+    /* Safe: fallback to default */
+  }
+}
+
+export function getDiscussionStrictMode(): boolean {
+  try {
+    const raw = localStorage.getItem(LS.discussionStrict);
+    if (raw === null) return false;
+    return raw === "true";
+  } catch {
+    return false;
+  }
+}
+
+export function setDiscussionStrictMode(enabled: boolean): void {
+  try {
+    localStorage.setItem(LS.discussionStrict, enabled ? "true" : "false");
+  } catch {
+    /* Safe: fallback to default */
+  }
+}
+
+export function getDiscussionMaxSentences(): number {
+  try {
+    const raw = Number(localStorage.getItem(LS.discussionMaxSentences));
+    if (!Number.isFinite(raw)) return 8;
+    return Math.min(10, Math.max(5, Math.round(raw)));
+  } catch {
+    return 8;
+  }
+}
+
+export function setDiscussionMaxSentences(count: number): void {
+  try {
+    const clamped = Math.min(10, Math.max(5, Math.round(count)));
+    localStorage.setItem(LS.discussionMaxSentences, String(clamped));
   } catch {
     /* Safe: fallback to default */
   }

@@ -2,18 +2,30 @@ import { History, MessageSquare, Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import { logDiscussionAnalytics } from "../analytics/discussion";
 import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
+import { MessageBubbleCard } from "../components/chat/MessageBubbleCard";
 import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { DISCUSSION_MODEL_PROFILE } from "../config/models/discussionProfile";
+import {
+  getDiscussionMaxSentences,
+  getDiscussionPreset,
+  getDiscussionStrictMode,
+} from "../config/settings";
+import {
+  DISCUSSION_FALLBACK_QUESTIONS,
+  shapeDiscussionResponse,
+} from "../features/discussion/shape";
 import {
   GAME_SYSTEM_PROMPTS,
   type GameType,
   getGameStartPrompt,
   getGameSystemPrompt,
 } from "../features/prompt/gamePrompts";
-import { useChat } from "../hooks/useChat";
+import { type ChatRequestOptions, useChat } from "../hooks/useChat";
 import { useGlassPalette } from "../hooks/useGlassPalette";
 import {
   deleteConversation,
@@ -23,9 +35,20 @@ import {
 } from "../lib/conversation-manager";
 import type { GlassTint } from "../lib/theme/glass";
 import { FRIENDLY_TINTS } from "../lib/theme/glass";
+import { buildDiscussionSystemPrompt } from "../prompts/discussion/base";
+import type { DiscussionPresetKey } from "../prompts/discussion/presets";
 import type { ChatMessageType } from "../types/chatMessage";
 
 const DEFAULT_TINT: GlassTint = FRIENDLY_TINTS[0]!;
+
+const MIN_DISCUSSION_SENTENCES = 5;
+
+interface DiscussionSession {
+  topic: string;
+  preset: DiscussionPresetKey;
+  maxSentences: number;
+  strictMode: boolean;
+}
 
 export default function ChatV2() {
   const [input, setInput] = useState("");
@@ -37,6 +60,9 @@ export default function ChatV2() {
   const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
   const toasts = useToasts();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const discussionSessionRef = useRef<DiscussionSession | null>(null);
+  const requestOptionsRef = useRef<ChatRequestOptions | null>(null);
+  const strictRetryTracker = useRef<Set<string>>(new Set());
 
   // Callback Refs für stabile Closures
   const onFinishRef = useRef<(message: ChatMessageType) => void>(() => {});
@@ -53,10 +79,17 @@ export default function ChatV2() {
     },
     onFinish: (message) => onFinishRef.current?.(message),
     systemPrompt: currentSystemPrompt,
+    getRequestOptions: () => requestOptionsRef.current ?? {},
   });
 
   const location = useLocation();
   const { gameId } = (location.state as { gameId?: GameType }) || {};
+
+  const resetDiscussionContext = useCallback(() => {
+    discussionSessionRef.current = null;
+    requestOptionsRef.current = null;
+    strictRetryTracker.current.clear();
+  }, []);
 
   // Function to start a game
   const startGame = useCallback(
@@ -65,6 +98,7 @@ export default function ChatV2() {
       const startMessage = getGameStartPrompt(gameType);
 
       // Set the system prompt for the new game
+      resetDiscussionContext();
       setCurrentSystemPrompt(systemPrompt);
 
       // Reset messages and start the game with the start message
@@ -76,21 +110,65 @@ export default function ChatV2() {
         console.error("Failed to start game:", error);
       });
     },
-    [append, setCurrentSystemPrompt, setMessages],
+    [append, resetDiscussionContext, setCurrentSystemPrompt, setMessages],
   );
 
-  // Function to start a discussion
-  const startDiscussion = (topicPrompt: string) => {
-    // Reset messages and start the discussion with the topic prompt
-    setMessages([]);
-    setCurrentSystemPrompt(""); // No special system prompt for discussions
-    void append({
-      role: "user",
-      content: topicPrompt,
-    }).catch((error) => {
-      console.error("Failed to start discussion:", error);
-    });
-  };
+  const startDiscussion = useCallback(
+    (topicPrompt: string) => {
+      try {
+        const preset = getDiscussionPreset();
+        const strictMode = getDiscussionStrictMode();
+        const maxSentences = getDiscussionMaxSentences();
+        const { prompt, presetKey } = buildDiscussionSystemPrompt({
+          preset,
+          minSentences: MIN_DISCUSSION_SENTENCES,
+          maxSentences,
+          strictMode,
+        });
+
+        resetDiscussionContext();
+        discussionSessionRef.current = {
+          topic: topicPrompt,
+          preset: presetKey,
+          maxSentences,
+          strictMode,
+        };
+        const baseParams = DISCUSSION_MODEL_PROFILE.parameters;
+        const baseMaxTokens = baseParams.max_tokens ?? 480;
+        const tunedMaxTokens = strictMode ? Math.min(baseMaxTokens, 420) : baseMaxTokens;
+        requestOptionsRef.current = {
+          model: DISCUSSION_MODEL_PROFILE.id,
+          temperature: baseParams.temperature,
+          top_p: baseParams.top_p,
+          presence_penalty: baseParams.presence_penalty,
+          max_tokens: tunedMaxTokens,
+        } satisfies ChatRequestOptions;
+        setMessages([]);
+        setActiveConversationId(null);
+        setCurrentSystemPrompt(prompt);
+        toasts.push({
+          kind: "info",
+          title: "Diskussionsmodus aktiv",
+          message: "Ein Absatz, meinungsstark und neugierig – leg los!",
+        });
+
+        void append({
+          role: "user",
+          content: topicPrompt,
+        }).catch((error) => {
+          console.error("Failed to start discussion:", error);
+        });
+      } catch (error) {
+        console.error("Failed to initialise discussion", error);
+        toasts.push({
+          kind: "error",
+          title: "Diskussionsstart fehlgeschlagen",
+          message: "Bitte versuche es erneut.",
+        });
+      }
+    },
+    [append, resetDiscussionContext, setCurrentSystemPrompt, setMessages, toasts],
+  );
 
   // Effect to start a game when a gameId is passed in location state
   useEffect(() => {
@@ -108,9 +186,60 @@ export default function ChatV2() {
   useEffect(() => {
     onFinishRef.current = (message: ChatMessageType) => {
       const currentMessages = messagesRef.current;
-      if (currentMessages.length >= 1) {
-        const allMessages = [...currentMessages, message];
-        const storageMessages = allMessages.map((msg) => ({
+      const session = discussionSessionRef.current;
+      let workingMessage = message;
+      let updatedMessages = currentMessages;
+
+      if (session && message.role === "assistant") {
+        const shaped = shapeDiscussionResponse(message.content, {
+          minSentences: MIN_DISCUSSION_SENTENCES,
+          maxSentences: session.maxSentences,
+          fallbackQuestions: DISCUSSION_FALLBACK_QUESTIONS,
+        });
+
+        if (shaped.text !== message.content) {
+          workingMessage = { ...message, content: shaped.text };
+        }
+
+        const merged = mergeMessageList(currentMessages, workingMessage);
+        if (merged !== currentMessages) {
+          setMessages(merged);
+        }
+        updatedMessages = merged;
+
+        logDiscussionAnalytics({
+          timestamp: Date.now(),
+          topic: session.topic,
+          preset: session.preset,
+          sentenceCount: shaped.sentences.length,
+          wordCount: countWords(shaped.text),
+          trimmed: shaped.trimmed,
+          fallbackUsed: shaped.fallbackUsed,
+          questionTrimmed: shaped.questionTrimmed,
+          strictMode: session.strictMode,
+        });
+
+        if (
+          session.strictMode &&
+          shaped.trimmed &&
+          !strictRetryTracker.current.has(workingMessage.id)
+        ) {
+          strictRetryTracker.current.add(workingMessage.id);
+          setTimeout(() => {
+            void append({
+              role: "user",
+              content: "Kürzer, bitte maximal 10 Sätze.",
+            }).catch((error) => {
+              console.error("Strict retry failed", error);
+            });
+          }, 120);
+        }
+      } else {
+        updatedMessages = mergeMessageList(currentMessages, message);
+      }
+
+      if (updatedMessages.length >= 1) {
+        const storageMessages = updatedMessages.map((msg) => ({
           id: msg.id,
           role: msg.role,
           content: msg.content,
@@ -137,7 +266,7 @@ export default function ChatV2() {
         }
       }
     };
-  }, [activeConversationId, toasts]);
+  }, [activeConversationId, append, setMessages, toasts]);
 
   // Update conversations list when history opens
   useEffect(() => {
@@ -205,6 +334,7 @@ export default function ChatV2() {
 
     setMessages(chatMessages);
     setActiveConversationId(id);
+    resetDiscussionContext();
 
     // Check if there's a system prompt in the conversation and set it
     const systemMessage = chatMessages.find((msg) => msg.role === "system");
@@ -238,6 +368,7 @@ export default function ChatV2() {
       setActiveConversationId(null);
       setCurrentSystemPrompt(undefined); // Clear system prompt as well
       setMessages([]); // Clear current messages if active conversation is deleted
+      resetDiscussionContext();
     }
     toasts.push({
       kind: "success",
@@ -247,6 +378,7 @@ export default function ChatV2() {
   };
 
   const handleNewConversation = () => {
+    resetDiscussionContext();
     setMessages([]);
     setActiveConversationId(null);
     setCurrentSystemPrompt(undefined); // Clear the system prompt when starting a new conversation
@@ -260,28 +392,23 @@ export default function ChatV2() {
   const discussionTopics = [
     {
       title: "Gibt es Außerirdische?",
-      prompt:
-        "Stell dir vor, wir sitzen mit einem zweiten Bier auf dem Balkon und kramen gemeinsam Erinnerungen hervor: Welche verrückten oder ernsten Stories über Außerirdische fallen dir spontan ein? Lass uns diese Fetzen sammeln, erst mal ohne sie zu bewerten. Danach lehnen wir uns zurück und fragen uns ganz locker: Was wäre, wenn eine davon wirklich passiert ist – wie würde sich das für uns anfühlen?",
+      prompt: "Gibt es Außerirdische?",
     },
     {
       title: "Wie wird die Zukunft aussehen?",
-      prompt:
-        "Wir schauen in die Nachtlichter der Stadt und erzählen uns, welche kleinen Zukunftsbilder wir im Kopf haben – vielleicht aus Serien, Artikeln oder Gesprächen nach Feierabend. Statt sofort zu analysieren, fragen wir immer wieder: Und wenn das wirklich passieren würde, wie würde unser Alltag klingen, riechen, schmecken?",
+      prompt: "Wie stellst du dir die nächsten 20 Jahre vor?",
     },
     {
       title: "Wird KI die Weltherrschaft übernehmen?",
-      prompt:
-        "Wir tun so, als würden wir an einer Bar darüber reden. Du erinnerst dich an witzige Schlagzeilen oder ernsthafte Debatten, ich steuere meine Gedanken bei. Wir lassen jede Idee kurz stehen gelassen und werfen spielerisch ein 'Was wäre, wenn…?' hinterher. Ziel ist kein Urteil, sondern dieses zufriedene Schulterzucken nach einem langen Gespräch.",
+      prompt: "Wird KI irgendwann zu viel Macht haben?",
     },
     {
       title: "Gibt es ein Leben nach dem Tod?",
-      prompt:
-        "Stell dir vor, wir erzählen uns nachts Geschichten, mal spirituell, mal wissenschaftlich, mal ganz persönlich. Wir halten die Momente fest, in denen jemand sagt: 'Vielleicht steckt da doch was dahinter.' Jedes Mal fragen wir leise: Wenn das wahr wäre, würde es uns beruhigen oder eher neugierig machen?",
+      prompt: "Gibt es deiner Meinung nach ein Leben nach dem Tod?",
     },
     {
       title: "Warum glauben Menschen an Schicksal?",
-      prompt:
-        "Wir sammeln kleine Alltagsgeschichten, in denen jemand sagt 'Das sollte wohl so sein'. Danach drehen wir sie in Gedanken ein bisschen hin und her, so wie man das Bierglas auf dem Tisch kreisen lässt. Immer wenn wir kurz davor sind, eine feste Meinung zu haben, fragen wir uns: Was würde passieren, wenn das Gegenteil stimmt?",
+      prompt: "Warum glauben manche so fest an Schicksal?",
     },
   ];
 
@@ -329,6 +456,7 @@ export default function ChatV2() {
               description="Dein intelligenter Assistent für Gespräche, Analysen und kreative Aufgaben"
               tint={friendlyPalette[0] ?? DEFAULT_TINT}
               onClick={handleNewConversation}
+              variant="surface"
               className="flex h-[152px] items-center justify-center text-center"
             />
             {/* Discussion Topics Section */}
@@ -344,7 +472,8 @@ export default function ChatV2() {
                     title={topic.title}
                     description={topic.prompt}
                     tint={tint}
-                    showDescriptionOnToggle
+                    variant="surface"
+                    badge="Diskussion"
                     onClick={() => {
                       // Start a new discussion with the topic prompt
                       startDiscussion(topic.prompt);
@@ -420,6 +549,7 @@ export default function ChatV2() {
                         description="Denkt nach..."
                         tint={friendlyPalette[0] ?? DEFAULT_TINT}
                         onClick={() => {}}
+                        variant="surface"
                         className="h-[152px] flex-col justify-center"
                       >
                         <div className="flex items-center space-x-2">
@@ -440,47 +570,27 @@ export default function ChatV2() {
         )}
 
         {/* Input Composer - Prominent und gut erkennbar */}
-        <div className="relative">
-          {/* Hintergrund-Blur Effekt */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 opacity-80 blur-sm"></div>
-
-          {/* Haupt-Container */}
-          <div className="glass-card relative p-4">
-            {/* Glanz-Effekt oben */}
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-
+        <div className="mt-6">
+          <div className="bg-corporate-bg-card/90 rounded-2xl border border-white/10 p-4 shadow-[0_20px_48px_-28px_rgba(2,8,23,0.9)] backdrop-blur-xl">
             <div className="flex items-end gap-3">
-              <div className="relative flex-1">
-                {/* Input-Bereich */}
+              <div className="flex-1">
                 <Textarea
                   ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Nachricht an Disa AI schreiben..."
-                  className="glass-card max-h-[200px] min-h-[52px] w-full resize-none rounded-xl px-4 py-3 text-white transition-all duration-200 placeholder:text-white/70 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
+                  className="focus:border-corporate-accent-primary/50 focus:ring-corporate-accent-primary/30 max-h-[200px] min-h-[60px] w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/60 focus:ring-2"
                   rows={1}
                   aria-label="Nachricht an Disa AI eingeben"
                   aria-describedby="input-help-text"
                 />
-
-                {/* Typing Indicator */}
-                {input.trim() && (
-                  <div className="absolute bottom-2 right-3">
-                    <div className="flex space-x-1">
-                      <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-400"></div>
-                      <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-purple-400 [animation-delay:0.2s]"></div>
-                      <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-pink-400 [animation-delay:0.4s]"></div>
-                    </div>
-                  </div>
-                )}
               </div>
 
-              {/* Send Button */}
               <Button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
-                className="h-12 w-12 shrink-0 rounded-xl border border-blue-400/30 bg-gradient-to-r from-blue-500/80 to-purple-500/80 p-0 text-white transition-all duration-200 hover:scale-105 hover:from-blue-500 hover:to-purple-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
+                className="border-corporate-accent-primary/40 text-color-corporate-text-on-accent hover:bg-corporate-accent-secondary focus:ring-corporate-accent-primary/40 h-12 w-12 shrink-0 rounded-xl border bg-corporate-accent-primary transition-transform duration-150 hover:scale-105 focus:outline-none focus:ring-2 active:scale-95 disabled:opacity-60 disabled:hover:scale-100"
                 aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
                 title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
               >
@@ -488,12 +598,11 @@ export default function ChatV2() {
               </Button>
             </div>
 
-            {/* Info Text */}
-            <div className="mt-2 flex items-center justify-between text-xs text-white/50">
+            <div className="mt-2 flex items-center justify-between text-xs text-white/60">
               <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
               {isLoading && (
-                <span className="flex items-center gap-1">
-                  <div className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></div>
+                <span className="flex items-center gap-2">
+                  <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-corporate-accent-primary"></span>
                   Tippt...
                 </span>
               )}
@@ -527,15 +636,37 @@ function MessageBubble({ message }: { message: ChatMessageType }) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div className={`max-w-[85%] ${isUser ? "ml-12" : "mr-12"}`}>
-        <RoleCard
-          title={isUser ? "Du" : "Disa AI"}
-          description={message.content}
+        <MessageBubbleCard
+          author={isUser ? "Du" : "Disa AI"}
+          body={message.content}
           tint={tint}
-          onClick={() => {}}
-          badge={message.timestamp ? new Date(message.timestamp).toLocaleTimeString() : undefined}
-          className=""
+          timestamp={message.timestamp}
+          align={isUser ? "right" : "left"}
         />
       </div>
     </div>
   );
+}
+
+function mergeMessageList(list: ChatMessageType[], next: ChatMessageType): ChatMessageType[] {
+  const index = list.findIndex((item) => item.id === next.id);
+  if (index === -1) {
+    return [...list, next];
+  }
+  const existing = list[index];
+  if (
+    existing.content === next.content &&
+    existing.role === next.role &&
+    existing.timestamp === next.timestamp &&
+    existing.model === next.model
+  ) {
+    return list;
+  }
+  const copy = [...list];
+  copy[index] = next;
+  return copy;
+}
+
+function countWords(text: string): number {
+  return text.trim().split(/\s+/).filter(Boolean).length;
 }

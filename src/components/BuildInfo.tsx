@@ -50,7 +50,15 @@ export function BuildInfo({ className = "", showFullInfo = false }: BuildInfoPro
 
   // Nur in Entwicklungsumgebung oder wenn explizit aktiviert anzeigen
   const isDevelopment = import.meta.env.DEV;
-  const showDebugInfo = isDevelopment || localStorage.getItem("show-debug-info") === "true";
+  const showDebugInfo =
+    isDevelopment ||
+    (() => {
+      try {
+        return localStorage.getItem("show-debug-info") === "true";
+      } catch {
+        return false;
+      }
+    })();
 
   if (!showDebugInfo) {
     return null;

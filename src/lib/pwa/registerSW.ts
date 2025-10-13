@@ -1,14 +1,5 @@
 import { logger } from "../utils/production-logger";
 
-try {
-  if ((navigator as any).webdriver) {
-    /* test → kein SW */ throw new Error("__PW_TEST__");
-  }
-} catch (_e) {
-  void _e;
-  /* stop SW */
-}
-
 // Build-ID from import.meta.env or fallback to timestamp
 const BUILD_ID =
   (import.meta as any)?.env?.VITE_BUILD_ID ??
@@ -17,10 +8,31 @@ const BUILD_ID =
 
 export { BUILD_ID };
 
+function isServiceWorkerDisabled(): boolean {
+  try {
+    if (typeof navigator === "undefined" || typeof location === "undefined") {
+      return true;
+    }
+
+    const params = new URLSearchParams(location.search);
+    const webdriver = Boolean((navigator as any).webdriver);
+    const playwrightUA = /playwright/i.test(navigator.userAgent);
+    return webdriver || params.has("no-sw") || playwrightUA;
+  } catch (error) {
+    logger.warn("[SW] guard failed, disabling registration", error);
+    return true;
+  }
+}
+
 export function registerSW() {
   if (typeof window === "undefined") return;
   if (!("serviceWorker" in navigator)) {
     logger.warn("[SW] Service Worker not supported in this browser");
+    return;
+  }
+
+  if (isServiceWorkerDisabled()) {
+    logger.warn("[SW] registration skipped (test or guard condition)");
     return;
   }
 
@@ -43,12 +55,12 @@ export function registerSW() {
 
   window.onerror = swErrorHandler;
 
-  // Issue #75 behoben - Service Worker wieder aktiviert für PWA-Funktionalität
   const hasImportScripts =
     typeof (globalThis as unknown as { importScripts?: unknown }).importScripts !== "undefined";
   const baseUrl =
     (import.meta as any)?.env?.VITE_BASE_URL ?? (import.meta as any)?.env?.BASE_URL ?? "./";
   const swUrl = hasImportScripts ? `/sw.js?build=${BUILD_ID}` : `${baseUrl}sw.js?build=${BUILD_ID}`;
+
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register(swUrl)
@@ -57,8 +69,6 @@ export function registerSW() {
           const nw = reg.installing;
           nw?.addEventListener("statechange", () => {
             if (nw.state === "installed" && navigator.serviceWorker.controller) {
-              // New content is available, and the new service worker has been installed.
-              // The 'autoUpdate' strategy will handle the update automatically.
               logger.info(
                 "[SW] New content is available and will be used when all tabs for this scope are closed.",
               );
@@ -66,21 +76,8 @@ export function registerSW() {
           });
         });
       })
-      .catch(() => {});
+      .catch((error) => {
+        logger.error("[SW] registration failed", error);
+      });
   });
-}
-
-// E2E: Service Worker im Test deaktivieren
-try {
-  const params = new URLSearchParams(location.search);
-  const isE2E =
-    (navigator as any).webdriver || params.has("no-sw") || /playwright/i.test(navigator.userAgent);
-  if (isE2E) {
-    logger.warn("[SW] disabled in E2E");
-    // Frühzeitiger Return aus jeglicher Registrierung
-    // (falls oben eine auto-registrierende Routine existiert, bitte direkt dort guarden)
-  }
-} catch (_e) {
-  void _e;
-  /* ignore */
 }

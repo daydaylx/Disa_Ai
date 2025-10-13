@@ -49,7 +49,7 @@ test.describe("Smoke Tests", () => {
     await composer.press("Enter");
 
     // The user message should be visible in the chat messages area
-    await expect(page.locator(".min-h-\\[152px\\]").getByText("Hallo Welt")).toBeVisible();
+    await expect(page.getByTestId("chat-log").getByText("Hallo Welt")).toBeVisible();
 
     // The mocked response "Hallo das ist eine Test-Antwort" should be visible
     await expect(page.getByText("Hallo das ist eine Test-Antwort")).toBeVisible();

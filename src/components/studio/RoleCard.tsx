@@ -8,23 +8,25 @@ export interface RoleTint {
   to: string;
 }
 
-export interface RoleCardProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface RoleCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   description: string;
   badge?: string;
-  tint: RoleTint;
+  tint?: RoleTint;
   isActive?: boolean;
   contrastOverlay?: boolean;
   showDescriptionOnToggle?: boolean;
   badgeStyle?: CSSProperties;
   badgeClassName?: string;
+  disabled?: boolean;
+  variant?: "tinted" | "surface";
 }
 
 /**
  * Glassmorphism role card used on the studio role screen.
  * Renders as an accessible button so it can be focused/tapped.
  */
-export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
+export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
   (
     {
       title,
@@ -34,11 +36,13 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       isActive = false,
       contrastOverlay: _contrastOverlay = false,
       className,
-      type = "button",
       style,
       showDescriptionOnToggle = false,
       badgeStyle,
       badgeClassName,
+      onClick,
+      disabled,
+      variant = "tinted",
       ...props
     },
     ref,
@@ -47,13 +51,16 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       | (CSSProperties & {
           "--card-tint-from"?: string;
           "--card-tint-to"?: string;
+          "--card-overlay-gradient"?: string;
+          "--card-glow-shadow"?: string;
         })
-      | undefined = tint
-      ? {
-          "--card-tint-from": tint.from,
-          "--card-tint-to": tint.to,
-        }
-      : undefined;
+      | undefined =
+      tint && variant === "tinted"
+        ? {
+            "--card-tint-from": tint.from,
+            "--card-tint-to": tint.to,
+          }
+        : undefined;
 
     const mergedStyle = accentVariables ? { ...style, ...accentVariables } : style;
     const [expanded, setExpanded] = useState(!showDescriptionOnToggle);
@@ -63,17 +70,34 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       setExpanded((prev) => !prev);
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (disabled) return;
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        onClick?.(event as unknown as React.MouseEvent<HTMLDivElement>);
+      }
+    };
+
     return (
-      <button
+      <div
         ref={ref}
-        type={type}
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          "glass-card tinted flex min-h-[112px] flex-col p-5 text-left text-white transition-all duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]",
+          "flex min-h-[104px] flex-col p-5 text-left text-white transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35",
+          !disabled && "cursor-pointer",
+          disabled && "cursor-not-allowed opacity-70",
+          variant === "tinted"
+            ? "glass-card tinted hover:-translate-y-[1px]"
+            : "bg-corporate-bg-card/90 hover:border-white/16 rounded-2xl border border-white/10 shadow-[0_18px_48px_-28px_rgba(6,10,26,0.75)]",
           isActive && "border-white/30 ring-2 ring-white/25",
           className,
         )}
+        role="button"
+        tabIndex={0}
+        aria-disabled={disabled || undefined}
+        onClick={disabled ? undefined : onClick}
+        onKeyDown={handleKeyDown}
         style={mergedStyle}
         {...props}
       >
@@ -111,7 +135,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
             </div>
           </div>
         </div>
-      </button>
+      </div>
     );
   },
 );

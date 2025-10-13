@@ -17,6 +17,15 @@ export interface UseChatOptions {
   body?: object;
   prepareMessages?: (history: ChatMessageType[]) => ChatMessageType[];
   systemPrompt?: string;
+  getRequestOptions?: () => ChatRequestOptions;
+}
+
+export interface ChatRequestOptions {
+  model?: string;
+  temperature?: number;
+  top_p?: number;
+  presence_penalty?: number;
+  max_tokens?: number;
 }
 
 interface ChatState {
@@ -83,6 +92,7 @@ export function useChat({
   body,
   prepareMessages: prepareMessagesOpt,
   systemPrompt: _systemPrompt,
+  getRequestOptions,
 }: UseChatOptions = {}) {
   const prepareMessages = useCallback(
     (history: ChatMessageType[]): ChatMessageType[] => {
@@ -102,6 +112,10 @@ export function useChat({
   });
 
   const systemPromptRef = useRef<string | undefined>(_systemPrompt);
+
+  useEffect(() => {
+    systemPromptRef.current = _systemPrompt ?? undefined;
+  }, [_systemPrompt]);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const rateLimitUntilRef = useRef<number>(0);
@@ -172,6 +186,8 @@ export function useChat({
           apiMessages = [{ role: "system", content: systemPrompt }, ...apiMessages];
         }
 
+        const requestOptions = getRequestOptions?.();
+
         await chatStream(
           apiMessages,
           (
@@ -219,7 +235,13 @@ export function useChat({
           },
           {
             signal: controller.signal,
-            model: (body as any)?.model,
+            model: requestOptions?.model ?? (body as any)?.model,
+            params: {
+              temperature: requestOptions?.temperature,
+              top_p: requestOptions?.top_p,
+              presence_penalty: requestOptions?.presence_penalty,
+              max_tokens: requestOptions?.max_tokens,
+            },
             onStart: () => {
               // Optionally trigger onResponse callback with a mock response
               if (onResponse) {
@@ -290,7 +312,7 @@ export function useChat({
       }
     },
 
-    [onResponse, onFinish, onError, body, prepareMessages, stateRef], // Remove state.messages from dependencies to prevent stale closures
+    [onResponse, onFinish, onError, body, prepareMessages, stateRef, getRequestOptions], // Remove state.messages from dependencies to prevent stale closures
   );
 
   const stop = useCallback(() => {

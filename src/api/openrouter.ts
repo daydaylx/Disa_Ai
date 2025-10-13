@@ -96,6 +96,13 @@ export async function chatOnce(
   });
 }
 
+type ChatRequestTuning = {
+  temperature?: number;
+  top_p?: number;
+  presence_penalty?: number;
+  max_tokens?: number;
+};
+
 export async function chatStream(
   messages: ChatMessage[],
   onDelta: (
@@ -104,6 +111,7 @@ export async function chatStream(
   ) => void,
   opts?: {
     model?: string;
+    params?: ChatRequestTuning;
     signal?: AbortSignal;
     onStart?: () => void;
     onDone?: (full: string) => void;
@@ -115,6 +123,19 @@ export async function chatStream(
     try {
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
+      const payload: Record<string, unknown> = {
+        model,
+        messages,
+        stream: true,
+      };
+
+      if (opts?.params) {
+        for (const [key, value] of Object.entries(opts.params)) {
+          if (value !== undefined) {
+            payload[key] = value;
+          }
+        }
+      }
       const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
         timeoutMs: 45000,
         signal: combinedSignal,
@@ -123,7 +144,7 @@ export async function chatStream(
         fetchOptions: {
           method: "POST",
           headers,
-          body: JSON.stringify({ model, messages, stream: true }),
+          body: JSON.stringify(payload),
         },
       });
 
