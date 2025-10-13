@@ -261,27 +261,27 @@ export default function ChatV2() {
     {
       title: "Gibt es Außerirdische?",
       prompt:
-        "Starte eine offene Diskussion über die Wahrscheinlichkeit außerirdischen Lebens. Nenne Pro/Contra, Unsicherheiten und heutige Evidenz.",
+        "Stell dir vor, wir sitzen mit einem zweiten Bier auf dem Balkon und kramen gemeinsam Erinnerungen hervor: Welche verrückten oder ernsten Stories über Außerirdische fallen dir spontan ein? Lass uns diese Fetzen sammeln, erst mal ohne sie zu bewerten. Danach lehnen wir uns zurück und fragen uns ganz locker: Was wäre, wenn eine davon wirklich passiert ist – wie würde sich das für uns anfühlen?",
     },
     {
       title: "Wie wird die Zukunft aussehen?",
       prompt:
-        "Diskussion über plausible gesellschaftlich-technische Entwicklungen in 5–10 Jahren. Treiber, Risiken, Sollbruchstellen.",
+        "Wir schauen in die Nachtlichter der Stadt und erzählen uns, welche kleinen Zukunftsbilder wir im Kopf haben – vielleicht aus Serien, Artikeln oder Gesprächen nach Feierabend. Statt sofort zu analysieren, fragen wir immer wieder: Und wenn das wirklich passieren würde, wie würde unser Alltag klingen, riechen, schmecken?",
     },
     {
       title: "Wird KI die Weltherrschaft übernehmen?",
       prompt:
-        "Diskussion über realistische KI-Risiken vs. Hype. Trenne kurz-/mittel-/langfristige Szenarien.",
+        "Wir tun so, als würden wir an einer Bar darüber reden. Du erinnerst dich an witzige Schlagzeilen oder ernsthafte Debatten, ich steuere meine Gedanken bei. Wir lassen jede Idee kurz stehen gelassen und werfen spielerisch ein 'Was wäre, wenn…?' hinterher. Ziel ist kein Urteil, sondern dieses zufriedene Schulterzucken nach einem langen Gespräch.",
     },
     {
       title: "Gibt es ein Leben nach dem Tod?",
       prompt:
-        "Diskussion über philosophische, religiöse und naturwissenschaftliche Perspektiven. Unsicherheiten klar benennen.",
+        "Stell dir vor, wir erzählen uns nachts Geschichten, mal spirituell, mal wissenschaftlich, mal ganz persönlich. Wir halten die Momente fest, in denen jemand sagt: 'Vielleicht steckt da doch was dahinter.' Jedes Mal fragen wir leise: Wenn das wahr wäre, würde es uns beruhigen oder eher neugierig machen?",
     },
     {
       title: "Warum glauben Menschen an Schicksal?",
       prompt:
-        "Diskussion über kognitive Verzerrungen, Kultur und Psychologie. Beispiele und Gegenbeispiele.",
+        "Wir sammeln kleine Alltagsgeschichten, in denen jemand sagt 'Das sollte wohl so sein'. Danach drehen wir sie in Gedanken ein bisschen hin und her, so wie man das Bierglas auf dem Tisch kreisen lässt. Immer wenn wir kurz davor sind, eine feste Meinung zu haben, fragen wir uns: Was würde passieren, wenn das Gegenteil stimmt?",
     },
   ];
 
