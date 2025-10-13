@@ -14,7 +14,7 @@ export function GlassCard({
         ].join(" ") + (className ? " " + className : "")
       }
     >
-      <div className="[background-image:url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/></filter><rect width=\'120\' height=\'120\' filter=\'url(#n)\' opacity=\'.04\'/></svg>')] pointer-events-none absolute inset-0 rounded-2xl mix-blend-overlay"></div>
+      {/* Noise texture overlay removed to reduce bundle size */}
       <div className="before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:shadow-[inset_0_1px_0_rgba(255,255,255,var(--stroke-in))] before:content-['']"></div>
       <div className="relative p-4">{children}</div>
     </div>
