@@ -653,8 +653,10 @@ function mergeMessageList(list: ChatMessageType[], next: ChatMessageType): ChatM
   if (index === -1) {
     return [...list, next];
   }
-  const existing = list[index];
+  const copy = [...list];
+  const existing = copy[index];
   if (
+    existing &&
     existing.content === next.content &&
     existing.role === next.role &&
     existing.timestamp === next.timestamp &&
@@ -662,7 +664,6 @@ function mergeMessageList(list: ChatMessageType[], next: ChatMessageType): ChatM
   ) {
     return list;
   }
-  const copy = [...list];
   copy[index] = next;
   return copy;
 }
