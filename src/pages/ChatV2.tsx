@@ -344,11 +344,12 @@ export default function ChatV2() {
                     title={topic.title}
                     description={topic.prompt}
                     tint={tint}
+                    showDescriptionOnToggle
                     onClick={() => {
                       // Start a new discussion with the topic prompt
                       startDiscussion(topic.prompt);
                     }}
-                    className="flex h-[152px] cursor-pointer items-center justify-center"
+                    className="flex min-h-[120px] cursor-pointer items-center justify-center"
                   />
                 );
               })}
