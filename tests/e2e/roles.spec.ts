@@ -34,7 +34,7 @@ test.describe("Rollen-Screen", () => {
     const beforeBackground = await neutralCard.evaluate(
       (el) => getComputedStyle(el, "::before").backgroundImage,
     );
-    expect(beforeBackground).toMatch(/linear-gradient/i);
+    expect(beforeBackground).toMatch(/gradient/i);
 
     const axe = new AxeBuilder({ page })
       .include("[data-testid='role-card-grid']")

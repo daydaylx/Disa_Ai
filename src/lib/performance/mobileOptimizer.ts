@@ -430,7 +430,6 @@ export class MobilePerformanceOptimizer {
 
     // Load-Time
     if (this.metrics.loadTime && this.metrics.loadTime > 3000) {
-      recommendations.push("Ladezeit zu lang - Bundle-Größe reduzieren");
       score -= 15;
     }
 
