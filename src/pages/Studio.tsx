@@ -122,9 +122,7 @@ function RolesTab() {
   };
 
   const handleNavigateToChat = () => {
-    navigate("/chat").catch((error) => {
-      console.error("Navigation failed:", error);
-    });
+    void navigate("/chat");
   };
 
   // Optimierte Kategorie-Reihenfolge für bessere Benutzerführung
@@ -321,9 +319,7 @@ function GamesTab() {
 
   const handleGameStart = (gameId: (typeof games)[number]["id"]) => {
     // Navigate to chat with the game
-    navigate("/chat", { state: { gameId } }).catch((error) => {
-      console.error("Navigation failed:", error);
-    });
+    void navigate("/chat", { state: { gameId } });
   };
 
   return (

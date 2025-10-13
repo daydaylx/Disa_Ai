@@ -4,7 +4,9 @@ import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import type { QuickstartAction } from "../../config/quickstarts";
 import { getQuickstartsWithFallback } from "../../config/quickstarts";
 import { getRoles } from "../../data/roles";
+import { useGlassPalette } from "../../hooks/useGlassPalette";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
+import { useStickToBottom } from "../../hooks/useStickToBottom";
 import type { Conversation } from "../../lib/conversation-manager";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
 import { FRIENDLY_TINTS, type GlassTint } from "../../lib/theme/glass";
@@ -24,9 +26,19 @@ const QUICKSTART_GRADIENTS = [
   "from-amber-300/70 via-orange-300/60 to-rose-400/50",
 ] as const;
 
-const HERO_CARD_TINT: CSSProperties = {
+type CardTintStyle = CSSProperties & {
+  "--card-tint-from"?: string;
+  "--card-tint-to"?: string;
+};
+
+const HERO_CARD_TINT: CardTintStyle = {
   "--card-tint-from": "rgba(249, 168, 212, 0.35)",
   "--card-tint-to": "rgba(129, 140, 248, 0.3)",
+};
+
+const QUICKSTART_ERROR_TINT: CardTintStyle = {
+  "--card-tint-from": "rgba(96, 165, 250, 0.32)",
+  "--card-tint-to": "rgba(59, 130, 246, 0.26)",
 };
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
@@ -108,9 +120,17 @@ export function ChatList({
   const [quickstartError, setQuickstartError] = useState<string | null>(null);
   const [activeQuickstart, setActiveQuickstart] = useState<string | null>(null);
 
+  const palette = useGlassPalette();
+  const friendlyPalette = palette.length > 0 ? palette : QUICKSTART_TINTS;
+
   const { startQuickstartFlow } = useQuickstartFlow({
     onStartFlow: onQuickstartFlow || (() => {}),
     currentModel,
+  });
+
+  const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
+    threshold: 0.9,
+    enabled: true,
   });
 
   useEffect(() => {
@@ -206,15 +226,7 @@ export function ChatList({
                   })}
                 </div>
               ) : quickstartError ? (
-                <div
-                  className="glass-card tinted p-6 text-center"
-                  style={
-                    {
-                      "--card-tint-from": "rgba(96, 165, 250, 0.32)",
-                      "--card-tint-to": "rgba(59, 130, 246, 0.26)",
-                    } satisfies CSSProperties
-                  }
-                >
+                <div className="glass-card tinted p-6 text-center" style={QUICKSTART_ERROR_TINT}>
                   <div className="bg-white/12 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
                       <path
@@ -243,10 +255,13 @@ export function ChatList({
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {quickstarts.map((action) => {
+                  {quickstarts.map((action, index) => {
                     const badge = action.tags?.[0]
                       ? formatQuickstartTag(action.tags[0]!)
                       : "Schnellstart";
+                    const tint =
+                      friendlyPalette[index % friendlyPalette.length] ?? FRIENDLY_TINTS[0]!;
+
                     return (
                       <RoleCard
                         key={action.id}

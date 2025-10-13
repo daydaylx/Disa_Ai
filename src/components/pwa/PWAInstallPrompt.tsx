@@ -5,6 +5,10 @@ import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { Button } from "../ui/button";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
+interface PWAInstallPromptProps {
+  className?: string;
+}
+
 export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
   const { canInstall, requestInstall, dismiss, installed } = usePWAInstall();
   const [isVisible, setIsVisible] = useState(false);

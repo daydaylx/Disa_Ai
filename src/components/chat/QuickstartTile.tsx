@@ -17,13 +17,18 @@ interface QuickstartTileProps {
 
 const LONG_PRESS_DURATION = 500; // ms
 
-const ACCENT_TONES: Record<NonNullable<QuickstartAction["tone"]>, [string, string, string]> = {
-  warm: ["rgba(249, 168, 212, 0.32)", "rgba(251, 191, 36, 0.28)", "rgba(253, 164, 175, 0.32)"],
-  cool: ["rgba(125, 211, 252, 0.32)", "rgba(96, 165, 250, 0.28)", "rgba(165, 180, 252, 0.32)"],
-  fresh: ["rgba(110, 231, 183, 0.32)", "rgba(59, 201, 219, 0.28)", "rgba(134, 239, 172, 0.32)"],
-  sunset: ["rgba(251, 191, 36, 0.32)", "rgba(244, 114, 182, 0.28)", "rgba(249, 168, 212, 0.32)"],
-  violet: ["rgba(196, 181, 253, 0.32)", "rgba(167, 139, 250, 0.28)", "rgba(192, 132, 252, 0.32)"],
-  default: ["rgba(99, 179, 237, 0.26)", "rgba(168, 132, 252, 0.22)", "rgba(244, 114, 182, 0.28)"],
+type CardTintVars = CSSProperties & {
+  "--card-tint-from"?: string;
+  "--card-tint-to"?: string;
+};
+
+const ACCENT_TONES: Record<NonNullable<QuickstartAction["tone"]>, [string, string]> = {
+  warm: ["rgba(249, 168, 212, 0.32)", "rgba(253, 164, 175, 0.32)"],
+  cool: ["rgba(125, 211, 252, 0.32)", "rgba(165, 180, 252, 0.32)"],
+  fresh: ["rgba(110, 231, 183, 0.32)", "rgba(134, 239, 172, 0.32)"],
+  sunset: ["rgba(251, 191, 36, 0.32)", "rgba(249, 168, 212, 0.32)"],
+  violet: ["rgba(196, 181, 253, 0.32)", "rgba(192, 132, 252, 0.32)"],
+  default: ["rgba(99, 179, 237, 0.26)", "rgba(244, 114, 182, 0.28)"],
 };
 
 /**
@@ -86,8 +91,8 @@ export function QuickstartTile({
   );
 
   const toneKey = (action.tone ?? "default") as keyof typeof ACCENT_TONES;
-  const [accentFrom, , accentTo] = ACCENT_TONES[toneKey] ?? ACCENT_TONES.default;
-  const accentVariables: CSSProperties = {
+  const [accentFrom, accentTo] = ACCENT_TONES[toneKey] ?? ACCENT_TONES.default;
+  const accentVariables: CardTintVars = {
     "--card-tint-from": accentFrom,
     "--card-tint-to": accentTo,
   };

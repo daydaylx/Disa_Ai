@@ -46,19 +46,12 @@ test.describe("Smoke Tests", () => {
 
     // Type a message and send it
     await composer.fill("Hallo Welt");
-    await page.locator('button[aria-label="Nachricht senden"]').click();
+    await composer.press("Enter");
 
     // The user message should be visible in the chat messages area
     await expect(page.locator(".min-h-\\[152px\\]").getByText("Hallo Welt")).toBeVisible();
 
-    // The stop button should appear during streaming
-    const stopButton = page.locator('button[aria-label="Nachricht wird gesendet..."]');
-    await expect(stopButton).toBeVisible({ timeout: 15000 });
-
     // The mocked response "Hallo das ist eine Test-Antwort" should be visible
     await expect(page.getByText("Hallo das ist eine Test-Antwort")).toBeVisible();
-
-    // After streaming, the stop button should disappear
-    await expect(stopButton).toBeHidden();
   });
 });

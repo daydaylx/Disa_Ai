@@ -36,7 +36,12 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
     },
     ref,
   ) => {
-    const accentVariables: CSSProperties | undefined = tint
+    const accentVariables:
+      | (CSSProperties & {
+          "--card-tint-from"?: string;
+          "--card-tint-to"?: string;
+        })
+      | undefined = tint
       ? {
           "--card-tint-from": tint.from,
           "--card-tint-to": tint.to,

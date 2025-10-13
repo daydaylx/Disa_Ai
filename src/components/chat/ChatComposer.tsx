@@ -175,6 +175,7 @@ export function ChatComposer({
                 variant="ghost"
                 className="min-h-touch-rec min-w-touch-rec rounded-full border border-red-300/30 bg-red-500/20 text-red-100 hover:bg-red-500/30"
                 title="Ausgabe stoppen"
+                aria-label="Nachricht wird gesendet..."
                 data-testid="composer-stop"
               >
                 <Square className="h-5 w-5" />
