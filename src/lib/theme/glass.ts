@@ -3,27 +3,10 @@ type Hsl = { h: number; s: number; l: number };
 export type GlassTint = { from: string; to: string };
 
 export const DEFAULT_GLASS_VARIANTS = [
-  "linear-gradient(135deg, rgba(110,72,255,0.28) 0%, rgba(13,148,255,0.24) 100%)",
-  "linear-gradient(135deg, rgba(236,72,153,0.28) 0%, rgba(245,158,11,0.24) 100%)",
-  "linear-gradient(135deg, rgba(16,185,129,0.28) 0%, rgba(59,130,246,0.22) 100%)",
-  "linear-gradient(135deg, rgba(251,191,36,0.28) 0%, rgba(244,114,182,0.22) 100%)",
-];
-
-// Freundlichere, wärmere Farbpalette für bessere Glassmorphismus-Integration
-export const FRIENDLY_GLASS_VARIANTS = [
-  "linear-gradient(135deg, rgba(192,132,252,0.32) 0%, rgba(14,165,233,0.22) 100%)", // Lavender to Sky
-  "linear-gradient(135deg, rgba(244,114,182,0.32) 0%, rgba(251,191,36,0.22) 100%)", // Blossom Peach
-  "linear-gradient(135deg, rgba(52,211,153,0.30) 0%, rgba(110,231,183,0.20) 100%)", // Mint Meadow
-  "linear-gradient(135deg, rgba(251,191,36,0.32) 0%, rgba(249,115,22,0.22) 100%)", // Golden Honey
-  "linear-gradient(135deg, rgba(236,72,153,0.30) 0%, rgba(168,85,247,0.22) 100%)", // Fuchsia Glow
-  "linear-gradient(135deg, rgba(56,189,248,0.30) 0%, rgba(129,140,248,0.22) 100%)", // Sky Evening
-];
-
-export const GOLDEN_GLASS_VARIANTS = [
-  "linear-gradient(135deg, rgba(255,223,120,0.42) 0%, rgba(255,179,71,0.32) 100%)",
-  "linear-gradient(135deg, rgba(255,215,141,0.36) 0%, rgba(255,190,92,0.28) 100%)",
-  "linear-gradient(135deg, rgba(255,240,190,0.34) 0%, rgba(255,203,122,0.26) 100%)",
-  "linear-gradient(135deg, rgba(255,230,160,0.38) 0%, rgba(255,192,100,0.28) 100%)",
+  "linear-gradient(135deg, hsla(252, 5%, 64%, 0.28) 0%, hsla(210, 5%, 52%, 0.24) 100%)",
+  "linear-gradient(135deg, hsla(325, 5%, 60%, 0.28) 0%, hsla(38, 5%, 50%, 0.24) 100%)",
+  "linear-gradient(135deg, hsla(160, 5%, 39%, 0.28) 0%, hsla(217, 5%, 60%, 0.22) 100%)",
+  "linear-gradient(135deg, hsla(45, 5%, 56%, 0.28) 0%, hsla(327, 5%, 70%, 0.22) 100%)",
 ];
 
 function clamp(value: number, min: number, max: number) {
