@@ -511,8 +511,8 @@ export default function ChatV2() {
             />
             {/* Discussion Topics Section */}
             <div className="grid grid-cols-1 gap-3 pb-8 sm:grid-cols-2 xl:grid-cols-3">
-              <div className="mb-1 flex flex-col gap-2 px-1 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between xl:col-span-3">
-                <div>
+              <div className="mb-4 flex flex-col gap-3 px-1 sm:col-span-2 sm:flex-row sm:items-start sm:justify-between xl:col-span-3">
+                <div className="flex-1">
                   <h3 className="text-xs font-semibold uppercase tracking-wide text-white/60">
                     Diskussionen
                   </h3>
@@ -520,7 +520,7 @@ export default function ChatV2() {
                     Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
                   </p>
                 </div>
-                <div className="w-full max-w-sm sm:w-auto">
+                <div className="w-full sm:w-48 md:w-56">
                   <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/70">
                     Stil auswählen
                   </span>
