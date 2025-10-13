@@ -527,6 +527,9 @@ export default function ChatV2() {
               </div>
               {discussionTopics.map((topic, index) => {
                 const tint = friendlyPalette[(index + 1) % friendlyPalette.length] ?? DEFAULT_TINT;
+                const tileBadge =
+                  discussionPresetOptions.find((option) => option.key === discussionPreset)
+                    ?.label ?? "Diskussion";
                 return (
                   <RoleCard
                     key={topic.title}
@@ -534,7 +537,7 @@ export default function ChatV2() {
                     description={topic.hint}
                     tint={tint}
                     variant="surface"
-                    badge={presetLabel}
+                    badge={tileBadge}
                     showDescriptionOnToggle
                     onClick={() => {
                       startDiscussion(topic.prompt);
