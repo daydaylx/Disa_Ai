@@ -315,6 +315,7 @@ export default function ModelsPage() {
         tint={tint}
         onClick={() => selectModelById(item.id, item.label)}
         badge={item.provider}
+        showDescriptionOnToggle
         isActive={isSelected}
         className={cn(
           "min-h-[140px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",

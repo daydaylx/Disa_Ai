@@ -240,6 +240,7 @@ function RolesTab() {
                           badge={role.category}
                           tint={tint}
                           contrastOverlay={false}
+                          showDescriptionOnToggle
                           isActive={activeRole?.id === role.id}
                           onClick={() => setActiveRole(role)}
                           aria-label={`Rolle ${role.name} auswählen`}
