@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import type { GlassTint } from "@/lib/theme/glass";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +13,7 @@ export function StaticGlassCard({
   className,
   children,
   tint,
+  style,
   ...props
 }: StaticGlassCardProps) {
   const paddingClasses = {
@@ -19,25 +22,25 @@ export function StaticGlassCard({
     lg: "p-8",
   };
 
-  const tintStyle = tint
-    ? { background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)` }
-    : {};
+  const accentVariables: CSSProperties | undefined = tint
+    ? {
+        "--card-tint-from": tint.from,
+        "--card-tint-to": tint.to,
+      }
+    : undefined;
+
+  const mergedStyle = accentVariables ? { ...style, ...accentVariables } : style;
 
   return (
     <div
       className={cn(
         "glass-card", // Neue, zentrale Klasse
+        tint && "tinted",
         className,
       )}
+      style={mergedStyle}
       {...props}
     >
-      {/* Tint gradient layer */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-[inherit]"
-        style={tintStyle}
-      />
-
       {/* Content container */}
       <div className={cn("relative z-10", paddingClasses[padding])}>{children}</div>
     </div>

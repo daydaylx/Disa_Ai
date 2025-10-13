@@ -22,7 +22,7 @@ interface ChatMessageProps {
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   return (
     <div className="relative my-4 overflow-hidden">
-      <div className="glass-card space-y-0 border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg">
+      <div className="glass-card space-y-0 p-4">
         <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
           <span className="text-xs font-medium uppercase tracking-wide text-white/70">
             {language || "Text"}
@@ -180,13 +180,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
         )}
 
         {/* Message Content */}
-        <div
-          className={cn(
-            "glass-card",
-            bubbleClass,
-            "border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg",
-          )}
-        >
+        <div className={cn("glass-card", bubbleClass, "p-4")}>
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>

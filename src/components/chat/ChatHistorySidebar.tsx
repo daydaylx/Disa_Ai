@@ -181,9 +181,8 @@ export function ChatHistorySidebar({
                     <li key={conversation.id}>
                       <div
                         className={cn(
-                          "glass-card group relative cursor-pointer border border-white/20 bg-white/10 p-4 px-4 py-3 text-left text-white shadow-lg backdrop-blur-lg transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
-                          isActive &&
-                            "border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.5)] ring-2 ring-white/20",
+                          "glass-card group relative cursor-pointer px-4 py-3 text-left text-white transition-all duration-200 hover:-translate-y-[1px]",
+                          isActive && "ring-2 ring-white/20",
                         )}
                         onClick={() => onSelect(conversation.id)}
                       >

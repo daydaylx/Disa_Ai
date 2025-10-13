@@ -94,8 +94,8 @@ function ChatStats() {
 }
 
 const DEFAULT_TINT: GlassTint = {
-  from: "hsl(210 10% 55% / 0.8)",
-  to: "hsl(250 10% 52% / 0.8)",
+  from: "hsl(210 25% 55% / 0.8)",
+  to: "hsl(250 25% 52% / 0.8)",
 };
 
 type InitState = "loading" | "ready" | "error";

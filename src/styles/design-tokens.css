@@ -6,9 +6,10 @@
 :root {
   /* Background */
   --bg-radial-gradient:
-    radial-gradient(1100px circle at 20% 15%, rgba(86, 122, 214, 0.28) 0%, transparent 55%),
-    radial-gradient(900px circle at 80% 0%, rgba(182, 102, 238, 0.22) 0%, transparent 60%);
-  --bg-linear-gradient: linear-gradient(160deg, #04070f 0%, #0a101d 35%, #121d2d 100%);
+    radial-gradient(1100px circle at 16% -8%, rgba(88, 134, 214, 0.28) 0%, transparent 60%),
+    radial-gradient(900px circle at 88% 4%, rgba(156, 108, 238, 0.22) 0%, transparent 62%),
+    radial-gradient(980px circle at 52% 120%, rgba(42, 116, 198, 0.18) 0%, transparent 72%);
+  --bg-linear-gradient: linear-gradient(168deg, #02060f 0%, #071126 45%, #0c1b33 100%);
   --bg-noise-overlay: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
   --bg-geometric-overlay: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Ccircle cx='40' cy='60' r='2' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='160' cy='40' r='1.5' fill='rgba(255,255,255,0.02)'/%3E%3Ccircle cx='180' cy='160' r='2.5' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='30' cy='180' r='1' fill='rgba(255,255,255,0.02)'/%3E%3Cpolygon points='120,80 125,90 115,90' fill='rgba(255,255,255,0.02)'/%3E%3Cpolygon points='80,120 85,130 75,130' fill='rgba(255,255,255,0.02)'/%3E%3Cpolygon points='160,140 165,150 155,150' fill='rgba(255,255,255,0.02)'/%3E%3C/svg%3E");
 
@@ -110,6 +111,9 @@
   --glass-overlay-medium: rgba(255, 255, 255, 0.09);
   --glass-overlay-strong: rgba(13, 19, 32, 0.18);
   --glass-overlay-intense: rgba(9, 14, 26, 0.28);
+  --card-highlight-overlay:
+    radial-gradient(90% 120% at 10% 12%, rgba(255, 255, 255, 0.38) 0%, transparent 62%),
+    radial-gradient(110% 120% at 85% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 72%);
 
   /* Transitions */
   --transition-fast: 150ms;
@@ -263,12 +267,16 @@
 /* Enhanced glass card with overlay management */
 .glass-card {
   @apply relative overflow-hidden rounded-2xl border shadow-glass-soft;
-  background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 100%),
-    var(--glass-bg-soft);
+  isolation: isolate;
+  background: linear-gradient(
+    148deg,
+    rgba(14, 22, 36, 0.82) 0%,
+    rgba(11, 19, 32, 0.72) 52%,
+    rgba(8, 15, 26, 0.62) 100%
+  );
   border-color: var(--glass-border-soft);
-  backdrop-filter: blur(var(--blur-md)) saturate(1.35);
-  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(1.35);
+  backdrop-filter: blur(var(--blur-md)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(1.2);
   transition:
     transform 0.25s ease-out,
     border-color 0.25s ease-out,
@@ -279,36 +287,44 @@
 .glass-card::before {
   content: "";
   @apply pointer-events-none absolute inset-0 rounded-[inherit];
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.04) 100%);
-  mix-blend-mode: screen;
-  opacity: 0.65;
-  transition: opacity 0.25s ease-out;
+  background: var(--card-overlay-gradient, var(--card-highlight-overlay));
+  opacity: 0.82;
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.25s ease-out;
 }
 
 .glass-card:hover {
   @apply shadow-glass-medium;
   border-color: var(--glass-border-medium);
-  background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%),
-    var(--glass-bg-medium);
-  transform: translateY(-3px);
+  background: linear-gradient(
+    148deg,
+    rgba(16, 26, 42, 0.88) 0%,
+    rgba(13, 22, 36, 0.76) 52%,
+    rgba(10, 18, 30, 0.66) 100%
+  );
+  transform: translateY(-2px);
 }
 
 .glass-card:hover::before {
-  opacity: 0.9;
+  opacity: 0.96;
+  transform: translateY(-2px);
 }
 
 .glass-card:active {
   transform: translateY(0);
-  transition-duration: 80ms;
+  transition-duration: 90ms;
 }
 
 .glass-card.active {
   @apply shadow-glass-strong ring-1 ring-white/10;
   border-color: var(--glass-border-strong);
-  background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.05) 100%),
-    var(--glass-bg-strong);
+  background: linear-gradient(
+    148deg,
+    rgba(18, 30, 48, 0.92) 0%,
+    rgba(14, 24, 40, 0.8) 52%,
+    rgba(11, 19, 32, 0.72) 100%
+  );
 }
 
 .glass-card.disabled {
@@ -317,15 +333,19 @@
 
 /* Glass card variant for use with color tint overlays (like RoleCard) */
 .glass-card.tinted {
-  background-color: transparent;
-  border-color: var(--glass-border-transparent);
-  backdrop-filter: blur(var(--blur-lg)) saturate(1.6);
-  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(1.6);
-  box-shadow: none;
+  border-color: var(--glass-border-medium);
+  box-shadow: var(--glass-glow-soft);
 }
 
 .glass-card.tinted::before {
-  opacity: 0.75;
+  background:
+    linear-gradient(
+      135deg,
+      var(--card-tint-from, rgba(99, 179, 237, 0.3)) 0%,
+      var(--card-tint-to, rgba(168, 132, 252, 0.26)) 100%
+    ),
+    var(--card-highlight-overlay);
+  opacity: 0.95;
 }
 
 /* Overlay variants for different content requirements */
@@ -390,9 +410,7 @@
 
 /* Ambient backdrop */
 body {
-  background:
-    var(--bg-linear-gradient), var(--bg-radial-gradient), var(--bg-geometric-overlay),
-    var(--bg-noise-overlay);
+  background: var(--bg-linear-gradient), var(--bg-radial-gradient), var(--bg-noise-overlay);
   background-color: #04070f;
   background-attachment: fixed;
   background-size: cover;

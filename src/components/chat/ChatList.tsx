@@ -1,5 +1,5 @@
 import { Clock, MessageSquare, Trash2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { getQuickstartsWithFallback } from "../../config/quickstarts";
@@ -23,6 +23,11 @@ const QUICKSTART_GRADIENTS = [
   "from-blue-400/70 via-sky-300/60 to-cyan-200/50",
   "from-amber-300/70 via-orange-300/60 to-rose-400/50",
 ] as const;
+
+const HERO_CARD_TINT: CSSProperties = {
+  "--card-tint-from": "rgba(249, 168, 212, 0.35)",
+  "--card-tint-to": "rgba(129, 140, 248, 0.3)",
+};
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
   {
@@ -163,7 +168,7 @@ export function ChatList({
       <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-5 px-1 py-3">
-            <div className="glass-card space-y-4 rounded-2xl border border-white/20 bg-white/10 p-6 shadow-lg backdrop-blur-lg">
+            <div className="glass-card tinted space-y-4 p-6" style={HERO_CARD_TINT}>
               <div className="space-y-3">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r from-rose-400/35 via-orange-300/30 to-amber-200/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white shadow-[0_6px_18px_rgba(249,168,212,0.35)] backdrop-blur-sm">
                   Willkommen zurück
@@ -188,11 +193,11 @@ export function ChatList({
             <div className="space-y-3 px-1">
               {isLoadingQuickstarts ? (
                 <div className="grid gap-3">
-                  {Array.from({ length: 4 }).map((_) => {
+                  {Array.from({ length: 4 }).map((_, index) => {
                     return (
                       <div
                         key={`quickstart-skeleton-${index}`}
-                        className="glass-card animate-pulse rounded-2xl border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg"
+                        className="glass-card animate-pulse p-4"
                       >
                         <div className="h-4 w-32 rounded bg-white/25" />
                         <div className="mt-2 h-3 w-48 rounded bg-white/20" />
@@ -201,7 +206,15 @@ export function ChatList({
                   })}
                 </div>
               ) : quickstartError ? (
-                <div className="glass-card rounded-2xl border border-white/20 bg-white/10 p-6 text-center shadow-lg backdrop-blur-lg">
+                <div
+                  className="glass-card tinted p-6 text-center"
+                  style={
+                    {
+                      "--card-tint-from": "rgba(96, 165, 250, 0.32)",
+                      "--card-tint-to": "rgba(59, 130, 246, 0.26)",
+                    } satisfies CSSProperties
+                  }
+                >
                   <div className="bg-white/12 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
                       <path
@@ -258,7 +271,7 @@ export function ChatList({
                 return (
                   <div
                     key={item.label}
-                    className="glass-card group rounded-2xl border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
+                    className="glass-card tinted group p-4 transition-all duration-200 hover:-translate-y-[1px]"
                   >
                     <button
                       type="button"
@@ -303,9 +316,8 @@ export function ChatList({
                       <div
                         key={conversation.id}
                         className={cn(
-                          "glass-card group relative flex items-start gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
-                          isActive &&
-                            "border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.5)] ring-2 ring-white/20",
+                          "glass-card group relative flex items-start gap-3 p-4 transition-all duration-200 hover:-translate-y-[1px]",
+                          isActive && "shadow-glass-strong ring-2 ring-white/25",
                         )}
                       >
                         <button

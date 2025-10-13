@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { type CSSProperties, forwardRef } from "react";
 
 import { cn } from "../../lib/utils";
 
@@ -31,10 +31,20 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       contrastOverlay: _contrastOverlay = false,
       className,
       type = "button",
+      style,
       ...props
     },
     ref,
   ) => {
+    const accentVariables: CSSProperties | undefined = tint
+      ? {
+          "--card-tint-from": tint.from,
+          "--card-tint-to": tint.to,
+        }
+      : undefined;
+
+    const mergedStyle = accentVariables ? { ...style, ...accentVariables } : style;
+
     return (
       <button
         ref={ref}
@@ -46,16 +56,9 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
           isActive && "border-white/30 ring-2 ring-white/25",
           className,
         )}
+        style={mergedStyle}
         {...props}
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-[inherit]"
-          style={{
-            background: `linear-gradient(135deg, ${tint.from} 0%, ${tint.to} 100%)`,
-          }}
-        />
-
         <div className="relative z-10 flex h-full flex-col">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">

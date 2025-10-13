@@ -133,7 +133,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "glass-card flex items-end gap-2 border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-lg",
+            "glass-card flex items-end gap-2 p-4",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
