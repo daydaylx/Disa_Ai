@@ -1,4 +1,12 @@
-export type DiscussionPresetKey = "locker_neugierig" | "edgy_provokant" | "nuechtern_pragmatisch" | "akademisch_formell" | "freundlich_offen" | "analytisch_detailliert" | "sarkastisch_witzig" | "fachlich_tiefgehend";
+export type DiscussionPresetKey =
+  | "locker_neugierig"
+  | "edgy_provokant"
+  | "nuechtern_pragmatisch"
+  | "akademisch_formell"
+  | "freundlich_offen"
+  | "analytisch_detailliert"
+  | "sarkastisch_witzig"
+  | "fachlich_tiefgehend";
 
 export const discussionPresets: Record<DiscussionPresetKey, string> = {
   locker_neugierig:
@@ -16,7 +24,7 @@ export const discussionPresets: Record<DiscussionPresetKey, string> = {
   sarkastisch_witzig:
     "hintergründig, mit sarkastischem Humor, leicht ironisch, pointiert aber nicht verletzend",
   fachlich_tiefgehend:
-    "fachkundig, tiefgehend, technische Präzision, Expertenwissen, detaillierte Erklärungen"
+    "fachkundig, tiefgehend, technische Präzision, Expertenwissen, detaillierte Erklärungen",
 };
 
 export const discussionPresetOptions: Array<{ key: DiscussionPresetKey; label: string }> = [
