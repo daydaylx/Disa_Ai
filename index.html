@@ -1,140 +1,130 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Disa AI</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="48x48"
-      href="/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png"
-    />
-    <link rel="apple-touch-icon" href="/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png" />
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.webmanifest" />
-
-    <!-- DNS Prefetch & Preconnect for API -->
-    <link rel="dns-prefetch" href="https://openrouter.ai" />
-    <link rel="preconnect" href="https://openrouter.ai" crossorigin />
-
-    <!-- Module Preload for critical chunks will be added by Vite -->
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <script>
-      // Loading indicator nur wenn React nicht innerhalb 1 Sekunde lädt
-      let loadingTimeout = setTimeout(() => {
-        const app = document.getElementById("app");
-        if (app && app.innerHTML.trim() === "") {
-          app.innerHTML = `
-            <div id="loading-indicator" style="
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 100vh;
-              background: linear-gradient(135deg, #1e1e2e 0%, #262637 100%);
-              color: white;
-              font-family: system-ui, -apple-system, sans-serif;
-              flex-direction: column;
-              gap: 1rem;
-            ">
-              <div style="font-size: 2rem; font-weight: bold;">Disa AI</div>
-              <div style="opacity: 0.7;">Lädt...</div>
-              <div style="
-                width: 32px;
-                height: 32px;
-                border: 3px solid rgba(255,255,255,0.3);
-                border-top: 3px solid #fff;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-              "></div>
-              <style>
-                @keyframes spin {
-                  0% { transform: rotate(0deg); }
-                  100% { transform: rotate(360deg); }
-                }
-              </style>
-            </div>
-          `;
-
-          // Error fallback nach 8 Sekunden
-          setTimeout(() => {
-            const loadingIndicator = document.getElementById("loading-indicator");
-            if (loadingIndicator) {
-              app.innerHTML = `
-                <div style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  min-height: 100vh;
-                  background: linear-gradient(135deg, #1e1e2e 0%, #262637 100%);
-                  color: white;
-                  font-family: system-ui, -apple-system, sans-serif;
-                  flex-direction: column;
-                  gap: 1rem;
-                  text-align: center;
-                  padding: 2rem;
-                ">
-                  <div style="font-size: 2rem; font-weight: bold;">⚠️ Disa AI</div>
-                  <div>Die App konnte nicht geladen werden.</div>
-                  <div style="opacity: 0.7; font-size: 0.9rem;">
-                    Bitte versuchen Sie es später erneut.
-                  </div>
-                  <button onclick="window.location.reload()" style="
-                    background: #4f46e5;
-                    color: white;
-                    border: none;
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 0.5rem;
-                    cursor: pointer;
-                    font-size: 1rem;
-                    margin-top: 1rem;
-                  ">
-                    Seite neu laden
-                  </button>
-                </div>
-              `;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grok - AI Assistant by xAI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2C2C2C;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333333;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            color: #FFFFFF;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .tile {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+        .tile h2 {
+            color: #333333;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        .tile p, .tile ul {
+            color: #333333;
+        }
+        .tile ul {
+            padding-left: 20px;
+        }
+        .tile a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .tile a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            background-color: #333333;
+            border-radius: 20px;
+        }
+        footer p {
+            margin: 0;
+            color: #B0B0B0;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
             }
-          }, 8000);
+            h1 {
+                font-size: 2em;
+            }
         }
-      }, 1000);
-
-      // React App Mount Detection - clear loading wenn React lädt
-      const observer = new MutationObserver(() => {
-        const app = document.getElementById("app");
-        if (app && app.children.length > 0 && !app.querySelector("#loading-indicator")) {
-          clearTimeout(loadingTimeout);
-          observer.disconnect();
-        }
-      });
-      observer.observe(document.getElementById("app"), { childList: true, subtree: true });
-
-      // Mobile viewport height fix
-      function setViewportHeight() {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty("--vh", `${vh}px`);
-      }
-
-      // Set initial viewport height
-      setViewportHeight();
-
-      // Update on resize and orientation change
-      window.addEventListener("resize", setViewportHeight);
-      window.addEventListener("orientationchange", () => {
-        setTimeout(setViewportHeight, 100);
-      });
-    </script>
-  </body>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Grok</h1>
+        </header>
+        <div class="grid">
+            <div class="tile">
+                <h2>🌟 Features</h2>
+                <ul>
+                    <li>❓ Answers questions with wit and wisdom</li>
+                    <li>💻 Helps with coding and file editing</li>
+                    <li>🛠️ Uses advanced tools for various tasks</li>
+                    <li>🌐 Has access to real-time information from the web and social media</li>
+                </ul>
+            </div>
+            <div class="tile">
+                <h2>🏢 About xAI</h2>
+                <p>xAI is a company founded by Elon Musk, dedicated to understanding the universe and advancing AI for the benefit of humanity.</p>
+                <p>Learn more about xAI: <a href="https://x.ai" target="_blank">x.ai</a></p>
+            </div>
+            <div class="tile">
+                <h2>📞 How to Use Grok</h2>
+                <p>Simply ask me anything! I'm here to assist with tasks, provide information, and make your life easier.</p>
+                <p>Examples:</p>
+                <ul>
+                    <li>Ask questions about current events</li>
+                    <li>Request help with coding</li>
+                    <li>Edit files or create new ones</li>
+                </ul>
+            </div>
+            <div class="tile">
+                <h2>🤖 What is Grok?</h2>
+                <p><strong>Grok</strong> is an AI assistant built by xAI, inspired by the <em>Hitchhiker's Guide to the Galaxy</em> and JARVIS from Iron Man. It aims to be helpful, truthful, and maximally truthful.</p>
+            </div>
+        </div>
+        <footer>
+            <p>&copy; 2023 xAI. All rights reserved. | <a href="#" style="color: #B0B0B0;">Privacy Policy</a> | <a href="#" style="color: #B0B0B0;">Terms of Service</a></p>
+        </footer>
+    </div>
+</body>
 </html>
