@@ -7,6 +7,13 @@ import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
 import { MessageBubbleCard } from "../components/chat/MessageBubbleCard";
 import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 import { Textarea } from "../components/ui/textarea";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { DISCUSSION_MODEL_PROFILE } from "../config/models/discussionProfile";
@@ -14,6 +21,7 @@ import {
   getDiscussionMaxSentences,
   getDiscussionPreset,
   getDiscussionStrictMode,
+  setDiscussionPreset,
 } from "../config/settings";
 import {
   DISCUSSION_FALLBACK_QUESTIONS,
@@ -36,12 +44,13 @@ import {
 import type { GlassTint } from "../lib/theme/glass";
 import { FRIENDLY_TINTS } from "../lib/theme/glass";
 import { buildDiscussionSystemPrompt } from "../prompts/discussion/base";
-import type { DiscussionPresetKey } from "../prompts/discussion/presets";
+import { type DiscussionPresetKey, discussionPresetOptions } from "../prompts/discussion/presets";
 import type { ChatMessageType } from "../types/chatMessage";
 
 const DEFAULT_TINT: GlassTint = FRIENDLY_TINTS[0]!;
 
 const MIN_DISCUSSION_SENTENCES = 5;
+const DISCUSSION_CARD_HINT = "Kurze Spekulationsrunde (5–10 Sätze, Abschlussfrage inklusive).";
 
 interface DiscussionSession {
   topic: string;
@@ -56,6 +65,8 @@ export default function ChatV2() {
   const [conversations, setConversations] = useState(() => getAllConversations());
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [currentSystemPrompt, setCurrentSystemPrompt] = useState<string | undefined>(undefined);
+  const [discussionPreset, setDiscussionPresetState] =
+    useState<DiscussionPresetKey>(getDiscussionPreset);
   const palette = useGlassPalette();
   const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
   const toasts = useToasts();
@@ -63,6 +74,7 @@ export default function ChatV2() {
   const discussionSessionRef = useRef<DiscussionSession | null>(null);
   const requestOptionsRef = useRef<ChatRequestOptions | null>(null);
   const strictRetryTracker = useRef<Set<string>>(new Set());
+  const discussionPresetRef = useRef<DiscussionPresetKey>(discussionPreset);
 
   // Callback Refs für stabile Closures
   const onFinishRef = useRef<(message: ChatMessageType) => void>(() => {});
@@ -85,11 +97,32 @@ export default function ChatV2() {
   const location = useLocation();
   const { gameId } = (location.state as { gameId?: GameType }) || {};
 
+  useEffect(() => {
+    discussionPresetRef.current = discussionPreset;
+  }, [discussionPreset]);
+
   const resetDiscussionContext = useCallback(() => {
     discussionSessionRef.current = null;
     requestOptionsRef.current = null;
     strictRetryTracker.current.clear();
   }, []);
+
+  const handleDiscussionPresetChange = useCallback(
+    (value: DiscussionPresetKey) => {
+      if (value === discussionPresetRef.current) return;
+      discussionPresetRef.current = value;
+      setDiscussionPresetState(value);
+      setDiscussionPreset(value);
+      const label =
+        discussionPresetOptions.find((option) => option.key === value)?.label ?? "Diskussion";
+      toasts.push({
+        kind: "info",
+        title: "Stil aktualisiert",
+        message: label,
+      });
+    },
+    [toasts],
+  );
 
   // Function to start a game
   const startGame = useCallback(
@@ -116,7 +149,7 @@ export default function ChatV2() {
   const startDiscussion = useCallback(
     (topicPrompt: string) => {
       try {
-        const preset = getDiscussionPreset();
+        const preset = discussionPresetRef.current ?? getDiscussionPreset();
         const strictMode = getDiscussionStrictMode();
         const maxSentences = getDiscussionMaxSentences();
         const { prompt, presetKey } = buildDiscussionSystemPrompt({
@@ -146,10 +179,12 @@ export default function ChatV2() {
         setMessages([]);
         setActiveConversationId(null);
         setCurrentSystemPrompt(prompt);
+        const presetLabel =
+          discussionPresetOptions.find((option) => option.key === presetKey)?.label ?? "Diskussion";
         toasts.push({
           kind: "info",
           title: "Diskussionsmodus aktiv",
-          message: "Ein Absatz, meinungsstark und neugierig – leg los!",
+          message: `${presetLabel} • ${MIN_DISCUSSION_SENTENCES}-${maxSentences} Sätze`,
         });
 
         void append({
@@ -410,7 +445,7 @@ export default function ChatV2() {
       title: "Warum glauben Menschen an Schicksal?",
       prompt: "Warum glauben manche so fest an Schicksal?",
     },
-  ];
+  ].map((topic) => ({ ...topic, hint: DISCUSSION_CARD_HINT }));
 
   return (
     <div className="relative flex h-full flex-col px-5 pb-8 pt-5">
@@ -461,21 +496,47 @@ export default function ChatV2() {
             />
             {/* Discussion Topics Section */}
             <div className="grid grid-cols-1 gap-3 pb-8">
-              <h3 className="px-1 text-xs font-semibold uppercase tracking-wide text-white/60">
-                Diskussionen
-              </h3>
+              <div className="mb-1 flex flex-col gap-2 px-1 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                    Diskussionen
+                  </h3>
+                  <p className="text-xs text-white/55">
+                    Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
+                  </p>
+                </div>
+                <div className="w-full max-w-xs sm:w-auto">
+                  <Select
+                    value={discussionPreset}
+                    onValueChange={(value) =>
+                      handleDiscussionPresetChange(value as DiscussionPresetKey)
+                    }
+                  >
+                    <SelectTrigger className="border-white/15 bg-white/5 text-xs text-white">
+                      <SelectValue placeholder="Stil auswählen" />
+                    </SelectTrigger>
+                    <SelectContent className="text-sm">
+                      {discussionPresetOptions.map((option) => (
+                        <SelectItem key={option.key} value={option.key}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
               {discussionTopics.map((topic, index) => {
                 const tint = friendlyPalette[(index + 1) % friendlyPalette.length] ?? DEFAULT_TINT;
                 return (
                   <RoleCard
                     key={topic.title}
                     title={topic.title}
-                    description={topic.prompt}
+                    description={topic.hint}
                     tint={tint}
                     variant="surface"
-                    badge="Diskussion"
+                    badge={presetLabel}
+                    showDescriptionOnToggle
                     onClick={() => {
-                      // Start a new discussion with the topic prompt
                       startDiscussion(topic.prompt);
                     }}
                     className="flex min-h-[120px] cursor-pointer items-center justify-center"
