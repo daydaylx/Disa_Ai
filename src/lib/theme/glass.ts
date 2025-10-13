@@ -3,10 +3,10 @@ type Hsl = { h: number; s: number; l: number };
 export type GlassTint = { from: string; to: string };
 
 export const DEFAULT_GLASS_VARIANTS = [
-  "linear-gradient(135deg, hsla(252, 5%, 64%, 0.28) 0%, hsla(210, 5%, 52%, 0.24) 100%)",
-  "linear-gradient(135deg, hsla(325, 5%, 60%, 0.28) 0%, hsla(38, 5%, 50%, 0.24) 100%)",
-  "linear-gradient(135deg, hsla(160, 5%, 39%, 0.28) 0%, hsla(217, 5%, 60%, 0.22) 100%)",
-  "linear-gradient(135deg, hsla(45, 5%, 56%, 0.28) 0%, hsla(327, 5%, 70%, 0.22) 100%)",
+  "linear-gradient(135deg, hsla(252, 30%, 64%, 0.28) 0%, hsla(210, 30%, 52%, 0.24) 100%)",
+  "linear-gradient(135deg, hsla(325, 30%, 60%, 0.28) 0%, hsla(38, 30%, 50%, 0.24) 100%)",
+  "linear-gradient(135deg, hsla(160, 30%, 39%, 0.28) 0%, hsla(217, 30%, 60%, 0.22) 100%)",
+  "linear-gradient(135deg, hsla(45, 30%, 56%, 0.28) 0%, hsla(327, 30%, 70%, 0.22) 100%)",
 ];
 
 function clamp(value: number, min: number, max: number) {
@@ -110,19 +110,19 @@ export function createRoleTint(accentColor?: string): GlassTint {
   const parsed = accentColor ? parseHsl(accentColor) : null;
   if (!parsed) {
     return {
-      from: "hsla(32, 5%, 67%, 0.92)",
-      to: "hsla(20, 5%, 54%, 0.72)",
+      from: "hsla(32, 30%, 67%, 0.92)",
+      to: "hsla(20, 30%, 54%, 0.72)",
     };
   }
 
   const start: Hsl = {
     h: parsed.h,
-    s: 5,
+    s: 30,
     l: clamp(parsed.l + 14, 0, 100),
   };
   const end: Hsl = {
     h: parsed.h + 18,
-    s: 5,
+    s: 30,
     l: clamp(parsed.l - 8, 0, 100),
   };
 
@@ -143,28 +143,28 @@ export function gradientToTint(gradient: string): GlassTint | null {
 // Freundliche Tint-Farbkombinationen für bessere Lesbarkeit und wärmere Ausstrahlung
 export const FRIENDLY_TINTS: GlassTint[] = [
   {
-    from: "hsla(262, 5%, 74%, 0.78)", // Lavender
-    to: "hsla(200, 5%, 68%, 0.55)", // Soft Sky
+    from: "hsla(262, 30%, 74%, 0.78)", // Lavender
+    to: "hsla(200, 30%, 68%, 0.55)", // Soft Sky
   },
   {
-    from: "hsla(335, 5%, 72%, 0.78)", // Blossom Pink
-    to: "hsla(24, 5%, 67%, 0.55)", // Peach Glow
+    from: "hsla(335, 30%, 72%, 0.78)", // Blossom Pink
+    to: "hsla(24, 30%, 67%, 0.55)", // Peach Glow
   },
   {
-    from: "hsla(160, 5%, 66%, 0.78)", // Mint
-    to: "hsla(188, 5%, 62%, 0.55)", // Aqua
+    from: "hsla(160, 30%, 66%, 0.78)", // Mint
+    to: "hsla(188, 30%, 62%, 0.55)", // Aqua
   },
   {
-    from: "hsla(42, 5%, 70%, 0.78)", // Golden Light
-    to: "hsla(16, 5%, 64%, 0.55)", // Amber Coral
+    from: "hsla(42, 30%, 70%, 0.78)", // Golden Light
+    to: "hsla(16, 30%, 64%, 0.55)", // Amber Coral
   },
   {
-    from: "hsla(280, 5%, 74%, 0.78)", // Orchid
-    to: "hsla(312, 5%, 68%, 0.55)", // Fuchsia Mist
+    from: "hsla(280, 30%, 74%, 0.78)", // Orchid
+    to: "hsla(312, 30%, 68%, 0.55)", // Fuchsia Mist
   },
   {
-    from: "hsla(202, 5%, 70%, 0.78)", // Daybreak Blue
-    to: "hsla(186, 5%, 64%, 0.55)", // Lagoon
+    from: "hsla(202, 30%, 70%, 0.78)", // Daybreak Blue
+    to: "hsla(186, 30%, 64%, 0.55)", // Lagoon
   },
 ];
 
