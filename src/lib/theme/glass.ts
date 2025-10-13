@@ -127,19 +127,19 @@ export function createRoleTint(accentColor?: string): GlassTint {
   const parsed = accentColor ? parseHsl(accentColor) : null;
   if (!parsed) {
     return {
-      from: "hsla(32, 96%, 67%, 0.92)",
-      to: "hsla(20, 92%, 54%, 0.72)",
+      from: "hsla(32, 5%, 67%, 0.92)",
+      to: "hsla(20, 5%, 54%, 0.72)",
     };
   }
 
   const start: Hsl = {
     h: parsed.h,
-    s: clamp(parsed.s + 4, 0, 100),
+    s: 5,
     l: clamp(parsed.l + 14, 0, 100),
   };
   const end: Hsl = {
     h: parsed.h + 18,
-    s: clamp(parsed.s, 0, 100),
+    s: 5,
     l: clamp(parsed.l - 8, 0, 100),
   };
 
@@ -160,28 +160,28 @@ export function gradientToTint(gradient: string): GlassTint | null {
 // Freundliche Tint-Farbkombinationen für bessere Lesbarkeit und wärmere Ausstrahlung
 export const FRIENDLY_TINTS: GlassTint[] = [
   {
-    from: "hsla(262, 82%, 74%, 0.78)", // Lavender
-    to: "hsla(200, 87%, 68%, 0.55)", // Soft Sky
+    from: "hsla(262, 5%, 74%, 0.78)", // Lavender
+    to: "hsla(200, 5%, 68%, 0.55)", // Soft Sky
   },
   {
-    from: "hsla(335, 86%, 72%, 0.78)", // Blossom Pink
-    to: "hsla(24, 92%, 67%, 0.55)", // Peach Glow
+    from: "hsla(335, 5%, 72%, 0.78)", // Blossom Pink
+    to: "hsla(24, 5%, 67%, 0.55)", // Peach Glow
   },
   {
-    from: "hsla(160, 82%, 66%, 0.78)", // Mint
-    to: "hsla(188, 84%, 62%, 0.55)", // Aqua
+    from: "hsla(160, 5%, 66%, 0.78)", // Mint
+    to: "hsla(188, 5%, 62%, 0.55)", // Aqua
   },
   {
-    from: "hsla(42, 92%, 70%, 0.78)", // Golden Light
-    to: "hsla(16, 86%, 64%, 0.55)", // Amber Coral
+    from: "hsla(42, 5%, 70%, 0.78)", // Golden Light
+    to: "hsla(16, 5%, 64%, 0.55)", // Amber Coral
   },
   {
-    from: "hsla(280, 88%, 74%, 0.78)", // Orchid
-    to: "hsla(312, 84%, 68%, 0.55)", // Fuchsia Mist
+    from: "hsla(280, 5%, 74%, 0.78)", // Orchid
+    to: "hsla(312, 5%, 68%, 0.55)", // Fuchsia Mist
   },
   {
-    from: "hsla(202, 86%, 70%, 0.78)", // Daybreak Blue
-    to: "hsla(186, 88%, 64%, 0.55)", // Lagoon
+    from: "hsla(202, 5%, 70%, 0.78)", // Daybreak Blue
+    to: "hsla(186, 5%, 64%, 0.55)", // Lagoon
   },
 ];
 
