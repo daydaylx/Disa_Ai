@@ -258,8 +258,17 @@ export default function ModelsPage() {
 
   // Kategorie-spezifische Base-Tints für bessere Übersichtlichkeit
   const categoryKeys = ["premium", "everyday", "free", "uncensored", "code"] as const;
+  const MODEL_CATEGORY_TINTS: Record<(typeof categoryKeys)[number], GlassTint> = {
+    premium: { from: "hsla(280, 92%, 64%, 0.6)", to: "hsla(200, 88%, 58%, 0.4)" },
+    everyday: { from: "hsla(48, 92%, 64%, 0.58)", to: "hsla(142, 88%, 58%, 0.38)" },
+    free: { from: "hsla(165, 90%, 60%, 0.6)", to: "hsla(44, 88%, 58%, 0.4)" },
+    uncensored: { from: "hsla(330, 90%, 66%, 0.6)", to: "hsla(262, 90%, 58%, 0.42)" },
+    code: { from: "hsla(205, 92%, 60%, 0.6)", to: "hsla(295, 88%, 58%, 0.42)" },
+  };
+
   const categoryTints = categoryKeys.reduce<Record<string, GlassTint>>((acc, key, index) => {
-    acc[key] = friendlyPalette[index % friendlyPalette.length] ?? DEFAULT_TINT;
+    acc[key] =
+      MODEL_CATEGORY_TINTS[key] ?? friendlyPalette[index % friendlyPalette.length] ?? DEFAULT_TINT;
     return acc;
   }, {});
 

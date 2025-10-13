@@ -10,37 +10,44 @@ import { useGlassPalette } from "../hooks/useGlassPalette";
 import type { GlassTint } from "../lib/theme/glass";
 import { FRIENDLY_TINTS } from "../lib/theme/glass";
 
-// Palette angepasst für einen dunkleren, transparenteren Glas-Effekt
+// Neon-inspirierte Gradient-Palette als Fallback
 const STATIC_CATEGORY_TINTS: GlassTint[] = [
   {
-    from: "hsla(262, 75%, 65%, 0.6)", // Darker Lavender
-    to: "hsla(200, 80%, 58%, 0.45)", // Darker, more transparent Sky
+    from: "hsla(265, 88%, 64%, 0.62)",
+    to: "hsla(188, 92%, 58%, 0.42)",
   },
   {
-    from: "hsla(335, 80%, 62%, 0.6)", // Darker Blossom Pink
-    to: "hsla(24, 85%, 55%, 0.45)", // Darker, more transparent Peach
+    from: "hsla(52, 92%, 62%, 0.58)",
+    to: "hsla(138, 88%, 58%, 0.38)",
   },
   {
-    from: "hsla(160, 75%, 56%, 0.6)", // Darker Mint
-    to: "hsla(188, 78%, 52%, 0.45)", // Darker, more transparent Aqua
+    from: "hsla(320, 90%, 65%, 0.58)",
+    to: "hsla(260, 88%, 60%, 0.42)",
   },
   {
-    from: "hsla(42, 85%, 60%, 0.6)", // Darker Golden Light
-    to: "hsla(16, 80%, 54%, 0.45)", // Darker, more transparent Amber
+    from: "hsla(185, 90%, 60%, 0.6)",
+    to: "hsla(45, 92%, 62%, 0.4)",
   },
   {
-    from: "hsla(280, 80%, 64%, 0.6)", // Darker Orchid
-    to: "hsla(312, 78%, 58%, 0.45)", // Darker, more transparent Fuchsia
+    from: "hsla(110, 90%, 58%, 0.58)",
+    to: "hsla(24, 88%, 58%, 0.4)",
   },
   {
-    from: "hsla(202, 80%, 60%, 0.6)", // Darker Daybreak Blue
-    to: "hsla(186, 82%, 54%, 0.45)", // Darker, more transparent Lagoon
-  },
-  {
-    from: "hsla(220, 75%, 65%, 0.6)", // A new blueish tint
-    to: "hsla(280, 80%, 58%, 0.45)", // A new purple tint
+    from: "hsla(290, 92%, 64%, 0.6)",
+    to: "hsla(200, 90%, 60%, 0.42)",
   },
 ];
+
+const CATEGORY_TINT_MAP: Record<string, GlassTint> = {
+  Alltag: { from: "hsla(265, 88%, 64%, 0.62)", to: "hsla(188, 92%, 58%, 0.42)" },
+  "Business & Karriere": { from: "hsla(52, 92%, 62%, 0.58)", to: "hsla(138, 88%, 58%, 0.38)" },
+  "Kreativ & Unterhaltung": { from: "hsla(320, 90%, 65%, 0.58)", to: "hsla(260, 88%, 60%, 0.42)" },
+  "Lernen & Bildung": { from: "hsla(185, 90%, 60%, 0.6)", to: "hsla(45, 92%, 62%, 0.4)" },
+  "Leben & Familie": { from: "hsla(110, 90%, 58%, 0.58)", to: "hsla(24, 88%, 58%, 0.4)" },
+  "Experten & Beratung": { from: "hsla(300, 92%, 66%, 0.6)", to: "hsla(200, 88%, 58%, 0.42)" },
+  Erwachsene: { from: "hsla(210, 92%, 62%, 0.6)", to: "hsla(320, 88%, 60%, 0.42)" },
+  Spezial: { from: "hsla(170, 92%, 60%, 0.6)", to: "hsla(44, 88%, 58%, 0.42)" },
+};
 
 // Removed unused ROLE_TINTS and RoleVisualConfig - now using useGlassPalette for consistent theming
 // const _ROLE_TINTS: Record<string, RoleVisualConfig> = {
@@ -164,7 +171,8 @@ function RolesTab() {
   const categoryTints: Record<string, GlassTint> = categoryOrder.reduce(
     (acc, category, index) => {
       // Verwende statische Farbpalette, damit sich RoleCard-Farben nicht bei Rollen-Auswahl ändern
-      acc[category] = staticPalette[index % staticPalette.length] ?? DEFAULT_TINT;
+      acc[category] =
+        CATEGORY_TINT_MAP[category] ?? staticPalette[index % staticPalette.length] ?? DEFAULT_TINT;
       return acc;
     },
     {} as Record<string, GlassTint>,
