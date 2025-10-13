@@ -532,7 +532,7 @@ function MessageBubble({ message }: { message: ChatMessageType }) {
           tint={tint}
           onClick={() => {}}
           badge={message.timestamp ? new Date(message.timestamp).toLocaleTimeString() : undefined}
-          className="flex h-[152px] items-center justify-center"
+          className=""
         />
       </div>
     </div>
