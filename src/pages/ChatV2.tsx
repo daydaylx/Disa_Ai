@@ -445,6 +445,22 @@ export default function ChatV2() {
       title: "Warum glauben Menschen an Schicksal?",
       prompt: "Warum glauben manche so fest an Schicksal?",
     },
+    {
+      title: "Brauchen wir ein Grundeinkommen?",
+      prompt: "Sollte es ein bedingungsloses Grundeinkommen geben?",
+    },
+    {
+      title: "Wie retten wir das Klima?",
+      prompt: "Welche Maßnahmen helfen deiner Meinung nach dem Klima am meisten?",
+    },
+    {
+      title: "Welche Rolle spielen soziale Medien?",
+      prompt: "Wie beeinflussen soziale Medien unser Denken und Verhalten?",
+    },
+    {
+      title: "Gestalten wir die Zukunft der Arbeit?",
+      prompt: "Wie werden Automatisierung und KI die Arbeitswelt verändern?",
+    },
   ].map((topic) => ({ ...topic, hint: DISCUSSION_CARD_HINT }));
 
   return (
@@ -491,12 +507,11 @@ export default function ChatV2() {
               description="Dein intelligenter Assistent für Gespräche, Analysen und kreative Aufgaben"
               tint={friendlyPalette[0] ?? DEFAULT_TINT}
               onClick={handleNewConversation}
-              variant="surface"
               className="flex h-[152px] items-center justify-center text-center"
             />
             {/* Discussion Topics Section */}
-            <div className="grid grid-cols-1 gap-3 pb-8">
-              <div className="mb-1 flex flex-col gap-2 px-1 sm:flex-row sm:items-center sm:justify-between">
+            <div className="grid grid-cols-1 gap-3 pb-8 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="mb-1 flex flex-col gap-2 px-1 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between xl:col-span-3">
                 <div>
                   <h3 className="text-xs font-semibold uppercase tracking-wide text-white/60">
                     Diskussionen
@@ -505,17 +520,20 @@ export default function ChatV2() {
                     Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
                   </p>
                 </div>
-                <div className="w-full max-w-xs sm:w-auto">
+                <div className="w-full max-w-sm sm:w-auto">
+                  <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/70">
+                    Stil auswählen
+                  </span>
                   <Select
                     value={discussionPreset}
                     onValueChange={(value) =>
                       handleDiscussionPresetChange(value as DiscussionPresetKey)
                     }
                   >
-                    <SelectTrigger className="border-white/15 bg-white/5 text-xs text-white">
-                      <SelectValue placeholder="Stil auswählen" />
+                    <SelectTrigger className="border-corporate-accent-primary/40 bg-corporate-accent-primary/15 focus:ring-corporate-accent-primary/40 text-xs font-medium text-white shadow-[0_12px_24px_-14px_rgba(35,125,255,0.45)] focus:outline-none focus:ring-2">
+                      <SelectValue placeholder="Stil wählen" />
                     </SelectTrigger>
-                    <SelectContent className="text-sm">
+                    <SelectContent className="bg-corporate-bg-card/95 border border-white/15 text-sm text-white shadow-[0_18px_48px_-28px_rgba(6,10,26,0.85)]">
                       {discussionPresetOptions.map((option) => (
                         <SelectItem key={option.key} value={option.key}>
                           {option.label}
@@ -536,13 +554,13 @@ export default function ChatV2() {
                     title={topic.title}
                     description={topic.hint}
                     tint={tint}
-                    variant="surface"
                     badge={tileBadge}
+                    badgeClassName="border-white/35 bg-white/20 text-[11px] font-semibold uppercase tracking-wide text-white drop-shadow-sm"
                     showDescriptionOnToggle
                     onClick={() => {
                       startDiscussion(topic.prompt);
                     }}
-                    className="flex min-h-[120px] cursor-pointer items-center justify-center"
+                    className="flex min-h-[132px] cursor-pointer flex-col justify-between"
                   />
                 );
               })}
