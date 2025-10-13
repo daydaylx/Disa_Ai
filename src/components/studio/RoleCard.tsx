@@ -16,6 +16,8 @@ export interface RoleCardProps extends React.ButtonHTMLAttributes<HTMLButtonElem
   isActive?: boolean;
   contrastOverlay?: boolean;
   showDescriptionOnToggle?: boolean;
+  badgeStyle?: CSSProperties;
+  badgeClassName?: string;
 }
 
 /**
@@ -35,6 +37,8 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       type = "button",
       style,
       showDescriptionOnToggle = false,
+      badgeStyle,
+      badgeClassName,
       ...props
     },
     ref,
@@ -83,7 +87,13 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
             </div>
             <div className="flex shrink-0 items-center gap-2">
               {badge ? (
-                <span className="pointer-events-none rounded-full border border-white/[0.14] bg-white/[0.06] px-2.5 py-1 text-[11px] leading-4 text-white/85 backdrop-blur-sm">
+                <span
+                  className={cn(
+                    "pointer-events-none rounded-full border px-2.5 py-1 text-[11px] leading-4 backdrop-blur-sm",
+                    badgeClassName,
+                  )}
+                  style={badgeStyle}
+                >
                   {badge}
                 </span>
               ) : null}

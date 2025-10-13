@@ -1,5 +1,5 @@
 import { ArrowRight, RotateCcw } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
@@ -47,6 +47,71 @@ const CATEGORY_TINT_MAP: Record<string, GlassTint> = {
   "Experten & Beratung": { from: "hsla(300, 92%, 66%, 0.6)", to: "hsla(200, 88%, 58%, 0.42)" },
   Erwachsene: { from: "hsla(210, 92%, 62%, 0.6)", to: "hsla(320, 88%, 60%, 0.42)" },
   Spezial: { from: "hsla(170, 92%, 60%, 0.6)", to: "hsla(44, 88%, 58%, 0.42)" },
+};
+
+const CATEGORY_BADGE_STYLES: Record<
+  string,
+  {
+    style: CSSProperties;
+    className?: string;
+  }
+> = {
+  Alltag: {
+    style: {
+      background: "linear-gradient(135deg, rgba(120, 99, 255, 0.24), rgba(82, 227, 255, 0.22))",
+      borderColor: "rgba(163, 194, 255, 0.45)",
+      color: "rgba(248, 249, 255, 0.95)",
+    },
+  },
+  "Business & Karriere": {
+    style: {
+      background: "linear-gradient(135deg, rgba(255, 216, 115, 0.24), rgba(120, 255, 168, 0.22))",
+      borderColor: "rgba(255, 226, 155, 0.5)",
+      color: "rgba(16, 18, 20, 0.9)",
+    },
+  },
+  "Kreativ & Unterhaltung": {
+    style: {
+      background: "linear-gradient(135deg, rgba(255, 166, 207, 0.26), rgba(168, 126, 255, 0.24))",
+      borderColor: "rgba(242, 190, 255, 0.45)",
+      color: "rgba(255, 248, 251, 0.96)",
+    },
+  },
+  "Lernen & Bildung": {
+    style: {
+      background: "linear-gradient(135deg, rgba(120, 210, 255, 0.22), rgba(255, 210, 120, 0.22))",
+      borderColor: "rgba(185, 230, 255, 0.5)",
+      color: "rgba(238, 248, 255, 0.96)",
+    },
+  },
+  "Leben & Familie": {
+    style: {
+      background: "linear-gradient(135deg, rgba(120, 255, 188, 0.24), rgba(255, 215, 140, 0.26))",
+      borderColor: "rgba(190, 255, 210, 0.45)",
+      color: "rgba(10, 26, 15, 0.88)",
+    },
+  },
+  "Experten & Beratung": {
+    style: {
+      background: "linear-gradient(135deg, rgba(200, 160, 255, 0.26), rgba(120, 210, 255, 0.22))",
+      borderColor: "rgba(210, 190, 255, 0.45)",
+      color: "rgba(246, 242, 255, 0.96)",
+    },
+  },
+  Erwachsene: {
+    style: {
+      background: "linear-gradient(135deg, rgba(120, 210, 255, 0.24), rgba(240, 160, 255, 0.24))",
+      borderColor: "rgba(170, 210, 255, 0.5)",
+      color: "rgba(13, 16, 24, 0.9)",
+    },
+  },
+  Spezial: {
+    style: {
+      background: "linear-gradient(135deg, rgba(90, 250, 210, 0.24), rgba(255, 210, 120, 0.24))",
+      borderColor: "rgba(166, 255, 226, 0.45)",
+      color: "rgba(5, 22, 18, 0.88)",
+    },
+  },
 };
 
 // Removed unused ROLE_TINTS and RoleVisualConfig - now using useGlassPalette for consistent theming
@@ -232,6 +297,7 @@ function RolesTab() {
                   <div className="grid grid-cols-1 gap-3">
                     {roles.map((role) => {
                       const tint = categoryTints[category] ?? (DEFAULT_TINT as GlassTint);
+                      const badgeAccent = CATEGORY_BADGE_STYLES[category];
                       return (
                         <RoleCard
                           key={role.id}
@@ -241,6 +307,8 @@ function RolesTab() {
                           tint={tint}
                           contrastOverlay={false}
                           showDescriptionOnToggle
+                          badgeStyle={badgeAccent?.style}
+                          badgeClassName={badgeAccent?.className}
                           isActive={activeRole?.id === role.id}
                           onClick={() => setActiveRole(role)}
                           aria-label={`Rolle ${role.name} auswählen`}

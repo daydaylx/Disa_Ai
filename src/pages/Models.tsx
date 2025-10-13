@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
@@ -272,6 +272,47 @@ export default function ModelsPage() {
     return acc;
   }, {});
 
+  const MODEL_BADGE_STYLES: Record<
+    (typeof categoryKeys)[number],
+    { style: CSSProperties; className?: string }
+  > = {
+    premium: {
+      style: {
+        background: "linear-gradient(135deg, rgba(207, 168, 255, 0.26), rgba(128, 226, 255, 0.24))",
+        borderColor: "rgba(210, 190, 255, 0.45)",
+        color: "rgba(21, 12, 32, 0.9)",
+      },
+    },
+    everyday: {
+      style: {
+        background: "linear-gradient(135deg, rgba(255, 220, 140, 0.26), rgba(160, 255, 190, 0.24))",
+        borderColor: "rgba(255, 230, 170, 0.45)",
+        color: "rgba(17, 19, 7, 0.88)",
+      },
+    },
+    free: {
+      style: {
+        background: "linear-gradient(135deg, rgba(130, 255, 200, 0.26), rgba(220, 255, 160, 0.24))",
+        borderColor: "rgba(170, 255, 210, 0.45)",
+        color: "rgba(6, 20, 13, 0.88)",
+      },
+    },
+    uncensored: {
+      style: {
+        background: "linear-gradient(135deg, rgba(255, 176, 220, 0.28), rgba(200, 160, 255, 0.24))",
+        borderColor: "rgba(255, 200, 230, 0.45)",
+        color: "rgba(26, 13, 22, 0.9)",
+      },
+    },
+    code: {
+      style: {
+        background: "linear-gradient(135deg, rgba(152, 210, 255, 0.26), rgba(200, 168, 255, 0.24))",
+        borderColor: "rgba(182, 222, 255, 0.45)",
+        color: "rgba(13, 22, 32, 0.9)",
+      },
+    },
+  };
+
   const selectModelById = (modelId: string, label?: string) => {
     setSelected(modelId);
     try {
@@ -302,6 +343,7 @@ export default function ModelsPage() {
     const isSelected = selected === item.id;
     // Use category-specific tint instead of palette offset
     const tint = categoryTints[categoryKey] ?? DEFAULT_TINT;
+    const badgeAccent = MODEL_BADGE_STYLES[categoryKey];
 
     return (
       <RoleCard
@@ -316,6 +358,8 @@ export default function ModelsPage() {
         onClick={() => selectModelById(item.id, item.label)}
         badge={item.provider}
         showDescriptionOnToggle
+        badgeStyle={badgeAccent?.style}
+        badgeClassName={badgeAccent?.className}
         isActive={isSelected}
         className={cn(
           "min-h-[140px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
