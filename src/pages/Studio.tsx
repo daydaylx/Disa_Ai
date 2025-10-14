@@ -496,7 +496,7 @@ function RolesTab() {
                       ? ({
                           "--card-overlay-gradient": accent.overlay,
                           "--card-glow-shadow": accent.glow,
-                          "--card-tint-opacity": "0.5",
+                          "--card-tint-opacity": "0.36",
                         } as CSSProperties & Record<string, string>)
                       : undefined;
 

@@ -359,6 +359,24 @@
   opacity: var(--card-tint-opacity, 0.38);
 }
 
+@media (max-width: 768px) {
+  .glass-card {
+    box-shadow: var(--card-glow-shadow, 0 18px 32px -22px rgba(6, 10, 22, 0.42));
+  }
+
+  .glass-card::before {
+    opacity: calc(var(--card-tint-opacity, 0.45) - 0.12);
+  }
+
+  .glass-card.tinted::before {
+    opacity: calc(var(--card-tint-opacity, 0.38) - 0.12);
+  }
+
+  .glass-card::after {
+    opacity: 0.5;
+  }
+}
+
 /* Overlay variants for different content requirements */
 .glass-card.overlay-weak::after {
   content: "";
