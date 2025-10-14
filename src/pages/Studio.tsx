@@ -72,43 +72,43 @@ const CATEGORY_TINT_MAP: Record<
 > = {
   Alltag: {
     overlay:
-      "linear-gradient(145deg, hsla(45, 85%, 70%, 0.36) 0%, hsla(265, 80%, 65%, 0.34) 40%, hsla(188, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(188, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(45, 85%, 70%, 0.28) 0%, hsla(265, 80%, 65%, 0.24) 40%, hsla(188, 80%, 60%, 0.2) 100%)",
+    glow: "0 24px 48px -24px hsla(188, 82%, 58%, 0.2)",
   },
   "Business & Karriere": {
     overlay:
-      "linear-gradient(145deg, hsla(138, 85%, 70%, 0.36) 0%, hsla(52, 80%, 65%, 0.34) 40%, hsla(70, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(70, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(138, 85%, 70%, 0.28) 0%, hsla(52, 80%, 65%, 0.24) 40%, hsla(70, 80%, 60%, 0.2) 100%)",
+    glow: "0 24px 48px -24px hsla(70, 82%, 58%, 0.2)",
   },
   "Kreativ & Unterhaltung": {
     overlay:
-      "linear-gradient(145deg, hsla(320, 85%, 70%, 0.36) 0%, hsla(260, 80%, 65%, 0.34) 40%, hsla(300, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(300, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(320, 85%, 70%, 0.28) 0%, hsla(260, 80%, 65%, 0.24) 40%, hsla(300, 80%, 60%, 0.2) 100%)",
+    glow: "0 24px 48px -24px hsla(300, 82%, 58%, 0.2)",
   },
   "Lernen & Bildung": {
     overlay:
-      "linear-gradient(145deg, hsla(180, 85%, 70%, 0.36) 0%, hsla(60, 80%, 65%, 0.34) 40%, hsla(210, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(210, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(180, 85%, 70%, 0.28) 0%, hsla(60, 80%, 65%, 0.24) 40%, hsla(210, 80%, 60%, 0.2) 100%)",
+    glow: "0 24px 48px -24px hsla(210, 82%, 58%, 0.2)",
   },
   "Leben & Familie": {
     overlay:
-      "linear-gradient(145deg, hsla(120, 85%, 70%, 0.36) 0%, hsla(50, 80%, 65%, 0.34) 40%, hsla(15, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(15, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(120, 85%, 70%, 0.28) 0%, hsla(50, 80%, 65%, 0.24) 40%, hsla(15, 80%, 60%, 0.2) 100%)",
+    glow: "0 24px 48px -24px hsla(15, 82%, 58%, 0.2)",
   },
   "Experten & Beratung": {
     overlay:
-      "linear-gradient(145deg, hsla(300, 85%, 70%, 0.36) 0%, hsla(210, 80%, 65%, 0.34) 40%, hsla(240, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(240, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(300, 85%, 70%, 0.28) 0%, hsla(210, 80%, 65%, 0.24) 40%, hsla(240, 80%, 60%, 0.2) 100%)",
+    glow: "0 24px 48px -24px hsla(240, 82%, 58%, 0.2)",
   },
   Erwachsene: {
     overlay:
-      "linear-gradient(145deg, hsla(220, 85%, 70%, 0.36) 0%, hsla(305, 80%, 65%, 0.34) 40%, hsla(275, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(275, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(220, 85%, 70%, 0.28) 0%, hsla(305, 80%, 65%, 0.24) 40%, hsla(275, 80%, 60%, 0.2) 100%)",
+    glow: "0 24px 48px -24px hsla(275, 82%, 58%, 0.2)",
   },
   Spezial: {
     overlay:
-      "linear-gradient(145deg, hsla(150, 85%, 70%, 0.36) 0%, hsla(30, 80%, 65%, 0.34) 40%, hsla(200, 80%, 60%, 0.28) 100%)",
-    glow: "0 32px 60px -24px hsla(200, 82%, 58%, 0.35)",
+      "linear-gradient(145deg, hsla(150, 85%, 70%, 0.28) 0%, hsla(30, 80%, 65%, 0.24) 40%, hsla(200, 80%, 60%, 0.2) 100%)",
+    glow: "0 24px 48px -24px hsla(200, 82%, 58%, 0.2)",
   },
 };
 
