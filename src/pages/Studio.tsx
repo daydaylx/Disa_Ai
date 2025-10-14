@@ -355,38 +355,42 @@ function RolesTab() {
 
   return (
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
-      <header className="mb-5 space-y-4">
+      <header className="mb-6 space-y-5">
         <div>
-          <h2 className="text-lg font-semibold text-white">Rollen-Studio</h2>
-          <p className="mt-1 text-sm leading-6 text-white/70">
+          <h2 className="text-xl font-semibold text-white sm:text-2xl">Rollen-Studio</h2>
+          <p className="mt-1 text-sm leading-7 text-white/70 sm:text-base">
             Wähle eine Stimme für Disa AI. Nutze Suche oder Filter, um schneller passende Rollen zu
             entdecken.
           </p>
         </div>
 
         {activeRole ? (
-          <div className="glass-card border-white/8 flex items-start justify-between gap-3 rounded-2xl border bg-white/5 px-4 py-3 text-xs text-white/80">
+          <div className="glass-card flex items-start justify-between gap-4 rounded-3xl border border-white/10 bg-white/10 px-5 py-4 text-xs text-white/80">
             <div className="space-y-1">
-              <p className="text-[11px] uppercase tracking-wide text-white/50">Aktive Rolle</p>
-              <p className="text-sm font-medium text-white">{activeRole.name}</p>
-              <p className="text-xs text-white/60">{summariseRole(activeRole)}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-white/45">
+                Aktive Rolle
+              </p>
+              <p className="text-sm font-semibold text-white sm:text-base">{activeRole.name}</p>
+              <p className="text-xs leading-5 text-white/60 sm:text-sm">
+                {summariseRole(activeRole)}
+              </p>
             </div>
             <button
               type="button"
               onClick={handleResetRole}
-              className="inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+              className="hover:bg-white/12 inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/80 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
-              <RotateCcw className="h-3.5 w-3.5" />
+              <RotateCcw className="h-3.5 w-3.5 text-white/75" />
               Zurücksetzen
             </button>
           </div>
         ) : null}
 
         <div className="space-y-3">
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <div className="relative flex-1">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30"
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40"
                 aria-hidden="true"
               />
               <input
@@ -401,28 +405,30 @@ function RolesTab() {
                 <button
                   type="button"
                   onClick={handleClearSearch}
-                  className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                  className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/70 transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                   aria-label="Suche zurücksetzen"
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="h-3.5 w-3.5 text-white/70" />
                 </button>
               ) : null}
             </div>
             <div className="flex items-center gap-2 text-xs text-white/60">
-              <Filter className="hidden h-4 w-4 text-white/30 sm:block" />
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+              <Filter className="hidden h-4 w-4 text-white/40 sm:block" />
+              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-white/70">
                 {totalMatchCount} von {orderedRoles.length} Rollen sichtbar
               </span>
             </div>
           </div>
 
-          <div className="-mx-2 flex items-center gap-2 overflow-x-auto pb-1">
+          <div className="-mx-2 flex items-center gap-2.5 overflow-x-auto pb-1">
             <button
               type="button"
               onClick={() => handleSelectCategory("all")}
               className={cn(
-                "glass-card shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition",
-                selectedCategory === "all" ? "text-white" : "text-white/70",
+                "glass-card shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition sm:text-sm",
+                selectedCategory === "all"
+                  ? "text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
+                  : "text-white/70",
               )}
             >
               Alle
@@ -434,7 +440,9 @@ function RolesTab() {
                 onClick={() => handleSelectCategory(category)}
                 className={cn(
                   "glass-card shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition",
-                  selectedCategory === category ? "text-white" : "text-white/70",
+                  selectedCategory === category
+                    ? "text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
+                    : "text-white/70",
                 )}
                 aria-pressed={selectedCategory === category}
               >
@@ -442,7 +450,7 @@ function RolesTab() {
                   {CATEGORY_ICONS[category]}
                 </span>
                 {category}
-                <span className="ml-1 text-white/50">
+                <span className="ml-1 text-white/60">
                   {categoriesInUse[category] ? `· ${categoriesInUse[category]}` : ""}
                 </span>
               </button>
@@ -451,7 +459,7 @@ function RolesTab() {
         </div>
       </header>
 
-      <div className="space-y-6 pb-8" data-testid="role-card-grid">
+      <div className="space-y-7 pb-8" data-testid="role-card-grid">
         {isLoadingRoles && orderedRoles.length === 0 ? (
           <div className="glass-card flex items-center justify-center p-6 text-sm text-white/70">
             Rollen werden geladen ...
@@ -470,24 +478,26 @@ function RolesTab() {
             if (!roles || roles.length === 0) return null;
 
             return (
-              <section key={category} className="space-y-3">
+              <section key={category} className="space-y-4 sm:space-y-5">
                 <div className="flex items-center justify-between gap-3">
-                  <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-white/90">
+                  <h3 className="flex items-center gap-2 text-base font-semibold text-white/90 sm:text-lg">
                     <span aria-hidden="true">{CATEGORY_ICONS[category] || "📋"}</span>
                     {category}
-                    <span className="text-xs font-normal text-white/60">({roles.length})</span>
+                    <span className="text-xs font-medium text-white/60 sm:text-sm">
+                      ({roles.length})
+                    </span>
                   </h3>
                   {selectedCategory !== "all" ? (
                     <button
                       type="button"
                       onClick={() => handleSelectCategory("all")}
-                      className="text-xs text-white/50 underline-offset-4 transition hover:text-white/80 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                      className="text-xs text-white/60 underline-offset-4 transition hover:text-white/80 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                     >
                       Filter aufheben
                     </button>
                   ) : null}
                 </div>
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
                   {roles.map((role) => {
                     const accent = CATEGORY_TINT_MAP[category];
                     const tint = categoryTints[category] ?? DEFAULT_TINT;
@@ -525,11 +535,11 @@ function RolesTab() {
         )}
       </div>
 
-      <div className="mt-4 flex flex-col gap-2">
+      <div className="mt-5 flex flex-col gap-2.5">
         <button
           type="button"
           onClick={handleNavigateToChat}
-          className="glass-card relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995]"
+          className="glass-card relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-cyan-400/45 via-sky-400/35 to-indigo-400/40 px-4 text-sm font-semibold text-white transition-all duration-200 hover:ring-1 hover:ring-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 active:scale-[0.99] sm:h-14 sm:text-base"
         >
           <div
             aria-hidden="true"
@@ -539,13 +549,16 @@ function RolesTab() {
             }}
           />
           <span className="relative z-10">Zum Chat mit aktueller Rolle</span>
-          <ArrowRight className="relative z-10 h-4 w-4" aria-hidden="true" />
+          <ArrowRight
+            className="relative z-10 h-4 w-4 text-white/85 sm:h-5 sm:w-5"
+            aria-hidden="true"
+          />
         </button>
         <button
           type="button"
           onClick={handleResetRole}
           disabled={!activeRole}
-          className="glass-card relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium text-white transition-all duration-200 hover:ring-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.995] disabled:opacity-50 disabled:grayscale disabled:active:scale-100"
+          className="glass-card relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/10 bg-white/10 px-4 text-sm font-medium text-white/90 transition-all duration-200 hover:ring-1 hover:ring-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/45 active:scale-[0.99] disabled:opacity-55 disabled:grayscale disabled:active:scale-100 sm:h-14 sm:text-base"
           aria-disabled={!activeRole}
         >
           <div
@@ -555,7 +568,10 @@ function RolesTab() {
               background: `linear-gradient(135deg, ${friendlyPalette[1]?.from ?? DEFAULT_TINT.from} 0%, ${friendlyPalette[1]?.to ?? DEFAULT_TINT.to} 100%)`,
             }}
           />
-          <RotateCcw className="relative z-10 h-4 w-4" aria-hidden="true" />
+          <RotateCcw
+            className="relative z-10 h-4 w-4 text-white/80 sm:h-5 sm:w-5"
+            aria-hidden="true"
+          />
           <span className="relative z-10">Rolle zurücksetzen</span>
         </button>
       </div>
@@ -601,10 +617,10 @@ function GamesTab() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-6 px-5 pb-8 pt-5 text-white">
+    <div className="flex h-full flex-col gap-7 px-5 pb-8 pt-5 text-white">
       <div>
-        <h2 className="text-lg font-semibold text-white">Spiele</h2>
-        <p className="mt-1 text-sm leading-6 text-white/70">
+        <h2 className="text-xl font-semibold text-white sm:text-2xl">Spiele</h2>
+        <p className="mt-1 text-sm leading-7 text-white/70 sm:text-base">
           Wähle ein Spiel aus, um eine neue Spielrunde zu starten.
         </p>
       </div>
@@ -613,11 +629,11 @@ function GamesTab() {
         {games.map((game) => (
           <div
             key={game.id}
-            className="glass-card flex cursor-pointer flex-col gap-2 p-4 transition-all hover:scale-[1.02]"
+            className="glass-card flex cursor-pointer flex-col gap-2 rounded-3xl p-4 transition-all hover:scale-[1.02] sm:p-5"
             onClick={() => handleGameStart(game.id)}
           >
-            <h3 className="font-semibold text-white">{game.title}</h3>
-            <p className="text-sm text-white/80">{game.description}</p>
+            <h3 className="text-base font-semibold text-white sm:text-lg">{game.title}</h3>
+            <p className="text-sm leading-6 text-white/80 sm:text-base">{game.description}</p>
           </div>
         ))}
       </div>
