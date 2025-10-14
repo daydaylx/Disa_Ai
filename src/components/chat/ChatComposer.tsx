@@ -189,11 +189,21 @@ export function ChatComposer({
         </div>
 
         <div className="mt-1 text-center text-xs text-text-1">
-          {isLoading
-            ? "Antwort wird erstellt …"
-            : isComposerDisabled
-              ? "Eingabe gesperrt, bitte warte einen Moment."
-              : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
+          <span className="inline-flex items-center justify-center gap-2">
+            {(isLoading || isComposerDisabled) && (
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand/40 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
+              </span>
+            )}
+            <span>
+              {isLoading
+                ? "Antwort wird erstellt …"
+                : isComposerDisabled
+                  ? "Eingabe gesperrt, bitte warte einen Moment."
+                  : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
+            </span>
+          </span>
         </div>
       </div>
     </div>

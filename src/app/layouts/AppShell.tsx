@@ -100,6 +100,13 @@ function BottomBar() {
                   <Icon className="h-4 w-4" />
                 </span>
                 <span>{label}</span>
+                <span
+                  className={cn(
+                    "h-[2px] w-6 rounded-full bg-brand transition-transform duration-200",
+                    isActive ? "scale-100" : "scale-0",
+                  )}
+                  aria-hidden
+                />
               </>
             )}
           </NavLink>

@@ -33,10 +33,10 @@ export function MessageBubbleCard({
   return (
     <article
       className={cn(
-        "relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-base border px-4 py-3",
+        "relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-base border px-4 py-3 transition-transform duration-200",
         variant === "assistant"
-          ? "border-border bg-surface-1 pl-6"
-          : "border-border bg-surface-2 pr-6",
+          ? "border-border bg-surface-1 pl-6 hover:-translate-y-[1px]"
+          : "border-border bg-surface-2 pr-6 hover:-translate-y-[1px]",
         className,
       )}
       {...props}

@@ -144,6 +144,22 @@
     pointer-events: none;
   }
 
+  .brand-panel::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background-image: radial-gradient(
+      circle at center,
+      rgb(var(--brand-rgb) / 0.16) 0%,
+      transparent 55%
+    );
+    background-size: 140px 140px;
+    transform: rotate(12deg);
+    animation: brand-grid-pan 18s linear infinite;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
   .brand-panel > * {
     position: relative;
     z-index: 1;
@@ -159,5 +175,14 @@
 
   .brand-label-active {
     color: var(--brand-base);
+  }
+}
+
+@keyframes brand-grid-pan {
+  from {
+    transform: rotate(12deg) translate3d(0, 0, 0);
+  }
+  to {
+    transform: rotate(12deg) translate3d(-140px, -140px, 0);
   }
 }
