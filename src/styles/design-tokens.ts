@@ -22,6 +22,10 @@ export const colors = {
     base: "#007AFF",
     weak: "#007AFF40",
   },
+  accent: {
+    base: "#FF9500",
+    weak: "#FF950033",
+  },
   state: {
     success: "#34C759",
     warning: "#FFCC00",

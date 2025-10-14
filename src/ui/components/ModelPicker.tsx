@@ -1,8 +1,9 @@
 import { useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
+
 import type { AIModel } from "../../data/models";
 import { formatContext, formatPrice, getModelById, MODELS } from "../../data/models";
-import { Badge } from "../ui/badge";
 
 interface ModelPickerProps {
   selectedModelId: string;

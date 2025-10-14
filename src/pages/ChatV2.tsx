@@ -498,28 +498,20 @@ export default function ChatV2() {
                   </Select>
                 </div>
               </div>
-              {discussionTopics.map((topic) => {
-                const tileBadge =
-                  discussionPresetOptions.find((option) => option.key === discussionPreset)
-                    ?.label ?? "Diskussion";
-                return (
-                  <div
-                    key={topic.title}
-                    className="rounded-lg border border-border bg-surface-1 p-4"
+              {discussionTopics.map((topic) => (
+                <div key={topic.title} className="rounded-lg border border-border bg-surface-1 p-4">
+                  <h4 className="font-semibold text-text-0">{topic.title}</h4>
+                  <p className="text-sm text-text-1">{topic.hint}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => startDiscussion(topic.prompt)}
+                    className="mt-4"
                   >
-                    <h4 className="font-semibold text-text-0">{topic.title}</h4>
-                    <p className="text-sm text-text-1">{topic.hint}</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => startDiscussion(topic.prompt)}
-                      className="mt-4"
-                    >
-                      Diskutieren
-                    </Button>
-                  </div>
-                );
-              })}
+                    Diskutieren
+                  </Button>
+                </div>
+              ))}
             </div>
 
             {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (

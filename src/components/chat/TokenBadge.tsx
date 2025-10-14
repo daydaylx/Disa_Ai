@@ -68,7 +68,7 @@ export function TokenBadge({
       )}
       {cost !== undefined && <div>Kosten: {formatCost(cost, currency)}</div>}
       {model && <div>Modell: {model}</div>}
-      {isLive && <div className="text-accent-500">● Live-Aktualisierung</div>}
+      {isLive && <div className="text-accent">● Live-Aktualisierung</div>}
     </div>
   );
 
@@ -92,7 +92,7 @@ export function TokenBadge({
                 <span className="opacity-60">{formatNumber(max)}</span>
               </>
             )}
-            {isLive && <Clock className="h-3 w-3 text-accent-500" />}
+            {isLive && <Clock className="h-3 w-3 text-accent" />}
           </Badge>
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-xs">
@@ -124,8 +124,8 @@ export function LiveTokenCounter({
     <div className={cn("flex items-center gap-2", className)}>
       <TokenBadge current={tokens} max={maxTokens} cost={cost} model={model} isLive={isStreaming} />
       {isStreaming && (
-        <div className="flex items-center gap-1 text-xs text-neutral-500">
-          <div className="h-1.5 w-1.5 animate-ping rounded-full bg-accent-500" />
+        <div className="flex items-center gap-1 text-xs text-text-1">
+          <div className="h-1.5 w-1.5 animate-ping rounded-full bg-accent/60" />
           <span>Stream läuft …</span>
         </div>
       )}

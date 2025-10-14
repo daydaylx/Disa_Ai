@@ -5,6 +5,7 @@ import type { Conversation } from "../../lib/conversation-manager";
 import { groupConversationsByDate } from "../../lib/conversation-utils";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
 import { cn } from "../../lib/utils";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
 interface ChatHistorySidebarProps {

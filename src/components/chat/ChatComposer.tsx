@@ -82,7 +82,6 @@ export function ChatComposer({
   const shouldShowSend = !isLoading && trimmedValue && canSend;
   const shouldShowStop = isLoading && onStop;
   const shouldShowRetry = canRetry && !isLoading && onRetry;
-  const isEmpty = trimmedValue.length === 0;
   const isComposerDisabled = disabled || isQuickstartLoading;
 
   return (

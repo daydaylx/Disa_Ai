@@ -208,13 +208,13 @@ function setupThemeColorUpdates() {
 
     switch (true) {
       case currentHash.includes("chat"):
-        updateThemeColor(designTokens.colors.accent[500]); // Cyan for chat
+        updateThemeColor(designTokens.colors.brand.base);
         break;
       case currentHash.includes("settings"):
-        updateThemeColor(designTokens.colors.semantic.purple); // Purple for settings
+        updateThemeColor(designTokens.colors.accent.base);
         break;
       default:
-        updateThemeColor(designTokens.colors.neutral[800]); // Default dark
+        updateThemeColor(designTokens.colors.surface[1]);
     }
   });
 

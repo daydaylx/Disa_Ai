@@ -9,6 +9,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        default: "border-border bg-surface-1 text-text-0 hover:bg-surface-1-hover",
+        secondary: "border-border bg-surface-2 text-text-1 hover:bg-surface-1 hover:text-text-0",
         outline: "border-border bg-transparent text-text-0 hover:bg-surface-1",
         brand: "border-transparent bg-brand text-white hover:bg-brand/90",
         ghost: "border-transparent bg-transparent text-text-1 hover:text-text-0 hover:bg-surface-1",
@@ -23,7 +25,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "outline",
+      variant: "default",
       size: "default",
     },
   },
