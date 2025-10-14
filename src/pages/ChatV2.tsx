@@ -449,7 +449,8 @@ export default function ChatV2() {
         {messages.length === 0 ? (
           <>
             <header className="mb-4 flex items-start justify-between gap-4">
-              <div>
+              <div className="space-y-2">
+                <span className="brand-chip w-fit">Neuer Chat</span>
                 <h2 className="text-lg font-semibold text-text-0">Chat</h2>
                 <p className="mt-1 text-sm leading-6 text-text-1">
                   Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.
@@ -499,7 +500,11 @@ export default function ChatV2() {
                 </div>
               </div>
               {discussionTopics.map((topic) => (
-                <div key={topic.title} className="rounded-lg border border-border bg-surface-1 p-4">
+                <div
+                  key={topic.title}
+                  className="space-y-3 rounded-lg border border-border bg-surface-1 p-4"
+                >
+                  <span className="brand-chip w-fit text-[10px]">Diskussion</span>
                   <h4 className="font-semibold text-text-0">{topic.title}</h4>
                   <p className="text-sm text-text-1">{topic.hint}</p>
                   <Button

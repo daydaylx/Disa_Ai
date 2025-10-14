@@ -172,7 +172,8 @@ export function ChatComposer({
               <Button
                 onClick={handleSend}
                 size="icon"
-                className="h-12 w-12"
+                variant="brand"
+                className="h-12 w-12 shadow-md"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 data-testid="composer-send"

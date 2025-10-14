@@ -42,14 +42,17 @@ function TopBar() {
     <header className="sticky top-0 z-40 h-14 border-b border-border bg-surface-0">
       <div className="mx-auto flex h-full w-full max-w-[var(--max-content-width)] items-center justify-between gap-4 px-4">
         <div className="flex items-center gap-3">
-          <span className="brand-rail h-full w-1 bg-brand" aria-hidden="true" />
-          <div className="flex flex-col leading-tight">
+          <span className="brand-rail h-full w-1" aria-hidden="true" />
+          <div className="flex flex-col gap-1 leading-tight">
             <BrandWordmark />
-            <span className="text-xs text-text-1">
-              {activeRole
-                ? `${activeRole.category ?? "Rolle"} · ${activeRole.name}`
-                : "Assistive Studio"}
-            </span>
+            {activeRole ? (
+              <div className="flex items-center gap-2">
+                <span className="brand-chip">{activeRole.category ?? "Rolle"}</span>
+                <span className="line-clamp-1 text-xs text-text-1">{activeRole.name}</span>
+              </div>
+            ) : (
+              <span className="brand-chip">Assistive Studio</span>
+            )}
           </div>
         </div>
         <Button
@@ -81,7 +84,7 @@ function BottomBar() {
             className={({ isActive }) =>
               cn(
                 "flex flex-1 flex-col items-center justify-center gap-1 rounded-base px-2 py-2 text-[11px] font-medium uppercase tracking-[0.08em] transition-colors",
-                isActive ? "text-text-0" : "text-text-1 hover:text-text-0",
+                isActive ? "brand-label-active" : "text-text-1 hover:text-text-0",
               )
             }
           >
@@ -90,7 +93,7 @@ function BottomBar() {
                 <span
                   className={cn(
                     "flex h-9 w-9 items-center justify-center rounded-base border border-transparent text-text-1 transition-colors",
-                    isActive && "bg-surface-1 text-text-0",
+                    isActive && "brand-icon-active",
                   )}
                   aria-hidden
                 >

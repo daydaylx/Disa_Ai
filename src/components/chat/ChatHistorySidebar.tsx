@@ -105,25 +105,37 @@ export function ChatHistorySidebar({
 
             <div className="flex gap-2">
               <Button
-                variant={filterType === "all" ? "secondary" : "ghost"}
+                variant="ghost"
                 size="sm"
                 onClick={() => setFilterType("all")}
+                className={cn(
+                  "rounded-base border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em]",
+                  filterType === "all" && "border-brand/40 bg-brand/15 text-brand",
+                )}
               >
                 <MessageSquare className="h-3 w-3" />
                 Alle
               </Button>
               <Button
-                variant={filterType === "favorites" ? "secondary" : "ghost"}
+                variant="ghost"
                 size="sm"
                 onClick={() => setFilterType("favorites")}
+                className={cn(
+                  "rounded-base border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em]",
+                  filterType === "favorites" && "border-brand/40 bg-brand/15 text-brand",
+                )}
               >
                 <Star className="h-3 w-3" />
                 Favoriten
               </Button>
               <Button
-                variant={filterType === "recent" ? "secondary" : "ghost"}
+                variant="ghost"
                 size="sm"
                 onClick={() => setFilterType("recent")}
+                className={cn(
+                  "rounded-base border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em]",
+                  filterType === "recent" && "border-brand/40 bg-brand/15 text-brand",
+                )}
               >
                 <Clock className="h-3 w-3" />
                 Kürzlich

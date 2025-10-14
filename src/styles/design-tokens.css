@@ -25,11 +25,23 @@
   --brand-strong-rgb: 0 105 220; /* Darker shade for hover states */
   --brand-strong: rgb(var(--brand-strong-rgb));
   --brand-weak: rgb(var(--brand-rgb) / 0.18); /* Subtle surface tint */
+  --brand-gradient: linear-gradient(
+    120deg,
+    rgb(var(--brand-rgb) / 0.92) 0%,
+    rgb(var(--brand-strong-rgb) / 0.88) 35%,
+    rgb(var(--accent-rgb) / 0.85) 100%
+  );
+  --brand-glow: 0 18px 42px rgb(var(--brand-rgb) / 0.28);
 
   /* Accent (utility only) - minimize to 1 max */
   --accent-rgb: 255 149 0;
   --accent-base: rgb(var(--accent-rgb));
   --accent-weak: rgb(var(--accent-rgb) / 0.2);
+  --accent-gradient: linear-gradient(
+    120deg,
+    rgb(var(--accent-rgb) / 0.9) 0%,
+    rgb(var(--brand-rgb) / 0.7) 100%
+  );
 
   /* Status colors */
   --success-rgb: 52 199 89;

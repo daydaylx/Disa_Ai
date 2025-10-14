@@ -100,4 +100,64 @@
     border: 1px solid var(--surface-border);
     border-radius: var(--surface-radius);
   }
+
+  .brand-rail {
+    background: var(--brand-gradient);
+    box-shadow: var(--brand-glow);
+  }
+
+  .brand-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: var(--surface-radius-pill);
+    border: 1px solid rgb(var(--brand-rgb) / 0.28);
+    background: rgb(var(--brand-rgb) / 0.12);
+    color: var(--brand-base);
+    padding: 0.25rem 0.75rem;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .brand-panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--surface-radius-lg);
+    border: 1px solid rgb(var(--brand-rgb) / 0.32);
+    background:
+      linear-gradient(135deg, rgb(var(--brand-rgb) / 0.12) 0%, transparent 55%),
+      linear-gradient(200deg, rgb(var(--accent-rgb) / 0.14) 0%, transparent 70%), var(--surface-1);
+    box-shadow: var(--brand-glow);
+  }
+
+  .brand-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.55;
+    background: radial-gradient(
+      140% 120% at 90% 0%,
+      rgb(var(--brand-rgb) / 0.18) 0%,
+      transparent 60%
+    );
+    pointer-events: none;
+  }
+
+  .brand-panel > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .brand-icon-active {
+    background: rgb(var(--brand-rgb) / 0.15);
+    color: var(--brand-base);
+    box-shadow:
+      0 0 0 1px rgb(var(--brand-rgb) / 0.22),
+      0 8px 20px -12px rgb(var(--brand-rgb) / 0.6);
+  }
+
+  .brand-label-active {
+    color: var(--brand-base);
+  }
 }

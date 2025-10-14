@@ -157,7 +157,8 @@ export function ChatList({
       <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-5 px-1 py-3">
-            <div className="space-y-4 rounded-lg border border-border bg-surface-1 p-6">
+            <div className="brand-panel space-y-4 p-6">
+              <span className="brand-chip w-fit">Disa▮AI Studio</span>
               <h1 className="text-2xl font-semibold leading-tight text-text-0">
                 Was möchtest du heute erschaffen?
               </h1>
@@ -165,7 +166,7 @@ export function ChatList({
                 Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
                 Sekunden.
               </p>
-              <Button onClick={handleStartStandardChat} className="w-full">
+              <Button onClick={handleStartStandardChat} className="w-full" variant="brand">
                 Neues Gespräch beginnen
               </Button>
             </div>
@@ -196,7 +197,7 @@ export function ChatList({
                   <Button
                     onClick={handleStartStandardChat}
                     className="mt-4"
-                    variant="outline"
+                    variant="brand"
                     data-testid="start-standard-chat"
                   >
                     Direkt im Chat starten
