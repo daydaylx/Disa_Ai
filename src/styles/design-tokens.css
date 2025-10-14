@@ -286,15 +286,15 @@
     var(--card-overlay-gradient, var(--card-tint-overlay)),
     linear-gradient(
       168deg,
-      rgba(18, 24, 36, 0.82) 0%,
-      rgba(14, 20, 32, 0.66) 55%,
-      rgba(8, 14, 24, 0.58) 100%
+      rgba(18, 24, 36, 0.68) 0%,
+      rgba(14, 20, 32, 0.58) 55%,
+      rgba(8, 14, 24, 0.52) 100%
     ),
-    rgba(12, 18, 28, 0.18);
+    rgba(12, 18, 28, 0.14);
   border-color: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: var(--card-glow-shadow, 0 26px 48px -24px rgba(5, 8, 16, 0.75));
+  box-shadow: var(--card-glow-shadow, 0 22px 42px -24px rgba(5, 8, 16, 0.6));
   transition:
     transform 0.25s ease-out,
     border-color 0.25s ease-out,
@@ -306,7 +306,7 @@
   content: "";
   @apply pointer-events-none absolute inset-0 rounded-[inherit];
   background: var(--card-tint-overlay, var(--card-highlight-overlay));
-  opacity: 0.82;
+  opacity: var(--card-tint-opacity, 0.68);
   transition:
     opacity 0.25s ease-out,
     transform 0.25s ease-out;
@@ -329,7 +329,7 @@
 }
 
 .glass-card:hover::before {
-  opacity: 0.95;
+  opacity: calc(var(--card-tint-opacity, 0.68) + 0.1);
   transform: translateY(-3px);
 }
 
@@ -350,13 +350,13 @@
 /* Glass card variant for use with color tint overlays (like RoleCard) */
 .glass-card.tinted {
   box-shadow:
-    0 26px 48px -24px rgba(5, 8, 16, 0.75),
+    0 22px 42px -26px rgba(6, 10, 28, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
 .glass-card.tinted::before {
   background: var(--card-tint-overlay);
-  opacity: 0.88;
+  opacity: var(--card-tint-opacity, 0.62);
 }
 
 /* Overlay variants for different content requirements */

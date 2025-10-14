@@ -496,6 +496,7 @@ function RolesTab() {
                       ? ({
                           "--card-overlay-gradient": accent.overlay,
                           "--card-glow-shadow": accent.glow,
+                          "--card-tint-opacity": "0.5",
                         } as CSSProperties & Record<string, string>)
                       : undefined;
 
@@ -508,7 +509,6 @@ function RolesTab() {
                         tint={tint}
                         style={style}
                         contrastOverlay={false}
-                        showDescriptionOnToggle
                         badgeStyle={badgeAccent?.style}
                         badgeClassName={badgeAccent?.className}
                         isActive={activeRole?.id === role.id}

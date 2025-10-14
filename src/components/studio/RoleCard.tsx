@@ -102,11 +102,13 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         {...props}
       >
         <div className="relative z-10 flex h-full flex-col">
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <h3 className="text-base font-semibold tracking-tight text-white">{title}</h3>
               {expanded ? (
-                <p className="mt-2 text-sm leading-6 text-white/85">{description}</p>
+                <p className="mt-2 line-clamp-4 text-sm leading-6 text-white/90 [text-shadow:0_0_8px_rgba(6,10,24,0.35)]">
+                  {description}
+                </p>
               ) : null}
             </div>
             <div className="flex shrink-0 items-center gap-2">
