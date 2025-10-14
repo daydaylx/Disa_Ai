@@ -33,6 +33,19 @@ function determineSupport() {
     prefersCoarsePointer ||
     matchesMobileBreakpoint;
 
+  const isDesktopPlatform = (() => {
+    const platform = uaData?.platform?.toLowerCase() ?? "";
+    if (platform) {
+      return ["windows", "mac", "macos", "linux", "cros"].some((value) => platform.includes(value));
+    }
+
+    return /windows|macintosh|mac os|linux|cros|x11/i.test(userAgent);
+  })();
+
+  if (isDesktopPlatform) {
+    return "allowed";
+  }
+
   return isAndroidPlatform && isMobileFormFactor ? "allowed" : "blocked";
 }
 
