@@ -1,4 +1,4 @@
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, Filter, RotateCcw, Search, X } from "lucide-react";
 import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,7 @@ import { loadRoles } from "../data/roles";
 import { useGlassPalette } from "../hooks/useGlassPalette";
 import type { GlassTint } from "../lib/theme/glass";
 import { FRIENDLY_TINTS } from "../lib/theme/glass";
+import { cn } from "../lib/utils";
 
 // Neon-inspirierte Gradient-Palette als Fallback
 const STATIC_CATEGORY_TINTS: GlassTint[] = [
@@ -38,8 +39,32 @@ const STATIC_CATEGORY_TINTS: GlassTint[] = [
   },
 ];
 
+const CATEGORY_ORDER = [
+  "Alltag",
+  "Business & Karriere",
+  "Kreativ & Unterhaltung",
+  "Lernen & Bildung",
+  "Leben & Familie",
+  "Experten & Beratung",
+  "Erwachsene",
+  "Spezial",
+] as const;
+
+type CategoryKey = (typeof CATEGORY_ORDER)[number];
+
+const CATEGORY_ICONS: Record<CategoryKey, string> = {
+  Alltag: "🚀",
+  "Business & Karriere": "💼",
+  "Kreativ & Unterhaltung": "🎨",
+  "Lernen & Bildung": "🎓",
+  "Leben & Familie": "🏠",
+  "Experten & Beratung": "🩺",
+  Erwachsene: "🔒",
+  Spezial: "⭐",
+};
+
 const CATEGORY_TINT_MAP: Record<
-  string,
+  CategoryKey,
   {
     overlay: string;
     glow: string;
@@ -88,7 +113,7 @@ const CATEGORY_TINT_MAP: Record<
 };
 
 const CATEGORY_BADGE_STYLES: Record<
-  string,
+  CategoryKey,
   {
     style: CSSProperties;
     className?: string;
@@ -166,6 +191,15 @@ const DEFAULT_TINT: RoleTint = FRIENDLY_TINTS[0] ?? {
   to: "hsla(200, 87%, 68%, 0.55)",
 };
 
+const FALLBACK_CATEGORY: CategoryKey = "Spezial";
+
+function normalizeCategory(category?: string): CategoryKey {
+  if (!category) return FALLBACK_CATEGORY;
+  return CATEGORY_ORDER.includes(category as CategoryKey)
+    ? (category as CategoryKey)
+    : FALLBACK_CATEGORY;
+}
+
 function summariseRole(role: Role): string {
   if (role.description) return role.description;
 
@@ -183,6 +217,8 @@ function RolesTab() {
   const { roles, activeRole, setActiveRole } = useStudio();
   const [roleList, setRoleList] = useState<Role[]>(roles);
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<"all" | CategoryKey>("all");
   const navigate = useNavigate();
   const palette = useGlassPalette();
   // Verwende statische Farbpalette für RoleCards, um Farbänderungen bei Rollen-Auswahl zu vermeiden
@@ -235,57 +271,184 @@ function RolesTab() {
     void navigate("/chat");
   };
 
-  // Optimierte Kategorie-Reihenfolge für bessere Benutzerführung
-  const categoryOrder = useMemo(
-    () =>
-      [
-        "Alltag",
-        "Business & Karriere",
-        "Kreativ & Unterhaltung",
-        "Lernen & Bildung",
-        "Leben & Familie",
-        "Experten & Beratung",
-        "Erwachsene",
-        "Spezial",
-      ] as const,
-    [],
-  );
-
   const orderedRoles = useMemo(() => {
     // Sortiere Rollen nach optimierten Kategorien für bessere Benutzerführung
     return [...availableRoles].sort((a, b) => {
-      const categoryA = a.category || "Spezial";
-      const categoryB = b.category || "Spezial";
+      const categoryA = normalizeCategory(a.category);
+      const categoryB = normalizeCategory(b.category);
 
-      const indexA = categoryOrder.indexOf(categoryA as any);
-      const indexB = categoryOrder.indexOf(categoryB as any);
+      const indexA = CATEGORY_ORDER.indexOf(categoryA);
+      const indexB = CATEGORY_ORDER.indexOf(categoryB);
 
       // Kategorien sortieren
       if (indexA !== indexB) {
-        const orderA = indexA === -1 ? categoryOrder.length : indexA;
-        const orderB = indexB === -1 ? categoryOrder.length : indexB;
+        const orderA = indexA === -1 ? CATEGORY_ORDER.length : indexA;
+        const orderB = indexB === -1 ? CATEGORY_ORDER.length : indexB;
         return orderA - orderB;
       }
 
       // Innerhalb der Kategorie alphabetisch sortieren
       return a.name.localeCompare(b.name);
     });
-  }, [availableRoles, categoryOrder]);
-  const categoryTints: Record<string, GlassTint> = categoryOrder.reduce(
+  }, [availableRoles]);
+
+  const filteredRoles = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    return orderedRoles.filter((role) => {
+      const category = normalizeCategory(role.category);
+      const matchesCategory = selectedCategory === "all" ? true : category === selectedCategory;
+      if (!matchesCategory) return false;
+      if (!normalizedSearch) return true;
+      const haystack = `${role.name} ${summariseRole(role)}`.toLowerCase();
+      return haystack.includes(normalizedSearch);
+    });
+  }, [orderedRoles, searchTerm, selectedCategory]);
+
+  const categoriesInUse = useMemo(() => {
+    return filteredRoles.reduce<Record<CategoryKey, number>>(
+      (acc, role) => {
+        const category = normalizeCategory(role.category);
+        acc[category] = (acc[category] ?? 0) + 1;
+        return acc;
+      },
+      {} as Record<CategoryKey, number>,
+    );
+  }, [filteredRoles]);
+
+  const categoryTints: Record<CategoryKey, GlassTint> = CATEGORY_ORDER.reduce(
     (acc, category, index) => {
       acc[category] = staticPalette[index % staticPalette.length] ?? DEFAULT_TINT;
       return acc;
     },
-    {} as Record<string, GlassTint>,
+    {} as Record<CategoryKey, GlassTint>,
   );
+
+  const resolvedCategoriesToRender =
+    selectedCategory === "all" ? CATEGORY_ORDER : [selectedCategory];
+
+  const totalMatchCount = filteredRoles.length;
+
+  const groupedRoles = useMemo(() => {
+    return filteredRoles.reduce<Record<CategoryKey, Role[]>>(
+      (acc, role) => {
+        const category = normalizeCategory(role.category);
+        if (!acc[category]) acc[category] = [];
+        acc[category].push(role);
+        return acc;
+      },
+      {} as Record<CategoryKey, Role[]>,
+    );
+  }, [filteredRoles]);
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
+
+  const handleSelectCategory = (categoryKey: "all" | CategoryKey) => {
+    setSelectedCategory((current) => {
+      if (current === categoryKey) {
+        return "all";
+      }
+      return categoryKey;
+    });
+  };
 
   return (
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
-      <header className="mb-4">
-        <h2 className="text-lg font-semibold text-white">Rollen-Studio</h2>
-        <p className="mt-1 text-sm leading-6 text-white/70">
-          Wähle eine Stimme für Disa AI. Die Karten sind mobile-first gestaltet – Tippen genügt.
-        </p>
+      <header className="mb-5 space-y-4">
+        <div>
+          <h2 className="text-lg font-semibold text-white">Rollen-Studio</h2>
+          <p className="mt-1 text-sm leading-6 text-white/70">
+            Wähle eine Stimme für Disa AI. Nutze Suche oder Filter, um schneller passende Rollen zu
+            entdecken.
+          </p>
+        </div>
+
+        {activeRole ? (
+          <div className="glass-card border-white/8 flex items-start justify-between gap-3 rounded-2xl border bg-white/5 px-4 py-3 text-xs text-white/80">
+            <div className="space-y-1">
+              <p className="text-[11px] uppercase tracking-wide text-white/50">Aktive Rolle</p>
+              <p className="text-sm font-medium text-white">{activeRole.name}</p>
+              <p className="text-xs text-white/60">{summariseRole(activeRole)}</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleResetRole}
+              className="inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              Zurücksetzen
+            </button>
+          </div>
+        ) : null}
+
+        <div className="space-y-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="relative flex-1">
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30"
+                aria-hidden="true"
+              />
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Rollen durchsuchen …"
+                className="w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-12 text-sm text-white placeholder:text-white/40 focus:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
+                aria-label="Rollen durchsuchen"
+              />
+              {searchTerm ? (
+                <button
+                  type="button"
+                  onClick={handleClearSearch}
+                  className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                  aria-label="Suche zurücksetzen"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              ) : null}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-white/60">
+              <Filter className="hidden h-4 w-4 text-white/30 sm:block" />
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                {totalMatchCount} von {orderedRoles.length} Rollen sichtbar
+              </span>
+            </div>
+          </div>
+
+          <div className="-mx-2 flex items-center gap-2 overflow-x-auto pb-1">
+            <button
+              type="button"
+              onClick={() => handleSelectCategory("all")}
+              className={cn(
+                "glass-card shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition",
+                selectedCategory === "all" ? "text-white" : "text-white/70",
+              )}
+            >
+              Alle
+            </button>
+            {CATEGORY_ORDER.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => handleSelectCategory(category)}
+                className={cn(
+                  "glass-card shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition",
+                  selectedCategory === category ? "text-white" : "text-white/70",
+                )}
+                aria-pressed={selectedCategory === category}
+              >
+                <span className="mr-1" aria-hidden="true">
+                  {CATEGORY_ICONS[category]}
+                </span>
+                {category}
+                <span className="ml-1 text-white/50">
+                  {categoriesInUse[category] ? `· ${categoriesInUse[category]}` : ""}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       <div className="space-y-6 pb-8" data-testid="role-card-grid">
@@ -294,79 +457,72 @@ function RolesTab() {
             Rollen werden geladen ...
           </div>
         ) : null}
-        {(() => {
-          // Gruppiere Rollen nach Kategorien für bessere Übersichtlichkeit
-          const groupedRoles = orderedRoles.reduce<Record<string, typeof orderedRoles>>(
-            (acc, role) => {
-              const category = role.category || "Spezial";
-              if (!acc[category]) acc[category] = [];
-              acc[category].push(role);
-              return acc;
-            },
-            {},
-          );
+        {totalMatchCount === 0 ? (
+          <div className="glass-card space-y-3 p-6 text-center text-sm text-white/70">
+            <p>Keine Rollen gefunden.</p>
+            <p className="text-xs text-white/50">
+              Passe die Filter an oder lösche den Suchbegriff, um alle Rollen erneut zu sehen.
+            </p>
+          </div>
+        ) : (
+          resolvedCategoriesToRender.map((category) => {
+            const roles = groupedRoles[category];
+            if (!roles || roles.length === 0) return null;
 
-          // Kategorie-Icons für visuelle Differenzierung
-          const categoryIcons: Record<string, string> = {
-            Alltag: "🚀",
-            "Business & Karriere": "💼",
-            "Kreativ & Unterhaltung": "🎨",
-            "Lernen & Bildung": "🎓",
-            "Leben & Familie": "🏠",
-            "Experten & Beratung": "🩺",
-            Erwachsene: "🔒",
-            Spezial: "⭐",
-          };
-
-          return categoryOrder
-            .map((category) => {
-              const roles = groupedRoles[category];
-              if (!roles || roles.length === 0) return null;
-
-              return (
-                <section key={category} className="space-y-3">
+            return (
+              <section key={category} className="space-y-3">
+                <div className="flex items-center justify-between gap-3">
                   <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-white/90">
-                    <span>{categoryIcons[category] || "📋"}</span>
+                    <span aria-hidden="true">{CATEGORY_ICONS[category] || "📋"}</span>
                     {category}
                     <span className="text-xs font-normal text-white/60">({roles.length})</span>
                   </h3>
-                  <div className="grid grid-cols-1 gap-2.5">
-                    {roles.map((role) => {
-                      const accent = CATEGORY_TINT_MAP[category];
-                      const tint = categoryTints[category] ?? (DEFAULT_TINT as GlassTint);
-                      const badgeAccent = CATEGORY_BADGE_STYLES[category];
-                      const style = accent
-                        ? ({
-                            "--card-overlay-gradient": accent.overlay,
-                            "--card-glow-shadow": accent.glow,
-                          } as CSSProperties & Record<string, string>)
-                        : undefined;
+                  {selectedCategory !== "all" ? (
+                    <button
+                      type="button"
+                      onClick={() => handleSelectCategory("all")}
+                      className="text-xs text-white/50 underline-offset-4 transition hover:text-white/80 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                    >
+                      Filter aufheben
+                    </button>
+                  ) : null}
+                </div>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  {roles.map((role) => {
+                    const accent = CATEGORY_TINT_MAP[category];
+                    const tint = categoryTints[category] ?? DEFAULT_TINT;
+                    const badgeAccent = CATEGORY_BADGE_STYLES[category];
+                    const style = accent
+                      ? ({
+                          "--card-overlay-gradient": accent.overlay,
+                          "--card-glow-shadow": accent.glow,
+                        } as CSSProperties & Record<string, string>)
+                      : undefined;
 
-                      return (
-                        <RoleCard
-                          key={role.id}
-                          title={role.name}
-                          description={summariseRole(role)}
-                          badge={role.category}
-                          tint={tint}
-                          style={style}
-                          contrastOverlay={false}
-                          showDescriptionOnToggle
-                          badgeStyle={badgeAccent?.style}
-                          badgeClassName={badgeAccent?.className}
-                          isActive={activeRole?.id === role.id}
-                          onClick={() => setActiveRole(role)}
-                          aria-label={`Rolle ${role.name} auswählen`}
-                          data-testid={`role-card-${role.id}`}
-                        />
-                      );
-                    })}
-                  </div>
-                </section>
-              );
-            })
-            .filter(Boolean);
-        })()}
+                    return (
+                      <RoleCard
+                        key={role.id}
+                        title={role.name}
+                        description={summariseRole(role)}
+                        badge={role.category}
+                        tint={tint}
+                        style={style}
+                        contrastOverlay={false}
+                        showDescriptionOnToggle
+                        badgeStyle={badgeAccent?.style}
+                        badgeClassName={badgeAccent?.className}
+                        isActive={activeRole?.id === role.id}
+                        onClick={() => setActiveRole(role)}
+                        aria-label={`Rolle ${role.name} auswählen`}
+                        data-testid={`role-card-${role.id}`}
+                      />
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })
+        )}
       </div>
 
       <div className="mt-4 flex flex-col gap-2">
