@@ -28,13 +28,18 @@ test.describe("Rollen-Screen", () => {
     expect(boundingBox?.width ?? 0).toBeGreaterThanOrEqual(48);
 
     await neutralCard.focus();
-    const boxShadow = await neutralCard.evaluate((el) => getComputedStyle(el).boxShadow);
-    expect(boxShadow).not.toBe("none");
-
-    const beforeBackground = await neutralCard.evaluate(
-      (el) => getComputedStyle(el, "::before").backgroundImage,
+    const backgroundColor = await neutralCard.evaluate(
+      (el) => getComputedStyle(el).backgroundColor,
     );
-    expect(beforeBackground).toMatch(/gradient/i);
+    expect(backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+
+    const borderColor = await neutralCard.evaluate((el) => getComputedStyle(el).borderColor);
+    expect(borderColor).not.toBe("rgba(0, 0, 0, 0)");
+
+    const accentBar = neutralCard.locator("span").first();
+    await expect(accentBar).toBeVisible();
+    const accentBarColor = await accentBar.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(accentBarColor).not.toBe("rgba(0, 0, 0, 0)");
 
     const axe = new AxeBuilder({ page })
       .include("[data-testid='role-card-grid']")

@@ -24,9 +24,7 @@ test.describe("Smoke Tests", () => {
     );
     await expect(heroTextLocator).toBeVisible({ timeout: 10000 });
 
-    const quickstartsLocator = page
-      .locator(".grid.grid-cols-1.gap-3.pb-8 .min-h-\\[152px\\].cursor-pointer")
-      .first();
+    const quickstartsLocator = page.getByTestId(/quickstart-/).first();
     await expect(quickstartsLocator).toBeVisible({ timeout: 10000 });
   });
 
