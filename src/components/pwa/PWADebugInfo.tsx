@@ -56,8 +56,8 @@ export function PWADebugInfo() {
       <Button
         onClick={() => setIsVisible(true)}
         variant="ghost"
-        size="sm"
-        className="fixed right-4 top-4 z-50 h-8 w-8 p-0 text-white/60 hover:bg-white/10 hover:text-white"
+        size="icon"
+        className="fixed right-4 top-4 z-50 h-8 w-8"
         aria-label="PWA Debug-Informationen anzeigen"
         title="PWA Debug-Informationen anzeigen"
       >
@@ -68,15 +68,15 @@ export function PWADebugInfo() {
 
   return (
     <div className="fixed right-4 top-4 z-50 max-w-sm">
-      <div className="glass-card p-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+      <div className="rounded-lg border border-border bg-surface-1 p-4 shadow-level">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-white">PWA Debug Info</h3>
+            <h3 className="text-sm font-semibold text-text-0">PWA Debug Info</h3>
             <Button
               onClick={() => setIsVisible(false)}
               variant="ghost"
-              size="sm"
-              className="h-6 w-6 p-0 text-white/60 hover:text-white"
+              size="icon"
+              className="h-6 w-6"
               aria-label="PWA Debug-Informationen schließen"
               title="Schließen"
             >
@@ -84,7 +84,7 @@ export function PWADebugInfo() {
             </Button>
           </div>
 
-          <div className="space-y-1 text-xs text-white/80">
+          <div className="space-y-1 text-xs text-text-1">
             <div>
               <span className="font-medium">Platform:</span>{" "}
               {debugInfo.isIOS ? "iOS" : debugInfo.isAndroid ? "Android" : "Desktop"}
@@ -122,9 +122,9 @@ export function PWADebugInfo() {
             </div>
           </div>
 
-          <div className="mt-3 border-t border-white/20 pt-2">
-            <p className="text-xs text-white/60">PWA installiert sich nur wenn:</p>
-            <ul className="mt-1 space-y-0.5 text-xs text-white/60">
+          <div className="mt-3 border-t border-border pt-2">
+            <p className="text-xs text-text-1">PWA installiert sich nur wenn:</p>
+            <ul className="mt-1 space-y-0.5 text-xs text-text-1">
               <li>• HTTPS (nicht localhost)</li>
               <li>• Chrome/Android</li>
               <li>• Manifest vorhanden</li>

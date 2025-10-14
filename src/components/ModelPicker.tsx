@@ -9,8 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Icon } from "./ui/Icon";
 import { Input } from "./ui/input";
 
-// All the logic and type definitions from the original file are preserved.
-
 type RolePolicy = Safety | "any";
 type Price = { in?: number; out?: number };
 
@@ -71,9 +69,7 @@ function safetyLabel(value: ModelEntry["safety"]): string {
   return "Flexibel";
 }
 
-// The main component with the new rendering logic
 export default function ModelPicker({ value, onChange, policyFromRole = "any" }: Props) {
-  // All the hooks (useState, useEffect, useMemo, useCallback) from the original file are preserved.
   const [all, setAll] = React.useState<ModelEntry[]>([]);
   const [searchInput, setSearchInput] = React.useState("");
   const [q, setQ] = React.useState("");
@@ -283,16 +279,15 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
     isFavoriteModel,
   ]);
 
-  // NEW RENDER LOGIC
   return (
     <section className="space-y-6" data-testid="settings-model-picker">
       {(!getApiKey() || getApiKey() === "") && (
-        <div className="rounded-lg bg-yellow-500/10 p-4 text-sm text-yellow-200" role="alert">
+        <div className="bg-warn/10 text-warn rounded-lg p-4 text-sm" role="alert">
           Hinweis: Für das Laden der Modell‑Liste ist ein OpenRouter API‑Key nötig (Einstellungen).
         </div>
       )}
       {policyFromRole !== "any" && (
-        <div className="rounded-lg bg-blue-500/10 p-4 text-sm text-blue-200" role="alert">
+        <div className="rounded-lg bg-brand/10 p-4 text-sm text-brand" role="alert">
           Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste
           entsprechend gefiltert.
         </div>
@@ -354,7 +349,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       </div>
 
       {showAdvanced && (
-        <Card className="bg-white/5">
+        <Card>
           <CardContent className="pt-6">
             <div
               className="grid grid-cols-2 gap-4 md:grid-cols-3"
@@ -362,7 +357,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
               aria-label="Detailfilter"
             >
               <div className="flex flex-col gap-1">
-                <label htmlFor="provider-select" className="text-text-muted text-sm">
+                <label htmlFor="provider-select" className="text-sm text-text-1">
                   Provider
                 </label>
                 <select
@@ -370,18 +365,17 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                   value={provider}
                   onChange={(e) => setProvider(e.target.value)}
                   aria-label="Provider filtern"
-                  className="placeholder:text-text-muted h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="h-10 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 >
                   {providers.map((p) => (
-                    <option key={p} value={p} className="bg-bg-elevated">
+                    <option key={p} value={p} className="bg-surface-2">
                       {p === "all" ? "Alle Provider" : p}
                     </option>
                   ))}
                 </select>
               </div>
-              {/* Other selects would be styled similarly */}
               <div className="flex flex-col gap-1">
-                <label htmlFor="sort-select" className="text-text-muted text-sm">
+                <label htmlFor="sort-select" className="text-sm text-text-1">
                   Sortieren nach
                 </label>
                 <select
@@ -391,15 +385,15 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                     setSortBy(e.target.value as "label" | "price" | "ctx")
                   }
                   aria-label="Sortierung"
-                  className="placeholder:text-text-muted h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="h-10 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 >
-                  <option value="label" className="bg-bg-elevated">
+                  <option value="label" className="bg-surface-2">
                     Name
                   </option>
-                  <option value="price" className="bg-bg-elevated">
+                  <option value="price" className="bg-surface-2">
                     Preis
                   </option>
-                  <option value="ctx" className="bg-bg-elevated">
+                  <option value="ctx" className="bg-surface-2">
                     Kontext
                   </option>
                 </select>
@@ -412,7 +406,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       <div role="listbox" aria-label="Modelle">
         {loading ? (
           <div
-            className="text-text-muted flex flex-col items-center justify-center p-8"
+            className="flex flex-col items-center justify-center p-8 text-text-1"
             role="status"
             aria-label="Modelle werden geladen"
           >
@@ -430,10 +424,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         )}
 
         {!loading && filtered.length === 0 && (
-          <div
-            className="text-text-muted flex flex-col items-center justify-center p-8"
-            role="status"
-          >
+          <div className="flex flex-col items-center justify-center p-8 text-text-1" role="status">
             <Icon name="search-off" size={48} className="mb-4" />
             <h3 className="text-lg font-semibold">Keine Modelle gefunden</h3>
             <p className="text-sm">Passe deine Filter oder den Suchbegriff an.</p>
@@ -514,8 +505,8 @@ function ModelListVirtualized({
         tabIndex={0}
         className={cn(
           "cursor-pointer transition-all",
-          active && "ring-2 ring-primary",
-          "focus-visible:ring-2 focus-visible:ring-primary",
+          active && "ring-2 ring-brand",
+          "focus-visible:ring-2 focus-visible:ring-brand",
         )}
         onClick={handleSelect}
         onKeyDown={handleKeyDown}
@@ -542,7 +533,7 @@ function ModelListVirtualized({
           </Button>
         </CardHeader>
         <CardContent className="space-y-4 pt-2">
-          <div className="text-text-muted flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-sm text-text-1">
             <span title="Kontextfenster">
               {m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—"}
             </span>

@@ -9,7 +9,7 @@
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "background_color": "#0b0f14",
-  "theme_color": "#22d3ee",
+  "theme_color": "#007AFF",
   "categories": ["productivity", "utilities"],
   "lang": "de",
   "scope": "/",
@@ -59,6 +59,13 @@
       "name": "Neuer Chat",
       "short_name": "Chat",
       "description": "Starte eine neue Unterhaltung",
+      "url": "/chat",
+      "icons": [{ "src": "/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Letzte Sitzung",
+      "short_name": "Letzte",
+      "description": "Zurück zur letzten Unterhaltung",
       "url": "/chat",
       "icons": [{ "src": "/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png", "sizes": "96x96" }]
     },

@@ -1,23 +1,20 @@
-/* --- Modern Reset --- */
+/* Minimal reset for the mobile-first shell */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
+
 * {
   margin: 0;
 }
+
 html,
 body,
 #app {
-  height: 100%;
-  /* Mobile viewport fix - use dynamic viewport units */
-  height: 100dvh;
-  /* Fallback for older browsers */
-  height: 100svh;
-  min-height: var(--vh, 100dvh);
-  height: var(--vh, 100dvh);
+  min-height: 100dvh;
 }
+
 img,
 svg,
 video,
@@ -25,12 +22,14 @@ canvas {
   max-width: 100%;
   display: block;
 }
+
 button,
 input,
 select,
 textarea {
   font: inherit;
 }
+
 :root {
   --vh: 100dvh;
   --inset-t: env(safe-area-inset-top, 0px);
@@ -40,46 +39,27 @@ textarea {
   scroll-behavior: smooth;
 }
 
-/* --- Page Base --- */
-/* page colors/typography are themed via tailwind + theme.css */
-
-/* --- Reduced motion --- */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* --- Safe Area Support for mobile devices --- */
 body {
-  /* Hintergrundbild wird in src/index.css gesetzt */
-  background-attachment: fixed;
-  color: var(--color-neutral-50);
-  /* iOS safe area insets */
+  background: var(--surface-0);
+  color: var(--text-0);
   padding-top: var(--inset-t);
   padding-bottom: var(--inset-b);
   padding-left: var(--inset-l);
   padding-right: var(--inset-r);
-  /* Prevent zoom on mobile when focusing inputs */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   touch-action: manipulation;
 }
 
-/* Mobile-optimized styles - Applied globally since we're mobile-only */
-* {
-  /* Improve touch targets */
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Prevent horizontal scroll on mobile */
 html,
 body {
   overflow-x: hidden;
-  position: relative;
 }
 
-/* Minimum touch target sizes (44px minimum for accessibility) */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 button,
 [role="button"],
 a,
@@ -90,34 +70,7 @@ textarea {
   min-width: 44px;
 }
 
-/* Ensure interactive elements have sufficient padding */
-button:not(.btn-icon),
-[role="button"]:not(.btn-icon) {
-  padding: 12px 16px;
-}
-
-/* Icon-only buttons need special handling */
-.btn-icon {
-  min-height: 44px;
-  min-width: 44px;
-  padding: 10px;
-}
-
-/* Improve text readability on mobile */
-body {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-/* Prevent zoom on form inputs */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea {
-  font-size: 16px; /* Prevents zoom on iOS */
-}
-
-/* Safe area utilities */
+/* Safe area helpers */
 .safe-top {
   padding-top: var(--inset-t);
 }
@@ -145,7 +98,6 @@ textarea {
   padding-right: var(--inset-r);
 }
 
-/* Margin variants for safe areas */
 .safe-mt {
   margin-top: var(--inset-t);
 }
@@ -159,26 +111,12 @@ textarea {
   margin-right: var(--inset-r);
 }
 
-/* --- Scrollbars (dezent) --- */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-}
-*::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-*::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-}
-
-:focus-visible {
-  outline: 2px solid rgba(147, 197, 253, 0.85);
-  outline-offset: 3px;
-}
-
-.dark :focus-visible {
-  outline: 2px solid rgba(129, 140, 248, 0.9);
-  outline-offset: 3px;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

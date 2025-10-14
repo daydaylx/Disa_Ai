@@ -27,29 +27,29 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 
   return (
     <div
-      className={cn("bg-bg-danger-subtle border-danger rounded-md border p-3", className)}
+      className={cn("rounded-md border border-danger/40 bg-danger/10 p-3", className)}
       role="alert"
     >
       <div className="flex items-start gap-2">
-        <div className="text-danger mt-0.5">
+        <div className="mt-0.5 text-danger">
           <Icon name="error" />
         </div>
         <div className="flex-1">
-          <div className="text-danger font-semibold">{title}</div>
-          <div className="text-danger text-sm">{message}</div>
+          <div className="font-semibold text-danger">{title}</div>
+          <div className="text-sm text-danger">{message}</div>
           {details ? (
             <details className="mt-1">
               <summary className="cursor-pointer text-xs underline underline-offset-4">
                 Details
               </summary>
-              <pre className="border-border-subtle bg-surface-100 text-text-primary mt-1 max-h-48 overflow-auto rounded border p-2 text-xs">
+              <pre className="mt-1 max-h-48 overflow-auto rounded border border-border-subtle bg-surface-2 p-2 text-xs text-text-strong">
                 {details}
               </pre>
             </details>
           ) : null}
           {onRetry ? (
             <div className="mt-2">
-              <Button variant="default" size="sm" onClick={onRetry} aria-label="Erneut versuchen">
+              <Button variant="outline" size="sm" onClick={onRetry} aria-label="Erneut versuchen">
                 <Icon name="info" className="mr-2" /> Erneut versuchen
               </Button>
             </div>

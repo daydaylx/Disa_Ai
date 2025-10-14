@@ -1,12 +1,10 @@
-import { type CSSProperties, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
 import { RoleCard } from "../components/studio/RoleCard";
+import { Button } from "../components/ui/button";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
-import { useGlassPalette } from "../hooks/useGlassPalette";
-import type { GlassTint } from "../lib/theme/glass";
-import { FRIENDLY_TINTS } from "../lib/theme/glass";
 import { cn } from "../lib/utils";
 
 function formatContext(ctx?: number) {
@@ -16,16 +14,6 @@ function formatContext(ctx?: number) {
   return `${ctx.toLocaleString()} Token`;
 }
 
-// Unused - keeping for potential future use
-// function formatPrice(price?: number) {
-//   if (price === undefined || price === null || typeof price !== "number") return "unbekannt";
-//   if (price === 0) return "Kostenlos";
-//   return `$${price.toFixed(3)}/1k`;
-// }
-
-const DEFAULT_TINT: GlassTint = FRIENDLY_TINTS[0]!;
-
-// === Premium Modelle ===
 const premiumModels = [
   {
     id: "perplexity/llama-3.1-sonar-large-128k-online",
@@ -68,7 +56,6 @@ const premiumModels = [
   },
 ] as const;
 
-// === Alltags Modelle ===
 const everydayModels = [
   {
     id: "meta-llama/llama-3.1-8b-instruct",
@@ -122,7 +109,6 @@ const everydayModels = [
   },
 ] as const;
 
-// === Free Modelle ===
 const freeModels = [
   {
     id: "meta-llama/llama-3.3-70b-instruct:free",
@@ -175,7 +161,6 @@ const freeModels = [
   },
 ] as const;
 
-// === Unzensiert Modelle ===
 const uncensoredModels = [
   {
     id: "thedrummer/cydonia-24b-v4.1",
@@ -219,7 +204,6 @@ const uncensoredModels = [
   },
 ] as const;
 
-// === Code-Modelle ===
 const codeModels = [
   {
     id: "deepseek/deepseek-coder",
@@ -245,8 +229,6 @@ const codeModels = [
 
 export default function ModelsPage() {
   const { activeRole } = useStudio();
-  const palette = useGlassPalette();
-  const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
   const toasts = useToasts();
   const [selected, setSelected] = useState(() => {
     try {
@@ -255,94 +237,6 @@ export default function ModelsPage() {
       return "";
     }
   });
-
-  // Kategorie-spezifische Base-Tints für bessere Übersichtlichkeit
-  const categoryKeys = ["premium", "everyday", "free", "uncensored", "code"] as const;
-  const MODEL_CATEGORY_TINTS: Record<(typeof categoryKeys)[number], GlassTint> = {
-    premium: { from: "hsla(280, 92%, 64%, 0.6)", to: "hsla(200, 88%, 58%, 0.4)" },
-    everyday: { from: "hsla(48, 92%, 64%, 0.58)", to: "hsla(142, 88%, 58%, 0.38)" },
-    free: { from: "hsla(165, 90%, 60%, 0.6)", to: "hsla(44, 88%, 58%, 0.4)" },
-    uncensored: { from: "hsla(330, 90%, 66%, 0.6)", to: "hsla(262, 90%, 58%, 0.42)" },
-    code: { from: "hsla(205, 92%, 60%, 0.6)", to: "hsla(295, 88%, 58%, 0.42)" },
-  };
-
-  const categoryTints = categoryKeys.reduce<Record<string, GlassTint>>((acc, key, index) => {
-    acc[key] =
-      MODEL_CATEGORY_TINTS[key] ?? friendlyPalette[index % friendlyPalette.length] ?? DEFAULT_TINT;
-    return acc;
-  }, {});
-
-  const MODEL_BADGE_STYLES: Record<
-    (typeof categoryKeys)[number],
-    { style: CSSProperties; className?: string }
-  > = {
-    premium: {
-      style: {
-        background: "linear-gradient(135deg, rgba(207, 168, 255, 0.26), rgba(128, 226, 255, 0.24))",
-        borderColor: "rgba(210, 190, 255, 0.45)",
-        color: "rgba(21, 12, 32, 0.9)",
-      },
-    },
-    everyday: {
-      style: {
-        background: "linear-gradient(135deg, rgba(255, 220, 140, 0.26), rgba(160, 255, 190, 0.24))",
-        borderColor: "rgba(255, 230, 170, 0.45)",
-        color: "rgba(17, 19, 7, 0.88)",
-      },
-    },
-    free: {
-      style: {
-        background: "linear-gradient(135deg, rgba(130, 255, 200, 0.26), rgba(220, 255, 160, 0.24))",
-        borderColor: "rgba(170, 255, 210, 0.45)",
-        color: "rgba(6, 20, 13, 0.88)",
-      },
-    },
-    uncensored: {
-      style: {
-        background: "linear-gradient(135deg, rgba(255, 176, 220, 0.28), rgba(200, 160, 255, 0.24))",
-        borderColor: "rgba(255, 200, 230, 0.45)",
-        color: "rgba(26, 13, 22, 0.9)",
-      },
-    },
-    code: {
-      style: {
-        background: "linear-gradient(135deg, rgba(152, 210, 255, 0.26), rgba(200, 168, 255, 0.24))",
-        borderColor: "rgba(182, 222, 255, 0.45)",
-        color: "rgba(13, 22, 32, 0.9)",
-      },
-    },
-  };
-
-  const MODEL_CARD_ACCENTS: Record<
-    (typeof categoryKeys)[number],
-    { overlay: string; glow: string }
-  > = {
-    premium: {
-      overlay:
-        "linear-gradient(145deg, hsla(280, 85%, 68%, 0.34) 0%, hsla(200, 80%, 63%, 0.32) 45%, hsla(260, 78%, 58%, 0.26) 100%)",
-      glow: "0 32px 58px -24px hsla(260, 80%, 62%, 0.32)",
-    },
-    everyday: {
-      overlay:
-        "linear-gradient(145deg, hsla(52, 85%, 68%, 0.34) 0%, hsla(138, 80%, 63%, 0.32) 45%, hsla(85, 78%, 58%, 0.26) 100%)",
-      glow: "0 32px 58px -24px hsla(85, 80%, 62%, 0.32)",
-    },
-    free: {
-      overlay:
-        "linear-gradient(145deg, hsla(120, 85%, 68%, 0.34) 0%, hsla(160, 80%, 63%, 0.32) 45%, hsla(295, 78%, 58%, 0.26) 100%)",
-      glow: "0 32px 58px -24px hsla(295, 80%, 62%, 0.32)",
-    },
-    uncensored: {
-      overlay:
-        "linear-gradient(145deg, hsla(320, 85%, 68%, 0.34) 0%, hsla(260, 80%, 63%, 0.32) 45%, hsla(30, 78%, 58%, 0.26) 100%)",
-      glow: "0 32px 58px -24px hsla(30, 80%, 62%, 0.32)",
-    },
-    code: {
-      overlay:
-        "linear-gradient(145deg, hsla(200, 85%, 68%, 0.34) 0%, hsla(150, 80%, 63%, 0.32) 45%, hsla(230, 78%, 58%, 0.26) 100%)",
-      glow: "0 32px 58px -24px hsla(230, 80%, 62%, 0.32)",
-    },
-  };
 
   const selectModelById = (modelId: string, label?: string) => {
     setSelected(modelId);
@@ -358,30 +252,16 @@ export default function ModelsPage() {
     });
   };
 
-  // Helper für einheitliche Featured-Model-Karten
-  const renderFeaturedCard = (
-    item: {
-      id: string;
-      label: string;
-      provider: string;
-      priceIn: number;
-      priceOut: number;
-      ctx?: number;
-      description: string;
-    },
-    categoryKey: "premium" | "everyday" | "free" | "uncensored" | "code",
-  ) => {
+  const renderFeaturedCard = (item: {
+    id: string;
+    label: string;
+    provider: string;
+    priceIn: number;
+    priceOut: number;
+    ctx?: number;
+    description: string;
+  }) => {
     const isSelected = selected === item.id;
-    // Use category-specific tint instead of palette offset
-    const tint = categoryTints[categoryKey] ?? DEFAULT_TINT;
-    const badgeAccent = MODEL_BADGE_STYLES[categoryKey];
-    const accent = MODEL_CARD_ACCENTS[categoryKey];
-    const style = accent
-      ? ({
-          "--card-overlay-gradient": accent.overlay,
-          "--card-glow-shadow": accent.glow,
-        } as CSSProperties & Record<string, string>)
-      : undefined;
 
     return (
       <RoleCard
@@ -392,18 +272,11 @@ export default function ModelsPage() {
         } | Out: ${
           item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)}/1M`
         }${item.ctx ? ` | Kontext: ${formatContext(item.ctx)}` : ""}`}
-        tint={tint}
         onClick={() => selectModelById(item.id, item.label)}
         badge={item.provider}
         showDescriptionOnToggle
-        badgeStyle={badgeAccent?.style}
-        badgeClassName={badgeAccent?.className}
-        style={style}
         isActive={isSelected}
-        className={cn(
-          "min-h-[140px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
-          isSelected && "ring-2 ring-white/30",
-        )}
+        className={cn("min-h-[140px]", isSelected && "ring-2 ring-brand")}
       />
     );
   };
@@ -411,12 +284,12 @@ export default function ModelsPage() {
   return (
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
       <header className="mb-4">
-        <h1 className="text-lg font-semibold text-white" data-testid="models-title">
+        <h1 className="text-lg font-semibold text-text-0" data-testid="models-title">
           Modellkatalog
         </h1>
-        <p className="mt-1 text-sm leading-6 text-white/85">
+        <p className="mt-1 text-sm leading-6 text-text-1">
           Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich jetzt im{" "}
-          <Link to="/roles" className="decoration-accent-300/60 text-accent-300 underline">
+          <Link to="/roles" className="text-brand underline">
             Rollen-Studio
           </Link>{" "}
           auswählen.
@@ -427,34 +300,27 @@ export default function ModelsPage() {
         <h2 id="active-role-heading" className="sr-only">
           Aktive Rolle
         </h2>
-        <RoleCard
-          title="Aktive Rolle"
-          description={`${activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"} - Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.`}
-          tint={friendlyPalette[0] ?? DEFAULT_TINT}
-          onClick={() => {}}
-          badge="Rollen-Studio"
-          variant="surface"
-          className="flex h-[100px] items-center justify-center"
-        >
-          <div className="flex items-center justify-end">
-            <Link
-              to="/roles"
-              className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-            >
+        <div className="rounded-lg border border-border bg-surface-1 p-4">
+          <h3 className="font-semibold text-text-0">Aktive Rolle</h3>
+          <p className="text-sm text-text-1">
+            {`${activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"} - Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.`}
+          </p>
+          <Link to="/roles">
+            <Button variant="outline" size="sm" className="mt-4">
               Rollen öffnen
-            </Link>
-          </div>
-        </RoleCard>
+            </Button>
+          </Link>
+        </div>
       </section>
 
       <section aria-labelledby="premium-models-heading" className="grid grid-cols-1 gap-3 pb-8">
         <h2
           id="premium-models-heading"
-          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+          className="text-sm font-semibold uppercase tracking-wide text-text-0"
         >
           🏆 Premium Modelle
         </h2>
-        <p className="text-xs text-white/75">
+        <p className="text-xs text-text-1">
           Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3
         </p>
         <div
@@ -462,18 +328,18 @@ export default function ModelsPage() {
           aria-labelledby="premium-models-heading"
           className="grid grid-cols-1 gap-4"
         >
-          {premiumModels.map((item) => renderFeaturedCard(item, "premium"))}
+          {premiumModels.map((item) => renderFeaturedCard(item))}
         </div>
       </section>
 
       <section aria-labelledby="everyday-models-heading" className="grid grid-cols-1 gap-3 pb-8">
         <h2
           id="everyday-models-heading"
-          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+          className="text-sm font-semibold uppercase tracking-wide text-text-0"
         >
           💼 Alltags Modelle
         </h2>
-        <p className="text-xs text-white/75">
+        <p className="text-xs text-text-1">
           Zuverlässige Modelle für tägliche Aufgaben – gutes Preis-Leistungs-Verhältnis
         </p>
         <div
@@ -481,33 +347,33 @@ export default function ModelsPage() {
           aria-labelledby="everyday-models-heading"
           className="grid grid-cols-1 gap-4"
         >
-          {everydayModels.map((item) => renderFeaturedCard(item, "everyday"))}
+          {everydayModels.map((item) => renderFeaturedCard(item))}
         </div>
       </section>
 
       <section aria-labelledby="free-models-heading" className="grid grid-cols-1 gap-3 pb-8">
         <h2
           id="free-models-heading"
-          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+          className="text-sm font-semibold uppercase tracking-wide text-text-0"
         >
           🎁 Free Modelle
         </h2>
-        <p className="text-xs text-white/75">
+        <p className="text-xs text-text-1">
           Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität
         </p>
         <div role="group" aria-labelledby="free-models-heading" className="grid grid-cols-1 gap-4">
-          {freeModels.map((item) => renderFeaturedCard(item, "free"))}
+          {freeModels.map((item) => renderFeaturedCard(item))}
         </div>
       </section>
 
       <section aria-labelledby="uncensored-models-heading" className="grid grid-cols-1 gap-3 pb-8">
         <h2
           id="uncensored-models-heading"
-          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+          className="text-sm font-semibold uppercase tracking-wide text-text-0"
         >
           🎭 Unzensiert Modelle
         </h2>
-        <p className="text-xs text-white/75">
+        <p className="text-xs text-text-1">
           Kreatives Schreiben & Rollenspiel – weniger Filter, mehr Freiheit
         </p>
         <div
@@ -515,22 +381,22 @@ export default function ModelsPage() {
           aria-labelledby="uncensored-models-heading"
           className="grid grid-cols-1 gap-4"
         >
-          {uncensoredModels.map((item) => renderFeaturedCard(item, "uncensored"))}
+          {uncensoredModels.map((item) => renderFeaturedCard(item))}
         </div>
       </section>
 
       <section aria-labelledby="code-models-heading" className="grid grid-cols-1 gap-3 pb-8">
         <h2
           id="code-models-heading"
-          className="text-sm font-semibold uppercase tracking-wide text-white/90"
+          className="text-sm font-semibold uppercase tracking-wide text-text-0"
         >
           💻 Code-Modelle
         </h2>
-        <p className="text-xs text-white/75">
+        <p className="text-xs text-text-1">
           Spezialisierte Modelle für Programmierung und Code-Analyse
         </p>
         <div role="group" aria-labelledby="code-models-heading" className="grid grid-cols-1 gap-4">
-          {codeModels.map((item) => renderFeaturedCard(item, "code"))}
+          {codeModels.map((item) => renderFeaturedCard(item))}
         </div>
       </section>
     </div>

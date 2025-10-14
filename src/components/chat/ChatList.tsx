@@ -1,45 +1,18 @@
 import { Clock, MessageSquare, Trash2 } from "lucide-react";
-import { type CSSProperties, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { getQuickstartsWithFallback } from "../../config/quickstarts";
 import { getRoles } from "../../data/roles";
-import { useGlassPalette } from "../../hooks/useGlassPalette";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import type { Conversation } from "../../lib/conversation-manager";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
-import { FRIENDLY_TINTS, type GlassTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { RoleCard } from "../studio/RoleCard";
+import { Button } from "../ui/button";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
-
-const QUICKSTART_TINTS: GlassTint[] = FRIENDLY_TINTS;
-
-const QUICKSTART_GRADIENTS = [
-  "from-rose-400/70 via-orange-300/60 to-amber-300/50",
-  "from-sky-400/70 via-indigo-300/60 to-purple-300/50",
-  "from-emerald-400/70 via-teal-300/60 to-cyan-300/50",
-  "from-fuchsia-400/70 via-pink-400/60 to-violet-300/50",
-  "from-blue-400/70 via-sky-300/60 to-cyan-200/50",
-  "from-amber-300/70 via-orange-300/60 to-rose-400/50",
-] as const;
-
-type CardTintStyle = CSSProperties & {
-  "--card-tint-from"?: string;
-  "--card-tint-to"?: string;
-};
-
-const HERO_CARD_TINT: CardTintStyle = {
-  "--card-tint-from": "rgba(249, 168, 212, 0.35)",
-  "--card-tint-to": "rgba(129, 140, 248, 0.3)",
-};
-
-const QUICKSTART_ERROR_TINT: CardTintStyle = {
-  "--card-tint-from": "rgba(96, 165, 250, 0.32)",
-  "--card-tint-to": "rgba(59, 130, 246, 0.26)",
-};
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
   {
@@ -69,8 +42,8 @@ function createRoleQuickstarts(): QuickstartAction[] {
   if (roles.length === 0) return [];
   return [...roles]
     .sort(() => Math.random() - 0.5)
-    .slice(0, QUICKSTART_TINTS.length)
-    .map((role, index) => ({
+    .slice(0, 4)
+    .map((role) => ({
       id: `role-${role.id}`,
       title: role.name,
       subtitle: role.description ?? "Aktiviere diese Chat-Rolle und starte mit einer ersten Frage.",
@@ -79,8 +52,6 @@ function createRoleQuickstarts(): QuickstartAction[] {
       persona: role.id,
       prompt: `Starte ein Gespräch als ${role.name}.`,
       tags: role.tags,
-      gradient:
-        QUICKSTART_GRADIENTS[index % QUICKSTART_GRADIENTS.length] ?? QUICKSTART_GRADIENTS[0],
     }));
 }
 
@@ -119,9 +90,6 @@ export function ChatList({
   const [isLoadingQuickstarts, setIsLoadingQuickstarts] = useState(true);
   const [quickstartError, setQuickstartError] = useState<string | null>(null);
   const [activeQuickstart, setActiveQuickstart] = useState<string | null>(null);
-
-  const palette = useGlassPalette();
-  const friendlyPalette = palette.length > 0 ? palette : QUICKSTART_TINTS;
 
   const { startQuickstartFlow } = useQuickstartFlow({
     onStartFlow: onQuickstartFlow || (() => {}),
@@ -188,26 +156,17 @@ export function ChatList({
       <div className="mx-auto flex w-full max-w-md flex-col">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-5 px-1 py-3">
-            <div className="glass-card tinted space-y-4 p-6" style={HERO_CARD_TINT}>
-              <div className="space-y-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r from-rose-400/35 via-orange-300/30 to-amber-200/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white shadow-[0_6px_18px_rgba(249,168,212,0.35)] backdrop-blur-sm">
-                  Willkommen zurück
-                </span>
-                <h1 className="text-[26px] font-semibold leading-tight text-white">
-                  Was möchtest du heute erschaffen?
-                </h1>
-                <p className="text-[14px] leading-relaxed text-white/85">
-                  Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert
-                  in Sekunden.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={handleStartStandardChat}
-                className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-gradient-to-r from-rose-400/25 via-orange-300/20 to-amber-200/20 px-5 py-3 text-sm font-medium text-white shadow-[0_16px_40px_rgba(250,204,171,0.35)] backdrop-blur-md transition-all duration-200 hover:-translate-y-[1px] hover:brightness-110 active:scale-[0.98]"
-              >
+            <div className="space-y-4 rounded-lg border border-border bg-surface-1 p-6">
+              <h1 className="text-2xl font-semibold leading-tight text-text-0">
+                Was möchtest du heute erschaffen?
+              </h1>
+              <p className="text-sm leading-relaxed text-text-1">
+                Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
+                Sekunden.
+              </p>
+              <Button onClick={handleStartStandardChat} className="w-full">
                 Neues Gespräch beginnen
-              </button>
+              </Button>
             </div>
 
             <div className="space-y-3 px-1">
@@ -217,50 +176,37 @@ export function ChatList({
                     return (
                       <div
                         key={`quickstart-skeleton-${index}`}
-                        className="glass-card animate-pulse p-4"
+                        className="animate-pulse rounded-lg border border-border bg-surface-1 p-4"
                       >
-                        <div className="h-4 w-32 rounded bg-white/25" />
-                        <div className="mt-2 h-3 w-48 rounded bg-white/20" />
+                        <div className="h-4 w-32 rounded bg-surface-2" />
+                        <div className="mt-2 h-3 w-48 rounded bg-surface-2" />
                       </div>
                     );
                   })}
                 </div>
               ) : quickstartError ? (
-                <div className="glass-card tinted p-6 text-center" style={QUICKSTART_ERROR_TINT}>
-                  <div className="bg-white/12 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
-                    <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833-.23 2.5 1.31 2.5z"
-                      />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-white">
+                <div className="rounded-lg border border-danger bg-surface-1 p-6 text-center">
+                  <h3 className="text-lg font-semibold text-text-0">
                     {quickstartError.includes("verfügbar")
                       ? "Keine Schnellstarts verfügbar"
                       : "Konfigurationsfehler"}
                   </h3>
-                  <p className="mt-2 text-sm text-white/70">{quickstartError}</p>
-                  <button
-                    type="button"
+                  <p className="mt-2 text-sm text-text-1">{quickstartError}</p>
+                  <Button
                     onClick={handleStartStandardChat}
-                    className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-2 text-sm font-medium text-white"
+                    className="mt-4"
+                    variant="outline"
                     data-testid="start-standard-chat"
                   >
                     Direkt im Chat starten
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {quickstarts.map((action, index) => {
+                  {quickstarts.map((action) => {
                     const badge = action.tags?.[0]
                       ? formatQuickstartTag(action.tags[0]!)
                       : "Schnellstart";
-                    const tint =
-                      friendlyPalette[index % friendlyPalette.length] ?? FRIENDLY_TINTS[0]!;
 
                     return (
                       <RoleCard
@@ -269,7 +215,6 @@ export function ChatList({
                         title={action.title}
                         description={action.subtitle ?? QUICKSTART_FALLBACK_SUBTITLE}
                         badge={badge}
-                        tint={tint}
                         isActive={activeQuickstart === action.id}
                         disabled={isQuickstartLoading && activeQuickstart !== action.id}
                         onClick={() => handleQuickstartClick(action)}
@@ -286,15 +231,15 @@ export function ChatList({
                 return (
                   <div
                     key={item.label}
-                    className="glass-card tinted group p-4 transition-all duration-200 hover:-translate-y-[1px]"
+                    className="rounded-lg border border-border bg-surface-1 p-4 transition-colors hover:bg-surface-2"
                   >
                     <button
                       type="button"
                       onClick={() => onQuickstartFlow?.(item.prompt, false)}
-                      className="flex w-full items-center justify-between gap-3 text-sm font-medium text-white transition-colors"
+                      className="flex w-full items-center justify-between gap-3 text-sm font-medium text-text-0 transition-colors"
                     >
                       <span className="text-left">{item.label}</span>
-                      <MessageSquare className="h-4 w-4 opacity-75 transition-all group-hover:scale-110 group-hover:opacity-100" />
+                      <MessageSquare className="h-4 w-4 text-text-1" />
                     </button>
                   </div>
                 );
@@ -304,14 +249,14 @@ export function ChatList({
             {recentConversations.length > 0 && (
               <div className="space-y-3 px-1 pt-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-white/70">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-text-1">
                     Letzte Chats
                   </h2>
                   {onShowHistory && (
                     <button
                       type="button"
                       onClick={onShowHistory}
-                      className="text-[12px] font-medium text-white/80 transition hover:text-white"
+                      className="text-xs font-medium text-text-1 transition-colors hover:text-text-0"
                     >
                       Alle ansehen
                     </button>
@@ -331,8 +276,8 @@ export function ChatList({
                       <div
                         key={conversation.id}
                         className={cn(
-                          "glass-card group relative flex items-start gap-3 p-4 transition-all duration-200 hover:-translate-y-[1px]",
-                          isActive && "shadow-glass-strong ring-2 ring-white/25",
+                          "group relative flex items-start gap-3 rounded-lg border border-border bg-surface-1 p-4 transition-colors hover:bg-surface-2",
+                          isActive && "ring-2 ring-brand",
                         )}
                       >
                         <button
@@ -341,12 +286,12 @@ export function ChatList({
                           onClick={() => onSelectConversation?.(conversation.id)}
                         >
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold text-white">
+                            <span className="text-sm font-semibold text-text-0">
                               {conversation.title}
                             </span>
                           </div>
                           <p
-                            className="mt-1 text-xs text-white/80"
+                            className="mt-1 text-xs text-text-1"
                             style={{
                               display: "-webkit-box",
                               WebkitLineClamp: 2,
@@ -356,7 +301,7 @@ export function ChatList({
                           >
                             {preview}
                           </p>
-                          <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-white/75">
+                          <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-text-1">
                             {Number.isFinite(lastActivity) && (
                               <span className="inline-flex items-center gap-1">
                                 <Clock className="h-3.5 w-3.5" />
@@ -370,14 +315,15 @@ export function ChatList({
                           </div>
                         </button>
                         {onDeleteConversation && (
-                          <button
-                            type="button"
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => onDeleteConversation(conversation.id)}
-                            className="bg-white/8 relative z-10 mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 text-white opacity-0 backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-red-400/40 hover:bg-red-500/25 hover:text-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent group-hover:opacity-100"
+                            className="absolute right-2 top-2 h-8 w-8 text-text-1 opacity-0 hover:bg-surface-2 hover:text-danger group-hover:opacity-100"
                             aria-label="Verlauf löschen"
                           >
                             <Trash2 className="h-4 w-4" />
-                          </button>
+                          </Button>
                         )}
                       </div>
                     );
@@ -400,13 +346,9 @@ export function ChatList({
         <div className="flex items-center justify-between px-2 pt-2">
           <div className="h-1 flex-1" />
           {!isSticking && (
-            <button
-              type="button"
-              onClick={() => scrollToBottom()}
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-white/80 shadow-[0_10px_24px_-14px_rgba(8,11,28,0.7)] transition hover:-translate-y-[1px]"
-            >
+            <Button variant="outline" size="sm" onClick={() => scrollToBottom()}>
               <span>Nach unten</span>
-            </button>
+            </Button>
           )}
         </div>
       </div>

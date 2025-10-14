@@ -78,9 +78,9 @@ export function PWAIntegration({
   return (
     <div className={`pwa-integration ${className}`}>
       {(isProcessing || isProcessingFiles) && (
-        <div className="bg-accent-light/10 border-accent-light/20 flex items-center gap-2 rounded-lg border p-3">
-          <div className="border-accent-light h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
-          <span className="text-accent-light text-sm">
+        <div className="flex items-center gap-2 rounded-lg border border-accent/20 bg-accent/10 p-3">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+          <span className="text-sm text-accent">
             {isProcessingFiles
               ? "Verarbeite geteilte Dateien..."
               : "Verarbeite geteilte Inhalte..."}
@@ -89,8 +89,8 @@ export function PWAIntegration({
       )}
 
       {status.hasData && !isProcessing && (
-        <div className="bg-success-light/10 border-success-light/20 flex items-center gap-2 rounded-lg border p-3">
-          <div className="text-success-light h-4 w-4">
+        <div className="flex items-center gap-2 rounded-lg border border-success/20 bg-success/10 p-3">
+          <div className="h-4 w-4 text-success">
             <svg fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
@@ -99,9 +99,7 @@ export function PWAIntegration({
               />
             </svg>
           </div>
-          <span className="text-success-light text-sm">
-            {status.dataTypes.join(", ")} empfangen
-          </span>
+          <span className="text-sm text-success">{status.dataTypes.join(", ")} empfangen</span>
         </div>
       )}
     </div>

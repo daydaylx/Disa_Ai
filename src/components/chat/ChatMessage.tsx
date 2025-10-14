@@ -1,9 +1,6 @@
 import { Bot, Copy, RotateCcw, User } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import { useStudio } from "../../app/state/StudioContext";
-import { useGlassPalette } from "../../hooks/useGlassPalette";
-import { createRoleTint, DEFAULT_GLASS_VARIANTS, gradientToTint } from "../../lib/theme/glass";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -21,25 +18,23 @@ interface ChatMessageProps {
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   return (
-    <div className="relative my-4 overflow-hidden">
-      <div className="glass-card space-y-0 p-4">
-        <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
-          <span className="text-xs font-medium uppercase tracking-wide text-white/70">
-            {language || "Text"}
-          </span>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 w-6 rounded-full border border-white/15 bg-white/10 p-0 text-white/70 backdrop-blur-sm hover:bg-white/20 hover:text-white"
-            onClick={() => void navigator.clipboard?.writeText(children)}
-          >
-            <Copy className="h-3 w-3" />
-          </Button>
-        </div>
-        <pre className="overflow-x-auto">
-          <code className="text-sm leading-relaxed text-white/95">{children}</code>
-        </pre>
+    <div className="relative my-4 overflow-hidden rounded-lg border border-border bg-surface-2">
+      <div className="flex items-center justify-between border-b border-border px-4 py-2">
+        <span className="text-xs font-medium uppercase tracking-wide text-text-1">
+          {language || "Text"}
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-text-1 hover:bg-surface-1 hover:text-text-0"
+          onClick={() => void navigator.clipboard?.writeText(children)}
+        >
+          <Copy className="h-4 w-4" />
+        </Button>
       </div>
+      <pre className="overflow-x-auto p-4">
+        <code className="text-sm leading-relaxed text-text-0">{children}</code>
+      </pre>
     </div>
   );
 }
@@ -51,7 +46,6 @@ function parseMessageContent(content: string) {
   let match;
 
   while ((match = codeBlockRegex.exec(content)) !== null) {
-    // Add text before code block
     if (match.index > lastIndex) {
       const textContent = content.slice(lastIndex, match.index);
       if (textContent.trim()) {
@@ -59,7 +53,6 @@ function parseMessageContent(content: string) {
       }
     }
 
-    // Add code block
     parts.push({
       type: "code",
       content: match[2] || "",
@@ -69,7 +62,6 @@ function parseMessageContent(content: string) {
     lastIndex = match.index + match[0].length;
   }
 
-  // Add remaining text
   if (lastIndex < content.length) {
     const textContent = content.slice(lastIndex);
     if (textContent.trim()) {
@@ -82,24 +74,12 @@ function parseMessageContent(content: string) {
 
 export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessageProps) {
   const [showActions, setShowActions] = useState(false);
-  const { accentColor, activeRole } = useStudio();
-  const palette = useGlassPalette();
 
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
   const parsedContent = parseMessageContent(message.content);
-
-  const userTint = useMemo(() => createRoleTint(accentColor), [accentColor]);
-  const assistantTint = useMemo(() => {
-    const roleAccent = activeRole?.styleHints?.accentColor;
-    if (roleAccent) return createRoleTint(roleAccent);
-    // palette is already GlassTint[], no need to convert
-    return (
-      palette[1] ?? palette[0] ?? gradientToTint(DEFAULT_GLASS_VARIANTS[0]!) ?? createRoleTint()
-    );
-  }, [activeRole?.styleHints?.accentColor, palette]);
 
   const bubbleClass = cn(
     "max-w-[85%] text-left",
@@ -119,7 +99,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
   return (
     <div
       className={cn(
-        "group relative flex gap-3 px-3 py-5 transition-all duration-200",
+        "group relative flex gap-3 px-3 py-5",
         isUser && "flex-row-reverse",
         isSystem && "justify-center opacity-70",
       )}
@@ -127,51 +107,30 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
-      {/* Avatar */}
       <div className={cn("relative", isSystem && "hidden")}>
-        <Avatar className="h-9 w-9 border border-white/15 shadow-[0_8px_24px_rgba(15,23,42,0.45)] backdrop-blur-sm">
-          <AvatarFallback
-            className={cn("border-0 text-white transition-colors", isUser && "text-zinc-900")}
-            style={
-              isUser
-                ? {
-                    background: `linear-gradient(135deg, ${userTint.from} 0%, ${userTint.to} 100%)`,
-                  }
-                : {
-                    background: `linear-gradient(135deg, ${assistantTint.from} 0%, ${assistantTint.to} 100%)`,
-                  }
-            }
-          >
+        <Avatar className="h-9 w-9 border border-border">
+          <AvatarFallback className={cn("bg-surface-2 text-text-0")}>
             {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
           </AvatarFallback>
         </Avatar>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-60"
-        />
       </div>
 
-      {/* Message Content */}
       <div className={cn("flex-1 space-y-2", isUser && "text-right", isSystem && "text-center")}>
-        {/* Message Header */}
         {!isSystem && (
           <div
             className={cn(
-              "flex items-center gap-2 text-[13px] text-white/60",
+              "flex items-center gap-2 text-[13px] text-text-1",
               isUser && "justify-end",
             )}
           >
-            <span className="font-medium text-white/90">{isUser ? "Ich" : "Assistent"}</span>
+            <span className="font-medium text-text-0">{isUser ? "Ich" : "Assistent"}</span>
             {message.model && (
-              <Badge
-                variant="secondary"
-                className="border-white/10 bg-white/10 text-xs text-white/75"
-              >
+              <Badge variant="secondary" className="border-border bg-surface-1 text-xs text-text-1">
                 {message.model}
               </Badge>
             )}
             {message.tokens && (
-              <Badge variant="outline" className="border-white/20 text-xs text-white/60">
+              <Badge variant="outline" className="border-border text-xs text-text-1">
                 {message.tokens} Token
               </Badge>
             )}
@@ -179,8 +138,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           </div>
         )}
 
-        {/* Message Content */}
-        <div className={cn("glass-card", bubbleClass, "p-4")}>
+        <div className={cn("rounded-lg border border-border bg-surface-1", bubbleClass, "p-4")}>
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
@@ -196,18 +154,17 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           </div>
         </div>
 
-        {/* Action Buttons */}
         {!isSystem && showActions && (
           <div
             className={cn(
-              "flex items-center gap-2 opacity-0 transition-all duration-200 group-hover:opacity-100",
+              "flex items-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
               isUser && "justify-end",
             )}
           >
             <Button
               variant="ghost"
-              size="sm"
-              className="bg-white/8 h-8 w-8 rounded-full border border-white/15 p-0 text-white/70 shadow-[0_4px_12px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-150 hover:scale-105 hover:bg-white/15 hover:text-white"
+              size="icon"
+              className="h-8 w-8 text-text-1 hover:bg-surface-1 hover:text-text-0"
               onClick={handleCopy}
               title="Nachricht kopieren"
               data-testid="message.copy"
@@ -217,8 +174,8 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
             {isAssistant && isLast && onRetry && (
               <Button
                 variant="ghost"
-                size="sm"
-                className="bg-white/8 h-8 w-8 rounded-full border border-white/15 p-0 text-white/70 shadow-[0_4px_12px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-150 hover:scale-105 hover:bg-white/15 hover:text-white"
+                size="icon"
+                className="h-8 w-8 text-text-1 hover:bg-surface-1 hover:text-text-0"
                 onClick={handleRetry}
                 title="Antwort erneut anfordern"
                 data-testid="message.retry"

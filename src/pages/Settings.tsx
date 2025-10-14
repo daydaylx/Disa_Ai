@@ -21,7 +21,6 @@ import { Label } from "../components/ui/label";
 import { StaticGlassCard } from "../components/ui/StaticGlassCard";
 import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
-import { useGlassPalette } from "../hooks/useGlassPalette";
 import { useMemory } from "../hooks/useMemory";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 import { useSettings } from "../hooks/useSettings";
@@ -34,7 +33,6 @@ import {
   importConversations,
 } from "../lib/conversation-manager";
 import { BUILD_ID } from "../lib/pwa/registerSW";
-import type { GlassTint } from "../lib/theme/glass";
 
 function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> }) {
   const [stats, setStats] = useState({ chatCount: 0, totalMessages: 0, storageUsed: 0 });
@@ -93,11 +91,6 @@ function ChatStats() {
   );
 }
 
-const DEFAULT_TINT: GlassTint = {
-  from: "hsl(210 25% 55% / 0.8)",
-  to: "hsl(250 25% 52% / 0.8)",
-};
-
 type InitState = "loading" | "ready" | "error";
 
 export default function SettingsPage() {
@@ -116,7 +109,6 @@ export default function SettingsPage() {
     getMemoryStats,
     isEnabled: memoryEnabled,
   } = useMemory();
-  const palette = useGlassPalette();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -320,7 +312,7 @@ export default function SettingsPage() {
     return (
       <div className="mx-auto flex h-full w-full max-w-md flex-col items-center justify-center p-4">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
           <p className="text-sm text-white/60">Lädt Einstellungen...</p>
         </div>
       </div>
@@ -344,7 +336,7 @@ export default function SettingsPage() {
                 })
                 .catch(() => window.location.reload());
             }}
-            className="hover:bg-accent-600 text-corporate-text-onAccent min-h-touch-rec rounded-md bg-accent-500 px-4 py-2 text-sm font-medium transition-colors"
+            className="min-h-touch-rec rounded-md bg-accent px-4 py-2 text-sm font-medium text-surface-0 transition-colors hover:bg-accent/90"
           >
             Seite neu laden
           </button>
@@ -356,26 +348,26 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-2">
-        <h1 className="text-token-h1 font-semibold text-corporate-text-primary">Einstellungen</h1>
-        <p className="text-token-body leading-relaxed text-corporate-text-secondary">
+        <h1 className="text-token-h1 font-semibold text-text-strong">Einstellungen</h1>
+        <p className="text-token-body leading-relaxed text-text-muted">
           API-Schlüssel verwalten und die App auf deinem Gerät installieren.
         </p>
       </header>
 
       {/* API Key Section */}
-      <StaticGlassCard tint={palette[0] ?? DEFAULT_TINT} padding="lg">
+      <StaticGlassCard padding="lg">
         <div className="flex flex-col space-y-1 pb-4">
-          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-corporate-text-primary">
+          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-text-strong">
             <Key className="h-5 w-5" />
             OpenRouter API-Schlüssel
           </h2>
-          <p className="text-token-body leading-relaxed text-corporate-text-secondary">
+          <p className="text-token-body leading-relaxed text-text-muted">
             Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
           </p>
         </div>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="apiKey" className="text-corporate-text-secondary">
+            <Label htmlFor="apiKey" className="text-text-muted">
               API-Schlüssel
             </Label>
             <div className="relative">
@@ -385,13 +377,13 @@ export default function SettingsPage() {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 placeholder="sk-or-..."
-                className="glass-card pr-10 font-mono text-corporate-text-primary placeholder:text-corporate-text-muted"
+                className="surface-card pr-10 font-mono text-text-strong placeholder:text-text-subtle"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                className="glass-card absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-corporate-text-secondary transition hover:text-corporate-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
+                className="surface-card absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-text-muted transition hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -408,7 +400,7 @@ export default function SettingsPage() {
                     : "bg-gray-500"
               }`}
             />
-            <span className="text-sm text-corporate-text-secondary">
+            <span className="text-sm text-text-muted">
               {keyStatus === "present"
                 ? "Schlüssel vorhanden"
                 : keyStatus === "invalid"
@@ -420,7 +412,7 @@ export default function SettingsPage() {
           <Button
             type="button"
             onClick={handleSaveKey}
-            className="glass-card text-corporate-text-onSurface min-h-touch-rec w-full border-0"
+            className="surface-card min-h-touch-rec w-full border-0 text-text-strong"
           >
             Schlüssel speichern
           </Button>
@@ -439,7 +431,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Content Filter Section */}
-      <StaticGlassCard tint={palette[1] ?? DEFAULT_TINT} padding="lg">
+      <StaticGlassCard padding="lg">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <User className="h-5 w-5" />
@@ -481,7 +473,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Memory Settings Section */}
-      <StaticGlassCard tint={palette[2] ?? DEFAULT_TINT} padding="lg">
+      <StaticGlassCard padding="lg">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Brain className="h-5 w-5" />
@@ -519,7 +511,7 @@ export default function SettingsPage() {
                     placeholder="Dein Name (optional)"
                     value={globalMemory?.name || ""}
                     onChange={(e) => updateGlobalMemory({ name: e.target.value })}
-                    className="glass-card text-white placeholder:text-white/40"
+                    className="surface-card text-white placeholder:text-white/40"
                   />
                   <Input
                     placeholder="Hobbys, Interessen (optional)"
@@ -531,13 +523,13 @@ export default function SettingsPage() {
                           : [],
                       })
                     }
-                    className="glass-card text-white placeholder:text-white/40"
+                    className="surface-card text-white placeholder:text-white/40"
                   />
                   <Input
                     placeholder="Hintergrund, Beruf (optional)"
                     value={globalMemory?.background || ""}
                     onChange={(e) => updateGlobalMemory({ background: e.target.value })}
-                    className="glass-card text-white placeholder:text-white/40"
+                    className="surface-card text-white placeholder:text-white/40"
                   />
                 </div>
               </div>
@@ -545,8 +537,8 @@ export default function SettingsPage() {
               {/* Memory Stats - nur in Entwicklung */}
               {import.meta.env.DEV && (
                 <div className="space-y-2 border-t border-white/10 pt-4">
-                  <Label className="text-corporate-text-secondary">Debug-Statistiken</Label>
-                  <div className="space-y-1 text-xs text-corporate-text-muted">
+                  <Label className="text-text-muted">Debug-Statistiken</Label>
+                  <div className="space-y-1 text-xs text-text-subtle">
                     <MemoryStats getMemoryStats={getMemoryStats} />
                   </div>
                 </div>
@@ -593,7 +585,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Chat Management Section */}
-      <StaticGlassCard tint={palette[3] ?? DEFAULT_TINT} padding="lg">
+      <StaticGlassCard padding="lg">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <MessageSquare className="h-5 w-5" />
@@ -684,7 +676,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* PWA Install Section */}
-      <StaticGlassCard tint={palette[4] ?? DEFAULT_TINT} padding="lg">
+      <StaticGlassCard padding="lg">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Smartphone className="h-5 w-5" />
@@ -715,7 +707,7 @@ export default function SettingsPage() {
           </div>
 
           {!isInstalled && (
-            <div className="glass-card rounded-lg p-3">
+            <div className="surface-card rounded-lg p-3">
               <div className="space-y-2 text-xs text-white/70">
                 <p className="font-medium">Vorteile der App-Installation:</p>
                 <ul className="list-disc space-y-1 pl-4">
@@ -766,7 +758,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Build Info */}
-      <StaticGlassCard tint={palette[5] ?? DEFAULT_TINT} padding="lg">
+      <StaticGlassCard padding="lg">
         <div className="space-y-1 pb-4">
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
             <Info className="h-5 w-5" />
@@ -781,19 +773,19 @@ export default function SettingsPage() {
             {/* Build ID nur in Entwicklung anzeigen */}
             {import.meta.env.DEV && (
               <div className="flex items-center justify-between text-sm">
-                <span className="text-corporate-text-secondary">Build ID:</span>
-                <span className="font-mono text-accent-400">{BUILD_ID}</span>
+                <span className="text-text-muted">Build ID:</span>
+                <span className="font-mono text-accent">{BUILD_ID}</span>
               </div>
             )}
             <div className="flex items-center justify-between text-sm">
-              <span className="text-corporate-text-secondary">Version:</span>
-              <span className="text-corporate-text-primary">v1.0.0</span>
+              <span className="text-text-muted">Version:</span>
+              <span className="text-text-strong">v1.0.0</span>
             </div>
             {/* Environment nur in Entwicklung anzeigen */}
             {import.meta.env.DEV && (
               <div className="flex items-center justify-between text-sm">
-                <span className="text-corporate-text-secondary">Environment:</span>
-                <span className="text-corporate-text-primary">
+                <span className="text-text-muted">Environment:</span>
+                <span className="text-text-strong">
                   {import.meta.env.DEV ? "Development" : "Production"}
                 </span>
               </div>
@@ -801,8 +793,8 @@ export default function SettingsPage() {
             {/* Build-Zeit nur in Entwicklung anzeigen */}
             {import.meta.env.DEV && (
               <div className="flex items-center justify-between text-sm">
-                <span className="text-corporate-text-secondary">Built:</span>
-                <span className="text-corporate-text-primary">
+                <span className="text-text-muted">Built:</span>
+                <span className="text-text-strong">
                   {(import.meta as any)?.env?.VITE_BUILD_TIME ??
                     new Date().toLocaleDateString("de-DE")}
                 </span>
@@ -810,7 +802,7 @@ export default function SettingsPage() {
             )}
           </div>
 
-          <div className="glass-card rounded p-3 text-xs">
+          <div className="surface-card rounded p-3 text-xs">
             <p className="text-white/60">
               <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein harter Reload
               (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.

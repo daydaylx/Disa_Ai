@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
+import { Button } from "../components/ui/button";
 import type { Message } from "./types";
 
 export default function VirtualMessageList({
@@ -19,11 +20,9 @@ export default function VirtualMessageList({
   const [isNearBottom, setIsNearBottom] = useState(true);
 
   useEffect(() => {
-    // Auto-Scroll bei neuen Messages nur wenn der Nutzer bereits am Ende war
     const el = containerRef.current;
     if (!el || !isNearBottom) return;
 
-    // Kurze Verzögerung für DOM-Updates
     const timer = setTimeout(() => {
       el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }, 10);
@@ -59,7 +58,6 @@ export default function VirtualMessageList({
 
   const loadOlder = () => {
     setVisibleCount((n) => Math.min(total, n + 120));
-    // kleine Verzögerung, dann oberhalb positionieren
     requestAnimationFrame(() => {
       const el = containerRef.current;
       if (!el) return;
@@ -83,12 +81,9 @@ export default function VirtualMessageList({
       >
         {start > 0 && (
           <div className="sticky top-0 z-10 flex justify-center">
-            <button
-              onClick={loadOlder}
-              className="my-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs hover:bg-white/10"
-            >
+            <Button variant="outline" size="sm" onClick={loadOlder} className="my-1">
               Ältere Nachrichten laden ({start})
-            </button>
+            </Button>
           </div>
         )}
         {slice.length === 0 ? (
@@ -97,11 +92,10 @@ export default function VirtualMessageList({
             style={{ minHeight: "calc(var(--vh, 100dvh) * 0.6)" }}
           >
             <div className="max-w-lg space-y-8 text-center">
-              {/* Professional Hero Section */}
               <div className="space-y-6">
                 <div className="relative mx-auto h-24 w-24">
-                  <div className="glass-backdrop--medium border-glass-border-medium flex h-full w-full items-center justify-center rounded-full border-2 shadow-glass-medium">
-                    <svg width="32" height="32" viewBox="0 0 24 24" className="text-slate-300">
+                  <div className="flex h-full w-full items-center justify-center rounded-full border-2 border-border bg-surface-1">
+                    <svg width="32" height="32" viewBox="0 0 24 24" className="text-text-1">
                       <path
                         fill="currentColor"
                         d="M12 3c5.5 0 10 3.58 10 8s-4.5 8-10 8c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.13 2 11c0-4.42 4.5-8 10-8Z"
@@ -110,16 +104,15 @@ export default function VirtualMessageList({
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <h2 className="text-3xl font-bold tracking-tight text-white">Disa AI</h2>
-                  <p className="text-lg font-medium text-slate-400">
+                  <h2 className="text-3xl font-bold tracking-tight text-text-0">Disa AI</h2>
+                  <p className="text-lg font-medium text-text-1">
                     Starte eine Unterhaltung mit deinem KI-Assistenten
                   </p>
                 </div>
               </div>
 
-              {/* Professional Quick Start Suggestions */}
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-white">Was möchtest du besprechen?</h3>
+                <h3 className="text-xl font-semibold text-text-0">Was möchtest du besprechen?</h3>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {[
                     {
@@ -142,7 +135,7 @@ export default function VirtualMessageList({
                     <button
                       key={index}
                       onClick={() => onSuggestionClick?.(suggestion.text)}
-                      className="glass-backdrop--soft hover:glass-backdrop--medium border-glass-border-soft hover:border-glass-border-medium group relative overflow-hidden rounded-xl border p-4 text-white shadow-glass-soft transition-all duration-300 hover:scale-105 hover:shadow-glass-medium"
+                      className="rounded-lg border border-border bg-surface-1 p-4 text-text-0 transition-colors hover:bg-surface-2"
                     >
                       <div className="flex items-center gap-3 text-left">
                         <span className="text-lg">{suggestion.icon}</span>
@@ -159,9 +152,10 @@ export default function VirtualMessageList({
         )}
       </div>
       {showScrollAnchor && (
-        <button
+        <Button
+          size="icon"
           onClick={scrollToBottom}
-          className="focus-visible:ring-accent-teal/50 fixed z-20 rounded-full bg-primary/80 p-2 text-white shadow-lg hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+          className="fixed z-20"
           style={{
             bottom: `calc(var(--bottom-nav-h) + 24px + max(16px, var(--safe-bottom)))`,
             right: `max(16px, var(--safe-right))`,
@@ -169,7 +163,7 @@ export default function VirtualMessageList({
           aria-label="Zum Ende scrollen"
         >
           ↓
-        </button>
+        </Button>
       )}
     </div>
   );

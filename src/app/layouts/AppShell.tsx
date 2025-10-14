@@ -1,4 +1,4 @@
-import { Bot, Compass, Cpu, MessageSquare, PlusCircle, Settings, Users } from "lucide-react";
+import { Cpu, MessageSquare, Plus, Settings, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
@@ -7,19 +7,30 @@ import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { Button } from "../../components/ui";
-import { StaticGlassCard } from "../../components/ui/StaticGlassCard";
-import { useGlassPalette } from "../../hooks/useGlassPalette";
 import { cn } from "../../lib/utils";
 import { useStudio } from "../state/StudioContext";
 
-function Header() {
+const NAV_ITEMS = [
+  { to: "/chat", label: "Chat", icon: MessageSquare },
+  { to: "/models", label: "Modelle", icon: Cpu },
+  { to: "/roles", label: "Rollen", icon: Users },
+  { to: "/settings", label: "Einstellungen", icon: Settings },
+];
+
+function BrandWordmark() {
+  return (
+    <span className="text-lg font-semibold tracking-tight text-text-0">
+      Disa<span className="text-brand">▮</span>AI
+    </span>
+  );
+}
+
+function TopBar() {
   const { activeRole } = useStudio();
   const location = useLocation();
   const navigate = useNavigate();
-  const palette = useGlassPalette();
-  const headerTint = palette[0] ?? { from: "hsla(0, 0%, 100%, 0.1)", to: "hsla(0, 0%, 100%, 0.0)" };
 
-  const handleNewChatClick = () => {
+  const handleNewChat = () => {
     const timestamp = Date.now();
     void navigate("/chat", {
       state: { newChat: timestamp },
@@ -28,114 +39,68 @@ function Header() {
   };
 
   return (
-    <header className="relative z-10 px-4 pb-6 pt-10">
-      <div className="mx-auto max-w-md">
-        <StaticGlassCard tint={headerTint} padding="lg">
-          <div className="relative flex items-center justify-between">
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r from-rose-400/35 via-orange-300/30 to-amber-200/35 px-3 py-1 text-xs font-medium tracking-wide text-white shadow-[0_4px_16px_rgba(248,191,88,0.25)]">
-                  <Compass className="h-3.5 w-3.5" /> KI-Studio
-                </div>
-                {activeRole && (
-                  <div className="from-accent-500/35 inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-r via-amber-300/30 to-rose-400/30 px-3 py-1 text-xs font-medium text-white shadow-[0_4px_18px_rgba(244,114,182,0.3)]">
-                    <Bot className="h-3.5 w-3.5" />
-                    {activeRole.name}
-                  </div>
-                )}
-              </div>
-              <div>
-                <h1
-                  className="text-3xl font-semibold text-zinc-100 drop-shadow-[0_4px_18px_rgba(147,51,234,0.35)]"
-                  data-testid="app-title"
-                >
-                  Disa AI
-                </h1>
-                <p className="mt-1 text-sm text-zinc-400">
-                  {activeRole
-                    ? `${activeRole.category ?? "Rolle"} • ${activeRole.name}`
-                    : "Texte, Bilder und Ideen in Sekunden, direkt im Chat."}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-end gap-4">
-              <Button
-                size="sm"
-                variant="ghost"
-                aria-label="Neues Gespräch"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border-0 bg-gradient-to-r from-rose-400 via-orange-300 to-amber-200 px-5 font-medium tracking-wide text-white shadow-[0_10px_32px_rgba(249,168,212,0.45)] transition-transform hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/25 active:scale-[0.98]"
-                onClick={handleNewChatClick}
-              >
-                <PlusCircle className="h-4 w-4" /> Neu starten
-              </Button>
-            </div>
+    <header className="sticky top-0 z-40 h-14 border-b border-border bg-surface-0">
+      <div className="mx-auto flex h-full w-full max-w-[var(--max-content-width)] items-center justify-between gap-4 px-4">
+        <div className="flex items-center gap-3">
+          <span className="brand-rail h-full w-1 bg-brand" aria-hidden="true" />
+          <div className="flex flex-col leading-tight">
+            <BrandWordmark />
+            <span className="text-xs text-text-1">
+              {activeRole
+                ? `${activeRole.category ?? "Rolle"} · ${activeRole.name}`
+                : "Assistive Studio"}
+            </span>
           </div>
-        </StaticGlassCard>
+        </div>
+        <Button
+          variant="brand"
+          size="sm"
+          onClick={handleNewChat}
+          aria-label="Neues Gespräch starten"
+          className="px-4"
+        >
+          <Plus className="h-4 w-4" />
+          <span>Neu</span>
+        </Button>
       </div>
     </header>
   );
 }
 
-function BottomNav() {
-  const navigationItems = [
-    { to: "/chat", label: "Chat", icon: <MessageSquare /> },
-    { to: "/models", label: "Modelle", icon: <Cpu /> },
-    { to: "/roles", label: "Rollen", icon: <Users /> },
-    { to: "/settings", label: "Einstellungen", icon: <Settings /> },
-  ];
-
+function BottomBar() {
   return (
-    <nav className="sticky bottom-0 z-20 border-t border-white/10 bg-[#040513]/90 backdrop-blur-2xl">
+    <nav className="sticky bottom-0 z-30 border-t border-border bg-surface-0">
       <div
-        className="mx-auto w-full max-w-md px-4"
+        className="mx-auto flex h-16 w-full max-w-[var(--max-content-width)] items-center gap-1 px-2"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
-        <div className="glass-strong flex items-center justify-between gap-2 rounded-2xl px-2 py-2 shadow-[0_18px_40px_rgba(5,8,18,0.45)]">
-          {navigationItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              title={item.label}
-              className={({ isActive }) =>
-                cn(
-                  "group relative flex min-h-touch-rec min-w-[94px] touch-manipulation flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 text-xs font-medium transition-colors duration-150 ease-out",
-                  isActive ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-200",
-                )
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "via-accent-500/80 pointer-events-none absolute inset-x-2 top-1 h-0.5 rounded-full bg-gradient-to-r from-transparent to-transparent transition-opacity duration-200",
-                      isActive ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      "flex h-6 w-6 items-center justify-center rounded-lg transition-colors",
-                      isActive
-                        ? "bg-white/12 text-zinc-100"
-                        : "bg-white/8 group-hover:bg-white/12 text-zinc-400 group-hover:text-zinc-100",
-                    )}
-                  >
-                    {item.icon}
-                  </span>
-                  <span className="text-[10px] leading-none tracking-[0.08em]">{item.label}</span>
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "bg-accent-500/70 pointer-events-none absolute inset-x-6 bottom-1 h-1 rounded-full blur-[2px] transition-opacity duration-200",
-                      isActive ? "opacity-90" : "opacity-0",
-                    )}
-                  />
-                </>
-              )}
-            </NavLink>
-          ))}
-        </div>
+        {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) =>
+              cn(
+                "flex flex-1 flex-col items-center justify-center gap-1 rounded-base px-2 py-2 text-[11px] font-medium uppercase tracking-[0.08em] transition-colors",
+                isActive ? "text-text-0" : "text-text-1 hover:text-text-0",
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <span
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-base border border-transparent text-text-1 transition-colors",
+                    isActive && "bg-surface-1 text-text-0",
+                  )}
+                  aria-hidden
+                >
+                  <Icon className="h-4 w-4" />
+                </span>
+                <span>{label}</span>
+              </>
+            )}
+          </NavLink>
+        ))}
       </div>
     </nav>
   );
@@ -149,51 +114,29 @@ export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
 
   return (
-    <div className="stage relative flex min-h-dvh w-full flex-col bg-transparent text-slate-200">
-      {/* Noise overlay */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.02'/></svg>")`,
-        }}
-      />
-
-      <Header />
+    <div className="flex min-h-dvh flex-col bg-surface-0 text-text-0">
+      <TopBar />
 
       <main
+        id="main"
         key={location.pathname}
-        className="animate-page-transition relative z-10 mx-auto w-full max-w-md flex-1 px-4 py-4"
+        className="animate-page-transition mx-auto flex w-full max-w-[var(--max-content-width)] flex-1 flex-col px-4 py-6"
       >
         {children}
       </main>
 
-      <BottomNav />
+      <BottomBar />
 
-      <NetworkBanner />
-
-      {/* PWA Install Prompt */}
-      <PWAInstallPrompt />
-
-      {/* PWA Debug Info (Development) */}
-      {process.env.NODE_ENV === "development" && <PWADebugInfo />}
-
-      {/* Footer mit Build-Info für Issue #81 */}
-      <footer
-        className="relative z-10 px-4 pb-2"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
-      >
-        <div className="mx-auto w-full max-w-md">
-          <div className="glass-strong rounded-2xl px-5 py-4 text-center shadow-[0_16px_48px_rgba(5,8,18,0.35)]">
-            <p className="text-[13px] font-medium text-zinc-100">
-              Disa AI Beta • Experimentelle Oberfläche
-            </p>
-            <p className="mt-1 text-[12px] text-zinc-400">
-              Feedback hilft uns, die Experience kontinuierlich zu verfeinern.
-            </p>
-            <BuildInfo className="mt-3 inline-flex items-center justify-center gap-1 rounded-full bg-white/10 px-3 py-1 font-mono text-[11px] text-zinc-300 transition-opacity hover:opacity-100" />
-          </div>
+      <footer className="border-t border-border bg-surface-0 py-4">
+        <div className="mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs text-text-1">
+          <span>Disa AI Beta · Tooling Preview</span>
+          <BuildInfo className="text-[11px] text-text-1" />
         </div>
       </footer>
+
+      <NetworkBanner />
+      <PWAInstallPrompt />
+      {process.env.NODE_ENV === "development" && <PWADebugInfo />}
     </div>
   );
 }

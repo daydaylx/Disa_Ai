@@ -8,57 +8,48 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Core colors only - keeping most used tokens
-        primary: "hsl(var(--primary))",
-        surface: "hsl(var(--surface))",
-        outline: "hsl(var(--outline))",
-        error: "hsl(var(--error))",
-        success: "hsl(var(--success))",
-        warning: "hsl(var(--warning))",
-
-        // Most used neutral variants only
-        neutral: {
-          200: "var(--color-neutral-200)",
-          500: "var(--color-neutral-500)",
-          800: "var(--color-neutral-800)",
-          900: "var(--color-neutral-900)",
-          950: "var(--color-neutral-950)",
+        surface: {
+          DEFAULT: "var(--surface-1)",
+          0: "var(--surface-0)",
+          1: "var(--surface-1)",
+          2: "var(--surface-2)",
         },
-
-        // Core accent colors
+        text: {
+          DEFAULT: "var(--text-0)",
+          strong: "var(--text-0)",
+          muted: "var(--text-1)",
+          subtle: "var(--text-2)",
+          0: "var(--text-0)",
+          1: "var(--text-1)",
+          2: "var(--text-2)",
+        },
+        border: {
+          DEFAULT: "var(--surface-border)",
+          subtle: "var(--surface-border)",
+          strong: "var(--surface-border-strong)",
+        },
+        brand: {
+          DEFAULT: "rgb(var(--brand-rgb) / <alpha-value>)",
+          base: "rgb(var(--brand-rgb) / <alpha-value>)",
+          strong: "rgb(var(--brand-strong-rgb) / <alpha-value>)",
+          weak: "rgb(var(--brand-rgb) / 0.18)",
+        },
         accent: {
-          300: "var(--color-accent-300)",
-          400: "var(--color-accent-400)", // Keeping this as it's used
-          500: "var(--color-accent-500)",
+          DEFAULT: "rgb(var(--accent-rgb) / <alpha-value>)",
+          base: "rgb(var(--accent-rgb) / <alpha-value>)",
+          weak: "rgb(var(--accent-rgb) / 0.2)",
         },
-
-        // Minimal semantic colors
-        semantic: {
-          danger: "var(--color-danger)",
-          success: "var(--color-success)",
-          warning: "var(--color-warning)",
-          purple: "var(--color-purple)",
-        },
-
-        // Reduced corporate colors - keeping only frequently used
-        corporate: {
-          bg: {
-            primary: "var(--color-corporate-bg-primary)",
-            secondary: "var(--color-corporate-bg-secondary)",
-            hover: "var(--color-corporate-bg-hover)",
-          },
-          text: {
-            primary: "var(--color-corporate-text-primary)",
-            secondary: "var(--color-corporate-text-secondary)",
-            muted: "var(--color-corporate-text-muted)",
-          },
-          accent: {
-            primary: "var(--color-corporate-accent-primary)",
-            danger: "var(--color-corporate-accent-danger)",
-          },
+        success: "rgb(var(--success-rgb) / <alpha-value>)",
+        warning: "rgb(var(--warning-rgb) / <alpha-value>)",
+        danger: "rgb(var(--danger-rgb) / <alpha-value>)",
+        state: {
+          success: "rgb(var(--success-rgb) / <alpha-value>)",
+          warning: "rgb(var(--warning-rgb) / <alpha-value>)",
+          danger: "rgb(var(--danger-rgb) / <alpha-value>)",
         },
       },
       spacing: {
+        0: "var(--spacing-0)",
         1: "var(--spacing-1)",
         2: "var(--spacing-2)",
         3: "var(--spacing-3)",
@@ -71,43 +62,20 @@ export default {
         16: "var(--spacing-16)",
         20: "var(--spacing-20)",
         24: "var(--spacing-24)",
-        // Touch target sizes
         "touch-min": "var(--touch-minimum)",
         "touch-rec": "var(--touch-recommended)",
         "touch-com": "var(--touch-comfortable)",
         "touch-lg": "var(--touch-large)",
       },
       borderRadius: {
-        none: "var(--radius-none)",
-        sm: "var(--radius-sm)",
-        md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
-        full: "var(--radius-full)",
+        none: "0px",
+        base: "var(--surface-radius)",
+        lg: "var(--surface-radius-lg)",
+        full: "var(--surface-radius-full)",
+        pill: "var(--surface-radius-pill)",
       },
       boxShadow: {
-        none: "var(--shadow-0)",
-        sm: "var(--shadow-1)",
-        md: "var(--shadow-2)",
-        lg: "var(--shadow-3)",
-        "glass-subtle": "var(--glass-glow-subtle)",
-        "glass-soft": "var(--glass-glow-soft)",
-        "glass-medium": "var(--glass-glow-medium)",
-        "glass-strong": "var(--glass-glow-strong)",
-      },
-      backdropBlur: {
-        sm: "var(--blur-sm)",
-        md: "var(--blur-md)",
-        lg: "var(--blur-lg)",
-        xl: "var(--blur-xl)",
-        "2xl": "var(--blur-2xl)",
-      },
-      backgroundColor: {
-        // Glass overlay variants
-        "glass-overlay-weak": "var(--glass-overlay-weak)",
-        "glass-overlay-soft": "var(--glass-overlay-soft)",
-        "glass-overlay-medium": "var(--glass-overlay-medium)",
-        "glass-overlay-strong": "var(--glass-overlay-strong)",
-        "glass-overlay-intense": "var(--glass-overlay-intense)",
+        level: "var(--surface-shadow)",
       },
       transitionDuration: {
         fast: "var(--transition-fast)",
@@ -115,13 +83,11 @@ export default {
         slow: "var(--transition-slow)",
       },
       height: {
-        // Mobile viewport units
         "screen-dynamic": "var(--vh, 100dvh)",
         "screen-small": "100svh",
         "screen-large": "100lvh",
       },
       minHeight: {
-        // Mobile viewport units
         "screen-dynamic": "var(--vh, 100dvh)",
         "screen-small": "100svh",
         "screen-large": "100lvh",
@@ -148,10 +114,9 @@ export default {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-down": "accordion-down 0.18s ease-out",
+        "accordion-up": "accordion-up 0.18s ease-out",
       },
-      // Safe area insets for mobile devices
       padding: {
         "safe-top": "env(safe-area-inset-top)",
         "safe-bottom": "env(safe-area-inset-bottom)",
@@ -167,20 +132,10 @@ export default {
     },
   },
   safelist: [
-    // Core component classes only
-    "badge",
-    "badge-muted",
-    "bubble",
-    "bubble-assistant",
-    "bubble-user",
-    "tile",
-    "card",
-    // Essential safe area classes
     "pb-safe-bottom",
     "pt-safe-top",
-    // Only keep commonly used gradient color variants
     {
-      pattern: /(from|via|to)-(rose|orange|amber|emerald|cyan)-(200|300|400|500)/,
+      pattern: /(grid|flex|gap|items|justify)-(.*)/,
     },
   ],
   plugins: [],

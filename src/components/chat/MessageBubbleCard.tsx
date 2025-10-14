@@ -1,66 +1,63 @@
 import type { ComponentPropsWithoutRef } from "react";
 
-import type { GlassTint } from "@/lib/theme/glass";
 import { cn } from "@/lib/utils";
 
-import { StaticGlassCard } from "../ui/StaticGlassCard";
+type MessageBubbleVariant = "assistant" | "user";
 
-interface MessageBubbleCardProps extends ComponentPropsWithoutRef<typeof StaticGlassCard> {
+interface MessageBubbleCardProps extends ComponentPropsWithoutRef<"article"> {
   author: string;
   body: string;
-  tint: GlassTint;
   timestamp?: number;
-  align?: "left" | "right";
+  variant: MessageBubbleVariant;
 }
 
-/**
- * Read-only message bubble for chat transcripts.
- * Intentionally non-interactive to avoid misleading button semantics.
- */
+function formatTimestamp(timestamp?: number) {
+  if (typeof timestamp !== "number") return { iso: undefined, label: undefined };
+  const date = new Date(timestamp);
+  return {
+    iso: date.toISOString(),
+    label: date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+  };
+}
+
 export function MessageBubbleCard({
   author,
   body,
-  tint,
   timestamp,
-  align = "left",
+  variant,
   className,
-  ...rest
+  ...props
 }: MessageBubbleCardProps) {
-  const isoTimestamp =
-    typeof timestamp === "number" ? new Date(timestamp).toISOString() : undefined;
-  const timeLabel =
-    typeof timestamp === "number"
-      ? new Date(timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      : undefined;
+  const { iso, label } = formatTimestamp(timestamp);
 
   return (
-    <StaticGlassCard
-      tint={tint}
-      padding="sm"
+    <article
       className={cn(
-        "cursor-text select-text transition-none hover:translate-y-0 hover:shadow-none",
-        align === "right" ? "text-right" : "text-left",
+        "relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-base border px-4 py-3",
+        variant === "assistant"
+          ? "border-border bg-surface-1 pl-6"
+          : "border-border bg-surface-2 pr-6",
         className,
       )}
-      {...rest}
+      {...props}
     >
-      <div className="space-y-2">
-        <div
-          className={cn(
-            "flex items-baseline gap-3 text-sm font-semibold text-white",
-            align === "right" ? "justify-end" : "justify-start",
-          )}
-        >
-          <span>{author}</span>
-          {timeLabel ? (
-            <time className="text-xs font-medium text-white/60" dateTime={isoTimestamp}>
-              {timeLabel}
-            </time>
-          ) : null}
-        </div>
-
-        <p className="whitespace-pre-wrap text-sm leading-6 text-white/85">{body}</p>
-      </div>
-    </StaticGlassCard>
+      {variant === "assistant" && (
+        <span className="brand-rail absolute left-0 top-0 h-full w-1 bg-brand" aria-hidden="true" />
+      )}
+      <header
+        className={cn(
+          "mb-2 flex items-baseline gap-3 text-xs font-medium uppercase tracking-[0.08em]",
+          variant === "assistant" ? "text-text-1" : "text-text-1",
+        )}
+      >
+        <span className="truncate">{author}</span>
+        {label ? (
+          <time className="text-[11px] font-normal text-text-1" dateTime={iso}>
+            {label}
+          </time>
+        ) : null}
+      </header>
+      <p className="whitespace-pre-wrap text-sm leading-6 text-text-0">{body}</p>
+    </article>
   );
 }

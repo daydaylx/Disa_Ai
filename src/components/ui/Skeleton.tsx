@@ -9,25 +9,12 @@ interface SkeletonProps {
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className, children }) => {
   return (
-    <div
-      className={cn(
-        "animate-pulse rounded-md bg-gradient-to-r",
-        "from-glass-surface/20 via-glass-surface/40 to-glass-surface/20",
-        "bg-[length:200%_100%] backdrop-blur-sm",
-        "border-glass-border/20 border",
-        className,
-      )}
-      style={{
-        animation: "skeleton-loading 1.8s ease-in-out infinite",
-      }}
-      aria-hidden="true"
-    >
+    <div className={cn("animate-pulse rounded-md bg-surface-2", className)} aria-hidden="true">
       {children}
     </div>
   );
 };
 
-// Message skeleton for chat loading states
 export const MessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false }) => {
   return (
     <div
@@ -46,11 +33,10 @@ export const MessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false
   );
 };
 
-// Header skeleton
 export const HeaderSkeleton: React.FC = () => {
   return (
     <div
-      className="border-border-subtle flex items-center justify-between border-b p-4"
+      className="flex items-center justify-between border-b border-border p-4"
       aria-hidden="true"
     >
       <div className="flex items-center space-x-3">
@@ -68,7 +54,6 @@ export const HeaderSkeleton: React.FC = () => {
   );
 };
 
-// Chat list skeleton
 export const ChatListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => {
   return (
     <div className="space-y-2 p-4" aria-hidden="true">
@@ -88,33 +73,27 @@ export const ChatListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) =>
   );
 };
 
-// Composer skeleton
 export const ComposerSkeleton: React.FC = () => {
   return (
     <div className="composer-container safe-x safe-bottom py-3" aria-hidden="true">
       <div className="relative flex items-end gap-2">
-        <Skeleton className="h-14 w-full rounded-[14px]" />
-        <Skeleton className="h-11 w-11 flex-shrink-0 rounded-[14px]" />
+        <Skeleton className="h-14 w-full rounded-lg" />
+        <Skeleton className="h-11 w-11 flex-shrink-0 rounded-lg" />
       </div>
     </div>
   );
 };
 
-// Loading dots animation for streaming messages
 export const LoadingDots: React.FC<{ className?: string }> = ({ className }) => {
   return (
-    <div
-      className={cn("text-accent-teal flex items-center space-x-1.5", className)}
-      aria-label="Lädt..."
-    >
-      <div className="from-accent-teal to-accent-violet h-2 w-2 animate-bounce rounded-full bg-gradient-to-r shadow-sm [animation-delay:-0.4s]" />
-      <div className="from-accent-violet to-accent-teal h-2 w-2 animate-bounce rounded-full bg-gradient-to-r shadow-sm [animation-delay:-0.2s]" />
-      <div className="from-accent-teal to-accent-violet h-2 w-2 animate-bounce rounded-full bg-gradient-to-r shadow-sm" />
+    <div className={cn("flex items-center space-x-1.5", className)} aria-label="Lädt...">
+      <div className="h-2 w-2 animate-bounce rounded-full bg-text-1 [animation-delay:-0.4s]" />
+      <div className="h-2 w-2 animate-bounce rounded-full bg-text-1 [animation-delay:-0.2s]" />
+      <div className="h-2 w-2 animate-bounce rounded-full bg-text-1" />
     </div>
   );
 };
 
-// Typing indicator for real-time responses
 export const TypingIndicator: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div
@@ -122,7 +101,7 @@ export const TypingIndicator: React.FC<{ className?: string }> = ({ className })
       aria-live="polite"
       aria-label="KI tippt..."
     >
-      <div className="text-text-muted flex items-center space-x-2">
+      <div className="flex items-center space-x-2 text-text-1">
         <LoadingDots />
         <span className="text-sm">KI tippt...</span>
       </div>
@@ -130,7 +109,6 @@ export const TypingIndicator: React.FC<{ className?: string }> = ({ className })
   );
 };
 
-// Skeleton for settings page
 export const SettingsSkeleton: React.FC = () => {
   return (
     <div className="space-y-6 p-4" aria-hidden="true">
@@ -147,7 +125,6 @@ export const SettingsSkeleton: React.FC = () => {
   );
 };
 
-// Glass Spinner for modern loading states
 export const GlassSpinner: React.FC<{ size?: "sm" | "md" | "lg"; className?: string }> = ({
   size = "md",
   className,
@@ -161,9 +138,7 @@ export const GlassSpinner: React.FC<{ size?: "sm" | "md" | "lg"; className?: str
   return (
     <div
       className={cn(
-        "border-glass-border/20 animate-spin rounded-full border-2",
-        "border-r-accent-violet border-t-accent-teal",
-        "shadow-sm backdrop-blur-sm",
+        "animate-spin rounded-full border-2 border-border border-t-brand",
         sizeClasses[size],
         className,
       )}
@@ -176,15 +151,10 @@ export const GlassSpinner: React.FC<{ size?: "sm" | "md" | "lg"; className?: str
   );
 };
 
-// Pulse animation for save states
 export const SavePulse: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div
-      className={cn(
-        "h-2 w-2 rounded-full bg-gradient-to-r from-green-400 to-emerald-400",
-        "animate-pulse shadow-lg shadow-green-400/25",
-        className,
-      )}
+      className={cn("h-2 w-2 animate-pulse rounded-full bg-success", className)}
       style={{
         animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       }}
@@ -194,17 +164,7 @@ export const SavePulse: React.FC<{ className?: string }> = ({ className }) => {
   );
 };
 
-// Add skeleton animation styles to CSS
 export const skeletonStyles = `
-@keyframes skeleton-loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
 @keyframes spin {
   from {
     transform: rotate(0deg);

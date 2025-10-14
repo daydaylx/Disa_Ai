@@ -1,7 +1,6 @@
 import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-// This component addresses the issue `04-composer-keyboard.md`
 import { useVisualViewport } from "../../hooks/useVisualViewport";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
@@ -21,11 +20,8 @@ interface ChatComposerProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-  // Fix für Issue #73: Autosend-Funktionalität
   isQuickstartLoading?: boolean;
 }
-
-// Suggestion prompts removed to match new design
 
 export function ChatComposer({
   value,
@@ -46,13 +42,10 @@ export function ChatComposer({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
 
-  // Auto-resize textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      // Reset height to auto to get the correct scrollHeight
       textarea.style.height = "auto";
-      // Set height based on scrollHeight, with min and max limits
       const newHeight = Math.min(Math.max(textarea.scrollHeight, 44), 200);
       textarea.style.height = `${newHeight}px`;
     }
@@ -91,36 +84,30 @@ export function ChatComposer({
   const shouldShowRetry = canRetry && !isLoading && onRetry;
   const isEmpty = trimmedValue.length === 0;
   const isComposerDisabled = disabled || isQuickstartLoading;
-  const showHelperState = !isLoading && (isComposerDisabled || isEmpty);
-
-  // Suggestion handling removed to match new design
 
   return (
     <div
       className={cn(
         "safe-bottom px-2 pt-4 transition-all duration-200",
-        viewport.isKeyboardOpen
-          ? "pb-4" // Less padding when keyboard is open
-          : "pb-[calc(var(--inset-b)+1.5rem)]", // Normal padding
+        viewport.isKeyboardOpen ? "pb-4" : "pb-[calc(var(--inset-b)+1.5rem)]",
         className,
       )}
       style={{
-        // Ensure composer stays above keyboard on mobile
         transform: viewport.isKeyboardOpen ? `translateY(-${viewport.offsetTop}px)` : undefined,
       }}
     >
-      <div className="mx-auto max-w-md space-y-4">
+      <div className="mx-auto max-w-md space-y-3">
         {(tokenCount !== undefined || maxTokens !== undefined) && (
-          <div className="flex items-center justify-between text-xs text-white/60">
+          <div className="flex items-center justify-between text-xs text-text-1">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="text-corporate-text-onSurface inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/10 px-3 py-1">
+                <span className="inline-flex items-center gap-1 rounded-full border border-border bg-surface-1 px-3 py-1">
                   <Zap className="h-3 w-3" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-corporate-text-secondary">
+                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-1 px-3 py-1">
                   Maximal: {maxTokens}
                 </span>
               )}
@@ -133,7 +120,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "glass-card flex items-end gap-2 p-4",
+            "flex items-end gap-2 rounded-lg border border-border bg-surface-1 p-2",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -148,10 +135,10 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "max-h-[200px] min-h-[44px] resize-none border-0 bg-transparent p-0 text-[15px] leading-relaxed text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                isQuickstartLoading && "cursor-not-allowed text-zinc-400",
+                "max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent p-2 text-[15px] leading-relaxed text-text-0 placeholder:text-text-1 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                isQuickstartLoading && "cursor-not-allowed text-text-1",
               )}
-              style={{ height: "44px" }}
+              style={{ height: "48px" }}
             />
           </div>
 
@@ -161,7 +148,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="bg-white/8 hover:bg-white/12 min-h-touch-rec min-w-touch-rec rounded-full border border-white/10 text-zinc-300 hover:text-zinc-100"
+                className="h-12 w-12 text-text-1 hover:bg-surface-2 hover:text-text-0"
                 title="Letzte Antwort erneut anfordern"
               >
                 <RotateCcw className="h-5 w-5" />
@@ -172,8 +159,8 @@ export function ChatComposer({
               <Button
                 onClick={handleStop}
                 size="icon"
-                variant="ghost"
-                className="min-h-touch-rec min-w-touch-rec rounded-full border border-red-300/30 bg-red-500/20 text-red-100 hover:bg-red-500/30"
+                variant="destructive"
+                className="h-12 w-12"
                 title="Ausgabe stoppen"
                 aria-label="Nachricht wird gesendet..."
                 data-testid="composer-stop"
@@ -186,7 +173,7 @@ export function ChatComposer({
               <Button
                 onClick={handleSend}
                 size="icon"
-                className="relative min-h-touch-rec min-w-touch-rec rounded-full border border-white/15 bg-white/15 text-zinc-100 shadow-[0_12px_30px_rgba(8,8,18,0.45)] transition-transform hover:scale-105 active:scale-95"
+                className="h-12 w-12"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 data-testid="composer-send"
@@ -196,18 +183,16 @@ export function ChatComposer({
             )}
 
             {!shouldShowRetry && !shouldShowStop && !shouldShowSend && (
-              <span className="block h-10 w-10" aria-hidden="true" />
+              <span className="block h-12 w-12" aria-hidden="true" />
             )}
           </div>
         </div>
 
-        <div className="mt-1 text-[12px] text-zinc-500">
+        <div className="mt-1 text-center text-xs text-text-1">
           {isLoading
             ? "Antwort wird erstellt …"
-            : showHelperState
-              ? isComposerDisabled
-                ? "Eingabe gesperrt, bitte warte einen Moment."
-                : "Schreibe eine Nachricht, um zu starten."
+            : isComposerDisabled
+              ? "Eingabe gesperrt, bitte warte einen Moment."
               : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
         </div>
       </div>

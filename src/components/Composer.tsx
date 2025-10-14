@@ -25,10 +25,10 @@ export function Composer({ value, onChange, onSend, onStop, streaming, canSend }
 
   return (
     <div
-      className="safe-px bg-bg-base/80 sticky z-40 pb-4 pt-2 backdrop-blur-lg"
-      style={{ bottom: "var(--bottom-nav-h)" }}
+      className="safe-px sticky bottom-0 z-40 border-t border-border bg-surface-0 pb-4 pt-2"
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}
     >
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto w-full max-w-[var(--max-content-width)]">
         <div id="composer-help" className="sr-only">
           Geben Sie Ihre Nachricht ein und drücken Sie Senden oder Enter
         </div>

@@ -1,38 +1,17 @@
-/**
- * LazyImage Component
- * Implements Issue #106 - Lazy loading for images and avatars
- */
-
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "../../lib/cn";
 
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  /** Fallback content while loading */
   fallback?: React.ReactNode;
-  /** Error fallback content */
   errorFallback?: React.ReactNode;
-  /** Low quality placeholder image URL */
   placeholder?: string;
-  /** Root margin for intersection observer */
   rootMargin?: string;
-  /** Threshold for intersection observer */
   threshold?: number;
-  /** Enable blur-to-sharp transition */
   enableBlurTransition?: boolean;
-  /** Aspect ratio for container (e.g., "1/1", "16/9") */
   aspectRatio?: string;
 }
 
-/**
- * LazyImage component with intersection observer for performance
- * Features:
- * - Intersection Observer API for viewport-based loading
- * - Placeholder support with blur transition
- * - Error handling with fallback content
- * - Aspect ratio containers to prevent layout shifts
- * - Automatic retries on network errors
- */
 export function LazyImage({
   src,
   alt,
@@ -54,10 +33,8 @@ export function LazyImage({
   const imgRef = useRef<HTMLImageElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Maximum retry attempts for failed loads
   const MAX_RETRIES = 2;
 
-  // Initialize intersection observer
   useEffect(() => {
     if (!src || loadState === "loaded") return;
 
@@ -96,7 +73,6 @@ export function LazyImage({
 
   const handleError = useCallback(
     (event: React.SyntheticEvent<HTMLImageElement>) => {
-      // Retry logic for transient network errors
       if (retryCount < MAX_RETRIES) {
         setRetryCount((prev) => prev + 1);
         setTimeout(
@@ -105,7 +81,7 @@ export function LazyImage({
             setCurrentSrc(src);
           },
           1000 * (retryCount + 1),
-        ); // Exponential backoff
+        );
       } else {
         setLoadState("error");
       }
@@ -114,9 +90,8 @@ export function LazyImage({
     [onError, retryCount, src],
   );
 
-  // Default fallback content
   const defaultFallback = (
-    <div className="flex h-full w-full items-center justify-center bg-white/10 text-white/50">
+    <div className="flex h-full w-full items-center justify-center bg-surface-1 text-text-1">
       <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
@@ -129,7 +104,7 @@ export function LazyImage({
   );
 
   const defaultErrorFallback = (
-    <div className="flex h-full w-full items-center justify-center bg-red-500/10 text-red-400">
+    <div className="flex h-full w-full items-center justify-center bg-danger/10 text-danger">
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
@@ -141,7 +116,6 @@ export function LazyImage({
     </div>
   );
 
-  // Container styles with aspect ratio
   const containerStyle = aspectRatio ? { aspectRatio } : undefined;
 
   return (
@@ -149,13 +123,10 @@ export function LazyImage({
       className={cn("relative overflow-hidden", aspectRatio && "block w-full", className)}
       style={containerStyle}
     >
-      {/* Loading state */}
       {loadState === "idle" && (fallback || defaultFallback)}
 
-      {/* Error state */}
       {loadState === "error" && (errorFallback || defaultErrorFallback)}
 
-      {/* Image */}
       {(loadState === "loading" || loadState === "loaded") && (
         <img
           ref={imgRef}
@@ -176,23 +147,17 @@ export function LazyImage({
         />
       )}
 
-      {/* Loading indicator overlay */}
       {loadState === "loading" && !placeholder && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/5">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white/60" />
+        <div className="bg-surface-1/50 absolute inset-0 flex items-center justify-center">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-brand" />
         </div>
       )}
     </div>
   );
 }
 
-/**
- * LazyAvatar - Specialized lazy image for avatars
- */
 interface LazyAvatarProps extends Omit<LazyImageProps, "aspectRatio"> {
-  /** Avatar size (affects both width/height and fallback icon size) */
   size?: "sm" | "md" | "lg" | "xl";
-  /** Fallback initials when image fails to load */
   fallbackInitials?: string;
 }
 
@@ -226,7 +191,7 @@ export function LazyAvatar({
   const customFallback = fallbackInitials ? (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 font-medium text-white",
+        "flex items-center justify-center rounded-full bg-brand font-medium text-white",
         sizeClasses[size],
         textSizes[size],
       )}
@@ -236,7 +201,7 @@ export function LazyAvatar({
   ) : (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full bg-white/10 text-white/60",
+        "flex items-center justify-center rounded-full bg-surface-2 text-text-1",
         sizeClasses[size],
       )}
     >

@@ -4,7 +4,7 @@ import { cn } from "../../lib/utils";
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("glass-card text-corporate-text-primary", className)} {...props} />
+    <div ref={ref} className={cn("surface-card text-text-0", className)} {...props} />
   ),
 );
 Card.displayName = "Card";
@@ -21,7 +21,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     <h3
       ref={ref}
       className={cn(
-        "text-token-h2 font-semibold leading-tight tracking-tight text-corporate-text-primary",
+        "text-token-h2 font-semibold leading-tight tracking-tight text-text-0",
         className,
       )}
       {...props}
@@ -36,7 +36,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-token-body leading-relaxed text-corporate-text-secondary", className)}
+    className={cn("text-token-body leading-relaxed text-text-1", className)}
     {...props}
   />
 ));
@@ -54,7 +54,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
     <div
       ref={ref}
       className={cn(
-        "flex items-center justify-between gap-4 border-t border-white/10 px-6 pb-6 pt-4",
+        "flex items-center justify-between gap-4 border-t border-border px-6 pb-6 pt-4",
         className,
       )}
       {...props}

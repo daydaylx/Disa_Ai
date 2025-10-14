@@ -64,13 +64,13 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
               aria-expanded={isOpen}
               onClick={() => toggle(i)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-left hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-violet-400"
+              className="w-full rounded-lg border border-border bg-surface-1 px-3 py-3 text-left hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-brand"
               style={{ minHeight: 56 }}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <div className="truncate font-medium">{it.title}</div>
-                  {it.meta && <div className="text-muted/80 truncate text-xs">{it.meta}</div>}
+                  {it.meta && <div className="truncate text-xs text-text-1">{it.meta}</div>}
                 </div>
                 <span
                   aria-hidden
@@ -85,7 +85,7 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
               role="region"
               aria-labelledby={hid}
               hidden={!isOpen}
-              className="rounded-b-lg border-b border-l border-r border-white/10 bg-white/5 px-3 pb-3 pt-2"
+              className="rounded-b-lg border-b border-l border-r border-border bg-surface-1 px-3 pb-3 pt-2"
             >
               {it.content}
             </div>

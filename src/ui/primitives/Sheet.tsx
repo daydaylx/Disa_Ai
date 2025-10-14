@@ -62,14 +62,9 @@ export function Sheet({
 
   return createPortal(
     <>
-      {/* Backdrop */}
+      <div className="fixed inset-0 z-50 bg-black/50" onClick={() => onOpenChange(false)} />
       <div
-        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-        onClick={() => onOpenChange(false)}
-      />
-      {/* Sheet */}
-      <div
-        className={`glass-sheet fixed z-50 ${sideClasses[side]} ${animationClasses[side]} ${className}`}
+        className={`fixed z-50 border-border bg-surface-1 ${sideClasses[side]} ${animationClasses[side]} ${className}`}
         role="dialog"
         aria-modal="true"
       >
@@ -104,7 +99,7 @@ interface SheetTitleProps {
 }
 
 export function SheetTitle({ children, className = "" }: SheetTitleProps) {
-  return <h2 className={`text-xl font-semibold text-neutral-100 ${className}`}>{children}</h2>;
+  return <h2 className={`text-xl font-semibold text-text-0 ${className}`}>{children}</h2>;
 }
 
 interface SheetDescriptionProps {
@@ -113,5 +108,5 @@ interface SheetDescriptionProps {
 }
 
 export function SheetDescription({ children, className = "" }: SheetDescriptionProps) {
-  return <p className={`text-neutral-300 ${className}`}>{children}</p>;
+  return <p className={`text-text-1 ${className}`}>{children}</p>;
 }

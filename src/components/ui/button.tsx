@@ -5,30 +5,25 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex min-h-[48px] items-center justify-center gap-2 whitespace-nowrap rounded-base border text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 disabled:pointer-events-none disabled:opacity-60",
   {
     variants: {
       variant: {
-        default:
-          "bg-corporate-accent-primary text-color-corporate-text-on-accent hover:bg-[--color-corporate-accent-secondary]",
-        destructive:
-          "bg-corporate-accent-danger text-color-corporate-text-on-accent hover:bg-red-600",
-        outline:
-          "border border-corporate-border-primary bg-corporate-bg-primary hover:bg-corporate-bg-elevated hover:text-corporate-text-primary",
-        secondary:
-          "bg-corporate-bg-elevated text-corporate-text-primary hover:bg-corporate-bg-card",
-        ghost: "hover:bg-corporate-bg-elevated hover:text-corporate-text-primary",
-        link: "text-corporate-accent-primary underline-offset-4 hover:underline",
+        outline: "border-border bg-transparent text-text-0 hover:bg-surface-1",
+        brand: "border-transparent bg-brand text-white hover:bg-brand/90",
+        ghost: "border-transparent bg-transparent text-text-1 hover:text-text-0 hover:bg-surface-1",
+        link: "border-transparent bg-transparent text-brand underline-offset-4 hover:underline",
+        destructive: "border-transparent bg-danger text-white hover:bg-danger/90",
       },
       size: {
-        default: "h-12 px-4 py-2", // 48px min-height for touch
-        sm: "h-11 rounded-md px-3", // 44px for less critical actions
-        lg: "h-14 rounded-md px-8", // 56px for primary actions
-        icon: "h-12 w-12", // 48px square for icons
+        default: "px-4",
+        sm: "h-[42px] px-3 text-sm",
+        lg: "h-12 px-5 text-base",
+        icon: "h-[44px] w-[44px]",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "outline",
       size: "default",
     },
   },

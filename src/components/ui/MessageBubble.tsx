@@ -11,8 +11,8 @@ const MessageBubble = React.forwardRef<HTMLDivElement, MessageBubbleProps>(
     const wrapperClasses = cn("flex w-full", variant === "user" ? "justify-end" : "justify-start");
 
     const bubbleClasses = cn(
-      "max-w-[80%] rounded-2xl px-4 py-3 shadow-md",
-      variant === "user" ? "bg-primary text-text-inverted" : "bg-bg-elevated text-text-default",
+      "max-w-[80%] rounded-2xl px-4 py-3",
+      variant === "user" ? "bg-brand text-white" : "bg-surface-1 text-text-0",
       className,
     );
 

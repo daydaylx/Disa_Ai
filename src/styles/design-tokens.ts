@@ -1,121 +1,35 @@
 /**
- * Central design token definitions for Disa AI.
+ * Minimal design token definitions for the redesigned Disa AI interface.
  *
- * Exports are consumed by Tailwind and other build tooling.
- * CSS variables are mapped in `design-tokens.css`.
+ * The tokens favour flat surfaces, high-contrast typography and a single brand accent.
+ * CSS variable wiring lives in `design-tokens.css`.
  */
 
-// Neutral palette with clear stops for backgrounds, borders and text
 export const colors = {
-  neutral: {
-    950: "#05070d",
-    900: "#0b1118",
-    800: "#111a26",
-    700: "#172231",
-    600: "#1d2b3c",
-    500: "#24344a",
-    400: "#2d3b50",
-    300: "#40526b",
-    200: "#95a4bb",
-    100: "#c6cfde",
-    50: "#f4f7fb",
+  surface: {
+    0: "#111111",
+    1: "#1E1E1E",
+    2: "#2C2C2C",
   },
-  accent: {
-    700: "#0a8aae",
-    500: "#22d3ee",
-    300: "#7dd3fc",
-    subtle: "rgba(34, 211, 238, 0.08)",
-    low: "rgba(34, 211, 238, 0.16)",
-    outline: "rgba(34, 211, 238, 0.38)",
-    foreground: "#03141c",
+  text: {
+    strong: "#F2F2F2",
+    muted: "#A8A8A8",
   },
-  semantic: {
-    danger: "#ef4444",
-    success: "#22c55e",
-    warning: "#f59e0b",
-    info: "#3b82f6",
-    purple: "#8b5cf6",
-    mint: "#6ee7b7",
+  border: {
+    subtle: "#333333",
   },
-  darkGlass: {
-    background: "#0b0f14",
-    surface: "#10151b",
-    surfaceElevated: "#131a21",
-    text: {
-      primary: "#e0e0e0",
-      secondary: "#b8bec4",
-      muted: "#9aa0a6",
-    },
-    accent: {
-      teal: "#26c6da",
-      violet: "#7c4dff",
-      pink: "#ff4d8b",
-    },
-    border: {
-      soft: "rgba(255, 255, 255, 0.12)",
-      strong: "rgba(255, 255, 255, 0.18)",
-      ultra: "rgba(255, 255, 255, 0.32)",
-    },
-    overlay: {
-      weak: "rgba(255, 255, 255, 0.04)",
-      soft: "rgba(255, 255, 255, 0.08)",
-      strong: "rgba(255, 255, 255, 0.16)",
-    },
-    shadow: {
-      base: "0 28px 80px -32px rgba(5, 9, 15, 0.75)",
-      soft: "0 18px 48px -24px rgba(5, 9, 15, 0.55)",
-    },
+  brand: {
+    base: "#007AFF",
+    weak: "#007AFF40",
   },
-  corporate: {
-    background: {
-      primary: "#000711",
-      secondary: "#0a0f1c",
-      elevated: "#0f1729",
-      card: "#141b2e",
-      hover: "#1a2235",
-    },
-    text: {
-      primary: "#f8fafc",
-      secondary: "#cbd5e1",
-      accent: "#60a5fa",
-      // WCAG AAA contrast-compliant text colors
-      onViolet: "#ffffff", // 100% white on violet for 7:1 contrast
-      onBlue: "#ffffff", // 100% white on blue for 7:1 contrast
-      onTeal: "#000000", // Black on teal for optimal contrast
-      onAccent: "#ffffff", // White on accent colors
-      onDark: "#ffffff", // White on dark backgrounds
-      onLight: "#0f172a", // Dark slate on light backgrounds
-      onSurface: "#f1f5f9", // Very light text on glass surfaces
-      muted: "#94a3b8", // Muted text (4.52:1 on dark)
-      subtle: "#64748b", // Subtle text (3.1:1 on dark) - use sparingly
-    },
-    border: {
-      primary: "#1e293b",
-      secondary: "#334155",
-      accent: "#475569",
-    },
-    accent: {
-      primary: "#3b82f6",
-      secondary: "#1d4ed8",
-      success: "#10b981",
-      warning: "#f59e0b",
-      danger: "#ef4444",
-      purple: "#8b5cf6",
-      // High contrast accent colors for accessibility
-      purpleHC: "#a855f7", // Higher contrast purple
-      blueHC: "#60a5fa", // Higher contrast blue
-      tealHC: "#06b6d4", // Higher contrast teal
-    },
-    glow: {
-      blue: "0 0 20px rgba(59, 130, 246, 0.3)",
-      purple: "0 0 20px rgba(139, 92, 246, 0.3)",
-      green: "0 0 20px rgba(16, 185, 129, 0.3)",
-    },
+  state: {
+    success: "#34C759",
+    warning: "#FFCC00",
+    danger: "#FF3B30",
   },
 } as const;
 
-export type ColorRamp = typeof colors.neutral;
-export type AccentRamp = typeof colors.accent;
+export type SurfaceRamp = typeof colors.surface;
 
 // Spacing scale (4 / 8 / 12 / 16 / 24 / 32 …) - 8dp grid system
 export const spacing = {
@@ -136,7 +50,6 @@ export const spacing = {
 
 // Touch targets and accessibility
 export const touchTargets = {
-  // Material Design minimum touch targets
   minimum: "44px", // iOS guideline minimum
   recommended: "48px", // Material Design recommended
   comfortable: "56px", // Comfortable for all users
@@ -180,70 +93,24 @@ export const typography = {
   },
 } as const;
 
-// Border radii tokens
+// Border radii tokens - single family (base + pill)
 export const radii = {
   none: "0px",
-  sm: "6px",
-  md: "10px",
-  lg: "14px",
+  base: "12px",
   full: "9999px",
+  pill: "999px",
 } as const;
 
-// Elevation tokens (0 / 1 / 2 / 3)
+// Subtle elevation tier
 export const elevation = {
-  0: "none",
-  1: "0 8px 20px -12px rgba(5, 11, 20, 0.55)",
-  2: "0 20px 48px -18px rgba(5, 11, 20, 0.55)",
-  3: "0 32px 64px -24px rgba(5, 11, 20, 0.65)",
-} as const;
-
-// Glassmorphism tokens
-export const glassmorphism = {
-  blur: {
-    sm: "8px",
-    md: "16px",
-    lg: "24px",
-    xl: "32px",
-    "2xl": "40px",
-  },
-  background: {
-    subtle: "rgba(255, 255, 255, 0.05)",
-    soft: "rgba(255, 255, 255, 0.08)",
-    medium: "rgba(255, 255, 255, 0.12)",
-    strong: "rgba(255, 255, 255, 0.16)",
-  },
-  border: {
-    subtle: "rgba(255, 255, 255, 0.08)",
-    soft: "rgba(255, 255, 255, 0.12)",
-    medium: "rgba(255, 255, 255, 0.16)",
-    strong: "rgba(255, 255, 255, 0.24)",
-  },
-  overlay: {
-    weak: "rgba(255, 255, 255, 0.05)", // Sehr subtil
-    soft: "rgba(255, 255, 255, 0.10)", // Subtil
-    medium: "rgba(255, 255, 255, 0.15)", // Moderat
-    strong: "rgba(255, 255, 255, 0.20)", // Stark
-    intense: "rgba(255, 255, 255, 0.30)", // Sehr stark
-  },
-  tint: {
-    cyan: "rgba(34, 211, 238, 0.1)",
-    purple: "rgba(168, 85, 247, 0.1)",
-    mint: "rgba(110, 231, 183, 0.1)",
-    warm: "rgba(255, 183, 77, 0.1)",
-  },
-  glow: {
-    subtle: "0 0 20px rgba(34, 211, 238, 0.15)",
-    soft: "0 0 30px rgba(34, 211, 238, 0.2)",
-    medium: "0 0 40px rgba(34, 211, 238, 0.25)",
-    strong: "0 0 60px rgba(34, 211, 238, 0.3)",
-  },
+  level: "0 4px 12px rgba(0, 0, 0, 0.1)",
 } as const;
 
 // Motion tokens
 export const transitions = {
   fast: "150ms",
   normal: "200ms",
-  slow: "300ms",
+  slow: "250ms",
 } as const;
 
 // Reference breakpoints (mobile first focus)
@@ -261,7 +128,6 @@ export const designTokens = {
   typography,
   radii,
   elevation,
-  glassmorphism,
   transitions,
   breakpoints,
 } as const;

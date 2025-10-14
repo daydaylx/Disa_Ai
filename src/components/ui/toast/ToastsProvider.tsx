@@ -84,20 +84,20 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               key={t.id}
               role="status"
               className={cn(
-                "tap-target border-border-strong bg-surface-200 shadow-elev2 text-text-primary pointer-events-auto w-[min(96vw,640px)] rounded-2xl border",
-                "flex items-start gap-3 p-3",
+                "pointer-events-auto flex w-[min(96vw,640px)] items-start gap-3 rounded-lg border border-border-strong bg-surface-1 p-3 text-text-strong shadow-level",
+                "tap-target",
               )}
             >
               <div className="mt-0.5">{KIND_TO_ICON[t.kind]}</div>
               <div className="flex-1">
                 {t.title ? <div className="font-semibold leading-snug">{t.title}</div> : null}
                 {t.message ? (
-                  <div className="text-sm leading-snug opacity-95">{t.message}</div>
+                  <div className="text-sm leading-snug text-text-muted">{t.message}</div>
                 ) : null}
                 {t.action ? (
                   <button
                     type="button"
-                    className="btn btn-ghost btn-sm mt-2"
+                    className="tap-target mt-2 inline-flex items-center justify-center rounded-base border border-transparent px-3 py-1 text-sm font-medium text-brand hover:bg-brand/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
                     onClick={t.action.onClick}
                   >
                     {t.action.label}
@@ -107,7 +107,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               <button
                 type="button"
                 aria-label="Schließen"
-                className="btn btn-ghost btn-sm ml-2"
+                className="tap-target ml-2 inline-flex h-8 w-8 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-surface-2 hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
                 onClick={() => dismiss(t.id)}
               >
                 <Icon name="close" />

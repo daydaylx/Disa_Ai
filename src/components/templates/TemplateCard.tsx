@@ -17,13 +17,13 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
   const getDifficultyColor = (difficulty?: string) => {
     switch (difficulty) {
       case "beginner":
-        return "bg-semantic-success/10 text-semantic-success border-semantic-success/30";
+        return "bg-success/10 text-success border-success/30";
       case "intermediate":
-        return "bg-semantic-warning/10 text-semantic-warning border-semantic-warning/30";
+        return "bg-warn/10 text-warn border-warn/30";
       case "advanced":
-        return "bg-semantic-danger/10 text-semantic-danger border-semantic-danger/30";
+        return "bg-danger/10 text-danger border-danger/30";
       default:
-        return "bg-neutral-500/10 text-neutral-200 border-neutral-500/30";
+        return "bg-surface-2 text-text-1 border-border";
     }
   };
 
@@ -38,7 +38,7 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
   return (
     <Card
       className={cn(
-        "group relative cursor-pointer transition-all duration-200 hover:scale-[1.02] hover:shadow-lg",
+        "group relative cursor-pointer transition-all duration-200 hover:scale-[1.02]",
         className,
       )}
     >
@@ -47,21 +47,20 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
           <div className="flex items-center gap-3">
             {template.icon && <div className="text-2xl">{template.icon}</div>}
             <div>
-              <CardTitle className="group-hover:text-accent-600 text-lg font-semibold transition-colors">
+              <CardTitle className="text-lg font-semibold transition-colors group-hover:text-brand">
                 {template.name}
               </CardTitle>
-              <CardDescription className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+              <CardDescription className="mt-1 text-sm text-text-1">
                 {template.description}
               </CardDescription>
             </div>
           </div>
-          <ChevronRight className="h-5 w-5 text-neutral-400 transition-colors group-hover:text-accent-500" />
+          <ChevronRight className="h-5 w-5 text-text-1 transition-colors group-hover:text-brand" />
         </div>
       </CardHeader>
 
       <CardContent className="pt-0">
-        {/* Template Stats */}
-        <div className="mb-4 flex items-center gap-4 text-sm text-neutral-600 dark:text-neutral-400">
+        <div className="mb-4 flex items-center gap-4 text-sm text-text-1">
           {template.estimatedTime && (
             <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
@@ -78,7 +77,6 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
           )}
         </div>
 
-        {/* Category and Tags */}
         <div className="mb-4 flex flex-wrap gap-2">
           <Badge variant="secondary" className="text-xs">
             {template.category}
@@ -96,38 +94,33 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
           )}
         </div>
 
-        {/* Starter Prompts Preview */}
         <div className="mb-4">
-          <div className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
-            Sample prompts:
-          </div>
+          <div className="mb-2 text-sm font-medium text-text-0">Sample prompts:</div>
           <div className="space-y-1">
             {template.starterPrompts.slice(0, 2).map((prompt, index) => (
               <div
                 key={index}
-                className="line-clamp-1 rounded bg-neutral-50 px-2 py-1 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
+                className="line-clamp-1 rounded bg-surface-2 px-2 py-1 text-xs text-text-1"
               >
                 "{prompt}"
               </div>
             ))}
             {template.starterPrompts.length > 2 && (
-              <div className="text-xs italic text-neutral-500">
+              <div className="text-xs italic text-text-1">
                 +{template.starterPrompts.length - 2} more prompts
               </div>
             )}
           </div>
         </div>
 
-        {/* Suggested Model */}
         {template.suggestedModel && (
-          <div className="mb-4 rounded-lg bg-blue-50 p-2 dark:bg-blue-950">
-            <div className="text-xs text-blue-700 dark:text-blue-300">
+          <div className="mb-4 rounded-lg bg-brand/10 p-2">
+            <div className="text-xs text-brand">
               <strong>Suggested model:</strong> {template.suggestedModel}
             </div>
           </div>
         )}
 
-        {/* Action Buttons */}
         <div className="flex gap-2">
           <Button onClick={handleUse} className="flex-1" size="sm">
             Use Template

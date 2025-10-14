@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/npm/v/disa-ai?label=version&style=for-the-badge)](package.json)
 [![License](https://img.shields.io/badge/license-Private-blue?style=for-the-badge)](#-lizenz)
 
-**Disa AI** ist eine professionelle, mobile-first AI-Chat Progressive Web App (PWA), die mit React, Vite, TypeScript und Tailwind CSS entwickelt wurde. Die Anwendung ist speziell für eine optimale Darstellung auf mobilen Endgeräten konzipiert und zeichnet sich durch ein modernes Glassmorphism-Design, eine robuste Codebasis und eine auf Sicherheit und Performance ausgerichtete Architektur aus.
+**Disa AI** ist eine professionelle, mobile-first AI-Chat Progressive Web App (PWA), die mit React, Vite, TypeScript und Tailwind CSS entwickelt wurde. Die Anwendung ist speziell für eine optimale Darstellung auf mobilen Endgeräten konzipiert und zeichnet sich durch ein modernes Minimal-Design, eine robuste Codebasis und eine auf Sicherheit und Performance ausgerichtete Architektur aus.
 
 ---
 
@@ -64,7 +64,7 @@ Die Anwendung verfügt über eine eigene, wiederverwendbare Komponenten-Biblioth
 
 ### Styling & Layout
 
-- **Glassmorphism**: Ein zentrales Design-Merkmal, das durch benutzerdefinierte Tailwind-Klassen wie `glass-card` realisiert wird. Diese kombinieren Hintergrund-Transparenz, `backdrop-filter: blur()` und feine Rahmen, um einen Tiefeneffekt zu erzeugen.
+- **Minimal Design-System**: Ein klares, reduziertes Design-System mit flachen Oberflächen und maximaler Funktionalität. Anstelle von Glaseffekten werden klare Oberflächen (surface-0, surface-1, surface-2) mit konsistenten Abständen und Farben verwendet.
 - **Mobile-First & Safe Area**: Das Layout ist primär für mobile Geräte konzipiert. `env(safe-area-inset-*)` wird in der Tailwind-Konfiguration genutzt, um sicherzustellen, dass UI-Elemente nicht von der "Notch" oder den Home-Indikatoren auf iOS- und Android-Geräten verdeckt werden.
 - **Dynamische Viewport-Höhe**: `App.tsx` enthält eine Logik, die die tatsächliche sichtbare Höhe des Viewports (`window.visualViewport.height`) misst und als CSS-Variable (`--vh`) setzt. Dies löst das klassische Problem auf mobilen Browsern, bei dem die Adressleiste die `100vh`-Einheit verfälscht.
 

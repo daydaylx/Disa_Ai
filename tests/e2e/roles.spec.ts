@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 import { AppHelpers } from "./helpers/app-helpers";
 
 test.describe("Rollen-Screen", () => {
-  test("cards share the glass template, interactive states and pass axe", async ({ page }) => {
+  test("cards are accessible and have interactive states", async ({ page }) => {
     const helpers = new AppHelpers(page);
     const monitor = helpers.setupConsoleMonitoring();
 
@@ -17,29 +17,19 @@ test.describe("Rollen-Screen", () => {
     const cardCount = await cards.count();
     expect(cardCount).toBeGreaterThan(4);
 
-    const neutralCard = page.getByTestId("role-card-neutral");
-    await expect(neutralCard).toBeVisible();
+    const firstCard = cards.first();
+    await expect(firstCard).toBeVisible();
 
-    await neutralCard.tap();
-    await expect(neutralCard).toHaveAttribute("aria-pressed", "true");
+    await firstCard.tap();
+    await expect(firstCard).toHaveAttribute("aria-pressed", "true");
 
-    const boundingBox = await neutralCard.boundingBox();
+    const boundingBox = await firstCard.boundingBox();
     expect(boundingBox?.height ?? 0).toBeGreaterThanOrEqual(48);
     expect(boundingBox?.width ?? 0).toBeGreaterThanOrEqual(48);
 
-    await neutralCard.focus();
-    const backgroundColor = await neutralCard.evaluate(
-      (el) => getComputedStyle(el).backgroundColor,
-    );
-    expect(backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
-
-    const borderColor = await neutralCard.evaluate((el) => getComputedStyle(el).borderColor);
+    await firstCard.focus();
+    const borderColor = await firstCard.evaluate((el) => getComputedStyle(el).borderColor);
     expect(borderColor).not.toBe("rgba(0, 0, 0, 0)");
-
-    const accentBar = neutralCard.locator("span").first();
-    await expect(accentBar).toBeVisible();
-    const accentBarColor = await accentBar.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(accentBarColor).not.toBe("rgba(0, 0, 0, 0)");
 
     const axe = new AxeBuilder({ page })
       .include("[data-testid='role-card-grid']")

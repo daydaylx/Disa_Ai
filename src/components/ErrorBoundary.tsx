@@ -16,10 +16,6 @@ interface State {
   errorId: string | null;
 }
 
-/**
- * Global Error Boundary with comprehensive error reporting
- * Provides detailed error information and recovery options
- */
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -32,7 +28,6 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): Partial<State> {
-    // Generate unique error ID for tracking
     const errorId = `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     return {
@@ -45,13 +40,11 @@ export class ErrorBoundary extends Component<Props, State> {
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ errorInfo });
 
-    // Log detailed error information
     logger.error("🚨 Application Error Boundary");
     logger.error("Error:", error);
     logger.error("Error Info:", errorInfo);
     logger.error("Component Stack:", errorInfo.componentStack);
 
-    // Log environment diagnostics
     this.logEnvironmentDiagnostics();
   }
 
@@ -73,14 +66,12 @@ export class ErrorBoundary extends Component<Props, State> {
       logger.error("Environment Configuration Error:", envError);
     }
 
-    // Check network connectivity
     if (navigator.onLine) {
       logger.error("Network Status: Online");
     } else {
       logger.error("Network Status: Offline");
     }
 
-    // Check localStorage availability
     try {
       localStorage.setItem("test", "test");
       localStorage.removeItem("test");
@@ -95,11 +86,10 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   private handleReset = () => {
-    // Clear localStorage and reload
     try {
       localStorage.clear();
     } catch {
-      // Ignore if localStorage is not available
+      // Ignore
     }
     window.location.reload();
   };
@@ -116,7 +106,6 @@ export class ErrorBoundary extends Component<Props, State> {
       timestamp: new Date().toISOString(),
     };
 
-    // Copy error report to clipboard
     void navigator.clipboard?.writeText(JSON.stringify(reportData, null, 2));
     alert("Fehlerbericht wurde in die Zwischenablage kopiert");
   };
@@ -125,19 +114,17 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       const { error, errorInfo, errorId } = this.state;
 
-      // Use custom fallback if provided
       if (this.props.fallback) {
         return this.props.fallback(error!, errorInfo!);
       }
 
-      // Default error UI
       return (
-        <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-red-50 to-red-100 p-4">
-          <div className="w-full max-w-2xl rounded-lg bg-white p-8 shadow-xl">
+        <div className="flex min-h-dvh items-center justify-center bg-surface-0 p-4">
+          <div className="w-full max-w-2xl rounded-lg bg-surface-1 p-8 shadow-level">
             <div className="mb-8 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-danger/10">
                 <svg
-                  className="h-8 w-8 text-red-600"
+                  className="h-8 w-8 text-danger"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -150,15 +137,15 @@ export class ErrorBoundary extends Component<Props, State> {
                   />
                 </svg>
               </div>
-              <h1 className="mb-2 text-2xl font-bold text-gray-900">Anwendungsfehler</h1>
-              <p className="text-gray-600">
+              <h1 className="mb-2 text-2xl font-bold text-text-0">Anwendungsfehler</h1>
+              <p className="text-text-1">
                 Die Anwendung ist auf einen unerwarteten Fehler gestoßen
               </p>
             </div>
 
-            <div className="mb-6 rounded-lg bg-gray-50 p-4">
-              <h2 className="mb-2 font-semibold text-gray-900">Fehlerdetails</h2>
-              <div className="space-y-1 text-sm text-gray-700">
+            <div className="mb-6 rounded-lg bg-surface-2 p-4">
+              <h2 className="mb-2 font-semibold text-text-0">Fehlerdetails</h2>
+              <div className="space-y-1 text-sm text-text-1">
                 <div>
                   <strong>Fehler-ID:</strong> {errorId}
                 </div>
@@ -175,12 +162,12 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {!isEnvironmentValid() && (
-              <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-                <h3 className="mb-2 font-semibold text-yellow-800">Konfigurationsproblem</h3>
-                <p className="mb-2 text-sm text-yellow-700">
+              <div className="border-warn/30 bg-warn/10 mb-6 rounded-lg border p-4">
+                <h3 className="text-warn mb-2 font-semibold">Konfigurationsproblem</h3>
+                <p className="text-warn/80 mb-2 text-sm">
                   Die Umgebungskonfiguration ist unvollständig:
                 </p>
-                <ul className="list-inside list-disc text-sm text-yellow-700">
+                <ul className="text-warn/80 list-inside list-disc text-sm">
                   {getEnvironmentErrors().map((error, index) => (
                     <li key={index}>{error}</li>
                   ))}
@@ -191,30 +178,30 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex flex-col gap-4 sm:flex-row">
               <button
                 onClick={this.handleReload}
-                className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+                className="flex-1 rounded-lg bg-brand px-4 py-2 text-white transition-colors hover:bg-brand/90"
               >
                 Seite neu laden
               </button>
               <button
                 onClick={this.handleReset}
-                className="flex-1 rounded-lg bg-gray-600 px-4 py-2 text-white transition-colors hover:bg-gray-700"
+                className="flex-1 rounded-lg bg-surface-2 px-4 py-2 text-text-0 transition-colors hover:bg-surface-1"
               >
                 App zurücksetzen
               </button>
               <button
                 onClick={this.handleReportError}
-                className="flex-1 rounded-lg bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
+                className="flex-1 rounded-lg bg-success px-4 py-2 text-white transition-colors hover:bg-success/90"
               >
                 Fehler melden
               </button>
             </div>
 
-            <div className="mt-6 border-t border-gray-200 pt-6">
+            <div className="mt-6 border-t border-border pt-6">
               <details className="text-sm">
-                <summary className="cursor-pointer text-gray-600 hover:text-gray-900">
+                <summary className="cursor-pointer text-text-1 hover:text-text-0">
                   Technische Details anzeigen
                 </summary>
-                <div className="mt-4 max-h-40 overflow-auto rounded bg-gray-900 p-4 font-mono text-xs text-gray-100">
+                <div className="mt-4 max-h-40 overflow-auto rounded bg-surface-2 p-4 font-mono text-xs text-text-0">
                   <div>
                     <strong>Stack Trace:</strong>
                   </div>
@@ -239,25 +226,16 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-/**
- * Hook for manual error reporting
- */
 export function useErrorReporting() {
   const reportError = (error: Error, context?: string) => {
     logger.error("🚨 Manual Error Report");
     logger.error("Error:", error);
     if (context) logger.error("Context:", context);
-
-    // You could send this to an error tracking service
   };
 
   return { reportError };
 }
 
-/**
- * Startup diagnostics component
- * Runs initial checks and reports problems as non-blocking warnings
- */
 export function StartupDiagnostics({ children }: { children: ReactNode }) {
   const [warnings, setWarnings] = React.useState<string[]>([]);
   const [showWarnings, setShowWarnings] = React.useState(false);
@@ -267,18 +245,14 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
       const diagnosticWarnings: string[] = [];
 
       try {
-        // Environment validation (non-critical)
         if (!isEnvironmentValid()) {
           diagnosticWarnings.push(...getEnvironmentErrors());
         }
 
-        // Network connectivity check (informational only)
         if (!navigator.onLine) {
           diagnosticWarnings.push("Offline-Modus aktiv");
         }
 
-        // API availability check (delayed, non-blocking)
-        // Only check if we have an API key configured and not on mobile to prevent crashes
         const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent,
         );
@@ -299,10 +273,9 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
 
               clearTimeout(timeoutId);
             } catch {
-              // API issues are handled by the existing error system
               logger.warn("API connectivity check failed - using existing error handling");
             }
-          }, 2000); // Longer delay for stability
+          }, 2000);
         }
 
         if (diagnosticWarnings.length > 0) {
@@ -310,7 +283,6 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
           setShowWarnings(true);
         }
       } catch (error) {
-        // Log but don't block
         logger.warn("Startup diagnostics failed:", error);
       }
     };
@@ -320,13 +292,12 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {/* Non-blocking warning banner */}
       {showWarnings && warnings.length > 0 && (
-        <div className="fixed left-0 right-0 top-0 z-50 border-b border-yellow-200 bg-yellow-100 p-4">
+        <div className="border-warn/30 bg-warn/10 fixed left-0 right-0 top-0 z-50 border-b p-4">
           <div className="mx-auto flex max-w-7xl items-center justify-between">
             <div className="flex items-center space-x-2">
               <svg
-                className="h-5 w-5 text-yellow-600"
+                className="text-warn h-5 w-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -338,13 +309,13 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 14.5c-.77.833.192 2.5 1.732 2.5z"
                 />
               </svg>
-              <span className="text-sm text-yellow-800">
+              <span className="text-warn text-sm">
                 {warnings.length === 1 ? warnings[0] : `${warnings.length} Konfigurationswarnungen`}
               </span>
             </div>
             <button
               onClick={() => setShowWarnings(false)}
-              className="text-xl font-bold text-yellow-600 hover:text-yellow-800"
+              className="text-warn hover:text-warn/80 text-xl font-bold"
               aria-label="Warning schließen"
             >
               ×
@@ -353,7 +324,6 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
         </div>
       )}
 
-      {/* App always renders */}
       <div className={showWarnings && warnings.length > 0 ? "pt-12" : ""}>{children}</div>
     </>
   );

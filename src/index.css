@@ -1,81 +1,37 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Base layer overrides and additions */
 @layer base {
   html {
-    -webkit-text-size-adjust: none; /* Safari */
-    text-size-adjust: none; /* Other browsers */
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
     scroll-behavior: smooth;
     color-scheme: dark;
   }
 
-  /* Background handled via design-tokens.css */
   body {
-    min-height: 100vh;
-    min-height: 100dvh; /* Dynamic viewport height for mobile */
-    color: var(--color-synthwave-text);
+    min-height: 100dvh;
+    background: var(--surface-0);
+    color: var(--text-0);
+    font-family: var(--font-mono);
+    font-size: 16px;
+    line-height: 1.6;
     overflow-x: hidden;
     position: relative;
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    font-size: 16px;
-    line-height: 1.6;
   }
 
-  /* Additional body styles if needed */
-
-  /* Mobile-optimierte Hintergrund-Variante */
-  body.background-optimized {
-    background-attachment: scroll; /* Better performance on mobile */
-  }
-
-  /* Global Glass Backdrop Layer - Applied to all content */
   #root {
-    position: relative;
-  }
-
-  #root::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -10;
-    pointer-events: none;
-    background:
-      radial-gradient(700px circle at 18% 12%, rgba(48, 92, 160, 0.18) 0%, transparent 60%),
-      radial-gradient(640px circle at 82% 4%, rgba(124, 84, 204, 0.14) 0%, transparent 62%),
-      linear-gradient(160deg, rgba(4, 6, 12, 0.75) 0%, rgba(8, 12, 20, 0.45) 60%, transparent 100%);
-    opacity: 0.72;
-    backdrop-filter: blur(14px) saturate(1.08);
-    -webkit-backdrop-filter: blur(14px) saturate(1.08);
-  }
-
-  /* Mobile-optimized background */
-  @media (max-width: 768px) {
-    body {
-      background-attachment: scroll; /* Better performance on mobile */
-      background-size: cover;
-      background: var(--bg-linear-gradient), var(--bg-radial-gradient), var(--bg-noise-overlay);
-    }
-
-    #root::before {
-      opacity: 0.62;
-      backdrop-filter: blur(12px) saturate(1.05);
-      -webkit-backdrop-filter: blur(12px) saturate(1.05);
-    }
-  }
-
-  /* High-resolution displays */
-  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    body {
-      background-size: cover;
-    }
-  }
-
-  /* Ensure the root element fills the viewport */
-  #root {
-    min-height: 100vh;
     min-height: 100dvh;
+    background: var(--surface-0);
   }
 
+  @layer utilities {
+    .overflow-wrap-anywhere {
+      overflow-wrap: anywhere;
+    }
+  }
   h1,
   h2,
   h3 {
@@ -87,178 +43,61 @@
   blockquote,
   figcaption {
     text-wrap: pretty;
-    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: var(--brand-base);
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  ::selection {
+    background-color: var(--brand-weak);
+    color: var(--text-0);
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--brand-base);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  textarea {
+    caret-color: var(--brand-base);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
-
-@tailwind components;
-
-/**
- * Component layer styles
- * Provides reusable component classes like .glass, .tile, .card, etc.
- */
 
 @layer components {
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
+  .surface-card {
+    background: var(--surface-1);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--surface-radius);
   }
-
-  .card-hover {
-    transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
-  }
-
-  .card-cta {
-    transition:
-      border-color 0.2s ease,
-      background-color 0.2s ease,
-      transform 0.2s ease;
-  }
-
-  /* Freundliche Button-Stile für wärmere Interaktionen */
-  .btn-friendly {
-    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-rose-400/25 via-orange-300/20 to-amber-200/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
-  }
-
-  .btn-friendly-warm {
-    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-amber-300/30 via-orange-300/20 to-rose-400/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
-  }
-
-  .btn-friendly-fresh {
-    @apply relative overflow-hidden rounded-xl border border-white/25 bg-gradient-to-r from-emerald-300/30 via-teal-300/20 to-cyan-300/25 px-6 py-3 text-white backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:brightness-110 active:scale-95;
-  }
-
-  /* PWA Install Prompt Animations */
-  .animate-bounce-in {
-    animation: bounceIn 0.6s ease-out forwards;
-  }
-
-  @keyframes bounceIn {
-    0% {
-      opacity: 0;
-      transform: translateY(100%) scale(0.3);
-    }
-    50% {
-      opacity: 1;
-      transform: translateY(-10%) scale(1.05);
-    }
-    70% {
-      transform: translateY(5%) scale(0.95);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0%) scale(1);
-    }
-  }
-}
-
-@supports not (backdrop-filter: blur(1px)) {
-  .card-glass {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background-color: rgba(255, 255, 255, 0.08);
-  }
-}
-
-@tailwind utilities;
-
-/* Page transition animations */
-@layer utilities {
-  @keyframes slide-up-fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-page-transition {
-    animation: slide-up-fade-in 0.4s cubic-bezier(0.3, 0, 0.2, 1);
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .card-hover:hover {
-    border-color: rgba(255, 255, 255, 0.16);
-    box-shadow: 0 14px 36px -10px rgba(0, 0, 0, 0.65);
-  }
-
-  .card-cta:hover {
-    border-color: rgba(255, 255, 255, 0.18);
-    background-color: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.95);
-  }
-}
-
-/* Additional responsive styles if needed */
-@media (max-width: 768px) {
-  /* Mobile-specific adjustments */
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Animationen für die Glow-Effekte */
-@keyframes pulse-glow-one {
-  0% {
-    transform: scale(1);
-    opacity: 0.2;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.25;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.2;
-  }
-}
-
-@keyframes pulse-glow-two {
-  0% {
-    transform: scale(1);
-    opacity: 0.2;
-  }
-  50% {
-    transform: scale(1.06);
-    opacity: 0.26;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.2;
-  }
-}
-
-/* Noise-Overlay */
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39sbGxvb29o RagehJTz_AAAAEXRSTlMAwObRxqs8PS8j2dDV0tT5/L4l+wAAAAlwSFlzAAALEwAACxMBAJqcGAAAAKtJREFUeJx900sSwyAMBFE06r5v3f+w8oOQTs105iMJIOTg93rPo2l1eX8p0359TxeXgXJ1d30wMDw+PjY2NzM3NDE1NTQ1MDIyMjA5OTk4OTE4ODg4ODc3Nzc3NDQyNjYyNTU2NbY2NjY2ODg4NjY5OTk5OTY2NTU1NTU2NjY2NjY1NDQ0NDQ0NDQyMjI5OTk5OTk4ODg4ODg2NjY1NTQ0NTQ1MDIyMjA4ODg9+1g4ODw8Pj4+Pj4+Pj4+Pj4+Pj45OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk... [truncated]");
-  z-index: -1;
-  opacity: 0.04; /* Noise-Textur verstärkt für mehr physische Qualität */
 }

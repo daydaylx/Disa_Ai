@@ -2,18 +2,19 @@ import * as React from "react";
 
 import { cn } from "../../lib/cn";
 
-type CopyButtonVariant = "primary" | "ghost" | "danger" | "base";
+type CopyButtonVariant = "base" | "brand" | "ghost" | "danger";
 
 const sizeClasses: Record<"sm" | "md", string> = {
-  sm: "btn-sm",
-  md: "",
+  sm: "h-10 w-10",
+  md: "h-11 px-4",
 };
 
 const variantClasses: Record<CopyButtonVariant, string> = {
-  primary: "btn-primary",
-  ghost: "btn-ghost",
-  danger: "btn-danger",
-  base: "",
+  base: "border-border-subtle bg-surface-1 text-text-muted hover:bg-surface-1-hover hover:text-text-strong",
+  brand: "border-transparent bg-brand-base text-surface-0 hover:bg-brand-strong",
+  ghost:
+    "border-transparent bg-transparent text-text-muted hover:bg-surface-1 hover:text-text-strong",
+  danger: "border-transparent bg-state-danger/10 text-state-danger hover:bg-state-danger/15",
 };
 
 interface CopyButtonProps
@@ -108,10 +109,9 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
       type="button"
       onClick={handleCopy}
       className={cn(
-        "btn",
-        variantClasses[variant],
+        "inline-flex items-center justify-center rounded-base border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 disabled:pointer-events-none disabled:opacity-60",
         sizeClasses[size],
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
+        variantClasses[variant],
         className,
       )}
       aria-label={`Text kopieren: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}`}

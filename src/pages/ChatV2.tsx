@@ -5,7 +5,6 @@ import { useLocation } from "react-router-dom";
 import { logDiscussionAnalytics } from "../analytics/discussion";
 import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
 import { MessageBubbleCard } from "../components/chat/MessageBubbleCard";
-import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui/button";
 import {
   Select,
@@ -34,20 +33,15 @@ import {
   getGameSystemPrompt,
 } from "../features/prompt/gamePrompts";
 import { type ChatRequestOptions, useChat } from "../hooks/useChat";
-import { useGlassPalette } from "../hooks/useGlassPalette";
 import {
   deleteConversation,
   getAllConversations,
   getConversation,
   saveConversation,
 } from "../lib/conversation-manager";
-import type { GlassTint } from "../lib/theme/glass";
-import { FRIENDLY_TINTS } from "../lib/theme/glass";
 import { buildDiscussionSystemPrompt } from "../prompts/discussion/base";
 import { type DiscussionPresetKey, discussionPresetOptions } from "../prompts/discussion/presets";
 import type { ChatMessageType } from "../types/chatMessage";
-
-const DEFAULT_TINT: GlassTint = FRIENDLY_TINTS[0]!;
 
 const MIN_DISCUSSION_SENTENCES = 5;
 const DISCUSSION_CARD_HINT = "Kurze Spekulationsrunde (5–10 Sätze, Abschlussfrage inklusive).";
@@ -67,8 +61,6 @@ export default function ChatV2() {
   const [currentSystemPrompt, setCurrentSystemPrompt] = useState<string | undefined>(undefined);
   const [discussionPreset, setDiscussionPresetState] =
     useState<DiscussionPresetKey>(getDiscussionPreset);
-  const palette = useGlassPalette();
-  const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
   const toasts = useToasts();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const discussionSessionRef = useRef<DiscussionSession | null>(null);
@@ -76,11 +68,9 @@ export default function ChatV2() {
   const strictRetryTracker = useRef<Set<string>>(new Set());
   const discussionPresetRef = useRef<DiscussionPresetKey>(discussionPreset);
 
-  // Callback Refs für stabile Closures
   const onFinishRef = useRef<(message: ChatMessageType) => void>(() => {});
   const messagesRef = useRef<ChatMessageType[]>([]);
 
-  // Main chat hook
   const { messages, append, isLoading, setMessages } = useChat({
     onError: (error) => {
       toasts.push({
@@ -124,17 +114,14 @@ export default function ChatV2() {
     [toasts],
   );
 
-  // Function to start a game
   const startGame = useCallback(
     (gameType: GameType) => {
       const systemPrompt = getGameSystemPrompt(gameType);
       const startMessage = getGameStartPrompt(gameType);
 
-      // Set the system prompt for the new game
       resetDiscussionContext();
       setCurrentSystemPrompt(systemPrompt);
 
-      // Reset messages and start the game with the start message
       setMessages([]);
       void append({
         role: "user",
@@ -205,19 +192,16 @@ export default function ChatV2() {
     [append, resetDiscussionContext, setCurrentSystemPrompt, setMessages, toasts],
   );
 
-  // Effect to start a game when a gameId is passed in location state
   useEffect(() => {
     if (gameId) {
       startGame(gameId);
     }
   }, [gameId, startGame]);
 
-  // Update ref bei messages-Änderungen
   useEffect(() => {
     messagesRef.current = messages;
   }, [messages]);
 
-  // Stable onFinish callback
   useEffect(() => {
     onFinishRef.current = (message: ChatMessageType) => {
       const currentMessages = messagesRef.current;
@@ -303,14 +287,12 @@ export default function ChatV2() {
     };
   }, [activeConversationId, append, setMessages, toasts]);
 
-  // Update conversations list when history opens
   useEffect(() => {
     if (isHistoryOpen) {
       setConversations(getAllConversations());
     }
   }, [isHistoryOpen]);
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -347,7 +329,6 @@ export default function ChatV2() {
       return;
     }
 
-    // Filter und konvertiere Messages - nur gültige Rollen
     const chatMessages: ChatMessageType[] = conversation.messages
       .filter((msg) => ["user", "assistant", "system"].includes(msg.role))
       .map((msg) => ({
@@ -371,7 +352,6 @@ export default function ChatV2() {
     setActiveConversationId(id);
     resetDiscussionContext();
 
-    // Check if there's a system prompt in the conversation and set it
     const systemMessage = chatMessages.find((msg) => msg.role === "system");
     if (systemMessage) {
       setCurrentSystemPrompt(systemMessage.content);
@@ -401,8 +381,8 @@ export default function ChatV2() {
     setConversations(getAllConversations());
     if (activeConversationId === id) {
       setActiveConversationId(null);
-      setCurrentSystemPrompt(undefined); // Clear system prompt as well
-      setMessages([]); // Clear current messages if active conversation is deleted
+      setCurrentSystemPrompt(undefined);
+      setMessages([]);
       resetDiscussionContext();
     }
     toasts.push({
@@ -416,7 +396,7 @@ export default function ChatV2() {
     resetDiscussionContext();
     setMessages([]);
     setActiveConversationId(null);
-    setCurrentSystemPrompt(undefined); // Clear the system prompt when starting a new conversation
+    setCurrentSystemPrompt(undefined);
     toasts.push({
       kind: "info",
       title: "Neue Unterhaltung",
@@ -465,63 +445,38 @@ export default function ChatV2() {
 
   return (
     <div className="relative flex h-full flex-col px-5 pb-8 pt-5">
-      {/* Sanfter Farbverlauf-Overlay nur für Chat-Seite */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[-1] opacity-20"
-        style={{
-          background: `linear-gradient(
-            to bottom,
-            hsla(340, 60%, 70%, 0.12) 0%,
-            hsla(280, 55%, 65%, 0.08) 25%,
-            hsla(220, 60%, 70%, 0.06) 50%,
-            hsla(190, 65%, 68%, 0.04) 75%,
-            transparent 100%
-          )`,
-        }}
-      />
       <div className="relative z-10">
         {messages.length === 0 ? (
-          /* Empty State - Im Stil der Models-Seite */
           <>
             <header className="mb-4 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-white">Chat</h2>
-                <p className="mt-1 text-sm leading-6 text-white/70">
+                <h2 className="text-lg font-semibold text-text-0">Chat</h2>
+                <p className="mt-1 text-sm leading-6 text-text-1">
                   Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.
                 </p>
               </div>
               <Button
                 onClick={() => setIsHistoryOpen(true)}
                 variant="ghost"
-                size="sm"
-                className="glass-card h-10 w-10 rounded-xl p-0 text-white transition-all"
+                size="icon"
                 aria-label="Chat-Verlauf öffnen"
               >
                 <History className="h-5 w-5" />
               </Button>
             </header>
 
-            {/* Hero Card */}
-            <RoleCard
-              title="Willkommen bei Disa AI"
-              description="Dein intelligenter Assistent für Gespräche, Analysen und kreative Aufgaben"
-              tint={friendlyPalette[0] ?? DEFAULT_TINT}
-              onClick={handleNewConversation}
-              className="flex h-[152px] items-center justify-center text-center"
-            />
-            {/* Discussion Topics Section */}
             <div className="grid grid-cols-1 gap-3 pb-8 sm:grid-cols-2 xl:grid-cols-3">
               <div className="mb-4 flex flex-col gap-3 px-1 sm:col-span-2 sm:flex-row sm:items-start sm:justify-between xl:col-span-3">
                 <div className="flex-1">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-text-1">
                     Diskussionen
                   </h3>
-                  <p className="text-xs text-white/55">
+                  <p className="text-xs text-text-1">
                     Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
                   </p>
                 </div>
                 <div className="w-full sm:w-48 md:w-56">
-                  <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-white/70">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-text-1">
                     Stil auswählen
                   </span>
                   <Select
@@ -530,10 +485,10 @@ export default function ChatV2() {
                       handleDiscussionPresetChange(value as DiscussionPresetKey)
                     }
                   >
-                    <SelectTrigger className="border-corporate-accent-primary/40 bg-corporate-accent-primary/15 focus:ring-corporate-accent-primary/40 text-xs font-medium text-white shadow-[0_12px_24px_-14px_rgba(35,125,255,0.45)] focus:outline-none focus:ring-2">
+                    <SelectTrigger>
                       <SelectValue placeholder="Stil wählen" />
                     </SelectTrigger>
-                    <SelectContent className="bg-corporate-bg-card/95 border border-white/15 text-sm text-white shadow-[0_18px_48px_-28px_rgba(6,10,26,0.85)]">
+                    <SelectContent>
                       {discussionPresetOptions.map((option) => (
                         <SelectItem key={option.key} value={option.key}>
                           {option.label}
@@ -543,32 +498,32 @@ export default function ChatV2() {
                   </Select>
                 </div>
               </div>
-              {discussionTopics.map((topic, index) => {
-                const tint = friendlyPalette[(index + 1) % friendlyPalette.length] ?? DEFAULT_TINT;
+              {discussionTopics.map((topic) => {
                 const tileBadge =
                   discussionPresetOptions.find((option) => option.key === discussionPreset)
                     ?.label ?? "Diskussion";
                 return (
-                  <RoleCard
+                  <div
                     key={topic.title}
-                    title={topic.title}
-                    description={topic.hint}
-                    tint={tint}
-                    badge={tileBadge}
-                    badgeClassName="border-white/35 bg-white/20 text-[11px] font-semibold uppercase tracking-wide text-white drop-shadow-sm"
-                    showDescriptionOnToggle
-                    onClick={() => {
-                      startDiscussion(topic.prompt);
-                    }}
-                    className="flex min-h-[132px] cursor-pointer flex-col justify-between"
-                  />
+                    className="rounded-lg border border-border bg-surface-1 p-4"
+                  >
+                    <h4 className="font-semibold text-text-0">{topic.title}</h4>
+                    <p className="text-sm text-text-1">{topic.hint}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => startDiscussion(topic.prompt)}
+                      className="mt-4"
+                    >
+                      Diskutieren
+                    </Button>
+                  </div>
                 );
               })}
             </div>
 
-            {/* Game Hints - shown when game system prompts are active */}
             {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
-              <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-white">
+              <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-text-0">
                 <p className="font-medium">Spiel-Hinweis:</p>
                 <p>
                   Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
@@ -580,7 +535,7 @@ export default function ChatV2() {
             )}
 
             {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
-              <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-white">
+              <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-text-0">
                 <p className="font-medium">Spiel-Hinweis:</p>
                 <p>
                   Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
@@ -593,16 +548,14 @@ export default function ChatV2() {
             )}
           </>
         ) : (
-          /* Chat Messages */
           <>
             <header className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Unterhaltung</h2>
+              <h2 className="text-lg font-semibold text-text-0">Unterhaltung</h2>
               <div className="flex gap-2">
                 <Button
                   onClick={handleNewConversation}
                   variant="ghost"
-                  size="sm"
-                  className="glass-card h-10 w-10 rounded-xl p-0 text-white transition-all"
+                  size="icon"
                   aria-label="Neue Unterhaltung starten"
                 >
                   <MessageSquare className="h-5 w-5" />
@@ -610,8 +563,7 @@ export default function ChatV2() {
                 <Button
                   onClick={() => setIsHistoryOpen(true)}
                   variant="ghost"
-                  size="sm"
-                  className="glass-card h-10 w-10 rounded-xl p-0 text-white transition-all"
+                  size="icon"
                   aria-label="Chat-Verlauf öffnen"
                 >
                   <History className="h-5 w-5" />
@@ -626,23 +578,16 @@ export default function ChatV2() {
                   ))}
                   {isLoading && (
                     <div className="flex justify-start">
-                      <RoleCard
-                        title=""
-                        description="Denkt nach..."
-                        tint={friendlyPalette[0] ?? DEFAULT_TINT}
-                        onClick={() => {}}
-                        variant="surface"
-                        className="h-[152px] flex-col justify-center"
-                      >
+                      <div className="rounded-lg border border-border bg-surface-1 p-4">
                         <div className="flex items-center space-x-2">
                           <div className="flex space-x-1">
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-white/70"></div>
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.15s]"></div>
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-white/70 [animation-delay:0.3s]"></div>
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-text-1"></div>
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-text-1 [animation-delay:0.15s]"></div>
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-text-1 [animation-delay:0.3s]"></div>
                           </div>
-                          <span className="text-sm text-white/70">Denkt nach...</span>
+                          <span className="text-sm text-text-1">Denkt nach...</span>
                         </div>
-                      </RoleCard>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -651,48 +596,49 @@ export default function ChatV2() {
           </>
         )}
 
-        {/* Input Composer - Prominent und gut erkennbar */}
-        <div className="mt-6">
-          <div className="bg-corporate-bg-card/90 rounded-2xl border border-white/10 p-4 shadow-[0_20px_48px_-28px_rgba(2,8,23,0.9)] backdrop-blur-xl">
-            <div className="flex items-end gap-3">
-              <div className="flex-1">
-                <Textarea
-                  ref={textareaRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Nachricht an Disa AI schreiben..."
-                  className="focus:border-corporate-accent-primary/50 focus:ring-corporate-accent-primary/30 max-h-[200px] min-h-[60px] w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/60 focus:ring-2"
-                  rows={1}
-                  aria-label="Nachricht an Disa AI eingeben"
-                  aria-describedby="input-help-text"
-                />
+        <div className="safe-px sticky bottom-0 z-40 border-t border-border bg-surface-0 pb-4 pt-2">
+          <div className="mx-auto w-full max-w-[var(--max-content-width)]">
+            <div className="rounded-lg border border-border bg-surface-1 p-2">
+              <div className="flex items-end gap-3">
+                <div className="flex-1">
+                  <Textarea
+                    ref={textareaRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Nachricht an Disa AI schreiben..."
+                    className="max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm text-text-0 placeholder:text-text-1 focus:ring-0"
+                    rows={1}
+                    aria-label="Nachricht an Disa AI eingeben"
+                    aria-describedby="input-help-text"
+                  />
+                </div>
+
+                <Button
+                  onClick={handleSend}
+                  disabled={!input.trim() || isLoading}
+                  size="icon"
+                  className="h-12 w-12 shrink-0"
+                  aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
+                  title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
+                >
+                  <Send className="h-5 w-5" aria-hidden="true" />
+                </Button>
               </div>
 
-              <Button
-                onClick={handleSend}
-                disabled={!input.trim() || isLoading}
-                className="border-corporate-accent-primary/40 text-color-corporate-text-on-accent hover:bg-corporate-accent-secondary focus:ring-corporate-accent-primary/40 h-12 w-12 shrink-0 rounded-xl border bg-corporate-accent-primary transition-transform duration-150 hover:scale-105 focus:outline-none focus:ring-2 active:scale-95 disabled:opacity-60 disabled:hover:scale-100"
-                aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
-                title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
-              >
-                <Send className="h-5 w-5" aria-hidden="true" />
-              </Button>
-            </div>
-
-            <div className="mt-2 flex items-center justify-between text-xs text-white/60">
-              <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
-              {isLoading && (
-                <span className="flex items-center gap-2">
-                  <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-corporate-accent-primary"></span>
-                  Tippt...
-                </span>
-              )}
+              <div className="mt-2 flex items-center justify-between text-xs text-text-1">
+                <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
+                {isLoading && (
+                  <span className="flex items-center gap-2">
+                    <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-brand"></span>
+                    Tippt...
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Chat History Sidebar */}
         <ChatHistorySidebar
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
@@ -706,26 +652,20 @@ export default function ChatV2() {
   );
 }
 
-// Message Bubbles - Im Stil der Models-Karten
 function MessageBubble({ message }: { message: ChatMessageType }) {
-  const palette = useGlassPalette();
-  const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
   const isUser = message.role === "user";
-  const targetIndex = isUser ? 2 : 0;
-  const tint =
-    friendlyPalette[targetIndex % friendlyPalette.length] ?? friendlyPalette[0] ?? DEFAULT_TINT;
+  const alignmentClass = isUser ? "justify-end" : "justify-start";
+  const offsetClass = isUser ? "ml-12" : "mr-12";
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div className={`max-w-[85%] ${isUser ? "ml-12" : "mr-12"}`}>
-        <MessageBubbleCard
-          author={isUser ? "Du" : "Disa AI"}
-          body={message.content}
-          tint={tint}
-          timestamp={message.timestamp}
-          align={isUser ? "right" : "left"}
-        />
-      </div>
+    <div className={`flex ${alignmentClass}`}>
+      <MessageBubbleCard
+        author={isUser ? "Du" : "Disa AI"}
+        body={message.content}
+        timestamp={message.timestamp}
+        variant={isUser ? "user" : "assistant"}
+        className={`max-w-[85%] ${offsetClass}`}
+      />
     </div>
   );
 }

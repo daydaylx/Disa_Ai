@@ -34,7 +34,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Filter commands based on query
   const filteredCommands = React.useMemo(() => {
     if (!query.trim()) return commands;
 
@@ -46,22 +45,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     );
   }, [commands, query]);
 
-  // Reset selected index when filtered commands change
   useEffect(() => {
     setSelectedIndex(0);
   }, [filteredCommands]);
 
-  // Focus management and focus trap
   useEffect(() => {
     if (isOpen) {
-      // Store previously focused element
       const previouslyFocused = document.activeElement as HTMLElement;
 
       requestAnimationFrame(() => {
         searchRef.current?.focus();
       });
 
-      // Focus trap implementation
       const handleTabKey = (e: KeyboardEvent) => {
         if (e.key !== "Tab") return;
 
@@ -75,13 +70,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
         if (e.shiftKey) {
-          // Shift + Tab
           if (document.activeElement === firstElement) {
             e.preventDefault();
             lastElement.focus();
           }
         } else {
-          // Tab
           if (document.activeElement === lastElement) {
             e.preventDefault();
             firstElement.focus();
@@ -93,7 +86,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
       return () => {
         document.removeEventListener("keydown", handleTabKey);
-        // Restore focus when closing
         if (previouslyFocused && previouslyFocused.focus) {
           previouslyFocused.focus();
         }
@@ -101,12 +93,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     } else {
       setQuery("");
       setSelectedIndex(0);
-      // Return undefined explicitly for consistency
       return undefined;
     }
   }, [isOpen]);
 
-  // Scroll selected item into view
   useEffect(() => {
     const selectedItem = itemRefs.current[selectedIndex];
     if (selectedItem && listRef.current) {
@@ -169,14 +159,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className="bg-background-deep/50 fixed inset-0 z-50 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      <div className="fixed inset-0 z-50 bg-black/50" onClick={onClose} aria-hidden="true" />
 
-      {/* Command Palette */}
       <div
         ref={dialogRef}
         className="fixed inset-x-4 z-50 mx-auto max-w-2xl"
@@ -192,11 +176,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         <p id="command-palette-description" className="sr-only">
           Verwende die Pfeiltasten zur Navigation, Enter zum Ausführen, Escape zum Schließen
         </p>
-        <div className="border-border-strong bg-surface-200 shadow-elev2 overflow-hidden rounded-xl border">
-          {/* Search Input */}
-          <div className="border-border-subtle flex items-center border-b px-4">
+        <div className="overflow-hidden rounded-lg border border-border bg-surface-1 shadow-level">
+          <div className="flex items-center border-b border-border px-4">
             <svg
-              className="text-text-muted h-5 w-5"
+              className="h-5 w-5 text-text-1"
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
@@ -210,7 +193,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             <input
               ref={searchRef}
               type="text"
-              className="text-text-primary placeholder:text-text-muted h-12 w-full border-0 bg-transparent pl-3 pr-4 focus:ring-0 sm:text-sm"
+              className="h-12 w-full border-0 bg-transparent pl-3 pr-4 text-text-0 placeholder:text-text-1 focus:ring-0 sm:text-sm"
               placeholder={placeholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -227,7 +210,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             />
           </div>
 
-          {/* Command List */}
           {filteredCommands.length > 0 ? (
             <ul
               ref={listRef}
@@ -244,10 +226,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   id={`command-${command.id}`}
                   className={cn(
                     "group flex cursor-pointer select-none items-center rounded-lg px-3 py-2",
-                    "transition-colors duration-fast",
+                    "transition-colors duration-150",
                     index === selectedIndex
-                      ? "bg-accent text-accent-foreground"
-                      : "hover:bg-surface-100 text-text-secondary",
+                      ? "bg-brand text-white"
+                      : "text-text-1 hover:bg-surface-2",
                     command.disabled && "cursor-not-allowed opacity-50",
                   )}
                   onClick={() => handleCommandClick(command, index)}
@@ -256,24 +238,22 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   aria-selected={index === selectedIndex}
                   aria-disabled={command.disabled}
                 >
-                  {/* Icon */}
                   {command.icon && (
                     <div
                       className={cn(
                         "mr-3 h-5 w-5 flex-shrink-0",
-                        index === selectedIndex ? "text-accent-foreground" : "text-text-muted",
+                        index === selectedIndex ? "text-white" : "text-text-1",
                       )}
                     >
                       {command.icon}
                     </div>
                   )}
 
-                  {/* Content */}
                   <div className="min-w-0 flex-1">
                     <div
                       className={cn(
                         "truncate font-medium",
-                        index === selectedIndex ? "text-accent-foreground" : "text-text-primary",
+                        index === selectedIndex ? "text-white" : "text-text-0",
                       )}
                     >
                       {command.title}
@@ -282,7 +262,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       <div
                         className={cn(
                           "truncate text-sm",
-                          index === selectedIndex ? "text-accent-foreground/85" : "text-text-muted",
+                          index === selectedIndex ? "text-white/80" : "text-text-1",
                         )}
                       >
                         {command.description}
@@ -290,12 +270,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     )}
                   </div>
 
-                  {/* Shortcut */}
                   {command.shortcut && (
                     <div
                       className={cn(
                         "ml-3 font-mono text-xs",
-                        index === selectedIndex ? "text-accent-foreground/80" : "text-text-muted",
+                        index === selectedIndex ? "text-white/80" : "text-text-1",
                       )}
                     >
                       {command.shortcut}
@@ -305,7 +284,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               ))}
             </ul>
           ) : (
-            <div className="text-text-muted px-4 py-14 text-center text-sm">
+            <div className="px-4 py-14 text-center text-sm text-text-1">
               Keine Befehle gefunden für "{query}"
             </div>
           )}
@@ -315,7 +294,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   );
 };
 
-// Hook for managing command palette state and keyboard shortcuts
 export function useCommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -338,7 +316,6 @@ export function useCommandPalette() {
   return { isOpen, open, close, toggle };
 }
 
-// Default commands that can be used across the app
 export function useDefaultCommands() {
   const focusComposer = useCallback(() => {
     const composer = document.querySelector(

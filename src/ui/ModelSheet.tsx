@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import BottomSheet from "../components/ui/BottomSheet";
+import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import type { Model } from "./types";
 
@@ -43,7 +44,6 @@ export default function ModelSheet({
     onClose();
   };
 
-  // Group models by provider for better organization
   const groupedModels = useMemo(() => {
     return models.reduce(
       (acc, model) => {
@@ -108,13 +108,13 @@ export default function ModelSheet({
         className="overflow-y-auto px-4 pb-4"
         style={{ maxHeight: "calc(var(--vh, 100dvh) * 0.65)" }}
       >
-        <div className="sticky top-0 z-10 -mx-4 mb-4 space-y-3 bg-slate-900/90 px-4 pb-3 pt-2 backdrop-blur-lg">
+        <div className="sticky top-0 z-10 -mx-4 mb-4 space-y-3 bg-surface-1 px-4 pb-3 pt-2">
           <Input
             ref={searchInputRef}
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
             placeholder="Modelle durchsuchen"
-            className="glass h-11 rounded-xl bg-transparent px-3 py-2 text-sm placeholder:text-zinc-500 focus-visible:ring-2 focus-visible:ring-accent-500"
+            className="h-11 rounded-lg"
           />
 
           {providerEntries.length > 1 && (
@@ -126,20 +126,14 @@ export default function ModelSheet({
               {providerEntries.map(([provider]) => {
                 const isActive = provider === activeProvider;
                 return (
-                  <button
+                  <Button
                     key={provider}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={`shrink-0 rounded-full px-4 py-2 text-sm transition-colors ${
-                      isActive
-                        ? "glass-strong border-white/15 text-zinc-100"
-                        : "glass text-zinc-300 hover:text-zinc-100"
-                    }`}
+                    variant={isActive ? "secondary" : "ghost"}
+                    size="sm"
                     onClick={() => setActiveProvider(provider)}
                   >
                     {provider}
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -165,13 +159,13 @@ export default function ModelSheet({
             return (
               <section key={provider} aria-label={`Modelle von ${provider}`} className="space-y-3">
                 <header className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-zinc-200">{provider}</h3>
-                  <span className="text-xs text-zinc-500">{filteredModels.length} Modelle</span>
+                  <h3 className="text-sm font-semibold text-text-0">{provider}</h3>
+                  <span className="text-xs text-text-1">{filteredModels.length} Modelle</span>
                 </header>
 
                 <div className="space-y-2">
                   {filteredModels.length === 0 ? (
-                    <div className="glass rounded-xl px-4 py-6 text-center text-sm text-zinc-300">
+                    <div className="rounded-lg border border-border bg-surface-1 px-4 py-6 text-center text-sm text-text-1">
                       Keine Treffer für „{searchTerm.trim()}“
                     </div>
                   ) : (
@@ -181,40 +175,36 @@ export default function ModelSheet({
                         <button
                           key={model.id}
                           onClick={() => handleSelect(model)}
-                          className={`w-full rounded-xl px-4 py-3 text-left transition-all duration-200 ${
-                            isSelected
-                              ? "glass-strong border-white/15 text-zinc-100 shadow-[0_12px_32px_rgba(8,8,18,0.45)]"
-                              : "glass text-zinc-200 hover:bg-white/10"
-                          }`}
+                          className={`w-full rounded-lg border border-border bg-surface-1 p-4 text-left transition-all duration-200 hover:bg-surface-2 ${isSelected ? "ring-2 ring-brand" : ""}`}
                           data-testid={`model-option-${model.id}`}
                         >
                           <div className="flex items-center justify-between gap-3">
                             <div className="min-w-0 flex-1">
-                              <h4 className="truncate text-sm font-medium text-zinc-100">
+                              <h4 className="truncate text-sm font-medium text-text-0">
                                 {model.label || model.id}
                               </h4>
-                              <div className="mt-1 flex flex-wrap items-center gap-3 text-[12px] text-zinc-400">
+                              <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-text-1">
                                 {model.ctx && (
-                                  <span className="text-zinc-300">
+                                  <span className="text-text-0">
                                     {(model.ctx / 1000).toFixed(0)}k Token
                                   </span>
                                 )}
                                 {model.pricing?.in !== undefined && (
-                                  <span className="text-zinc-300">
+                                  <span className="text-text-0">
                                     {model.pricing.in === 0
                                       ? "Kostenlos"
                                       : `$${model.pricing.in}/1k`}
                                   </span>
                                 )}
                                 {model.tags.length > 0 && (
-                                  <span className="truncate text-zinc-500">
+                                  <span className="truncate text-text-1">
                                     {model.tags.slice(0, 2).join(" • ")}
                                   </span>
                                 )}
                               </div>
                             </div>
                             {isSelected && (
-                              <div className="glass inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-zinc-900">
+                              <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-brand text-white">
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                                   <path
                                     d="M10 3L4.5 8.5L2 6"
@@ -238,7 +228,7 @@ export default function ModelSheet({
         </div>
 
         {models.length === 0 && (
-          <div className="text-text-muted py-8 text-center">
+          <div className="py-8 text-center text-text-1">
             <p>Keine Modelle verfügbar</p>
             <p className="mt-1 text-sm">Überprüfen Sie Ihre Internetverbindung</p>
           </div>
