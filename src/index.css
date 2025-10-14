@@ -16,6 +16,9 @@
     color: var(--color-synthwave-text);
     overflow-x: hidden;
     position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    font-size: 16px;
+    line-height: 1.6;
   }
 
   /* Additional body styles if needed */
@@ -37,12 +40,12 @@
     z-index: -10;
     pointer-events: none;
     background:
-      radial-gradient(1000px circle at 15% 6%, rgba(118, 154, 224, 0.12) 0%, transparent 58%),
-      radial-gradient(900px circle at 86% 10%, rgba(188, 148, 255, 0.1) 0%, transparent 62%),
-      linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 78%);
-    opacity: 0.68;
-    backdrop-filter: blur(22px) saturate(1.18);
-    -webkit-backdrop-filter: blur(22px) saturate(1.18);
+      radial-gradient(700px circle at 18% 12%, rgba(48, 92, 160, 0.18) 0%, transparent 60%),
+      radial-gradient(640px circle at 82% 4%, rgba(124, 84, 204, 0.14) 0%, transparent 62%),
+      linear-gradient(160deg, rgba(4, 6, 12, 0.75) 0%, rgba(8, 12, 20, 0.45) 60%, transparent 100%);
+    opacity: 0.72;
+    backdrop-filter: blur(14px) saturate(1.08);
+    -webkit-backdrop-filter: blur(14px) saturate(1.08);
   }
 
   /* Mobile-optimized background */
@@ -54,9 +57,9 @@
     }
 
     #root::before {
-      opacity: 0.55;
-      backdrop-filter: blur(18px) saturate(1.1);
-      -webkit-backdrop-filter: blur(18px) saturate(1.1);
+      opacity: 0.62;
+      backdrop-filter: blur(12px) saturate(1.05);
+      -webkit-backdrop-filter: blur(12px) saturate(1.05);
     }
   }
 
@@ -71,6 +74,20 @@
   #root {
     min-height: 100vh;
     min-height: 100dvh;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  blockquote,
+  figcaption {
+    text-wrap: pretty;
+    text-rendering: optimizeLegibility;
   }
 }
 
@@ -186,6 +203,17 @@
 /* Additional responsive styles if needed */
 @media (max-width: 768px) {
   /* Mobile-specific adjustments */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Animationen für die Glow-Effekte */

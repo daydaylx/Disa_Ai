@@ -1,12 +1,11 @@
 import { ArrowRight, Filter, RotateCcw, Search, X } from "lucide-react";
-import { type CSSProperties, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
 import { RoleCard, type RoleTint } from "../components/studio/RoleCard";
 import type { Role } from "../data/roles";
 import { loadRoles } from "../data/roles";
-import { useGlassPalette } from "../hooks/useGlassPalette";
 import type { GlassTint } from "../lib/theme/glass";
 import { FRIENDLY_TINTS } from "../lib/theme/glass";
 import { cn } from "../lib/utils";
@@ -52,131 +51,6 @@ const CATEGORY_ORDER = [
 
 type CategoryKey = (typeof CATEGORY_ORDER)[number];
 
-const CATEGORY_ICONS: Record<CategoryKey, string> = {
-  Alltag: "🚀",
-  "Business & Karriere": "💼",
-  "Kreativ & Unterhaltung": "🎨",
-  "Lernen & Bildung": "🎓",
-  "Leben & Familie": "🏠",
-  "Experten & Beratung": "🩺",
-  Erwachsene: "🔒",
-  Spezial: "⭐",
-};
-
-const CATEGORY_TINT_MAP: Record<
-  CategoryKey,
-  {
-    overlay: string;
-    glow: string;
-  }
-> = {
-  Alltag: {
-    overlay:
-      "linear-gradient(145deg, hsla(45, 85%, 70%, 0.28) 0%, hsla(265, 80%, 65%, 0.24) 40%, hsla(188, 80%, 60%, 0.2) 100%)",
-    glow: "0 24px 48px -24px hsla(188, 82%, 58%, 0.2)",
-  },
-  "Business & Karriere": {
-    overlay:
-      "linear-gradient(145deg, hsla(138, 85%, 70%, 0.28) 0%, hsla(52, 80%, 65%, 0.24) 40%, hsla(70, 80%, 60%, 0.2) 100%)",
-    glow: "0 24px 48px -24px hsla(70, 82%, 58%, 0.2)",
-  },
-  "Kreativ & Unterhaltung": {
-    overlay:
-      "linear-gradient(145deg, hsla(320, 85%, 70%, 0.28) 0%, hsla(260, 80%, 65%, 0.24) 40%, hsla(300, 80%, 60%, 0.2) 100%)",
-    glow: "0 24px 48px -24px hsla(300, 82%, 58%, 0.2)",
-  },
-  "Lernen & Bildung": {
-    overlay:
-      "linear-gradient(145deg, hsla(180, 85%, 70%, 0.28) 0%, hsla(60, 80%, 65%, 0.24) 40%, hsla(210, 80%, 60%, 0.2) 100%)",
-    glow: "0 24px 48px -24px hsla(210, 82%, 58%, 0.2)",
-  },
-  "Leben & Familie": {
-    overlay:
-      "linear-gradient(145deg, hsla(120, 85%, 70%, 0.28) 0%, hsla(50, 80%, 65%, 0.24) 40%, hsla(15, 80%, 60%, 0.2) 100%)",
-    glow: "0 24px 48px -24px hsla(15, 82%, 58%, 0.2)",
-  },
-  "Experten & Beratung": {
-    overlay:
-      "linear-gradient(145deg, hsla(300, 85%, 70%, 0.28) 0%, hsla(210, 80%, 65%, 0.24) 40%, hsla(240, 80%, 60%, 0.2) 100%)",
-    glow: "0 24px 48px -24px hsla(240, 82%, 58%, 0.2)",
-  },
-  Erwachsene: {
-    overlay:
-      "linear-gradient(145deg, hsla(220, 85%, 70%, 0.28) 0%, hsla(305, 80%, 65%, 0.24) 40%, hsla(275, 80%, 60%, 0.2) 100%)",
-    glow: "0 24px 48px -24px hsla(275, 82%, 58%, 0.2)",
-  },
-  Spezial: {
-    overlay:
-      "linear-gradient(145deg, hsla(150, 85%, 70%, 0.28) 0%, hsla(30, 80%, 65%, 0.24) 40%, hsla(200, 80%, 60%, 0.2) 100%)",
-    glow: "0 24px 48px -24px hsla(200, 82%, 58%, 0.2)",
-  },
-};
-
-const CATEGORY_BADGE_STYLES: Record<
-  CategoryKey,
-  {
-    style: CSSProperties;
-    className?: string;
-  }
-> = {
-  Alltag: {
-    style: {
-      background: "linear-gradient(135deg, rgba(120, 99, 255, 0.24), rgba(82, 227, 255, 0.22))",
-      borderColor: "rgba(163, 194, 255, 0.45)",
-      color: "rgba(248, 249, 255, 0.95)",
-    },
-  },
-  "Business & Karriere": {
-    style: {
-      background: "linear-gradient(135deg, rgba(255, 216, 115, 0.24), rgba(120, 255, 168, 0.22))",
-      borderColor: "rgba(255, 226, 155, 0.5)",
-      color: "rgba(16, 18, 20, 0.9)",
-    },
-  },
-  "Kreativ & Unterhaltung": {
-    style: {
-      background: "linear-gradient(135deg, rgba(255, 166, 207, 0.26), rgba(168, 126, 255, 0.24))",
-      borderColor: "rgba(242, 190, 255, 0.45)",
-      color: "rgba(255, 248, 251, 0.96)",
-    },
-  },
-  "Lernen & Bildung": {
-    style: {
-      background: "linear-gradient(135deg, rgba(120, 210, 255, 0.22), rgba(255, 210, 120, 0.22))",
-      borderColor: "rgba(185, 230, 255, 0.5)",
-      color: "rgba(238, 248, 255, 0.96)",
-    },
-  },
-  "Leben & Familie": {
-    style: {
-      background: "linear-gradient(135deg, rgba(120, 255, 188, 0.24), rgba(255, 215, 140, 0.26))",
-      borderColor: "rgba(190, 255, 210, 0.45)",
-      color: "rgba(10, 26, 15, 0.88)",
-    },
-  },
-  "Experten & Beratung": {
-    style: {
-      background: "linear-gradient(135deg, rgba(200, 160, 255, 0.26), rgba(120, 210, 255, 0.22))",
-      borderColor: "rgba(210, 190, 255, 0.45)",
-      color: "rgba(246, 242, 255, 0.96)",
-    },
-  },
-  Erwachsene: {
-    style: {
-      background: "linear-gradient(135deg, rgba(120, 210, 255, 0.24), rgba(240, 160, 255, 0.24))",
-      borderColor: "rgba(170, 210, 255, 0.5)",
-      color: "rgba(13, 16, 24, 0.9)",
-    },
-  },
-  Spezial: {
-    style: {
-      background: "linear-gradient(135deg, rgba(90, 250, 210, 0.24), rgba(255, 210, 120, 0.24))",
-      borderColor: "rgba(166, 255, 226, 0.45)",
-      color: "rgba(5, 22, 18, 0.88)",
-    },
-  },
-};
-
 // Removed unused ROLE_TINTS and RoleVisualConfig - now using useGlassPalette for consistent theming
 // const _ROLE_TINTS: Record<string, RoleVisualConfig> = {
 //   neutral: { tint: { from: "hsl(210 90% 60% / 0.22)", to: "hsl(50 95% 55% / 0.22)" } },
@@ -220,10 +94,7 @@ function RolesTab() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<"all" | CategoryKey>("all");
   const navigate = useNavigate();
-  const palette = useGlassPalette();
-  // Verwende statische Farbpalette für RoleCards, um Farbänderungen bei Rollen-Auswahl zu vermeiden
   const staticPalette = STATIC_CATEGORY_TINTS;
-  const friendlyPalette = palette.length > 0 ? palette : FRIENDLY_TINTS;
 
   useEffect(() => {
     let mounted = true;
@@ -357,15 +228,17 @@ function RolesTab() {
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
       <header className="mb-6 space-y-5">
         <div>
-          <h2 className="text-xl font-semibold text-white sm:text-2xl">Rollen-Studio</h2>
-          <p className="mt-1 text-sm leading-7 text-white/70 sm:text-base">
+          <h2 className="text-balance text-xl font-semibold text-white sm:text-2xl">
+            Rollen-Studio
+          </h2>
+          <p className="mt-1 text-pretty text-sm leading-7 text-white/70 sm:text-base">
             Wähle eine Stimme für Disa AI. Nutze Suche oder Filter, um schneller passende Rollen zu
             entdecken.
           </p>
         </div>
 
         {activeRole ? (
-          <div className="glass-card flex items-start justify-between gap-4 rounded-3xl border border-white/10 bg-white/10 px-5 py-4 text-xs text-white/80">
+          <div className="border-white/12 bg-white/8 flex items-start justify-between gap-4 rounded-2xl border px-5 py-4 text-xs text-white/80">
             <div className="space-y-1">
               <p className="text-[11px] font-semibold uppercase tracking-wide text-white/45">
                 Aktive Rolle
@@ -398,34 +271,34 @@ function RolesTab() {
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder="Rollen durchsuchen …"
-                className="w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-12 text-sm text-white placeholder:text-white/40 focus:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"
+                className="border-white/12 bg-white/6 min-h-[48px] w-full rounded-xl border py-2.5 pl-10 pr-12 text-sm text-white placeholder:text-white/40 focus:border-white/25 focus:outline-none focus:ring-2 focus:ring-white/25"
                 aria-label="Rollen durchsuchen"
               />
               {searchTerm ? (
                 <button
                   type="button"
                   onClick={handleClearSearch}
-                  className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/70 transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                  className="border-white/12 absolute right-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border bg-white/10 text-white/70 transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35"
                   aria-label="Suche zurücksetzen"
                 >
                   <X className="h-3.5 w-3.5 text-white/70" />
                 </button>
               ) : null}
             </div>
-            <div className="flex items-center gap-2 text-xs text-white/60">
-              <Filter className="hidden h-4 w-4 text-white/40 sm:block" />
-              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-white/70">
+            <div className="flex items-center gap-3 text-xs text-white/60">
+              <Filter className="hidden h-5 w-5 text-white/40 sm:block" />
+              <span className="border-white/12 bg-white/8 rounded-full border px-4 py-2 text-white/70">
                 {totalMatchCount} von {orderedRoles.length} Rollen sichtbar
               </span>
             </div>
           </div>
 
-          <div className="-mx-2 flex items-center gap-2.5 overflow-x-auto pb-1">
+          <div className="-mx-2 flex items-center gap-3 overflow-x-auto pb-1">
             <button
               type="button"
               onClick={() => handleSelectCategory("all")}
               className={cn(
-                "glass-card shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition sm:text-sm",
+                "min-h-[48px] shrink-0 rounded-full px-4 py-3 text-sm font-medium transition",
                 selectedCategory === "all"
                   ? "text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
                   : "text-white/70",
@@ -439,16 +312,13 @@ function RolesTab() {
                 type="button"
                 onClick={() => handleSelectCategory(category)}
                 className={cn(
-                  "glass-card shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition",
+                  "min-h-[48px] shrink-0 rounded-full px-4 py-3 text-sm font-medium transition",
                   selectedCategory === category
                     ? "text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
                     : "text-white/70",
                 )}
                 aria-pressed={selectedCategory === category}
               >
-                <span className="mr-1" aria-hidden="true">
-                  {CATEGORY_ICONS[category]}
-                </span>
                 {category}
                 <span className="ml-1 text-white/60">
                   {categoriesInUse[category] ? `· ${categoriesInUse[category]}` : ""}
@@ -480,11 +350,10 @@ function RolesTab() {
             return (
               <section key={category} className="space-y-4 sm:space-y-5">
                 <div className="flex items-center justify-between gap-3">
-                  <h3 className="flex items-center gap-2 text-base font-semibold text-white/90 sm:text-lg">
-                    <span aria-hidden="true">{CATEGORY_ICONS[category] || "📋"}</span>
+                  <h3 className="text-balance text-sm font-semibold text-white/85 sm:text-base">
                     {category}
-                    <span className="text-xs font-medium text-white/60 sm:text-sm">
-                      ({roles.length})
+                    <span className="ml-2 text-xs font-medium text-white/55 sm:text-[13px]">
+                      {roles.length}
                     </span>
                   </h3>
                   {selectedCategory !== "all" ? (
@@ -499,16 +368,8 @@ function RolesTab() {
                 </div>
                 <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
                   {roles.map((role) => {
-                    const accent = CATEGORY_TINT_MAP[category];
                     const tint = categoryTints[category] ?? DEFAULT_TINT;
-                    const badgeAccent = CATEGORY_BADGE_STYLES[category];
-                    const style = accent
-                      ? ({
-                          "--card-overlay-gradient": accent.overlay,
-                          "--card-glow-shadow": accent.glow,
-                          "--card-tint-opacity": "0.36",
-                        } as CSSProperties & Record<string, string>)
-                      : undefined;
+                    const accentColor = tint.from ?? "rgba(255, 255, 255, 0.28)";
 
                     return (
                       <RoleCard
@@ -517,10 +378,12 @@ function RolesTab() {
                         description={summariseRole(role)}
                         badge={role.category}
                         tint={tint}
-                        style={style}
-                        contrastOverlay={false}
-                        badgeStyle={badgeAccent?.style}
-                        badgeClassName={badgeAccent?.className}
+                        variant="minimal"
+                        badgeStyle={{
+                          borderColor: accentColor,
+                          background: "transparent",
+                        }}
+                        badgeClassName="text-white/70 uppercase tracking-wide"
                         isActive={activeRole?.id === role.id}
                         onClick={() => setActiveRole(role)}
                         aria-label={`Rolle ${role.name} auswählen`}
@@ -539,40 +402,20 @@ function RolesTab() {
         <button
           type="button"
           onClick={handleNavigateToChat}
-          className="glass-card relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-cyan-400/45 via-sky-400/35 to-indigo-400/40 px-4 text-sm font-semibold text-white transition-all duration-200 hover:ring-1 hover:ring-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 active:scale-[0.99] sm:h-14 sm:text-base"
+          className="border-white/12 bg-white/6 hover:border-white/18 relative flex h-12 items-center justify-center gap-2 rounded-2xl border px-4 text-sm font-medium text-white transition-all duration-200 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/45 active:scale-[0.99] sm:h-14 sm:text-base"
         >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
-            style={{
-              background: `linear-gradient(135deg, ${friendlyPalette[0]?.from ?? DEFAULT_TINT.from} 0%, ${friendlyPalette[0]?.to ?? DEFAULT_TINT.to} 100%)`,
-            }}
-          />
-          <span className="relative z-10">Zum Chat mit aktueller Rolle</span>
-          <ArrowRight
-            className="relative z-10 h-4 w-4 text-white/85 sm:h-5 sm:w-5"
-            aria-hidden="true"
-          />
+          <span className="text-pretty">Zum Chat mit aktueller Rolle</span>
+          <ArrowRight className="h-4 w-4 text-white/75 sm:h-5 sm:w-5" aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={handleResetRole}
           disabled={!activeRole}
-          className="glass-card relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/10 bg-white/10 px-4 text-sm font-medium text-white/90 transition-all duration-200 hover:ring-1 hover:ring-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/45 active:scale-[0.99] disabled:opacity-55 disabled:grayscale disabled:active:scale-100 sm:h-14 sm:text-base"
+          className="border-white/12 bg-white/6 hover:bg-white/9 hover:border-white/18 relative flex h-12 items-center justify-center gap-2 rounded-2xl border px-4 text-sm font-medium text-white/80 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.99] disabled:opacity-55 disabled:grayscale disabled:active:scale-100 sm:h-14 sm:text-base"
           aria-disabled={!activeRole}
         >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-50"
-            style={{
-              background: `linear-gradient(135deg, ${friendlyPalette[1]?.from ?? DEFAULT_TINT.from} 0%, ${friendlyPalette[1]?.to ?? DEFAULT_TINT.to} 100%)`,
-            }}
-          />
-          <RotateCcw
-            className="relative z-10 h-4 w-4 text-white/80 sm:h-5 sm:w-5"
-            aria-hidden="true"
-          />
-          <span className="relative z-10">Rolle zurücksetzen</span>
+          <RotateCcw className="h-4 w-4 text-white/70 sm:h-5 sm:w-5" aria-hidden="true" />
+          <span>Rolle zurücksetzen</span>
         </button>
       </div>
     </div>
@@ -619,21 +462,25 @@ function GamesTab() {
   return (
     <div className="flex h-full flex-col gap-7 px-5 pb-8 pt-5 text-white">
       <div>
-        <h2 className="text-xl font-semibold text-white sm:text-2xl">Spiele</h2>
-        <p className="mt-1 text-sm leading-7 text-white/70 sm:text-base">
+        <h2 className="text-balance text-xl font-semibold text-white sm:text-2xl">Spiele</h2>
+        <p className="mt-1 text-pretty text-sm leading-7 text-white/70 sm:text-base">
           Wähle ein Spiel aus, um eine neue Spielrunde zu starten.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
         {games.map((game) => (
           <div
             key={game.id}
-            className="glass-card flex cursor-pointer flex-col gap-2 rounded-3xl p-4 transition-all hover:scale-[1.02] sm:p-5"
+            className="border-white/12 bg-white/6 hover:border-white/18 flex min-h-[120px] cursor-pointer flex-col gap-3 rounded-2xl border p-4 transition-all duration-200 hover:bg-white/10 sm:p-5"
             onClick={() => handleGameStart(game.id)}
           >
-            <h3 className="text-base font-semibold text-white sm:text-lg">{game.title}</h3>
-            <p className="text-sm leading-6 text-white/80 sm:text-base">{game.description}</p>
+            <h3 className="text-balance text-sm font-semibold text-white/85 sm:text-base">
+              {game.title}
+            </h3>
+            <p className="text-pretty text-sm leading-6 text-white/70 sm:text-base">
+              {game.description}
+            </p>
           </div>
         ))}
       </div>
@@ -650,8 +497,10 @@ export default function Studio() {
         <button
           type="button"
           onClick={() => setActiveTab("roles")}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "roles" ? "glass-card text-white" : "glass-card text-white/70"
+          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35 ${
+            activeTab === "roles"
+              ? "border-white/18 border bg-white/10 text-white"
+              : "hover:border-white/12 hover:bg-white/8 border border-transparent text-white/60"
           }`}
         >
           Rollen
@@ -659,8 +508,10 @@ export default function Studio() {
         <button
           type="button"
           onClick={() => setActiveTab("styles")}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-            activeTab === "styles" ? "glass-card text-white" : "glass-card text-white/70"
+          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35 ${
+            activeTab === "styles"
+              ? "border-white/18 border bg-white/10 text-white"
+              : "hover:border-white/12 hover:bg-white/8 border border-transparent text-white/60"
           }`}
         >
           Spiele
