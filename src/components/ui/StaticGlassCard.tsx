@@ -25,7 +25,11 @@ export function StaticGlassCard({
 }: StaticSurfaceSectionProps) {
   return (
     <div
-      className={cn("surface-card", variant === "raised" && "surface-card--raised", className)}
+      className={cn(
+        "surface-card card-depth",
+        variant === "raised" && "surface-card--raised",
+        className,
+      )}
       {...props}
     >
       <div className={cn("relative", paddingClasses[padding])}>{children}</div>

@@ -1,55 +1,39 @@
 /**
- * Minimal design token definitions for the redesigned Disa AI interface.
+ * Glassmorphism design token definitions for the redesigned Disa AI interface.
  *
- * The tokens favour flat surfaces, high-contrast typography and a single brand accent.
+ * The tokens favour glassmorphism surfaces with subtle transparency and high-contrast typography.
  * CSS variable wiring lives in `design-tokens.css`.
  */
 
 export const colors = {
-  surface: {
-    0: "#111111",
-    1: "#1E1E1E",
-    2: "#2C2C2C",
-  },
-  text: {
-    strong: "#F2F2F2",
-    muted: "#A8A8A8",
-  },
-  border: {
-    subtle: "#333333",
-  },
-  brand: {
-    base: "#007AFF",
-    weak: "#007AFF40",
-  },
-  accent: {
-    base: "#FF9500",
-    weak: "#FF950033",
-  },
-  state: {
-    success: "#34C759",
-    warning: "#FFCC00",
-    danger: "#FF3B30",
-  },
+  canvas: "#0b0d10" /* Canvas background */,
+  layer1: "#101318" /* Primary layer */,
+  layer2: "#161a20" /* Secondary layer for depth */,
+  primaryText: "#e6eaef" /* Primärtext */,
+  secondaryText: "#a8b0bb" /* Sekundärtext */,
+  subtleText: "#6b7280" /* Noch dezenterer Text */,
+  accent1: "#6fd3ff" /* Kalt */,
+  accent2: "#ff9f6f" /* Warm */,
+  accent1Rgb: "111, 211, 255",
+  accent2Rgb: "255, 159, 111",
+  success: "#34C759" /* Green */,
+  successBg: "rgba(52, 199, 89, 0.1)",
+  warning: "#FFCC00" /* Yellow */,
+  warningBg: "rgba(255, 204, 0, 0.1)",
+  danger: "#FF3B30" /* Red */,
+  dangerBg: "rgba(255, 59, 48, 0.1)",
 } as const;
 
-export type SurfaceRamp = typeof colors.surface;
-
-// Spacing scale (4 / 8 / 12 / 16 / 24 / 32 …) - 8dp grid system
+// Spacing scale (8px grid) - Updated to match new tokens
 export const spacing = {
-  0: "0px",
-  1: "4px", // 0.5 * 8dp
-  2: "8px", // 1 * 8dp - base unit
-  3: "12px", // 1.5 * 8dp
-  4: "16px", // 2 * 8dp
-  5: "20px", // 2.5 * 8dp - non-standard, avoid
-  6: "24px", // 3 * 8dp
-  8: "32px", // 4 * 8dp
-  10: "40px", // 5 * 8dp
-  12: "48px", // 6 * 8dp - minimum touch target
-  16: "64px", // 8 * 8dp
-  20: "80px", // 10 * 8dp
-  24: "96px", // 12 * 8dp
+  0: "4px",
+  1: "8px" /* space-1: 8px */,
+  2: "12px" /* space-2: 12px */,
+  3: "16px" /* space-3: 16px */,
+  4: "24px" /* space-4: 24px */,
+  5: "32px" /* space-5: 32px */,
+  6: "40px" /* space-6: 40px */,
+  8: "64px" /* space-8: 64px */,
 } as const;
 
 // Touch targets and accessibility
@@ -60,8 +44,14 @@ export const touchTargets = {
   large: "64px", // Large touch targets for better UX
 } as const;
 
-// Typography scale
+// Typography scale - Updated to match new tokens
 export const typography = {
+  display: {
+    fontSize: "28px" /* font-display: 28px */,
+    lineHeight: "36px",
+    fontWeight: "600",
+    letterSpacing: "-0.01em",
+  },
   h1: {
     fontSize: "24px",
     lineHeight: "32px",
@@ -74,20 +64,26 @@ export const typography = {
     fontWeight: "600",
     letterSpacing: "-0.01em",
   },
-  subtitle: {
+  h3: {
     fontSize: "18px",
     lineHeight: "26px",
     fontWeight: "500",
+    letterSpacing: "-0.01em",
   },
   body: {
-    fontSize: "16px",
+    fontSize: "16px" /* font-body: 16px */,
     lineHeight: "24px",
     fontWeight: "400",
   },
-  label: {
-    fontSize: "13px",
-    lineHeight: "18px",
+  hint: {
+    fontSize: "14px" /* font-hint: 14px */,
+    lineHeight: "20px",
     fontWeight: "500",
+  },
+  caption: {
+    fontSize: "12px",
+    lineHeight: "16px",
+    fontWeight: "400",
   },
   mono: {
     fontSize: "14px",
@@ -97,24 +93,33 @@ export const typography = {
   },
 } as const;
 
-// Border radii tokens - single family (base + pill)
+// Border radii tokens
 export const radii = {
   none: "0px",
+  sm: "8px",
   base: "12px",
+  lg: "16px",
+  xl: "20px",
   full: "9999px",
   pill: "999px",
 } as const;
 
-// Subtle elevation tier
+// Elevation tokens
 export const elevation = {
-  level: "0 4px 12px rgba(0, 0, 0, 0.1)",
+  level1: "0 2px 10px rgba(0, 0, 0, 0.35)" /* elev-1 */,
+  level2: "0 6px 26px rgba(0, 0, 0, 0.45)" /* elev-2 */,
+  level3: "0 12px 40px rgba(0, 0, 0, 0.55)" /* elev-3 */,
+  neon: "0 0 18px rgba(111,211,255,0.35)" /* neon glow */,
+  neonStrong: "0 0 24px rgba(111,211,255,0.5)" /* strong neon glow */,
 } as const;
 
 // Motion tokens
 export const transitions = {
-  fast: "150ms",
+  fast: "120ms",
   normal: "200ms",
-  slow: "250ms",
+  slow: "300ms",
+  spring: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+  smooth: "cubic-bezier(0.4, 0, 0.2, 1)",
 } as const;
 
 // Reference breakpoints (mobile first focus)
@@ -123,6 +128,32 @@ export const breakpoints = {
   md: "768px",
   lg: "1024px",
   xl: "1280px",
+} as const;
+
+// Blur tokens
+export const blur = {
+  sm: "6px" /* glass-blur-sm */,
+  md: "12px" /* glass-blur-md */,
+  lg: "18px" /* glass-blur-lg */,
+} as const;
+
+// Glassmorphism parameters
+export const glass = {
+  bg: "18, 22, 28" /* glass-bg: RGB from bg0 */,
+  alpha: 0.16 /* glass-alpha */,
+  alphaSubtle: 0.08 /* glass-alpha-subtle */,
+  alphaStrong: 0.24 /* glass-alpha-strong */,
+  stroke: "rgba(255,255,255,0.12)" /* glass-stroke */,
+  strokeStrong: "rgba(255,255,255,0.18)" /* glass-stroke-strong */,
+  radius: "18px" /* glass-radius */,
+} as const;
+
+export const gradients = {
+  primary: "linear-gradient(135deg, #6fd3ff 0%, #ff9f6f 100%)",
+  accent: "linear-gradient(135deg, #101318 0%, #0b0d10 100%)",
+  glass: "linear-gradient(135deg, rgba(111,211,255,0.1) 0%, rgba(255,159,111,0.1) 100%)",
+  sunset: "linear-gradient(135deg, #ff9f6f 0%, #ff6b6b 100%)",
+  ocean: "linear-gradient(135deg, #6fd3ff 0%, #4ecdc4 100%)",
 } as const;
 
 export const designTokens = {
@@ -134,6 +165,9 @@ export const designTokens = {
   elevation,
   transitions,
   breakpoints,
+  blur,
+  glass,
+  gradients,
 } as const;
 
 export type DesignTokens = typeof designTokens;

@@ -40,8 +40,8 @@ textarea {
 }
 
 body {
-  background: var(--surface-0);
-  color: var(--text-0);
+  background: var(--bg0);
+  color: var(--fg);
   padding-top: var(--inset-t);
   padding-bottom: var(--inset-b);
   padding-left: var(--inset-l);

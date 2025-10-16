@@ -19,9 +19,33 @@ const NAV_ITEMS = [
 
 function BrandWordmark() {
   return (
-    <span className="text-lg font-semibold tracking-tight text-text-0">
+    <span className="text-text-0 text-lg font-semibold tracking-tight">
       Disa<span className="text-brand">▮</span>AI
     </span>
+  );
+}
+
+function DesktopNav() {
+  return (
+    <nav className="border-border/80 glass glass--subtle hidden items-center gap-1 rounded-full border px-1 py-1 shadow-level backdrop-blur-md lg:flex">
+      {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
+        <NavLink
+          key={to}
+          to={to}
+          className={({ isActive }) =>
+            cn(
+              "touch-target no-select flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-all duration-200",
+              isActive
+                ? "text-brand border-border/60 border bg-[rgba(111,211,255,0.16)] shadow-neon"
+                : "text-text-1 hover:text-text-0 hover:bg-hover-bg hover:-translate-y-[1px] hover:shadow-level",
+            )
+          }
+        >
+          <Icon className="h-4 w-4" aria-hidden />
+          <span>{label}</span>
+        </NavLink>
+      ))}
+    </nav>
   );
 }
 
@@ -39,32 +63,39 @@ function TopBar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 h-14 border-b border-border bg-surface-0">
-      <div className="mx-auto flex h-full w-full max-w-[var(--max-content-width)] items-center justify-between gap-4 px-4">
-        <div className="flex items-center gap-3">
-          <span className="brand-rail h-full w-1" aria-hidden="true" />
-          <div className="flex flex-col gap-1 leading-tight">
+    <header className="border-border/80 glass glass--subtle sticky top-0 z-40 border-b backdrop-blur-md transition-all duration-200">
+      <div className="mx-auto flex h-16 w-full max-w-[var(--max-content-width)] items-center justify-between gap-6 px-4 lg:px-6">
+        <div className="flex flex-1 items-center gap-5">
+          <div className="flex items-center gap-3">
+            <span className="brand-rail h-9 w-1 rounded-r-full" aria-hidden="true" />
             <BrandWordmark />
+          </div>
+          <DesktopNav />
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="text-text-1 hidden flex-col items-end gap-1 text-xs leading-tight sm:flex">
             {activeRole ? (
-              <div className="flex items-center gap-2">
-                <span className="brand-chip">{activeRole.category ?? "Rolle"}</span>
-                <span className="line-clamp-1 text-xs text-text-1">{activeRole.name}</span>
-              </div>
+              <>
+                <span className="brand-chip touch-target no-select">
+                  {activeRole.category ?? "Rolle"}
+                </span>
+                <span className="text-text-1 line-clamp-1 text-[11px]">{activeRole.name}</span>
+              </>
             ) : (
-              <span className="brand-chip">Assistive Studio</span>
+              <span className="brand-chip touch-target no-select">Assistive Studio</span>
             )}
           </div>
+          <Button
+            variant="brand"
+            size="sm"
+            onClick={handleNewChat}
+            aria-label="Neues Gespräch starten"
+            className="haptic-feedback px-4"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Neu</span>
+          </Button>
         </div>
-        <Button
-          variant="brand"
-          size="sm"
-          onClick={handleNewChat}
-          aria-label="Neues Gespräch starten"
-          className="px-4"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Neu</span>
-        </Button>
       </div>
     </header>
   );
@@ -72,9 +103,9 @@ function TopBar() {
 
 function BottomBar() {
   return (
-    <nav className="sticky bottom-0 z-30 border-t border-border bg-surface-0">
+    <nav className="border-border/80 glass glass--subtle sticky bottom-0 z-30 border-t backdrop-blur-md transition-all duration-200 md:hidden">
       <div
-        className="mx-auto flex h-16 w-full max-w-[var(--max-content-width)] items-center gap-1 px-2"
+        className="mobile-safe-padding mx-auto flex h-16 w-full max-w-[var(--max-content-width)] items-center gap-1 px-2"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
@@ -83,8 +114,10 @@ function BottomBar() {
             to={to}
             className={({ isActive }) =>
               cn(
-                "flex flex-1 flex-col items-center justify-center gap-1 rounded-base px-2 py-2 text-[11px] font-medium uppercase tracking-[0.08em] transition-colors",
-                isActive ? "brand-label-active" : "text-text-1 hover:text-text-0",
+                "touch-target-mobile no-select flex flex-1 flex-col items-center justify-center gap-1 rounded-base px-2 py-2 text-[11px] font-medium uppercase tracking-[0.08em] transition-all duration-200",
+                isActive
+                  ? "brand-label-active text-brand border-border/60 border bg-[rgba(111,211,255,0.12)]"
+                  : "text-text-1 hover:text-text-0 hover:bg-hover-bg",
               )
             }
           >
@@ -92,7 +125,7 @@ function BottomBar() {
               <>
                 <span
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-base border border-transparent text-text-1 transition-colors",
+                    "text-text-1 flex h-9 w-9 items-center justify-center rounded-base border border-transparent transition-all duration-200",
                     isActive && "brand-icon-active",
                   )}
                   aria-hidden
@@ -102,7 +135,7 @@ function BottomBar() {
                 <span>{label}</span>
                 <span
                   className={cn(
-                    "h-[2px] w-6 rounded-full bg-brand transition-transform duration-200",
+                    "bg-brand h-[2px] w-6 rounded-full transition-transform duration-200",
                     isActive ? "scale-100" : "scale-0",
                   )}
                   aria-hidden
@@ -124,25 +157,34 @@ export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-dvh flex-col bg-surface-0 text-text-0">
-      <TopBar />
+    <div className="bg-surface-0 text-text-0 relative min-h-dvh overflow-hidden">
+      <div className="pointer-events-none" aria-hidden="true">
+        <div className="absolute inset-0 bg-[radial-gradient(140%_120%_at_0%_0%,rgba(111,211,255,0.22),transparent_58%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(255,159,111,0.18),transparent_62%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_120%,rgba(111,211,255,0.08),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,255,255,0.04)_0deg,transparent_140deg,transparent_220deg,rgba(255,255,255,0.06)_360deg)] opacity-60 mix-blend-overlay" />
+      </div>
 
-      <main
-        id="main"
-        key={location.pathname}
-        className="animate-page-transition mx-auto flex w-full max-w-[var(--max-content-width)] flex-1 flex-col px-4 py-6"
-      >
-        {children}
-      </main>
+      <div className="relative z-10 flex min-h-dvh flex-col">
+        <TopBar />
 
-      <BottomBar />
+        <main
+          id="main"
+          key={location.pathname}
+          className="animate-page-transition mx-auto flex w-full max-w-[var(--max-content-width)] flex-1 flex-col px-4 pb-10 pt-8 sm:px-6 lg:px-8"
+        >
+          {children}
+        </main>
 
-      <footer className="border-t border-border bg-surface-0 py-4">
-        <div className="mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs text-text-1">
-          <span>Disa AI Beta · Tooling Preview</span>
-          <BuildInfo className="text-[11px] text-text-1" />
-        </div>
-      </footer>
+        <BottomBar />
+
+        <footer className="border-border/80 border-t bg-[rgba(var(--glass-bg),0.55)] py-6 backdrop-blur">
+          <div className="text-text-1 mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
+            <span>Disa AI Beta · Tooling Preview</span>
+            <BuildInfo className="text-text-1 text-[11px]" />
+          </div>
+        </footer>
+      </div>
 
       <NetworkBanner />
       <PWAInstallPrompt />

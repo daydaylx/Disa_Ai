@@ -58,7 +58,7 @@ export function MessageItem({
       >
         <div className="mb-1 flex items-center gap-2">
           <span className="badge badge-muted">{msg.role}</span>
-          <time className="text-[11px] text-[hsl(var(--text-muted))]">
+          <time className="text-[11px] text-[hsl(var(--fg-dim))]">
             {new Date(msg.createdAt).toLocaleTimeString()}
           </time>
         </div>
@@ -77,7 +77,7 @@ export function MessageItem({
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="w-full resize-none rounded border border-[hsl(var(--text-muted)/0.3)] bg-[hsl(var(--bg-elevated)/0.5)] p-2 text-sm"
+              className="w-full resize-none rounded border border-[hsl(var(--fg-dim)/0.3)] bg-[hsl(var(--bg1)/0.5)] p-2 text-sm"
               rows={Math.min(editContent.split("\n").length + 1, 10)}
             />
             <div className="flex gap-2">
@@ -86,7 +86,7 @@ export function MessageItem({
                   handlers?.onEdit(msg.id, editContent);
                   setIsEditing(false);
                 }}
-                className="rounded bg-[hsl(var(--accent-primary))] px-3 py-1 text-xs font-medium text-black hover:bg-[hsl(var(--accent-primary-weak))]"
+                className="rounded bg-[hsl(var(--acc1))] px-3 py-1 text-xs font-medium text-black hover:bg-[hsl(var(--acc1)/0.4)]"
               >
                 Speichern
               </button>
@@ -95,7 +95,7 @@ export function MessageItem({
                   setEditContent(msg.content);
                   setIsEditing(false);
                 }}
-                className="rounded border border-[hsl(var(--text-muted)/0.3)] px-3 py-1 text-xs font-medium hover:bg-[hsl(var(--bg-elevated)/0.5)]"
+                className="rounded border border-[hsl(var(--fg-dim)/0.3)] px-3 py-1 text-xs font-medium hover:bg-[hsl(var(--bg1)/0.5)]"
               >
                 Abbrechen
               </button>
@@ -121,7 +121,7 @@ export function MessageItem({
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="rounded border border-[hsl(var(--text-muted)/0.3)] px-3 py-1 text-xs font-medium hover:bg-[hsl(var(--bg-elevated)/0.5)]"
+                className="rounded border border-[hsl(var(--fg-dim)/0.3)] px-3 py-1 text-xs font-medium hover:bg-[hsl(var(--bg1)/0.5)]"
               >
                 Abbrechen
               </button>

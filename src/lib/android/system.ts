@@ -208,13 +208,13 @@ function setupThemeColorUpdates() {
 
     switch (true) {
       case currentHash.includes("chat"):
-        updateThemeColor(designTokens.colors.brand.base);
+        updateThemeColor(designTokens.colors.accent1);
         break;
       case currentHash.includes("settings"):
-        updateThemeColor(designTokens.colors.accent.base);
+        updateThemeColor(designTokens.colors.accent2);
         break;
       default:
-        updateThemeColor(designTokens.colors.surface[1]);
+        updateThemeColor(designTokens.colors.layer1);
     }
   });
 

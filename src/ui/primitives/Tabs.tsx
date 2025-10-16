@@ -9,16 +9,16 @@ export function Tabs({
   items: Array<{ value: string; label: string }>;
 }) {
   return (
-    <div className="inline-flex gap-1 rounded-[var(--radius-pill)] border border-[hsl(var(--text-muted)/0.25)] bg-[hsl(var(--bg-elevated)/0.6)] p-1">
+    <div className="inline-flex gap-1 rounded-[var(--surface-radius-pill)] border border-[hsl(var(--fg-dim)/0.25)] bg-[hsl(var(--bg1)/0.6)] p-1">
       {items.map((it) => (
         <button
           key={it.value}
           onClick={() => onChange(it.value)}
           className={cn(
-            "rounded-[var(--radius-pill)] px-3 py-1.5 text-sm",
+            "rounded-[var(--surface-radius-pill)] px-3 py-1.5 text-sm",
             value === it.value
-              ? "bg-[hsl(var(--accent-primary)/0.18)] text-[hsl(var(--accent-primary))]"
-              : "text-[hsl(var(--text-muted))] hover:bg-[hsl(var(--bg-elevated)/0.5)]",
+              ? "bg-[hsl(var(--acc1)/0.18)] text-[hsl(var(--acc1))]"
+              : "text-[hsl(var(--fg-dim))] hover:bg-[hsl(var(--bg1)/0.5)]",
           )}
         >
           {it.label}

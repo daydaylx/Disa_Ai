@@ -55,7 +55,7 @@ export function ErrorBanner({ uiState, onDismiss }: ErrorBannerProps) {
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="ml-2 text-[hsl(var(--text-muted))] transition-colors hover:text-[hsl(var(--text-main))]"
+            className="ml-2 text-[hsl(var(--fg-dim))] transition-colors hover:text-[hsl(var(--fg))]"
             aria-label="Fehler-Banner schließen"
           >
             ✕

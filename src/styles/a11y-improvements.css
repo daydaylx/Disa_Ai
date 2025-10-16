@@ -120,3 +120,12 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Fallback für Textfarben im Glassmorphism-Design */
+.text-fg-dim {
+  color: var(--fg-dim) !important;
+}
+
+.text-fg {
+  color: var(--fg) !important;
+}

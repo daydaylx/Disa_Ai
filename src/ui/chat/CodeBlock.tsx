@@ -14,7 +14,7 @@ export function CodeBlock({
   return (
     <div className="my-2">
       <div className="code-header">
-        <span className="text-xs text-[hsl(var(--text-muted))]">{language}</span>
+        <span className="text-xs text-[hsl(var(--fg-dim))]">{language}</span>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={copy}>
             Copy

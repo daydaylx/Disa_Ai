@@ -451,8 +451,8 @@ export default function ChatV2() {
             <header className="mb-4 flex items-start justify-between gap-4">
               <div className="space-y-2">
                 <span className="brand-chip w-fit">Neuer Chat</span>
-                <h2 className="text-lg font-semibold text-text-0">Chat</h2>
-                <p className="mt-1 text-sm leading-6 text-text-1">
+                <h2 className="text-text-0 text-lg font-semibold">Chat</h2>
+                <p className="text-text-1 mt-1 text-sm leading-6">
                   Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.
                 </p>
               </div>
@@ -466,18 +466,18 @@ export default function ChatV2() {
               </Button>
             </header>
 
-            <div className="grid grid-cols-1 gap-3 pb-8 sm:grid-cols-2 xl:grid-cols-3">
-              <div className="mb-4 flex flex-col gap-3 px-1 sm:col-span-2 sm:flex-row sm:items-start sm:justify-between xl:col-span-3">
+            <div className="grid grid-cols-2 gap-2 pb-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              <div className="col-span-full mb-4 flex flex-col gap-3 px-1 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex-1">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-text-1">
+                  <h3 className="text-text-1 text-xs font-semibold uppercase tracking-wide">
                     Diskussionen
                   </h3>
-                  <p className="text-xs text-text-1">
+                  <p className="text-text-1 text-xs">
                     Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
                   </p>
                 </div>
                 <div className="w-full sm:w-48 md:w-56">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-text-1">
+                  <span className="text-text-1 mb-1 block text-xs font-semibold uppercase tracking-wide">
                     Stil auswählen
                   </span>
                   <Select
@@ -502,25 +502,32 @@ export default function ChatV2() {
               {discussionTopics.map((topic) => (
                 <div
                   key={topic.title}
-                  className="space-y-3 rounded-lg border border-border bg-surface-1 p-4"
+                  className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
                 >
-                  <span className="brand-chip w-fit text-[10px]">Diskussion</span>
-                  <h4 className="font-semibold text-text-0">{topic.title}</h4>
-                  <p className="text-sm text-text-1">{topic.hint}</p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => startDiscussion(topic.prompt)}
-                    className="mt-4"
-                  >
-                    Diskutieren
-                  </Button>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                  <div className="relative p-3">
+                    <span className="inline-block rounded-full bg-white/10 px-2 py-1 text-[10px] font-medium text-white/80 backdrop-blur-sm">
+                      Diskussion
+                    </span>
+                    <h4 className="mt-2 line-clamp-2 text-sm font-semibold text-white">
+                      {topic.title}
+                    </h4>
+                    <p className="mt-1 line-clamp-2 text-xs text-white/60">{topic.hint}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => startDiscussion(topic.prompt)}
+                      className="mt-3 h-7 w-full rounded-lg bg-white/10 text-xs font-medium text-white hover:bg-white/20 hover:text-white"
+                    >
+                      Diskutieren
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
 
             {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
-              <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-text-0">
+              <div className="text-text-0 mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm">
                 <p className="font-medium">Spiel-Hinweis:</p>
                 <p>
                   Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
@@ -532,7 +539,7 @@ export default function ChatV2() {
             )}
 
             {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
-              <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-text-0">
+              <div className="text-text-0 mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm">
                 <p className="font-medium">Spiel-Hinweis:</p>
                 <p>
                   Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
@@ -547,7 +554,7 @@ export default function ChatV2() {
         ) : (
           <>
             <header className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-text-0">Unterhaltung</h2>
+              <h2 className="text-text-0 text-lg font-semibold">Unterhaltung</h2>
               <div className="flex gap-2">
                 <Button
                   onClick={handleNewConversation}
@@ -574,16 +581,21 @@ export default function ChatV2() {
                     <MessageBubble key={message.id} message={message} />
                   ))}
                   {isLoading && (
-                    <div className="flex justify-start">
-                      <div className="rounded-lg border border-border bg-surface-1 p-4">
-                        <div className="flex items-center space-x-2">
+                    <div className="animate-fade-in flex justify-start">
+                      <div className="glass glass--subtle border-border/80 mr-12 max-w-[85%] rounded-base border p-4">
+                        <div className="flex items-center space-x-3">
                           <div className="flex space-x-1">
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-text-1"></div>
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-text-1 [animation-delay:0.15s]"></div>
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-text-1 [animation-delay:0.3s]"></div>
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-accent1"></div>
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-accent2 [animation-delay:0.15s]"></div>
+                            <div className="h-2 w-2 animate-bounce rounded-full bg-accent1 [animation-delay:0.3s]"></div>
                           </div>
-                          <span className="text-sm text-text-1">Denkt nach...</span>
+                          <span className="text-text-1 animate-pulse text-sm">
+                            Disa denkt nach...
+                          </span>
+                          <div className="h-2 w-2 animate-pulse rounded-full bg-accent1"></div>
                         </div>
+                        {/* Subtle shimmer effect */}
+                        <div className="from-accent1/20 via-accent1/40 to-accent1/20 animate-shimmer mt-2 h-1 rounded-full bg-gradient-to-r"></div>
                       </div>
                     </div>
                   )}
@@ -593,9 +605,9 @@ export default function ChatV2() {
           </>
         )}
 
-        <div className="safe-px sticky bottom-0 z-40 border-t border-border bg-surface-0 pb-4 pt-2">
+        <div className="safe-px border-border bg-surface-0 sticky bottom-0 z-40 border-t pb-4 pt-2">
           <div className="mx-auto w-full max-w-[var(--max-content-width)]">
-            <div className="rounded-lg border border-border bg-surface-1 p-2">
+            <div className="border-border bg-surface-1 rounded-lg border p-2">
               <div className="flex items-end gap-3">
                 <div className="flex-1">
                   <Textarea
@@ -604,7 +616,7 @@ export default function ChatV2() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Nachricht an Disa AI schreiben..."
-                    className="max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm text-text-0 placeholder:text-text-1 focus:ring-0"
+                    className="text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0"
                     rows={1}
                     aria-label="Nachricht an Disa AI eingeben"
                     aria-describedby="input-help-text"
@@ -623,12 +635,17 @@ export default function ChatV2() {
                 </Button>
               </div>
 
-              <div className="mt-2 flex items-center justify-between text-xs text-text-1">
+              <div className="text-text-1 mt-2 flex items-center justify-between text-xs">
                 <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
                 {isLoading && (
-                  <span className="flex items-center gap-2">
-                    <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-brand"></span>
-                    Tippt...
+                  <span className="animate-fade-in flex items-center gap-2">
+                    <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-accent1"></span>
+                    <span className="text-text-1">Disa tippt...</span>
+                    <div className="flex space-x-1">
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-accent2"></div>
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-accent1 [animation-delay:0.1s]"></div>
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-accent2 [animation-delay:0.2s]"></div>
+                    </div>
                   </span>
                 )}
               </div>
@@ -655,13 +672,13 @@ function MessageBubble({ message }: { message: ChatMessageType }) {
   const offsetClass = isUser ? "ml-12" : "mr-12";
 
   return (
-    <div className={`flex ${alignmentClass}`}>
+    <div className={`flex ${alignmentClass} group`}>
       <MessageBubbleCard
         author={isUser ? "Du" : "Disa AI"}
         body={message.content}
         timestamp={message.timestamp}
         variant={isUser ? "user" : "assistant"}
-        className={`max-w-[85%] ${offsetClass}`}
+        className={`max-w-[85%] ${offsetClass} transition-all duration-200 hover:scale-[1.02]`}
       />
     </div>
   );
