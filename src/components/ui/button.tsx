@@ -48,15 +48,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     return (
       <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
-        {!asChild && (
+        {asChild ? (
+          children
+        ) : (
           <>
+            {children}
             {/* Subtle shine effect on hover */}
             <div className="pointer-events-none absolute inset-0 -translate-x-full rounded-base bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
             {/* Touch ripple effect */}
             <div className="touch-ripple absolute inset-0 rounded-base" />
           </>
         )}
-        {children}
       </Comp>
     );
   },
