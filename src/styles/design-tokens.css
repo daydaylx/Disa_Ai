@@ -12,6 +12,7 @@
   --fg: #e6eaef; /* Primärtext */
   --fg-dim: #a8b0bb; /* Sekundärtext */
   --fg-subtle: #6b7280; /* Noch dezenterer Text */
+  --white: #ffffff; /* Pure white for masks and technical uses */
 
   /* Akzente (kalt/warm) */
   --acc1: #6fd3ff;
