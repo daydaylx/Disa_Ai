@@ -32,7 +32,7 @@
     "verify": "npm run typecheck && npm run lint && npm run test:unit && npm run e2e",
     "clean": "rm -rf dist .vite .cache .tmp coverage test-results",
     "postbuild": "cp public/_redirects dist/_redirects && cp public/_headers dist/_headers && node scripts/generate-routes.js",
-    "prepare": "husky",
+    "prepare": "node -e \"if (process.env.NODE_ENV === 'production') process.exit(0)\" && husky install",
     "lh": "lhci autorun --config=./lighthouserc.cjs",
     "lint-staged": "lint-staged"
   },
@@ -113,7 +113,7 @@
     "tmp": "0.2.5"
   },
   "engines": {
-    "node": ">=20.14.0 <24"
+    "node": ">=20.19.0 <24"
   },
   "buildInfo": {
     "buildId": "v1.0.0-f57289a",
