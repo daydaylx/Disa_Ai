@@ -635,8 +635,10 @@ export default function SettingsPage() {
                   asChild
                 >
                   <label htmlFor="import-chats" className="cursor-pointer">
-                    <Upload className="mr-2 h-4 w-4" />
-                    Importieren
+                    <span className="flex items-center gap-2">
+                      <Upload className="h-4 w-4" />
+                      Importieren
+                    </span>
                   </label>
                 </Button>
               </div>
