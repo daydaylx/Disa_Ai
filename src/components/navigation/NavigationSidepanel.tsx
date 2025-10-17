@@ -297,28 +297,28 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           <ul className="space-y-2" role="list">
             {items.map(({ to, label, icon: Icon }) => (
               <li key={to} role="listitem">
-                <NavLink
-                  to={to}
-                  onClick={closePanel}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200",
-                      "touch-target no-select sidepanel-focus-visible group",
-                      isActive
-                        ? "text-brand bg-brand/10 border-brand/20 border shadow-sm"
-                        : "text-text-1 hover:text-text-0 hover:bg-hover-bg hover:shadow-sm",
-                    )
-                  }
-                  aria-current={({ isActive }) => (isActive ? "page" : undefined)}
-                >
-                  <Icon
-                    className={cn(
-                      "h-5 w-5 flex-shrink-0 transition-colors duration-200",
-                      "group-hover:scale-110",
-                    )}
-                    aria-hidden="true"
-                  />
-                  <span>{label}</span>
+                <NavLink to={to} onClick={closePanel}>
+                  {({ isActive }) => (
+                    <div
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200",
+                        "touch-target no-select sidepanel-focus-visible group",
+                        isActive
+                          ? "text-brand bg-brand/10 border-brand/20 border shadow-sm"
+                          : "text-text-1 hover:text-text-0 hover:bg-hover-bg hover:shadow-sm",
+                      )}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <Icon
+                        className={cn(
+                          "h-5 w-5 flex-shrink-0 transition-colors duration-200",
+                          "group-hover:scale-110",
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span>{label}</span>
+                    </div>
+                  )}
                 </NavLink>
               </li>
             ))}
