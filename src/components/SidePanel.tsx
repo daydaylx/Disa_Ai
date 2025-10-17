@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import React, { type RefObject,useRef } from "react";
+import React, { type RefObject, useRef } from "react";
 
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useSwipe } from "../hooks/useSwipe";

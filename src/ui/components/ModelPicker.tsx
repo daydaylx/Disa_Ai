@@ -43,14 +43,14 @@ export function ModelPicker({ selectedModelId, onModelChange, className = "" }: 
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between rounded-lg border border-border bg-surface-1 px-3 py-2 text-left text-sm transition-colors hover:border-brand"
+        className="border-border bg-surface-1 hover:border-brand flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition-colors"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
         <div className="flex items-center gap-2">
-          <span className="font-medium text-text-0">{selectedModel?.label || "Modell wählen"}</span>
+          <span className="text-text-0 font-medium">{selectedModel?.label || "Modell wählen"}</span>
           {selectedModel && (
-            <div className="flex items-center gap-1 text-xs text-text-1">
+            <div className="text-text-1 flex items-center gap-1 text-xs">
               <span>•</span>
               <span>{formatContext(selectedModel.context)}</span>
               <span>•</span>
@@ -59,7 +59,7 @@ export function ModelPicker({ selectedModelId, onModelChange, className = "" }: 
           )}
         </div>
         <svg
-          className={`h-4 w-4 text-text-1 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`text-text-1 h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -72,10 +72,10 @@ export function ModelPicker({ selectedModelId, onModelChange, className = "" }: 
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
 
-          <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-96 overflow-y-auto rounded-lg border border-border bg-surface-1 p-1">
+          <div className="border-border bg-surface-1 absolute left-0 right-0 top-full z-50 mt-1 max-h-96 overflow-y-auto rounded-lg border p-1">
             {Object.entries(groupedModels).map(([provider, models]) => (
               <div key={provider} className="mb-2 last:mb-0">
-                <div className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-text-1">
+                <div className="text-text-1 px-2 py-1 text-xs font-semibold uppercase tracking-wide">
                   {getProviderName(provider)}
                 </div>
 
@@ -83,17 +83,17 @@ export function ModelPicker({ selectedModelId, onModelChange, className = "" }: 
                   <button
                     key={model.id}
                     onClick={() => handleModelSelect(model.id)}
-                    className={`group w-full rounded-md p-2 text-left transition-all hover:bg-surface-2 ${
-                      model.id === selectedModelId ? "bg-surface-2 ring-1 ring-brand" : ""
+                    className={`hover:bg-surface-2 group w-full rounded-md p-2 text-left transition-all ${
+                      model.id === selectedModelId ? "bg-surface-2 ring-brand ring-1" : ""
                     }`}
                     role="option"
                     aria-selected={model.id === selectedModelId}
                   >
                     <div className="flex items-start justify-between">
                       <div className="min-w-0 flex-1">
-                        <div className="mb-1 text-sm font-medium text-text-0">{model.label}</div>
+                        <div className="text-text-0 mb-1 text-sm font-medium">{model.label}</div>
 
-                        <div className="mb-1 flex items-center gap-3 text-xs text-text-1">
+                        <div className="text-text-1 mb-1 flex items-center gap-3 text-xs">
                           <span>Context: {formatContext(model.context)}</span>
                           <span>•</span>
                           <span>In: {formatPrice(model.inputPrice)}</span>
@@ -116,7 +116,7 @@ export function ModelPicker({ selectedModelId, onModelChange, className = "" }: 
                       {model.id === selectedModelId && (
                         <div className="ml-2 flex-shrink-0">
                           <svg
-                            className="h-4 w-4 text-brand"
+                            className="text-brand h-4 w-4"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >

@@ -176,10 +176,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         <p id="command-palette-description" className="sr-only">
           Verwende die Pfeiltasten zur Navigation, Enter zum Ausführen, Escape zum Schließen
         </p>
-        <div className="overflow-hidden rounded-lg border border-border bg-surface-1 shadow-level">
-          <div className="flex items-center border-b border-border px-4">
+        <div className="border-border bg-surface-1 overflow-hidden rounded-lg border shadow-level">
+          <div className="border-border flex items-center border-b px-4">
             <svg
-              className="h-5 w-5 text-text-1"
+              className="text-text-1 h-5 w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
@@ -193,7 +193,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             <input
               ref={searchRef}
               type="text"
-              className="h-12 w-full border-0 bg-transparent pl-3 pr-4 text-text-0 placeholder:text-text-1 focus:ring-0 sm:text-sm"
+              className="text-text-0 placeholder:text-text-1 h-12 w-full border-0 bg-transparent pl-3 pr-4 focus:ring-0 sm:text-sm"
               placeholder={placeholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -284,7 +284,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               ))}
             </ul>
           ) : (
-            <div className="px-4 py-14 text-center text-sm text-text-1">
+            <div className="text-text-1 px-4 py-14 text-center text-sm">
               Keine Befehle gefunden für "{query}"
             </div>
           )}

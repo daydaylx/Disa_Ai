@@ -64,7 +64,7 @@ export function Sheet({
     <>
       <div className="fixed inset-0 z-50 bg-black/50" onClick={() => onOpenChange(false)} />
       <div
-        className={`fixed z-50 border-border bg-surface-1 ${sideClasses[side]} ${animationClasses[side]} ${className}`}
+        className={`border-border bg-surface-1 fixed z-50 ${sideClasses[side]} ${animationClasses[side]} ${className}`}
         role="dialog"
         aria-modal="true"
       >
@@ -99,7 +99,7 @@ interface SheetTitleProps {
 }
 
 export function SheetTitle({ children, className = "" }: SheetTitleProps) {
-  return <h2 className={`text-xl font-semibold text-text-0 ${className}`}>{children}</h2>;
+  return <h2 className={`text-text-0 text-xl font-semibold ${className}`}>{children}</h2>;
 }
 
 interface SheetDescriptionProps {

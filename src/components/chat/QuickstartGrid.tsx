@@ -67,10 +67,10 @@ export function QuickstartGrid({
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="h-32 animate-pulse rounded-lg border border-border bg-surface-1"
+            className="border-border bg-surface-1 h-32 animate-pulse rounded-lg border"
           >
-            <div className="h-4 w-24 rounded bg-surface-2" />
-            <div className="mt-2 h-3 w-20 rounded bg-surface-2" />
+            <div className="bg-surface-2 h-4 w-24 rounded" />
+            <div className="bg-surface-2 mt-2 h-3 w-20 rounded" />
           </div>
         ))}
       </div>

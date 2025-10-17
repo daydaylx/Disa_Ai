@@ -80,6 +80,7 @@ type BubbleKind = 'assistant'|'user';
 export function ChatBubble({kind, children}:{kind:BubbleKind; children:React.ReactNode}) {
 const side = kind==='user' ? 'items-end ml-auto' : 'items-start mr-auto';
 return (
+
 <div className={`max-w-[78%] ${side} glass px-3 py-2`}>
 <p className="text-[var(--fg)]/92 leading-6">{children}</p>
 </div>

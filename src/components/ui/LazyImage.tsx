@@ -91,7 +91,7 @@ export function LazyImage({
   );
 
   const defaultFallback = (
-    <div className="flex h-full w-full items-center justify-center bg-surface-1 text-text-1">
+    <div className="bg-surface-1 text-text-1 flex h-full w-full items-center justify-center">
       <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
@@ -149,7 +149,7 @@ export function LazyImage({
 
       {loadState === "loading" && !placeholder && (
         <div className="bg-surface-1/50 absolute inset-0 flex items-center justify-center">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-brand" />
+          <div className="border-border border-t-brand h-4 w-4 animate-spin rounded-full border-2" />
         </div>
       )}
     </div>
@@ -191,7 +191,7 @@ export function LazyAvatar({
   const customFallback = fallbackInitials ? (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full bg-brand font-medium text-white",
+        "bg-brand flex items-center justify-center rounded-full font-medium text-white",
         sizeClasses[size],
         textSizes[size],
       )}
@@ -201,7 +201,7 @@ export function LazyAvatar({
   ) : (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full bg-surface-2 text-text-1",
+        "bg-surface-2 text-text-1 flex items-center justify-center rounded-full",
         sizeClasses[size],
       )}
     >

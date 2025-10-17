@@ -56,7 +56,7 @@ export function MemoryPanel({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-sm">
-            <Brain className="h-4 w-4 text-brand" />
+            <Brain className="text-brand h-4 w-4" />
             Gedächtnis
           </CardTitle>
           <Button variant="ghost" size="icon" onClick={onToggle} className="h-8 w-8">
@@ -64,7 +64,7 @@ export function MemoryPanel({
           </Button>
         </div>
         {threadTitle && (
-          <p className="truncate text-xs text-text-1" title={threadTitle}>
+          <p className="text-text-1 truncate text-xs" title={threadTitle}>
             {threadTitle}
           </p>
         )}
@@ -74,7 +74,7 @@ export function MemoryPanel({
         <CardContent className="space-y-3 pt-0">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-medium text-text-1">
+              <h4 className="text-text-1 text-xs font-medium">
                 Gespeicherte Punkte ({memoryPoints.length}/12)
               </h4>
               {onAddNote && (
@@ -95,23 +95,23 @@ export function MemoryPanel({
                 {memoryPoints.map((point, index) => (
                   <div
                     key={index}
-                    className="rounded border border-border bg-surface-2 p-2 text-xs"
+                    className="border-border bg-surface-2 rounded border p-2 text-xs"
                   >
                     <span className="text-text-0">• {point}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-2 text-center text-xs italic text-text-1">
+              <div className="text-text-1 p-2 text-center text-xs italic">
                 Noch keine Gedächtnis-Punkte gespeichert
               </div>
             )}
           </div>
 
           {showAddNote && onAddNote && (
-            <div className="space-y-2 rounded-lg border border-border bg-surface-2 p-3">
+            <div className="border-border bg-surface-2 space-y-2 rounded-lg border p-3">
               <div className="flex items-center justify-between">
-                <h5 className="text-xs font-medium text-text-1">Notiz hinzufügen</h5>
+                <h5 className="text-text-1 text-xs font-medium">Notiz hinzufügen</h5>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -154,13 +154,13 @@ export function MemoryPanel({
           )}
 
           {isLoading && (
-            <div className="flex items-center gap-2 text-xs text-text-1">
-              <div className="h-3 w-3 animate-spin rounded-full border border-border border-t-transparent" />
+            <div className="text-text-1 flex items-center gap-2 text-xs">
+              <div className="border-border h-3 w-3 animate-spin rounded-full border border-t-transparent" />
               Aktualisiere Gedächtnis...
             </div>
           )}
 
-          <div className="border-t border-border pt-2">
+          <div className="border-border border-t pt-2">
             <div className="flex gap-2">
               <Badge variant="secondary" className="text-xs">
                 {memoryPoints.length} Punkte

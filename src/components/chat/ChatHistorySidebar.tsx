@@ -70,16 +70,16 @@ export function ChatHistorySidebar({
       <div className="fixed inset-0 bg-black/50 md:hidden" onClick={onClose} />
 
       <div
-        className="fixed right-0 top-0 h-full w-full max-w-sm bg-surface-1 shadow-level md:relative md:right-auto md:top-auto md:h-auto md:max-w-none md:rounded-lg md:border md:border-border md:shadow-none"
+        className="bg-surface-1 md:border-border fixed right-0 top-0 h-full w-full max-w-sm shadow-level md:relative md:right-auto md:top-auto md:h-auto md:max-w-none md:rounded-lg md:border md:shadow-none"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 80px)" }}
       >
-        <div className="sticky top-0 z-10 border-b border-border bg-surface-1">
+        <div className="border-border bg-surface-1 sticky top-0 z-10 border-b">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
               <Button variant="ghost" size="icon" onClick={onClose} aria-label="Zurück zum Chat">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h2 className="text-lg font-semibold text-text-0">Chat-Verlauf</h2>
+              <h2 className="text-text-0 text-lg font-semibold">Chat-Verlauf</h2>
             </div>
             <Button
               variant="ghost"
@@ -93,11 +93,11 @@ export function ChatHistorySidebar({
 
           <div className="px-4 pb-4">
             <div className="relative mb-3">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-1" />
+              <Search className="text-text-1 absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Chats durchsuchen..."
-                className="w-full rounded-lg border border-border bg-surface-2 py-2 pl-10 pr-4 text-text-0 placeholder:text-text-1 focus:outline-none focus:ring-2 focus:ring-brand"
+                className="border-border bg-surface-2 text-text-0 placeholder:text-text-1 focus:ring-brand w-full rounded-lg border py-2 pl-10 pr-4 focus:outline-none focus:ring-2"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -147,7 +147,7 @@ export function ChatHistorySidebar({
         <div className="h-[calc(100vh-220px)] overflow-y-auto px-4 pb-4 md:h-[calc(100%-140px)]">
           {Object.entries(groupedConversations).map(([groupName, groupConversations]) => (
             <div key={groupName} className="mb-6">
-              <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-text-1">
+              <h3 className="text-text-1 mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
                 {groupName}
               </h3>
               <ul className="space-y-2">
@@ -164,21 +164,21 @@ export function ChatHistorySidebar({
                     <li key={conversation.id}>
                       <div
                         className={cn(
-                          "group relative cursor-pointer rounded-lg border border-border bg-surface-2 p-4 text-left text-text-0 transition-colors hover:bg-surface-1",
-                          isActive && "ring-2 ring-brand",
+                          "border-border bg-surface-2 text-text-0 hover:bg-surface-1 group relative cursor-pointer rounded-lg border p-4 text-left transition-colors",
+                          isActive && "ring-brand ring-2",
                         )}
                         onClick={() => onSelect(conversation.id)}
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0 flex-1">
                             <div className="mb-1 flex items-center gap-2">
-                              <p className="truncate text-sm font-semibold text-text-0">
+                              <p className="text-text-0 truncate text-sm font-semibold">
                                 {conversation.title}
                               </p>
                               {isActive && <Badge variant="secondary">Aktiv</Badge>}
                             </div>
                             <p
-                              className="truncate text-xs text-text-1"
+                              className="text-text-1 truncate text-xs"
                               style={{
                                 display: "-webkit-box",
                                 WebkitLineClamp: 2,
@@ -191,11 +191,11 @@ export function ChatHistorySidebar({
                           </div>
                           <div className="flex flex-col items-end gap-1">
                             {Number.isFinite(lastActivity) && (
-                              <span className="text-xs text-text-1">
+                              <span className="text-text-1 text-xs">
                                 {formatRelativeTime(lastActivity)}
                               </span>
                             )}
-                            <div className="flex items-center gap-1 text-xs text-text-1">
+                            <div className="text-text-1 flex items-center gap-1 text-xs">
                               <MessageSquare className="h-3 w-3" />
                               <span>{messageCount}</span>
                             </div>
@@ -209,7 +209,7 @@ export function ChatHistorySidebar({
                             event.stopPropagation();
                             onDelete(conversation.id);
                           }}
-                          className="absolute right-2 top-2 h-8 w-8 text-text-1 opacity-0 hover:bg-surface-2 hover:text-danger group-hover:opacity-100"
+                          className="text-text-1 hover:bg-surface-2 absolute right-2 top-2 h-8 w-8 opacity-0 hover:text-danger group-hover:opacity-100"
                           aria-label="Konversation löschen"
                         >
                           <X className="h-4 w-4" />
@@ -225,10 +225,10 @@ export function ChatHistorySidebar({
           {filteredConversations.length === 0 && (
             <div className="flex h-full flex-col items-center justify-center text-center">
               <MessageSquare className="text-text-1/50 h-12 w-12" />
-              <h3 className="mt-4 text-lg font-medium text-text-0">
+              <h3 className="text-text-0 mt-4 text-lg font-medium">
                 {searchQuery ? "Keine Treffer gefunden" : "Noch kein Verlauf"}
               </h3>
-              <p className="mt-2 text-sm text-text-1">
+              <p className="text-text-1 mt-2 text-sm">
                 {searchQuery
                   ? "Versuchen Sie es mit anderen Suchbegriffen."
                   : "Unterhaltungen werden automatisch gesichert, sobald du Nachrichten austauschst."}

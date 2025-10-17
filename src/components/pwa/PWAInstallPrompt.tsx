@@ -53,14 +53,14 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
     <div
       className={`fixed bottom-4 left-4 right-4 z-50 md:left-auto md:max-w-sm ${className || ""}`}
     >
-      <div className="rounded-lg border border-border bg-surface-1 p-6 shadow-level">
+      <div className="border-border bg-surface-1 rounded-lg border p-6 shadow-level">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">
-              <Smartphone className="h-5 w-5 text-text-0" />
-              <h3 className="font-semibold text-text-0">Disa AI installieren</h3>
+              <Smartphone className="text-text-0 h-5 w-5" />
+              <h3 className="text-text-0 font-semibold">Disa AI installieren</h3>
             </div>
-            <p className="mb-4 text-sm text-text-1">
+            <p className="text-text-1 mb-4 text-sm">
               Installiere Disa AI als App für schnelleren Zugriff und bessere Performance.
             </p>
 

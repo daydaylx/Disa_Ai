@@ -88,23 +88,23 @@ export function BottomSheet({ isOpen, onClose, title, children, className }: Bot
         ref={sheetRef}
         className={cn(
           "animate-in slide-in-from-bottom fixed inset-x-0 bottom-0 max-h-[90vh] duration-300",
-          "rounded-t-lg border-t border-border bg-surface-1",
+          "border-border bg-surface-1 rounded-t-lg border-t",
           "pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-center pb-2 pt-3">
-          <div className="h-1 w-10 rounded-full bg-surface-2" />
+          <div className="bg-surface-2 h-1 w-10 rounded-full" />
         </div>
 
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <h2 id="bottom-sheet-title" className="text-xl font-semibold text-text-0">
+        <div className="border-border flex items-center justify-between border-b px-6 py-4">
+          <h2 id="bottom-sheet-title" className="text-text-0 text-xl font-semibold">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="tap-target flex h-10 w-10 items-center justify-center rounded-full bg-surface-2 text-text-1 transition-colors hover:bg-surface-2 hover:text-text-0"
+            className="tap-target bg-surface-2 text-text-1 hover:bg-surface-2 hover:text-text-0 flex h-10 w-10 items-center justify-center rounded-full transition-colors"
             aria-label="Schließen"
           >
             <X className="h-5 w-5" />

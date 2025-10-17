@@ -76,7 +76,9 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
               <p className="text-text-1 text-xs leading-snug">{tile.subtitle}</p>
             </div>
             <div className="text-text-1 mt-auto flex items-center gap-1.5 text-xs">
-              <Badge variant="outline" className="text-xs px-1.5 py-0.5">Start</Badge>
+              <Badge variant="outline" className="px-1.5 py-0.5 text-xs">
+                Start
+              </Badge>
             </div>
           </button>
         );

@@ -14,7 +14,7 @@ function determineSupport() {
 
   // Development mode: always allow access for debugging
   if (import.meta.env.DEV) {
-    console.log("Development mode: allowing access for debugging");
+    console.warn("Development mode: allowing access for debugging");
     return "allowed";
   }
 
@@ -29,9 +29,6 @@ function determineSupport() {
   const matchesMobileBreakpoint = matchesMedia
     ? matchesMedia("(max-width: 900px)").matches
     : window.innerWidth <= 900;
-
-  const isAndroidPlatform =
-    uaData?.platform?.toLowerCase() === "android" || /android/i.test(userAgent);
 
   const isMobileFormFactor =
     (uaData?.mobile ?? false) ||

@@ -29,14 +29,14 @@ export function ConversationHistorySheet({
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Chat-Verlauf">
       <div className="max-h-[65vh] overflow-y-auto px-6 py-4">
         {conversations.length === 0 ? (
-          <div className="rounded-lg border border-border bg-surface-1 p-6 text-center">
+          <div className="border-border bg-surface-1 rounded-lg border p-6 text-center">
             <div className="space-y-3">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface-2">
-                <MessageSquare className="h-6 w-6 text-text-1" />
+              <div className="border-border bg-surface-2 mx-auto flex h-12 w-12 items-center justify-center rounded-full border">
+                <MessageSquare className="text-text-1 h-6 w-6" />
               </div>
               <div>
-                <p className="font-medium text-text-0">Noch kein Verlauf gespeichert</p>
-                <p className="mt-2 text-sm text-text-1">
+                <p className="text-text-0 font-medium">Noch kein Verlauf gespeichert</p>
+                <p className="text-text-1 mt-2 text-sm">
                   Unterhaltungen werden automatisch gesichert, sobald du Nachrichten austauschst.
                 </p>
               </div>
@@ -56,8 +56,8 @@ export function ConversationHistorySheet({
                 <li key={conversation.id} className="group relative">
                   <div
                     className={cn(
-                      "rounded-lg border border-border bg-surface-2 p-5 text-left text-text-0 transition-colors hover:bg-surface-1",
-                      isActive && "ring-2 ring-brand",
+                      "border-border bg-surface-2 text-text-0 hover:bg-surface-1 rounded-lg border p-5 text-left transition-colors",
+                      isActive && "ring-brand ring-2",
                     )}
                   >
                     <button
@@ -67,15 +67,15 @@ export function ConversationHistorySheet({
                     >
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-semibold text-text-0">{conversation.title}</p>
+                          <p className="text-text-0 text-sm font-semibold">{conversation.title}</p>
                           {isActive ? (
-                            <span className="rounded-full bg-brand/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-brand">
+                            <span className="bg-brand/20 text-brand rounded-full px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
                               Aktiv
                             </span>
                           ) : null}
                         </div>
                         <p
-                          className="mt-2 text-xs text-text-1"
+                          className="text-text-1 mt-2 text-xs"
                           style={{
                             display: "-webkit-box",
                             WebkitLineClamp: 2,
@@ -85,7 +85,7 @@ export function ConversationHistorySheet({
                         >
                           {preview}
                         </p>
-                        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-text-1">
+                        <div className="text-text-1 mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
                           {Number.isFinite(lastActivity) ? (
                             <span className="inline-flex items-center gap-1">
                               <Clock className="h-3.5 w-3.5" />
@@ -97,7 +97,7 @@ export function ConversationHistorySheet({
                             {messageCount} Nachricht{messageCount === 1 ? "" : "en"}
                           </span>
                           {conversation.model ? (
-                            <span className="inline-flex items-center gap-1 text-text-1">
+                            <span className="text-text-1 inline-flex items-center gap-1">
                               Modell: {conversation.model}
                             </span>
                           ) : null}
@@ -111,7 +111,7 @@ export function ConversationHistorySheet({
                         event.stopPropagation();
                         onDelete(conversation.id);
                       }}
-                      className="absolute right-3 top-3 h-8 w-8 text-text-1 opacity-0 hover:bg-surface-2 hover:text-danger group-hover:opacity-100"
+                      className="text-text-1 hover:bg-surface-2 absolute right-3 top-3 h-8 w-8 opacity-0 hover:text-danger group-hover:opacity-100"
                       aria-label="Konversation löschen"
                     >
                       <Trash2 className="h-4 w-4" />

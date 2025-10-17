@@ -73,7 +73,7 @@ export function QuickstartTile({
   return (
     <div
       className={cn(
-        "group relative min-h-[96px] rounded-base border border-border bg-surface-1 transition-all duration-200",
+        "border-border bg-surface-1 group relative min-h-[96px] rounded-base border transition-all duration-200",
         isActive && "scale-95 opacity-70",
         isLoading && "pointer-events-none",
         !isLoading && "hover:-translate-y-[1px] active:scale-[0.98]",
@@ -81,7 +81,7 @@ export function QuickstartTile({
     >
       <button
         data-testid={`quickstart-${action.id}`}
-        className="flex h-full w-full flex-col items-center justify-center text-center text-text-0"
+        className="text-text-0 flex h-full w-full flex-col items-center justify-center text-center"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
@@ -92,15 +92,15 @@ export function QuickstartTile({
         type="button"
       >
         {isPinned && (
-          <div className="absolute right-2 top-2 rounded-full bg-surface-2 p-1">
-            <Pin className="h-3 w-3 text-text-0" />
+          <div className="bg-surface-2 absolute right-2 top-2 rounded-full p-1">
+            <Pin className="text-text-0 h-3 w-3" />
           </div>
         )}
 
         <div className="relative z-10 space-y-1.5">
           <div className="text-xl">{action.icon || "✨"}</div>
-          <div className="text-xs font-medium text-text-0 sm:text-sm">{action.title}</div>
-          <div className="text-xs text-text-1">{action.subtitle}</div>
+          <div className="text-text-0 text-xs font-medium sm:text-sm">{action.title}</div>
+          <div className="text-text-1 text-xs">{action.subtitle}</div>
         </div>
 
         {showActions && (
@@ -110,7 +110,7 @@ export function QuickstartTile({
           >
             <button
               onClick={handlePinToggle}
-              className="flex flex-col items-center gap-1 rounded-base border border-border bg-surface-2 px-4 py-3 text-text-0 transition-all hover:scale-105 hover:bg-surface-1"
+              className="border-border bg-surface-2 text-text-0 hover:bg-surface-1 flex flex-col items-center gap-1 rounded-base border px-4 py-3 transition-all hover:scale-105"
               type="button"
             >
               {isPinned ? (
@@ -130,7 +130,7 @@ export function QuickstartTile({
 
         {isLoading && (
           <div className="absolute inset-0 z-20 flex items-center justify-center rounded-base bg-black/60">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-border border-t-brand" />
+            <div className="border-border border-t-brand h-6 w-6 animate-spin rounded-full border-2" />
           </div>
         )}
       </button>

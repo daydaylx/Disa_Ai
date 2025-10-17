@@ -78,9 +78,9 @@ export function PWAIntegration({
   return (
     <div className={`pwa-integration ${className}`}>
       {(isProcessing || isProcessingFiles) && (
-        <div className="flex items-center gap-2 rounded-lg border border-accent/20 bg-accent/10 p-3">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-accent border-t-transparent" />
-          <span className="text-sm text-accent">
+        <div className="border-accent/20 bg-accent/10 flex items-center gap-2 rounded-lg border p-3">
+          <div className="border-accent h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
+          <span className="text-accent text-sm">
             {isProcessingFiles
               ? "Verarbeite geteilte Dateien..."
               : "Verarbeite geteilte Inhalte..."}

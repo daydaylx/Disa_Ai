@@ -69,7 +69,7 @@ describe("SettingsPage", () => {
     await act(async () => {
       renderWithProviders(<SettingsPage />);
     });
-    
+
     expect(screen.getByRole("heading", { name: /Einstellungen/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/API-Schlüssel/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Schlüssel speichern/i })).toBeInTheDocument();
@@ -88,12 +88,16 @@ describe("SettingsPage", () => {
     const saveButton = screen.getByRole("button", { name: /Schlüssel speichern/i });
 
     // Enter a valid API key
-    fireEvent.change(apiKeyInput, { target: { value: "sk-123456789012345678901234567890123456789012345678" } });
+    fireEvent.change(apiKeyInput, {
+      target: { value: "sk-123456789012345678901234567890123456789012345678" },
+    });
     fireEvent.click(saveButton);
 
     // Check that the key was saved in sessionStorage
     await waitFor(() => {
-      expect(window.sessionStorage.getItem("disa-ai-api-key")).toBe("sk-123456789012345678901234567890123456789012345678");
+      expect(window.sessionStorage.getItem("disa-ai-api-key")).toBe(
+        "sk-123456789012345678901234567890123456789012345678",
+      );
     });
 
     // Check for success toast notification (mocked in the UI)
@@ -118,7 +122,10 @@ describe("SettingsPage", () => {
 
   it("removes API key when clear button is clicked", async () => {
     // First, set an API key in sessionStorage
-    window.sessionStorage.setItem("disa-ai-api-key", "sk-123456789012345678901234567890123456789012345678");
+    window.sessionStorage.setItem(
+      "disa-ai-api-key",
+      "sk-123456789012345678901234567890123456789012345678",
+    );
 
     await act(async () => {
       renderWithProviders(<SettingsPage />);
@@ -139,13 +146,13 @@ describe("SettingsPage", () => {
     });
 
     const memoryToggle = screen.getByLabelText(/Gedächtnis aktivieren/i);
-    
+
     // Initially memory should be disabled
     expect(memoryToggle).not.toBeChecked();
 
     // Toggle memory on
     fireEvent.click(memoryToggle);
-    
+
     // Check that memory settings were updated in localStorage
     await waitFor(() => {
       const settings = JSON.parse(window.localStorage.getItem("disa-memory-settings") || "{}");
@@ -154,7 +161,7 @@ describe("SettingsPage", () => {
 
     // Toggle memory off
     fireEvent.click(memoryToggle);
-    
+
     // Check that memory settings were updated in localStorage
     await waitFor(() => {
       const settings = JSON.parse(window.localStorage.getItem("disa-memory-settings") || "{}");
@@ -168,13 +175,13 @@ describe("SettingsPage", () => {
     });
 
     const nsfwToggle = screen.getByLabelText(/18\+ \/ NSFW-Content anzeigen/i);
-    
+
     // Initially NSFW should be disabled
     expect(nsfwToggle).not.toBeChecked();
 
     // Toggle NSFW on
     fireEvent.click(nsfwToggle);
-    
+
     // Check that settings were updated in localStorage
     await waitFor(() => {
       const settings = JSON.parse(window.localStorage.getItem("disa-ai-settings") || "{}");
@@ -183,7 +190,7 @@ describe("SettingsPage", () => {
 
     // Toggle NSFW off
     fireEvent.click(nsfwToggle);
-    
+
     // Check that settings were updated in localStorage
     await waitFor(() => {
       const settings = JSON.parse(window.localStorage.getItem("disa-ai-settings") || "{}");

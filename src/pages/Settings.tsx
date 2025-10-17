@@ -41,7 +41,11 @@ interface MemoryStatsData {
 }
 
 function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<MemoryStatsData> }) {
-  const [stats, setStats] = useState<MemoryStatsData>({ chatCount: 0, totalMessages: 0, storageUsed: 0 });
+  const [stats, setStats] = useState<MemoryStatsData>({
+    chatCount: 0,
+    totalMessages: 0,
+    storageUsed: 0,
+  });
   const toasts = useToasts();
 
   useEffect(() => {
@@ -50,7 +54,11 @@ function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<MemoryS
         const data = await getMemoryStats();
         setStats(data);
       } catch (error) {
-        toasts.push({ kind: "error", title: "Speicherstatistiken laden fehlgeschlagen", message: String(error) });
+        toasts.push({
+          kind: "error",
+          title: "Speicherstatistiken laden fehlgeschlagen",
+          message: String(error),
+        });
       }
     };
     void loadStats();
@@ -517,8 +525,8 @@ export default function SettingsPage() {
               {/* Global Memory Input */}
               <div className="space-y-3 border-t border-white/10 pt-4">
                 <Label htmlFor="memory-name" className="text-white/90">
-                Persönliche Informationen
-              </Label>
+                  Persönliche Informationen
+                </Label>
                 <div className="space-y-2">
                   <Input
                     id="memory-name"
