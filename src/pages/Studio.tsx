@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useStudio } from "../app/state/StudioContext";
 import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui";
+import { useToasts } from "../components/ui/toast/ToastsProvider";
 import type { Role } from "../data/roles";
 import { loadRoles } from "../data/roles";
 
@@ -50,6 +51,7 @@ function RolesTab() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<"all" | CategoryKey>("all");
   const navigate = useNavigate();
+  const toasts = useToasts();
 
   useEffect(() => {
     let mounted = true;
@@ -67,7 +69,11 @@ function RolesTab() {
         }, []);
         setRoleList(uniqueById);
       } catch (error) {
-        console.warn("Konnte zusätzliche Rollen nicht laden:", error);
+        toasts.push({
+          kind: "error",
+          title: "Fehler beim Laden zusätzlicher Rollen",
+          message: error instanceof Error ? error.message : String(error),
+        });
         setRoleList(roles);
       } finally {
         if (mounted) {
@@ -80,7 +86,7 @@ function RolesTab() {
     return () => {
       mounted = false;
     };
-  }, [roles]);
+  }, [roles, toasts]);
 
   const availableRoles = useMemo(() => {
     if (activeRole && !roleList.some((role) => role.id === activeRole.id)) {
@@ -293,7 +299,7 @@ function RolesTab() {
                     </Button>
                   ) : null}
                 </div>
-                <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {roles.map((role) => (
                     <RoleCard
                       key={role.id}
@@ -376,11 +382,11 @@ function GamesTab() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {games.map((game) => (
           <div
             key={game.id}
-            className="border-border bg-surface-1 hover:border-brand flex min-h-[120px] cursor-pointer flex-col gap-3 rounded-lg border p-4 transition-all duration-200 sm:p-5"
+            className="border-border bg-surface-1 hover:border-brand flex min-h-[96px] cursor-pointer flex-col gap-2.5 rounded-lg border p-3 transition-all duration-200 sm:p-4"
             onClick={() => handleGameStart(game.id)}
           >
             <h3 className="text-text-1 text-balance text-sm font-semibold sm:text-base">

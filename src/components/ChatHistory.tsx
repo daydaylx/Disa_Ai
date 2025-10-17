@@ -21,7 +21,7 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ items, onItemSelect })
         <Glass
           key={item.id}
           variant="subtle"
-          className="cursor-pointer rounded-lg p-3 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+          className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
           onClick={() => onItemSelect(item)}
         >
           <div className="font-medium text-[var(--fg)]">{item.title}</div>

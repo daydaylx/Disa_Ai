@@ -73,7 +73,7 @@ export function QuickstartTile({
   return (
     <div
       className={cn(
-        "group relative min-h-[120px] rounded-base border border-border bg-surface-1 transition-all duration-200",
+        "group relative min-h-[96px] rounded-base border border-border bg-surface-1 transition-all duration-200",
         isActive && "scale-95 opacity-70",
         isLoading && "pointer-events-none",
         !isLoading && "hover:-translate-y-[1px] active:scale-[0.98]",
@@ -97,9 +97,9 @@ export function QuickstartTile({
           </div>
         )}
 
-        <div className="relative z-10 space-y-2">
-          <div className="text-2xl">{action.icon || "✨"}</div>
-          <div className="text-sm font-medium text-text-0">{action.title}</div>
+        <div className="relative z-10 space-y-1.5">
+          <div className="text-xl">{action.icon || "✨"}</div>
+          <div className="text-xs font-medium text-text-0 sm:text-sm">{action.title}</div>
           <div className="text-xs text-text-1">{action.subtitle}</div>
         </div>
 

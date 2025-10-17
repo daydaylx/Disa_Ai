@@ -15,7 +15,7 @@ export const TypingIndicator: React.FC<TypingIndicatorProps> = ({
 
   return (
     <div className="mx-auto max-w-[720px] px-4 py-2">
-      <Glass variant="subtle" className="mr-auto max-w-[78%] items-start px-3 py-2">
+      <Glass variant="subtle" className="mr-auto max-w-[78%] items-start px-2 py-1">
         <div className="flex items-center space-x-2">
           <span className="text-sm text-[var(--fg)]">{message}</span>
           <div className="flex space-x-1">

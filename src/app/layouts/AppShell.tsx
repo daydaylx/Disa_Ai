@@ -101,53 +101,7 @@ function TopBar() {
   );
 }
 
-function BottomBar() {
-  return (
-    <nav className="border-border/80 glass glass--subtle sticky bottom-0 z-30 border-t backdrop-blur-md transition-all duration-200 md:hidden">
-      <div
-        className="mobile-safe-padding mx-auto flex h-16 w-full max-w-[var(--max-content-width)] items-center gap-1 px-2"
-        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-      >
-        {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              cn(
-                "touch-target-mobile no-select flex flex-1 flex-col items-center justify-center gap-1 rounded-base px-2 py-2 text-[11px] font-medium uppercase tracking-[0.08em] transition-all duration-200",
-                isActive
-                  ? "brand-label-active text-brand border-border/60 border bg-[rgba(111,211,255,0.12)]"
-                  : "text-text-1 hover:text-text-0 hover:bg-hover-bg",
-              )
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <span
-                  className={cn(
-                    "text-text-1 flex h-9 w-9 items-center justify-center rounded-base border border-transparent transition-all duration-200",
-                    isActive && "brand-icon-active",
-                  )}
-                  aria-hidden
-                >
-                  <Icon className="h-4 w-4" />
-                </span>
-                <span>{label}</span>
-                <span
-                  className={cn(
-                    "bg-brand h-[2px] w-6 rounded-full transition-transform duration-200",
-                    isActive ? "scale-100" : "scale-0",
-                  )}
-                  aria-hidden
-                />
-              </>
-            )}
-          </NavLink>
-        ))}
-      </div>
-    </nav>
-  );
-}
+
 
 interface AppShellProps {
   children: ReactNode;
@@ -176,7 +130,7 @@ export function AppShell({ children }: AppShellProps) {
           {children}
         </main>
 
-        <BottomBar />
+        
 
         <footer className="border-border/80 border-t bg-[rgba(var(--glass-bg),0.55)] py-6 backdrop-blur">
           <div className="text-text-1 mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs sm:flex-row sm:justify-between sm:text-left">

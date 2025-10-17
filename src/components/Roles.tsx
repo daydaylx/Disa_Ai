@@ -23,7 +23,7 @@ export const Roles: React.FC<RolesProps> = ({ roles, onRoleSelect }) => {
         <Glass
           key={role.id}
           variant="subtle"
-          className="cursor-pointer rounded-lg p-3 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+          className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
           onClick={() => onRoleSelect(role)}
         >
           <h3 className="font-medium text-[var(--fg)]">{role.name}</h3>

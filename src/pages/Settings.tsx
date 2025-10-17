@@ -34,8 +34,15 @@ import {
 } from "../lib/conversation-manager";
 import { BUILD_ID } from "../lib/pwa/registerSW";
 
-function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> }) {
-  const [stats, setStats] = useState({ chatCount: 0, totalMessages: 0, storageUsed: 0 });
+interface MemoryStatsData {
+  chatCount: number;
+  totalMessages: number;
+  storageUsed: number;
+}
+
+function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<MemoryStatsData> }) {
+  const [stats, setStats] = useState<MemoryStatsData>({ chatCount: 0, totalMessages: 0, storageUsed: 0 });
+  const toasts = useToasts();
 
   useEffect(() => {
     const loadStats = async () => {
@@ -43,11 +50,11 @@ function MemoryStats({ getMemoryStats }: { getMemoryStats: () => Promise<any> })
         const data = await getMemoryStats();
         setStats(data);
       } catch (error) {
-        console.warn("Failed to load memory stats:", error);
+        toasts.push({ kind: "error", title: "Speicherstatistiken laden fehlgeschlagen", message: String(error) });
       }
     };
     void loadStats();
-  }, [getMemoryStats]);
+  }, [getMemoryStats, toasts]);
 
   return (
     <>
@@ -356,7 +363,7 @@ export default function SettingsPage() {
       </header>
 
       {/* API Key Section */}
-      <StaticGlassCard padding="lg" className="brand-panel border-none">
+      <StaticGlassCard padding="md" className="brand-panel border-none">
         <div className="flex flex-col space-y-1 pb-4">
           <span className="brand-chip w-fit">Zugang</span>
           <h2 className="text-text-strong flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight">
@@ -433,7 +440,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Content Filter Section */}
-      <StaticGlassCard padding="lg">
+      <StaticGlassCard padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Inhalte</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -476,7 +483,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Memory Settings Section */}
-      <StaticGlassCard padding="lg">
+      <StaticGlassCard padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Gedächtnis</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -509,15 +516,20 @@ export default function SettingsPage() {
             <>
               {/* Global Memory Input */}
               <div className="space-y-3 border-t border-white/10 pt-4">
-                <Label className="text-white/90">Persönliche Informationen</Label>
+                <Label htmlFor="memory-name" className="text-white/90">
+                Persönliche Informationen
+              </Label>
                 <div className="space-y-2">
                   <Input
+                    id="memory-name"
                     placeholder="Dein Name (optional)"
                     value={globalMemory?.name || ""}
                     onChange={(e) => updateGlobalMemory({ name: e.target.value })}
                     className="surface-card text-white placeholder:text-white/40"
+                    aria-label="Dein Name für persönliche Informationen"
                   />
                   <Input
+                    id="memory-hobbies"
                     placeholder="Hobbys, Interessen (optional)"
                     value={globalMemory?.hobbies?.join(", ") || ""}
                     onChange={(e) =>
@@ -528,12 +540,15 @@ export default function SettingsPage() {
                       })
                     }
                     className="surface-card text-white placeholder:text-white/40"
+                    aria-label="Deine Hobbys und Interessen"
                   />
                   <Input
+                    id="memory-background"
                     placeholder="Hintergrund, Beruf (optional)"
                     value={globalMemory?.background || ""}
                     onChange={(e) => updateGlobalMemory({ background: e.target.value })}
                     className="surface-card text-white placeholder:text-white/40"
+                    aria-label="Dein beruflicher Hintergrund"
                   />
                 </div>
               </div>
@@ -589,7 +604,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Chat Management Section */}
-      <StaticGlassCard padding="lg">
+      <StaticGlassCard padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Chats</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -683,7 +698,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* PWA Install Section */}
-      <StaticGlassCard padding="lg">
+      <StaticGlassCard padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">PWA</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -766,7 +781,7 @@ export default function SettingsPage() {
       </StaticGlassCard>
 
       {/* Build Info */}
-      <StaticGlassCard padding="lg">
+      <StaticGlassCard padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">System</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">

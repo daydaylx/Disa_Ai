@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="sticky top-0 z-10 mb-4 w-full px-4 py-6">
       <Glass
         variant="subtle"
-        className="mx-auto max-w-[720px] border-b border-[var(--glass-stroke)] p-4"
+        className="mx-auto max-w-[720px] border-b border-[var(--glass-stroke)] p-3"
       >
         <div className="flex flex-col items-center">
           {/* Status und Modell Info */}

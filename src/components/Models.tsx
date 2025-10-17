@@ -25,7 +25,7 @@ export const Models: React.FC<ModelsProps> = ({ models, currentModelId, onModelS
         <Glass
           key={model.id}
           variant="subtle"
-          className={`cursor-pointer rounded-lg p-3 transition-colors hover:bg-[rgba(255,255,255,0.05)] ${
+          className={`cursor-pointer rounded-lg p-2 transition-colors hover:bg-[rgba(255,255,255,0.05)] ${
             currentModelId === model.id ? "border-[var(--acc1)] shadow-[var(--neon)]" : ""
           }`}
           onClick={() => onModelSelect(model)}

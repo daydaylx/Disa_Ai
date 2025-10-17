@@ -21,7 +21,6 @@ export const Settings: React.FC<SettingsProps> = ({
   return (
     <div className="space-y-4">
       <Glass variant="subtle" className="rounded-lg p-3">
-        <h3 className="mb-2 font-medium text-[var(--fg)]">Theme</h3>
         <div className="flex gap-2">
           <button
             className={`rounded-full px-3 py-1 text-sm ${
@@ -68,7 +67,6 @@ export const Settings: React.FC<SettingsProps> = ({
       {showConfirmClear && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <Glass variant="standard" className="w-full max-w-sm rounded-lg p-4">
-            <h3 className="mb-2 font-bold text-[var(--fg)]">Cache leeren?</h3>
             <p className="mb-4 text-sm text-[var(--fg-dim)]">
               Dadurch werden temporäre Dateien gelöscht. Die Aktion kann nicht rückgängig gemacht
               werden.

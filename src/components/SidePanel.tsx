@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import React, { useRef } from "react";
+import React, { type RefObject,useRef } from "react";
 
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useSwipe } from "../hooks/useSwipe";
@@ -24,7 +24,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
   onSwipeRightToOpen,
   onSwipeLeftToClose,
 }) => {
-  const tabs: PanelTab[] = ["history", "roles", "model", "settings"];
+  const tabs: PanelTab[] = ["history", "roles", "models", "settings"];
 
   const getTabLabel = (t: PanelTab): string => {
     switch (t) {
@@ -32,8 +32,8 @@ export const SidePanel: React.FC<SidePanelProps> = ({
         return "Chathistorie";
       case "roles":
         return "Rollen";
-      case "model":
-        return "Modell";
+      case "models":
+        return "Modelle";
       case "settings":
         return "Einstellungen";
       default:

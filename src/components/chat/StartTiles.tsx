@@ -42,7 +42,7 @@ interface StartTilesProps {
 
 export function StartTiles({ onTileClick }: StartTilesProps) {
   return (
-    <div className="grid grid-cols-2 gap-4 p-4">
+    <div className="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3">
       {startTiles.map((tile) => {
         const backgroundIcon = isValidElement(tile.icon)
           ? cloneElement(tile.icon as ReactElement<{ className?: string }>, {
@@ -59,7 +59,7 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
             type="button"
             onClick={() => onTileClick(tile.action)}
             className={cn(
-              "card-depth border-border bg-surface-1 group relative flex h-full flex-col gap-3 overflow-hidden rounded-base border p-4 text-left transition-all duration-150",
+              "card-depth border-border bg-surface-1 group relative flex h-full flex-col gap-2.5 overflow-hidden rounded-base border p-3 text-left transition-all duration-150",
               "hover:border-brand hover:bg-surface-2 focus-visible:ring-brand-weak focus-visible:ring-offset-surface-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
             )}
           >
@@ -68,17 +68,15 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
                 {backgroundIcon}
               </span>
             )}
-            <span className="bg-brand/15 text-brand flex h-10 w-10 items-center justify-center rounded-base">
+            <span className="bg-brand/15 text-brand flex h-8 w-8 items-center justify-center rounded-base">
               {tile.icon}
             </span>
-            <div className="space-y-1">
-              <div className="text-text-0 text-sm font-semibold">{tile.title}</div>
+            <div className="space-y-0.5">
+              <div className="text-text-0 text-xs font-semibold sm:text-sm">{tile.title}</div>
               <p className="text-text-1 text-xs leading-snug">{tile.subtitle}</p>
             </div>
-            <div className="text-text-1 mt-auto flex items-center gap-2 text-xs">
-              <Badge variant="outline">Schnellstart</Badge>
-              <span aria-hidden="true">•</span>
-              <span className="text-text-muted">Tippen zum Öffnen</span>
+            <div className="text-text-1 mt-auto flex items-center gap-1.5 text-xs">
+              <Badge variant="outline" className="text-xs px-1.5 py-0.5">Start</Badge>
             </div>
           </button>
         );

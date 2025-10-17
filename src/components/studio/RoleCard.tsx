@@ -50,7 +50,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          "card-depth border-border bg-surface-1 text-text-0 focus-visible:ring-brand relative flex min-h-[96px] flex-col rounded-lg border p-4 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2",
+          "card-depth border-border bg-surface-1 text-text-0 focus-visible:ring-brand relative flex min-h-[76px] flex-col rounded-lg border p-3 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2",
           !disabled && "hover:bg-surface-2 cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
           isActive && "ring-brand ring-2",
@@ -66,11 +66,11 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         <div className="flex h-full flex-col">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <h3 className="text-text-0 text-base font-semibold tracking-tight sm:text-lg">
+              <h3 className="text-text-0 text-sm font-semibold tracking-tight sm:text-base">
                 {title}
               </h3>
               {expanded ? (
-                <p className="text-text-1 mt-2 line-clamp-3 text-sm leading-6 sm:leading-7">
+                <p className="text-text-1 mt-1.5 line-clamp-2 text-xs leading-5 sm:text-sm sm:leading-6">
                   {description}
                 </p>
               ) : null}

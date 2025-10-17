@@ -17,7 +17,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ kind, children, timestam
   return (
     <Glass
       variant={glassVariant}
-      className={`max-w-[78%] ${side} px-3 py-2 transition-all duration-300 ease-out`}
+      className={`max-w-[78%] ${side} px-2 py-1 transition-all duration-300 ease-out`}
     >
       <div className="flex flex-col">
         <p className="text-[var(--fg)]/92 leading-6">{children}</p>

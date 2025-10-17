@@ -49,8 +49,7 @@ export const InputBar: React.FC<InputBarProps> = ({ onSend, disabled = false }) 
         <div className="flex items-end gap-2">
           <button
             type="button"
-            className="rounded-full p-2 transition-colors hover:bg-[rgba(255,255,255,0.08)]"
-            aria-label="Add attachment"
+            className="rounded-full p-1 transition-colors hover:bg-[rgba(255,255,255,0.08)]"
             disabled={disabled}
           >
             <Plus size={18} />
@@ -74,7 +73,7 @@ export const InputBar: React.FC<InputBarProps> = ({ onSend, disabled = false }) 
 
           <button
             type="button"
-            className="rounded-full p-2 transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+            className="rounded-full p-1 transition-colors hover:bg-[rgba(255,255,255,0.08)]"
             aria-label="Voice input"
             disabled={disabled}
           >
@@ -83,7 +82,7 @@ export const InputBar: React.FC<InputBarProps> = ({ onSend, disabled = false }) 
 
           <button
             type="submit"
-            className={`rounded-full p-2 transition-colors ${
+            className={`rounded-full p-1 transition-colors ${
               message.trim()
                 ? "bg-[var(--acc1)] text-[var(--bg0)] hover:bg-[hsl(204,100%,60%)]"
                 : "bg-[rgba(255,255,255,0.08)]"

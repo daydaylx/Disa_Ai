@@ -2,10 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 
 import { addExplicitMemory, updateMemorySummary } from "../api/memory";
 import type { ChatMemory, GlobalMemory, MemorySettings } from "../lib/memory/memoryService";
+import { memoryService } from "../lib/memory/memoryService";
 import type { ChatMessage } from "../types/chat";
 
 // Lazy-load memory service instance
-let memoryServiceInstance: any = null;
+let memoryServiceInstance: typeof memoryService | null = null;
 const getMemoryService = async () => {
   if (!memoryServiceInstance) {
     const module = await import("../lib/memory/memoryService");
