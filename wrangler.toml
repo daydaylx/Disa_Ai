@@ -13,17 +13,5 @@ pages_build_output_dir = "dist"
   # Alle anderen Branches als Preview
   vars = { NODE_ENV = "development" }
 
-# Build-Konfiguration für bessere Performance
-[build]
-  command = "npm run build"
-  cwd = ""
-  watch_dir = "src"
-
-# Cache-Purging für Asset-Updates
-[site]
-  bucket = "dist"
-
-# Deploy-Hooks für automatische Cache-Invalidierung
-[[env.production.services]]
-  binding = "CACHE_PURGE"
-  service = "cloudflare-cache-purge"
+# Note: Build configuration is handled by Cloudflare Pages dashboard
+# Cache purging and deploy hooks are managed through Pages dashboard
