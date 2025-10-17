@@ -3,10 +3,10 @@
 
 name = "disa-ai"
 compatibility_date = "2024-09-30"
+pages_build_output_dir = "dist"
 
 [env.production]
   # Main branch als Produktionsumgebung
-  route = "disaai.pages.dev"
   vars = { NODE_ENV = "production" }
 
 [env.preview]

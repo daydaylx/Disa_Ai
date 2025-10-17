@@ -5,7 +5,7 @@
     "destination": "dist",
     "root_dir": ".",
     "environment_variables": {
-      "NODE_VERSION": "20",
+      "NODE_VERSION": "20.19",
       "CF_PAGES": "true"
     }
   },
