@@ -1,0 +1,188 @@
+/**
+ * Unified typography scale with consistent vertical rhythm
+ * Optimized for readability at 100%-120% system font size
+ */
+
+/* Heading styles with consistent scale */
+.typo-h1 {
+  font-size: 2rem; /* 32px */
+  line-height: 1.25; /* 40px */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.typo-h2 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.33; /* 32px */
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.typo-h3 {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.4; /* 28px */
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.typo-h4 {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.44; /* 26px */
+  font-weight: 600;
+}
+
+.typo-h5 {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5; /* 24px */
+  font-weight: 600;
+}
+
+.typo-h6 {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.57; /* 22px */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Body text variants */
+.typo-body {
+  font-size: 1rem; /* 16px */
+  line-height: 1.6; /* 25.6px ≈ 26px */
+  font-weight: 400;
+}
+
+.typo-body-sm {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.57; /* 22px */
+  font-weight: 400;
+}
+
+.typo-body-lg {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.67; /* 30px */
+  font-weight: 400;
+}
+
+/* Caption and small text */
+.typo-caption {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.5; /* 18px */
+  font-weight: 400;
+}
+
+.typo-caption-strong {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.5; /* 18px */
+  font-weight: 600;
+}
+
+/* Label styles */
+.typo-label {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.43; /* 20px */
+  font-weight: 500;
+}
+
+.typo-label-sm {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.33; /* 16px */
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Display text for heroes/landing */
+.typo-display {
+  font-size: 2.5rem; /* 40px */
+  line-height: 1.2; /* 48px */
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.typo-display-sm {
+  font-size: 2rem; /* 32px */
+  line-height: 1.25; /* 40px */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Code/Monospace text */
+.typo-code {
+  font-family: var(--font-code);
+  font-size: 0.875em; /* 87.5% of parent */
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Responsive typography adjustments */
+@media (min-width: 640px) {
+  .typo-h1 {
+    font-size: 2.5rem; /* 40px */
+    line-height: 1.2; /* 48px */
+  }
+
+  .typo-h2 {
+    font-size: 1.875rem; /* 30px */
+    line-height: 1.27; /* 38px */
+  }
+
+  .typo-display {
+    font-size: 3rem; /* 48px */
+    line-height: 1.17; /* 56px */
+  }
+}
+
+/* Text balance for better readability */
+.typo-balance {
+  text-wrap: balance;
+}
+
+.typo-pretty {
+  text-wrap: pretty;
+}
+
+/* Vertical rhythm utilities */
+.typo-rhythm-tight {
+  margin-bottom: 0.5rem; /* 8px */
+}
+
+.typo-rhythm-normal {
+  margin-bottom: 1rem; /* 16px */
+}
+
+.typo-rhythm-loose {
+  margin-bottom: 1.5rem; /* 24px */
+}
+
+/* Accessibility: Ensure minimum font sizes */
+@media (prefers-reduced-data: reduce) {
+  /* Reduce font weights for data saver mode */
+  .typo-h1,
+  .typo-h2,
+  .typo-h3,
+  .typo-display {
+    font-weight: 600;
+  }
+}
+
+/* Support for user font size preferences (120% scaling) */
+@media (min-width: 1px) {
+  :root {
+    /* Base font size scales with user preferences */
+    font-size: 100%; /* 16px default, but respects user settings */
+  }
+}
+
+/* Dark mode optimizations for better readability */
+@media (prefers-color-scheme: dark) {
+  .typo-h1,
+  .typo-h2,
+  .typo-h3,
+  .typo-h4,
+  .typo-h5,
+  .typo-display {
+    /* Slightly reduce font weight in dark mode to prevent glare */
+    font-weight: 600;
+  }
+}

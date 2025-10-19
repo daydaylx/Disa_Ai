@@ -1,3 +1,6 @@
+/* Import typography system */
+@import "./styles/typography.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
