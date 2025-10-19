@@ -67,6 +67,25 @@
   --space-5: 32px;
   --space-6: 40px;
   --space-8: 64px;
+  --space-10: 80px;
+  --space-12: 96px;
+
+  /* Semantische Spacing-Tokens */
+  --spacing-xs: var(--space-1); /* 8px - Kleinste Abstände (z.B. inline gaps) */
+  --spacing-sm: var(--space-2); /* 12px - Kleine Abstände (z.B. zwischen verwandten Items) */
+  --spacing-md: var(--space-3); /* 16px - Medium Abstände (z.B. zwischen Komponenten) */
+  --spacing-lg: var(--space-4); /* 24px - Große Abstände (z.B. zwischen Sections) */
+  --spacing-xl: var(--space-5); /* 32px - Extra große Abstände (z.B. Page Padding) */
+  --spacing-2xl: var(--space-6); /* 40px - Sehr große Abstände */
+  --spacing-3xl: var(--space-8); /* 64px - Maximale Abstände */
+
+  /* Spezifische Anwendungsfälle */
+  --section-gap: var(--spacing-lg); /* Abstand zwischen Sektionen */
+  --stack-gap: var(--spacing-md); /* Abstand in vertikalen Stacks */
+  --inline-gap: var(--spacing-sm); /* Abstand in horizontalen Layouts */
+  --component-gap: var(--spacing-md); /* Abstand zwischen Komponenten */
+  --page-padding-y: var(--spacing-xl); /* Vertikales Page Padding */
+  --page-padding-x: var(--spacing-md); /* Horizontales Page Padding */
 
   --font-display: 28px;
   --font-h1: 24px;

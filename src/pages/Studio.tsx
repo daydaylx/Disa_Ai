@@ -177,8 +177,8 @@ function RolesTab() {
   };
 
   return (
-    <div className="flex h-full flex-col px-5 pb-8 pt-5">
-      <header className="mb-6 space-y-5">
+    <div className="flex h-full flex-col px-page-x pb-page-y pt-page-y">
+      <header className="mb-section-gap space-y-stack-gap">
         <div className="space-y-2">
           <span className="brand-chip w-fit">{t.studio.chip}</span>
           <h1 className="text-balance text-xl font-semibold text-text-0 sm:text-2xl">
@@ -250,7 +250,7 @@ function RolesTab() {
             </div>
           </div>
 
-          <div className="-mx-2 flex items-center gap-3 overflow-x-auto pb-1">
+          <div className="flex items-center gap-inline-gap overflow-x-auto pb-1">
             <Button
               variant={selectedCategory === "all" ? "secondary" : "ghost"}
               onClick={() => handleSelectCategory("all")}
@@ -274,7 +274,7 @@ function RolesTab() {
         </div>
       </header>
 
-      <div className="space-y-7 pb-8" data-testid="role-card-grid">
+      <div className="space-y-section-gap pb-page-y" data-testid="role-card-grid">
         {isLoadingRoles && orderedRoles.length === 0 ? (
           <div className="flex items-center justify-center rounded-lg border border-border bg-surface-1 p-6 text-sm text-text-1">
             {t.studio.loading}
@@ -293,7 +293,7 @@ function RolesTab() {
             return (
               <section
                 key={category}
-                className="space-y-4 sm:space-y-5"
+                className="space-y-stack-gap"
                 aria-labelledby={`category-${category}`}
               >
                 <div className="flex items-center justify-between gap-3">
@@ -383,7 +383,7 @@ function GamesTab() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-7 px-5 pb-8 pt-5 text-text-0">
+    <div className="flex h-full flex-col gap-section-gap px-page-x pb-page-y pt-page-y text-text-0">
       <header>
         <h1 className="text-balance text-xl font-semibold text-text-0 sm:text-2xl">
           {t.games.title}
