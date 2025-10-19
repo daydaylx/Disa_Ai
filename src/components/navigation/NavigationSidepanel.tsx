@@ -404,10 +404,11 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={menuButtonRef}
           onClick={togglePanel}
           className={cn(
-            "fixed z-50 flex h-12 w-12 items-center justify-center rounded-full",
-            "glass glass--subtle border border-border/60 backdrop-blur-md transition-all duration-200",
-            "text-text-strong hover:border-brand/50 hover:text-brand hover:shadow-neon",
+            "fixed z-50 flex h-10 w-10 items-center justify-center rounded-lg",
+            "bg-surface-1/60 border border-border/30 backdrop-blur-sm transition-all duration-200",
+            "hover:bg-surface-1/80 text-text-muted hover:border-brand/40 hover:text-brand",
             "touch-target haptic-feedback sidepanel-focus-visible",
+            "opacity-70 hover:opacity-100",
             className,
           )}
           style={{
@@ -418,7 +419,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           aria-expanded={isOpen}
           aria-controls="navigation-sidepanel"
         >
-          <Menu className="h-5 w-5" aria-hidden="true" />
+          <Menu className="h-4 w-4" aria-hidden="true" />
         </button>
 
         {/* Edge swipe target for opening */}
@@ -439,8 +440,8 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
             isOpen || dragOffset > 0 ? "pointer-events-auto" : "pointer-events-none",
           )}
           style={{
-            backgroundColor: `rgba(0, 0, 0, ${0.5 * getOverlayOpacity()})`,
-            backdropFilter: getOverlayOpacity() > 0 ? "blur(4px)" : "none",
+            backgroundColor: `rgba(0, 0, 0, ${0.3 * getOverlayOpacity()})`,
+            backdropFilter: getOverlayOpacity() > 0 ? "blur(2px)" : "none",
           }}
           onClick={closePanel}
           aria-hidden="true"
@@ -452,9 +453,9 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           id="navigation-sidepanel"
           className={cn(
             "fixed right-0 top-0 z-50 flex h-full flex-col",
-            "glass glass--strong border-l border-border/80 backdrop-blur-xl",
+            "bg-surface-1/95 border-l border-border/40 backdrop-blur-md",
             "sidepanel-container sidepanel-safe-area sidepanel-border",
-            "transition-[width] duration-300 ease-out",
+            "shadow-2xl transition-[width] duration-300 ease-out",
             isAnimating && "sidepanel-transition",
             isCompact && "sidepanel-compact",
           )}
