@@ -9,13 +9,22 @@ export const colors = {
   canvas: "#0b0d10" /* Canvas background */,
   layer1: "#101318" /* Primary layer */,
   layer2: "#161a20" /* Secondary layer for depth */,
-  primaryText: "#e6eaef" /* Primärtext */,
-  secondaryText: "#a8b0bb" /* Sekundärtext */,
-  subtleText: "#6b7280" /* Noch dezenterer Text */,
+  surface0: "rgba(12, 16, 23, 0.94)" /* Base surface */,
+  surface1: "rgba(17, 22, 31, 0.96)" /* Card surface */,
+  surface2: "rgba(23, 29, 41, 0.98)" /* Elevated surface */,
+  primaryText: "#f4f7ff" /* Primärtext */,
+  secondaryText: "#dde6f6" /* Sekundärtext */,
+  mutedText: "rgba(204, 216, 233, 0.78)" /* Muted body */,
+  subtleText: "rgba(204, 216, 233, 0.62)" /* Noch dezenterer Text */,
   accent1: "#6fd3ff" /* Kalt */,
   accent2: "#ff9f6f" /* Warm */,
   accent1Rgb: "111, 211, 255",
   accent2Rgb: "255, 159, 111",
+  brandRgb: "111, 211, 255",
+  brand: "rgb(111, 211, 255)" /* Brand primary */,
+  brandWeak: "rgba(111, 211, 255, 0.22)",
+  brandStrong: "rgba(111, 211, 255, 0.92)",
+  brandContrast: "#03101a",
   success: "#34C759" /* Green */,
   successBg: "rgba(52, 199, 89, 0.1)",
   warning: "#FFCC00" /* Yellow */,
@@ -113,6 +122,25 @@ export const elevation = {
   neonStrong: "0 0 24px rgba(111,211,255,0.5)" /* strong neon glow */,
 } as const;
 
+export const text = {
+  strong: "#f4f7ff",
+  primary: "#dde6f6",
+  muted: "rgba(204, 216, 233, 0.78)",
+  subtle: "rgba(204, 216, 233, 0.62)",
+} as const;
+
+export const surfaces = {
+  0: "rgba(12, 16, 23, 0.94)",
+  1: "rgba(17, 22, 31, 0.96)",
+  2: "rgba(23, 29, 41, 0.98)",
+} as const;
+
+export const border = {
+  baseRgb: "126, 148, 175",
+  subtleRgb: "80, 98, 124",
+  strongRgb: "168, 191, 214",
+} as const;
+
 // Motion tokens
 export const transitions = {
   fast: "120ms",
@@ -163,6 +191,9 @@ export const designTokens = {
   typography,
   radii,
   elevation,
+  text,
+  surfaces,
+  border,
   transitions,
   breakpoints,
   blur,

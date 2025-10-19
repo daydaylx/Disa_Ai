@@ -10,6 +10,7 @@ import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { Button } from "../../components/ui";
 import { useResponsiveLayout } from "../../hooks/useResponsiveLayout";
 import { cn } from "../../lib/utils";
+import { BrandWordmark } from "../components/BrandWordmark";
 import { SidepanelProvider } from "../state/SidepanelContext";
 import { useStudio } from "../state/StudioContext";
 
@@ -19,14 +20,6 @@ const NAV_ITEMS = [
   { to: "/roles", label: "Rollen", icon: Users },
   { to: "/settings", label: "Einstellungen", icon: Settings },
 ];
-
-function BrandWordmark() {
-  return (
-    <span className="text-text-0 text-lg font-semibold tracking-tight">
-      Disa<span className="text-brand">▮</span>AI
-    </span>
-  );
-}
 
 // Navigation is now handled by NavigationSidepanel component
 
@@ -47,7 +40,7 @@ function TopBar() {
 
   return (
     <header
-      className="border-border/80 glass glass--subtle sticky top-0 z-30 border-b backdrop-blur-md transition-all duration-200"
+      className="glass glass--subtle sticky top-0 z-30 border-b border-border/80 backdrop-blur-md transition-all duration-200"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div
@@ -64,13 +57,13 @@ function TopBar() {
           </div>
         </div>
         <div className="flex min-w-0 flex-wrap items-center justify-end gap-3">
-          <div className="text-text-1 hidden min-w-0 flex-col items-end gap-1 text-xs leading-tight sm:flex">
+          <div className="hidden min-w-0 flex-col items-end gap-1 text-xs leading-tight text-text-1 sm:flex">
             {activeRole ? (
               <>
                 <span className="brand-chip touch-target no-select max-w-full truncate">
                   {activeRole.category ?? "Rolle"}
                 </span>
-                <span className="text-text-1 line-clamp-1 text-[11px]">{activeRole.name}</span>
+                <span className="line-clamp-1 text-[11px] text-text-1">{activeRole.name}</span>
               </>
             ) : (
               <span className="brand-chip touch-target no-select">Assistive Studio</span>
@@ -115,7 +108,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const layout = useResponsiveLayout();
 
   return (
-    <div className="bg-surface-0 text-text-0 relative min-h-dvh overflow-hidden">
+    <div className="relative min-h-dvh overflow-hidden bg-surface-0 text-text-0">
       {/* Background gradients */}
       <div className="pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(140%_120%_at_0%_0%,rgba(111,211,255,0.22),transparent_58%)]" />
@@ -145,10 +138,10 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         </div>
 
         {/* Footer */}
-        <footer className="border-border/80 border-t bg-[rgba(var(--glass-bg),0.55)] py-6 backdrop-blur">
-          <div className="text-text-1 mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
+        <footer className="border-t border-border/80 bg-[rgba(var(--glass-bg),0.55)] py-6 backdrop-blur">
+          <div className="mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs text-text-1 sm:flex-row sm:justify-between sm:text-left">
             <span>Disa AI Beta · Tooling Preview</span>
-            <BuildInfo className="text-text-1 text-[11px]" />
+            <BuildInfo className="text-[11px] text-text-1" />
           </div>
         </footer>
       </div>
@@ -162,7 +155,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         )}
       >
         {/* Optional sidepanel footer content */}
-        <div className="text-text-1 space-y-2 text-xs">
+        <div className="space-y-2 text-xs text-text-1">
           <div>Version: 1.0.0</div>
           <div>Mode: {layout.sidepanelMode}</div>
         </div>

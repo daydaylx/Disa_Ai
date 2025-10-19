@@ -1,10 +1,13 @@
-import { Menu, X } from "lucide-react";
-import type { ReactNode } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { History, Menu, PanelRightClose, PanelRightOpen, X } from "lucide-react";
+import type { ReactElement, ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
+import type { Conversation } from "../../lib/conversation-manager";
+import { getAllConversations } from "../../lib/conversation-manager";
 import { TouchGestureHandler } from "../../lib/touch/gestures";
 import { cn } from "../../lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 interface NavigationItem {
   to: string;
@@ -24,9 +27,13 @@ interface SidepanelState {
   dragOffset: number;
 }
 
-const PANEL_WIDTH = 280;
+type PanelMode = "expanded" | "compact";
+
+const EXPANDED_WIDTH = 280;
+const COMPACT_WIDTH = 96;
 const SWIPE_THRESHOLD = 50;
 const SWIPE_VELOCITY_THRESHOLD = 0.5;
+const PANEL_MODE_STORAGE_KEY = "disa:ui:sidepanelMode";
 
 export function NavigationSidepanel({ items, children, className }: NavigationSidepanelProps) {
   const [state, setState] = useState<SidepanelState>({
@@ -34,12 +41,171 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     isAnimating: false,
     dragOffset: 0,
   });
+  const [panelMode, setPanelMode] = useState<PanelMode>(() => {
+    if (typeof window === "undefined") return "expanded";
+    try {
+      const stored = localStorage.getItem(PANEL_MODE_STORAGE_KEY) as PanelMode | null;
+      return stored === "compact" ? "compact" : "expanded";
+    } catch {
+      return "expanded";
+    }
+  });
+  const [historyPreviews, setHistoryPreviews] = useState<Conversation[]>(() => {
+    if (typeof window === "undefined") return [] as Conversation[];
+    try {
+      return getAllConversations().slice(0, 3);
+    } catch {
+      return [] as Conversation[];
+    }
+  });
+
+  const panelWidth = panelMode === "compact" ? COMPACT_WIDTH : EXPANDED_WIDTH;
+  const isCompact = panelMode === "compact";
 
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-  const gestureHandlerRef = useRef<TouchGestureHandler | null>(null);
+  const edgeRef = useRef<HTMLDivElement>(null);
+  const overlayGestureRef = useRef<TouchGestureHandler | null>(null);
+  const edgeGestureRef = useRef<TouchGestureHandler | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
+
+  const chatItem = useMemo(() => items.find((item) => item.label === "Chat"), [items]);
+  const rolesItem = useMemo(() => items.find((item) => item.label === "Rollen"), [items]);
+  const modelsItem = useMemo(() => items.find((item) => item.label === "Modelle"), [items]);
+  const settingsItem = useMemo(() => items.find((item) => item.label === "Einstellungen"), [items]);
+
+  const wrapWithTooltip = (label: string, node: ReactElement) =>
+    isCompact ? (
+      <Tooltip>
+        <TooltipTrigger asChild>{node}</TooltipTrigger>
+        <TooltipContent side="left">{label}</TooltipContent>
+      </Tooltip>
+    ) : (
+      node
+    );
+
+  const renderNavLink = (item: NavigationItem | undefined, key: string) => {
+    if (!item) return null;
+
+    const content = (
+      <NavLink to={item.to} onClick={closePanel} aria-label={item.label}>
+        {({ isActive }) => {
+          const containerClasses = cn(
+            "flex items-center gap-3 rounded-lg border border-transparent px-3 py-3 text-sm font-medium transition-all duration-200",
+            "touch-target no-select sidepanel-focus-visible group",
+            isCompact && "justify-center px-2 py-2",
+            isActive
+              ? "text-brand bg-brand/10 border-brand/30 shadow-sm"
+              : "text-text-muted hover:text-text-strong hover:bg-hover-bg hover:border-border-strong/40",
+          );
+          const labelClasses = cn("truncate", isCompact && "sr-only");
+          const iconClasses = cn(
+            "h-5 w-5 flex-shrink-0 transition-transform duration-200",
+            "group-hover:scale-110",
+          );
+          return (
+            <div className={containerClasses} aria-current={isActive ? "page" : undefined}>
+              <item.icon className={iconClasses} aria-hidden="true" />
+              <span className={labelClasses}>{item.label}</span>
+            </div>
+          );
+        }}
+      </NavLink>
+    );
+
+    return <li key={key}>{wrapWithTooltip(item.label, content as ReactElement)}</li>;
+  };
+
+  const openHistoryPanel = useCallback(() => {
+    void navigate("/chat", { state: { openHistory: true } });
+    closePanel();
+  }, [navigate, closePanel]);
+
+  const openConversation = useCallback(
+    (conversationId: string) => {
+      void navigate("/chat", { state: { conversationId } });
+      closePanel();
+    },
+    [navigate, closePanel],
+  );
+
+  const renderHistoryPreview = (conversation: Conversation) => {
+    const button = (
+      <button
+        type="button"
+        onClick={() => openConversation(conversation.id)}
+        className={cn(
+          "flex items-center gap-3 rounded-lg border border-border-subtle px-3 py-2 text-xs transition-all duration-200",
+          "text-text-muted hover:border-border-strong/40 hover:bg-hover-bg hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0",
+          isCompact && "justify-center px-2",
+        )}
+      >
+        <History className="h-4 w-4 flex-shrink-0 text-brand" aria-hidden="true" />
+        <span className={cn("truncate text-left", isCompact && "sr-only")}>
+          {conversation.title}
+        </span>
+      </button>
+    );
+    return <li key={conversation.id}>{wrapWithTooltip(conversation.title, button)}</li>;
+  };
+
+  const renderActionButton = (
+    key: string,
+    label: string,
+    description: string,
+    onClick: () => void,
+  ) => {
+    const button = (
+      <button
+        type="button"
+        onClick={onClick}
+        className={cn(
+          "flex items-center gap-3 rounded-lg border border-border-subtle px-3 py-2 text-sm font-medium transition-all duration-200",
+          "text-text-muted hover:border-border-strong/40 hover:bg-hover-bg hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0",
+          isCompact && "justify-center px-2",
+        )}
+      >
+        <History className="h-4 w-4 flex-shrink-0 text-brand" aria-hidden="true" />
+        <span className={cn("truncate", isCompact && "sr-only")}>{label}</span>
+      </button>
+    );
+
+    return (
+      <div key={key} className="space-y-1">
+        {wrapWithTooltip(label, button)}
+        {!isCompact && description && (
+          <p className="text-xs leading-5 text-text-subtle">{description}</p>
+        )}
+      </div>
+    );
+  };
+
+  const renderNavSection = (
+    id: string,
+    label: string,
+    content: React.ReactNode,
+    description?: string,
+  ) => (
+    <section key={id} aria-labelledby={id} className="space-y-3">
+      <div className="flex flex-col gap-1">
+        <h3
+          id={id}
+          className={cn(
+            "text-xs font-semibold uppercase tracking-[0.24em] text-text-muted",
+            isCompact && "sr-only",
+          )}
+        >
+          {label}
+        </h3>
+        {!isCompact && description && (
+          <p className="text-xs leading-5 text-text-subtle">{description}</p>
+        )}
+      </div>
+      <div>{content}</div>
+    </section>
+  );
 
   // Open/Close functions
   const openPanel = useCallback(() => {
@@ -50,6 +216,10 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
   const closePanel = useCallback(() => {
     setState((prev) => ({ ...prev, isOpen: false, isAnimating: true, dragOffset: 0 }));
     setTimeout(() => setState((prev) => ({ ...prev, isAnimating: false })), 300);
+  }, []);
+
+  const togglePanelMode = useCallback(() => {
+    setPanelMode((prev) => (prev === "compact" ? "expanded" : "compact"));
   }, []);
 
   const togglePanel = useCallback(() => {
@@ -99,115 +269,145 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     }
   }, [state.isOpen]);
 
-  // Touch gesture setup
+  // Persist panel mode preference
   useEffect(() => {
-    if (!overlayRef.current) return;
+    try {
+      localStorage.setItem(PANEL_MODE_STORAGE_KEY, panelMode);
+    } catch {
+      /* ignore storage errors */
+    }
+    // Reset drag offset when switching modes
+    setState((prev) => ({ ...prev, dragOffset: 0 }));
+  }, [panelMode]);
 
-    const gestureHandler = new TouchGestureHandler(overlayRef.current, {
-      swipeThreshold: SWIPE_THRESHOLD,
-      preventDefaultSwipe: false,
-    });
+  // Refresh history previews once panel opens
+  useEffect(() => {
+    if (!state.isOpen) return;
+    try {
+      setHistoryPreviews(getAllConversations().slice(0, 3));
+    } catch {
+      setHistoryPreviews([]);
+    }
+  }, [state.isOpen]);
 
-    let isDragging = false;
-    let startX = 0;
-    let currentX = 0;
-    let startTime = 0;
+  // Touch gesture setup (overlay + edge swipe area)
+  useEffect(() => {
+    const overlayEl = overlayRef.current;
+    const edgeEl = edgeRef.current;
 
-    gestureHandler.onSwipeGesture((swipeEvent) => {
-      if (swipeEvent.direction === "left" && state.isOpen) {
-        closePanel();
-      } else if (swipeEvent.direction === "right" && !state.isOpen) {
-        // Only allow opening from right edge (last 50px)
-        const screenWidth = window.innerWidth;
-        if (startX > screenWidth - 50) {
+    const setupGestureHandler = (element: HTMLElement | null) => {
+      if (!element) return null;
+      const handler = new TouchGestureHandler(element, {
+        swipeThreshold: SWIPE_THRESHOLD,
+        preventDefaultSwipe: false,
+      });
+      handler.onSwipeGesture((swipeEvent) => {
+        if (swipeEvent.direction === "left" && state.isOpen) {
+          closePanel();
+        } else if (swipeEvent.direction === "right" && !state.isOpen) {
           openPanel();
         }
-      }
-    });
-
-    // Custom drag handling for smooth panel movement
-    const handleTouchStart = (event: TouchEvent) => {
-      if (event.touches.length !== 1) return;
-
-      startX = event.touches[0]!.clientX;
-      currentX = startX;
-      startTime = Date.now();
-      isDragging = false;
-
-      // Only allow drag from right edge when closed, or anywhere when open
-      const screenWidth = window.innerWidth;
-      if (!state.isOpen && startX < screenWidth - 50) return;
-
-      isDragging = true;
+      });
+      return handler;
     };
 
-    const handleTouchMove = (event: TouchEvent) => {
-      if (!isDragging || event.touches.length !== 1) return;
+    const overlayHandler = setupGestureHandler(overlayEl);
+    const edgeHandler = setupGestureHandler(edgeEl);
+    overlayGestureRef.current = overlayHandler;
+    edgeGestureRef.current = edgeHandler;
 
-      currentX = event.touches[0]!.clientX;
-      const deltaX = currentX - startX;
+    const setupDragHandlers = (element: HTMLElement | null, allowEdgeOpen = false) => {
+      if (!element) return () => {};
 
-      if (state.isOpen) {
-        // When open, allow dragging left to close
-        const offset = Math.min(0, deltaX);
-        setState((prev) => ({ ...prev, dragOffset: offset }));
-      } else {
-        // When closed, allow dragging right to open
-        const offset = Math.max(0, deltaX);
-        setState((prev) => ({ ...prev, dragOffset: offset }));
-      }
+      let isDragging = false;
+      let startX = 0;
+      let currentX = 0;
+      let startTime = 0;
+
+      const handleTouchStart = (event: TouchEvent) => {
+        if (event.touches.length !== 1) return;
+
+        startX = event.touches[0]!.clientX;
+        currentX = startX;
+        startTime = Date.now();
+        isDragging = false;
+
+        const screenWidth = window.innerWidth;
+        if (!state.isOpen && !allowEdgeOpen && startX < screenWidth - 50) return;
+
+        isDragging = true;
+      };
+
+      const handleTouchMove = (event: TouchEvent) => {
+        if (!isDragging || event.touches.length !== 1) return;
+
+        currentX = event.touches[0]!.clientX;
+        const deltaX = currentX - startX;
+
+        if (state.isOpen) {
+          const offset = Math.min(0, deltaX);
+          setState((prev) => ({ ...prev, dragOffset: offset }));
+        } else {
+          const offset = Math.max(0, deltaX);
+          setState((prev) => ({ ...prev, dragOffset: offset }));
+        }
+      };
+
+      const handleTouchEnd = () => {
+        if (!isDragging) return;
+
+        const deltaX = currentX - startX;
+        const duration = Date.now() - startTime;
+        const velocity = Math.abs(deltaX) / duration;
+
+        const shouldToggle =
+          Math.abs(deltaX) > panelWidth / 3 || velocity > SWIPE_VELOCITY_THRESHOLD;
+
+        if (state.isOpen && deltaX < -SWIPE_THRESHOLD && shouldToggle) {
+          closePanel();
+        } else if (!state.isOpen && deltaX > SWIPE_THRESHOLD && shouldToggle) {
+          openPanel();
+        } else {
+          setState((prev) => ({ ...prev, dragOffset: 0 }));
+        }
+
+        isDragging = false;
+      };
+
+      element.addEventListener("touchstart", handleTouchStart, { passive: true });
+      element.addEventListener("touchmove", handleTouchMove, { passive: true });
+      element.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+      return () => {
+        element.removeEventListener("touchstart", handleTouchStart);
+        element.removeEventListener("touchmove", handleTouchMove);
+        element.removeEventListener("touchend", handleTouchEnd);
+      };
     };
 
-    const handleTouchEnd = () => {
-      if (!isDragging) return;
-
-      const deltaX = currentX - startX;
-      const duration = Date.now() - startTime;
-      const velocity = Math.abs(deltaX) / duration;
-
-      // Determine if we should complete the gesture
-      const shouldToggle =
-        Math.abs(deltaX) > PANEL_WIDTH / 3 || velocity > SWIPE_VELOCITY_THRESHOLD;
-
-      if (state.isOpen && deltaX < -SWIPE_THRESHOLD && shouldToggle) {
-        closePanel();
-      } else if (!state.isOpen && deltaX > SWIPE_THRESHOLD && shouldToggle) {
-        openPanel();
-      } else {
-        // Snap back
-        setState((prev) => ({ ...prev, dragOffset: 0 }));
-      }
-
-      isDragging = false;
-    };
-
-    const currentOverlay = overlayRef.current;
-    currentOverlay.addEventListener("touchstart", handleTouchStart, { passive: true });
-    currentOverlay.addEventListener("touchmove", handleTouchMove, { passive: true });
-    currentOverlay.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-    gestureHandlerRef.current = gestureHandler;
+    const cleanupOverlay = setupDragHandlers(overlayEl, false);
+    const cleanupEdge = setupDragHandlers(edgeEl, true);
 
     return () => {
-      gestureHandler.destroy();
-      if (currentOverlay) {
-        currentOverlay.removeEventListener("touchstart", handleTouchStart);
-        currentOverlay.removeEventListener("touchmove", handleTouchMove);
-        currentOverlay.removeEventListener("touchend", handleTouchEnd);
-      }
+      overlayGestureRef.current?.destroy();
+      overlayGestureRef.current = null;
+      edgeGestureRef.current?.destroy();
+      edgeGestureRef.current = null;
+      cleanupOverlay();
+      cleanupEdge();
     };
-  }, [state.isOpen, openPanel, closePanel]);
+  }, [state.isOpen, openPanel, closePanel, panelWidth]);
 
   // Calculate transform based on state
   const getTransform = () => {
     if (state.isAnimating) {
-      return state.isOpen ? "translateX(0)" : `translateX(${PANEL_WIDTH}px)`;
+      return state.isOpen ? "translateX(0)" : `translateX(${panelWidth}px)`;
     }
 
     if (state.isOpen) {
       return `translateX(${state.dragOffset}px)`;
     } else {
-      return `translateX(${PANEL_WIDTH + Math.min(0, state.dragOffset)}px)`;
+      return `translateX(${panelWidth + Math.min(0, state.dragOffset)}px)`;
     }
   };
 
@@ -217,121 +417,192 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     }
 
     if (state.isOpen) {
-      return Math.max(0, 1 + state.dragOffset / PANEL_WIDTH);
+      return Math.max(0, 1 + state.dragOffset / panelWidth);
     } else {
-      return Math.max(0, Math.min(1, state.dragOffset / PANEL_WIDTH));
+      return Math.max(0, Math.min(1, state.dragOffset / panelWidth));
     }
   };
 
   return (
-    <>
-      {/* Menu Button */}
-      <button
-        ref={menuButtonRef}
-        onClick={togglePanel}
-        className={cn(
-          "fixed z-50 flex h-12 w-12 items-center justify-center rounded-full",
-          "glass glass--subtle border-border/60 border backdrop-blur-md transition-all duration-200",
-          "text-text-0 hover:text-brand hover:border-brand/50 hover:shadow-neon",
-          "touch-target haptic-feedback sidepanel-focus-visible",
-          className,
-        )}
-        style={{
-          top: "calc(env(safe-area-inset-top, 0px) + 1rem)",
-          right: "calc(env(safe-area-inset-right, 0px) + 1rem)",
-        }}
-        aria-label={state.isOpen ? "Navigation schließen" : "Navigation öffnen"}
-        aria-expanded={state.isOpen}
-        aria-controls="navigation-sidepanel"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
+    <TooltipProvider>
+      <>
+        {/* Menu Button */}
+        <button
+          ref={menuButtonRef}
+          onClick={togglePanel}
+          className={cn(
+            "fixed z-50 flex h-12 w-12 items-center justify-center rounded-full",
+            "glass glass--subtle border border-border/60 backdrop-blur-md transition-all duration-200",
+            "text-text-strong hover:border-brand/50 hover:text-brand hover:shadow-neon",
+            "touch-target haptic-feedback sidepanel-focus-visible",
+            className,
+          )}
+          style={{
+            top: "calc(env(safe-area-inset-top, 0px) + 1rem)",
+            right: "calc(env(safe-area-inset-right, 0px) + 1rem)",
+          }}
+          aria-label={state.isOpen ? "Navigation schließen" : "Navigation öffnen"}
+          aria-expanded={state.isOpen}
+          aria-controls="navigation-sidepanel"
+        >
+          <Menu className="h-5 w-5" aria-hidden="true" />
+        </button>
 
-      {/* Overlay */}
-      <div
-        ref={overlayRef}
-        className={cn(
-          "sidepanel-overlay-transition sidepanel-no-select fixed inset-0 z-40",
-          state.isOpen || state.dragOffset > 0 ? "pointer-events-auto" : "pointer-events-none",
-        )}
-        style={{
-          backgroundColor: `rgba(0, 0, 0, ${0.5 * getOverlayOpacity()})`,
-          backdropFilter: getOverlayOpacity() > 0 ? "blur(4px)" : "none",
-        }}
-        onClick={closePanel}
-        aria-hidden="true"
-      />
+        {/* Edge swipe target for opening */}
+        <div
+          ref={edgeRef}
+          className={cn(
+            "sidepanel-touch-area",
+            state.isOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-0",
+          )}
+          aria-hidden="true"
+        />
 
-      {/* Sidepanel */}
-      <aside
-        ref={panelRef}
-        id="navigation-sidepanel"
-        className={cn(
-          "fixed right-0 top-0 z-50 flex h-full flex-col",
-          "glass glass--strong border-border/80 border-l backdrop-blur-xl",
-          "sidepanel-container sidepanel-safe-area sidepanel-border",
-          state.isAnimating ? "sidepanel-transition" : "transition-none",
-        )}
-        style={{
-          width: `${PANEL_WIDTH}px`,
-          transform: getTransform(),
-        }}
-        aria-label="Hauptnavigation"
-        role="navigation"
-      >
-        {/* Header */}
-        <div className="border-border/60 flex items-center justify-between border-b p-4">
-          <h2 className="text-text-0 text-lg font-semibold">Navigation</h2>
-          <button
-            ref={closeButtonRef}
-            onClick={closePanel}
-            className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-full",
-              "text-text-1 hover:text-text-0 hover:bg-hover-bg",
-              "touch-target transition-colors duration-200",
+        {/* Overlay */}
+        <div
+          ref={overlayRef}
+          className={cn(
+            "sidepanel-overlay-transition sidepanel-no-select fixed inset-0 z-40",
+            state.isOpen || state.dragOffset > 0 ? "pointer-events-auto" : "pointer-events-none",
+          )}
+          style={{
+            backgroundColor: `rgba(0, 0, 0, ${0.5 * getOverlayOpacity()})`,
+            backdropFilter: getOverlayOpacity() > 0 ? "blur(4px)" : "none",
+          }}
+          onClick={closePanel}
+          aria-hidden="true"
+        />
+
+        {/* Sidepanel */}
+        <aside
+          ref={panelRef}
+          id="navigation-sidepanel"
+          className={cn(
+            "fixed right-0 top-0 z-50 flex h-full flex-col",
+            "glass glass--strong border-l border-border/80 backdrop-blur-xl",
+            "sidepanel-container sidepanel-safe-area sidepanel-border",
+            "transition-[width] duration-300 ease-out",
+            state.isAnimating && "sidepanel-transition",
+            isCompact && "sidepanel-compact",
+          )}
+          style={{
+            width: `${panelWidth}px`,
+            transform: getTransform(),
+          }}
+          aria-label="Hauptnavigation"
+          role="navigation"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between gap-2 border-b border-border/60 p-4">
+            <h2 className={cn("text-base font-semibold text-text-strong", isCompact && "sr-only")}>
+              Navigation
+            </h2>
+            <div className="flex items-center gap-2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={togglePanelMode}
+                    className={cn(
+                      "flex h-9 w-9 items-center justify-center rounded-full",
+                      "text-text-muted hover:bg-hover-bg hover:text-text-strong",
+                      "touch-target transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+                    )}
+                    aria-label={isCompact ? "Navigation erweitern" : "Navigation kompakt anzeigen"}
+                    aria-pressed={isCompact}
+                  >
+                    {isCompact ? (
+                      <PanelRightOpen className="h-5 w-5" aria-hidden="true" />
+                    ) : (
+                      <PanelRightClose className="h-5 w-5" aria-hidden="true" />
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  {isCompact ? "Ansicht erweitern" : "Komprimierte Ansicht"}
+                </TooltipContent>
+              </Tooltip>
+              <button
+                ref={closeButtonRef}
+                onClick={closePanel}
+                className={cn(
+                  "flex h-9 w-9 items-center justify-center rounded-full",
+                  "text-text-muted hover:bg-hover-bg hover:text-text-strong",
+                  "touch-target transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+                )}
+                aria-label="Navigation schließen"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          {/* Navigation Items */}
+          <nav className="sidepanel-scroll flex-1 space-y-6 overflow-y-auto p-4">
+            {renderNavSection(
+              "sidepanel-history",
+              "Verlauf",
+              <div className="space-y-3">
+                {renderActionButton(
+                  "history-open",
+                  "Verlauf öffnen",
+                  "Gespeicherte Konversationen im Chat anzeigen.",
+                  openHistoryPanel,
+                )}
+                {chatItem && (
+                  <ul className="space-y-1" role="list">
+                    {renderNavLink(chatItem, "chat-home")}
+                  </ul>
+                )}
+                {historyPreviews.length > 0 ? (
+                  <ul className="space-y-1" role="list">
+                    {historyPreviews.map((conversation) => renderHistoryPreview(conversation))}
+                  </ul>
+                ) : (
+                  !isCompact && (
+                    <p className="text-xs leading-5 text-text-subtle">
+                      Noch keine Gespräche gespeichert.
+                    </p>
+                  )
+                )}
+              </div>,
+              "Schneller Zugriff auf deine letzten Chats.",
             )}
-            aria-label="Navigation schließen"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
 
-        {/* Navigation Items */}
-        <nav className="sidepanel-scroll flex-1 overflow-y-auto p-4">
-          <ul className="space-y-2" role="list">
-            {items.map(({ to, label, icon: Icon }) => (
-              <li key={to} role="listitem">
-                <NavLink to={to} onClick={closePanel}>
-                  {({ isActive }) => (
-                    <div
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200",
-                        "touch-target no-select sidepanel-focus-visible group",
-                        isActive
-                          ? "text-brand bg-brand/10 border-brand/20 border shadow-sm"
-                          : "text-text-1 hover:text-text-0 hover:bg-hover-bg hover:shadow-sm",
-                      )}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      <Icon
-                        className={cn(
-                          "h-5 w-5 flex-shrink-0 transition-colors duration-200",
-                          "group-hover:scale-110",
-                        )}
-                        aria-hidden="true"
-                      />
-                      <span>{label}</span>
-                    </div>
-                  )}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+            {rolesItem &&
+              renderNavSection(
+                "sidepanel-roles",
+                "Rollen",
+                <ul className="space-y-1" role="list">
+                  {renderNavLink(rolesItem, "roles-link")}
+                </ul>,
+                "Wechsle zwischen gespeicherten Rollenprofilen.",
+              )}
 
-        {/* Footer content */}
-        {children && <div className="border-border/60 border-t p-4">{children}</div>}
-      </aside>
-    </>
+            {modelsItem &&
+              renderNavSection(
+                "sidepanel-models",
+                "Modelle",
+                <ul className="space-y-1" role="list">
+                  {renderNavLink(modelsItem, "models-link")}
+                </ul>,
+                "Verwalte deine bevorzugten Sprachmodelle.",
+              )}
+
+            {settingsItem &&
+              renderNavSection(
+                "sidepanel-settings",
+                "Einstellungen",
+                <ul className="space-y-1" role="list">
+                  {renderNavLink(settingsItem, "settings-link")}
+                </ul>,
+                "Anwendungen und Konto konfigurieren.",
+              )}
+          </nav>
+
+          {/* Footer content */}
+          {children && <div className="border-t border-border/60 p-4">{children}</div>}
+        </aside>
+      </>
+    </TooltipProvider>
   );
 }

@@ -1,11 +1,12 @@
-import { History, MessageSquare, Send } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { History, Plus, Send } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { logDiscussionAnalytics } from "../analytics/discussion";
 import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
 import { MessageBubbleCard } from "../components/chat/MessageBubbleCard";
 import { Button } from "../components/ui/button";
+import { Label } from "../components/ui/label";
 import {
   Select,
   SelectContent,
@@ -15,6 +16,7 @@ import {
 } from "../components/ui/select";
 import { Textarea } from "../components/ui/textarea";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
 import { DISCUSSION_MODEL_PROFILE } from "../config/models/discussionProfile";
 import {
   getDiscussionMaxSentences,
@@ -85,11 +87,35 @@ export default function ChatV2() {
   });
 
   const location = useLocation();
-  const { gameId } = (location.state as { gameId?: GameType }) || {};
+  const navigate = useNavigate();
+  const locationState = useMemo(() => {
+    return (
+      (location.state as {
+        gameId?: GameType;
+        openHistory?: boolean;
+        conversationId?: string;
+      }) ?? {}
+    );
+  }, [location.state]);
+  const { gameId, openHistory, conversationId } = locationState;
+  const stateWithoutHistory = useMemo(() => {
+    const { openHistory: _open, ...rest } = locationState;
+    return rest;
+  }, [locationState]);
+  const stateWithoutConversation = useMemo(() => {
+    const { conversationId: _omit, ...rest } = locationState;
+    return rest;
+  }, [locationState]);
 
   useEffect(() => {
     discussionPresetRef.current = discussionPreset;
   }, [discussionPreset]);
+
+  useEffect(() => {
+    if (!openHistory) return;
+    setIsHistoryOpen(true);
+    void navigate(location.pathname, { replace: true, state: stateWithoutHistory });
+  }, [openHistory, navigate, location.pathname, stateWithoutHistory]);
 
   const resetDiscussionContext = useCallback(() => {
     discussionSessionRef.current = null;
@@ -317,56 +343,78 @@ export default function ChatV2() {
     }
   };
 
-  const handleSelectConversation = (id: string) => {
-    const conversation = getConversation(id);
+  const handleSelectConversation = useCallback(
+    (id: string) => {
+      const conversation = getConversation(id);
 
-    if (!conversation?.messages || !Array.isArray(conversation.messages)) {
+      if (!conversation?.messages || !Array.isArray(conversation.messages)) {
+        toasts.push({
+          kind: "error",
+          title: "Fehler",
+          message: "Konversation ist beschädigt oder konnte nicht geladen werden",
+        });
+        return;
+      }
+
+      const chatMessages: ChatMessageType[] = conversation.messages
+        .filter((msg) => ["user", "assistant", "system"].includes(msg.role))
+        .map((msg) => ({
+          id: msg.id,
+          role: msg.role as "user" | "assistant" | "system",
+          content: msg.content,
+          timestamp: msg.timestamp,
+          model: msg.model,
+        }));
+
+      if (chatMessages.length === 0) {
+        toasts.push({
+          kind: "warning",
+          title: "Konversation leer",
+          message: "Diese Konversation enthält keine gültigen Nachrichten",
+        });
+        return;
+      }
+
+      setMessages(chatMessages);
+      setActiveConversationId(id);
+      resetDiscussionContext();
+
+      const systemMessage = chatMessages.find((msg) => msg.role === "system");
+      if (systemMessage) {
+        setCurrentSystemPrompt(systemMessage.content);
+      } else {
+        setCurrentSystemPrompt(undefined);
+      }
+
+      setIsHistoryOpen(false);
+
       toasts.push({
-        kind: "error",
-        title: "Fehler",
-        message: "Konversation ist beschädigt oder konnte nicht geladen werden",
+        kind: "success",
+        title: "Konversation geladen",
+        message: `${conversation.title} wurde geladen`,
       });
-      return;
-    }
+    },
+    [
+      resetDiscussionContext,
+      setActiveConversationId,
+      setCurrentSystemPrompt,
+      setIsHistoryOpen,
+      setMessages,
+      toasts,
+    ],
+  );
 
-    const chatMessages: ChatMessageType[] = conversation.messages
-      .filter((msg) => ["user", "assistant", "system"].includes(msg.role))
-      .map((msg) => ({
-        id: msg.id,
-        role: msg.role as "user" | "assistant" | "system",
-        content: msg.content,
-        timestamp: msg.timestamp,
-        model: msg.model,
-      }));
-
-    if (chatMessages.length === 0) {
-      toasts.push({
-        kind: "warning",
-        title: "Konversation leer",
-        message: "Diese Konversation enthält keine gültigen Nachrichten",
-      });
-      return;
-    }
-
-    setMessages(chatMessages);
-    setActiveConversationId(id);
-    resetDiscussionContext();
-
-    const systemMessage = chatMessages.find((msg) => msg.role === "system");
-    if (systemMessage) {
-      setCurrentSystemPrompt(systemMessage.content);
-    } else {
-      setCurrentSystemPrompt(undefined);
-    }
-
-    setIsHistoryOpen(false);
-
-    toasts.push({
-      kind: "success",
-      title: "Konversation geladen",
-      message: `${conversation.title} wurde geladen`,
-    });
-  };
+  useEffect(() => {
+    if (!conversationId) return;
+    handleSelectConversation(conversationId);
+    void navigate(location.pathname, { replace: true, state: stateWithoutConversation });
+  }, [
+    conversationId,
+    handleSelectConversation,
+    navigate,
+    location.pathname,
+    stateWithoutConversation,
+  ]);
 
   const handleDeleteConversation = (id: string) => {
     if (
@@ -444,217 +492,284 @@ export default function ChatV2() {
   ].map((topic) => ({ ...topic, hint: DISCUSSION_CARD_HINT }));
 
   return (
-    <div className="relative flex h-full flex-col px-5 pb-8 pt-5">
-      <div className="relative z-10">
-        {messages.length === 0 ? (
-          <>
-            <header className="mb-4 flex items-start justify-between gap-4">
-              <div className="space-y-2">
-                <span className="brand-chip w-fit">Neuer Chat</span>
-                <h2 className="text-text-0 text-lg font-semibold">Chat</h2>
-                <p className="text-text-1 mt-1 text-sm leading-6">
-                  Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.
-                </p>
-              </div>
-              <Button
-                onClick={() => setIsHistoryOpen(true)}
-                variant="ghost"
-                size="icon"
-                aria-label="Chat-Verlauf öffnen"
-              >
-                <History className="h-5 w-5" />
-              </Button>
-            </header>
-
-            <div className="grid grid-cols-3 gap-2 pb-8 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-              <div className="col-span-full mb-4 flex flex-col gap-3 px-1 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex-1">
-                  <h3 className="text-text-1 text-xs font-semibold uppercase tracking-wide">
-                    Diskussionen
-                  </h3>
-                  <p className="text-text-1 text-xs">
-                    Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
+    <TooltipProvider>
+      <div className="relative flex h-full flex-col px-5 pb-8 pt-5">
+        <div className="relative z-10">
+          {messages.length === 0 ? (
+            <>
+              <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">
+                    Chat-Start
+                  </p>
+                  <h1 className="text-balance text-token-h1 font-semibold text-text-strong">
+                    Disa&nbsp;AI Chat
+                  </h1>
+                  <p className="text-sm leading-6 text-text-muted">
+                    Starte eine Unterhaltung oder nutze die Schnellstarts für wiederkehrende
+                    Aufgaben.
                   </p>
                 </div>
-                <div className="w-full sm:w-48 md:w-56">
-                  <span className="text-text-1 mb-1 block text-xs font-semibold uppercase tracking-wide">
-                    Stil auswählen
-                  </span>
-                  <Select
-                    value={discussionPreset}
-                    onValueChange={(value) =>
-                      handleDiscussionPresetChange(value as DiscussionPresetKey)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Stil wählen" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {discussionPresetOptions.map((option) => (
-                        <SelectItem key={option.key} value={option.key}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              {discussionTopics.map((topic) => (
                 <div
-                  key={topic.title}
-                  className="group relative cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 hover:shadow-lg"
-                  onClick={() => startDiscussion(topic.prompt)}
+                  className="flex flex-wrap items-center gap-2 sm:justify-end"
+                  role="toolbar"
+                  aria-label="Chat-Aktionen"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                  <div className="relative p-2">
-                    <span className="inline-block rounded-full bg-white/10 px-2 py-1 text-[10px] font-medium text-white/80 backdrop-blur-sm">
-                      Diskussion
-                    </span>
-                    <h4 className="mt-2 line-clamp-3 text-xs font-semibold leading-tight text-white">
-                      {topic.title}
-                    </h4>
+                  <Button
+                    onClick={handleNewConversation}
+                    variant="brand"
+                    size="lg"
+                    className="shadow-neon"
+                  >
+                    <Plus className="h-4 w-4" aria-hidden="true" />
+                    <span>Neuer Chat</span>
+                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={() => setIsHistoryOpen(true)}
+                        variant="secondary"
+                        size="icon"
+                        aria-label="Chat-Verlauf öffnen"
+                      >
+                        <History className="h-5 w-5" aria-hidden="true" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
+                  </Tooltip>
+                </div>
+              </header>
+
+              <section aria-labelledby="discussion-heading" className="pb-8">
+                <div className="mb-5 flex flex-col gap-4 rounded-xl border border-border-subtle bg-surface-0 p-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex-1 space-y-1">
+                    <h2
+                      id="discussion-heading"
+                      className="text-xs font-semibold uppercase tracking-[0.28em] text-text-strong"
+                    >
+                      Diskussionen
+                    </h2>
+                    <p className="text-sm leading-6 text-text-muted">
+                      Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
+                    </p>
+                  </div>
+                  <div
+                    className="w-full sm:w-60"
+                    role="group"
+                    aria-labelledby="discussion-style-label"
+                  >
+                    <Label
+                      id="discussion-style-label"
+                      htmlFor="discussion-style"
+                      className="mb-1 block text-xs font-semibold uppercase tracking-[0.24em] text-text-muted"
+                    >
+                      Stil auswählen
+                    </Label>
+                    <p
+                      id="discussion-style-hint"
+                      className="mb-2 text-xs leading-5 text-text-subtle"
+                    >
+                      Steuert Tonalität und Strenge der Argumentation. Auswahl wird gespeichert.
+                    </p>
+                    <Select
+                      value={discussionPreset}
+                      onValueChange={(value) =>
+                        handleDiscussionPresetChange(value as DiscussionPresetKey)
+                      }
+                    >
+                      <SelectTrigger
+                        id="discussion-style"
+                        aria-describedby="discussion-style-hint"
+                        aria-label="Diskussionsstil wählen"
+                      >
+                        <SelectValue placeholder="Stil wählen" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {discussionPresetOptions.map((option) => (
+                          <SelectItem key={option.key} value={option.key}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-              ))}
-            </div>
-
-            {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
-              <div className="text-text-0 mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm">
-                <p className="font-medium">Spiel-Hinweis:</p>
-                <p>
-                  Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
-                  <strong>ja</strong>, <strong>nein</strong>, <strong>unklar</strong> oder{" "}
-                  <strong>teilweise</strong>.
-                </p>
-                <p>Die KI wird versuchen, deine gewählte Entität zu erraten!</p>
-              </div>
-            )}
-
-            {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
-              <div className="text-text-0 mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm">
-                <p className="font-medium">Spiel-Hinweis:</p>
-                <p>
-                  Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
-                  <strong>D</strong>.
-                </p>
-                <p>
-                  Schreibe <strong>„weiter“</strong>, um die nächste Frage zu erhalten.
-                </p>
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            <header className="mb-4 flex items-center justify-between">
-              <h2 className="text-text-0 text-lg font-semibold">Unterhaltung</h2>
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleNewConversation}
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Neue Unterhaltung starten"
-                >
-                  <MessageSquare className="h-5 w-5" />
-                </Button>
-                <Button
-                  onClick={() => setIsHistoryOpen(true)}
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Chat-Verlauf öffnen"
-                >
-                  <History className="h-5 w-5" />
-                </Button>
-              </div>
-            </header>
-            <div className="flex-1 overflow-hidden">
-              <div className="h-full overflow-y-auto pb-4">
-                <div className="space-y-4">
-                  {messages.map((message) => (
-                    <MessageBubble key={message.id} message={message} />
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                  {discussionTopics.map((topic) => (
+                    <button
+                      key={topic.title}
+                      type="button"
+                      onClick={() => startDiscussion(topic.prompt)}
+                      className="group flex h-full flex-col justify-between rounded-xl border border-border-subtle bg-surface-1 px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0"
+                    >
+                      <span
+                        className="line-clamp-2 text-sm font-semibold leading-snug tracking-tight text-text-strong [hyphens:auto]"
+                        lang="de"
+                      >
+                        {topic.title}
+                      </span>
+                      <span className="mt-2 text-xs leading-5 text-text-subtle">{topic.hint}</span>
+                    </button>
                   ))}
-                  {isLoading && (
-                    <div className="animate-fade-in flex justify-start">
-                      <div className="glass glass--subtle border-border/80 mr-12 max-w-[85%] rounded-base border p-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="flex space-x-1">
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-accent1"></div>
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-accent2 [animation-delay:0.15s]"></div>
-                            <div className="h-2 w-2 animate-bounce rounded-full bg-accent1 [animation-delay:0.3s]"></div>
+                </div>
+              </section>
+
+              {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
+                <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-text-0">
+                  <p className="font-medium">Spiel-Hinweis:</p>
+                  <p>
+                    Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
+                    <strong>ja</strong>, <strong>nein</strong>, <strong>unklar</strong> oder{" "}
+                    <strong>teilweise</strong>.
+                  </p>
+                  <p>Die KI wird versuchen, deine gewählte Entität zu erraten!</p>
+                </div>
+              )}
+
+              {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
+                <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-text-0">
+                  <p className="font-medium">Spiel-Hinweis:</p>
+                  <p>
+                    Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
+                    <strong>D</strong>.
+                  </p>
+                  <p>
+                    Schreibe <strong>„weiter“</strong>, um die nächste Frage zu erhalten.
+                  </p>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1">
+                  <h2 className="text-balance text-token-h2 font-semibold text-text-strong">
+                    Unterhaltung
+                  </h2>
+                  <p className="text-sm leading-6 text-text-muted">
+                    Aktuelle Unterhaltung mit Disa&nbsp;AI. Aktionen stehen als Tastaturkürzel
+                    bereit.
+                  </p>
+                </div>
+                <div
+                  className="flex flex-wrap items-center gap-2 sm:justify-end"
+                  role="toolbar"
+                  aria-label="Chat-Aktionen"
+                >
+                  <Button
+                    onClick={handleNewConversation}
+                    variant="brand"
+                    size="lg"
+                    className="shadow-neon"
+                  >
+                    <Plus className="h-4 w-4" aria-hidden="true" />
+                    <span>Neue Unterhaltung</span>
+                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={() => setIsHistoryOpen(true)}
+                        variant="secondary"
+                        size="icon"
+                        aria-label="Chat-Verlauf öffnen"
+                      >
+                        <History className="h-5 w-5" aria-hidden="true" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
+                  </Tooltip>
+                </div>
+              </header>
+              <div className="flex-1 overflow-hidden">
+                <div className="h-full overflow-y-auto pb-4">
+                  <div className="space-y-4">
+                    {messages.map((message) => (
+                      <MessageBubble key={message.id} message={message} />
+                    ))}
+                    {isLoading && (
+                      <div className="animate-fade-in flex justify-start">
+                        <div className="glass glass--subtle mr-12 max-w-[85%] rounded-base border border-border/80 p-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="flex space-x-1">
+                              <div className="h-2 w-2 animate-bounce rounded-full bg-accent1"></div>
+                              <div className="h-2 w-2 animate-bounce rounded-full bg-accent2 [animation-delay:0.15s]"></div>
+                              <div className="h-2 w-2 animate-bounce rounded-full bg-accent1 [animation-delay:0.3s]"></div>
+                            </div>
+                            <span className="animate-pulse text-sm text-text-1">
+                              Disa denkt nach...
+                            </span>
+                            <div className="h-2 w-2 animate-pulse rounded-full bg-accent1"></div>
                           </div>
-                          <span className="text-text-1 animate-pulse text-sm">
-                            Disa denkt nach...
-                          </span>
-                          <div className="h-2 w-2 animate-pulse rounded-full bg-accent1"></div>
+                          {/* Subtle shimmer effect */}
+                          <div className="from-accent1/20 via-accent1/40 to-accent1/20 animate-shimmer mt-2 h-1 rounded-full bg-gradient-to-r"></div>
                         </div>
-                        {/* Subtle shimmer effect */}
-                        <div className="from-accent1/20 via-accent1/40 to-accent1/20 animate-shimmer mt-2 h-1 rounded-full bg-gradient-to-r"></div>
                       </div>
-                    </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          <div className="safe-px sticky bottom-0 z-40 border-t border-border bg-surface-0 pb-4 pt-2">
+            <div className="mx-auto w-full max-w-[var(--max-content-width)]">
+              <div className="rounded-lg border border-border bg-surface-1 p-2">
+                <div className="flex items-end gap-3">
+                  <div className="flex-1">
+                    <Textarea
+                      ref={textareaRef}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Nachricht an Disa AI schreiben..."
+                      className="max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm text-text-0 placeholder:text-text-1 focus:ring-0"
+                      rows={1}
+                      aria-label="Nachricht an Disa AI eingeben"
+                      aria-describedby="input-help-text"
+                    />
+                  </div>
+
+                  <Button
+                    onClick={handleSend}
+                    disabled={!input.trim() || isLoading}
+                    size="icon"
+                    className="h-12 w-12 shrink-0"
+                    aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
+                    title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
+                  >
+                    <Send className="h-5 w-5" aria-hidden="true" />
+                  </Button>
+                </div>
+
+                <div className="mt-2 flex items-center justify-between text-xs text-text-1">
+                  <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
+                  {isLoading && (
+                    <span className="animate-fade-in flex items-center gap-2">
+                      <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-accent1"></span>
+                      <span className="text-text-1">Disa tippt...</span>
+                      <div className="flex space-x-1">
+                        <div className="h-1 w-1 animate-bounce rounded-full bg-accent2"></div>
+                        <div className="h-1 w-1 animate-bounce rounded-full bg-accent1 [animation-delay:0.1s]"></div>
+                        <div className="h-1 w-1 animate-bounce rounded-full bg-accent2 [animation-delay:0.2s]"></div>
+                      </div>
+                    </span>
                   )}
                 </div>
               </div>
             </div>
-          </>
-        )}
-
-        <div className="safe-px border-border bg-surface-0 sticky bottom-0 z-40 border-t pb-4 pt-2">
-          <div className="mx-auto w-full max-w-[var(--max-content-width)]">
-            <div className="border-border bg-surface-1 rounded-lg border p-2">
-              <div className="flex items-end gap-3">
-                <div className="flex-1">
-                  <Textarea
-                    ref={textareaRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Nachricht an Disa AI schreiben..."
-                    className="text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0"
-                    rows={1}
-                    aria-label="Nachricht an Disa AI eingeben"
-                    aria-describedby="input-help-text"
-                  />
-                </div>
-
-                <Button
-                  onClick={handleSend}
-                  disabled={!input.trim() || isLoading}
-                  size="icon"
-                  className="h-12 w-12 shrink-0"
-                  aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
-                  title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
-                >
-                  <Send className="h-5 w-5" aria-hidden="true" />
-                </Button>
-              </div>
-
-              <div className="text-text-1 mt-2 flex items-center justify-between text-xs">
-                <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
-                {isLoading && (
-                  <span className="animate-fade-in flex items-center gap-2">
-                    <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-accent1"></span>
-                    <span className="text-text-1">Disa tippt...</span>
-                    <div className="flex space-x-1">
-                      <div className="h-1 w-1 animate-bounce rounded-full bg-accent2"></div>
-                      <div className="h-1 w-1 animate-bounce rounded-full bg-accent1 [animation-delay:0.1s]"></div>
-                      <div className="h-1 w-1 animate-bounce rounded-full bg-accent2 [animation-delay:0.2s]"></div>
-                    </div>
-                  </span>
-                )}
-              </div>
-            </div>
           </div>
-        </div>
 
-        <ChatHistorySidebar
-          isOpen={isHistoryOpen}
-          onClose={() => setIsHistoryOpen(false)}
-          conversations={conversations}
-          activeId={activeConversationId}
-          onSelect={handleSelectConversation}
-          onDelete={handleDeleteConversation}
-        />
+          <ChatHistorySidebar
+            isOpen={isHistoryOpen}
+            onClose={() => setIsHistoryOpen(false)}
+            conversations={conversations}
+            activeId={activeConversationId}
+            onSelect={handleSelectConversation}
+            onDelete={handleDeleteConversation}
+          />
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }
 

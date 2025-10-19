@@ -9,9 +9,21 @@
   --bg0: #0b0d10; /* Canvas */
   --bg1: #101318; /* Layer 1 */
   --bg2: #161a20; /* Layer 2 für mehr Tiefe */
-  --fg: #e6eaef; /* Primärtext */
-  --fg-dim: #a8b0bb; /* Sekundärtext */
-  --fg-subtle: #6b7280; /* Noch dezenterer Text */
+  --surface-0: rgba(12, 16, 23, 0.94); /* Grundfläche */
+  --surface-1: rgba(17, 22, 31, 0.96); /* Kartenfläche */
+  --surface-2: rgba(23, 29, 41, 0.98); /* Erhöhte Oberflächen */
+
+  /* Text-Tokens (WCAG AA) */
+  --text-strong: #f4f7ff; /* 13:1 auf bg1 */
+  --text-primary: #dde6f6; /* >6:1 auf surface-1 */
+  --text-muted: rgba(204, 216, 233, 0.78); /* 4.7:1 auf surface-1 */
+  --text-subtle: rgba(204, 216, 233, 0.62); /* 3.6:1 auf surface-2 */
+  --text-0: var(--text-strong); /* Legacy Alias */
+  --text-1: var(--text-primary);
+  --text-2: var(--text-muted);
+  --fg: var(--text-strong); /* Backward compatible */
+  --fg-dim: var(--text-primary);
+  --fg-subtle: var(--text-subtle);
   --white: #ffffff; /* Pure white for masks and technical uses */
 
   /* Akzente (kalt/warm) */
@@ -38,6 +50,13 @@
   --elev-3: 0 12px 40px rgba(0, 0, 0, 0.55);
   --neon: 0 0 18px rgba(var(--acc1-rgb), 0.35);
   --neon-strong: 0 0 24px rgba(var(--acc1-rgb), 0.5);
+
+  /* Marke */
+  --brand-rgb: 111, 211, 255;
+  --brand: rgb(var(--brand-rgb));
+  --brand-weak: rgba(var(--brand-rgb), 0.22);
+  --brand-strong: rgba(var(--brand-rgb), 0.92);
+  --brand-contrast: #03101a;
 
   /* Spacing & Typo - erweitertes 8pt Grid */
   --space-0: 4px;
@@ -104,11 +123,17 @@
   --focus-offset: 2px;
 
   /* Interaktionsfarben */
-  --hover-bg: rgba(255, 255, 255, 0.05);
-  --active-bg: rgba(255, 255, 255, 0.08);
-  --border-default: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.12);
-  --border-focus: rgba(var(--acc1-rgb), 0.4);
+  --hover-bg: rgba(255, 255, 255, 0.08);
+  --hover-bg-strong: rgba(255, 255, 255, 0.12);
+  --active-bg: rgba(255, 255, 255, 0.14);
+
+  /* Border Kontrastwerte */
+  --border-rgb: 126, 148, 175;
+  --border-subtle-rgb: 80, 98, 124;
+  --border-strong-rgb: 168, 191, 214;
+  --border-default: rgba(var(--border-rgb), 0.45);
+  --border-hover: rgba(var(--border-strong-rgb), 0.55);
+  --border-focus: rgba(var(--brand-rgb), 0.65);
 }
 
 /* Selection styling with brand color */
