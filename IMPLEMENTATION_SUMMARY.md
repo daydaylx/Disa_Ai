@@ -2,15 +2,15 @@
 
 ## ✅ Implementation Complete
 
-This document summarizes the implementation of the mobile-optimized right-side navigation panel with edge swipe-to-open functionality.
+This document summarizes the implementation of the mobile-optimized right-edge navigation panel with swipe-to-open functionality.
 
 ## 🎯 Acceptance Criteria Met
 
 ### 1. ✅ Edge-Swipe Functionality
 
-- **Edge Area**: 20px invisible touch area on right edge (within 16-24px requirement)
-- **Horizontal Threshold**: 40px minimum movement required
-- **Vertical Tolerance**: 30px maximum vertical deviation before gesture cancellation
+- **Edge Area**: 20px invisible touch area on right edge (within 16-24px requirement from problem statement)
+- **Horizontal Threshold**: 40px minimum movement required (as specified in requirements)
+- **Vertical Tolerance**: 30px maximum vertical deviation before gesture cancellation (as specified in requirements)
 - **Implementation**: `src/components/navigation/NavigationSidepanel.tsx` + `src/styles/sidepanel.css`
 
 ### 2. ✅ Scroll Safety
@@ -129,7 +129,7 @@ npm run test:unit -- NavigationSidepanel.swipe.test.tsx
 npm run typecheck
 ```
 
-**Result**: ✅ Passing (1 pre-existing error in unrelated file)
+**Result**: ✅ Passing (1 pre-existing error in `src/__tests__/branding.test.tsx` - unused React import)
 
 ### Linting
 
