@@ -9,8 +9,8 @@
 
 /* Optimize touch interactions for PWA */
 .sidepanel-touch-area {
-  /* Larger touch area for edge swipe - optimiert für einfaches Öffnen */
-  min-width: 80px;
+  /* Edge swipe area - 20px width for precise edge detection (16-24px range) */
+  min-width: 20px;
   min-height: 100vh;
   position: fixed;
   right: 0;

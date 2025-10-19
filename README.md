@@ -16,6 +16,7 @@
   - [Komponenten-Architektur](#komponenten-architektur)
   - [Konfiguration & Feature Flags](#konfiguration--feature-flags)
   - [PWA und Offline-Fähigkeit](#pwa-und-offline-fähigkeit)
+- [📱 Mobile Navigation & Swipe-Gesten](docs/mobile-navigation.md)
 - [🛠️ Tech Stack](#-tech-stack)
 - [🚀 Erste Schritte](#-erste-schritte)
   - [Voraussetzungen](#voraussetzungen)

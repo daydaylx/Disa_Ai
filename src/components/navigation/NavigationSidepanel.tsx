@@ -26,7 +26,9 @@ type PanelMode = "expanded" | "compact";
 
 const EXPANDED_WIDTH = 280;
 const COMPACT_WIDTH = 96;
-const SWIPE_THRESHOLD = 50;
+const SWIPE_THRESHOLD = 40; // Horizontal threshold for swipe detection
+const VERTICAL_TOLERANCE = 30; // Maximum vertical movement allowed for horizontal swipe
+const EDGE_SWIPE_WIDTH = 20; // Edge detection area width (16-24px range)
 const SWIPE_VELOCITY_THRESHOLD = 0.5;
 const PANEL_MODE_STORAGE_KEY = "disa:ui:sidepanelMode";
 
@@ -294,19 +296,24 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
 
       let isDragging = false;
       let startX = 0;
+      let startY = 0;
       let currentX = 0;
+      let currentY = 0;
       let startTime = 0;
 
       const handleTouchStart = (event: TouchEvent) => {
         if (event.touches.length !== 1) return;
 
         startX = event.touches[0]!.clientX;
+        startY = event.touches[0]!.clientY;
         currentX = startX;
+        currentY = startY;
         startTime = Date.now();
         isDragging = false;
 
         const screenWidth = window.innerWidth;
-        if (!isOpen && !allowEdgeOpen && startX < screenWidth - 50) return;
+        // For edge swipe: only start if touch is within edge area
+        if (!isOpen && !allowEdgeOpen && startX < screenWidth - EDGE_SWIPE_WIDTH) return;
 
         isDragging = true;
       };
@@ -315,7 +322,16 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         if (!isDragging || event.touches.length !== 1) return;
 
         currentX = event.touches[0]!.clientX;
+        currentY = event.touches[0]!.clientY;
         const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+
+        // Cancel swipe if vertical movement exceeds tolerance (prioritize scrolling)
+        if (Math.abs(deltaY) > VERTICAL_TOLERANCE) {
+          isDragging = false;
+          setDragOffset(0);
+          return;
+        }
 
         if (isOpen) {
           const offset = Math.min(0, deltaX);
@@ -330,11 +346,15 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         if (!isDragging) return;
 
         const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
         const duration = Date.now() - startTime;
         const velocity = Math.abs(deltaX) / duration;
 
+        // Only trigger if horizontal movement dominates and exceeds threshold
+        const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY);
+        const meetsThreshold = Math.abs(deltaX) > SWIPE_THRESHOLD;
         const shouldToggle =
-          Math.abs(deltaX) > panelWidth / 3 || velocity > SWIPE_VELOCITY_THRESHOLD;
+          isHorizontalDominant && (meetsThreshold || velocity > SWIPE_VELOCITY_THRESHOLD);
 
         if (isOpen && deltaX < -SWIPE_THRESHOLD && shouldToggle) {
           closePanel();
