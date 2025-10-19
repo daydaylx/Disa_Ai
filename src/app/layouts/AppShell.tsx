@@ -109,12 +109,11 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
   return (
     <div className="relative min-h-dvh overflow-hidden bg-surface-0 text-text-0">
-      {/* Background gradients */}
-      <div className="pointer-events-none" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(140%_120%_at_0%_0%,rgba(111,211,255,0.22),transparent_58%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(255,159,111,0.18),transparent_62%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_120%,rgba(111,211,255,0.08),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,255,255,0.04)_0deg,transparent_140deg,transparent_220deg,rgba(255,255,255,0.06)_360deg)] opacity-60 mix-blend-overlay" />
+      {/* Background gradients - Optimized for smooth rendering and no banding */}
+      <div className="pointer-events-none will-change-[opacity]" aria-hidden="true">
+        <div className="absolute inset-0 bg-[radial-gradient(140%_120%_at_0%_0%,rgba(111,211,255,0.22)_0%,rgba(111,211,255,0.12)_35%,rgba(111,211,255,0.05)_50%,transparent_58%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(255,159,111,0.18)_0%,rgba(255,159,111,0.10)_38%,rgba(255,159,111,0.04)_52%,transparent_62%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_120%,rgba(111,211,255,0.08)_0%,rgba(111,211,255,0.04)_45%,rgba(111,211,255,0.02)_60%,transparent_70%)]" />
       </div>
 
       {/* Main layout */}

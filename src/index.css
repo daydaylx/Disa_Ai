@@ -15,9 +15,23 @@
 
   body {
     min-height: 100dvh;
+    /* Optimized gradients: more color stops for smoother transitions, no banding */
     background:
-      radial-gradient(circle at 10% 20%, rgba(111, 211, 255, 0.08) 0%, transparent 25%),
-      radial-gradient(circle at 90% 80%, rgba(255, 159, 111, 0.08) 0%, transparent 25%), var(--bg0);
+      radial-gradient(
+        circle at 10% 20%,
+        rgba(111, 211, 255, 0.08) 0%,
+        rgba(111, 211, 255, 0.05) 12%,
+        rgba(111, 211, 255, 0.02) 20%,
+        transparent 25%
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(255, 159, 111, 0.08) 0%,
+        rgba(255, 159, 111, 0.05) 12%,
+        rgba(255, 159, 111, 0.02) 20%,
+        transparent 25%
+      ),
+      var(--bg0);
     color: var(--fg);
     font-family: var(--font-mono);
     font-size: 16px;
@@ -25,6 +39,9 @@
     overflow-x: hidden;
     position: relative;
     padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* GPU acceleration hint for smooth scrolling */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
   }
 
   #root {
