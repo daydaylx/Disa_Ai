@@ -6,7 +6,7 @@
 
 ### Key Technologies
 
-- **Frontend**: React 19, TypeScript (strict mode), Vite 7
+- **Frontend**: React 19, TypeScript (strict mode), Vite 7.x
 - **Styling**: Tailwind CSS with Design Tokens, Radix UI for headless components
 - **State Management**: React Hooks and Context API
 - **Testing**: Vitest (unit tests), Playwright (E2E tests)
@@ -188,7 +188,7 @@ ESLint enforces a specific import order:
 
 ### Routing
 
-- **Library**: React Router v7
+- **Library**: React Router 7.x
 - **Code Splitting**: All routes use `React.lazy()` for dynamic imports
 - **Suspense**: Wrap lazy-loaded routes with `Suspense` and provide fallbacks
 
@@ -232,7 +232,7 @@ This approach combines Tailwind's flexibility with a maintainable token system.
 ## PWA Features
 
 - **Service Worker**: Workbox for precaching and offline support
-- **Manifest**: `public/manifest.json` with app metadata
+- **Manifest**: `public/manifest.webmanifest` with app metadata
 - **Icons**: Multiple sizes in `public/` for all platforms
 - **Offline**: Critical features work without network connectivity
 
