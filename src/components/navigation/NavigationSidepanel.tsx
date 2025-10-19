@@ -230,12 +230,16 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         ref={menuButtonRef}
         onClick={togglePanel}
         className={cn(
-          "fixed right-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full",
+          "fixed z-50 flex h-12 w-12 items-center justify-center rounded-full",
           "glass glass--subtle border-border/60 border backdrop-blur-md transition-all duration-200",
           "text-text-0 hover:text-brand hover:border-brand/50 hover:shadow-neon",
           "touch-target haptic-feedback sidepanel-focus-visible",
           className,
         )}
+        style={{
+          top: "calc(env(safe-area-inset-top, 0px) + 1rem)",
+          right: "calc(env(safe-area-inset-right, 0px) + 1rem)",
+        }}
         aria-label={state.isOpen ? "Navigation schließen" : "Navigation öffnen"}
         aria-expanded={state.isOpen}
         aria-controls="navigation-sidepanel"

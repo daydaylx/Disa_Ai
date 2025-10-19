@@ -43,20 +43,31 @@ function TopBar() {
     });
   };
 
+  const headerPadding = "1.25rem";
+
   return (
-    <header className="border-border/80 glass glass--subtle sticky top-0 z-30 border-b backdrop-blur-md transition-all duration-200">
-      <div className="mx-auto flex h-16 w-full max-w-[var(--max-content-width)] items-center justify-between gap-6 px-4 lg:px-6">
+    <header
+      className="border-border/80 glass glass--subtle sticky top-0 z-30 border-b backdrop-blur-md transition-all duration-200"
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+    >
+      <div
+        className="mx-auto flex h-16 w-full max-w-[var(--max-content-width)] items-center justify-between gap-6"
+        style={{
+          paddingLeft: `calc(${headerPadding} + env(safe-area-inset-left, 0px))`,
+          paddingRight: `calc(${headerPadding} + env(safe-area-inset-right, 0px))`,
+        }}
+      >
         <div className="flex flex-1 items-center gap-5">
           <div className="flex items-center gap-3">
             <span className="brand-rail h-9 w-1 rounded-r-full" aria-hidden="true" />
             <BrandWordmark />
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="text-text-1 hidden flex-col items-end gap-1 text-xs leading-tight sm:flex">
+        <div className="flex min-w-0 flex-wrap items-center justify-end gap-3">
+          <div className="text-text-1 hidden min-w-0 flex-col items-end gap-1 text-xs leading-tight sm:flex">
             {activeRole ? (
               <>
-                <span className="brand-chip touch-target no-select">
+                <span className="brand-chip touch-target no-select max-w-full truncate">
                   {activeRole.category ?? "Rolle"}
                 </span>
                 <span className="text-text-1 line-clamp-1 text-[11px]">{activeRole.name}</span>
@@ -70,7 +81,7 @@ function TopBar() {
             size="sm"
             onClick={handleNewChat}
             aria-label="Neues Gespräch starten"
-            className="haptic-feedback px-4"
+            className="haptic-feedback flex-shrink-0 px-4"
           >
             <Plus className="h-4 w-4" />
             <span>Neu</span>
