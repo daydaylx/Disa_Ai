@@ -3,6 +3,7 @@ import type { ReactElement, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+import { useSidepanel } from "../../app/state/SidepanelContext";
 import type { Conversation } from "../../lib/conversation-manager";
 import { getAllConversations } from "../../lib/conversation-manager";
 import { TouchGestureHandler } from "../../lib/touch/gestures";
@@ -21,12 +22,6 @@ interface NavigationSidepanelProps {
   className?: string;
 }
 
-interface SidepanelState {
-  isOpen: boolean;
-  isAnimating: boolean;
-  dragOffset: number;
-}
-
 type PanelMode = "expanded" | "compact";
 
 const EXPANDED_WIDTH = 280;
@@ -36,11 +31,8 @@ const SWIPE_VELOCITY_THRESHOLD = 0.5;
 const PANEL_MODE_STORAGE_KEY = "disa:ui:sidepanelMode";
 
 export function NavigationSidepanel({ items, children, className }: NavigationSidepanelProps) {
-  const [state, setState] = useState<SidepanelState>({
-    isOpen: false,
-    isAnimating: false,
-    dragOffset: 0,
-  });
+  const { isOpen, isAnimating, openPanel, closePanel, togglePanel } = useSidepanel();
+  const [dragOffset, setDragOffset] = useState(0);
   const [panelMode, setPanelMode] = useState<PanelMode>(() => {
     if (typeof window === "undefined") return "expanded";
     try {
@@ -207,37 +199,18 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     </section>
   );
 
-  // Open/Close functions
-  const openPanel = useCallback(() => {
-    setState((prev) => ({ ...prev, isOpen: true, isAnimating: true }));
-    setTimeout(() => setState((prev) => ({ ...prev, isAnimating: false })), 300);
-  }, []);
-
-  const closePanel = useCallback(() => {
-    setState((prev) => ({ ...prev, isOpen: false, isAnimating: true, dragOffset: 0 }));
-    setTimeout(() => setState((prev) => ({ ...prev, isAnimating: false })), 300);
-  }, []);
-
   const togglePanelMode = useCallback(() => {
     setPanelMode((prev) => (prev === "compact" ? "expanded" : "compact"));
   }, []);
 
-  const togglePanel = useCallback(() => {
-    if (state.isOpen) {
-      closePanel();
-    } else {
-      openPanel();
-    }
-  }, [state.isOpen, openPanel, closePanel]);
-
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && state.isOpen) {
+      if (event.key === "Escape" && isOpen) {
         closePanel();
       }
 
-      if (event.key === "Tab" && state.isOpen && panelRef.current) {
+      if (event.key === "Tab" && isOpen && panelRef.current) {
         const focusableElements = panelRef.current.querySelectorAll(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
         );
@@ -256,18 +229,18 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [state.isOpen, closePanel]);
+  }, [isOpen, closePanel]);
 
   // Focus management
   useEffect(() => {
-    if (state.isOpen) {
+    if (isOpen) {
       // Focus the close button when panel opens
       setTimeout(() => closeButtonRef.current?.focus(), 100);
     } else {
       // Return focus to menu button when panel closes
       menuButtonRef.current?.focus();
     }
-  }, [state.isOpen]);
+  }, [isOpen]);
 
   // Persist panel mode preference
   useEffect(() => {
@@ -277,18 +250,18 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
       /* ignore storage errors */
     }
     // Reset drag offset when switching modes
-    setState((prev) => ({ ...prev, dragOffset: 0 }));
+    setDragOffset(0);
   }, [panelMode]);
 
   // Refresh history previews once panel opens
   useEffect(() => {
-    if (!state.isOpen) return;
+    if (!isOpen) return;
     try {
       setHistoryPreviews(getAllConversations().slice(0, 3));
     } catch {
       setHistoryPreviews([]);
     }
-  }, [state.isOpen]);
+  }, [isOpen]);
 
   // Touch gesture setup (overlay + edge swipe area)
   useEffect(() => {
@@ -302,9 +275,9 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         preventDefaultSwipe: false,
       });
       handler.onSwipeGesture((swipeEvent) => {
-        if (swipeEvent.direction === "left" && state.isOpen) {
+        if (swipeEvent.direction === "left" && isOpen) {
           closePanel();
-        } else if (swipeEvent.direction === "right" && !state.isOpen) {
+        } else if (swipeEvent.direction === "right" && !isOpen) {
           openPanel();
         }
       });
@@ -333,7 +306,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         isDragging = false;
 
         const screenWidth = window.innerWidth;
-        if (!state.isOpen && !allowEdgeOpen && startX < screenWidth - 50) return;
+        if (!isOpen && !allowEdgeOpen && startX < screenWidth - 50) return;
 
         isDragging = true;
       };
@@ -344,12 +317,12 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         currentX = event.touches[0]!.clientX;
         const deltaX = currentX - startX;
 
-        if (state.isOpen) {
+        if (isOpen) {
           const offset = Math.min(0, deltaX);
-          setState((prev) => ({ ...prev, dragOffset: offset }));
+          setDragOffset(offset);
         } else {
           const offset = Math.max(0, deltaX);
-          setState((prev) => ({ ...prev, dragOffset: offset }));
+          setDragOffset(offset);
         }
       };
 
@@ -363,12 +336,12 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         const shouldToggle =
           Math.abs(deltaX) > panelWidth / 3 || velocity > SWIPE_VELOCITY_THRESHOLD;
 
-        if (state.isOpen && deltaX < -SWIPE_THRESHOLD && shouldToggle) {
+        if (isOpen && deltaX < -SWIPE_THRESHOLD && shouldToggle) {
           closePanel();
-        } else if (!state.isOpen && deltaX > SWIPE_THRESHOLD && shouldToggle) {
+        } else if (!isOpen && deltaX > SWIPE_THRESHOLD && shouldToggle) {
           openPanel();
         } else {
-          setState((prev) => ({ ...prev, dragOffset: 0 }));
+          setDragOffset(0);
         }
 
         isDragging = false;
@@ -396,30 +369,30 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
       cleanupOverlay();
       cleanupEdge();
     };
-  }, [state.isOpen, openPanel, closePanel, panelWidth]);
+  }, [isOpen, openPanel, closePanel, panelWidth]);
 
   // Calculate transform based on state
   const getTransform = () => {
-    if (state.isAnimating) {
-      return state.isOpen ? "translateX(0)" : `translateX(${panelWidth}px)`;
+    if (isAnimating) {
+      return isOpen ? "translateX(0)" : `translateX(${panelWidth}px)`;
     }
 
-    if (state.isOpen) {
-      return `translateX(${state.dragOffset}px)`;
+    if (isOpen) {
+      return `translateX(${dragOffset}px)`;
     } else {
-      return `translateX(${panelWidth + Math.min(0, state.dragOffset)}px)`;
+      return `translateX(${panelWidth + Math.min(0, dragOffset)}px)`;
     }
   };
 
   const getOverlayOpacity = () => {
-    if (state.isAnimating) {
-      return state.isOpen ? 1 : 0;
+    if (isAnimating) {
+      return isOpen ? 1 : 0;
     }
 
-    if (state.isOpen) {
-      return Math.max(0, 1 + state.dragOffset / panelWidth);
+    if (isOpen) {
+      return Math.max(0, 1 + dragOffset / panelWidth);
     } else {
-      return Math.max(0, Math.min(1, state.dragOffset / panelWidth));
+      return Math.max(0, Math.min(1, dragOffset / panelWidth));
     }
   };
 
@@ -441,8 +414,8 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
             top: "calc(env(safe-area-inset-top, 0px) + 1rem)",
             right: "calc(env(safe-area-inset-right, 0px) + 1rem)",
           }}
-          aria-label={state.isOpen ? "Navigation schließen" : "Navigation öffnen"}
-          aria-expanded={state.isOpen}
+          aria-label={isOpen ? "Navigation schließen" : "Navigation öffnen"}
+          aria-expanded={isOpen}
           aria-controls="navigation-sidepanel"
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
@@ -453,7 +426,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={edgeRef}
           className={cn(
             "sidepanel-touch-area",
-            state.isOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-0",
+            isOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-0",
           )}
           aria-hidden="true"
         />
@@ -463,7 +436,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={overlayRef}
           className={cn(
             "sidepanel-overlay-transition sidepanel-no-select fixed inset-0 z-40",
-            state.isOpen || state.dragOffset > 0 ? "pointer-events-auto" : "pointer-events-none",
+            isOpen || dragOffset > 0 ? "pointer-events-auto" : "pointer-events-none",
           )}
           style={{
             backgroundColor: `rgba(0, 0, 0, ${0.5 * getOverlayOpacity()})`,
@@ -482,7 +455,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
             "glass glass--strong border-l border-border/80 backdrop-blur-xl",
             "sidepanel-container sidepanel-safe-area sidepanel-border",
             "transition-[width] duration-300 ease-out",
-            state.isAnimating && "sidepanel-transition",
+            isAnimating && "sidepanel-transition",
             isCompact && "sidepanel-compact",
           )}
           style={{
