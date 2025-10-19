@@ -1,7 +1,9 @@
+import { Sparkles } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { defaultQuickstarts, type QuickstartAction } from "../../config/quickstarts";
 import { quickstartPersistence } from "../../lib/quickstarts/persistence";
+import { Button } from "../ui/button";
 import { QuickstartTile } from "./QuickstartTile";
 
 interface QuickstartGridProps {
@@ -61,18 +63,34 @@ export function QuickstartGrid({
     [onQuickstartLongPress],
   );
 
+  // Empty state: No quickstarts available
   if (quickstarts.length === 0) {
     return (
-      <div className="grid grid-cols-2 gap-4 p-4">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div
-            key={index}
-            className="border-border bg-surface-1 h-32 animate-pulse rounded-lg border"
-          >
-            <div className="bg-surface-2 h-4 w-24 rounded" />
-            <div className="bg-surface-2 mt-2 h-3 w-20 rounded" />
+      <div className="flex min-h-[280px] items-center justify-center p-4">
+        <div className="max-w-xs space-y-4 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-border bg-surface-2">
+            <Sparkles className="h-8 w-8 text-text-1" />
           </div>
-        ))}
+          <div className="space-y-2">
+            <h3 className="typo-h5 text-text-0">Keine Schnellstarts verfügbar</h3>
+            <p className="typo-body-sm text-text-1">
+              Schnellstarts helfen dir, häufige Aufgaben mit einem Tippen zu starten. Sie werden
+              automatisch geladen.
+            </p>
+          </div>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => {
+              const sortedQuickstarts = quickstartPersistence.sortQuickstarts(defaultQuickstarts);
+              setQuickstarts(sortedQuickstarts);
+            }}
+            className="mx-auto"
+          >
+            <Sparkles className="h-4 w-4" />
+            Schnellstarts neu laden
+          </Button>
+        </div>
       </div>
     );
   }
