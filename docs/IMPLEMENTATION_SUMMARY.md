@@ -94,12 +94,20 @@ All acceptance criteria from the requirements have been met and verified.
 
 ### Constants
 
+These values were chosen based on the requirements and UX best practices:
+
 ```typescript
-const SWIPE_THRESHOLD = 40;           // Horizontal threshold
-const VERTICAL_TOLERANCE = 30;        // Max vertical movement
-const EDGE_SWIPE_WIDTH = 20;          // Edge detection area
-const SWIPE_VELOCITY_THRESHOLD = 0.5; // Min velocity (px/ms)
+const SWIPE_THRESHOLD = 40;           // Horizontal threshold (requirement: ~40px)
+const VERTICAL_TOLERANCE = 30;        // Max vertical movement (requirement: ~30px)
+const EDGE_SWIPE_WIDTH = 20;          // Edge detection area (requirement: 16-24px range)
+const SWIPE_VELOCITY_THRESHOLD = 0.5; // Min velocity for fast swipes (px/ms)
 ```
+
+**Rationale**:
+- **40px threshold**: Balances ease of detection with accidental trigger prevention
+- **30px vertical tolerance**: Allows for natural hand movement while prioritizing scrolling
+- **20px edge width**: Middle of 16-24px spec, wide enough for easy targeting but narrow enough to avoid main content conflicts
+- **0.5 px/ms velocity**: Enables fast flick gestures to open panel even with shorter travel distance
 
 ### Swipe Detection Algorithm
 
@@ -188,6 +196,8 @@ const SWIPE_VELOCITY_THRESHOLD = 0.5; // Min velocity (px/ms)
 
 ### Manual Testing Checklist
 
+**Note**: This is a checklist for manual testing on actual devices. These tests should be performed before production deployment.
+
 Recommended manual tests on actual devices:
 
 - [ ] Edge swipe opens panel (Android Chrome, Pixel)
@@ -205,7 +215,11 @@ Recommended manual tests on actual devices:
 ## Known Limitations
 
 1. **E2E Browser Installation**: Playwright browsers need to be installed in CI environment
+   - **Resolution**: Run `npx playwright install chromium` in CI setup
+   - **Reference**: See `.github/workflows/ci.yml` or Playwright documentation
+   
 2. **Desktop Swipe**: Touch gestures only work on touch devices (expected behavior)
+
 3. **Landscape Mode**: Panel takes more relative space in landscape (acceptable for mobile-first design)
 
 ## Migration Notes
