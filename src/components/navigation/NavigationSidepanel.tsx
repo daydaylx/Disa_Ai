@@ -24,12 +24,12 @@ interface NavigationSidepanelProps {
 
 type PanelMode = "expanded" | "compact";
 
-const EXPANDED_WIDTH = 280;
-const COMPACT_WIDTH = 96;
+const EXPANDED_WIDTH = 248;
+const COMPACT_WIDTH = 88;
 const SWIPE_THRESHOLD = 40; // ~40px horizontal movement threshold
 const VERTICAL_TOLERANCE = 30; // ~30px vertical tolerance
 const SWIPE_VELOCITY_THRESHOLD = 0.5;
-const EDGE_SWIPE_WIDTH = 20; // 20px edge area (within 16-24px requirement)
+const EDGE_SWIPE_WIDTH = 28; // Slightly larger edge to improve discoverability
 const PANEL_MODE_STORAGE_KEY = "disa:ui:sidepanelMode";
 
 export function NavigationSidepanel({ items, children, className }: NavigationSidepanelProps) {
@@ -364,13 +364,13 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         const duration = Date.now() - startTime;
         const velocity = Math.abs(deltaX) / duration;
 
-        const shouldToggle =
-          Math.abs(deltaX) > SWIPE_THRESHOLD || velocity > SWIPE_VELOCITY_THRESHOLD;
+        const passed = Math.abs(deltaX) > SWIPE_THRESHOLD || velocity > SWIPE_VELOCITY_THRESHOLD;
 
-        if (isOpen && deltaX > SWIPE_THRESHOLD && shouldToggle) {
+        // When panel is open, user must drag to the right (positive delta) to close
+        if (isOpen && deltaX > SWIPE_THRESHOLD && passed) {
           closePanel();
           setDragOffset(0);
-        } else if (!isOpen && deltaX < -SWIPE_THRESHOLD && shouldToggle) {
+        } else if (!isOpen && deltaX < -SWIPE_THRESHOLD && passed) {
           openPanel();
           setDragOffset(0);
         } else {
@@ -464,6 +464,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
             isOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-0",
           )}
           aria-hidden="true"
+          style={{ position: "fixed", top: 0, right: 0, width: EDGE_SWIPE_WIDTH, height: "100%" }}
         />
 
         {/* Overlay */}
