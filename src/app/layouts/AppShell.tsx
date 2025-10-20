@@ -1,6 +1,6 @@
 import { Cpu, MessageSquare, Plus, Settings, Users } from "lucide-react";
 import type { ReactNode } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NavigationSidepanel } from "../../components/navigation/NavigationSidepanel";
@@ -36,25 +36,48 @@ function TopBar() {
     });
   };
 
-  const headerPadding = "1.25rem";
+  const headerPadding = "1rem";
 
   return (
     <header
-      className="glass-chrome sticky top-0 z-30 border-b border-border/80 transition-all duration-200"
+      className="bg-surface-0/80 supports-[backdrop-filter]:bg-surface-0/70 sticky top-0 z-30 border-b border-border/60 backdrop-blur-md transition-all duration-200"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div
-        className="mx-auto flex h-16 w-full max-w-[var(--max-content-width)] items-center justify-between gap-6"
+        className="mx-auto flex h-14 w-full max-w-[var(--max-content-width)] items-center justify-between gap-4"
         style={{
           paddingLeft: `calc(${headerPadding} + env(safe-area-inset-left, 0px))`,
           paddingRight: `calc(${headerPadding} + env(safe-area-inset-right, 0px))`,
         }}
       >
-        <div className="flex flex-1 items-center gap-5">
+        <div className="flex flex-1 items-center gap-4">
           <div className="flex items-center gap-3">
             <span className="brand-rail h-9 w-1 rounded-r-full" aria-hidden="true" />
             <BrandWordmark />
           </div>
+          <nav
+            aria-label="Hauptnavigation"
+            className="hidden items-center gap-1 text-sm font-medium text-text-2 md:flex"
+          >
+            {NAV_ITEMS.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-2 rounded-full px-3 py-2 transition-colors duration-150",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0",
+                    isActive
+                      ? "bg-brand/15 text-text-strong"
+                      : "hover:bg-surface-1/70 text-text-2 hover:text-text-strong",
+                  )
+                }
+              >
+                <item.icon className="h-4 w-4 flex-shrink-0 opacity-80" aria-hidden="true" />
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
+          </nav>
         </div>
         <div className="flex min-w-0 flex-wrap items-center justify-end gap-3">
           <div className="hidden min-w-0 flex-col items-end gap-1 text-xs leading-tight text-text-1 sm:flex">
@@ -111,9 +134,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     <div className="relative min-h-dvh overflow-hidden bg-surface-0 text-text-0">
       {/* Background gradients - Optimized for smooth rendering and no banding */}
       <div className="pointer-events-none will-change-[opacity]" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(140%_120%_at_0%_0%,rgba(var(--glass-tint-neutral-rgb),0.2)_0%,rgba(var(--glass-tint-neutral-rgb),0.12)_35%,rgba(var(--glass-tint-neutral-rgb),0.05)_50%,transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(var(--acc2-rgb),0.16)_0%,rgba(var(--acc2-rgb),0.1)_38%,rgba(var(--acc2-rgb),0.04)_52%,transparent_62%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_120%,rgba(var(--glass-tint-neutral-rgb),0.08)_0%,rgba(var(--glass-tint-neutral-rgb),0.04)_45%,rgba(var(--glass-tint-neutral-rgb),0.02)_60%,transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(160%_140%_at_10%_12%,rgba(var(--glass-tint-neutral-rgb),0.16)_0%,transparent_65%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(140%_120%_at_90%_18%,rgba(var(--acc2-rgb),0.08)_0%,transparent_60%)]" />
       </div>
 
       {/* Main layout */}
@@ -127,9 +149,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             key={location.pathname}
             className={cn(
               "animate-page-transition flex flex-1 flex-col overflow-y-auto",
-              "mx-auto w-full max-w-[var(--max-content-width)] px-4 pb-10 pt-8 sm:px-6",
-              // Adjust padding on larger screens if sidepanel is persistent
-              layout.sidepanelMode === "persistent" ? "lg:pr-8" : "lg:px-8",
+              "mx-auto w-full max-w-[var(--max-content-width)] px-4 pb-8 pt-6 sm:px-6 lg:px-8",
+              layout.sidepanelMode === "persistent" ? "lg:pr-10" : "",
             )}
           >
             {children}
@@ -137,7 +158,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         </div>
 
         {/* Footer */}
-        <footer className="border-t border-border/80 bg-[rgba(var(--glass-bg),0.55)] py-6 backdrop-blur">
+        <footer className="bg-surface-0/70 supports-[backdrop-filter]:bg-surface-0/60 border-t border-border/50 py-5 backdrop-blur-md">
           <div className="mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs text-text-1 sm:flex-row sm:justify-between sm:text-left">
             <span>Disa AI Beta · Tooling Preview</span>
             <BuildInfo className="text-[11px] text-text-1" />

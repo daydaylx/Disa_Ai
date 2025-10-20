@@ -1,6 +1,6 @@
 import { ChevronLeft, History, Menu, PanelRightClose, PanelRightOpen, X } from "lucide-react";
 import type { ReactElement, ReactNode } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { useSidepanel } from "../../app/state/SidepanelContext";
@@ -36,12 +36,12 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
   const [dragOffset, setDragOffset] = useState(0);
   const [dragType, setDragType] = useState<"open" | "close" | null>(null);
   const [panelMode, setPanelMode] = useState<PanelMode>(() => {
-    if (typeof window === "undefined") return "expanded";
+    if (typeof window === "undefined") return "compact";
     try {
       const stored = localStorage.getItem(PANEL_MODE_STORAGE_KEY) as PanelMode | null;
-      return stored === "compact" ? "compact" : "expanded";
+      return stored === "expanded" ? "expanded" : "compact";
     } catch {
-      return "expanded";
+      return "compact";
     }
   });
   const [historyPreviews, setHistoryPreviews] = useState<Conversation[]>(() => {
@@ -72,11 +72,6 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
   });
   const navigate = useNavigate();
 
-  const chatItem = useMemo(() => items.find((item) => item.label === "Chat"), [items]);
-  const rolesItem = useMemo(() => items.find((item) => item.label === "Rollen"), [items]);
-  const modelsItem = useMemo(() => items.find((item) => item.label === "Modelle"), [items]);
-  const settingsItem = useMemo(() => items.find((item) => item.label === "Einstellungen"), [items]);
-
   const wrapWithTooltip = (label: string, node: ReactElement) =>
     isCompact ? (
       <Tooltip>
@@ -94,17 +89,18 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
       <NavLink to={item.to} onClick={closePanel} aria-label={item.label}>
         {({ isActive }) => {
           const containerClasses = cn(
-            "flex items-center gap-3 rounded-lg border border-transparent px-3 py-3 text-sm font-medium transition-all duration-200",
-            "touch-target no-select sidepanel-focus-visible group",
-            isCompact && "justify-center px-2 py-2",
+            "flex items-center gap-2 rounded-md border border-border/40 bg-surface-1/70 px-3 py-2 text-sm font-medium transition-colors duration-150",
+            "sidepanel-focus-visible group",
+            isCompact && "justify-center px-2",
             isActive
-              ? "text-brand bg-brand/10 border-brand/30 shadow-sm"
-              : "text-text-muted hover:text-text-strong hover:bg-hover-bg hover:border-border-strong/40",
+              ? "border-brand/50 bg-brand/12 text-text-strong"
+              : "text-text-2 hover:border-border hover:bg-surface-2/60 hover:text-text-strong",
           );
           const labelClasses = cn("truncate", isCompact && "sr-only");
           const iconClasses = cn(
-            "h-5 w-5 flex-shrink-0 transition-transform duration-200",
+            "h-4 w-4 flex-shrink-0 opacity-80 transition-transform duration-150",
             "group-hover:scale-110",
+            isActive && "text-brand",
           );
           return (
             <div className={containerClasses} aria-current={isActive ? "page" : undefined}>
@@ -138,8 +134,8 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         type="button"
         onClick={() => openConversation(conversation.id)}
         className={cn(
-          "flex items-center gap-3 rounded-lg border border-border-subtle px-3 py-2 text-xs transition-all duration-200",
-          "text-text-muted hover:border-border-strong/40 hover:bg-hover-bg hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0",
+          "bg-surface-1/60 flex items-center gap-2 rounded-md border border-border/35 px-3 py-2 text-xs transition-colors duration-150",
+          "hover:bg-surface-2/60 text-text-2 hover:border-border hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0",
           isCompact && "justify-center px-2",
         )}
       >
@@ -163,8 +159,8 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         type="button"
         onClick={onClick}
         className={cn(
-          "flex items-center gap-3 rounded-lg border border-border-subtle px-3 py-2 text-sm font-medium transition-all duration-200",
-          "text-text-muted hover:border-border-strong/40 hover:bg-hover-bg hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0",
+          "bg-surface-1/60 flex items-center gap-2 rounded-md border border-border/35 px-3 py-2 text-sm font-medium transition-colors duration-150",
+          "hover:bg-surface-2/60 text-text-2 hover:border-border hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0",
           isCompact && "justify-center px-2",
         )}
       >
@@ -177,7 +173,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
       <div key={key} className="space-y-1">
         {wrapWithTooltip(label, button)}
         {!isCompact && description && (
-          <p className="text-xs leading-5 text-text-subtle">{description}</p>
+          <p className="text-[11px] leading-5 text-text-subtle">{description}</p>
         )}
       </div>
     );
@@ -189,19 +185,19 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     content: React.ReactNode,
     description?: string,
   ) => (
-    <section key={id} aria-labelledby={id} className="space-y-3">
+    <section key={id} aria-labelledby={id} className="space-y-2">
       <div className="flex flex-col gap-1">
         <h3
           id={id}
           className={cn(
-            "text-xs font-semibold uppercase tracking-[0.24em] text-text-muted",
+            "text-[11px] font-semibold uppercase tracking-[0.18em] text-text-subtle",
             isCompact && "sr-only",
           )}
         >
           {label}
         </h3>
         {!isCompact && description && (
-          <p className="text-xs leading-5 text-text-subtle">{description}</p>
+          <p className="text-text-subtle/80 text-xs leading-5">{description}</p>
         )}
       </div>
       <div>{content}</div>
@@ -448,12 +444,9 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={menuButtonRef}
           onClick={togglePanel}
           className={cn(
-            "glass-card fixed z-50 flex h-12 w-12 items-center justify-center rounded-lg",
-            "text-text-primary transition-all duration-200",
-            "hover:border-brand/60 hover:text-brand",
-            "touch-target haptic-feedback sidepanel-focus-visible",
-            "opacity-90 hover:opacity-100",
-            "hidden md:flex",
+            "bg-surface-1/80 supports-[backdrop-filter]:bg-surface-1/70 fixed z-40 hidden h-11 w-11 items-center justify-center rounded-full border border-border/60 text-text-2 shadow-sm backdrop-blur-md transition-colors duration-150",
+            "hover:border-border hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0",
+            "touch-target sidepanel-focus-visible",
             className,
           )}
           style={{
@@ -530,8 +523,13 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           role="navigation"
         >
           {/* Header */}
-          <div className="flex items-center justify-between gap-2 border-b border-border/60 p-4">
-            <h2 className={cn("text-base font-semibold text-text-strong", isCompact && "sr-only")}>
+          <div className="bg-surface-0/60 flex items-center justify-between gap-2 border-b border-border/40 p-3.5">
+            <h2
+              className={cn(
+                "text-sm font-semibold uppercase tracking-[0.16em] text-text-subtle",
+                isCompact && "sr-only",
+              )}
+            >
               Navigation
             </h2>
             <div className="flex items-center gap-2">
@@ -540,9 +538,9 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
                   <button
                     onClick={togglePanelMode}
                     className={cn(
-                      "flex h-9 w-9 items-center justify-center rounded-full",
-                      "text-text-muted hover:bg-hover-bg hover:text-text-strong",
-                      "touch-target transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+                      "flex h-8 w-8 items-center justify-center rounded-full border border-transparent",
+                      "hover:bg-surface-1/70 text-text-2 hover:border-border hover:text-text-strong",
+                      "touch-target transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
                     )}
                     aria-label={isCompact ? "Navigation erweitern" : "Navigation kompakt anzeigen"}
                     aria-pressed={isCompact}
@@ -562,9 +560,9 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
                 ref={closeButtonRef}
                 onClick={closePanel}
                 className={cn(
-                  "flex h-9 w-9 items-center justify-center rounded-full",
-                  "text-text-muted hover:bg-hover-bg hover:text-text-strong",
-                  "touch-target transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+                  "flex h-8 w-8 items-center justify-center rounded-full border border-transparent",
+                  "hover:bg-surface-1/70 text-text-2 hover:border-border hover:text-text-strong",
+                  "touch-target transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
                 )}
                 aria-label="Navigation schließen"
               >
@@ -574,70 +572,44 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           </div>
 
           {/* Navigation Items */}
-          <nav className="sidepanel-scroll flex-1 space-y-6 overflow-y-auto p-4">
+          <nav className="sidepanel-scroll flex-1 space-y-4 overflow-y-auto p-4">
+            {renderNavSection(
+              "sidepanel-navigation",
+              "Bereiche",
+              <ul className="space-y-1" role="list">
+                {items.map((item) => renderNavLink(item, item.to))}
+              </ul>,
+              "Hauptfunktionen im schnellen Zugriff.",
+            )}
+
             {renderNavSection(
               "sidepanel-history",
               "Verlauf",
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {renderActionButton(
                   "history-open",
-                  "Verlauf öffnen",
-                  "Gespeicherte Konversationen im Chat anzeigen.",
+                  "Gespeicherte Unterhaltungen",
+                  "Öffnet die Übersicht deiner gespeicherten Gespräche.",
                   openHistoryPanel,
                 )}
-                {chatItem && (
-                  <ul className="space-y-1" role="list">
-                    {renderNavLink(chatItem, "chat-home")}
-                  </ul>
-                )}
-                {historyPreviews.length > 0 ? (
+                {!isCompact && historyPreviews.length > 0 && (
                   <ul className="space-y-1" role="list">
                     {historyPreviews.map((conversation) => renderHistoryPreview(conversation))}
                   </ul>
-                ) : (
-                  !isCompact && (
-                    <p className="text-xs leading-5 text-text-subtle">
-                      Noch keine Gespräche gespeichert.
-                    </p>
-                  )
+                )}
+                {!isCompact && historyPreviews.length === 0 && (
+                  <p className="text-xs leading-5 text-text-subtle">
+                    Noch keine Gespräche gespeichert.
+                  </p>
                 )}
               </div>,
-              "Schneller Zugriff auf deine letzten Chats.",
             )}
-
-            {rolesItem &&
-              renderNavSection(
-                "sidepanel-roles",
-                "Rollen",
-                <ul className="space-y-1" role="list">
-                  {renderNavLink(rolesItem, "roles-link")}
-                </ul>,
-                "Wechsle zwischen gespeicherten Rollenprofilen.",
-              )}
-
-            {modelsItem &&
-              renderNavSection(
-                "sidepanel-models",
-                "Modelle",
-                <ul className="space-y-1" role="list">
-                  {renderNavLink(modelsItem, "models-link")}
-                </ul>,
-                "Verwalte deine bevorzugten Sprachmodelle.",
-              )}
-
-            {settingsItem &&
-              renderNavSection(
-                "sidepanel-settings",
-                "Einstellungen",
-                <ul className="space-y-1" role="list">
-                  {renderNavLink(settingsItem, "settings-link")}
-                </ul>,
-                "Anwendungen und Konto konfigurieren.",
-              )}
           </nav>
 
           {/* Footer content */}
-          {children && <div className="border-t border-border/60 p-4">{children}</div>}
+          {children && (
+            <div className="border-t border-border/40 p-4 text-xs text-text-subtle">{children}</div>
+          )}
         </aside>
       </>
     </TooltipProvider>

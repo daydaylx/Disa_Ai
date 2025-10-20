@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { logDiscussionAnalytics } from "../analytics/discussion";
 import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
 import { MessageBubbleCard } from "../components/chat/MessageBubbleCard";
+import Accordion from "../components/ui/Accordion";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
 import {
@@ -452,44 +453,76 @@ export default function ChatV2() {
     });
   };
 
-  const discussionTopics = [
+  const discussionTopicConfig = [
     {
       title: "Gibt es Außerirdische?",
       prompt: "Gibt es Außerirdische?",
+      category: "curiosity",
     },
     {
       title: "Wie wird die Zukunft aussehen?",
       prompt: "Wie stellst du dir die nächsten 20 Jahre vor?",
+      category: "future",
     },
     {
       title: "Wird KI die Weltherrschaft übernehmen?",
       prompt: "Wird KI irgendwann zu viel Macht haben?",
+      category: "future",
     },
     {
       title: "Gibt es ein Leben nach dem Tod?",
       prompt: "Gibt es deiner Meinung nach ein Leben nach dem Tod?",
+      category: "curiosity",
     },
     {
       title: "Warum glauben Menschen an Schicksal?",
       prompt: "Warum glauben manche so fest an Schicksal?",
+      category: "curiosity",
     },
     {
       title: "Brauchen wir ein Grundeinkommen?",
       prompt: "Sollte es ein bedingungsloses Grundeinkommen geben?",
+      category: "society",
     },
     {
       title: "Wie retten wir das Klima?",
       prompt: "Welche Maßnahmen helfen deiner Meinung nach dem Klima am meisten?",
+      category: "society",
     },
     {
       title: "Welche Rolle spielen soziale Medien?",
       prompt: "Wie beeinflussen soziale Medien unser Denken und Verhalten?",
+      category: "society",
     },
     {
       title: "Gestalten wir die Zukunft der Arbeit?",
       prompt: "Wie werden Automatisierung und KI die Arbeitswelt verändern?",
+      category: "future",
     },
-  ].map((topic) => ({ ...topic, hint: DISCUSSION_CARD_HINT }));
+  ] as const;
+
+  const discussionSections = [
+    {
+      id: "curiosity",
+      title: "Neugier & Sinnfragen",
+      description: "Philosophische Warm-ups und lockere Brainstormings.",
+    },
+    {
+      id: "future",
+      title: "Zukunft & Technologie",
+      description: "Blick nach vorn auf Innovation, Automatisierung und KI.",
+    },
+    {
+      id: "society",
+      title: "Gesellschaft & Alltag",
+      description: "Diskussionen rund um Klima, Wirtschaft und soziale Dynamiken.",
+    },
+  ].map((section) => ({
+    ...section,
+    topics: discussionTopicConfig
+      .filter((topic) => topic.category === section.id)
+      .map((topic) => ({ ...topic, hint: DISCUSSION_CARD_HINT })),
+  }));
 
   return (
     <TooltipProvider>
@@ -541,15 +574,15 @@ export default function ChatV2() {
               </header>
 
               <section aria-labelledby="discussion-heading" className="pb-8">
-                <div className="mb-5 flex flex-col gap-4 rounded-xl border border-border-subtle bg-surface-0 p-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="bg-surface-0/70 mb-5 flex flex-col gap-4 rounded-lg border border-border/45 p-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex-1 space-y-1">
                     <h2
                       id="discussion-heading"
-                      className="text-xs font-semibold uppercase tracking-[0.28em] text-text-strong"
+                      className="text-[11px] font-semibold uppercase tracking-[0.24em] text-text-subtle"
                     >
                       Diskussionen
                     </h2>
-                    <p className="text-sm leading-6 text-text-muted">
+                    <p className="text-xs leading-6 text-text-muted">
                       Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
                     </p>
                   </div>
@@ -594,23 +627,40 @@ export default function ChatV2() {
                     </Select>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                  {discussionTopics.map((topic) => (
-                    <button
-                      key={topic.title}
-                      type="button"
-                      onClick={() => startDiscussion(topic.prompt)}
-                      className="bg-surface-2/40 hover:bg-surface-2/60 glass-tile group flex h-full flex-col justify-between rounded-lg border border-border/50 px-3 py-2 text-left backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0"
-                    >
-                      <span
-                        className="line-clamp-2 text-xs font-semibold leading-tight tracking-tight text-text-strong [hyphens:auto]"
-                        lang="de"
-                      >
-                        {topic.title}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+                <Accordion
+                  single
+                  items={discussionSections.map((section, index) => ({
+                    id: section.id,
+                    title: section.title,
+                    meta:
+                      section.topics.length === 1 ? "1 Thema" : `${section.topics.length} Themen`,
+                    defaultOpen: index === 0,
+                    content: (
+                      <div className="space-y-3">
+                        <p className="text-xs leading-5 text-text-subtle">{section.description}</p>
+                        <div className="grid gap-2 sm:grid-cols-2">
+                          {section.topics.map((topic) => (
+                            <button
+                              key={topic.title}
+                              type="button"
+                              onClick={() => startDiscussion(topic.prompt)}
+                              title={topic.hint}
+                              className="bg-surface-1/70 hover:bg-surface-2/60 group flex flex-col gap-1 rounded-md border border-border/40 px-3 py-2 text-left transition-colors duration-150 hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0"
+                            >
+                              <span
+                                className="text-sm font-medium text-text-strong [hyphens:auto]"
+                                lang="de"
+                              >
+                                {topic.title}
+                              </span>
+                              <span className="text-xs text-text-subtle">{topic.hint}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ),
+                  }))}
+                />
               </section>
 
               {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (

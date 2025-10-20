@@ -17,17 +17,15 @@
     min-height: 100dvh;
     background:
       radial-gradient(
-        120% 120% at 12% 18%,
-        rgba(var(--glass-tint-neutral-rgb), 0.18) 0%,
-        transparent 64%
+        140% 120% at 50% 0%,
+        rgba(var(--glass-tint-neutral-rgb), 0.12) 0%,
+        transparent 70%
       ),
-      radial-gradient(120% 120% at 86% 78%, rgba(var(--acc2-rgb), 0.12) 0%, transparent 68%),
-      linear-gradient(180deg, rgba(var(--glass-tint-neutral-rgb), 0.08) 0%, transparent 55%),
-      var(--bg0);
+      linear-gradient(180deg, rgba(10, 13, 19, 0.92) 0%, rgba(8, 11, 17, 0.96) 55%, var(--bg0) 100%);
     color: var(--fg);
     font-family: var(--font-mono);
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: var(--font-body);
+    line-height: 1.55;
     overflow-x: hidden;
     position: relative;
     padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -40,16 +38,13 @@
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background:
-      radial-gradient(
-        140% 140% at 50% -10%,
-        rgba(var(--glass-tint-neutral-rgb), 0.15) 0%,
-        transparent 55%
-      ),
-      linear-gradient(120deg, rgba(var(--brand-rgb), 0.05) 0%, transparent 48%),
-      linear-gradient(200deg, rgba(var(--acc2-rgb), 0.04) 0%, transparent 60%);
-    opacity: 0.85;
-    mix-blend-mode: lighten;
+    background: radial-gradient(
+      160% 120% at 80% 10%,
+      rgba(var(--glass-tint-neutral-rgb), 0.18) 0%,
+      transparent 65%
+    );
+    opacity: 0.45;
+    mix-blend-mode: normal;
     z-index: 0;
   }
 
@@ -58,24 +53,13 @@
     position: fixed;
     inset: -20vh;
     pointer-events: none;
-    background-image:
-      radial-gradient(
-        1px 1px at 20% 20%,
-        rgba(255, 255, 255, var(--canvas-noise-opacity)) 0%,
-        transparent 100%
-      ),
-      radial-gradient(
-        1px 1px at 80% 80%,
-        rgba(255, 255, 255, calc(var(--canvas-noise-opacity) * 0.65)) 0%,
-        transparent 100%
-      ),
-      radial-gradient(
-        1px 1px at 40% 60%,
-        rgba(255, 255, 255, calc(var(--canvas-noise-opacity) * 0.4)) 0%,
-        transparent 100%
-      );
-    background-size: 260px 260px;
-    opacity: 0.7;
+    background-image: radial-gradient(
+      1px 1px at 20% 20%,
+      rgba(255, 255, 255, calc(var(--canvas-noise-opacity) * 0.6)) 0%,
+      transparent 100%
+    );
+    background-size: 360px 360px;
+    opacity: 0.25;
     mix-blend-mode: screen;
     z-index: 0;
   }

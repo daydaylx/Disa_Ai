@@ -9,9 +9,9 @@
   --bg0: #0b0d10; /* Canvas */
   --bg1: #101318; /* Layer 1 */
   --bg2: #161a20; /* Layer 2 für mehr Tiefe */
-  --surface-0: rgba(12, 16, 23, 0.94); /* Grundfläche */
-  --surface-1: rgba(17, 22, 31, 0.96); /* Kartenfläche */
-  --surface-2: rgba(23, 29, 41, 0.98); /* Erhöhte Oberflächen */
+  --surface-0: rgba(13, 17, 24, 0.82); /* Grundfläche: dezenter, lässt Hintergrund durchscheinen */
+  --surface-1: rgba(18, 23, 32, 0.88); /* Kartenfläche: weniger Glas-Effekt */
+  --surface-2: rgba(24, 30, 42, 0.92); /* Erhöhte Oberflächen: reduzierte Opazität */
   --surface-glass-card: rgba(var(--glass-bg), var(--glass-alpha-card));
   --surface-glass-panel: rgba(var(--glass-bg), var(--glass-alpha-panel));
   --surface-glass-chrome: rgba(var(--glass-bg), var(--glass-alpha-chrome));
@@ -40,10 +40,10 @@
   --glass-alpha: 0.2; /* Legacy alpha */
   --glass-alpha-subtle: 0.12; /* Für subtile Oberflächen */
   --glass-alpha-strong: 0.3; /* Für wichtige Oberflächen */
-  --glass-alpha-card: 0.22; /* Standard-Karten */
-  --glass-alpha-panel: 0.28; /* Navigation & Dialoge */
-  --glass-alpha-chrome: 0.16; /* Toolbars / Header */
-  --glass-alpha-overlay: 0.45; /* Dimmed Hintergründe */
+  --glass-alpha-card: 0.18; /* Standard-Karten */
+  --glass-alpha-panel: 0.24; /* Navigation & Dialoge */
+  --glass-alpha-chrome: 0.12; /* Toolbars / Header */
+  --glass-alpha-overlay: 0.36; /* Dimmed Hintergründe */
   --glass-tint-rgb: 142, 196, 255; /* Kühle Glas-Tönung */
   --glass-tint-neutral-rgb: 188, 208, 242; /* Neutraler Umbra */
   --glass-tint-alpha-subtle: 0.18;
@@ -56,8 +56,8 @@
   --glass-noise-opacity: 0.08;
   --glass-radius: 18px;
   --glass-blur-sm: 6px;
-  --glass-blur-md: 18px;
-  --glass-blur-lg: 32px;
+  --glass-blur-md: 14px;
+  --glass-blur-lg: 26px;
   --glass-blur-xl: 48px;
 
   /* Schatten & Glow (sparsam, performance-optimiert) */
@@ -92,7 +92,7 @@
   --spacing-sm: var(--space-2); /* 12px - Kleine Abstände (z.B. zwischen verwandten Items) */
   --spacing-md: var(--space-3); /* 16px - Medium Abstände (z.B. zwischen Komponenten) */
   --spacing-lg: var(--space-4); /* 24px - Große Abstände (z.B. zwischen Sections) */
-  --spacing-xl: var(--space-5); /* 32px - Extra große Abstände (z.B. Page Padding) */
+  --spacing-xl: var(--space-4); /* 24px - Extra große Abstände (z.B. Page Padding) */
   --spacing-2xl: var(--space-6); /* 40px - Sehr große Abstände */
   --spacing-3xl: var(--space-8); /* 64px - Maximale Abstände */
 
@@ -104,13 +104,13 @@
   --page-padding-y: var(--spacing-xl); /* Vertikales Page Padding */
   --page-padding-x: var(--spacing-md); /* Horizontales Page Padding */
 
-  --font-display: 28px;
-  --font-h1: 24px;
-  --font-h2: 20px;
-  --font-h3: 18px;
-  --font-body: 16px;
-  --font-hint: 14px;
-  --font-caption: 12px;
+  --font-display: 26px;
+  --font-h1: 22px;
+  --font-h2: 18px;
+  --font-h3: 16px;
+  --font-body: 15px;
+  --font-hint: 13px;
+  --font-caption: 11px;
 
   /* Status colors - verbesserte Kontraste */
   --success-rgb: 52, 199, 89;
@@ -124,7 +124,7 @@
   --danger-bg: rgba(var(--danger-rgb), 0.1);
 
   /* Layout - konsistente Radii */
-  --max-content-width: 720px;
+  --max-content-width: 880px;
   --radius-sm: 8px;
   --radius-base: 12px;
   --radius-lg: 16px;

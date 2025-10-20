@@ -9,9 +9,9 @@ export const colors = {
   canvas: "#0b0d10" /* Canvas background */,
   layer1: "#101318" /* Primary layer */,
   layer2: "#161a20" /* Secondary layer for depth */,
-  surface0: "rgba(12, 16, 23, 0.94)" /* Base surface */,
-  surface1: "rgba(17, 22, 31, 0.96)" /* Card surface */,
-  surface2: "rgba(23, 29, 41, 0.98)" /* Elevated surface */,
+  surface0: "rgba(13, 17, 24, 0.82)" /* Base surface */,
+  surface1: "rgba(18, 23, 32, 0.88)" /* Card surface */,
+  surface2: "rgba(24, 30, 42, 0.92)" /* Elevated surface */,
   primaryText: "#f4f7ff" /* Primärtext */,
   secondaryText: "#dde6f6" /* Sekundärtext */,
   mutedText: "rgba(204, 216, 233, 0.78)" /* Muted body */,
@@ -56,41 +56,41 @@ export const touchTargets = {
 // Typography scale - Updated to match new tokens
 export const typography = {
   display: {
-    fontSize: "28px" /* font-display: 28px */,
-    lineHeight: "36px",
+    fontSize: "26px" /* font-display: 26px */,
+    lineHeight: "34px",
     fontWeight: "600",
     letterSpacing: "-0.01em",
   },
   h1: {
-    fontSize: "24px",
-    lineHeight: "32px",
+    fontSize: "22px",
+    lineHeight: "30px",
     fontWeight: "600",
     letterSpacing: "-0.01em",
   },
   h2: {
-    fontSize: "20px",
-    lineHeight: "28px",
+    fontSize: "18px",
+    lineHeight: "26px",
     fontWeight: "600",
     letterSpacing: "-0.01em",
   },
   h3: {
-    fontSize: "18px",
-    lineHeight: "26px",
+    fontSize: "16px",
+    lineHeight: "24px",
     fontWeight: "500",
     letterSpacing: "-0.01em",
   },
   body: {
-    fontSize: "16px" /* font-body: 16px */,
-    lineHeight: "24px",
+    fontSize: "15px" /* font-body: 15px */,
+    lineHeight: "22px",
     fontWeight: "400",
   },
   hint: {
-    fontSize: "14px" /* font-hint: 14px */,
-    lineHeight: "20px",
+    fontSize: "13px" /* font-hint: 13px */,
+    lineHeight: "18px",
     fontWeight: "500",
   },
   caption: {
-    fontSize: "12px",
+    fontSize: "11px",
     lineHeight: "16px",
     fontWeight: "400",
   },
@@ -130,9 +130,9 @@ export const text = {
 } as const;
 
 export const surfaces = {
-  0: "rgba(12, 16, 23, 0.94)",
-  1: "rgba(17, 22, 31, 0.96)",
-  2: "rgba(23, 29, 41, 0.98)",
+  0: "rgba(13, 17, 24, 0.82)",
+  1: "rgba(18, 23, 32, 0.88)",
+  2: "rgba(24, 30, 42, 0.92)",
 } as const;
 
 export const border = {
@@ -161,8 +161,8 @@ export const breakpoints = {
 // Blur tokens
 export const blur = {
   sm: "6px" /* glass-blur-sm */,
-  md: "12px" /* glass-blur-md */,
-  lg: "18px" /* glass-blur-lg */,
+  md: "14px" /* glass-blur-md */,
+  lg: "26px" /* glass-blur-lg */,
 } as const;
 
 // Glassmorphism parameters
