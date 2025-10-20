@@ -365,7 +365,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         const velocity = Math.abs(deltaX) / duration;
 
         const shouldToggle =
-          Math.abs(deltaX) > panelWidth / 3 || velocity > SWIPE_VELOCITY_THRESHOLD;
+          Math.abs(deltaX) > SWIPE_THRESHOLD || velocity > SWIPE_VELOCITY_THRESHOLD;
 
         if (isOpen && deltaX > SWIPE_THRESHOLD && shouldToggle) {
           closePanel();
