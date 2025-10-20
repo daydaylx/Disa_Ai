@@ -1,7 +1,7 @@
 import "./index.css"; // Tailwind base/components/utilities
 import "./styles/design-tokens.css"; // Design tokens (CSS variables)
 import "./styles/mobile-fixes.css"; // Mobile viewport and scaling fixes
-import "./styles/sidepanel.css"; // Sidepanel specific styles
+import "./styles/bottomsheet.css"; // Bottom sheet specific styles
 import "./ui/base.css"; // Reset & base styles
 import "./styles/a11y-improvements.css"; // A11y improvements
 

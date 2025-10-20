@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { ChatBubble } from "../components/ChatBubble";
 import { Header } from "../components/Header";
 import { InputBar } from "../components/InputBar";
-import { SidePanel } from "../components/SidePanel";
-
-type SidePanelState = "closed" | "open";
-type PanelTab = "history" | "roles" | "models" | "settings";
+import { BottomSheetButton } from "./BottomSheetButton";
 
 interface Message {
   id: string;
@@ -21,20 +18,8 @@ interface ChatAreaProps {
 }
 
 export const ChatArea: React.FC<ChatAreaProps> = ({ messages, onSend }) => {
-  const [panelState, setPanelState] = useState<SidePanelState>("closed");
-  const [panelTab, setPanelTab] = useState<PanelTab>("history");
-
   const handleSend = (message: string) => {
     onSend(message);
-  };
-
-  const closePanel = () => {
-    setPanelState("closed");
-  };
-
-  const togglePanel = (tab: PanelTab = "history") => {
-    setPanelState(panelState === "open" ? "closed" : "open");
-    setPanelTab(tab);
   };
 
   return (
@@ -65,35 +50,8 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, onSend }) => {
         </div>
       </div>
 
-      {/* Seitliches Panel mit erweiterten Funktionen */}
-      <SidePanel
-        state={panelState}
-        tab={panelTab}
-        onClose={closePanel}
-        onTabChange={setPanelTab}
-        onSwipeRightToOpen={() => setPanelState("open")}
-        onSwipeLeftToClose={closePanel}
-      />
-
-      {/* Trigger für das Panel (z.B. Einstellungs-Button) */}
-      <button
-        onClick={() => togglePanel()}
-        className="glass glass--subtle hover:glass--strong fixed right-4 top-4 z-20 rounded-full border border-border/60 p-2 transition-all duration-300"
-        aria-label="Einstellungen öffnen"
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <circle cx="12" cy="12" r="1"></circle>
-          <circle cx="12" cy="5" r="1"></circle>
-          <circle cx="12" cy="19" r="1"></circle>
-        </svg>
-      </button>
+      {/* Bottom Sheet Button - replaces the old side panel */}
+      <BottomSheetButton />
     </div>
   );
 };
