@@ -18,7 +18,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
         htmlFor={id}
         className={cn("inline-flex cursor-pointer select-none items-center gap-3", className)}
       >
-        {label && <span className="text-text-muted text-sm">{label}</span>}
+        {label && <span className="text-sm text-text-muted">{label}</span>}
         <span
           className={cn(
             "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast",
@@ -38,7 +38,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           />
           <span
             className={cn(
-              "bg-surface-0 inline-block h-5 w-5 transform rounded-full shadow transition-transform duration-fast",
+              "inline-block h-5 w-5 transform rounded-full bg-surface-0 shadow transition-transform duration-fast",
               checked ? "translate-x-6" : "translate-x-1",
             )}
           />
