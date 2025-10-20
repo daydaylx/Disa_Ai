@@ -787,6 +787,30 @@
     border-color: var(--glass-stroke-strong);
   }
 
+  /* Custom tile component with enhanced glass effect */
+  .glass-tile {
+    background: rgba(var(--glass-bg), 0.35);
+    backdrop-filter: blur(var(--glass-blur-md)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-md)) saturate(160%);
+    border: 1px solid var(--glass-stroke);
+    border-radius: var(--radius-base);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all var(--transition-normal) var(--transition-smooth);
+  }
+
+  .glass-tile:hover {
+    background: rgba(var(--glass-bg), 0.45);
+    border-color: var(--glass-stroke-strong);
+    box-shadow:
+      0 6px 16px rgba(0, 0, 0, 0.2),
+      0 0 0 1px var(--glass-stroke);
+    transform: translateY(-2px);
+  }
+
+  .glass-tile:active {
+    transform: translateY(0);
+  }
+
   /* Performance optimization: reduce blur on low-end devices */
   @media (prefers-reduced-motion: reduce) {
     .glass,

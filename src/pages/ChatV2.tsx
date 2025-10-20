@@ -594,21 +594,20 @@ export default function ChatV2() {
                     </Select>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   {discussionTopics.map((topic) => (
                     <button
                       key={topic.title}
                       type="button"
                       onClick={() => startDiscussion(topic.prompt)}
-                      className="group flex h-full flex-col justify-between rounded-xl border border-border-subtle bg-surface-1 px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0"
+                      className="bg-surface-2/40 hover:bg-surface-2/60 glass-tile group flex h-full flex-col justify-between rounded-lg border border-border/50 px-3 py-2 text-left backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0"
                     >
                       <span
-                        className="line-clamp-2 text-sm font-semibold leading-snug tracking-tight text-text-strong [hyphens:auto]"
+                        className="line-clamp-2 text-xs font-semibold leading-tight tracking-tight text-text-strong [hyphens:auto]"
                         lang="de"
                       >
                         {topic.title}
                       </span>
-                      <span className="mt-2 text-xs leading-5 text-text-subtle">{topic.hint}</span>
                     </button>
                   ))}
                 </div>
