@@ -6,7 +6,7 @@ jobs:
     timeout-minutes: 15 # Maximum 15 minutes for entire job
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: ".nvmrc"
           cache: "npm"

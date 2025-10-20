@@ -30,7 +30,7 @@ jobs:
           git fetch origin main:main || echo "Main branch already available"
 
       - name: "Setup Node.js"
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "22.19.0"
           cache: "npm"
@@ -82,7 +82,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Setup Node.js"
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "22.19.0"
           cache: "npm"
@@ -148,7 +148,7 @@ jobs:
           fetch-depth: 0
 
       - name: "Setup Node.js"
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: "22.19.0"
           cache: "npm"
