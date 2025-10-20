@@ -25,11 +25,14 @@ export function useEdgeSwipe({
   const startY = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active || typeof window === "undefined") {
+      return;
+    }
 
     const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length !== 1) return;
-      const t = e.touches[0];
+      const t = e.touches.item(0);
+      if (!t) return;
       const vw = window.innerWidth;
 
       const fromRight = edge === "right" && t.clientX >= vw - edgeWidth;
@@ -44,7 +47,8 @@ export function useEdgeSwipe({
     const onTouchMove = (e: TouchEvent) => {
       if (!tracking.current || startX.current == null || startY.current == null) return;
 
-      const t = e.touches[0];
+      const t = e.touches.item(0);
+      if (!t) return;
       const dx = t.clientX - startX.current;
       const dy = Math.abs(t.clientY - startY.current);
 
@@ -83,6 +87,7 @@ export function useEdgeSwipe({
     window.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
     return () => {
+      if (typeof window === "undefined") return;
       window.removeEventListener("touchstart", onTouchStart as any);
       window.removeEventListener("touchmove", onTouchMove as any);
       window.removeEventListener("touchend", onTouchEnd as any);

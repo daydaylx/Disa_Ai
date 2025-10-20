@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import React from "react";
 import { describe, expect, it } from "vitest";
 
 import { BrandWordmark } from "../app/components/BrandWordmark";
@@ -11,7 +10,7 @@ describe("BrandWordmark", () => {
     expect(screen.getByText(/Disa/)).toBeInTheDocument();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <span
-        class="text-text-strong text-lg font-semibold tracking-tight"
+        class="text-lg font-semibold tracking-tight text-text-strong"
       >
         Disa
         <span

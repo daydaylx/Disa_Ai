@@ -3,6 +3,7 @@ import React, { type RefObject, useRef } from "react";
 
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useSwipe } from "../hooks/useSwipe";
+import { Glass } from "./Glass";
 
 type PanelTab = "history" | "roles" | "models" | "settings";
 type SidePanelState = "closed" | "peek" | "open";
@@ -70,7 +71,10 @@ export const SidePanel: React.FC<SidePanelProps> = ({
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <div className="glass glass--strong h-full w-[86vw] p-3">
+        <Glass
+          variant="strong"
+          className="h-full w-[88vw] max-w-[380px] border border-border/50 p-4 shadow-level2"
+        >
           {/* Close button */}
           <div className="mb-3 flex items-center justify-between">
             <h2 id="panel-title" className="text-lg font-semibold text-[var(--fg)]">
@@ -78,7 +82,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
             </h2>
             <button
               onClick={onClose}
-              className="glass--subtle rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-[var(--acc1)]"
+              className="glass glass--subtle rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-[var(--acc1)]"
               aria-label="Panel schließen"
             >
               <X size={18} />
@@ -110,7 +114,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
               {getTabLabel(tab)} Inhalt wird hier angezeigt
             </div>
           </div>
-        </div>
+        </Glass>
         {/* Scrim */}
         {state === "open" && (
           <div

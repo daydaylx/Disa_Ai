@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 
 interface SidepanelState {
   isOpen: boolean;
@@ -25,17 +25,37 @@ export function SidepanelProvider({ children }: SidepanelProviderProps) {
     isOpen: false,
     isAnimating: false,
   });
+  const animationTimeoutRef = useRef<number | null>(null);
+
+  const clearAnimationTimeout = useCallback(() => {
+    if (animationTimeoutRef.current !== null && typeof window !== "undefined") {
+      window.clearTimeout(animationTimeoutRef.current);
+      animationTimeoutRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => clearAnimationTimeout, [clearAnimationTimeout]);
 
   const openPanel = useCallback(() => {
     setState({ isOpen: true, isAnimating: true });
     // Animation duration matches CSS transition
-    setTimeout(() => setState((prev) => ({ ...prev, isAnimating: false })), 300);
-  }, []);
+    if (typeof window === "undefined") return;
+    clearAnimationTimeout();
+    animationTimeoutRef.current = window.setTimeout(() => {
+      setState((prev) => ({ ...prev, isAnimating: false }));
+      animationTimeoutRef.current = null;
+    }, 300);
+  }, [clearAnimationTimeout]);
 
   const closePanel = useCallback(() => {
     setState({ isOpen: false, isAnimating: true });
-    setTimeout(() => setState((prev) => ({ ...prev, isAnimating: false })), 300);
-  }, []);
+    if (typeof window === "undefined") return;
+    clearAnimationTimeout();
+    animationTimeoutRef.current = window.setTimeout(() => {
+      setState((prev) => ({ ...prev, isAnimating: false }));
+      animationTimeoutRef.current = null;
+    }, 300);
+  }, [clearAnimationTimeout]);
 
   const togglePanel = useCallback(() => {
     if (state.isOpen) {

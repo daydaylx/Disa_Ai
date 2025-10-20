@@ -78,7 +78,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, onSend }) => {
       {/* Trigger für das Panel (z.B. Einstellungs-Button) */}
       <button
         onClick={() => togglePanel()}
-        className="glass--subtle hover:glass--strong fixed right-4 top-4 z-20 rounded-full p-2 transition-all duration-300"
+        className="glass glass--subtle hover:glass--strong fixed right-4 top-4 z-20 rounded-full border border-border/60 p-2 transition-all duration-300"
         aria-label="Einstellungen öffnen"
       >
         <svg

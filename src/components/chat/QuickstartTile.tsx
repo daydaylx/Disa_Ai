@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { cn } from "../../lib/utils";
+import { Glass } from "../Glass";
 
 interface QuickstartTileProps {
   action: QuickstartAction;
@@ -71,17 +72,19 @@ export function QuickstartTile({
   );
 
   return (
-    <div
+    <Glass
+      variant="subtle"
       className={cn(
-        "group relative min-h-[96px] rounded-base border border-border bg-surface-1 transition-all duration-200",
+        "group relative min-h-[96px] overflow-hidden rounded-base border border-border/60 transition-all duration-200",
+        "before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(120%_120%_at_80%_0%,rgba(var(--glass-tint-rgb),0.18)_0%,transparent_65%)] before:opacity-0 before:transition-opacity before:duration-200",
+        "hover:-translate-y-[1px] hover:before:opacity-100 active:scale-[0.98]",
         isActive && "scale-95 opacity-70",
         isLoading && "pointer-events-none",
-        !isLoading && "hover:-translate-y-[1px] active:scale-[0.98]",
       )}
     >
       <button
         data-testid={`quickstart-${action.id}`}
-        className="flex h-full w-full flex-col items-center justify-center text-center text-text-0"
+        className="relative z-10 flex h-full w-full flex-col items-center justify-center text-center text-text-0"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
@@ -92,7 +95,7 @@ export function QuickstartTile({
         type="button"
       >
         {isPinned && (
-          <div className="absolute right-2 top-2 rounded-full bg-surface-2 p-1">
+          <div className="glass glass--subtle absolute right-2 top-2 rounded-full border border-border/50 p-1">
             <Pin className="h-3 w-3 text-text-0" />
           </div>
         )}
@@ -105,12 +108,12 @@ export function QuickstartTile({
 
         {showActions && (
           <div
-            className="absolute inset-0 z-20 flex items-center justify-center rounded-base bg-black/80"
+            className="glass glass--strong absolute inset-0 z-20 flex items-center justify-center rounded-base border border-border/70 bg-[rgba(var(--glass-bg),0.85)]"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={handlePinToggle}
-              className="flex flex-col items-center gap-1 rounded-base border border-border bg-surface-2 px-4 py-3 text-text-0 transition-all hover:scale-105 hover:bg-surface-1"
+              className="glass glass--subtle flex flex-col items-center gap-1 rounded-base border border-border/60 px-4 py-3 text-text-0 transition-all hover:scale-105 hover:shadow-level2"
               type="button"
             >
               {isPinned ? (
@@ -129,11 +132,11 @@ export function QuickstartTile({
         )}
 
         {isLoading && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center rounded-base bg-black/60">
+          <div className="glass glass--strong absolute inset-0 z-20 flex items-center justify-center rounded-base border border-border/60 bg-[rgba(var(--glass-bg),0.75)]">
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-border border-t-brand" />
           </div>
         )}
       </button>
-    </div>
+    </Glass>
   );
 }

@@ -1,6 +1,3 @@
-// src/components/navigation/EdgeSwipeHandle.tsx
-import React from "react";
-
 import { useSidepanel } from "../../app/state/SidepanelContext";
 import { useEdgeSwipe } from "../../hooks/useEdgeSwipe";
 import { cn } from "../../lib/utils";

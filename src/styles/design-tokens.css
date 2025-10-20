@@ -34,15 +34,18 @@
 
   /* Glas-Parameter - verbessert für Performance */
   --glass-bg: 18, 22, 28; /* RGB von bg0 */
-  --glass-alpha: 0.16; /* Leicht erhöht für besseren Kontrast */
-  --glass-alpha-subtle: 0.08; /* Für subtile Oberflächen */
-  --glass-alpha-strong: 0.24; /* Für wichtige Oberflächen */
+  --glass-alpha: 0.2; /* Leicht erhöht für besseren Kontrast */
+  --glass-alpha-subtle: 0.12; /* Für subtile Oberflächen */
+  --glass-alpha-strong: 0.3; /* Für wichtige Oberflächen */
+  --glass-tint-rgb: 142, 196, 255; /* Kühle Glas-Tönung */
+  --glass-tint-alpha-subtle: 0.18;
+  --glass-tint-alpha-strong: 0.28;
   --glass-stroke: rgba(255, 255, 255, 0.12);
   --glass-stroke-strong: rgba(255, 255, 255, 0.18);
   --glass-radius: 18px;
-  --glass-blur-sm: 6px;
-  --glass-blur-md: 12px;
-  --glass-blur-lg: 18px;
+  --glass-blur-sm: 8px;
+  --glass-blur-md: 18px;
+  --glass-blur-lg: 28px;
 
   /* Schatten & Glow (sparsam, performance-optimiert) */
   --elev-1: 0 2px 10px rgba(0, 0, 0, 0.35);

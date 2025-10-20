@@ -63,6 +63,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
   const edgeGestureRef = useRef<TouchGestureHandler | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const focusTimeoutRef = useRef<number | null>(null);
   const navigate = useNavigate();
 
   const chatItem = useMemo(() => items.find((item) => item.label === "Chat"), [items]);
@@ -235,13 +236,28 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
 
   // Focus management
   useEffect(() => {
+    if (focusTimeoutRef.current !== null && typeof window !== "undefined") {
+      window.clearTimeout(focusTimeoutRef.current);
+      focusTimeoutRef.current = null;
+    }
+
     if (isOpen) {
-      // Focus the close button when panel opens
-      setTimeout(() => closeButtonRef.current?.focus(), 100);
+      if (typeof window !== "undefined") {
+        focusTimeoutRef.current = window.setTimeout(() => {
+          closeButtonRef.current?.focus();
+          focusTimeoutRef.current = null;
+        }, 100);
+      }
     } else {
-      // Return focus to menu button when panel closes
       menuButtonRef.current?.focus();
     }
+
+    return () => {
+      if (focusTimeoutRef.current !== null && typeof window !== "undefined") {
+        window.clearTimeout(focusTimeoutRef.current);
+        focusTimeoutRef.current = null;
+      }
+    };
   }, [isOpen]);
 
   // Persist panel mode preference
@@ -418,10 +434,10 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={menuButtonRef}
           onClick={togglePanel}
           className={cn(
-            "fixed z-50 flex h-12 w-12 items-center justify-center rounded-lg",
-            "bg-surface-1/85 border border-border-strong/50 transition-all duration-200",
-            "hover:bg-surface-1/95 text-text-primary hover:border-brand/60 hover:text-brand",
-            "touch-target haptic-feedback sidepanel-focus-visible shadow-lg",
+            "glass glass--strong fixed z-50 flex h-12 w-12 items-center justify-center rounded-lg",
+            "border border-border/50 text-text-primary transition-all duration-200",
+            "hover:-translate-y-[1px] hover:border-brand/60 hover:text-brand hover:shadow-level2",
+            "touch-target haptic-feedback sidepanel-focus-visible",
             "opacity-90 hover:opacity-100",
             "hidden md:flex", // Hide on mobile (< 768px), show on desktop
             className,
@@ -468,9 +484,9 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           id="navigation-sidepanel"
           className={cn(
             "fixed right-0 top-0 z-50 flex h-full flex-col",
-            "bg-surface-1/85 border-l border-border/30",
+            "glass glass--strong border border-border/40 bg-transparent",
             "sidepanel-container sidepanel-safe-area sidepanel-border",
-            "shadow-lg transition-[width] duration-300 ease-out",
+            "transition-[width] duration-300 ease-out",
             isAnimating && "sidepanel-transition",
             isCompact && "sidepanel-compact",
           )}
