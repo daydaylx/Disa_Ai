@@ -7,6 +7,7 @@ import {
   Info,
   Key,
   MessageSquare,
+  RefreshCw,
   Shield,
   Smartphone,
   Trash2,
@@ -321,6 +322,18 @@ export default function SettingsPage() {
         message: "Die Chats konnten nicht gelöscht werden.",
       });
     }
+  };
+
+  const handleHardReload = () => {
+    import("../lib/utils/reload-manager")
+      .then(({ reloadHelpers }) => {
+        reloadHelpers.userRequested();
+      })
+      .catch(() => {
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+      });
   };
 
   if (initState === "loading") {
@@ -840,6 +853,16 @@ export default function SettingsPage() {
               (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.
             </p>
           </div>
+
+          <Button
+            type="button"
+            onClick={handleHardReload}
+            variant="outline"
+            className="border-accent1/40 hover:bg-accent1/10 flex w-full items-center justify-center gap-2 text-accent1"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Seite vollständig neu laden
+          </Button>
         </div>
       </StaticGlassCard>
     </div>

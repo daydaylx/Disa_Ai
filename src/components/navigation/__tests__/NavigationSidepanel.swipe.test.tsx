@@ -92,8 +92,10 @@ describe("NavigationSidepanel - Swipe Gestures", () => {
 
     // Wait for panel to open
     await waitFor(() => {
-      const panel = document.querySelector("#navigation-sidepanel");
-      expect(panel).toBeInTheDocument();
+      const panel = document.querySelector("#navigation-sidepanel") as HTMLElement | null;
+      expect(panel).not.toBeNull();
+      const transform = panel ? window.getComputedStyle(panel).transform : "";
+      expect(["matrix(1, 0, 0, 1, 0, 0)", "translateX(0px)"]).toContain(transform);
     });
   });
 
@@ -133,11 +135,11 @@ describe("NavigationSidepanel - Swipe Gestures", () => {
     fireEvent.touchMove(edgeArea, { touches: [touchMove] });
     fireEvent.touchEnd(edgeArea, { changedTouches: [touchMove] });
 
-    // Panel should not open
-    const panel = document.querySelector("#navigation-sidepanel");
-    // Panel exists but should not be visible (translated off screen)
-    const panelStyle = window.getComputedStyle(panel as Element);
-    expect(panelStyle.transform).toContain("translateX"); // Should have transform
+    // Panel should not open (still translated off-screen)
+    const panel = document.querySelector("#navigation-sidepanel") as HTMLElement | null;
+    expect(panel).not.toBeNull();
+    const transform = panel ? window.getComputedStyle(panel).transform : "";
+    expect(transform).not.toBe("matrix(1, 0, 0, 1, 0, 0)");
   });
 
   it("should cancel gesture when vertical movement exceeds tolerance", () => {

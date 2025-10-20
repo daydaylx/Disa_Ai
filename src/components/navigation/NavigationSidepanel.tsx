@@ -293,9 +293,9 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         preventDefaultSwipe: false,
       });
       handler.onSwipeGesture((swipeEvent) => {
-        if (swipeEvent.direction === "left" && isOpen) {
+        if (swipeEvent.direction === "right" && isOpen) {
           closePanel();
-        } else if (swipeEvent.direction === "right" && !isOpen) {
+        } else if (swipeEvent.direction === "left" && !isOpen) {
           openPanel();
         }
       });
@@ -325,9 +325,15 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         startTime = Date.now();
         isDragging = false;
 
-        const screenWidth = window.innerWidth;
-        // For edge swipe area, only start if touch is in the rightmost edge
-        if (!isOpen && allowEdgeOpen && startX < screenWidth - EDGE_SWIPE_WIDTH) return;
+        const viewportWidth =
+          typeof window !== "undefined" && "visualViewport" in window
+            ? (window.visualViewport?.width ?? window.innerWidth)
+            : window.innerWidth;
+
+        if (!isOpen && allowEdgeOpen) {
+          const threshold = viewportWidth - EDGE_SWIPE_WIDTH;
+          if (startX < threshold) return;
+        }
 
         isDragging = true;
       };
@@ -347,13 +353,8 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           return;
         }
 
-        if (isOpen) {
-          const offset = Math.min(0, deltaX);
-          setDragOffset(offset);
-        } else {
-          const offset = Math.max(0, deltaX);
-          setDragOffset(offset);
-        }
+        const offset = deltaX;
+        setDragOffset(offset);
       };
 
       const handleTouchEnd = () => {
@@ -366,10 +367,12 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         const shouldToggle =
           Math.abs(deltaX) > panelWidth / 3 || velocity > SWIPE_VELOCITY_THRESHOLD;
 
-        if (isOpen && deltaX < -SWIPE_THRESHOLD && shouldToggle) {
+        if (isOpen && deltaX > SWIPE_THRESHOLD && shouldToggle) {
           closePanel();
-        } else if (!isOpen && deltaX > SWIPE_THRESHOLD && shouldToggle) {
+          setDragOffset(0);
+        } else if (!isOpen && deltaX < -SWIPE_THRESHOLD && shouldToggle) {
           openPanel();
+          setDragOffset(0);
         } else {
           setDragOffset(0);
         }
