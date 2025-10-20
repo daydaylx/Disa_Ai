@@ -20,12 +20,15 @@ test.describe("Smoke Tests", () => {
 
     // Look for the actual text shown when there are no messages
     const heroTextLocator = page.getByText(
-      "Starte eine Unterhaltung oder wähle einen Schnellstart für häufige Aufgaben.",
+      "Starte eine Unterhaltung oder nutze die Schnellstarts für wiederkehrende Aufgaben.",
     );
     await expect(heroTextLocator).toBeVisible({ timeout: 10000 });
 
-    const quickstartsLocator = page.getByTestId(/quickstart-/).first();
-    await expect(quickstartsLocator).toBeVisible({ timeout: 10000 });
+    const discussionsHeading = page.getByRole("heading", { name: "Diskussionen" });
+    await expect(discussionsHeading).toBeVisible({ timeout: 10000 });
+
+    const firstDiscussionTopic = page.getByRole("button", { name: "Gibt es Außerirdische?" });
+    await expect(firstDiscussionTopic).toBeVisible({ timeout: 10000 });
   });
 
   test("Can send a message and receive a streamed response", async ({ page }) => {
@@ -46,10 +49,12 @@ test.describe("Smoke Tests", () => {
     await composer.fill("Hallo Welt");
     await composer.press("Enter");
 
-    // The user message should be visible in the chat messages area
-    await expect(page.getByTestId("chat-log").getByText("Hallo Welt")).toBeVisible();
+    const userMessage = page.getByRole("article").filter({ hasText: "Hallo Welt" });
+    await expect(userMessage).toBeVisible();
 
-    // The mocked response "Hallo das ist eine Test-Antwort" should be visible
-    await expect(page.getByText("Hallo das ist eine Test-Antwort")).toBeVisible();
+    const assistantMessage = page.getByRole("article").filter({
+      hasText: "Hallo das ist eine Test-Antwort",
+    });
+    await expect(assistantMessage).toBeVisible();
   });
 });
