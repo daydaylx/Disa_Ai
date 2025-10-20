@@ -94,7 +94,7 @@ export default function VirtualMessageList({
             <div className="max-w-lg space-y-8 text-center">
               <div className="space-y-6">
                 <div className="relative mx-auto h-24 w-24">
-                  <div className="border-border bg-surface-1 flex h-full w-full items-center justify-center rounded-full border-2">
+                  <div className="flex h-full w-full items-center justify-center rounded-full border-2 border-border bg-surface-1">
                     <svg width="32" height="32" viewBox="0 0 24 24" className="text-text-1">
                       <path
                         fill="currentColor"
@@ -104,15 +104,15 @@ export default function VirtualMessageList({
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <h2 className="text-text-0 text-3xl font-bold tracking-tight">Disa AI</h2>
-                  <p className="text-text-1 text-lg font-medium">
+                  <h2 className="text-3xl font-bold tracking-tight text-text-0">Disa AI</h2>
+                  <p className="text-lg font-medium text-text-1">
                     Starte eine Unterhaltung mit deinem KI-Assistenten
                   </p>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-text-0 text-xl font-semibold">Was möchtest du besprechen?</h3>
+                <h3 className="text-xl font-semibold text-text-0">Was möchtest du besprechen?</h3>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {[
                     {
@@ -135,7 +135,7 @@ export default function VirtualMessageList({
                     <button
                       key={index}
                       onClick={() => onSuggestionClick?.(suggestion.text)}
-                      className="border-border bg-surface-1 text-text-0 hover:bg-surface-2 rounded-lg border p-4 transition-colors"
+                      className="rounded-lg border border-border bg-surface-1 p-4 text-text-0 transition-colors hover:bg-surface-2"
                     >
                       <div className="flex items-center gap-3 text-left">
                         <span className="text-lg">{suggestion.icon}</span>

@@ -287,7 +287,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </div>
       )}
       {policyFromRole !== "any" && (
-        <div className="bg-brand/10 text-brand rounded-lg p-4 text-sm" role="alert">
+        <div className="rounded-lg bg-brand/10 p-4 text-sm text-brand" role="alert">
           Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste
           entsprechend gefiltert.
         </div>
@@ -357,7 +357,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
               aria-label="Detailfilter"
             >
               <div className="flex flex-col gap-1">
-                <label htmlFor="provider-select" className="text-text-1 text-sm">
+                <label htmlFor="provider-select" className="text-sm text-text-1">
                   Provider
                 </label>
                 <select
@@ -365,7 +365,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                   value={provider}
                   onChange={(e) => setProvider(e.target.value)}
                   aria-label="Provider filtern"
-                  className="border-border bg-surface-1 focus-visible:ring-brand h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2"
+                  className="h-10 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 >
                   {providers.map((p) => (
                     <option key={p} value={p} className="bg-surface-2">
@@ -375,7 +375,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                 </select>
               </div>
               <div className="flex flex-col gap-1">
-                <label htmlFor="sort-select" className="text-text-1 text-sm">
+                <label htmlFor="sort-select" className="text-sm text-text-1">
                   Sortieren nach
                 </label>
                 <select
@@ -385,7 +385,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                     setSortBy(e.target.value as "label" | "price" | "ctx")
                   }
                   aria-label="Sortierung"
-                  className="border-border bg-surface-1 focus-visible:ring-brand h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2"
+                  className="h-10 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 >
                   <option value="label" className="bg-surface-2">
                     Name
@@ -406,7 +406,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       <div role="listbox" aria-label="Modelle">
         {loading ? (
           <div
-            className="text-text-1 flex flex-col items-center justify-center p-8"
+            className="flex flex-col items-center justify-center p-8 text-text-1"
             role="status"
             aria-label="Modelle werden geladen"
           >
@@ -424,7 +424,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         )}
 
         {!loading && filtered.length === 0 && (
-          <div className="text-text-1 flex flex-col items-center justify-center p-8" role="status">
+          <div className="flex flex-col items-center justify-center p-8 text-text-1" role="status">
             <Icon name="search-off" size={48} className="mb-4" />
             <h3 className="text-lg font-semibold">Keine Modelle gefunden</h3>
             <p className="text-sm">Passe deine Filter oder den Suchbegriff an.</p>
@@ -505,8 +505,8 @@ function ModelListVirtualized({
         tabIndex={0}
         className={cn(
           "cursor-pointer transition-all",
-          active && "ring-brand ring-2",
-          "focus-visible:ring-brand focus-visible:ring-2",
+          active && "ring-2 ring-brand",
+          "focus-visible:ring-2 focus-visible:ring-brand",
         )}
         onClick={handleSelect}
         onKeyDown={handleKeyDown}
@@ -533,7 +533,7 @@ function ModelListVirtualized({
           </Button>
         </CardHeader>
         <CardContent className="space-y-4 pt-2">
-          <div className="text-text-1 flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-sm text-text-1">
             <span title="Kontextfenster">
               {m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—"}
             </span>
