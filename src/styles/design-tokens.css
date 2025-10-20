@@ -12,6 +12,9 @@
   --surface-0: rgba(12, 16, 23, 0.94); /* Grundfläche */
   --surface-1: rgba(17, 22, 31, 0.96); /* Kartenfläche */
   --surface-2: rgba(23, 29, 41, 0.98); /* Erhöhte Oberflächen */
+  --surface-glass-card: rgba(var(--glass-bg), var(--glass-alpha-card));
+  --surface-glass-panel: rgba(var(--glass-bg), var(--glass-alpha-panel));
+  --surface-glass-chrome: rgba(var(--glass-bg), var(--glass-alpha-chrome));
 
   /* Text-Tokens (WCAG AA) */
   --text-strong: #f4f7ff; /* 13:1 auf bg1 */
@@ -34,23 +37,34 @@
 
   /* Glas-Parameter - verbessert für Performance */
   --glass-bg: 18, 22, 28; /* RGB von bg0 */
-  --glass-alpha: 0.2; /* Leicht erhöht für besseren Kontrast */
+  --glass-alpha: 0.2; /* Legacy alpha */
   --glass-alpha-subtle: 0.12; /* Für subtile Oberflächen */
   --glass-alpha-strong: 0.3; /* Für wichtige Oberflächen */
+  --glass-alpha-card: 0.22; /* Standard-Karten */
+  --glass-alpha-panel: 0.28; /* Navigation & Dialoge */
+  --glass-alpha-chrome: 0.16; /* Toolbars / Header */
+  --glass-alpha-overlay: 0.45; /* Dimmed Hintergründe */
   --glass-tint-rgb: 142, 196, 255; /* Kühle Glas-Tönung */
+  --glass-tint-neutral-rgb: 188, 208, 242; /* Neutraler Umbra */
   --glass-tint-alpha-subtle: 0.18;
   --glass-tint-alpha-strong: 0.28;
+  --glass-tint-alpha-neutral: 0.22;
   --glass-stroke: rgba(255, 255, 255, 0.12);
+  --glass-stroke-soft: rgba(255, 255, 255, 0.08);
   --glass-stroke-strong: rgba(255, 255, 255, 0.18);
+  --glass-border-hard: rgba(255, 255, 255, 0.24);
+  --glass-noise-opacity: 0.08;
   --glass-radius: 18px;
-  --glass-blur-sm: 8px;
+  --glass-blur-sm: 6px;
   --glass-blur-md: 18px;
-  --glass-blur-lg: 28px;
+  --glass-blur-lg: 32px;
+  --glass-blur-xl: 48px;
 
   /* Schatten & Glow (sparsam, performance-optimiert) */
   --elev-1: 0 2px 10px rgba(0, 0, 0, 0.35);
   --elev-2: 0 6px 26px rgba(0, 0, 0, 0.45);
   --elev-3: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --elev-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --neon: 0 0 18px rgba(var(--acc1-rgb), 0.35);
   --neon-strong: 0 0 24px rgba(var(--acc1-rgb), 0.5);
 
@@ -150,6 +164,8 @@
   /* Focus - verbesserte Sichtbarkeit */
   --focus-ring: 0 0 0 3px rgba(var(--acc1-rgb), 0.7);
   --focus-ring-strong: 0 0 0 4px rgba(var(--acc1-rgb), 0.8);
+  --glass-focus-ring: 0 0 0 3px rgba(188, 208, 242, 0.55);
+  --glass-focus-ring-strong: 0 0 0 4px rgba(111, 211, 255, 0.65);
   --focus-offset: 2px;
 
   /* Interaktionsfarben */
@@ -164,6 +180,11 @@
   --border-default: rgba(var(--border-rgb), 0.45);
   --border-hover: rgba(var(--border-strong-rgb), 0.55);
   --border-focus: rgba(var(--brand-rgb), 0.65);
+
+  /* Canvas Layering */
+  --canvas-overlay: rgba(16, 20, 28, 0.72);
+  --canvas-overlay-soft: rgba(24, 28, 36, 0.56);
+  --canvas-noise-opacity: 0.04;
 }
 
 /* Selection styling with brand color */

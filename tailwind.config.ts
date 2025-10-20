@@ -22,6 +22,9 @@ export default {
         "surface-0": "var(--surface-0)",
         "surface-1": "var(--surface-1)",
         "surface-2": "var(--surface-2)",
+        "surface-glass-card": "var(--surface-glass-card)",
+        "surface-glass-panel": "var(--surface-glass-panel)",
+        "surface-glass-chrome": "var(--surface-glass-chrome)",
         primary: "var(--fg)",
         secondary: "var(--fg-dim)",
         subtle: "var(--fg-subtle)",
@@ -101,11 +104,16 @@ export default {
         level3: "var(--elev-3)",
         neon: "var(--neon)",
         "neon-strong": "var(--neon-strong)",
+        "glass-inset": "var(--elev-glass-inset)",
       },
       backdropBlur: {
         sm: "var(--glass-blur-sm)" /* Added glass blur sm */,
         md: "var(--glass-blur-md)" /* Added glass blur md */,
         lg: "var(--glass-blur-lg)" /* Added glass blur lg */,
+        xl: "var(--glass-blur-xl)",
+      },
+      opacity: {
+        "glass-noise": "var(--canvas-noise-opacity)",
       },
       transitionDuration: {
         fast: "var(--transition-fast)",
@@ -173,6 +181,10 @@ export default {
     "glass" /* Added glass class */,
     "glass--subtle" /* Added glass subtle class */,
     "glass--strong" /* Added glass strong class */,
+    "glass-panel",
+    "glass-card",
+    "glass-chrome",
+    "glass-lifted",
     {
       pattern: /(grid|flex|gap|items|justify)-(.*)/,
     },

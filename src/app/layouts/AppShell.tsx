@@ -40,7 +40,7 @@ function TopBar() {
 
   return (
     <header
-      className="glass glass--subtle sticky top-0 z-30 border-b border-border/80 backdrop-blur-md transition-all duration-200"
+      className="glass-chrome sticky top-0 z-30 border-b border-border/80 transition-all duration-200"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div
@@ -111,9 +111,9 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     <div className="relative min-h-dvh overflow-hidden bg-surface-0 text-text-0">
       {/* Background gradients - Optimized for smooth rendering and no banding */}
       <div className="pointer-events-none will-change-[opacity]" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(140%_120%_at_0%_0%,rgba(111,211,255,0.22)_0%,rgba(111,211,255,0.12)_35%,rgba(111,211,255,0.05)_50%,transparent_58%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(255,159,111,0.18)_0%,rgba(255,159,111,0.10)_38%,rgba(255,159,111,0.04)_52%,transparent_62%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_120%,rgba(111,211,255,0.08)_0%,rgba(111,211,255,0.04)_45%,rgba(111,211,255,0.02)_60%,transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(140%_120%_at_0%_0%,rgba(var(--glass-tint-neutral-rgb),0.2)_0%,rgba(var(--glass-tint-neutral-rgb),0.12)_35%,rgba(var(--glass-tint-neutral-rgb),0.05)_50%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(var(--acc2-rgb),0.16)_0%,rgba(var(--acc2-rgb),0.1)_38%,rgba(var(--acc2-rgb),0.04)_52%,transparent_62%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_120%,rgba(var(--glass-tint-neutral-rgb),0.08)_0%,rgba(var(--glass-tint-neutral-rgb),0.04)_45%,rgba(var(--glass-tint-neutral-rgb),0.02)_60%,transparent_70%)]" />
       </div>
 
       {/* Main layout */}

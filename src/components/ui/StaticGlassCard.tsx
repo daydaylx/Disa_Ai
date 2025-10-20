@@ -26,7 +26,7 @@ export function StaticGlassCard({
   return (
     <div
       className={cn(
-        "surface-card card-depth",
+        "surface-card glass-card",
         variant === "raised" && "surface-card--raised",
         className,
       )}

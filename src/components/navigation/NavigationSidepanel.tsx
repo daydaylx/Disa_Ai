@@ -437,12 +437,12 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={menuButtonRef}
           onClick={togglePanel}
           className={cn(
-            "glass glass--strong fixed z-50 flex h-12 w-12 items-center justify-center rounded-lg",
-            "border border-border/50 text-text-primary transition-all duration-200",
-            "hover:-translate-y-[1px] hover:border-brand/60 hover:text-brand hover:shadow-level2",
+            "glass-card fixed z-50 flex h-12 w-12 items-center justify-center rounded-lg",
+            "text-text-primary transition-all duration-200",
+            "hover:border-brand/60 hover:text-brand",
             "touch-target haptic-feedback sidepanel-focus-visible",
             "opacity-90 hover:opacity-100",
-            "hidden md:flex", // Hide on mobile (< 768px), show on desktop
+            "hidden md:flex",
             className,
           )}
           style={{
@@ -474,8 +474,12 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
             isOpen || dragOffset > 0 ? "pointer-events-auto" : "pointer-events-none",
           )}
           style={{
-            backgroundColor: `rgba(0, 0, 0, ${0.3 * getOverlayOpacity()})`,
-            backdropFilter: getOverlayOpacity() > 0 ? "blur(2px)" : "none",
+            opacity: getOverlayOpacity(),
+            backgroundColor: "rgba(var(--glass-bg), var(--glass-alpha-overlay))",
+            backdropFilter:
+              getOverlayOpacity() > 0 ? "blur(var(--glass-blur-sm)) saturate(110%)" : "none",
+            WebkitBackdropFilter:
+              getOverlayOpacity() > 0 ? "blur(var(--glass-blur-sm)) saturate(110%)" : "none",
           }}
           onClick={closePanel}
           aria-hidden="true"
@@ -486,8 +490,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={panelRef}
           id="navigation-sidepanel"
           className={cn(
-            "fixed right-0 top-0 z-50 flex h-full flex-col",
-            "glass glass--strong border border-border/40 bg-transparent",
+            "glass-panel fixed right-0 top-0 z-50 flex h-full flex-col",
             "sidepanel-container sidepanel-safe-area sidepanel-border",
             "transition-[width] duration-300 ease-out",
             isAnimating && "sidepanel-transition",
