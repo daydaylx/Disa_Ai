@@ -42,7 +42,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
               <summary className="cursor-pointer text-xs underline underline-offset-4">
                 Details
               </summary>
-              <pre className="border-border-subtle bg-surface-2 text-text-strong mt-1 max-h-48 overflow-auto rounded border p-2 text-xs">
+              <pre className="mt-1 max-h-48 overflow-auto rounded border border-border-subtle bg-surface-2 p-2 text-xs text-text-strong">
                 {details}
               </pre>
             </details>

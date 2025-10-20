@@ -276,7 +276,7 @@ export default function ModelsPage() {
         badge={item.provider}
         showDescriptionOnToggle
         isActive={isSelected}
-        className={cn("min-h-[140px]", isSelected && "ring-brand ring-2")}
+        className={cn("min-h-[140px]", isSelected && "ring-2 ring-brand")}
       />
     );
   };
@@ -285,10 +285,10 @@ export default function ModelsPage() {
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
       <header className="mb-6 space-y-2">
         <span className="brand-chip w-fit">Modelle</span>
-        <h1 className="text-text-0 text-lg font-semibold" data-testid="models-title">
+        <h1 className="text-lg font-semibold text-text-0" data-testid="models-title">
           Modellkatalog
         </h1>
-        <p className="text-text-1 text-sm leading-6">
+        <p className="text-sm leading-6 text-text-1">
           Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich jetzt im{" "}
           <Link to="/roles" className="text-brand underline">
             Rollen-Studio
@@ -303,8 +303,8 @@ export default function ModelsPage() {
         </h2>
         <div className="brand-panel card-depth space-y-2 p-4">
           <span className="brand-chip w-fit">Aktive Rolle</span>
-          <h3 className="text-text-0 font-semibold">Aktive Rolle</h3>
-          <p className="text-text-1 text-sm">
+          <h3 className="font-semibold text-text-0">Aktive Rolle</h3>
+          <p className="text-sm text-text-1">
             {`${activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"} - Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.`}
           </p>
           <Link to="/roles">
@@ -320,12 +320,12 @@ export default function ModelsPage() {
           <span className="brand-chip w-fit">Premium</span>
           <h2
             id="premium-models-heading"
-            className="text-text-0 text-sm font-semibold uppercase tracking-wide"
+            className="text-sm font-semibold uppercase tracking-wide text-text-0"
           >
             🏆 Premium Modelle
           </h2>
         </div>
-        <p className="text-text-1 text-xs">
+        <p className="text-xs text-text-1">
           Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3
         </p>
         <div
@@ -342,12 +342,12 @@ export default function ModelsPage() {
           <span className="brand-chip w-fit">Alltag</span>
           <h2
             id="everyday-models-heading"
-            className="text-text-0 text-sm font-semibold uppercase tracking-wide"
+            className="text-sm font-semibold uppercase tracking-wide text-text-0"
           >
             💼 Alltags Modelle
           </h2>
         </div>
-        <p className="text-text-1 text-xs">
+        <p className="text-xs text-text-1">
           Zuverlässige Modelle für tägliche Aufgaben – gutes Preis-Leistungs-Verhältnis
         </p>
         <div
@@ -364,12 +364,12 @@ export default function ModelsPage() {
           <span className="brand-chip w-fit">Free</span>
           <h2
             id="free-models-heading"
-            className="text-text-0 text-sm font-semibold uppercase tracking-wide"
+            className="text-sm font-semibold uppercase tracking-wide text-text-0"
           >
             🎁 Free Modelle
           </h2>
         </div>
-        <p className="text-text-1 text-xs">
+        <p className="text-xs text-text-1">
           Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität
         </p>
         <div role="group" aria-labelledby="free-models-heading" className="grid grid-cols-1 gap-4">
@@ -382,12 +382,12 @@ export default function ModelsPage() {
           <span className="brand-chip w-fit">Unzensiert</span>
           <h2
             id="uncensored-models-heading"
-            className="text-text-0 text-sm font-semibold uppercase tracking-wide"
+            className="text-sm font-semibold uppercase tracking-wide text-text-0"
           >
             🎭 Unzensiert Modelle
           </h2>
         </div>
-        <p className="text-text-1 text-xs">
+        <p className="text-xs text-text-1">
           Kreatives Schreiben & Rollenspiel – weniger Filter, mehr Freiheit
         </p>
         <div
@@ -404,12 +404,12 @@ export default function ModelsPage() {
           <span className="brand-chip w-fit">Code</span>
           <h2
             id="code-models-heading"
-            className="text-text-0 text-sm font-semibold uppercase tracking-wide"
+            className="text-sm font-semibold uppercase tracking-wide text-text-0"
           >
             💻 Code-Modelle
           </h2>
         </div>
-        <p className="text-text-1 text-xs">
+        <p className="text-xs text-text-1">
           Spezialisierte Modelle für Programmierung und Code-Analyse
         </p>
         <div role="group" aria-labelledby="code-models-heading" className="grid grid-cols-1 gap-4">

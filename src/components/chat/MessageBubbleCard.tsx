@@ -66,7 +66,7 @@ export function MessageBubbleCard({
         <span className="truncate font-semibold">{author}</span>
         {label ? (
           <time
-            className="text-text-1 text-[11px] font-normal opacity-70 transition-opacity duration-200 group-hover:opacity-100"
+            className="text-[11px] font-normal text-text-1 opacity-70 transition-opacity duration-200 group-hover:opacity-100"
             dateTime={iso}
           >
             {label}
@@ -74,7 +74,7 @@ export function MessageBubbleCard({
         ) : null}
       </header>
 
-      <p className="text-text-0 whitespace-pre-wrap text-sm leading-6 transition-colors duration-200">
+      <p className="whitespace-pre-wrap text-sm leading-6 text-text-0 transition-colors duration-200">
         {body}
       </p>
 

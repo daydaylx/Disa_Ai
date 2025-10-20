@@ -46,7 +46,7 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
             )}
           />
         </div>
-        {text && <span className={cn(textSizes[size], "text-text-1 animate-pulse")}>{text}</span>}
+        {text && <span className={cn(textSizes[size], "animate-pulse text-text-1")}>{text}</span>}
       </div>
     );
   }
@@ -55,7 +55,7 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
     return (
       <div className={cn("flex items-center gap-2", className)}>
         <div className={cn(sizeClasses[size], "animate-pulse rounded-full bg-accent1")} />
-        {text && <span className={cn(textSizes[size], "text-text-1 animate-pulse")}>{text}</span>}
+        {text && <span className={cn(textSizes[size], "animate-pulse text-text-1")}>{text}</span>}
       </div>
     );
   }
@@ -65,7 +65,7 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
       <div className={cn("relative overflow-hidden", className)}>
         <div className="from-accent1/20 via-accent1/60 to-accent1/20 animate-shimmer h-2 w-24 rounded-full bg-gradient-to-r" />
         {text && (
-          <span className={cn(textSizes[size], "text-text-1 mt-1 block animate-pulse")}>
+          <span className={cn(textSizes[size], "mt-1 block animate-pulse text-text-1")}>
             {text}
           </span>
         )}
@@ -98,10 +98,10 @@ interface LoadingBubbleProps {
 export function LoadingBubble({ text = "Disa denkt nach...", className }: LoadingBubbleProps) {
   return (
     <div className={cn("animate-fade-in flex justify-start", className)}>
-      <div className="glass glass--subtle border-border/80 mr-12 max-w-[85%] rounded-base border p-4">
+      <div className="glass glass--subtle mr-12 max-w-[85%] rounded-base border border-border/80 p-4">
         <div className="flex items-center space-x-3">
           <Loading variant="dots" size="md" />
-          <span className="text-text-1 animate-pulse text-sm">{text}</span>
+          <span className="animate-pulse text-sm text-text-1">{text}</span>
         </div>
         {/* Subtle shimmer effect */}
         <div className="from-accent1/20 via-accent1/40 to-accent1/20 animate-shimmer mt-2 h-1 rounded-full bg-gradient-to-r" />
