@@ -404,16 +404,16 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={menuButtonRef}
           onClick={togglePanel}
           className={cn(
-            "fixed z-50 flex h-10 w-10 items-center justify-center rounded-lg",
-            "bg-surface-1/60 border border-border/30 backdrop-blur-sm transition-all duration-200",
-            "hover:bg-surface-1/80 text-text-muted hover:border-brand/40 hover:text-brand",
-            "touch-target haptic-feedback sidepanel-focus-visible",
-            "opacity-70 hover:opacity-100",
+            "fixed z-50 flex h-12 w-12 items-center justify-center rounded-lg",
+            "bg-surface-1/85 border border-border-strong/50 backdrop-blur-md transition-all duration-200",
+            "hover:bg-surface-1/95 text-text-primary hover:border-brand/60 hover:text-brand",
+            "touch-target haptic-feedback sidepanel-focus-visible shadow-lg",
+            "opacity-90 hover:opacity-100",
             className,
           )}
           style={{
-            top: "calc(env(safe-area-inset-top, 0px) + 1rem)",
-            right: "calc(env(safe-area-inset-right, 0px) + 1rem)",
+            top: "calc(env(safe-area-inset-top, 0px) + 0.75rem)",
+            right: "calc(env(safe-area-inset-right, 0px) + 0.75rem)",
           }}
           aria-label={isOpen ? "Navigation schließen" : "Navigation öffnen"}
           aria-expanded={isOpen}

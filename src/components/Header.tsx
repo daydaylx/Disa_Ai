@@ -23,8 +23,8 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-10 mb-4 w-full px-4 py-6">
       <Glass
-        variant="subtle"
-        className="mx-auto max-w-[720px] border-b border-[var(--glass-stroke)] p-3"
+        variant="standard"
+        className="mx-auto max-w-[720px] border-b border-[var(--glass-stroke-strong)] p-3 backdrop-blur-md"
       >
         <div className="flex flex-col items-center">
           {/* Status und Modell Info */}

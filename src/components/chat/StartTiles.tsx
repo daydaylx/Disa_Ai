@@ -42,7 +42,7 @@ interface StartTilesProps {
 
 export function StartTiles({ onTileClick }: StartTilesProps) {
   return (
-    <div className="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 p-3 xs:grid-cols-2 sm:grid-cols-3">
       {startTiles.map((tile) => {
         const backgroundIcon = isValidElement(tile.icon)
           ? cloneElement(tile.icon as ReactElement<{ className?: string }>, {
@@ -59,8 +59,9 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
             type="button"
             onClick={() => onTileClick(tile.action)}
             className={cn(
-              "card-depth border-border bg-surface-1 group relative flex h-full flex-col gap-2.5 overflow-hidden rounded-base border p-3 text-left transition-all duration-150",
-              "hover:border-brand hover:bg-surface-2 focus-visible:ring-brand-weak focus-visible:ring-offset-surface-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+              "card-depth group relative flex h-full min-h-[var(--touch-comfortable)] flex-col gap-2.5 overflow-hidden rounded-base border border-border bg-surface-1 p-3 text-left transition-all duration-150",
+              "hover:border-brand hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+              "touch-target active:scale-95 active:bg-surface-2",
             )}
           >
             {backgroundIcon && (
@@ -68,14 +69,14 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
                 {backgroundIcon}
               </span>
             )}
-            <span className="bg-brand/15 text-brand flex h-8 w-8 items-center justify-center rounded-base">
+            <span className="flex h-8 w-8 items-center justify-center rounded-base bg-brand/15 text-brand">
               {tile.icon}
             </span>
             <div className="space-y-0.5">
-              <div className="text-text-0 text-xs font-semibold sm:text-sm">{tile.title}</div>
-              <p className="text-text-1 text-xs leading-snug">{tile.subtitle}</p>
+              <div className="text-xs font-semibold text-text-0 sm:text-sm">{tile.title}</div>
+              <p className="text-xs leading-snug text-text-1">{tile.subtitle}</p>
             </div>
-            <div className="text-text-1 mt-auto flex items-center gap-1.5 text-xs">
+            <div className="mt-auto flex items-center gap-1.5 text-xs text-text-1">
               <Badge variant="outline" className="px-1.5 py-0.5 text-xs">
                 Start
               </Badge>

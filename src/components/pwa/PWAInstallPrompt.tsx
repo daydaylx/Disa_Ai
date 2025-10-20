@@ -51,25 +51,30 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
 
   return (
     <div
-      className={`fixed bottom-4 left-4 right-4 z-50 md:left-auto md:max-w-sm ${className || ""}`}
+      className={`fixed bottom-4 left-4 right-4 z-[9999] md:left-auto md:right-4 md:max-w-sm lg:max-w-md ${className || ""}`}
     >
-      <div className="border-border bg-surface-1 rounded-lg border p-6 shadow-level">
+      <div className="glass glass--strong max-h-[40vh] overflow-y-auto rounded-lg p-4 shadow-xl backdrop-blur-lg sm:max-h-none sm:p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">
-              <Smartphone className="text-text-0 h-5 w-5" />
-              <h3 className="text-text-0 font-semibold">Disa AI installieren</h3>
+              <Smartphone className="h-5 w-5 text-text-0" />
+              <h3 className="font-semibold text-text-0">Disa AI installieren</h3>
             </div>
-            <p className="text-text-1 mb-4 text-sm">
+            <p className="mb-3 text-xs leading-tight text-text-1 sm:mb-4 sm:text-sm">
               Installiere Disa AI als App für schnelleren Zugriff und bessere Performance.
             </p>
 
-            <div className="flex gap-2">
-              <Button onClick={handleInstall} size="sm" className="flex-1">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button onClick={handleInstall} size="sm" className="order-1 flex-1">
                 <Download className="mr-2 h-4 w-4" />
                 Jetzt installieren
               </Button>
-              <Button onClick={handleDismiss} size="sm" variant="outline">
+              <Button
+                onClick={handleDismiss}
+                size="sm"
+                variant="outline"
+                className="order-2 sm:order-2"
+              >
                 Später
               </Button>
             </div>

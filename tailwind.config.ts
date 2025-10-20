@@ -6,6 +6,14 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: ["class"],
   theme: {
+    screens: {
+      xs: "480px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
     extend: {
       colors: {
         canvas: "var(--bg0)",

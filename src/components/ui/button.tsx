@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex min-h-[48px] items-center justify-center gap-2 whitespace-nowrap rounded-base border text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 disabled:pointer-events-none disabled:opacity-60 relative overflow-hidden group touch-target no-select",
+  "inline-flex min-h-[var(--touch-recommended)] items-center justify-center gap-2 whitespace-nowrap rounded-base border text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 disabled:pointer-events-none disabled:opacity-60 relative overflow-hidden group touch-target no-select",
   {
     variants: {
       variant: {
@@ -24,10 +24,10 @@ const buttonVariants = cva(
           "glass glass--strong border-transparent bg-danger-bg/20 text-danger hover:bg-danger-bg/30 hover:-translate-y-[1px] hover:shadow-level2 active:translate-y-0",
       },
       size: {
-        default: "px-4 py-2",
-        sm: "h-[42px] px-3 text-sm py-1.5",
-        lg: "h-12 px-5 text-base py-3",
-        icon: "h-[44px] w-[44px] p-0",
+        default: "px-4 py-2 min-w-[var(--touch-recommended)]",
+        sm: "h-[var(--touch-minimum)] px-3 text-sm py-1.5 min-w-[var(--touch-minimum)]",
+        lg: "h-[var(--touch-comfortable)] px-5 text-base py-3 min-w-[var(--touch-comfortable)]",
+        icon: "h-[var(--touch-recommended)] w-[var(--touch-recommended)] p-0",
       },
     },
     defaultVariants: {
