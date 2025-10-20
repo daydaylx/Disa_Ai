@@ -1,4 +1,4 @@
-import { History, Menu, PanelRightClose, PanelRightOpen, X } from "lucide-react";
+import { ChevronLeft, History, Menu, PanelRightClose, PanelRightOpen, X } from "lucide-react";
 import type { ReactElement, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -6,7 +6,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useSidepanel } from "../../app/state/SidepanelContext";
 import type { Conversation } from "../../lib/conversation-manager";
 import { getAllConversations } from "../../lib/conversation-manager";
-import { TouchGestureHandler } from "../../lib/touch/gestures";
 import { cn } from "../../lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
@@ -26,10 +25,7 @@ type PanelMode = "expanded" | "compact";
 
 const EXPANDED_WIDTH = 248;
 const COMPACT_WIDTH = 88;
-const SWIPE_THRESHOLD = 40; // ~40px horizontal movement threshold
-const VERTICAL_TOLERANCE = 30; // ~30px vertical tolerance
-const SWIPE_VELOCITY_THRESHOLD = 0.5;
-const EDGE_SWIPE_WIDTH = 28; // Slightly larger edge to improve discoverability
+// Swipe entfernt: statische Bedien-Buttons statt Gesten
 const PANEL_MODE_STORAGE_KEY = "disa:ui:sidepanelMode";
 
 export function NavigationSidepanel({ items, children, className }: NavigationSidepanelProps) {
@@ -58,9 +54,6 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
 
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-  const edgeRef = useRef<HTMLDivElement>(null);
-  const overlayGestureRef = useRef<TouchGestureHandler | null>(null);
-  const edgeGestureRef = useRef<TouchGestureHandler | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const focusTimeoutRef = useRef<number | null>(null);
@@ -281,153 +274,12 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     }
   }, [isOpen]);
 
-  // Touch gesture setup (overlay + edge swipe area)
-  useEffect(() => {
-    const overlayEl = overlayRef.current;
-    const edgeEl = edgeRef.current;
-
-    const setupGestureHandler = (element: HTMLElement | null) => {
-      if (!element) return null;
-      const handler = new TouchGestureHandler(element, {
-        swipeThreshold: SWIPE_THRESHOLD, // Use 40px threshold
-        preventDefaultSwipe: false,
-      });
-      handler.onSwipeGesture((swipeEvent) => {
-        if (swipeEvent.direction === "right" && isOpen) {
-          closePanel();
-        } else if (swipeEvent.direction === "left" && !isOpen) {
-          openPanel();
-        }
-      });
-      return handler;
-    };
-
-    const overlayHandler = setupGestureHandler(overlayEl);
-    const edgeHandler = setupGestureHandler(edgeEl);
-    overlayGestureRef.current = overlayHandler;
-    edgeGestureRef.current = edgeHandler;
-
-    const setupDragHandlers = (element: HTMLElement | null, allowEdgeOpen = false) => {
-      if (!element) return () => {};
-
-      let isDragging = false;
-      let startX = 0;
-      let startY = 0;
-      let currentX = 0;
-      let startTime = 0;
-
-      const handleTouchStart = (event: TouchEvent) => {
-        if (event.touches.length !== 1) return;
-
-        startX = event.touches[0]!.clientX;
-        startY = event.touches[0]!.clientY;
-        currentX = startX;
-        startTime = Date.now();
-        isDragging = false;
-
-        const viewportWidth =
-          typeof window !== "undefined" && "visualViewport" in window
-            ? (window.visualViewport?.width ?? window.innerWidth)
-            : window.innerWidth;
-
-        if (!isOpen && allowEdgeOpen) {
-          const threshold = viewportWidth - EDGE_SWIPE_WIDTH;
-          if (startX < threshold) return;
-        }
-
-        isDragging = true;
-      };
-
-      const handleTouchMove = (event: TouchEvent) => {
-        if (!isDragging || event.touches.length !== 1) return;
-
-        currentX = event.touches[0]!.clientX;
-        const currentY = event.touches[0]!.clientY;
-        const deltaX = currentX - startX;
-        const deltaY = currentY - startY;
-
-        // Check vertical tolerance - if moved too much vertically, cancel gesture
-        if (Math.abs(deltaY) > VERTICAL_TOLERANCE && Math.abs(deltaY) > Math.abs(deltaX)) {
-          isDragging = false;
-          setDragOffset(0);
-          return;
-        }
-
-        const offset = deltaX;
-        setDragOffset(offset);
-      };
-
-      const handleTouchEnd = () => {
-        if (!isDragging) return;
-
-        const deltaX = currentX - startX;
-        const duration = Date.now() - startTime;
-        const velocity = Math.abs(deltaX) / duration;
-
-        const passed = Math.abs(deltaX) > SWIPE_THRESHOLD || velocity > SWIPE_VELOCITY_THRESHOLD;
-
-        // When panel is open, user must drag to the right (positive delta) to close
-        if (isOpen && deltaX > SWIPE_THRESHOLD && passed) {
-          closePanel();
-          setDragOffset(0);
-        } else if (!isOpen && deltaX < -SWIPE_THRESHOLD && passed) {
-          openPanel();
-          setDragOffset(0);
-        } else {
-          setDragOffset(0);
-        }
-
-        isDragging = false;
-      };
-
-      element.addEventListener("touchstart", handleTouchStart, { passive: true });
-      element.addEventListener("touchmove", handleTouchMove, { passive: true });
-      element.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-      return () => {
-        element.removeEventListener("touchstart", handleTouchStart);
-        element.removeEventListener("touchmove", handleTouchMove);
-        element.removeEventListener("touchend", handleTouchEnd);
-      };
-    };
-
-    const cleanupOverlay = setupDragHandlers(overlayEl, false);
-    const cleanupEdge = setupDragHandlers(edgeEl, true);
-
-    return () => {
-      overlayGestureRef.current?.destroy();
-      overlayGestureRef.current = null;
-      edgeGestureRef.current?.destroy();
-      edgeGestureRef.current = null;
-      cleanupOverlay();
-      cleanupEdge();
-    };
-  }, [isOpen, openPanel, closePanel, panelWidth]);
+  // Swipe-Gesten vollständig entfernt
 
   // Calculate transform based on state
-  const getTransform = () => {
-    if (isAnimating) {
-      return isOpen ? "translateX(0)" : `translateX(${panelWidth}px)`;
-    }
+  const getTransform = () => (isOpen ? "translateX(0)" : `translateX(${panelWidth}px)`);
 
-    if (isOpen) {
-      return `translateX(${dragOffset}px)`;
-    } else {
-      return `translateX(${panelWidth + Math.min(0, dragOffset)}px)`;
-    }
-  };
-
-  const getOverlayOpacity = () => {
-    if (isAnimating) {
-      return isOpen ? 1 : 0;
-    }
-
-    if (isOpen) {
-      return Math.max(0, 1 + dragOffset / panelWidth);
-    } else {
-      return Math.max(0, Math.min(1, dragOffset / panelWidth));
-    }
-  };
+  const getOverlayOpacity = () => (isOpen ? 1 : 0);
 
   return (
     <TooltipProvider>
@@ -456,16 +308,21 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           <Menu className="h-4 w-4" aria-hidden="true" />
         </button>
 
-        {/* Edge swipe target for opening */}
-        <div
-          ref={edgeRef}
-          className={cn(
-            "sidepanel-touch-area",
-            isOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-0",
-          )}
-          aria-hidden="true"
-          style={{ position: "fixed", top: 0, right: 0, width: EDGE_SWIPE_WIDTH, height: "100%" }}
-        />
+        {/* Dezenter Handle-Button am rechten Rand (nur wenn Panel geschlossen ist) */}
+        {!isOpen && (
+          <button
+            type="button"
+            onClick={openPanel}
+            className={cn(
+              "glass-chrome fixed right-1 top-1/2 z-40 hidden -translate-y-1/2 items-center justify-center rounded-full",
+              "text-text-muted opacity-70 transition-all duration-200 hover:text-text-strong hover:opacity-100",
+              "h-24 w-8 md:hidden", // mobil sichtbar, Desktop nutzen Top-Right-Button
+            )}
+            aria-label="Navigation öffnen"
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          </button>
+        )}
 
         {/* Overlay */}
         <div
