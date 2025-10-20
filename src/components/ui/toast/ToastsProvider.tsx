@@ -84,7 +84,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               key={t.id}
               role="status"
               className={cn(
-                "border-border-strong bg-surface-1 text-text-strong pointer-events-auto flex w-[min(96vw,640px)] items-start gap-3 rounded-lg border p-3 shadow-level",
+                "pointer-events-auto flex w-[min(96vw,640px)] items-start gap-3 rounded-lg border border-border-strong bg-surface-1 p-3 text-text-strong shadow-level",
                 "tap-target",
               )}
             >
@@ -92,12 +92,12 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               <div className="flex-1">
                 {t.title ? <div className="font-semibold leading-snug">{t.title}</div> : null}
                 {t.message ? (
-                  <div className="text-text-muted text-sm leading-snug">{t.message}</div>
+                  <div className="text-sm leading-snug text-text-muted">{t.message}</div>
                 ) : null}
                 {t.action ? (
                   <button
                     type="button"
-                    className="tap-target text-brand hover:bg-brand/10 focus-visible:ring-brand-weak focus-visible:ring-offset-surface-1 mt-2 inline-flex items-center justify-center rounded-base border border-transparent px-3 py-1 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="tap-target mt-2 inline-flex items-center justify-center rounded-base border border-transparent px-3 py-1 text-sm font-medium text-brand hover:bg-brand/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
                     onClick={t.action.onClick}
                   >
                     {t.action.label}
@@ -107,7 +107,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               <button
                 type="button"
                 aria-label="Schließen"
-                className="tap-target text-text-muted hover:bg-surface-2 hover:text-text-strong focus-visible:ring-brand-weak focus-visible:ring-offset-surface-1 ml-2 inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                className="tap-target ml-2 inline-flex h-8 w-8 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-surface-2 hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
                 onClick={() => dismiss(t.id)}
               >
                 <Icon name="close" />

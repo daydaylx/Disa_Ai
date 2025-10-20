@@ -9,7 +9,7 @@ interface SkeletonProps {
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className, children }) => {
   return (
-    <div className={cn("bg-surface-2 animate-pulse rounded-md", className)} aria-hidden="true">
+    <div className={cn("animate-pulse rounded-md bg-surface-2", className)} aria-hidden="true">
       {children}
     </div>
   );
@@ -36,7 +36,7 @@ export const MessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false
 export const HeaderSkeleton: React.FC = () => {
   return (
     <div
-      className="border-border flex items-center justify-between border-b p-4"
+      className="flex items-center justify-between border-b border-border p-4"
       aria-hidden="true"
     >
       <div className="flex items-center space-x-3">
@@ -87,9 +87,9 @@ export const ComposerSkeleton: React.FC = () => {
 export const LoadingDots: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div className={cn("flex items-center space-x-1.5", className)} aria-label="Lädt...">
-      <div className="bg-text-1 h-2 w-2 animate-bounce rounded-full [animation-delay:-0.4s]" />
-      <div className="bg-text-1 h-2 w-2 animate-bounce rounded-full [animation-delay:-0.2s]" />
-      <div className="bg-text-1 h-2 w-2 animate-bounce rounded-full" />
+      <div className="h-2 w-2 animate-bounce rounded-full bg-text-1 [animation-delay:-0.4s]" />
+      <div className="h-2 w-2 animate-bounce rounded-full bg-text-1 [animation-delay:-0.2s]" />
+      <div className="h-2 w-2 animate-bounce rounded-full bg-text-1" />
     </div>
   );
 };
@@ -101,7 +101,7 @@ export const TypingIndicator: React.FC<{ className?: string }> = ({ className })
       aria-live="polite"
       aria-label="KI tippt..."
     >
-      <div className="text-text-1 flex items-center space-x-2">
+      <div className="flex items-center space-x-2 text-text-1">
         <LoadingDots />
         <span className="text-sm">KI tippt...</span>
       </div>
@@ -138,7 +138,7 @@ export const GlassSpinner: React.FC<{ size?: "sm" | "md" | "lg"; className?: str
   return (
     <div
       className={cn(
-        "border-border border-t-brand animate-spin rounded-full border-2",
+        "animate-spin rounded-full border-2 border-border border-t-brand",
         sizeClasses[size],
         className,
       )}

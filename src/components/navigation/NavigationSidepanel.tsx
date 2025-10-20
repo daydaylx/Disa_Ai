@@ -26,8 +26,10 @@ type PanelMode = "expanded" | "compact";
 
 const EXPANDED_WIDTH = 280;
 const COMPACT_WIDTH = 96;
-const SWIPE_THRESHOLD = 50;
+const SWIPE_THRESHOLD = 40; // ~40px horizontal movement threshold
+const VERTICAL_TOLERANCE = 30; // ~30px vertical tolerance
 const SWIPE_VELOCITY_THRESHOLD = 0.5;
+const EDGE_SWIPE_WIDTH = 20; // 20px edge area (within 16-24px requirement)
 const PANEL_MODE_STORAGE_KEY = "disa:ui:sidepanelMode";
 
 export function NavigationSidepanel({ items, children, className }: NavigationSidepanelProps) {
@@ -271,7 +273,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     const setupGestureHandler = (element: HTMLElement | null) => {
       if (!element) return null;
       const handler = new TouchGestureHandler(element, {
-        swipeThreshold: SWIPE_THRESHOLD,
+        swipeThreshold: SWIPE_THRESHOLD, // Use 40px threshold
         preventDefaultSwipe: false,
       });
       handler.onSwipeGesture((swipeEvent) => {
@@ -294,6 +296,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
 
       let isDragging = false;
       let startX = 0;
+      let startY = 0;
       let currentX = 0;
       let startTime = 0;
 
@@ -301,12 +304,14 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         if (event.touches.length !== 1) return;
 
         startX = event.touches[0]!.clientX;
+        startY = event.touches[0]!.clientY;
         currentX = startX;
         startTime = Date.now();
         isDragging = false;
 
         const screenWidth = window.innerWidth;
-        if (!isOpen && !allowEdgeOpen && startX < screenWidth - 50) return;
+        // For edge swipe area, only start if touch is in the rightmost edge
+        if (!isOpen && allowEdgeOpen && startX < screenWidth - EDGE_SWIPE_WIDTH) return;
 
         isDragging = true;
       };
@@ -315,7 +320,16 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
         if (!isDragging || event.touches.length !== 1) return;
 
         currentX = event.touches[0]!.clientX;
+        const currentY = event.touches[0]!.clientY;
         const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+
+        // Check vertical tolerance - if moved too much vertically, cancel gesture
+        if (Math.abs(deltaY) > VERTICAL_TOLERANCE && Math.abs(deltaY) > Math.abs(deltaX)) {
+          isDragging = false;
+          setDragOffset(0);
+          return;
+        }
 
         if (isOpen) {
           const offset = Math.min(0, deltaX);

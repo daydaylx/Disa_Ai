@@ -66,7 +66,7 @@ export function BuildInfo({ className = "", showFullInfo = false }: BuildInfoPro
 
   if (showFullInfo) {
     return (
-      <div className={`text-text-muted space-y-1 text-xs ${className}`}>
+      <div className={`space-y-1 text-xs text-text-muted ${className}`}>
         <div className="flex items-center gap-2">
           <span className="font-mono">{formattedBuildId}</span>
           <span>•</span>
@@ -82,7 +82,7 @@ export function BuildInfo({ className = "", showFullInfo = false }: BuildInfoPro
   }
 
   return (
-    <div className={`text-text-subtle font-mono text-xs ${className}`}>
+    <div className={`font-mono text-xs text-text-subtle ${className}`}>
       {formattedBuildId} • {formattedSha}
     </div>
   );

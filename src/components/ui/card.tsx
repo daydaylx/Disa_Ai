@@ -28,7 +28,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     <h3
       ref={ref}
       className={cn(
-        "text-text-0 text-token-h2 font-semibold leading-tight tracking-tight",
+        "text-token-h2 font-semibold leading-tight tracking-tight text-text-0",
         className,
       )}
       {...props}
@@ -43,7 +43,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-text-1 text-token-body leading-relaxed", className)}
+    className={cn("text-token-body leading-relaxed text-text-1", className)}
     {...props}
   />
 ));
@@ -61,7 +61,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
     <div
       ref={ref}
       className={cn(
-        "border-border flex items-center justify-between gap-4 border-t px-6 pb-6 pt-4",
+        "flex items-center justify-between gap-4 border-t border-border px-6 pb-6 pt-4",
         className,
       )}
       {...props}
