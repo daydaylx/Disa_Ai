@@ -413,16 +413,17 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
   return (
     <TooltipProvider>
       <>
-        {/* Menu Button */}
+        {/* Menu Button - Hidden on mobile, only edge swipe available */}
         <button
           ref={menuButtonRef}
           onClick={togglePanel}
           className={cn(
             "fixed z-50 flex h-12 w-12 items-center justify-center rounded-lg",
-            "bg-surface-1/85 border border-border-strong/50 backdrop-blur-md transition-all duration-200",
+            "bg-surface-1/85 border border-border-strong/50 transition-all duration-200",
             "hover:bg-surface-1/95 text-text-primary hover:border-brand/60 hover:text-brand",
             "touch-target haptic-feedback sidepanel-focus-visible shadow-lg",
             "opacity-90 hover:opacity-100",
+            "hidden md:flex", // Hide on mobile (< 768px), show on desktop
             className,
           )}
           style={{
@@ -467,9 +468,9 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           id="navigation-sidepanel"
           className={cn(
             "fixed right-0 top-0 z-50 flex h-full flex-col",
-            "bg-surface-1/95 border-l border-border/40 backdrop-blur-md",
+            "bg-surface-1/85 border-l border-border/30",
             "sidepanel-container sidepanel-safe-area sidepanel-border",
-            "shadow-2xl transition-[width] duration-300 ease-out",
+            "shadow-lg transition-[width] duration-300 ease-out",
             isAnimating && "sidepanel-transition",
             isCompact && "sidepanel-compact",
           )}
