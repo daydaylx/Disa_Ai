@@ -351,7 +351,7 @@ export default function SettingsPage() {
                 })
                 .catch(() => window.location.reload());
             }}
-            className="bg-accent text-surface-0 hover:bg-accent/90 min-h-touch-rec rounded-md px-4 py-2 text-sm font-medium transition-colors"
+            className="bg-accent hover:bg-accent/90 min-h-touch-rec rounded-md px-4 py-2 text-sm font-medium text-surface-0 transition-colors"
           >
             Seite neu laden
           </button>
@@ -364,8 +364,8 @@ export default function SettingsPage() {
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-2">
         <span className="brand-chip w-fit">Dashboard</span>
-        <h1 className="text-text-strong text-token-h1 font-semibold">Einstellungen</h1>
-        <p className="text-text-muted text-token-body leading-relaxed">
+        <h1 className="text-token-h1 font-semibold text-text-strong">Einstellungen</h1>
+        <p className="text-token-body leading-relaxed text-text-muted">
           API-Schlüssel verwalten und die App auf deinem Gerät installieren.
         </p>
       </header>
@@ -374,11 +374,11 @@ export default function SettingsPage() {
       <StaticGlassCard padding="md" className="brand-panel border-none">
         <div className="flex flex-col space-y-1 pb-4">
           <span className="brand-chip w-fit">Zugang</span>
-          <h2 className="text-text-strong flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight">
+          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-text-strong">
             <Key className="h-5 w-5" />
             OpenRouter API-Schlüssel
           </h2>
-          <p className="text-text-muted text-token-body leading-relaxed">
+          <p className="text-token-body leading-relaxed text-text-muted">
             Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
           </p>
         </div>
@@ -394,13 +394,13 @@ export default function SettingsPage() {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 placeholder="sk-or-..."
-                className="surface-card text-text-strong placeholder:text-text-subtle pr-10 font-mono"
+                className="surface-card pr-10 font-mono text-text-strong placeholder:text-text-subtle"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                className="surface-card text-text-muted hover:text-text-strong focus-visible:ring-accent absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full transition focus-visible:outline-none focus-visible:ring-2"
+                className="surface-card focus-visible:ring-accent absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-text-muted transition hover:text-text-strong focus-visible:outline-none focus-visible:ring-2"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -417,7 +417,7 @@ export default function SettingsPage() {
                     : "bg-gray-500"
               }`}
             />
-            <span className="text-text-muted text-sm">
+            <span className="text-sm text-text-muted">
               {keyStatus === "present"
                 ? "Schlüssel vorhanden"
                 : keyStatus === "invalid"
@@ -429,7 +429,7 @@ export default function SettingsPage() {
           <Button
             type="button"
             onClick={handleSaveKey}
-            className="surface-card text-text-strong min-h-touch-rec w-full border-0"
+            className="surface-card min-h-touch-rec w-full border-0 text-text-strong"
           >
             Schlüssel speichern
           </Button>
@@ -565,7 +565,7 @@ export default function SettingsPage() {
               {import.meta.env.DEV && (
                 <div className="space-y-2 border-t border-white/10 pt-4">
                   <Label className="text-text-muted">Debug-Statistiken</Label>
-                  <div className="text-text-subtle space-y-1 text-xs">
+                  <div className="space-y-1 text-xs text-text-subtle">
                     <MemoryStats getMemoryStats={getMemoryStats} />
                   </div>
                 </div>
