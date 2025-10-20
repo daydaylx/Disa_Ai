@@ -25,12 +25,16 @@ type PanelMode = "expanded" | "compact";
 
 const EXPANDED_WIDTH = 248;
 const COMPACT_WIDTH = 88;
-// Swipe entfernt: statische Bedien-Buttons statt Gesten
+// Unterstützt Swipe-Gesten + dezente Bedienelemente
 const PANEL_MODE_STORAGE_KEY = "disa:ui:sidepanelMode";
+const VERTICAL_CANCEL_DISTANCE = 28;
+const SWIPE_DISTANCE_THRESHOLD = 56;
+const SWIPE_VELOCITY_THRESHOLD = 0.35;
 
 export function NavigationSidepanel({ items, children, className }: NavigationSidepanelProps) {
   const { isOpen, isAnimating, openPanel, closePanel, togglePanel } = useSidepanel();
   const [dragOffset, setDragOffset] = useState(0);
+  const [dragType, setDragType] = useState<"open" | "close" | null>(null);
   const [panelMode, setPanelMode] = useState<PanelMode>(() => {
     if (typeof window === "undefined") return "expanded";
     try {
@@ -54,9 +58,18 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
 
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const edgeRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const focusTimeoutRef = useRef<number | null>(null);
+  const dragStateRef = useRef({
+    active: false,
+    type: null as "open" | "close" | null,
+    startX: 0,
+    startY: 0,
+    pointerId: -1,
+    startTime: 0,
+  });
   const navigate = useNavigate();
 
   const chatItem = useMemo(() => items.find((item) => item.label === "Chat"), [items]);
@@ -262,6 +275,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     }
     // Reset drag offset when switching modes
     setDragOffset(0);
+    setDragType(null);
   }, [panelMode]);
 
   // Refresh history previews once panel opens
@@ -274,12 +288,157 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
     }
   }, [isOpen]);
 
-  // Swipe-Gesten vollständig entfernt
+  useEffect(() => {
+    setDragOffset(0);
+    setDragType(null);
+  }, [isOpen]);
+
+  useEffect(() => {
+    const panelEl = panelRef.current;
+    const overlayEl = overlayRef.current;
+    const edgeEl = edgeRef.current;
+
+    if (!panelEl || !overlayEl) return;
+
+    const activeState = dragStateRef.current;
+
+    const shouldIgnoreTarget = (event: PointerEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return false;
+      return Boolean(target.closest("button, a, input, textarea, select, label"));
+    };
+
+    const beginDrag = (event: PointerEvent, type: "open" | "close") => {
+      if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+      if (type === "open" && isOpen) return;
+      if (type === "close" && !isOpen) return;
+      if (shouldIgnoreTarget(event)) return;
+
+      activeState.active = true;
+      activeState.type = type;
+      activeState.startX = event.clientX;
+      activeState.startY = event.clientY;
+      activeState.pointerId = event.pointerId;
+      activeState.startTime = performance.now();
+      setDragType(type);
+      setDragOffset(0);
+    };
+
+    const endDrag = (commit: boolean) => {
+      if (!activeState.active || !activeState.type) return;
+      const intent = activeState.type;
+      activeState.active = false;
+      activeState.type = null;
+      activeState.pointerId = -1;
+      activeState.startTime = 0;
+      setDragOffset(0);
+      setDragType(null);
+
+      if (!commit) return;
+
+      if (intent === "close") {
+        closePanel();
+      } else if (intent === "open") {
+        openPanel();
+      }
+    };
+
+    const handlePointerDownPanel = (event: PointerEvent) => beginDrag(event, "close");
+    const handlePointerDownOverlay = (event: PointerEvent) => beginDrag(event, "close");
+    const handlePointerDownEdge = (event: PointerEvent) => beginDrag(event, "open");
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!activeState.active || activeState.pointerId !== event.pointerId || !activeState.type) {
+        return;
+      }
+
+      const deltaX = event.clientX - activeState.startX;
+      const deltaY = event.clientY - activeState.startY;
+
+      if (Math.abs(deltaY) > VERTICAL_CANCEL_DISTANCE && Math.abs(deltaY) > Math.abs(deltaX)) {
+        activeState.active = false;
+        activeState.type = null;
+        setDragOffset(0);
+        setDragType(null);
+        return;
+      }
+
+      if (activeState.type === "close") {
+        const offset = Math.max(0, deltaX);
+        setDragOffset((prev) => (prev === offset ? prev : Math.min(offset, panelWidth)));
+      } else if (activeState.type === "open") {
+        const offset = Math.min(0, deltaX);
+        setDragOffset((prev) => (prev === offset ? prev : Math.max(offset, -panelWidth)));
+      }
+    };
+
+    const handlePointerEnd = (event: PointerEvent) => {
+      if (!activeState.active || activeState.pointerId !== event.pointerId || !activeState.type) {
+        return;
+      }
+
+      const deltaX = event.clientX - activeState.startX;
+      const durationMs = Math.max(1, performance.now() - activeState.startTime);
+      const velocity = Math.abs(deltaX) / durationMs;
+
+      if (activeState.type === "close") {
+        const distancePassed = Math.max(0, deltaX);
+        const shouldCommit =
+          distancePassed >= Math.min(panelWidth * 0.4, SWIPE_DISTANCE_THRESHOLD) ||
+          velocity > SWIPE_VELOCITY_THRESHOLD;
+        endDrag(shouldCommit);
+      } else if (activeState.type === "open") {
+        const distancePassed = Math.min(0, deltaX);
+        const shouldCommit =
+          Math.abs(distancePassed) >= Math.min(panelWidth * 0.45, SWIPE_DISTANCE_THRESHOLD) ||
+          velocity > SWIPE_VELOCITY_THRESHOLD;
+        endDrag(shouldCommit);
+      } else {
+        endDrag(false);
+      }
+    };
+
+    panelEl.addEventListener("pointerdown", handlePointerDownPanel, { passive: true });
+    overlayEl.addEventListener("pointerdown", handlePointerDownOverlay, { passive: true });
+    edgeEl?.addEventListener("pointerdown", handlePointerDownEdge, { passive: true });
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("pointerup", handlePointerEnd, { passive: true });
+    window.addEventListener("pointercancel", handlePointerEnd, { passive: true });
+
+    return () => {
+      panelEl.removeEventListener("pointerdown", handlePointerDownPanel);
+      overlayEl.removeEventListener("pointerdown", handlePointerDownOverlay);
+      edgeEl?.removeEventListener("pointerdown", handlePointerDownEdge);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerEnd);
+      window.removeEventListener("pointercancel", handlePointerEnd);
+    };
+  }, [isOpen, panelWidth, openPanel, closePanel]);
 
   // Calculate transform based on state
-  const getTransform = () => (isOpen ? "translateX(0)" : `translateX(${panelWidth}px)`);
+  const getTransform = () => {
+    if (dragType === "close") {
+      const offset = Math.min(panelWidth, Math.max(0, dragOffset));
+      return `translateX(${offset}px)`;
+    }
+    if (dragType === "open") {
+      const offset = Math.max(0, panelWidth + Math.min(0, dragOffset));
+      return `translateX(${offset}px)`;
+    }
+    return isOpen ? "translateX(0)" : `translateX(${panelWidth}px)`;
+  };
 
-  const getOverlayOpacity = () => (isOpen ? 1 : 0);
+  const getOverlayOpacity = () => {
+    if (dragType === "close") {
+      const progress = Math.min(1, Math.max(0, dragOffset / panelWidth));
+      return Math.max(0, 1 - progress);
+    }
+    if (dragType === "open") {
+      const progress = Math.min(1, Math.abs(dragOffset) / panelWidth);
+      return progress;
+    }
+    return isOpen ? 1 : 0;
+  };
 
   return (
     <TooltipProvider>
@@ -316,7 +475,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
             className={cn(
               "glass-chrome fixed right-1 top-1/2 z-40 hidden -translate-y-1/2 items-center justify-center rounded-full",
               "text-text-muted opacity-70 transition-all duration-200 hover:text-text-strong hover:opacity-100",
-              "h-24 w-8 md:hidden", // mobil sichtbar, Desktop nutzen Top-Right-Button
+              "h-24 w-8 md:hidden",
             )}
             aria-label="Navigation öffnen"
           >
@@ -324,12 +483,21 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           </button>
         )}
 
+        <div
+          ref={edgeRef}
+          className={cn(
+            "sidepanel-touch-area fixed inset-y-0 right-0 z-30 touch-pan-y md:hidden",
+            isOpen ? "hidden" : "block",
+          )}
+          aria-hidden="true"
+        />
+
         {/* Overlay */}
         <div
           ref={overlayRef}
           className={cn(
-            "sidepanel-overlay-transition sidepanel-no-select fixed inset-0 z-40",
-            isOpen || dragOffset > 0 ? "pointer-events-auto" : "pointer-events-none",
+            "sidepanel-overlay-transition sidepanel-no-select fixed inset-0 z-40 touch-none",
+            isOpen || dragType === "close" ? "pointer-events-auto" : "pointer-events-none",
           )}
           style={{
             opacity: getOverlayOpacity(),
@@ -348,7 +516,7 @@ export function NavigationSidepanel({ items, children, className }: NavigationSi
           ref={panelRef}
           id="navigation-sidepanel"
           className={cn(
-            "glass-panel fixed right-0 top-0 z-50 flex h-full flex-col",
+            "glass-panel fixed right-0 top-0 z-50 flex h-full touch-pan-y flex-col",
             "sidepanel-container sidepanel-safe-area sidepanel-border",
             "transition-[width] duration-300 ease-out",
             isAnimating && "sidepanel-transition",
