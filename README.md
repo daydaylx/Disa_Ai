@@ -16,6 +16,7 @@
   - [Komponenten-Architektur](#komponenten-architektur)
   - [Konfiguration & Feature Flags](#konfiguration--feature-flags)
   - [PWA und Offline-Fähigkeit](#pwa-und-offline-fähigkeit)
+- [📱 Mobile Navigation & Swipe Gestures](#-mobile-navigation--swipe-gestures)
 - [🛠️ Tech Stack](#-tech-stack)
 - [🚀 Erste Schritte](#-erste-schritte)
   - [Voraussetzungen](#voraussetzungen)
@@ -67,6 +68,33 @@ Die Anwendung verfügt über eine eigene, wiederverwendbare Komponenten-Biblioth
 - **Minimal Design-System**: Ein klares, reduziertes Design-System mit flachen Oberflächen und maximaler Funktionalität. Anstelle von Glaseffekten werden klare Oberflächen (surface-0, surface-1, surface-2) mit konsistenten Abständen und Farben verwendet.
 - **Mobile-First & Safe Area**: Das Layout ist primär für mobile Geräte konzipiert. `env(safe-area-inset-*)` wird in der Tailwind-Konfiguration genutzt, um sicherzustellen, dass UI-Elemente nicht von der "Notch" oder den Home-Indikatoren auf iOS- und Android-Geräten verdeckt werden.
 - **Dynamische Viewport-Höhe**: `App.tsx` enthält eine Logik, die die tatsächliche sichtbare Höhe des Viewports (`window.visualViewport.height`) misst und als CSS-Variable (`--vh`) setzt. Dies löst das klassische Problem auf mobilen Browsern, bei dem die Adressleiste die `100vh`-Einheit verfälscht.
+
+## 📱 Mobile Navigation & Swipe Gestures
+
+Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtsseitigen Sidepanel, das durch intuitive Gesten gesteuert werden kann:
+
+### Öffnen des Panels
+
+- **Edge-Swipe (Mobil)**: Wische vom rechten Bildschirmrand (innerhalb von 20px) nach links, um das Navigations-Panel zu öffnen. Die Geste benötigt mindestens 40px horizontale Bewegung und respektiert eine vertikale Toleranz von 30px, um nicht mit Scroll-Gesten zu kollidieren.
+- **Menu-Button (Desktop/Mobil)**: Tippe auf das Menu-Icon in der rechten oberen Ecke.
+- **Tastatur**: Navigiere mit Tab zum Menu-Button und drücke Enter oder Space.
+
+### Schließen des Panels
+
+- **Swipe nach links**: Wische das geöffnete Panel nach links.
+- **Schließen-Button**: Tippe auf das X-Icon im Panel-Header.
+- **Backdrop-Klick**: Tippe auf den abgedunkelten Bereich außerhalb des Panels.
+- **Escape-Taste**: Drücke Escape zum Schließen (Tastatur-Barrierefreiheit).
+
+### Technische Details
+
+- **Edge-Detection**: 20px breiter, unsichtbarer Touch-Bereich am rechten Rand
+- **Scroll-Sicherheit**: Vertikales Scrolling bleibt unbeeinträchtigt
+- **Browser-Kompatibilität**: Getestet auf iOS Safari und Android Chrome
+- **Barrierefreiheit**: WCAG 2.1 AA konform, vollständige Tastaturnavigation, Screen-Reader-Unterstützung
+- **Performance**: GPU-beschleunigte Animationen, respektiert `prefers-reduced-motion`
+
+Für detaillierte Informationen siehe [docs/MOBILE_NAVIGATION.md](docs/MOBILE_NAVIGATION.md).
 
 ## 🏛️ Architektur-Überblick
 
