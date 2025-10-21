@@ -33,16 +33,12 @@ function normalizeCategory(category?: string): CategoryKey {
 }
 
 function summariseRole(role: Role): string {
-  if (role.description) return role.description;
+  if (role.description) return role.description.trim();
 
   const normalized = role.systemPrompt.replace(/\s+/g, " ").trim();
   if (!normalized) return "Kein Beschreibungstext vorhanden.";
 
-  const [firstSentence] = normalized.split(/(?<=[.!?])\s+/);
-  if (!firstSentence) return normalized.slice(0, 140);
-
-  const summary = firstSentence.trim();
-  return summary.length > 160 ? `${summary.slice(0, 157)}…` : summary;
+  return normalized;
 }
 
 function RolesTab() {
@@ -200,7 +196,7 @@ function RolesTab() {
                 {t.studio.activeRole.label}
               </p>
               <p className="text-sm font-semibold text-text-0 sm:text-base">{activeRole.name}</p>
-              <p className="text-xs leading-5 text-text-1 sm:text-sm">
+              <p className="whitespace-pre-line text-xs leading-5 text-text-1 sm:text-sm">
                 {summariseRole(activeRole)}
               </p>
             </div>

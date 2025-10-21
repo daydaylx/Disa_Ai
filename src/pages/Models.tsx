@@ -275,11 +275,18 @@ export default function ModelsPage() {
         onClick={() => selectModelById(item.id, item.label)}
         badge={item.provider}
         showDescriptionOnToggle
+        defaultExpanded
         isActive={isSelected}
         className={cn("min-h-[140px]", isSelected && "ring-2 ring-brand")}
       />
     );
   };
+
+  const activeRoleSummary =
+    activeRole &&
+    (activeRole.description?.trim() ||
+      activeRole.systemPrompt.replace(/\s+/g, " ").trim() ||
+      "Kein Beschreibungstext vorhanden.");
 
   return (
     <div className="flex h-full flex-col px-5 pb-8 pt-5">
@@ -301,11 +308,19 @@ export default function ModelsPage() {
         <h2 id="active-role-heading" className="sr-only">
           Aktive Rolle
         </h2>
-        <div className="brand-panel card-depth space-y-2 p-4">
+        <div className="brand-panel card-depth space-y-3 p-4">
           <span className="brand-chip w-fit">Aktive Rolle</span>
           <h3 className="font-semibold text-text-0">Aktive Rolle</h3>
-          <p className="text-sm text-text-1">
-            {`${activeRole ? activeRole.name : "Standard (keine Rolle ausgewählt)"} - Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.`}
+          {activeRole && activeRoleSummary ? (
+            <>
+              <p className="text-sm font-medium text-text-0">{activeRole.name}</p>
+              <p className="whitespace-pre-line text-sm text-text-1">{activeRoleSummary}</p>
+            </>
+          ) : (
+            <p className="text-sm text-text-1">Standard (keine Rolle ausgewählt)</p>
+          )}
+          <p className="text-xs text-text-2">
+            Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.
           </p>
           <Link to="/roles">
             <Button variant="brand" size="sm" className="mt-4">

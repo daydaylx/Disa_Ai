@@ -11,6 +11,7 @@ export interface RoleCardProps extends React.HTMLAttributes<HTMLDivElement> {
   badge?: string;
   isActive?: boolean;
   showDescriptionOnToggle?: boolean;
+  defaultExpanded?: boolean;
   disabled?: boolean;
 }
 
@@ -23,13 +24,14 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
       isActive = false,
       className,
       showDescriptionOnToggle = false,
+      defaultExpanded,
       onClick,
       disabled,
       ...props
     },
     ref,
   ) => {
-    const [expanded, setExpanded] = useState(!showDescriptionOnToggle);
+    const [expanded, setExpanded] = useState(defaultExpanded ?? !showDescriptionOnToggle);
 
     const handleInfoToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
@@ -70,7 +72,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
                 {title}
               </h3>
               {expanded ? (
-                <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-text-1 sm:text-sm sm:leading-6">
+                <p className="mt-1.5 whitespace-pre-line text-xs leading-5 text-text-1 sm:text-sm sm:leading-6">
                   {description}
                 </p>
               ) : null}
