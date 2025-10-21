@@ -1,17 +1,20 @@
-import { Cpu, MessageSquare, Plus, Settings, Users } from "lucide-react";
+import { Cpu, Menu, MessageSquare, Plus, Settings, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import { NavigationSidepanel } from "../../components/navigation/NavigationSidepanel";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
-import { Button } from "../../components/ui";
-import { useResponsiveLayout } from "../../hooks/useResponsiveLayout";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../../components/ui";
 import { cn } from "../../lib/utils";
 import { BrandWordmark } from "../components/BrandWordmark";
-import { SidepanelProvider } from "../state/SidepanelContext";
 import { useStudio } from "../state/StudioContext";
 
 const NAV_ITEMS = [
@@ -50,11 +53,41 @@ function TopBar() {
           paddingRight: `calc(${headerPadding} + env(safe-area-inset-right, 0px))`,
         }}
       >
-        <div className="flex flex-1 items-center gap-4">
+        <div className="flex flex-1 items-center gap-3">
           <div className="flex items-center gap-3">
             <span className="brand-rail h-9 w-1 rounded-r-full" aria-hidden="true" />
             <BrandWordmark />
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="ml-auto h-9 w-9 rounded-full border border-border/40 md:hidden"
+                aria-label="Navigation öffnen"
+              >
+                <Menu className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" sideOffset={8} className="w-48 space-y-1">
+              {NAV_ITEMS.map((item) => (
+                <DropdownMenuItem
+                  key={item.to}
+                  onSelect={(event) => {
+                    event.preventDefault();
+                    void navigate(item.to);
+                  }}
+                  className={cn(
+                    "flex items-center gap-2",
+                    location.pathname.startsWith(item.to) ? "text-text-strong" : "text-text-muted",
+                  )}
+                >
+                  <item.icon className="h-4 w-4" aria-hidden="true" />
+                  <span>{item.label}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <nav
             aria-label="Hauptnavigation"
             className="hidden items-center gap-1 text-sm font-medium text-text-2 md:flex"
@@ -115,11 +148,7 @@ interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
 
-  return (
-    <SidepanelProvider>
-      <AppShellLayout location={location}>{children}</AppShellLayout>
-    </SidepanelProvider>
-  );
+  return <AppShellLayout location={location}>{children}</AppShellLayout>;
 }
 
 interface AppShellLayoutProps {
@@ -128,8 +157,6 @@ interface AppShellLayoutProps {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
-  const layout = useResponsiveLayout();
-
   return (
     <div className="relative min-h-dvh overflow-hidden bg-surface-0 text-text-0">
       {/* Background gradients - Optimized for smooth rendering and no banding */}
@@ -150,7 +177,6 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             className={cn(
               "animate-page-transition flex flex-1 flex-col overflow-y-auto",
               "mx-auto w-full max-w-[var(--max-content-width)] px-4 pb-8 pt-6 sm:px-6 lg:px-8",
-              layout.sidepanelMode === "persistent" ? "lg:pr-10" : "",
             )}
           >
             {children}
@@ -165,21 +191,6 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           </div>
         </footer>
       </div>
-
-      {/* Navigation Sidepanel */}
-      <NavigationSidepanel
-        items={NAV_ITEMS}
-        className={cn(
-          // Adjust position based on layout mode
-          layout.sidepanelMode === "persistent" ? "hidden lg:block" : "",
-        )}
-      >
-        {/* Optional sidepanel footer content */}
-        <div className="space-y-2 text-xs text-text-1">
-          <div>Version: 1.0.0</div>
-          <div>Mode: {layout.sidepanelMode}</div>
-        </div>
-      </NavigationSidepanel>
 
       {/* Global components */}
       <NetworkBanner />
