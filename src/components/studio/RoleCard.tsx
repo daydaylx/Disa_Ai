@@ -2,7 +2,6 @@ import { Info } from "lucide-react";
 import { type ButtonHTMLAttributes, forwardRef, useState } from "react";
 
 import { cn } from "../../lib/utils";
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { cardVariants } from "../ui/card";
 
@@ -31,6 +30,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
     ref,
   ) => {
     const [expanded, setExpanded] = useState(defaultExpanded);
+    const detailId = `${title.replace(/\s+/g, "-").toLowerCase()}-details`;
 
     const handleInfoToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
@@ -44,8 +44,8 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          cardVariants({ interactive: true }),
-          "flex flex-col p-3 text-left",
+          cardVariants({ interactive: true, padding: "md" }),
+          "flex flex-col gap-3 text-left",
           !disabled && "cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
           isActive && "ring-2 ring-brand",
@@ -55,39 +55,43 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         disabled={disabled}
         {...props}
       >
-        <div className="flex h-full flex-col">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold tracking-tight text-text-0 sm:text-base">
-                {title}
-              </h3>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/35 bg-[var(--glass-overlay-strong)] text-sm font-semibold uppercase text-[var(--text-on-glass)] shadow-[var(--glass-shadow)]">
+            {title.slice(0, 1)}
+          </div>
+          <div className="flex flex-1 flex-col gap-2">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 space-y-1">
+                <h3 className="text-sm font-semibold leading-tight sm:text-base">{title}</h3>
+                {badge && (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide opacity-75">
+                    {badge}
+                  </span>
+                )}
+              </div>
               <Button
                 size="icon"
                 variant="ghost"
                 onClick={handleInfoToggle}
                 aria-label={expanded ? "Beschreibung verbergen" : "Beschreibung anzeigen"}
                 aria-expanded={expanded}
+                aria-controls={detailId}
+                className="border border-white/30 bg-[var(--glass-overlay-muted)] text-[var(--text-on-glass)] hover:border-white/50 hover:bg-[var(--glass-overlay-strong)]"
               >
                 <Info className="h-4 w-4" />
               </Button>
             </div>
           </div>
-
-          {expanded && (
-            <div className="mt-3 border-t border-border/60 pt-3">
-              <p className="whitespace-pre-line break-words text-xs leading-5 text-text-1 sm:text-sm sm:leading-6">
-                {description}
-              </p>
-              {badge && (
-                <div className="mt-2">
-                  <Badge variant="secondary">{badge}</Badge>
-                </div>
-              )}
-            </div>
-          )}
         </div>
+
+        {expanded && (
+          <div
+            id={detailId}
+            className="rounded-xl border border-white/30 bg-[var(--glass-overlay-muted)] p-3 text-xs leading-5 opacity-85 sm:text-sm sm:leading-6"
+          >
+            <p className="whitespace-pre-line break-words">{description}</p>
+          </div>
+        )}
       </button>
     );
   },

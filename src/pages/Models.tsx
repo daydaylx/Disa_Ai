@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
-import { RoleCard } from "../components/studio/RoleCard";
-import { Button } from "../components/ui/button";
+import { Button, Card } from "../components/ui";
+import { ModelCard } from "../components/ui/ModelCard";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
-import { cn } from "../lib/utils";
 
-function formatContext(ctx?: number) {
-  if (!ctx) return "Unbekannte Kontextlänge";
-  if (ctx >= 1000000) return `${(ctx / 1000000).toFixed(1)} Mio. Token`;
-  if (ctx >= 1000) return `${(ctx / 1000).toFixed(0)}k Token`;
-  return `${ctx.toLocaleString()} Token`;
-}
+type ModelDefinition = {
+  id: string;
+  label: string;
+  provider: string;
+  priceIn: number;
+  priceOut: number;
+  ctx?: number;
+  description: string;
+};
 
 const premiumModels = [
   {
@@ -54,7 +56,7 @@ const premiumModels = [
     description:
       "Logisches Denken, lange Begründungen – denkt erst, antwortet dann. Für knifflige Fragen und mehrstufige Erklärungen stark.",
   },
-] as const;
+] satisfies ModelDefinition[];
 
 const everydayModels = [
   {
@@ -107,7 +109,7 @@ const everydayModels = [
     description:
       "Günstiges Reasoning-Light: angenehme Plauderei mit solider Struktur, symmetrische Kosten.",
   },
-] as const;
+] satisfies ModelDefinition[];
 
 const freeModels = [
   {
@@ -159,7 +161,7 @@ const freeModels = [
     ctx: 32768,
     description: "Kostenlose Qwen-Variante für schnelle Experimente und einfache Aufgaben.",
   },
-] as const;
+] satisfies ModelDefinition[];
 
 const uncensoredModels = [
   {
@@ -202,7 +204,7 @@ const uncensoredModels = [
     description:
       "Kostenlose unzensierte Variante für Experimente. Qualität schwankt, aber ein guter Einstieg.",
   },
-] as const;
+] satisfies ModelDefinition[];
 
 const codeModels = [
   {
@@ -225,11 +227,58 @@ const codeModels = [
     description:
       "Spezialisiertes Code-Qwen. Versteht Programmierung ausgezeichnet, erklärt und debuggt präzise.",
   },
-] as const;
+] satisfies ModelDefinition[];
+
+interface ModelGroup {
+  id: string;
+  badge: string;
+  title: string;
+  description: string;
+  models: ModelDefinition[];
+}
+
+const modelGroups: ModelGroup[] = [
+  {
+    id: "premium",
+    badge: "Premium",
+    title: "🏆 Premium Modelle",
+    description: "Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3",
+    models: premiumModels,
+  },
+  {
+    id: "everyday",
+    badge: "Alltag",
+    title: "💼 Alltags Modelle",
+    description: "Zuverlässige Modelle für tägliche Aufgaben – starkes Preis-Leistungs-Verhältnis",
+    models: everydayModels,
+  },
+  {
+    id: "free",
+    badge: "Free",
+    title: "🎁 Free Modelle",
+    description: "Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität",
+    models: freeModels,
+  },
+  {
+    id: "uncensored",
+    badge: "Unzensiert",
+    title: "🎭 Unzensiert Modelle",
+    description: "Kreative Modelle mit wenig Filtern – ideal für Rollenspiel und Storytelling",
+    models: uncensoredModels,
+  },
+  {
+    id: "code",
+    badge: "Code",
+    title: "🧑‍💻 Code Modelle",
+    description: "Spezialisiert auf Programmierung, Debugging und technische Analysen",
+    models: codeModels,
+  },
+];
 
 export default function ModelsPage() {
   const { activeRole } = useStudio();
   const toasts = useToasts();
+  const [openId, setOpenId] = useState<string | null>(null);
   const [selected, setSelected] = useState(() => {
     try {
       return localStorage.getItem("disa_model") || "";
@@ -240,6 +289,7 @@ export default function ModelsPage() {
 
   const selectModelById = (modelId: string, label?: string) => {
     setSelected(modelId);
+    setOpenId(null);
     try {
       localStorage.setItem("disa_model", modelId);
     } catch {
@@ -252,183 +302,110 @@ export default function ModelsPage() {
     });
   };
 
-  const renderFeaturedCard = (item: {
-    id: string;
-    label: string;
-    provider: string;
-    priceIn: number;
-    priceOut: number;
-    ctx?: number;
-    description: string;
-  }) => {
-    const isSelected = selected === item.id;
-
-    return (
-      <RoleCard
-        key={item.id}
-        title={item.label}
-        description={`${item.description}\n\nIn: ${
-          item.priceIn === 0 ? "Kostenlos" : `$${item.priceIn.toFixed(3)}/1M`
-        } | Out: ${
-          item.priceOut === 0 ? "Kostenlos" : `$${item.priceOut.toFixed(3)}/1M`
-        }${item.ctx ? ` | Kontext: ${formatContext(item.ctx)}` : ""}`}
-        onClick={() => selectModelById(item.id, item.label)}
-        badge={item.provider}
-        isActive={isSelected}
-        className={cn("min-h-[140px]", isSelected && "ring-2 ring-brand")}
-      />
-    );
-  };
-
   const activeRoleSummary =
     activeRole &&
     (activeRole.description?.trim() ||
       activeRole.systemPrompt.replace(/\s+/g, " ").trim() ||
       "Kein Beschreibungstext vorhanden.");
 
+  const safeSelectedLabel = useMemo(() => {
+    const allModels = modelGroups.flatMap((group) => group.models);
+    return allModels.find((model) => model.id === selected)?.label;
+  }, [selected]);
+
   return (
-    <div className="flex h-full flex-col px-5 pb-8 pt-5">
-      <header className="mb-6 space-y-2">
-        <span className="brand-chip w-fit">Modelle</span>
-        <h1 className="text-lg font-semibold text-text-0" data-testid="models-title">
-          Modellkatalog
-        </h1>
-        <p className="text-sm leading-6 text-text-1">
-          Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich jetzt im{" "}
-          <Link to="/roles" className="text-brand underline">
-            Rollen-Studio
-          </Link>{" "}
-          auswählen.
-        </p>
+    <div className="flex h-full flex-col gap-8 px-4 pb-16 pt-6 text-[var(--text-on-glass)] sm:px-6 lg:px-8">
+      <header className="space-y-3 text-[var(--text-on-glass)]" data-testid="models-title">
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-[var(--glass-overlay-muted)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
+          Modelle
+        </span>
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold sm:text-3xl">Modellkatalog</h1>
+          <p className="max-w-2xl text-sm leading-6 opacity-80 sm:text-base">
+            Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich im{" "}
+            <Link to="/roles" className="font-medium underline">
+              Rollen-Studio
+            </Link>{" "}
+            auswählen.
+          </p>
+        </div>
+        {safeSelectedLabel && (
+          <p className="text-xs opacity-65 sm:text-sm">
+            Aktuell ausgewählt: <span className="font-semibold">{safeSelectedLabel}</span>
+          </p>
+        )}
       </header>
 
-      <section aria-labelledby="active-role-heading" className="mb-6">
-        <h2 id="active-role-heading" className="sr-only">
-          Aktive Rolle
-        </h2>
-        <div className="brand-panel card-depth space-y-3 p-4">
-          <span className="brand-chip w-fit">Aktive Rolle</span>
-          <h3 className="font-semibold text-text-0">Aktive Rolle</h3>
-          {activeRole && activeRoleSummary ? (
-            <>
-              <p className="text-sm font-medium text-text-0">{activeRole.name}</p>
-              <p className="whitespace-pre-line text-sm text-text-1">{activeRoleSummary}</p>
-            </>
-          ) : (
-            <p className="text-sm text-text-1">Standard (keine Rolle ausgewählt)</p>
-          )}
-          <p className="text-xs text-text-2">
-            Passe Stimme, Tonalität und Badges jetzt bequem im Rollen-Studio an.
-          </p>
-          <Link to="/roles">
-            <Button variant="brand" size="sm" className="mt-4">
-              Rollen öffnen
-            </Button>
-          </Link>
+      <Card padding="md" className="space-y-4 text-[var(--text-on-glass)]">
+        <div className="space-y-2">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
+            Studio Fokus
+          </span>
+          <h2 className="text-lg font-semibold sm:text-xl">Aktive Rolle</h2>
         </div>
-      </section>
-
-      <section aria-labelledby="premium-models-heading" className="grid grid-cols-1 gap-3 pb-8">
-        <div className="space-y-1">
-          <span className="brand-chip w-fit">Premium</span>
-          <h2
-            id="premium-models-heading"
-            className="text-sm font-semibold uppercase tracking-wide text-text-0"
-          >
-            🏆 Premium Modelle
-          </h2>
-        </div>
-        <p className="text-xs text-text-1">
-          Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3
+        {activeRole && activeRoleSummary ? (
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2 text-sm font-semibold sm:text-base">
+              <span>{activeRole.name}</span>
+              {activeRole.category && (
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide opacity-80">
+                  {activeRole.category}
+                </span>
+              )}
+            </div>
+            <p className="text-sm leading-6 opacity-80 sm:text-base">{activeRoleSummary}</p>
+          </div>
+        ) : (
+          <p className="text-sm opacity-75 sm:text-base">Standard (keine Rolle ausgewählt)</p>
+        )}
+        <p className="text-xs opacity-65 sm:text-sm">
+          Passe Stimme, Tonalität und Badges flexibel im Rollen-Studio an.
         </p>
-        <div
-          role="group"
-          aria-labelledby="premium-models-heading"
-          className="grid grid-cols-1 gap-4"
-        >
-          {premiumModels.map((item) => renderFeaturedCard(item))}
-        </div>
-      </section>
+        <Link to="/roles" className="inline-flex">
+          <Button variant="brand" size="sm">
+            Rollen öffnen
+          </Button>
+        </Link>
+      </Card>
 
-      <section aria-labelledby="everyday-models-heading" className="grid grid-cols-1 gap-3 pb-8">
-        <div className="space-y-1">
-          <span className="brand-chip w-fit">Alltag</span>
-          <h2
-            id="everyday-models-heading"
-            className="text-sm font-semibold uppercase tracking-wide text-text-0"
-          >
-            💼 Alltags Modelle
-          </h2>
-        </div>
-        <p className="text-xs text-text-1">
-          Zuverlässige Modelle für tägliche Aufgaben – gutes Preis-Leistungs-Verhältnis
-        </p>
-        <div
-          role="group"
-          aria-labelledby="everyday-models-heading"
-          className="grid grid-cols-1 gap-4"
-        >
-          {everydayModels.map((item) => renderFeaturedCard(item))}
-        </div>
-      </section>
-
-      <section aria-labelledby="free-models-heading" className="grid grid-cols-1 gap-3 pb-8">
-        <div className="space-y-1">
-          <span className="brand-chip w-fit">Free</span>
-          <h2
-            id="free-models-heading"
-            className="text-sm font-semibold uppercase tracking-wide text-text-0"
-          >
-            🎁 Free Modelle
-          </h2>
-        </div>
-        <p className="text-xs text-text-1">
-          Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität
-        </p>
-        <div role="group" aria-labelledby="free-models-heading" className="grid grid-cols-1 gap-4">
-          {freeModels.map((item) => renderFeaturedCard(item))}
-        </div>
-      </section>
-
-      <section aria-labelledby="uncensored-models-heading" className="grid grid-cols-1 gap-3 pb-8">
-        <div className="space-y-1">
-          <span className="brand-chip w-fit">Unzensiert</span>
-          <h2
-            id="uncensored-models-heading"
-            className="text-sm font-semibold uppercase tracking-wide text-text-0"
-          >
-            🎭 Unzensiert Modelle
-          </h2>
-        </div>
-        <p className="text-xs text-text-1">
-          Kreatives Schreiben & Rollenspiel – weniger Filter, mehr Freiheit
-        </p>
-        <div
-          role="group"
-          aria-labelledby="uncensored-models-heading"
-          className="grid grid-cols-1 gap-4"
-        >
-          {uncensoredModels.map((item) => renderFeaturedCard(item))}
-        </div>
-      </section>
-
-      <section aria-labelledby="code-models-heading" className="grid grid-cols-1 gap-3 pb-8">
-        <div className="space-y-1">
-          <span className="brand-chip w-fit">Code</span>
-          <h2
-            id="code-models-heading"
-            className="text-sm font-semibold uppercase tracking-wide text-text-0"
-          >
-            💻 Code-Modelle
-          </h2>
-        </div>
-        <p className="text-xs text-text-1">
-          Spezialisierte Modelle für Programmierung und Code-Analyse
-        </p>
-        <div role="group" aria-labelledby="code-models-heading" className="grid grid-cols-1 gap-4">
-          {codeModels.map((item) => renderFeaturedCard(item))}
-        </div>
-      </section>
+      {modelGroups.map((group) => (
+        <section key={group.id} aria-labelledby={`models-${group.id}`} className="space-y-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div className="space-y-1">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-[var(--glass-overlay-muted)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
+                {group.badge}
+              </span>
+              <h2 id={`models-${group.id}`} className="text-lg font-semibold sm:text-xl">
+                {group.title}
+              </h2>
+            </div>
+            <span className="text-xs font-medium uppercase tracking-wide opacity-60 sm:text-sm">
+              {group.models.length} Modelle
+            </span>
+          </div>
+          <p className="max-w-2xl text-sm opacity-75 sm:text-base">{group.description}</p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {group.models.map((model) => (
+              <ModelCard
+                key={model.id}
+                id={model.id}
+                name={model.label}
+                provider={model.provider}
+                priceIn={model.priceIn}
+                priceOut={model.priceOut}
+                contextTokens={model.ctx}
+                description={model.description}
+                isSelected={selected === model.id}
+                isOpen={openId === model.id}
+                onSelect={() => selectModelById(model.id, model.label)}
+                onToggleDetails={() =>
+                  setOpenId((current) => (current === model.id ? null : model.id))
+                }
+              />
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

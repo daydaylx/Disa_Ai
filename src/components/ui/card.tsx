@@ -4,22 +4,28 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const cardVariants = cva(
-  "relative rounded-lg border border-[var(--border-card)] bg-card text-text-0 shadow-card transition-all duration-200 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+  [
+    "relative isolate overflow-hidden rounded-2xl border border-[var(--border-glass)]",
+    "bg-[var(--glass-layer-card)] text-[var(--text-on-glass)] shadow-[var(--glass-shadow)]",
+    "backdrop-blur-[var(--glass-blur)] supports-[backdrop-filter]:backdrop-saturate-125",
+    "transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-[var(--glass-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-bg)]",
+  ].join(" "),
   {
     variants: {
       tone: {
         default: "",
-        muted: "bg-surface-0 text-text-1",
-        contrast: "bg-surface-2 text-text-0",
+        muted: "bg-[var(--glass-overlay-muted)] text-text-1",
+        contrast:
+          "border-white/50 bg-[var(--glass-overlay-strong)] text-[var(--text-on-glass)] shadow-lg",
       },
       elevation: {
         none: "shadow-none",
-        sm: "shadow-card",
+        sm: "shadow-[var(--glass-shadow)]",
         md: "shadow-card-hover",
       },
       interactive: {
         false: "",
-        true: "hover:bg-card-hover hover:shadow-card-hover focus-visible:ring-brand motion-safe:hover:-translate-y-[2px]",
+        true: "motion-safe:hover:-translate-y-[2px] motion-safe:hover:shadow-card-hover hover:bg-[var(--glass-overlay-muted)]",
       },
       padding: {
         none: "",

@@ -5,6 +5,18 @@
  */
 
 :root {
+  /* Glassmorphism Baseline */
+  --glass-bg: rgba(255, 255, 255, 0.64);
+  --glass-bg-dark: rgba(17, 17, 17, 0.56);
+  --glass-bg-rgb: 255, 255, 255;
+  --glass-bg-dark-rgb: 17, 17, 17;
+  --glass-blur: 14px;
+  --glass-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --surface-bg: #fafafa;
+  --text-on-glass: #111111;
+  --text-on-glass-dark: #fafafa;
+  --border-glass: rgba(255, 255, 255, 0.45);
+
   /* Basis */
   --bg0: #0b0d10; /* Canvas */
   --bg1: #101318; /* Layer 1 */
@@ -12,9 +24,19 @@
   --surface-0: rgba(13, 17, 24, 0.82); /* Grundfläche: dezenter, lässt Hintergrund durchscheinen */
   --surface-1: rgba(18, 23, 32, 0.88); /* Kartenfläche: weniger Glas-Effekt */
   --surface-2: rgba(24, 30, 42, 0.92); /* Erhöhte Oberflächen: reduzierte Opazität */
-  --surface-glass-card: rgba(var(--glass-bg), var(--glass-alpha-card));
-  --surface-glass-panel: rgba(var(--glass-bg), var(--glass-alpha-panel));
-  --surface-glass-chrome: rgba(var(--glass-bg), var(--glass-alpha-chrome));
+  --surface-glass-card: var(--glass-bg);
+  --surface-glass-panel: color-mix(in srgb, var(--glass-bg) 85%, transparent);
+  --surface-glass-chrome: color-mix(in srgb, var(--glass-bg) 70%, transparent);
+  --glass-layer-base: rgba(var(--glass-bg-rgb), var(--glass-alpha));
+  --glass-layer-card: rgba(var(--glass-bg-rgb), var(--glass-alpha-card));
+  --glass-layer-panel: rgba(var(--glass-bg-rgb), var(--glass-alpha-panel));
+  --glass-layer-chrome: rgba(var(--glass-bg-rgb), var(--glass-alpha-chrome));
+  --glass-overlay-muted: color-mix(in srgb, var(--glass-layer-card) 88%, transparent);
+  --glass-overlay-strong: color-mix(
+    in srgb,
+    var(--glass-layer-panel) 92%,
+    rgba(255, 255, 255, 0.12) 8%
+  );
   --surface-card-default: var(--surface-1);
   --surface-card-hover: var(--surface-2);
   --surface-card-muted: color-mix(in srgb, var(--surface-1) 75%, transparent);
@@ -43,7 +65,6 @@
   --acc2-rgb: 255, 159, 111;
 
   /* Glas-Parameter - verbessert für Performance */
-  --glass-bg: 18, 22, 28; /* RGB von bg0 */
   --glass-alpha: 0.2; /* Legacy alpha */
   --glass-alpha-subtle: 0.12; /* Für subtile Oberflächen */
   --glass-alpha-strong: 0.3; /* Für wichtige Oberflächen */
@@ -64,7 +85,7 @@
   --glass-noise-opacity: 0.08;
   --glass-radius: 18px;
   --glass-blur-sm: 6px;
-  --glass-blur-md: 14px;
+  --glass-blur-md: var(--glass-blur);
   --glass-blur-lg: 26px;
   --glass-blur-xl: 48px;
 
@@ -193,6 +214,21 @@
   --canvas-overlay: rgba(16, 20, 28, 0.72);
   --canvas-overlay-soft: rgba(24, 28, 36, 0.56);
   --canvas-noise-opacity: 0.04;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --glass-bg: var(--glass-bg-dark);
+    --glass-bg-rgb: var(--glass-bg-dark-rgb);
+    --text-on-glass: var(--text-on-glass-dark);
+    --surface-bg: #050608;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --glass-blur: 0px;
+  }
 }
 
 /* Selection styling with brand color */

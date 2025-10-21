@@ -5,6 +5,7 @@ export * from "./card";
 export * from "./dialog";
 export * from "./dropdown-menu";
 export * from "./input";
+export * from "./ModelCard";
 export * from "./select";
 export * from "./StaticGlassCard";
 export * from "./tabs";

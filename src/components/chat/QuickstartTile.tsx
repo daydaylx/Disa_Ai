@@ -108,7 +108,7 @@ export function QuickstartTile({
 
         {showActions && (
           <div
-            className="glass glass--strong absolute inset-0 z-20 flex items-center justify-center rounded-base border border-border/70 bg-[rgba(var(--glass-bg),0.85)]"
+            className="glass glass--strong absolute inset-0 z-20 flex items-center justify-center rounded-base border border-border/70 bg-[var(--glass-overlay-strong)]"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -132,7 +132,7 @@ export function QuickstartTile({
         )}
 
         {isLoading && (
-          <div className="glass glass--strong absolute inset-0 z-20 flex items-center justify-center rounded-base border border-border/60 bg-[rgba(var(--glass-bg),0.75)]">
+          <div className="glass glass--strong absolute inset-0 z-20 flex items-center justify-center rounded-base border border-border/60 bg-[var(--glass-overlay-muted)]">
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-border border-t-brand" />
           </div>
         )}

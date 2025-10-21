@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Glass } from "./Glass";
+import { RoleCard } from "./studio/RoleCard";
 
 interface Role {
   id: string;
@@ -16,19 +16,22 @@ interface RolesProps {
   onRoleSelect: (role: Role) => void;
 }
 
+function summariseRole(role: Role) {
+  if (role.description?.trim()) return role.description.trim();
+  return role.systemPrompt.replace(/\s+/g, " ").trim();
+}
+
 export const Roles: React.FC<RolesProps> = ({ roles, onRoleSelect }) => {
   return (
-    <div className="space-y-3">
+    <div className="grid gap-3">
       {roles.map((role) => (
-        <Glass
+        <RoleCard
           key={role.id}
-          variant="subtle"
-          className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+          title={role.name}
+          description={summariseRole(role)}
+          badge={role.recommendedModel}
           onClick={() => onRoleSelect(role)}
-        >
-          <h3 className="font-medium text-[var(--fg)]">{role.name}</h3>
-          <p className="mt-1 text-sm text-[var(--fg-dim)]">{role.description}</p>
-        </Glass>
+        />
       ))}
     </div>
   );

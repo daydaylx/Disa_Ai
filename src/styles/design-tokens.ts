@@ -167,10 +167,16 @@ export const blur = {
 
 // Glassmorphism parameters
 export const glass = {
-  bg: "18, 22, 28" /* glass-bg: RGB from bg0 */,
-  alpha: 0.16 /* glass-alpha */,
-  alphaSubtle: 0.08 /* glass-alpha-subtle */,
-  alphaStrong: 0.24 /* glass-alpha-strong */,
+  bg: "rgba(255, 255, 255, 0.64)" /* glass-bg */,
+  bgDark: "rgba(17, 17, 17, 0.56)" /* glass-bg-dark */,
+  blur: "14px" /* glass-blur */,
+  shadow: "0 4px 12px rgba(0, 0, 0, 0.08)" /* glass-shadow */,
+  text: "#111111" /* text-on-glass */,
+  textDark: "#fafafa" /* text-on-glass-dark */,
+  border: "rgba(255, 255, 255, 0.45)" /* border-glass */,
+  alpha: 0.2 /* glass-alpha */,
+  alphaSubtle: 0.12 /* glass-alpha-subtle */,
+  alphaStrong: 0.3 /* glass-alpha-strong */,
   stroke: "rgba(255,255,255,0.12)" /* glass-stroke */,
   strokeStrong: "rgba(255,255,255,0.18)" /* glass-stroke-strong */,
   radius: "18px" /* glass-radius */,
