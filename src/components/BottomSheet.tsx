@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
+import { cn } from "../lib/utils";
 import { Glass } from "./Glass";
 
 type BottomSheetState = "closed" | "open";
@@ -110,10 +111,10 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
 
           {/* Header with close button */}
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-[var(--fg)]">{getTabLabel(tab)}</h2>
+            <h2 className="text-lg font-semibold text-text-strong">{getTabLabel(tab)}</h2>
             <button
               onClick={onClose}
-              className="glass glass--subtle rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-[var(--acc1)]"
+              className="glass glass--subtle rounded-full p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               aria-label="Panel schließen"
             >
               <X size={18} />
@@ -125,12 +126,14 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
             {tabs.map((t) => (
               <button
                 key={t}
+                type="button"
                 onClick={() => onTabChange(t)}
-                className={`whitespace-nowrap rounded-full px-3 py-2 text-sm ${
+                className={cn(
+                  "whitespace-nowrap rounded-full border px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
                   t === tab
-                    ? "bg-[var(--acc1)] text-white"
-                    : "bg-gray-200 text-[var(--fg-dim)] hover:bg-gray-300"
-                }`}
+                    ? "border-brand/50 bg-brand/15 text-brand shadow-neon"
+                    : "bg-surface-glass-card/60 border-transparent text-text-muted hover:bg-hover-bg hover:text-text-strong",
+                )}
                 aria-selected={t === tab}
               >
                 {getTabLabel(t)}
@@ -140,7 +143,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
 
           {/* Tab Content */}
           <div className="flex-1 overflow-y-auto">
-            <div className="p-2 text-sm text-[var(--fg-dim)]">
+            <div className="p-2 text-sm text-text-muted">
               {getTabLabel(tab)} Inhalt wird hier angezeigt
             </div>
           </div>

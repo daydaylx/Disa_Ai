@@ -17,14 +17,14 @@
 }
 
 /* Globale Fokus-Styles für bessere Sichtbarkeit */
-*:focus {
+*:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
 
 /* Verbessertes Focus-Management für Touch-Geräte */
 @media (hover: none) and (pointer: coarse) {
-  *:focus {
+  *:focus-visible {
     outline-width: 3px;
     outline-offset: 3px;
   }

@@ -40,12 +40,13 @@
   --glass-alpha: 0.2; /* Legacy alpha */
   --glass-alpha-subtle: 0.12; /* Für subtile Oberflächen */
   --glass-alpha-strong: 0.3; /* Für wichtige Oberflächen */
-  --glass-alpha-card: 0.18; /* Standard-Karten */
-  --glass-alpha-panel: 0.24; /* Navigation & Dialoge */
+  --glass-alpha-card: 0.22; /* Standard-Karten - etwas milchiger */
+  --glass-alpha-panel: 0.28; /* Navigation & Dialoge - mehr Separation */
   --glass-alpha-chrome: 0.12; /* Toolbars / Header */
   --glass-alpha-overlay: 0.36; /* Dimmed Hintergründe */
   --glass-tint-rgb: 142, 196, 255; /* Kühle Glas-Tönung */
   --glass-tint-neutral-rgb: 188, 208, 242; /* Neutraler Umbra */
+  --glass-highlight-rgb: 242, 248, 255; /* Subtile Highlights für Milchglas */
   --glass-tint-alpha-subtle: 0.18;
   --glass-tint-alpha-strong: 0.28;
   --glass-tint-alpha-neutral: 0.22;

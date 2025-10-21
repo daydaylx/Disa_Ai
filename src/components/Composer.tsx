@@ -25,8 +25,8 @@ export function Composer({ value, onChange, onSend, onStop, streaming, canSend }
 
   return (
     <div
-      className="safe-px sticky bottom-0 z-40 border-t border-border bg-surface-0 pb-4 pt-2"
-      style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}
+      className="safe-px bg-surface-0/95 sticky bottom-0 z-40 border-t border-border pb-0 pt-2 backdrop-blur-md"
+      style={{ paddingBottom: "calc(var(--mobile-safe-bottom) + var(--spacing-lg))" }}
     >
       <div className="mx-auto w-full max-w-[var(--max-content-width)]">
         <div id="composer-help" className="sr-only">

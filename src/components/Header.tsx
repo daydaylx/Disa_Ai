@@ -13,37 +13,45 @@ export const Header: React.FC<HeaderProps> = ({
   model = "openrouter/auto",
   tokensUsed = 0,
 }) => {
-  const statusColors = {
-    online: "bg-green-500",
-    offline: "bg-red-500",
-    loading: "bg-yellow-500",
-    error: "bg-red-500",
+  const statusColors: Record<NonNullable<HeaderProps["status"]>, string> = {
+    online: "bg-success",
+    offline: "bg-danger",
+    loading: "bg-warning",
+    error: "bg-danger",
   };
 
   return (
-    <header className="sticky top-0 z-10 mb-4 w-full px-4 py-6">
+    <header
+      className="sticky top-0 z-10 mb-4 w-full px-page-x pb-6 pt-2"
+      style={{ paddingTop: "calc(var(--mobile-safe-top) + var(--spacing-lg))" }}
+    >
       <Glass
         variant="standard"
-        className="mx-auto max-w-[720px] border-b border-[var(--glass-stroke-strong)] p-3 backdrop-blur-md"
+        className="mx-auto flex max-w-[var(--max-content-width)] flex-col gap-3 border border-border/50 px-5 py-4 shadow-level2 backdrop-blur-lg"
       >
         <div className="flex flex-col items-center">
           {/* Status und Modell Info */}
-          <div className="mb-2 flex w-full items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className={`h-2 w-2 rounded-full ${statusColors[status]}`}></div>
-              <span className="text-xs text-[var(--fg-dim)]">{model}</span>
+          <div className="flex w-full items-center justify-between text-xs text-text-subtle">
+            <div className="flex items-center gap-2">
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${statusColors[status]}`}
+                aria-hidden="true"
+              />
+              <span className="font-medium text-text-muted">{model}</span>
             </div>
 
             {tokensUsed > 0 && (
-              <span className="text-xs text-[var(--fg-dim)]">{tokensUsed} Tokens</span>
+              <span className="text-text-muted">
+                <span className="font-medium text-text-strong">{tokensUsed}</span> Tokens
+              </span>
             )}
           </div>
 
           {/* Haupt-Titel */}
-          <h1 className="mb-1 text-xl font-bold text-[var(--fg)]">Disa AI</h1>
+          <h1 className="text-token-h2 font-semibold text-text-strong">Disa AI</h1>
 
           {/* Beschreibungstext */}
-          <p className="max-w-md text-center text-xs text-[var(--fg-dim)]">
+          <p className="max-w-md text-center text-sm leading-6 text-text-muted">
             Dein künstlicher Freund und Helfer, ein guter Freund, nicht immer ehrlich, aber immer
             da.
           </p>

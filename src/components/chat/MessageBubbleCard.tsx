@@ -33,10 +33,10 @@ export function MessageBubbleCard({
   return (
     <article
       className={cn(
-        "relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-base border transition-all duration-200",
+        "group relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-base border transition-all duration-200",
         variant === "assistant"
-          ? "glass glass--subtle border-border/80 pl-6 hover:-translate-y-[1px] hover:shadow-level2"
-          : "glass glass--strong border-border/60 pr-6 hover:-translate-y-[1px] hover:shadow-level3",
+          ? "glass glass--subtle border-border/80 py-3 pl-6 pr-5 hover:-translate-y-[1px] hover:shadow-level2 sm:py-4 sm:pl-8 sm:pr-6"
+          : "glass glass--strong border-border/60 py-3 pl-5 pr-6 hover:-translate-y-[1px] hover:shadow-level3 sm:py-4 sm:pl-6 sm:pr-8",
         className,
       )}
       {...props}
@@ -59,14 +59,14 @@ export function MessageBubbleCard({
 
       <header
         className={cn(
-          "mb-2 flex items-baseline gap-3 text-xs font-medium uppercase tracking-[0.08em] transition-colors duration-200",
-          variant === "assistant" ? "text-text-1" : "text-text-1",
+          "mb-2 flex items-baseline gap-3 text-[11px] font-medium uppercase tracking-[0.08em] text-text-subtle transition-colors duration-200",
+          variant === "assistant" ? "sm:pl-1" : "sm:pr-1",
         )}
       >
         <span className="truncate font-semibold">{author}</span>
         {label ? (
           <time
-            className="text-[11px] font-normal text-text-1 opacity-70 transition-opacity duration-200 group-hover:opacity-100"
+            className="text-[11px] font-normal text-text-muted opacity-70 transition-opacity duration-200 group-hover:opacity-100"
             dateTime={iso}
           >
             {label}
@@ -74,7 +74,7 @@ export function MessageBubbleCard({
         ) : null}
       </header>
 
-      <p className="whitespace-pre-wrap text-sm leading-6 text-text-0 transition-colors duration-200">
+      <p className="whitespace-pre-wrap text-[15px] leading-7 text-text-strong transition-colors duration-200">
         {body}
       </p>
 

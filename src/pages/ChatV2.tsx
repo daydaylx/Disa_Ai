@@ -740,14 +740,14 @@ export default function ChatV2() {
                         <div className="glass glass--subtle mr-12 max-w-[85%] rounded-base border border-border/80 p-4">
                           <div className="flex items-center space-x-3">
                             <div className="flex space-x-1">
-                              <div className="h-2 w-2 animate-bounce rounded-full bg-accent1"></div>
-                              <div className="h-2 w-2 animate-bounce rounded-full bg-accent2 [animation-delay:0.15s]"></div>
-                              <div className="h-2 w-2 animate-bounce rounded-full bg-accent1 [animation-delay:0.3s]"></div>
+                              <div className="h-2 w-2 rounded-full bg-accent1 motion-safe:animate-bounce"></div>
+                              <div className="h-2 w-2 rounded-full bg-accent2 [animation-delay:0.15s] motion-safe:animate-bounce"></div>
+                              <div className="h-2 w-2 rounded-full bg-accent1 [animation-delay:0.3s] motion-safe:animate-bounce"></div>
                             </div>
-                            <span className="animate-pulse text-sm text-text-1">
+                            <span className="text-sm text-text-1 motion-safe:animate-pulse">
                               Disa denkt nach...
                             </span>
-                            <div className="h-2 w-2 animate-pulse rounded-full bg-accent1"></div>
+                            <div className="h-2 w-2 rounded-full bg-accent1 motion-safe:animate-pulse"></div>
                           </div>
                           {/* Subtle shimmer effect */}
                           <div className="from-accent1/20 via-accent1/40 to-accent1/20 animate-shimmer mt-2 h-1 rounded-full bg-gradient-to-r"></div>
@@ -760,7 +760,10 @@ export default function ChatV2() {
             </>
           )}
 
-          <div className="safe-px sticky bottom-0 z-40 border-t border-border bg-surface-0 pb-4 pt-2">
+          <div
+            className="safe-px bg-surface-0/95 sticky bottom-0 z-40 border-t border-border pb-0 pt-2 backdrop-blur-md"
+            style={{ paddingBottom: "calc(var(--mobile-safe-bottom) + var(--spacing-lg))" }}
+          >
             <div className="mx-auto w-full max-w-[var(--max-content-width)]">
               <div className="rounded-lg border border-border bg-surface-1 p-2">
                 <div className="flex items-end gap-3">
@@ -793,13 +796,13 @@ export default function ChatV2() {
                 <div className="mt-2 flex items-center justify-between text-xs text-text-1">
                   <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
                   {isLoading && (
-                    <span className="animate-fade-in flex items-center gap-2">
-                      <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-accent1"></span>
+                    <span className="animate-fade-in flex items-center gap-2" aria-live="polite">
+                      <span className="inline-flex h-2 w-2 rounded-full bg-accent1 motion-safe:animate-pulse"></span>
                       <span className="text-text-1">Disa tippt...</span>
                       <div className="flex space-x-1">
-                        <div className="h-1 w-1 animate-bounce rounded-full bg-accent2"></div>
-                        <div className="h-1 w-1 animate-bounce rounded-full bg-accent1 [animation-delay:0.1s]"></div>
-                        <div className="h-1 w-1 animate-bounce rounded-full bg-accent2 [animation-delay:0.2s]"></div>
+                        <div className="h-1 w-1 rounded-full bg-accent2 motion-safe:animate-bounce"></div>
+                        <div className="h-1 w-1 rounded-full bg-accent1 [animation-delay:0.1s] motion-safe:animate-bounce"></div>
+                        <div className="h-1 w-1 rounded-full bg-accent2 [animation-delay:0.2s] motion-safe:animate-bounce"></div>
                       </div>
                     </span>
                   )}

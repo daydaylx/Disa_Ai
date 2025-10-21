@@ -482,6 +482,8 @@ function ModelListVirtualized({
 
   const renderCard = (m: MergedEntry) => {
     const isFavorite = isFavoriteModel(m);
+    const maybeDescription = (m as Record<string, unknown>).description;
+    const description = typeof maybeDescription === "string" ? maybeDescription : undefined;
     const active = Boolean(
       activeValue &&
         (activeValue === m.id ||
@@ -533,9 +535,9 @@ function ModelListVirtualized({
           </Button>
         </CardHeader>
         <CardContent className="space-y-4 pt-2">
-          {m.description && (
+          {description && (
             <p className="whitespace-pre-line break-words text-sm leading-6 text-text-1">
-              {m.description}
+              {description}
             </p>
           )}
           <div className="flex items-center justify-between text-sm text-text-1">
