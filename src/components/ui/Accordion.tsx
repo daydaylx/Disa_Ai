@@ -22,13 +22,16 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
   const toggle = useCallback(
     (i: number) => {
       setOpenSet((prev) => {
-        const next = new Set(prev);
         if (single) {
-          next.clear();
-          next.add(i);
-        } else {
-          next.has(i) ? next.delete(i) : next.add(i);
+          const isOpen = prev.has(i);
+          const next = new Set<number>();
+          if (!isOpen) {
+            next.add(i);
+          }
+          return next;
         }
+        const next = new Set(prev);
+        next.has(i) ? next.delete(i) : next.add(i);
         return next;
       });
     },
