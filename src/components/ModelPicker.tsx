@@ -514,7 +514,7 @@ function ModelListVirtualized({
       >
         <CardHeader className="flex-row items-start justify-between pb-2">
           <div className="flex-1">
-            <CardTitle>{m.label ?? m.id}</CardTitle>
+            <CardTitle className="break-words">{m.label ?? m.id}</CardTitle>
             <CardDescription>{m.provider ?? "Unbekannter Provider"}</CardDescription>
           </div>
           <Button
@@ -533,6 +533,11 @@ function ModelListVirtualized({
           </Button>
         </CardHeader>
         <CardContent className="space-y-4 pt-2">
+          {m.description && (
+            <p className="whitespace-pre-line break-words text-sm leading-6 text-text-1">
+              {m.description}
+            </p>
+          )}
           <div className="flex items-center justify-between text-sm text-text-1">
             <span title="Kontextfenster">
               {m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—"}

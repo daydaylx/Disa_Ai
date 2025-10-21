@@ -15,6 +15,19 @@ interface RoleSelectorProps {
   className?: string;
 }
 
+function summariseRole(role: Role): string {
+  if (role.description?.trim()) {
+    return role.description.trim();
+  }
+
+  const normalized = role.systemPrompt.replace(/\s+/g, " ").trim();
+  if (!normalized) {
+    return "Kein Beschreibungstext vorhanden.";
+  }
+
+  return normalized;
+}
+
 export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -74,7 +87,8 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
       roles = roles.filter((p) => {
         const nameMatch = p.name.toLowerCase().includes(term);
         const descriptionMatch = p.description?.toLowerCase().includes(term) ?? false;
-        return nameMatch || descriptionMatch;
+        const systemMatch = p.systemPrompt.toLowerCase().includes(term);
+        return nameMatch || descriptionMatch || systemMatch;
       });
     }
 
@@ -195,65 +209,74 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
               </div>
             ) : (
               <div className="space-y-2">
-                {filteredRoles.map((role) => (
-                  <button
-                    key={role.id}
-                    onClick={() => handleRoleSelect(role)}
-                    className={cn(
-                      "relative flex w-full items-center gap-4 rounded-lg p-4 text-left transition-all",
-                      selectedRole?.id === role.id
-                        ? "bg-brand/20 ring-1 ring-brand/50"
-                        : "hover:bg-surface-2",
-                    )}
-                  >
-                    <div
+                {filteredRoles.map((role) => {
+                  const summary = summariseRole(role);
+
+                  return (
+                    <button
+                      key={role.id}
+                      onClick={() => handleRoleSelect(role)}
                       className={cn(
-                        "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
-                        selectedRole?.id === role.id ? "bg-brand/30" : "bg-surface-2",
+                        "relative flex w-full items-start gap-4 rounded-lg p-4 text-left transition-all",
+                        selectedRole?.id === role.id
+                          ? "bg-brand/20 ring-1 ring-brand/50"
+                          : "hover:bg-surface-2",
                       )}
                     >
-                      <Bot
+                      <div
                         className={cn(
-                          "h-5 w-5",
-                          selectedRole?.id === role.id ? "text-brand" : "text-text-1",
+                          "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
+                          selectedRole?.id === role.id ? "bg-brand/30" : "bg-surface-2",
                         )}
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="truncate text-sm font-medium text-text-0">
-                          {role.name}
-                        </span>
-                        {selectedRole?.id === role.id && (
-                          <span className="text-sm text-brand">✓</span>
+                      >
+                        <Bot
+                          className={cn(
+                            "h-5 w-5",
+                            selectedRole?.id === role.id ? "text-brand" : "text-text-1",
+                          )}
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start gap-2">
+                          <span className="break-words text-sm font-medium text-text-0">
+                            {role.name}
+                          </span>
+                          {selectedRole?.id === role.id && (
+                            <span className="mt-0.5 text-sm text-brand">✓</span>
+                          )}
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center gap-2">
+                          {role.category && (
+                            <Badge
+                              variant="secondary"
+                              className={cn(
+                                "px-2 py-0.5 text-xs",
+                                role.category === "Erwachsene"
+                                  ? "border-pink-500/30 bg-pink-500/20 text-pink-200"
+                                  : "",
+                              )}
+                            >
+                              {role.category}
+                            </Badge>
+                          )}
+                          {role.tags?.includes("adult") && (
+                            <Badge
+                              variant="outline"
+                              className="border-pink-500/50 bg-pink-500/10 px-1.5 py-0.5 text-xs text-pink-300"
+                            >
+                              18+
+                            </Badge>
+                          )}
+                        </div>
+                        {summary && (
+                          <p className="mt-2 whitespace-pre-line break-words text-xs leading-5 text-text-1">
+                            {summary}
+                          </p>
                         )}
                       </div>
-                      <div className="mt-1 flex items-center gap-2">
-                        {role.category && (
-                          <Badge
-                            variant="secondary"
-                            className={cn(
-                              "px-2 py-0.5 text-xs",
-                              role.category === "Erwachsene"
-                                ? "border-pink-500/30 bg-pink-500/20 text-pink-200"
-                                : "",
-                            )}
-                          >
-                            {role.category}
-                          </Badge>
-                        )}
-                        {role.tags?.includes("adult") && (
-                          <Badge
-                            variant="outline"
-                            className="border-pink-500/50 bg-pink-500/10 px-1.5 py-0.5 text-xs text-pink-300"
-                          >
-                            18+
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>

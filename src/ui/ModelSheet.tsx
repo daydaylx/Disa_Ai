@@ -180,7 +180,7 @@ export default function ModelSheet({
                         >
                           <div className="flex items-center justify-between gap-3">
                             <div className="min-w-0 flex-1">
-                              <h4 className="truncate text-sm font-medium text-text-0">
+                              <h4 className="break-words text-sm font-medium text-text-0">
                                 {model.label || model.id}
                               </h4>
                               <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-text-1">
@@ -197,11 +197,16 @@ export default function ModelSheet({
                                   </span>
                                 )}
                                 {model.tags.length > 0 && (
-                                  <span className="truncate text-text-1">
-                                    {model.tags.slice(0, 2).join(" • ")}
+                                  <span className="break-words text-text-1">
+                                    {model.tags.join(" • ")}
                                   </span>
                                 )}
                               </div>
+                              {model.description && (
+                                <p className="mt-2 whitespace-pre-line break-words text-xs leading-5 text-text-1">
+                                  {model.description}
+                                </p>
+                              )}
                             </div>
                             {isSelected && (
                               <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-brand text-white">
