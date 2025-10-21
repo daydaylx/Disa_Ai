@@ -72,7 +72,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
                 {title}
               </h3>
               {expanded ? (
-                <p className="mt-1.5 whitespace-pre-line text-xs leading-5 text-text-1 sm:text-sm sm:leading-6">
+                <p className="mt-1.5 whitespace-pre-line break-words text-xs leading-5 text-text-1 sm:text-sm sm:leading-6">
                   {description}
                 </p>
               ) : null}

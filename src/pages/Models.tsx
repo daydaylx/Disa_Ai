@@ -274,8 +274,6 @@ export default function ModelsPage() {
         }${item.ctx ? ` | Kontext: ${formatContext(item.ctx)}` : ""}`}
         onClick={() => selectModelById(item.id, item.label)}
         badge={item.provider}
-        showDescriptionOnToggle
-        defaultExpanded
         isActive={isSelected}
         className={cn("min-h-[140px]", isSelected && "ring-2 ring-brand")}
       />
