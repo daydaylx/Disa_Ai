@@ -317,6 +317,8 @@ function RolesTab() {
                       badge={role.category}
                       isActive={activeRole?.id === role.id}
                       onClick={() => setActiveRole(role)}
+                      showDescriptionOnToggle
+                      defaultExpanded={activeRole?.id === role.id}
                       aria-label={t.studio.actions.selectRole(role.name)}
                       data-testid={`role-card-${role.id}`}
                     />
