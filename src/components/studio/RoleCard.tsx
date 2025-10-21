@@ -11,7 +11,6 @@ export interface RoleCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonEleme
   description: string;
   badge?: string;
   isActive?: boolean;
-  showDescriptionOnToggle?: boolean;
   defaultExpanded?: boolean;
   disabled?: boolean;
 }
@@ -24,15 +23,14 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
       badge,
       isActive = false,
       className,
-      showDescriptionOnToggle = false,
-      defaultExpanded,
+      defaultExpanded = false,
       onClick,
       disabled,
       ...props
     },
     ref,
   ) => {
-    const [expanded, setExpanded] = useState(defaultExpanded ?? !showDescriptionOnToggle);
+    const [expanded, setExpanded] = useState(defaultExpanded);
 
     const handleInfoToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
@@ -47,7 +45,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         data-state={isActive ? "active" : "inactive"}
         className={cn(
           cardVariants({ interactive: true }),
-          "flex min-h-[76px] flex-col p-3 text-left",
+          "flex flex-col p-3 text-left",
           !disabled && "cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
           isActive && "ring-2 ring-brand",
@@ -63,27 +61,32 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
               <h3 className="text-sm font-semibold tracking-tight text-text-0 sm:text-base">
                 {title}
               </h3>
-              {expanded ? (
-                <p className="mt-1.5 whitespace-pre-line break-words text-xs leading-5 text-text-1 sm:text-sm sm:leading-6">
-                  {description}
-                </p>
-              ) : null}
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              {badge && <Badge variant="secondary">{badge}</Badge>}
-              {showDescriptionOnToggle && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={handleInfoToggle}
-                  aria-label={expanded ? "Beschreibung verbergen" : "Beschreibung anzeigen"}
-                  aria-expanded={expanded}
-                >
-                  <Info className="h-4 w-4" />
-                </Button>
-              )}
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleInfoToggle}
+                aria-label={expanded ? "Beschreibung verbergen" : "Beschreibung anzeigen"}
+                aria-expanded={expanded}
+              >
+                <Info className="h-4 w-4" />
+              </Button>
             </div>
           </div>
+
+          {expanded && (
+            <div className="mt-3 border-t border-border/60 pt-3">
+              <p className="whitespace-pre-line break-words text-xs leading-5 text-text-1 sm:text-sm sm:leading-6">
+                {description}
+              </p>
+              {badge && (
+                <div className="mt-2">
+                  <Badge variant="secondary">{badge}</Badge>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </button>
     );
