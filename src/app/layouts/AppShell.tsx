@@ -24,7 +24,7 @@ const NAV_ITEMS = [
   { to: "/settings", label: "Einstellungen", icon: Settings },
 ];
 
-// Navigation is now handled by NavigationSidepanel component
+// Navigation wird adaptiv über die Top-Bar und das mobile Dropdown-Menü bereitgestellt
 
 function TopBar() {
   const { activeRole } = useStudio();
