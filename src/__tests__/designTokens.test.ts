@@ -21,9 +21,9 @@ describe("design tokens", () => {
       surface2: designTokens.colors.surface2,
     }).toMatchInlineSnapshot(`
       {
-        "surface0": "rgba(12, 16, 23, 0.94)",
-        "surface1": "rgba(17, 22, 31, 0.96)",
-        "surface2": "rgba(23, 29, 41, 0.98)",
+        "surface0": "rgba(13, 17, 24, 0.82)",
+        "surface1": "rgba(18, 23, 32, 0.88)",
+        "surface2": "rgba(24, 30, 42, 0.92)",
       }
     `);
   });
