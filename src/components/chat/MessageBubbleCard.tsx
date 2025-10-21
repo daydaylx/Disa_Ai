@@ -33,10 +33,11 @@ export function MessageBubbleCard({
   return (
     <article
       className={cn(
-        "group relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-base border transition-all duration-200",
+        "group relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-base border border-[var(--border-card)] bg-card text-text-0 shadow-card transition-all duration-200 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-brand/60 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
         variant === "assistant"
-          ? "glass glass--subtle border-border/80 py-3 pl-6 pr-5 hover:-translate-y-[1px] hover:shadow-level2 sm:py-4 sm:pl-8 sm:pr-6"
-          : "glass glass--strong border-border/60 py-3 pl-5 pr-6 hover:-translate-y-[1px] hover:shadow-level3 sm:py-4 sm:pl-6 sm:pr-8",
+          ? "py-3 pl-6 pr-5 sm:py-4 sm:pl-8 sm:pr-6"
+          : "bg-surface-2 py-3 pl-5 pr-6 sm:py-4 sm:pl-6 sm:pr-8",
+        "motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-card-hover",
         className,
       )}
       {...props}
@@ -77,9 +78,6 @@ export function MessageBubbleCard({
       <p className="whitespace-pre-wrap text-[15px] leading-7 text-text-strong transition-colors duration-200">
         {body}
       </p>
-
-      {/* Subtle hover effect overlay */}
-      <div className="pointer-events-none absolute inset-0 rounded-base bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
     </article>
   );
 }

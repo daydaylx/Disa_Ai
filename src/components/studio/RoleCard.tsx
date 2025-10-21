@@ -1,11 +1,12 @@
 import { Info } from "lucide-react";
-import { forwardRef, useState } from "react";
+import { type ButtonHTMLAttributes, forwardRef, useState } from "react";
 
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { cardVariants } from "../ui/card";
 
-export interface RoleCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface RoleCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "title"> {
   title: string;
   description: string;
   badge?: string;
@@ -15,7 +16,7 @@ export interface RoleCardProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
 }
 
-export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
+export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
   (
     {
       title,
@@ -38,31 +39,22 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
       setExpanded((prev) => !prev);
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (disabled) return;
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        onClick?.(event as unknown as React.MouseEvent<HTMLDivElement>);
-      }
-    };
-
     return (
-      <div
+      <button
         ref={ref}
+        type="button"
         aria-pressed={isActive}
         data-state={isActive ? "active" : "inactive"}
         className={cn(
-          "card-depth relative flex min-h-[76px] flex-col rounded-lg border border-border bg-surface-1 p-3 text-left text-text-0 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
-          !disabled && "cursor-pointer hover:bg-surface-2",
+          cardVariants({ interactive: true }),
+          "flex min-h-[76px] flex-col p-3 text-left",
+          !disabled && "cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
           isActive && "ring-2 ring-brand",
           className,
         )}
-        role="button"
-        tabIndex={0}
-        aria-disabled={disabled || undefined}
         onClick={disabled ? undefined : onClick}
-        onKeyDown={handleKeyDown}
+        disabled={disabled}
         {...props}
       >
         <div className="flex h-full flex-col">
@@ -93,7 +85,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
             </div>
           </div>
         </div>
-      </div>
+      </button>
     );
   },
 );

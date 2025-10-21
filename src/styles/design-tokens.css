@@ -15,6 +15,13 @@
   --surface-glass-card: rgba(var(--glass-bg), var(--glass-alpha-card));
   --surface-glass-panel: rgba(var(--glass-bg), var(--glass-alpha-panel));
   --surface-glass-chrome: rgba(var(--glass-bg), var(--glass-alpha-chrome));
+  --surface-card-default: var(--surface-1);
+  --surface-card-hover: var(--surface-2);
+  --surface-card-muted: color-mix(in srgb, var(--surface-1) 75%, transparent);
+  --border-card: rgba(var(--border-rgb), 0.55);
+  --border-card-strong: rgba(var(--border-strong-rgb), 0.65);
+  --shadow-card: 0 12px 28px rgba(0, 0, 0, 0.35);
+  --shadow-card-hover: 0 18px 36px rgba(0, 0, 0, 0.45);
 
   /* Text-Tokens (WCAG AA) */
   --text-strong: #f4f7ff; /* 13:1 auf bg1 */

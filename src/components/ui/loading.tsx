@@ -2,6 +2,8 @@ import React from "react";
 
 import { cn } from "@/lib/utils";
 
+import { Card, cardVariants } from "./card";
+
 interface LoadingProps {
   variant?: "dots" | "pulse" | "shimmer" | "spinner";
   size?: "sm" | "md" | "lg";
@@ -98,7 +100,12 @@ interface LoadingBubbleProps {
 export function LoadingBubble({ text = "Disa denkt nach...", className }: LoadingBubbleProps) {
   return (
     <div className={cn("animate-fade-in flex justify-start", className)}>
-      <div className="glass glass--subtle mr-12 max-w-[85%] rounded-base border border-border/80 p-4">
+      <div
+        className={cn(
+          cardVariants({ tone: "default", elevation: "sm" }),
+          "mr-12 max-w-[85%] rounded-base border border-[var(--border-card)] p-4",
+        )}
+      >
         <div className="flex items-center space-x-3">
           <Loading variant="dots" size="md" />
           <span className="animate-pulse text-sm text-text-1">{text}</span>
@@ -118,9 +125,9 @@ interface LoadingCardProps {
 
 export function LoadingCard({ title = "Laden...", className, children }: LoadingCardProps) {
   return (
-    <div className={cn("surface-card animate-fade-in", className)}>
+    <Card className={cn("animate-fade-in", className)} padding="md">
       {(title || children) && (
-        <div className="space-y-4 p-6">
+        <div className="flex flex-col gap-4">
           {title && (
             <div className="from-text-1/20 to-text-1/40 animate-shimmer h-6 w-1/3 rounded bg-gradient-to-r" />
           )}
@@ -139,6 +146,6 @@ export function LoadingCard({ title = "Laden...", className, children }: Loading
           )}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

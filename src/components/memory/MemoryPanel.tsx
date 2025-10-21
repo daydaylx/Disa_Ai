@@ -166,7 +166,7 @@ export function MemoryPanel({
                 {memoryPoints.length} Punkte
               </Badge>
               {memoryPoints.length >= 10 && (
-                <Badge variant="outline" className="border-warn text-warn text-xs">
+                <Badge variant="outline" className="border-warning text-xs text-warning">
                   Fast voll
                 </Badge>
               )}

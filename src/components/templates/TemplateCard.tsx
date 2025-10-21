@@ -17,11 +17,11 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
   const getDifficultyColor = (difficulty?: string) => {
     switch (difficulty) {
       case "beginner":
-        return "bg-success/10 text-success border-success/30";
+        return "bg-success/15 text-success border-success/40";
       case "intermediate":
-        return "bg-warn/10 text-warn border-warn/30";
+        return "bg-warning-bg text-warning border-warning/50";
       case "advanced":
-        return "bg-danger/10 text-danger border-danger/30";
+        return "bg-danger-bg text-danger border-danger/40";
       default:
         return "bg-surface-2 text-text-1 border-border";
     }
@@ -37,8 +37,19 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
 
   return (
     <Card
+      interactive
+      role="button"
+      tabIndex={0}
+      aria-label={`${template.name} auswählen`}
+      onClick={handleUse}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleUse();
+        }
+      }}
       className={cn(
-        "group relative cursor-pointer transition-all duration-200 hover:scale-[1.02]",
+        "group relative cursor-pointer focus-visible:ring-brand motion-safe:hover:-translate-y-[1px]",
         className,
       )}
     >
@@ -122,11 +133,25 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
         )}
 
         <div className="flex gap-2">
-          <Button onClick={handleUse} className="flex-1" size="sm">
+          <Button
+            onClick={(event) => {
+              event.stopPropagation();
+              handleUse();
+            }}
+            className="flex-1"
+            size="sm"
+          >
             Use Template
           </Button>
           {onPreview && (
-            <Button onClick={handlePreview} variant="outline" size="sm">
+            <Button
+              onClick={(event) => {
+                event.stopPropagation();
+                handlePreview();
+              }}
+              variant="outline"
+              size="sm"
+            >
               Preview
             </Button>
           )}

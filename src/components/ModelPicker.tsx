@@ -505,14 +505,12 @@ function ModelListVirtualized({
         role="option"
         aria-selected={active}
         tabIndex={0}
-        className={cn(
-          "cursor-pointer transition-all",
-          active && "ring-2 ring-brand",
-          "focus-visible:ring-2 focus-visible:ring-brand",
-        )}
+        interactive
+        className={cn("cursor-pointer", active && "ring-2 ring-brand")}
         onClick={handleSelect}
         onKeyDown={handleKeyDown}
         data-testid="model-option"
+        data-state={active ? "active" : "inactive"}
       >
         <CardHeader className="flex-row items-start justify-between pb-2">
           <div className="flex-1">
@@ -522,7 +520,10 @@ function ModelListVirtualized({
           <Button
             variant="ghost"
             size="sm"
-            className={cn("rounded-full px-2 py-1", isFavorite && "text-yellow-400")}
+            className={cn(
+              "rounded-full px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+              isFavorite && "text-warning",
+            )}
             aria-pressed={isFavorite}
             aria-label={isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
             onClick={(event) => {
