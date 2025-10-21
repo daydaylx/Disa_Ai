@@ -65,11 +65,17 @@ function TopBar() {
                 size="icon"
                 className="ml-auto h-9 w-9 rounded-full border border-border/40 md:hidden"
                 aria-label="Navigation öffnen"
+                data-testid="nav-menu-trigger"
               >
                 <Menu className="h-4 w-4" aria-hidden="true" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={8} className="w-48 space-y-1">
+            <DropdownMenuContent
+              align="end"
+              sideOffset={8}
+              className="w-48 space-y-1"
+              data-testid="nav-menu"
+            >
               {NAV_ITEMS.map((item) => (
                 <DropdownMenuItem
                   key={item.to}
