@@ -1,10 +1,11 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { chatStream } from "../../src/api/openrouter";
 import { useChat } from "../../src/hooks/useChat";
 
 // Mock the dependencies
-vi.mock("../../src/lib/openrouter", () => ({
+vi.mock("../../src/api/openrouter", () => ({
   chatStream: vi.fn(),
 }));
 
@@ -14,8 +15,11 @@ Object.defineProperty(global.crypto, "randomUUID", {
 });
 
 describe("useChat", () => {
+  let mockChatStream: ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    mockChatStream = vi.mocked(chatStream);
   });
 
   it("should initialize with empty messages", () => {
@@ -42,35 +46,29 @@ describe("useChat", () => {
 
   it("should handle streaming response correctly", async () => {
     // Mock the chatStream to simulate a response
-    const mockStream = await vi.importMock("../../src/lib/openrouter");
-    const mockResponse = {
-      [Symbol.asyncIterator]: () => {
-        const chunks = [
-          { type: "content", content: "Hello" },
-          { type: "content", content: " world!" },
-          { type: "done" },
-        ];
-        let index = 0;
-        return {
-          next: async () => {
-            if (index < chunks.length) {
-              return { value: chunks[index++], done: false };
-            }
-            return { value: undefined, done: true };
-          },
-        };
-      },
-    };
-    mockStream.chatStream.mockResolvedValue(mockResponse);
+    mockChatStream.mockImplementation((_messages, onDelta, opts) => {
+      opts?.onStart?.();
+
+      // Initialize the assistant message
+      onDelta("", {
+        id: "assistant-123",
+        role: "assistant",
+        timestamp: Date.now(),
+      });
+
+      // Stream the content
+      onDelta("Hello");
+      onDelta(" world!");
+
+      opts?.onDone?.("Hello world!");
+    });
 
     const { result } = renderHook(() => useChat());
 
     const testMessage = { role: "user", content: "Hello" };
-    result.current.append(testMessage);
 
-    // Wait for the stream to complete
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
+    await act(async () => {
+      await result.current.append(testMessage);
     });
 
     // Check that we have both user and assistant messages
@@ -82,17 +80,8 @@ describe("useChat", () => {
 
   it("should handle errors during streaming", async () => {
     // Mock the chatStream to simulate an error
-    const mockStream = await vi.importMock("../../src/lib/openrouter");
-    const mockErrorStream = {
-      [Symbol.asyncIterator]: () => {
-        return {
-          next: async () => {
-            return { value: { type: "error", error: "RATE_LIMITED" }, done: true };
-          },
-        };
-      },
-    };
-    mockStream.chatStream.mockResolvedValue(mockErrorStream);
+    const error = new Error("RATE_LIMITED");
+    mockChatStream.mockRejectedValue(error);
 
     const { result } = renderHook(() => useChat());
 

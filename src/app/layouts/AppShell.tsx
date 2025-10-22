@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import { SideNavigation } from "../../components/layout/SideNavigation";
 import { ScrollToVoid } from "../../components/layout/ScrollToVoid";
+import { SideNavigation } from "../../components/layout/SideNavigation";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
