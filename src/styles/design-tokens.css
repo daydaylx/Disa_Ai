@@ -91,9 +91,9 @@
 
   /* Touch targets */
   --size-touch-compact: 2.75rem;
-  --size-touch-comfortable: 3rem;
-  --size-touch-relaxed: 3.25rem;
-  --size-touch-spacious: 3.5rem;
+  --size-touch-comfortable: 3.25rem;
+  --size-touch-relaxed: 3.5rem;
+  --size-touch-spacious: 3.75rem;
 
   /* Scrollbar dimensions */
   --size-scrollbar: 8px;
@@ -334,8 +334,8 @@
     --color-surface-overlay: rgba(0, 0, 0, 0.6);
 
     --color-text-primary: #f3f2f1;
-    --color-text-secondary: #d2d0ce;
-    --color-text-tertiary: #b3b0ad;
+    --color-text-secondary: #e1dfdd;
+    --color-text-tertiary: #c9c7c4;
     --color-text-muted: #8a8886;
     --color-text-inverse: #201f1e;
     --color-text-on-brand: #0b0b0a;
@@ -356,16 +356,16 @@
     --color-brand-strong: #0a65b0;
     --color-brand-on-primary: #0b0b0a;
 
-    --color-status-success-fg: #58d370;
+    --color-status-success-fg: #74ec87;
     --color-status-success-bg: #0d3b21;
     --color-status-success-border: #258d47;
-    --color-status-warning-fg: #f5cc4d;
+    --color-status-warning-fg: #f8d96c;
     --color-status-warning-bg: #3d2e0d;
     --color-status-warning-border: #d8a104;
-    --color-status-danger-fg: #f1707b;
+    --color-status-danger-fg: #f88e98;
     --color-status-danger-bg: #47141a;
     --color-status-danger-border: #d13438;
-    --color-status-info-fg: #6cb8f6;
+    --color-status-info-fg: #85c8ff;
     --color-status-info-bg: #123c73;
     --color-status-info-border: #2899f5;
 
@@ -553,6 +553,51 @@
     --motion-easing-exit: linear;
     --motion-easing-accelerate: linear;
     --motion-easing-decelerate: linear;
+  }
+
+  /* Deaktiviere Animationen und Übergänge */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Entferne alle Animationen */
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-fade-in-down,
+  .animate-slide-in-right,
+  .animate-slide-in-left,
+  .animate-scale-in,
+  .animate-pulse,
+  .animate-bounce,
+  .animate-shimmer,
+  .animate-float,
+  .animate-glow,
+  .hover-lift,
+  .hover-scale,
+  .hover-glow,
+  .touch-ripple::before {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Entferne Bewegungseffekte für Kacheln */
+  .soft-tile:hover,
+  .soft-surface:hover,
+  .surface-card:hover,
+  .card-depth:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-surface);
+  }
+
+  /* Entferne Bewegungseffekte für StartTiles */
+  .group:hover {
+    transform: none !important;
   }
 }
 
