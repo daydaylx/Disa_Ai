@@ -17,7 +17,7 @@ export function StaticGlassCard({
   children,
   ...props
 }: StaticSurfaceSectionProps) {
-  const elevation = variant === "raised" ? "md" : "sm";
+  const elevation = variant === "raised" ? "raised" : "surface";
 
   return (
     <Card elevation={elevation} padding={padding} className={cn("relative", className)} {...props}>

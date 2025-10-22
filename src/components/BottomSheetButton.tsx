@@ -1,16 +1,22 @@
 import { Menu } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { BottomSheet } from "./BottomSheet";
+import { Button } from "./ui/button";
 
 type PanelTab = "history" | "roles" | "models" | "settings";
+
+type BottomSheetEvent = CustomEvent<{
+  action: "toggle" | "open" | "close";
+  tab?: PanelTab;
+}>;
 
 export const BottomSheetButton: React.FC = () => {
   const [sheetState, setSheetState] = useState<"closed" | "open">("closed");
   const [activeTab, setActiveTab] = useState<PanelTab>("history");
 
   const toggleSheet = () => {
-    setSheetState(sheetState === "closed" ? "open" : "closed");
+    setSheetState((prev) => (prev === "closed" ? "open" : "closed"));
   };
 
   const closeSheet = () => {
@@ -20,21 +26,54 @@ export const BottomSheetButton: React.FC = () => {
   const changeTab = (tab: PanelTab) => {
     setActiveTab(tab);
     // If the sheet is closed, opening it to the selected tab
-    if (sheetState === "closed") {
-      setSheetState("open");
-    }
+    setSheetState("open");
   };
+
+  useEffect(() => {
+    const handleExternalToggle = (event: Event) => {
+      const customEvent = event as BottomSheetEvent;
+      if (!customEvent.detail) return;
+
+      const { action, tab } = customEvent.detail;
+
+      if (tab) {
+        setActiveTab(tab);
+      }
+
+      if (action === "toggle") {
+        setSheetState((prev) => (prev === "closed" ? "open" : "closed"));
+        return;
+      }
+
+      if (action === "open") {
+        setSheetState("open");
+        return;
+      }
+
+      if (action === "close") {
+        setSheetState("closed");
+      }
+    };
+
+    window.addEventListener("disa:bottom-sheet", handleExternalToggle as EventListener);
+    return () => {
+      window.removeEventListener("disa:bottom-sheet", handleExternalToggle as EventListener);
+    };
+  }, []);
 
   return (
     <>
       {/* Floating Button to open the bottom sheet */}
-      <button
+      <Button
+        type="button"
+        variant="primary"
+        size="icon"
         onClick={toggleSheet}
-        className="glass glass--subtle fixed bottom-4 right-4 z-30 rounded-full border border-border/60 p-3 shadow-lg"
+        className="fixed bottom-[var(--space-md)] right-[var(--space-md)] z-30 shadow-raised"
         aria-label="Menü öffnen"
       >
-        <Menu size={20} />
-      </button>
+        <Menu className="h-5 w-5" />
+      </Button>
 
       {/* Bottom Sheet Component */}
       <BottomSheet

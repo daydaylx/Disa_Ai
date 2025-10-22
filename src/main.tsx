@@ -8,6 +8,7 @@ import { initEnvironment } from "./config/env";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 // PWA Installation Prompt
 import { registerSW } from "./lib/pwa/registerSW";
+import { themeController } from "./styles/theme";
 
 // Initialize environment configuration
 try {
@@ -37,6 +38,7 @@ function initializeApp() {
 }
 
 // Start the app
+themeController.init();
 initializeApp();
 
 // PWA Service Worker

@@ -1,30 +1,24 @@
 import { describe, expect, it } from "vitest";
 
-import { designTokens } from "../styles/design-tokens";
+import { designTokens, getDesignTokenVariables } from "../styles/design-tokens";
+import { colorTokens } from "../styles/tokens/color";
+import { motionTokens } from "../styles/tokens/motion";
+import { typographyTokens } from "../styles/tokens/typography";
 
 describe("design tokens", () => {
-  it("provides a WCAG-compliant text scale", () => {
-    expect(designTokens.text).toMatchInlineSnapshot(`
-      {
-        "muted": "rgba(204, 216, 233, 0.78)",
-        "primary": "#dde6f6",
-        "strong": "#f4f7ff",
-        "subtle": "rgba(204, 216, 233, 0.62)",
-      }
-    `);
+  it("exposes semantic surface layers for light mode", () => {
+    expect(designTokens.color.light.surfaces).toEqual(colorTokens.light.surfaces);
   });
 
-  it("exposes dark-surface layers for consistent contrast", () => {
-    expect({
-      surface0: designTokens.colors.surface0,
-      surface1: designTokens.colors.surface1,
-      surface2: designTokens.colors.surface2,
-    }).toMatchInlineSnapshot(`
-      {
-        "surface0": "rgba(13, 17, 24, 0.82)",
-        "surface1": "rgba(18, 23, 32, 0.88)",
-        "surface2": "rgba(24, 30, 42, 0.92)",
-      }
-    `);
+  it("maps dark-mode typography tokens to CSS variables", () => {
+    const vars = getDesignTokenVariables("dark");
+
+    expect(vars["--font-size-body"]).toBe(typographyTokens.textStyles.body.fontSize);
+    expect(vars["--line-height-body"]).toBe(typographyTokens.textStyles.body.lineHeight);
+    expect(vars["--color-text-primary"]).toBe(colorTokens.dark.text.primary);
+  });
+
+  it("keeps motion tokens within soft-depth durations", () => {
+    expect(designTokens.motion.duration).toEqual(motionTokens.duration);
   });
 });

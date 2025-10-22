@@ -2,6 +2,7 @@
  * Mobile-spezifische Shortcuts und Gesten für erweiterte UX
  */
 
+import { themeController } from "../../styles/theme";
 import { TouchGestureHandler } from "../touch/gestures";
 import { hapticFeedback } from "../touch/haptics";
 
@@ -327,10 +328,7 @@ export class MobileShortcutsManager {
    * Theme wechseln
    */
   private toggleTheme(): void {
-    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
-    const newTheme = currentTheme === "light" ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
+    themeController.toggle();
   }
 
   /**

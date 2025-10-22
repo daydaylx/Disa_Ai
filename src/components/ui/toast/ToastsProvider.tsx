@@ -78,26 +78,27 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     <ToastsContext.Provider value={value}>
       {children}
       {createPortal(
-        <div className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col items-center gap-2 p-3">
+        <div className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col items-center gap-[var(--space-stack-sm)] p-[var(--space-inline-md)]">
           {items.map((t) => (
             <div
               key={t.id}
               role="status"
               className={cn(
-                "pointer-events-auto flex w-[min(96vw,640px)] items-start gap-3 rounded-lg border border-border-strong bg-surface-1 p-3 text-text-strong shadow-level",
-                "tap-target",
+                "pointer-events-auto flex w-[min(96vw,640px)] items-start gap-[var(--space-inline-md)] rounded-[var(--radius-lg)] border border-border-strong bg-overlay-toast p-[var(--space-md)] text-overlay-toast-fg shadow-popover",
               )}
             >
               <div className="mt-0.5">{KIND_TO_ICON[t.kind]}</div>
               <div className="flex-1">
-                {t.title ? <div className="font-semibold leading-snug">{t.title}</div> : null}
+                {t.title ? (
+                  <div className="text-body font-semibold leading-snug">{t.title}</div>
+                ) : null}
                 {t.message ? (
-                  <div className="text-sm leading-snug text-text-muted">{t.message}</div>
+                  <div className="text-body leading-snug text-text-secondary">{t.message}</div>
                 ) : null}
                 {t.action ? (
                   <button
                     type="button"
-                    className="tap-target mt-2 inline-flex items-center justify-center rounded-base border border-transparent px-3 py-1 text-sm font-medium text-brand hover:bg-brand/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
+                    className="mt-[var(--space-2xs)] inline-flex items-center justify-center rounded-[var(--radius-md)] border border-transparent px-[var(--space-inline-md)] py-[var(--space-3xs)] text-body-sm font-medium text-action-ghost hover:bg-action-ghost-hover focus-visible:shadow-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]"
                     onClick={t.action.onClick}
                   >
                     {t.action.label}
@@ -107,7 +108,7 @@ export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
               <button
                 type="button"
                 aria-label="Schließen"
-                className="tap-target ml-2 inline-flex h-8 w-8 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-surface-2 hover:text-text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
+                className="ml-[var(--space-inline-sm)] inline-flex size-[var(--size-touch-compact)] items-center justify-center rounded-[var(--radius-md)] text-text-tertiary transition-[background,color] duration-small ease-standard hover:bg-action-ghost-hover hover:text-text-primary focus-visible:shadow-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]"
                 onClick={() => dismiss(t.id)}
               >
                 <Icon name="close" />

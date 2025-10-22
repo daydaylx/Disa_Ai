@@ -8,6 +8,7 @@ export * from "./input";
 export * from "./ModelCard";
 export * from "./select";
 export * from "./StaticGlassCard";
+export * from "./table";
 export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";

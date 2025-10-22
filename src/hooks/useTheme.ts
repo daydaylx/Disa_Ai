@@ -1,25 +1,37 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-// Single theme system - minimal dark
-const DATA_ATTRIBUTE = "data-ui-theme";
+import {
+  type ColorMode,
+  themeController,
+  type ThemePreference,
+  type ThemeState,
+} from "../styles/theme";
 
-function applyTheme() {
-  if (typeof document === "undefined") return;
+export function useTheme(): {
+  preference: ThemePreference;
+  mode: ColorMode;
+  setPreference: (preference: ThemePreference) => void;
+  toggle: () => void;
+} {
+  const [state, setState] = useState<ThemeState>(themeController.getState());
 
-  const root = document.documentElement;
-  root.setAttribute(DATA_ATTRIBUTE, "minimal-dark");
-  root.classList.add("dark");
-  root.classList.remove("light");
-}
-
-export function useTheme() {
   useEffect(() => {
-    applyTheme();
+    themeController.init();
+    return themeController.subscribe(setState);
   }, []);
 
-  // Simplified return for single theme
+  const setPreference = (preference: ThemePreference) => {
+    themeController.setPreference(preference);
+  };
+
+  const toggle = () => {
+    themeController.toggle();
+  };
+
   return {
-    mode: "minimal-dark" as const,
-    effectiveMode: "minimal-dark" as const,
+    preference: state.preference,
+    mode: state.mode,
+    setPreference,
+    toggle,
   };
 }

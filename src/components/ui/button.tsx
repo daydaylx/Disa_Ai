@@ -5,29 +5,32 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex min-h-[var(--touch-recommended)] items-center justify-center gap-2 whitespace-nowrap rounded-base border text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 disabled:pointer-events-none disabled:opacity-60 relative overflow-hidden group touch-target no-select",
+  "relative inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border text-body font-medium transition-[background,box-shadow,border-color,color,transform] duration-small ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)] focus-visible:shadow-focus disabled:pointer-events-none disabled:opacity-60 select-none",
   {
     variants: {
       variant: {
-        default:
-          "glass glass--subtle border-border/80 text-text-0 hover:bg-hover-bg hover:border-border-hover hover:-translate-y-[1px] hover:shadow-level2 active:translate-y-0 active:shadow-level",
-        secondary:
-          "glass glass--subtle border-border/60 text-text-1 hover:bg-hover-bg hover:text-text-0 hover:border-border-hover hover:-translate-y-[1px] active:translate-y-0",
-        outline:
-          "glass glass--subtle border-border/80 text-text-0 hover:bg-hover-bg hover:border-border-hover hover:-translate-y-[1px] active:translate-y-0",
+        primary:
+          "border-transparent bg-action-primary text-action-primary-fg shadow-raised hover:bg-action-primary-hover active:bg-action-primary-active",
         brand:
-          "glass glass--strong border-transparent bg-gradient-to-r from-accent1/20 to-accent2/20 text-brand hover:from-accent1/30 hover:to-accent2/30 hover:-translate-y-[1px] hover:shadow-neon hover:border-border-focus active:translate-y-0 shadow-neon",
+          "border-transparent bg-action-primary text-action-primary-fg shadow-raised hover:bg-action-primary-hover active:bg-action-primary-active",
+        default:
+          "border border-action-secondary-border bg-action-secondary text-action-secondary-fg shadow-surface hover:bg-action-secondary-hover hover:border-action-secondary-border-hover active:bg-action-secondary-active",
+        secondary:
+          "border border-action-secondary-border bg-action-secondary text-action-secondary-fg shadow-surface hover:bg-action-secondary-hover hover:border-action-secondary-border-hover active:bg-action-secondary-active",
+        outline:
+          "border border-action-secondary-border bg-transparent text-action-secondary-fg hover:bg-action-secondary-hover active:bg-action-secondary-active",
         ghost:
-          "border-transparent bg-transparent text-text-1 hover:text-text-0 hover:bg-hover-bg hover:-translate-y-[1px] active:translate-y-0",
-        link: "border-transparent bg-transparent text-brand underline-offset-4 hover:underline hover:text-accent1/80",
+          "border border-transparent bg-transparent text-action-ghost hover:bg-action-ghost-hover active:bg-action-ghost-active",
+        link: "border border-transparent bg-transparent text-text-link underline-offset-4 hover:underline hover:text-text-link-hover",
         destructive:
-          "glass glass--strong border-transparent bg-danger-bg/20 text-danger hover:bg-danger-bg/30 hover:-translate-y-[1px] hover:shadow-level2 active:translate-y-0",
+          "border-transparent bg-action-destructive text-action-destructive-fg shadow-surface hover:bg-action-destructive-hover active:bg-action-destructive-active",
       },
       size: {
-        default: "px-4 py-2 min-w-[var(--touch-recommended)]",
-        sm: "h-[var(--touch-minimum)] px-3 text-sm py-1.5 min-w-[var(--touch-minimum)]",
-        lg: "h-[var(--touch-comfortable)] px-5 text-base py-3 min-w-[var(--touch-comfortable)]",
-        icon: "h-[var(--touch-recommended)] w-[var(--touch-recommended)] p-0",
+        default:
+          "min-h-[var(--size-touch-comfortable)] px-[var(--space-inline-lg)] py-[var(--space-2xs)] gap-[var(--space-2xs)]",
+        sm: "min-h-[var(--size-touch-compact)] px-[var(--space-inline-md)] py-[var(--space-3xs)] text-body-sm",
+        lg: "min-h-[var(--size-touch-relaxed)] px-[var(--space-inline-lg)] py-[var(--space-xs)] text-subtitle",
+        icon: "size-[var(--size-touch-comfortable)] min-h-[var(--size-touch-comfortable)] rounded-[var(--radius-lg)] p-0 text-title",
       },
     },
     defaultVariants: {
@@ -48,17 +51,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     return (
       <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
-        {asChild ? (
-          children
-        ) : (
-          <>
-            {children}
-            {/* Subtle shine effect on hover */}
-            <div className="pointer-events-none absolute inset-0 -translate-x-full rounded-base bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
-            {/* Touch ripple effect */}
-            <div className="touch-ripple absolute inset-0 rounded-base" />
-          </>
-        )}
+        {children}
       </Comp>
     );
   },

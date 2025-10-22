@@ -34,21 +34,21 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
     return (
       <div className={cn("flex items-center gap-2", className)}>
         <div className="flex space-x-1">
-          <div className={cn(dotSizes[size], "animate-bounce rounded-full bg-accent1")} />
+          <div className={cn(dotSizes[size], "bg-accent1 animate-bounce rounded-full")} />
           <div
             className={cn(
               dotSizes[size],
-              "animate-bounce rounded-full bg-accent2 [animation-delay:0.15s]",
+              "bg-accent2 animate-bounce rounded-full [animation-delay:0.15s]",
             )}
           />
           <div
             className={cn(
               dotSizes[size],
-              "animate-bounce rounded-full bg-accent1 [animation-delay:0.3s]",
+              "bg-accent1 animate-bounce rounded-full [animation-delay:0.3s]",
             )}
           />
         </div>
-        {text && <span className={cn(textSizes[size], "animate-pulse text-text-1")}>{text}</span>}
+        {text && <span className={cn(textSizes[size], "text-text-1 animate-pulse")}>{text}</span>}
       </div>
     );
   }
@@ -56,8 +56,8 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
   if (variant === "pulse") {
     return (
       <div className={cn("flex items-center gap-2", className)}>
-        <div className={cn(sizeClasses[size], "animate-pulse rounded-full bg-accent1")} />
-        {text && <span className={cn(textSizes[size], "animate-pulse text-text-1")}>{text}</span>}
+        <div className={cn(sizeClasses[size], "bg-accent1 animate-pulse rounded-full")} />
+        {text && <span className={cn(textSizes[size], "text-text-1 animate-pulse")}>{text}</span>}
       </div>
     );
   }
@@ -67,7 +67,7 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
       <div className={cn("relative overflow-hidden", className)}>
         <div className="from-accent1/20 via-accent1/60 to-accent1/20 animate-shimmer h-2 w-24 rounded-full bg-gradient-to-r" />
         {text && (
-          <span className={cn(textSizes[size], "mt-1 block animate-pulse text-text-1")}>
+          <span className={cn(textSizes[size], "text-text-1 mt-1 block animate-pulse")}>
             {text}
           </span>
         )}
@@ -81,7 +81,7 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
         <div
           className={cn(
             sizeClasses[size],
-            "border-accent1/20 animate-spin rounded-full border-2 border-t-accent1",
+            "border-accent1/20 border-t-accent1 animate-spin rounded-full border-2",
           )}
         />
         {text && <span className={cn(textSizes[size], "text-text-1")}>{text}</span>}
@@ -102,13 +102,13 @@ export function LoadingBubble({ text = "Disa denkt nach...", className }: Loadin
     <div className={cn("animate-fade-in flex justify-start", className)}>
       <div
         className={cn(
-          cardVariants({ tone: "default", elevation: "sm" }),
-          "mr-12 max-w-[85%] rounded-base border border-[var(--border-card)] p-4",
+          cardVariants({ tone: "default", elevation: "surface" }),
+          "mr-12 max-w-[85%] rounded-[var(--radius-lg)] border border-border-subtle p-[var(--space-md)]",
         )}
       >
         <div className="flex items-center space-x-3">
           <Loading variant="dots" size="md" />
-          <span className="animate-pulse text-sm text-text-1">{text}</span>
+          <span className="text-text-1 animate-pulse text-sm">{text}</span>
         </div>
         {/* Subtle shimmer effect */}
         <div className="from-accent1/20 via-accent1/40 to-accent1/20 animate-shimmer mt-2 h-1 rounded-full bg-gradient-to-r" />

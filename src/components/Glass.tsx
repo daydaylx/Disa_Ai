@@ -1,35 +1,45 @@
 import React from "react";
 
-interface GlassProps {
+import { cn } from "../lib/utils";
+
+type SurfaceVariant = "subtle" | "standard" | "strong";
+
+interface SurfaceProps {
   children: React.ReactNode;
   className?: string;
-  variant?: "subtle" | "standard" | "strong";
+  variant?: SurfaceVariant;
   asChild?: boolean;
-  onClick?: () => void; // Added onClick support
+  onClick?: () => void;
 }
 
-export const Glass: React.FC<GlassProps> = ({
+const baseClasses =
+  "relative isolate rounded-[var(--radius-lg)] border transition-[background,box-shadow,border-color] duration-small ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]";
+
+const variantClasses: Record<SurfaceVariant, string> = {
+  subtle: "bg-surface-subtle border-border-hairline shadow-surface",
+  standard: "bg-surface-base border-border-subtle shadow-surface",
+  strong: "bg-surface-card border-border-strong shadow-raised",
+};
+
+export const Glass: React.FC<SurfaceProps> = ({
   children,
-  className = "",
+  className,
   variant = "standard",
   asChild = false,
   onClick,
 }) => {
-  // Only apply glass effect if backdrop-filter is supported
-  const glassClass = `glass ${variant === "subtle" ? "glass--subtle" : variant === "strong" ? "glass--strong" : ""}`;
-
-  const elementClass = `${glassClass} ${className}`;
+  const surfaceClass = cn(baseClasses, variantClasses[variant], className);
 
   if (asChild && React.isValidElement(children)) {
     return React.cloneElement(children, {
-      className: `${elementClass} ${(children.props as any).className || ""}`,
-      onClick: onClick || (children.props as any).onClick,
+      className: cn(surfaceClass, (children.props as { className?: string }).className),
+      onClick: onClick ?? (children.props as { onClick?: () => void }).onClick,
     } as React.Attributes);
-  } else {
-    return (
-      <div className={elementClass} onClick={onClick}>
-        {children}
-      </div>
-    );
   }
+
+  return (
+    <div className={surfaceClass} onClick={onClick}>
+      {children}
+    </div>
+  );
 };

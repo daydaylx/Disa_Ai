@@ -4,50 +4,45 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const cardVariants = cva(
-  [
-    "relative isolate overflow-hidden rounded-2xl border border-[var(--border-glass)]",
-    "bg-[var(--glass-layer-card)] text-[var(--text-on-glass)] shadow-[var(--glass-shadow)]",
-    "backdrop-blur-[var(--glass-blur)] supports-[backdrop-filter]:backdrop-saturate-125",
-    "transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-[var(--glass-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-bg)]",
-  ].join(" "),
+  "relative isolate overflow-hidden rounded-[var(--radius-xl)] border border-border-hairline bg-surface-card text-text-primary shadow-surface transition-[box-shadow,transform,border-color,background] duration-small ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]",
   {
     variants: {
       tone: {
         default: "",
-        muted: "bg-[var(--glass-overlay-muted)] text-text-1",
-        contrast:
-          "border-white/50 bg-[var(--glass-overlay-strong)] text-[var(--text-on-glass)] shadow-lg",
+        muted: "bg-surface-subtle text-text-secondary",
+        contrast: "bg-surface-popover text-text-inverse border-border-strong",
       },
       elevation: {
         none: "shadow-none",
-        sm: "shadow-[var(--glass-shadow)]",
-        md: "shadow-card-hover",
+        surface: "shadow-surface",
+        raised: "shadow-raised",
+        overlay: "shadow-overlay",
       },
       interactive: {
         false: "",
-        true: "motion-safe:hover:-translate-y-[2px] motion-safe:hover:shadow-card-hover hover:bg-[var(--glass-overlay-muted)]",
+        true: "motion-safe:hover:-translate-y-[2px] motion-safe:hover:shadow-raised",
       },
       padding: {
         none: "",
-        sm: "p-4",
-        md: "p-6",
-        lg: "p-8",
+        sm: "p-[var(--space-md)]",
+        md: "p-[var(--space-lg)]",
+        lg: "p-[var(--space-xl)]",
       },
     },
     compoundVariants: [
       {
         tone: "muted",
-        elevation: "none",
-        class: "border-border/60",
+        class: "border-border-subtle",
       },
       {
         tone: "contrast",
-        class: "border-border/70",
+        elevation: "overlay",
+        class: "shadow-overlay",
       },
     ],
     defaultVariants: {
       tone: "default",
-      elevation: "sm",
+      elevation: "surface",
       interactive: false,
       padding: "none",
     },
@@ -71,7 +66,14 @@ Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col gap-3 px-6 pb-4 pt-6", className)} {...props} />
+    <div
+      ref={ref}
+      className={cn(
+        "flex flex-col gap-[var(--space-stack-sm)] px-[var(--space-lg)] pb-[var(--space-md)] pt-[var(--space-lg)]",
+        className,
+      )}
+      {...props}
+    />
   ),
 );
 CardHeader.displayName = "CardHeader";
@@ -81,7 +83,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     <h3
       ref={ref}
       className={cn(
-        "text-token-h2 font-semibold leading-tight tracking-tight text-text-0",
+        "text-title font-semibold leading-tight tracking-tight text-text-primary",
         className,
       )}
       {...props}
@@ -96,7 +98,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-token-body leading-relaxed text-text-1", className)}
+    className={cn("text-body leading-relaxed text-text-secondary", className)}
     {...props}
   />
 ));
@@ -104,7 +106,14 @@ CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col gap-4 px-6 pb-6", className)} {...props} />
+    <div
+      ref={ref}
+      className={cn(
+        "flex flex-col gap-[var(--space-stack-md)] px-[var(--space-lg)] pb-[var(--space-lg)]",
+        className,
+      )}
+      {...props}
+    />
   ),
 );
 CardContent.displayName = "CardContent";
@@ -114,7 +123,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
     <div
       ref={ref}
       className={cn(
-        "flex items-center justify-between gap-4 border-t border-border/60 px-6 pb-6 pt-4",
+        "flex items-center justify-between gap-[var(--space-inline-lg)] border-t border-border-divider px-[var(--space-lg)] pb-[var(--space-lg)] pt-[var(--space-md)]",
         className,
       )}
       {...props}

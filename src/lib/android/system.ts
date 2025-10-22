@@ -196,35 +196,48 @@ function setupThemeColorUpdates() {
 
   if (!themeColorMeta) return;
 
-  const updateThemeColor = (color: string) => {
+  const getScheme = (): "light" | "dark" => {
+    const explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit === "light" || explicit === "dark") {
+      return explicit;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  };
+
+  const chooseColorForRoute = () => {
+    const scheme = getScheme();
+    const palette = designTokens.color[scheme];
+    const hash = window.location.hash;
+
+    if (hash.includes("chat")) {
+      return palette.brand.primary;
+    }
+
+    if (hash.includes("settings")) {
+      return palette.controls.field.bg;
+    }
+
+    return palette.surfaces.base;
+  };
+
+  const updateThemeColor = () => {
+    const color = chooseColorForRoute();
     themeColorMeta.content = color;
-    // Also update CSS custom property for consistency
     document.documentElement.style.setProperty("--theme-color", color);
   };
 
-  // Update theme color based on route changes
-  const observer = new MutationObserver(() => {
-    const currentHash = window.location.hash;
+  const domObserver = new MutationObserver(updateThemeColor);
+  domObserver.observe(document.body, { childList: true, subtree: true });
 
-    switch (true) {
-      case currentHash.includes("chat"):
-        updateThemeColor(designTokens.colors.accent1);
-        break;
-      case currentHash.includes("settings"):
-        updateThemeColor(designTokens.colors.accent2);
-        break;
-      default:
-        updateThemeColor(designTokens.colors.layer1);
-    }
+  const themeObserver = new MutationObserver(updateThemeColor);
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
   });
 
-  observer.observe(document.body, { childList: true, subtree: true });
-
-  // Initial theme color update
-  window.addEventListener("hashchange", () => {
-    setTimeout(() => observer.disconnect(), 100);
-    setTimeout(() => observer.observe(document.body, { childList: true, subtree: true }), 200);
-  });
+  window.addEventListener("hashchange", updateThemeColor);
+  updateThemeColor();
 }
 
 /**

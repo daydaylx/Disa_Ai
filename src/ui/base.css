@@ -40,8 +40,8 @@ textarea {
 }
 
 body {
-  background: var(--bg0);
-  color: var(--fg);
+  background: var(--color-surface-canvas);
+  color: var(--color-text-primary);
   padding-top: var(--inset-t);
   padding-bottom: var(--inset-b);
   padding-left: var(--inset-l);
@@ -66,8 +66,8 @@ a,
 input,
 select,
 textarea {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: var(--size-touch-compact);
+  min-width: var(--size-touch-compact);
 }
 
 /* Safe area helpers */
