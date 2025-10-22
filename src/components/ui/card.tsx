@@ -4,14 +4,17 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const cardVariants = cva(
-  "relative isolate overflow-hidden rounded-[var(--radius-xl)] border border-border-hairline bg-surface-card text-text-primary shadow-surface transition-[box-shadow,transform,border-color,background,opacity] duration-small ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]",
+  "relative isolate overflow-hidden rounded-[var(--radius-card)] border border-border-hairline bg-surface-card text-text-primary shadow-surface transition-[box-shadow,transform,border-color,background,opacity,backdrop-filter] duration-small ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]",
   {
     variants: {
       tone: {
         default: "",
-        muted: "bg-surface-subtle text-text-secondary",
+        muted: "bg-surface-subtle text-text-secondary border-border-subtle",
         contrast: "bg-surface-popover text-text-inverse border-border-strong",
-        glass: "bg-surface-card/80 backdrop-blur-md border-border/30",
+        glass: "backdrop-blur-sm bg-surface-card/80 border-border/30",
+        "glass-subtle": "backdrop-blur-sm bg-surface-card/85 border-border/25",
+        "glass-medium": "backdrop-blur-md bg-surface-card/70 border-border/20",
+        "glass-strong": "backdrop-blur-lg bg-surface-card/60 border-border/15",
         solid: "bg-surface-card border-border",
         outlined: "bg-transparent border-border-strong",
       },
@@ -21,19 +24,28 @@ const cardVariants = cva(
         raised: "shadow-raised",
         overlay: "shadow-overlay",
         popover: "shadow-popover",
+        // Neo-Depth System Extensions
+        "surface-subtle": "shadow-[var(--shadow-surface-subtle)]",
+        "surface-prominent": "shadow-[var(--shadow-surface-prominent)]",
+        "surface-hover": "shadow-[var(--shadow-surface-hover)]",
+        "surface-active": "shadow-[var(--shadow-surface-active)]",
       },
       interactive: {
         false: "",
+        // Enhanced interactions for Neo-Depth
         gentle:
-          "motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
+          "motion-safe:hover:-translate-y-[3px] motion-safe:hover:shadow-[var(--shadow-surface-hover)] motion-safe:hover:bg-surface-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
         dramatic:
-          "motion-safe:hover:-translate-y-[3px] motion-safe:hover:shadow-overlay motion-safe:hover:scale-[1.02] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+          "motion-safe:hover:-translate-y-[6px] motion-safe:hover:scale-[1.01] motion-safe:hover:shadow-[var(--shadow-surface-prominent)] cursor-pointer motion-safe:transition-all motion-safe:duration-280 motion-safe:ease-out",
         subtle:
-          "motion-safe:hover:bg-surface-subtle cursor-pointer motion-safe:transition-colors motion-safe:duration-150 motion-safe:ease-out",
+          "motion-safe:hover:bg-surface-subtle motion-safe:hover:border-border cursor-pointer motion-safe:transition-all motion-safe:duration-150 motion-safe:ease-out",
         press:
-          "motion-safe:active:scale-[0.98] motion-safe:active:shadow-none cursor-pointer motion-safe:transition-all motion-safe:duration-100 motion-safe:ease-out",
-        lift: "motion-safe:hover:-translate-y-[2px] motion-safe:hover:shadow-overlay motion-safe:focus-visible:translate-y-0 motion-safe:focus-visible:shadow-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
-        glow: "motion-safe:hover:shadow-[0_0_20px_rgba(var(--color-brand-rgb),0.3)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+          "motion-safe:active:translate-y-[1px] motion-safe:active:scale-[0.99] motion-safe:active:shadow-[var(--shadow-surface-active)] cursor-pointer motion-safe:transition-all motion-safe:duration-120 motion-safe:ease-out",
+        lift: "motion-safe:hover:-translate-y-[4px] motion-safe:hover:shadow-[var(--shadow-surface-hover)] motion-safe:focus-visible:translate-y-0 motion-safe:focus-visible:shadow-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
+        glow: "motion-safe:hover:shadow-[var(--shadow-glow-brand)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "glow-success": "motion-safe:hover:shadow-[var(--shadow-glow-success)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "glow-warning": "motion-safe:hover:shadow-[var(--shadow-glow-warning)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "glow-error": "motion-safe:hover:shadow-[var(--shadow-glow-error)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
       },
       padding: {
         none: "",

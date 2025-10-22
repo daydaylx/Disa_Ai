@@ -31,6 +31,17 @@ export type TypographyTokens = {
     label: TextStyle;
     mono: TextStyle;
   };
+  cardTextStyles: {
+    titleHero: TextStyle;
+    titleLg: TextStyle;
+    titleBase: TextStyle;
+    titleSm: TextStyle;
+    descriptionLg: TextStyle;
+    descriptionBase: TextStyle;
+    descriptionSm: TextStyle;
+    metadata: TextStyle;
+    label: TextStyle;
+  };
   fixedSizes: {
     badge: string;
     input: string;
@@ -115,6 +126,71 @@ export const typographyTokens: TypographyTokens = {
       textTransform: "none",
     },
   },
+  cardTextStyles: {
+    titleHero: {
+      fontSize: "1.25rem", // 20px
+      lineHeight: "1.375rem", // 22px
+      fontWeight: 600,
+      letterSpacing: "-0.008em",
+      textTransform: "none",
+    },
+    titleLg: {
+      fontSize: "1.125rem", // 18px
+      lineHeight: "1.375rem", // 22px
+      fontWeight: 600,
+      letterSpacing: "-0.006em",
+      textTransform: "none",
+    },
+    titleBase: {
+      fontSize: "1rem", // 16px
+      lineHeight: "1.375rem", // 22px
+      fontWeight: 600,
+      letterSpacing: "-0.004em",
+      textTransform: "none",
+    },
+    titleSm: {
+      fontSize: "0.875rem", // 14px
+      lineHeight: "1.25rem", // 20px
+      fontWeight: 600,
+      letterSpacing: "-0.002em",
+      textTransform: "none",
+    },
+    descriptionLg: {
+      fontSize: "1rem", // 16px
+      lineHeight: "1.5rem", // 24px
+      fontWeight: 400,
+      letterSpacing: "0em",
+      textTransform: "none",
+    },
+    descriptionBase: {
+      fontSize: "0.875rem", // 14px
+      lineHeight: "1.25rem", // 20px
+      fontWeight: 400,
+      letterSpacing: "0em",
+      textTransform: "none",
+    },
+    descriptionSm: {
+      fontSize: "0.75rem", // 12px
+      lineHeight: "1rem", // 16px
+      fontWeight: 400,
+      letterSpacing: "0.01em",
+      textTransform: "none",
+    },
+    metadata: {
+      fontSize: "0.75rem", // 12px
+      lineHeight: "1rem", // 16px
+      fontWeight: 500,
+      letterSpacing: "0.05em", // Increased tracking
+      textTransform: "uppercase",
+    },
+    label: {
+      fontSize: "0.75rem", // 12px
+      lineHeight: "1rem", // 16px
+      fontWeight: 600,
+      letterSpacing: "0.05em", // Increased tracking
+      textTransform: "uppercase",
+    },
+  },
   fixedSizes: {
     badge: "0.6875rem" /* 11px equivalent */,
     input: "1rem" /* 16px */,
@@ -184,6 +260,71 @@ export const typographyCssVars = {
       fontSize: "--font-size-mono",
       lineHeight: "--line-height-mono",
       fontWeight: "--font-weight-mono",
+    },
+  },
+  cardTextStyles: {
+    titleHero: {
+      fontSize: "--font-size-title-hero",
+      lineHeight: "--line-height-title-hero",
+      fontWeight: "--font-weight-title-hero",
+      letterSpacing: "--letter-spacing-title-hero",
+      textTransform: "--text-transform-title-hero",
+    },
+    titleLg: {
+      fontSize: "--font-size-title-lg",
+      lineHeight: "--line-height-title-lg",
+      fontWeight: "--font-weight-title-lg",
+      letterSpacing: "--letter-spacing-title-lg",
+      textTransform: "--text-transform-title-lg",
+    },
+    titleBase: {
+      fontSize: "--font-size-title-base",
+      lineHeight: "--line-height-title-base",
+      fontWeight: "--font-weight-title-base",
+      letterSpacing: "--letter-spacing-title-base",
+      textTransform: "--text-transform-title-base",
+    },
+    titleSm: {
+      fontSize: "--font-size-title-sm",
+      lineHeight: "--line-height-title-sm",
+      fontWeight: "--font-weight-title-sm",
+      letterSpacing: "--letter-spacing-title-sm",
+      textTransform: "--text-transform-title-sm",
+    },
+    descriptionLg: {
+      fontSize: "--font-size-description-lg",
+      lineHeight: "--line-height-description-lg",
+      fontWeight: "--font-weight-description-lg",
+      letterSpacing: "--letter-spacing-description-lg",
+      textTransform: "--text-transform-description-lg",
+    },
+    descriptionBase: {
+      fontSize: "--font-size-description-base",
+      lineHeight: "--line-height-description-base",
+      fontWeight: "--font-weight-description-base",
+      letterSpacing: "--letter-spacing-description-base",
+      textTransform: "--text-transform-description-base",
+    },
+    descriptionSm: {
+      fontSize: "--font-size-description-sm",
+      lineHeight: "--line-height-description-sm",
+      fontWeight: "--font-weight-description-sm",
+      letterSpacing: "--letter-spacing-description-sm",
+      textTransform: "--text-transform-description-sm",
+    },
+    metadata: {
+      fontSize: "--font-size-metadata",
+      lineHeight: "--line-height-metadata",
+      fontWeight: "--font-weight-metadata",
+      letterSpacing: "--letter-spacing-metadata",
+      textTransform: "--text-transform-metadata",
+    },
+    label: {
+      fontSize: "--font-size-card-label",
+      lineHeight: "--line-height-card-label",
+      fontWeight: "--font-weight-card-label",
+      letterSpacing: "--letter-spacing-card-label",
+      textTransform: "--text-transform-card-label",
     },
   },
   fixedSizes: {

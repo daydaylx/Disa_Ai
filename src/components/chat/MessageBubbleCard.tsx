@@ -1,6 +1,8 @@
 import type { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader } from "../../components/ui/card";
+import { Badge } from "../../components/ui/badge";
 
 type MessageBubbleVariant = "assistant" | "user";
 
@@ -30,54 +32,73 @@ export function MessageBubbleCard({
 }: MessageBubbleCardProps) {
   const { iso, label } = formatTimestamp(timestamp);
 
+  // Neo-Depth Configuration based on variant
+  const cardConfig = {
+    assistant: {
+      tone: "glass-subtle" as const,
+      borderClass: "border-l-4 border-l-brand",
+      bgClass: "bg-brand/3",
+      badgeIcon: "🤖",
+      badgeClass: "bg-brand/10 text-brand border border-brand/20",
+      alignment: "justify-start" as const,
+    },
+    user: {
+      tone: "glass-subtle" as const,
+      borderClass: "border-r-4 border-r-purple-500",
+      bgClass: "bg-gradient-to-r from-purple-500/3 to-blue-500/3",
+      badgeIcon: "👤",
+      badgeClass: "bg-purple-500/10 text-purple-700 border border-purple-500/20",
+      alignment: "justify-end" as const,
+    },
+  };
+
+  const config = cardConfig[variant];
+
   return (
-    <article
-      className={cn(
-        "focus-visible:ring-brand/60 group relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-hairline)] bg-surface-card text-text-primary shadow-surface transition-all duration-small ease-standard focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-canvas)]",
-        variant === "assistant"
-          ? "py-3 pl-6 pr-5 sm:py-4 sm:pl-8 sm:pr-6"
-          : "bg-surface-2 py-3 pl-5 pr-6 sm:py-4 sm:pl-6 sm:pr-8",
-        "motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-raised",
-        className,
-      )}
-      {...props}
-    >
-      {/* Brand rail for assistant messages */}
-      {variant === "assistant" && (
-        <span
-          className="absolute left-0 top-0 h-full w-1 rounded-r-full bg-[var(--color-brand-primary)]"
-          aria-hidden="true"
-        />
-      )}
-
-      {/* User indicator */}
-      {variant === "user" && (
-        <div
-          className="from-accent1/80 to-accent2/80 absolute right-0 top-0 h-full w-1 rounded-l-full bg-gradient-to-b"
-          aria-hidden="true"
-        />
-      )}
-
-      <header
+    <div className={cn("flex w-full", config.alignment)}>
+      <Card
+        tone={config.tone}
+        elevation="raised"
+        interactive="gentle"
+        padding="none"
         className={cn(
-          "mb-2 flex items-baseline gap-3 text-[11px] font-medium uppercase tracking-[0.08em] text-text-secondary transition-colors duration-small ease-standard",
-          variant === "assistant" ? "sm:pl-1" : "sm:pr-1",
+          "w-full max-w-[min(100%,640px)] relative overflow-visible",
+          config.borderClass,
+          config.bgClass,
+          className,
         )}
+        {...props}
       >
-        <span className="truncate font-semibold">{author}</span>
-        {label ? (
-          <time
-            className="text-[11px] font-normal text-text-muted opacity-70 transition-opacity duration-small ease-standard group-hover:opacity-100"
-            dateTime={iso}
-          >
-            {label}
-          </time>
-        ) : null}
-      </header>
+        {/* Role Badge Header */}
+        <CardHeader className="pb-2">
+          <div className={cn(
+            "inline-flex items-center gap-2 rounded-[var(--radius-card-inner)] px-3 py-1.5 max-w-fit text-sm font-medium",
+            config.badgeClass
+          )}>
+            <span className="text-sm">{config.badgeIcon}</span>
+            <span className="font-semibold">{author}</span>
+            {label && (
+              <>
+                <span className="text-current/50">•</span>
+                <time
+                  className="text-xs opacity-75"
+                  dateTime={iso}
+                  title={iso}
+                >
+                  {label}
+                </time>
+              </>
+            )}
+          </div>
+        </CardHeader>
 
-      <p className="text-text-strong whitespace-pre-wrap text-[15px] leading-7 transition-colors duration-small ease-standard">
-        {body}
-      </p>
-    </article>
+        {/* Message Content with Enhanced Typography */}
+        <CardContent className="pt-0">
+          <div className="whitespace-pre-wrap text-sm leading-relaxed text-text-strong">
+            {body}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

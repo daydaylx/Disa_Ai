@@ -3,16 +3,34 @@ import * as React from "react";
 
 import { cn } from "../../lib/utils";
 
+interface AvatarProps extends React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> {
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+}
+
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Root
-    ref={ref}
-    className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}
-    {...props}
-  />
-));
+  AvatarProps
+>(({ className, size = 'md', ...props }, ref) => {
+  const sizeClasses = {
+    xs: 'h-6 w-6',
+    sm: 'h-8 w-8', 
+    md: 'h-10 w-10',
+    lg: 'h-12 w-12',
+    xl: 'h-16 w-16'
+  };
+
+  return (
+    <AvatarPrimitive.Root
+      ref={ref}
+      className={cn(
+        "relative flex shrink-0 overflow-hidden rounded-full",
+        sizeClasses[size],
+        className
+      )}
+      {...props}
+    />
+  );
+});
 Avatar.displayName = AvatarPrimitive.Root.displayName;
 
 const AvatarImage = React.forwardRef<

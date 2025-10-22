@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { cn } from "../../lib/utils";
+import { Card, CardContent } from "../ui/card";
 
 interface QuickstartTileProps {
   action: QuickstartAction;
@@ -71,69 +72,92 @@ export function QuickstartTile({
   );
 
   return (
-    <div
+    <Card
+      clickable
+      elevation="raised"
+      interactive="gentle"
+      padding="md"
+      state={isLoading ? "loading" : "default"}
       className={cn(
-        "border-border group relative min-h-[96px] overflow-hidden rounded-lg border transition-all duration-200",
-        "bg-surface-card hover:-translate-y-[1px] active:scale-[0.98]",
+        "group relative min-h-[120px] overflow-hidden",
+        "transition-all duration-200 ease-out",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
         isActive && "scale-95 opacity-70",
         isLoading && "pointer-events-none",
+        "data-[state=selected]:ring-brand data-[state=selected]:ring-2 data-[state=selected]:shadow-glow-brand"
       )}
+      onCardClick={() => onTap(action)}
     >
-      <button
-        data-testid={`quickstart-${action.id}`}
-        className="text-text-0 relative z-10 flex h-full w-full flex-col items-center justify-center text-center"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchCancel}
-        onMouseDown={handleTouchStart}
-        onMouseUp={handleTouchEnd}
-        onMouseLeave={handleTouchCancel}
-        disabled={isLoading}
-        type="button"
-      >
-        {isPinned && (
-          <div className="border-border absolute right-2 top-2 rounded-full border bg-surface-raised p-1">
-            <Pin className="text-text-0 h-3 w-3" />
-          </div>
-        )}
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-3 z-0">
+        <div className="absolute -right-4 -top-4 text-6xl rotate-12">
+          {action.icon || "✨"}
+        </div>
+      </div>
 
-        <div className="relative z-10 space-y-1.5">
-          <div className="text-xl">{action.icon || "✨"}</div>
-          <div className="text-text-0 text-xs font-medium sm:text-sm">{action.title}</div>
-          <div className="text-text-1 text-xs">{action.subtitle}</div>
+      <CardContent className="relative z-10 h-full flex flex-col justify-between items-center text-center">
+        <div className="space-y-2 w-full">
+          <div className="flex items-center justify-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-card-small bg-brand/10 text-brand">
+              <span className="text-lg">{action.icon || "✨"}</span>
+            </div>
+            {isPinned && (
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand/10 text-brand">
+                <Pin className="h-3 w-3" />
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <h3 className="font-semibold text-title-sm text-text-strong line-clamp-1">
+              {action.title}
+            </h3>
+            {action.subtitle && (
+              <p className="text-xs text-text-muted leading-relaxed line-clamp-2">
+                {action.subtitle}
+              </p>
+            )}
+          </div>
         </div>
 
-        {showActions && (
-          <div
-            className="border-border absolute inset-0 z-20 flex items-center justify-center rounded-lg border bg-overlay-dialog shadow-overlay"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={handlePinToggle}
-              className="border-border flex flex-col items-center gap-1 rounded-lg border bg-surface-raised px-4 py-3 text-text-primary transition-all hover:scale-105 hover:shadow-raised"
-              type="button"
-            >
-              {isPinned ? (
-                <>
-                  <PinOff className="h-6 w-6" />
-                  <span className="text-xs">Lösen</span>
-                </>
-              ) : (
-                <>
-                  <Pin className="h-6 w-6" />
-                  <span className="text-xs">Anheften</span>
-                </>
-              )}
-            </button>
+        <div className="pt-2 w-full">
+          <div className="text-xs text-text-subtle text-center">
+            {action.action || "Zum Starten tippen"}
           </div>
-        )}
+        </div>
+      </CardContent>
 
-        {isLoading && (
-          <div className="border-border absolute inset-0 z-20 flex items-center justify-center rounded-lg border bg-overlay-dialog shadow-overlay">
-            <div className="border-border border-t-brand h-6 w-6 animate-spin rounded-full border-2" />
-          </div>
-        )}
-      </button>
-    </div>
+      {/* Long Press Indicator */}
+      {showActions && (
+        <div
+          className="absolute inset-0 z-20 flex items-center justify-center bg-brand/5 border-2 border-brand/30 rounded-card"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={handlePinToggle}
+            className="flex flex-col items-center gap-1 rounded-card-inner bg-brand/10 px-4 py-3 text-brand transition-all hover:scale-105 hover:bg-brand/20"
+            type="button"
+          >
+            {isPinned ? (
+              <>
+                <PinOff className="h-5 w-5" />
+                <span className="text-xs">Lösen</span>
+              </>
+            ) : (
+              <>
+                <Pin className="h-5 w-5" />
+                <span className="text-xs">Anheften</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-overlay-dialog/80">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-brand border-t-transparent" />
+        </div>
+      )}
+    </Card>
   );
 }
