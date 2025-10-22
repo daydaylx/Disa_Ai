@@ -15,14 +15,8 @@
 /* Viewport height fixes for mobile browsers */
 :root {
   /* Calculate real viewport height and store in CSS custom property */
+  /* This will be overridden by JavaScript implementation */
   --vh: 1vh;
-}
-
-/* Dynamic viewport height calculation */
-@supports (height: 100dvh) {
-  :root {
-    --vh: 1dvh;
-  }
 }
 
 /* Root element mobile optimizations */

@@ -31,7 +31,7 @@ textarea {
 }
 
 :root {
-  --vh: 100dvh;
+  --vh: 1vh;
   --inset-t: env(safe-area-inset-top, 0px);
   --inset-r: env(safe-area-inset-right, 0px);
   --inset-b: env(safe-area-inset-bottom, 0px);

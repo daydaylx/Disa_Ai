@@ -18,14 +18,19 @@ export default function App() {
     if (typeof window === "undefined") return;
 
     const applyViewportHeight = () => {
-      document.documentElement.style.setProperty("--vh", `${window.innerHeight}px`);
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
     };
 
     applyViewportHeight();
     window.addEventListener("resize", applyViewportHeight, { passive: true });
+    window.addEventListener("orientationchange", () => {
+      setTimeout(applyViewportHeight, 100);
+    });
 
     return () => {
       window.removeEventListener("resize", applyViewportHeight);
+      window.removeEventListener("orientationchange", applyViewportHeight);
     };
   }, []);
 
