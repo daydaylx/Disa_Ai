@@ -8,6 +8,7 @@ import { AppShell } from "./layouts/AppShell";
 const ChatPage = lazy(() => import("../pages/ChatV2"));
 const ModelsPage = lazy(() => import("../pages/Models"));
 const RolesPage = lazy(() => import("../pages/Studio"));
+const PrivacyPolicy = lazy(() => import("../pages/PrivacyPolicy"));
 
 const router = createBrowserRouter(
   [
@@ -121,54 +122,8 @@ const router = createBrowserRouter(
                 ></div>
               }
             >
-              <div className="py-8">
-                <h1 className="mb-6 text-2xl font-bold">Datenschutzerklärung</h1>
-                <div className="prose max-w-none">
-                  <h2>1. Datenschutz auf einen Blick</h2>
-                  <h3>Allgemeine Hinweise</h3>
-                  <p>
-                    Die folgenden Informationen geben einen einfachen Überblick darüber, was mit
-                    Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.
-                  </p>
-                  <p>
-                    Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert
-                    werden können. Ausführliche Informationen zum Thema Datenschutz entnehmen Sie
-                    unserer unter diesem Text aufgeführten Datenschutzerklärung.
-                  </p>
-
-                  <h2>2. Hosting und Content Delivery Network (CDN)</h2>
-                  <h3>Datenverarbeitung</h3>
-                  <p>
-                    Diese Website wird über GitHub Pages gehostet. Anbieter ist die GitHub Inc., 88
-                    Colin P Kelly Jr St, San Francisco, CA 94107, USA.
-                  </p>
-
-                  <h2>3. Allgemeine Hinweise und Pflichtinformationen</h2>
-                  <h3>Datenschutz</h3>
-                  <p>
-                    Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr
-                    ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend
-                    der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
-                  </p>
-
-                  <h2>4. Datenerfassung auf dieser Website</h2>
-                  <h3>Wie erfassen wir Ihre Daten?</h3>
-                  <p>
-                    Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen.
-                    Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme
-                    erfasst.
-                  </p>
-
-                  <h2>5. Plugins und Tools</h2>
-                  <h3>OpenRouter.ai</h3>
-                  <p>
-                    Diese App verwendet die OpenRouter.ai API zur Verarbeitung Ihrer Anfragen.
-                    Weitere Informationen zum Datenschutz bei OpenRouter finden Sie unter:
-                    https://openrouter.ai/privacy
-                  </p>
-
-                  <p className="mt-4 text-sm text-gray-500">Stand: 22. Oktober 2025</p>
-                </div>
+              <div>
+                <PrivacyPolicy />
               </div>
             </Suspense>
           </ErrorBoundary>
