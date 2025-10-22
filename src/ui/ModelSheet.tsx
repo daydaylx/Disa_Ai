@@ -108,7 +108,7 @@ export default function ModelSheet({
         className="overflow-y-auto px-4 pb-4"
         style={{ maxHeight: "calc(var(--vh, 100dvh) * 0.65)" }}
       >
-        <div className="sticky top-0 z-10 -mx-4 mb-4 space-y-3 bg-surface-1 px-4 pb-3 pt-2">
+        <div className="bg-surface-1 sticky top-0 z-10 -mx-4 mb-4 space-y-3 px-4 pb-3 pt-2">
           <Input
             ref={searchInputRef}
             value={searchTerm}
@@ -159,13 +159,13 @@ export default function ModelSheet({
             return (
               <section key={provider} aria-label={`Modelle von ${provider}`} className="space-y-3">
                 <header className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-text-0">{provider}</h3>
-                  <span className="text-xs text-text-1">{filteredModels.length} Modelle</span>
+                  <h3 className="text-text-0 text-sm font-semibold">{provider}</h3>
+                  <span className="text-text-1 text-xs">{filteredModels.length} Modelle</span>
                 </header>
 
                 <div className="space-y-2">
                   {filteredModels.length === 0 ? (
-                    <div className="rounded-lg border border-border bg-surface-1 px-4 py-6 text-center text-sm text-text-1">
+                    <div className="border-border bg-surface-1 text-text-1 rounded-lg border px-4 py-6 text-center text-sm">
                       Keine Treffer für „{searchTerm.trim()}“
                     </div>
                   ) : (
@@ -175,15 +175,15 @@ export default function ModelSheet({
                         <button
                           key={model.id}
                           onClick={() => handleSelect(model)}
-                          className={`w-full rounded-lg border border-border bg-surface-1 p-4 text-left transition-all duration-200 hover:bg-surface-2 ${isSelected ? "ring-2 ring-brand" : ""}`}
+                          className={`border-border bg-surface-1 hover:bg-surface-2 w-full rounded-lg border p-4 text-left transition-all duration-200 ${isSelected ? "ring-brand ring-2" : ""}`}
                           data-testid={`model-option-${model.id}`}
                         >
                           <div className="flex items-center justify-between gap-3">
                             <div className="min-w-0 flex-1">
-                              <h4 className="break-words text-sm font-medium text-text-0">
+                              <h4 className="text-text-0 break-words text-sm font-medium">
                                 {model.label || model.id}
                               </h4>
-                              <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-text-1">
+                              <div className="text-text-1 mt-1 flex flex-wrap items-center gap-3 text-xs">
                                 {model.ctx && (
                                   <span className="text-text-0">
                                     {(model.ctx / 1000).toFixed(0)}k Token
@@ -197,19 +197,19 @@ export default function ModelSheet({
                                   </span>
                                 )}
                                 {model.tags.length > 0 && (
-                                  <span className="break-words text-text-1">
+                                  <span className="text-text-1 break-words">
                                     {model.tags.join(" • ")}
                                   </span>
                                 )}
                               </div>
                               {model.description && (
-                                <p className="mt-2 whitespace-pre-line break-words text-xs leading-5 text-text-1">
+                                <p className="text-text-1 mt-2 whitespace-pre-line break-words text-xs leading-5">
                                   {model.description}
                                 </p>
                               )}
                             </div>
                             {isSelected && (
-                              <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-brand text-white">
+                              <div className="bg-brand flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-white">
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                                   <path
                                     d="M10 3L4.5 8.5L2 6"
@@ -233,7 +233,7 @@ export default function ModelSheet({
         </div>
 
         {models.length === 0 && (
-          <div className="py-8 text-center text-text-1">
+          <div className="text-text-1 py-8 text-center">
             <p>Keine Modelle verfügbar</p>
             <p className="mt-1 text-sm">Überprüfen Sie Ihre Internetverbindung</p>
           </div>

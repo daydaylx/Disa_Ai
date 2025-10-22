@@ -43,7 +43,10 @@ interface StartTilesProps {
 
 export function StartTiles({ onTileClick }: StartTilesProps) {
   return (
-    <div className="grid grid-cols-1 gap-3 p-3 xs:grid-cols-2 sm:grid-cols-3" style={{ paddingLeft: "var(--navigation-width)" }}>
+    <div
+      className="grid grid-cols-1 gap-3 p-3 xs:grid-cols-2 sm:grid-cols-3"
+      style={{ paddingLeft: "var(--navigation-width)" }}
+    >
       {startTiles.map((tile) => {
         const backgroundIcon = isValidElement(tile.icon)
           ? cloneElement(tile.icon as ReactElement<{ className?: string }>, {
@@ -60,9 +63,9 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
             variant="subtle"
             asChild
             className={cn(
-              "group relative flex h-full min-h-[var(--touch-comfortable)] flex-col overflow-hidden rounded-base border border-border/60 p-3 text-left transition-all duration-200",
+              "rounded-base border-border/60 group relative flex h-full min-h-[var(--touch-comfortable)] flex-col overflow-hidden border p-3 text-left transition-all duration-200",
               "before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(110%_110%_at_85%_-10%,rgba(var(--glass-tint-rgb),0.2)_0%,transparent_60%)] before:opacity-0 before:transition-opacity before:duration-200",
-              "motion-safe:hover:-translate-y-[1px] hover:border-brand hover:before:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-weak focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+              "hover:border-brand focus-visible:ring-brand-weak focus-visible:ring-offset-surface-1 hover:before:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-safe:hover:-translate-y-[1px]",
               "touch-target active:scale-95",
             )}
           >
@@ -76,14 +79,14 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
                   {backgroundIcon}
                 </span>
               )}
-              <span className="flex h-8 w-8 items-center justify-center rounded-base bg-brand/15 text-brand">
+              <span className="rounded-base bg-brand/15 text-brand flex h-8 w-8 items-center justify-center">
                 {tile.icon}
               </span>
               <div className="space-y-0.5">
-                <div className="text-xs font-semibold text-text-0 sm:text-sm">{tile.title}</div>
-                <p className="text-xs leading-snug text-text-1">{tile.subtitle}</p>
+                <div className="text-text-0 text-xs font-semibold sm:text-sm">{tile.title}</div>
+                <p className="text-text-1 text-xs leading-snug">{tile.subtitle}</p>
               </div>
-              <div className="mt-auto flex items-center gap-1.5 text-xs text-text-1">
+              <div className="text-text-1 mt-auto flex items-center gap-1.5 text-xs">
                 <Badge variant="outline" className="px-1.5 py-0.5 text-xs">
                   Start
                 </Badge>

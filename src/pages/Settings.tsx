@@ -364,7 +364,7 @@ export default function SettingsPage() {
                 })
                 .catch(() => window.location.reload());
             }}
-            className="bg-accent hover:bg-accent/90 min-h-touch-rec rounded-md px-4 py-2 text-sm font-medium text-surface-0 transition-colors"
+            className="bg-accent hover:bg-accent/90 min-h-touch-rec text-surface-0 rounded-md px-4 py-2 text-sm font-medium transition-colors"
           >
             Seite neu laden
           </button>
@@ -377,7 +377,7 @@ export default function SettingsPage() {
     <div className="mx-auto flex h-full w-full max-w-md flex-col gap-4 p-4">
       <header className="space-y-2">
         <span className="brand-chip w-fit">Dashboard</span>
-        <h1 className="text-token-h1 font-semibold text-text-strong">Einstellungen</h1>
+        <h1 className="text-token-h1 text-text-strong font-semibold">Einstellungen</h1>
         <p className="text-token-body leading-relaxed text-text-muted">
           API-Schlüssel verwalten und die App auf deinem Gerät installieren.
         </p>
@@ -387,7 +387,7 @@ export default function SettingsPage() {
       <StaticSurfaceSection padding="md" className="brand-panel border-none">
         <div className="flex flex-col space-y-1 pb-4">
           <span className="brand-chip w-fit">Zugang</span>
-          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-text-strong">
+          <h2 className="text-token-h2 text-text-strong flex items-center gap-2 font-semibold leading-tight tracking-tight">
             <Key className="h-5 w-5" />
             OpenRouter API-Schlüssel
           </h2>
@@ -407,13 +407,13 @@ export default function SettingsPage() {
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
                 placeholder="sk-or-..."
-                className="surface-card pr-10 font-mono text-text-strong placeholder:text-text-subtle"
+                className="surface-card text-text-strong placeholder:text-text-subtle pr-10 font-mono"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                className="surface-card focus-visible:ring-accent absolute right-2 top-1/2 grid min-h-touch-rec min-w-touch-rec -translate-y-1/2 place-items-center rounded-full text-text-muted transition hover:text-text-strong focus-visible:outline-none focus-visible:ring-2"
+                className="surface-card focus-visible:ring-accent min-h-touch-rec min-w-touch-rec hover:text-text-strong absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-text-muted transition focus-visible:outline-none focus-visible:ring-2"
               >
                 {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -442,7 +442,7 @@ export default function SettingsPage() {
           <Button
             type="button"
             onClick={handleSaveKey}
-            className="surface-card min-h-touch-rec w-full border-0 text-text-strong"
+            className="surface-card min-h-touch-rec text-text-strong w-full border-0"
           >
             Schlüssel speichern
           </Button>
@@ -464,7 +464,7 @@ export default function SettingsPage() {
       <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Inhalte</span>
-          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
+          <h2 className="text-token-h2 flex items-center gap-2 font-semibold leading-tight tracking-tight text-white">
             <User className="h-5 w-5" />
             Inhaltsfilter
           </h2>
@@ -507,7 +507,7 @@ export default function SettingsPage() {
       <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Gedächtnis</span>
-          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
+          <h2 className="text-token-h2 flex items-center gap-2 font-semibold leading-tight tracking-tight text-white">
             <Brain className="h-5 w-5" />
             Gedächtnis-Funktion
           </h2>
@@ -578,7 +578,7 @@ export default function SettingsPage() {
               {import.meta.env.DEV && (
                 <div className="space-y-2 border-t border-white/10 pt-4">
                   <Label className="text-text-muted">Debug-Statistiken</Label>
-                  <div className="space-y-1 text-xs text-text-subtle">
+                  <div className="text-text-subtle space-y-1 text-xs">
                     <MemoryStats getMemoryStats={getMemoryStats} />
                   </div>
                 </div>
@@ -628,7 +628,7 @@ export default function SettingsPage() {
       <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Chats</span>
-          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
+          <h2 className="text-token-h2 flex items-center gap-2 font-semibold leading-tight tracking-tight text-white">
             <MessageSquare className="h-5 w-5" />
             Chat-Verwaltung
           </h2>
@@ -722,7 +722,7 @@ export default function SettingsPage() {
       <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">PWA</span>
-          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
+          <h2 className="text-token-h2 flex items-center gap-2 font-semibold leading-tight tracking-tight text-white">
             <Smartphone className="h-5 w-5" />
             App-Installation
           </h2>
@@ -805,7 +805,7 @@ export default function SettingsPage() {
       <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">System</span>
-          <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
+          <h2 className="text-token-h2 flex items-center gap-2 font-semibold leading-tight tracking-tight text-white">
             <Info className="h-5 w-5" />
             Build Information
           </h2>
@@ -858,7 +858,7 @@ export default function SettingsPage() {
             type="button"
             onClick={handleHardReload}
             variant="outline"
-            className="border-accent1/40 hover:bg-accent1/10 flex w-full items-center justify-center gap-2 text-accent1"
+            className="border-accent1/40 hover:bg-accent1/10 text-accent1 flex w-full items-center justify-center gap-2"
           >
             <RefreshCw className="h-4 w-4" />
             Seite vollständig neu laden

@@ -36,7 +36,7 @@ export function SideNavigation() {
       )}
     >
       <div className="flex h-full flex-col">
-        <div className="flex flex-col items-center gap-2 border-b border-border p-2">
+        <div className="border-border flex flex-col items-center gap-2 border-b p-2">
           <BrandWordmark className="h-8 w-8 p-1" />
           {activeRole ? (
             <span
@@ -62,7 +62,7 @@ export function SideNavigation() {
                   "flex h-12 w-12 flex-col items-center justify-center rounded-full text-xs font-medium transition",
                   "text-[var(--text-on-glass)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-bg)]",
                   isActive
-                    ? "bg-[var(--glass-overlay-strong)] shadow-[var(--glass-shadow)] ring-1 ring-white/30 font-semibold"
+                    ? "bg-[var(--glass-overlay-strong)] font-semibold shadow-[var(--glass-shadow)] ring-1 ring-white/30"
                     : "opacity-80 hover:bg-[var(--glass-overlay-muted)] hover:opacity-100",
                 )
               }
@@ -73,7 +73,7 @@ export function SideNavigation() {
           ))}
         </div>
 
-        <div className="flex flex-col items-center gap-2 border-t border-border p-2">
+        <div className="border-border flex flex-col items-center gap-2 border-t p-2">
           <Button
             variant="brand"
             size="icon"

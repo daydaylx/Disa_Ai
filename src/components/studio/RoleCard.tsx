@@ -48,7 +48,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
           "flex flex-col gap-3 text-left",
           !disabled && "cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
-          isActive && "ring-2 ring-brand",
+          isActive && "ring-brand ring-2",
           className,
         )}
         onClick={disabled ? undefined : onClick}

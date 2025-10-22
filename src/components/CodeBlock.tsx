@@ -38,13 +38,13 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-base border border-border bg-surface-2 text-sm text-text-0",
+        "rounded-base border-border bg-surface-2 text-text-0 relative overflow-hidden border text-sm",
         className,
       )}
     >
-      <span className="brand-rail absolute left-0 top-0 h-full w-1 bg-brand" aria-hidden="true" />
-      <div className="flex items-center justify-between border-b border-border bg-surface-1 px-4 py-2 pl-6">
-        <span className="font-mono text-xs uppercase tracking-[0.08em] text-text-1">
+      <span className="brand-rail bg-brand absolute left-0 top-0 h-full w-1" aria-hidden="true" />
+      <div className="border-border bg-surface-1 flex items-center justify-between border-b px-4 py-2 pl-6">
+        <span className="text-text-1 font-mono text-xs uppercase tracking-[0.08em]">
           {normalizedLang || "code"}
         </span>
         <div className="flex items-center gap-1">
@@ -52,7 +52,7 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
             type="button"
             onClick={handleToggleWrap}
             className={cn(
-              "inline-flex h-9 w-9 items-center justify-center rounded-base border border-transparent text-text-1 transition-colors hover:bg-surface-2 hover:text-text-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+              "rounded-base text-text-1 hover:bg-surface-2 hover:text-text-0 focus-visible:ring-brand focus-visible:ring-offset-surface-1 inline-flex h-9 w-9 items-center justify-center border border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
               wrap && "bg-surface-2 text-text-0",
             )}
             aria-pressed={wrap}
@@ -65,7 +65,7 @@ export default function CodeBlock({ code, lang, onCopied, className }: CodeBlock
             onCopied={handleCopied}
             size="sm"
             variant="ghost"
-            className="h-9 w-9 focus-visible:ring-offset-surface-1"
+            className="focus-visible:ring-offset-surface-1 h-9 w-9"
             aria-label="Code kopieren"
           >
             {copied ? (

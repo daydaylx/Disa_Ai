@@ -82,7 +82,7 @@ export function BuildInfo({ className = "", showFullInfo = false }: BuildInfoPro
   }
 
   return (
-    <div className={`font-mono text-xs text-text-subtle ${className}`}>
+    <div className={`text-text-subtle font-mono text-xs ${className}`}>
       {formattedBuildId} • {formattedSha}
     </div>
   );

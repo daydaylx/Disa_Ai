@@ -33,7 +33,7 @@ export function MessageBubbleCard({
   return (
     <article
       className={cn(
-        "group relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-hairline)] bg-surface-card text-text-primary shadow-surface transition-all duration-small ease-standard focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-brand/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-canvas)]",
+        "focus-visible:ring-brand/60 group relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-hairline)] bg-surface-card text-text-primary shadow-surface transition-all duration-small ease-standard focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-canvas)]",
         variant === "assistant"
           ? "py-3 pl-6 pr-5 sm:py-4 sm:pl-8 sm:pr-6"
           : "bg-surface-2 py-3 pl-5 pr-6 sm:py-4 sm:pl-6 sm:pr-8",
@@ -75,7 +75,7 @@ export function MessageBubbleCard({
         ) : null}
       </header>
 
-      <p className="whitespace-pre-wrap text-[15px] leading-7 text-text-strong transition-colors duration-small ease-standard">
+      <p className="text-text-strong whitespace-pre-wrap text-[15px] leading-7 transition-colors duration-small ease-standard">
         {body}
       </p>
     </article>

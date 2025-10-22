@@ -18,18 +18,18 @@ export const TypingIndicator: React.FC<TypingIndicatorProps> = ({
       <div role="status" aria-live="polite" aria-atomic="true">
         <SoftDepthSurface variant="subtle" className="mr-auto max-w-[78%] items-start px-2 py-1">
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-text-strong">{message}</span>
+            <span className="text-text-strong text-sm">{message}</span>
             <div className="flex space-x-1">
               <div
-                className="h-2 w-2 rounded-full bg-accent1 motion-safe:animate-bounce"
+                className="bg-accent1 h-2 w-2 rounded-full motion-safe:animate-bounce"
                 style={{ animationDelay: "0ms" }}
               ></div>
               <div
-                className="h-2 w-2 rounded-full bg-accent1 motion-safe:animate-bounce"
+                className="bg-accent1 h-2 w-2 rounded-full motion-safe:animate-bounce"
                 style={{ animationDelay: "150ms" }}
               ></div>
               <div
-                className="h-2 w-2 rounded-full bg-accent1 motion-safe:animate-bounce"
+                className="bg-accent1 h-2 w-2 rounded-full motion-safe:animate-bounce"
                 style={{ animationDelay: "300ms" }}
               ></div>
             </div>

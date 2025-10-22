@@ -124,7 +124,7 @@ export function LiveTokenCounter({
     <div className={cn("flex items-center gap-2", className)}>
       <TokenBadge current={tokens} max={maxTokens} cost={cost} model={model} isLive={isStreaming} />
       {isStreaming && (
-        <div className="flex items-center gap-1 text-xs text-text-1">
+        <div className="text-text-1 flex items-center gap-1 text-xs">
           <div className="bg-accent/60 h-1.5 w-1.5 animate-ping rounded-full" />
           <span>Stream läuft …</span>
         </div>

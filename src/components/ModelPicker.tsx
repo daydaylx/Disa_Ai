@@ -287,7 +287,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         </div>
       )}
       {policyFromRole !== "any" && (
-        <div className="rounded-lg bg-brand/10 p-4 text-sm text-brand" role="alert">
+        <div className="bg-brand/10 text-brand rounded-lg p-4 text-sm" role="alert">
           Rollen-Policy aktiv: <span className="font-medium">{policyFromRole}</span> – Liste
           entsprechend gefiltert.
         </div>
@@ -357,7 +357,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
               aria-label="Detailfilter"
             >
               <div className="flex flex-col gap-1">
-                <label htmlFor="provider-select" className="text-sm text-text-1">
+                <label htmlFor="provider-select" className="text-text-1 text-sm">
                   Provider
                 </label>
                 <select
@@ -365,7 +365,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                   value={provider}
                   onChange={(e) => setProvider(e.target.value)}
                   aria-label="Provider filtern"
-                  className="h-10 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                  className="border-border bg-surface-1 focus-visible:ring-brand h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2"
                 >
                   {providers.map((p) => (
                     <option key={p} value={p} className="bg-surface-2">
@@ -375,7 +375,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                 </select>
               </div>
               <div className="flex flex-col gap-1">
-                <label htmlFor="sort-select" className="text-sm text-text-1">
+                <label htmlFor="sort-select" className="text-text-1 text-sm">
                   Sortieren nach
                 </label>
                 <select
@@ -385,7 +385,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
                     setSortBy(e.target.value as "label" | "price" | "ctx")
                   }
                   aria-label="Sortierung"
-                  className="h-10 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                  className="border-border bg-surface-1 focus-visible:ring-brand h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2"
                 >
                   <option value="label" className="bg-surface-2">
                     Name
@@ -406,7 +406,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
       <div role="listbox" aria-label="Modelle">
         {loading ? (
           <div
-            className="flex flex-col items-center justify-center p-8 text-text-1"
+            className="text-text-1 flex flex-col items-center justify-center p-8"
             role="status"
             aria-label="Modelle werden geladen"
           >
@@ -424,7 +424,7 @@ export default function ModelPicker({ value, onChange, policyFromRole = "any" }:
         )}
 
         {!loading && filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center p-8 text-text-1" role="status">
+          <div className="text-text-1 flex flex-col items-center justify-center p-8" role="status">
             <Icon name="search-off" size={48} className="mb-4" />
             <h3 className="text-lg font-semibold">Keine Modelle gefunden</h3>
             <p className="text-sm">Passe deine Filter oder den Suchbegriff an.</p>
@@ -506,7 +506,7 @@ function ModelListVirtualized({
         aria-selected={active}
         tabIndex={0}
         interactive
-        className={cn("cursor-pointer", active && "ring-2 ring-brand")}
+        className={cn("cursor-pointer", active && "ring-brand ring-2")}
         onClick={handleSelect}
         onKeyDown={handleKeyDown}
         data-testid="model-option"
@@ -521,7 +521,7 @@ function ModelListVirtualized({
             variant="ghost"
             size="sm"
             className={cn(
-              "rounded-full px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+              "focus-visible:ring-brand/60 focus-visible:ring-offset-canvas rounded-full px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
               isFavorite && "text-warning",
             )}
             aria-pressed={isFavorite}
@@ -537,11 +537,11 @@ function ModelListVirtualized({
         </CardHeader>
         <CardContent className="space-y-4 pt-2">
           {description && (
-            <p className="whitespace-pre-line break-words text-sm leading-6 text-text-1">
+            <p className="text-text-1 whitespace-pre-line break-words text-sm leading-6">
               {description}
             </p>
           )}
-          <div className="flex items-center justify-between text-sm text-text-1">
+          <div className="text-text-1 flex items-center justify-between text-sm">
             <span title="Kontextfenster">
               {m.ctx ? `${m.ctx.toLocaleString("de-DE")} Tokens` : "—"}
             </span>

@@ -68,8 +68,8 @@ export function QuickstartGrid({
     return (
       <div className="flex min-h-[280px] items-center justify-center p-4">
         <div className="max-w-xs space-y-4 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-border bg-surface-2">
-            <Sparkles className="h-8 w-8 text-text-1" />
+          <div className="border-border bg-surface-2 mx-auto flex h-16 w-16 items-center justify-center rounded-full border">
+            <Sparkles className="text-text-1 h-8 w-8" />
           </div>
           <div className="space-y-2">
             <h3 className="typo-h5 text-text-0">Keine Schnellstarts verfügbar</h3>

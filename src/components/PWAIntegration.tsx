@@ -89,8 +89,8 @@ export function PWAIntegration({
       )}
 
       {status.hasData && !isProcessing && (
-        <div className="flex items-center gap-2 rounded-lg border border-success/20 bg-success/10 p-3">
-          <div className="h-4 w-4 text-success">
+        <div className="border-success/20 bg-success/10 flex items-center gap-2 rounded-lg border p-3">
+          <div className="text-success h-4 w-4">
             <svg fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
@@ -99,7 +99,7 @@ export function PWAIntegration({
               />
             </svg>
           </div>
-          <span className="text-sm text-success">{status.dataTypes.join(", ")} empfangen</span>
+          <span className="text-success text-sm">{status.dataTypes.join(", ")} empfangen</span>
         </div>
       )}
     </div>
