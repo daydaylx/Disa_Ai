@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { logDiscussionAnalytics } from "../analytics/discussion";
 import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
 import { MessageBubbleCard } from "../components/chat/MessageBubbleCard";
+import SettingsFAB from "../components/nav/SettingsFAB";
 import Accordion from "../components/ui/Accordion";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
@@ -820,6 +821,9 @@ export default function ChatV2() {
             onDelete={handleDeleteConversation}
           />
         </div>
+        
+        {/* Settings FAB Button - bottom left */}
+        <SettingsFAB />
       </div>
     </TooltipProvider>
   );

@@ -7,6 +7,7 @@ import { ScrollToVoid } from "../../components/layout/ScrollToVoid";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
+import TopMenuButton from "../../components/nav/TopMenuButton";
 import { cn } from "../../lib/utils";
 
 interface AppShellProps {
@@ -39,7 +40,10 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               <div className="text-lg font-semibold tracking-tight text-text-primary">
                 Disa<span className="text-brand">AI</span>
               </div>
-              <BurgerMenu />
+              <div className="flex items-center gap-2">
+                <TopMenuButton />
+                <BurgerMenu />
+              </div>
             </div>
           </header>
 
