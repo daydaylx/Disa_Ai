@@ -4,29 +4,68 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const cardVariants = cva(
-  "relative isolate overflow-hidden rounded-[var(--radius-xl)] border border-border-hairline bg-surface-card text-text-primary shadow-surface transition-[box-shadow,transform,border-color,background] duration-small ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]",
+  "relative isolate overflow-hidden rounded-[var(--radius-xl)] border border-border-hairline bg-surface-card text-text-primary shadow-surface transition-[box-shadow,transform,border-color,background,opacity] duration-small ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]",
   {
     variants: {
       tone: {
         default: "",
         muted: "bg-surface-subtle text-text-secondary",
         contrast: "bg-surface-popover text-text-inverse border-border-strong",
+        glass: "bg-surface-card/80 backdrop-blur-md border-border/30",
+        solid: "bg-surface-card border-border",
+        outlined: "bg-transparent border-border-strong",
       },
       elevation: {
         none: "shadow-none",
         surface: "shadow-surface",
         raised: "shadow-raised",
         overlay: "shadow-overlay",
+        popover: "shadow-popover",
       },
       interactive: {
         false: "",
-        true: "motion-safe:hover:-translate-y-[2px] motion-safe:hover:shadow-raised",
+        gentle:
+          "motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
+        dramatic:
+          "motion-safe:hover:-translate-y-[3px] motion-safe:hover:shadow-overlay motion-safe:hover:scale-[1.02] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        subtle:
+          "motion-safe:hover:bg-surface-subtle cursor-pointer motion-safe:transition-colors motion-safe:duration-150 motion-safe:ease-out",
+        press:
+          "motion-safe:active:scale-[0.98] motion-safe:active:shadow-none cursor-pointer motion-safe:transition-all motion-safe:duration-100 motion-safe:ease-out",
+        lift: "motion-safe:hover:-translate-y-[2px] motion-safe:hover:shadow-overlay motion-safe:focus-visible:translate-y-0 motion-safe:focus-visible:shadow-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
+        glow: "motion-safe:hover:shadow-[0_0_20px_rgba(var(--color-brand-rgb),0.3)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
       },
       padding: {
         none: "",
+        xs: "p-[var(--space-sm)]",
         sm: "p-[var(--space-md)]",
         md: "p-[var(--space-lg)]",
         lg: "p-[var(--space-xl)]",
+        xl: "p-[var(--space-2xl)]",
+      },
+      size: {
+        auto: "",
+        sm: "max-w-sm",
+        md: "max-w-md",
+        lg: "max-w-lg",
+        xl: "max-w-xl",
+        full: "w-full",
+      },
+      intent: {
+        default: "",
+        primary: "border-brand bg-brand/5 text-brand-text",
+        secondary: "border-action-secondary bg-action-secondary/5",
+        warning: "border-status-warning bg-status-warning/5 text-status-warning-text",
+        error: "border-status-error bg-status-error/5 text-status-error-text",
+        success: "border-status-success bg-status-success/5 text-status-success-text",
+        info: "border-status-info bg-status-info/5 text-status-info-text",
+      },
+      state: {
+        default: "",
+        loading: "animate-pulse bg-surface-subtle pointer-events-none",
+        disabled: "opacity-50 pointer-events-none cursor-not-allowed",
+        selected: "border-brand bg-brand/10 ring-2 ring-brand/20",
+        focus: "ring-2 ring-brand/50",
       },
     },
     compoundVariants: [
@@ -39,28 +78,189 @@ const cardVariants = cva(
         elevation: "overlay",
         class: "shadow-overlay",
       },
+      {
+        tone: "glass",
+        class: "border-border/20",
+      },
+      {
+        intent: "primary",
+        interactive: "gentle",
+        class: "motion-safe:hover:bg-brand/10",
+      },
+      {
+        intent: "error",
+        interactive: "gentle",
+        class: "motion-safe:hover:bg-status-error/10",
+      },
+      {
+        intent: "success",
+        interactive: "gentle",
+        class: "motion-safe:hover:bg-status-success/10",
+      },
+      {
+        intent: "warning",
+        interactive: "gentle",
+        class: "motion-safe:hover:bg-status-warning/10",
+      },
+      {
+        state: "loading",
+        class: "animate-pulse",
+      },
+      {
+        state: "selected",
+        interactive: false,
+        class: "cursor-default",
+      },
+      {
+        interactive: ["gentle", "dramatic", "subtle", "press", "lift", "glow"],
+        class: "touch-target min-h-[44px]",
+      },
+      {
+        intent: "primary",
+        interactive: "glow",
+        class:
+          "motion-safe:hover:shadow-[0_0_25px_rgba(var(--color-brand-rgb),0.4)] motion-safe:hover:border-brand/60",
+      },
+      {
+        intent: "error",
+        interactive: "glow",
+        class: "motion-safe:hover:shadow-[0_0_20px_rgba(var(--color-status-error-rgb),0.3)]",
+      },
+      {
+        intent: "success",
+        interactive: "glow",
+        class: "motion-safe:hover:shadow-[0_0_20px_rgba(var(--color-status-success-rgb),0.3)]",
+      },
+      {
+        state: "selected",
+        interactive: ["gentle", "subtle"],
+        class: "motion-safe:hover:bg-brand/15 motion-safe:hover:border-brand/40",
+      },
+      {
+        state: "loading",
+        interactive: false,
+        class: "cursor-wait pointer-events-none",
+      },
+      {
+        tone: "glass",
+        interactive: ["gentle", "dramatic"],
+        class: "motion-safe:hover:bg-surface-card/90 motion-safe:hover:backdrop-blur-lg",
+      },
     ],
     defaultVariants: {
       tone: "default",
       elevation: "surface",
       interactive: false,
       padding: "none",
+      size: "auto",
+      intent: "default",
+      state: "default",
     },
   },
 );
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+    VariantProps<typeof cardVariants> {
+  /**
+   * Whether the card should be rendered as a clickable element
+   * @default false
+   */
+  clickable?: boolean;
+  /**
+   * Callback fired when the card is clicked (only if clickable=true)
+   */
+  onCardClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  /**
+   * ARIA label for accessibility when clickable
+   */
+  "aria-label"?: string;
+}
+
+// Export variant props for external use
+export type CardVariantProps = VariantProps<typeof cardVariants>;
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, tone, elevation, interactive, padding, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(cardVariants({ tone, elevation, interactive, padding, className }))}
-      {...props}
-    />
-  ),
+  (
+    {
+      className,
+      tone,
+      elevation,
+      interactive,
+      padding,
+      size,
+      intent,
+      state,
+      clickable = false,
+      onCardClick,
+      onClick,
+      ...props
+    },
+    ref,
+  ) => {
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      if (state === "disabled" || state === "loading") {
+        event.preventDefault();
+        return;
+      }
+
+      if (clickable && onCardClick) {
+        onCardClick(event);
+      }
+      onClick?.(event);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (state === "disabled" || state === "loading") {
+        event.preventDefault();
+        return;
+      }
+
+      if (clickable && (event.key === "Enter" || event.key === " ")) {
+        event.preventDefault();
+        // Create a synthetic mouse event for consistency
+        const syntheticEvent = new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+        });
+
+        // Trigger the click handler with the synthetic event
+        const target = event.currentTarget;
+        if (onCardClick) {
+          onCardClick({
+            ...syntheticEvent,
+            currentTarget: target,
+            target: target,
+          } as React.MouseEvent<HTMLDivElement>);
+        }
+      }
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          cardVariants({
+            tone,
+            elevation,
+            interactive: clickable ? interactive || "gentle" : interactive,
+            padding,
+            size,
+            intent,
+            state,
+            className,
+          }),
+        )}
+        onClick={clickable ? handleClick : onClick}
+        onKeyDown={clickable ? handleKeyDown : undefined}
+        role={clickable ? "button" : undefined}
+        tabIndex={clickable && state !== "disabled" && state !== "loading" ? 0 : undefined}
+        aria-disabled={state === "disabled" || state === "loading" ? true : undefined}
+        aria-pressed={state === "selected" ? true : undefined}
+        {...props}
+      />
+    );
+  },
 );
 Card.displayName = "Card";
 

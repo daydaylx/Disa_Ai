@@ -306,11 +306,11 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="border-border relative h-[90vh] w-[90vw] max-w-md rounded-xl border bg-surface-card shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="border-border relative h-full max-h-[90vh] w-full max-w-md rounded-xl border bg-surface-card shadow-xl">
         <div className="flex h-full flex-col">
-          {/* Header */}
-          <div className="border-border flex items-center justify-between border-b p-4">
+          {/* Header - Fixed */}
+          <div className="border-border flex flex-shrink-0 items-center justify-between border-b p-4">
             <h2 className="text-text-strong text-lg font-semibold">Erweiterte Einstellungen</h2>
             <button
               onClick={onClose}
@@ -321,8 +321,8 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
             </button>
           </div>
 
-          {/* Settings Content */}
-          <div className="flex-1 overflow-y-auto p-4">
+          {/* Settings Content - Scrollable */}
+          <div className="min-h-0 flex-1 overflow-y-auto p-4">
             <div className="space-y-6">
               {/* API Key Section */}
               <div className="space-y-3">

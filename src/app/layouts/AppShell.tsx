@@ -2,12 +2,11 @@ import type { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import { BurgerMenu } from "../../components/layout/BurgerMenu";
 import { ScrollToVoid } from "../../components/layout/ScrollToVoid";
+import TopMenuButton from "../../components/nav/TopMenuButton";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
-import TopMenuButton from "../../components/nav/TopMenuButton";
 import { cn } from "../../lib/utils";
 
 interface AppShellProps {
@@ -42,7 +41,6 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               </div>
               <div className="flex items-center gap-2">
                 <TopMenuButton />
-                <BurgerMenu />
               </div>
             </div>
           </header>
@@ -71,8 +69,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       <NetworkBanner />
       <PWAInstallPrompt />
 
-      {/* Mobile navigation - conditionally render based on page */}
-      <BurgerMenu />
+      {/* TopMenuButton is now the primary navigation for mobile */}
 
       {process.env.NODE_ENV === "development" && <PWADebugInfo />}
     </div>
