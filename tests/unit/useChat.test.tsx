@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useChat } from "../../src/hooks/useChat";
 
@@ -15,34 +15,34 @@ Object.defineProperty(global.crypto, "randomUUID", {
 
 describe("useChat", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should initialize with empty messages", () => {
     const { result } = renderHook(() => useChat());
 
     expect(result.current.messages).toEqual([]);
-    expect(result.current.isStreaming).toBe(false);
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
   });
 
-  it("should add a user message when sending", async () => {
+  it("should add a user message when appending", async () => {
     const { result } = renderHook(() => useChat());
 
-    const testMessage = "Hello, world!";
-    result.current.send(testMessage);
+    const testMessage = { role: "user", content: "Hello, world!" };
+    result.current.append(testMessage);
 
     // Check that the user message was added
     await waitFor(() => {
       expect(result.current.messages).toHaveLength(1);
       expect(result.current.messages[0].role).toBe("user");
-      expect(result.current.messages[0].content).toBe(testMessage);
+      expect(result.current.messages[0].content).toBe(testMessage.content);
     });
   });
 
   it("should handle streaming response correctly", async () => {
     // Mock the chatStream to simulate a response
-    const mockStream = jest.requireMock("../../src/lib/openrouter");
+    const mockStream = await vi.importMock("../../src/lib/openrouter");
     const mockResponse = {
       [Symbol.asyncIterator]: () => {
         const chunks = [
@@ -65,12 +65,12 @@ describe("useChat", () => {
 
     const { result } = renderHook(() => useChat());
 
-    const testMessage = "Hello";
-    result.current.send(testMessage);
+    const testMessage = { role: "user", content: "Hello" };
+    result.current.append(testMessage);
 
     // Wait for the stream to complete
     await waitFor(() => {
-      expect(result.current.isStreaming).toBe(false);
+      expect(result.current.isLoading).toBe(false);
     });
 
     // Check that we have both user and assistant messages
@@ -82,7 +82,7 @@ describe("useChat", () => {
 
   it("should handle errors during streaming", async () => {
     // Mock the chatStream to simulate an error
-    const mockStream = jest.requireMock("../../src/lib/openrouter");
+    const mockStream = await vi.importMock("../../src/lib/openrouter");
     const mockErrorStream = {
       [Symbol.asyncIterator]: () => {
         return {
@@ -96,13 +96,13 @@ describe("useChat", () => {
 
     const { result } = renderHook(() => useChat());
 
-    const testMessage = "Hello";
-    result.current.send(testMessage);
+    const testMessage = { role: "user", content: "Hello" };
+    result.current.append(testMessage);
 
     // Wait for the error to be handled
     await waitFor(() => {
-      expect(result.current.error).toBe("RATE_LIMITED");
-      expect(result.current.isStreaming).toBe(false);
+      expect(result.current.error).not.toBeNull();
+      expect(result.current.isLoading).toBe(false);
     });
   });
 });

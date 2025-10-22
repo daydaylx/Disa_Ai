@@ -66,7 +66,7 @@ function loadThemeState(): AuroraThemeState {
         currentTimeTheme: getTimeOfDay(),
       };
     }
-  } catch (_error) {
+  } catch {
     // Error handling for loading aurora theme state - using defaults if loading fails
   }
 
@@ -88,7 +88,7 @@ function saveThemeState(state: AuroraThemeState) {
         timeBasedEnabled: state.timeBasedEnabled,
       }),
     );
-  } catch (_error) {
+  } catch {
     // Error handling for saving aurora theme state - silently fail to avoid disrupting UX
   }
 }

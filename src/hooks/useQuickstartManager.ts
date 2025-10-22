@@ -34,7 +34,7 @@ export function useQuickstartManager() {
         const data = JSON.parse(stored) as Record<string, QuickstartUsage>;
         setUsage(new Map(Object.entries(data)));
       }
-    } catch (_err) {
+    } catch {
       // Error handling for loading quickstart usage data - silently fail to avoid disrupting UX
     }
   }, []);
@@ -44,7 +44,7 @@ export function useQuickstartManager() {
     try {
       const data = Object.fromEntries(usage);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch (_err) {
+    } catch {
       // Error handling for saving quickstart usage data - silently fail to avoid disrupting UX
     }
   }, [usage]);

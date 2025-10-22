@@ -24,7 +24,7 @@ const loadSettingsFromStorage = () => {
     } else {
       cachedSettings = { ...DEFAULT_SETTINGS };
     }
-  } catch (_error) {
+  } catch {
     // Error handling for loading settings - using defaults if loading fails
     cachedSettings = { ...DEFAULT_SETTINGS };
   }
@@ -35,7 +35,7 @@ const notifySubscribers = (settings: UserSettings) => {
   subscribers.forEach((listener) => {
     try {
       listener(settings);
-    } catch (_error) {
+    } catch {
       // Error handling for settings subscriber - ignoring individual subscriber failures
     }
   });
@@ -71,7 +71,7 @@ export function useSettings() {
     cachedSettings = { ...cachedSettings, ...newSettings };
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(cachedSettings));
-    } catch (_error) {
+    } catch {
       // Error handling for saving settings - silently fail to avoid disrupting UX
     }
     notifySubscribers(cachedSettings);
