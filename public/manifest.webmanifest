@@ -75,6 +75,20 @@
       "description": "App-Einstellungen öffnen",
       "url": "/settings",
       "icons": [{ "src": "/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Impressum",
+      "short_name": "Impressum",
+      "description": "Rechtliche Informationen",
+      "url": "/impressum",
+      "icons": [{ "src": "/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Datenschutz",
+      "short_name": "Datenschutz",
+      "description": "Datenschutzerklärung",
+      "url": "/datenschutz",
+      "icons": [{ "src": "/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png", "sizes": "96x96" }]
     }
   ],
   "share_target": {

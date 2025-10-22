@@ -10,7 +10,7 @@ describe("BrandWordmark", () => {
     expect(screen.getByText(/Disa/)).toBeInTheDocument();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <span
-        class="text-lg font-semibold tracking-tight text-text-strong"
+        class="text-text-strong text-lg font-semibold tracking-tight"
       >
         Disa
         <span

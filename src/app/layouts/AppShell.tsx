@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
+import { BottomNavigation, LegalBottomNavigation } from "../../components/layout/BottomNavigation";
+import { BurgerMenu } from "../../components/layout/BurgerMenu";
 import { ScrollToVoid } from "../../components/layout/ScrollToVoid";
 import { SideNavigation } from "../../components/layout/SideNavigation";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -24,6 +26,8 @@ interface AppShellLayoutProps {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
+  const isLegalPage = ["/impressum", "/datenschutz"].includes(location.pathname);
+
   return (
     <div className="text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)] pl-[var(--navigation-width)]">
       {/* Background gradients - soft glass aura */}
@@ -36,6 +40,15 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
       <ScrollToVoid>
         <div className="relative z-10 flex min-h-dvh flex-col">
+          <header className="border-border bg-surface-base/90 sticky top-0 z-30 border-b backdrop-blur-xl sm:hidden">
+            <div className="flex items-center justify-between px-4 py-3">
+              <div className="text-lg font-semibold tracking-tight text-text-primary">
+                Disa<span className="text-brand">AI</span>
+              </div>
+              <BurgerMenu />
+            </div>
+          </header>
+
           <main
             id="main"
             key={location.pathname}
@@ -51,7 +64,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           <footer className="border-t border-border-subtle bg-surface-base py-5 text-text-secondary">
             <div className="mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
               <span>Disa AI Beta · Tooling Preview</span>
-              <BuildInfo className="text-[11px]" />
+              <BuildInfo className="text-[11px] text-xs sm:text-xs" />
             </div>
           </footer>
         </div>
@@ -59,6 +72,10 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
       <NetworkBanner />
       <PWAInstallPrompt />
+
+      {/* Mobile navigation - conditionally render based on page */}
+      {isLegalPage ? <LegalBottomNavigation /> : <BottomNavigation />}
+
       {process.env.NODE_ENV === "development" && <PWADebugInfo />}
     </div>
   );
