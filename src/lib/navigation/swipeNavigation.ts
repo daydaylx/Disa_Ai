@@ -188,9 +188,9 @@ export class SwipeNavigationManager {
       transform: translate(-50%, -50%);
       background: rgba(0, 0, 0, 0.8);
       color: white;
-      padding: 12px 20px;
-      border-radius: 20px;
-      font-size: 14px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-button);
+      font-size: var(--font-size-body-small);
       font-weight: 500;
       backdrop-filter: blur(10px);
       z-index: 1000;

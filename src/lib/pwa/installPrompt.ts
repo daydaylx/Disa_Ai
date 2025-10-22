@@ -64,11 +64,11 @@ function showInstallPrompt(): void {
       bottom: 20px;
       left: 20px;
       right: 20px;
-      background: rgba(79, 70, 229, 0.95);
+      background: rgba(var(--accent-color-rgb), 0.95);
       backdrop-filter: blur(10px);
       color: white;
-      padding: 16px;
-      border-radius: 12px;
+      padding: var(--space-md);
+      border-radius: var(--radius-install-prompt);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       display: flex;
@@ -82,10 +82,10 @@ function showInstallPrompt(): void {
       </div>
       <button id="pwa-install-btn" style="
         background: white;
-        color: #4f46e5;
+        color: var(--accent-color);
         border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
+        padding: calc(var(--space-sm) - 4px) var(--space-sm);
+        border-radius: var(--radius-focus);
         font-weight: 600;
         cursor: pointer;
       ">Installieren</button>
@@ -93,8 +93,8 @@ function showInstallPrompt(): void {
         background: transparent;
         color: white;
         border: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 8px 12px;
-        border-radius: 6px;
+        padding: calc(var(--space-sm) - 4px) var(--space-md);
+        border-radius: var(--radius-focus);
         cursor: pointer;
       ">×</button>
     </div>

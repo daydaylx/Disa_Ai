@@ -95,16 +95,16 @@ export class MobileToastManager {
         pointer-events: auto;
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border-radius: 16px;
-        padding: 12px 16px;
-        margin: 4px 0;
+        border-radius: var(--radius-toast);
+        padding: calc(var(--space-sm) - 4px) var(--space-sm);
+        margin: calc(var(--space-xs) - 4px) 0;
         max-width: calc(100vw - 32px);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
         border: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         align-items: center;
-        gap: 12px;
-        font-size: 14px;
+        gap: var(--space-sm);
+        font-size: var(--font-size-body-small);
         font-weight: 500;
         opacity: 0;
         transform: translateY(-20px) scale(0.95);
@@ -143,7 +143,7 @@ export class MobileToastManager {
       }
 
       .mobile-toast__icon {
-        font-size: 16px;
+        font-size: var(--font-size-input);
         flex-shrink: 0;
       }
 
@@ -156,9 +156,9 @@ export class MobileToastManager {
         background: rgba(255, 255, 255, 0.2);
         border: none;
         color: inherit;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 13px;
+        padding: calc(var(--space-xs) - 4px) var(--space-sm);
+        border-radius: var(--radius-badge);
+        font-size: 0.8125rem;  /* entspricht 13px */
         font-weight: 600;
         cursor: pointer;
         transition: background 0.2s ease;
