@@ -25,10 +25,10 @@
 
 /* Drag handle styling for better UX */
 .bottom-sheet-drag-handle {
-  width: 40px;
-  height: 5px;
+  width: var(--size-bottomsheet-handle-width);
+  height: var(--size-bottomsheet-handle);
   background-color: var(--fg-dim);
-  border-radius: 3px;
+  border-radius: calc(var(--radius-sm) / 2);
   margin: 0 auto 10px;
 }
 
@@ -65,7 +65,7 @@
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .bottom-sheet-border {
-    border-width: 2px;
+    border-width: var(--size-bottomsheet-border);
   }
 }
 

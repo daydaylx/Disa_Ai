@@ -96,7 +96,7 @@ input,
 textarea,
 select {
   /* Prevent zoom on iOS */
-  font-size: 16px;
+  font-size: var(--font-size-input);
   /* Smooth touch scrolling */
   -webkit-overflow-scrolling: touch;
   /* Improve touch response */
@@ -109,7 +109,7 @@ input[type="email"],
 input[type="password"],
 input[type="search"],
 textarea {
-  font-size: 16px !important;
+  font-size: var(--font-size-input) !important;
   transform: scale(1);
 }
 

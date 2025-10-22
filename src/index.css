@@ -110,7 +110,7 @@
   *:focus-visible {
     outline: 2px solid var(--acc1);
     outline-offset: 3px;
-    border-radius: 6px;
+    border-radius: var(--radius-focus);
   }
 
   textarea {
@@ -118,13 +118,13 @@
   }
 
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: var(--size-scrollbar);
+    height: var(--size-scrollbar);
   }
 
   ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.18);
-    border-radius: 999px;
+    border-radius: var(--radius-scrollbar);
   }
 
   ::-webkit-scrollbar-track {
@@ -405,8 +405,8 @@
     }
 
     .touch-ripple:active::before {
-      width: 200px;
-      height: 200px;
+      width: var(--size-ripple-max);
+      height: var(--size-ripple-max);
     }
 
     /* Haptic feedback simulation with visual feedback */
@@ -746,7 +746,7 @@
     background: rgba(var(--brand-rgb), 0.14);
     color: var(--brand);
     padding: 0.25rem 0.75rem;
-    font-size: 11px;
+    font-size: var(--font-size-badge);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     transition: all var(--transition-normal) var(--transition-smooth);

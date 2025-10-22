@@ -12,8 +12,8 @@
 
   /* Fokus-Ring für bessere Sichtbarkeit */
   --focus-ring-color: rgb(147, 51, 234); /* Accent color */
-  --focus-ring-width: 2px;
-  --focus-ring-offset: 2px;
+  --focus-ring-width: var(--size-bottomsheet-border);
+  --focus-ring-offset: var(--size-bottomsheet-border);
 }
 
 /* Globale Fokus-Styles für bessere Sichtbarkeit */
@@ -25,8 +25,8 @@
 /* Verbessertes Focus-Management für Touch-Geräte */
 @media (hover: none) and (pointer: coarse) {
   *:focus-visible {
-    outline-width: 3px;
-    outline-offset: 3px;
+    outline-width: calc(var(--size-bottomsheet-border) + 1px);
+    outline-offset: calc(var(--size-bottomsheet-border) + 1px);
   }
 }
 
@@ -43,8 +43,8 @@
 button,
 [role="button"],
 a {
-  min-height: 44px; /* iOS Guidelines */
-  min-width: 44px;
+  min-height: var(--size-touch-compact); /* iOS Guidelines */
+  min-width: var(--size-touch-compact);
 }
 
 /* Verbesserte Kontraste für häufige Text-Utilities */
@@ -98,16 +98,16 @@ a {
   background: var(--focus-ring-color);
   color: white;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--font-size-body-small);
   transition: top 0.2s ease;
 }
 
 .skip-link:focus {
-  top: 16px;
-  outline: 2px solid white;
-  outline-offset: 2px;
+  top: 1rem;
+  outline: var(--size-bottomsheet-border) solid white;
+  outline-offset: var(--size-bottomsheet-border);
 }
 
 /* Reduzierte Animation für Benutzer mit Bewegungsempfindlichkeit */
