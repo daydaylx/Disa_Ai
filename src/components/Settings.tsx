@@ -20,23 +20,24 @@ export const Settings: React.FC<SettingsProps> = ({
 
   return (
     <div className="space-y-4">
-      <SoftDepthSurface variant="subtle" className="rounded-lg p-3">
+      <SoftDepthSurface variant="standard" className="rounded-xl p-4">
+        <h3 className="mb-3 font-semibold text-[var(--color-text-primary)]">Erscheinungsbild</h3>
         <div className="flex gap-2">
           <button
-            className={`rounded-full px-3 py-1 text-sm ${
+            className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
               theme === "dark"
-                ? "bg-[var(--acc1)] text-[var(--bg0)]"
-                : "bg-[rgba(255,255,255,0.1)] text-[var(--fg)]"
+                ? "bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] shadow-md"
+                : "bg-[var(--color-surface-card)] text-[var(--color-text-primary)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-raised)]"
             }`}
             onClick={() => onThemeChange("dark")}
           >
             Dunkel
           </button>
           <button
-            className={`rounded-full px-3 py-1 text-sm ${
+            className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
               theme === "light"
-                ? "bg-[var(--acc1)] text-[var(--bg0)]"
-                : "bg-[rgba(255,255,255,0.1)] text-[var(--fg)]"
+                ? "bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] shadow-md"
+                : "bg-[var(--color-surface-card)] text-[var(--color-text-primary)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-raised)]"
             }`}
             onClick={() => onThemeChange("light")}
           >
@@ -45,17 +46,17 @@ export const Settings: React.FC<SettingsProps> = ({
         </div>
       </SoftDepthSurface>
 
-      <SoftDepthSurface variant="subtle" className="rounded-lg p-3">
-        <h3 className="mb-2 font-medium text-[var(--fg)]">Datenschutz</h3>
+      <SoftDepthSurface variant="standard" className="rounded-xl p-4">
+        <h3 className="mb-3 font-semibold text-[var(--color-text-primary)]">Datenschutz</h3>
         <div className="space-y-2">
           <button
-            className="w-full rounded p-2 text-left text-[var(--fg)] hover:bg-[rgba(255,255,255,0.05)]"
+            className="w-full rounded-xl p-3 text-left text-[var(--color-text-primary)] bg-[var(--color-surface-card)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-raised)] transition-colors"
             onClick={() => setShowConfirmClear(true)}
           >
             Cache leeren
           </button>
           <button
-            className="w-full rounded p-2 text-left text-[var(--fg)] text-red-500 hover:bg-[rgba(255,255,255,0.05)]"
+            className="w-full rounded-xl p-3 text-left text-[var(--color-status-danger-fg)] bg-[var(--color-surface-card)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-status-danger-bg)] hover:text-[var(--color-status-danger-fg)] transition-colors"
             onClick={() => setShowConfirmDelete(true)}
           >
             Verlauf löschen
@@ -65,21 +66,21 @@ export const Settings: React.FC<SettingsProps> = ({
 
       {/* Confirm dialogs */}
       {showConfirmClear && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <SoftDepthSurface variant="standard" className="w-full max-w-sm rounded-lg p-4">
-            <p className="mb-4 text-sm text-[var(--fg-dim)]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-surface-overlay)] p-4">
+          <SoftDepthSurface variant="strong" className="w-full max-w-sm rounded-xl p-5">
+            <p className="mb-5 text-[var(--color-text-primary)]">
               Dadurch werden temporäre Dateien gelöscht. Die Aktion kann nicht rückgängig gemacht
               werden.
             </p>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3">
               <button
-                className="rounded px-3 py-1 text-[var(--fg)]"
+                className="rounded-lg px-4 py-2 font-medium text-[var(--color-text-primary)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                 onClick={() => setShowConfirmClear(false)}
               >
                 Abbrechen
               </button>
               <button
-                className="rounded bg-red-500 px-3 py-1 text-white"
+                className="rounded-lg bg-[var(--color-status-danger-fg)] px-4 py-2 font-medium text-[var(--color-text-on-accent)] hover:bg-[var(--color-status-danger-border)] transition-colors"
                 onClick={() => {
                   onClearCache();
                   setShowConfirmClear(false);
@@ -93,22 +94,22 @@ export const Settings: React.FC<SettingsProps> = ({
       )}
 
       {showConfirmDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <SoftDepthSurface variant="standard" className="w-full max-w-sm rounded-lg p-4">
-            <h3 className="mb-2 font-bold text-[var(--fg)]">Verlauf löschen?</h3>
-            <p className="mb-4 text-sm text-[var(--fg-dim)]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-surface-overlay)] p-4">
+          <SoftDepthSurface variant="strong" className="w-full max-w-sm rounded-xl p-5">
+            <h3 className="mb-2 font-bold text-[var(--color-text-primary)]">Verlauf löschen?</h3>
+            <p className="mb-5 text-[var(--color-text-primary)]">
               Dadurch werden alle Chat-Verläufe gelöscht. Die Aktion kann nicht rückgängig gemacht
               werden.
             </p>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3">
               <button
-                className="rounded px-3 py-1 text-[var(--fg)]"
+                className="rounded-lg px-4 py-2 font-medium text-[var(--color-text-primary)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                 onClick={() => setShowConfirmDelete(false)}
               >
                 Abbrechen
               </button>
               <button
-                className="rounded bg-red-500 px-3 py-1 text-white"
+                className="rounded-lg bg-[var(--color-status-danger-fg)] px-4 py-2 font-medium text-[var(--color-text-on-accent)] hover:bg-[var(--color-status-danger-border)] transition-colors"
                 onClick={() => {
                   onDeleteHistory();
                   setShowConfirmDelete(false);
