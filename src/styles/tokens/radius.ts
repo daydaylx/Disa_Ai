@@ -11,6 +11,14 @@ export type RadiusTokens = {
   xl: string;
   pill: string;
   full: string;
+
+  /* Additional radii for specific components */
+  scrollbar: string;
+  focus: string;
+  toast: string;
+  installPrompt: string;
+  button: string;
+  badge: string;
 };
 
 export const radiusTokens: RadiusTokens = {
@@ -22,6 +30,14 @@ export const radiusTokens: RadiusTokens = {
   xl: "16px",
   pill: "999px",
   full: "9999px",
+
+  /* Additional radii for specific components */
+  scrollbar: "999px",
+  focus: "6px",
+  toast: "16px",
+  installPrompt: "12px",
+  button: "20px",
+  badge: "8px",
 };
 
 export const radiusCssVars = {
@@ -33,4 +49,12 @@ export const radiusCssVars = {
   xl: "--radius-xl",
   pill: "--radius-pill",
   full: "--radius-full",
+
+  /* Additional radii for specific components */
+  scrollbar: "--radius-scrollbar",
+  focus: "--radius-focus",
+  toast: "--radius-toast",
+  installPrompt: "--radius-install-prompt",
+  button: "--radius-button",
+  badge: "--radius-badge",
 } as const;

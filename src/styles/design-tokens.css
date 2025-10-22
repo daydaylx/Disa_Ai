@@ -60,6 +60,10 @@
   --font-weight-mono: 400;
   --letter-spacing-mono: 0em;
 
+  /* Fixed font sizes for specific components */
+  --font-size-badge: 0.6875rem; /* 11px equivalent */
+  --font-size-input: 1rem; /* 16px */
+
   /* Spacing scale */
   --space-none: 0px;
   --space-3xs: 0.125rem;
@@ -91,6 +95,15 @@
   --size-touch-relaxed: 3.25rem;
   --size-touch-spacious: 3.5rem;
 
+  /* Scrollbar dimensions */
+  --size-scrollbar: 8px;
+
+  /* Fixed sizes */
+  --size-ripple-max: 200px;
+  --size-bottomsheet-handle: 5px;
+  --size-bottomsheet-handle-width: 40px;
+  --size-bottomsheet-border: 2px;
+
   /* Radii */
   --radius-none: 0px;
   --radius-xs: 2px;
@@ -100,6 +113,12 @@
   --radius-xl: 16px;
   --radius-pill: 999px;
   --radius-full: 9999px;
+  --radius-scrollbar: 999px;
+  --radius-focus: 6px;
+  --radius-toast: 16px;
+  --radius-install-prompt: 12px;
+  --radius-button: 20px;
+  --radius-badge: 8px;
 
   /* Motion */
   --motion-duration-micro: 120ms;
@@ -111,6 +130,31 @@
   --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
   --motion-easing-accelerate: cubic-bezier(0.8, 0, 1, 1);
   --motion-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+
+  /* Fixed font sizes for specific components */
+  --font-size-badge: 0.6875rem; /* 11px equivalent */
+  --font-size-input: 1rem; /* 16px */
+
+  /* Scrollbar dimensions */
+  --size-scrollbar: 8px;
+
+  /* Fixed sizes */
+  --size-ripple-max: 200px;
+  --size-bottomsheet-handle: 5px;
+  --size-bottomsheet-handle-width: 40px;
+  --size-bottomsheet-border: 2px;
+
+  /* Additional radii for specific components */
+  --radius-scrollbar: 999px;
+  --radius-focus: 6px;
+  --radius-toast: 16px;
+  --radius-install-prompt: 12px;
+  --radius-button: 20px;
+  --radius-badge: 8px;
+
+  /* Additional color variables */
+  --accent-color: #4f46e5;
+  --accent-color-rgb: 79, 70, 229;
 
   /* Legacy aliases for transition period */
   --fg: var(--color-text-primary);

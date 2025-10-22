@@ -31,6 +31,10 @@ export type TypographyTokens = {
     label: TextStyle;
     mono: TextStyle;
   };
+  fixedSizes: {
+    badge: string;
+    input: string;
+  };
 };
 
 export const typographyTokens: TypographyTokens = {
@@ -111,6 +115,10 @@ export const typographyTokens: TypographyTokens = {
       textTransform: "none",
     },
   },
+  fixedSizes: {
+    badge: "0.6875rem" /* 11px equivalent */,
+    input: "1rem" /* 16px */,
+  },
 };
 
 export const typographyCssVars = {
@@ -177,5 +185,9 @@ export const typographyCssVars = {
       lineHeight: "--line-height-mono",
       fontWeight: "--font-weight-mono",
     },
+  },
+  fixedSizes: {
+    badge: "--font-size-badge",
+    input: "--font-size-input",
   },
 } as const;

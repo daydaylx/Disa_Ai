@@ -533,3 +533,14 @@ export const colorCssVars = {
     dialogBorder: "--color-overlay-dialog-border",
   },
 } as const;
+
+/* Additional color values for specific components */
+export const additionalColorTokens = {
+  accent: "#4f46e5" /* Used in install prompt */,
+  accentRgb: "79, 70, 229" /* RGB version of accent color */,
+} as const;
+
+export const additionalColorCssVars = {
+  accent: "--accent-color",
+  accentRgb: "--accent-color-rgb",
+} as const;

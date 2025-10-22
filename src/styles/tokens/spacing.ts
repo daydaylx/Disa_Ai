@@ -37,10 +37,19 @@ export type TouchTargets = {
   spacious: string;
 };
 
+export type FixedSizes = {
+  scrollbar: string;
+  rippleMax: string;
+  bottomsheetHandle: string;
+  bottomsheetHandleWidth: string;
+  bottomsheetBorder: string;
+};
+
 export type SpacingTokens = {
   scale: SpacingScale;
   semantic: SemanticSpacing;
   touch: TouchTargets;
+  fixed: FixedSizes;
 };
 
 export const spacingTokens: SpacingTokens = {
@@ -75,6 +84,13 @@ export const spacingTokens: SpacingTokens = {
     relaxed: "3.25rem",
     spacious: "3.5rem",
   },
+  fixed: {
+    scrollbar: "8px",
+    rippleMax: "200px",
+    bottomsheetHandle: "5px",
+    bottomsheetHandleWidth: "40px",
+    bottomsheetBorder: "2px",
+  },
 };
 
 export const spacingCssVars = {
@@ -108,5 +124,12 @@ export const spacingCssVars = {
     comfortable: "--size-touch-comfortable",
     relaxed: "--size-touch-relaxed",
     spacious: "--size-touch-spacious",
+  },
+  fixed: {
+    scrollbar: "--size-scrollbar",
+    rippleMax: "--size-ripple-max",
+    bottomsheetHandle: "--size-bottomsheet-handle",
+    bottomsheetHandleWidth: "--size-bottomsheet-handle-width",
+    bottomsheetBorder: "--size-bottomsheet-border",
   },
 } as const;
