@@ -58,9 +58,20 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           </main>
 
           <footer className="border-t border-border-subtle bg-surface-base py-5 text-text-secondary">
-            <div className="mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
-              <span>Disa AI Beta · Tooling Preview</span>
-              <BuildInfo className="text-[11px] text-xs sm:text-xs" />
+            <div className="mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-2 px-4 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
+              <div className="flex flex-col items-center gap-1 sm:flex-row sm:gap-3">
+                <span>Disa AI Beta · Tooling Preview</span>
+                <span className="hidden sm:block">|</span>
+                <a 
+                  href="/privacy-policy.html" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-brand hover:underline"
+                >
+                  Datenschutzerklärung
+                </a>
+              </div>
+              <BuildInfo className="text-[11px] sm:text-xs" />
             </div>
           </footer>
         </div>
