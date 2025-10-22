@@ -5,7 +5,6 @@ import { BuildInfo } from "../../components/BuildInfo";
 import { BottomNavigation, LegalBottomNavigation } from "../../components/layout/BottomNavigation";
 import { BurgerMenu } from "../../components/layout/BurgerMenu";
 import { ScrollToVoid } from "../../components/layout/ScrollToVoid";
-import { SideNavigation } from "../../components/layout/SideNavigation";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
@@ -29,14 +28,12 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const isLegalPage = ["/impressum", "/datenschutz"].includes(location.pathname);
 
   return (
-    <div className="text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)] pl-[var(--navigation-width)]">
+    <div className="text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]">
       {/* Background gradients - soft glass aura */}
       <div className="pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(150%_120%_at_12%_10%,rgba(var(--glass-tint-neutral-rgb),0.18)_0%,transparent_65%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(130%_110%_at_88%_18%,rgba(var(--acc2-rgb),0.12)_0%,transparent_60%)]" />
       </div>
-
-      <SideNavigation />
 
       <ScrollToVoid>
         <div className="relative z-10 flex min-h-dvh flex-col">
@@ -54,7 +51,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             key={location.pathname}
             className={cn(
               "animate-page-transition flex flex-1 flex-col",
-              "mx-auto w-full max-w-[var(--max-content-width)] px-4 pb-[calc(7rem+env(safe-area-inset-bottom,0px))] pt-6",
+              "mx-auto w-full max-w-[var(--max-content-width)] px-4 pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] pt-6", // Further reduced bottom padding for better accessibility while keeping enough space
               "sm:px-6 sm:pb-16 sm:pt-[calc(6rem+env(safe-area-inset-top,0px))] lg:px-8",
             )}
           >

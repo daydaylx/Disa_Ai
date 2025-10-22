@@ -21,7 +21,7 @@ export function BottomNavigation() {
       role="navigation"
       aria-label="Mobile Hauptnavigation"
       className={cn(
-        "border-border fixed inset-x-0 bottom-0 z-50 border-t bg-surface-base pb-[env(safe-area-inset-bottom,0px)]",
+        "bg-surface-base/80 fixed inset-x-0 bottom-0 z-50 border-t pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl",
         "sm:hidden", // Only show on small screens
       )}
     >
@@ -36,7 +36,7 @@ export function BottomNavigation() {
               cn(
                 "flex flex-col items-center justify-center rounded-xl p-2 text-xs font-medium transition",
                 "text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)]",
-                "h-16 min-h-16",
+                "h-14 min-h-14", // Reduced height
                 "data-[state=active]:bg-[var(--glass-overlay-strong)] data-[state=active]:font-semibold data-[state=active]:text-text-primary",
                 isActive
                   ? "bg-[var(--glass-overlay-strong)] font-semibold text-text-primary"
@@ -44,8 +44,8 @@ export function BottomNavigation() {
               )
             }
           >
-            <item.icon className="h-6 w-6" aria-hidden="true" />
-            <span className="mt-1">{item.label}</span>
+            <item.icon className="h-5 w-5" aria-hidden="true" /> {/* Reduced icon size */}
+            <span className="mt-1 text-[0.75rem]">{item.label}</span> {/* Reduced text size */}
             <span className="sr-only">{item.label}</span>
           </NavLink>
         ))}
@@ -60,7 +60,7 @@ export function LegalBottomNavigation() {
       role="navigation"
       aria-label="Mobile Rechtsnavigation"
       className={cn(
-        "border-border fixed inset-x-0 bottom-0 z-50 border-t bg-surface-base pb-[env(safe-area-inset-bottom,0px)]",
+        "bg-surface-base/80 fixed inset-x-0 bottom-0 z-50 border-t pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl",
         "sm:hidden", // Only show on small screens
       )}
     >
@@ -75,7 +75,7 @@ export function LegalBottomNavigation() {
               cn(
                 "flex flex-col items-center justify-center rounded-xl p-2 text-xs font-medium transition",
                 "text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)]",
-                "h-16 min-h-16",
+                "h-14 min-h-14", // Reduced height
                 "data-[state=active]:bg-[var(--glass-overlay-strong)] data-[state=active]:font-semibold data-[state=active]:text-text-primary",
                 isActive
                   ? "bg-[var(--glass-overlay-strong)] font-semibold text-text-primary"
@@ -83,8 +83,8 @@ export function LegalBottomNavigation() {
               )
             }
           >
-            <item.icon className="h-6 w-6" aria-hidden="true" />
-            <span className="mt-1">{item.label}</span>
+            <item.icon className="h-5 w-5" aria-hidden="true" /> {/* Reduced icon size */}
+            <span className="mt-1 text-[0.75rem]">{item.label}</span> {/* Reduced text size */}
             <span className="sr-only">{item.label}</span>
           </NavLink>
         ))}
