@@ -88,35 +88,18 @@ const router = createBrowserRouter(
               <div className="py-8">
                 <h1 className="mb-6 text-2xl font-bold">Impressum</h1>
                 <div className="prose max-w-none">
-                  <h2>Angaben gemäß § 5 TMG</h2>
+                  <div className="mb-6 rounded-lg border border-blue-500/20 bg-blue-500/10 p-4">
+                    <p className="font-medium text-blue-200">
+                      Dies ist eine rein private, nicht geschäftsmäßige Webseite ohne
+                      Gewinnerzielungsabsicht.
+                    </p>
+                  </div>
+
+                  <h2>Verantwortlich für den Inhalt</h2>
                   <p>
-                    Mustermann GmbH
+                    David Grunert
                     <br />
-                    Musterstraße 111
-                    <br />
-                    99999 Musterstadt
-                  </p>
-                  <h2>Vertreten durch</h2>
-                  <p>Geschäftsführer: Max Mustermann</p>
-                  <h2>Kontakt</h2>
-                  <p>
-                    Telefon: +49 (0) 123 45678
-                    <br />
-                    E-Mail: muster@firma.de
-                  </p>
-                  <h2>Umsatzsteuer-ID</h2>
-                  <p>
-                    Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:
-                    <br />
-                    DE999999999
-                  </p>
-                  <h2>Redaktionell verantwortlich</h2>
-                  <p>
-                    Max Mustermann
-                    <br />
-                    Musterstraße 111
-                    <br />
-                    99999 Musterstadt
+                    E-Mail: grunert94@hotmail.com
                   </p>
                 </div>
               </div>
@@ -184,7 +167,7 @@ const router = createBrowserRouter(
                     https://openrouter.ai/privacy
                   </p>
 
-                  <p className="mt-4 text-sm text-gray-500">Stand: Oktober 2025</p>
+                  <p className="mt-4 text-sm text-gray-500">Stand: 22. Oktober 2025</p>
                 </div>
               </div>
             </Suspense>
