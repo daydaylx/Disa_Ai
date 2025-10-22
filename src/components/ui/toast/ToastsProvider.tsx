@@ -1,123 +1,56 @@
-import * as React from "react";
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import React, { createContext, useContext, useState } from "react";
 
-import { cn } from "../../../lib/cn";
-import { Icon } from "../Icon";
-import type { ToastItem, ToastKind } from "./ToastTypes";
+type ToastKind = "success" | "error" | "warning" | "info";
 
-interface ToastsContextValue {
-  push: (t: Omit<ToastItem, "id">) => string;
-  dismiss: (id: string) => void;
+interface Toast {
+  id: string;
+  kind: ToastKind;
+  title: string;
+  message: string;
+  duration?: number;
 }
 
-const ToastsContext = createContext<ToastsContextValue | null>(null);
-
-export function useToasts() {
-  const ctx = useContext(ToastsContext);
-  if (!ctx) throw new Error("useToasts must be used within <ToastsProvider />");
-  return ctx;
+interface ToastsContextType {
+  toasts: Toast[];
+  push: (toast: Omit<Toast, "id">) => void;
+  remove: (id: string) => void;
 }
 
-const KIND_TO_ICON: Record<ToastKind, React.ReactNode> = {
-  info: <Icon name="info" />,
-  success: <Icon name="success" />,
-  warning: <Icon name="warning" />,
-  error: <Icon name="error" />,
-};
+const ToastsContext = createContext<ToastsContextType | undefined>(undefined);
 
-export const ToastsProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [items, setItems] = useState<ToastItem[]>([]);
-  const portalRef = useRef<HTMLElement | null>(null);
+export function ToastsProvider({ children }: { children: React.ReactNode }) {
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const ensurePortal = () => {
-    if (portalRef.current) return portalRef.current;
-    const el = document.createElement("div");
-    el.setAttribute("id", "toasts-portal");
-    document.body.appendChild(el);
-    portalRef.current = el;
-    return el;
+  const push = (toast: Omit<Toast, "id">) => {
+    const id = Math.random().toString(36).substr(2, 9);
+    const newToast = { ...toast, id };
+    
+    setToasts(prev => [...prev, newToast]);
+    
+    // Auto remove after duration
+    const duration = toast.duration ?? 5000;
+    if (duration > 0) {
+      setTimeout(() => {
+        remove(id);
+      }, duration);
+    }
   };
 
-  const dismiss = useCallback((id: string) => {
-    setItems((list) => list.filter((i) => i.id !== id));
-  }, []);
-
-  const push = useCallback(
-    (t: Omit<ToastItem, "id">) => {
-      const id = crypto.randomUUID();
-      const item: ToastItem = { id, durationMs: 5000, ...t };
-      setItems((list) => [item, ...list]);
-      if (item.durationMs && item.durationMs > 0) {
-        window.setTimeout(() => dismiss(id), item.durationMs);
-      }
-      return id;
-    },
-    [dismiss],
-  );
-
-  const value = useMemo<ToastsContextValue>(() => ({ push, dismiss }), [push, dismiss]);
-
-  // Global Toast-Bus: erlaubt Toaster außerhalb von React (z.B. SW-Update-Hinweis)
-  React.useEffect(() => {
-    const onToast = (ev: Event) => {
-      try {
-        const ce = ev as CustomEvent<Omit<ToastItem, "id">>;
-        if (ce?.detail && typeof ce.detail === "object") {
-          push(ce.detail);
-        }
-      } catch {
-        /* ignore */
-      }
-    };
-    window.addEventListener("disa:toast", onToast);
-    return () => window.removeEventListener("disa:toast", onToast);
-  }, [push]);
+  const remove = (id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
   return (
-    <ToastsContext.Provider value={value}>
+    <ToastsContext.Provider value={{ toasts, push, remove }}>
       {children}
-      {createPortal(
-        <div className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col items-center gap-[var(--space-stack-sm)] p-[var(--space-inline-md)]">
-          {items.map((t) => (
-            <div
-              key={t.id}
-              role="status"
-              className={cn(
-                "pointer-events-auto flex w-[min(96vw,640px)] items-start gap-[var(--space-inline-md)] rounded-[var(--radius-lg)] border border-border-strong bg-overlay-toast p-[var(--space-md)] text-overlay-toast-fg shadow-popover",
-              )}
-            >
-              <div className="mt-0.5">{KIND_TO_ICON[t.kind]}</div>
-              <div className="flex-1">
-                {t.title ? (
-                  <div className="text-body font-semibold leading-snug">{t.title}</div>
-                ) : null}
-                {t.message ? (
-                  <div className="text-body leading-snug text-text-secondary">{t.message}</div>
-                ) : null}
-                {t.action ? (
-                  <button
-                    type="button"
-                    className="mt-[var(--space-2xs)] inline-flex items-center justify-center rounded-[var(--radius-md)] border border-transparent px-[var(--space-inline-md)] py-[var(--space-3xs)] text-body-sm font-medium text-action-ghost hover:bg-action-ghost-hover focus-visible:shadow-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]"
-                    onClick={t.action.onClick}
-                  >
-                    {t.action.label}
-                  </button>
-                ) : null}
-              </div>
-              <button
-                type="button"
-                aria-label="Schließen"
-                className="ml-[var(--space-inline-sm)] inline-flex size-[var(--size-touch-compact)] items-center justify-center rounded-[var(--radius-md)] text-text-tertiary transition-[background,color] duration-small ease-standard hover:bg-action-ghost-hover hover:text-text-primary focus-visible:shadow-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]"
-                onClick={() => dismiss(t.id)}
-              >
-                <Icon name="close" />
-              </button>
-            </div>
-          ))}
-        </div>,
-        ensurePortal(),
-      )}
     </ToastsContext.Provider>
   );
-};
+}
+
+export function useToasts() {
+  const context = useContext(ToastsContext);
+  if (!context) {
+    throw new Error("useToasts must be used within ToastsProvider");
+  }
+  return context;
+}

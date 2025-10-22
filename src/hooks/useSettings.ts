@@ -1,90 +1,68 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-export interface UserSettings {
+interface Settings {
   showNSFWContent: boolean;
-  // Weitere Settings können hier hinzugefügt werden
+  enableAnalytics: boolean;
+  enableNotifications: boolean;
+  theme: "light" | "dark" | "auto";
+  language: string;
 }
 
-const DEFAULT_SETTINGS: UserSettings = {
-  showNSFWContent: false, // Standardmäßig deaktiviert für Sicherheit
-};
-
-const SETTINGS_KEY = "disa-ai-settings";
-
-let cachedSettings: UserSettings = { ...DEFAULT_SETTINGS };
-let settingsInitialized = false;
-const subscribers = new Set<(settings: UserSettings) => void>();
-
-const loadSettingsFromStorage = () => {
-  try {
-    const stored = localStorage.getItem(SETTINGS_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      cachedSettings = { ...DEFAULT_SETTINGS, ...parsed };
-    } else {
-      cachedSettings = { ...DEFAULT_SETTINGS };
-    }
-  } catch {
-    // Error handling for loading settings - using defaults if loading fails
-    cachedSettings = { ...DEFAULT_SETTINGS };
-  }
-  settingsInitialized = true;
-};
-
-const notifySubscribers = (settings: UserSettings) => {
-  subscribers.forEach((listener) => {
-    try {
-      listener(settings);
-    } catch {
-      // Error handling for settings subscriber - ignoring individual subscriber failures
-    }
-  });
+const DEFAULT_SETTINGS: Settings = {
+  showNSFWContent: false,
+  enableAnalytics: true,
+  enableNotifications: true,
+  theme: "auto",
+  language: "de",
 };
 
 export function useSettings() {
-  const [settings, setSettings] = useState<UserSettings>(() => {
-    if (typeof window !== "undefined" && !settingsInitialized) {
-      loadSettingsFromStorage();
-    }
-    return cachedSettings;
-  });
-  const [isLoaded, setIsLoaded] = useState(settingsInitialized);
-
-  useEffect(() => {
-    const listener = (next: UserSettings) => setSettings(next);
-    subscribers.add(listener);
-
-    if (!settingsInitialized && typeof window !== "undefined") {
-      loadSettingsFromStorage();
-      setSettings(cachedSettings);
-      setIsLoaded(true);
-    } else {
-      setIsLoaded(true);
-    }
-
-    return () => {
-      subscribers.delete(listener);
-    };
-  }, []);
-
-  const updateSettings = useCallback((newSettings: Partial<UserSettings>) => {
-    cachedSettings = { ...cachedSettings, ...newSettings };
+  const [settings, setSettings] = useState<Settings>(() => {
     try {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(cachedSettings));
+      const saved = localStorage.getItem("disa-ai-settings");
+      return saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_SETTINGS;
     } catch {
-      // Error handling for saving settings - silently fail to avoid disrupting UX
+      return DEFAULT_SETTINGS;
     }
-    notifySubscribers(cachedSettings);
-  }, []);
+  });
+
+  const saveSettings = useCallback((newSettings: Partial<Settings>) => {
+    try {
+      const updated = { ...settings, ...newSettings };
+      setSettings(updated);
+      localStorage.setItem("disa-ai-settings", JSON.stringify(updated));
+    } catch (error) {
+      console.error("Failed to save settings:", error);
+    }
+  }, [settings]);
 
   const toggleNSFWContent = useCallback(() => {
-    updateSettings({ showNSFWContent: !cachedSettings.showNSFWContent });
-  }, [updateSettings]);
+    saveSettings({ showNSFWContent: !settings.showNSFWContent });
+  }, [saveSettings, settings.showNSFWContent]);
+
+  const toggleAnalytics = useCallback(() => {
+    saveSettings({ enableAnalytics: !settings.enableAnalytics });
+  }, [saveSettings, settings.enableAnalytics]);
+
+  const toggleNotifications = useCallback(() => {
+    saveSettings({ enableNotifications: !settings.enableNotifications });
+  }, [saveSettings, settings.enableNotifications]);
+
+  const setTheme = useCallback((theme: Settings["theme"]) => {
+    saveSettings({ theme });
+  }, [saveSettings]);
+
+  const setLanguage = useCallback((language: string) => {
+    saveSettings({ language });
+  }, [saveSettings]);
 
   return {
     settings,
-    isLoaded,
-    updateSettings,
     toggleNSFWContent,
+    toggleAnalytics,
+    toggleNotifications,
+    setTheme,
+    setLanguage,
+    saveSettings,
   };
 }

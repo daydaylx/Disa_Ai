@@ -128,7 +128,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
                   "focus-visible:ring-brand whitespace-nowrap rounded-full border px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2",
                   t === tab
                     ? "border-brand/50 bg-brand/15 text-brand shadow-neon"
-                    : "bg-surface-glass-card/60 hover:bg-hover-bg hover:text-text-strong border-transparent text-text-muted",
+                    : "bg-surface-card/60 hover:bg-hover-bg hover:text-text-strong border-transparent text-text-muted",
                 )}
                 aria-selected={t === tab}
               >

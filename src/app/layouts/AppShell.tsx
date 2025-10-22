@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import { BottomNavigation, LegalBottomNavigation } from "../../components/layout/BottomNavigation";
 import { BurgerMenu } from "../../components/layout/BurgerMenu";
 import { ScrollToVoid } from "../../components/layout/ScrollToVoid";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -25,14 +24,12 @@ interface AppShellLayoutProps {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
-  const isLegalPage = ["/impressum", "/datenschutz"].includes(location.pathname);
-
   return (
     <div className="text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]">
-      {/* Background gradients - soft glass aura */}
+      {/* Background gradients - soft depth aura */}
       <div className="pointer-events-none" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(150%_120%_at_12%_10%,rgba(var(--glass-tint-neutral-rgb),0.18)_0%,transparent_65%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(130%_110%_at_88%_18%,rgba(var(--acc2-rgb),0.12)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(150%_120%_at_12%_10%,rgba(var(--color-surface-base),0.18)_0%,transparent_65%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(130%_110%_at_88%_18%,rgba(var(--color-brand-strong-rgb),0.12)_0%,transparent_60%)]" />
       </div>
 
       <ScrollToVoid>
@@ -71,7 +68,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       <PWAInstallPrompt />
 
       {/* Mobile navigation - conditionally render based on page */}
-      {isLegalPage ? <LegalBottomNavigation /> : <BottomNavigation />}
+      <BurgerMenu />
 
       {process.env.NODE_ENV === "development" && <PWADebugInfo />}
     </div>

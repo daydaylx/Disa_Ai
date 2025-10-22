@@ -53,7 +53,7 @@ export function Tooltip({
     >
       {children}
       {isVisible && (
-        <div className={`glass-tooltip ${placementClasses[placement]} ${className}`} role="tooltip">
+        <div className={`bg-surface-card border-border-subtle rounded-lg border px-2 py-1 text-xs shadow-md ${placementClasses[placement]} ${className}`} role="tooltip">
           {content}
         </div>
       )}

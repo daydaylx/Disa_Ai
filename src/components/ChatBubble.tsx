@@ -12,11 +12,11 @@ interface ChatBubbleProps {
 
 export const ChatBubble: React.FC<ChatBubbleProps> = ({ kind, children, timestamp }) => {
   const side = kind === "user" ? "items-end ml-auto" : "items-start mr-auto";
-  const glassVariant = kind === "user" ? "standard" : "subtle";
+  const surfaceVariant = kind === "user" ? "standard" : "subtle";
 
   return (
     <SoftDepthSurface
-      variant={glassVariant}
+      variant={surfaceVariant}
       className={`max-w-[78%] ${side} px-2 py-1 transition-all duration-300 ease-out`}
     >
       <div className="flex flex-col">

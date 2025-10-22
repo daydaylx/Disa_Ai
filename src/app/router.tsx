@@ -7,7 +7,6 @@ import { AppShell } from "./layouts/AppShell";
 // Lazy-loaded Routes für bessere Performance
 const ChatPage = lazy(() => import("../pages/ChatV2"));
 const ModelsPage = lazy(() => import("../pages/Models"));
-const SettingsPage = lazy(() => import("../pages/Settings"));
 const RolesPage = lazy(() => import("../pages/Studio"));
 
 const router = createBrowserRouter(
@@ -68,25 +67,6 @@ const router = createBrowserRouter(
               }
             >
               <ModelsPage />
-            </Suspense>
-          </ErrorBoundary>
-        </AppShell>
-      ),
-    },
-    {
-      path: "/settings",
-      element: (
-        <AppShell>
-          <ErrorBoundary>
-            <Suspense
-              fallback={
-                <div
-                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
-                  aria-label="Laden..."
-                ></div>
-              }
-            >
-              <SettingsPage />
             </Suspense>
           </ErrorBoundary>
         </AppShell>

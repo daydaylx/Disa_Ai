@@ -15,15 +15,9 @@
 
   body {
     min-height: 100dvh;
-    background:
-      radial-gradient(
-        140% 120% at 50% 0%,
-        rgba(var(--glass-tint-neutral-rgb), 0.12) 0%,
-        transparent 70%
-      ),
-      linear-gradient(180deg, rgba(10, 13, 19, 0.92) 0%, rgba(8, 11, 17, 0.96) 55%, var(--bg0) 100%);
-    color: var(--fg);
-    font-family: var(--font-mono);
+    background: var(--color-surface-canvas);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-sans);
     font-size: var(--font-body);
     line-height: 1.55;
     overflow-x: hidden;
@@ -31,21 +25,6 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(
-      160% 120% at 80% 10%,
-      rgba(var(--glass-tint-neutral-rgb), 0.18) 0%,
-      transparent 65%
-    );
-    opacity: 0.45;
-    mix-blend-mode: normal;
-    z-index: 0;
   }
 
   body::after {

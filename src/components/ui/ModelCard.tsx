@@ -75,7 +75,7 @@ export function ModelCard({
       data-testid={`model-card-${id}`}
     >
       <header className="flex items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/35 bg-[var(--glass-overlay-strong)] text-sm font-semibold uppercase text-[var(--text-on-glass)] shadow-[var(--glass-shadow)]">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-sm font-semibold uppercase text-text-primary shadow-surface">
           {provider.slice(0, 1)}
         </div>
 
@@ -93,14 +93,14 @@ export function ModelCard({
           aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
           aria-expanded={isOpen}
           aria-controls={detailId}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-[var(--glass-overlay-muted)] text-[var(--text-on-glass)] transition hover:border-white/50 hover:bg-[var(--glass-overlay-strong)] focus-visible:outline-none focus-visible:ring-[var(--glass-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-bg)]"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
         >
           <Info className="h-4 w-4" aria-hidden="true" />
         </button>
       </header>
 
       <footer className="flex items-center justify-between text-xs font-medium opacity-80 sm:text-sm">
-        <span className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/15 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-on-glass)] opacity-80">
+        <span className="inline-flex items-center gap-1 rounded-full border border-border-subtle bg-surface-subtle px-2 py-1 text-xs font-semibold uppercase tracking-wide text-text-primary opacity-80">
           {isSelected ? (
             <>
               <Check className="h-3.5 w-3.5" aria-hidden="true" />
@@ -120,7 +120,7 @@ export function ModelCard({
           id={detailId}
           role="region"
           aria-live="polite"
-          className="space-y-3 rounded-xl border border-white/30 bg-[var(--glass-overlay-muted)] p-3 text-xs leading-relaxed text-[var(--text-on-glass)] opacity-90 sm:text-sm"
+          className="space-y-3 rounded-xl border border-border-subtle bg-surface-subtle p-3 text-xs leading-relaxed text-text-primary opacity-90 sm:text-sm"
         >
           <p>{description}</p>
           <dl className="grid grid-cols-2 gap-2">

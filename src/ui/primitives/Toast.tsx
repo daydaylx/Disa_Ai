@@ -75,14 +75,14 @@ interface ToastItemProps {
 
 function ToastItem({ toast, onRemove }: ToastItemProps) {
   const variantClasses = {
-    default: "",
-    success: "glass-toast--success",
-    warning: "glass-toast--warning",
-    error: "glass-toast--error",
+    default: "bg-surface-card border-border-subtle",
+    success: "bg-status-success-bg border-status-success-border",
+    warning: "bg-status-warning-bg border-status-warning-border",
+    error: "bg-status-danger-bg border-status-danger-border",
   };
 
   const classes = [
-    "glass-toast",
+    "border rounded-lg p-4 shadow-md",
     variantClasses[toast.variant || "default"],
     "animate-in slide-in-from-right duration-300",
   ]
@@ -98,7 +98,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
         </div>
         <button
           onClick={onRemove}
-          className="glass-backdrop--soft hover:glass-backdrop--medium rounded-md p-1 transition-colors"
+          className="bg-surface-subtle hover:bg-surface-muted border-border-subtle rounded-md border p-1 transition-colors"
           aria-label="Close notification"
         >
           <svg

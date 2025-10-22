@@ -42,8 +42,8 @@ export const InputBar: React.FC<InputBarProps> = ({ onSend, disabled = false }) 
         variant="standard"
         className={`rounded-[20px] p-2 transition-all duration-300 ${
           isFocused
-            ? "border-[hsl(200,100%,75%,0.14)] shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_0_12px_rgba(111,211,255,0.18)]"
-            : "border-[var(--glass-stroke)]"
+            ? "border-border-focus shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_0_12px_rgba(111,211,255,0.18)]"
+            : "border-border-subtle"
         } ${disabled ? "opacity-60" : ""}`}
       >
         <div className="flex items-end gap-2">

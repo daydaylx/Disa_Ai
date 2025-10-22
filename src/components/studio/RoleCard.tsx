@@ -56,7 +56,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         {...props}
       >
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/35 bg-[var(--glass-overlay-strong)] text-sm font-semibold uppercase text-[var(--text-on-glass)] shadow-[var(--glass-shadow)]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-sm font-semibold uppercase text-text-primary shadow-surface">
             {title.slice(0, 1)}
           </div>
           <div className="flex flex-1 flex-col gap-2">
@@ -76,7 +76,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
                 aria-label={expanded ? "Beschreibung verbergen" : "Beschreibung anzeigen"}
                 aria-expanded={expanded}
                 aria-controls={detailId}
-                className="border border-white/30 bg-[var(--glass-overlay-muted)] text-[var(--text-on-glass)] hover:border-white/50 hover:bg-[var(--glass-overlay-strong)]"
+                className="border border-border-subtle bg-surface-subtle text-text-primary hover:border-border-strong hover:bg-surface-raised"
               >
                 <Info className="h-4 w-4" />
               </Button>
@@ -87,7 +87,7 @@ export const RoleCard = forwardRef<HTMLButtonElement, RoleCardProps>(
         {expanded && (
           <div
             id={detailId}
-            className="rounded-xl border border-white/30 bg-[var(--glass-overlay-muted)] p-3 text-xs leading-5 opacity-85 sm:text-sm sm:leading-6"
+            className="rounded-xl border border-border-subtle bg-surface-subtle p-3 text-xs leading-5 opacity-85 sm:text-sm sm:leading-6"
           >
             <p className="whitespace-pre-line break-words">{description}</p>
           </div>

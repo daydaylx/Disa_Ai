@@ -314,9 +314,9 @@ export default function ModelsPage() {
   }, [selected]);
 
   return (
-    <div className="flex h-full flex-col gap-8 px-4 pb-16 pt-6 text-[var(--text-on-glass)] sm:px-6 lg:px-8">
-      <header className="space-y-3 text-[var(--text-on-glass)]" data-testid="models-title">
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-[var(--glass-overlay-muted)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
+    <div className="flex h-full flex-col gap-8 px-4 pb-16 pt-6 text-[var(--color-text-primary)] sm:px-6 lg:px-8">
+      <header className="space-y-3 text-[var(--color-text-primary)]" data-testid="models-title">
+        <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
           Modelle
         </span>
         <div className="space-y-1">
@@ -336,7 +336,7 @@ export default function ModelsPage() {
         )}
       </header>
 
-      <Card padding="md" className="space-y-4 text-[var(--text-on-glass)]">
+      <Card padding="md" className="space-y-4 text-[var(--color-text-primary)]">
         <div className="space-y-2">
           <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
             Studio Fokus
@@ -372,7 +372,7 @@ export default function ModelsPage() {
         <section key={group.id} aria-labelledby={`models-${group.id}`} className="space-y-3">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div className="space-y-1">
-              <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-[var(--glass-overlay-muted)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
                 {group.badge}
               </span>
               <h2 id={`models-${group.id}`} className="text-lg font-semibold sm:text-xl">

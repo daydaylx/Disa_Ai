@@ -19,7 +19,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
 
     const classes = [
-      "glass-select",
+      "border-border-subtle bg-surface-card text-text-primary focus:ring-brand/20 block w-full rounded-lg border px-3 py-2 shadow-sm focus:border-brand focus:outline-none focus:ring-2",
       error && "border-red-400 focus:border-red-400 focus:ring-red-400/20",
       className,
     ]

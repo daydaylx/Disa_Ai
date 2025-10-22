@@ -1,124 +1,62 @@
-import * as React from "react";
+import { useCallback, useEffect, useState } from "react";
 
-/** Chromium-spezifisches Event (nicht in lib.dom.d.ts) */
 interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform?: string }>;
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: "accepted" | "dismissed";
+    platform: string;
+  }>;
+  prompt(): Promise<void>;
 }
 
-/** Navigator-Erweiterung für iOS Standalone */
 declare global {
-  interface Navigator {
-    standalone?: boolean;
+  interface WindowEventMap {
+    beforeinstallprompt: BeforeInstallPromptEvent;
   }
-}
-
-const LS_KEY_DISMISSED = "disa:pwa:dismissed";
-
-function isStandalone(): boolean {
-  try {
-    if (navigator.standalone) return true;
-  } catch {
-    // absichtlich ignoriert
-    void 0;
-  }
-  try {
-    return window.matchMedia("(display-mode: standalone)").matches;
-  } catch {
-    return false;
-  }
-}
-function isIOS(): boolean {
-  const ua = navigator.userAgent || "";
-  return /iphone|ipad|ipod/i.test(ua);
 }
 
 export function usePWAInstall() {
-  const [deferred, setDeferred] = React.useState<BeforeInstallPromptEvent | null>(null);
-  const [installed, setInstalled] = React.useState<boolean>(() => isStandalone());
-  const [dismissed, setDismissed] = React.useState<boolean>(() => {
-    try {
-      return localStorage.getItem(LS_KEY_DISMISSED) === "true";
-    } catch {
-      return false;
-    }
-  });
+  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installed, setInstalled] = useState(false);
 
-  React.useEffect(() => {
-    if (isStandalone()) setInstalled(true);
-
-    const onBeforeInstall = (e: Event) => {
-      const be = e as BeforeInstallPromptEvent;
-      if (typeof be.prompt === "function") {
-        e.preventDefault();
-        setDeferred(be);
-      }
+  useEffect(() => {
+    const handler = (e: BeforeInstallPromptEvent) => {
+      e.preventDefault();
+      setInstallPromptEvent(e);
     };
 
-    const onAppInstalled = () => {
+    window.addEventListener("beforeinstallprompt", handler as any);
+    
+    // Check if already installed
+    if (window.matchMedia("(display-mode: standalone)").matches || 
+        (window.navigator as any).standalone) {
       setInstalled(true);
-      setDeferred(null);
-    };
-
-    window.addEventListener("beforeinstallprompt", onBeforeInstall);
-    window.addEventListener("appinstalled", onAppInstalled);
+    }
 
     return () => {
-      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
-      window.removeEventListener("appinstalled", onAppInstalled);
+      window.removeEventListener("beforeinstallprompt", handler as any);
     };
   }, []);
 
-  async function requestInstall() {
-    if (!deferred) return;
-    try {
-      await deferred.prompt();
-      const choice = await deferred.userChoice;
-      if (choice.outcome !== "accepted") {
-        try {
-          localStorage.setItem(LS_KEY_DISMISSED, "true");
-        } catch {
-          // ignore storage errors
-          void 0;
-        }
-        setDismissed(true);
-      }
-    } catch {
-      try {
-        localStorage.setItem(LS_KEY_DISMISSED, "true");
-      } catch {
-        // ignore storage errors
-        void 0;
-      }
-      setDismissed(true);
-    } finally {
-      setDeferred(null);
+  const requestInstall = useCallback(async () => {
+    if (!installPromptEvent) {
+      throw new Error("Install prompt not available");
     }
-  }
 
-  function dismiss() {
-    try {
-      localStorage.setItem(LS_KEY_DISMISSED, "true");
-    } catch {
-      // ignore storage errors
-      void 0;
+    await installPromptEvent.prompt();
+    const { outcome } = await installPromptEvent.userChoice;
+    
+    if (outcome === "accepted") {
+      setInstalled(true);
+      setInstallPromptEvent(null);
     }
-    setDismissed(true);
-  }
-
-  const canInstall = !!deferred && !installed && !dismissed && !isIOS(); // Nur Android/Chrome
-  const visible = canInstall; // Nur bei Android sichtbar
-  const canPrompt = canInstall; // Alias für Alt-Code
+    
+    return outcome;
+  }, [installPromptEvent]);
 
   return {
-    // neue Felder
-    canInstall,
+    canInstall: !!installPromptEvent,
     installed,
-    dismissed,
     requestInstall,
-    dismiss,
-    // Abwärtskompatibilität
-    visible,
-    canPrompt,
-  } as const;
+  };
 }

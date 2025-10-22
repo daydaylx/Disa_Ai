@@ -64,7 +64,6 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
             asChild
             className={cn(
               "rounded-base border-border/60 group relative flex h-full min-h-[var(--touch-comfortable)] flex-col overflow-hidden border p-3 text-left transition-all duration-200",
-              "before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(110%_110%_at_85%_-10%,rgba(var(--glass-tint-rgb),0.2)_0%,transparent_60%)] before:opacity-0 before:transition-opacity before:duration-200",
               "hover:border-brand focus-visible:ring-brand-weak focus-visible:ring-offset-surface-1 hover:before:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-safe:hover:-translate-y-[1px]",
               "touch-target active:scale-95",
             )}
