@@ -25,7 +25,7 @@ export function Composer({ value, onChange, onSend, onStop, streaming, canSend }
 
   return (
     <div
-      className="safe-px bg-surface-0/95 sticky bottom-0 z-40 border-t border-border pb-0 pt-2 backdrop-blur-md"
+      className="safe-px bg-surface-0 border-border sticky bottom-0 z-40 border-t pb-0 pt-2"
       style={{ paddingBottom: "calc(var(--mobile-safe-bottom) + var(--spacing-lg))" }}
     >
       <div className="mx-auto w-full max-w-[var(--max-content-width)]">

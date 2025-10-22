@@ -153,18 +153,6 @@
   --danger: var(--color-status-danger-fg);
   --danger-bg: var(--color-status-danger-bg);
   --danger-rgb: 179, 38, 30;
-  --glass-radius: var(--radius-xl);
-  --glass-stroke: var(--color-border-subtle);
-  --glass-stroke-soft: var(--color-border-hairline);
-  --glass-stroke-strong: var(--color-border-strong);
-  --glass-border-hard: var(--color-border-strong);
-  --glass-blur: 0px;
-  --glass-blur-sm: 0px;
-  --glass-blur-md: 0px;
-  --glass-blur-lg: 0px;
-  --glass-shadow: var(--shadow-surface);
-  --glass-focus-ring: var(--shadow-focus);
-  --glass-focus-ring-strong: var(--shadow-focus);
 }
 
 :root,

@@ -71,12 +71,16 @@ describe("SettingsPage", () => {
     });
 
     expect(screen.getByRole("heading", { name: /Einstellungen/i })).toBeInTheDocument();
-    expect(screen.getByLabelText(/API-Schlüssel/i)).toBeInTheDocument();
+    // Use the input's id instead of the text which also matches the eye button
+    expect(screen.getByLabelText("API-Schlüssel")).toBeInTheDocument();
+    // Find the button by its text and container context
     expect(screen.getByRole("button", { name: /Schlüssel speichern/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Gedächtnis-Funktion/i })).toBeInTheDocument();
-    expect(screen.getByLabelText(/Gedächtnis aktivieren/i)).toBeInTheDocument();
+    // Find the memory switch by its label
+    expect(screen.getByLabelText("Gedächtnis aktivieren")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Inhaltsfilter/i })).toBeInTheDocument();
-    expect(screen.getByLabelText(/18\+ \/ NSFW-Content anzeigen/i)).toBeInTheDocument();
+    // Find the NSFW switch by its label
+    expect(screen.getByLabelText("18+ / NSFW-Content anzeigen")).toBeInTheDocument();
   });
 
   it("validates and saves valid API key with success toast", async () => {
@@ -84,24 +88,31 @@ describe("SettingsPage", () => {
       renderWithProviders(<SettingsPage />);
     });
 
-    const apiKeyInput = screen.getByLabelText(/API-Schlüssel/i);
-    const saveButton = screen.getByRole("button", { name: /Schlüssel speichern/i });
+    // Use the input's id instead of the text which also matches the eye button
+    const apiKeyInput = screen.getByLabelText("API-Schlüssel");
+    // Find the first save button (there should only be one in the API key section)
+    const saveButtons = screen.getAllByRole("button", { name: /Schlüssel speichern/i });
+    const saveButton = saveButtons[0];
 
     // Enter a valid API key
     fireEvent.change(apiKeyInput, {
-      target: { value: "sk-123456789012345678901234567890123456789012345678" },
+      target: { value: "sk-or-123456789012345678901234567890123456789012345678" },
     });
     fireEvent.click(saveButton);
 
-    // Check that the key was saved in sessionStorage
+    // Wait for possible toast to appear
     await waitFor(() => {
-      expect(window.sessionStorage.getItem("disa-ai-api-key")).toBe(
-        "sk-123456789012345678901234567890123456789012345678",
-      );
+      const toasts = screen.queryAllByRole("status");
+      expect(toasts.length).toBeGreaterThan(0);
     });
 
-    // Check for success toast notification (mocked in the UI)
-    // Note: Actual toast verification would depend on the toast implementation
+    // Check that the key was saved in sessionStorage
+    expect(window.sessionStorage.getItem("openrouter-key")).toBe(
+      "sk-or-123456789012345678901234567890123456789012345678",
+    );
+
+    // Check for success toast
+    expect(screen.getByText(/Schlüssel gespeichert/i)).toBeInTheDocument();
   });
 
   it("validates invalid API key with error toast", async () => {
@@ -109,21 +120,31 @@ describe("SettingsPage", () => {
       renderWithProviders(<SettingsPage />);
     });
 
-    const apiKeyInput = screen.getByLabelText(/API-Schlüssel/i);
-    const saveButton = screen.getByRole("button", { name: /Schlüssel speichern/i });
+    // Use the input's id instead of the text which also matches the eye button
+    const apiKeyInput = screen.getByLabelText("API-Schlüssel");
+    // Find the first save button (there should only be one in the API key section)
+    const saveButtons = screen.getAllByRole("button", { name: /Schlüssel speichern/i });
+    const saveButton = saveButtons[0];
 
-    // Enter an invalid API key
+    // Enter an invalid API key (doesn't start with 'sk-or-')
     fireEvent.change(apiKeyInput, { target: { value: "invalid-key" } });
     fireEvent.click(saveButton);
 
-    // Check for error toast notification
-    // Note: Actual toast verification would depend on the toast implementation
+    // Wait for possible toast to appear
+    await waitFor(() => {
+      const toasts = screen.queryAllByRole("status");
+      expect(toasts.length).toBeGreaterThan(0);
+    });
+
+    // Check for error toast - use getAllByText and check the first one
+    const errorElements = screen.getAllByText(/Ungültiger Schlüssel/i);
+    expect(errorElements[0]).toBeInTheDocument();
   });
 
   it("removes API key when clear button is clicked", async () => {
     // First, set an API key in sessionStorage
     window.sessionStorage.setItem(
-      "disa-ai-api-key",
+      "openrouter-key",
       "sk-123456789012345678901234567890123456789012345678",
     );
 
@@ -131,12 +152,18 @@ describe("SettingsPage", () => {
       renderWithProviders(<SettingsPage />);
     });
 
-    const clearButton = screen.getByRole("button", { name: /Schlüssel entfernen/i });
-    fireEvent.click(clearButton);
+    // First clear the input
+    const apiKeyInput = screen.getByLabelText("API-Schlüssel");
+    fireEvent.change(apiKeyInput, { target: { value: "" } });
+
+    // Click the first save button to remove the key
+    const saveButtons = screen.getAllByRole("button", { name: /Schlüssel speichern/i });
+    const saveButton = saveButtons[0];
+    fireEvent.click(saveButton);
 
     // Check that the key was removed from sessionStorage
     await waitFor(() => {
-      expect(window.sessionStorage.getItem("disa-ai-api-key")).toBeNull();
+      expect(window.sessionStorage.getItem("openrouter-key")).toBeFalsy();
     });
   });
 
@@ -145,7 +172,7 @@ describe("SettingsPage", () => {
       renderWithProviders(<SettingsPage />);
     });
 
-    const memoryToggle = screen.getByLabelText(/Gedächtnis aktivieren/i);
+    const memoryToggle = screen.getByLabelText("Gedächtnis aktivieren");
 
     // Initially memory should be disabled
     expect(memoryToggle).not.toBeChecked();
@@ -155,7 +182,7 @@ describe("SettingsPage", () => {
 
     // Check that memory settings were updated in localStorage
     await waitFor(() => {
-      const settings = JSON.parse(window.localStorage.getItem("disa-memory-settings") || "{}");
+      const settings = JSON.parse(window.localStorage.getItem("disa:memory:settings") || "{}");
       expect(settings.enabled).toBe(true);
     });
 
@@ -164,7 +191,7 @@ describe("SettingsPage", () => {
 
     // Check that memory settings were updated in localStorage
     await waitFor(() => {
-      const settings = JSON.parse(window.localStorage.getItem("disa-memory-settings") || "{}");
+      const settings = JSON.parse(window.localStorage.getItem("disa:memory:settings") || "{}");
       expect(settings.enabled).toBe(false);
     });
   });
@@ -174,7 +201,7 @@ describe("SettingsPage", () => {
       renderWithProviders(<SettingsPage />);
     });
 
-    const nsfwToggle = screen.getByLabelText(/18\+ \/ NSFW-Content anzeigen/i);
+    const nsfwToggle = screen.getByLabelText("18+ / NSFW-Content anzeigen");
 
     // Initially NSFW should be disabled
     expect(nsfwToggle).not.toBeChecked();

@@ -32,9 +32,8 @@ export function Menu() {
         role="navigation"
         aria-label="Hauptnavigation"
         className={cn(
-          "fixed bottom-0 left-0 right-0 z-40 border-t border-white/30",
-          "bg-[var(--glass-bg)] text-[var(--text-on-glass)] shadow-[var(--glass-shadow)]",
-          "supports-[backdrop-filter]:backdrop-saturate-125 backdrop-blur-[var(--glass-blur)]",
+          "border-border fixed bottom-0 left-0 right-0 z-40 border-t",
+          "bg-surface-base text-text-primary shadow-surface",
           "sm:bottom-auto sm:top-0 sm:border-b sm:border-t-0",
         )}
       >
@@ -105,7 +104,7 @@ export function Menu() {
           size="icon"
           onClick={handleNewChat}
           aria-label="Neues Gespräch starten"
-          className="h-14 w-14 rounded-full border border-[var(--border-glass)] bg-[var(--glass-overlay-strong)] shadow-[var(--glass-shadow)] backdrop-blur-[var(--glass-blur)]"
+          className="h-14 w-14 rounded-full border border-border-subtle bg-surface-raised shadow-raised"
         >
           <Plus className="h-6 w-6" aria-hidden="true" />
         </Button>

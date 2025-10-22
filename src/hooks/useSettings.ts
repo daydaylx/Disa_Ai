@@ -24,8 +24,8 @@ const loadSettingsFromStorage = () => {
     } else {
       cachedSettings = { ...DEFAULT_SETTINGS };
     }
-  } catch (error) {
-    console.warn("Failed to load settings from localStorage:", error);
+  } catch (_error) {
+    // Error handling for loading settings - using defaults if loading fails
     cachedSettings = { ...DEFAULT_SETTINGS };
   }
   settingsInitialized = true;
@@ -35,8 +35,8 @@ const notifySubscribers = (settings: UserSettings) => {
   subscribers.forEach((listener) => {
     try {
       listener(settings);
-    } catch (error) {
-      console.warn("Settings subscriber failed:", error);
+    } catch (_error) {
+      // Error handling for settings subscriber - ignoring individual subscriber failures
     }
   });
 };
@@ -71,8 +71,8 @@ export function useSettings() {
     cachedSettings = { ...cachedSettings, ...newSettings };
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(cachedSettings));
-    } catch (error) {
-      console.warn("Failed to save settings to localStorage:", error);
+    } catch (_error) {
+      // Error handling for saving settings - silently fail to avoid disrupting UX
     }
     notifySubscribers(cachedSettings);
   }, []);

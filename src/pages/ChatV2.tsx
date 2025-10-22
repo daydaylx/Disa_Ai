@@ -535,7 +535,7 @@ export default function ChatV2() {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">
                     Chat-Start
                   </p>
-                  <h1 className="text-balance text-token-h1 font-semibold text-text-strong">
+                  <h1 className="text-token-h1 text-text-strong text-balance font-semibold">
                     Disa&nbsp;AI Chat
                   </h1>
                   <p className="text-sm leading-6 text-text-muted">
@@ -574,11 +574,11 @@ export default function ChatV2() {
               </header>
 
               <section aria-labelledby="discussion-heading" className="pb-8">
-                <div className="bg-surface-0/70 mb-5 flex flex-col gap-4 rounded-lg border border-border/45 p-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="bg-surface-0/70 border-border/45 mb-5 flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex-1 space-y-1">
                     <h2
                       id="discussion-heading"
-                      className="text-[11px] font-semibold uppercase tracking-[0.24em] text-text-subtle"
+                      className="text-text-subtle text-[11px] font-semibold uppercase tracking-[0.24em]"
                     >
                       Diskussionen
                     </h2>
@@ -600,7 +600,7 @@ export default function ChatV2() {
                     </Label>
                     <p
                       id="discussion-style-hint"
-                      className="mb-2 text-xs leading-5 text-text-subtle"
+                      className="text-text-subtle mb-2 text-xs leading-5"
                     >
                       Steuert Tonalität und Strenge der Argumentation. Auswahl wird gespeichert.
                     </p>
@@ -637,7 +637,7 @@ export default function ChatV2() {
                     defaultOpen: index === 0,
                     content: (
                       <div className="space-y-3">
-                        <p className="text-xs leading-5 text-text-subtle">{section.description}</p>
+                        <p className="text-text-subtle text-xs leading-5">{section.description}</p>
                         <div className="grid gap-2 sm:grid-cols-2">
                           {section.topics.map((topic) => (
                             <button
@@ -645,15 +645,15 @@ export default function ChatV2() {
                               type="button"
                               onClick={() => startDiscussion(topic.prompt)}
                               title={topic.hint}
-                              className="bg-surface-1/70 hover:bg-surface-2/60 group flex flex-col gap-1 rounded-md border border-border/40 px-3 py-2 text-left transition-colors duration-150 hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0"
+                              className="bg-surface-1/70 hover:bg-surface-2/60 border-border/40 hover:border-border focus-visible:ring-brand/50 focus-visible:ring-offset-surface-0 group flex flex-col gap-1 rounded-md border px-3 py-2 text-left transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                             >
                               <span
-                                className="text-sm font-medium text-text-strong [hyphens:auto]"
+                                className="text-text-strong text-sm font-medium [hyphens:auto]"
                                 lang="de"
                               >
                                 {topic.title}
                               </span>
-                              <span className="text-xs text-text-subtle">{topic.hint}</span>
+                              <span className="text-text-subtle text-xs">{topic.hint}</span>
                             </button>
                           ))}
                         </div>
@@ -664,7 +664,7 @@ export default function ChatV2() {
               </section>
 
               {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
-                <div className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-text-0">
+                <div className="text-text-0 mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm">
                   <p className="font-medium">Spiel-Hinweis:</p>
                   <p>
                     Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
@@ -676,7 +676,7 @@ export default function ChatV2() {
               )}
 
               {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
-                <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-text-0">
+                <div className="text-text-0 mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm">
                   <p className="font-medium">Spiel-Hinweis:</p>
                   <p>
                     Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
@@ -692,7 +692,7 @@ export default function ChatV2() {
             <>
               <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="space-y-1">
-                  <h2 className="text-balance text-token-h2 font-semibold text-text-strong">
+                  <h2 className="text-token-h2 text-text-strong text-balance font-semibold">
                     Unterhaltung
                   </h2>
                   <p className="text-sm leading-6 text-text-muted">
@@ -737,17 +737,17 @@ export default function ChatV2() {
                     ))}
                     {isLoading && (
                       <div className="animate-fade-in flex justify-start">
-                        <div className="glass glass--subtle mr-12 max-w-[85%] rounded-base border border-border/80 p-4">
+                        <div className="border-border mr-12 max-w-[85%] rounded-lg border bg-surface-card p-4">
                           <div className="flex items-center space-x-3">
                             <div className="flex space-x-1">
-                              <div className="h-2 w-2 rounded-full bg-accent1 motion-safe:animate-bounce"></div>
-                              <div className="h-2 w-2 rounded-full bg-accent2 [animation-delay:0.15s] motion-safe:animate-bounce"></div>
-                              <div className="h-2 w-2 rounded-full bg-accent1 [animation-delay:0.3s] motion-safe:animate-bounce"></div>
+                              <div className="bg-accent1 h-2 w-2 rounded-full motion-safe:animate-bounce"></div>
+                              <div className="bg-accent2 h-2 w-2 rounded-full [animation-delay:0.15s] motion-safe:animate-bounce"></div>
+                              <div className="bg-accent1 h-2 w-2 rounded-full [animation-delay:0.3s] motion-safe:animate-bounce"></div>
                             </div>
-                            <span className="text-sm text-text-1 motion-safe:animate-pulse">
+                            <span className="text-text-1 text-sm motion-safe:animate-pulse">
                               Disa denkt nach...
                             </span>
-                            <div className="h-2 w-2 rounded-full bg-accent1 motion-safe:animate-pulse"></div>
+                            <div className="bg-accent1 h-2 w-2 rounded-full motion-safe:animate-pulse"></div>
                           </div>
                           {/* Subtle shimmer effect */}
                           <div className="from-accent1/20 via-accent1/40 to-accent1/20 animate-shimmer mt-2 h-1 rounded-full bg-gradient-to-r"></div>
@@ -761,11 +761,11 @@ export default function ChatV2() {
           )}
 
           <div
-            className="safe-px bg-surface-0/95 sticky bottom-0 z-40 border-t border-border pb-0 pt-2 backdrop-blur-md"
+            className="safe-px bg-surface-0 border-border sticky bottom-0 z-40 border-t pb-0 pt-2"
             style={{ paddingBottom: "calc(var(--mobile-safe-bottom) + var(--spacing-lg))" }}
           >
             <div className="mx-auto w-full max-w-[var(--max-content-width)]">
-              <div className="rounded-lg border border-border bg-surface-1 p-2">
+              <div className="border-border bg-surface-1 rounded-lg border p-2">
                 <div className="flex items-end gap-3">
                   <div className="flex-1">
                     <Textarea
@@ -774,7 +774,7 @@ export default function ChatV2() {
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={handleKeyDown}
                       placeholder="Nachricht an Disa AI schreiben..."
-                      className="max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm text-text-0 placeholder:text-text-1 focus:ring-0"
+                      className="text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0"
                       rows={1}
                       aria-label="Nachricht an Disa AI eingeben"
                       aria-describedby="input-help-text"
@@ -793,16 +793,16 @@ export default function ChatV2() {
                   </Button>
                 </div>
 
-                <div className="mt-2 flex items-center justify-between text-xs text-text-1">
+                <div className="text-text-1 mt-2 flex items-center justify-between text-xs">
                   <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
                   {isLoading && (
                     <span className="animate-fade-in flex items-center gap-2" aria-live="polite">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-accent1 motion-safe:animate-pulse"></span>
+                      <span className="bg-accent1 inline-flex h-2 w-2 rounded-full motion-safe:animate-pulse"></span>
                       <span className="text-text-1">Disa tippt...</span>
                       <div className="flex space-x-1">
-                        <div className="h-1 w-1 rounded-full bg-accent2 motion-safe:animate-bounce"></div>
-                        <div className="h-1 w-1 rounded-full bg-accent1 [animation-delay:0.1s] motion-safe:animate-bounce"></div>
-                        <div className="h-1 w-1 rounded-full bg-accent2 [animation-delay:0.2s] motion-safe:animate-bounce"></div>
+                        <div className="bg-accent2 h-1 w-1 rounded-full motion-safe:animate-bounce"></div>
+                        <div className="bg-accent1 h-1 w-1 rounded-full [animation-delay:0.1s] motion-safe:animate-bounce"></div>
+                        <div className="bg-accent2 h-1 w-1 rounded-full [animation-delay:0.2s] motion-safe:animate-bounce"></div>
                       </div>
                     </span>
                   )}

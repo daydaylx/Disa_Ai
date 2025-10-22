@@ -73,7 +73,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
       >
         <Glass
           variant="strong"
-          className="h-full w-[88vw] max-w-[380px] border border-border/50 p-4 shadow-level2"
+          className="border-border/50 shadow-level2 h-full w-[88vw] max-w-[380px] border p-4"
         >
           {/* Close button */}
           <div className="mb-3 flex items-center justify-between">
@@ -82,7 +82,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
             </h2>
             <button
               onClick={onClose}
-              className="glass glass--subtle rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-[var(--acc1)]"
+              className="focus:ring-brand rounded-full bg-surface-raised p-1 focus:outline-none focus:ring-2"
               aria-label="Panel schließen"
             >
               <X size={18} />
@@ -117,11 +117,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
         </Glass>
         {/* Scrim */}
         {state === "open" && (
-          <div
-            onClick={onClose}
-            className="fixed inset-0 z-30 bg-black/40 backdrop-blur-[2px]"
-            aria-hidden="true"
-          />
+          <div onClick={onClose} className="fixed inset-0 z-30 bg-black/40" aria-hidden="true" />
         )}
       </aside>
     </>

@@ -63,12 +63,12 @@ export function ModelCard({
       aria-pressed={isSelected}
       aria-controls={detailId}
       className={cn(
-        "group relative flex flex-col gap-3 rounded-2xl border border-[var(--border-glass)]",
-        "bg-[var(--glass-layer-card)] p-4 text-left text-[var(--text-on-glass)] shadow-[var(--glass-shadow)]",
-        "supports-[backdrop-filter]:backdrop-saturate-125 backdrop-blur-[var(--glass-blur)] transition-transform duration-200",
-        "focus:outline-none focus-visible:ring-[var(--glass-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-bg)]",
-        "hover:-translate-y-[1px] hover:shadow-card-hover",
-        isSelected && "shadow-card-hover ring-2 ring-brand",
+        "border-border group relative flex flex-col gap-3 rounded-2xl border",
+        "bg-surface-card p-4 text-left text-text-primary",
+        "transition-transform duration-200",
+        "focus:ring-focus focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
+        "hover:-translate-y-[1px] hover:shadow-raised",
+        isSelected && "ring-brand shadow-raised ring-2",
       )}
       onClick={onSelect}
       onKeyDown={handleKeyDown}

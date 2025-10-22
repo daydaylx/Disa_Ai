@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ErrorBoundary } from "../../src/components/ErrorBoundary";
 
@@ -14,11 +15,11 @@ const BombComponent: React.FC<{ shouldThrow: boolean }> = ({ shouldThrow }) => {
 describe("ErrorBoundary", () => {
   beforeEach(() => {
     // Suppress console.error during tests since we're testing error scenarios
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("renders children when no error occurs", () => {
@@ -72,7 +73,7 @@ describe("ErrorBoundary", () => {
   });
 
   it('copies error report to clipboard when "Fehler melden" is clicked', async () => {
-    const mockWriteText = jest.fn();
+    const mockWriteText = vi.fn();
     Object.assign(navigator, {
       clipboard: {
         writeText: mockWriteText,

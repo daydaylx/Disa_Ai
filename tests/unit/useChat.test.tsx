@@ -1,15 +1,16 @@
 import { renderHook, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
 
 import { useChat } from "../../src/hooks/useChat";
 
 // Mock the dependencies
-jest.mock("../../src/lib/openrouter", () => ({
-  chatStream: jest.fn(),
+vi.mock("../../src/lib/openrouter", () => ({
+  chatStream: vi.fn(),
 }));
 
 // Mock crypto.randomUUID
 Object.defineProperty(global.crypto, "randomUUID", {
-  value: jest.fn(() => "mocked-uuid"),
+  value: vi.fn(() => "mocked-uuid"),
 });
 
 describe("useChat", () => {

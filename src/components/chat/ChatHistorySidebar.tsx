@@ -5,7 +5,6 @@ import type { Conversation } from "../../lib/conversation-manager";
 import { groupConversationsByDate } from "../../lib/conversation-utils";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
 import { cn } from "../../lib/utils";
-import { Glass } from "../Glass";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
@@ -77,12 +76,9 @@ export function ChatHistorySidebar({
           paddingBottom: "calc(var(--mobile-safe-bottom) + var(--spacing-xl))",
         }}
       >
-        <Glass
-          variant="strong"
-          className="flex h-full w-full flex-col border border-border/40 shadow-level2 backdrop-blur-xl md:rounded-lg"
-        >
+        <div className="border-border flex h-full w-full flex-col border bg-surface-popover shadow-popover md:rounded-lg">
           <div className="flex h-full flex-col overflow-hidden">
-            <div className="flex flex-col gap-5 px-page-x md:px-6">
+            <div className="px-page-x flex flex-col gap-5 md:px-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Button
@@ -93,7 +89,7 @@ export function ChatHistorySidebar({
                   >
                     <ArrowLeft className="h-5 w-5" />
                   </Button>
-                  <h2 className="text-lg font-semibold text-text-strong">Chat-Verlauf</h2>
+                  <h2 className="text-text-strong text-lg font-semibold">Chat-Verlauf</h2>
                 </div>
                 <Button
                   variant="ghost"
@@ -107,11 +103,11 @@ export function ChatHistorySidebar({
 
               <div className="space-y-3">
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle" />
+                  <Search className="text-text-subtle absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                   <input
                     type="text"
                     placeholder="Chats durchsuchen..."
-                    className="glass glass--subtle w-full border-border/60 pl-11 pr-4 text-sm text-text-strong placeholder:text-text-muted focus-visible:border-border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                    className="border-border focus-visible:ring-brand w-full border bg-surface-card pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted focus-visible:border-border-focus focus-visible:outline-none focus-visible:ring-2"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -123,7 +119,7 @@ export function ChatHistorySidebar({
                     size="sm"
                     onClick={() => setFilterType("all")}
                     className={cn(
-                      "rounded-base border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors hover:text-text-strong",
+                      "rounded-base hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "all" &&
                         "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
                     )}
@@ -136,7 +132,7 @@ export function ChatHistorySidebar({
                     size="sm"
                     onClick={() => setFilterType("favorites")}
                     className={cn(
-                      "rounded-base border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors hover:text-text-strong",
+                      "rounded-base hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "favorites" &&
                         "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
                     )}
@@ -149,7 +145,7 @@ export function ChatHistorySidebar({
                     size="sm"
                     onClick={() => setFilterType("recent")}
                     className={cn(
-                      "rounded-base border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors hover:text-text-strong",
+                      "rounded-base hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "recent" &&
                         "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
                     )}
@@ -161,10 +157,10 @@ export function ChatHistorySidebar({
               </div>
             </div>
 
-            <div className="mt-4 flex-1 overflow-y-auto px-page-x pb-2 md:px-6">
+            <div className="px-page-x mt-4 flex-1 overflow-y-auto pb-2 md:px-6">
               {Object.entries(groupedConversations).map(([groupName, groupConversations]) => (
                 <div key={groupName} className="mb-6">
-                  <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-text-1">
+                  <h3 className="text-text-1 mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
                     {groupName}
                   </h3>
                   <ul className="space-y-2">
@@ -181,15 +177,15 @@ export function ChatHistorySidebar({
                         <li key={conversation.id}>
                           <div
                             className={cn(
-                              "glass glass--subtle group relative cursor-pointer rounded-base border-border/60 p-4 text-left text-text-strong transition-all duration-200 hover:-translate-y-[1px] hover:shadow-level2",
-                              isActive && "ring-2 ring-brand",
+                              "border-border group relative cursor-pointer rounded-lg border bg-surface-card p-4 text-left text-text-primary transition-all duration-200 hover:-translate-y-[1px] hover:shadow-raised",
+                              isActive && "ring-brand ring-2",
                             )}
                             onClick={() => onSelect(conversation.id)}
                           >
                             <div className="flex items-start justify-between gap-2">
                               <div className="min-w-0 flex-1">
                                 <div className="mb-1 flex items-center gap-2">
-                                  <p className="truncate text-sm font-semibold text-text-strong">
+                                  <p className="text-text-strong truncate text-sm font-semibold">
                                     {conversation.title}
                                   </p>
                                   {isActive && <Badge variant="secondary">Aktiv</Badge>}
@@ -208,11 +204,11 @@ export function ChatHistorySidebar({
                               </div>
                               <div className="flex flex-col items-end gap-1">
                                 {Number.isFinite(lastActivity) && (
-                                  <span className="text-xs text-text-1">
+                                  <span className="text-text-1 text-xs">
                                     {formatRelativeTime(lastActivity)}
                                   </span>
                                 )}
-                                <div className="flex items-center gap-1 text-xs text-text-1">
+                                <div className="text-text-1 flex items-center gap-1 text-xs">
                                   <MessageSquare className="h-3 w-3" />
                                   <span>{messageCount}</span>
                                 </div>
@@ -226,7 +222,7 @@ export function ChatHistorySidebar({
                                 event.stopPropagation();
                                 onDelete(conversation.id);
                               }}
-                              className="absolute right-2 top-2 h-8 w-8 text-text-muted opacity-0 hover:bg-hover-bg hover:text-danger group-hover:opacity-100"
+                              className="hover:bg-hover-bg hover:text-danger absolute right-2 top-2 h-8 w-8 text-text-muted opacity-0 group-hover:opacity-100"
                               aria-label="Konversation löschen"
                             >
                               <X className="h-4 w-4" />
@@ -242,7 +238,7 @@ export function ChatHistorySidebar({
               {filteredConversations.length === 0 && (
                 <div className="flex h-full flex-col items-center justify-center px-4 text-center">
                   <div className="max-w-xs space-y-4">
-                    <div className="glass glass--subtle mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-border/50">
+                    <div className="border-border mx-auto flex h-16 w-16 items-center justify-center rounded-full border bg-surface-card">
                       <MessageSquare className="h-8 w-8 text-text-muted" />
                     </div>
                     <div className="space-y-2">
@@ -276,7 +272,7 @@ export function ChatHistorySidebar({
               )}
             </div>
           </div>
-        </Glass>
+        </div>
       </div>
     </div>
   );

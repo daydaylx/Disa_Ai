@@ -33,8 +33,7 @@ export function useMemory() {
         const service = await getMemoryService();
         setSettings(service.getSettings());
         setGlobalMemory(service.getGlobalMemory());
-      } catch (error) {
-        console.warn("Failed to load memory service:", error);
+      } catch (_error) {
         setError("Failed to load memory service");
       }
     };
@@ -53,8 +52,7 @@ export function useMemory() {
       if ("enabled" in newSettings) {
         setGlobalMemory(service.getGlobalMemory());
       }
-    } catch (error) {
-      console.warn("Failed to update settings:", error);
+    } catch (_error) {
       setError("Failed to update settings");
     }
   }, []);
@@ -72,8 +70,7 @@ export function useMemory() {
         const service = await getMemoryService();
         service.updateGlobalMemory(updates);
         setGlobalMemory(service.getGlobalMemory());
-      } catch (error) {
-        console.warn("Failed to update global memory:", error);
+      } catch (_error) {
         setError("Failed to update global memory");
       }
     },
@@ -85,8 +82,7 @@ export function useMemory() {
       const service = await getMemoryService();
       service.clearGlobalMemory();
       setGlobalMemory(null);
-    } catch (error) {
-      console.warn("Failed to clear global memory:", error);
+    } catch (_error) {
       setError("Failed to clear global memory");
     }
   }, []);
@@ -96,8 +92,7 @@ export function useMemory() {
     try {
       const service = await getMemoryService();
       return service.getChatMemory(chatId);
-    } catch (error) {
-      console.warn("Failed to get chat memory:", error);
+    } catch (_error) {
       setError("Failed to get chat memory");
       return null;
     }
@@ -110,8 +105,7 @@ export function useMemory() {
       try {
         const service = await getMemoryService();
         service.updateChatMemory(chatId, messages, context);
-      } catch (error) {
-        console.warn("Failed to update chat memory:", error);
+      } catch (_error) {
         setError("Failed to update chat memory");
       }
     },
@@ -122,8 +116,7 @@ export function useMemory() {
     try {
       const service = await getMemoryService();
       service.deleteChatMemory(chatId);
-    } catch (error) {
-      console.warn("Failed to delete chat memory:", error);
+    } catch (_error) {
       setError("Failed to delete chat memory");
     }
   }, []);
@@ -133,8 +126,7 @@ export function useMemory() {
     try {
       const service = await getMemoryService();
       return service.getChatList();
-    } catch (error) {
-      console.warn("Failed to get chat list:", error);
+    } catch (_error) {
       setError("Failed to get chat list");
       return [];
     }
@@ -144,8 +136,7 @@ export function useMemory() {
     try {
       const service = await getMemoryService();
       return service.exportAllMemory();
-    } catch (error) {
-      console.warn("Failed to export memory:", error);
+    } catch (_error) {
       setError("Failed to export memory");
       return {};
     }
@@ -156,8 +147,7 @@ export function useMemory() {
       const service = await getMemoryService();
       service.clearAllMemory();
       setGlobalMemory(null);
-    } catch (error) {
-      console.warn("Failed to clear all memory:", error);
+    } catch (_error) {
       setError("Failed to clear all memory");
     }
   }, []);
@@ -166,8 +156,7 @@ export function useMemory() {
     try {
       const service = await getMemoryService();
       return service.getMemoryStats();
-    } catch (error) {
-      console.warn("Failed to get memory stats:", error);
+    } catch (_error) {
       setError("Failed to get memory stats");
       return {
         enabled: false,

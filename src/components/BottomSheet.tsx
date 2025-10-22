@@ -2,7 +2,6 @@ import { X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
 import { cn } from "../lib/utils";
-import { Glass } from "./Glass";
 
 type BottomSheetState = "closed" | "open";
 type PanelTab = "history" | "roles" | "models" | "settings";
@@ -100,10 +99,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <Glass
-          variant="strong"
-          className="bottom-sheet-safe-area h-full w-full border border-border/50 p-4 shadow-level2"
-        >
+        <div className="bottom-sheet-safe-area border-border h-full w-full border bg-surface-popover p-4 shadow-popover">
           {/* Drag handle for better UX */}
           <div className="mb-3 flex w-full justify-center">
             <div className="bottom-sheet-drag-handle" />
@@ -111,10 +107,10 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
 
           {/* Header with close button */}
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-text-strong">{getTabLabel(tab)}</h2>
+            <h2 className="text-text-strong text-lg font-semibold">{getTabLabel(tab)}</h2>
             <button
               onClick={onClose}
-              className="glass glass--subtle rounded-full p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              className="focus-visible:ring-brand rounded-full bg-surface-raised p-1 focus-visible:outline-none focus-visible:ring-2"
               aria-label="Panel schließen"
             >
               <X size={18} />
@@ -129,10 +125,10 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
                 type="button"
                 onClick={() => onTabChange(t)}
                 className={cn(
-                  "whitespace-nowrap rounded-full border px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+                  "focus-visible:ring-brand whitespace-nowrap rounded-full border px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2",
                   t === tab
                     ? "border-brand/50 bg-brand/15 text-brand shadow-neon"
-                    : "bg-surface-glass-card/60 border-transparent text-text-muted hover:bg-hover-bg hover:text-text-strong",
+                    : "bg-surface-glass-card/60 hover:bg-hover-bg hover:text-text-strong border-transparent text-text-muted",
                 )}
                 aria-selected={t === tab}
               >
@@ -147,7 +143,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
               {getTabLabel(tab)} Inhalt wird hier angezeigt
             </div>
           </div>
-        </Glass>
+        </div>
       </div>
     </>
   );

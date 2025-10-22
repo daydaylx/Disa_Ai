@@ -24,7 +24,7 @@ interface AppShellLayoutProps {
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-[var(--surface-bg)] text-text-0">
+    <div className="text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]">
       {/* Background gradients - soft glass aura */}
       <div className="pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(150%_120%_at_12%_10%,rgba(var(--glass-tint-neutral-rgb),0.18)_0%,transparent_65%)]" />
@@ -46,7 +46,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           {children}
         </main>
 
-        <footer className="supports-[backdrop-filter]:backdrop-saturate-125 border-t border-white/25 bg-[var(--glass-overlay-muted)] py-5 text-[var(--text-on-glass)] shadow-[var(--glass-shadow)] backdrop-blur-[var(--glass-blur)]">
+        <footer className="border-t border-border-subtle bg-surface-base py-5 text-text-secondary">
           <div className="mx-auto flex w-full max-w-[var(--max-content-width)] flex-col items-center gap-1 px-4 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
             <span>Disa AI Beta · Tooling Preview</span>
             <BuildInfo className="text-[11px]" />
