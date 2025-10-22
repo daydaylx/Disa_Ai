@@ -11,7 +11,7 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
@@ -59,47 +59,8 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
   };
 
   const handleApiKeySettings = () => {
-    // Open API key in a simple prompt for quick access
-    const currentKey = sessionStorage.getItem("openrouter-key") ?? "";
-    const newKey = prompt("OpenRouter API-Schlüssel eingeben:", currentKey);
-
-    if (newKey !== null) {
-      try {
-        const trimmedKey = newKey.trim();
-
-        if (trimmedKey) {
-          if (!trimmedKey.startsWith("sk-or-")) {
-            toasts.push({
-              kind: "error",
-              title: "Ungültiger Schlüssel",
-              message: "OpenRouter-Schlüssel beginnen mit 'sk-or-'",
-            });
-            return;
-          }
-          sessionStorage.setItem("openrouter-key", trimmedKey);
-          setApiKeyStatus("present");
-          toasts.push({
-            kind: "success",
-            title: "Schlüssel gespeichert",
-            message: "API-Schlüssel wurde erfolgreich gespeichert.",
-          });
-        } else {
-          sessionStorage.removeItem("openrouter-key");
-          setApiKeyStatus("empty");
-          toasts.push({
-            kind: "success",
-            title: "Schlüssel entfernt",
-            message: "API-Schlüssel wurde gelöscht.",
-          });
-        }
-      } catch {
-        toasts.push({
-          kind: "error",
-          title: "Speichern fehlgeschlagen",
-          message: "Der Schlüssel konnte nicht gesichert werden.",
-        });
-      }
-    }
+    // Redirect to the secure Advanced Settings Modal for API key management
+    onOpenAdvancedSettings?.();
     handleClose();
   };
 
@@ -134,39 +95,8 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
   };
 
   const handleImportChats = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-
-    input.onchange = (event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const content = e.target?.result as string;
-          JSON.parse(content); // Parse to validate JSON format
-
-          // Import logic would be handled here
-          // For now, just show success message
-          toasts.push({
-            kind: "info",
-            title: "Import vorbereitet",
-            message: "Import-Funktionalität wird verarbeitet...",
-          });
-        } catch {
-          toasts.push({
-            kind: "error",
-            title: "Import fehlgeschlagen",
-            message: "Die Datei konnte nicht gelesen werden.",
-          });
-        }
-      };
-      reader.readAsText(file);
-    };
-
-    input.click();
+    // Redirect to Advanced Settings Modal for full import functionality
+    onOpenAdvancedSettings?.();
     handleClose();
   };
 
@@ -226,15 +156,18 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen]);
 
-  // Get conversation stats for quick info
-  const stats = getConversationStats();
+  // Get conversation stats for quick info (memoized for performance)
+  const stats = useMemo(() => getConversationStats(), []);
 
   return (
     <div className="relative">
       <button
         ref={buttonRef}
         onClick={handleToggle}
+        id="menu-button"
+        aria-controls="menu-dropdown"
         aria-expanded={isOpen}
+        aria-haspopup="menu"
         aria-label={isOpen ? "Menü schließen" : "Menü öffnen"}
         className="touch-target border-border bg-surface-1 text-text-0 hover:bg-surface-2 fixed right-4 z-40 inline-flex h-11 w-11 items-center justify-center rounded-full border transition active:scale-95"
         style={{ top: `calc(var(--inset-t) + 16px)` }}
@@ -258,11 +191,12 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
           {/* Dropdown Menu */}
           <div
+            id="menu-dropdown"
             ref={menuRef}
             className="border-border fixed right-4 z-50 w-72 max-w-[90vw] rounded-xl border bg-surface-card shadow-xl"
             style={{ top: `calc(var(--inset-t) + 72px)` }}
             role="menu"
-            aria-label="Hauptmenü"
+            aria-labelledby="menu-button"
           >
             <div className="p-1">
               {/* Header */}
@@ -282,7 +216,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   <div className="space-y-1">
                     <button
                       onClick={() => handleNavigation("/chat")}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <MessageSquare className="h-4 w-4 text-text-muted" />
@@ -290,7 +224,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                     </button>
                     <button
                       onClick={() => handleNavigation("/models")}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <Cpu className="h-4 w-4 text-text-muted" />
@@ -298,7 +232,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                     </button>
                     <button
                       onClick={() => handleNavigation("/roles")}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <User className="h-4 w-4 text-text-muted" />
@@ -315,7 +249,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   <div className="space-y-1">
                     <button
                       onClick={handleApiKeySettings}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <Key className="h-4 w-4 text-text-muted" />
@@ -336,7 +270,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
                     <button
                       onClick={handleExportChats}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <Download className="h-4 w-4 text-text-muted" />
@@ -345,7 +279,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
                     <button
                       onClick={handleImportChats}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <Upload className="h-4 w-4 text-text-muted" />
@@ -355,7 +289,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                     {canInstall && !isInstalled && (
                       <button
                         onClick={handleInstallPWA}
-                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                        className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                         role="menuitem"
                       >
                         <Smartphone className="h-4 w-4 text-text-muted" />
@@ -376,7 +310,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   <div className="space-y-1">
                     <button
                       onClick={handleAdvancedSettings}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <Settings className="h-4 w-4 text-text-muted" />
@@ -393,7 +327,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   <div className="space-y-1">
                     <button
                       onClick={() => handleNavigation("/impressum")}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <FileText className="h-4 w-4 text-text-muted" />
@@ -401,7 +335,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                     </button>
                     <button
                       onClick={() => handleNavigation("/datenschutz")}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition hover:bg-surface-subtle focus:bg-surface-subtle focus:outline-none"
                       role="menuitem"
                     >
                       <FileText className="h-4 w-4 text-text-muted" />
