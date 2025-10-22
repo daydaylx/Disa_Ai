@@ -21,7 +21,7 @@ const variantClasses: Record<SurfaceVariant, string> = {
   strong: "bg-surface-card border-border-strong shadow-raised",
 };
 
-export const Glass: React.FC<SurfaceProps> = ({
+export const SoftDepthSurface: React.FC<SurfaceProps> = ({
   children,
   className,
   variant = "standard",

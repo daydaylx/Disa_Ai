@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Glass } from "./Glass";
+import { SoftDepthSurface } from "./Glass";
 
 type BubbleKind = "assistant" | "user";
 
@@ -15,7 +15,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ kind, children, timestam
   const glassVariant = kind === "user" ? "standard" : "subtle";
 
   return (
-    <Glass
+    <SoftDepthSurface
       variant={glassVariant}
       className={`max-w-[78%] ${side} px-2 py-1 transition-all duration-300 ease-out`}
     >
@@ -25,6 +25,6 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ kind, children, timestam
           <span className="mt-1 self-end text-xs text-[var(--fg-dim)]">{timestamp}</span>
         )}
       </div>
-    </Glass>
+    </SoftDepthSurface>
   );
 };

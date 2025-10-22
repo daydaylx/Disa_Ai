@@ -10,7 +10,7 @@ interface StaticSurfaceSectionProps extends Omit<CardProps, "padding" | "elevati
   variant?: SurfaceVariant;
 }
 
-export function StaticGlassCard({
+export function StaticSurfaceSection({
   padding = "md",
   variant = "flat",
   className,

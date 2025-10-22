@@ -177,7 +177,7 @@ export function ChatHistorySidebar({
                         <li key={conversation.id}>
                           <div
                             className={cn(
-                              "border-border group relative cursor-pointer rounded-lg border bg-surface-card p-4 text-left text-text-primary transition-all duration-200 hover:-translate-y-[1px] hover:shadow-raised",
+                              "border-border group relative cursor-pointer rounded-[var(--radius-lg)] border bg-surface-card p-4 text-left text-text-primary transition-all duration-small ease-standard hover:-translate-y-[1px] hover:shadow-raised",
                               isActive && "ring-brand ring-2",
                             )}
                             onClick={() => onSelect(conversation.id)}

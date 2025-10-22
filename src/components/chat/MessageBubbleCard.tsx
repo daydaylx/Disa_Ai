@@ -33,11 +33,11 @@ export function MessageBubbleCard({
   return (
     <article
       className={cn(
-        "group relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-base border border-[var(--border-card)] bg-card text-text-0 shadow-card transition-all duration-200 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-brand/60 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+        "group relative w-full max-w-[min(100%,640px)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-hairline)] bg-surface-card text-text-primary shadow-surface transition-all duration-small ease-standard focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-brand/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-canvas)]",
         variant === "assistant"
           ? "py-3 pl-6 pr-5 sm:py-4 sm:pl-8 sm:pr-6"
           : "bg-surface-2 py-3 pl-5 pr-6 sm:py-4 sm:pl-6 sm:pr-8",
-        "motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-card-hover",
+        "motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-raised",
         className,
       )}
       {...props}
@@ -45,7 +45,7 @@ export function MessageBubbleCard({
       {/* Brand rail for assistant messages */}
       {variant === "assistant" && (
         <span
-          className="brand-rail absolute left-0 top-0 h-full w-1 rounded-r-full"
+          className="absolute left-0 top-0 h-full w-1 rounded-r-full bg-[var(--color-brand-primary)]"
           aria-hidden="true"
         />
       )}
@@ -60,14 +60,14 @@ export function MessageBubbleCard({
 
       <header
         className={cn(
-          "mb-2 flex items-baseline gap-3 text-[11px] font-medium uppercase tracking-[0.08em] text-text-subtle transition-colors duration-200",
+          "mb-2 flex items-baseline gap-3 text-[11px] font-medium uppercase tracking-[0.08em] text-text-secondary transition-colors duration-small ease-standard",
           variant === "assistant" ? "sm:pl-1" : "sm:pr-1",
         )}
       >
         <span className="truncate font-semibold">{author}</span>
         {label ? (
           <time
-            className="text-[11px] font-normal text-text-muted opacity-70 transition-opacity duration-200 group-hover:opacity-100"
+            className="text-[11px] font-normal text-text-muted opacity-70 transition-opacity duration-small ease-standard group-hover:opacity-100"
             dateTime={iso}
           >
             {label}
@@ -75,7 +75,7 @@ export function MessageBubbleCard({
         ) : null}
       </header>
 
-      <p className="whitespace-pre-wrap text-[15px] leading-7 text-text-strong transition-colors duration-200">
+      <p className="whitespace-pre-wrap text-[15px] leading-7 text-text-strong transition-colors duration-small ease-standard">
         {body}
       </p>
     </article>

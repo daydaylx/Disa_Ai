@@ -3,7 +3,7 @@ import React, { type RefObject, useRef } from "react";
 
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useSwipe } from "../hooks/useSwipe";
-import { Glass } from "./Glass";
+import { SoftDepthSurface } from "./Glass";
 
 type PanelTab = "history" | "roles" | "models" | "settings";
 type SidePanelState = "closed" | "peek" | "open";
@@ -71,7 +71,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <Glass
+        <SoftDepthSurface
           variant="strong"
           className="border-border/50 shadow-level2 h-full w-[88vw] max-w-[380px] border p-4"
         >
@@ -114,7 +114,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
               {getTabLabel(tab)} Inhalt wird hier angezeigt
             </div>
           </div>
-        </Glass>
+        </SoftDepthSurface>
         {/* Scrim */}
         {state === "open" && (
           <div onClick={onClose} className="fixed inset-0 z-30 bg-black/40" aria-hidden="true" />

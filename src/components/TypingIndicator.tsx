@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Glass } from "./Glass";
+import { SoftDepthSurface } from "./Glass";
 
 interface TypingIndicatorProps {
   show?: boolean;
@@ -16,7 +16,7 @@ export const TypingIndicator: React.FC<TypingIndicatorProps> = ({
   return (
     <div className="mx-auto max-w-[720px] px-4 py-2">
       <div role="status" aria-live="polite" aria-atomic="true">
-        <Glass variant="subtle" className="mr-auto max-w-[78%] items-start px-2 py-1">
+        <SoftDepthSurface variant="subtle" className="mr-auto max-w-[78%] items-start px-2 py-1">
           <div className="flex items-center space-x-2">
             <span className="text-sm text-text-strong">{message}</span>
             <div className="flex space-x-1">
@@ -34,7 +34,7 @@ export const TypingIndicator: React.FC<TypingIndicatorProps> = ({
               ></div>
             </div>
           </div>
-        </Glass>
+        </SoftDepthSurface>
       </div>
     </div>
   );

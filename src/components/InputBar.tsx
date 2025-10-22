@@ -1,7 +1,7 @@
 import { Mic, Plus, SendHorizonal } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
-import { Glass } from "./Glass";
+import { SoftDepthSurface } from "./Glass";
 
 interface InputBarProps {
   onSend: (message: string) => void;
@@ -38,7 +38,7 @@ export const InputBar: React.FC<InputBarProps> = ({ onSend, disabled = false }) 
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto mb-4 w-full max-w-[720px] px-4">
-      <Glass
+      <SoftDepthSurface
         variant="standard"
         className={`rounded-[20px] p-2 transition-all duration-300 ${
           isFocused
@@ -93,7 +93,7 @@ export const InputBar: React.FC<InputBarProps> = ({ onSend, disabled = false }) 
             <SendHorizonal size={18} />
           </button>
         </div>
-      </Glass>
+      </SoftDepthSurface>
     </form>
   );
 };

@@ -520,13 +520,14 @@
 }
 
 @layer components {
-  /* Soft-depth surfaces (legacy glass aliases) */
-  .glass,
-  .glass--subtle,
-  .glass--strong,
-  .glass-card,
-  .glass-panel,
-  .glass-chrome {
+  /* Fluent 2 Soft-Depth surfaces */
+  .soft-surface,
+  .soft-surface--subtle,
+  .soft-surface--standard,
+  .soft-surface--strong,
+  .soft-surface-card,
+  .soft-surface-panel,
+  .soft-surface-chrome {
     position: relative;
     border-radius: var(--radius-xl);
     border: 1px solid var(--color-border-hairline);
@@ -540,60 +541,63 @@
     overflow: hidden;
   }
 
-  .glass--subtle,
-  .glass-chrome {
+  .soft-surface--subtle,
+  .soft-surface-chrome {
     background-color: var(--color-surface-subtle);
     border-color: var(--color-border-subtle);
   }
 
-  .glass--strong,
-  .glass-panel {
+  .soft-surface--standard {
+    background-color: var(--color-surface-base);
+    border-color: var(--color-border-subtle);
+  }
+
+  .soft-surface--strong,
+  .soft-surface-panel {
     background-color: var(--color-surface-card);
     border-color: var(--color-border-strong);
     box-shadow: var(--shadow-raised);
   }
 
-  .glass-panel {
+  .soft-surface-panel {
     background-color: var(--color-surface-popover);
     box-shadow: var(--shadow-overlay);
   }
 
-  .glass-card {
+  .soft-surface-card {
     background-color: var(--color-surface-card);
   }
 
-  .glass-card:hover,
-  .glass:hover,
-  .glass--subtle:hover,
-  .glass--strong:hover {
+  .soft-surface-card:hover,
+  .soft-surface:hover,
+  .soft-surface--subtle:hover,
+  .soft-surface--standard:hover,
+  .soft-surface--strong:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-raised);
   }
 
-  .glass-card:focus-visible,
-  .glass:focus-visible,
-  .glass--subtle:focus-visible,
-  .glass--strong:focus-visible {
+  .soft-surface-card:focus-visible,
+  .soft-surface:focus-visible,
+  .soft-surface--subtle:focus-visible,
+  .soft-surface--standard:focus-visible,
+  .soft-surface--strong:focus-visible {
     outline: none;
     box-shadow: var(--shadow-focus);
   }
 
-  .glass-panel:hover,
-  .glass-panel:focus-visible,
-  .glass--strong:hover,
-  .glass--strong:focus-visible {
-    border-color: var(--glass-border-hard);
-    box-shadow: var(--elev-3), var(--elev-glass-inset);
+  .soft-surface-panel:hover,
+  .soft-surface-panel:focus-visible,
+  .soft-surface--strong:hover,
+  .soft-surface--strong:focus-visible {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-overlay);
   }
 
-  .glass-chrome {
+  .soft-surface-chrome {
     border-radius: var(--radius-lg);
-    border-color: var(--glass-stroke);
-    box-shadow: var(--elev-1);
-  }
-
-  .glass-lifted {
-    mix-blend-mode: plus-lighter;
+    border-color: var(--color-border-hairline);
+    box-shadow: var(--shadow-surface);
   }
 
   .surface-card,
@@ -643,15 +647,15 @@
     box-shadow: inset 0 0 0 1px var(--color-border-strong);
   }
 
-  .neon-glow {
+  .elevated {
     box-shadow: var(--shadow-raised);
   }
 
-  .neon-glow-strong {
+  .elevated-strong {
     box-shadow: var(--shadow-overlay);
   }
 
-  .glass-tile {
+  .soft-tile {
     background-color: var(--color-surface-card);
     border: 1px solid var(--color-border-hairline);
     border-radius: var(--radius-lg);
@@ -659,25 +663,22 @@
     transition: transform var(--motion-duration-small) var(--motion-easing-standard);
   }
 
-  .glass-tile:hover {
+  .soft-tile:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-raised);
   }
 
   @media (prefers-contrast: more) {
-    .glass,
-    .glass--subtle,
-    .glass--strong,
-    .glass-card,
-    .glass-panel,
-    .glass-chrome {
-      border-color: var(--glass-border-hard);
-      box-shadow: var(--elev-2);
-      background-color: color-mix(
-        in srgb,
-        var(--glass-layer-panel) 90%,
-        rgba(255, 255, 255, 0.18) 10%
-      );
+    .soft-surface,
+    .soft-surface--subtle,
+    .soft-surface--standard,
+    .soft-surface--strong,
+    .soft-surface-card,
+    .soft-surface-panel,
+    .soft-surface-chrome {
+      border-color: var(--color-border-strong);
+      box-shadow: var(--shadow-raised);
+      background-color: var(--color-surface-card);
     }
 
     .surface-card,
@@ -686,32 +687,22 @@
       box-shadow: var(--shadow-card-hover);
       background-color: var(--surface-card-hover);
     }
-
-    .glass::after,
-    .glass--subtle::after,
-    .glass--strong::after,
-    .glass-card::after,
-    .glass-panel::after,
-    .glass-chrome::after {
-      opacity: 0.72;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .glass,
-    .glass--subtle,
-    .glass--strong,
-    .glass-card,
-    .glass-panel,
-    .glass-chrome,
-    .glass-tile {
-      backdrop-filter: blur(var(--glass-blur-sm)) saturate(110%);
-      -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(110%);
+    .soft-surface,
+    .soft-surface--subtle,
+    .soft-surface--standard,
+    .soft-surface--strong,
+    .soft-surface-card,
+    .soft-surface-panel,
+    .soft-surface-chrome,
+    .soft-tile {
       transform: none !important;
     }
 
-    .glass-card:hover,
-    .glass-tile:hover {
+    .soft-surface-card:hover,
+    .soft-tile:hover {
       transform: none;
     }
 
@@ -761,14 +752,12 @@
   .brand-panel {
     position: relative;
     overflow: hidden;
-    border-radius: var(--glass-radius);
+    border-radius: var(--radius-xl);
     border: 1px solid rgb(111, 211, 255, 0.32);
     background:
       linear-gradient(135deg, rgb(111, 211, 255, 0.12) 0%, transparent 55%),
-      linear-gradient(200deg, rgb(255, 159, 111, 0.14) 0%, transparent 70%), var(--glass-layer-base);
+      linear-gradient(200deg, rgb(255, 159, 111, 0.14) 0%, transparent 70%), var(--color-surface-base);
     box-shadow: 0 18px 42px rgb(111, 211, 255, 0.28);
-    backdrop-filter: blur(var(--glass-blur-md)) saturate(120%);
-    -webkit-backdrop-filter: blur(var(--glass-blur-md)) saturate(120%);
   }
 
   .brand-panel::after {
@@ -823,16 +812,6 @@
 
   .surface-card--raised {
     box-shadow: var(--shadow-card-hover);
-  }
-
-  /* Performance optimization: reduce blur on low-end devices */
-  @media (prefers-reduced-motion: reduce) {
-    .glass,
-    .glass--subtle,
-    .glass--strong {
-      backdrop-filter: blur(var(--glass-blur-sm)) saturate(120%);
-      -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(120%);
-    }
   }
 }
 

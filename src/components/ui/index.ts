@@ -7,7 +7,7 @@ export * from "./dropdown-menu";
 export * from "./input";
 export * from "./ModelCard";
 export * from "./select";
-export * from "./StaticGlassCard";
+export * from "./StaticSurfaceSection";
 export * from "./table";
 export * from "./tabs";
 export * from "./textarea";

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Glass } from "./Glass";
+import { SoftDepthSurface } from "./Glass";
 
 interface Model {
   id: string;
@@ -22,7 +22,7 @@ export const Models: React.FC<ModelsProps> = ({ models, currentModelId, onModelS
   return (
     <div className="space-y-3">
       {models.map((model) => (
-        <Glass
+        <SoftDepthSurface
           key={model.id}
           variant="subtle"
           className={`cursor-pointer rounded-lg p-2 transition-colors hover:bg-[rgba(255,255,255,0.05)] ${
@@ -45,7 +45,7 @@ export const Models: React.FC<ModelsProps> = ({ models, currentModelId, onModelS
             <span>Kontext: {model.contextLength}</span>
             <span>Preis: {model.price}</span>
           </div>
-        </Glass>
+        </SoftDepthSurface>
       ))}
     </div>
   );

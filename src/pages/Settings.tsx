@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { StaticGlassCard } from "../components/ui/StaticGlassCard";
+import { StaticSurfaceSection } from "../components/ui/StaticSurfaceSection";
 import { Switch } from "../components/ui/Switch";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { useMemory } from "../hooks/useMemory";
@@ -384,7 +384,7 @@ export default function SettingsPage() {
       </header>
 
       {/* API Key Section */}
-      <StaticGlassCard padding="md" className="brand-panel border-none">
+      <StaticSurfaceSection padding="md" className="brand-panel border-none">
         <div className="flex flex-col space-y-1 pb-4">
           <span className="brand-chip w-fit">Zugang</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-text-strong">
@@ -458,10 +458,10 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </StaticGlassCard>
+      </StaticSurfaceSection>
 
       {/* Content Filter Section */}
-      <StaticGlassCard padding="md">
+      <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Inhalte</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -501,10 +501,10 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </StaticGlassCard>
+      </StaticSurfaceSection>
 
       {/* Memory Settings Section */}
-      <StaticGlassCard padding="md">
+      <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Gedächtnis</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -622,10 +622,10 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </StaticGlassCard>
+      </StaticSurfaceSection>
 
       {/* Chat Management Section */}
-      <StaticGlassCard padding="md">
+      <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">Chats</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -716,10 +716,10 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </StaticGlassCard>
+      </StaticSurfaceSection>
 
       {/* PWA Install Section */}
-      <StaticGlassCard padding="md">
+      <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">PWA</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -799,10 +799,10 @@ export default function SettingsPage() {
             </ul>
           </div>
         </div>
-      </StaticGlassCard>
+      </StaticSurfaceSection>
 
       {/* Build Info */}
-      <StaticGlassCard padding="md">
+      <StaticSurfaceSection padding="md">
         <div className="space-y-1 pb-4">
           <span className="brand-chip w-fit">System</span>
           <h2 className="flex items-center gap-2 text-token-h2 font-semibold leading-tight tracking-tight text-white">
@@ -864,7 +864,7 @@ export default function SettingsPage() {
             Seite vollständig neu laden
           </Button>
         </div>
-      </StaticGlassCard>
+      </StaticSurfaceSection>
     </div>
   );
 }

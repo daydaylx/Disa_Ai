@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Glass } from "./Glass";
+import { SoftDepthSurface } from "./Glass";
 
 interface ChatHistoryItem {
   id: string;
@@ -18,7 +18,7 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ items, onItemSelect })
   return (
     <div className="space-y-2">
       {items.map((item) => (
-        <Glass
+        <SoftDepthSurface
           key={item.id}
           variant="subtle"
           className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
@@ -29,7 +29,7 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ items, onItemSelect })
             <span>{item.timestamp}</span>
             <span>{item.model}</span>
           </div>
-        </Glass>
+        </SoftDepthSurface>
       ))}
     </div>
   );

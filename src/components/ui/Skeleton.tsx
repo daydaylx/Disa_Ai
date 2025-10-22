@@ -125,7 +125,7 @@ export const SettingsSkeleton: React.FC = () => {
   );
 };
 
-export const GlassSpinner: React.FC<{ size?: "sm" | "md" | "lg"; className?: string }> = ({
+export const SoftDepthSpinner: React.FC<{ size?: "sm" | "md" | "lg"; className?: string }> = ({
   size = "md",
   className,
 }) => {

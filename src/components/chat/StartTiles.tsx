@@ -2,7 +2,7 @@ import { Book, Code, MessageSquare } from "lucide-react";
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 
 import { cn } from "../../lib/utils";
-import { Glass } from "../Glass";
+import { SoftDepthSurface } from "../Glass";
 import { Badge } from "../ui/badge";
 
 export type StartTileAction = { type: "new-chat" } | { type: "set-role"; roleId: string };
@@ -55,7 +55,7 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
           : null;
 
         return (
-          <Glass
+          <SoftDepthSurface
             key={tile.id}
             variant="subtle"
             asChild
@@ -89,7 +89,7 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
                 </Badge>
               </div>
             </button>
-          </Glass>
+          </SoftDepthSurface>
         );
       })}
     </div>
