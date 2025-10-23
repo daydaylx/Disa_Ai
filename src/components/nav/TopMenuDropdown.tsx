@@ -216,27 +216,27 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   <div className="space-y-1">
                     <button
                       onClick={() => handleNavigation("/chat")}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <MessageSquare className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm">Chat</span>
+                      <span className="text-standard text-sm truncate">Chat</span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/models")}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <Cpu className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm">Modelle</span>
+                      <span className="text-standard text-sm truncate">Modelle</span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/roles")}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <User className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm">Rollen</span>
+                      <span className="text-standard text-sm truncate">Rollen</span>
                     </button>
                   </div>
                 </div>
@@ -249,19 +249,19 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   <div className="space-y-1">
                     <button
                       onClick={handleApiKeySettings}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <Key className="h-4 w-4 text-[var(--fg)]" />
                       <div className="flex-1">
-                        <span className="text-standard text-sm">API-Schlüssel</span>
+                        <span className="text-standard text-sm truncate">API-Schlüssel</span>
                         <div className="mt-0.5 flex items-center gap-1">
                           <div
                             className={`h-1.5 w-1.5 rounded-full ${
                               apiKeyStatus === "present" ? "bg-green-500" : "bg-gray-500"
                             }`}
                           />
-                          <span className="text-xs text-muted">
+                          <span className="text-xs text-muted truncate">
                             {apiKeyStatus === "present" ? "Gesetzt" : "Nicht gesetzt"}
                           </span>
                         </div>
@@ -270,32 +270,32 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
                     <button
                       onClick={handleExportChats}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <Download className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm">Chats exportieren</span>
+                      <span className="text-standard text-sm truncate">Chats exportieren</span>
                     </button>
 
                     <button
                       onClick={handleImportChats}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <Upload className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm">Chats importieren</span>
+                      <span className="text-standard text-sm truncate">Chats importieren</span>
                     </button>
 
                     {canInstall && !isInstalled && (
                       <button
                         onClick={handleInstallPWA}
-                        className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                        className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                         role="menuitem"
                       >
                         <Smartphone className="h-4 w-4 text-[var(--fg)]" />
                         <div className="flex-1">
-                          <span className="text-standard text-sm">App installieren</span>
-                          <div className="text-xs text-muted">Als native App nutzen</div>
+                          <span className="text-standard text-sm truncate">App installieren</span>
+                          <div className="text-xs text-muted truncate">Als native App nutzen</div>
                         </div>
                       </button>
                     )}
@@ -310,11 +310,11 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   <div className="space-y-1">
                     <button
                       onClick={handleAdvancedSettings}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <Settings className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm">Alle Einstellungen</span>
+                      <span className="text-standard text-sm truncate">Alle Einstellungen</span>
                     </button>
                   </div>
                 </div>
@@ -327,19 +327,19 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   <div className="space-y-1">
                     <button
                       onClick={() => handleNavigation("/impressum")}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <FileText className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm">Impressum</span>
+                      <span className="text-standard text-sm truncate">Impressum</span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/datenschutz")}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
                       role="menuitem"
                     >
                       <FileText className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm">Datenschutz</span>
+                      <span className="text-standard text-sm truncate">Datenschutz</span>
                     </button>
                   </div>
                 </div>

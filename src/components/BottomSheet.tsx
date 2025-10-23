@@ -123,7 +123,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
     <>
       {/* Backdrop overlay - scrim */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 transition-opacity ${
+        className={`fixed inset-0 z-40 bg-black/60 transition-opacity ${
           state === "open" ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={onClose}

@@ -63,7 +63,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         state={isActive ? "selected" : disabled ? "disabled" : "default"}
         data-cat={categoryKey}
         className={cn(
-          "category-border category-tint category-focus flex flex-col gap-3 text-left",
+          "category-border category-tint category-focus text-left",
           !disabled && "cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
           isActive && "ring-brand ring-2 bg-brand/10",
@@ -87,23 +87,32 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-sm font-semibold uppercase text-text-primary shadow-surface">
             {title.slice(0, 1)}
           </div>
+
           <div className="flex flex-1 flex-col gap-2">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 space-y-1">
+            <div className="flex flex-1 items-start justify-between gap-2">
+              <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-semibold leading-tight sm:text-base">{title}</h3>
-                {badge && (
-                  <span className="category-badge inline-flex items-center gap-2 rounded-full border border-white/30 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide">
-                    <span className="category-dot h-1.5 w-1.5 rounded-full" />
-                    {badge}
-                  </span>
-                )}
-                {category && (
-                  <span className="category-badge inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide">
-                    <span className="text-xs">{categoryData.icon}</span>
-                    {categoryData.label}
-                  </span>
-                )}
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {badge && (
+                    <span className="category-badge inline-flex items-center gap-2 rounded-full border border-white/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
+                      <span className="category-dot h-1.5 w-1.5 rounded-full" />
+                      {badge}
+                    </span>
+                  )}
+                  {category && (
+                    <span className="category-badge inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                      <span className="text-xs">{categoryData.icon}</span>
+                      {categoryData.label}
+                    </span>
+                  )}
+                  {isActive && (
+                    <span className="text-text-1 text-xs px-2 py-0.5 rounded-full border border-border-subtle bg-surface-subtle">
+                      Aktiv
+                    </span>
+                  )}
+                </div>
               </div>
+
               <div
                 role="button"
                 tabIndex={0}
@@ -124,13 +133,15 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
                 <Info className="h-4 w-4" />
               </div>
             </div>
+
+            <p className="text-xs text-text-secondary sm:text-sm line-clamp-2">{description}</p>
           </div>
         </div>
 
         {expanded && (
           <div
             id={detailId}
-            className="rounded-xl border border-border-subtle bg-surface-subtle p-3 text-xs leading-5 opacity-85 sm:text-sm sm:leading-6"
+            className="mt-3 pt-3 border-t border-border-subtle text-xs leading-5 opacity-85 sm:text-sm sm:leading-6"
           >
             <p className="whitespace-pre-line break-words">{description}</p>
           </div>

@@ -78,7 +78,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
       roles = roles.filter((p) => !isNSFWRole(p));
     }
 
-    if (selectedCategory !== "all") {
+    if (selectedCategory !== ("all" as const)) {
       roles = roles.filter((p) => p.category === selectedCategory);
     }
 

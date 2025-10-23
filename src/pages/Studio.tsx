@@ -48,6 +48,7 @@ function RolesTab() {
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<"all" | CategoryKey>("all");
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
   const toasts = useToasts();
 
@@ -172,6 +173,13 @@ function RolesTab() {
     });
   };
 
+  const toggleCategory = (categoryKey: CategoryKey) => {
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [categoryKey]: !prev[categoryKey],
+    }));
+  };
+
   return (
     <div className="px-page-x pb-page-y pt-page-y flex h-full flex-col">
       <header className="mb-section-gap space-y-stack-gap">
@@ -246,26 +254,85 @@ function RolesTab() {
             </div>
           </div>
 
-          <div className="gap-inline-gap flex items-center overflow-x-auto pb-1">
+          {/* Mobile-friendly vertical category list */}
+          <div className="space-y-1">
             <Button
               variant={selectedCategory === "all" ? "secondary" : "ghost"}
               onClick={() => handleSelectCategory("all")}
+              className="w-full justify-start"
             >
               {t.studio.filter.all}
+              {selectedCategory === "all" && (
+                <span className="ml-2 text-xs">({totalMatchCount})</span>
+              )}
             </Button>
-            {CATEGORY_ORDER.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "secondary" : "ghost"}
-                onClick={() => handleSelectCategory(category)}
-                aria-pressed={selectedCategory === category}
-              >
-                {category}
-                <span className="text-text-1 ml-1">
-                  {categoriesInUse[category] ? `· ${categoriesInUse[category]}` : ""}
-                </span>
-              </Button>
-            ))}
+            {CATEGORY_ORDER.map((category) => {
+              const isCategoryExpanded = expandedCategories[category] ?? true;
+              const roleCount = categoriesInUse[category] || 0;
+
+              if (roleCount === 0) return null;
+
+              return (
+                <div key={category} className="space-y-1">
+                  <div
+                    className="flex items-center justify-between p-2 rounded-lg border border-border-subtle bg-surface-subtle cursor-pointer"
+                    onClick={() => {
+                      if (selectedCategory === "all") {
+                        toggleCategory(category);
+                      } else {
+                        handleSelectCategory(category);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        if (selectedCategory === "all") {
+                          toggleCategory(category);
+                        } else {
+                          handleSelectCategory(category);
+                        }
+                      }
+                    }}
+                  >
+                    <span className="font-medium">{category}</span>
+                    <span className="text-xs text-text-muted">({roleCount})</span>
+                  </div>
+
+                  {selectedCategory === "all" && isCategoryExpanded && (
+                    <div className="ml-2 space-y-2 pl-2 border-l border-border-subtle">
+                      {groupedRoles[normalizeCategory(category)]?.slice(0, 3).map((role) => (
+                        <div
+                          key={role.id}
+                          className="p-2 pl-3 text-sm hover:bg-surface-muted rounded cursor-pointer flex justify-between"
+                          onClick={() => setActiveRole(role)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              setActiveRole(role);
+                            }
+                          }}
+                        >
+                          <span>{role.name}</span>
+                          <span className="text-xs text-text-muted">
+                            {activeRole?.id === role.id ? "Aktiv" : ""}
+                          </span>
+                        </div>
+                      ))}
+                      {groupedRoles[normalizeCategory(category)] &&
+                        groupedRoles[normalizeCategory(category)].length > 3 && (
+                          <div className="p-2 pl-3 text-xs text-text-muted">
+                            +{groupedRoles[normalizeCategory(category)].length - 3} weitere
+                          </div>
+                        )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </header>
@@ -286,43 +353,51 @@ function RolesTab() {
             const roles = groupedRoles[category];
             if (!roles || roles.length === 0) return null;
 
+            const isCategoryExpanded =
+              selectedCategory === "all" ? (expandedCategories[category] ?? true) : true;
+
             return (
               <section
                 key={category}
                 className="space-y-stack-gap"
                 aria-labelledby={`category-${category}`}
               >
-                <div className="flex items-center justify-between gap-3">
-                  <h2
-                    id={`category-${category}`}
-                    className="text-text-1 text-balance text-sm font-semibold sm:text-base"
-                  >
-                    {category}
-                    <span className="text-text-1 ml-2 text-xs font-medium sm:text-[13px]">
-                      {roles.length}
-                    </span>
-                  </h2>
-                  {selectedCategory !== "all" ? (
-                    <Button variant="link" onClick={() => handleSelectCategory("all")}>
-                      {t.studio.filter.clearFilter}
-                    </Button>
-                  ) : null}
-                </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {roles.map((role) => (
-                    <RoleCard
-                      key={role.id}
-                      title={role.name}
-                      description={summariseRole(role)}
-                      badge={role.category}
-                      isActive={activeRole?.id === role.id}
-                      onClick={() => setActiveRole(role)}
-                      defaultExpanded={activeRole?.id === role.id}
-                      aria-label={t.studio.actions.selectRole(role.name)}
-                      data-testid={`role-card-${role.id}`}
-                    />
-                  ))}
-                </div>
+                {selectedCategory !== ("all" as const as "all" | CategoryKey) && (
+                  <div className="flex items-center justify-between gap-3">
+                    <h2
+                      id={`category-${category}`}
+                      className="text-text-1 text-balance text-sm font-semibold sm:text-base"
+                    >
+                      {category}
+                      <span className="text-text-1 ml-2 text-xs font-medium sm:text-[13px]">
+                        {roles.length}
+                      </span>
+                    </h2>
+                    {selectedCategory !== ("all" as const as "all" | CategoryKey) ? (
+                      <Button variant="link" onClick={() => handleSelectCategory("all")}>
+                        {t.studio.filter.clearFilter}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+
+                {isCategoryExpanded && (
+                  <div className="grid grid-cols-1 gap-3">
+                    {roles.map((role) => (
+                      <RoleCard
+                        key={role.id}
+                        title={role.name}
+                        description={summariseRole(role)}
+                        badge={role.category}
+                        isActive={activeRole?.id === role.id}
+                        onClick={() => setActiveRole(role)}
+                        defaultExpanded={activeRole?.id === role.id}
+                        aria-label={t.studio.actions.selectRole(role.name)}
+                        data-testid={`role-card-${role.id}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </section>
             );
           })

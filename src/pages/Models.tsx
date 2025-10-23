@@ -286,6 +286,8 @@ export default function ModelsPage() {
       return "";
     }
   });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
   const selectModelById = (modelId: string, label?: string) => {
     setSelected(modelId);
@@ -302,6 +304,13 @@ export default function ModelsPage() {
     });
   };
 
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [groupId]: !prev[groupId],
+    }));
+  };
+
   const activeRoleSummary =
     activeRole &&
     (activeRole.description?.trim() ||
@@ -313,8 +322,52 @@ export default function ModelsPage() {
     return allModels.find((model) => model.id === selected)?.label;
   }, [selected]);
 
+  // Filter models based on search term
+  const filteredModelGroups = useMemo(() => {
+    return modelGroups
+      .map((group) => {
+        const filteredModels = group.models.filter(
+          (model) =>
+            model.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            model.provider.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            model.description.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+        return {
+          ...group,
+          models: filteredModels,
+        };
+      })
+      .filter((group) => group.models.length > 0); // Only show groups that have matching models
+  }, [searchTerm]);
+
   return (
-    <div className="flex h-full flex-col gap-8 px-4 pb-16 pt-6 text-[var(--color-text-primary)] sm:px-6 lg:px-8">
+    <div className="flex h-full flex-col gap-4 px-4 pb-16 pt-6 text-[var(--color-text-primary)] sm:px-6 lg:px-8">
+      {/* Search Bar */}
+      <div className="relative mb-2">
+        <input
+          type="search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Modelle suchen..."
+          className="border-border bg-surface-1 text-text-0 placeholder:text-text-1 focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2"
+          aria-label="Modellsuche"
+        />
+        <svg
+          className="text-text-1 pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </div>
+
       <header className="space-y-3 text-[var(--color-text-primary)]" data-testid="models-title">
         <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
           Modelle
@@ -368,44 +421,67 @@ export default function ModelsPage() {
         </Link>
       </Card>
 
-      {modelGroups.map((group) => (
-        <section key={group.id} aria-labelledby={`models-${group.id}`} className="space-y-3">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div className="space-y-1">
-              <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
-                {group.badge}
-              </span>
-              <h2 id={`models-${group.id}`} className="text-lg font-semibold sm:text-xl">
-                {group.title}
-              </h2>
-            </div>
-            <span className="text-xs font-medium uppercase tracking-wide opacity-60 sm:text-sm">
-              {group.models.length} Modelle
-            </span>
-          </div>
-          <p className="max-w-2xl text-sm opacity-75 sm:text-base">{group.description}</p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {group.models.map((model) => (
-              <ModelCard
-                key={model.id}
-                id={model.id}
-                name={model.label}
-                provider={model.provider}
-                priceIn={model.priceIn}
-                priceOut={model.priceOut}
-                contextTokens={model.ctx}
-                description={model.description}
-                isSelected={selected === model.id}
-                isOpen={openId === model.id}
-                onSelect={() => selectModelById(model.id, model.label)}
-                onToggleDetails={() =>
-                  setOpenId((current) => (current === model.id ? null : model.id))
+      {filteredModelGroups.map((group) => {
+        const isGroupExpanded = expandedGroups[group.id] ?? true;
+        return (
+          <section key={group.id} aria-labelledby={`models-${group.id}`} className="space-y-2">
+            <div
+              className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"
+              onClick={() => toggleGroup(group.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleGroup(group.id);
                 }
-              />
-            ))}
-          </div>
-        </section>
-      ))}
+              }}
+            >
+              <div className="space-y-1">
+                <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
+                  {group.badge}
+                </span>
+                <h2 id={`models-${group.id}`} className="text-lg font-semibold sm:text-xl">
+                  {group.title}
+                  {!isGroupExpanded && (
+                    <span className="text-xs font-normal text-text-muted ml-2">
+                      ({group.models.length} Modelle)
+                    </span>
+                  )}
+                </h2>
+              </div>
+              <span className="text-xs font-medium uppercase tracking-wide opacity-60 sm:text-sm">
+                {group.models.length} Modelle
+              </span>
+            </div>
+
+            <p className="max-w-2xl text-sm opacity-75 sm:text-base">{group.description}</p>
+
+            {isGroupExpanded && (
+              <div className="grid gap-3">
+                {group.models.map((model) => (
+                  <ModelCard
+                    key={model.id}
+                    id={model.id}
+                    name={model.label}
+                    provider={model.provider}
+                    priceIn={model.priceIn}
+                    priceOut={model.priceOut}
+                    contextTokens={model.ctx}
+                    description={model.description}
+                    isSelected={selected === model.id}
+                    isOpen={openId === model.id}
+                    onSelect={() => selectModelById(model.id, model.label)}
+                    onToggleDetails={() =>
+                      setOpenId((current) => (current === model.id ? null : model.id))
+                    }
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
     </div>
   );
 }

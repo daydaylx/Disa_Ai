@@ -476,7 +476,7 @@ export function BurgerMenu() {
                     to={item.to}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `touch-target-preferred flex items-center gap-3 rounded-lg px-3 py-3 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus-ring ${
+                      `touch-target-preferred flex items-center gap-3 rounded-lg px-3 py-3 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus-ring truncate ${
                         isActive ? "active-state text-strong" : "hover-state text-standard"
                       }`
                     }

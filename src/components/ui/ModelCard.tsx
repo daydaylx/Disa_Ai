@@ -1,11 +1,11 @@
-import { Check, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { useId } from "react";
 
 import { cn } from "../../lib/utils";
 import { getCategoryData, normalizeCategoryKey } from "../../utils/category-mapping";
 import { Avatar } from "./avatar";
 import { Badge } from "./badge";
-import { Card, CardContent, CardHeader } from "./card";
+import { Card } from "./card";
 
 export interface ModelCardProps {
   id: string;
@@ -70,12 +70,18 @@ export function ModelCard({
     }
   };
 
+  // Determine badge variant based on pricing
+  const getBadgeVariant = () => {
+    if (priceIn === 0 && priceOut === 0) return "success";
+    if (priceIn < 0.5 && priceOut < 0.5) return "default";
+    return "outline";
+  };
+
   return (
     <Card
       role="button"
       tabIndex={0}
       aria-pressed={isSelected}
-      aria-controls={detailId}
       elevation={isSelected ? "surface-prominent" : "raised"}
       interactive="gentle"
       padding="md"
@@ -91,103 +97,107 @@ export function ModelCard({
       onKeyDown={handleKeyDown}
       data-testid={`model-card-${id}`}
     >
-      <CardHeader className="pb-2">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Avatar size="md" className="shadow-surface-subtle">
-              {provider.slice(0, 1)}
-            </Avatar>
-            {providerTier === "premium" && (
-              <Badge size="xs" variant="brand" className="absolute -right-1 -top-1">
-                ★
-              </Badge>
-            )}
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="text-title-base text-text-strong truncate font-semibold">{name}</h3>
-            <div className="flex items-center gap-2">
-              <p className="truncate text-sm text-text-muted">{provider}</p>
-              <span className="category-badge inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
-                <span className="category-dot h-1 w-1 rounded-full" />
-                {categoryData.label}
-              </span>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              onToggleDetails();
-            }}
-            aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
-            aria-expanded={isOpen}
-            aria-controls={detailId}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
-          >
-            <Info className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-3">
-        {description && (
-          <p className="line-clamp-2 text-sm leading-relaxed text-text-secondary">{description}</p>
-        )}
-
-        <div className="flex items-center justify-between">
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="outline" size="sm">
-              {contextTokens ? formatContext(contextTokens) : "N/A"} Kontext
+      <div className="flex items-start gap-3">
+        <div className="relative flex-shrink-0">
+          <Avatar size="md" className="shadow-surface-subtle">
+            {provider.slice(0, 1)}
+          </Avatar>
+          {providerTier === "premium" && (
+            <Badge size="xs" variant="brand" className="absolute -right-1 -top-1">
+              ★
             </Badge>
-            {contextTokens && contextTokens > 100000 && (
-              <Badge variant="info" size="sm">
-                ⚡ Hoch
-              </Badge>
-            )}
-          </div>
-          <div className="text-right">
-            <div className="font-mono text-sm text-text-muted">
-              ${priceIn}/{priceOut}
+          )}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-title-base text-text-strong font-semibold truncate">{name}</h3>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="truncate text-sm text-text-muted">{provider}</p>
+                <span className="category-badge inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                  <span className="category-dot h-1 w-1 rounded-full" />
+                  {categoryData.label}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-end gap-1">
+              <div className="font-mono text-sm text-text-muted">
+                {priceIn === 0 && priceOut === 0 ? " Kostenlos" : `${priceIn}/${priceOut}M`}
+              </div>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onToggleDetails();
+                }}
+                aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
+                aria-expanded={isOpen}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
+              >
+                <Info className="h-4 w-4" aria-hidden="true" />
+              </button>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center justify-between border-t border-border-divider pt-2">
-          <div className="flex items-center gap-2">
-            <span className="text-text-subtle text-xs">{isSelected ? "Aktiv" : "Erkunden"}</span>
-            {isSelected && <Check className="text-brand h-3.5 w-3.5" aria-hidden="true" />}
+          {description && (
+            <p className="mt-2 text-sm leading-relaxed text-text-secondary line-clamp-2">
+              {description}
+            </p>
+          )}
+
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border-divider">
+            <div className="flex items-center gap-2">
+              <Badge variant={getBadgeVariant()} size="sm">
+                {contextTokens ? formatContext(contextTokens) : "N/A"}
+              </Badge>
+              {contextTokens && contextTokens > 100000 && (
+                <Badge variant="info" size="sm">
+                  ⚡
+                </Badge>
+              )}
+            </div>
+
+            <Badge variant={isSelected ? "brand" : "outline"} size="sm" className="px-3 py-1">
+              {isSelected ? "Aktiv" : "Auswählen"}
+            </Badge>
           </div>
-
-          <Badge variant={isSelected ? "brand" : "outline"} size="sm">
-            {isSelected ? "Aktiv" : "Auswählen"}
-          </Badge>
         </div>
-      </CardContent>
+      </div>
 
       {isOpen && (
         <div
           id={detailId}
           role="region"
           aria-live="polite"
-          className="mt-3 space-y-3 border-t border-border-divider pt-3"
+          className="mt-4 pt-4 border-t border-border-divider"
         >
-          <p className="text-description-base text-text-secondary">{description}</p>
+          <p className="text-description-base text-text-secondary mb-3">{description}</p>
           <div className="text-description-sm grid grid-cols-2 gap-3">
             <div>
-              <dt className="text-text-strong font-semibold">Kontextlänge</dt>
-              <dd className="mt-1">{formatContext(contextTokens)}</dd>
+              <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
+                Kontextlänge
+              </dt>
+              <dd className="mt-1 font-mono">{formatContext(contextTokens)}</dd>
             </div>
             <div>
-              <dt className="text-text-strong font-semibold">Provider</dt>
+              <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
+                Provider
+              </dt>
               <dd className="mt-1">{provider}</dd>
             </div>
             <div>
-              <dt className="text-text-strong font-semibold">Input</dt>
-              <dd className="mt-1">{formatPrice(priceIn)}</dd>
+              <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
+                Input
+              </dt>
+              <dd className="mt-1 font-mono">{formatPrice(priceIn)}</dd>
             </div>
             <div>
-              <dt className="text-text-strong font-semibold">Output</dt>
-              <dd className="mt-1">{formatPrice(priceOut)}</dd>
+              <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
+                Output
+              </dt>
+              <dd className="mt-1 font-mono">{formatPrice(priceOut)}</dd>
             </div>
           </div>
         </div>

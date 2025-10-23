@@ -262,10 +262,9 @@ const BottomSheetSettings: React.FC<BottomSheetSettingsProps> = ({ isOpen, onClo
           </div>
 
           {/* TOC / Tab Navigation */}
-          <div className="flex overflow-x-auto border-b border-[var(--glass-border)] bg-[var(--glass-surface)] bg-opacity-70 backdrop-blur-lg p-2">
+          <div className="flex overflow-x-auto border-b border-[var(--glass-border)] bg-[var(--glass-surface)] bg-opacity-70 backdrop-blur-lg p-2 gap-2">
             <button
-              onClick={() => toggleSection("api")}
-              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full mr-2 min-h-[40px] min-w-[100px] text-center ${
+              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full min-h-[40px] min-w-[100px] text-center ${
                 activeSections.includes("api")
                   ? "bg-[var(--brand-primary)] text-[var(--text-on-brand)]"
                   : "bg-[var(--surface-card)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:bg-[var(--surface-raised)]"
@@ -283,7 +282,7 @@ const BottomSheetSettings: React.FC<BottomSheetSettingsProps> = ({ isOpen, onClo
 
             <button
               onClick={() => toggleSection("filter")}
-              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full mr-2 min-h-[40px] min-w-[100px] text-center ${
+              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full min-h-[40px] min-w-[100px] text-center ${
                 activeSections.includes("filter")
                   ? "bg-[var(--brand-primary)] text-[var(--text-on-brand)]"
                   : "bg-[var(--surface-card)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:bg-[var(--surface-raised)]"
@@ -301,7 +300,7 @@ const BottomSheetSettings: React.FC<BottomSheetSettingsProps> = ({ isOpen, onClo
 
             <button
               onClick={() => toggleSection("memory")}
-              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full mr-2 min-h-[40px] min-w-[100px] text-center ${
+              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full min-h-[40px] min-w-[100px] text-center ${
                 activeSections.includes("memory")
                   ? "bg-[var(--brand-primary)] text-[var(--text-on-brand)]"
                   : "bg-[var(--surface-card)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:bg-[var(--surface-raised)]"
@@ -319,7 +318,7 @@ const BottomSheetSettings: React.FC<BottomSheetSettingsProps> = ({ isOpen, onClo
 
             <button
               onClick={() => toggleSection("chat")}
-              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full mr-2 min-h-[40px] min-w-[100px] text-center ${
+              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full min-h-[40px] min-w-[100px] text-center ${
                 activeSections.includes("chat")
                   ? "bg-[var(--brand-primary)] text-[var(--text-on-brand)]"
                   : "bg-[var(--surface-card)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:bg-[var(--surface-raised)]"
@@ -337,7 +336,7 @@ const BottomSheetSettings: React.FC<BottomSheetSettingsProps> = ({ isOpen, onClo
 
             <button
               onClick={() => toggleSection("pwa")}
-              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full mr-2 min-h-[40px] min-w-[100px] text-center ${
+              className={`touch-target-preferred flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm rounded-full min-h-[40px] min-w-[100px] text-center ${
                 activeSections.includes("pwa")
                   ? "bg-[var(--brand-primary)] text-[var(--text-on-brand)]"
                   : "bg-[var(--surface-card)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:bg-[var(--surface-raised)]"

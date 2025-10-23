@@ -365,7 +365,7 @@
   --color-table-row-hover: #f1f1f0;
 
   /* Overlay */
-  --color-overlay-scrim: rgba(27, 26, 25, 0.45);
+  --color-overlay-scrim: rgba(27, 26, 25, 0.6);
   --color-overlay-tooltip-bg: #201f1e;
   --color-overlay-tooltip-fg: #f5f5f5;
   --color-overlay-toast-bg: #201f1e;
@@ -403,7 +403,7 @@
     --color-surface-muted: #2f2e2d;
     --color-surface-raised: #323130;
     --color-surface-card: #1f1e1d;
-    --color-surface-popover: #252423;
+    --color-surface-popover: #1f1e1d;
     --color-surface-overlay: rgba(0, 0, 0, 0.6);
 
     --color-text-primary: #f3f2f1;
@@ -488,7 +488,7 @@
     --color-table-row-divider: rgba(255, 255, 255, 0.08);
     --color-table-row-hover: #2f2e2d;
 
-    --color-overlay-scrim: rgba(0, 0, 0, 0.65);
+    --color-overlay-scrim: rgba(0, 0, 0, 0.8);
     --color-overlay-tooltip-bg: #323130;
     --color-overlay-tooltip-fg: #f3f2f1;
     --color-overlay-toast-bg: #2d2c2b;
@@ -525,7 +525,7 @@
   --color-surface-muted: #2f2e2d;
   --color-surface-raised: #323130;
   --color-surface-card: #1f1e1d;
-  --color-surface-popover: #252423;
+  --color-surface-popover: #1f1e1d;
   --color-surface-overlay: rgba(0, 0, 0, 0.6);
 
   --color-text-primary: #f3f2f1;
