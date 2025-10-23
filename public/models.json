@@ -1,0 +1,198 @@
+[
+  {
+    "id": "openrouter/andromeda-alpha",
+    "name": "Andromeda Alpha",
+    "desc": "Versteht Text und Bilder, erklärt Inhalte visuell.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "alibaba/tongyi-deepresearch-30b-a3b:free",
+    "name": "Tongyi DeepResearch 30B",
+    "desc": "Denkt logisch und gründlich, ideal für lange Fragen.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "meituan/longcat-flash-chat:free",
+    "name": "Longcat Flash Chat",
+    "desc": "Sehr schnelles Chat-Modell, merkt sich lange Gespräche.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "deepseek/deepseek-chat-v3-0324:free",
+    "name": "Deepseek Chat V3",
+    "desc": "Redet natürlich, kann aber auch nachdenken, wenn nötig.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+    "name": "Dolphin Mistral Venice",
+    "desc": "Sehr freies Modell ohne starke Filter, kreativ und offen.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "tencent/hunyuan-a13b-instruct:free",
+    "name": "Hunyuan A13B",
+    "desc": "Allrounder für Gespräche und Erklärungen, ruhig und klar.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "deepseek/deepseek-r1-0528-qwen3-8b:free",
+    "name": "Deepseek R1 Qwen 8B",
+    "desc": "Kleines, logisches Modell, das gut nachdenkt.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "google/gemma-3n-e4b-it:free",
+    "name": "Gemma 3N 4B",
+    "desc": "Leichtes Modell, läuft schnell und spart Ressourcen.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "qwen/qwen3-8b:free",
+    "name": "Qwen 3 8B",
+    "desc": "Freundlicher Mehrsprachler mit klarem Schreibstil.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "shisa-ai/shisa-v2-llama3.3-70b:free",
+    "name": "Shisa Llama 3.3 70B",
+    "desc": "Stark in Japanisch und Englisch, natürlich und höflich.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "arliai/qwq-32b-arliai-rpr-v1:free",
+    "name": "QwQ 32B Arliai",
+    "desc": "Kreatives Modell für Geschichten oder Rollenspiele.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "venice/uncensored:free",
+    "name": "Venice Uncensored",
+    "desc": "Redet frei und ungefiltert, ideal für ehrliche Gespräche.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "nvidia/nemotron-nano-9b-v2:free",
+    "name": "Nemotron Nano 9B",
+    "desc": "Schnell und leicht, versteht einfache Logik.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "z-ai/glm-4-32b",
+    "name": "GLM 4 32B",
+    "desc": "Versteht lange Texte gut und bleibt konzentriert.",
+    "price_in": 0.1,
+    "price_out": 0.1
+  },
+  {
+    "id": "opengvlab/internvl3-78b",
+    "name": "InternVL3 78B",
+    "desc": "Kann Bilder und Text gemeinsam analysieren.",
+    "price_in": 0.07,
+    "price_out": 0.26
+  },
+  {
+    "id": "arcee-ai/afm-4.5b",
+    "name": "AFM 4.5B",
+    "desc": "Kleines, stabiles Modell für einfache Aufgaben.",
+    "price_in": 0.05,
+    "price_out": 0.15
+  },
+  {
+    "id": "baidu/ernie-4.5-21b-a3b",
+    "name": "Ernie 4.5 21B",
+    "desc": "Sehr gut bei logischem Denken und längeren Themen.",
+    "price_in": 0.07,
+    "price_out": 0.28
+  },
+  {
+    "id": "openai/gpt-oss-20b",
+    "name": "GPT OSS 20B",
+    "desc": "Offenes OpenAI-Modell, vielseitig und stabil.",
+    "price_in": 0.03,
+    "price_out": 0.14
+  },
+  {
+    "id": "qwen/qwen-2.5-72b-instruct",
+    "name": "Qwen 2.5 72B",
+    "desc": "Starker Allrounder für lange, natürliche Chats.",
+    "price_in": 0.07,
+    "price_out": 0.26
+  },
+  {
+    "id": "x-ai/grok-4-fast",
+    "name": "Grok 4 Fast",
+    "desc": "Antwortet schnell und kann viel Kontext behalten.",
+    "price_in": 0.2,
+    "price_out": 0.5
+  },
+  {
+    "id": "deepseek/deepseek-chat",
+    "name": "Deepseek Chat",
+    "desc": "Standardmodell, freundlich und zuverlässig.",
+    "price_in": 0.24,
+    "price_out": 0.84
+  },
+  {
+    "id": "meta-llama/llama-4-maverick",
+    "name": "Llama 4 Maverick",
+    "desc": "Großes Modell für vielseitige Gespräche.",
+    "price_in": 0.15,
+    "price_out": 0.6
+  },
+  {
+    "id": "meta-llama/llama-3.1-70b-instruct",
+    "name": "Llama 3.1 70B",
+    "desc": "Bewährtes Chat-Modell mit klaren Antworten.",
+    "price_in": 0.4,
+    "price_out": 0.4
+  },
+  {
+    "id": "mistralai/mistral-nemo",
+    "name": "Mistral Nemo",
+    "desc": "Sehr günstig und flink im Gespräch.",
+    "price_in": 0.02,
+    "price_out": 0.04
+  },
+  {
+    "id": "mistralai/mistral-7b-instruct-v0.3",
+    "name": "Mistral 7B",
+    "desc": "Kleines, schnelles Modell für kurze Chats.",
+    "price_in": 0.03,
+    "price_out": 0.05
+  },
+  {
+    "id": "z-ai/glm-4.5-air:free",
+    "name": "GLM 4.5 Air",
+    "desc": "Leichtes Modell mit optionalem Denkmodus.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "tngtech/deepseek-r1t2-chimera:free",
+    "name": "Deepseek R1T2 Chimera",
+    "desc": "Kombiniert zwei Denkmodelle, gut bei Problemlösungen.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  },
+  {
+    "id": "google/gemma-3-27b-it:free",
+    "name": "Gemma 3 27B",
+    "desc": "Großes, freundliches Modell für vielseitige Chats.",
+    "price_in": 0.0,
+    "price_out": 0.0
+  }
+]
