@@ -34,7 +34,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
       <ScrollToVoid>
         <div className="relative z-10 flex min-h-dvh flex-col">
-          <header className="border-border bg-surface-base/90 sticky top-0 z-30 border-b backdrop-blur-xl sm:hidden">
+          <header className="border-border bg-surface-base/90 sticky top-0 z-20 border-b backdrop-blur-xl sm:hidden">
             <div className="flex items-center justify-between px-4 py-3">
               <div className="text-lg font-semibold tracking-tight text-text-primary">
                 Disa<span className="text-brand">AI</span>
@@ -62,9 +62,9 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               <div className="flex flex-col items-center gap-1 sm:flex-row sm:gap-3">
                 <span>Disa AI Beta · Tooling Preview</span>
                 <span className="hidden sm:block">|</span>
-                <a 
-                  href="/privacy-policy.html" 
-                  target="_blank" 
+                <a
+                  href="/privacy-policy.html"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-brand hover:underline"
                 >

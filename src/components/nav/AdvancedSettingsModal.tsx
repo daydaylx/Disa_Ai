@@ -313,7 +313,7 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
       onClick={handleBackdropClick}
     >
       <div className="border-border relative h-full max-h-[90vh] w-full max-w-md rounded-xl border bg-surface-card shadow-xl sm:h-auto sm:max-h-[80vh]">

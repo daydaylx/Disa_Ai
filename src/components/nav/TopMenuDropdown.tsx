@@ -169,8 +169,8 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label={isOpen ? "Menü schließen" : "Menü öffnen"}
-        className="touch-target border-border bg-surface-1 text-text-0 hover:bg-surface-2 fixed right-4 z-40 inline-flex h-11 w-11 items-center justify-center rounded-full border transition active:scale-95"
-        style={{ top: `calc(var(--inset-t) + 16px)` }}
+        className="touch-target border-border bg-surface-1 text-text-0 hover:bg-surface-2 fixed right-4 z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border transition active:scale-95"
+        style={{ top: `max(16px, calc(env(safe-area-inset-top, 0px) + 16px))` }}
         data-no-zoom
       >
         {isOpen ? (
@@ -184,7 +184,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-30 bg-black/20"
+            className="fixed inset-0 z-40 bg-black/30"
             onClick={handleClose}
             aria-hidden="true"
           />
@@ -194,7 +194,7 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
             id="menu-dropdown"
             ref={menuRef}
             className="border-border fixed right-4 z-50 w-72 max-w-[90vw] rounded-xl border bg-surface-card shadow-xl"
-            style={{ top: `calc(var(--inset-t) + 72px)` }}
+            style={{ top: `max(72px, calc(env(safe-area-inset-top, 0px) + 72px))` }}
             role="menu"
             aria-labelledby="menu-button"
           >

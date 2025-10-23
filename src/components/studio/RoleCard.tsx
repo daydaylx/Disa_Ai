@@ -60,19 +60,23 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         ref={ref as any}
         interactive={isActive ? "dramatic" : "gentle"}
         padding="md"
-        state={disabled ? "disabled" : "default"}
+        state={isActive ? "selected" : disabled ? "disabled" : "default"}
         data-cat={categoryKey}
         className={cn(
           "category-border category-tint category-focus flex flex-col gap-3 text-left",
           !disabled && "cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
-          isActive && "ring-brand bg-brand/10 ring-2",
+          isActive && "ring-brand ring-2 bg-brand/10",
           className,
         )}
         onClick={handleCardClick}
-        role="button"
         tabIndex={disabled ? -1 : 0}
-        aria-pressed={isActive}
+        onKeyDown={(e) => {
+          if ((e.key === "Enter" || e.key === " ") && !disabled) {
+            e.preventDefault();
+            handleCardClick(e as any);
+          }
+        }}
         aria-label={`${title} ${isActive ? "ausgewählt" : "auswählen"}`}
         data-testid={`role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
         {...props}
