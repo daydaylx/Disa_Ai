@@ -1,5 +1,6 @@
 import "./index.css"; // Tailwind base/components/utilities
 import "./styles/design-tokens.css"; // Design tokens (CSS variables)
+import "./styles/overlay-tokens.css"; // WCAG AA compliant overlay & menu tokens
 import "./styles/mobile-fixes.css"; // Mobile viewport and scaling fixes
 import "./styles/bottomsheet.css"; // Bottom sheet specific styles
 import "./ui/base.css"; // Reset & base styles

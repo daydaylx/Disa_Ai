@@ -329,21 +329,23 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
       aria-modal="true"
       aria-labelledby="modal-title"
     >
+      {/* WCAG AA compliant scrim overlay */}
       <div
-        className="absolute inset-0 bg-black/40"
+        className="scrim-overlay absolute inset-0"
         onClick={handleBackdropClick}
         aria-hidden="true"
       />
-      <div className="relative mt-6 w-[min(92vw,680px)] max-h-[80dvh] overflow-y-auto rounded-2xl border border-white/10 bg-neutral-900/70 backdrop-blur-md shadow-xl flex flex-col">
+      {/* Optimized glass panel with no double-blur */}
+      <div className="glass-panel relative mt-6 w-[min(92vw,680px)] max-h-[80dvh] overflow-y-auto rounded-2xl flex flex-col">
         <div className="flex flex-1 flex-col min-h-0">
-          {/* Header - Fixed */}
-          <div className="border-border flex flex-shrink-0 items-center justify-between border-b p-4">
-            <h2 id="modal-title" className="text-text-strong text-lg font-semibold">
+          {/* Header - no additional backdrop-blur to prevent double transparency */}
+          <div className="border-b border-[var(--glass-border)] flex flex-shrink-0 items-center justify-between p-4 bg-black/5">
+            <h2 id="modal-title" className="text-strong text-lg font-semibold">
               Erweiterte Einstellungen
             </h2>
             <button
               onClick={onClose}
-              className="hover:text-text-strong rounded-lg p-1 text-text-muted transition"
+              className="touch-target rounded-lg p-1 text-muted hover:text-strong transition focus-ring"
               aria-label="Einstellungen schließen"
             >
               <X className="h-5 w-5" />
@@ -355,16 +357,16 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
             <div className="space-y-6">
               {/* API Key Section */}
               <div className="space-y-3">
-                <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
+                <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
                   <Key className="h-5 w-5" />
                   API-Schlüssel
                 </h3>
-                <p className="text-sm text-text-muted">
+                <p className="text-sm text-muted">
                   Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
                 </p>
 
                 <div className="space-y-2">
-                  <Label htmlFor="apiKey" className="text-text-muted">
+                  <Label htmlFor="apiKey" className="text-standard font-semibold tracking-wider">
                     API-Schlüssel
                   </Label>
                   <div className="relative">
@@ -374,13 +376,14 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                       value={apiKey}
                       onChange={(event) => setApiKey(event.target.value)}
                       placeholder="sk-or-..."
-                      className="pr-10 font-mono"
+                      className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] pr-10 font-mono"
+                      style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                     />
                     <button
                       type="button"
                       onClick={() => setShowKey(!showKey)}
                       aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                      className="hover:text-text-strong absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-text-muted transition"
+                      className="touch-target bg-[var(--hover-overlay)] focus-ring hover:text-[var(--fg-strong)] absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-[var(--fg)] transition-all duration-180 ease-out motion-reduce:transition-none"
                     >
                       {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -397,7 +400,7 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                           : "bg-gray-500"
                     }`}
                   />
-                  <span className="text-sm text-text-muted">
+                  <span className="text-sm text-muted">
                     {keyStatus === "present"
                       ? "Schlüssel vorhanden"
                       : keyStatus === "invalid"
@@ -406,7 +409,11 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                   </span>
                 </div>
 
-                <Button type="button" onClick={handleSaveKey} className="w-full">
+                <Button
+                  type="button"
+                  onClick={handleSaveKey}
+                  className="touch-target-preferred bg-[var(--glass-surface)] border border-[var(--glass-border)] text-[var(--fg)] w-full hover:bg-[var(--hover-overlay)] transition-all duration-180 ease-out motion-reduce:transition-none"
+                >
                   Schlüssel speichern
                 </Button>
 
@@ -424,21 +431,21 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
 
               {/* Content Filter Section */}
               <div className="space-y-3">
-                <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
+                <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
                   <User className="h-5 w-5" />
                   Inhaltsfilter
                 </h3>
-                <p className="text-sm text-text-muted">
+                <p className="text-sm text-muted">
                   Verwalte die Sichtbarkeit verschiedener Inhaltsarten.
                 </p>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-1">
-                      <Label htmlFor="nsfw-toggle" className="text-text-strong">
+                      <Label htmlFor="nsfw-toggle" className="text-standard">
                         18+ / NSFW-Content anzeigen
                       </Label>
-                      <p id="nsfw-description" className="text-xs text-text-muted">
+                      <p id="nsfw-description" className="text-xs text-muted">
                         Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden Rollen.
                       </p>
                     </div>
@@ -465,7 +472,7 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
 
               {/* Memory Settings Section */}
               <div className="space-y-3">
-                <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
+                <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -483,17 +490,17 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                   </svg>
                   Gedächtnis
                 </h3>
-                <p className="text-sm text-text-muted">
+                <p className="text-sm text-muted">
                   Speichere Chat-Verläufe und persönliche Informationen für zukünftige Gespräche.
                 </p>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-1">
-                      <Label htmlFor="memory-toggle" className="text-text-strong">
+                      <Label htmlFor="memory-toggle" className="text-standard">
                         Gedächtnis aktivieren
                       </Label>
-                      <p id="memory-description" className="text-xs text-text-muted">
+                      <p id="memory-description" className="text-xs text-muted">
                         Wenn aktiviert, werden Chat-Verläufe und globale Infos lokal gespeichert.
                       </p>
                     </div>
@@ -508,8 +515,8 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                   {memoryEnabled && (
                     <>
                       {/* Global Memory Input */}
-                      <div className="border-border space-y-3 border-t pt-4">
-                        <Label htmlFor="memory-name" className="text-text-strong">
+                      <div className="border-t border-[var(--glass-border)] space-y-3 pt-4">
+                        <Label htmlFor="memory-name" className="text-standard">
                           Persönliche Informationen
                         </Label>
                         <div className="space-y-2">
@@ -518,7 +525,9 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                             placeholder="Dein Name (optional)"
                             value={globalMemory?.name || ""}
                             onChange={(e) => updateGlobalMemory({ name: e.target.value })}
+                            className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
                             aria-label="Dein Name für persönliche Informationen"
+                            style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                           />
                           <Input
                             id="memory-hobbies"
@@ -531,14 +540,18 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                                   : [],
                               })
                             }
+                            className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
                             aria-label="Deine Hobbys und Interessen"
+                            style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                           />
                           <Input
                             id="memory-background"
                             placeholder="Hintergrund, Beruf (optional)"
                             value={globalMemory?.background || ""}
                             onChange={(e) => updateGlobalMemory({ background: e.target.value })}
+                            className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
                             aria-label="Dein beruflicher Hintergrund"
+                            style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                           />
                         </div>
                       </div>

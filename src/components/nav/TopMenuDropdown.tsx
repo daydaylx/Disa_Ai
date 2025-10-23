@@ -182,27 +182,27 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* WCAG AA compliant scrim overlay */}
           <div
-            className="fixed inset-0 z-40 bg-black/30"
+            className="scrim-overlay fixed inset-0 z-40"
             onClick={handleClose}
             aria-hidden="true"
           />
 
-          {/* Dropdown Menu */}
+          {/* Optimized glass panel with no double-blur */}
           <div
             id="menu-dropdown"
             ref={menuRef}
-            className="border-border fixed right-4 z-50 w-72 max-w-[90vw] rounded-xl border border-white/10 bg-neutral-900/70 dark:bg-neutral-900/70 light:bg-white/8 backdrop-blur-md motion-reduce:backdrop-blur-none shadow-xl text-neutral-100 dark:text-neutral-100 light:text-neutral-900"
+            className="glass-panel fixed right-4 z-50 w-72 max-w-[90vw] rounded-xl"
             style={{ top: `max(72px, calc(env(safe-area-inset-top, 0px) + 72px))` }}
             role="menu"
             aria-labelledby="menu-button"
           >
             <div className="p-1">
-              {/* Header */}
-              <div className="border-border border-b border-white/10 p-3 bg-neutral-800/30 backdrop-blur-sm">
-                <h2 className="text-neutral-100 text-lg font-semibold">Disa AI</h2>
-                <p className="text-xs text-neutral-300">
+              {/* Header - no additional backdrop-blur to prevent double transparency */}
+              <div className="border-b border-[var(--glass-border)] p-3 bg-black/5">
+                <h2 className="text-strong text-lg font-semibold">Disa AI</h2>
+                <p className="text-xs text-muted">
                   {stats.totalConversations} Chats • {stats.totalMessages} Nachrichten
                 </p>
               </div>
@@ -210,84 +210,58 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
               {/* Quick Navigation */}
               <div className="p-2">
                 <div className="mb-3">
-                  <h3
-                    className="text-white/80 px-2 py-1 text-xs font-semibold uppercase tracking-wider"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="text-strong px-2 py-1 text-xs font-semibold uppercase tracking-wider">
                     Navigation
                   </h3>
                   <div className="space-y-1">
                     <button
                       onClick={() => handleNavigation("/chat")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <MessageSquare className="h-4 w-4 text-neutral-300" />
-                      <span
-                        className="text-neutral-100 text-sm"
-                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                      >
-                        Chat
-                      </span>
+                      <MessageSquare className="h-4 w-4 text-[var(--fg)]" />
+                      <span className="text-standard text-sm">Chat</span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/models")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <Cpu className="h-4 w-4 text-neutral-300" />
-                      <span
-                        className="text-neutral-100 text-sm"
-                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                      >
-                        Modelle
-                      </span>
+                      <Cpu className="h-4 w-4 text-[var(--fg)]" />
+                      <span className="text-standard text-sm">Modelle</span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/roles")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <User className="h-4 w-4 text-neutral-300" />
-                      <span
-                        className="text-neutral-100 text-sm"
-                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                      >
-                        Rollen
-                      </span>
+                      <User className="h-4 w-4 text-[var(--fg)]" />
+                      <span className="text-standard text-sm">Rollen</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Quick Settings */}
                 <div className="mb-3">
-                  <h3
-                    className="text-white/80 px-2 py-1 text-xs font-semibold uppercase tracking-wider"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="text-strong px-2 py-1 text-xs font-semibold uppercase tracking-wider">
                     Schnellzugriff
                   </h3>
                   <div className="space-y-1">
                     <button
                       onClick={handleApiKeySettings}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <Key className="h-4 w-4 text-neutral-300" />
+                      <Key className="h-4 w-4 text-[var(--fg)]" />
                       <div className="flex-1">
-                        <span
-                          className="text-neutral-100 text-sm"
-                          style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                        >
-                          API-Schlüssel
-                        </span>
+                        <span className="text-standard text-sm">API-Schlüssel</span>
                         <div className="mt-0.5 flex items-center gap-1">
                           <div
                             className={`h-1.5 w-1.5 rounded-full ${
                               apiKeyStatus === "present" ? "bg-green-500" : "bg-gray-500"
                             }`}
                           />
-                          <span className="text-xs text-neutral-300">
+                          <span className="text-xs text-muted">
                             {apiKeyStatus === "present" ? "Gesetzt" : "Nicht gesetzt"}
                           </span>
                         </div>
@@ -296,47 +270,32 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
                     <button
                       onClick={handleExportChats}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <Download className="h-4 w-4 text-neutral-300" />
-                      <span
-                        className="text-neutral-100 text-sm"
-                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                      >
-                        Chats exportieren
-                      </span>
+                      <Download className="h-4 w-4 text-[var(--fg)]" />
+                      <span className="text-standard text-sm">Chats exportieren</span>
                     </button>
 
                     <button
                       onClick={handleImportChats}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <Upload className="h-4 w-4 text-neutral-300" />
-                      <span
-                        className="text-neutral-100 text-sm"
-                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                      >
-                        Chats importieren
-                      </span>
+                      <Upload className="h-4 w-4 text-[var(--fg)]" />
+                      <span className="text-standard text-sm">Chats importieren</span>
                     </button>
 
                     {canInstall && !isInstalled && (
                       <button
                         onClick={handleInstallPWA}
-                        className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                        className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                         role="menuitem"
                       >
-                        <Smartphone className="h-4 w-4 text-neutral-300" />
+                        <Smartphone className="h-4 w-4 text-[var(--fg)]" />
                         <div className="flex-1">
-                          <span
-                            className="text-neutral-100 text-sm"
-                            style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                          >
-                            App installieren
-                          </span>
-                          <div className="text-xs text-neutral-300">Als native App nutzen</div>
+                          <span className="text-standard text-sm">App installieren</span>
+                          <div className="text-xs text-muted">Als native App nutzen</div>
                         </div>
                       </button>
                     )}
@@ -345,71 +304,50 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
                 {/* Advanced Settings */}
                 <div className="mb-3">
-                  <h3
-                    className="text-white/80 px-2 py-1 text-xs font-semibold uppercase tracking-wider"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="text-strong px-2 py-1 text-xs font-semibold uppercase tracking-wider">
                     Erweitert
                   </h3>
                   <div className="space-y-1">
                     <button
                       onClick={handleAdvancedSettings}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <Settings className="h-4 w-4 text-neutral-300" />
-                      <span
-                        className="text-neutral-100 text-sm"
-                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                      >
-                        Alle Einstellungen
-                      </span>
+                      <Settings className="h-4 w-4 text-[var(--fg)]" />
+                      <span className="text-standard text-sm">Alle Einstellungen</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Legal & Info */}
-                <div className="border-border border-t border-white/10 pt-2">
-                  <h3
-                    className="text-white/80 px-2 py-1 text-xs font-semibold uppercase tracking-wider"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                <div className="border-t border-[var(--glass-border)] pt-2">
+                  <h3 className="text-strong px-2 py-1 text-xs font-semibold uppercase tracking-wider">
                     Information
                   </h3>
                   <div className="space-y-1">
                     <button
                       onClick={() => handleNavigation("/impressum")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <FileText className="h-4 w-4 text-neutral-300" />
-                      <span
-                        className="text-neutral-100 text-sm"
-                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                      >
-                        Impressum
-                      </span>
+                      <FileText className="h-4 w-4 text-[var(--fg)]" />
+                      <span className="text-standard text-sm">Impressum</span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/datenschutz")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
                     >
-                      <FileText className="h-4 w-4 text-neutral-300" />
-                      <span
-                        className="text-neutral-100 text-sm"
-                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                      >
-                        Datenschutz
-                      </span>
+                      <FileText className="h-4 w-4 text-[var(--fg)]" />
+                      <span className="text-standard text-sm">Datenschutz</span>
                     </button>
                   </div>
                 </div>
 
                 {/* App Info */}
-                <div className="border-border mt-2 border-t border-white/10 pt-2">
+                <div className="mt-2 border-t border-[var(--glass-border)] pt-2">
                   <div className="px-2 py-1">
-                    <div className="text-center text-xs text-neutral-300">
+                    <div className="text-center text-xs text-muted">
                       Disa AI v1.0.0
                       {isInstalled && (
                         <div className="font-medium text-green-400">✓ Installiert</div>

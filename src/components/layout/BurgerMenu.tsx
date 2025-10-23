@@ -62,20 +62,20 @@ function ChatStats() {
   return (
     <div className="grid grid-cols-2 gap-4 text-sm">
       <div className="space-y-1">
-        <span className="text-neutral-300">Konversationen:</span>
-        <div className="font-medium text-neutral-100">{stats.totalConversations}</div>
+        <span className="text-standard">Konversationen:</span>
+        <div className="font-medium text-strong">{stats.totalConversations}</div>
       </div>
       <div className="space-y-1">
-        <span className="text-neutral-300">Nachrichten:</span>
-        <div className="font-medium text-neutral-100">{stats.totalMessages}</div>
+        <span className="text-standard">Nachrichten:</span>
+        <div className="font-medium text-strong">{stats.totalMessages}</div>
       </div>
       <div className="space-y-1">
-        <span className="text-neutral-300">Ø pro Chat:</span>
-        <div className="font-medium text-neutral-100">{stats.averageMessagesPerConversation}</div>
+        <span className="text-standard">Ø pro Chat:</span>
+        <div className="font-medium text-strong">{stats.averageMessagesPerConversation}</div>
       </div>
       <div className="space-y-1">
-        <span className="text-neutral-300">Verwendete Modelle:</span>
-        <div className="font-medium text-neutral-100">{stats.modelsUsed.length}</div>
+        <span className="text-standard">Verwendete Modelle:</span>
+        <div className="font-medium text-strong">{stats.modelsUsed.length}</div>
       </div>
     </div>
   );
@@ -405,26 +405,28 @@ export function BurgerMenu() {
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
 
+      {/* WCAG AA compliant scrim overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/50"
+          className="scrim-overlay fixed inset-0 z-50"
           onClick={closeMenu}
           aria-hidden="true"
         ></div>
       )}
 
+      {/* Optimized glass panel with no double-blur */}
       {isOpen && (
         <div
           ref={menuRef}
-          className="border-border fixed right-2 top-16 z-50 h-[calc(100vh-6rem)] max-h-[600px] min-h-[300px] w-64 max-w-[90vw] rounded-xl border border-white/10 bg-neutral-900/70 dark:bg-neutral-900/70 light:bg-white/8 backdrop-blur-md motion-reduce:backdrop-blur-none shadow-xl text-neutral-100 dark:text-neutral-100 light:text-neutral-900"
+          className="glass-panel fixed right-2 top-16 z-50 h-[calc(100vh-6rem)] max-h-[600px] min-h-[300px] w-64 max-w-[90vw] rounded-xl"
           role="dialog"
           aria-modal="true"
           aria-labelledby="menu-title"
         >
           <div className="p-1">
-            {/* Header */}
-            <div className="border-border flex items-center justify-between border-b border-white/10 p-4 bg-neutral-800/30 backdrop-blur-sm">
-              <h2 id="menu-title" className="text-lg font-semibold text-neutral-100">
+            {/* Header - no additional backdrop-blur to prevent double transparency */}
+            <div className="flex items-center justify-between border-b border-[var(--glass-border)] p-4 bg-black/5">
+              <h2 id="menu-title" className="text-lg font-semibold text-strong">
                 {activeTab === "settings" ? "Einstellungen" : "Menü"}
               </h2>
               <div className="flex items-center gap-1">
@@ -434,6 +436,7 @@ export function BurgerMenu() {
                     size="icon"
                     onClick={backToMain}
                     aria-label="Zurück zum Menü"
+                    className="touch-target focus-ring"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -452,7 +455,13 @@ export function BurgerMenu() {
                     </svg>
                   </Button>
                 )}
-                <Button variant="ghost" size="icon" onClick={closeMenu} aria-label="Menü schließen">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={closeMenu}
+                  aria-label="Menü schließen"
+                  className="touch-target focus-ring"
+                >
                   <X className="h-5 w-5" />
                 </Button>
               </div>
@@ -467,33 +476,26 @@ export function BurgerMenu() {
                     to={item.to}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-white/50 ${
-                        isActive
-                          ? "bg-neutral-800/40 backdrop-blur-sm text-neutral-100"
-                          : "hover:bg-white/15 text-neutral-100/90"
+                      `touch-target-preferred flex items-center gap-3 rounded-lg px-3 py-3 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus-ring ${
+                        isActive ? "active-state text-strong" : "hover-state text-standard"
                       }`
                     }
                   >
-                    <item.icon className="h-5 w-5 text-neutral-100/90" />
-                    <span
-                      className="text-neutral-100/90"
-                      style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                    >
-                      {item.label}
-                    </span>
+                    <item.icon className="h-5 w-5 text-[var(--fg)]" />
+                    <span className="text-standard">{item.label}</span>
                   </NavLink>
                 ))}
 
                 {/* Settings Button */}
                 <button
                   onClick={openSettings}
-                  className="flex items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50 text-neutral-100/90"
+                  className="touch-target-preferred flex items-center gap-3 rounded-lg px-3 py-3 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring text-standard"
                 >
-                  <Settings className="h-5 w-5 text-neutral-100/90" />
-                  <span className="text-neutral-100/90">Einstellungen</span>
+                  <Settings className="h-5 w-5 text-[var(--fg)]" />
+                  <span className="text-standard">Einstellungen</span>
                 </button>
 
-                <div className="border-border my-2 border-t"></div>
+                <div className="border-t border-[var(--glass-border)] my-2"></div>
 
                 {legalItems.map((item) => (
                   <NavLink
@@ -501,20 +503,13 @@ export function BurgerMenu() {
                     to={item.to}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-white/50 ${
-                        isActive
-                          ? "bg-neutral-800/40 backdrop-blur-sm text-neutral-100"
-                          : "hover:bg-white/15 text-neutral-100/90"
+                      `touch-target-preferred flex items-center gap-3 rounded-lg px-3 py-3 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus-ring ${
+                        isActive ? "active-state text-strong" : "hover-state text-standard"
                       }`
                     }
                   >
-                    <item.icon className="h-5 w-5 text-neutral-100/90" />
-                    <span
-                      className="text-neutral-100/90"
-                      style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
-                    >
-                      {item.label}
-                    </span>
+                    <item.icon className="h-5 w-5 text-[var(--fg)]" />
+                    <span className="text-standard">{item.label}</span>
                   </NavLink>
                 ))}
               </div>
@@ -525,19 +520,16 @@ export function BurgerMenu() {
               <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4">
                 {/* API Key Section */}
                 <div className="space-y-3">
-                  <h3
-                    className="flex items-center gap-2 text-lg font-semibold"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-strong">
                     <Key className="h-5 w-5" />
                     API-Schlüssel
                   </h3>
-                  <p className="text-sm text-neutral-300">
+                  <p className="text-sm text-muted">
                     Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
                   </p>
 
                   <div className="space-y-2">
-                    <Label htmlFor="apiKey" className="text-neutral-300">
+                    <Label htmlFor="apiKey" className="text-standard font-semibold tracking-wider">
                       API-Schlüssel
                     </Label>
                     <div className="relative">
@@ -547,13 +539,14 @@ export function BurgerMenu() {
                         value={apiKey}
                         onChange={(event) => setApiKey(event.target.value)}
                         placeholder="sk-or-..."
-                        className="bg-neutral-800/40 border-white/20 text-neutral-100 placeholder:text-neutral-400 pr-10 font-mono backdrop-blur-sm"
+                        className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] pr-10 font-mono"
+                        style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                       />
                       <button
                         type="button"
                         onClick={() => setShowKey(!showKey)}
                         aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                        className="bg-neutral-800/30 backdrop-blur-sm focus-visible:ring-white/50 min-h-touch-rec min-w-touch-rec hover:text-neutral-100 absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-neutral-300 transition-all duration-180 ease-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2"
+                        className="touch-target bg-[var(--hover-overlay)] focus-ring hover:text-[var(--fg-strong)] absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-[var(--fg)] transition-all duration-180 ease-out motion-reduce:transition-none"
                       >
                         {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -570,7 +563,7 @@ export function BurgerMenu() {
                             : "bg-gray-500"
                       }`}
                     />
-                    <span className="text-sm text-neutral-300">
+                    <span className="text-sm text-muted">
                       {keyStatus === "present"
                         ? "Schlüssel vorhanden"
                         : keyStatus === "invalid"
@@ -582,7 +575,7 @@ export function BurgerMenu() {
                   <Button
                     type="button"
                     onClick={handleSaveKey}
-                    className="bg-neutral-800/40 backdrop-blur-sm border border-white/20 min-h-touch-rec text-neutral-100 w-full hover:bg-neutral-800/60 transition-all duration-180 ease-out motion-reduce:transition-none"
+                    className="touch-target-preferred bg-[var(--glass-surface)] border border-[var(--glass-border)] text-[var(--fg)] w-full hover:bg-[var(--hover-overlay)] transition-all duration-180 ease-out motion-reduce:transition-none"
                   >
                     Schlüssel speichern
                   </Button>
@@ -601,24 +594,21 @@ export function BurgerMenu() {
 
                 {/* Content Filter Section */}
                 <div className="space-y-3">
-                  <h3
-                    className="flex items-center gap-2 text-lg font-semibold"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-strong">
                     <User className="h-5 w-5" />
                     Inhaltsfilter
                   </h3>
-                  <p className="text-sm text-neutral-300">
+                  <p className="text-sm text-muted">
                     Verwalte die Sichtbarkeit verschiedener Inhaltsarten.
                   </p>
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <Label htmlFor="nsfw-toggle" className="text-neutral-100/90">
+                        <Label htmlFor="nsfw-toggle" className="text-standard">
                           18+ / NSFW-Content anzeigen
                         </Label>
-                        <p id="nsfw-description" className="text-xs text-neutral-300">
+                        <p id="nsfw-description" className="text-xs text-muted">
                           Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden
                           Rollen.
                         </p>
@@ -646,10 +636,7 @@ export function BurgerMenu() {
 
                 {/* Memory Settings Section */}
                 <div className="space-y-3">
-                  <h3
-                    className="flex items-center gap-2 text-lg font-semibold"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-strong">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -667,17 +654,17 @@ export function BurgerMenu() {
                     </svg>
                     Gedächtnis
                   </h3>
-                  <p className="text-sm text-neutral-300">
+                  <p className="text-sm text-muted">
                     Speichere Chat-Verläufe und persönliche Informationen für zukünftige Gespräche.
                   </p>
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <Label htmlFor="memory-toggle" className="text-neutral-100/90">
+                        <Label htmlFor="memory-toggle" className="text-standard">
                           Gedächtnis aktivieren
                         </Label>
-                        <p id="memory-description" className="text-xs text-neutral-300">
+                        <p id="memory-description" className="text-xs text-muted">
                           Wenn aktiviert, werden Chat-Verläufe und globale Infos lokal gespeichert.
                         </p>
                       </div>
@@ -692,8 +679,8 @@ export function BurgerMenu() {
                     {memoryEnabled && (
                       <>
                         {/* Global Memory Input */}
-                        <div className="space-y-3 border-t border-white/10 pt-4">
-                          <Label htmlFor="memory-name" className="text-neutral-100/90">
+                        <div className="space-y-3 border-t border-[var(--glass-border)] pt-4">
+                          <Label htmlFor="memory-name" className="text-standard">
                             Persönliche Informationen
                           </Label>
                           <div className="space-y-2">
@@ -702,8 +689,9 @@ export function BurgerMenu() {
                               placeholder="Dein Name (optional)"
                               value={globalMemory?.name || ""}
                               onChange={(e) => updateGlobalMemory({ name: e.target.value })}
-                              className="bg-neutral-800/40 border-white/20 text-neutral-100 placeholder:text-neutral-400 backdrop-blur-sm"
+                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
                               aria-label="Dein Name für persönliche Informationen"
+                              style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                             />
                             <Input
                               id="memory-hobbies"
@@ -716,22 +704,24 @@ export function BurgerMenu() {
                                     : [],
                                 })
                               }
-                              className="bg-neutral-800/40 border-white/20 text-neutral-100 placeholder:text-neutral-400 backdrop-blur-sm"
+                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
                               aria-label="Deine Hobbys und Interessen"
+                              style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                             />
                             <Input
                               id="memory-background"
                               placeholder="Hintergrund, Beruf (optional)"
                               value={globalMemory?.background || ""}
                               onChange={(e) => updateGlobalMemory({ background: e.target.value })}
-                              className="bg-neutral-800/40 border-white/20 text-neutral-100 placeholder:text-neutral-400 backdrop-blur-sm"
+                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
                               aria-label="Dein beruflicher Hintergrund"
+                              style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                             />
                           </div>
                         </div>
 
                         {/* Clear Memory */}
-                        <div className="border-t border-white/10 pt-4">
+                        <div className="border-t border-[var(--glass-border)] pt-4">
                           <Button
                             onClick={() => {
                               if (
@@ -749,7 +739,7 @@ export function BurgerMenu() {
                               }
                             }}
                             variant="outline"
-                            className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+                            className="touch-target-preferred w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
                             Alle Erinnerungen löschen
@@ -774,32 +764,29 @@ export function BurgerMenu() {
 
                 {/* Chat Management Section */}
                 <div className="space-y-3">
-                  <h3
-                    className="flex items-center gap-2 text-lg font-semibold"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-strong">
                     <MessageSquare className="h-5 w-5" />
                     Chat-Verwaltung
                   </h3>
-                  <p className="text-sm text-neutral-300">
+                  <p className="text-sm text-muted">
                     Exportiere, importiere und verwalte deine gespeicherten Konversationen.
                   </p>
 
                   <div className="space-y-6">
                     {/* Chat Statistics */}
                     <div className="space-y-3">
-                      <Label className="text-neutral-100/90">Statistiken</Label>
+                      <Label className="text-standard">Statistiken</Label>
                       <ChatStats />
                     </div>
 
                     {/* Export/Import Actions */}
-                    <div className="space-y-3 border-t border-white/10 pt-4">
-                      <Label className="text-neutral-100/90">Import & Export</Label>
+                    <div className="space-y-3 border-t border-[var(--glass-border)] pt-4">
+                      <Label className="text-standard">Import & Export</Label>
                       <div className="grid grid-cols-2 gap-3">
                         <Button
                           onClick={handleExportChats}
                           variant="outline"
-                          className="w-full border-blue-500/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20"
+                          className="touch-target w-full border-blue-500/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20"
                         >
                           <Download className="mr-2 h-4 w-4" />
                           Exportieren
@@ -815,7 +802,7 @@ export function BurgerMenu() {
                           />
                           <Button
                             variant="outline"
-                            className="w-full border-green-500/30 bg-green-500/10 text-green-300 hover:bg-green-500/20"
+                            className="touch-target w-full border-green-500/30 bg-green-500/10 text-green-300 hover:bg-green-500/20"
                             asChild
                           >
                             <label htmlFor="import-chats" className="cursor-pointer">
@@ -830,13 +817,13 @@ export function BurgerMenu() {
                     </div>
 
                     {/* Cleanup Actions */}
-                    <div className="space-y-3 border-t border-white/10 pt-4">
-                      <Label className="text-neutral-100/90">Aufräumen</Label>
+                    <div className="space-y-3 border-t border-[var(--glass-border)] pt-4">
+                      <Label className="text-standard">Aufräumen</Label>
                       <div className="space-y-2">
                         <Button
                           onClick={handleCleanupOldChats}
                           variant="outline"
-                          className="w-full border-yellow-500/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20"
+                          className="touch-target-preferred w-full border-yellow-500/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20"
                         >
                           <FileText className="mr-2 h-4 w-4" />
                           Alte Chats löschen (30+ Tage)
@@ -845,7 +832,7 @@ export function BurgerMenu() {
                         <Button
                           onClick={handleDeleteAllChats}
                           variant="outline"
-                          className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+                          className="touch-target-preferred w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Alle Chats löschen
@@ -869,14 +856,11 @@ export function BurgerMenu() {
 
                 {/* PWA Install Section */}
                 <div className="space-y-3">
-                  <h3
-                    className="flex items-center gap-2 text-lg font-semibold"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-strong">
                     <Smartphone className="h-5 w-5" />
                     App-Installation
                   </h3>
-                  <p className="text-sm text-neutral-300">
+                  <p className="text-sm text-muted">
                     Installiere Disa AI als native App für bessere Performance und schnelleren
                     Zugriff.
                   </p>
@@ -892,7 +876,7 @@ export function BurgerMenu() {
                               : "bg-gray-500"
                         }`}
                       />
-                      <span className="text-sm font-medium text-white/90">
+                      <span className="text-sm font-medium text-standard">
                         {isInstalled
                           ? "✅ App ist installiert"
                           : canInstall
@@ -902,8 +886,8 @@ export function BurgerMenu() {
                     </div>
 
                     {!isInstalled && (
-                      <div className="surface-card rounded-lg p-3">
-                        <div className="space-y-2 text-xs text-white/70">
+                      <div className="bg-[var(--glass-surface)] rounded-lg p-3">
+                        <div className="space-y-2 text-xs text-muted">
                           <p className="font-medium">Vorteile der App-Installation:</p>
                           <ul className="list-disc space-y-1 pl-4">
                             <li>Schneller direkter Zugriff vom Home-Screen</li>
@@ -919,7 +903,7 @@ export function BurgerMenu() {
                       <Button
                         type="button"
                         onClick={handleInstallPWA}
-                        className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600"
+                        className="touch-target-preferred w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600"
                       >
                         <Download className="mr-2 h-4 w-4" />
                         Jetzt als App installieren
@@ -931,14 +915,14 @@ export function BurgerMenu() {
                         <div className="mb-2 text-lg font-medium text-green-400">
                           🎉 App erfolgreich installiert!
                         </div>
-                        <p className="text-sm text-white/60">
+                        <p className="text-sm text-muted">
                           Du kannst Disa AI jetzt direkt vom Home-Screen starten und wie eine native
                           App verwenden.
                         </p>
                       </div>
                     )}
 
-                    <div className="space-y-2 text-xs text-white/60">
+                    <div className="space-y-2 text-xs text-muted">
                       <p>
                         <span className="font-medium">Vorteile:</span>
                       </p>
@@ -954,43 +938,38 @@ export function BurgerMenu() {
 
                 {/* Build Info */}
                 <div className="space-y-3">
-                  <h3
-                    className="flex items-center gap-2 text-lg font-semibold"
-                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
-                  >
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-strong">
                     <Info className="h-5 w-5" />
                     Build Information
                   </h3>
-                  <p className="text-sm text-neutral-300">
-                    Build-Version und Deployment-Informationen
-                  </p>
+                  <p className="text-sm text-muted">Build-Version und Deployment-Informationen</p>
 
                   <div className="space-y-4">
                     <div className="space-y-2">
                       {/* Build ID nur in Entwicklung anzeigen */}
                       {import.meta.env.DEV && (
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-neutral-300">Build ID:</span>
-                          <span className="text-accent font-mono">{BUILD_ID}</span>
+                          <span className="text-muted">Build ID:</span>
+                          <span className="text-[var(--accent)] font-mono">{BUILD_ID}</span>
                         </div>
                       )}
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-neutral-300">Version:</span>
-                        <span className="text-text-strong">v1.0.0</span>
+                        <span className="text-muted">Version:</span>
+                        <span className="text-strong">v1.0.0</span>
                       </div>
                       {/* Environment nur in Entwicklung anzeigen */}
                       {import.meta.env.DEV && (
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-neutral-300">Environment:</span>
-                          <span className="text-text-strong">
+                          <span className="text-muted">Environment:</span>
+                          <span className="text-strong">
                             {import.meta.env.DEV ? "Development" : "Production"}
                           </span>
                         </div>
                       )}
                     </div>
 
-                    <div className="surface-card rounded p-3 text-xs">
-                      <p className="text-white/60">
+                    <div className="bg-[var(--glass-surface)] rounded p-3 text-xs">
+                      <p className="text-muted">
                         <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein
                         harter Reload (Strg+Shift+R) erforderlich sein, um die neue Version zu
                         laden.
@@ -1001,7 +980,7 @@ export function BurgerMenu() {
                       type="button"
                       onClick={handleHardReload}
                       variant="outline"
-                      className="border-accent1/40 hover:bg-accent1/10 text-accent1 flex w-full items-center justify-center gap-2"
+                      className="touch-target-preferred border-[var(--accent)]/40 hover:bg-[var(--accent)]/10 text-[var(--accent)] flex w-full items-center justify-center gap-2"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
