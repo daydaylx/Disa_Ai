@@ -20,6 +20,7 @@ export const GlassDrawer: React.FC<GlassDrawerProps> = ({ open, onClose, childre
         document.body.style.overflow = "";
       };
     }
+    return undefined;
   }, [open]);
 
   // ESC key handler

@@ -107,7 +107,9 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
               <div
                 role="button"
                 tabIndex={0}
-                onClick={handleInfoToggle}
+                onClick={(e) =>
+                  handleInfoToggle(e as unknown as React.MouseEvent<HTMLButtonElement>)
+                }
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();

@@ -10,7 +10,7 @@ interface PWAInstallPromptProps {
 }
 
 export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
-  const { canInstall, requestInstall, dismiss, installed } = usePWAInstall();
+  const { canInstall, requestInstall, installed } = usePWAInstall();
   const [isVisible, setIsVisible] = useState(false);
   const toasts = useToasts();
 
@@ -41,7 +41,6 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
   };
 
   const handleDismiss = () => {
-    dismiss();
     setIsVisible(false);
   };
 

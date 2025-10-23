@@ -114,7 +114,7 @@ export const InteractiveCard = React.forwardRef<HTMLDivElement, InteractiveCardP
       setIsMenuOpen(!isMenuOpen);
     };
 
-    const isClickable = !disabled && !isLoading && (onCardClick || selectable);
+    const isClickable = !disabled && !isLoading && (!!onCardClick || selectable);
 
     return (
       <Card

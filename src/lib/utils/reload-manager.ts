@@ -4,4 +4,11 @@ export const reloadHelpers = {
       window.location.reload();
     }
   },
+  serviceWorkerUpdate: (delay: number = 0) => {
+    if (typeof window !== "undefined") {
+      setTimeout(() => {
+        window.location.reload();
+      }, delay);
+    }
+  },
 };

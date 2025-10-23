@@ -13,7 +13,7 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useMemory } from "../../hooks/useMemory";
 import { usePWAInstall } from "../../hooks/usePWAInstall";
@@ -310,13 +310,14 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
   };
 
   // Lock body scroll when modal opens
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = "";
       };
     }
+    return undefined;
   }, [isOpen]);
 
   if (!isOpen) return null;

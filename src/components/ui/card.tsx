@@ -43,9 +43,12 @@ const cardVariants = cva(
           "motion-safe:active:translate-y-[1px] motion-safe:active:scale-[0.99] motion-safe:active:shadow-[var(--shadow-surface-active)] cursor-pointer motion-safe:transition-all motion-safe:duration-120 motion-safe:ease-out",
         lift: "motion-safe:hover:-translate-y-[4px] motion-safe:hover:shadow-[var(--shadow-surface-hover)] motion-safe:focus-visible:translate-y-0 motion-safe:focus-visible:shadow-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
         glow: "motion-safe:hover:shadow-[var(--shadow-glow-brand)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "glow-success": "motion-safe:hover:shadow-[var(--shadow-glow-success)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "glow-warning": "motion-safe:hover:shadow-[var(--shadow-glow-warning)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "glow-error": "motion-safe:hover:shadow-[var(--shadow-glow-error)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "glow-success":
+          "motion-safe:hover:shadow-[var(--shadow-glow-success)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "glow-warning":
+          "motion-safe:hover:shadow-[var(--shadow-glow-warning)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "glow-error":
+          "motion-safe:hover:shadow-[var(--shadow-glow-error)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
       },
       padding: {
         none: "",
@@ -243,7 +246,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             ...syntheticEvent,
             currentTarget: target,
             target: target,
-          } as React.MouseEvent<HTMLDivElement>);
+          } as unknown as React.MouseEvent<HTMLDivElement>);
         }
       }
     };

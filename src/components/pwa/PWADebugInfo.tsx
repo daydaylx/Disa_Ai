@@ -34,7 +34,7 @@ function isChrome(): boolean {
 
 export function PWADebugInfo() {
   const [isVisible, setIsVisible] = useState(false);
-  const { canInstall, installed, dismissed } = usePWAInstall();
+  const { canInstall, installed } = usePWAInstall();
 
   const debugInfo = {
     userAgent: navigator.userAgent,
@@ -44,7 +44,6 @@ export function PWADebugInfo() {
     isChrome: isChrome(),
     canInstall,
     installed,
-    dismissed,
     protocol: window.location.protocol,
     host: window.location.host,
     hasServiceWorker: "serviceWorker" in navigator,
@@ -107,10 +106,6 @@ export function PWADebugInfo() {
             <div>
               <span className="font-medium">Already Installed:</span>{" "}
               {debugInfo.installed ? "✅ Yes" : "❌ No"}
-            </div>
-            <div>
-              <span className="font-medium">Dismissed:</span>{" "}
-              {debugInfo.dismissed ? "✅ Yes" : "❌ No"}
             </div>
             <div>
               <span className="font-medium">Service Worker:</span>{" "}

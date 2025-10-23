@@ -295,12 +295,18 @@ export default function ChatV2() {
         }));
 
         try {
-          const conversationId = saveConversation(
-            storageMessages,
-            activeConversationId || undefined,
-          );
+          const conversation = {
+            id: activeConversationId || crypto.randomUUID(),
+            title: `Conversation ${new Date().toLocaleDateString()}`,
+            messages: storageMessages,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            model: "default",
+            messageCount: storageMessages.length,
+          };
+          saveConversation(conversation);
           if (!activeConversationId) {
-            setActiveConversationId(conversationId);
+            setActiveConversationId(conversation.id);
           }
           setConversations(getAllConversations());
         } catch (error) {
@@ -821,7 +827,7 @@ export default function ChatV2() {
             onDelete={handleDeleteConversation}
           />
         </div>
-        
+
         {/* Settings FAB Button - bottom left */}
         <SettingsFAB />
       </div>
