@@ -2,9 +2,10 @@ import { Check, Info } from "lucide-react";
 import { useId } from "react";
 
 import { cn } from "../../lib/utils";
-import { Card, CardContent, CardHeader } from "./card";
-import { Badge } from "./badge";
+import { getCategoryData, normalizeCategoryKey } from "../../utils/category-mapping";
 import { Avatar } from "./avatar";
+import { Badge } from "./badge";
+import { Card, CardContent, CardHeader } from "./card";
 
 interface ModelCardProps {
   id: string;
@@ -14,11 +15,12 @@ interface ModelCardProps {
   priceOut: number;
   contextTokens?: number;
   description: string;
+  category?: string;
   isSelected: boolean;
   isOpen: boolean;
   onSelect: () => void;
   onToggleDetails: () => void;
-  providerTier?: 'free' | 'premium' | 'enterprise';
+  providerTier?: "free" | "premium" | "enterprise";
 }
 
 const priceFormatter = new Intl.NumberFormat("de-DE", {
@@ -46,13 +48,20 @@ export function ModelCard({
   priceOut,
   contextTokens,
   description,
+  category,
   isSelected,
   isOpen,
   onSelect,
   onToggleDetails,
-  providerTier = 'free',
+  providerTier = "free",
 }: ModelCardProps) {
   const detailId = useId();
+
+  // Determine category based on provider tier if not explicitly provided
+  const effectiveCategory =
+    category || (providerTier === "premium" ? "Modell: Premium" : "Modell: Alltag");
+  const categoryKey = normalizeCategoryKey(effectiveCategory);
+  const categoryData = getCategoryData(effectiveCategory);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -71,8 +80,9 @@ export function ModelCard({
       interactive="gentle"
       padding="md"
       state={isSelected ? "selected" : "default"}
+      data-cat={categoryKey}
       className={cn(
-        "w-full relative overflow-hidden",
+        "category-border category-tint category-focus relative w-full overflow-hidden",
         "transition-all duration-200 ease-out",
         "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
         isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
@@ -87,19 +97,21 @@ export function ModelCard({
             <Avatar size="md" className="shadow-surface-subtle">
               {provider.slice(0, 1)}
             </Avatar>
-            {providerTier === 'premium' && (
-              <Badge
-                size="xs"
-                variant="brand"
-                className="absolute -top-1 -right-1"
-              >★</Badge>
+            {providerTier === "premium" && (
+              <Badge size="xs" variant="brand" className="absolute -right-1 -top-1">
+                ★
+              </Badge>
             )}
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-title-base text-text-strong truncate">
-              {name}
-            </h3>
-            <p className="text-sm text-text-muted truncate">{provider}</p>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-title-base text-text-strong truncate font-semibold">{name}</h3>
+            <div className="flex items-center gap-2">
+              <p className="truncate text-sm text-text-muted">{provider}</p>
+              <span className="category-badge inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                <span className="category-dot h-1 w-1 rounded-full" />
+                {categoryData.label}
+              </span>
+            </div>
           </div>
           <button
             type="button"
@@ -119,41 +131,34 @@ export function ModelCard({
 
       <CardContent className="space-y-3">
         {description && (
-          <p className="text-sm text-text-secondary leading-relaxed line-clamp-2">
-            {description}
-          </p>
+          <p className="line-clamp-2 text-sm leading-relaxed text-text-secondary">{description}</p>
         )}
 
         <div className="flex items-center justify-between">
           <div className="flex flex-wrap gap-2">
             <Badge variant="outline" size="sm">
-              {contextTokens ? formatContext(contextTokens) : 'N/A'} Kontext
+              {contextTokens ? formatContext(contextTokens) : "N/A"} Kontext
             </Badge>
             {contextTokens && contextTokens > 100000 && (
-              <Badge variant="info" size="sm">⚡ Hoch</Badge>
+              <Badge variant="info" size="sm">
+                ⚡ Hoch
+              </Badge>
             )}
           </div>
           <div className="text-right">
-            <div className="text-sm font-mono text-text-muted">
+            <div className="font-mono text-sm text-text-muted">
               ${priceIn}/{priceOut}
             </div>
           </div>
         </div>
 
-        <div className="pt-2 flex items-center justify-between border-t border-border-divider">
+        <div className="flex items-center justify-between border-t border-border-divider pt-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-text-subtle">
-              {isSelected ? "Aktiv" : "Erkunden"}
-            </span>
-            {isSelected && (
-              <Check className="h-3.5 w-3.5 text-brand" aria-hidden="true" />
-            )}
+            <span className="text-text-subtle text-xs">{isSelected ? "Aktiv" : "Erkunden"}</span>
+            {isSelected && <Check className="text-brand h-3.5 w-3.5" aria-hidden="true" />}
           </div>
-          
-          <Badge
-            variant={isSelected ? "brand" : "outline"}
-            size="sm"
-          >
+
+          <Badge variant={isSelected ? "brand" : "outline"} size="sm">
             {isSelected ? "Aktiv" : "Auswählen"}
           </Badge>
         </div>
@@ -164,24 +169,24 @@ export function ModelCard({
           id={detailId}
           role="region"
           aria-live="polite"
-          className="border-t border-border-divider mt-3 pt-3 space-y-3"
+          className="mt-3 space-y-3 border-t border-border-divider pt-3"
         >
           <p className="text-description-base text-text-secondary">{description}</p>
-          <div className="grid grid-cols-2 gap-3 text-description-sm">
+          <div className="text-description-sm grid grid-cols-2 gap-3">
             <div>
-              <dt className="font-semibold text-text-strong">Kontextlänge</dt>
+              <dt className="text-text-strong font-semibold">Kontextlänge</dt>
               <dd className="mt-1">{formatContext(contextTokens)}</dd>
             </div>
             <div>
-              <dt className="font-semibold text-text-strong">Provider</dt>
+              <dt className="text-text-strong font-semibold">Provider</dt>
               <dd className="mt-1">{provider}</dd>
             </div>
             <div>
-              <dt className="font-semibold text-text-strong">Input</dt>
+              <dt className="text-text-strong font-semibold">Input</dt>
               <dd className="mt-1">{formatPrice(priceIn)}</dd>
             </div>
             <div>
-              <dt className="font-semibold text-text-strong">Output</dt>
+              <dt className="text-text-strong font-semibold">Output</dt>
               <dd className="mt-1">{formatPrice(priceOut)}</dd>
             </div>
           </div>

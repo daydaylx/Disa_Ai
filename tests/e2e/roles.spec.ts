@@ -13,7 +13,7 @@ test.describe("Rollen-Screen", () => {
     const grid = page.getByTestId("role-card-grid");
     await expect(grid).toBeVisible();
 
-    const cards = grid.getByRole("button");
+    const cards = grid.locator("[data-testid^='role-card-']");
     const cardCount = await cards.count();
     expect(cardCount).toBeGreaterThan(4);
 

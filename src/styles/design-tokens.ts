@@ -1,3 +1,4 @@
+import { generateCategoryTokens } from "./tokens/category-colors";
 import { colorCssVars, colorTokens, type ThemeMode } from "./tokens/color";
 import { motionCssVars, motionTokens } from "./tokens/motion";
 import { radiusCssVars, radiusTokens } from "./tokens/radius";
@@ -44,6 +45,10 @@ export function getDesignTokenVariables(mode: ThemeMode): CssVariableMap {
     typographyCssVars,
     typographyTokens as unknown as Record<string, unknown>,
   );
+
+  // Add category color tokens
+  const categoryTokens = generateCategoryTokens();
+  Object.assign(variableMap, categoryTokens);
 
   return variableMap;
 }

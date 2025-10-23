@@ -61,58 +61,58 @@
   --letter-spacing-mono: 0em;
 
   /* Card Typography */
-  --font-size-title-hero: 1.25rem;      /* 20px */
-  --line-height-title-hero: 1.375rem;   /* 22px */
+  --font-size-title-hero: 1.25rem; /* 20px */
+  --line-height-title-hero: 1.375rem; /* 22px */
   --font-weight-title-hero: 600;
   --letter-spacing-title-hero: -0.008em;
   --text-transform-title-hero: none;
 
-  --font-size-title-lg: 1.125rem;       /* 18px */
-  --line-height-title-lg: 1.375rem;     /* 22px */
+  --font-size-title-lg: 1.125rem; /* 18px */
+  --line-height-title-lg: 1.375rem; /* 22px */
   --font-weight-title-lg: 600;
   --letter-spacing-title-lg: -0.006em;
   --text-transform-title-lg: none;
 
-  --font-size-title-base: 1rem;         /* 16px */
-  --line-height-title-base: 1.375rem;   /* 22px */
+  --font-size-title-base: 1rem; /* 16px */
+  --line-height-title-base: 1.375rem; /* 22px */
   --font-weight-title-base: 600;
   --letter-spacing-title-base: -0.004em;
   --text-transform-title-base: none;
 
-  --font-size-title-sm: 0.875rem;       /* 14px */
-  --line-height-title-sm: 1.25rem;      /* 20px */
+  --font-size-title-sm: 0.875rem; /* 14px */
+  --line-height-title-sm: 1.25rem; /* 20px */
   --font-weight-title-sm: 600;
   --letter-spacing-title-sm: -0.002em;
   --text-transform-title-sm: none;
 
-  --font-size-description-lg: 1rem;      /* 16px */
-  --line-height-description-lg: 1.5rem;  /* 24px */
+  --font-size-description-lg: 1rem; /* 16px */
+  --line-height-description-lg: 1.5rem; /* 24px */
   --font-weight-description-lg: 400;
   --letter-spacing-description-lg: 0em;
   --text-transform-description-lg: none;
 
-  --font-size-description-base: 0.875rem;    /* 14px */
-  --line-height-description-base: 1.25rem;   /* 20px */
+  --font-size-description-base: 0.875rem; /* 14px */
+  --line-height-description-base: 1.25rem; /* 20px */
   --font-weight-description-base: 400;
   --letter-spacing-description-base: 0em;
   --text-transform-description-base: none;
 
-  --font-size-description-sm: 0.75rem;       /* 12px */
-  --line-height-description-sm: 1rem;         /* 16px */
+  --font-size-description-sm: 0.75rem; /* 12px */
+  --line-height-description-sm: 1rem; /* 16px */
   --font-weight-description-sm: 400;
   --letter-spacing-description-sm: 0.01em;
   --text-transform-description-sm: none;
 
-  --font-size-metadata: 0.75rem;         /* 12px */
-  --line-height-metadata: 1rem;           /* 16px */
+  --font-size-metadata: 0.75rem; /* 12px */
+  --line-height-metadata: 1rem; /* 16px */
   --font-weight-metadata: 500;
-  --letter-spacing-metadata: 0.05em;      /* Increased tracking */
+  --letter-spacing-metadata: 0.05em; /* Increased tracking */
   --text-transform-metadata: uppercase;
 
-  --font-size-card-label: 0.75rem;       /* 12px */
-  --line-height-card-label: 1rem;         /* 16px */
+  --font-size-card-label: 0.75rem; /* 12px */
+  --line-height-card-label: 1rem; /* 16px */
   --font-weight-card-label: 600;
-  --letter-spacing-card-label: 0.05em;    /* Increased tracking */
+  --letter-spacing-card-label: 0.05em; /* Increased tracking */
   --text-transform-card-label: uppercase;
 
   /* Fixed font sizes for specific components */
@@ -166,9 +166,9 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
-  --radius-card: 16px;         /* Standard card corner radius */
-  --radius-card-inner: 12px;   /* Internal card elements */
-  --radius-card-small: 8px;    /* Small card elements like badges */
+  --radius-card: 16px; /* Standard card corner radius */
+  --radius-card-inner: 12px; /* Internal card elements */
+  --radius-card-small: 8px; /* Small card elements like badges */
   --radius-pill: 999px;
   --radius-full: 9999px;
   --radius-scrollbar: 999px;
@@ -177,7 +177,7 @@
   --radius-install-prompt: 12px;
   --radius-button: 20px;
   --radius-badge: 8px;
-  --radius-avatar: 50%;        /* For profile images */
+  --radius-avatar: 50%; /* For profile images */
 
   /* Motion */
   --motion-duration-micro: 120ms;
@@ -380,12 +380,12 @@
   --shadow-overlay: 0 18px 36px rgba(15, 14, 13, 0.26), 0 0 0 1px rgba(15, 14, 13, 0.08);
   --shadow-popover: 0 22px 44px rgba(15, 14, 13, 0.32), 0 0 0 1px rgba(15, 14, 13, 0.12);
   --shadow-focus: 0 0 0 3px rgba(15, 108, 189, 0.4);
-  
+
   /* Neo-Depth System Shadows */
   --shadow-surface-subtle: 0 2px 6px rgba(15, 14, 13, 0.08), 0 0 0 1px rgba(15, 14, 13, 0.06);
   --shadow-surface-raised: 0 4px 12px rgba(15, 14, 13, 0.12), 0 1px 3px rgba(15, 14, 13, 0.08);
   --shadow-surface-prominent: 0 8px 24px rgba(15, 14, 13, 0.16), 0 2px 6px rgba(15, 14, 13, 0.12);
-  --shadow-surface-hover: 0 12px 32px rgba(15, 14, 13, 0.20), 0 4px 12px rgba(15, 14, 13, 0.16);
+  --shadow-surface-hover: 0 12px 32px rgba(15, 14, 13, 0.2), 0 4px 12px rgba(15, 14, 13, 0.16);
   --shadow-surface-active: 0 2px 8px rgba(15, 14, 13, 0.12), 0 0 0 1px rgba(15, 14, 13, 0.08);
   --shadow-glow-brand: 0 0 0 3px rgba(15, 107, 189, 0.15), 0 8px 24px rgba(15, 107, 189, 0.12);
   --shadow-glow-success: 0 0 0 3px rgba(16, 124, 16, 0.15), 0 8px 24px rgba(16, 124, 16, 0.12);
@@ -502,17 +502,17 @@
     --shadow-overlay: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
     --shadow-popover: 0 26px 54px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(255, 255, 255, 0.1);
     --shadow-focus: 0 0 0 3px rgba(58, 160, 255, 0.48);
-    
+
     /* Neo-Depth System Shadows - Dark Mode */
-    --shadow-surface-subtle: 0 2px 6px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    --shadow-surface-subtle: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
     --shadow-surface-raised: 0 4px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.35);
-    --shadow-surface-prominent: 0 8px 24px rgba(0, 0, 0, 0.60), 0 2px 6px rgba(0, 0, 0, 0.40);
-    --shadow-surface-hover: 0 12px 32px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.50);
-    --shadow-surface-active: 0 2px 8px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.08);
-    --shadow-glow-brand: 0 0 0 3px rgba(58, 160, 255, 0.20), 0 8px 24px rgba(58, 160, 255, 0.30);
-    --shadow-glow-success: 0 0 0 3px rgba(74, 204, 74, 0.20), 0 8px 24px rgba(74, 204, 74, 0.30);
-    --shadow-glow-warning: 0 0 0 3px rgba(255, 204, 74, 0.20), 0 8px 24px rgba(255, 204, 74, 0.30);
-    --shadow-glow-error: 0 0 0 3px rgba(241, 112, 123, 0.20), 0 8px 24px rgba(241, 112, 123, 0.30);
+    --shadow-surface-prominent: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+    --shadow-surface-hover: 0 12px 32px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-surface-active: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    --shadow-glow-brand: 0 0 0 3px rgba(58, 160, 255, 0.2), 0 8px 24px rgba(58, 160, 255, 0.3);
+    --shadow-glow-success: 0 0 0 3px rgba(74, 204, 74, 0.2), 0 8px 24px rgba(74, 204, 74, 0.3);
+    --shadow-glow-warning: 0 0 0 3px rgba(255, 204, 74, 0.2), 0 8px 24px rgba(255, 204, 74, 0.3);
+    --shadow-glow-error: 0 0 0 3px rgba(241, 112, 123, 0.2), 0 8px 24px rgba(241, 112, 123, 0.3);
   }
 }
 
@@ -624,17 +624,17 @@
   --shadow-overlay: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
   --shadow-popover: 0 26px 54px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(255, 255, 255, 0.1);
   --shadow-focus: 0 0 0 3px rgba(58, 160, 255, 0.48);
-  
+
   /* Neo-Depth System Shadows - Dark Theme */
-  --shadow-surface-subtle: 0 2px 6px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-surface-subtle: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
   --shadow-surface-raised: 0 4px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.35);
-  --shadow-surface-prominent: 0 8px 24px rgba(0, 0, 0, 0.60), 0 2px 6px rgba(0, 0, 0, 0.40);
-  --shadow-surface-hover: 0 12px 32px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.50);
-  --shadow-surface-active: 0 2px 8px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.08);
-  --shadow-glow-brand: 0 0 0 3px rgba(58, 160, 255, 0.20), 0 8px 24px rgba(58, 160, 255, 0.30);
-  --shadow-glow-success: 0 0 0 3px rgba(74, 204, 74, 0.20), 0 8px 24px rgba(74, 204, 74, 0.30);
-  --shadow-glow-warning: 0 0 0 3px rgba(255, 204, 74, 0.20), 0 8px 24px rgba(255, 204, 74, 0.30);
-  --shadow-glow-error: 0 0 0 3px rgba(241, 112, 123, 0.20), 0 8px 24px rgba(241, 112, 123, 0.30);
+  --shadow-surface-prominent: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-surface-hover: 0 12px 32px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-surface-active: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-glow-brand: 0 0 0 3px rgba(58, 160, 255, 0.2), 0 8px 24px rgba(58, 160, 255, 0.3);
+  --shadow-glow-success: 0 0 0 3px rgba(74, 204, 74, 0.2), 0 8px 24px rgba(74, 204, 74, 0.3);
+  --shadow-glow-warning: 0 0 0 3px rgba(255, 204, 74, 0.2), 0 8px 24px rgba(255, 204, 74, 0.3);
+  --shadow-glow-error: 0 0 0 3px rgba(241, 112, 123, 0.2), 0 8px 24px rgba(241, 112, 123, 0.3);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -706,4 +706,160 @@ body {
   background-color: var(--color-surface-canvas);
   font-family: var(--font-family-sans);
   text-rendering: optimizeLegibility;
+}
+
+/* Category Color System */
+[data-theme="dark"] {
+  /* Category Base HSL Values - Adjusted for WCAG AA compliance */
+  --cat-alltag-h: 30;
+  --cat-alltag-s: 22%;
+  --cat-alltag-l: 62%;
+  --cat-alltag-fg: hsl(30 22% calc(62% + 10%) / 0.95);
+  --cat-alltag-border: hsl(30 22% 62% / 0.55);
+  --cat-alltag-tint: hsl(30 22% 62% / 0.08);
+  --cat-alltag-badge-bg: hsl(30 22% 62% / 0.28);
+  --cat-alltag-focus: hsl(30 22% 62% / 0.65);
+  --cat-alltag-dot: hsl(30 22% 62% / 0.85);
+
+  --cat-business-h: 210;
+  --cat-business-s: 24%;
+  --cat-business-l: 64%;
+  --cat-business-fg: hsl(210 24% calc(64% + 10%) / 0.95);
+  --cat-business-border: hsl(210 24% 64% / 0.55);
+  --cat-business-tint: hsl(210 24% 64% / 0.08);
+  --cat-business-badge-bg: hsl(210 24% 64% / 0.28);
+  --cat-business-focus: hsl(210 24% 64% / 0.65);
+  --cat-business-dot: hsl(210 24% 64% / 0.85);
+
+  --cat-kreativ-h: 275;
+  --cat-kreativ-s: 24%;
+  --cat-kreativ-l: 64%;
+  --cat-kreativ-fg: hsl(275 24% calc(64% + 10%) / 0.95);
+  --cat-kreativ-border: hsl(275 24% 64% / 0.55);
+  --cat-kreativ-tint: hsl(275 24% 64% / 0.08);
+  --cat-kreativ-badge-bg: hsl(275 24% 64% / 0.28);
+  --cat-kreativ-focus: hsl(275 24% 64% / 0.65);
+  --cat-kreativ-dot: hsl(275 24% 64% / 0.85);
+
+  --cat-bildung-h: 195;
+  --cat-bildung-s: 22%;
+  --cat-bildung-l: 64%;
+  --cat-bildung-fg: hsl(195 22% calc(64% + 10%) / 0.95);
+  --cat-bildung-border: hsl(195 22% 64% / 0.55);
+  --cat-bildung-tint: hsl(195 22% 64% / 0.08);
+  --cat-bildung-badge-bg: hsl(195 22% 64% / 0.28);
+  --cat-bildung-focus: hsl(195 22% 64% / 0.65);
+  --cat-bildung-dot: hsl(195 22% 64% / 0.85);
+
+  --cat-familie-h: 5;
+  --cat-familie-s: 20%;
+  --cat-familie-l: 64%;
+  --cat-familie-fg: hsl(5 20% calc(64% + 10%) / 0.95);
+  --cat-familie-border: hsl(5 20% 64% / 0.55);
+  --cat-familie-tint: hsl(5 20% 64% / 0.08);
+  --cat-familie-badge-bg: hsl(5 20% 64% / 0.28);
+  --cat-familie-focus: hsl(5 20% 64% / 0.65);
+  --cat-familie-dot: hsl(5 20% 64% / 0.85);
+
+  --cat-beratung-h: 145;
+  --cat-beratung-s: 22%;
+  --cat-beratung-l: 64%;
+  --cat-beratung-fg: hsl(145 22% calc(64% + 10%) / 0.95);
+  --cat-beratung-border: hsl(145 22% 64% / 0.55);
+  --cat-beratung-tint: hsl(145 22% 64% / 0.08);
+  --cat-beratung-badge-bg: hsl(145 22% 64% / 0.28);
+  --cat-beratung-focus: hsl(145 22% 64% / 0.65);
+  --cat-beratung-dot: hsl(145 22% 64% / 0.85);
+
+  --cat-model-premium-h: 230;
+  --cat-model-premium-s: 24%;
+  --cat-model-premium-l: 64%;
+  --cat-model-premium-fg: hsl(230 24% calc(64% + 10%) / 0.95);
+  --cat-model-premium-border: hsl(230 24% 64% / 0.55);
+  --cat-model-premium-tint: hsl(230 24% 64% / 0.08);
+  --cat-model-premium-badge-bg: hsl(230 24% 64% / 0.28);
+  --cat-model-premium-focus: hsl(230 24% 64% / 0.65);
+  --cat-model-premium-dot: hsl(230 24% 64% / 0.85);
+
+  --cat-model-alltag-h: 12;
+  --cat-model-alltag-s: 22%;
+  --cat-model-alltag-l: 64%;
+  --cat-model-alltag-fg: hsl(12 22% calc(64% + 10%) / 0.95);
+  --cat-model-alltag-border: hsl(12 22% 64% / 0.55);
+  --cat-model-alltag-tint: hsl(12 22% 64% / 0.08);
+  --cat-model-alltag-badge-bg: hsl(12 22% 64% / 0.28);
+  --cat-model-alltag-focus: hsl(12 22% 64% / 0.65);
+  --cat-model-alltag-dot: hsl(12 22% 64% / 0.85);
+}
+
+/* Category data attribute selectors - Updated for accessibility */
+[data-cat="alltag"] {
+  --h: var(--cat-alltag-h);
+  --s: var(--cat-alltag-s);
+  --l: var(--cat-alltag-l);
+}
+
+[data-cat="business"] {
+  --h: var(--cat-business-h);
+  --s: var(--cat-business-s);
+  --l: var(--cat-business-l);
+}
+
+[data-cat="kreativ"] {
+  --h: var(--cat-kreativ-h);
+  --s: var(--cat-kreativ-s);
+  --l: var(--cat-kreativ-l);
+}
+
+[data-cat="bildung"] {
+  --h: var(--cat-bildung-h);
+  --s: var(--cat-bildung-s);
+  --l: var(--cat-bildung-l);
+}
+
+[data-cat="familie"] {
+  --h: var(--cat-familie-h);
+  --s: var(--cat-familie-s);
+  --l: var(--cat-familie-l);
+}
+
+[data-cat="beratung"] {
+  --h: var(--cat-beratung-h);
+  --s: var(--cat-beratung-s);
+  --l: var(--cat-beratung-l);
+}
+
+[data-cat="model-premium"] {
+  --h: var(--cat-model-premium-h);
+  --s: var(--cat-model-premium-s);
+  --l: var(--cat-model-premium-l);
+}
+
+[data-cat="model-alltag"] {
+  --h: var(--cat-model-alltag-h);
+  --s: var(--cat-model-alltag-s);
+  --l: var(--cat-model-alltag-l);
+}
+
+/* Base category styling utilities - Accessibility compliant */
+.category-border {
+  border-color: hsl(var(--h) var(--s) var(--l) / 0.75);
+}
+
+.category-tint {
+  background: linear-gradient(0deg, hsl(var(--h) var(--s) var(--l) / 0.08), transparent);
+}
+
+.category-badge {
+  color: hsl(var(--h) var(--s) calc(var(--l) + 10%) / 0.95);
+  background: hsl(var(--h) var(--s) var(--l) / 0.28);
+}
+
+.category-focus:focus-visible {
+  outline: 2px solid hsl(var(--h) var(--s) var(--l) / 0.65);
+  outline-offset: 2px;
+}
+
+.category-dot {
+  background: hsl(var(--h) var(--s) var(--l) / 0.85);
 }

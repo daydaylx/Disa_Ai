@@ -1,8 +1,8 @@
 import type { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/lib/utils";
+
 import { Card, CardContent, CardHeader } from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
 
 type MessageBubbleVariant = "assistant" | "user";
 
@@ -57,12 +57,13 @@ export function MessageBubbleCard({
   return (
     <div className={cn("flex w-full", config.alignment)}>
       <Card
+        role="article"
         tone={config.tone}
         elevation="raised"
         interactive="gentle"
         padding="none"
         className={cn(
-          "w-full max-w-[min(100%,640px)] relative overflow-visible",
+          "relative w-full max-w-[min(100%,640px)] overflow-visible",
           config.borderClass,
           config.bgClass,
           className,
@@ -71,20 +72,18 @@ export function MessageBubbleCard({
       >
         {/* Role Badge Header */}
         <CardHeader className="pb-2">
-          <div className={cn(
-            "inline-flex items-center gap-2 rounded-[var(--radius-card-inner)] px-3 py-1.5 max-w-fit text-sm font-medium",
-            config.badgeClass
-          )}>
+          <div
+            className={cn(
+              "inline-flex max-w-fit items-center gap-2 rounded-[var(--radius-card-inner)] px-3 py-1.5 text-sm font-medium",
+              config.badgeClass,
+            )}
+          >
             <span className="text-sm">{config.badgeIcon}</span>
             <span className="font-semibold">{author}</span>
             {label && (
               <>
                 <span className="text-current/50">•</span>
-                <time
-                  className="text-xs opacity-75"
-                  dateTime={iso}
-                  title={iso}
-                >
+                <time className="text-xs opacity-75" dateTime={iso} title={iso}>
                   {label}
                 </time>
               </>
@@ -94,9 +93,7 @@ export function MessageBubbleCard({
 
         {/* Message Content with Enhanced Typography */}
         <CardContent className="pt-0">
-          <div className="whitespace-pre-wrap text-sm leading-relaxed text-text-strong">
-            {body}
-          </div>
+          <div className="text-text-strong whitespace-pre-wrap text-sm leading-relaxed">{body}</div>
         </CardContent>
       </Card>
     </div>
