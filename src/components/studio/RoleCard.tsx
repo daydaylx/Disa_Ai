@@ -99,7 +99,6 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
                 )}
               </div>
               <div
-                role="button"
                 tabIndex={0}
                 onClick={handleInfoToggle}
                 onKeyDown={(e) => {

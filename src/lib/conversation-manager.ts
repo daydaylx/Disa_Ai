@@ -48,23 +48,23 @@ export function getAllConversations(): ConversationMetadata[] {
 
 export function getConversation(id: string): Conversation | null {
   // Mock implementation
-  console.log(`Getting conversation ${id}`);
+  console.warn(`Getting conversation ${id} - Mock implementation`);
   return null;
 }
 
 export function saveConversation(conversation: Conversation): void {
   // Mock implementation
-  console.log(`Saving conversation ${conversation.id}`);
+  console.warn(`Saving conversation ${conversation.id} - Mock implementation`);
 }
 
 export function deleteConversation(id: string): void {
   // Mock implementation
-  console.log(`Deleting conversation ${id}`);
+  console.warn(`Deleting conversation ${id} - Mock implementation`);
 }
 
 export function cleanupOldConversations(days: number): number {
   // Mock implementation
-  console.log(`Cleaning up conversations older than ${days} days`);
+  console.warn(`Cleaning up conversations older than ${days} days - Mock implementation`);
   return 0; // Number of deleted conversations
 }
 
@@ -85,7 +85,10 @@ export function importConversations(
   options: { overwrite?: boolean; merge?: boolean },
 ) {
   // Mock implementation
-  console.log(`Importing ${data.conversations.length} conversations with options:`, options);
+  console.warn(
+    `Importing ${data.conversations.length} conversations with options - Mock implementation:`,
+    options,
+  );
   return {
     success: true,
     importedCount: 0,

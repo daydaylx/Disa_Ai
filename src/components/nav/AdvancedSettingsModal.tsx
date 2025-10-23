@@ -526,13 +526,13 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                       {/* Clear Memory */}
                       <div className="border-border border-t pt-4">
                         <Button
-                          onClick={async () => {
+                          onClick={() => {
                             if (
                               confirm(
                                 "Alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
                               )
                             ) {
-                              await clearAllMemory();
+                              clearAllMemory();
                               toasts.push({
                                 kind: "success",
                                 title: "Gedächtnis gelöscht",

@@ -416,7 +416,7 @@ export function BurgerMenu() {
       {isOpen && (
         <div
           ref={menuRef}
-          className="border-border fixed bottom-20 right-2 top-16 z-50 w-64 max-w-[90vw] rounded-xl border bg-surface-card shadow-lg"
+          className="border-border fixed right-2 top-16 z-50 h-[calc(100vh-6rem)] max-h-[600px] min-h-[300px] w-64 max-w-[90vw] rounded-xl border bg-surface-card shadow-lg"
           role="dialog"
           aria-modal="true"
           aria-labelledby="menu-title"
@@ -508,7 +508,7 @@ export function BurgerMenu() {
 
             {/* Settings Menu */}
             {activeTab === "settings" && (
-              <div className="flex h-[calc(100%-60px)] flex-col gap-4 overflow-y-auto p-4">
+              <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4">
                 {/* API Key Section */}
                 <div className="space-y-3">
                   <h3 className="flex items-center gap-2 text-lg font-semibold">
@@ -710,13 +710,13 @@ export function BurgerMenu() {
                         {/* Clear Memory */}
                         <div className="border-t border-white/10 pt-4">
                           <Button
-                            onClick={async () => {
+                            onClick={() => {
                               if (
                                 confirm(
                                   "Alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
                                 )
                               ) {
-                                await clearAllMemory();
+                                clearAllMemory();
                                 toasts.push({
                                   kind: "success",
                                   title: "Gedächtnis gelöscht",

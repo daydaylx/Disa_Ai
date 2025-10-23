@@ -23,22 +23,19 @@ export function useMemory() {
   // Initialize memory
   useEffect(() => {
     if (isEnabled) {
-      const loadMemory = async () => {
-        try {
-          const memory = await MemoryStore.getGlobalMemory();
-          setGlobalMemory(memory);
-        } catch (error) {
-          console.error("Failed to load global memory:", error);
-        }
-      };
-      loadMemory();
+      try {
+        const memory = MemoryStore.getGlobalMemory();
+        setGlobalMemory(memory);
+      } catch (error) {
+        console.error("Failed to load global memory:", error);
+      }
     }
   }, [isEnabled]);
 
   const toggleMemory = useCallback(() => {
     const newEnabled = !isEnabled;
     setIsEnabled(newEnabled);
-    
+
     try {
       if (newEnabled) {
         localStorage.setItem("disa-ai-memory-enabled", "true");
@@ -50,21 +47,24 @@ export function useMemory() {
     }
   }, [isEnabled]);
 
-  const updateGlobalMemory = useCallback(async (updates: Partial<GlobalMemory>) => {
-    if (!isEnabled) return;
-    
-    try {
-      const updated = { ...(globalMemory || {}), ...updates };
-      await MemoryStore.saveGlobalMemory(updated);
-      setGlobalMemory(updated);
-    } catch (error) {
-      console.error("Failed to update global memory:", error);
-    }
-  }, [globalMemory, isEnabled]);
+  const updateGlobalMemory = useCallback(
+    (updates: Partial<GlobalMemory>) => {
+      if (!isEnabled) return;
 
-  const clearAllMemory = useCallback(async () => {
+      try {
+        const updated = { ...(globalMemory || {}), ...updates };
+        MemoryStore.saveGlobalMemory(updated);
+        setGlobalMemory(updated);
+      } catch (error) {
+        console.error("Failed to update global memory:", error);
+      }
+    },
+    [globalMemory, isEnabled],
+  );
+
+  const clearAllMemory = useCallback(() => {
     try {
-      await MemoryStore.clearAll();
+      MemoryStore.clearAll();
       setGlobalMemory(null);
     } catch (error) {
       console.error("Failed to clear memory:", error);

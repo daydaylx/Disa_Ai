@@ -6,7 +6,7 @@ interface GlobalMemory {
 }
 
 export class MemoryStore {
-  static async getGlobalMemory(): Promise<GlobalMemory | null> {
+  static getGlobalMemory(): GlobalMemory | null {
     try {
       const data = localStorage.getItem("disa-ai-global-memory");
       return data ? JSON.parse(data) : null;
@@ -15,7 +15,7 @@ export class MemoryStore {
     }
   }
 
-  static async saveGlobalMemory(memory: GlobalMemory): Promise<void> {
+  static saveGlobalMemory(memory: GlobalMemory): void {
     try {
       localStorage.setItem("disa-ai-global-memory", JSON.stringify(memory));
     } catch (error) {
@@ -23,11 +23,11 @@ export class MemoryStore {
     }
   }
 
-  static async clearAll(): Promise<void> {
+  static clearAll(): void {
     try {
       localStorage.removeItem("disa-ai-global-memory");
       // Clear other memory-related items
-      Object.keys(localStorage).forEach(key => {
+      Object.keys(localStorage).forEach((key) => {
         if (key.startsWith("disa-ai-conversation-")) {
           localStorage.removeItem(key);
         }
