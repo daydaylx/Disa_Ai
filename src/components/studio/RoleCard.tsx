@@ -70,7 +70,6 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
           className,
         )}
         onClick={handleCardClick}
-        role="button"
         tabIndex={disabled ? -1 : 0}
         aria-pressed={isActive}
         aria-label={`${title} ${isActive ? "ausgewählt" : "auswählen"}`}
@@ -98,16 +97,23 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
                   </span>
                 )}
               </div>
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={handleInfoToggle}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleInfoToggle(e as any);
+                  }
+                }}
                 aria-label={expanded ? "Beschreibung verbergen" : "Beschreibung anzeigen"}
                 aria-expanded={expanded}
                 aria-controls={detailId}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border-subtle bg-surface-subtle text-sm font-medium text-text-primary transition-colors hover:border-border-strong hover:bg-surface-raised focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-base)] disabled:pointer-events-none disabled:opacity-50"
               >
                 <Info className="h-4 w-4" />
-              </button>
+              </div>
             </div>
           </div>
         </div>
