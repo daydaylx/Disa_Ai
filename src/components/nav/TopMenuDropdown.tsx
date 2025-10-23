@@ -210,51 +210,77 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
               {/* Quick Navigation */}
               <div className="p-2">
                 <div className="mb-3">
-                  <h3 className="text-neutral-400 px-2 py-1 text-xs font-semibold uppercase tracking-wide">
+                  <h3
+                    className="text-white/80 px-2 py-1 text-xs font-semibold uppercase tracking-wider"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     Navigation
                   </h3>
                   <div className="space-y-1">
                     <button
                       onClick={() => handleNavigation("/chat")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <MessageSquare className="h-4 w-4 text-neutral-300" />
-                      <span className="text-neutral-100 text-sm">Chat</span>
+                      <span
+                        className="text-neutral-100 text-sm"
+                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                      >
+                        Chat
+                      </span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/models")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <Cpu className="h-4 w-4 text-neutral-300" />
-                      <span className="text-neutral-100 text-sm">Modelle</span>
+                      <span
+                        className="text-neutral-100 text-sm"
+                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                      >
+                        Modelle
+                      </span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/roles")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <User className="h-4 w-4 text-neutral-300" />
-                      <span className="text-neutral-100 text-sm">Rollen</span>
+                      <span
+                        className="text-neutral-100 text-sm"
+                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                      >
+                        Rollen
+                      </span>
                     </button>
                   </div>
                 </div>
 
                 {/* Quick Settings */}
                 <div className="mb-3">
-                  <h3 className="text-neutral-400 px-2 py-1 text-xs font-semibold uppercase tracking-wide">
+                  <h3
+                    className="text-white/80 px-2 py-1 text-xs font-semibold uppercase tracking-wider"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     Schnellzugriff
                   </h3>
                   <div className="space-y-1">
                     <button
                       onClick={handleApiKeySettings}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <Key className="h-4 w-4 text-neutral-300" />
                       <div className="flex-1">
-                        <span className="text-neutral-100 text-sm">API-Schlüssel</span>
+                        <span
+                          className="text-neutral-100 text-sm"
+                          style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                        >
+                          API-Schlüssel
+                        </span>
                         <div className="mt-0.5 flex items-center gap-1">
                           <div
                             className={`h-1.5 w-1.5 rounded-full ${
@@ -270,31 +296,46 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
                     <button
                       onClick={handleExportChats}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <Download className="h-4 w-4 text-neutral-300" />
-                      <span className="text-neutral-100 text-sm">Chats exportieren</span>
+                      <span
+                        className="text-neutral-100 text-sm"
+                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                      >
+                        Chats exportieren
+                      </span>
                     </button>
 
                     <button
                       onClick={handleImportChats}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <Upload className="h-4 w-4 text-neutral-300" />
-                      <span className="text-neutral-100 text-sm">Chats importieren</span>
+                      <span
+                        className="text-neutral-100 text-sm"
+                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                      >
+                        Chats importieren
+                      </span>
                     </button>
 
                     {canInstall && !isInstalled && (
                       <button
                         onClick={handleInstallPWA}
-                        className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                        className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                         role="menuitem"
                       >
                         <Smartphone className="h-4 w-4 text-neutral-300" />
                         <div className="flex-1">
-                          <span className="text-neutral-100 text-sm">App installieren</span>
+                          <span
+                            className="text-neutral-100 text-sm"
+                            style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                          >
+                            App installieren
+                          </span>
                           <div className="text-xs text-neutral-300">Als native App nutzen</div>
                         </div>
                       </button>
@@ -304,42 +345,63 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
                 {/* Advanced Settings */}
                 <div className="mb-3">
-                  <h3 className="text-neutral-400 px-2 py-1 text-xs font-semibold uppercase tracking-wide">
+                  <h3
+                    className="text-white/80 px-2 py-1 text-xs font-semibold uppercase tracking-wider"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     Erweitert
                   </h3>
                   <div className="space-y-1">
                     <button
                       onClick={handleAdvancedSettings}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <Settings className="h-4 w-4 text-neutral-300" />
-                      <span className="text-neutral-100 text-sm">Alle Einstellungen</span>
+                      <span
+                        className="text-neutral-100 text-sm"
+                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                      >
+                        Alle Einstellungen
+                      </span>
                     </button>
                   </div>
                 </div>
 
                 {/* Legal & Info */}
                 <div className="border-border border-t border-white/10 pt-2">
-                  <h3 className="text-neutral-400 px-2 py-1 text-xs font-semibold uppercase tracking-wide">
+                  <h3
+                    className="text-white/80 px-2 py-1 text-xs font-semibold uppercase tracking-wider"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     Information
                   </h3>
                   <div className="space-y-1">
                     <button
                       onClick={() => handleNavigation("/impressum")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <FileText className="h-4 w-4 text-neutral-300" />
-                      <span className="text-neutral-100 text-sm">Impressum</span>
+                      <span
+                        className="text-neutral-100 text-sm"
+                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                      >
+                        Impressum
+                      </span>
                     </button>
                     <button
                       onClick={() => handleNavigation("/datenschutz")}
-                      className="touch-target flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="touch-target flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50"
                       role="menuitem"
                     >
                       <FileText className="h-4 w-4 text-neutral-300" />
-                      <span className="text-neutral-100 text-sm">Datenschutz</span>
+                      <span
+                        className="text-neutral-100 text-sm"
+                        style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                      >
+                        Datenschutz
+                      </span>
                     </button>
                   </div>
                 </div>

@@ -467,7 +467,7 @@ export function BurgerMenu() {
                     to={item.to}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-lg px-4 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-white/50 ${
+                      `flex items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-white/50 ${
                         isActive
                           ? "bg-neutral-800/40 backdrop-blur-sm text-neutral-100"
                           : "hover:bg-white/15 text-neutral-100/90"
@@ -475,14 +475,19 @@ export function BurgerMenu() {
                     }
                   >
                     <item.icon className="h-5 w-5 text-neutral-100/90" />
-                    <span className="text-neutral-100/90">{item.label}</span>
+                    <span
+                      className="text-neutral-100/90"
+                      style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                    >
+                      {item.label}
+                    </span>
                   </NavLink>
                 ))}
 
                 {/* Settings Button */}
                 <button
                   onClick={openSettings}
-                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50 text-neutral-100/90"
+                  className="flex items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50 text-neutral-100/90"
                 >
                   <Settings className="h-5 w-5 text-neutral-100/90" />
                   <span className="text-neutral-100/90">Einstellungen</span>
@@ -496,7 +501,7 @@ export function BurgerMenu() {
                     to={item.to}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-lg px-4 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-white/50 ${
+                      `flex items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-white/50 ${
                         isActive
                           ? "bg-neutral-800/40 backdrop-blur-sm text-neutral-100"
                           : "hover:bg-white/15 text-neutral-100/90"
@@ -504,7 +509,12 @@ export function BurgerMenu() {
                     }
                   >
                     <item.icon className="h-5 w-5 text-neutral-100/90" />
-                    <span className="text-neutral-100/90">{item.label}</span>
+                    <span
+                      className="text-neutral-100/90"
+                      style={{ textShadow: "0 0 3px rgba(0,0,0,0.5)" }}
+                    >
+                      {item.label}
+                    </span>
                   </NavLink>
                 ))}
               </div>
@@ -515,16 +525,19 @@ export function BurgerMenu() {
               <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4">
                 {/* API Key Section */}
                 <div className="space-y-3">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold">
+                  <h3
+                    className="flex items-center gap-2 text-lg font-semibold"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     <Key className="h-5 w-5" />
                     API-Schlüssel
                   </h3>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-neutral-300">
                     Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
                   </p>
 
                   <div className="space-y-2">
-                    <Label htmlFor="apiKey" className="text-text-muted">
+                    <Label htmlFor="apiKey" className="text-neutral-300">
                       API-Schlüssel
                     </Label>
                     <div className="relative">
@@ -557,7 +570,7 @@ export function BurgerMenu() {
                             : "bg-gray-500"
                       }`}
                     />
-                    <span className="text-sm text-text-muted">
+                    <span className="text-sm text-neutral-300">
                       {keyStatus === "present"
                         ? "Schlüssel vorhanden"
                         : keyStatus === "invalid"
@@ -588,11 +601,14 @@ export function BurgerMenu() {
 
                 {/* Content Filter Section */}
                 <div className="space-y-3">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold">
+                  <h3
+                    className="flex items-center gap-2 text-lg font-semibold"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     <User className="h-5 w-5" />
                     Inhaltsfilter
                   </h3>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-neutral-300">
                     Verwalte die Sichtbarkeit verschiedener Inhaltsarten.
                   </p>
 
@@ -630,7 +646,10 @@ export function BurgerMenu() {
 
                 {/* Memory Settings Section */}
                 <div className="space-y-3">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold">
+                  <h3
+                    className="flex items-center gap-2 text-lg font-semibold"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -648,7 +667,7 @@ export function BurgerMenu() {
                     </svg>
                     Gedächtnis
                   </h3>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-neutral-300">
                     Speichere Chat-Verläufe und persönliche Informationen für zukünftige Gespräche.
                   </p>
 
@@ -755,11 +774,14 @@ export function BurgerMenu() {
 
                 {/* Chat Management Section */}
                 <div className="space-y-3">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold">
+                  <h3
+                    className="flex items-center gap-2 text-lg font-semibold"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     <MessageSquare className="h-5 w-5" />
                     Chat-Verwaltung
                   </h3>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-neutral-300">
                     Exportiere, importiere und verwalte deine gespeicherten Konversationen.
                   </p>
 
@@ -847,11 +869,14 @@ export function BurgerMenu() {
 
                 {/* PWA Install Section */}
                 <div className="space-y-3">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold">
+                  <h3
+                    className="flex items-center gap-2 text-lg font-semibold"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     <Smartphone className="h-5 w-5" />
                     App-Installation
                   </h3>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-neutral-300">
                     Installiere Disa AI als native App für bessere Performance und schnelleren
                     Zugriff.
                   </p>
@@ -929,11 +954,14 @@ export function BurgerMenu() {
 
                 {/* Build Info */}
                 <div className="space-y-3">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold">
+                  <h3
+                    className="flex items-center gap-2 text-lg font-semibold"
+                    style={{ textShadow: "0 0 4px rgba(0,0,0,0.6)" }}
+                  >
                     <Info className="h-5 w-5" />
                     Build Information
                   </h3>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-neutral-300">
                     Build-Version und Deployment-Informationen
                   </p>
 
@@ -942,18 +970,18 @@ export function BurgerMenu() {
                       {/* Build ID nur in Entwicklung anzeigen */}
                       {import.meta.env.DEV && (
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-text-muted">Build ID:</span>
+                          <span className="text-neutral-300">Build ID:</span>
                           <span className="text-accent font-mono">{BUILD_ID}</span>
                         </div>
                       )}
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-text-muted">Version:</span>
+                        <span className="text-neutral-300">Version:</span>
                         <span className="text-text-strong">v1.0.0</span>
                       </div>
                       {/* Environment nur in Entwicklung anzeigen */}
                       {import.meta.env.DEV && (
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-text-muted">Environment:</span>
+                          <span className="text-neutral-300">Environment:</span>
                           <span className="text-text-strong">
                             {import.meta.env.DEV ? "Development" : "Production"}
                           </span>
