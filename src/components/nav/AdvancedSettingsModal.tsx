@@ -316,8 +316,8 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="border-border relative h-full max-h-[90vh] w-full max-w-md rounded-xl border bg-surface-card shadow-xl sm:h-auto sm:max-h-[80vh]">
-        <div className="flex h-full flex-col">
+      <div className="border-border relative w-full max-w-md max-h-[90vh] rounded-xl border bg-surface-card shadow-xl overflow-hidden flex flex-col">
+        <div className="flex flex-1 flex-col min-h-0">
           {/* Header - Fixed */}
           <div className="border-border flex flex-shrink-0 items-center justify-between border-b p-4">
             <h2 className="text-text-strong text-lg font-semibold">Erweiterte Einstellungen</h2>
