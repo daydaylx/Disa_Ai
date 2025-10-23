@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import AdvancedSettingsModal from "./AdvancedSettingsModal";
+import BottomSheetSettings from "../BottomSheetSettings";
 import TopMenuDropdown from "./TopMenuDropdown";
 
 export default function TopMenuButton() {
@@ -17,7 +17,7 @@ export default function TopMenuButton() {
   return (
     <>
       <TopMenuDropdown onOpenAdvancedSettings={handleOpenAdvancedSettings} />
-      <AdvancedSettingsModal isOpen={showAdvancedSettings} onClose={handleCloseAdvancedSettings} />
+      <BottomSheetSettings isOpen={showAdvancedSettings} onClose={handleCloseAdvancedSettings} />
     </>
   );
 }
