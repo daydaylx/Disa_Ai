@@ -10,7 +10,7 @@ export default function SettingsFAB() {
       href="#/settings"
       aria-label="Einstellungen öffnen"
       onClick={handleClick}
-      className="touch-target border-border bg-surface-1 text-text-0 fixed right-4 z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border transition active:scale-95"
+      className="touch-target border-border bg-surface-1 text-text-0 fixed right-4 z-40 inline-flex h-11 w-11 items-center justify-center rounded-full border transition active:scale-95"
       style={{ bottom: "calc(var(--inset-b) + 16px)" }}
       data-no-zoom
     >

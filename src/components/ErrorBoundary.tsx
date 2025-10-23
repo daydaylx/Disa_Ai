@@ -293,7 +293,7 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
   return (
     <>
       {showWarnings && warnings.length > 0 && (
-        <div className="border-warn/30 bg-warn/10 fixed left-0 right-0 top-0 z-50 border-b p-4">
+        <div className="border-warn/30 bg-warn/10 fixed left-0 right-0 top-0 z-60 border-b p-4">
           <div className="mx-auto flex max-w-7xl items-center justify-between">
             <div className="flex items-center space-x-2">
               <svg

@@ -57,7 +57,7 @@ export function PWADebugInfo() {
         onClick={() => setIsVisible(true)}
         variant="ghost"
         size="icon"
-        className="fixed right-4 top-4 z-50 h-8 w-8"
+        className="fixed right-4 top-20 z-40 h-8 w-8"
         aria-label="PWA Debug-Informationen anzeigen"
         title="PWA Debug-Informationen anzeigen"
       >
@@ -67,7 +67,7 @@ export function PWADebugInfo() {
   }
 
   return (
-    <div className="fixed right-4 top-4 z-50 max-w-sm">
+    <div className="fixed right-4 top-20 z-40 max-w-sm">
       <div className="border-border bg-surface-1 shadow-level rounded-lg border p-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">

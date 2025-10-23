@@ -66,7 +66,7 @@ export function ChatHistorySidebar({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-30">
       <div className="fixed inset-0 bg-black/50 md:hidden" onClick={onClose} />
 
       <div
