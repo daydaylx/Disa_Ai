@@ -62,20 +62,20 @@ function ChatStats() {
   return (
     <div className="grid grid-cols-2 gap-4 text-sm">
       <div className="space-y-1">
-        <span className="text-white/60">Konversationen:</span>
-        <div className="font-medium text-white">{stats.totalConversations}</div>
+        <span className="text-neutral-300">Konversationen:</span>
+        <div className="font-medium text-neutral-100">{stats.totalConversations}</div>
       </div>
       <div className="space-y-1">
-        <span className="text-white/60">Nachrichten:</span>
-        <div className="font-medium text-white">{stats.totalMessages}</div>
+        <span className="text-neutral-300">Nachrichten:</span>
+        <div className="font-medium text-neutral-100">{stats.totalMessages}</div>
       </div>
       <div className="space-y-1">
-        <span className="text-white/60">Ø pro Chat:</span>
-        <div className="font-medium text-white">{stats.averageMessagesPerConversation}</div>
+        <span className="text-neutral-300">Ø pro Chat:</span>
+        <div className="font-medium text-neutral-100">{stats.averageMessagesPerConversation}</div>
       </div>
       <div className="space-y-1">
-        <span className="text-white/60">Verwendete Modelle:</span>
-        <div className="font-medium text-white">{stats.modelsUsed.length}</div>
+        <span className="text-neutral-300">Verwendete Modelle:</span>
+        <div className="font-medium text-neutral-100">{stats.modelsUsed.length}</div>
       </div>
     </div>
   );
@@ -416,15 +416,15 @@ export function BurgerMenu() {
       {isOpen && (
         <div
           ref={menuRef}
-          className="border-border fixed right-2 top-16 z-50 h-[calc(100vh-6rem)] max-h-[600px] min-h-[300px] w-64 max-w-[90vw] rounded-xl border bg-surface-card shadow-lg"
+          className="border-border fixed right-2 top-16 z-50 h-[calc(100vh-6rem)] max-h-[600px] min-h-[300px] w-64 max-w-[90vw] rounded-xl border border-white/10 bg-neutral-900/70 dark:bg-neutral-900/70 light:bg-white/8 backdrop-blur-md motion-reduce:backdrop-blur-none shadow-xl text-neutral-100 dark:text-neutral-100 light:text-neutral-900"
           role="dialog"
           aria-modal="true"
           aria-labelledby="menu-title"
         >
           <div className="p-1">
             {/* Header */}
-            <div className="border-border flex items-center justify-between border-b p-4">
-              <h2 id="menu-title" className="text-lg font-semibold">
+            <div className="border-border flex items-center justify-between border-b border-white/10 p-4 bg-neutral-800/30 backdrop-blur-sm">
+              <h2 id="menu-title" className="text-lg font-semibold text-neutral-100">
                 {activeTab === "settings" ? "Einstellungen" : "Menü"}
               </h2>
               <div className="flex items-center gap-1">
@@ -467,23 +467,25 @@ export function BurgerMenu() {
                     to={item.to}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-lg px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] ${
-                        isActive ? "bg-surface-raised text-text-primary" : "hover:bg-surface-subtle"
+                      `flex items-center gap-3 rounded-lg px-4 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-white/50 ${
+                        isActive
+                          ? "bg-neutral-800/40 backdrop-blur-sm text-neutral-100"
+                          : "hover:bg-white/15 text-neutral-100/90"
                       }`
                     }
                   >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.label}</span>
+                    <item.icon className="h-5 w-5 text-neutral-100/90" />
+                    <span className="text-neutral-100/90">{item.label}</span>
                   </NavLink>
                 ))}
 
                 {/* Settings Button */}
                 <button
                   onClick={openSettings}
-                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-left transition hover:bg-surface-subtle focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]"
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50 text-neutral-100/90"
                 >
-                  <Settings className="h-5 w-5" />
-                  <span>Einstellungen</span>
+                  <Settings className="h-5 w-5 text-neutral-100/90" />
+                  <span className="text-neutral-100/90">Einstellungen</span>
                 </button>
 
                 <div className="border-border my-2 border-t"></div>
@@ -494,13 +496,15 @@ export function BurgerMenu() {
                     to={item.to}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-lg px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] ${
-                        isActive ? "bg-surface-raised text-text-primary" : "hover:bg-surface-subtle"
+                      `flex items-center gap-3 rounded-lg px-4 py-3 text-left transition-all duration-180 ease-out motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-white/50 ${
+                        isActive
+                          ? "bg-neutral-800/40 backdrop-blur-sm text-neutral-100"
+                          : "hover:bg-white/15 text-neutral-100/90"
                       }`
                     }
                   >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.label}</span>
+                    <item.icon className="h-5 w-5 text-neutral-100/90" />
+                    <span className="text-neutral-100/90">{item.label}</span>
                   </NavLink>
                 ))}
               </div>
@@ -530,13 +534,13 @@ export function BurgerMenu() {
                         value={apiKey}
                         onChange={(event) => setApiKey(event.target.value)}
                         placeholder="sk-or-..."
-                        className="surface-card text-text-strong placeholder:text-text-subtle pr-10 font-mono"
+                        className="bg-neutral-800/40 border-white/20 text-neutral-100 placeholder:text-neutral-400 pr-10 font-mono backdrop-blur-sm"
                       />
                       <button
                         type="button"
                         onClick={() => setShowKey(!showKey)}
                         aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                        className="surface-card focus-visible:ring-accent min-h-touch-rec min-w-touch-rec hover:text-text-strong absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-text-muted transition focus-visible:outline-none focus-visible:ring-2"
+                        className="bg-neutral-800/30 backdrop-blur-sm focus-visible:ring-white/50 min-h-touch-rec min-w-touch-rec hover:text-neutral-100 absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-neutral-300 transition-all duration-180 ease-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2"
                       >
                         {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -565,7 +569,7 @@ export function BurgerMenu() {
                   <Button
                     type="button"
                     onClick={handleSaveKey}
-                    className="surface-card min-h-touch-rec text-text-strong w-full border-0"
+                    className="bg-neutral-800/40 backdrop-blur-sm border border-white/20 min-h-touch-rec text-neutral-100 w-full hover:bg-neutral-800/60 transition-all duration-180 ease-out motion-reduce:transition-none"
                   >
                     Schlüssel speichern
                   </Button>
@@ -595,10 +599,10 @@ export function BurgerMenu() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <Label htmlFor="nsfw-toggle" className="text-white/90">
+                        <Label htmlFor="nsfw-toggle" className="text-neutral-100/90">
                           18+ / NSFW-Content anzeigen
                         </Label>
-                        <p id="nsfw-description" className="text-xs text-white/60">
+                        <p id="nsfw-description" className="text-xs text-neutral-300">
                           Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden
                           Rollen.
                         </p>
@@ -651,10 +655,10 @@ export function BurgerMenu() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <Label htmlFor="memory-toggle" className="text-white/90">
+                        <Label htmlFor="memory-toggle" className="text-neutral-100/90">
                           Gedächtnis aktivieren
                         </Label>
-                        <p id="memory-description" className="text-xs text-white/60">
+                        <p id="memory-description" className="text-xs text-neutral-300">
                           Wenn aktiviert, werden Chat-Verläufe und globale Infos lokal gespeichert.
                         </p>
                       </div>
@@ -670,7 +674,7 @@ export function BurgerMenu() {
                       <>
                         {/* Global Memory Input */}
                         <div className="space-y-3 border-t border-white/10 pt-4">
-                          <Label htmlFor="memory-name" className="text-white/90">
+                          <Label htmlFor="memory-name" className="text-neutral-100/90">
                             Persönliche Informationen
                           </Label>
                           <div className="space-y-2">
@@ -679,7 +683,7 @@ export function BurgerMenu() {
                               placeholder="Dein Name (optional)"
                               value={globalMemory?.name || ""}
                               onChange={(e) => updateGlobalMemory({ name: e.target.value })}
-                              className="surface-card text-white placeholder:text-white/40"
+                              className="bg-neutral-800/40 border-white/20 text-neutral-100 placeholder:text-neutral-400 backdrop-blur-sm"
                               aria-label="Dein Name für persönliche Informationen"
                             />
                             <Input
@@ -693,7 +697,7 @@ export function BurgerMenu() {
                                     : [],
                                 })
                               }
-                              className="surface-card text-white placeholder:text-white/40"
+                              className="bg-neutral-800/40 border-white/20 text-neutral-100 placeholder:text-neutral-400 backdrop-blur-sm"
                               aria-label="Deine Hobbys und Interessen"
                             />
                             <Input
@@ -701,7 +705,7 @@ export function BurgerMenu() {
                               placeholder="Hintergrund, Beruf (optional)"
                               value={globalMemory?.background || ""}
                               onChange={(e) => updateGlobalMemory({ background: e.target.value })}
-                              className="surface-card text-white placeholder:text-white/40"
+                              className="bg-neutral-800/40 border-white/20 text-neutral-100 placeholder:text-neutral-400 backdrop-blur-sm"
                               aria-label="Dein beruflicher Hintergrund"
                             />
                           </div>
@@ -762,13 +766,13 @@ export function BurgerMenu() {
                   <div className="space-y-6">
                     {/* Chat Statistics */}
                     <div className="space-y-3">
-                      <Label className="text-white/90">Statistiken</Label>
+                      <Label className="text-neutral-100/90">Statistiken</Label>
                       <ChatStats />
                     </div>
 
                     {/* Export/Import Actions */}
                     <div className="space-y-3 border-t border-white/10 pt-4">
-                      <Label className="text-white/90">Import & Export</Label>
+                      <Label className="text-neutral-100/90">Import & Export</Label>
                       <div className="grid grid-cols-2 gap-3">
                         <Button
                           onClick={handleExportChats}
@@ -805,7 +809,7 @@ export function BurgerMenu() {
 
                     {/* Cleanup Actions */}
                     <div className="space-y-3 border-t border-white/10 pt-4">
-                      <Label className="text-white/90">Aufräumen</Label>
+                      <Label className="text-neutral-100/90">Aufräumen</Label>
                       <div className="space-y-2">
                         <Button
                           onClick={handleCleanupOldChats}
