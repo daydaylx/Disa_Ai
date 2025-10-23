@@ -303,11 +303,20 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="border-border relative h-full max-h-[90vh] w-full max-w-md rounded-xl border bg-surface-card shadow-xl">
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4"
+      onClick={handleBackdropClick}
+    >
+      <div className="border-border relative h-full max-h-[90vh] w-full max-w-md rounded-xl border bg-surface-card shadow-xl sm:h-auto sm:max-h-[80vh]">
         <div className="flex h-full flex-col">
           {/* Header - Fixed */}
           <div className="border-border flex flex-shrink-0 items-center justify-between border-b p-4">
