@@ -43,11 +43,22 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
       setExpanded((prev) => !prev);
     };
 
+    const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      // If clicking on the info button, don't trigger the card click
+      const target = event.target as HTMLElement;
+      if (target.closest('[aria-label*="Beschreibung"]')) {
+        return;
+      }
+
+      if (!disabled && onClick) {
+        onClick(event);
+      }
+    };
+
     return (
       <Card
         ref={ref as any}
-        clickable
-        interactive="gentle"
+        interactive={isActive ? "dramatic" : "gentle"}
         padding="md"
         state={isActive ? "selected" : disabled ? "disabled" : "default"}
         data-cat={categoryKey}
@@ -58,7 +69,12 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
           isActive && "ring-brand ring-2",
           className,
         )}
-        onCardClick={disabled ? undefined : onClick}
+        onClick={handleCardClick}
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        aria-pressed={isActive}
+        aria-label={`${title} ${isActive ? "ausgewählt" : "auswählen"}`}
+        data-testid={`role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
         {...props}
       >
         <div className="flex w-full items-start gap-3">

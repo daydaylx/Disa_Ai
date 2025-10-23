@@ -7,7 +7,7 @@ import { Avatar } from "./avatar";
 import { Badge } from "./badge";
 import { Card, CardContent, CardHeader } from "./card";
 
-interface ModelCardProps {
+export interface ModelCardProps {
   id: string;
   name: string;
   provider: string;

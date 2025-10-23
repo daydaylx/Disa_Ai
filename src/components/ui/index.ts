@@ -1,11 +1,9 @@
 export * from "./avatar";
 export * from "./badge";
 export * from "./button";
-export * from "./card";
 export * from "./dialog";
 export * from "./dropdown-menu";
 export * from "./input";
-export * from "./ModelCard";
 export * from "./select";
 export * from "./StaticSurfaceSection";
 export * from "./table";
@@ -13,8 +11,18 @@ export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";
 
+// Card System - explicit exports to avoid conflicts
+export type { CardProps } from "./card";
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
+export type { ModelCardProps } from "./ModelCard";
+export { ModelCard } from "./ModelCard";
+
 // Enhanced Card System
-export * from "./card-types";
+export type {
+  CardVariantProps,
+  ConversationCardProps,
+  ModelCardProps as ModelCardTypeProps,
+} from "./card-types";
 export * from "./DiscussionTopicCard";
 export * from "./InteractiveCard";
 export * from "./StatusCard";

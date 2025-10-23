@@ -1,12 +1,24 @@
-import { Cpu, Download, Eye, EyeOff, FileText, Info, Key, MessageSquare, Menu, Settings, Shield, Smartphone, Trash2, Upload, User, X } from "lucide-react";
+import {
+  Cpu,
+  Download,
+  Eye,
+  EyeOff,
+  FileText,
+  Info,
+  Key,
+  Menu,
+  MessageSquare,
+  Settings,
+  Shield,
+  Smartphone,
+  Trash2,
+  Upload,
+  User,
+  X,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Switch } from "../ui/Switch";
-import { useToasts } from "../ui/toast/ToastsProvider";
 import { useMemory } from "../../hooks/useMemory";
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { useSettings } from "../../hooks/useSettings";
@@ -19,6 +31,11 @@ import {
   importConversations,
 } from "../../lib/conversation-manager";
 import { BUILD_ID } from "../../lib/pwa/registerSW";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Switch } from "../ui/Switch";
+import { useToasts } from "../ui/toast/ToastsProvider";
 
 const navItems = [
   { to: "/chat", icon: MessageSquare, label: "Chat" },
@@ -72,7 +89,6 @@ export function BurgerMenu() {
   const [keyStatus, setKeyStatus] = useState<"empty" | "present" | "invalid">("empty");
   const menuRef = useRef<HTMLDivElement>(null);
   const toasts = useToasts();
-  const navigate = useNavigate();
   const { canInstall, installed: isInstalled, requestInstall: promptInstall } = usePWAInstall();
   const { settings, toggleNSFWContent } = useSettings();
   const {
@@ -217,8 +233,8 @@ export function BurgerMenu() {
         const importData = JSON.parse(content);
 
         const result = importConversations(importData, {
-          mergeStrategy: "skip-duplicates",
-          createBackup: true,
+          merge: true,
+          overwrite: false,
         });
 
         if (result.success) {
@@ -413,15 +429,26 @@ export function BurgerMenu() {
               </h2>
               <div className="flex items-center gap-1">
                 {activeTab === "settings" && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={backToMain} 
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={backToMain}
                     aria-label="Zurück zum Menü"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                      <path d="m12 19-7-7 7-7"/>
-                      <path d="M19 12H5"/>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-5 w-5"
+                    >
+                      <path d="m12 19-7-7 7-7" />
+                      <path d="M19 12H5" />
                     </svg>
                   </Button>
                 )}
@@ -441,9 +468,7 @@ export function BurgerMenu() {
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
                       `flex items-center gap-3 rounded-lg px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] ${
-                        isActive
-                          ? "bg-surface-raised text-text-primary"
-                          : "hover:bg-surface-subtle"
+                        isActive ? "bg-surface-raised text-text-primary" : "hover:bg-surface-subtle"
                       }`
                     }
                   >
@@ -455,7 +480,7 @@ export function BurgerMenu() {
                 {/* Settings Button */}
                 <button
                   onClick={openSettings}
-                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] hover:bg-surface-subtle"
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-left transition hover:bg-surface-subtle focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]"
                 >
                   <Settings className="h-5 w-5" />
                   <span>Einstellungen</span>
@@ -470,9 +495,7 @@ export function BurgerMenu() {
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
                       `flex items-center gap-3 rounded-lg px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] ${
-                        isActive
-                          ? "bg-surface-raised text-text-primary"
-                          : "hover:bg-surface-subtle"
+                        isActive ? "bg-surface-raised text-text-primary" : "hover:bg-surface-subtle"
                       }`
                     }
                   >
@@ -495,7 +518,7 @@ export function BurgerMenu() {
                   <p className="text-sm text-text-muted">
                     Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
                   </p>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="apiKey" className="text-text-muted">
                       API-Schlüssel
@@ -552,8 +575,8 @@ export function BurgerMenu() {
                     <div className="text-xs text-blue-200">
                       <p className="mb-1 font-medium">Datenschutz:</p>
                       <p>
-                        Dein Schlüssel wird nur in der Browser-Session gespeichert und automatisch beim
-                        Schließen gelöscht.
+                        Dein Schlüssel wird nur in der Browser-Session gespeichert und automatisch
+                        beim Schließen gelöscht.
                       </p>
                     </div>
                   </div>
@@ -568,7 +591,7 @@ export function BurgerMenu() {
                   <p className="text-sm text-text-muted">
                     Verwalte die Sichtbarkeit verschiedener Inhaltsarten.
                   </p>
-                  
+
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
@@ -576,7 +599,8 @@ export function BurgerMenu() {
                           18+ / NSFW-Content anzeigen
                         </Label>
                         <p id="nsfw-description" className="text-xs text-white/60">
-                          Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden Rollen.
+                          Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden
+                          Rollen.
                         </p>
                       </div>
                       <Switch
@@ -592,8 +616,8 @@ export function BurgerMenu() {
                       <div className="text-xs text-orange-200">
                         <p className="mb-1 font-medium">Hinweis:</p>
                         <p>
-                          Diese Einstellung wird nur lokal in deinem Browser gespeichert. 18+ Inhalte werden
-                          standardmäßig ausgeblendet.
+                          Diese Einstellung wird nur lokal in deinem Browser gespeichert. 18+
+                          Inhalte werden standardmäßig ausgeblendet.
                         </p>
                       </div>
                     </div>
@@ -603,16 +627,27 @@ export function BurgerMenu() {
                 {/* Memory Settings Section */}
                 <div className="space-y-3">
                   <h3 className="flex items-center gap-2 text-lg font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/>
-                      <path d="M12 6v6l4 2"/>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-5 w-5"
+                    >
+                      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+                      <path d="M12 6v6l4 2" />
                     </svg>
                     Gedächtnis
                   </h3>
                   <p className="text-sm text-text-muted">
                     Speichere Chat-Verläufe und persönliche Informationen für zukünftige Gespräche.
                   </p>
-                  
+
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
@@ -685,7 +720,8 @@ export function BurgerMenu() {
                                 toasts.push({
                                   kind: "success",
                                   title: "Gedächtnis gelöscht",
-                                  message: "Alle gespeicherten Chat-Verläufe und Infos wurden entfernt.",
+                                  message:
+                                    "Alle gespeicherten Chat-Verläufe und Infos wurden entfernt.",
                                 });
                               }
                             }}
@@ -704,8 +740,9 @@ export function BurgerMenu() {
                       <div className="text-xs text-blue-200">
                         <p className="mb-1 font-medium">Datenschutz:</p>
                         <p>
-                          Alle Daten werden nur lokal in deinem Browser gespeichert und niemals an Server
-                          übertragen. Das Gedächtnis kann jederzeit deaktiviert oder gelöscht werden.
+                          Alle Daten werden nur lokal in deinem Browser gespeichert und niemals an
+                          Server übertragen. Das Gedächtnis kann jederzeit deaktiviert oder gelöscht
+                          werden.
                         </p>
                       </div>
                     </div>
@@ -795,8 +832,9 @@ export function BurgerMenu() {
                       <div className="text-xs text-blue-200">
                         <p className="mb-1 font-medium">Sicherheit:</p>
                         <p>
-                          Alle Chat-Daten werden nur lokal gespeichert. Export-Dateien enthalten vollständige
-                          Konversationsverläufe - behandle sie entsprechend vertraulich.
+                          Alle Chat-Daten werden nur lokal gespeichert. Export-Dateien enthalten
+                          vollständige Konversationsverläufe - behandle sie entsprechend
+                          vertraulich.
                         </p>
                       </div>
                     </div>
@@ -810,9 +848,10 @@ export function BurgerMenu() {
                     App-Installation
                   </h3>
                   <p className="text-sm text-text-muted">
-                    Installiere Disa AI als native App für bessere Performance und schnelleren Zugriff.
+                    Installiere Disa AI als native App für bessere Performance und schnelleren
+                    Zugriff.
                   </p>
-                  
+
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <div
@@ -864,8 +903,8 @@ export function BurgerMenu() {
                           🎉 App erfolgreich installiert!
                         </div>
                         <p className="text-sm text-white/60">
-                          Du kannst Disa AI jetzt direkt vom Home-Screen starten und wie eine native App
-                          verwenden.
+                          Du kannst Disa AI jetzt direkt vom Home-Screen starten und wie eine native
+                          App verwenden.
                         </p>
                       </div>
                     )}
@@ -893,7 +932,7 @@ export function BurgerMenu() {
                   <p className="text-sm text-text-muted">
                     Build-Version und Deployment-Informationen
                   </p>
-                  
+
                   <div className="space-y-4">
                     <div className="space-y-2">
                       {/* Build ID nur in Entwicklung anzeigen */}
@@ -920,8 +959,9 @@ export function BurgerMenu() {
 
                     <div className="surface-card rounded p-3 text-xs">
                       <p className="text-white/60">
-                        <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein harter Reload
-                        (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.
+                        <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein
+                        harter Reload (Strg+Shift+R) erforderlich sein, um die neue Version zu
+                        laden.
                       </p>
                     </div>
 
@@ -931,11 +971,22 @@ export function BurgerMenu() {
                       variant="outline"
                       className="border-accent1/40 hover:bg-accent1/10 text-accent1 flex w-full items-center justify-center gap-2"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                        <path d="M21 3v5h-5"/>
-                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                        <path d="M3 21v-5h5"/>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-4 w-4"
+                      >
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                        <path d="M21 3v5h-5" />
+                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                        <path d="M3 21v-5h5" />
                       </svg>
                       Seite vollständig neu laden
                     </Button>

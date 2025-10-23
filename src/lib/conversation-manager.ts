@@ -1,6 +1,18 @@
 // Mock implementation of conversation manager functions
 // In a real application, these would connect to actual storage
 
+export interface Conversation {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  lastActivity?: string;
+  model: string;
+  messageCount: number;
+  messages?: any[];
+  isFavorite?: boolean;
+}
+
 interface ConversationMetadata {
   id: string;
   title: string;
@@ -34,20 +46,25 @@ export function getAllConversations(): ConversationMetadata[] {
   return [];
 }
 
-export function getConversation(id: string) {
+export function getConversation(id: string): Conversation | null {
   // Mock implementation
+  console.log(`Getting conversation ${id}`);
   return null;
 }
 
-export function saveConversation(conversation: any) {
+export function saveConversation(conversation: Conversation): void {
   // Mock implementation
+  console.log(`Saving conversation ${conversation.id}`);
 }
 
-export function deleteConversation(id: string) {
+export function deleteConversation(id: string): void {
   // Mock implementation
+  console.log(`Deleting conversation ${id}`);
 }
 
-export function cleanupOldConversations(days: number) {
+export function cleanupOldConversations(days: number): number {
+  // Mock implementation
+  console.log(`Cleaning up conversations older than ${days} days`);
   return 0; // Number of deleted conversations
 }
 
@@ -63,7 +80,12 @@ export function exportConversations(): ExportData {
   };
 }
 
-export function importConversations(data: any, options: any) {
+export function importConversations(
+  data: ExportData,
+  options: { overwrite?: boolean; merge?: boolean },
+) {
+  // Mock implementation
+  console.log(`Importing ${data.conversations.length} conversations with options:`, options);
   return {
     success: true,
     importedCount: 0,

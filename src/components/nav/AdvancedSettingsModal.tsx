@@ -201,8 +201,8 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
         const importData = JSON.parse(content);
 
         const result = importConversations(importData, {
-          mergeStrategy: "skip-duplicates",
-          createBackup: true,
+          merge: true,
+          overwrite: false,
         });
 
         if (result.success) {

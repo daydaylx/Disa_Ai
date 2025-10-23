@@ -52,7 +52,8 @@ export function ConversationHistorySheet({
               const messageCount = conversation.messageCount ?? conversation.messages?.length ?? 0;
               const lastMessage =
                 conversation.messages?.[conversation.messages.length - 1]?.content ?? "";
-              const lastActivity = conversation.lastActivity ?? conversation.updatedAt;
+              const lastActivityString = conversation.lastActivity ?? conversation.updatedAt;
+              const lastActivity = new Date(lastActivityString).getTime();
               const preview = lastMessage.trim() || EMPTY_PREVIEW;
               const isActive = conversation.id === activeId;
 

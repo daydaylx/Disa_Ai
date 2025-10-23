@@ -272,7 +272,8 @@ export function ChatList({
                     const lastMessage =
                       conversation.messages?.[conversation.messages.length - 1]?.content ?? "";
                     const preview = lastMessage.trim() || "Noch keine Nachrichten gespeichert.";
-                    const lastActivity = conversation.lastActivity ?? conversation.updatedAt;
+                    const lastActivityString = conversation.lastActivity ?? conversation.updatedAt;
+                    const lastActivity = new Date(lastActivityString).getTime();
 
                     return (
                       <div
