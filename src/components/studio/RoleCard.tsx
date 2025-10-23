@@ -70,13 +70,15 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
           className,
         )}
         onClick={handleCardClick}
-        tabIndex={disabled ? -1 : 0}
         onKeyDown={(e) => {
           if ((e.key === "Enter" || e.key === " ") && !disabled) {
             e.preventDefault();
             handleCardClick(e as any);
           }
         }}
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        aria-pressed={isActive}
         aria-label={`${title} ${isActive ? "ausgewählt" : "auswählen"}`}
         data-testid={`role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
         {...props}

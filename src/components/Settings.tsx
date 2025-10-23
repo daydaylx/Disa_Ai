@@ -66,9 +66,22 @@ export const Settings: React.FC<SettingsProps> = ({
 
       {/* Confirm dialogs */}
       {showConfirmClear && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-surface-overlay)] p-4">
-          <SoftDepthSurface variant="strong" className="w-full max-w-sm rounded-xl p-5">
-            <p className="mb-5 text-[var(--color-text-primary)]">
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center pointer-events-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="clear-confirm-title"
+        >
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setShowConfirmClear(false)}
+            aria-hidden="true"
+          />
+          <SoftDepthSurface
+            variant="strong"
+            className="relative mt-6 w-[min(92vw,400px)] max-h-[80dvh] overflow-y-auto rounded-2xl border border-white/10 bg-neutral-900/70 backdrop-blur-md shadow-xl p-5"
+          >
+            <p id="clear-confirm-title" className="mb-5 text-[var(--color-text-primary)]">
               Dadurch werden temporäre Dateien gelöscht. Die Aktion kann nicht rückgängig gemacht
               werden.
             </p>
@@ -94,9 +107,27 @@ export const Settings: React.FC<SettingsProps> = ({
       )}
 
       {showConfirmDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-surface-overlay)] p-4">
-          <SoftDepthSurface variant="strong" className="w-full max-w-sm rounded-xl p-5">
-            <h3 className="mb-2 font-bold text-[var(--color-text-primary)]">Verlauf löschen?</h3>
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center pointer-events-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-confirm-title"
+        >
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setShowConfirmDelete(false)}
+            aria-hidden="true"
+          />
+          <SoftDepthSurface
+            variant="strong"
+            className="relative mt-6 w-[min(92vw,400px)] max-h-[80dvh] overflow-y-auto rounded-2xl border border-white/10 bg-neutral-900/70 backdrop-blur-md shadow-xl p-5"
+          >
+            <h3
+              id="delete-confirm-title"
+              className="mb-2 font-bold text-[var(--color-text-primary)]"
+            >
+              Verlauf löschen?
+            </h3>
             <p className="mb-5 text-[var(--color-text-primary)]">
               Dadurch werden alle Chat-Verläufe gelöscht. Die Aktion kann nicht rückgängig gemacht
               werden.

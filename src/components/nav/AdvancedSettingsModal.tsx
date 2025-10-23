@@ -309,18 +309,37 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
     }
   };
 
+  // Lock body scroll when modal opens
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-      onClick={handleBackdropClick}
+      className="fixed inset-0 z-50 flex items-start justify-center pointer-events-auto"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
     >
-      <div className="border-border relative w-full max-w-md max-h-[90vh] rounded-xl border bg-surface-card shadow-xl overflow-hidden flex flex-col">
+      <div
+        className="absolute inset-0 bg-black/40"
+        onClick={handleBackdropClick}
+        aria-hidden="true"
+      />
+      <div className="relative mt-6 w-[min(92vw,680px)] max-h-[80dvh] overflow-y-auto rounded-2xl border border-white/10 bg-neutral-900/70 backdrop-blur-md shadow-xl flex flex-col">
         <div className="flex flex-1 flex-col min-h-0">
           {/* Header - Fixed */}
           <div className="border-border flex flex-shrink-0 items-center justify-between border-b p-4">
-            <h2 className="text-text-strong text-lg font-semibold">Erweiterte Einstellungen</h2>
+            <h2 id="modal-title" className="text-text-strong text-lg font-semibold">
+              Erweiterte Einstellungen
+            </h2>
             <button
               onClick={onClose}
               className="hover:text-text-strong rounded-lg p-1 text-text-muted transition"
