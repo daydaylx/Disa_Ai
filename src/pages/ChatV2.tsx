@@ -817,11 +817,10 @@ export default function ChatV2() {
         activeId={activeConversationId}
         onSelect={handleSelectConversation}
         onDelete={handleDeleteConversation}
-        className="mobile-chat-history-sidebar"
       />
 
       {/* Settings FAB Button - bottom left */}
-      <SettingsFAB className="mobile-chat-settings-fab" />
+      <SettingsFAB />
     </div>
   );
 }

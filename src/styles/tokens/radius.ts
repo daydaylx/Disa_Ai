@@ -21,10 +21,10 @@ export type RadiusTokens = {
   badge: string;
 
   /* Neo-Depth Card System - Standardized Card Radii */
-  card: string;          // Standard card radius (16px)
-  cardInner: string;     // Inner elements (12px)
-  cardSmall: string;     // Small elements like badges (8px)
-  avatar: string;        // Avatar/profile images (50%)
+  card: string; // Standard card radius (16px)
+  cardInner: string; // Inner elements (12px)
+  cardSmall: string; // Small elements like badges (8px)
+  avatar: string; // Avatar/profile images (50%)
 };
 
 export const radiusTokens: RadiusTokens = {
@@ -46,10 +46,10 @@ export const radiusTokens: RadiusTokens = {
   badge: "8px",
 
   /* Neo-Depth Card System - Consistent Geometry */
-  card: "16px",          // Standard for all cards (xl token)
-  cardInner: "12px",     // Inner content areas (lg token)
-  cardSmall: "8px",      // Badges, small elements (md token)
-  avatar: "50%",         // Profile images and circular elements
+  card: "16px", // Standard for all cards (xl token)
+  cardInner: "12px", // Inner content areas (lg token)
+  cardSmall: "8px", // Badges, small elements (md token)
+  avatar: "50%", // Profile images and circular elements
 };
 
 export const radiusCssVars = {

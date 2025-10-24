@@ -1,5 +1,6 @@
+import { Bot, Home, Users } from "lucide-react"; // Example icons
 import { NavLink } from "react-router-dom";
-import { Home, Bot, Users } from "lucide-react"; // Example icons
+
 import { cn } from "../../lib/utils";
 
 const navItems = [
@@ -19,7 +20,7 @@ export function BottomNavigation() {
             className={({ isActive }) =>
               cn(
                 "nav-item flex flex-col items-center justify-center text-sm font-medium transition-colors",
-                isActive ? "text-brand" : "text-text-secondary hover:text-text-primary"
+                isActive ? "text-brand" : "text-text-secondary hover:text-text-primary",
               )
             }
           >

@@ -831,7 +831,7 @@ export default function MobileChatV2() {
       </BottomSheet>
 
       {/* Mobile Settings FAB Button - bottom left */}
-      <SettingsFAB className="mobile-chat-settings-fab" />
+      <SettingsFAB />
     </div>
   );
 }

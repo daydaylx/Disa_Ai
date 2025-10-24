@@ -7,15 +7,14 @@ import "./ui/base.css"; // Reset & base styles
 import "./styles/a11y-improvements.css"; // A11y improvements
 import "./styles/mobile-enhanced.css"; // Mobile-enhanced styles
 
-import React from "react";
 import ReactDOM from "react-dom/client";
 
-import MobileApp from "./MobileApp";
 import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
 import { initEnvironment } from "./config/env";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 // PWA Installation Prompt
 import { registerSW } from "./lib/pwa/registerSW";
+import MobileApp from "./MobileApp";
 import { themeController } from "./styles/theme";
 
 // Initialize environment configuration

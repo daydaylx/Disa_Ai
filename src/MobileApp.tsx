@@ -13,7 +13,6 @@ import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
 import { MobileOnlyGate } from "./components/layout/MobileOnlyGate";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
-import { cn } from "./lib/utils";
 
 export default function MobileApp() {
   // Initialize viewport height with optimized throttling for scroll performance

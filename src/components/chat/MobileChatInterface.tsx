@@ -827,7 +827,7 @@ export function MobileChatInterface() {
       </BottomSheet>
 
       {/* Mobile Settings FAB */}
-      <SettingsFAB className="mobile-chat-settings-fab" />
+      <SettingsFAB />
     </div>
   );
 }

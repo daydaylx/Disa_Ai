@@ -1,5 +1,6 @@
+import { Bot, Home, Users } from "lucide-react"; // Example icons
 import { NavLink } from "react-router-dom";
-import { Home, Bot, Users } from "lucide-react"; // Example icons
+
 import { cn } from "../../lib/utils";
 
 const navItems = [
@@ -10,7 +11,7 @@ const navItems = [
 
 export function MobileBottomNavigation() {
   return (
-    <nav 
+    <nav
       className="bottom-navigation bg-surface-base/90 fixed bottom-0 z-20 w-full border-t border-border backdrop-blur-xl"
       role="navigation"
       aria-label="Hauptnavigation"
@@ -23,7 +24,7 @@ export function MobileBottomNavigation() {
             className={({ isActive }) =>
               cn(
                 "nav-item flex flex-col items-center justify-center text-sm font-medium transition-colors touch-target",
-                isActive ? "text-brand" : "text-text-secondary hover:text-text-primary"
+                isActive ? "text-brand" : "text-text-secondary hover:text-text-primary",
               )
             }
             aria-label={item.label}

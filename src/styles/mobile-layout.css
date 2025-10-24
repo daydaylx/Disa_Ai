@@ -12,17 +12,17 @@
   --layout-bottom-nav-height: 4rem;
   --layout-content-padding-x: 1rem;
   --layout-content-padding-y: 1rem;
-  
+
   /* Main content area calculation */
   --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
   --layout-main-pb: calc(var(--layout-bottom-nav-height) + var(--layout-content-padding-y));
-  
+
   /* Touch targets */
   --touch-target-minimum: 48px;
   --touch-target-comfortable: 56px;
   --touch-target-relaxed: 64px;
   --touch-target-spacious: 72px;
-  
+
   /* Mobile-specific spacing */
   --space-mobile-xs: 0.25rem;
   --space-mobile-sm: 0.5rem;
@@ -533,7 +533,9 @@
 /* Mobile settings FAB adjustments */
 .mobile-chat-settings-fab {
   position: fixed;
-  bottom: calc(var(--layout-bottom-nav-height) + var(--space-mobile-lg) + env(safe-area-inset-bottom, 0px));
+  bottom: calc(
+    var(--layout-bottom-nav-height) + var(--space-mobile-lg) + env(safe-area-inset-bottom, 0px)
+  );
   right: var(--space-mobile-lg);
   z-index: 40;
   min-height: var(--touch-target-comfortable);
@@ -723,7 +725,7 @@
     --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
     --layout-main-pb: calc(var(--layout-footer-height) + var(--layout-content-padding-y));
   }
-  
+
   /* Show sidebar on tablet/desktop */
   .app-sidebar {
     position: fixed;
@@ -738,17 +740,17 @@
     flex-direction: column;
     padding: var(--space-md) 0;
   }
-  
+
   /* Adjust main content for sidebar */
   .main-content-with-sidebar {
     margin-left: var(--layout-sidebar-width);
   }
-  
+
   /* Hide bottom navigation on tablet/desktop */
   .bottom-navigation {
     display: none;
   }
-  
+
   /* Show traditional footer on tablet/desktop */
   .app-footer {
     display: block;
@@ -757,7 +759,7 @@
     border-top: 1px solid var(--color-border-subtle);
     margin-top: auto;
   }
-  
+
   /* Card grid for tablet */
   .tablet-card-grid {
     display: grid;
@@ -772,14 +774,14 @@
     --layout-content-padding-x: 2rem;
     --layout-content-padding-y: 2rem;
   }
-  
+
   /* Card grid for desktop */
   .desktop-card-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-xl);
   }
-  
+
   /* Wider content area */
   .main-content {
     max-width: 1200px;
@@ -792,7 +794,7 @@
     --layout-sidebar-width: 5rem;
     --layout-content-padding-x: 2.5rem;
   }
-  
+
   /* Card grid for large desktop */
   .large-desktop-card-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -805,19 +807,19 @@
   .touch-target {
     transition: none;
   }
-  
+
   .touch-target:active {
     transform: scale(0.98);
     transition: transform var(--transition-fast) var(--transition-smooth);
   }
-  
+
   /* Enhanced touch feedback for buttons */
   button:active,
   .button-touch:active {
     transform: scale(0.95);
     transition: transform var(--transition-fast) var(--transition-smooth);
   }
-  
+
   /* Touch feedback for interactive elements */
   .touch-interactive:active {
     background-color: var(--active-bg);
@@ -834,7 +836,7 @@
   .chat-input-container {
     border-width: 2px;
   }
-  
+
   .mobile-btn {
     border-width: 2px;
   }
@@ -850,7 +852,7 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   .animate-fade-in,
   .animate-fade-in-up,
   .animate-fade-in-down,
@@ -870,7 +872,7 @@
     transform: none !important;
     transition: none !important;
   }
-  
+
   /* Remove movement effects for tiles */
   .soft-tile:hover,
   .soft-surface:hover,
@@ -879,7 +881,7 @@
     transform: none !important;
     box-shadow: var(--shadow-surface);
   }
-  
+
   /* Remove movement effects for StartTiles */
   .group:hover {
     transform: none !important;

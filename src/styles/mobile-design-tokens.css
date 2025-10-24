@@ -11,17 +11,17 @@
   --layout-bottom-nav-height: 4rem;
   --layout-content-padding-x: 1rem;
   --layout-content-padding-y: 1rem;
-  
+
   /* Main content area calculation */
   --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
   --layout-main-pb: calc(var(--layout-bottom-nav-height) + var(--layout-content-padding-y));
-  
+
   /* Touch targets for mobile */
   --touch-target-minimum: 48px;
   --touch-target-comfortable: 56px;
   --touch-target-relaxed: 64px;
   --touch-target-spacious: 72px;
-  
+
   /* Mobile spacing scale */
   --space-mobile-xs: 0.25rem;
   --space-mobile-sm: 0.5rem;
@@ -32,20 +32,20 @@
   --space-mobile-3xl: 2.5rem;
   --space-mobile-4xl: 3rem;
   --space-mobile-5xl: 4rem;
-  
+
   /* Mobile card sizing */
   --card-mobile-width: 100%;
   --card-mobile-border-radius: var(--radius-xl);
   --card-mobile-padding: var(--space-md);
   --card-mobile-gap: var(--space-md);
-  
+
   /* Mobile form elements */
   --input-mobile-height: var(--touch-target-comfortable);
   --input-mobile-padding-x: var(--space-md);
   --input-mobile-padding-y: var(--space-sm);
   --input-mobile-font-size: var(--font-size-input);
   --input-mobile-border-radius: var(--radius-lg);
-  
+
   /* Mobile button sizing */
   --btn-mobile-height: var(--touch-target-comfortable);
   --btn-mobile-padding-x: var(--space-lg);
@@ -53,131 +53,131 @@
   --btn-mobile-font-size: var(--font-size-body);
   --btn-mobile-border-radius: var(--radius-button);
   --btn-mobile-icon-size: 1.5rem;
-  
+
   /* Mobile navigation */
   --nav-mobile-height: var(--layout-bottom-nav-height);
   --nav-mobile-item-padding-x: var(--space-sm);
   --nav-mobile-item-padding-y: var(--space-xs);
   --nav-mobile-icon-size: 1.5rem;
   --nav-mobile-font-size: var(--font-size-caption);
-  
+
   /* Mobile breakpoints */
   --breakpoint-mobile: 480px;
   --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1024px;
   --breakpoint-large-desktop: 1280px;
-  
+
   /* Mobile-specific typography */
   --font-size-mobile-display: 2rem;
   --line-height-mobile-display: 2.5rem;
   --font-weight-mobile-display: 600;
   --letter-spacing-mobile-display: -0.01em;
-  
+
   --font-size-mobile-headline: 1.5rem;
   --line-height-mobile-headline: 2rem;
   --font-weight-mobile-headline: 600;
   --letter-spacing-mobile-headline: -0.008em;
-  
+
   --font-size-mobile-title: 1.25rem;
   --line-height-mobile-title: 1.75rem;
   --font-weight-mobile-title: 600;
   --letter-spacing-mobile-title: -0.006em;
-  
+
   --font-size-mobile-subtitle: 1.125rem;
   --line-height-mobile-subtitle: 1.5rem;
   --font-weight-mobile-subtitle: 500;
   --letter-spacing-mobile-subtitle: 0em;
-  
+
   --font-size-mobile-body: 1rem;
   --line-height-mobile-body: 1.5rem;
   --font-weight-mobile-body: 400;
   --letter-spacing-mobile-body: 0em;
-  
+
   --font-size-mobile-body-strong: 1rem;
   --line-height-mobile-body-strong: 1.5rem;
   --font-weight-mobile-body-strong: 600;
   --letter-spacing-mobile-body-strong: 0em;
-  
+
   --font-size-mobile-body-small: 0.875rem;
   --line-height-mobile-body-small: 1.25rem;
   --font-weight-mobile-body-small: 400;
   --letter-spacing-mobile-body-small: 0em;
-  
+
   --font-size-mobile-caption: 0.75rem;
   --line-height-mobile-caption: 1rem;
   --font-weight-mobile-caption: 500;
   --letter-spacing-mobile-caption: 0.01em;
-  
+
   --font-size-mobile-label: 0.875rem;
   --line-height-mobile-label: 1.25rem;
   --font-weight-mobile-label: 600;
   --letter-spacing-mobile-label: 0.02em;
   --text-transform-mobile-label: uppercase;
-  
+
   --font-size-mobile-mono: 0.875rem;
   --line-height-mobile-mono: 1.25rem;
   --font-weight-mobile-mono: 400;
   --letter-spacing-mobile-mono: 0em;
-  
+
   /* Mobile card typography */
   --font-size-mobile-title-hero: 1.125rem;
   --line-height-mobile-title-hero: 1.5rem;
   --font-weight-mobile-title-hero: 600;
   --letter-spacing-mobile-title-hero: -0.008em;
   --text-transform-mobile-title-hero: none;
-  
+
   --font-size-mobile-title-lg: 1rem;
   --line-height-mobile-title-lg: 1.5rem;
   --font-weight-mobile-title-lg: 600;
   --letter-spacing-mobile-title-lg: -0.006em;
   --text-transform-mobile-title-lg: none;
-  
+
   --font-size-mobile-title-base: 0.875rem;
   --line-height-mobile-title-base: 1.25rem;
   --font-weight-mobile-title-base: 600;
   --letter-spacing-mobile-title-base: -0.004em;
   --text-transform-mobile-title-base: none;
-  
+
   --font-size-mobile-title-sm: 0.75rem;
   --line-height-mobile-title-sm: 1rem;
   --font-weight-mobile-title-sm: 600;
   --letter-spacing-mobile-title-sm: -0.002em;
   --text-transform-mobile-title-sm: none;
-  
+
   --font-size-mobile-description-lg: 0.875rem;
   --line-height-mobile-description-lg: 1.25rem;
   --font-weight-mobile-description-lg: 400;
   --letter-spacing-mobile-description-lg: 0em;
   --text-transform-mobile-description-lg: none;
-  
+
   --font-size-mobile-description-base: 0.75rem;
   --line-height-mobile-description-base: 1rem;
   --font-weight-mobile-description-base: 400;
   --letter-spacing-mobile-description-base: 0em;
   --text-transform-mobile-description-base: none;
-  
+
   --font-size-mobile-description-sm: 0.6875rem;
   --line-height-mobile-description-sm: 0.875rem;
   --font-weight-mobile-description-sm: 400;
   --letter-spacing-mobile-description-sm: 0.01em;
   --text-transform-mobile-description-sm: none;
-  
+
   --font-size-mobile-metadata: 0.6875rem;
   --line-height-mobile-metadata: 0.875rem;
   --font-weight-mobile-metadata: 500;
   --letter-spacing-mobile-metadata: 0.05em;
   --text-transform-mobile-metadata: uppercase;
-  
+
   --font-size-mobile-card-label: 0.6875rem;
   --line-height-mobile-card-label: 0.875rem;
   --font-weight-mobile-card-label: 600;
   --letter-spacing-mobile-card-label: 0.05em;
   --text-transform-mobile-card-label: uppercase;
-  
+
   /* Fixed mobile font sizes */
   --font-size-mobile-badge: 0.625rem;
   --font-size-mobile-input: 1rem;
-  
+
   /* Mobile spacing scale */
   --space-mobile-none: 0px;
   --space-mobile-3xs: 0.125rem;
@@ -190,7 +190,7 @@
   --space-mobile-2xl: 2.5rem;
   --space-mobile-3xl: 3rem;
   --space-mobile-4xl: 4rem;
-  
+
   /* Mobile semantic spacing */
   --space-mobile-stack-xs: 0.5rem;
   --space-mobile-stack-sm: 0.75rem;
@@ -202,22 +202,22 @@
   --space-mobile-section: 2.5rem;
   --space-mobile-container-x: 1rem;
   --space-mobile-container-y: 1.5rem;
-  
+
   /* Mobile touch targets */
   --size-mobile-touch-compact: 48px;
   --size-mobile-touch-comfortable: 56px;
   --size-mobile-touch-relaxed: 64px;
   --size-mobile-touch-spacious: 72px;
-  
+
   /* Mobile scrollbar dimensions */
   --size-mobile-scrollbar: 8px;
-  
+
   /* Mobile fixed sizes */
   --size-mobile-ripple-max: 200px;
   --size-mobile-bottomsheet-handle: 5px;
   --size-mobile-bottomsheet-handle-width: 40px;
   --size-mobile-bottomsheet-border: 2px;
-  
+
   /* Mobile radii */
   --radius-mobile-none: 0px;
   --radius-mobile-xs: 2px;
@@ -237,7 +237,7 @@
   --radius-mobile-button: 20px;
   --radius-mobile-badge: 8px;
   --radius-mobile-avatar: 50%;
-  
+
   /* Mobile motion */
   --motion-mobile-duration-micro: 120ms;
   --motion-mobile-duration-small: 160ms;
@@ -248,20 +248,20 @@
   --motion-mobile-easing-exit: cubic-bezier(0.4, 0, 1, 1);
   --motion-mobile-easing-accelerate: cubic-bezier(0.8, 0, 1, 1);
   --motion-mobile-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
-  
+
   /* Mobile fixed font sizes */
   --font-size-mobile-badge: 0.625rem;
   --font-size-mobile-input: 1rem;
-  
+
   /* Mobile scrollbar dimensions */
   --size-mobile-scrollbar: 8px;
-  
+
   /* Mobile fixed sizes */
   --size-mobile-ripple-max: 200px;
   --size-mobile-bottomsheet-handle: 5px;
   --size-mobile-bottomsheet-handle-width: 40px;
   --size-mobile-bottomsheet-border: 2px;
-  
+
   /* Mobile additional radii */
   --radius-mobile-scrollbar: 999px;
   --radius-mobile-focus: 6px;
@@ -270,14 +270,14 @@
   --radius-mobile-button: 20px;
   --radius-mobile-badge: 8px;
   --radius-mobile-avatar: 50%;
-  
+
   /* Mobile additional color variables */
   --accent-mobile-color: #4f46e5;
   --accent-mobile-color-rgb: 79, 70, 229;
-  
+
   /* Mobile navigation variables */
   --navigation-mobile-width: 4rem;
-  
+
   /* Mobile legacy aliases for transition period */
   --fg-mobile: var(--color-text-primary);
   --fg-mobile-dim: var(--color-text-secondary);
@@ -330,118 +330,118 @@
     --layout-content-padding-y: 1.5rem;
     --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
     --layout-main-pb: calc(var(--layout-footer-height) + var(--layout-content-padding-y));
-    
+
     /* Tablet typography */
     --font-size-tablet-display: 2.25rem;
     --line-height-tablet-display: 2.75rem;
     --font-weight-tablet-display: 600;
     --letter-spacing-tablet-display: -0.01em;
-    
+
     --font-size-tablet-headline: 1.75rem;
     --line-height-tablet-headline: 2.25rem;
     --font-weight-tablet-headline: 600;
     --letter-spacing-tablet-headline: -0.008em;
-    
+
     --font-size-tablet-title: 1.5rem;
     --line-height-tablet-title: 2rem;
     --font-weight-tablet-title: 600;
     --letter-spacing-tablet-title: -0.006em;
-    
+
     --font-size-tablet-subtitle: 1.25rem;
     --line-height-tablet-subtitle: 1.75rem;
     --font-weight-tablet-subtitle: 500;
     --letter-spacing-tablet-subtitle: 0em;
-    
+
     --font-size-tablet-body: 1rem;
     --line-height-tablet-body: 1.55rem;
     --font-weight-tablet-body: 400;
     --letter-spacing-tablet-body: 0em;
-    
+
     --font-size-tablet-body-strong: 1rem;
     --line-height-tablet-body-strong: 1.55rem;
     --font-weight-tablet-body-strong: 600;
     --letter-spacing-tablet-body-strong: 0em;
-    
+
     --font-size-tablet-body-small: 0.9375rem;
     --line-height-tablet-body-small: 1.375rem;
     --font-weight-tablet-body-small: 400;
     --letter-spacing-tablet-body-small: 0em;
-    
+
     --font-size-tablet-caption: 0.8125rem;
     --line-height-tablet-caption: 1.125rem;
     --font-weight-tablet-caption: 500;
     --letter-spacing-tablet-caption: 0.01em;
-    
+
     --font-size-tablet-label: 0.875rem;
     --line-height-tablet-label: 1.25rem;
     --font-weight-tablet-label: 600;
     --letter-spacing-tablet-label: 0.02em;
     --text-transform-tablet-label: uppercase;
-    
+
     --font-size-tablet-mono: 0.9375rem;
     --line-height-tablet-mono: 1.375rem;
     --font-weight-tablet-mono: 400;
     --letter-spacing-tablet-mono: 0em;
-    
+
     /* Tablet card typography */
     --font-size-tablet-title-hero: 1.25rem;
     --line-height-tablet-title-hero: 1.375rem;
     --font-weight-tablet-title-hero: 600;
     --letter-spacing-tablet-title-hero: -0.008em;
     --text-transform-tablet-title-hero: none;
-    
+
     --font-size-tablet-title-lg: 1.125rem;
     --line-height-tablet-title-lg: 1.375rem;
     --font-weight-tablet-title-lg: 600;
     --letter-spacing-tablet-title-lg: -0.006em;
     --text-transform-tablet-title-lg: none;
-    
+
     --font-size-tablet-title-base: 1rem;
     --line-height-tablet-title-base: 1.375rem;
     --font-weight-tablet-title-base: 600;
     --letter-spacing-tablet-title-base: -0.004em;
     --text-transform-tablet-title-base: none;
-    
+
     --font-size-tablet-title-sm: 0.875rem;
     --line-height-tablet-title-sm: 1.25rem;
     --font-weight-tablet-title-sm: 600;
     --letter-spacing-tablet-title-sm: -0.002em;
     --text-transform-tablet-title-sm: none;
-    
+
     --font-size-tablet-description-lg: 1rem;
     --line-height-tablet-description-lg: 1.5rem;
     --font-weight-tablet-description-lg: 400;
     --letter-spacing-tablet-description-lg: 0em;
     --text-transform-tablet-description-lg: none;
-    
+
     --font-size-tablet-description-base: 0.875rem;
     --line-height-tablet-description-base: 1.25rem;
     --font-weight-tablet-description-base: 400;
     --letter-spacing-tablet-description-base: 0em;
     --text-transform-tablet-description-base: none;
-    
+
     --font-size-tablet-description-sm: 0.75rem;
     --line-height-tablet-description-sm: 1rem;
     --font-weight-tablet-description-sm: 400;
     --letter-spacing-tablet-description-sm: 0.01em;
     --text-transform-tablet-description-sm: none;
-    
+
     --font-size-tablet-metadata: 0.75rem;
     --line-height-tablet-metadata: 1rem;
     --font-weight-tablet-metadata: 500;
     --letter-spacing-tablet-metadata: 0.05em;
     --text-transform-tablet-metadata: uppercase;
-    
+
     --font-size-tablet-card-label: 0.75rem;
     --line-height-tablet-card-label: 1rem;
     --font-weight-tablet-card-label: 600;
     --letter-spacing-tablet-card-label: 0.05em;
     --text-transform-tablet-card-label: uppercase;
-    
+
     /* Fixed tablet font sizes */
     --font-size-tablet-badge: 0.6875rem;
     --font-size-tablet-input: 1rem;
-    
+
     /* Tablet spacing scale */
     --space-tablet-none: 0px;
     --space-tablet-3xs: 0.125rem;
@@ -454,7 +454,7 @@
     --space-tablet-2xl: 2.5rem;
     --space-tablet-3xl: 3rem;
     --space-tablet-4xl: 4rem;
-    
+
     /* Tablet semantic spacing */
     --space-tablet-stack-xs: 0.5rem;
     --space-tablet-stack-sm: 0.75rem;
@@ -466,22 +466,22 @@
     --space-tablet-section: 2.5rem;
     --space-tablet-container-x: 1.5rem;
     --space-tablet-container-y: 2rem;
-    
+
     /* Tablet touch targets */
     --size-tablet-touch-compact: 48px;
     --size-tablet-touch-comfortable: 56px;
     --size-tablet-touch-relaxed: 64px;
     --size-tablet-touch-spacious: 72px;
-    
+
     /* Tablet scrollbar dimensions */
     --size-tablet-scrollbar: 8px;
-    
+
     /* Tablet fixed sizes */
     --size-tablet-ripple-max: 200px;
     --size-tablet-bottomsheet-handle: 5px;
     --size-tablet-bottomsheet-handle-width: 40px;
     --size-tablet-bottomsheet-border: 2px;
-    
+
     /* Tablet radii */
     --radius-tablet-none: 0px;
     --radius-tablet-xs: 2px;
@@ -501,7 +501,7 @@
     --radius-tablet-button: 20px;
     --radius-tablet-badge: 8px;
     --radius-tablet-avatar: 50%;
-    
+
     /* Tablet motion */
     --motion-tablet-duration-micro: 120ms;
     --motion-tablet-duration-small: 160ms;
@@ -512,20 +512,20 @@
     --motion-tablet-easing-exit: cubic-bezier(0.4, 0, 1, 1);
     --motion-tablet-easing-accelerate: cubic-bezier(0.8, 0, 1, 1);
     --motion-tablet-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
-    
+
     /* Tablet fixed font sizes */
     --font-size-tablet-badge: 0.6875rem;
     --font-size-tablet-input: 1rem;
-    
+
     /* Tablet scrollbar dimensions */
     --size-tablet-scrollbar: 8px;
-    
+
     /* Tablet fixed sizes */
     --size-tablet-ripple-max: 200px;
     --size-tablet-bottomsheet-handle: 5px;
     --size-tablet-bottomsheet-handle-width: 40px;
     --size-tablet-bottomsheet-border: 2px;
-    
+
     /* Tablet additional radii */
     --radius-tablet-scrollbar: 999px;
     --radius-tablet-focus: 6px;
@@ -534,11 +534,11 @@
     --radius-tablet-button: 20px;
     --radius-tablet-badge: 8px;
     --radius-tablet-avatar: 50%;
-    
+
     /* Tablet additional color variables */
     --accent-tablet-color: #4f46e5;
     --accent-tablet-color-rgb: 79, 70, 229;
-    
+
     /* Tablet navigation variables */
     --navigation-tablet-width: 4rem;
   }
@@ -553,118 +553,118 @@
     --layout-content-padding-y: 2rem;
     --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
     --layout-main-pb: calc(var(--layout-footer-height) + var(--layout-content-padding-y));
-    
+
     /* Desktop typography */
     --font-size-desktop-display: 2.5rem;
     --line-height-desktop-display: 3rem;
     --font-weight-desktop-display: 600;
     --letter-spacing-desktop-display: -0.01em;
-    
+
     --font-size-desktop-headline: 2rem;
     --line-height-desktop-headline: 2.5rem;
     --font-weight-desktop-headline: 600;
     --letter-spacing-desktop-headline: -0.008em;
-    
+
     --font-size-desktop-title: 1.75rem;
     --line-height-desktop-title: 2.25rem;
     --font-weight-desktop-title: 600;
     --letter-spacing-desktop-title: -0.006em;
-    
+
     --font-size-desktop-subtitle: 1.5rem;
     --line-height-desktop-subtitle: 2rem;
     --font-weight-desktop-subtitle: 500;
     --letter-spacing-desktop-subtitle: 0em;
-    
+
     --font-size-desktop-body: 1.125rem;
     --line-height-desktop-body: 1.625rem;
     --font-weight-desktop-body: 400;
     --letter-spacing-desktop-body: 0em;
-    
+
     --font-size-desktop-body-strong: 1.125rem;
     --line-height-desktop-body-strong: 1.625rem;
     --font-weight-desktop-body-strong: 600;
     --letter-spacing-desktop-body-strong: 0em;
-    
+
     --font-size-desktop-body-small: 1rem;
     --line-height-desktop-body-small: 1.5rem;
     --font-weight-desktop-body-small: 400;
     --letter-spacing-desktop-body-small: 0em;
-    
+
     --font-size-desktop-caption: 0.875rem;
     --line-height-desktop-caption: 1.25rem;
     --font-weight-desktop-caption: 500;
     --letter-spacing-desktop-caption: 0.01em;
-    
+
     --font-size-desktop-label: 1rem;
     --line-height-desktop-label: 1.5rem;
     --font-weight-desktop-label: 600;
     --letter-spacing-desktop-label: 0.02em;
     --text-transform-desktop-label: uppercase;
-    
+
     --font-size-desktop-mono: 1rem;
     --line-height-desktop-mono: 1.5rem;
     --font-weight-desktop-mono: 400;
     --letter-spacing-desktop-mono: 0em;
-    
+
     /* Desktop card typography */
     --font-size-desktop-title-hero: 1.5rem;
     --line-height-desktop-title-hero: 2rem;
     --font-weight-desktop-title-hero: 600;
     --letter-spacing-desktop-title-hero: -0.008em;
     --text-transform-desktop-title-hero: none;
-    
+
     --font-size-desktop-title-lg: 1.25rem;
     --line-height-desktop-title-lg: 1.75rem;
     --font-weight-desktop-title-lg: 600;
     --letter-spacing-desktop-title-lg: -0.006em;
     --text-transform-desktop-title-lg: none;
-    
+
     --font-size-desktop-title-base: 1.125rem;
     --line-height-desktop-title-base: 1.5rem;
     --font-weight-desktop-title-base: 600;
     --letter-spacing-desktop-title-base: -0.004em;
     --text-transform-desktop-title-base: none;
-    
+
     --font-size-desktop-title-sm: 1rem;
     --line-height-desktop-title-sm: 1.375rem;
     --font-weight-desktop-title-sm: 600;
     --letter-spacing-desktop-title-sm: -0.002em;
     --text-transform-desktop-title-sm: none;
-    
+
     --font-size-desktop-description-lg: 1.125rem;
     --line-height-desktop-description-lg: 1.75rem;
     --font-weight-desktop-description-lg: 400;
     --letter-spacing-desktop-description-lg: 0em;
     --text-transform-desktop-description-lg: none;
-    
+
     --font-size-desktop-description-base: 1rem;
     --line-height-desktop-description-base: 1.5rem;
     --font-weight-desktop-description-base: 400;
     --letter-spacing-desktop-description-base: 0em;
     --text-transform-desktop-description-base: none;
-    
+
     --font-size-desktop-description-sm: 0.875rem;
     --line-height-desktop-description-sm: 1.25rem;
     --font-weight-desktop-description-sm: 400;
     --letter-spacing-desktop-description-sm: 0.01em;
     --text-transform-desktop-description-sm: none;
-    
+
     --font-size-desktop-metadata: 0.875rem;
     --line-height-desktop-metadata: 1.25rem;
     --font-weight-desktop-metadata: 500;
     --letter-spacing-desktop-metadata: 0.05em;
     --text-transform-desktop-metadata: uppercase;
-    
+
     --font-size-desktop-card-label: 0.875rem;
     --line-height-desktop-card-label: 1.25rem;
     --font-weight-desktop-card-label: 600;
     --letter-spacing-desktop-card-label: 0.05em;
     --text-transform-desktop-card-label: uppercase;
-    
+
     /* Fixed desktop font sizes */
     --font-size-desktop-badge: 0.75rem;
     --font-size-desktop-input: 1.125rem;
-    
+
     /* Desktop spacing scale */
     --space-desktop-none: 0px;
     --space-desktop-3xs: 0.125rem;
@@ -677,7 +677,7 @@
     --space-desktop-2xl: 2.5rem;
     --space-desktop-3xl: 3rem;
     --space-desktop-4xl: 4rem;
-    
+
     /* Desktop semantic spacing */
     --space-desktop-stack-xs: 0.5rem;
     --space-desktop-stack-sm: 0.75rem;
@@ -689,22 +689,22 @@
     --space-desktop-section: 3rem;
     --space-desktop-container-x: 2rem;
     --space-desktop-container-y: 2.5rem;
-    
+
     /* Desktop touch targets */
     --size-desktop-touch-compact: 48px;
     --size-desktop-touch-comfortable: 56px;
     --size-desktop-touch-relaxed: 64px;
     --size-desktop-touch-spacious: 72px;
-    
+
     /* Desktop scrollbar dimensions */
     --size-desktop-scrollbar: 8px;
-    
+
     /* Desktop fixed sizes */
     --size-desktop-ripple-max: 200px;
     --size-desktop-bottomsheet-handle: 5px;
     --size-desktop-bottomsheet-handle-width: 40px;
     --size-desktop-bottomsheet-border: 2px;
-    
+
     /* Desktop radii */
     --radius-desktop-none: 0px;
     --radius-desktop-xs: 2px;
@@ -724,7 +724,7 @@
     --radius-desktop-button: 20px;
     --radius-desktop-badge: 8px;
     --radius-desktop-avatar: 50%;
-    
+
     /* Desktop motion */
     --motion-desktop-duration-micro: 120ms;
     --motion-desktop-duration-small: 160ms;
@@ -735,20 +735,20 @@
     --motion-desktop-easing-exit: cubic-bezier(0.4, 0, 1, 1);
     --motion-desktop-easing-accelerate: cubic-bezier(0.8, 0, 1, 1);
     --motion-desktop-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
-    
+
     /* Desktop fixed font sizes */
     --font-size-desktop-badge: 0.75rem;
     --font-size-desktop-input: 1.125rem;
-    
+
     /* Desktop scrollbar dimensions */
     --size-desktop-scrollbar: 8px;
-    
+
     /* Desktop fixed sizes */
     --size-desktop-ripple-max: 200px;
     --size-desktop-bottomsheet-handle: 5px;
     --size-desktop-bottomsheet-handle-width: 40px;
     --size-desktop-bottomsheet-border: 2px;
-    
+
     /* Desktop additional radii */
     --radius-desktop-scrollbar: 999px;
     --radius-desktop-focus: 6px;
@@ -757,11 +757,11 @@
     --radius-desktop-button: 20px;
     --radius-desktop-badge: 8px;
     --radius-desktop-avatar: 50%;
-    
+
     /* Desktop additional color variables */
     --accent-desktop-color: #4f46e5;
     --accent-desktop-color-rgb: 79, 70, 229;
-    
+
     /* Desktop navigation variables */
     --navigation-desktop-width: 5rem;
   }
@@ -776,7 +776,7 @@
     --layout-content-padding-y: 2.5rem;
     --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
     --layout-main-pb: calc(var(--layout-footer-height) + var(--layout-content-padding-y));
-    
+
     /* Large desktop navigation variables */
     --navigation-large-desktop-width: 5rem;
   }
@@ -800,11 +800,11 @@
   .mobile-only {
     display: none !important;
   }
-  
+
   .tablet-up {
     display: block !important;
   }
-  
+
   /* Show sidebar on tablet/desktop */
   .app-sidebar {
     position: fixed;
@@ -819,17 +819,17 @@
     flex-direction: column;
     padding: var(--space-md) 0;
   }
-  
+
   /* Adjust main content for sidebar */
   .main-content-with-sidebar {
     margin-left: var(--layout-sidebar-width);
   }
-  
+
   /* Hide bottom navigation on tablet/desktop */
   .bottom-navigation {
     display: none;
   }
-  
+
   /* Show traditional footer on tablet/desktop */
   .app-footer {
     display: block;
@@ -838,7 +838,7 @@
     border-top: 1px solid var(--color-border-subtle);
     margin-top: auto;
   }
-  
+
   /* Card grid for tablet */
   .tablet-card-grid {
     display: grid;
@@ -852,14 +852,14 @@
   .desktop-up {
     display: block !important;
   }
-  
+
   /* Card grid for desktop */
   .desktop-card-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-xl);
   }
-  
+
   /* Wider content area */
   .main-content {
     max-width: 1200px;
@@ -884,7 +884,7 @@
   .responsive-hide-tablet-up {
     display: none !important;
   }
-  
+
   .responsive-show-tablet-up {
     display: block !important;
   }
@@ -894,7 +894,7 @@
   .responsive-hide-desktop-up {
     display: none !important;
   }
-  
+
   .responsive-show-desktop-up {
     display: block !important;
   }
@@ -906,32 +906,32 @@
   .touch-target {
     transition: none;
   }
-  
+
   .touch-target:active {
     transform: scale(0.95);
     transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
   }
-  
+
   /* Enhanced touch feedback for buttons */
   button:active,
   .button-touch:active {
     transform: scale(0.95);
     transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
   }
-  
+
   /* Touch feedback for interactive elements */
   .touch-interactive:active {
     background-color: var(--active-bg);
     transform: scale(0.98);
     transition: all var(--motion-duration-fast) var(--motion-easing-standard);
   }
-  
+
   /* Ripple effect for touch */
   .touch-ripple {
     position: relative;
     overflow: hidden;
   }
-  
+
   .touch-ripple::before {
     content: \"\";
     position: absolute;
@@ -946,21 +946,21 @@
       width var(--motion-duration-normal) var(--motion-easing-standard),
       height var(--motion-duration-normal) var(--motion-easing-standard);
   }
-  
+
   .touch-ripple:active::before {
     width: var(--size-ripple-max);
     height: var(--size-ripple-max);
   }
-  
+
   /* Haptic feedback simulation with visual feedback */
   .haptic-feedback {
     position: relative;
   }
-  
+
   .haptic-feedback:active {
     animation: haptic-pulse 0.15s ease-out;
   }
-  
+
   @keyframes haptic-pulse {
     0% {
       transform: scale(1);
@@ -974,7 +974,7 @@
       opacity: 1;
     }
   }
-  
+
   /* Improved touch targets on pure touch devices */
   @media (max-width: 768px) {
     .touch-target-mobile {
@@ -982,7 +982,7 @@
       min-width: var(--touch-comfortable);
       padding: var(--space-2) var(--space-3);
     }
-    
+
     /* Larger touch areas for mobile */
     .mobile-touch-area {
       min-height: var(--touch-large);
@@ -997,23 +997,23 @@
     position: relative;
     transition: background-color var(--motion-duration-small) var(--motion-easing-standard);
   }
-  
+
   .touch-target:hover,
   .touch-target:focus {
     background-color: var(--hover-bg);
   }
-  
+
   .touch-target:active {
     background-color: var(--active-bg);
     transform: scale(0.95);
     transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
   }
-  
+
   .button-touch:active {
     transform: scale(0.95);
     transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
   }
-  
+
   .touch-interactive:active {
     background-color: var(--active-bg);
     transform: scale(0.98);
@@ -1051,7 +1051,7 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   /* Better scrolling for containers */
   .smooth-scroll {
     scroll-behavior: smooth;
@@ -1069,7 +1069,7 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   .animate-fade-in,
   .animate-pulse,
   .animate-bounce {

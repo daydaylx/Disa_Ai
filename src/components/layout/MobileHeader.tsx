@@ -1,5 +1,5 @@
-import { useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const routeTitles: Record<string, string> = {
   "/chat": "Chat",
@@ -18,7 +18,7 @@ export function MobileHeader({ onMenuToggle }: MobileHeaderProps) {
   const title = routeTitles[location.pathname] || "Disa AI";
 
   return (
-    <header 
+    <header
       className="app-header bg-surface-base/90 fixed top-0 z-20 w-full border-b border-border backdrop-blur-xl"
       role="banner"
     >

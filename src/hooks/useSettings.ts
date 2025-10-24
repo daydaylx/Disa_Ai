@@ -26,15 +26,18 @@ export function useSettings() {
     }
   });
 
-  const saveSettings = useCallback((newSettings: Partial<Settings>) => {
-    try {
-      const updated = { ...settings, ...newSettings };
-      setSettings(updated);
-      localStorage.setItem("disa-ai-settings", JSON.stringify(updated));
-    } catch (error) {
-      console.error("Failed to save settings:", error);
-    }
-  }, [settings]);
+  const saveSettings = useCallback(
+    (newSettings: Partial<Settings>) => {
+      try {
+        const updated = { ...settings, ...newSettings };
+        setSettings(updated);
+        localStorage.setItem("disa-ai-settings", JSON.stringify(updated));
+      } catch (error) {
+        console.error("Failed to save settings:", error);
+      }
+    },
+    [settings],
+  );
 
   const toggleNSFWContent = useCallback(() => {
     saveSettings({ showNSFWContent: !settings.showNSFWContent });
@@ -48,13 +51,19 @@ export function useSettings() {
     saveSettings({ enableNotifications: !settings.enableNotifications });
   }, [saveSettings, settings.enableNotifications]);
 
-  const setTheme = useCallback((theme: Settings["theme"]) => {
-    saveSettings({ theme });
-  }, [saveSettings]);
+  const setTheme = useCallback(
+    (theme: Settings["theme"]) => {
+      saveSettings({ theme });
+    },
+    [saveSettings],
+  );
 
-  const setLanguage = useCallback((language: string) => {
-    saveSettings({ language });
-  }, [saveSettings]);
+  const setLanguage = useCallback(
+    (language: string) => {
+      saveSettings({ language });
+    },
+    [saveSettings],
+  );
 
   return {
     settings,

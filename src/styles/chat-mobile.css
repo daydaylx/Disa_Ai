@@ -324,7 +324,9 @@
 /* Mobile chat settings FAB adjustments */
 .mobile-chat-settings-fab {
   position: fixed;
-  bottom: calc(var(--layout-bottom-nav-height) + var(--space-lg) + env(safe-area-inset-bottom, 0px));
+  bottom: calc(
+    var(--layout-bottom-nav-height) + var(--space-lg) + env(safe-area-inset-bottom, 0px)
+  );
   right: var(--space-lg);
   z-index: 40;
   min-height: var(--touch-target-comfortable);
@@ -350,24 +352,24 @@
   .mobile-chat-container {
     max-height: calc(100dvh - var(--layout-header-height));
   }
-  
+
   .mobile-chat-header {
     padding: var(--space-lg) var(--space-container-x);
   }
-  
+
   .mobile-chat-messages {
     padding: var(--space-lg) var(--space-container-x);
   }
-  
+
   .mobile-chat-input-container {
     padding: var(--space-md) var(--space-container-x);
     padding-bottom: var(--space-lg);
   }
-  
+
   .mobile-message-bubble {
     max-width: 75%;
   }
-  
+
   .mobile-chat-history-content {
     max-width: 400px;
     max-height: 100dvh;
@@ -380,11 +382,11 @@
   .mobile-chat-container {
     height: calc(100dvh - var(--layout-header-height));
   }
-  
+
   .mobile-message-bubble {
     max-width: 65%;
   }
-  
+
   .mobile-chat-history-content {
     max-width: 480px;
   }
@@ -398,7 +400,7 @@
   .mobile-chat-settings-fab:hover {
     transform: none;
   }
-  
+
   .mobile-chat-send-btn:active:not(:disabled),
   .mobile-chat-settings-fab:active {
     transform: scale(0.95);
@@ -413,7 +415,7 @@
   .mobile-chat-settings-fab {
     transition: none;
   }
-  
+
   .mobile-message-bubble:hover,
   .mobile-chat-history-item:hover {
     transform: none;

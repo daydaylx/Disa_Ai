@@ -7,7 +7,6 @@ import "./ui/base.css"; // Reset & base styles
 import "./styles/a11y-improvements.css"; // A11y improvements
 import "./styles/mobile-enhanced.css"; // Mobile-enhanced styles
 
-import React from "react";
 import ReactDOM from "react-dom/client";
 
 import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";

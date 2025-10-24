@@ -12,11 +12,11 @@
   --layout-bottom-nav-height: 4rem;
   --layout-content-padding-x: 1rem;
   --layout-content-padding-y: 1rem;
-  
+
   /* Main content area calculation */
   --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
   --layout-main-pb: calc(var(--layout-bottom-nav-height) + var(--layout-content-padding-y));
-  
+
   /* Touch target enhancements for mobile */
   --touch-target-minimum: 48px;
   --touch-target-comfortable: 56px;
@@ -326,7 +326,7 @@
     --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
     --layout-main-pb: calc(var(--layout-footer-height) + var(--layout-content-padding-y));
   }
-  
+
   /* Show sidebar on tablet/desktop */
   .app-sidebar {
     position: fixed;
@@ -341,17 +341,17 @@
     flex-direction: column;
     padding: var(--space-md) 0;
   }
-  
+
   /* Adjust main content for sidebar */
   .main-content-with-sidebar {
     margin-left: var(--layout-sidebar-width);
   }
-  
+
   /* Hide bottom navigation on tablet/desktop */
   .bottom-navigation {
     display: none;
   }
-  
+
   /* Show traditional footer on tablet/desktop */
   .app-footer {
     display: block;
@@ -360,18 +360,18 @@
     border-top: 1px solid var(--color-border-subtle);
     margin-top: auto;
   }
-  
+
   /* Card grid for tablet */
   .tablet-card-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-lg);
   }
-  
+
   .hide-on-mobile {
     display: block !important;
   }
-  
+
   .show-on-mobile {
     display: none !important;
   }
@@ -384,14 +384,14 @@
     --layout-content-padding-x: 2rem;
     --layout-content-padding-y: 2rem;
   }
-  
+
   /* Card grid for desktop */
   .desktop-card-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-xl);
   }
-  
+
   /* Wider content area */
   .main-content {
     max-width: 1200px;
@@ -405,7 +405,7 @@
     --layout-sidebar-width: 5rem;
     --layout-content-padding-x: 2.5rem;
   }
-  
+
   /* Card grid for large desktop */
   .large-desktop-card-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -421,7 +421,7 @@
   .responsive-hide-tablet-up {
     display: none !important;
   }
-  
+
   .responsive-show-tablet-up {
     display: block !important;
   }
@@ -431,7 +431,7 @@
   .responsive-hide-desktop-up {
     display: none !important;
   }
-  
+
   .responsive-show-desktop-up {
     display: block !important;
   }
@@ -445,13 +445,13 @@
   .touch-target {
     transition: none;
   }
-  
+
   .mobile-btn:active,
   .nav-item:active,
   .touch-target:active {
     transform: scale(0.95);
   }
-  
+
   /* Larger touch targets on pure touch devices */
   .touch-device-larger {
     min-height: calc(var(--touch-target-comfortable) * 1.1);
@@ -467,7 +467,7 @@
   .chat-input-container {
     border-width: 2px;
   }
-  
+
   .mobile-btn {
     border-width: 2px;
   }
@@ -480,7 +480,7 @@
   .nav-item {
     transition: none;
   }
-  
+
   .mobile-card:hover {
     transform: none;
   }

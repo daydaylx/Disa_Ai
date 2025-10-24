@@ -66,9 +66,9 @@ export function MobileChatHistorySidebar({
     const normalizedSearch = searchTerm.trim().toLowerCase();
     return conversations.filter((conversation) => {
       if (!normalizedSearch) return true;
-      const haystack = `${conversation.title} ${conversation.messages
-        .map((msg) => msg.content)
-        .join(" ")}`.toLowerCase();
+      const haystack = `${conversation.title} ${
+        conversation.messages?.map((msg) => msg.content)?.join(" ") || ""
+      }`.toLowerCase();
       return haystack.includes(normalizedSearch);
     });
   }, [conversations, searchTerm]);
@@ -183,7 +183,7 @@ export function MobileChatHistorySidebar({
             ) : (
               filteredConversations.map((conversation) => {
                 const isActive = activeId === conversation.id;
-                const messageCount = conversation.messages.length;
+                const messageCount = conversation.messages?.length || 0;
 
                 return (
                   <div
