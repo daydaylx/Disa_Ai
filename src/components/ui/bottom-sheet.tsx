@@ -1,8 +1,8 @@
-import { X } from \"lucide-react\";
-import type { ReactNode } from \"react\";
-import { useEffect, useRef } from \"react\";
+import { X } from "lucide-react";
+import type { ReactNode } from "react";
+import { useEffect, useRef } from "react";
 
-import { cn } from \"../../lib/utils\";
+import { cn } from "../../lib/utils";
 
 interface BottomSheetProps {
   isOpen: boolean;
@@ -18,9 +18,9 @@ export function BottomSheet({ isOpen, onClose, title, children, className }: Bot
   useEffect(() => {
     if (!isOpen) return undefined;
 
-    document.body.style.overflow = \"hidden\";
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = \"\";
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
@@ -28,19 +28,19 @@ export function BottomSheet({ isOpen, onClose, title, children, className }: Bot
     if (!isOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === \"Escape\") {
+      if (event.key === "Escape") {
         onClose();
       }
     };
 
     const handleFocusTrap = (event: KeyboardEvent) => {
-      if (event.key !== \"Tab\") return;
+      if (event.key !== "Tab") return;
 
       const sheet = sheetRef.current;
       if (!sheet) return;
 
       const focusableElements = sheet.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])',
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
       const firstElement = focusableElements[0] as HTMLElement;
       const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
@@ -58,19 +58,19 @@ export function BottomSheet({ isOpen, onClose, title, children, className }: Bot
       }
     };
 
-    document.addEventListener(\"keydown\", handleKeyDown);
-    document.addEventListener(\"keydown\", handleFocusTrap);
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleFocusTrap);
 
     setTimeout(() => {
       const firstFocusable = sheetRef.current?.querySelector(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])',
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       ) as HTMLElement;
       firstFocusable?.focus();
     }, 100);
 
     return () => {
-      document.removeEventListener(\"keydown\", handleKeyDown);
-      document.removeEventListener(\"keydown\", handleFocusTrap);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleFocusTrap);
     };
   }, [isOpen, onClose]);
 
@@ -78,40 +78,40 @@ export function BottomSheet({ isOpen, onClose, title, children, className }: Bot
 
   return (
     <div
-      className=\"mobile-scrim-overlay fixed inset-0 z-50 bg-black/50\"
+      className="mobile-scrim-overlay fixed inset-0 z-50 bg-black/50"
       onClick={onClose}
-      role=\"dialog\"
-      aria-modal=\"true\"
-      aria-labelledby=\"bottom-sheet-title\"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="bottom-sheet-title"
     >
       <div
         ref={sheetRef}
         className={cn(
-          \"mobile-chat-history-sidebar animate-in slide-in-from-bottom fixed inset-x-0 bottom-0 max-h-[90vh] duration-300\",
-          \"border-border bg-surface-1 rounded-t-lg border-t\",
-          \"pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]\",
+          "mobile-chat-history-sidebar animate-in slide-in-from-bottom fixed inset-x-0 bottom-0 max-h-[90vh] duration-300",
+          "border-border bg-surface-1 rounded-t-lg border-t",
+          "pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className=\"flex justify-center pb-2 pt-3\">
-          <div className=\"bg-surface-2 h-1 w-10 rounded-full\" />
+        <div className="flex justify-center pb-2 pt-3">
+          <div className="bg-surface-2 h-1 w-10 rounded-full" />
         </div>
 
-        <div className=\"border-border flex items-center justify-between border-b px-6 py-4\">
-          <h2 id=\"bottom-sheet-title\" className=\"text-text-0 text-xl font-semibold\">
+        <div className="border-border flex items-center justify-between border-b px-6 py-4">
+          <h2 id="bottom-sheet-title" className="text-text-0 text-xl font-semibold">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className=\"tap-target bg-surface-2 text-text-1 hover:bg-surface-2 hover:text-text-0 flex h-10 w-10 items-center justify-center rounded-full transition-colors touch-target\"
-            aria-label=\"Schließen\"
+            className="tap-target bg-surface-2 text-text-1 hover:bg-surface-2 hover:text-text-0 flex h-10 w-10 items-center justify-center rounded-full transition-colors touch-target"
+            aria-label="Schließen"
           >
-            <X className=\"h-5 w-5\" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className=\"overflow-hidden\">{children}</div>
+        <div className="overflow-hidden">{children}</div>
       </div>
     </div>
   );

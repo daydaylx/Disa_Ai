@@ -1,37 +1,37 @@
-import \"./index.css\"; // Tailwind base/components/utilities
-import \"./styles/design-tokens.css\"; // Design tokens (CSS variables)
-import \"./styles/overlay-tokens.css\"; // WCAG AA compliant overlay & menu tokens
-import \"./styles/mobile-fixes.css\"; // Mobile viewport and scaling fixes
-import \"./styles/bottomsheet.css\"; // Bottom sheet specific styles
-import \"./ui/base.css\"; // Reset & base styles
-import \"./styles/a11y-improvements.css\"; // A11y improvements
-import \"./styles/mobile-enhanced.css\"; // Mobile-enhanced styles
+import "./index.css"; // Tailwind base/components/utilities
+import "./styles/design-tokens.css"; // Design tokens (CSS variables)
+import "./styles/overlay-tokens.css"; // WCAG AA compliant overlay & menu tokens
+import "./styles/mobile-fixes.css"; // Mobile viewport and scaling fixes
+import "./styles/bottomsheet.css"; // Bottom sheet specific styles
+import "./ui/base.css"; // Reset & base styles
+import "./styles/a11y-improvements.css"; // A11y improvements
+import "./styles/mobile-enhanced.css"; // Mobile-enhanced styles
 
-import React from \"react\";
-import ReactDOM from \"react-dom/client\";
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-import MobileApp from \"./MobileApp\";
-import { ErrorBoundary, StartupDiagnostics } from \"./components/ErrorBoundary\";
-import { initEnvironment } from \"./config/env\";
-import { initializeA11yEnforcement } from \"./lib/a11y/touchTargets\";
+import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
+import { initEnvironment } from "./config/env";
+import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 // PWA Installation Prompt
-import { registerSW } from \"./lib/pwa/registerSW\";
-import { themeController } from \"./styles/theme\";
+import { registerSW } from "./lib/pwa/registerSW";
+import MobileApp from "./MobileApp";
+import { themeController } from "./styles/theme";
 
 // Initialize environment configuration
 try {
   const envResult = initEnvironment();
   if (!envResult.success) {
-    console.error(\"Environment initialization failed:\", envResult.errors);
+    console.error("Environment initialization failed:", envResult.errors);
   }
 } catch (error) {
-  console.error(\"Critical environment error:\", error);
+  console.error("Critical environment error:", error);
 }
 
 // Initialize app
 function initializeMobileApp() {
-  const el = document.getElementById(\"app\");
-  if (!el) throw new Error(\"#app element not found\");
+  const el = document.getElementById("app");
+  if (!el) throw new Error("#app element not found");
 
   const root = ReactDOM.createRoot(el);
   root.render(
