@@ -11,9 +11,10 @@ const routeTitles: Record<string, string> = {
 
 interface MobileHeaderProps {
   onMenuToggle: () => void;
+  isMenuOpen?: boolean;
 }
 
-export function MobileHeader({ onMenuToggle }: MobileHeaderProps) {
+export function MobileHeader({ onMenuToggle, isMenuOpen = false }: MobileHeaderProps) {
   const location = useLocation();
   const title = routeTitles[location.pathname] || "Disa AI";
 
@@ -28,8 +29,8 @@ export function MobileHeader({ onMenuToggle }: MobileHeaderProps) {
         <button
           onClick={onMenuToggle}
           className="touch-target-preferred h-10 w-10 rounded-full"
-          aria-label="Menü öffnen"
-          aria-expanded={false}
+          aria-label={isMenuOpen ? "Menü schließen" : "Menü öffnen"}
+          aria-expanded={isMenuOpen}
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
         </button>

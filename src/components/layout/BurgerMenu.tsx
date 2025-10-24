@@ -6,7 +6,6 @@ import {
   FileText,
   Info,
   Key,
-  Menu,
   MessageSquare,
   Settings,
   Shield,
@@ -16,7 +15,7 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { useMemory } from "../../hooks/useMemory";
@@ -81,8 +80,23 @@ function ChatStats() {
   );
 }
 
-export function BurgerMenu() {
-  const [isOpen, setIsOpen] = useState(false);
+interface BurgerMenuProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps = {}) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+
+  // Use external state if provided, otherwise use internal state
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = useMemo(() => {
+    return onClose !== undefined
+      ? (open: boolean) => {
+          if (!open) onClose();
+        }
+      : setInternalIsOpen;
+  }, [onClose, setInternalIsOpen]);
   const [activeTab, setActiveTab] = useState<"main" | "settings">("main");
   const [apiKey, setApiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
@@ -99,18 +113,10 @@ export function BurgerMenu() {
     isEnabled: memoryEnabled,
   } = useMemory();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-    // Reset to main tab when closing menu
-    if (isOpen) {
-      setActiveTab("main");
-    }
-  };
-
-  const closeMenu = () => {
+  const closeMenu = useCallback(() => {
     setIsOpen(false);
     setActiveTab("main");
-  };
+  }, [setIsOpen, setActiveTab]);
 
   const openSettings = () => {
     setActiveTab("settings");
@@ -343,7 +349,7 @@ export function BurgerMenu() {
 
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
-  }, [isOpen, activeTab]);
+  }, [isOpen, activeTab, closeMenu]);
 
   // Focus trap for accessibility
   useEffect(() => {
@@ -393,18 +399,7 @@ export function BurgerMenu() {
   }, [isOpen]);
 
   return (
-    <div className="relative">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={toggleMenu}
-        aria-expanded={isOpen}
-        aria-label={isOpen ? "Menü schließen" : "Menü öffnen"}
-        className="h-10 w-10 rounded-full"
-      >
-        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
-
+    <>
       {/* WCAG AA compliant scrim overlay */}
       {isOpen && (
         <div
@@ -1008,6 +1003,6 @@ export function BurgerMenu() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

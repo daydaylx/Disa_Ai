@@ -2,6 +2,7 @@ import { type ReactNode, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
+import { BurgerMenu } from "../../components/layout/BurgerMenu";
 import { MobileBottomNavigation } from "../../components/layout/MobileBottomNavigation";
 import { MobileHeader } from "../../components/layout/MobileHeader";
 import { ScrollToVoid } from "../../components/layout/ScrollToVoid";
@@ -37,7 +38,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
 
       <ScrollToVoid>
         <div className="relative z-10 flex min-h-dvh flex-col">
-          <MobileHeader onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
+          <MobileHeader onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} isMenuOpen={isMenuOpen} />
 
           <main
             id="main"
@@ -71,6 +72,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
         </div>
       </ScrollToVoid>
 
+      <BurgerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <NetworkBanner />
       <PWAInstallPrompt />
       <MobileBottomNavigation />
