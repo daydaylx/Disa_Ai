@@ -301,37 +301,6 @@ export function MobileRolesInterface() {
                     <span className="font-medium">{category}</span>
                     <span className="text-xs text-text-muted">({roleCount})</span>
                   </div>
-
-                  {selectedCategory === "all" && isCategoryExpanded && (
-                    <div className="ml-2 space-y-2 pl-2 border-l border-border-subtle">
-                      {groupedRoles[normalizeCategory(category)]?.slice(0, 3).map((role) => (
-                        <div
-                          key={role.id}
-                          className="p-2 pl-3 text-sm hover:bg-surface-muted rounded cursor-pointer flex justify-between touch-target"
-                          onClick={() => setActiveRole(role)}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              setActiveRole(role);
-                            }
-                          }}
-                        >
-                          <span>{role.name}</span>
-                          <span className="text-xs text-text-muted">
-                            {activeRole?.id === role.id ? "Aktiv" : ""}
-                          </span>
-                        </div>
-                      ))}
-                      {groupedRoles[normalizeCategory(category)] &&
-                        groupedRoles[normalizeCategory(category)].length > 3 && (
-                          <div className="p-2 pl-3 text-xs text-text-muted">
-                            +{groupedRoles[normalizeCategory(category)].length - 3} weitere
-                          </div>
-                        )}
-                    </div>
-                  )}
                 </div>
               );
             })}
