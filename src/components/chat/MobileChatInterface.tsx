@@ -42,7 +42,7 @@ import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { useToasts } from "../ui/toast/ToastsProvider";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { ChatHistorySidebar } from "./ChatHistorySidebar";
 import { MessageBubbleCard } from "./MessageBubbleCard";
 
@@ -565,20 +565,22 @@ export function MobileChatInterface() {
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 <span>Neuer Chat</span>
               </Button>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => setIsHistoryOpen(true)}
-                    variant="secondary"
-                    size="icon"
-                    aria-label="Chat-Verlauf öffnen"
-                    className="mobile-btn mobile-btn-secondary touch-target"
-                  >
-                    <History className="h-5 w-5" aria-hidden="true" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
-              </Tooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => setIsHistoryOpen(true)}
+                      variant="secondary"
+                      size="icon"
+                      aria-label="Chat-Verlauf öffnen"
+                      className="mobile-btn mobile-btn-secondary touch-target"
+                    >
+                      <History className="h-5 w-5" aria-hidden="true" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </header>
 
@@ -715,20 +717,22 @@ export function MobileChatInterface() {
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 <span>Neue Unterhaltung</span>
               </Button>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => setIsHistoryOpen(true)}
-                    variant="secondary"
-                    size="icon"
-                    aria-label="Chat-Verlauf öffnen"
-                    className="mobile-btn mobile-btn-secondary touch-target"
-                  >
-                    <History className="h-5 w-5" aria-hidden="true" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
-              </Tooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => setIsHistoryOpen(true)}
+                      variant="secondary"
+                      size="icon"
+                      aria-label="Chat-Verlauf öffnen"
+                      className="mobile-btn mobile-btn-secondary touch-target"
+                    >
+                      <History className="h-5 w-5" aria-hidden="true" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </header>
 

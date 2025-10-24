@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
 import { getDiscussionMaxSentences } from "../config/settings";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
@@ -217,20 +217,22 @@ export default function Chat() {
             <Plus className="h-4 w-4" aria-hidden="true" />
             <span>Neuer Chat</span>
           </Button>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={openHistory}
-                variant="secondary"
-                size="icon"
-                aria-label="Chat-Verlauf öffnen"
-                className="mobile-btn mobile-btn-secondary touch-target"
-              >
-                <History className="h-5 w-5" aria-hidden="true" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
-          </Tooltip>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={openHistory}
+                  variant="secondary"
+                  size="icon"
+                  aria-label="Chat-Verlauf öffnen"
+                  className="mobile-btn mobile-btn-secondary touch-target"
+                >
+                  <History className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </header>
 
@@ -329,19 +331,21 @@ export default function Chat() {
             <Plus className="h-4 w-4" />
             <span>Neue Unterhaltung</span>
           </Button>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={openHistory}
-                variant="secondary"
-                size="icon"
-                className="mobile-btn mobile-btn-secondary touch-target"
-              >
-                <History className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
-          </Tooltip>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={openHistory}
+                  variant="secondary"
+                  size="icon"
+                  className="mobile-btn mobile-btn-secondary touch-target"
+                >
+                  <History className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Verlauf öffnen</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </header>
 
