@@ -1,126 +1,160 @@
-import { useCallback, useState } from "react";
-
+import { useCallback, useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useToasts } from "../components/ui/toast/ToastsProvider";
 import {
-  type Conversation,
-  deleteConversation as deleteConversationStorage,
-  getAllConversations as getAllConversationsStorage,
-  getConversation as getConversationStorage,
-  saveConversation as saveConversationStorage,
+  deleteConversation as deleteFromDb,
+  getAllConversations,
+  getConversation as getFromDb,
 } from "../lib/conversation-manager";
-import type { ChatMessageType } from "../types/chatMessage";
+import type { ChatMessageType, Conversation } from "../types";
 
-export interface UseConversationManagerReturn {
-  // State
-  conversations: Conversation[];
-  activeConversationId: string | null;
-
-  // Actions
-  loadConversation: (id: string) => Conversation | null;
-  saveCurrentConversation: (messages: ChatMessageType[], systemPrompt?: string) => string;
-  deleteConversation: (id: string) => void;
-  refreshConversations: () => void;
-  setActiveConversationId: (id: string | null) => void;
-  createNewConversation: () => void;
+interface ConversationManagerProps {
+  setMessages: (messages: ChatMessageType[]) => void;
+  setCurrentSystemPrompt: (prompt: string | undefined) => void;
+  onNewConversation: () => void;
 }
 
-/**
- * Custom hook for managing chat conversations
- *
- * Handles:
- * - Loading, saving, and deleting conversations
- * - Tracking the active conversation
- * - Auto-saving conversations
- * - Refreshing the conversation list
- *
- * @example
- * ```tsx
- * const {
- *   conversations,
- *   activeConversationId,
- *   loadConversation,
- *   saveCurrentConversation,
- *   deleteConversation
- * } = useConversationManager();
- * ```
- */
-export function useConversationManager(): UseConversationManagerReturn {
-  const [conversations, setConversations] = useState<Conversation[]>(() =>
-    getAllConversationsStorage(),
+export function useConversationManager({
+  setMessages,
+  setCurrentSystemPrompt,
+  onNewConversation,
+}: ConversationManagerProps) {
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(
+    null,
   );
-  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const toasts = useToasts();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const refreshConversations = useCallback(() => {
-    setConversations(getAllConversationsStorage());
+    setConversations(getAllConversations());
   }, []);
 
-  const loadConversation = useCallback((id: string): Conversation | null => {
-    const conversation = getConversationStorage(id);
-    if (conversation) {
-      setActiveConversationId(id);
+  useEffect(() => {
+    if (isHistoryOpen) {
+      refreshConversations();
     }
-    return conversation;
-  }, []);
+  }, [isHistoryOpen, refreshConversations]);
 
-  const saveCurrentConversation = useCallback(
-    (messages: ChatMessageType[], systemPrompt?: string): string => {
-      // Convert messages to storage format
-      const storageMessages = messages.map((msg) => ({
-        role: msg.role,
-        content: msg.content,
-        timestamp: msg.timestamp,
-      }));
+  const handleSelectConversation = useCallback(
+    (id: string) => {
+      const conversation = getFromDb(id);
 
-      const conversation: Conversation = {
-        id: activeConversationId || `conv_${Date.now()}`,
-        title: messages[0]?.content.slice(0, 50) || "Neue Konversation",
-        messages: storageMessages,
-        systemPrompt,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        model: "default",
-        messageCount: storageMessages.length,
-      };
-
-      saveConversationStorage(conversation);
-
-      // Set as active if no active conversation
-      if (!activeConversationId) {
-        setActiveConversationId(conversation.id);
+      if (!conversation?.messages || !Array.isArray(conversation.messages)) {
+        toasts.push({
+          kind: "error",
+          title: "Fehler",
+          message: "Konversation ist beschädigt oder konnte nicht geladen werden",
+        });
+        return;
       }
 
-      // Refresh the conversations list
-      refreshConversations();
+      const chatMessages: ChatMessageType[] = conversation.messages
+        .filter((msg) => ["user", "assistant", "system"].includes(msg.role))
+        .map((msg) => ({
+          id: msg.id,
+          role: msg.role as "user" | "assistant" | "system",
+          content: msg.content,
+          timestamp: msg.timestamp,
+          model: msg.model,
+        }));
 
-      return conversation.id;
+      if (chatMessages.length === 0) {
+        toasts.push({
+          kind: "warning",
+          title: "Konversation leer",
+          message: "Diese Konversation enthält keine gültigen Nachrichten",
+        });
+        return;
+      }
+
+      setMessages(chatMessages);
+      setActiveConversationId(id);
+      onNewConversation(); // Resets discussion context etc.
+
+      const systemMessage = chatMessages.find((msg) => msg.role === "system");
+      setCurrentSystemPrompt(systemMessage?.content);
+      setIsHistoryOpen(false);
+
+      toasts.push({
+        kind: "success",
+        title: "Konversation geladen",
+        message: `${conversation.title} wurde geladen`,
+      });
     },
-    [activeConversationId, refreshConversations],
+    [setMessages, setCurrentSystemPrompt, onNewConversation, toasts],
   );
 
-  const deleteConversation = useCallback(
+  const handleDeleteConversation = useCallback(
     (id: string) => {
-      deleteConversationStorage(id);
-      refreshConversations();
+      if (
+        !confirm(
+          "Möchtest du diese Konversation wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        )
+      ) {
+        return;
+      }
 
-      // Clear active conversation if it was deleted
+      deleteFromDb(id);
+      refreshConversations();
       if (activeConversationId === id) {
         setActiveConversationId(null);
+        setCurrentSystemPrompt(undefined);
+        setMessages([]);
+        onNewConversation();
       }
+      toasts.push({
+        kind: "success",
+        title: "Gelöscht",
+        message: "Konversation wurde gelöscht",
+      });
     },
-    [activeConversationId, refreshConversations],
+    [
+      activeConversationId,
+      refreshConversations,
+      setMessages,
+      setCurrentSystemPrompt,
+      onNewConversation,
+      toasts,
+    ],
   );
 
-  const createNewConversation = useCallback(() => {
+  const handleNewConversation = useCallback(() => {
+    onNewConversation();
+    setMessages([]);
     setActiveConversationId(null);
-  }, []);
+    setCurrentSystemPrompt(undefined);
+    toasts.push({
+      kind: "info",
+      title: "Neue Unterhaltung",
+      message: "Bereit für eine neue Unterhaltung",
+    });
+  }, [onNewConversation, setMessages, setCurrentSystemPrompt, toasts]);
+
+  // Effect to load conversation from URL
+  useEffect(() => {
+    const state = location.state as { conversationId?: string } | null;
+    const conversationId = state?.conversationId;
+    if (conversationId) {
+      handleSelectConversation(conversationId);
+      // Clean up state from location
+      const { conversationId: _omit, ...rest } = state;
+      void navigate(location.pathname, { replace: true, state: rest });
+    }
+  }, [location, navigate, handleSelectConversation]);
 
   return {
+    isHistoryOpen,
+    openHistory: () => setIsHistoryOpen(true),
+    closeHistory: () => setIsHistoryOpen(false),
     conversations,
     activeConversationId,
-    loadConversation,
-    saveCurrentConversation,
-    deleteConversation,
-    refreshConversations,
+    selectConversation: handleSelectConversation,
+    deleteConversation: handleDeleteConversation,
+    newConversation: handleNewConversation,
     setActiveConversationId,
-    createNewConversation,
+    refreshConversations,
   };
 }
