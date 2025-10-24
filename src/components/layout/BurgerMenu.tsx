@@ -413,7 +413,7 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
       {isOpen && (
         <div
           ref={menuRef}
-          className="glass-panel fixed right-2 top-16 z-50 h-[calc(100vh-6rem)] max-h-[600px] min-h-[300px] w-64 max-w-[90vw] rounded-xl"
+          className="glass-panel fixed right-2 top-16 z-50 h-[calc(100vh-6rem)] max-h-[600px] min-h-[300px] w-80 max-w-[95vw] rounded-xl"
           role="dialog"
           aria-modal="true"
           aria-labelledby="menu-title"
@@ -471,13 +471,13 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                     to={item.to}
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `touch-target-preferred flex items-center gap-3 rounded-lg px-3 py-3 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus-ring truncate ${
+                      `touch-target-preferred flex items-center gap-3 rounded-lg px-3 py-3 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none focus-ring ${
                         isActive ? "active-state text-strong" : "hover-state text-standard"
                       }`
                     }
                   >
-                    <item.icon className="h-5 w-5 text-[var(--fg)]" />
-                    <span className="text-standard">{item.label}</span>
+                    <item.icon className="h-5 w-5 text-[var(--fg)] flex-shrink-0" />
+                    <span className="text-standard text-sm break-words min-w-0">{item.label}</span>
                   </NavLink>
                 ))}
 
@@ -486,8 +486,8 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                   onClick={openSettings}
                   className="touch-target-preferred flex items-center gap-3 rounded-lg px-3 py-3 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring text-standard"
                 >
-                  <Settings className="h-5 w-5 text-[var(--fg)]" />
-                  <span className="text-standard">Einstellungen</span>
+                  <Settings className="h-5 w-5 text-[var(--fg)] flex-shrink-0" />
+                  <span className="text-standard text-sm break-words min-w-0">Einstellungen</span>
                 </button>
 
                 <div className="border-t border-[var(--glass-border)] my-2"></div>
@@ -503,8 +503,8 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                       }`
                     }
                   >
-                    <item.icon className="h-5 w-5 text-[var(--fg)]" />
-                    <span className="text-standard">{item.label}</span>
+                    <item.icon className="h-5 w-5 text-[var(--fg)] flex-shrink-0" />
+                    <span className="text-standard text-sm break-words min-w-0">{item.label}</span>
                   </NavLink>
                 ))}
               </div>
@@ -534,7 +534,7 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                         value={apiKey}
                         onChange={(event) => setApiKey(event.target.value)}
                         placeholder="sk-or-..."
-                        className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] pr-10 font-mono"
+                        className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] pr-10 font-mono text-sm min-w-0 w-full"
                         style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                       />
                       <button
@@ -570,7 +570,7 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                   <Button
                     type="button"
                     onClick={handleSaveKey}
-                    className="touch-target-preferred bg-[var(--glass-surface)] border border-[var(--glass-border)] text-[var(--fg)] w-full hover:bg-[var(--hover-overlay)] transition-all duration-180 ease-out motion-reduce:transition-none"
+                    className="touch-target-preferred bg-[var(--glass-surface)] border border-[var(--glass-border)] text-[var(--fg)] w-full hover:bg-[var(--hover-overlay)] transition-all duration-180 ease-out motion-reduce:transition-none text-sm break-words"
                   >
                     Schlüssel speichern
                   </Button>
@@ -684,7 +684,7 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                               placeholder="Dein Name (optional)"
                               value={globalMemory?.name || ""}
                               onChange={(e) => updateGlobalMemory({ name: e.target.value })}
-                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
+                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] text-sm min-w-0 w-full"
                               aria-label="Dein Name für persönliche Informationen"
                               style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                             />
@@ -699,7 +699,7 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                                     : [],
                                 })
                               }
-                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
+                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] text-sm min-w-0 w-full"
                               aria-label="Deine Hobbys und Interessen"
                               style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                             />
@@ -708,7 +708,7 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                               placeholder="Hintergrund, Beruf (optional)"
                               value={globalMemory?.background || ""}
                               onChange={(e) => updateGlobalMemory({ background: e.target.value })}
-                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
+                              className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] text-sm min-w-0 w-full"
                               aria-label="Dein beruflicher Hintergrund"
                               style={{ backdropFilter: "var(--glass-blur-subtle)" }}
                             />
@@ -734,10 +734,10 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                               }
                             }}
                             variant="outline"
-                            className="touch-target-preferred w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+                            className="touch-target-preferred w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20 text-sm break-words"
                           >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Alle Erinnerungen löschen
+                            <Trash2 className="mr-2 h-4 w-4 flex-shrink-0" />
+                            <span className="min-w-0">Alle Erinnerungen löschen</span>
                           </Button>
                         </div>
                       </>
@@ -898,10 +898,10 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                       <Button
                         type="button"
                         onClick={handleInstallPWA}
-                        className="touch-target-preferred w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600"
+                        className="touch-target-preferred w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600 text-sm break-words"
                       >
-                        <Download className="mr-2 h-4 w-4" />
-                        Jetzt als App installieren
+                        <Download className="mr-2 h-4 w-4 flex-shrink-0" />
+                        <span className="min-w-0">Jetzt als App installieren</span>
                       </Button>
                     )}
 
@@ -975,7 +975,7 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                       type="button"
                       onClick={handleHardReload}
                       variant="outline"
-                      className="touch-target-preferred border-[var(--accent)]/40 hover:bg-[var(--accent)]/10 text-[var(--accent)] flex w-full items-center justify-center gap-2"
+                      className="touch-target-preferred border-[var(--accent)]/40 hover:bg-[var(--accent)]/10 text-[var(--accent)] flex w-full items-center justify-center gap-2 text-sm break-words"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -987,14 +987,14 @@ export function BurgerMenu({ isOpen: externalIsOpen, onClose }: BurgerMenuProps 
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="h-4 w-4"
+                        className="h-4 w-4 flex-shrink-0"
                       >
                         <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
                         <path d="M21 3v5h-5" />
                         <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
                         <path d="M3 21v-5h5" />
                       </svg>
-                      Seite vollständig neu laden
+                      <span className="min-w-0">Seite vollständig neu laden</span>
                     </Button>
                   </div>
                 </div>
