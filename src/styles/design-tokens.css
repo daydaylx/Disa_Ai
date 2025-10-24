@@ -277,9 +277,9 @@
 
   /* Text */
   --color-text-primary: #201f1e;
-  --color-text-secondary: #484644;
-  --color-text-tertiary: #605e5c;
-  --color-text-muted: #8a8886;
+  --color-text-secondary: #3a3836;
+  --color-text-tertiary: #424038;
+  --color-text-muted: #555249;
   --color-text-inverse: #ffffff;
   --color-text-on-brand: #ffffff;
   --color-text-on-accent: #0f2940;
@@ -408,8 +408,8 @@
 
     --color-text-primary: #f3f2f1;
     --color-text-secondary: #e1dfdd;
-    --color-text-tertiary: #c9c7c4;
-    --color-text-muted: #8a8886;
+    --color-text-tertiary: #d8d5d0;
+    --color-text-muted: #b8b5b0;
     --color-text-inverse: #201f1e;
     --color-text-on-brand: #0b0b0a;
     --color-text-on-accent: #052138;
