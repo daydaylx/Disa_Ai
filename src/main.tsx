@@ -9,12 +9,12 @@ import "./styles/mobile-enhanced.css"; // Mobile-enhanced styles
 
 import ReactDOM from "react-dom/client";
 
+import App from "./App";
 import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
 import { initEnvironment } from "./config/env";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 // PWA Installation Prompt
 import { registerSW } from "./lib/pwa/registerSW";
-import MobileApp from "./MobileApp";
 import { themeController } from "./styles/theme";
 
 // Initialize environment configuration
@@ -36,7 +36,7 @@ function initializeApp() {
   root.render(
     <ErrorBoundary>
       <StartupDiagnostics>
-        <MobileApp />
+        <App />
       </StartupDiagnostics>
     </ErrorBoundary>,
   );

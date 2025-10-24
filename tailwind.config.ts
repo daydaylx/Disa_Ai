@@ -211,18 +211,6 @@ export default {
         badge: "var(--font-size-badge)",
         input: "var(--font-size-input)",
       },
-      fontSize: {
-        display: withTextStyle("display"),
-        headline: withTextStyle("headline"),
-        title: withTextStyle("title"),
-        subtitle: withTextStyle("subtitle"),
-        body: withTextStyle("body"),
-        "body-strong": withTextStyle("bodyStrong"),
-        "body-sm": withTextStyle("bodySmall"),
-        caption: withTextStyle("caption"),
-        label: withTextStyle("label"),
-        mono: withTextStyle("mono"),
-      },
       transitionDuration: {
         micro: "var(--motion-duration-micro)",
         small: "var(--motion-duration-small)",

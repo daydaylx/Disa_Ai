@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
+import { useSwipeablePanel } from "../hooks/useSwipeablePanel";
 import { cn } from "../lib/utils";
 
 type BottomSheetState = "closed" | "open";
@@ -15,8 +16,6 @@ interface BottomSheetProps {
 
 export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, onTabChange }) => {
   const tabs: PanelTab[] = ["history", "roles", "models", "settings"];
-  const [sheetHeight, setSheetHeight] = useState("25vh"); // Start with 25% of viewport height
-  const [isDragging, setIsDragging] = useState(false);
 
   const getTabLabel = (t: PanelTab): string => {
     switch (t) {
@@ -33,91 +32,14 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
     }
   };
 
-  // Refs for touch handling
-  const sheetRef = useRef<HTMLDivElement>(null);
-  const touchStartY = useRef<number | null>(null);
-  const touchStartHeight = useRef<number>(0);
-
-  // Touch event handlers for expanding/collapsing
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (e.touches[0]) {
-      touchStartY.current = e.touches[0].clientY;
-      if (sheetRef.current) {
-        touchStartHeight.current = sheetRef.current.clientHeight;
-      }
-      setIsDragging(true);
-    }
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!touchStartY.current || !sheetRef.current || !e.touches[0]) return;
-
-    const touchY = e.touches[0].clientY;
-    const diffY = touchY - touchStartY.current;
-
-    // Only expand/squeeze if swiping up/down
-    if (Math.abs(diffY) > 10) {
-      // Swipe down gesture - if swiping down significantly, prepare to close
-      if (diffY > 30) {
-        const newHeight = Math.max(window.innerHeight * 0.1, touchStartHeight.current - diffY);
-        setSheetHeight(`${newHeight}px`);
-      } else if (diffY < -10) {
-        // Swipe up - expand the sheet
-        const newHeight = Math.min(
-          window.innerHeight * 0.9, // 90% max height as requested
-          touchStartHeight.current - diffY,
-        );
-        setSheetHeight(`${newHeight}px`);
-      }
-    }
-  };
-
-  const onTouchEnd = () => {
-    if (touchStartY.current !== null) {
-      const currentY = touchStartY.current;
-      touchStartY.current = null;
-
-      // Calculate if the swipe was significant enough to close
-      if (currentY && sheetRef.current) {
-        const currentHeight = sheetRef.current.clientHeight;
-        const minThreshold = window.innerHeight * 0.2; // If less than 20% of screen height, close
-
-        if (currentHeight < minThreshold) {
-          onClose(); // Close if swiped down enough
-        } else {
-          // Reset to preferred height
-          setSheetHeight(state === "open" ? "85vh" : "0vh"); // Changed to 85vh as requested (between 80-90%)
-        }
-      }
-    }
-    setIsDragging(false);
-  };
-
-  // Reset height when state changes
-  useEffect(() => {
-    setSheetHeight(state === "open" ? "85vh" : "0vh"); // Changed to 85vh as requested (between 80-90%)
-  }, [state]);
-
-  // Handle hardware back button for Android
-  useEffect(() => {
-    if (state !== "open") return;
-
-    const handleBackButton = (e: Event) => {
-      e.preventDefault();
-      onClose();
-    };
-
-    // Add the event listener for the back button
-    const handler = (e: Event) => handleBackButton(e);
-    window.addEventListener("popstate", handler);
-
-    // Push a history state to handle the back button
-    window.history.pushState({}, "");
-
-    return () => {
-      window.removeEventListener("popstate", handler);
-    };
-  }, [state, onClose]);
+  // Use the swipeable panel hook for all touch handling
+  const { sheetRef, sheetHeight, isDragging, touchHandlers } = useSwipeablePanel({
+    isOpen: state === "open",
+    onClose,
+    initialHeight: "85vh",
+    minHeightThreshold: 0.2,
+    maxHeightPercentage: 0.9,
+  });
 
   return (
     <>
@@ -144,9 +66,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({ state, tab, onClose, o
           height: sheetHeight,
           maxHeight: "90vh", // Maximum 90vh as requested
         }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
+        {...touchHandlers}
         // Add aria attributes for accessibility
         role="dialog"
         aria-modal="true"

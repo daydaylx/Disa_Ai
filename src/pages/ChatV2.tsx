@@ -67,6 +67,7 @@ export default function ChatV2() {
     useState<DiscussionPresetKey>(getDiscussionPreset);
   const toasts = useToasts();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const discussionSessionRef = useRef<DiscussionSession | null>(null);
   const requestOptionsRef = useRef<ChatRequestOptions | null>(null);
   const strictRetryTracker = useRef<Set<string>>(new Set());
@@ -118,6 +119,11 @@ export default function ChatV2() {
     setIsHistoryOpen(true);
     void navigate(location.pathname, { replace: true, state: stateWithoutHistory });
   }, [openHistory, navigate, location.pathname, stateWithoutHistory]);
+
+  // Auto-scroll to the latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   const resetDiscussionContext = useCallback(() => {
     discussionSessionRef.current = null;
@@ -757,6 +763,8 @@ export default function ChatV2() {
                 </div>
               </div>
             )}
+            {/* Auto-scroll anchor */}
+            <div ref={messagesEndRef} />
           </div>
         </>
       )}

@@ -3,19 +3,8 @@ import React from "react";
 import { ChatBubble } from "../components/ChatBubble";
 import { Header } from "../components/Header";
 import { InputBar } from "../components/InputBar";
+import type { ChatAreaProps } from "../types";
 import { BottomSheetButton } from "./BottomSheetButton";
-
-interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-}
-
-interface ChatAreaProps {
-  messages: Message[];
-  onSend: (message: string) => void;
-}
 
 export const ChatArea: React.FC<ChatAreaProps> = ({ messages, onSend }) => {
   const handleSend = (message: string) => {
