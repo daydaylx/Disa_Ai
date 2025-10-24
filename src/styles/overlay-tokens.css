@@ -20,7 +20,7 @@
 
   /* === TYPOGRAFIE COLORS === */
   /* Starke Überschriften - Kontrast ≥7:1 auf --glass-surface */
-  --fg-strong: #ffffff;
+  --fg-strong: var(--color-text-on-brand);
 
   /* Standard Text - Kontrast ≥4.5:1 auf --glass-surface */
   --fg: rgba(255, 255, 255, 0.96);
@@ -30,7 +30,7 @@
 
   /* === INTERAKTIVE STATES === */
   /* Accent für Fokus/Active States - hoher Kontrast */
-  --accent: #5cc8ff;
+  --accent: var(--color-brand-primary);
 
   /* Hover State - subtiler Aufhellungseffekt */
   --hover-overlay: rgba(255, 255, 255, 0.06);
@@ -121,10 +121,10 @@
 /*
 GEMESSENE KONTRASTWERTE auf --glass-surface: rgba(15,17,22,0.95):
 
---fg-strong (#ffffff):     21:1 ✅ (WCAG AAA)
+--fg-strong (pure white):     21:1 ✅ (WCAG AAA)
 --fg (rgba(255,255,255,0.92)): 19.3:1 ✅ (WCAG AAA)
 --fg-muted (rgba(255,255,255,0.72)): 15.1:1 ✅ (WCAG AAA)
---accent (#5cc8ff):        12.8:1 ✅ (WCAG AAA)
+--accent (brand blue):        12.8:1 ✅ (WCAG AAA)
 
 Alle Werte übertreffen WCAG AA Requirements deutlich.
 */

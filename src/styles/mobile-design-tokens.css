@@ -272,8 +272,8 @@
   --radius-mobile-avatar: 50%;
 
   /* Mobile additional color variables */
-  --accent-mobile-color: #4f46e5;
-  --accent-mobile-color-rgb: 79, 70, 229;
+  --accent-mobile-color: var(--color-brand-primary);
+  --accent-mobile-color-rgb: var(--brand-mobile-rgb);
 
   /* Mobile navigation variables */
   --navigation-mobile-width: 4rem;
@@ -536,8 +536,8 @@
     --radius-tablet-avatar: 50%;
 
     /* Tablet additional color variables */
-    --accent-tablet-color: #4f46e5;
-    --accent-tablet-color-rgb: 79, 70, 229;
+    --accent-tablet-color: var(--color-brand-primary);
+    --accent-tablet-color-rgb: var(--brand-mobile-rgb);
 
     /* Tablet navigation variables */
     --navigation-tablet-width: 4rem;
@@ -759,8 +759,8 @@
     --radius-desktop-avatar: 50%;
 
     /* Desktop additional color variables */
-    --accent-desktop-color: #4f46e5;
-    --accent-desktop-color-rgb: 79, 70, 229;
+    --accent-desktop-color: var(--color-brand-primary);
+    --accent-desktop-color-rgb: var(--brand-mobile-rgb);
 
     /* Desktop navigation variables */
     --navigation-desktop-width: 5rem;
