@@ -16,7 +16,9 @@ declare global {
 }
 
 export function usePWAInstall() {
-  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(
+    null,
+  );
   const [installed, setInstalled] = useState(false);
 
   useEffect(() => {
@@ -26,10 +28,12 @@ export function usePWAInstall() {
     };
 
     window.addEventListener("beforeinstallprompt", handler as any);
-    
+
     // Check if already installed
-    if (window.matchMedia("(display-mode: standalone)").matches || 
-        (window.navigator as any).standalone) {
+    if (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as any).standalone
+    ) {
       setInstalled(true);
     }
 
@@ -45,12 +49,12 @@ export function usePWAInstall() {
 
     await installPromptEvent.prompt();
     const { outcome } = await installPromptEvent.userChoice;
-    
+
     if (outcome === "accepted") {
       setInstalled(true);
       setInstallPromptEvent(null);
     }
-    
+
     return outcome;
   }, [installPromptEvent]);
 
