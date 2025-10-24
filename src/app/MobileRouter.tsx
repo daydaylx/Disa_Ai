@@ -5,7 +5,7 @@ import { ErrorBoundary } from "../components/ErrorBoundary";
 import { MobileAppShell } from "./layouts/MobileAppShell";
 
 // Lazy-loaded Routes für bessere Performance
-const ChatPage = lazy(() => import("../pages/MobileChatV2"));
+const ChatPage = lazy(() => import("../pages/Chat"));
 const ModelsPage = lazy(() => import("../pages/MobileModels"));
 const RolesPage = lazy(() => import("../pages/MobileStudio"));
 

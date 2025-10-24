@@ -1,8 +1,8 @@
-import { History, Plus, Send } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { History, Plus } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
+import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
-import { Composer } from "../components/chat/ChatComposer"; // Using the better Composer
 import { MessageBubbleCard } from "../components/chat/MessageBubbleCard";
 import { MobileChatHistorySidebar } from "../components/chat/MobileChatHistorySidebar";
 import SettingsFAB from "../components/nav/SettingsFAB";
@@ -83,7 +83,7 @@ export default function Chat() {
   } = useDiscussion({
     append,
     setMessages,
-    setSystemPrompt,
+    setSystemPrompt: setCurrentSystemPrompt,
     setRequestOptions,
   });
 
@@ -97,7 +97,7 @@ export default function Chat() {
   // Auto-save conversation on finish
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
     if (!isLoading && messages.length > 0 && lastMessage?.role === "assistant") {
       let finalMessages = messages;
       if (isDiscussionActive()) {
@@ -151,7 +151,7 @@ export default function Chat() {
   // --- Handlers ---
   const handleSend = useCallback(() => {
     if (!input.trim()) return;
-    append({ role: "user", content: input.trim() });
+    void append({ role: "user", content: input.trim() });
     setInput("");
   }, [input, append, setInput]);
 
@@ -256,14 +256,8 @@ export default function Chat() {
             >
               Stil auswählen
             </Label>
-            <Select
-              value={discussionPreset}
-              onValueChange={handleDiscussionPresetChange}
-            >
-              <SelectTrigger
-                id="discussion-style"
-                className="mobile-form-select touch-target"
-              >
+            <Select value={discussionPreset} onValueChange={handleDiscussionPresetChange}>
+              <SelectTrigger id="discussion-style" className="mobile-form-select touch-target">
                 <SelectValue placeholder="Stil wählen" />
               </SelectTrigger>
               <SelectContent>
@@ -359,14 +353,16 @@ export default function Chat() {
           <div className="mobile-chat-loading animate-fade-in flex justify-start">
             {/* Loading Indicator */}
             <div className="border-border mr-12 max-w-[85%] rounded-lg border bg-surface-card p-4">
-                <div className="flex items-center space-x-3">
-                    <div className="flex space-x-1">
-                        <div className="h-2 w-2 rounded-full bg-brand-primary motion-safe:animate-bounce"></div>
-                        <div className="h-2 w-2 rounded-full bg-brand-primary [animation-delay:0.15s] motion-safe:animate-bounce"></div>
-                        <div className="h-2 w-2 rounded-full bg-brand-primary [animation-delay:0.3s] motion-safe:animate-bounce"></div>
-                    </div>
-                    <span className="text-sm text-text-muted motion-safe:animate-pulse">Disa denkt nach...</span>
+              <div className="flex items-center space-x-3">
+                <div className="flex space-x-1">
+                  <div className="h-2 w-2 rounded-full bg-brand-primary motion-safe:animate-bounce"></div>
+                  <div className="h-2 w-2 rounded-full bg-brand-primary [animation-delay:0.15s] motion-safe:animate-bounce"></div>
+                  <div className="h-2 w-2 rounded-full bg-brand-primary [animation-delay:0.3s] motion-safe:animate-bounce"></div>
                 </div>
+                <span className="text-sm text-text-muted motion-safe:animate-pulse">
+                  Disa denkt nach...
+                </span>
+              </div>
             </div>
           </div>
         )}
@@ -388,12 +384,12 @@ export default function Chat() {
       </main>
 
       {/* Unified Composer Input */}
-      <Composer
+      <ChatComposer
         value={input}
         onChange={setInput}
         onSend={handleSend}
         onStop={stop}
-        streaming={isLoading}
+        isLoading={isLoading}
         canSend={!isLoading}
       />
 
@@ -427,8 +423,7 @@ export default function Chat() {
 function MessageBubble({ message }: { message: ChatMessageType }) {
   const isUser = message.role === "user";
   return (
-    <div
-      className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <MessageBubbleCard
         author={isUser ? "Du" : "Disa AI"}
         body={message.content}

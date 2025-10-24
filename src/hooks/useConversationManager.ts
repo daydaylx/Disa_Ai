@@ -1,5 +1,6 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import {
   deleteConversation as deleteFromDb,
@@ -21,9 +22,7 @@ export function useConversationManager({
 }: ConversationManagerProps) {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [activeConversationId, setActiveConversationId] = useState<string | null>(
-    null,
-  );
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const toasts = useToasts();
   const navigate = useNavigate();
   const location = useLocation();

@@ -20,7 +20,7 @@ import {
   getGameStartPrompt,
   getGameSystemPrompt,
 } from "../../features/prompt/gamePrompts";
-import { type ChatRequestOptions, useChat } from "../../hooks/useChat";
+import { useChat } from "../../hooks/useChat";
 import {
   deleteConversation,
   getAllConversations,
@@ -32,6 +32,7 @@ import {
   type DiscussionPresetKey,
   discussionPresetOptions,
 } from "../../prompts/discussion/presets";
+import type { ChatRequestOptions } from "../../types";
 import type { ChatMessageType } from "../../types/chatMessage";
 import SettingsFAB from "../nav/SettingsFAB";
 import Accordion from "../ui/Accordion";

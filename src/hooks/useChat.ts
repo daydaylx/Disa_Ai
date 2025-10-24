@@ -4,6 +4,7 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import { chatStream } from "../api/openrouter";
 import { mapError } from "../lib/errors";
 import { RateLimitError } from "../lib/errors/types";
+import type { ChatRequestOptions } from "../types";
 import type { ChatMessageType } from "../types/chatMessage";
 
 export interface UseChatOptions {
@@ -20,20 +21,14 @@ export interface UseChatOptions {
   getRequestOptions?: () => ChatRequestOptions;
 }
 
-export interface ChatRequestOptions {
-  model?: string;
-  temperature?: number;
-  top_p?: number;
-  presence_penalty?: number;
-  max_tokens?: number;
-}
-
 interface ChatState {
   messages: ChatMessageType[];
   input: string;
   isLoading: boolean;
   error: Error | null;
   abortController: AbortController | null;
+  currentSystemPrompt: string | undefined;
+  requestOptions: ChatRequestOptions | null;
 }
 
 type ChatAction =
@@ -44,6 +39,8 @@ type ChatAction =
   | { type: "SET_LOADING"; isLoading: boolean }
   | { type: "SET_ERROR"; error: Error | null }
   | { type: "SET_ABORT_CONTROLLER"; controller: AbortController | null }
+  | { type: "SET_CURRENT_SYSTEM_PROMPT"; prompt: string | undefined }
+  | { type: "SET_REQUEST_OPTIONS"; options: ChatRequestOptions | null }
   | { type: "RESET" };
 
 function chatReducer(state: ChatState, action: ChatAction): ChatState {
@@ -67,6 +64,10 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return { ...state, error: action.error };
     case "SET_ABORT_CONTROLLER":
       return { ...state, abortController: action.controller };
+    case "SET_CURRENT_SYSTEM_PROMPT":
+      return { ...state, currentSystemPrompt: action.prompt };
+    case "SET_REQUEST_OPTIONS":
+      return { ...state, requestOptions: action.options };
     case "RESET":
       return {
         ...state,
@@ -75,6 +76,8 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
         isLoading: false,
         error: null,
         abortController: null,
+        currentSystemPrompt: undefined,
+        requestOptions: null,
       };
     default:
       return state;
@@ -109,6 +112,8 @@ export function useChat({
     isLoading: false,
     error: null,
     abortController: null,
+    currentSystemPrompt: _systemPrompt,
+    requestOptions: null,
   });
 
   const systemPromptRef = useRef<string | undefined>(_systemPrompt);
@@ -181,12 +186,12 @@ export function useChat({
         }));
 
         // Add system prompt as the first message if it exists and not already present
-        const systemPrompt = systemPromptRef.current;
+        const systemPrompt = stateRef.current.currentSystemPrompt || systemPromptRef.current;
         if (systemPrompt && apiMessages.length > 0 && apiMessages[0]?.role !== "system") {
           apiMessages = [{ role: "system", content: systemPrompt }, ...apiMessages];
         }
 
-        const requestOptions = getRequestOptions?.();
+        const requestOptions = stateRef.current.requestOptions || getRequestOptions?.();
 
         await chatStream(
           apiMessages,
@@ -371,6 +376,15 @@ export function useChat({
     dispatch({ type: "SET_INPUT", input });
   }, []);
 
+  const setCurrentSystemPrompt = useCallback((prompt: string | undefined) => {
+    dispatch({ type: "SET_CURRENT_SYSTEM_PROMPT", prompt });
+    systemPromptRef.current = prompt;
+  }, []);
+
+  const setRequestOptions = useCallback((options: ChatRequestOptions | null) => {
+    dispatch({ type: "SET_REQUEST_OPTIONS", options });
+  }, []);
+
   return {
     messages: state.messages,
     input: state.input,
@@ -381,5 +395,7 @@ export function useChat({
     setMessages,
     isLoading: state.isLoading,
     error: state.error,
+    setCurrentSystemPrompt,
+    setRequestOptions,
   };
 }

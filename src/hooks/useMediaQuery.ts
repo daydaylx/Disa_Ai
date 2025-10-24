@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 /**
  * Custom hook for tracking the state of a media query.
@@ -10,12 +10,12 @@ export function useMediaQuery(query: string): boolean {
 
   useEffect(() => {
     // Ensure window.matchMedia is available
-    if (typeof window.matchMedia !== 'function') {
+    if (typeof window.matchMedia !== "function") {
       return;
     }
 
     const mediaQueryList = window.matchMedia(query);
-    
+
     // Function to update state based on media query match status
     const updateMatches = (event: MediaQueryListEvent | MediaQueryList) => {
       setMatches(event.matches);
@@ -27,7 +27,7 @@ export function useMediaQuery(query: string): boolean {
     // Add listener for changes
     // Using addEventListener for modern browsers
     try {
-      mediaQueryList.addEventListener('change', updateMatches);
+      mediaQueryList.addEventListener("change", updateMatches);
     } catch {
       // Fallback for older browsers
       mediaQueryList.addListener(updateMatches);
@@ -36,7 +36,7 @@ export function useMediaQuery(query: string): boolean {
     // Cleanup listener on component unmount
     return () => {
       try {
-        mediaQueryList.removeEventListener('change', updateMatches);
+        mediaQueryList.removeEventListener("change", updateMatches);
       } catch {
         // Fallback for older browsers
         mediaQueryList.removeListener(updateMatches);
@@ -52,5 +52,5 @@ export function useMediaQuery(query: string): boolean {
  * Uses a default max-width of 768px.
  */
 export function useIsMobile(): boolean {
-  return useMediaQuery('(max-width: 768px)');
+  return useMediaQuery("(max-width: 768px)");
 }

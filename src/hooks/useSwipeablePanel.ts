@@ -9,7 +9,7 @@ export interface UseSwipeablePanelOptions {
 }
 
 export interface UseSwipeablePanelReturn {
-  sheetRef: React.RefObject<HTMLDivElement>;
+  sheetRef: React.RefObject<HTMLDivElement | null>;
   sheetHeight: string;
   isDragging: boolean;
   touchHandlers: {

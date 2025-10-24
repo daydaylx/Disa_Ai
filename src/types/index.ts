@@ -26,6 +26,18 @@ export type MessageRole = Message["role"];
 // Re-export existing types for backward compatibility
 export type { ChatMessageType } from "./chatMessage";
 
+// Export conversation types
+export type { Conversation } from "../lib/conversation-manager";
+
+// Export chat request options from useChat hook
+export interface ChatRequestOptions {
+  model?: string;
+  temperature?: number;
+  top_p?: number;
+  presence_penalty?: number;
+  max_tokens?: number;
+}
+
 // ==================== Chat Types ====================
 
 export interface ChatSession {
