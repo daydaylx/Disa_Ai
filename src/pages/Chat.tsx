@@ -157,14 +157,54 @@ export default function Chat() {
 
   // --- Hardcoded Config (could be moved) ---
   const discussionTopicConfig = useMemo(
-    () => [
-      {
-        title: "Gibt es Außerirdische?",
-        prompt: "Gibt es Außerirdische?",
-        category: "curiosity",
-      },
-      // ... other topics
-    ],
+    () =>
+      [
+        {
+          title: "Gibt es Außerirdische?",
+          prompt: "Gibt es Außerirdische?",
+          category: "curiosity",
+        },
+        {
+          title: "Wie wird die Zukunft aussehen?",
+          prompt: "Wie stellst du dir die nächsten 20 Jahre vor?",
+          category: "future",
+        },
+        {
+          title: "Wird KI die Weltherrschaft übernehmen?",
+          prompt: "Wird KI irgendwann zu viel Macht haben?",
+          category: "future",
+        },
+        {
+          title: "Gibt es ein Leben nach dem Tod?",
+          prompt: "Gibt es deiner Meinung nach ein Leben nach dem Tod?",
+          category: "curiosity",
+        },
+        {
+          title: "Warum glauben Menschen an Schicksal?",
+          prompt: "Warum glauben manche so fest an Schicksal?",
+          category: "curiosity",
+        },
+        {
+          title: "Brauchen wir ein Grundeinkommen?",
+          prompt: "Sollte es ein bedingungsloses Grundeinkommen geben?",
+          category: "society",
+        },
+        {
+          title: "Wie retten wir das Klima?",
+          prompt: "Welche Maßnahmen helfen deiner Meinung nach dem Klima am meisten?",
+          category: "society",
+        },
+        {
+          title: "Welche Rolle spielen soziale Medien?",
+          prompt: "Wie beeinflussen soziale Medien unser Denken und Verhalten?",
+          category: "society",
+        },
+        {
+          title: "Gestalten wir die Zukunft der Arbeit?",
+          prompt: "Wie werden Automatisierung und KI die Arbeitswelt verändern?",
+          category: "future",
+        },
+      ] as const,
     [],
   );
 
@@ -176,7 +216,16 @@ export default function Chat() {
           title: "Neugier & Sinnfragen",
           description: "Philosophische Warm-ups und lockere Brainstormings.",
         },
-        // ... other sections
+        {
+          id: "future",
+          title: "Zukunft & Technologie",
+          description: "Blick nach vorn auf Innovation, Automatisierung und KI.",
+        },
+        {
+          id: "society",
+          title: "Gesellschaft & Alltag",
+          description: "Diskussionen rund um Klima, Wirtschaft und soziale Dynamischen.",
+        },
       ].map((section) => ({
         ...section,
         topics: discussionTopicConfig
