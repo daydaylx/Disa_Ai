@@ -13,6 +13,7 @@ export interface RoleCardProps extends Omit<HTMLAttributes<HTMLDivElement>, "tit
   isActive?: boolean;
   defaultExpanded?: boolean;
   disabled?: boolean;
+  isMobile?: boolean;
 }
 
 export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
@@ -27,6 +28,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
       defaultExpanded = false,
       onClick,
       disabled,
+      isMobile = false,
       ...props
     },
     ref,
@@ -67,6 +69,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
           !disabled && "cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
           isActive && "ring-brand ring-2 bg-brand/10",
+          isMobile && "mobile-role-card touch-target",
           className,
         )}
         onClick={handleCardClick}
@@ -80,33 +83,69 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         tabIndex={disabled ? -1 : 0}
         aria-pressed={isActive}
         aria-label={`${title} ${isActive ? "ausgewählt" : "auswählen"}`}
-        data-testid={`role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
+        data-testid={`${isMobile ? "mobile-" : ""}role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
         {...props}
       >
         <div className="flex w-full items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-sm font-semibold uppercase text-text-primary shadow-surface">
+          <div
+            className={cn(
+              "flex shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-sm font-semibold uppercase text-text-primary shadow-surface",
+              isMobile ? "h-12 w-12 touch-target" : "h-10 w-10",
+            )}
+          >
             {title.slice(0, 1)}
           </div>
 
           <div className="flex flex-1 flex-col gap-2">
             <div className="flex flex-1 items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold leading-tight sm:text-base">{title}</h3>
+                <h3
+                  className={cn(
+                    "font-semibold leading-tight",
+                    isMobile ? "text-base" : "text-sm sm:text-base",
+                  )}
+                >
+                  {title}
+                </h3>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {badge && (
-                    <span className="category-badge inline-flex items-center gap-2 rounded-full border border-white/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
-                      <span className="category-dot h-1.5 w-1.5 rounded-full" />
+                    <span
+                      className={cn(
+                        "category-badge inline-flex items-center gap-2 rounded-full border border-white/30 font-semibold uppercase tracking-wide",
+                        isMobile
+                          ? "mobile-category-badge px-3 py-1 text-xs touch-target"
+                          : "px-2 py-0.5 text-[10px]",
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "category-dot rounded-full",
+                          isMobile ? "mobile-category-dot h-2 w-2" : "h-1.5 w-1.5",
+                        )}
+                      />
                       {badge}
                     </span>
                   )}
                   {category && (
-                    <span className="category-badge inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide">
-                      <span className="text-xs">{categoryData.icon}</span>
+                    <span
+                      className={cn(
+                        "category-badge inline-flex items-center rounded-full font-medium uppercase tracking-wide",
+                        isMobile
+                          ? "mobile-category-badge gap-2 px-3 py-1 text-xs touch-target"
+                          : "gap-1.5 px-2 py-0.5 text-[10px]",
+                      )}
+                    >
+                      <span className={isMobile ? "text-sm" : "text-xs"}>{categoryData.icon}</span>
                       {categoryData.label}
                     </span>
                   )}
                   {isActive && (
-                    <span className="text-text-1 text-xs px-2 py-0.5 rounded-full border border-border-subtle bg-surface-subtle">
+                    <span
+                      className={cn(
+                        "text-text-1 text-xs rounded-full border border-border-subtle bg-surface-subtle",
+                        isMobile ? "px-3 py-1 touch-target" : "px-2 py-0.5",
+                      )}
+                    >
                       Aktiv
                     </span>
                   )}
@@ -128,20 +167,35 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
                 aria-label={expanded ? "Beschreibung verbergen" : "Beschreibung anzeigen"}
                 aria-expanded={expanded}
                 aria-controls={detailId}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border-subtle bg-surface-subtle text-sm font-medium text-text-primary transition-colors hover:border-border-strong hover:bg-surface-raised focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-base)] disabled:pointer-events-none disabled:opacity-50"
+                className={cn(
+                  "inline-flex items-center justify-center rounded-md border border-border-subtle bg-surface-subtle text-sm font-medium text-text-primary transition-colors hover:border-border-strong hover:bg-surface-raised focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-base)] disabled:pointer-events-none disabled:opacity-50",
+                  isMobile ? "h-12 w-12 mobile-info-btn touch-target" : "h-10 w-10",
+                )}
               >
-                <Info className="h-4 w-4" />
+                <Info className={isMobile ? "h-5 w-5" : "h-4 w-4"} />
               </div>
             </div>
 
-            <p className="text-xs text-text-secondary sm:text-sm line-clamp-2">{description}</p>
+            <p
+              className={cn(
+                "text-text-secondary",
+                isMobile ? "text-sm line-clamp-3" : "text-xs sm:text-sm line-clamp-2",
+              )}
+            >
+              {description}
+            </p>
           </div>
         </div>
 
         {expanded && (
           <div
             id={detailId}
-            className="mt-3 pt-3 border-t border-border-subtle text-xs leading-5 opacity-85 sm:text-sm sm:leading-6"
+            className={cn(
+              "border-t border-border-subtle",
+              isMobile
+                ? "mobile-role-details mt-4 pt-4 text-sm leading-6"
+                : "mt-3 pt-3 text-xs leading-5 opacity-85 sm:text-sm sm:leading-6",
+            )}
           >
             <p className="whitespace-pre-line break-words">{description}</p>
           </div>

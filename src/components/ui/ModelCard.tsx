@@ -21,6 +21,7 @@ export interface ModelCardProps {
   onSelect: () => void;
   onToggleDetails: () => void;
   providerTier?: "free" | "premium" | "enterprise";
+  isMobile?: boolean;
 }
 
 const priceFormatter = new Intl.NumberFormat("de-DE", {
@@ -54,6 +55,7 @@ export function ModelCard({
   onSelect,
   onToggleDetails,
   providerTier = "free",
+  isMobile = false,
 }: ModelCardProps) {
   const detailId = useId();
 
@@ -92,18 +94,23 @@ export function ModelCard({
         "transition-all duration-200 ease-out",
         "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
         isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
+        isMobile && "mobile-model-card touch-target",
       )}
       onClick={onSelect}
       onKeyDown={handleKeyDown}
-      data-testid={`model-card-${id}`}
+      data-testid={`${isMobile ? "mobile-" : ""}model-card-${id}`}
     >
       <div className="flex items-start gap-3">
         <div className="relative flex-shrink-0">
-          <Avatar size="md" className="shadow-surface-subtle">
+          <Avatar size="md" className={cn("shadow-surface-subtle", isMobile && "touch-target")}>
             {provider.slice(0, 1)}
           </Avatar>
           {providerTier === "premium" && (
-            <Badge size="xs" variant="brand" className="absolute -right-1 -top-1">
+            <Badge
+              size="xs"
+              variant="brand"
+              className={cn("absolute -right-1 -top-1", isMobile && "touch-target")}
+            >
               ★
             </Badge>
           )}
@@ -115,7 +122,12 @@ export function ModelCard({
               <h3 className="text-title-base text-text-strong font-semibold truncate">{name}</h3>
               <div className="flex items-center gap-2 mt-1">
                 <p className="truncate text-sm text-text-muted">{provider}</p>
-                <span className="category-badge inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                <span
+                  className={cn(
+                    "category-badge inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide",
+                    isMobile && "touch-target",
+                  )}
+                >
                   <span className="category-dot h-1 w-1 rounded-full" />
                   {categoryData.label}
                 </span>
@@ -134,7 +146,10 @@ export function ModelCard({
                 }}
                 aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
                 aria-expanded={isOpen}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
+                className={cn(
+                  "flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]",
+                  isMobile ? "h-10 w-10 mobile-info-btn touch-target" : "h-8 w-8",
+                )}
               >
                 <Info className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -142,24 +157,37 @@ export function ModelCard({
           </div>
 
           {description && (
-            <p className="mt-2 text-sm leading-relaxed text-text-secondary line-clamp-2">
+            <p
+              className={cn(
+                "mt-2 text-sm leading-relaxed text-text-secondary",
+                isMobile ? "line-clamp-3" : "line-clamp-2",
+              )}
+            >
               {description}
             </p>
           )}
 
           <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border-divider">
             <div className="flex items-center gap-2">
-              <Badge variant={getBadgeVariant()} size="sm">
+              <Badge
+                variant={getBadgeVariant()}
+                size="sm"
+                className={cn(isMobile && "touch-target")}
+              >
                 {contextTokens ? formatContext(contextTokens) : "N/A"}
               </Badge>
               {contextTokens && contextTokens > 100000 && (
-                <Badge variant="info" size="sm">
+                <Badge variant="info" size="sm" className={cn(isMobile && "touch-target")}>
                   ⚡
                 </Badge>
               )}
             </div>
 
-            <Badge variant={isSelected ? "brand" : "outline"} size="sm" className="px-3 py-1">
+            <Badge
+              variant={isSelected ? "brand" : "outline"}
+              size="sm"
+              className={cn("px-3 py-1", isMobile && "touch-target")}
+            >
               {isSelected ? "Aktiv" : "Auswählen"}
             </Badge>
           </div>
@@ -171,7 +199,10 @@ export function ModelCard({
           id={detailId}
           role="region"
           aria-live="polite"
-          className="mt-4 pt-4 border-t border-border-divider"
+          className={cn(
+            "mt-4 pt-4 border-t border-border-divider",
+            isMobile && "mobile-model-details",
+          )}
         >
           <p className="text-description-base text-text-secondary mb-3">{description}</p>
           <div className="text-description-sm grid grid-cols-2 gap-3">

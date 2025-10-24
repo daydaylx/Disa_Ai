@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
-import { MobileRoleCard } from "../components/studio/MobileRoleCard";
+import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import type { Role } from "../data/roles";
@@ -357,7 +357,7 @@ export default function MobileStudio() {
                 {isCategoryExpanded && (
                   <div className="mobile-roles-grid grid gap-3">
                     {roles.map((role) => (
-                      <MobileRoleCard
+                      <RoleCard
                         key={role.id}
                         title={role.name}
                         description={summariseRole(role)}
@@ -368,6 +368,7 @@ export default function MobileStudio() {
                         aria-label={t.studio.actions.selectRole(role.name)}
                         data-testid={`role-card-${role.id}`}
                         className="touch-target"
+                        isMobile={true}
                       />
                     ))}
                   </div>

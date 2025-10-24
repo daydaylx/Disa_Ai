@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
 import { Button, Card } from "../components/ui";
-import { MobileModelCard } from "../components/ui/MobileModelCard";
+import { ModelCard } from "../components/ui/ModelCard";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 
 type ModelDefinition = {
@@ -460,7 +460,7 @@ export default function MobileModels() {
             {isGroupExpanded && (
               <div className="mobile-models-grid grid gap-3">
                 {group.models.map((model) => (
-                  <MobileModelCard
+                  <ModelCard
                     key={model.id}
                     id={model.id}
                     name={model.label}
@@ -475,6 +475,7 @@ export default function MobileModels() {
                     onToggleDetails={() =>
                       setOpenId((current) => (current === model.id ? null : model.id))
                     }
+                    isMobile={true}
                   />
                 ))}
               </div>
