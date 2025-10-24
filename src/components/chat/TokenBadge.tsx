@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface TokenBadgeProps {
   current: number;
@@ -73,33 +73,31 @@ export function TokenBadge({
   );
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Badge
-            variant={variant}
-            className={cn(
-              "flex items-center gap-1 font-mono text-xs transition-all",
-              isLive && "animate-pulse",
-              className,
-            )}
-          >
-            <Icon className="h-3 w-3" />
-            <span>{formatNumber(current)}</span>
-            {max && (
-              <>
-                <span className="opacity-60">/</span>
-                <span className="opacity-60">{formatNumber(max)}</span>
-              </>
-            )}
-            {isLive && <Clock className="text-accent h-3 w-3" />}
-          </Badge>
-        </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-xs">
-          {tooltipContent}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge
+          variant={variant}
+          className={cn(
+            "flex items-center gap-1 font-mono text-xs transition-all",
+            isLive && "animate-pulse",
+            className,
+          )}
+        >
+          <Icon className="h-3 w-3" />
+          <span>{formatNumber(current)}</span>
+          {max && (
+            <>
+              <span className="opacity-60">/</span>
+              <span className="opacity-60">{formatNumber(max)}</span>
+            </>
+          )}
+          {isLive && <Clock className="text-accent h-3 w-3" />}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs">
+        {tooltipContent}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 

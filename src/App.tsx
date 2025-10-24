@@ -14,6 +14,7 @@ import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
 import { MobileOnlyGate } from "./components/layout/MobileOnlyGate";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
+import { TooltipProvider } from "./components/ui/tooltip";
 
 export default function App() {
   // Initialize viewport height with optimized throttling for scroll performance
@@ -38,12 +39,14 @@ export default function App() {
   }, []);
 
   return (
-    <StudioProvider>
-      <ToastsProvider>
-        <MobileOnlyGate>
-          <Router />
-        </MobileOnlyGate>
-      </ToastsProvider>
-    </StudioProvider>
+    <TooltipProvider>
+      <StudioProvider>
+        <ToastsProvider>
+          <MobileOnlyGate>
+            <Router />
+          </MobileOnlyGate>
+        </ToastsProvider>
+      </StudioProvider>
+    </TooltipProvider>
   );
 }
