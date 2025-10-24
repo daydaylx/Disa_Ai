@@ -6,7 +6,6 @@ import "./styles/bottomsheet.css"; // Bottom sheet specific styles
 import "./ui/base.css"; // Reset & base styles
 import "./styles/a11y-improvements.css"; // A11y improvements
 import "./styles/mobile-enhanced.css"; // Mobile-enhanced styles
-import "./styles/mobile-layout.css"; // Mobile layout styles
 
 import React from "react";
 
@@ -14,8 +13,9 @@ import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
 import { MobileOnlyGate } from "./components/layout/MobileOnlyGate";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
+import { cn } from "./lib/utils";
 
-export default function App() {
+export default function MobileApp() {
   // Initialize viewport height with optimized throttling for scroll performance
   React.useEffect(() => {
     if (typeof window === "undefined") return;

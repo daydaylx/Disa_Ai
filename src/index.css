@@ -1,5 +1,9 @@
 /* Import typography system */
-@import "./styles/typography.css";
+@import \"./styles/typography.css\";
+@import \"./styles/mobile-fixes.css\";
+@import \"./styles/mobile-enhanced.css\";
+@import \"./styles/mobile-design-tokens.css\";
+@import \"./styles/mobile-layout.css\";
 
 @tailwind base;
 @tailwind components;
@@ -28,7 +32,7 @@
   }
 
   body::after {
-    content: "";
+    content: \"\";
     position: fixed;
     inset: -20vh;
     pointer-events: none;
@@ -337,8 +341,8 @@
   @media (hover: none) and (pointer: coarse) {
     /* Touch-optimized tap targets */
     .touch-target {
-      min-height: var(--touch-recommended);
-      min-width: var(--touch-recommended);
+      min-height: var(--touch-target-comfortable);
+      min-width: var(--touch-target-comfortable);
       position: relative;
     }
 
@@ -369,7 +373,7 @@
     }
 
     .touch-ripple::before {
-      content: "";
+      content: \"\";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -411,7 +415,7 @@
       }
     }
 
-    /* Improved touch targets for small screens */
+    /* Improved touch targets on pure touch devices */
     @media (max-width: 768px) {
       .touch-target-mobile {
         min-height: var(--touch-comfortable);
@@ -427,59 +431,44 @@
     }
   }
 
-  /* Touch-friendly hover states that work on mobile */
-  .touch-hover {
-    position: relative;
-    transition: background-color var(--transition-normal) var(--transition-smooth);
-  }
-
-  .touch-hover:hover,
-  .touch-hover:focus {
-    background-color: var(--hover-bg);
-  }
-
-  .touch-hover:active {
-    background-color: var(--active-bg);
-  }
-
-  /* Safe area handling for mobile devices */
-  .mobile-safe-padding {
-    padding-top: env(safe-area-inset-top, 0);
-    padding-bottom: env(safe-area-inset-bottom, 0);
-    padding-left: env(safe-area-inset-left, 0);
-    padding-right: env(safe-area-inset-right, 0);
-  }
-
-  .mobile-safe-margin {
-    margin-top: env(safe-area-inset-top, 0);
-    margin-bottom: env(safe-area-inset-bottom, 0);
-    margin-left: env(safe-area-inset-left, 0);
-    margin-right: env(safe-area-inset-right, 0);
-  }
-
-  /* Prevent text selection on touch interactions */
-  .no-select {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Smooth scrolling for touch devices */
-  @media (pointer: coarse) {
-    html {
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
+  /* Touch device specific adjustments */
+  @media (hover: none) and (pointer: coarse) {
+    .touch-target {
+      transition: none;
     }
 
-    /* Better scrolling for containers */
-    .smooth-scroll {
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      overflow-scrolling: touch;
+    .touch-target:active {
+      transform: scale(0.95);
+      transition: transform var(--transition-fast) var(--transition-smooth);
+    }
+
+    .button-touch:active {
+      transform: scale(0.98);
+      transition: transform var(--transition-fast) var(--transition-smooth);
+    }
+
+    .touch-interactive:active {
+      background-color: var(--active-bg);
+      transform: scale(0.95);
+      transition: all var(--transition-fast) var(--transition-smooth);
     }
   }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .app-header,
+    .bottom-navigation,
+    .mobile-card,
+    .chat-input-container {
+      border-width: 2px;
+    }
+
+    .mobile-btn {
+      border-width: 2px;
+    }
+  }
+
+  /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -491,9 +480,37 @@
     }
 
     .animate-fade-in,
+    .animate-fade-in-up,
+    .animate-fade-in-down,
+    .animate-slide-in-right,
+    .animate-slide-in-left,
+    .animate-scale-in,
     .animate-pulse,
-    .animate-bounce {
-      animation: none;
+    .animate-bounce,
+    .animate-shimmer,
+    .animate-float,
+    .animate-glow,
+    .hover-lift,
+    .hover-scale,
+    .hover-glow,
+    .touch-ripple::before {
+      animation: none !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    /* Remove movement effects for tiles */
+    .soft-tile:hover,
+    .soft-surface:hover,
+    .surface-card:hover,
+    .card-depth:hover {
+      transform: none !important;
+      box-shadow: var(--shadow-surface);
+    }
+
+    /* Remove movement effects for StartTiles */
+    .group:hover {
+      transform: none !important;
     }
   }
 }
@@ -741,7 +758,7 @@
   }
 
   .brand-panel::after {
-    content: "";
+    content: \"\";
     position: absolute;
     inset: 0;
     opacity: 0.55;
@@ -750,7 +767,7 @@
   }
 
   .brand-panel::before {
-    content: "";
+    content: \"\";
     position: absolute;
     inset: -40%;
     background-image: radial-gradient(

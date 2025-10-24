@@ -1,8 +1,16 @@
-import "./styles/layers.css";
+import "./index.css"; // Tailwind base/components/utilities
+import "./styles/design-tokens.css"; // Design tokens (CSS variables)
+import "./styles/overlay-tokens.css"; // WCAG AA compliant overlay & menu tokens
+import "./styles/mobile-fixes.css"; // Mobile viewport and scaling fixes
+import "./styles/bottomsheet.css"; // Bottom sheet specific styles
+import "./ui/base.css"; // Reset & base styles
+import "./styles/a11y-improvements.css"; // A11y improvements
+import "./styles/mobile-enhanced.css"; // Mobile-enhanced styles
 
-import { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-import App from "./App";
+import MobileApp from "./MobileApp";
 import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
 import { initEnvironment } from "./config/env";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
@@ -25,11 +33,11 @@ function initializeApp() {
   const el = document.getElementById("app");
   if (!el) throw new Error("#app element not found");
 
-  const root = createRoot(el);
+  const root = ReactDOM.createRoot(el);
   root.render(
     <ErrorBoundary>
       <StartupDiagnostics>
-        <App />
+        <MobileApp />
       </StartupDiagnostics>
     </ErrorBoundary>,
   );

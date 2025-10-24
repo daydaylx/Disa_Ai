@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from \"react\";
 import { useLocation, useNavigate } from \"react-router-dom\";
 
 import { logDiscussionAnalytics } from \"../analytics/discussion\";
-import { ChatHistorySidebar } from \"../components/chat/ChatHistorySidebar\";
+import { MobileChatHistorySidebar } from \"../components/chat/MobileChatHistorySidebar\";
 import { MessageBubbleCard } from \"../components/chat/MessageBubbleCard\";
 import SettingsFAB from \"../components/nav/SettingsFAB\";
 import Accordion from \"../components/ui/Accordion\";
@@ -46,6 +46,7 @@ import {
 import { buildDiscussionSystemPrompt } from \"../prompts/discussion/base\";
 import { type DiscussionPresetKey, discussionPresetOptions } from \"../prompts/discussion/presets\";
 import type { ChatMessageType } from \"../types/chatMessage\";
+import { BottomSheet } from \"../components/ui/bottom-sheet\";
 
 const MIN_DISCUSSION_SENTENCES = 5;
 const DISCUSSION_CARD_HINT = \"Kurze Spekulationsrunde (5–10 Sätze, Abschlussfrage inklusive).\";
@@ -57,7 +58,7 @@ interface DiscussionSession {
   strictMode: boolean;
 }
 
-export default function ChatV2() {
+export default function MobileChatV2() {
   const [input, setInput] = useState(\"\");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState(() => getAllConversations());
@@ -563,7 +564,7 @@ export default function ChatV2() {
                 onClick={handleNewConversation}
                 variant=\"brand\"
                 size=\"lg\"
-                className=\"shadow-neon mobile-btn mobile-btn-primary\"
+                className=\"shadow-neon mobile-btn mobile-btn-primary touch-target\"
               >
                 <Plus className=\"h-4 w-4\" aria-hidden=\"true\" />
                 <span>Neuer Chat</span>
@@ -575,7 +576,7 @@ export default function ChatV2() {
                     variant=\"secondary\"
                     size=\"icon\"
                     aria-label=\"Chat-Verlauf öffnen\"
-                    className=\"mobile-btn mobile-btn-secondary\"
+                    className=\"mobile-btn mobile-btn-secondary touch-target\"
                   >
                     <History className=\"h-5 w-5\" aria-hidden=\"true\" />
                   </Button>
@@ -588,12 +589,12 @@ export default function ChatV2() {
           <section aria-labelledby=\"discussion-heading\" className=\"pb-8\">
             <div className=\"bg-surface-0/70 border-border/45 mb-5 flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-start sm:justify-between\">
               <div className=\"flex-1 space-y-1\">
-                <h2
+                <span
                   id=\"discussion-heading\"
                   className=\"text-text-subtle text-[11px] font-semibold uppercase tracking-[0.24em]\"
                 >
                   Diskussionen
-                </h2>
+                </span>
                 <p className=\"text-xs leading-6 text-text-muted\">
                   Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
                 </p>
@@ -626,7 +627,7 @@ export default function ChatV2() {
                     id=\"discussion-style\"
                     aria-describedby=\"discussion-style-hint\"
                     aria-label=\"Diskussionsstil wählen\"
-                    className=\"mobile-form-select\"
+                    className=\"mobile-form-select touch-target\"
                   >
                     <SelectValue placeholder=\"Stil wählen\" />
                   </SelectTrigger>
@@ -722,7 +723,7 @@ export default function ChatV2() {
                 onClick={handleNewConversation}
                 variant=\"brand\"
                 size=\"lg\"
-                className=\"mobile-btn mobile-btn-primary shadow-neon\"
+                className=\"shadow-neon mobile-btn mobile-btn-primary touch-target\"
               >
                 <Plus className=\"h-4 w-4\" aria-hidden=\"true\" />
                 <span>Neue Unterhaltung</span>
@@ -734,7 +735,7 @@ export default function ChatV2() {
                     variant=\"secondary\"
                     size=\"icon\"
                     aria-label=\"Chat-Verlauf öffnen\"
-                    className=\"mobile-btn mobile-btn-secondary\"
+                    className=\"mobile-btn mobile-btn-secondary touch-target\"
                   >
                     <History className=\"h-5 w-5\" aria-hidden=\"true\" />
                   </Button>
@@ -744,18 +745,18 @@ export default function ChatV2() {
             </div>
           </header>
 
-          <div className=\"mobile-chat-messages\">
+          <div className=\"mobile-chat-messages bg-surface-0/70 border-border/45 mx-auto flex h-full w-full max-w-[var(--max-content-width)] flex-col gap-4 rounded-lg border p-4\">
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
             {isLoading && (
               <div className=\"mobile-chat-loading animate-fade-in flex justify-start\">
-                <div className=\"mobile-chat-loading-bubble border-border mr-12 max-w-[85%] rounded-lg border bg-surface-card p-4\">
+                <div className=\"border-border mr-12 max-w-[85%] rounded-lg border bg-surface-card p-4\">
                   <div className=\"mobile-chat-loading-content flex items-center space-x-3\">
                     <div className=\"mobile-chat-loading-dots flex space-x-1\">
-                      <div className=\"mobile-chat-loading-dot bg-accent1 h-2 w-2 rounded-full motion-safe:animate-bounce\"></div>
-                      <div className=\"mobile-chat-loading-dot bg-accent2 h-2 w-2 rounded-full [animation-delay:0.15s] motion-safe:animate-bounce\"></div>
-                      <div className=\"mobile-chat-loading-dot bg-accent1 h-2 w-2 rounded-full [animation-delay:0.3s] motion-safe:animate-bounce\"></div>
+                      <div className=\"bg-accent1 h-2 w-2 rounded-full motion-safe:animate-bounce\"></div>
+                      <div className=\"bg-accent2 h-2 w-2 rounded-full [animation-delay:0.15s] motion-safe:animate-bounce\"></div>
+                      <div className=\"bg-accent1 h-2 w-2 rounded-full [animation-delay:0.3s] motion-safe:animate-bounce\"></div>
                     </div>
                     <span className=\"text-text-1 text-sm motion-safe:animate-pulse\">
                       Disa denkt nach...
@@ -772,7 +773,7 @@ export default function ChatV2() {
       )}
 
       <div
-        className=\"mobile-chat-input-container safe-px bg-surface-0 border-border sticky bottom-0 z-40 border-t\"
+        className=\"mobile-chat-input-container safe-px bg-surface-0/90 border-border sticky bottom-0 z-40 border-t pt-2\"
         style={{ paddingBottom: \"calc(var(--mobile-safe-bottom) + var(--spacing-lg))\" }}
       >
         <div className=\"mx-auto w-full max-w-[var(--max-content-width)]\">
@@ -784,7 +785,7 @@ export default function ChatV2() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder=\"Nachricht an Disa AI schreiben...\"
-                className=\"mobile-chat-textarea text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0\"
+                className=\"mobile-chat-textarea text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0 touch-target\"
                 rows={1}
                 aria-label=\"Nachricht an Disa AI eingeben\"
                 aria-describedby=\"input-help-text\"
@@ -795,7 +796,7 @@ export default function ChatV2() {
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
               size=\"icon\"
-              className=\"mobile-chat-send-btn h-12 w-12 shrink-0\"
+              className=\"mobile-chat-send-btn h-12 w-12 shrink-0 touch-target\"
               aria-label={isLoading ? \"Nachricht wird gesendet...\" : \"Nachricht senden\"}
               title={isLoading ? \"Nachricht wird gesendet...\" : \"Nachricht senden (Enter)\"}
             >
@@ -820,17 +821,26 @@ export default function ChatV2() {
         </div>
       </div>
 
-      <ChatHistorySidebar
+      {/* Mobile Chat History Sidebar using BottomSheet */}
+      <BottomSheet 
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
-        conversations={conversations}
-        activeId={activeConversationId}
-        onSelect={handleSelectConversation}
-        onDelete={handleDeleteConversation}
+        title=\"Chat-Verlauf\"
         className=\"mobile-chat-history-sidebar\"
-      />
+      >
+        <div className=\"mobile-chat-history-content\">
+          <MobileChatHistorySidebar
+            isOpen={isHistoryOpen}
+            onClose={() => setIsHistoryOpen(false)}
+            conversations={conversations}
+            activeId={activeConversationId}
+            onSelect={handleSelectConversation}
+            onDelete={handleDeleteConversation}
+          />
+        </div>
+      </BottomSheet>
 
-      {/* Settings FAB Button - bottom left */}
+      {/* Mobile Settings FAB Button - bottom left */}
       <SettingsFAB className=\"mobile-chat-settings-fab\" />
     </div>
   );
@@ -842,7 +852,7 @@ function MessageBubble({ message }: { message: ChatMessageType }) {
   const offsetClass = isUser ? \"ml-12\" : \"mr-12\";
 
   return (
-    <div className={`mobile-message-bubble flex ${alignmentClass} group ${isUser ? \"mobile-message-bubble-user\" : \"mobile-message-bubble-assistant\"}`}>
+    <div className={`mobile-message-bubble flex ${alignmentClass} group`} data-testid=\"message-bubble\">
       <MessageBubbleCard
         author={isUser ? \"Du\" : \"Disa AI\"}
         body={message.content}

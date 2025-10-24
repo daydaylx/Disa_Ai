@@ -1,54 +1,56 @@
-import { History, Plus, Send } from \"lucide-react\";
-import { useCallback, useEffect, useMemo, useRef, useState } from \"react\";
-import { useLocation, useNavigate } from \"react-router-dom\";
+import { History, Plus, Send } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { logDiscussionAnalytics } from \"../analytics/discussion\";
-import { ChatHistorySidebar } from \"../components/chat/ChatHistorySidebar\";
-import { MessageBubbleCard } from \"../components/chat/MessageBubbleCard\";
-import SettingsFAB from \"../components/nav/SettingsFAB\";
-import Accordion from \"../components/ui/Accordion\";
-import { Button } from \"../components/ui/button\";
-import { Label } from \"../components/ui/label\";
+import { logDiscussionAnalytics } from "../../analytics/discussion";
+import { ChatHistorySidebar } from "./ChatHistorySidebar";
+import { MessageBubbleCard } from "./MessageBubbleCard";
+import SettingsFAB from "../nav/SettingsFAB";
+import Accordion from "../ui/Accordion";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from \"../components/ui/select\";
-import { Textarea } from \"../components/ui/textarea\";
-import { useToasts } from \"../components/ui/toast/ToastsProvider\";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from \"../components/ui/tooltip\";
-import { DISCUSSION_MODEL_PROFILE } from \"../config/models/discussionProfile\";
+} from "../ui/select";
+import { Textarea } from "../ui/textarea";
+import { useToasts } from "../ui/toast/ToastsProvider";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { DISCUSSION_MODEL_PROFILE } from "../../config/models/discussionProfile";
 import {
   getDiscussionMaxSentences,
   getDiscussionPreset,
   getDiscussionStrictMode,
   setDiscussionPreset,
-} from \"../config/settings\";
+} from "../../config/settings";
 import {
   DISCUSSION_FALLBACK_QUESTIONS,
   shapeDiscussionResponse,
-} from \"../features/discussion/shape\";
+} from "../../features/discussion/shape";
 import {
   GAME_SYSTEM_PROMPTS,
   type GameType,
   getGameStartPrompt,
   getGameSystemPrompt,
-} from \"../features/prompt/gamePrompts\";
-import { type ChatRequestOptions, useChat } from \"../hooks/useChat\";
+} from "../../features/prompt/gamePrompts";
+import { type ChatRequestOptions, useChat } from "../../hooks/useChat";
 import {
   deleteConversation,
   getAllConversations,
   getConversation,
   saveConversation,
-} from \"../lib/conversation-manager\";
-import { buildDiscussionSystemPrompt } from \"../prompts/discussion/base\";
-import { type DiscussionPresetKey, discussionPresetOptions } from \"../prompts/discussion/presets\";
-import type { ChatMessageType } from \"../types/chatMessage\";
+} from "../../lib/conversation-manager";
+import { buildDiscussionSystemPrompt } from "../../prompts/discussion/base";
+import { type DiscussionPresetKey, discussionPresetOptions } from "../../prompts/discussion/presets";
+import type { ChatMessageType } from "../../types/chatMessage";
+import { BottomSheet } from "../ui/bottom-sheet";
+import { cn } from "../../lib/utils";
 
 const MIN_DISCUSSION_SENTENCES = 5;
-const DISCUSSION_CARD_HINT = \"Kurze Spekulationsrunde (5–10 Sätze, Abschlussfrage inklusive).\";
+const DISCUSSION_CARD_HINT = "Kurze Spekulationsrunde (5–10 Sätze, Abschlussfrage inklusive).";
 
 interface DiscussionSession {
   topic: string;
@@ -57,7 +59,7 @@ interface DiscussionSession {
   strictMode: boolean;
 }
 
-export default function ChatV2() {
+export function MobileChatInterface() {
   const [input, setInput] = useState(\"\");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState(() => getAllConversations());
@@ -71,7 +73,7 @@ export default function ChatV2() {
   const requestOptionsRef = useRef<ChatRequestOptions | null>(null);
   const strictRetryTracker = useRef<Set<string>>(new Set());
   const discussionPresetRef = useRef<DiscussionPresetKey>(discussionPreset);
-
+  
   const onFinishRef = useRef<(message: ChatMessageType) => void>(() => {});
   const messagesRef = useRef<ChatMessageType[]>([]);
 
@@ -221,9 +223,8 @@ export default function ChatV2() {
   );
 
   useEffect(() => {
-    if (gameId) {
-      startGame(gameId);
-    }
+    if (!gameId) return;
+    startGame(gameId);
   }, [gameId, startGame]);
 
   useEffect(() => {
@@ -522,7 +523,7 @@ export default function ChatV2() {
     {
       id: \"society\",
       title: \"Gesellschaft & Alltag\",
-      description: \"Diskussionen rund um Klima, Wirtschaft und soziale Dynamiken.\",
+      description: \"Diskussionen rund um Klima, Wirtschaft und soziale Dynamischen.\",
     },
   ].map((section) => ({
     ...section,
@@ -532,7 +533,7 @@ export default function ChatV2() {
   }));
 
   return (
-    <div className=\"mobile-chat-container text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]\">
+    <div className=\"chat-container text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]\">
       {/* Background gradients - soft depth aura */}
       <div className=\"pointer-events-none\" aria-hidden=\"true\">
         <div className=\"absolute inset-0 bg-[radial-gradient(150%_120%_at_12%_10%,rgba(var(--color-surface-base),0.18)_0%,transparent_65%)]\" />
@@ -563,7 +564,7 @@ export default function ChatV2() {
                 onClick={handleNewConversation}
                 variant=\"brand\"
                 size=\"lg\"
-                className=\"shadow-neon mobile-btn mobile-btn-primary\"
+                className=\"shadow-neon mobile-btn mobile-btn-primary touch-target\"
               >
                 <Plus className=\"h-4 w-4\" aria-hidden=\"true\" />
                 <span>Neuer Chat</span>
@@ -575,7 +576,7 @@ export default function ChatV2() {
                     variant=\"secondary\"
                     size=\"icon\"
                     aria-label=\"Chat-Verlauf öffnen\"
-                    className=\"mobile-btn mobile-btn-secondary\"
+                    className=\"mobile-btn mobile-btn-secondary touch-target\"
                   >
                     <History className=\"h-5 w-5\" aria-hidden=\"true\" />
                   </Button>
@@ -626,7 +627,7 @@ export default function ChatV2() {
                     id=\"discussion-style\"
                     aria-describedby=\"discussion-style-hint\"
                     aria-label=\"Diskussionsstil wählen\"
-                    className=\"mobile-form-select\"
+                    className=\"mobile-form-select touch-target\"
                   >
                     <SelectValue placeholder=\"Stil wählen\" />
                   </SelectTrigger>
@@ -722,7 +723,7 @@ export default function ChatV2() {
                 onClick={handleNewConversation}
                 variant=\"brand\"
                 size=\"lg\"
-                className=\"mobile-btn mobile-btn-primary shadow-neon\"
+                className=\"mobile-btn mobile-btn-primary shadow-neon touch-target\"
               >
                 <Plus className=\"h-4 w-4\" aria-hidden=\"true\" />
                 <span>Neue Unterhaltung</span>
@@ -734,7 +735,7 @@ export default function ChatV2() {
                     variant=\"secondary\"
                     size=\"icon\"
                     aria-label=\"Chat-Verlauf öffnen\"
-                    className=\"mobile-btn mobile-btn-secondary\"
+                    className=\"mobile-btn mobile-btn-secondary touch-target\"
                   >
                     <History className=\"h-5 w-5\" aria-hidden=\"true\" />
                   </Button>
@@ -744,7 +745,7 @@ export default function ChatV2() {
             </div>
           </header>
 
-          <div className=\"mobile-chat-messages\">
+          <div className=\"chat-messages bg-surface-0/70 border-border/45 mx-auto flex h-full w-full max-w-[var(--max-content-width)] flex-col gap-4 rounded-lg border p-4\">
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
@@ -772,11 +773,11 @@ export default function ChatV2() {
       )}
 
       <div
-        className=\"mobile-chat-input-container safe-px bg-surface-0 border-border sticky bottom-0 z-40 border-t\"
+        className=\"chat-input-container safe-px bg-surface-0/90 border-border sticky bottom-0 z-40 border-t pt-2 backdrop-blur-xl\"
         style={{ paddingBottom: \"calc(var(--mobile-safe-bottom) + var(--spacing-lg))\" }}
       >
         <div className=\"mx-auto w-full max-w-[var(--max-content-width)]\">
-          <div className=\"mobile-chat-input-form border-border bg-surface-1 rounded-lg border p-2\">
+          <div className=\"chat-input-form border-border bg-surface-1 rounded-lg border p-2\">
             <div className=\"flex-1\">
               <Textarea
                 ref={textareaRef}
@@ -784,7 +785,7 @@ export default function ChatV2() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder=\"Nachricht an Disa AI schreiben...\"
-                className=\"mobile-chat-textarea text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0\"
+                className=\"chat-textarea text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0 touch-target\"
                 rows={1}
                 aria-label=\"Nachricht an Disa AI eingeben\"
                 aria-describedby=\"input-help-text\"
@@ -795,7 +796,7 @@ export default function ChatV2() {
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
               size=\"icon\"
-              className=\"mobile-chat-send-btn h-12 w-12 shrink-0\"
+              className=\"chat-send-btn h-12 w-12 shrink-0 touch-target\"
               aria-label={isLoading ? \"Nachricht wird gesendet...\" : \"Nachricht senden\"}
               title={isLoading ? \"Nachricht wird gesendet...\" : \"Nachricht senden (Enter)\"}
             >
@@ -820,17 +821,26 @@ export default function ChatV2() {
         </div>
       </div>
 
-      <ChatHistorySidebar
+      {/* Mobile Chat History Sidebar using BottomSheet */}
+      <BottomSheet 
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
-        conversations={conversations}
-        activeId={activeConversationId}
-        onSelect={handleSelectConversation}
-        onDelete={handleDeleteConversation}
+        title=\"Chat-Verlauf\"
         className=\"mobile-chat-history-sidebar\"
-      />
+      >
+        <div className=\"mobile-chat-history-content\">
+          <ChatHistorySidebar
+            isOpen={isHistoryOpen}
+            onClose={() => setIsHistoryOpen(false)}
+            conversations={conversations}
+            activeId={activeConversationId}
+            onSelect={handleSelectConversation}
+            onDelete={handleDeleteConversation}
+          />
+        </div>
+      </BottomSheet>
 
-      {/* Settings FAB Button - bottom left */}
+      {/* Mobile Settings FAB */}
       <SettingsFAB className=\"mobile-chat-settings-fab\" />
     </div>
   );
@@ -842,7 +852,7 @@ function MessageBubble({ message }: { message: ChatMessageType }) {
   const offsetClass = isUser ? \"ml-12\" : \"mr-12\";
 
   return (
-    <div className={`mobile-message-bubble flex ${alignmentClass} group ${isUser ? \"mobile-message-bubble-user\" : \"mobile-message-bubble-assistant\"}`}>
+    <div className={`chat-message flex ${alignmentClass} group`} data-testid=\"message-bubble\">
       <MessageBubbleCard
         author={isUser ? \"Du\" : \"Disa AI\"}
         body={message.content}

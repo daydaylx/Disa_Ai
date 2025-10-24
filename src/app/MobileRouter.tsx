@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from \"react-router-dom
 
 import { ErrorBoundary } from \"../components/ErrorBoundary\";
 import { MobileAppShell } from \"./layouts/MobileAppShell\";
+import { MobileOnlyGate } from \"../components/layout/MobileOnlyGate\";
 
 // Lazy-loaded Routes für bessere Performance
 const ChatPage = lazy(() => import(\"../pages/MobileChatV2\"));
@@ -95,15 +96,11 @@ const router = createBrowserRouter(
                     </p>
                   </div>
 
-                  <h2 className=\"mb-3 text-lg font-semibold\">Verantwortlich für den Inhalt</h2>
-                  <p className=\"mb-2\">
+                  <h2>Verantwortlich für den Inhalt</h2>
+                  <p>
                     David Grunert
                     <br />
                     E-Mail: grunert94@hotmail.com
-                  </p>
-                  <p>
-                    Da diese Seite rein privat und nicht geschäftsmäßig betrieben wird, besteht
-                    keine Verpflichtung zur Benennung eines Datenschutzbeauftragten.
                   </p>
                 </div>
               </div>
@@ -344,6 +341,6 @@ const router = createBrowserRouter(
   },
 );
 
-export function Router() {
+export function MobileRouter() {
   return <RouterProvider router={router} />;
 }

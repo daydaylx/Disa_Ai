@@ -1,30 +1,32 @@
-import type { ReactNode } from \"react\";
+import { useState, type ReactNode } from \"react\";
 import { useLocation } from \"react-router-dom\";
 
 import { BuildInfo } from \"../../components/BuildInfo\";
-import { MobileNavigation } from \"../../components/layout/MobileNavigation\";
+import { MobileBottomNavigation } from \"../../components/layout/MobileBottomNavigation\";
+import { MobileHeader } from \"../../components/layout/MobileHeader\";
 import { ScrollToVoid } from \"../../components/layout/ScrollToVoid\";
-import { TopAppBar } from \"../../components/layout/TopAppBar\";
 import { NetworkBanner } from \"../../components/NetworkBanner\";
 import { PWADebugInfo } from \"../../components/pwa/PWADebugInfo\";
 import { PWAInstallPrompt } from \"../../components/pwa/PWAInstallPrompt\";
 import { cn } from \"../../lib/utils\";
 
-interface AppShellProps {
+interface MobileAppShellProps {
   children: ReactNode;
 }
 
-export function AppShell({ children }: AppShellProps) {
+export function MobileAppShell({ children }: MobileAppShellProps) {
   const location = useLocation();
-  return <AppShellLayout location={location}>{children}</AppShellLayout>;
+  return <MobileAppShellLayout location={location}>{children}</MobileAppShellLayout>;
 }
 
-interface AppShellLayoutProps {
+interface MobileAppShellLayoutProps {
   children: ReactNode;
   location: ReturnType<typeof useLocation>;
 }
 
-function AppShellLayout({ children, location }: AppShellLayoutProps) {
+function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className=\"app-shell text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]\">
       {/* Background gradients - soft depth aura */}
@@ -35,7 +37,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
       <ScrollToVoid>
         <div className=\"relative z-10 flex min-h-dvh flex-col\">
-          <TopAppBar />
+          <MobileHeader onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
 
           <main
             id=\"main\"
@@ -71,7 +73,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
       <NetworkBanner />
       <PWAInstallPrompt />
-      <MobileNavigation />
+      <MobileBottomNavigation />
 
       {process.env.NODE_ENV === \"development\" && <PWADebugInfo />}
     </div>
