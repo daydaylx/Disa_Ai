@@ -16,216 +16,292 @@ type ModelDefinition = {
   description: string;
 };
 
-const premiumModels = [
+// Schnelle kostenlose Modelle für alltägliche Chats
+const quickFreeModels = [
   {
-    id: "perplexity/llama-3.1-sonar-large-128k-online",
-    label: "Sonar Large Online",
-    provider: "Perplexity",
-    priceIn: 1.0,
-    priceOut: 1.0,
-    ctx: 128000,
-    description: "Llama mit Online-Zugang. Kann aktuelle Infos aus dem Internet holen.",
-  },
-  {
-    id: "openai/gpt-4o-mini",
-    label: "GPT-4o mini",
-    provider: "OpenAI",
-    priceIn: 0.15,
-    priceOut: 0.6,
-    ctx: 128000,
-    description:
-      "OpenAI-Allrounder: sehr verlässlich, starker Kontext und Toolsupport – ideal, wenn es einfach laufen soll.",
-  },
-  {
-    id: "google/gemini-2.0-flash-exp",
-    label: "Gemini 2.0 Flash",
+    id: "google/gemma-3n-e4b-it:free",
+    label: "Gemma 3N 4B",
     provider: "Google",
     priceIn: 0.0,
     priceOut: 0.0,
-    ctx: 1000000,
-    description:
-      "Googles neuestes Modell mit riesigem Kontext (1M Tokens!). Experimentell, aber sehr leistungsfähig.",
+    ctx: 8192,
+    description: "Leichtes Modell, läuft schnell und spart Ressourcen.",
   },
   {
-    id: "deepseek/deepseek-chat-v3.1",
-    label: "DeepSeek V3.1",
+    id: "qwen/qwen3-8b:free",
+    label: "Qwen 3 8B",
+    provider: "Qwen",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 32768,
+    description: "Freundlicher Mehrsprachler mit klarem Schreibstil.",
+  },
+  {
+    id: "deepseek/deepseek-r1-0528-qwen3-8b:free",
+    label: "Deepseek R1 Qwen 8B",
     provider: "DeepSeek",
-    priceIn: 0.27,
-    priceOut: 1.1,
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 32768,
+    description: "Kleines, logisches Modell, das gut nachdenkt.",
+  },
+  {
+    id: "nvidia/nemotron-nano-9b-v2:free",
+    label: "Nemotron Nano 9B",
+    provider: "NVIDIA",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 16384,
+    description: "Schnell und leicht, versteht einfache Logik.",
+  },
+] satisfies ModelDefinition[];
+
+// Starke kostenlose Modelle für komplexe Aufgaben
+const powerfulFreeModels = [
+  {
+    id: "alibaba/tongyi-deepresearch-30b-a3b:free",
+    label: "Tongyi DeepResearch 30B",
+    provider: "Alibaba",
+    priceIn: 0.0,
+    priceOut: 0.0,
     ctx: 64000,
-    description:
-      "Logisches Denken, lange Begründungen – denkt erst, antwortet dann. Für knifflige Fragen und mehrstufige Erklärungen stark.",
+    description: "Denkt logisch und gründlich, ideal für lange Fragen.",
   },
-] satisfies ModelDefinition[];
-
-const everydayModels = [
   {
-    id: "meta-llama/llama-3.1-8b-instruct",
-    label: "Llama 3.1 8B",
-    provider: "Meta",
-    priceIn: 0.02,
-    priceOut: 0.03,
+    id: "shisa-ai/shisa-v2-llama3.3-70b:free",
+    label: "Shisa Llama 3.3 70B",
+    provider: "Shisa AI",
+    priceIn: 0.0,
+    priceOut: 0.0,
     ctx: 131072,
-    description:
-      "Sehr guter Allrounder für Gespräche, stabil und vorhersehbar – mein Standardtipp für produktive Chats.",
+    description: "Stark in Japanisch und Englisch, natürlich und höflich.",
   },
   {
-    id: "mistralai/mistral-small-3.2-24b-instruct",
-    label: "Mistral Small 24B",
-    provider: "Mistral",
-    priceIn: 0.2,
-    priceOut: 0.8,
-    ctx: 32000,
-    description:
-      "Kompaktes Mistral mit 24B – schnell, präzise, gut für Analysen und strukturierte Antworten.",
-  },
-  {
-    id: "mistralai/mistral-7b-instruct",
-    label: "Mistral 7B",
-    provider: "Mistral",
-    priceIn: 0.028,
-    priceOut: 0.054,
-    ctx: 32768,
-    description:
-      "Schlank und schnell – perfekt für Dialoge und leichtere Aufgaben, wenn es besonders flott gehen soll.",
-  },
-  {
-    id: "qwen/qwen-2.5-7b-instruct",
-    label: "Qwen 2.5 7B",
-    provider: "Qwen",
-    priceIn: 0.04,
-    priceOut: 0.1,
-    ctx: 32768,
-    description:
-      "Preiswert und wortgewandt, oft etwas direkter Ton – ideal für schnelle Brainstorms.",
-  },
-  {
-    id: "deepseek/deepseek-r1-distill-llama-8b",
-    label: "DeepSeek R1 Distill 8B",
-    provider: "DeepSeek",
-    priceIn: 0.04,
-    priceOut: 0.04,
+    id: "google/gemma-3-27b-it:free",
+    label: "Gemma 3 27B",
+    provider: "Google",
+    priceIn: 0.0,
+    priceOut: 0.0,
     ctx: 65536,
-    description:
-      "Günstiges Reasoning-Light: angenehme Plauderei mit solider Struktur, symmetrische Kosten.",
+    description: "Großes, freundliches Modell für vielseitige Chats.",
+  },
+  {
+    id: "meituan/longcat-flash-chat:free",
+    label: "Longcat Flash Chat",
+    provider: "Meituan",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 128000,
+    description: "Sehr schnelles Chat-Modell, merkt sich lange Gespräche.",
   },
 ] satisfies ModelDefinition[];
 
-const freeModels = [
+// Premium spezialisierte Modelle
+const premiumModels = [
   {
-    id: "meta-llama/llama-3.3-70b-instruct:free",
-    label: "Llama 3.3 70B (Free)",
-    provider: "Meta",
-    priceIn: 0,
-    priceOut: 0,
-    ctx: 131072,
-    description:
-      "Freies 70B-Flaggschiff – sehr stabil mit großer Kontexttiefe, wenn du etwas mehr Reserven willst.",
+    id: "z-ai/glm-4-32b",
+    label: "GLM 4 32B",
+    provider: "Z-AI",
+    priceIn: 0.1,
+    priceOut: 0.1,
+    ctx: 128000,
+    description: "Versteht lange Texte gut und bleibt konzentriert.",
   },
   {
-    id: "mistralai/mistral-nemo:free",
-    label: "Mistral Nemo (Free)",
-    provider: "Mistral",
-    priceIn: 0,
-    priceOut: 0,
-    ctx: 131072,
-    description:
-      "Robustes Long-Context-Modell von Mistral. Solide Qualität bei null Kosten – super Standardwahl.",
-  },
-  {
-    id: "qwen/qwen-2.5-72b-instruct:free",
-    label: "Qwen 2.5 72B (Free)",
-    provider: "Qwen",
-    priceIn: 0,
-    priceOut: 0,
+    id: "opengvlab/internvl3-78b",
+    label: "InternVL3 78B",
+    provider: "OpenGVLab",
+    priceIn: 0.07,
+    priceOut: 0.26,
     ctx: 32768,
-    description:
-      "Kostenlose 72B-Version. Premium-Qualität ohne Kosten – einer der besten Free-Modelle.",
+    description: "Kann Bilder und Text gemeinsam analysieren.",
   },
   {
-    id: "meta-llama/llama-3.3-8b-instruct:free",
-    label: "Llama 3.3 8B (Free)",
-    provider: "Meta",
-    priceIn: 0,
-    priceOut: 0,
-    ctx: 131072,
-    description:
-      "Kostenloses Test-Pferd für lockere Chats. Wenn es hakt, wechsel auf Llama 3.1 8B.",
+    id: "baidu/ernie-4.5-21b-a3b",
+    label: "Ernie 4.5 21B",
+    provider: "Baidu",
+    priceIn: 0.07,
+    priceOut: 0.28,
+    ctx: 65536,
+    description: "Sehr gut bei logischem Denken und längeren Themen.",
   },
   {
-    id: "qwen/qwen-2.5-7b-instruct:free",
-    label: "Qwen 2.5 7B (Free)",
+    id: "qwen/qwen-2.5-72b-instruct",
+    label: "Qwen 2.5 72B",
     provider: "Qwen",
-    priceIn: 0,
-    priceOut: 0,
-    ctx: 32768,
-    description: "Kostenlose Qwen-Variante für schnelle Experimente und einfache Aufgaben.",
+    priceIn: 0.07,
+    priceOut: 0.26,
+    ctx: 131072,
+    description: "Starker Allrounder für lange, natürliche Chats.",
+  },
+  {
+    id: "x-ai/grok-4-fast",
+    label: "Grok 4 Fast",
+    provider: "xAI",
+    priceIn: 0.2,
+    priceOut: 0.5,
+    ctx: 128000,
+    description: "Antwortet schnell und kann viel Kontext behalten.",
+  },
+  {
+    id: "deepseek/deepseek-chat",
+    label: "Deepseek Chat",
+    provider: "DeepSeek",
+    priceIn: 0.24,
+    priceOut: 0.84,
+    ctx: 65536,
+    description: "Standardmodell, freundlich und zuverlässig.",
+  },
+  {
+    id: "meta-llama/llama-4-maverick",
+    label: "Llama 4 Maverick",
+    provider: "Meta",
+    priceIn: 0.15,
+    priceOut: 0.6,
+    ctx: 131072,
+    description: "Großes Modell für vielseitige Gespräche.",
+  },
+  {
+    id: "meta-llama/llama-3.1-70b-instruct",
+    label: "Llama 3.1 70B",
+    provider: "Meta",
+    priceIn: 0.4,
+    priceOut: 0.4,
+    ctx: 131072,
+    description: "Sehr bewährtes Chat-Modell mit klaren Antworten.",
   },
 ] satisfies ModelDefinition[];
 
-const uncensoredModels = [
+// Multimodale Modelle für Text + Bilder
+const multimodalModels = [
   {
-    id: "thedrummer/cydonia-24b-v4.1",
-    label: "Cydonia 24B v4.1",
-    provider: "TheDrummer",
-    priceIn: 1.2,
-    priceOut: 1.2,
+    id: "openrouter/andromeda-alpha",
+    label: "Andromeda Alpha",
+    provider: "OpenRouter",
+    priceIn: 0.0,
+    priceOut: 0.0,
     ctx: 32768,
-    description:
-      "Kreatives Schreiben, Rollenspiel, wenig Filter. Klingt freier und fantasievoller als übliche Schulbuch-Bots.",
+    description: "Versteht Text und Bilder, erklärt Inhalte visuell.",
   },
   {
-    id: "cognitivecomputations/dolphin3.0-mistral-24b",
-    label: "Dolphin 3.0 Mistral 24B",
-    provider: "CognitiveComputations",
-    priceIn: 0.3,
-    priceOut: 0.3,
+    id: "opengvlab/internvl3-78b",
+    label: "InternVL3 78B",
+    provider: "OpenGVLab",
+    priceIn: 0.07,
+    priceOut: 0.26,
     ctx: 32768,
-    description:
-      "Unkompliziertes Rollenspiel-Modell mit wenig Einschränkungen. Gut für kreative Szenarien.",
+    description: "Kann Bilder und Text gemeinsam analysieren.",
   },
-  {
-    id: "sao10k/l3.3-euryale-70b",
-    label: "Euryale L3.3 70B",
-    provider: "Sao10k",
-    priceIn: 0.8,
-    priceOut: 0.8,
-    ctx: 131072,
-    description:
-      "Unzensiertes 70B-Modell für kreative Geschichten und Rollenspiel mit großem Kontext.",
-  },
+] satisfies ModelDefinition[];
+
+// Kreative und ungefilterte Modelle
+const creativeModels = [
   {
     id: "venice/uncensored:free",
-    label: "Venice Uncensored (Free)",
+    label: "Venice Uncensored",
     provider: "Venice",
-    priceIn: 0,
-    priceOut: 0,
-    ctx: 8192,
-    description:
-      "Kostenlose unzensierte Variante für Experimente. Qualität schwankt, aber ein guter Einstieg.",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 32768,
+    description: "Redet frei und ungefiltert, ideal für ehrliche Gespräche.",
+  },
+  {
+    id: "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+    label: "Dolphin Mistral Venice",
+    provider: "Cognitive Computations",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 65536,
+    description: "Sehr freies Modell ohne starke Filter, kreativ und offen.",
+  },
+  {
+    id: "arliai/qwq-32b-arliai-rpr-v1:free",
+    label: "QwQ 32B Arliai",
+    provider: "Arliai",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 65536,
+    description: "Kreatives Modell für Geschichten oder Rollenspiele.",
   },
 ] satisfies ModelDefinition[];
 
-const codeModels = [
+// Chat-Allrounder für vielseitige Gespräche
+const chatModels = [
   {
-    id: "deepseek/deepseek-coder",
-    label: "DeepSeek Coder",
+    id: "deepseek/deepseek-chat-v3-0324:free",
+    label: "Deepseek Chat V3",
     provider: "DeepSeek",
-    priceIn: 0.2,
-    priceOut: 0.8,
-    ctx: 32768,
-    description:
-      "Spezialisiert auf Programmierung. Versteht Code-Kontext gut, erklärt und debuggt sauber.",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 65536,
+    description: "Redet natürlich, kann aber auch nachdenken, wenn nötig.",
   },
   {
-    id: "qwen/qwen-2.5-coder-32b-instruct",
-    label: "Qwen 2.5 Coder 32B",
-    provider: "Qwen",
-    priceIn: 0.3,
-    priceOut: 0.9,
+    id: "tencent/hunyuan-a13b-instruct:free",
+    label: "Hunyuan A13B",
+    provider: "Tencent",
+    priceIn: 0.0,
+    priceOut: 0.0,
     ctx: 32768,
-    description:
-      "Spezialisiertes Code-Qwen. Versteht Programmierung ausgezeichnet, erklärt und debuggt präzise.",
+    description: "Allrounder für Gespräche und Erklärungen, ruhig und klar.",
+  },
+  {
+    id: "z-ai/glm-4.5-air:free",
+    label: "GLM 4.5 Air",
+    provider: "Z-AI",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 32768,
+    description: "Leichtes Modell mit optionalem Denkmodus.",
+  },
+  {
+    id: "tngtech/deepseek-r1t2-chimera:free",
+    label: "Deepseek R1T2 Chimera",
+    provider: "TNG Technology",
+    priceIn: 0.0,
+    priceOut: 0.0,
+    ctx: 65536,
+    description: "Kombiniert zwei Denkmodelle, gut bei Problemlösungen.",
+  },
+] satisfies ModelDefinition[];
+
+// Günstige spezialisierte Modelle
+const budgetModels = [
+  {
+    id: "arcee-ai/afm-4.5b",
+    label: "AFM 4.5B",
+    provider: "Arcee AI",
+    priceIn: 0.05,
+    priceOut: 0.15,
+    ctx: 16384,
+    description: "Kleines, stabiles Modell für einfache Aufgaben.",
+  },
+  {
+    id: "openai/gpt-oss-20b",
+    label: "GPT OSS 20B",
+    provider: "OpenAI",
+    priceIn: 0.03,
+    priceOut: 0.14,
+    ctx: 32768,
+    description: "Offenes OpenAI-Modell, vielseitig und stabil.",
+  },
+  {
+    id: "mistralai/mistral-nemo",
+    label: "Mistral Nemo",
+    provider: "Mistral",
+    priceIn: 0.02,
+    priceOut: 0.04,
+    ctx: 128000,
+    description: "Sehr günstig und flink im Gespräch.",
+  },
+  {
+    id: "mistralai/mistral-7b-instruct-v0.3",
+    label: "Mistral 7B",
+    provider: "Mistral",
+    priceIn: 0.03,
+    priceOut: 0.05,
+    ctx: 32768,
+    description: "Kleines, schnelles Modell für kurze Chats.",
   },
 ] satisfies ModelDefinition[];
 
@@ -239,39 +315,53 @@ interface ModelGroup {
 
 const modelGroups: ModelGroup[] = [
   {
+    id: "quick-free",
+    badge: "Schnell & Kostenlos",
+    title: "⚡ Schnelle Kostenlose",
+    description: "Leichte, blitzschnelle Modelle für alltägliche Chats und schnelle Antworten",
+    models: quickFreeModels,
+  },
+  {
+    id: "powerful-free",
+    badge: "Stark & Kostenlos",
+    title: "🚀 Starke Kostenlose",
+    description: "Große, leistungsstarke Modelle für komplexe Aufgaben – ohne Kosten",
+    models: powerfulFreeModels,
+  },
+  {
+    id: "chat",
+    badge: "Chat",
+    title: "💬 Chat-Allrounder",
+    description: "Vielseitige Gesprächsmodelle für natürliche Unterhaltungen",
+    models: chatModels,
+  },
+  {
+    id: "multimodal",
+    badge: "Multimodal",
+    title: "🖼️ Multimodale Modelle",
+    description: "Verstehen Text und Bilder gemeinsam – für visuelle Aufgaben",
+    models: multimodalModels,
+  },
+  {
+    id: "creative",
+    badge: "Kreativ",
+    title: "🎭 Kreativ & Uncensored",
+    description: "Freie, ungefilterte Modelle für kreative Geschichten und Rollenspiele",
+    models: creativeModels,
+  },
+  {
+    id: "budget",
+    badge: "Budget",
+    title: "💰 Budget-Spezialist",
+    description: "Günstige, spezialisierte Modelle für gezielte Aufgaben",
+    models: budgetModels,
+  },
+  {
     id: "premium",
     badge: "Premium",
     title: "🏆 Premium Modelle",
-    description: "Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3",
+    description: "Top-Qualität für anspruchsvolle Aufgaben – beste Leistung zu fairen Preisen",
     models: premiumModels,
-  },
-  {
-    id: "everyday",
-    badge: "Alltag",
-    title: "💼 Alltags Modelle",
-    description: "Zuverlässige Modelle für tägliche Aufgaben – starkes Preis-Leistungs-Verhältnis",
-    models: everydayModels,
-  },
-  {
-    id: "free",
-    badge: "Free",
-    title: "🎁 Free Modelle",
-    description: "Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität",
-    models: freeModels,
-  },
-  {
-    id: "uncensored",
-    badge: "Unzensiert",
-    title: "🎭 Unzensiert Modelle",
-    description: "Kreative Modelle mit wenig Filtern – ideal für Rollenspiel und Storytelling",
-    models: uncensoredModels,
-  },
-  {
-    id: "code",
-    badge: "Code",
-    title: "🧑‍💻 Code Modelle",
-    description: "Spezialisiert auf Programmierung, Debugging und technische Analysen",
-    models: codeModels,
   },
 ];
 
