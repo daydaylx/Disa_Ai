@@ -1,4 +1,4 @@
-import { Button } from "../primitives/Button";
+import { Button } from "../../components/ui/button";
 export function CodeBlock({
   code,
   language = "text",

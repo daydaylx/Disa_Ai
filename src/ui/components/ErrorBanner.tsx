@@ -1,4 +1,4 @@
-import { Badge } from "../primitives/Badge";
+import { Badge } from "../../components/ui/badge";
 import type { UIState } from "../state/uiMachine";
 import { hasError } from "../state/uiMachine";
 

@@ -265,7 +265,6 @@ export default function MobileStudio() {
               )}
             </Button>
             {CATEGORY_ORDER.map((category) => {
-              const isCategoryExpanded = expandedCategories[category] ?? true;
               const roleCount = categoriesInUse[category] || 0;
 
               if (roleCount === 0) return null;
