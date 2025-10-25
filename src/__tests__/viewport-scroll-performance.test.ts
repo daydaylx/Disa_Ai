@@ -17,13 +17,16 @@ describe("Viewport Scroll Performance Optimization", () => {
     });
     mockClearTimeout = vi.fn();
 
-    // Setup DOM mocks
+    // Setup DOM mocks with complete document structure
     Object.defineProperty(global, "document", {
       value: {
         documentElement: {
           style: {
             setProperty: mockSetProperty,
           },
+        },
+        body: {
+          innerHTML: "",
         },
       },
       configurable: true,
