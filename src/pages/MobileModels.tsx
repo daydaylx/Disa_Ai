@@ -6,6 +6,33 @@ import { Button, Card } from "../components/ui";
 import { ModelCard } from "../components/ui/ModelCard";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 
+// Tooltip component for technical terms
+function Tooltip({
+  children,
+  content,
+  className = "",
+}: {
+  children: React.ReactNode;
+  content: string;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`relative inline-flex items-center gap-1 group cursor-help ${className}`}
+      title={content}
+      aria-label={content}
+    >
+      {children}
+      <span className="text-text-muted opacity-60 group-hover:opacity-100 transition-opacity">
+        ℹ️
+      </span>
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+        {content}
+      </span>
+    </span>
+  );
+}
+
 type ModelDefinition = {
   id: string;
   label: string;
@@ -431,7 +458,15 @@ export default function MobileModels() {
   }, [searchTerm]);
 
   return (
-    <div className="mobile-models-container flex h-full flex-col gap-4 px-4 pb-16 pt-6 text-[var(--color-text-primary)] sm:px-6 lg:px-8">
+    <div
+      className="mobile-models-container flex h-full flex-col gap-4 px-4 pb-16 pt-6 text-[var(--color-text-primary)] sm:px-6 lg:px-8"
+      style={{
+        // Ensure content is readable and touch-friendly
+        minHeight: "100vh",
+        fontSize: "16px", // Prevent iOS zoom on focus
+        lineHeight: "1.6",
+      }}
+    >
       {/* Mobile-optimized search bar */}
       <div className="relative mb-2">
         <input
@@ -458,24 +493,50 @@ export default function MobileModels() {
         </svg>
       </div>
 
-      <header className="space-y-3 text-[var(--color-text-primary)]" data-testid="models-title">
+      <header className="space-y-4 text-[var(--color-text-primary)]" data-testid="models-title">
         <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
-          Modelle
+          🤖 Modelle
         </span>
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold sm:text-3xl">Modellkatalog</h1>
-          <p className="max-w-2xl text-sm leading-6 opacity-80 sm:text-base">
-            Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich im{" "}
-            <Link to="/roles" className="font-medium underline">
-              Rollen-Studio
-            </Link>{" "}
-            auswählen.
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">KI-Modellkatalog</h1>
+          <p className="max-w-2xl text-sm leading-relaxed opacity-80 sm:text-base">
+            Wähle das perfekte{" "}
+            <Tooltip content="Künstliche Intelligenz Sprachmodelle, die auf verschiedene Aufgaben spezialisiert sind">
+              KI-Modell
+            </Tooltip>{" "}
+            für deine Aufgabe. Von schnellen kostenlosen Modellen für alltägliche Chats bis zu
+            leistungsstarken{" "}
+            <Tooltip content="Kostenpflichtige Modelle mit höherer Leistung und besserer Qualität">
+              Premium-Modellen
+            </Tooltip>{" "}
+            für komplexe Analysen.
           </p>
+
+          {/* Quick Navigation */}
+          <div className="flex flex-wrap gap-2 pt-2">
+            <span className="text-xs font-medium text-text-muted">Schnellzugriff:</span>
+            {["quick-free", "powerful-free", "premium"].map((groupId) => (
+              <button
+                key={groupId}
+                onClick={() => {
+                  const element = document.getElementById(`models-${groupId}`);
+                  element?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="inline-flex items-center gap-1 rounded-lg border border-border-subtle bg-surface-subtle/50 px-2 py-1 text-xs font-medium text-text-primary transition-colors hover:bg-surface-subtle hover:border-border-strong focus:outline-none focus:ring-2 focus:ring-brand/50 touch-target"
+              >
+                {groupId === "quick-free" && "⚡ Schnell"}
+                {groupId === "powerful-free" && "🚀 Stark"}
+                {groupId === "premium" && "🏆 Premium"}
+              </button>
+            ))}
+          </div>
         </div>
+
         {safeSelectedLabel && (
-          <p className="text-xs opacity-65 sm:text-sm">
-            Aktuell ausgewählt: <span className="font-semibold">{safeSelectedLabel}</span>
-          </p>
+          <div className="flex items-center gap-2 rounded-lg bg-brand/10 border border-brand/20 px-3 py-2">
+            <span className="text-xs opacity-75 sm:text-sm">Aktuell ausgewählt:</span>
+            <span className="font-semibold text-brand">{safeSelectedLabel}</span>
+          </div>
         )}
       </header>
 
@@ -504,11 +565,51 @@ export default function MobileModels() {
         <p className="text-xs opacity-65 sm:text-sm">
           Passe Stimme, Tonalität und Badges flexibel im Rollen-Studio an.
         </p>
-        <Link to="/roles" className="inline-flex">
-          <Button variant="brand" size="sm">
-            Rollen öffnen
-          </Button>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link to="/roles" className="inline-flex">
+            <Button variant="brand" size="sm" className="touch-target">
+              🎭 Rollen-Studio öffnen
+            </Button>
+          </Link>
+          <Link to="/chat" className="inline-flex">
+            <Button variant="outline" size="sm" className="touch-target">
+              💬 Chat starten
+            </Button>
+          </Link>
+        </div>
+      </Card>
+
+      {/* Quick Help Section */}
+      <Card padding="sm" className="bg-blue-50 border-blue-200 text-blue-900">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-blue-600">💡</span>
+            <h3 className="text-sm font-semibold">Schnelle Orientierung</h3>
+          </div>
+          <div className="text-xs space-y-1">
+            <p>
+              <strong>Neu hier?</strong> Starte mit{" "}
+              <Tooltip content="Kostenlose Modelle ohne Limits für den Einstieg">
+                ⚡ Schnellen Kostenlosen
+              </Tooltip>{" "}
+              Modellen.
+            </p>
+            <p>
+              <strong>Wichtige Aufgaben?</strong> Nutze{" "}
+              <Tooltip content="Kostenpflichtige Modelle mit höchster Qualität und Zuverlässigkeit">
+                🏆 Premium
+              </Tooltip>{" "}
+              Modelle für beste Ergebnisse.
+            </p>
+            <p>
+              <strong>Bilder verarbeiten?</strong> Wähle{" "}
+              <Tooltip content="Modelle die sowohl Text als auch Bilder verstehen können">
+                🖼️ Multimodale
+              </Tooltip>{" "}
+              Modelle.
+            </p>
+          </div>
+        </div>
       </Card>
 
       {filteredModelGroups.map((group) => {
@@ -527,11 +628,14 @@ export default function MobileModels() {
                 }
               }}
             >
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
                   {group.badge}
                 </span>
-                <h2 id={`models-${group.id}`} className="text-lg font-semibold sm:text-xl">
+                <h2
+                  id={`models-${group.id}`}
+                  className="text-lg font-semibold tracking-tight sm:text-xl"
+                >
                   {group.title}
                   {!isGroupExpanded && (
                     <span className="text-xs font-normal text-text-muted ml-2">
@@ -539,13 +643,122 @@ export default function MobileModels() {
                     </span>
                   )}
                 </h2>
+
+                {/* Use case highlights */}
+                <div className="flex flex-wrap gap-1">
+                  {group.id === "quick-free" && (
+                    <>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                        ✨ Sofortige Antworten
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+                        💬 Alltägliche Chats
+                      </span>
+                    </>
+                  )}
+                  {group.id === "powerful-free" && (
+                    <>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800">
+                        🧠 Komplexe Aufgaben
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+                        📚 Lange Texte
+                      </span>
+                    </>
+                  )}
+                  {group.id === "premium" && (
+                    <>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-800">
+                        🎯 Professionell
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
+                        ⚡ Höchste Qualität
+                      </span>
+                    </>
+                  )}
+                  {group.id === "multimodal" && (
+                    <>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-800">
+                        🖼️ Bild-Analyse
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-cyan-100 px-2 py-0.5 text-xs font-medium text-cyan-800">
+                        🔍 Visuelle KI
+                      </span>
+                    </>
+                  )}
+                  {group.id === "creative" && (
+                    <>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-pink-100 px-2 py-0.5 text-xs font-medium text-pink-800">
+                        🎭 Kreativität
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-800">
+                        📝 Geschichten
+                      </span>
+                    </>
+                  )}
+                  {group.id === "chat" && (
+                    <>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800">
+                        💬 Natürlich
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-teal-100 px-2 py-0.5 text-xs font-medium text-teal-800">
+                        🤝 Unterhaltung
+                      </span>
+                    </>
+                  )}
+                  {group.id === "budget" && (
+                    <>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800">
+                        💰 Preiswert
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-800">
+                        🎯 Spezialisiert
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
-              <span className="text-xs font-medium uppercase tracking-wide opacity-60 sm:text-sm">
-                {group.models.length} Modelle
-              </span>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium uppercase tracking-wide opacity-60 sm:text-sm">
+                  {group.models.length} Modelle
+                </span>
+                <div className="h-4 w-px bg-border-subtle opacity-50" />
+                <button
+                  onClick={() => toggleGroup(group.id)}
+                  className="text-xs text-text-muted hover:text-text-primary transition-colors"
+                  aria-label={isGroupExpanded ? "Gruppe zuklappen" : "Gruppe aufklappen"}
+                >
+                  {isGroupExpanded ? "Zuklappen" : "Aufklappen"}
+                </button>
+              </div>
             </div>
 
-            <p className="max-w-2xl text-sm opacity-75 sm:text-base">{group.description}</p>
+            <div className="space-y-2">
+              <p className="max-w-2xl text-sm leading-relaxed opacity-75 sm:text-base">
+                {group.description}
+              </p>
+
+              {/* Quick summary for each group */}
+              <div className="rounded-lg bg-surface-subtle/30 border border-border-subtle p-3">
+                <p className="text-xs text-text-muted leading-relaxed">
+                  {group.id === "quick-free" &&
+                    "💡 Perfekt für: Schnelle Fragen, Brainstorming, einfache Übersetzungen und alltägliche Chats ohne Wartezeit."}
+                  {group.id === "powerful-free" &&
+                    "💡 Perfekt für: Tiefere Analysen, ausführliche Recherche, komplexe Problemlösungen und lange Dokumente."}
+                  {group.id === "premium" &&
+                    "💡 Perfekt für: Geschäftskritische Aufgaben, professionelle Analysen und wenn höchste Qualität erforderlich ist."}
+                  {group.id === "multimodal" &&
+                    "💡 Perfekt für: Bildanalyse, Screenshot-Erklärungen, Diagramm-Beschreibungen und visuelle Inhalte verstehen."}
+                  {group.id === "creative" &&
+                    "💡 Perfekt für: Kreatives Schreiben, Rollenspiele, unzensierte Diskussionen und experimentelle Inhalte."}
+                  {group.id === "chat" &&
+                    "💡 Perfekt für: Natürliche Gespräche, Beratung, Diskussionen und wenn du einen vertrauensvollen Chat-Partner suchst."}
+                  {group.id === "budget" &&
+                    "💡 Perfekt für: Kostenoptimierte Projekte, einfache Aufgaben und wenn du Geld sparen möchtest."}
+                </p>
+              </div>
+            </div>
 
             {isGroupExpanded && (
               <div className="mobile-models-grid grid gap-3">

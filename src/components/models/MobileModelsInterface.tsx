@@ -6,6 +6,33 @@ import { Button, Card } from "../ui";
 import { ModelCard } from "../ui/ModelCard";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
+// Tooltip component for technical terms
+function Tooltip({
+  children,
+  content,
+  className = "",
+}: {
+  children: React.ReactNode;
+  content: string;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`relative inline-flex items-center gap-1 group cursor-help ${className}`}
+      title={content}
+      aria-label={content}
+    >
+      {children}
+      <span className="text-text-muted opacity-60 group-hover:opacity-100 transition-opacity">
+        ℹ️
+      </span>
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+        {content}
+      </span>
+    </span>
+  );
+}
+
 type ModelDefinition = {
   id: string;
   label: string;
@@ -315,39 +342,53 @@ interface ModelGroup {
 
 const modelGroups: ModelGroup[] = [
   {
+    id: "quick-free",
+    badge: "Schnell & Kostenlos",
+    title: "⚡ Schnelle Kostenlose",
+    description: "Leichte, blitzschnelle Modelle für alltägliche Chats und schnelle Antworten",
+    models: quickFreeModels,
+  },
+  {
+    id: "powerful-free",
+    badge: "Stark & Kostenlos",
+    title: "🚀 Starke Kostenlose",
+    description: "Große, leistungsstarke Modelle für komplexe Aufgaben – ohne Kosten",
+    models: powerfulFreeModels,
+  },
+  {
+    id: "chat",
+    badge: "Chat",
+    title: "💬 Chat-Allrounder",
+    description: "Vielseitige Gesprächsmodelle für natürliche Unterhaltungen",
+    models: chatModels,
+  },
+  {
+    id: "multimodal",
+    badge: "Multimodal",
+    title: "🖼️ Multimodale Modelle",
+    description: "Verstehen Text und Bilder gemeinsam – für visuelle Aufgaben",
+    models: multimodalModels,
+  },
+  {
+    id: "creative",
+    badge: "Kreativ",
+    title: "🎭 Kreativ & Uncensored",
+    description: "Freie, ungefilterte Modelle für kreative Geschichten und Rollenspiele",
+    models: creativeModels,
+  },
+  {
+    id: "budget",
+    badge: "Budget",
+    title: "💰 Budget-Spezialist",
+    description: "Günstige, spezialisierte Modelle für gezielte Aufgaben",
+    models: budgetModels,
+  },
+  {
     id: "premium",
     badge: "Premium",
     title: "🏆 Premium Modelle",
-    description: "Top-Qualität für wichtige Aufgaben – GPT-4, Claude & DeepSeek V3",
+    description: "Top-Qualität für anspruchsvolle Aufgaben – beste Leistung zu fairen Preisen",
     models: premiumModels,
-  },
-  {
-    id: "everyday",
-    badge: "Alltag",
-    title: "💼 Alltags Modelle",
-    description: "Zuverlässige Modelle für tägliche Aufgaben – starkes Preis-Leistungs-Verhältnis",
-    models: everydayModels,
-  },
-  {
-    id: "free",
-    badge: "Free",
-    title: "🎁 Free Modelle",
-    description: "Kostenlose Modelle zum Testen und Experimentieren – null Kosten, solide Qualität",
-    models: freeModels,
-  },
-  {
-    id: "uncensored",
-    badge: "Unzensiert",
-    title: "🎭 Unzensiert Modelle",
-    description: "Kreative Modelle mit wenig Filtern – ideal für Rollenspiel und Storytelling",
-    models: uncensoredModels,
-  },
-  {
-    id: "code",
-    badge: "Code",
-    title: "🧑‍💻 Code Modelle",
-    description: "Spezialisiert auf Programmierung, Debugging und technische Analysen",
-    models: codeModels,
   },
 ];
 
@@ -444,24 +485,50 @@ export function MobileModelsInterface() {
         </svg>
       </div>
 
-      <header className="space-y-3 text-[var(--color-text-primary)]" data-testid="models-title">
+      <header className="space-y-4 text-[var(--color-text-primary)]" data-testid="models-title">
         <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
-          Modelle
+          🤖 Modelle
         </span>
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold sm:text-3xl">Modellkatalog</h1>
-          <p className="max-w-2xl text-sm leading-6 opacity-80 sm:text-base">
-            Finde das passende KI-Modell für deinen Anwendungsfall. Rollen lassen sich im{" "}
-            <Link to="/roles" className="font-medium underline">
-              Rollen-Studio
-            </Link>{" "}
-            auswählen.
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">KI-Modellkatalog</h1>
+          <p className="max-w-2xl text-sm leading-relaxed opacity-80 sm:text-base">
+            Wähle das perfekte{" "}
+            <Tooltip content="Künstliche Intelligenz Sprachmodelle, die auf verschiedene Aufgaben spezialisiert sind">
+              KI-Modell
+            </Tooltip>{" "}
+            für deine Aufgabe. Von schnellen kostenlosen Modellen für alltägliche Chats bis zu
+            leistungsstarken{" "}
+            <Tooltip content="Kostenpflichtige Modelle mit höherer Leistung und besserer Qualität">
+              Premium-Modellen
+            </Tooltip>{" "}
+            für komplexe Analysen.
           </p>
+
+          {/* Quick Navigation */}
+          <div className="flex flex-wrap gap-2 pt-2">
+            <span className="text-xs font-medium text-text-muted">Schnellzugriff:</span>
+            {["quick-free", "powerful-free", "premium"].map((groupId) => (
+              <button
+                key={groupId}
+                onClick={() => {
+                  const element = document.getElementById(`models-${groupId}`);
+                  element?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="inline-flex items-center gap-1 rounded-lg border border-border-subtle bg-surface-subtle/50 px-2 py-1 text-xs font-medium text-text-primary transition-colors hover:bg-surface-subtle hover:border-border-strong focus:outline-none focus:ring-2 focus:ring-brand/50 touch-target"
+              >
+                {groupId === "quick-free" && "⚡ Schnell"}
+                {groupId === "powerful-free" && "🚀 Stark"}
+                {groupId === "premium" && "🏆 Premium"}
+              </button>
+            ))}
+          </div>
         </div>
+
         {safeSelectedLabel && (
-          <p className="text-xs opacity-65 sm:text-sm">
-            Aktuell ausgewählt: <span className="font-semibold">{safeSelectedLabel}</span>
-          </p>
+          <div className="flex items-center gap-2 rounded-lg bg-brand/10 border border-brand/20 px-3 py-2">
+            <span className="text-xs opacity-75 sm:text-sm">Aktuell ausgewählt:</span>
+            <span className="font-semibold text-brand">{safeSelectedLabel}</span>
+          </div>
         )}
       </header>
 
@@ -490,11 +557,51 @@ export function MobileModelsInterface() {
         <p className="text-xs opacity-65 sm:text-sm">
           Passe Stimme, Tonalität und Badges flexibel im Rollen-Studio an.
         </p>
-        <Link to="/roles" className="inline-flex">
-          <Button variant="brand" size="sm">
-            Rollen öffnen
-          </Button>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link to="/roles" className="inline-flex">
+            <Button variant="brand" size="sm" className="touch-target">
+              🎭 Rollen-Studio öffnen
+            </Button>
+          </Link>
+          <Link to="/chat" className="inline-flex">
+            <Button variant="outline" size="sm" className="touch-target">
+              💬 Chat starten
+            </Button>
+          </Link>
+        </div>
+      </Card>
+
+      {/* Quick Help Section */}
+      <Card padding="sm" className="bg-blue-50 border-blue-200 text-blue-900">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-blue-600">💡</span>
+            <h3 className="text-sm font-semibold">Schnelle Orientierung</h3>
+          </div>
+          <div className="text-xs space-y-1">
+            <p>
+              <strong>Neu hier?</strong> Starte mit{" "}
+              <Tooltip content="Kostenlose Modelle ohne Limits für den Einstieg">
+                ⚡ Schnellen Kostenlosen
+              </Tooltip>{" "}
+              Modellen.
+            </p>
+            <p>
+              <strong>Wichtige Aufgaben?</strong> Nutze{" "}
+              <Tooltip content="Kostenpflichtige Modelle mit höchster Qualität und Zuverlässigkeit">
+                🏆 Premium
+              </Tooltip>{" "}
+              Modelle für beste Ergebnisse.
+            </p>
+            <p>
+              <strong>Bilder verarbeiten?</strong> Wähle{" "}
+              <Tooltip content="Modelle die sowohl Text als auch Bilder verstehen können">
+                🖼️ Multimodale
+              </Tooltip>{" "}
+              Modelle.
+            </p>
+          </div>
+        </div>
       </Card>
 
       {filteredModelGroups.map((group) => {
@@ -502,7 +609,7 @@ export function MobileModelsInterface() {
         return (
           <section key={group.id} aria-labelledby={`models-${group.id}`} className="space-y-2">
             <div
-              className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"
+              className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between touch-target"
               onClick={() => toggleGroup(group.id)}
               role="button"
               tabIndex={0}
@@ -551,6 +658,7 @@ export function MobileModelsInterface() {
                     onToggleDetails={() =>
                       setOpenId((current) => (current === model.id ? null : model.id))
                     }
+                    isMobile={true}
                   />
                 ))}
               </div>
