@@ -1,6 +1,7 @@
 export * from "./avatar";
 export * from "./badge";
 export * from "./button";
+export * from "./chip";
 export * from "./dialog";
 export * from "./dropdown-menu";
 export * from "./input";
@@ -26,6 +27,10 @@ export type {
 export * from "./DiscussionTopicCard";
 export * from "./InteractiveCard";
 export * from "./StatusCard";
+
+// Modal and Drawer Components
+export * from "./drawer";
+export * from "./modal";
 
 // Card System Utilities
 export const CardUtils = {

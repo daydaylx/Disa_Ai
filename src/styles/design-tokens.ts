@@ -1,4 +1,8 @@
 import { generateCategoryTokens } from "./tokens/category-colors";
+import {
+  generateCategorySemanticTokens,
+  generateCategoryTonalTokens,
+} from "./tokens/category-tonal-scales";
 import { colorCssVars, colorTokens, type ThemeMode } from "./tokens/color";
 import { motionCssVars, motionTokens } from "./tokens/motion";
 import { radiusCssVars, radiusTokens } from "./tokens/radius";
@@ -49,6 +53,13 @@ export function getDesignTokenVariables(mode: ThemeMode): CssVariableMap {
   // Add category color tokens
   const categoryTokens = generateCategoryTokens();
   Object.assign(variableMap, categoryTokens);
+
+  // Add category tonal scale tokens
+  const categoryTonalTokens = {
+    ...generateCategoryTonalTokens(),
+    ...generateCategorySemanticTokens(),
+  };
+  Object.assign(variableMap, categoryTonalTokens);
 
   return variableMap;
 }
