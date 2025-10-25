@@ -147,8 +147,8 @@ export function ModelCard({
                 aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
                 aria-expanded={isOpen}
                 className={cn(
-                  "flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]",
-                  isMobile ? "h-10 w-10 mobile-info-btn touch-target" : "h-8 w-8",
+                  "flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)] relative z-20",
+                  isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
                 )}
               >
                 <Info className="h-4 w-4" aria-hidden="true" />
@@ -200,8 +200,8 @@ export function ModelCard({
           role="region"
           aria-live="polite"
           className={cn(
-            "mt-4 pt-4 border-t border-border-divider",
-            isMobile && "mobile-model-details",
+            "mt-4 pt-4 border-t border-border-divider relative z-10",
+            isMobile && "max-w-full overflow-hidden",
           )}
         >
           <p className="text-description-base text-text-secondary mb-3">{description}</p>

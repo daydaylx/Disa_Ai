@@ -26,7 +26,7 @@ function Tooltip({
       <span className="text-text-muted opacity-60 group-hover:opacity-100 transition-opacity">
         ℹ️
       </span>
-      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
         {content}
       </span>
     </span>
@@ -458,7 +458,7 @@ export function MobileModelsInterface() {
   }, [searchTerm]);
 
   return (
-    <div className="flex h-full flex-col gap-4 px-4 pb-16 pt-6 text-[var(--color-text-primary)] sm:px-6 lg:px-8">
+    <div className="flex min-h-screen flex-col gap-4 px-4 pb-16 pt-6 text-[var(--color-text-primary)] sm:px-6 lg:px-8">
       {/* Search Bar with mobile optimizations */}
       <div className="relative mb-2">
         <input
@@ -641,7 +641,7 @@ export function MobileModelsInterface() {
             <p className="max-w-2xl text-sm opacity-75 sm:text-base">{group.description}</p>
 
             {isGroupExpanded && (
-              <div className="mobile-models-grid grid gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
                 {group.models.map((model) => (
                   <ModelCard
                     key={model.id}
