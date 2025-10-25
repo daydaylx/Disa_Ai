@@ -14,6 +14,11 @@ export default defineConfig({
     environment: "jsdom",
     pool: "threads",
     setupFiles: ["tests/setup.ts", "tests/polyfills.ts"],
+    environmentOptions: {
+      jsdom: {
+        resources: "usable",
+      },
+    },
     include: ["src/**/*.{test,spec}.{ts,tsx}", "tests/unit/**/*.{test,spec}.{ts,tsx}"],
     exclude: ["**/node_modules/**", "**/dist/**", "**/e2e/**", "**/*.stories.{ts,tsx}"],
     coverage: {
