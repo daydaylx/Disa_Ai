@@ -458,7 +458,7 @@ export function MobileModelsInterface() {
   }, [searchTerm]);
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 px-4 pb-16 pt-6 text-[var(--color-text-primary)] sm:px-6 lg:px-8">
+    <div className="flex min-h-screen flex-col gap-4 px-4 pb-16 pt-6 text-[var(--color-text-primary)]">
       {/* Search Bar with mobile optimizations */}
       <div className="relative mb-2">
         <input
@@ -490,8 +490,8 @@ export function MobileModelsInterface() {
           🤖 Modelle
         </span>
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">KI-Modellkatalog</h1>
-          <p className="max-w-2xl text-sm leading-relaxed opacity-80 sm:text-base">
+          <h1 className="text-2xl font-semibold tracking-tight">KI-Modellkatalog</h1>
+          <p className="max-w-2xl text-sm leading-relaxed opacity-80">
             Wähle das perfekte{" "}
             <Tooltip content="Künstliche Intelligenz Sprachmodelle, die auf verschiedene Aufgaben spezialisiert sind">
               KI-Modell
@@ -526,7 +526,7 @@ export function MobileModelsInterface() {
 
         {safeSelectedLabel && (
           <div className="flex items-center gap-2 rounded-lg bg-brand/10 border border-brand/20 px-3 py-2">
-            <span className="text-xs opacity-75 sm:text-sm">Aktuell ausgewählt:</span>
+            <span className="text-xs opacity-75">Aktuell ausgewählt:</span>
             <span className="font-semibold text-brand">{safeSelectedLabel}</span>
           </div>
         )}
@@ -537,11 +537,11 @@ export function MobileModelsInterface() {
           <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] opacity-70">
             Studio Fokus
           </span>
-          <h2 className="text-lg font-semibold sm:text-xl">Aktive Rolle</h2>
+          <h2 className="text-lg font-semibold">Aktive Rolle</h2>
         </div>
         {activeRole && activeRoleSummary ? (
           <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2 text-sm font-semibold sm:text-base">
+            <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
               <span>{activeRole.name}</span>
               {activeRole.category && (
                 <span className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide opacity-80">
@@ -549,12 +549,12 @@ export function MobileModelsInterface() {
                 </span>
               )}
             </div>
-            <p className="text-sm leading-6 opacity-80 sm:text-base">{activeRoleSummary}</p>
+            <p className="text-sm leading-6 opacity-80">{activeRoleSummary}</p>
           </div>
         ) : (
-          <p className="text-sm opacity-75 sm:text-base">Standard (keine Rolle ausgewählt)</p>
+          <p className="text-sm opacity-75">Standard (keine Rolle ausgewählt)</p>
         )}
-        <p className="text-xs opacity-65 sm:text-sm">
+        <p className="text-xs opacity-65">
           Passe Stimme, Tonalität und Badges flexibel im Rollen-Studio an.
         </p>
         <div className="flex flex-wrap gap-2">
@@ -609,7 +609,7 @@ export function MobileModelsInterface() {
         return (
           <section key={group.id} aria-labelledby={`models-${group.id}`} className="space-y-2">
             <div
-              className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between touch-target"
+              className="flex flex-col gap-2 touch-target"
               onClick={() => toggleGroup(group.id)}
               role="button"
               tabIndex={0}
@@ -624,7 +624,7 @@ export function MobileModelsInterface() {
                 <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
                   {group.badge}
                 </span>
-                <h2 id={`models-${group.id}`} className="text-lg font-semibold sm:text-xl">
+                <h2 id={`models-${group.id}`} className="text-lg font-semibold">
                   {group.title}
                   {!isGroupExpanded && (
                     <span className="text-xs font-normal text-text-muted ml-2">
@@ -633,15 +633,15 @@ export function MobileModelsInterface() {
                   )}
                 </h2>
               </div>
-              <span className="text-xs font-medium uppercase tracking-wide opacity-60 sm:text-sm">
+              <span className="text-xs font-medium uppercase tracking-wide opacity-60">
                 {group.models.length} Modelle
               </span>
             </div>
 
-            <p className="max-w-2xl text-sm opacity-75 sm:text-base">{group.description}</p>
+            <p className="max-w-2xl text-sm opacity-75">{group.description}</p>
 
             {isGroupExpanded && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
+              <div className="grid grid-cols-1 gap-3 w-full">
                 {group.models.map((model) => (
                   <ModelCard
                     key={model.id}

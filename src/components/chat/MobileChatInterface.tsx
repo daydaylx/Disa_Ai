@@ -552,7 +552,7 @@ export function MobileChatInterface() {
               </p>
             </div>
             <div
-              className="flex flex-wrap items-center gap-2 sm:justify-end"
+              className="flex flex-wrap items-center gap-2"
               role="toolbar"
               aria-label="Chat-Aktionen"
             >
@@ -583,7 +583,7 @@ export function MobileChatInterface() {
           </header>
 
           <section aria-labelledby="discussion-heading" className="pb-8">
-            <div className="bg-surface-0/70 border-border/45 mb-5 flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="bg-surface-0/70 border-border/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
               <div className="flex-1 space-y-1">
                 <h2
                   id="discussion-heading"
@@ -595,7 +595,7 @@ export function MobileChatInterface() {
                   Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
                 </p>
               </div>
-              <div className="w-full sm:w-60" role="group" aria-labelledby="discussion-style-label">
+              <div className="w-full" role="group" aria-labelledby="discussion-style-label">
                 <Label
                   id="discussion-style-label"
                   htmlFor="discussion-style"
@@ -640,7 +640,7 @@ export function MobileChatInterface() {
                 content: (
                   <div className="space-y-3">
                     <p className="text-text-subtle text-xs leading-5">{section.description}</p>
-                    <div className="grid gap-2 sm:grid-cols-2">
+                    <div className="grid gap-2 grid-cols-1">
                       {section.topics.map((topic) => (
                         <button
                           key={topic.title}
@@ -702,7 +702,7 @@ export function MobileChatInterface() {
               </p>
             </div>
             <div
-              className="mobile-chat-toolbar flex flex-wrap items-center gap-2 sm:justify-end"
+              className="mobile-chat-toolbar flex flex-wrap items-center gap-2"
               role="toolbar"
               aria-label="Chat-Aktionen"
             >

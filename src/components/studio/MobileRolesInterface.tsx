@@ -185,12 +185,8 @@ export function MobileRolesInterface() {
       <header className="mb-section-gap space-y-stack-gap">
         <div className="space-y-2">
           <span className="brand-chip w-fit">{t.studio.chip}</span>
-          <h1 className="text-text-0 text-balance text-xl font-semibold sm:text-2xl">
-            {t.studio.title}
-          </h1>
-          <p className="text-text-1 mt-1 text-pretty text-sm leading-7 sm:text-base">
-            {t.studio.description}
-          </p>
+          <h1 className="text-text-0 text-balance text-xl font-semibold">{t.studio.title}</h1>
+          <p className="text-text-1 mt-1 text-pretty text-sm leading-7">{t.studio.description}</p>
         </div>
 
         {activeRole ? (
@@ -203,8 +199,8 @@ export function MobileRolesInterface() {
               <p className="text-text-1 text-xs font-semibold uppercase tracking-wide">
                 {t.studio.activeRole.label}
               </p>
-              <p className="text-text-0 text-sm font-semibold sm:text-base">{activeRole.name}</p>
-              <p className="text-text-1 whitespace-pre-line text-xs leading-5 sm:text-sm">
+              <p className="text-text-0 text-sm font-semibold">{activeRole.name}</p>
+              <p className="text-text-1 whitespace-pre-line text-xs leading-5">
                 {summariseRole(activeRole)}
               </p>
             </div>
@@ -222,7 +218,7 @@ export function MobileRolesInterface() {
 
         <div className="space-y-3">
           {/* Mobile-optimized search bar */}
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="flex flex-col gap-4">
             <div className="relative flex-1">
               <Search
                 className="text-text-1 pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
@@ -249,7 +245,7 @@ export function MobileRolesInterface() {
               ) : null}
             </div>
             <div className="text-text-1 flex items-center gap-3 text-xs">
-              <Filter className="text-text-1 hidden h-5 w-5 sm:block" />
+              <Filter className="text-text-1 h-5 w-5" />
               <span className="border-border bg-surface-1 text-text-1 rounded-full border px-4 py-2 touch-target">
                 {t.studio.filter.visible(totalMatchCount, orderedRoles.length)}
               </span>
@@ -337,12 +333,10 @@ export function MobileRolesInterface() {
                   <div className="flex items-center justify-between gap-3">
                     <h2
                       id={`category-${category}`}
-                      className="text-text-1 text-balance text-sm font-semibold sm:text-base"
+                      className="text-text-1 text-balance text-sm font-semibold"
                     >
                       {category}
-                      <span className="text-text-1 ml-2 text-xs font-medium sm:text-[13px]">
-                        {roles.length}
-                      </span>
+                      <span className="text-text-1 ml-2 text-xs font-medium">{roles.length}</span>
                     </h2>
                     {selectedCategory !== ("all" as const as "all" | CategoryKey) ? (
                       <Button

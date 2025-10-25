@@ -45,11 +45,12 @@ function determineSupport() {
     return /windows|macintosh|mac os|linux|cros|x11/i.test(userAgent);
   })();
 
+  // Mobile-only: Block desktop platforms and only allow mobile form factors
   if (isDesktopPlatform) {
-    return "allowed";
+    return "blocked";
   }
 
-  // Allow all mobile devices and tablet form factors for testing purposes
+  // Allow mobile devices and tablet form factors
   return isMobileFormFactor ? "allowed" : "blocked";
 }
 
@@ -118,18 +119,18 @@ export function MobileOnlyGate({ children }: MobileOnlyGateProps) {
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-text-0 text-xl font-semibold">Nur auf Android verfügbar</h1>
+            <h1 className="text-text-0 text-xl font-semibold">Nur auf Mobilgeräten verfügbar</h1>
             <p className="text-text-1 text-sm">
-              Dieses Interface wurde speziell für Android-Smartphones entwickelt. Bitte öffne die
-              App auf einem Android-Gerät, um fortzufahren.
+              Dieses Interface wurde speziell für Smartphones und Tablets entwickelt. Bitte öffne
+              die App auf einem Mobilgerät, um fortzufahren.
             </p>
           </div>
 
           <div className="border-border bg-surface-2 text-text-1 w-full rounded-lg border p-4 text-sm">
             <p>Nächste Schritte:</p>
             <ol className="text-text-1 mt-3 list-decimal space-y-2 pl-5 text-left">
-              <li>QR-Code oder Link auf deinem Android-Gerät öffnen.</li>
-              <li>Im Chrome- oder Edge-Browser die Seite laden.</li>
+              <li>QR-Code oder Link auf deinem Mobilgerät öffnen.</li>
+              <li>Im mobilen Browser die Seite laden.</li>
               <li>Optional als PWA installieren, um Vollbild zu erhalten.</li>
             </ol>
           </div>
