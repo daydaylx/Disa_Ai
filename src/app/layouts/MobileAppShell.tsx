@@ -29,7 +29,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="app-shell text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]">
+    <div className="app-shell text-text-0 relative min-h-screen min-h-dvh overflow-x-hidden bg-[var(--surface-bg)]">
       {/* Background gradients - soft depth aura */}
       <div className="pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(150%_120%_at_12%_10%,rgba(var(--color-surface-base),0.18)_0%,transparent_65%)]" />
@@ -37,7 +37,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
       </div>
 
       <ScrollToVoid>
-        <div className="relative z-10 flex min-h-dvh flex-col">
+        <div className="relative z-10 flex min-h-screen min-h-dvh flex-col">
           <MobileHeader onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} isMenuOpen={isMenuOpen} />
 
           <main
@@ -45,7 +45,8 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
             key={location.pathname}
             className={cn(
               "main-content animate-page-transition flex flex-1 flex-col",
-              "mx-auto w-full max-w-[var(--max-content-width)] px-4 pt-20 pb-24", // Adjusted padding for fixed bars
+              "mx-auto w-full max-w-[var(--max-content-width)] px-4 pt-20", // Adjusted padding for fixed bars
+              "pb-[calc(6rem+env(safe-area-inset-bottom,0px))]", // Bottom nav + safe area
               "sm:px-6 sm:pb-16 sm:pt-24 lg:px-8",
             )}
           >

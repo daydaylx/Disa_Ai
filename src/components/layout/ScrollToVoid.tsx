@@ -40,7 +40,7 @@ export function ScrollToVoid({ children }: ScrollToVoidProps) {
     <div
       ref={containerRef}
       className={cn(
-        "relative min-h-dvh overflow-y-auto",
+        "relative min-h-screen min-h-dvh overflow-y-auto",
         "before:absolute before:inset-0 before:z-[-1] before:bg-black before:opacity-[var(--scroll-opacity,0)] before:transition-opacity before:duration-300",
       )}
     >

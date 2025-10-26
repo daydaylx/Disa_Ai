@@ -21,6 +21,8 @@
   }
 
   body {
+    /* iOS fallback for older browsers */
+    min-height: 100vh;
     min-height: 100dvh;
     background: var(--color-surface-canvas);
     color: var(--color-text-primary);
