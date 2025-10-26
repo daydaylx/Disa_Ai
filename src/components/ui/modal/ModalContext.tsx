@@ -4,8 +4,8 @@ interface ModalContextType {
   isOpen: boolean;
   openModal: () => void;
   closeModal: () => void;
-  modalRef: React.RefObject<HTMLDivElement>;
-  triggerRef: React.RefObject<HTMLElement>;
+  modalRef: React.RefObject<HTMLDivElement | null>;
+  triggerRef: React.RefObject<HTMLElement | null>;
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);

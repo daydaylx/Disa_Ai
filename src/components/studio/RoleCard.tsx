@@ -54,6 +54,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         target.closest('[aria-label="Details zur Rolle"]') ||
         target.closest(".info-button-container")
       ) {
+        event.stopPropagation(); // Prevent card click when info button is clicked
         return;
       }
 
@@ -106,138 +107,138 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
     );
 
     return (
-      <Card
-        ref={ref as any}
-        interactive={isActive ? "dramatic" : "gentle"}
-        padding="md"
-        state={isActive ? "selected" : disabled ? "disabled" : "default"}
-        data-cat={categoryKey}
-        className={cn(
-          "category-border category-tint category-focus text-left relative",
-          !disabled && "cursor-pointer",
-          disabled && "cursor-not-allowed opacity-70",
-          isActive && "ring-brand ring-2 bg-brand/10",
-          isMobile && "mobile-role-card touch-target",
-          // Add padding-right to prevent text overlap with info button
-          isMobile ? "pr-16" : "pr-14",
-          className,
-        )}
-        onClick={handleCardClick}
-        onKeyDown={(e) => {
-          if ((e.key === "Enter" || e.key === " ") && !disabled) {
-            e.preventDefault();
-            handleCardClick(e as any);
-          }
-        }}
-        role="button"
-        tabIndex={disabled ? -1 : 0}
-        aria-pressed={isActive}
-        aria-label={`${title} ${isActive ? "ausgewählt" : "auswählen"}`}
-        data-testid={`role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
-        {...props}
-      >
-        {/* Info Toggle - Positioned top-right - Now accessible div with role="button" */}
-        <InfoToggle />
-
-        <div className="flex w-full items-start gap-3">
-          <div
-            className={cn(
-              "flex shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-sm font-semibold uppercase text-text-primary shadow-surface",
-              isMobile ? "h-12 w-12 touch-target" : "h-10 w-10",
-            )}
-          >
-            {title.slice(0, 1)}
-          </div>
-
-          <div className="flex flex-1 flex-col gap-2">
-            <div className="min-w-0 flex-1">
-              <h3
-                className={cn(
-                  "role-title-typography text-heading-sm text-high-contrast line-clamp-1",
-                  isMobile ? "text-heading-md" : "text-heading-sm",
-                )}
-              >
-                {title}
-              </h3>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {badge && (
-                  <span
-                    className={cn(
-                      "category-badge inline-flex items-center gap-2 rounded-full border border-white/30 font-semibold uppercase tracking-wide",
-                      isMobile
-                        ? "mobile-category-badge px-3 py-1 text-xs touch-target"
-                        : "px-2 py-0.5 text-[10px]",
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "category-dot rounded-full",
-                        isMobile ? "mobile-category-dot h-2 w-2" : "h-1.5 w-1.5",
-                      )}
-                    />
-                    {badge}
-                  </span>
-                )}
-                {category && (
-                  <span
-                    className={cn(
-                      "category-badge inline-flex items-center rounded-full font-medium uppercase tracking-wide",
-                      isMobile
-                        ? "mobile-category-badge gap-2 px-3 py-1 text-xs touch-target"
-                        : "gap-1.5 px-2 py-0.5 text-[10px]",
-                    )}
-                  >
-                    <span className={isMobile ? "text-sm" : "text-xs"}>{categoryData.icon}</span>
-                    {categoryData.label}
-                  </span>
-                )}
-                {isActive && (
-                  <span
-                    className={cn(
-                      "text-text-1 text-xs rounded-full border border-border-subtle bg-surface-subtle",
-                      isMobile ? "px-3 py-1 touch-target" : "px-2 py-0.5",
-                    )}
-                  >
-                    Aktiv
-                  </span>
-                )}
-              </div>
+      <div className={cn("relative", className)}>
+        <Card
+          ref={ref as any}
+          interactive={isActive ? "dramatic" : "gentle"}
+          padding="md"
+          state={isActive ? "selected" : disabled ? "disabled" : "default"}
+          data-cat={categoryKey}
+          className={cn(
+            "category-border category-tint category-focus text-left",
+            !disabled && "cursor-pointer",
+            disabled && "cursor-not-allowed opacity-70",
+            isActive && "ring-brand ring-2 bg-brand/10",
+            isMobile && "mobile-role-card touch-target",
+            // Add padding-right to prevent text overlap with info button
+            isMobile ? "pr-16" : "pr-14",
+          )}
+          onClick={handleCardClick}
+          onKeyDown={(e) => {
+            if ((e.key === "Enter" || e.key === " ") && !disabled) {
+              e.preventDefault();
+              handleCardClick(e as any);
+            }
+          }}
+          role="button"
+          tabIndex={disabled ? -1 : 0}
+          aria-pressed={isActive}
+          aria-label={`${title} ${isActive ? "ausgewählt" : "auswählen"}`}
+          data-testid={`role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
+          {...props}
+        >
+          <div className="flex w-full items-start gap-3">
+            <div
+              className={cn(
+                "flex shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-sm font-semibold uppercase text-text-primary shadow-surface",
+                isMobile ? "h-12 w-12 touch-target" : "h-10 w-10",
+              )}
+            >
+              {title.slice(0, 1)}
             </div>
 
-            <div className="role-text">
+            <div className="flex flex-1 flex-col gap-2">
+              <div className="min-w-0 flex-1">
+                <h3
+                  className={cn(
+                    "role-title-typography text-heading-sm text-high-contrast line-clamp-1",
+                    isMobile ? "text-heading-md" : "text-heading-sm",
+                  )}
+                >
+                  {title}
+                </h3>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {badge && (
+                    <span
+                      className={cn(
+                        "category-badge inline-flex items-center gap-2 rounded-full border border-white/30 font-semibold uppercase tracking-wide",
+                        isMobile
+                          ? "mobile-category-badge px-3 py-1 text-xs touch-target"
+                          : "px-2 py-0.5 text-[10px]",
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "category-dot rounded-full",
+                          isMobile ? "mobile-category-dot h-2 w-2" : "h-1.5 w-1.5",
+                        )}
+                      />
+                      {badge}
+                    </span>
+                  )}
+                  {category && (
+                    <span
+                      className={cn(
+                        "category-badge inline-flex items-center rounded-full font-medium uppercase tracking-wide",
+                        isMobile
+                          ? "mobile-category-badge gap-2 px-3 py-1 text-xs touch-target"
+                          : "gap-1.5 px-2 py-0.5 text-[10px]",
+                      )}
+                    >
+                      <span className={isMobile ? "text-sm" : "text-xs"}>{categoryData.icon}</span>
+                      {categoryData.label}
+                    </span>
+                  )}
+                  {isActive && (
+                    <span
+                      className={cn(
+                        "text-text-1 text-xs rounded-full border border-border-subtle bg-surface-subtle",
+                        isMobile ? "px-3 py-1 touch-target" : "px-2 py-0.5",
+                      )}
+                    >
+                      Aktiv
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="role-text">
+                <p
+                  className={cn(
+                    "role-description-typography typography-base text-medium-contrast",
+                    isMobile ? "text-body-base line-clamp-3" : "text-body-small line-clamp-2",
+                  )}
+                >
+                  {description}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Expanded Details Section */}
+          {expanded && (
+            <div
+              id={detailId}
+              className={cn(
+                "expanded-details",
+                "mt-4 pt-4 border-t border-border-subtle",
+                "typography-base",
+              )}
+            >
               <p
                 className={cn(
-                  "role-description-typography typography-base text-medium-contrast",
-                  isMobile ? "text-body-base line-clamp-3" : "text-body-small line-clamp-2",
+                  "role-description-typography whitespace-pre-line text-medium-contrast",
+                  isMobile ? "text-body-base" : "text-body-small",
                 )}
               >
                 {description}
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* Expanded Details Section */}
-        {expanded && (
-          <div
-            id={detailId}
-            className={cn(
-              "expanded-details",
-              "mt-4 pt-4 border-t border-border-subtle",
-              "typography-base",
-            )}
-          >
-            <p
-              className={cn(
-                "role-description-typography whitespace-pre-line text-medium-contrast",
-                isMobile ? "text-body-base" : "text-body-small",
-              )}
-            >
-              {description}
-            </p>
-          </div>
-        )}
-      </Card>
+          )}
+        </Card>
+        {/* Info Toggle - Positioned absolutely top-right - Separate from card */}
+        <InfoToggle />
+      </div>
     );
   },
 );

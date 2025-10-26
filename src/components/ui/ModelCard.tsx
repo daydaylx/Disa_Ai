@@ -80,79 +80,65 @@ export function ModelCard({
   };
 
   return (
-    <Card
-      role="button"
-      tabIndex={0}
-      aria-pressed={isSelected}
-      elevation={isSelected ? "surface-prominent" : "raised"}
-      interactive="gentle"
-      padding="md"
-      state={isSelected ? "selected" : "default"}
-      data-cat={categoryKey}
-      className={cn(
-        "category-border category-tint category-focus relative w-full overflow-hidden",
-        "transition-all duration-200 ease-out",
-        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
-        isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
-        isMobile && "mobile-model-card touch-target",
-      )}
-      onClick={onSelect}
-      onKeyDown={handleKeyDown}
-      data-testid={`${isMobile ? "mobile-" : ""}model-card-${id}`}
-    >
-      <div className="flex items-start gap-3">
-        <div className="relative flex-shrink-0">
-          <Avatar size="md" className={cn("shadow-surface-subtle", isMobile && "touch-target")}>
-            {provider.slice(0, 1)}
-          </Avatar>
-          {providerTier === "premium" && (
-            <Badge
-              size="xs"
-              variant="brand"
-              className={cn("absolute -right-1 -top-1", isMobile && "touch-target")}
-            >
-              ★
-            </Badge>
-          )}
-        </div>
+    <div className="relative w-full">
+      <Card
+        role="button"
+        tabIndex={0}
+        aria-pressed={isSelected}
+        elevation={isSelected ? "surface-prominent" : "raised"}
+        interactive="gentle"
+        padding="md"
+        state={isSelected ? "selected" : "default"}
+        data-cat={categoryKey}
+        className={cn(
+          "category-border category-tint category-focus relative w-full overflow-hidden",
+          "transition-all duration-200 ease-out",
+          "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
+          isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
+          isMobile && "mobile-model-card touch-target",
+        )}
+        onClick={onSelect}
+        onKeyDown={handleKeyDown}
+        data-testid={`${isMobile ? "mobile-" : ""}model-card-${id}`}
+      >
+        <div className="flex items-start gap-3">
+          <div className="relative flex-shrink-0">
+            <Avatar size="md" className={cn("shadow-surface-subtle", isMobile && "touch-target")}>
+              {provider.slice(0, 1)}
+            </Avatar>
+            {providerTier === "premium" && (
+              <Badge
+                size="xs"
+                variant="brand"
+                className={cn("absolute -right-1 -top-1", isMobile && "touch-target")}
+              >
+                ★
+              </Badge>
+            )}
+          </div>
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="text-title-base text-text-strong font-semibold truncate">{name}</h3>
-              <div className="flex items-center gap-2 mt-1">
-                <p className="truncate text-sm text-text-muted">{provider}</p>
-                <span
-                  className={cn(
-                    "category-badge inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide",
-                    isMobile && "touch-target",
-                  )}
-                >
-                  <span className="category-dot h-1 w-1 rounded-full" />
-                  {categoryData.label}
-                </span>
-              </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-title-base text-text-strong font-semibold truncate">{name}</h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="truncate text-sm text-text-muted">{provider}</p>
+                  <span
+                    className={cn(
+                      "category-badge inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide",
+                      isMobile && "touch-target",
+                    )}
+                  >
+                    <span className="category-dot h-1 w-1 rounded-full" />
+                    {categoryData.label}
+                  </span>
+                </div>
             </div>
 
             <div className="flex flex-col items-end gap-1">
               <div className="font-mono text-sm text-text-muted">
                 {priceIn === 0 && priceOut === 0 ? " Kostenlos" : `${priceIn}/${priceOut}M`}
               </div>
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onToggleDetails();
-                }}
-                aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
-                aria-expanded={isOpen}
-                className={cn(
-                  "flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)] relative z-20",
-                  isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
-                )}
-              >
-                <Info className="h-4 w-4" aria-hidden="true" />
-              </button>
             </div>
           </div>
 
@@ -233,6 +219,23 @@ export function ModelCard({
           </div>
         </div>
       )}
+      {/* Info button positioned absolutely outside the Card to avoid nested interactive elements */}
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          onToggleDetails();
+        }}
+        aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
+        aria-expanded={isOpen}
+        className={cn(
+          "absolute top-3 right-3 flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]",
+          isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
+        )}
+      >
+        <Info className="h-4 w-4" aria-hidden="true" />
+      </button>
     </Card>
+  </div>
   );
 }
