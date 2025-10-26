@@ -11,7 +11,6 @@ import {
   Trash2,
   Upload,
   User,
-  X,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -28,6 +27,7 @@ import {
 } from "../../lib/conversation-manager";
 import { BUILD_ID } from "../../lib/pwa/registerSW";
 import { Button } from "../ui/button";
+import { Drawer } from "../ui/drawer/Drawer";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/Switch";
@@ -289,190 +289,466 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
       });
   };
 
-  // Close on Escape key
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
-
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  };
-
-  // Lock body scroll when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = "";
-      };
-    }
-    return undefined;
-  }, [isOpen]);
-
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pointer-events-auto"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel="Erweiterte Einstellungen"
+      width="95vw"
+      position="right"
     >
-      {/* WCAG AA compliant scrim overlay */}
-      <div
-        className="scrim-overlay absolute inset-0"
-        onClick={handleBackdropClick}
-        aria-hidden="true"
-      />
-      {/* Optimized glass panel with no double-blur */}
-      <div className="glass-panel relative mt-6 w-[min(92vw,680px)] max-h-[80dvh] overflow-y-auto rounded-2xl flex flex-col">
-        <div className="flex flex-1 flex-col min-h-0">
-          {/* Header - no additional backdrop-blur to prevent double transparency */}
-          <div className="border-b border-[var(--glass-border)] flex flex-shrink-0 items-center justify-between p-4 bg-black/5">
-            <h2 id="modal-title" className="text-strong text-lg font-semibold">
-              Erweiterte Einstellungen
-            </h2>
-            <button
-              onClick={onClose}
-              className="touch-target rounded-lg p-1 text-muted hover:text-strong transition focus-ring"
-              aria-label="Einstellungen schließen"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
+      <div className="flex flex-col h-full">
+        {/* Settings Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="space-y-6">
+            {/* API Key Section */}
+            <div className="space-y-3">
+              <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
+                <Key className="h-5 w-5" />
+                API-Schlüssel
+              </h3>
+              <p className="text-sm text-muted">
+                Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
+              </p>
 
-          {/* Settings Content - Scrollable */}
-          <div className="min-h-0 flex-1 overflow-y-auto p-4">
-            <div className="space-y-6">
-              {/* API Key Section */}
-              <div className="space-y-3">
-                <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
-                  <Key className="h-5 w-5" />
+              <div className="space-y-2">
+                <Label htmlFor="apiKey" className="text-standard font-semibold tracking-wider">
                   API-Schlüssel
-                </h3>
-                <p className="text-sm text-muted">
-                  Wird nur in der aktuellen Session gespeichert. Nie an unsere Server übertragen.
-                </p>
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="apiKey"
+                    type={showKey ? "text" : "password"}
+                    value={apiKey}
+                    onChange={(event) => setApiKey(event.target.value)}
+                    placeholder="sk-or-..."
+                    className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] pr-10 font-mono"
+                    style={{ backdropFilter: "var(--glass-blur-subtle)" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowKey(!showKey)}
+                    aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
+                    className="touch-target bg-[var(--hover-overlay)] focus-ring hover:text-[var(--fg-strong)] absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-[var(--fg)] transition-all duration-180 ease-out motion-reduce:transition-none"
+                  >
+                    {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="apiKey" className="text-standard font-semibold tracking-wider">
-                    API-Schlüssel
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="apiKey"
-                      type={showKey ? "text" : "password"}
-                      value={apiKey}
-                      onChange={(event) => setApiKey(event.target.value)}
-                      placeholder="sk-or-..."
-                      className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)] pr-10 font-mono"
-                      style={{ backdropFilter: "var(--glass-blur-subtle)" }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowKey(!showKey)}
-                      aria-label={showKey ? "API-Schlüssel ausblenden" : "API-Schlüssel anzeigen"}
-                      className="touch-target bg-[var(--hover-overlay)] focus-ring hover:text-[var(--fg-strong)] absolute right-2 top-1/2 grid -translate-y-1/2 place-items-center rounded-full text-[var(--fg)] transition-all duration-180 ease-out motion-reduce:transition-none"
-                    >
-                      {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
+              <div className="flex items-center gap-2">
+                <div
+                  className={`h-2 w-2 rounded-full ${
+                    keyStatus === "present"
+                      ? "bg-green-500"
+                      : keyStatus === "invalid"
+                        ? "bg-red-500"
+                        : "bg-gray-500"
+                  }`}
+                />
+                <span className="text-sm text-muted">
+                  {keyStatus === "present"
+                    ? "Schlüssel vorhanden"
+                    : keyStatus === "invalid"
+                      ? "Ungültiger Schlüssel"
+                      : "Kein Schlüssel"}
+                </span>
+              </div>
+
+              <Button
+                type="button"
+                onClick={handleSaveKey}
+                className="touch-target-preferred bg-[var(--glass-surface)] border border-[var(--glass-border)] text-[var(--fg)] w-full hover:bg-[var(--hover-overlay)] transition-all duration-180 ease-out motion-reduce:transition-none"
+              >
+                Schlüssel speichern
+              </Button>
+
+              <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
+                <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
+                <div className="text-xs text-blue-200">
+                  <p className="mb-1 font-medium">Datenschutz:</p>
+                  <p>
+                    Dein Schlüssel wird nur in der Browser-Session gespeichert und automatisch beim
+                    Schließen gelöscht.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Filter Section */}
+            <div className="space-y-3">
+              <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
+                <User className="h-5 w-5" />
+                Inhaltsfilter
+              </h3>
+              <p className="text-sm text-muted">
+                Verwalte die Sichtbarkeit verschiedener Inhaltsarten.
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <Label htmlFor="nsfw-toggle" className="text-standard">
+                      18+ / NSFW-Content anzeigen
+                    </Label>
+                    <p id="nsfw-description" className="text-xs text-muted">
+                      Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden Rollen.
+                    </p>
+                  </div>
+                  <Switch
+                    checked={settings.showNSFWContent}
+                    onChange={toggleNSFWContent}
+                    id="nsfw-toggle"
+                    aria-describedby="nsfw-description"
+                  />
+                </div>
+
+                <div className="flex items-start gap-2 rounded-lg border border-orange-500/20 bg-orange-500/10 p-3">
+                  <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-400" />
+                  <div className="text-xs text-orange-200">
+                    <p className="mb-1 font-medium">Hinweis:</p>
+                    <p>
+                      Diese Einstellung wird nur lokal in deinem Browser gespeichert. 18+ Inhalte
+                      werden standardmäßig ausgeblendet.
+                    </p>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      keyStatus === "present"
-                        ? "bg-green-500"
-                        : keyStatus === "invalid"
-                          ? "bg-red-500"
-                          : "bg-gray-500"
-                    }`}
+            {/* Memory Settings Section */}
+            <div className="space-y-3">
+              <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-5 w-5"
+                >
+                  <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+                Gedächtnis
+              </h3>
+              <p className="text-sm text-muted">
+                Speichere Chat-Verläufe und persönliche Informationen für zukünftige Gespräche.
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <Label htmlFor="memory-toggle" className="text-standard">
+                      Gedächtnis aktivieren
+                    </Label>
+                    <p id="memory-description" className="text-xs text-muted">
+                      Wenn aktiviert, werden Chat-Verläufe und globale Infos lokal gespeichert.
+                    </p>
+                  </div>
+                  <Switch
+                    checked={memoryEnabled}
+                    onChange={toggleMemory}
+                    id="memory-toggle"
+                    aria-describedby="memory-description"
                   />
-                  <span className="text-sm text-muted">
-                    {keyStatus === "present"
-                      ? "Schlüssel vorhanden"
-                      : keyStatus === "invalid"
-                        ? "Ungültiger Schlüssel"
-                        : "Kein Schlüssel"}
-                  </span>
                 </div>
 
-                <Button
-                  type="button"
-                  onClick={handleSaveKey}
-                  className="touch-target-preferred bg-[var(--glass-surface)] border border-[var(--glass-border)] text-[var(--fg)] w-full hover:bg-[var(--hover-overlay)] transition-all duration-180 ease-out motion-reduce:transition-none"
-                >
-                  Schlüssel speichern
-                </Button>
+                {memoryEnabled && (
+                  <>
+                    {/* Global Memory Input */}
+                    <div className="border-t border-[var(--glass-border)] space-y-3 pt-4">
+                      <Label htmlFor="memory-name" className="text-standard">
+                        Persönliche Informationen
+                      </Label>
+                      <div className="space-y-2">
+                        <Input
+                          id="memory-name"
+                          placeholder="Dein Name (optional)"
+                          value={globalMemory?.name || ""}
+                          onChange={(e) => updateGlobalMemory({ name: e.target.value })}
+                          className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
+                          aria-label="Dein Name für persönliche Informationen"
+                          style={{ backdropFilter: "var(--glass-blur-subtle)" }}
+                        />
+                        <Input
+                          id="memory-hobbies"
+                          placeholder="Hobbys, Interessen (optional)"
+                          value={globalMemory?.hobbies?.join(", ") || ""}
+                          onChange={(e) =>
+                            updateGlobalMemory({
+                              hobbies: e.target.value
+                                ? e.target.value.split(",").map((h) => h.trim())
+                                : [],
+                            })
+                          }
+                          className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
+                          aria-label="Deine Hobbys und Interessen"
+                          style={{ backdropFilter: "var(--glass-blur-subtle)" }}
+                        />
+                        <Input
+                          id="memory-background"
+                          placeholder="Hintergrund, Beruf (optional)"
+                          value={globalMemory?.background || ""}
+                          onChange={(e) => updateGlobalMemory({ background: e.target.value })}
+                          className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
+                          aria-label="Dein beruflicher Hintergrund"
+                          style={{ backdropFilter: "var(--glass-blur-subtle)" }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Clear Memory */}
+                    <div className="border-border border-t pt-4">
+                      <Button
+                        onClick={() => {
+                          if (
+                            confirm(
+                              "Alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+                            )
+                          ) {
+                            clearAllMemory();
+                            toasts.push({
+                              kind: "success",
+                              title: "Gedächtnis gelöscht",
+                              message:
+                                "Alle gespeicherten Chat-Verläufe und Infos wurden entfernt.",
+                            });
+                          }
+                        }}
+                        variant="outline"
+                        className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Alle Erinnerungen löschen
+                      </Button>
+                    </div>
+                  </>
+                )}
 
                 <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
                   <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
                   <div className="text-xs text-blue-200">
                     <p className="mb-1 font-medium">Datenschutz:</p>
                     <p>
-                      Dein Schlüssel wird nur in der Browser-Session gespeichert und automatisch
-                      beim Schließen gelöscht.
+                      Alle Daten werden nur lokal in deinem Browser gespeichert und niemals an
+                      Server übertragen. Das Gedächtnis kann jederzeit deaktiviert oder gelöscht
+                      werden.
                     </p>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Content Filter Section */}
-              <div className="space-y-3">
-                <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
-                  <User className="h-5 w-5" />
-                  Inhaltsfilter
-                </h3>
-                <p className="text-sm text-muted">
-                  Verwalte die Sichtbarkeit verschiedener Inhaltsarten.
-                </p>
+            {/* Chat Management Section */}
+            <div className="space-y-3">
+              <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
+                <MessageSquare className="h-5 w-5" />
+                Chat-Verwaltung
+              </h3>
+              <p className="text-sm text-text-muted">
+                Exportiere, importiere und verwalte deine gespeicherten Konversationen.
+              </p>
 
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <Label htmlFor="nsfw-toggle" className="text-standard">
-                        18+ / NSFW-Content anzeigen
-                      </Label>
-                      <p id="nsfw-description" className="text-xs text-muted">
-                        Ermöglicht die Anzeige von Adult-Content-Personas und entsprechenden Rollen.
-                      </p>
-                    </div>
-                    <Switch
-                      checked={settings.showNSFWContent}
-                      onChange={toggleNSFWContent}
-                      id="nsfw-toggle"
-                      aria-describedby="nsfw-description"
-                    />
-                  </div>
+              <div className="space-y-6">
+                {/* Chat Statistics */}
+                <div className="space-y-3">
+                  <Label className="text-text-strong">Statistiken</Label>
+                  <ChatStats />
+                </div>
 
-                  <div className="flex items-start gap-2 rounded-lg border border-orange-500/20 bg-orange-500/10 p-3">
-                    <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-400" />
-                    <div className="text-xs text-orange-200">
-                      <p className="mb-1 font-medium">Hinweis:</p>
-                      <p>
-                        Diese Einstellung wird nur lokal in deinem Browser gespeichert. 18+ Inhalte
-                        werden standardmäßig ausgeblendet.
-                      </p>
+                {/* Export/Import Actions */}
+                <div className="border-border space-y-3 border-t pt-4">
+                  <Label className="text-text-strong">Import & Export</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      onClick={handleExportChats}
+                      variant="outline"
+                      className="w-full border-blue-500/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      Exportieren
+                    </Button>
+
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept=".json"
+                        onChange={handleImportChats}
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                        id="import-chats"
+                      />
+                      <Button
+                        variant="outline"
+                        className="w-full border-green-500/30 bg-green-500/10 text-green-300 hover:bg-green-500/20"
+                        asChild
+                      >
+                        <label htmlFor="import-chats" className="cursor-pointer">
+                          <span className="flex items-center gap-2">
+                            <Upload className="h-4 w-4" />
+                            Importieren
+                          </span>
+                        </label>
+                      </Button>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Memory Settings Section */}
-              <div className="space-y-3">
-                <h3 className="text-strong flex items-center gap-2 text-lg font-semibold">
+                {/* Cleanup Actions */}
+                <div className="border-border space-y-3 border-t pt-4">
+                  <Label className="text-text-strong">Aufräumen</Label>
+                  <div className="space-y-2">
+                    <Button
+                      onClick={handleCleanupOldChats}
+                      variant="outline"
+                      className="w-full border-yellow-500/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20"
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      Alte Chats löschen (30+ Tage)
+                    </Button>
+
+                    <Button
+                      onClick={handleDeleteAllChats}
+                      variant="outline"
+                      className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Alle Chats löschen
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
+                  <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
+                  <div className="text-xs text-blue-200">
+                    <p className="mb-1 font-medium">Sicherheit:</p>
+                    <p>
+                      Alle Chat-Daten werden nur lokal gespeichert. Export-Dateien enthalten
+                      vollständige Konversationsverläufe - behandle sie entsprechend vertraulich.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* PWA Install Section */}
+            <div className="space-y-3">
+              <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
+                <Smartphone className="h-5 w-5" />
+                App-Installation
+              </h3>
+              <p className="text-sm text-text-muted">
+                Installiere Disa AI als native App für bessere Performance und schnelleren Zugriff.
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`h-3 w-3 rounded-full ${
+                      isInstalled
+                        ? "bg-green-500"
+                        : canInstall
+                          ? "animate-pulse bg-blue-500"
+                          : "bg-gray-500"
+                    }`}
+                  />
+                  <span className="text-text-strong text-sm font-medium">
+                    {isInstalled
+                      ? "✅ App ist installiert"
+                      : canInstall
+                        ? "📱 Installation verfügbar"
+                        : "❌ Installation nicht verfügbar"}
+                  </span>
+                </div>
+
+                {canInstall && (
+                  <Button
+                    type="button"
+                    onClick={handleInstallPWA}
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Jetzt als App installieren
+                  </Button>
+                )}
+
+                {isInstalled && (
+                  <div className="py-4 text-center">
+                    <div className="mb-2 text-lg font-medium text-green-400">
+                      🎉 App erfolgreich installiert!
+                    </div>
+                    <p className="text-sm text-text-muted">
+                      Du kannst Disa AI jetzt direkt vom Home-Screen starten und wie eine native App
+                      verwenden.
+                    </p>
+                  </div>
+                )}
+
+                <div className="space-y-2 text-xs text-text-muted">
+                  <p>
+                    <span className="font-medium">Vorteile:</span>
+                  </p>
+                  <ul className="ml-4 space-y-1">
+                    <li>• Schnellerer Start ohne Browser-UI</li>
+                    <li>• Offline-Funktionalität</li>
+                    <li>• Push-Benachrichtigungen möglich</li>
+                    <li>• Bessere Performance</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Build Info */}
+            <div className="space-y-3">
+              <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
+                <Info className="h-5 w-5" />
+                Build Information
+              </h3>
+              <p className="text-sm text-text-muted">Build-Version und Deployment-Informationen</p>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  {/* Build ID nur in Entwicklung anzeigen */}
+                  {import.meta.env.DEV && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-text-muted">Build ID:</span>
+                      <span className="text-accent font-mono">{BUILD_ID}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-text-muted">Version:</span>
+                    <span className="text-text-strong">v1.0.0</span>
+                  </div>
+                  {/* Environment nur in Entwicklung anzeigen */}
+                  {import.meta.env.DEV && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-text-muted">Environment:</span>
+                      <span className="text-text-strong">
+                        {import.meta.env.DEV ? "Development" : "Production"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded bg-surface-subtle p-3 text-xs">
+                  <p className="text-text-muted">
+                    <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein harter
+                    Reload (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.
+                  </p>
+                </div>
+
+                <Button
+                  type="button"
+                  onClick={handleHardReload}
+                  variant="outline"
+                  className="flex w-full items-center justify-center gap-2"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -483,352 +759,20 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-5 w-5"
+                    className="h-4 w-4"
                   >
-                    <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
-                    <path d="M12 6v6l4 2" />
+                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                    <path d="M21 3v5h-5" />
+                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                    <path d="M3 21v-5h5" />
                   </svg>
-                  Gedächtnis
-                </h3>
-                <p className="text-sm text-muted">
-                  Speichere Chat-Verläufe und persönliche Informationen für zukünftige Gespräche.
-                </p>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <Label htmlFor="memory-toggle" className="text-standard">
-                        Gedächtnis aktivieren
-                      </Label>
-                      <p id="memory-description" className="text-xs text-muted">
-                        Wenn aktiviert, werden Chat-Verläufe und globale Infos lokal gespeichert.
-                      </p>
-                    </div>
-                    <Switch
-                      checked={memoryEnabled}
-                      onChange={toggleMemory}
-                      id="memory-toggle"
-                      aria-describedby="memory-description"
-                    />
-                  </div>
-
-                  {memoryEnabled && (
-                    <>
-                      {/* Global Memory Input */}
-                      <div className="border-t border-[var(--glass-border)] space-y-3 pt-4">
-                        <Label htmlFor="memory-name" className="text-standard">
-                          Persönliche Informationen
-                        </Label>
-                        <div className="space-y-2">
-                          <Input
-                            id="memory-name"
-                            placeholder="Dein Name (optional)"
-                            value={globalMemory?.name || ""}
-                            onChange={(e) => updateGlobalMemory({ name: e.target.value })}
-                            className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
-                            aria-label="Dein Name für persönliche Informationen"
-                            style={{ backdropFilter: "var(--glass-blur-subtle)" }}
-                          />
-                          <Input
-                            id="memory-hobbies"
-                            placeholder="Hobbys, Interessen (optional)"
-                            value={globalMemory?.hobbies?.join(", ") || ""}
-                            onChange={(e) =>
-                              updateGlobalMemory({
-                                hobbies: e.target.value
-                                  ? e.target.value.split(",").map((h) => h.trim())
-                                  : [],
-                              })
-                            }
-                            className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
-                            aria-label="Deine Hobbys und Interessen"
-                            style={{ backdropFilter: "var(--glass-blur-subtle)" }}
-                          />
-                          <Input
-                            id="memory-background"
-                            placeholder="Hintergrund, Beruf (optional)"
-                            value={globalMemory?.background || ""}
-                            onChange={(e) => updateGlobalMemory({ background: e.target.value })}
-                            className="bg-[var(--glass-surface)] border-[var(--glass-border)] text-[var(--fg)] placeholder:text-[var(--fg-muted)]"
-                            aria-label="Dein beruflicher Hintergrund"
-                            style={{ backdropFilter: "var(--glass-blur-subtle)" }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Clear Memory */}
-                      <div className="border-border border-t pt-4">
-                        <Button
-                          onClick={() => {
-                            if (
-                              confirm(
-                                "Alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-                              )
-                            ) {
-                              clearAllMemory();
-                              toasts.push({
-                                kind: "success",
-                                title: "Gedächtnis gelöscht",
-                                message:
-                                  "Alle gespeicherten Chat-Verläufe und Infos wurden entfernt.",
-                              });
-                            }
-                          }}
-                          variant="outline"
-                          className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Alle Erinnerungen löschen
-                        </Button>
-                      </div>
-                    </>
-                  )}
-
-                  <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
-                    <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
-                    <div className="text-xs text-blue-200">
-                      <p className="mb-1 font-medium">Datenschutz:</p>
-                      <p>
-                        Alle Daten werden nur lokal in deinem Browser gespeichert und niemals an
-                        Server übertragen. Das Gedächtnis kann jederzeit deaktiviert oder gelöscht
-                        werden.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Chat Management Section */}
-              <div className="space-y-3">
-                <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
-                  <MessageSquare className="h-5 w-5" />
-                  Chat-Verwaltung
-                </h3>
-                <p className="text-sm text-text-muted">
-                  Exportiere, importiere und verwalte deine gespeicherten Konversationen.
-                </p>
-
-                <div className="space-y-6">
-                  {/* Chat Statistics */}
-                  <div className="space-y-3">
-                    <Label className="text-text-strong">Statistiken</Label>
-                    <ChatStats />
-                  </div>
-
-                  {/* Export/Import Actions */}
-                  <div className="border-border space-y-3 border-t pt-4">
-                    <Label className="text-text-strong">Import & Export</Label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button
-                        onClick={handleExportChats}
-                        variant="outline"
-                        className="w-full border-blue-500/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20"
-                      >
-                        <Download className="mr-2 h-4 w-4" />
-                        Exportieren
-                      </Button>
-
-                      <div className="relative">
-                        <input
-                          type="file"
-                          accept=".json"
-                          onChange={handleImportChats}
-                          className="absolute inset-0 cursor-pointer opacity-0"
-                          id="import-chats"
-                        />
-                        <Button
-                          variant="outline"
-                          className="w-full border-green-500/30 bg-green-500/10 text-green-300 hover:bg-green-500/20"
-                          asChild
-                        >
-                          <label htmlFor="import-chats" className="cursor-pointer">
-                            <span className="flex items-center gap-2">
-                              <Upload className="h-4 w-4" />
-                              Importieren
-                            </span>
-                          </label>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Cleanup Actions */}
-                  <div className="border-border space-y-3 border-t pt-4">
-                    <Label className="text-text-strong">Aufräumen</Label>
-                    <div className="space-y-2">
-                      <Button
-                        onClick={handleCleanupOldChats}
-                        variant="outline"
-                        className="w-full border-yellow-500/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20"
-                      >
-                        <FileText className="mr-2 h-4 w-4" />
-                        Alte Chats löschen (30+ Tage)
-                      </Button>
-
-                      <Button
-                        onClick={handleDeleteAllChats}
-                        variant="outline"
-                        className="w-full border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20"
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Alle Chats löschen
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3">
-                    <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
-                    <div className="text-xs text-blue-200">
-                      <p className="mb-1 font-medium">Sicherheit:</p>
-                      <p>
-                        Alle Chat-Daten werden nur lokal gespeichert. Export-Dateien enthalten
-                        vollständige Konversationsverläufe - behandle sie entsprechend vertraulich.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* PWA Install Section */}
-              <div className="space-y-3">
-                <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
-                  <Smartphone className="h-5 w-5" />
-                  App-Installation
-                </h3>
-                <p className="text-sm text-text-muted">
-                  Installiere Disa AI als native App für bessere Performance und schnelleren
-                  Zugriff.
-                </p>
-
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`h-3 w-3 rounded-full ${
-                        isInstalled
-                          ? "bg-green-500"
-                          : canInstall
-                            ? "animate-pulse bg-blue-500"
-                            : "bg-gray-500"
-                      }`}
-                    />
-                    <span className="text-text-strong text-sm font-medium">
-                      {isInstalled
-                        ? "✅ App ist installiert"
-                        : canInstall
-                          ? "📱 Installation verfügbar"
-                          : "❌ Installation nicht verfügbar"}
-                    </span>
-                  </div>
-
-                  {canInstall && (
-                    <Button
-                      type="button"
-                      onClick={handleInstallPWA}
-                      className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white transition-transform hover:scale-105 hover:from-blue-600 hover:to-purple-600"
-                    >
-                      <Download className="mr-2 h-4 w-4" />
-                      Jetzt als App installieren
-                    </Button>
-                  )}
-
-                  {isInstalled && (
-                    <div className="py-4 text-center">
-                      <div className="mb-2 text-lg font-medium text-green-400">
-                        🎉 App erfolgreich installiert!
-                      </div>
-                      <p className="text-sm text-text-muted">
-                        Du kannst Disa AI jetzt direkt vom Home-Screen starten und wie eine native
-                        App verwenden.
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="space-y-2 text-xs text-text-muted">
-                    <p>
-                      <span className="font-medium">Vorteile:</span>
-                    </p>
-                    <ul className="ml-4 space-y-1">
-                      <li>• Schnellerer Start ohne Browser-UI</li>
-                      <li>• Offline-Funktionalität</li>
-                      <li>• Push-Benachrichtigungen möglich</li>
-                      <li>• Bessere Performance</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Build Info */}
-              <div className="space-y-3">
-                <h3 className="text-text-strong flex items-center gap-2 text-lg font-semibold">
-                  <Info className="h-5 w-5" />
-                  Build Information
-                </h3>
-                <p className="text-sm text-text-muted">
-                  Build-Version und Deployment-Informationen
-                </p>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    {/* Build ID nur in Entwicklung anzeigen */}
-                    {import.meta.env.DEV && (
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-text-muted">Build ID:</span>
-                        <span className="text-accent font-mono">{BUILD_ID}</span>
-                      </div>
-                    )}
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-text-muted">Version:</span>
-                      <span className="text-text-strong">v1.0.0</span>
-                    </div>
-                    {/* Environment nur in Entwicklung anzeigen */}
-                    {import.meta.env.DEV && (
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-text-muted">Environment:</span>
-                        <span className="text-text-strong">
-                          {import.meta.env.DEV ? "Development" : "Production"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="rounded bg-surface-subtle p-3 text-xs">
-                    <p className="text-text-muted">
-                      <span className="font-medium">Cache-Hinweis:</span> Bei Updates kann ein
-                      harter Reload (Strg+Shift+R) erforderlich sein, um die neue Version zu laden.
-                    </p>
-                  </div>
-
-                  <Button
-                    type="button"
-                    onClick={handleHardReload}
-                    variant="outline"
-                    className="flex w-full items-center justify-center gap-2"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-4 w-4"
-                    >
-                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                      <path d="M21 3v5h-5" />
-                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                      <path d="M3 21v-5h5" />
-                    </svg>
-                    Seite vollständig neu laden
-                  </Button>
-                </div>
+                  Seite vollständig neu laden
+                </Button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Drawer>
   );
 }

@@ -1,7 +1,338 @@
 /**
  * Mobile-First Layout System
  * Implements a comprehensive mobile-first layout with responsive breakpoints
+ * Typography system for optimal readability on mobile devices
  */
+
+/* ================================================================
+   MOBILE TYPOGRAPHY SYSTEM
+   ================================================================ */
+
+/* Base typography variables */
+:root {
+  /* Mobile-first font scales - Optimized for 16-18px range */
+  --font-size-body-base: 18px; /* Upper end of optimal mobile body text */
+  --font-size-body-small: 16px; /* Secondary text - lower bound */
+  --font-size-body-large: 20px; /* Emphasized body text */
+
+  /* Mobile heading scale - smaller than desktop */
+  --font-size-heading-xs: 16px; /* Tiny headings */
+  --font-size-heading-sm: 18px; /* Small headings */
+  --font-size-heading-md: 20px; /* Medium headings */
+  --font-size-heading-lg: 24px; /* Large headings */
+  --font-size-heading-xl: 28px; /* Extra large headings */
+
+  /* Optimal line heights for readability */
+  --line-height-tight: 1.25; /* Headings */
+  --line-height-normal: 1.55; /* Body text optimal */
+  --line-height-relaxed: 1.65; /* Loose body text */
+
+  /* Letter spacing for better readability */
+  --letter-spacing-tight: -0.025em; /* Large headings */
+  --letter-spacing-normal: 0; /* Body text */
+  --letter-spacing-wide: 0.025em; /* Small caps, badges */
+
+  /* Reading widths */
+  --max-reading-width: 65ch; /* Optimal line length */
+  --max-reading-width-narrow: 45ch; /* Narrow columns */
+  --max-reading-width-wide: 75ch; /* Wide content */
+}
+
+/* Base typography settings */
+.typography-base {
+  /* Optimal mobile body text */
+  font-size: var(--font-size-body-base);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
+
+  /* Advanced text rendering for crisp text */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1;
+
+  /* Enhanced text wrapping - prevents ragged right chaos */
+  text-wrap: pretty;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  hyphenate-limit-last: always;
+  hyphenate-limit-zone: 8%;
+
+  /* Reading width constraint for optimal readability */
+  max-width: var(--max-reading-width);
+}
+
+/* Typography scale classes */
+.text-body-small {
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-normal);
+}
+
+.text-body-base {
+  font-size: var(--font-size-body-base);
+  line-height: var(--line-height-normal);
+}
+
+.text-body-large {
+  font-size: var(--font-size-body-large);
+  line-height: var(--line-height-relaxed);
+}
+
+.text-heading-xs {
+  font-size: var(--font-size-heading-xs);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-normal);
+  font-weight: 600;
+}
+
+.text-heading-sm {
+  font-size: var(--font-size-heading-sm);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-normal);
+  font-weight: 600;
+}
+
+.text-heading-md {
+  font-size: var(--font-size-heading-md);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  font-weight: 600;
+}
+
+.text-heading-lg {
+  font-size: var(--font-size-heading-lg);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  font-weight: 700;
+}
+
+.text-heading-xl {
+  font-size: var(--font-size-heading-xl);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  font-weight: 700;
+}
+
+/* Reading width utilities */
+.reading-width {
+  max-width: var(--max-reading-width);
+}
+
+.reading-width-narrow {
+  max-width: var(--max-reading-width-narrow);
+}
+
+.reading-width-wide {
+  max-width: var(--max-reading-width-wide);
+}
+
+/* Enhanced contrast for accessibility - WCAG AA/AAA compliant */
+.text-high-contrast {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  /* Ensure minimum 7:1 contrast ratio (AAA level) */
+  --color-text-primary: hsl(0 0% 0%); /* Pure black for maximum contrast */
+}
+
+.text-medium-contrast {
+  color: var(--color-text-secondary);
+  font-weight: 450;
+  /* Enhanced contrast for secondary text - exceeds 4.5:1 ratio */
+  --color-text-secondary: hsl(0 0% 20%); /* Darker gray for better readability */
+}
+
+.text-low-contrast {
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+  /* Meets WCAG AA minimum 4.5:1 for small text */
+  --color-text-tertiary: hsl(0 0% 35%); /* Tested to meet contrast requirements */
+}
+
+/* Role-specific high contrast typography */
+.role-title-typography {
+  /* Titles need maximum contrast for readability */
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.role-description-typography {
+  /* Descriptions get enhanced contrast */
+  color: var(--color-text-secondary);
+  font-weight: 450;
+}
+
+/* Dark mode enhanced contrasts - WCAG AA/AAA compliant */
+@media (prefers-color-scheme: dark) {
+  .text-high-contrast {
+    --color-text-primary: hsl(0 0% 100%); /* Pure white for maximum contrast (AAA level) */
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2); /* Enhanced shadow for crispness */
+  }
+
+  .text-medium-contrast {
+    --color-text-secondary: hsl(0 0% 90%); /* High contrast for readability (exceeds 4.5:1) */
+  }
+
+  .text-low-contrast {
+    --color-text-tertiary: hsl(0 0% 78%); /* Meets WCAG AA minimum for dark backgrounds */
+  }
+
+  /* Enhanced role card typography for dark mode */
+  .role-title-typography {
+    --color-text-primary: hsl(0 0% 100%); /* Maximum contrast for titles */
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.3); /* Enhanced readability */
+  }
+
+  .role-description-typography {
+    --color-text-secondary: hsl(0 0% 92%); /* Exceptional contrast for descriptions */
+  }
+}
+
+/* High contrast mode - Enhanced for accessibility */
+@media (prefers-contrast: high) {
+  .text-high-contrast {
+    color: var(--color-text-primary);
+    font-weight: 600; /* Stronger weight for high contrast */
+    --color-text-primary: hsl(0 0% 0%); /* Pure black */
+  }
+
+  .text-medium-contrast {
+    color: var(--color-text-secondary);
+    font-weight: 500; /* Increased weight */
+    --color-text-secondary: hsl(0 0% 15%); /* Much darker gray */
+  }
+
+  .text-low-contrast {
+    color: var(--color-text-tertiary);
+    font-weight: 450; /* Increased weight */
+    --color-text-tertiary: hsl(0 0% 30%); /* Darker tertiary text */
+  }
+}
+
+/* Forced colors mode support (Windows High Contrast) */
+@media (forced-colors: active) {
+  .text-high-contrast {
+    color: ButtonText;
+    font-weight: 600;
+  }
+
+  .text-medium-contrast {
+    color: ButtonText;
+    font-weight: 500;
+  }
+
+  .text-low-contrast {
+    color: GrayText;
+    font-weight: 450;
+  }
+}
+
+/* Enhanced text wrapping utilities */
+.text-balance {
+  text-wrap: balance;
+  /* Optimal for headings and short content */
+  orphans: 2;
+  widows: 2;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+  /* Optimal for body text and descriptions */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  hyphenate-limit-last: always;
+  orphans: 2;
+  widows: 2;
+}
+
+.text-stable {
+  text-wrap: stable;
+  /* For special cases where consistent line breaks are needed */
+}
+
+/* Role-specific typography improvements */
+.role-title-typography {
+  text-wrap: balance;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: none; /* Don't hyphenate titles */
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  max-width: 100%;
+}
+
+.role-description-typography {
+  text-wrap: pretty;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  hyphenate-limit-last: always;
+  max-width: var(--max-reading-width);
+  orphans: 2;
+  widows: 2;
+}
+
+/* Hyphenation control */
+.hyphens-auto {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+}
+
+.hyphens-manual {
+  hyphens: manual;
+  -webkit-hyphens: manual;
+  -moz-hyphens: manual;
+}
+
+.hyphens-none {
+  hyphens: none;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+}
+
+/* Word break utilities */
+.break-words {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.break-all {
+  word-break: break-all;
+}
+
+.break-keep {
+  word-break: keep-all;
+}
+
+/* Mobile-optimized responsive typography */
+@media (min-width: 640px) {
+  :root {
+    /* Slightly larger on tablets */
+    --font-size-body-base: 18px;
+    --font-size-heading-md: 22px;
+    --font-size-heading-lg: 28px;
+    --font-size-heading-xl: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    /* Desktop scaling */
+    --font-size-body-base: 16px; /* Desktop can be smaller */
+    --font-size-heading-md: 24px;
+    --font-size-heading-lg: 32px;
+    --font-size-heading-xl: 40px;
+  }
+}
 
 /* Base mobile-first layout */
 :root {
@@ -15,7 +346,10 @@
 
   /* Main content area calculation */
   --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
-  --layout-main-pb: calc(var(--layout-bottom-nav-height) + var(--layout-content-padding-y));
+  --layout-main-pb: calc(
+    var(--layout-bottom-nav-height) + var(--layout-content-padding-y) +
+      env(safe-area-inset-bottom, 0px)
+  );
 
   /* Touch targets */
   --touch-target-minimum: 48px;
@@ -642,11 +976,260 @@
   gap: var(--space-mobile-lg);
 }
 
-/* Mobile roles grid */
+/* Mobile roles grid - Force single column layout */
 .mobile-roles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-mobile-lg);
+  max-width: 100%;
+}
+
+/* Mobile role card typography improvements */
+.mobile-role-card {
+  /* Ensure proper text flow and readability */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  /* Clean spacing for mobile */
+  padding: var(--space-mobile-md);
+
+  /* Enhanced typography for mobile */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Prevent orphans and widows */
+  orphans: 2;
+  widows: 2;
+}
+
+/* Mobile role card enhanced typography */
+.mobile-role-card h3 {
+  /* Use optimized title typography */
+  text-wrap: balance;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: none; /* No hyphenation for titles */
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+
+  /* Prevent hanging punctuation issues */
+  hanging-punctuation: none;
+
+  /* Optimal contrast and spacing */
+  margin-bottom: 0.5rem;
+
+  /* Enhanced line height for mobile titles */
+  line-height: 1.3;
+}
+
+.mobile-role-card p {
+  /* Pretty text wrapping for descriptions */
+  text-wrap: pretty;
+
+  /* Advanced hyphenation for smooth reading */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  hyphenate-limit-last: always;
+  hyphenate-limit-zone: 8%;
+
+  /* Enhanced readability */
+  text-align: left;
+  text-align-last: left;
+
+  /* Prevent orphans and widows */
+  orphans: 2;
+  widows: 2;
+
+  /* Optimal paragraph spacing */
+  margin-bottom: 0.75rem;
+}
+
+.mobile-role-card p:last-child {
+  margin-bottom: 0;
+}
+
+.mobile-role-card .role-text {
+  /* Optimal reading width and spacing */
+  max-width: var(--max-reading-width);
+  line-height: var(--line-height-normal);
+
+  /* Enhanced text rendering */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Advanced wrapping and hyphenation */
+  text-wrap: pretty;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  /* Ensure no horizontal overflow */
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Mobile role card title clamping */
+.mobile-role-card h3 {
+  /* Clean single line titles */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mobile role card badges spacing */
+.mobile-role-card .mobile-category-badge {
+  /* Consistent badge spacing */
+  margin-right: var(--space-mobile-xs);
+  margin-bottom: var(--space-mobile-xs);
+}
+
+/* Smooth expand/collapse animation */
+.mobile-role-card .role-text p {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Better touch targets for "Mehr anzeigen" button */
+.mobile-role-card .role-text button {
+  /* Enhanced touch area */
+  padding: var(--space-mobile-sm);
+  margin: var(--space-mobile-sm) calc(-1 * var(--space-mobile-sm));
+  border-radius: var(--radius-md);
+  background: transparent;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.mobile-role-card .role-text button:hover,
+.mobile-role-card .role-text button:focus {
+  background-color: var(--color-surface-subtle);
+}
+
+/* Accessibility improvements for mobile */
+.mobile-role-card:focus-within {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .mobile-role-card {
+    border-width: 2px;
+  }
+
+  .mobile-role-card .role-text button {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Mobile role card info button positioning */
+.mobile-role-card .info-button {
+  /* Ensure proper positioning and no scroll jump */
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+  /* Prevent layout shifts */
+  margin: 0;
+  /* Smooth interactions */
+  transition: all 0.2s ease-in-out;
+  /* Prevent text selection */
+  user-select: none;
+  -webkit-user-select: none;
+  /* Ensure backdrop blur works */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.mobile-role-card .info-button:active {
+  /* Prevent scroll jump on tap */
+  transform: scale(0.95);
+  transition: transform 0.1s ease-out;
+}
+
+.mobile-role-card .info-button:focus {
+  /* Systematic focus ring - not purple glow */
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-surface-base),
+    0 0 0 4px var(--color-brand-primary);
+}
+
+/* Prevent info button text overlap */
+.mobile-role-card {
+  /* Ensure sufficient padding for info button */
+  padding-right: 4rem !important;
+}
+
+/* Info button icon rotation animation */
+.mobile-role-card .info-button .info-icon {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-role-card .info-button[aria-expanded="true"] .info-icon {
+  transform: rotate(180deg);
+}
+
+/* Expanded details animation */
+.mobile-role-card .expanded-details {
+  /* Smooth slide-in animation */
+  animation: slideInFromTop 0.3s ease-out;
+  transform-origin: top;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* High contrast mode for info button */
+@media (prefers-contrast: high) {
+  .mobile-role-card .info-button {
+    border-width: 2px;
+    border-color: currentColor;
+  }
+
+  .mobile-role-card .info-button:focus {
+    box-shadow:
+      0 0 0 2px var(--color-surface-base),
+      0 0 0 4px var(--color-text-primary);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-role-card .role-text p,
+  .mobile-role-card .role-text button,
+  .mobile-role-card .info-button,
+  .mobile-role-card .info-button .info-icon,
+  .mobile-role-card .expanded-details {
+    transition: none;
+    animation: none;
+  }
+
+  .mobile-role-card .info-button[aria-expanded="true"] .info-icon {
+    transform: none;
+  }
+
+  @keyframes slideInFromTop {
+    from,
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 /* Mobile studio container */

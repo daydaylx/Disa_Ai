@@ -15,7 +15,10 @@
 
   /* Main content area calculation */
   --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
-  --layout-main-pb: calc(var(--layout-bottom-nav-height) + var(--layout-content-padding-y));
+  --layout-main-pb: calc(
+    var(--layout-bottom-nav-height) + var(--layout-content-padding-y) +
+      env(safe-area-inset-bottom, 0px)
+  );
 
   /* Touch target enhancements for mobile */
   --touch-target-minimum: 48px;

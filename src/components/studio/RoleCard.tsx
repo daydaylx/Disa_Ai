@@ -48,7 +48,10 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
     const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
       // If clicking on the info button, don't trigger the card click
       const target = event.target as HTMLElement;
-      if (target.closest('[aria-label*="Beschreibung"]')) {
+      if (
+        target.closest('[aria-label="Details zur Rolle"]') ||
+        target.closest('button[type="button"]')
+      ) {
         return;
       }
 
@@ -65,11 +68,13 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         state={isActive ? "selected" : disabled ? "disabled" : "default"}
         data-cat={categoryKey}
         className={cn(
-          "category-border category-tint category-focus text-left",
+          "category-border category-tint category-focus text-left relative",
           !disabled && "cursor-pointer",
           disabled && "cursor-not-allowed opacity-70",
           isActive && "ring-brand ring-2 bg-brand/10",
           isMobile && "mobile-role-card touch-target",
+          // Add padding-right to prevent text overlap with info button
+          isMobile ? "pr-16" : "pr-14",
           className,
         )}
         onClick={handleCardClick}
@@ -86,6 +91,44 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         data-testid={`${isMobile ? "mobile-" : ""}role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
         {...props}
       >
+        {/* Info Button - Positioned top-right */}
+        <button
+          onClick={handleInfoToggle}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleInfoToggle(e);
+            }
+          }}
+          aria-label="Details zur Rolle"
+          aria-expanded={expanded}
+          aria-controls={detailId}
+          className={cn(
+            "info-button",
+            "absolute top-2 right-2 z-10",
+            "flex items-center justify-center",
+            "rounded-lg border border-border-subtle bg-surface-base/80 backdrop-blur-sm",
+            "text-text-secondary hover:text-text-primary",
+            "transition-all duration-200 ease-in-out",
+            "hover:bg-surface-subtle hover:border-border-strong",
+            "focus:outline-none",
+            "active:bg-surface-raised",
+            // 44x44px touch target for mobile
+            isMobile ? "h-11 w-11 touch-target" : "h-10 w-10",
+            // Ensure proper z-index layering
+            "shadow-sm hover:shadow-md",
+          )}
+          type="button"
+        >
+          <Info
+            className={cn(
+              "info-icon",
+              "transition-transform duration-200",
+              isMobile ? "h-5 w-5" : "h-4 w-4",
+            )}
+          />
+        </button>
+
         <div className="flex w-full items-start gap-3">
           <div
             className={cn(
@@ -97,107 +140,91 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
           </div>
 
           <div className="flex flex-1 flex-col gap-2">
-            <div className="flex flex-1 items-start justify-between gap-2">
-              <div className="min-w-0 flex-1">
-                <h3
-                  className={cn(
-                    "font-semibold leading-tight",
-                    isMobile ? "text-base" : "text-sm sm:text-base",
-                  )}
-                >
-                  {title}
-                </h3>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {badge && (
-                    <span
-                      className={cn(
-                        "category-badge inline-flex items-center gap-2 rounded-full border border-white/30 font-semibold uppercase tracking-wide",
-                        isMobile
-                          ? "mobile-category-badge px-3 py-1 text-xs touch-target"
-                          : "px-2 py-0.5 text-[10px]",
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "category-dot rounded-full",
-                          isMobile ? "mobile-category-dot h-2 w-2" : "h-1.5 w-1.5",
-                        )}
-                      />
-                      {badge}
-                    </span>
-                  )}
-                  {category && (
-                    <span
-                      className={cn(
-                        "category-badge inline-flex items-center rounded-full font-medium uppercase tracking-wide",
-                        isMobile
-                          ? "mobile-category-badge gap-2 px-3 py-1 text-xs touch-target"
-                          : "gap-1.5 px-2 py-0.5 text-[10px]",
-                      )}
-                    >
-                      <span className={isMobile ? "text-sm" : "text-xs"}>{categoryData.icon}</span>
-                      {categoryData.label}
-                    </span>
-                  )}
-                  {isActive && (
-                    <span
-                      className={cn(
-                        "text-text-1 text-xs rounded-full border border-border-subtle bg-surface-subtle",
-                        isMobile ? "px-3 py-1 touch-target" : "px-2 py-0.5",
-                      )}
-                    >
-                      Aktiv
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={(e) =>
-                  handleInfoToggle(e as unknown as React.MouseEvent<HTMLButtonElement>)
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleInfoToggle(e as any);
-                  }
-                }}
-                aria-label={expanded ? "Beschreibung verbergen" : "Beschreibung anzeigen"}
-                aria-expanded={expanded}
-                aria-controls={detailId}
+            <div className="min-w-0 flex-1">
+              <h3
                 className={cn(
-                  "inline-flex items-center justify-center rounded-md border border-border-subtle bg-surface-subtle text-sm font-medium text-text-primary transition-colors hover:border-border-strong hover:bg-surface-raised focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-base)] disabled:pointer-events-none disabled:opacity-50",
-                  isMobile ? "h-12 w-12 mobile-info-btn touch-target" : "h-10 w-10",
+                  "role-title-typography text-heading-sm text-high-contrast line-clamp-1",
+                  isMobile ? "text-heading-md" : "text-heading-sm",
                 )}
               >
-                <Info className={isMobile ? "h-5 w-5" : "h-4 w-4"} />
+                {title}
+              </h3>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {badge && (
+                  <span
+                    className={cn(
+                      "category-badge inline-flex items-center gap-2 rounded-full border border-white/30 font-semibold uppercase tracking-wide",
+                      isMobile
+                        ? "mobile-category-badge px-3 py-1 text-xs touch-target"
+                        : "px-2 py-0.5 text-[10px]",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "category-dot rounded-full",
+                        isMobile ? "mobile-category-dot h-2 w-2" : "h-1.5 w-1.5",
+                      )}
+                    />
+                    {badge}
+                  </span>
+                )}
+                {category && (
+                  <span
+                    className={cn(
+                      "category-badge inline-flex items-center rounded-full font-medium uppercase tracking-wide",
+                      isMobile
+                        ? "mobile-category-badge gap-2 px-3 py-1 text-xs touch-target"
+                        : "gap-1.5 px-2 py-0.5 text-[10px]",
+                    )}
+                  >
+                    <span className={isMobile ? "text-sm" : "text-xs"}>{categoryData.icon}</span>
+                    {categoryData.label}
+                  </span>
+                )}
+                {isActive && (
+                  <span
+                    className={cn(
+                      "text-text-1 text-xs rounded-full border border-border-subtle bg-surface-subtle",
+                      isMobile ? "px-3 py-1 touch-target" : "px-2 py-0.5",
+                    )}
+                  >
+                    Aktiv
+                  </span>
+                )}
               </div>
             </div>
 
-            <p
-              className={cn(
-                "text-text-secondary",
-                isMobile ? "text-sm line-clamp-3" : "text-xs sm:text-sm line-clamp-2",
-              )}
-            >
-              {description}
-            </p>
+            <div className="role-text">
+              <p
+                className={cn(
+                  "role-description-typography typography-base text-medium-contrast",
+                  isMobile ? "text-body-base line-clamp-3" : "text-body-small line-clamp-2",
+                )}
+              >
+                {description}
+              </p>
+            </div>
           </div>
         </div>
 
+        {/* Expanded Details Section */}
         {expanded && (
           <div
             id={detailId}
             className={cn(
-              "border-t border-border-subtle",
-              isMobile
-                ? "mobile-role-details mt-4 pt-4 text-sm leading-6"
-                : "mt-3 pt-3 text-xs leading-5 opacity-85 sm:text-sm sm:leading-6",
+              "expanded-details",
+              "mt-4 pt-4 border-t border-border-subtle",
+              "typography-base",
             )}
           >
-            <p className="whitespace-pre-line break-words">{description}</p>
+            <p
+              className={cn(
+                "role-description-typography whitespace-pre-line text-medium-contrast",
+                isMobile ? "text-body-base" : "text-body-small",
+              )}
+            >
+              {description}
+            </p>
           </div>
         )}
       </Card>

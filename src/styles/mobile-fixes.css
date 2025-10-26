@@ -863,12 +863,7 @@ textarea {
   gap: var(--space-lg);
 }
 
-/* Mobile-specific roles grid */
-.mobile-roles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-lg);
-}
+/* Mobile-specific roles grid - moved to mobile-layout.css */
 
 /* Mobile-specific studio container */
 .mobile-studio-container {

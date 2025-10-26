@@ -15,7 +15,10 @@
 
   /* Main content area calculation */
   --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
-  --layout-main-pb: calc(var(--layout-bottom-nav-height) + var(--layout-content-padding-y));
+  --layout-main-pb: calc(
+    var(--layout-bottom-nav-height) + var(--layout-content-padding-y) +
+      env(safe-area-inset-bottom, 0px)
+  );
 
   /* Touch targets for mobile */
   --touch-target-minimum: 48px;
@@ -419,7 +422,10 @@
     --layout-content-padding-x: 1.5rem;
     --layout-content-padding-y: 1.5rem;
     --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
-    --layout-main-pb: calc(var(--layout-footer-height) + var(--layout-content-padding-y));
+    --layout-main-pb: calc(
+      var(--layout-footer-height) + var(--layout-content-padding-y) +
+        env(safe-area-inset-bottom, 0px)
+    );
   }
 
   /* Show sidebar on tablet/desktop */

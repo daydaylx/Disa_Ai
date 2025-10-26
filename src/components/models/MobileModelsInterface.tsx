@@ -458,7 +458,7 @@ export function MobileModelsInterface() {
   }, [searchTerm]);
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 px-4 pb-16 pt-6 text-[var(--color-text-primary)]">
+    <div className="flex min-h-screen flex-col gap-4 px-4 pb-16 pt-6 overflow-y-auto scrollable text-[var(--color-text-primary)]">
       {/* Search Bar with mobile optimizations */}
       <div className="relative mb-2">
         <input

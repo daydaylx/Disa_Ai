@@ -5,6 +5,8 @@
 @import \"./styles/mobile-design-tokens.css\";
 @import \"./styles/mobile-layout.css\";
 @import \"./styles/category-tonal-scales.css\";
+@import \"./styles/performance-glass-system.css\";
+@import \"./styles/mobile-navigation-performance.css\";
 
 @tailwind base;
 @tailwind components;
