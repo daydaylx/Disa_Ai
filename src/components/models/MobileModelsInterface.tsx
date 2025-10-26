@@ -624,14 +624,15 @@ export function MobileModelsInterface() {
                 <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
                   {group.badge}
                 </span>
-                <h2 id={`models-${group.id}`} className="text-lg font-semibold">
+                {/* Changed from h2 to h3 to maintain proper heading hierarchy */}
+                <h3 id={`models-${group.id}`} className="text-lg font-semibold">
                   {group.title}
                   {!isGroupExpanded && (
                     <span className="text-xs font-normal text-text-muted ml-2">
                       ({group.models.length} Modelle)
                     </span>
                   )}
-                </h2>
+                </h3>
               </div>
               <span className="text-xs font-medium uppercase tracking-wide opacity-60">
                 {group.models.length} Modelle
