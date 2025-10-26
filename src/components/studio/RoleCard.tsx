@@ -40,25 +40,68 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
     const categoryKey = normalizeCategoryKey(category);
     const categoryData = getCategoryData(category);
 
-    const handleInfoToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleInfoToggle = (event: React.MouseEvent | React.KeyboardEvent) => {
       event.stopPropagation();
       setExpanded((prev) => !prev);
     };
 
-    const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleCardClick = (event: React.MouseEvent | React.KeyboardEvent) => {
       // If clicking on the info button, don't trigger the card click
       const target = event.target as HTMLElement;
       if (
         target.closest('[aria-label="Details zur Rolle"]') ||
-        target.closest('button[type="button"]')
+        target.closest(".info-button-container")
       ) {
         return;
       }
 
       if (!disabled && onClick) {
-        onClick(event);
+        onClick(event as React.MouseEvent<HTMLDivElement>);
       }
     };
+
+    // Create accessible info toggle that's not a nested button
+    const InfoToggle = ({ className }: { className?: string }) => (
+      <div
+        onClick={handleInfoToggle}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleInfoToggle(e);
+          }
+        }}
+        aria-label="Details zur Rolle"
+        aria-expanded={expanded}
+        aria-controls={detailId}
+        className={cn(
+          "info-button-container", // Changed class name for identification
+          "absolute top-2 right-2 z-10",
+          "flex items-center justify-center",
+          "rounded-lg border border-border-subtle bg-surface-base/80 backdrop-blur-sm",
+          "text-text-secondary hover:text-text-primary",
+          "transition-all duration-200 ease-in-out",
+          "hover:bg-surface-subtle hover:border-border-strong",
+          "focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2",
+          "active:bg-surface-raised",
+          "cursor-pointer",
+          // 44x44px touch target for mobile
+          isMobile ? "h-11 w-11 touch-target" : "h-10 w-10",
+          // Ensure proper z-index layering
+          "shadow-sm hover:shadow-md",
+          className,
+        )}
+        role="button"
+        tabIndex={0}
+      >
+        <Info
+          className={cn(
+            "info-icon",
+            "transition-transform duration-200",
+            isMobile ? "h-5 w-5" : "h-4 w-4",
+          )}
+        />
+      </div>
+    );
 
     return (
       <Card
@@ -81,7 +124,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         onKeyDown={(e) => {
           if ((e.key === "Enter" || e.key === " ") && !disabled) {
             e.preventDefault();
-            handleCardClick(e as any);
+            handleCardClick(e);
           }
         }}
         role="button"
@@ -91,43 +134,8 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         data-testid={`${isMobile ? "mobile-" : ""}role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
         {...props}
       >
-        {/* Info Button - Positioned top-right */}
-        <button
-          onClick={handleInfoToggle}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleInfoToggle(e);
-            }
-          }}
-          aria-label="Details zur Rolle"
-          aria-expanded={expanded}
-          aria-controls={detailId}
-          className={cn(
-            "info-button",
-            "absolute top-2 right-2 z-10",
-            "flex items-center justify-center",
-            "rounded-lg border border-border-subtle bg-surface-base/80 backdrop-blur-sm",
-            "text-text-secondary hover:text-text-primary",
-            "transition-all duration-200 ease-in-out",
-            "hover:bg-surface-subtle hover:border-border-strong",
-            "focus:outline-none",
-            "active:bg-surface-raised",
-            // 44x44px touch target for mobile
-            isMobile ? "h-11 w-11 touch-target" : "h-10 w-10",
-            // Ensure proper z-index layering
-            "shadow-sm hover:shadow-md",
-          )}
-          type="button"
-        >
-          <Info
-            className={cn(
-              "info-icon",
-              "transition-transform duration-200",
-              isMobile ? "h-5 w-5" : "h-4 w-4",
-            )}
-          />
-        </button>
+        {/* Info Toggle - Positioned top-right - Now accessible div with role="button" */}
+        <InfoToggle />
 
         <div className="flex w-full items-start gap-3">
           <div
