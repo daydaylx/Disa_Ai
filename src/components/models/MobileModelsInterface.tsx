@@ -26,7 +26,7 @@ function Tooltip({
       <span className="text-text-muted opacity-60 group-hover:opacity-100 transition-opacity">
         ℹ️
       </span>
-      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs text-text-0 bg-surface-1 border border-border-subtle rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg backdrop-blur-md">
         {content}
       </span>
     </span>
@@ -458,9 +458,9 @@ export function MobileModelsInterface() {
   }, [searchTerm]);
 
   return (
-    <div className="mobile-models-container px-page-x pb-page-y pt-page-y flex h-full flex-col gap-4 text-[var(--color-text-primary)]">
+    <div className="mobile-models-container flex flex-col gap-4 text-[var(--color-text-primary)]">
       {/* Search Bar with mobile optimizations */}
-      <div className="relative mb-2">
+      <div className="relative mb-2 px-page-x pt-page-y">
         <input
           type="search"
           value={searchTerm}
@@ -485,7 +485,10 @@ export function MobileModelsInterface() {
         </svg>
       </div>
 
-      <header className="space-y-4 text-[var(--color-text-primary)]" data-testid="models-title">
+      <header
+        className="space-y-4 text-[var(--color-text-primary)] px-page-x"
+        data-testid="models-title"
+      >
         <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
           🤖 Modelle
         </span>
@@ -532,7 +535,7 @@ export function MobileModelsInterface() {
         )}
       </header>
 
-      <Card padding="md" className="space-y-4 text-[var(--color-text-primary)]">
+      <Card padding="md" className="space-y-4 text-[var(--color-text-primary)] mx-page-x">
         <div className="space-y-2">
           <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] opacity-70">
             Studio Fokus
@@ -572,7 +575,7 @@ export function MobileModelsInterface() {
       </Card>
 
       {/* Quick Help Section */}
-      <Card padding="sm" className="bg-blue-50 border-blue-200 text-blue-900">
+      <Card padding="sm" className="bg-blue-50 border-blue-200 text-blue-900 mx-page-x">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-blue-600">💡</span>
@@ -607,7 +610,11 @@ export function MobileModelsInterface() {
       {filteredModelGroups.map((group) => {
         const isGroupExpanded = expandedGroups[group.id] ?? true;
         return (
-          <section key={group.id} aria-labelledby={`models-${group.id}`} className="space-y-2">
+          <section
+            key={group.id}
+            aria-labelledby={`models-${group.id}`}
+            className="space-y-2 px-page-x pb-page-y last:pb-page-y"
+          >
             <div
               className="flex flex-col gap-2 touch-target"
               onClick={() => toggleGroup(group.id)}
