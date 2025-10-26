@@ -34,22 +34,22 @@ export const radiusTokens: RadiusTokens = {
   md: "8px",
   lg: "12px",
   xl: "16px",
-  pill: "999px",
-  full: "9999px",
+  pill: "16px",
+  full: "50%",
 
   /* Additional radii for specific components */
-  scrollbar: "999px",
-  focus: "6px",
-  toast: "16px",
+  scrollbar: "16px",
+  focus: "4px",
+  toast: "12px",
   installPrompt: "12px",
-  button: "20px",
+  button: "12px",
   badge: "8px",
 
   /* Neo-Depth Card System - Consistent Geometry */
-  card: "16px", // Standard for all cards (xl token)
-  cardInner: "12px", // Inner content areas (lg token)
-  cardSmall: "8px", // Badges, small elements (md token)
-  avatar: "50%", // Profile images and circular elements
+  card: "12px",
+  cardInner: "8px",
+  cardSmall: "4px",
+  avatar: "50%",
 };
 
 export const radiusCssVars = {

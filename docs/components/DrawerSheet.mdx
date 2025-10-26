@@ -1,0 +1,37 @@
+# DrawerSheet
+
+**Pfad:** `src/components/ui/drawer-sheet.tsx`
+
+Das DrawerSheet ersetzt das alte Burger-Menü und nutzt `--color-overlay-*` Tokens für Scrim & Panel. Features:
+
+- Fokus-Falle + `Escape`/Tap-Outside Handling
+- Browser-Back (`history.pushState`) zum Schließen
+- Safe-Area Padding (`env(safe-area-inset-bottom)`) für Android/iOS
+
+```tsx
+import { DrawerSheet } from "../../src/components/ui/drawer-sheet";
+
+export function DrawerPreview() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Overflow öffnen</button>
+      <DrawerSheet title="Overflow" isOpen={open} onClose={() => setOpen(false)}>
+        <div className="space-y-3 text-sm text-text-secondary">
+          <p>Nutze das DrawerSheet für sekundäre Aktionen und Menüs.</p>
+          <p>Tokens: `--color-overlay-dialog-bg`, `--color-border-hairline`, `--shadow-overlay`.</p>
+        </div>
+      </DrawerSheet>
+    </>
+  );
+}
+```
+
+| Prop | Typ | Beschreibung |
+| --- | --- | --- |
+| `title` | `string` | ARIA-Label + Headline |
+| `isOpen` | `boolean` | Sichtbarkeit |
+| `onClose` | `() => void` | Schließt auch Backdrop/ESC |
+| `footer` | `ReactNode` | Optionaler Sticky-Footer |
+
+> Für Barrierefreiheit immer `onClose` bereitstellen und interaktive Inhalte fokussierbar halten.

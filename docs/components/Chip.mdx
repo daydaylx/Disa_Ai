@@ -1,0 +1,35 @@
+# Chip
+
+**Pfad:** `src/components/ui/chip.tsx`
+
+Der Chip lehnt sich an die Kategorienfarben aus `src/styles/tokens/category-tonal-scales.ts` an und bietet `subtle`, `outline`, `filled`, `soft` Varianten. Jede Variante mappt auf `--role-accent-*-*` Token.
+
+```tsx
+import { Chip } from "../../src/components/ui/chip";
+
+export function ChipTokens() {
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Chip category="business" variant="subtle" size="md">
+        Business
+      </Chip>
+      <Chip category="kreativ" variant="outline" size="md">
+        Kreativ
+      </Chip>
+      <Chip category="model-premium" variant="filled" size="md">
+        Premium Model
+      </Chip>
+    </div>
+  );
+}
+```
+
+## Props
+
+| Prop | Typ | Beschreibung |
+| --- | --- | --- |
+| `variant` | `subtle \| outline \| filled \| soft` | Legt Oberfläche + Border fest |
+| `size` | `xs \| sm \| md \| lg` | Typografie + Padding am 4px Raster |
+| `category` | `CategoryKey` | Wählt Tonalität (`--role-accent-*`) |
+
+> Hinweis: Für neue Kategorien zuerst `category-tonal-scales.ts` erweitern, damit Tokens und Chip-Varianten konsistent bleiben.

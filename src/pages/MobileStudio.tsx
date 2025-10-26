@@ -181,7 +181,7 @@ export default function MobileStudio() {
   };
 
   return (
-    <div className="mobile-studio-container px-page-x pb-page-y pt-page-y flex h-full flex-col">
+    <div className="mobile-studio-container flex min-h-0 flex-1 flex-col overflow-y-auto px-page-x pb-page-y pt-page-y">
       <header className="mb-section-gap space-y-stack-gap">
         <div className="space-y-2">
           <span className="brand-chip w-fit">{t.studio.chip}</span>
@@ -217,43 +217,47 @@ export default function MobileStudio() {
         ) : null}
 
         <div className="space-y-3">
-          {/* Mobile-optimized search bar */}
-          <div className="flex flex-col gap-4">
-            <div className="relative flex-1">
-              <Search
-                className="text-text-1 pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                aria-hidden="true"
-              />
-              <input
-                type="search"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder={t.studio.search.placeholder}
-                className="border-border bg-surface-1 text-text-0 placeholder:text-text-1 focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-2.5 pl-10 pr-12 text-sm focus:outline-none focus:ring-2 touch-target"
-                aria-label={t.studio.search.ariaLabel}
-              />
-              {searchTerm ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleClearSearch}
-                  className="text-text-1 absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 touch-target"
-                  aria-label={t.studio.search.clearAria}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              ) : null}
-            </div>
-            <div className="text-text-1 flex items-center gap-3 text-xs">
-              <Filter className="text-text-1 h-5 w-5" />
-              <span className="border-border bg-surface-1 text-text-1 rounded-full border px-4 py-2 touch-target">
-                {t.studio.filter.visible(totalMatchCount, orderedRoles.length)}
-              </span>
+          <div className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/95 backdrop-blur">
+            <div className="space-y-3 px-page-x py-3">
+              <div className="relative flex-1">
+                <Search
+                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-tertiary)]"
+                  aria-hidden="true"
+                />
+                <input
+                  type="search"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder={t.studio.search.placeholder}
+                  className="w-full rounded-[var(--radius-card)] border border-[var(--color-control-field-border)] bg-[var(--color-control-field-bg)] py-2.5 pl-10 pr-12 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:border-[var(--color-control-field-border-active)] focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary-focus-ring)]"
+                  aria-label={t.studio.search.ariaLabel}
+                />
+                {searchTerm ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleClearSearch}
+                    className="absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 text-[var(--color-text-secondary)]"
+                    aria-label={t.studio.search.clearAria}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                ) : null}
+              </div>
+              <div className="flex items-center justify-between text-xs text-[var(--color-text-secondary)]">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-4 w-4" />
+                  <span>{t.studio.filter.visible(totalMatchCount, orderedRoles.length)}</span>
+                </div>
+                <span className="font-medium uppercase tracking-[0.3em]">
+                  {selectedCategory === "all" ? t.studio.filter.all : selectedCategory}
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Mobile-friendly vertical category list */}
-          <div className="space-y-1">
+          <div className="space-y-1 pt-4">
             <Button
               variant={selectedCategory === "all" ? "secondary" : "ghost"}
               onClick={() => handleSelectCategory("all")}
@@ -272,7 +276,7 @@ export default function MobileStudio() {
               return (
                 <div key={category} className="space-y-1">
                   <div
-                    className="flex items-center justify-between p-2 rounded-lg border border-border-subtle bg-surface-subtle cursor-pointer touch-target"
+                    className="flex items-center justify-between rounded-lg border border-border-subtle bg-surface-subtle p-2 text-sm"
                     onClick={() => {
                       if (selectedCategory === "all") {
                         toggleCategory(category);

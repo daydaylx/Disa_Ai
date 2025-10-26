@@ -25,9 +25,9 @@ export type MotionTokens = {
 export const motionTokens: MotionTokens = {
   duration: {
     micro: "120ms",
-    small: "160ms",
-    medium: "220ms",
-    large: "320ms",
+    small: "150ms",
+    medium: "180ms",
+    large: "200ms",
   },
   easing: {
     standard: "cubic-bezier(0.2, 0, 0, 1)",

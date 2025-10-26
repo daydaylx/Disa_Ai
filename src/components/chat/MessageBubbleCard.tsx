@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef, CSSProperties } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -32,51 +32,79 @@ export function MessageBubbleCard({
 }: MessageBubbleCardProps) {
   const { iso, label } = formatTimestamp(timestamp);
 
-  // Neo-Depth Configuration based on variant
-  const cardConfig = {
+  const cardConfig: Record<
+    MessageBubbleVariant,
+    {
+      alignment: "justify-start" | "justify-end";
+      accentColor: string;
+      bubbleTint: number;
+      badgeTint: number;
+      badgeText: string;
+      badgeIcon: string;
+    }
+  > = {
     assistant: {
-      tone: "glass-subtle" as const,
-      borderClass: "border-l-4 border-l-brand",
-      bgClass: "bg-brand/3",
+      alignment: "justify-start",
+      accentColor: "var(--color-brand-primary)",
+      bubbleTint: 6,
+      badgeTint: 14,
+      badgeText: "var(--color-brand-strong)",
       badgeIcon: "🤖",
-      badgeClass: "bg-brand/10 text-brand border border-brand/20",
-      alignment: "justify-start" as const,
     },
     user: {
-      tone: "glass-subtle" as const,
-      borderClass: "border-r-4 border-r-purple-500",
-      bgClass: "bg-gradient-to-r from-purple-500/3 to-blue-500/3",
+      alignment: "justify-end",
+      accentColor: "var(--acc2)",
+      bubbleTint: 5,
+      badgeTint: 12,
+      badgeText: "var(--color-text-primary)",
       badgeIcon: "👤",
-      badgeClass: "bg-purple-500/10 text-purple-700 border border-purple-500/20",
-      alignment: "justify-end" as const,
     },
   };
 
   const config = cardConfig[variant];
+  const bubbleStyles: CSSProperties = {
+    background: `color-mix(in srgb, ${config.accentColor} ${config.bubbleTint}%, var(--color-surface-card))`,
+    borderColor: `color-mix(in srgb, ${config.accentColor} 18%, var(--color-border-hairline))`,
+  };
+  const badgeStyles: CSSProperties = {
+    background: `color-mix(in srgb, ${config.accentColor} ${config.badgeTint}%, var(--color-surface-card))`,
+    borderColor: `color-mix(in srgb, ${config.accentColor} 32%, transparent)`,
+    color: config.badgeText,
+  };
+  const accentStyles: CSSProperties = {
+    background: `color-mix(in srgb, ${config.accentColor} 65%, transparent)`,
+  };
 
   return (
     <div className={cn("flex w-full", config.alignment)}>
       <Card
         role="article"
-        tone={config.tone}
-        elevation="raised"
-        interactive="gentle"
+        tone="default"
+        elevation="surface"
+        interactive={false}
         padding="none"
         className={cn(
-          "relative w-full max-w-[min(100%,640px)] overflow-visible",
-          config.borderClass,
-          config.bgClass,
+          "relative w-full max-w-[min(100%,640px)] overflow-visible border border-border-hairline text-text-primary",
           className,
         )}
+        style={bubbleStyles}
         {...props}
       >
+        <span
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute top-4 bottom-4 w-1 rounded-full",
+            variant === "assistant" ? "left-2" : "right-2",
+          )}
+          style={accentStyles}
+        />
         {/* Role Badge Header */}
         <CardHeader className="pb-2">
           <div
             className={cn(
-              "inline-flex max-w-fit items-center gap-2 rounded-[var(--radius-card-inner)] px-3 py-1.5 text-sm font-medium",
-              config.badgeClass,
+              "inline-flex max-w-fit items-center gap-2 rounded-[var(--radius-card-inner)] border px-3 py-1.5 text-sm font-medium",
             )}
+            style={badgeStyles}
           >
             <span className="text-sm">{config.badgeIcon}</span>
             <span className="font-semibold">{author}</span>
@@ -93,7 +121,9 @@ export function MessageBubbleCard({
 
         {/* Message Content with Enhanced Typography */}
         <CardContent className="pt-0">
-          <div className="text-text-strong whitespace-pre-wrap text-sm leading-relaxed">{body}</div>
+          <div className="text-text-primary whitespace-pre-wrap text-sm leading-relaxed">
+            {body}
+          </div>
         </CardContent>
       </Card>
     </div>

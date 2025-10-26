@@ -95,18 +95,18 @@ export function ChatComposer({
         transform: viewport.isKeyboardOpen ? `translateY(-${viewport.offsetTop}px)` : undefined,
       }}
     >
-      <div className="mx-auto max-w-md space-y-3">
+      <div className="mx-auto max-w-md space-y-3 text-text-secondary">
         {(tokenCount !== undefined || maxTokens !== undefined) && (
-          <div className="text-text-1 flex items-center justify-between text-xs">
+          <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="border-border bg-surface-1 inline-flex items-center gap-1 rounded-full border px-3 py-1">
+                <span className="bg-surface-subtle border-border-hairline inline-flex items-center gap-1 rounded-full border px-3 py-1 text-text-secondary">
                   <Zap className="h-3 w-3" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="border-border bg-surface-1 inline-flex items-center gap-2 rounded-full border px-3 py-1">
+                <span className="bg-surface-subtle border-border-hairline inline-flex items-center gap-2 rounded-full border px-3 py-1 text-text-secondary">
                   Maximal: {maxTokens}
                 </span>
               )}
@@ -119,7 +119,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "border-border bg-surface-1 flex items-end gap-2 rounded-lg border p-2",
+            "flex items-end gap-2 rounded-lg border border-border-subtle bg-surface-card p-2",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -134,8 +134,8 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent p-2 text-[15px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                isQuickstartLoading && "text-text-1 cursor-not-allowed",
+                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent p-2 text-[15px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                isQuickstartLoading && "text-text-secondary cursor-not-allowed",
               )}
               style={{ height: "48px" }}
             />
@@ -147,7 +147,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="text-text-1 hover:bg-surface-2 hover:text-text-0 h-12 w-12"
+                className="h-12 w-12 text-text-secondary hover:bg-surface-subtle hover:text-text-primary"
                 title="Letzte Antwort erneut anfordern"
               >
                 <RotateCcw className="h-5 w-5" />
@@ -173,7 +173,7 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="brand"
-                className="h-12 w-12 shadow-md"
+                className="h-12 w-12 shadow-surface"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 data-testid="composer-send"
@@ -188,12 +188,12 @@ export function ChatComposer({
           </div>
         </div>
 
-        <div className="text-text-1 mt-1 text-center text-xs">
+        <div className="text-text-secondary mt-1 text-center text-xs">
           <span className="inline-flex items-center justify-center gap-2">
             {(isLoading || isComposerDisabled) && (
               <span className="relative flex h-2 w-2">
-                <span className="bg-brand/40 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
-                <span className="bg-brand relative inline-flex h-2 w-2 rounded-full" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 bg-[color-mix(in_srgb,var(--color-brand-primary)_45%,transparent)]" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-brand-primary)]" />
               </span>
             )}
             <span>

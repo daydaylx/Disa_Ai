@@ -7,5 +7,9 @@ import { MobileModelsInterface } from "../components/models/MobileModelsInterfac
  * It leverages the reusable MobileModelsInterface component for all functionality.
  */
 export default function MobileModels() {
-  return <MobileModelsInterface />;
+  return (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <MobileModelsInterface />
+    </div>
+  );
 }

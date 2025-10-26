@@ -50,37 +50,37 @@ export type TypographyTokens = {
 
 export const typographyTokens: TypographyTokens = {
   fontStacks: {
-    sans: '"Segoe UI Variable", "Segoe UI", Inter, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif',
-    mono: '"Cascadia Code", "Fira Code", "SFMono-Regular", Menlo, Consolas, monospace',
-    numeric: '"Segoe UI Variable", "Segoe UI", Inter, system-ui, sans-serif',
+    sans: '"Inter Variable", "Inter", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif',
+    mono: '"JetBrains Mono", "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace',
+    numeric: '"Inter Variable", "Segoe UI", system-ui, sans-serif',
   },
   textStyles: {
     display: {
-      fontSize: "2.25rem",
-      lineHeight: "2.75rem",
+      fontSize: "2rem",
+      lineHeight: "2.5rem",
       fontWeight: 600,
       letterSpacing: "-0.01em",
       textTransform: "none",
     },
     headline: {
       fontSize: "1.75rem",
-      lineHeight: "2.25rem",
+      lineHeight: "2.1875rem",
       fontWeight: 600,
       letterSpacing: "-0.008em",
       textTransform: "none",
     },
     title: {
       fontSize: "1.5rem",
-      lineHeight: "2rem",
+      lineHeight: "1.875rem",
       fontWeight: 600,
       letterSpacing: "-0.006em",
       textTransform: "none",
     },
     subtitle: {
       fontSize: "1.25rem",
-      lineHeight: "1.75rem",
+      lineHeight: "1.5rem",
       fontWeight: 500,
-      letterSpacing: "0em",
+      letterSpacing: "-0.002em",
       textTransform: "none",
     },
     body: {
@@ -98,102 +98,102 @@ export const typographyTokens: TypographyTokens = {
       textTransform: "none",
     },
     bodySmall: {
-      fontSize: "0.9375rem",
-      lineHeight: "1.375rem",
+      fontSize: "0.875rem",
+      lineHeight: "1.3125rem",
       fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
     },
     caption: {
-      fontSize: "0.8125rem",
+      fontSize: "0.75rem",
       lineHeight: "1.125rem",
       fontWeight: 500,
-      letterSpacing: "0.01em",
+      letterSpacing: "0.02em",
       textTransform: "none",
     },
     label: {
       fontSize: "0.875rem",
       lineHeight: "1.25rem",
       fontWeight: 600,
-      letterSpacing: "0.02em",
+      letterSpacing: "0.04em",
       textTransform: "uppercase",
     },
     mono: {
-      fontSize: "0.9375rem",
-      lineHeight: "1.375rem",
-      fontWeight: 400,
+      fontSize: "0.875rem",
+      lineHeight: "1.3rem",
+      fontWeight: 500,
       letterSpacing: "0em",
       textTransform: "none",
     },
   },
   cardTextStyles: {
     titleHero: {
-      fontSize: "1.25rem", // 20px
-      lineHeight: "1.375rem", // 22px
+      fontSize: "1.5rem",
+      lineHeight: "1.875rem",
       fontWeight: 600,
       letterSpacing: "-0.008em",
       textTransform: "none",
     },
     titleLg: {
-      fontSize: "1.125rem", // 18px
-      lineHeight: "1.375rem", // 22px
+      fontSize: "1.25rem",
+      lineHeight: "1.5rem",
       fontWeight: 600,
       letterSpacing: "-0.006em",
       textTransform: "none",
     },
     titleBase: {
-      fontSize: "1rem", // 16px
-      lineHeight: "1.375rem", // 22px
+      fontSize: "1.125rem",
+      lineHeight: "1.5rem",
       fontWeight: 600,
       letterSpacing: "-0.004em",
       textTransform: "none",
     },
     titleSm: {
-      fontSize: "0.875rem", // 14px
-      lineHeight: "1.25rem", // 20px
+      fontSize: "1rem",
+      lineHeight: "1.375rem",
       fontWeight: 600,
       letterSpacing: "-0.002em",
       textTransform: "none",
     },
     descriptionLg: {
-      fontSize: "1rem", // 16px
-      lineHeight: "1.5rem", // 24px
+      fontSize: "1rem",
+      lineHeight: "1.5rem",
       fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
     },
     descriptionBase: {
-      fontSize: "0.875rem", // 14px
-      lineHeight: "1.25rem", // 20px
+      fontSize: "0.875rem",
+      lineHeight: "1.35rem",
       fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
     },
     descriptionSm: {
-      fontSize: "0.75rem", // 12px
-      lineHeight: "1rem", // 16px
+      fontSize: "0.75rem",
+      lineHeight: "1.125rem",
       fontWeight: 400,
-      letterSpacing: "0.01em",
+      letterSpacing: "0.02em",
       textTransform: "none",
     },
     metadata: {
-      fontSize: "0.75rem", // 12px
-      lineHeight: "1rem", // 16px
+      fontSize: "0.75rem",
+      lineHeight: "1.125rem",
       fontWeight: 500,
-      letterSpacing: "0.05em", // Increased tracking
+      letterSpacing: "0.08em",
       textTransform: "uppercase",
     },
     label: {
-      fontSize: "0.75rem", // 12px
-      lineHeight: "1rem", // 16px
+      fontSize: "0.75rem",
+      lineHeight: "1.125rem",
       fontWeight: 600,
-      letterSpacing: "0.05em", // Increased tracking
+      letterSpacing: "0.08em",
       textTransform: "uppercase",
     },
   },
   fixedSizes: {
-    badge: "0.6875rem" /* 11px equivalent */,
-    input: "1rem" /* 16px */,
+    badge: "0.75rem",
+    input: "1rem",
   },
 };
 

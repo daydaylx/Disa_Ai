@@ -1,0 +1,41 @@
+# Button
+
+**Pfad:** `src/components/ui/button.tsx`
+
+Der Button nutzt die zentralen Design-Tokens (`--color-brand-primary`, `--color-action-secondary-*`, `--size-touch-*`). Alle Varianten behalten denselben Fokus-Stil (`var(--color-border-focus)`) und respektieren `prefers-reduced-motion`.
+
+## Varianten
+- `brand`/`primary` – Primäre Aktionen auf `--acc1`
+- `secondary` – neutrale Aktionen mit `--color-action-secondary-*`
+- `ghost`/`outline` – transparente Varianten für Toolbars
+- `destructive` – Fehleraktionen basierend auf `--color-action-destructive-*`
+- `link` – Textlink mit `--color-text-link`
+
+## Größen
+- `sm`, `default`, `lg`, `icon`
+
+```tsx
+import { Button } from "../../src/components/ui/button";
+
+export function ButtonShowcase() {
+  return (
+    <div className="flex flex-wrap gap-3">
+      <Button variant="brand">Primär</Button>
+      <Button variant="secondary">Sekundär</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="destructive">Löschen</Button>
+      <Button variant="brand" size="icon" aria-label="Senden">
+        ➤
+      </Button>
+    </div>
+  );
+}
+```
+
+| Prop | Typ | Beschreibung |
+| --- | --- | --- |
+| `variant` | siehe oben | Definiert Farbschema pro Token |
+| `size` | `sm \| default \| lg \| icon` | Höhe/Breite gem. Touch-Raster |
+| `asChild` | `boolean` | Rendert Button-Stile auf beliebigem Element |
+
+> Fokuszustände werden automatisch durch die Komponente gesetzt – keine manuellen Klassen nötig.

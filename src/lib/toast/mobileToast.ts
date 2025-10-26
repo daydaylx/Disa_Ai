@@ -93,14 +93,16 @@ export class MobileToastManager {
     style.textContent = `
       .mobile-toast {
         pointer-events: auto;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
         border-radius: var(--radius-toast);
         padding: calc(var(--space-sm) - 4px) var(--space-sm);
         margin: calc(var(--space-xs) - 4px) 0;
         max-width: calc(100vw - 32px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: var(--shadow-overlay);
+        border: 1px solid var(--color-overlay-dialog-border);
+        background: var(--color-overlay-toast-bg);
+        color: var(--color-overlay-toast-fg);
         display: flex;
         align-items: center;
         gap: var(--space-sm);
@@ -123,23 +125,27 @@ export class MobileToastManager {
       }
 
       .mobile-toast--success {
-        background: rgba(34, 197, 94, 0.9);
-        color: white;
+        background: color-mix(in srgb, var(--ok) 65%, var(--bg1));
+        color: var(--fg-invert);
+        border-color: color-mix(in srgb, var(--ok) 45%, transparent);
       }
 
       .mobile-toast--error {
-        background: rgba(239, 68, 68, 0.9);
-        color: white;
+        background: color-mix(in srgb, var(--err) 65%, var(--bg1));
+        color: var(--fg-invert);
+        border-color: color-mix(in srgb, var(--err) 45%, transparent);
       }
 
       .mobile-toast--warning {
-        background: rgba(245, 158, 11, 0.9);
-        color: white;
+        background: color-mix(in srgb, var(--warn) 60%, var(--bg1));
+        color: var(--fg-invert);
+        border-color: color-mix(in srgb, var(--warn) 45%, transparent);
       }
 
       .mobile-toast--info {
-        background: rgba(59, 130, 246, 0.9);
-        color: white;
+        background: color-mix(in srgb, var(--info) 60%, var(--bg1));
+        color: var(--fg-invert);
+        border-color: color-mix(in srgb, var(--info) 45%, transparent);
       }
 
       .mobile-toast__icon {
@@ -153,24 +159,24 @@ export class MobileToastManager {
       }
 
       .mobile-toast__action {
-        background: rgba(255, 255, 255, 0.2);
-        border: none;
+        background: color-mix(in srgb, currentColor 18%, transparent);
+        border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
         color: inherit;
         padding: calc(var(--space-xs) - 4px) var(--space-sm);
         border-radius: var(--radius-badge);
-        font-size: 0.8125rem;  /* entspricht 13px */
+        font-size: 0.8125rem;
         font-weight: 600;
         cursor: pointer;
-        transition: background 0.2s ease;
+        transition: background 0.2s ease, transform 0.2s ease;
       }
 
       .mobile-toast__action:hover {
-        background: rgba(255, 255, 255, 0.3);
+        background: color-mix(in srgb, currentColor 25%, transparent);
       }
 
       .mobile-toast__action:active {
-        background: rgba(255, 255, 255, 0.4);
-        transform: scale(0.98);
+        background: color-mix(in srgb, currentColor 35%, transparent);
+        transform: scale(0.97);
       }
 
       /* Position variants */

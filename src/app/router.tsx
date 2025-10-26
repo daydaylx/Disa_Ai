@@ -8,6 +8,8 @@ import { MobileAppShell } from "./layouts/MobileAppShell";
 const ChatPage = lazy(() => import("../pages/Chat"));
 const ModelsPage = lazy(() => import("../pages/MobileModels"));
 const RolesPage = lazy(() => import("../pages/MobileStudio"));
+const DesignDirectionsPage = lazy(() => import("../pages/DesignDirections"));
+const SettingsPage = lazy(() => import("../pages/Settings"));
 
 const router = createBrowserRouter(
   [
@@ -67,6 +69,44 @@ const router = createBrowserRouter(
               }
             >
               <ModelsPage />
+            </Suspense>
+          </ErrorBoundary>
+        </MobileAppShell>
+      ),
+    },
+    {
+      path: "/settings",
+      element: (
+        <MobileAppShell>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
+              <SettingsPage />
+            </Suspense>
+          </ErrorBoundary>
+        </MobileAppShell>
+      ),
+    },
+    {
+      path: "/design-directions",
+      element: (
+        <MobileAppShell>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
+              <DesignDirectionsPage />
             </Suspense>
           </ErrorBoundary>
         </MobileAppShell>

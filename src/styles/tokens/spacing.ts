@@ -55,15 +55,15 @@ export type SpacingTokens = {
 export const spacingTokens: SpacingTokens = {
   scale: {
     none: "0px",
-    "3xs": "0.125rem",
-    "2xs": "0.25rem",
-    xs: "0.5rem",
-    sm: "0.75rem",
-    md: "1rem",
-    lg: "1.5rem",
-    xl: "2rem",
-    "2xl": "2.5rem",
-    "3xl": "3rem",
+    "3xs": "0.25rem", // 4px
+    "2xs": "0.5rem", // 8px
+    xs: "0.75rem", // 12px
+    sm: "1rem", // 16px
+    md: "1.5rem", // 24px
+    lg: "2rem", // 32px
+    xl: "3rem", // 48px
+    "2xl": "4rem", // 64px
+    "3xl": "4rem",
     "4xl": "4rem",
   },
   semantic: {
@@ -74,9 +74,9 @@ export const spacingTokens: SpacingTokens = {
     inlineSm: "0.5rem",
     inlineMd: "0.75rem",
     inlineLg: "1rem",
-    section: "2.5rem",
-    containerX: "1.5rem",
-    containerY: "2rem",
+    section: "3rem",
+    containerX: "1rem",
+    containerY: "1.5rem",
   },
   touch: {
     compact: "2.75rem",

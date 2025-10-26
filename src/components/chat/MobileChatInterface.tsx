@@ -34,7 +34,6 @@ import {
 } from "../../prompts/discussion/presets";
 import type { ChatRequestOptions } from "../../types";
 import type { ChatMessageType } from "../../types/chatMessage";
-import SettingsFAB from "../nav/SettingsFAB";
 import Accordion from "../ui/Accordion";
 import { BottomSheet } from "../ui/bottom-sheet";
 import { Button } from "../ui/button";
@@ -826,9 +825,6 @@ export function MobileChatInterface() {
           />
         </div>
       </BottomSheet>
-
-      {/* Mobile Settings FAB */}
-      <SettingsFAB />
     </div>
   );
 }

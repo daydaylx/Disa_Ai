@@ -111,7 +111,7 @@ export function CategoryDemo() {
                       variant="outline"
                       category={categoryKey}
                       removable
-                      onRemove={() => console.log(`Remove ${categoryKey}`)}
+                      onRemove={() => console.warn(`Remove ${categoryKey}`)}
                     >
                       Removable
                     </Chip>

@@ -5,7 +5,6 @@ import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
 import { MessageBubbleCard } from "../components/chat/MessageBubbleCard";
 import { MobileChatHistorySidebar } from "../components/chat/MobileChatHistorySidebar";
-import SettingsFAB from "../components/nav/SettingsFAB";
 import Accordion from "../components/ui/Accordion";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
@@ -463,8 +462,6 @@ export default function Chat() {
           onDelete={deleteConversation}
         />
       )}
-
-      <SettingsFAB />
     </div>
   );
 }

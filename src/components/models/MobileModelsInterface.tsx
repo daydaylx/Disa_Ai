@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { Button, Card } from "../ui";
 import { ModelCard } from "../ui/ModelCard";
 import { useToasts } from "../ui/toast/ToastsProvider";
+import { VirtualList } from "../ui/VirtualList";
 
 // Tooltip component for technical terms
 function Tooltip({
@@ -406,20 +407,23 @@ export function MobileModelsInterface() {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
-  const selectModelById = (modelId: string, label?: string) => {
-    setSelected(modelId);
-    setOpenId(null);
-    try {
-      localStorage.setItem("disa_model", modelId);
-    } catch {
-      /* ignore */
-    }
-    toasts.push({
-      kind: "success",
-      title: "Modell gewählt",
-      message: `${label || modelId} wird für neue Gespräche verwendet.`,
-    });
-  };
+  const selectModelById = useCallback(
+    (modelId: string, label?: string) => {
+      setSelected(modelId);
+      setOpenId(null);
+      try {
+        localStorage.setItem("disa_model", modelId);
+      } catch {
+        /* ignore */
+      }
+      toasts.push({
+        kind: "success",
+        title: "Modell gewählt",
+        message: `${label || modelId} wird für neue Gespräche verwendet.`,
+      });
+    },
+    [toasts],
+  );
 
   const toggleGroup = (groupId: string) => {
     setExpandedGroups((prev) => ({
@@ -457,36 +461,82 @@ export function MobileModelsInterface() {
       .filter((group) => group.models.length > 0); // Only show groups that have matching models
   }, [searchTerm]);
 
+  const renderModelCard = useCallback(
+    (model: ModelDefinition) => (
+      <ModelCard
+        key={model.id}
+        id={model.id}
+        name={model.label}
+        provider={model.provider}
+        priceIn={model.priceIn}
+        priceOut={model.priceOut}
+        contextTokens={model.ctx}
+        description={model.description}
+        isSelected={selected === model.id}
+        isOpen={openId === model.id}
+        onSelect={() => selectModelById(model.id, model.label)}
+        onToggleDetails={() => setOpenId((current) => (current === model.id ? null : model.id))}
+        isMobile={true}
+      />
+    ),
+    [openId, selectModelById, selected],
+  );
+
   return (
-    <div className="mobile-models-container flex flex-col gap-4 text-[var(--color-text-primary)]">
-      {/* Search Bar with mobile optimizations */}
-      <div className="relative mb-2 px-page-x pt-page-y">
-        <input
-          type="search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Modelle suchen..."
-          className="border-border bg-surface-1 text-text-0 placeholder:text-text-1 focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 touch-target"
-          aria-label="Modellsuche"
-        />
-        <svg
-          className="text-text-1 pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
+    <div className="mobile-models-container flex flex-1 flex-col gap-4 pb-6 text-[var(--color-text-primary)]">
+      <div className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/95 backdrop-blur">
+        <div className="space-y-3 px-page-x py-3">
+          <div className="relative">
+            <input
+              type="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Modelle suchen..."
+              className="w-full rounded-[var(--radius-card)] border border-[var(--color-control-field-border)] bg-[var(--color-control-field-bg)] py-3 pl-10 pr-4 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:border-[var(--color-control-field-border-active)] focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary-focus-ring)]"
+              aria-label="Modellsuche"
+            />
+            <svg
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-tertiary)]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <span className="font-semibold uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
+              Schnellzugriff
+            </span>
+            {[
+              { id: "quick-free", label: "⚡ Schnell" },
+              { id: "powerful-free", label: "🚀 Stark" },
+              { id: "premium", label: "🏆 Premium" },
+            ].map((entry) => (
+              <button
+                key={entry.id}
+                onClick={() =>
+                  document
+                    .getElementById(`models-${entry.id}`)
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
+                className="rounded-[var(--radius-pill)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-subtle)] px-3 py-1 font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-subtle)] hover:text-[var(--color-text-primary)]"
+              >
+                {entry.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <header
-        className="space-y-4 text-[var(--color-text-primary)] px-page-x"
+        className="space-y-4 px-page-x pt-4 text-[var(--color-text-primary)]"
         data-testid="models-title"
       >
         <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
@@ -506,25 +556,6 @@ export function MobileModelsInterface() {
             </Tooltip>{" "}
             für komplexe Analysen.
           </p>
-
-          {/* Quick Navigation */}
-          <div className="flex flex-wrap gap-2 pt-2">
-            <span className="text-xs font-medium text-text-muted">Schnellzugriff:</span>
-            {["quick-free", "powerful-free", "premium"].map((groupId) => (
-              <button
-                key={groupId}
-                onClick={() => {
-                  const element = document.getElementById(`models-${groupId}`);
-                  element?.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
-                className="inline-flex items-center gap-1 rounded-lg border border-border-subtle bg-surface-subtle/50 px-2 py-1 text-xs font-medium text-text-primary transition-colors hover:bg-surface-subtle hover:border-border-strong focus:outline-none focus:ring-2 focus:ring-brand/50 touch-target"
-              >
-                {groupId === "quick-free" && "⚡ Schnell"}
-                {groupId === "powerful-free" && "🚀 Stark"}
-                {groupId === "premium" && "🏆 Premium"}
-              </button>
-            ))}
-          </div>
         </div>
 
         {safeSelectedLabel && (
@@ -648,29 +679,33 @@ export function MobileModelsInterface() {
 
             <p className="max-w-2xl text-sm opacity-75">{group.description}</p>
 
-            {isGroupExpanded && (
-              <div className="grid grid-cols-1 gap-3 w-full">
-                {group.models.map((model) => (
-                  <ModelCard
-                    key={model.id}
-                    id={model.id}
-                    name={model.label}
-                    provider={model.provider}
-                    priceIn={model.priceIn}
-                    priceOut={model.priceOut}
-                    contextTokens={model.ctx}
-                    description={model.description}
-                    isSelected={selected === model.id}
-                    isOpen={openId === model.id}
-                    onSelect={() => selectModelById(model.id, model.label)}
-                    onToggleDetails={() =>
-                      setOpenId((current) => (current === model.id ? null : model.id))
-                    }
-                    isMobile={true}
-                  />
-                ))}
-              </div>
-            )}
+            {isGroupExpanded &&
+              (() => {
+                const useVirtualList = group.models.length >= 12;
+                if (useVirtualList) {
+                  const height = Math.min(560, Math.max(320, group.models.length * 150));
+                  return (
+                    <VirtualList
+                      items={group.models}
+                      keyExtractor={(model) => model.id}
+                      itemHeight={168}
+                      virtualizationThreshold={8}
+                      estimatedItemHeight={168}
+                      height={height}
+                      className="rounded-[var(--radius-card-inner)] border border-border-hairline bg-surface-subtle/20"
+                      renderItem={(model) => (
+                        <div className="px-1 py-1">{renderModelCard(model)}</div>
+                      )}
+                    />
+                  );
+                }
+
+                return (
+                  <div className="grid w-full grid-cols-1 gap-3">
+                    {group.models.map((model) => renderModelCard(model))}
+                  </div>
+                );
+              })()}
           </section>
         );
       })}
