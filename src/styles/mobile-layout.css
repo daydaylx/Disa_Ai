@@ -1241,6 +1241,18 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* Mobile models container */
+.mobile-models-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: calc(100dvh - var(--layout-header-height) - var(--layout-bottom-nav-height));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
 /* Mobile studio header */
 .mobile-studio-header {
   padding: var(--space-mobile-md) var(--layout-content-padding-x);
