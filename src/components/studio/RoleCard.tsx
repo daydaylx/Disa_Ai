@@ -45,7 +45,9 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
       setExpanded((prev) => !prev);
     };
 
-    const handleCardClick = (event: React.MouseEvent | React.KeyboardEvent) => {
+    const handleCardClick = (
+      event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+    ) => {
       // If clicking on the info button, don't trigger the card click
       const target = event.target as HTMLElement;
       if (
@@ -124,14 +126,14 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         onKeyDown={(e) => {
           if ((e.key === "Enter" || e.key === " ") && !disabled) {
             e.preventDefault();
-            handleCardClick(e);
+            handleCardClick(e as any);
           }
         }}
         role="button"
         tabIndex={disabled ? -1 : 0}
         aria-pressed={isActive}
         aria-label={`${title} ${isActive ? "ausgewählt" : "auswählen"}`}
-        data-testid={`${isMobile ? "mobile-" : ""}role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
+        data-testid={`role-card-${title.replace(/\s+/g, "_").toLowerCase()}`}
         {...props}
       >
         {/* Info Toggle - Positioned top-right - Now accessible div with role="button" */}
