@@ -217,13 +217,13 @@ export function GlassPerformanceDemo() {
       {/* Bottom Navigation - Critical Path */}
       <nav className={useLegacy ? "bottom-navigation" : "bottom-navigation-performance"}>
         <div className="flex items-center justify-around p-4">
-          <button className="text-white/80 hover:text-white">
+          <button className="text-white/80 hover:text-white" aria-label="Home">
             <div className="text-xs">Home</div>
           </button>
-          <button className="text-white/80 hover:text-white">
+          <button className="text-white/80 hover:text-white" aria-label="Performance">
             <div className="text-xs">Performance</div>
           </button>
-          <button className="text-white/80 hover:text-white">
+          <button className="text-white/80 hover:text-white" aria-label="Settings">
             <div className="text-xs">Settings</div>
           </button>
         </div>

@@ -161,6 +161,99 @@ export default defineConfig(({ mode }) => {
         sourcemap: false, // Kleinere Builds in Production
         reportCompressedSize: false, // Schnellere Builds
       }),
+      // Additional performance optimizations for main thread
+      brotliSize: true, // Report Brotli compressed size
+      rollupOptions: {
+        treeshake: {
+          preset: "recommended",
+          propertyReadSideEffects: false,
+          tryCatchDeoptimization: false,
+          unknownGlobalSideEffects: false,
+        },
+        output: {
+          manualChunks: (id) => {
+            if (id.includes('node_modules')) {
+              // Split React-related dependencies into separate chunks for better caching
+              if (id.includes('react') || id.includes('react-dom')) {
+                return 'react-vendor';
+              }
+              // Split router dependencies
+              if (id.includes('react-router-dom')) {
+                return 'router-vendor';
+              }
+              // Split Radix UI dependencies
+              if (id.includes('@radix-ui')) {
+                return 'radix-vendor';
+              }
+              // Split UI utility dependencies
+              if (id.includes('lucide-react') || id.includes('class-variance-authority') || id.includes('tailwind-merge')) {
+                return 'ui-vendor';
+              }
+              // Split utility dependencies
+              if (id.includes('zod') || id.includes('nanoid') || id.includes('js-yaml')) {
+                return 'utils-vendor';
+              }
+              // Create a separate chunk for other large dependencies
+              if (id.includes('@types/node') || id.includes('workbox') || id.includes('vite')) {
+                return 'other-vendor';
+              }
+              // Group all other node_modules in a common vendor chunk
+              return 'vendor';
+            }
+            // Split application code by feature areas for better caching
+            if (id.includes('src/components/ui')) {
+              return 'ui-components';
+            }
+            if (id.includes('src/features')) {
+              return 'feature-components';
+            }
+            if (id.includes('src/pages')) {
+              return 'pages';
+            }
+            if (id.includes('src/hooks')) {
+              return 'hooks';
+            }
+            if (id.includes('src/utils')) {
+              return 'utils';
+            }
+            if (id.includes('src/lib')) {
+              return 'lib';
+            }
+            if (id.includes('src/services') || id.includes('src/api')) {
+              return 'services';
+            }
+          },
+          // Optimize main thread performance by reducing chunk size and enabling compression
+          compact: true,
+          entryFileNames: "assets/js/[name]-[hash].js",
+          chunkFileNames: "assets/js/[name]-[hash].js",
+          assetFileNames: (assetInfo) => {
+            if (!assetInfo.name) return "assets/[name]-[hash][extname]";
+
+            const info = assetInfo.name.split(".");
+            const ext = info[info.length - 1];
+
+            // CSS-Files in eigenen Ordner für korrekte MIME-Type-Erkennung
+            if (/\.(css)$/.test(assetInfo.name)) {
+              return "assets/css/[name]-[hash].[ext]";
+            }
+            // Font-Files
+            if (/\.(woff|woff2|ttf|eot)$/.test(assetInfo.name)) {
+              return "assets/fonts/[name]-[hash].[ext]";
+            }
+            // Image-Files
+            if (/\.(png|jpg|jpeg|gif|svg|webp)$/.test(assetInfo.name)) {
+              return "assets/images/[name]-[hash].[ext]";
+            }
+            // JSON-Files (z.B. quickstarts.json)
+            if (/\.(json)$/.test(assetInfo.name)) {
+              return "assets/data/[name]-[hash].[ext]";
+            }
+            // Alle anderen Assets
+            return "assets/misc/[name]-[hash].[ext]";
+          },
+        },
+      },
       rollupOptions: {
         treeshake: {
           preset: "recommended",
@@ -171,7 +264,36 @@ export default defineConfig(({ mode }) => {
         // Robust solution: No externalization needed for bundled app
         // Dependencies will be properly ordered through manualChunks priority
         output: {
-          manualChunks: undefined,
+          manualChunks: (id) => {
+            if (id.includes('node_modules')) {
+              // Split React-related dependencies into separate chunks for better caching
+              if (id.includes('react') || id.includes('react-dom')) {
+                return 'react-vendor';
+              }
+              // Split router dependencies
+              if (id.includes('react-router-dom')) {
+                return 'router-vendor';
+              }
+              // Split Radix UI dependencies
+              if (id.includes('@radix-ui')) {
+                return 'radix-vendor';
+              }
+              // Split UI utility dependencies
+              if (id.includes('lucide-react') || id.includes('class-variance-authority') || id.includes('tailwind-merge')) {
+                return 'ui-vendor';
+              }
+              // Split utility dependencies
+              if (id.includes('zod') || id.includes('nanoid') || id.includes('js-yaml')) {
+                return 'utils-vendor';
+              }
+              // Create a separate chunk for other large dependencies
+              if (id.includes('@types/node') || id.includes('workbox') || id.includes('vite')) {
+                return 'other-vendor';
+              }
+              // Group all other node_modules in a common vendor chunk
+              return 'vendor';
+            }
+          },
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,
           entryFileNames: "assets/js/[name]-[hash].js",

@@ -65,7 +65,8 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
 
     // Create accessible info toggle that's not a nested button
     const InfoToggle = ({ className }: { className?: string }) => (
-      <div
+      <button
+        type="button"
         onClick={handleInfoToggle}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -86,15 +87,13 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
           "hover:bg-surface-subtle hover:border-border-strong",
           "focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2",
           "active:bg-surface-raised",
-          "cursor-pointer",
           // 44x44px touch target for mobile
           isMobile ? "h-11 w-11 touch-target" : "h-10 w-10",
           // Ensure proper z-index layering
           "shadow-sm hover:shadow-md",
+          "cursor-pointer", // Move cursor-pointer here
           className,
         )}
-        role="button"
-        tabIndex={0}
       >
         <Info
           className={cn(
@@ -103,7 +102,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
             isMobile ? "h-5 w-5" : "h-4 w-4",
           )}
         />
-      </div>
+      </button>
     );
 
     return (
