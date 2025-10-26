@@ -287,12 +287,12 @@ export default function Chat() {
         {/* Discussion Section */}
         <div className="bg-surface-0/70 border-border/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
           <div className="flex-1 space-y-1">
-            <span
+            <h2
               id="discussion-heading"
               className="text-text-subtle text-[11px] font-semibold uppercase tracking-[0.24em]"
             >
               Diskussionen
-            </span>
+            </h2>
             <p className="text-xs leading-6 text-text-muted">
               Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
             </p>
@@ -440,6 +440,7 @@ export default function Chat() {
         onStop={stop}
         isLoading={isLoading}
         canSend={!isLoading}
+        placeholder="Nachricht an Disa AI schreiben..."
       />
 
       {/* Responsive History Sidebar */}
