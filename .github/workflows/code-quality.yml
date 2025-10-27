@@ -106,7 +106,7 @@ jobs:
 
       - name: "Upload bundle analysis"
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: bundle-analysis
           path: bundle_analysis.txt
