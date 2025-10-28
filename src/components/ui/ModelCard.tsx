@@ -133,109 +133,109 @@ export function ModelCard({
                     {categoryData.label}
                   </span>
                 </div>
+              </div>
+
+              <div className="flex flex-col items-end gap-1">
+                <div className="font-mono text-sm text-text-muted">
+                  {priceIn === 0 && priceOut === 0 ? " Kostenlos" : `${priceIn}/${priceOut}M`}
+                </div>
+              </div>
             </div>
 
-            <div className="flex flex-col items-end gap-1">
-              <div className="font-mono text-sm text-text-muted">
-                {priceIn === 0 && priceOut === 0 ? " Kostenlos" : `${priceIn}/${priceOut}M`}
+            {description && (
+              <p
+                className={cn(
+                  "mt-2 text-sm leading-relaxed text-text-secondary",
+                  isMobile ? "line-clamp-3" : "line-clamp-2",
+                )}
+              >
+                {description}
+              </p>
+            )}
+
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border-divider">
+              <div className="flex items-center gap-2">
+                <Badge
+                  variant={getBadgeVariant()}
+                  size="sm"
+                  className={cn(isMobile && "touch-target")}
+                >
+                  {contextTokens ? formatContext(contextTokens) : "N/A"}
+                </Badge>
+                {contextTokens && contextTokens > 100000 && (
+                  <Badge variant="info" size="sm" className={cn(isMobile && "touch-target")}>
+                    ⚡
+                  </Badge>
+                )}
+              </div>
+
+              <Badge
+                variant={isSelected ? "brand" : "outline"}
+                size="sm"
+                className={cn("px-3 py-1", isMobile && "touch-target")}
+              >
+                {isSelected ? "Aktiv" : "Auswählen"}
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        {isOpen && (
+          <div
+            id={detailId}
+            role="region"
+            aria-live="polite"
+            className={cn(
+              "mt-4 pt-4 border-t border-border-divider relative z-10",
+              isMobile && "max-w-full overflow-hidden",
+            )}
+          >
+            <p className="text-description-base text-text-secondary mb-3">{description}</p>
+            <div className="text-description-sm grid grid-cols-2 gap-3">
+              <div>
+                <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
+                  Kontextlänge
+                </dt>
+                <dd className="mt-1 font-mono">{formatContext(contextTokens)}</dd>
+              </div>
+              <div>
+                <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
+                  Provider
+                </dt>
+                <dd className="mt-1">{provider}</dd>
+              </div>
+              <div>
+                <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
+                  Input
+                </dt>
+                <dd className="mt-1 font-mono">{formatPrice(priceIn)}</dd>
+              </div>
+              <div>
+                <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
+                  Output
+                </dt>
+                <dd className="mt-1 font-mono">{formatPrice(priceOut)}</dd>
               </div>
             </div>
           </div>
-
-          {description && (
-            <p
-              className={cn(
-                "mt-2 text-sm leading-relaxed text-text-secondary",
-                isMobile ? "line-clamp-3" : "line-clamp-2",
-              )}
-            >
-              {description}
-            </p>
-          )}
-
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border-divider">
-            <div className="flex items-center gap-2">
-              <Badge
-                variant={getBadgeVariant()}
-                size="sm"
-                className={cn(isMobile && "touch-target")}
-              >
-                {contextTokens ? formatContext(contextTokens) : "N/A"}
-              </Badge>
-              {contextTokens && contextTokens > 100000 && (
-                <Badge variant="info" size="sm" className={cn(isMobile && "touch-target")}>
-                  ⚡
-                </Badge>
-              )}
-            </div>
-
-            <Badge
-              variant={isSelected ? "brand" : "outline"}
-              size="sm"
-              className={cn("px-3 py-1", isMobile && "touch-target")}
-            >
-              {isSelected ? "Aktiv" : "Auswählen"}
-            </Badge>
-          </div>
-        </div>
-      </div>
-
-      {isOpen && (
-        <div
-          id={detailId}
-          role="region"
-          aria-live="polite"
+        )}
+        {/* Info button positioned absolutely outside the Card to avoid nested interactive elements */}
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onToggleDetails();
+          }}
+          aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
+          aria-expanded={isOpen}
           className={cn(
-            "mt-4 pt-4 border-t border-border-divider relative z-10",
-            isMobile && "max-w-full overflow-hidden",
+            "absolute top-3 right-3 flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]",
+            isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
           )}
         >
-          <p className="text-description-base text-text-secondary mb-3">{description}</p>
-          <div className="text-description-sm grid grid-cols-2 gap-3">
-            <div>
-              <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
-                Kontextlänge
-              </dt>
-              <dd className="mt-1 font-mono">{formatContext(contextTokens)}</dd>
-            </div>
-            <div>
-              <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
-                Provider
-              </dt>
-              <dd className="mt-1">{provider}</dd>
-            </div>
-            <div>
-              <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
-                Input
-              </dt>
-              <dd className="mt-1 font-mono">{formatPrice(priceIn)}</dd>
-            </div>
-            <div>
-              <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
-                Output
-              </dt>
-              <dd className="mt-1 font-mono">{formatPrice(priceOut)}</dd>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* Info button positioned absolutely outside the Card to avoid nested interactive elements */}
-      <button
-        type="button"
-        onClick={(event) => {
-          event.stopPropagation();
-          onToggleDetails();
-        }}
-        aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
-        aria-expanded={isOpen}
-        className={cn(
-          "absolute top-3 right-3 flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]",
-          isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
-        )}
-      >
-        <Info className="h-4 w-4" aria-hidden="true" />
-      </button>
-    </Card>
-  </div>
+          <Info className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </Card>
+    </div>
   );
 }
