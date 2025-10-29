@@ -1,12 +1,12 @@
 /* Import typography system */
-@import \"./styles/typography.css\";
-@import \"./styles/mobile-fixes.css\";
-@import \"./styles/mobile-enhanced.css\";
-@import \"./styles/mobile-design-tokens.css\";
-@import \"./styles/mobile-layout.css\";
-@import \"./styles/category-tonal-scales.css\";
-@import \"./styles/performance-glass-system.css\";
-@import \"./styles/mobile-navigation-performance.css\";
+@import "./styles/typography.css";
+@import "./styles/mobile-fixes.css";
+@import "./styles/mobile-enhanced.css";
+@import "./styles/mobile-design-tokens.css";
+@import "./styles/mobile-layout.css";
+@import "./styles/category-tonal-scales.css";
+@import "./styles/performance-glass-system.css";
+@import "./styles/mobile-navigation-performance.css";
 
 @tailwind base;
 @tailwind components;

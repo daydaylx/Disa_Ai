@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useStudio } from "../app/state/StudioContext";
 import type { QuickstartAction } from "../config/quickstarts";
 import { getRoleById } from "../data/roles";
-import { trackQuickstartClicked } from "../lib/analytics/index";
+import { analytics } from "../lib/analytics";
 
 export interface UseQuickstartFlowOptions {
   onStartFlow: (
@@ -21,7 +21,7 @@ export function useQuickstartFlow({ onStartFlow, currentModel }: UseQuickstartFl
     (action: QuickstartAction) => {
       try {
         // 1. Track analytics (Issue #71)
-        trackQuickstartClicked({
+        analytics.trackQuickstartClicked({
           id: action.id,
           flowId: action.flowId,
           model: currentModel,

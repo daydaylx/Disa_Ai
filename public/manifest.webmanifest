@@ -73,7 +73,7 @@
       "name": "Einstellungen",
       "short_name": "Settings",
       "description": "App-Einstellungen öffnen",
-      "url": "/settings",
+      "url": "/settings/api",
       "icons": [{ "src": "/icons/Gemini_Generated_Image_fsfeeafsfeeafsfe.png", "sizes": "96x96" }]
     },
     {

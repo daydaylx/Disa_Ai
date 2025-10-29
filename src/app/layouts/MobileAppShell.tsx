@@ -16,7 +16,11 @@ const ROUTE_TITLES: Record<string, string> = {
   "/chat": "Chat",
   "/roles": "Rollen",
   "/models": "Modelle",
-  "/settings": "Einstellungen",
+  "/settings/api": "API-Key",
+  "/settings/memory": "Verlauf & Gedächtnis",
+  "/settings/filters": "Inhalte & Filter",
+  "/settings/appearance": "Darstellung",
+  "/settings/data": "Import & Export",
   "/design-directions": "Design Matrix",
 };
 
@@ -24,7 +28,11 @@ const NAV_ITEMS = [
   { path: "/chat", label: "Chat" },
   { path: "/roles", label: "Rollen" },
   { path: "/models", label: "Modelle" },
-  { path: "/settings", label: "Einstellungen" },
+  { path: "/settings/api", label: "API" },
+  { path: "/settings/memory", label: "Verlauf" },
+  { path: "/settings/filters", label: "Filter" },
+  { path: "/settings/appearance", label: "Darstellung" },
+  { path: "/settings/data", label: "Daten" },
 ];
 
 export function MobileAppShell({ children }: MobileAppShellProps) {

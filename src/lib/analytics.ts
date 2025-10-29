@@ -4,6 +4,8 @@
  * Implements local analytics without external tracking
  */
 
+const MAX_STORED_EVENTS = 100;
+
 export interface AnalyticsEvent {
   name: string;
   properties?: Record<string, any>;
@@ -26,7 +28,7 @@ class LocalAnalytics {
   private sessionId: string;
   private events: AnalyticsEvent[] = [];
   private session: AnalyticsSession;
-  private isEnabled = true;
+  public isEnabled = true;
 
   constructor() {
     this.sessionId = this.generateSessionId();
@@ -91,6 +93,13 @@ class LocalAnalytics {
 
     this.events.push(event);
     this.session.events.push(event);
+
+    if (this.events.length > MAX_STORED_EVENTS) {
+      this.events = this.events.slice(-MAX_STORED_EVENTS);
+    }
+    if (this.session.events.length > MAX_STORED_EVENTS) {
+      this.session.events = this.session.events.slice(-MAX_STORED_EVENTS);
+    }
 
     // Store in localStorage for persistence
     this.persistEvents();
@@ -220,7 +229,7 @@ class LocalAnalytics {
     }
   }
 
-  private persistEvents(): void {
+  public persistEvents(): void {
     try {
       localStorage.setItem("disa:analytics-events", JSON.stringify(this.events));
     } catch (error) {
@@ -280,6 +289,24 @@ class LocalAnalytics {
       errorCount: eventCounts["error"] || 0,
       pageViews: eventCounts["page_view"] || 0,
     };
+  }
+
+  trackQuickstartClicked(properties: {
+    id: string;
+    flowId: string;
+    model?: string;
+    autosend: boolean;
+  }): void {
+    this.track("quickstart_clicked", properties);
+  }
+
+  trackQuickstartCompleted(properties: {
+    id: string;
+    flowId: string;
+    model?: string;
+    duration_ms: number;
+  }): void {
+    this.track("quickstart_completed", properties);
   }
 }
 

@@ -190,7 +190,7 @@ export function handleProtocolAction(
 
     case "settings":
       return {
-        route: "/settings",
+        route: "/settings/api",
       };
 
     case "models":

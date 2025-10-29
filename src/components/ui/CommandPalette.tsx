@@ -345,7 +345,7 @@ export function useDefaultCommands() {
   }, []);
 
   const openSettings = useCallback(() => {
-    window.location.hash = "#/settings";
+    window.location.hash = "#/settings/api";
   }, []);
 
   const switchModel = useCallback(() => {

@@ -20,7 +20,7 @@ export default function OrbStatus({ streaming, modelLabel }: Props) {
             Modell: {modelLabel}
             <span className="text-text-1 mx-1">·</span>
             <a
-              href="#/settings"
+              href="#/settings/api"
               className="text-brand hover:underline"
               aria-label="Modell ändern in den Einstellungen"
             >

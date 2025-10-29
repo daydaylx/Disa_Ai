@@ -9,7 +9,11 @@ const ChatPage = lazy(() => import("../pages/Chat"));
 const ModelsPage = lazy(() => import("../pages/MobileModels"));
 const RolesPage = lazy(() => import("../pages/MobileStudio"));
 const DesignDirectionsPage = lazy(() => import("../pages/DesignDirections"));
-const SettingsPage = lazy(() => import("../pages/Settings"));
+const SettingsApiPage = lazy(() => import("../pages/SettingsApi"));
+const SettingsMemoryPage = lazy(() => import("../pages/SettingsMemory"));
+const SettingsFiltersPage = lazy(() => import("../pages/SettingsFilters"));
+const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
+const SettingsDataPage = lazy(() => import("../pages/SettingsData"));
 
 const router = createBrowserRouter(
   [
@@ -76,6 +80,10 @@ const router = createBrowserRouter(
     },
     {
       path: "/settings",
+      element: <Navigate to="/settings/api" replace />,
+    },
+    {
+      path: "/settings/api",
       element: (
         <MobileAppShell>
           <ErrorBoundary>
@@ -87,7 +95,83 @@ const router = createBrowserRouter(
                 ></div>
               }
             >
-              <SettingsPage />
+              <SettingsApiPage />
+            </Suspense>
+          </ErrorBoundary>
+        </MobileAppShell>
+      ),
+    },
+    {
+      path: "/settings/memory",
+      element: (
+        <MobileAppShell>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
+              <SettingsMemoryPage />
+            </Suspense>
+          </ErrorBoundary>
+        </MobileAppShell>
+      ),
+    },
+    {
+      path: "/settings/filters",
+      element: (
+        <MobileAppShell>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
+              <SettingsFiltersPage />
+            </Suspense>
+          </ErrorBoundary>
+        </MobileAppShell>
+      ),
+    },
+    {
+      path: "/settings/appearance",
+      element: (
+        <MobileAppShell>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
+              <SettingsAppearancePage />
+            </Suspense>
+          </ErrorBoundary>
+        </MobileAppShell>
+      ),
+    },
+    {
+      path: "/settings/data",
+      element: (
+        <MobileAppShell>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div
+                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
+                  aria-label="Laden..."
+                ></div>
+              }
+            >
+              <SettingsDataPage />
             </Suspense>
           </ErrorBoundary>
         </MobileAppShell>

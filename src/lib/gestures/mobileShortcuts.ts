@@ -60,7 +60,7 @@ export class MobileShortcutsManager {
         description: "Langes Drücken mit drei Fingern öffnet die Einstellungen",
         gesture: "three-finger-tap",
         action: () => {
-          window.location.hash = "/settings";
+          window.location.hash = "/settings/api";
           hapticFeedback.success();
         },
         enabled: true,
