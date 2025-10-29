@@ -6,11 +6,11 @@ import { useStudio } from "../app/state/StudioContext";
 import { MobilePageShell } from "../components/layout/MobilePageShell";
 import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui";
+import { GlassCard } from "../components/ui/GlassCard";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import type { Role } from "../data/roles";
 import { loadRoles } from "../data/roles";
 import { useTranslation } from "../hooks/useTranslation";
-import { cn } from "../lib/utils";
 
 const CATEGORY_ORDER = [
   "Alltag",
@@ -53,9 +53,6 @@ export default function MobileStudio() {
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
   const toasts = useToasts();
-
-  const glassCardClass =
-    "card-glass-performance rounded-[var(--radius-card)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)]/85 backdrop-blur-sm shadow-[var(--shadow-surface)]";
 
   useEffect(() => {
     let mounted = true;
@@ -195,38 +192,34 @@ export default function MobileStudio() {
         </div>
 
         {activeRole ? (
-          <aside
-            className={cn(
-              glassCardClass,
-              "brand-panel card-depth text-text-1 flex items-start justify-between gap-4 px-5 py-4 text-xs",
-            )}
-            aria-label={t.studio.activeRole.label}
-          >
-            <div className="space-y-1">
-              <span className="brand-chip w-fit">{t.studio.activeRole.chip}</span>
-              <p className="text-text-1 text-xs font-semibold uppercase tracking-wide">
-                {t.studio.activeRole.label}
-              </p>
-              <p className="text-text-0 text-base font-semibold">{activeRole.name}</p>
-              <p className="text-text-1 whitespace-pre-line text-sm leading-5">
-                {summariseRole(activeRole)}
-              </p>
-            </div>
-            <Button
-              variant="ghost"
-              onClick={handleResetRole}
-              aria-label={t.studio.activeRole.resetAria}
-              className="touch-target bg-surface-2 text-text-1 hover:bg-surface-2 hover:text-text-0 flex h-10 w-10 items-center justify-center rounded-full transition-colors"
-            >
-              <RotateCcw className="text-text-1 h-3.5 w-3.5" />
-              {t.studio.activeRole.reset}
-            </Button>
+          <aside aria-label={t.studio.activeRole.label}>
+            <GlassCard className="brand-panel card-depth text-text-1 flex items-start justify-between gap-4 px-5 py-4 text-xs">
+              <div className="space-y-1">
+                <span className="brand-chip w-fit">{t.studio.activeRole.chip}</span>
+                <p className="text-text-1 text-xs font-semibold uppercase tracking-wide">
+                  {t.studio.activeRole.label}
+                </p>
+                <p className="text-text-0 text-base font-semibold">{activeRole.name}</p>
+                <p className="text-text-1 whitespace-pre-line text-sm leading-5">
+                  {summariseRole(activeRole)}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                onClick={handleResetRole}
+                aria-label={t.studio.activeRole.resetAria}
+                className="touch-target bg-surface-2 text-text-1 hover:bg-surface-2 hover:text-text-0 flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+              >
+                <RotateCcw className="text-text-1 h-3.5 w-3.5" />
+                {t.studio.activeRole.reset}
+              </Button>
+            </GlassCard>
           </aside>
         ) : null}
 
         <div className="space-y-3">
           <div className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/95 backdrop-blur">
-            <div className={cn(glassCardClass, "space-y-3 px-page-x py-3")}>
+            <GlassCard className="space-y-3 px-page-x py-3">
               <div className="relative flex-1">
                 <Search
                   className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-tertiary)]"
@@ -261,7 +254,7 @@ export default function MobileStudio() {
                   {selectedCategory === "all" ? t.studio.filter.all : selectedCategory}
                 </span>
               </div>
-            </div>
+            </GlassCard>
           </div>
 
           {/* Mobile-friendly vertical category list */}

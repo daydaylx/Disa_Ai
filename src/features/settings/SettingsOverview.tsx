@@ -4,19 +4,13 @@ import { Link, useLocation } from "react-router-dom";
 
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { GlassCard } from "../../components/ui/GlassCard";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import { useTheme } from "../../hooks/useTheme";
 import { getConversationStats } from "../../lib/conversation-manager";
 import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
-import { cn } from "../../lib/utils";
 
 interface OverviewCard {
   id: string;
@@ -109,27 +103,24 @@ export function SettingsOverview() {
 
   return (
     <div className="space-y-6 pb-12">
-      <section
-        className={cn(
-          "card-glass-performance",
-          "rounded-[var(--radius-card)] border border-brand/30 bg-brand/10 px-4 py-4 text-[var(--color-brand-strong)]",
-        )}
-      >
-        <h2 className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--color-brand-strong)]">
-          Schnellstart
-        </h2>
-        <p className="mt-2 text-sm text-[var(--color-brand-strong)]/90">
-          Richte zuerst deinen API-Key ein, aktiviere anschließend das Gedächtnis und wähle dein
-          Lieblings-Theme. Du kannst jederzeit wieder hierher zurückkehren.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Button asChild size="sm" variant="brand-soft">
-            <Link to="/settings/api">API-Key speichern</Link>
-          </Button>
-          <Button asChild size="sm" variant="secondary">
-            <Link to="/settings/memory">Gedächtnis konfigurieren</Link>
-          </Button>
-        </div>
+      <section>
+        <GlassCard className="rounded-[var(--radius-card)] border-brand/30 bg-brand/10 px-4 py-4 text-[var(--color-brand-strong)]">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--color-brand-strong)]">
+            Schnellstart
+          </h2>
+          <p className="mt-2 text-sm text-[var(--color-brand-strong)]/90">
+            Richte zuerst deinen API-Key ein, aktiviere anschließend das Gedächtnis und wähle dein
+            Lieblings-Theme. Du kannst jederzeit wieder hierher zurückkehren.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button asChild size="sm" variant="brand-soft">
+              <Link to="/settings/api">API-Key speichern</Link>
+            </Button>
+            <Button asChild size="sm" variant="secondary">
+              <Link to="/settings/memory">Gedächtnis konfigurieren</Link>
+            </Button>
+          </div>
+        </GlassCard>
       </section>
 
       <section className="space-y-3">
@@ -147,7 +138,7 @@ export function SettingsOverview() {
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <Card key={card.id} interactive="lift" className="group card-glass-performance">
+              <GlassCard key={card.id} interactive="lift" className="group">
                 <Link to={card.to} className="flex h-full flex-col focus-visible:outline-none">
                   <CardHeader className="flex flex-row items-start gap-3">
                     <span className="grid h-10 w-10 place-content-center rounded-full bg-surface-subtle text-brand">
@@ -175,39 +166,35 @@ export function SettingsOverview() {
                     </span>
                   </CardContent>
                 </Link>
-              </Card>
+              </GlassCard>
             );
           })}
         </div>
       </section>
 
-      <section
-        id="settings-shortcuts"
-        className={cn(
-          "card-glass-performance rounded-[var(--radius-card)] border border-border-subtle bg-surface-subtle/90 px-4 py-4",
-        )}
-        tabIndex={-1}
-      >
-        <header className="flex items-center gap-2">
-          <Waves className="h-5 w-5 text-brand" aria-hidden />
-          <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-text-tertiary">
-            Gesten & Shortcuts
-          </h2>
-        </header>
-        <ul className="mt-3 space-y-2 text-sm text-text-secondary">
-          <li>
-            <strong className="text-text-primary">Langes Drücken mit drei Fingern</strong> öffnet
-            die Einstellungen – jederzeit erreichbar.
-          </li>
-          <li>
-            <strong className="text-text-primary">Doppeltippen am oberen Rand</strong> scrollt
-            zurück zum Anfang der aktuellen Ansicht.
-          </li>
-          <li>
-            <strong className="text-text-primary">Swipe nach oben mit drei Fingern</strong> wechselt
-            das Theme – perfekt zum schnellen Check.
-          </li>
-        </ul>
+      <section id="settings-shortcuts" tabIndex={-1}>
+        <GlassCard className="rounded-[var(--radius-card)] border-border-subtle bg-surface-subtle/90 px-4 py-4">
+          <header className="flex items-center gap-2">
+            <Waves className="h-5 w-5 text-brand" aria-hidden />
+            <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-text-tertiary">
+              Gesten & Shortcuts
+            </h2>
+          </header>
+          <ul className="mt-3 space-y-2 text-sm text-text-secondary">
+            <li>
+              <strong className="text-text-primary">Langes Drücken mit drei Fingern</strong> öffnet
+              die Einstellungen – jederzeit erreichbar.
+            </li>
+            <li>
+              <strong className="text-text-primary">Doppeltippen am oberen Rand</strong> scrollt
+              zurück zum Anfang der aktuellen Ansicht.
+            </li>
+            <li>
+              <strong className="text-text-primary">Swipe nach oben mit drei Fingern</strong>{" "}
+              wechselt das Theme – perfekt zum schnellen Check.
+            </li>
+          </ul>
+        </GlassCard>
       </section>
     </div>
   );
