@@ -200,12 +200,11 @@
 
 ### Performance-Demo
 
-```tsx
-import { GlassPerformanceDemo } from "@/components/demo/GlassPerformanceDemo";
-
-// Zeigt FPS-Unterschiede zwischen Legacy und Optimiert
-<GlassPerformanceDemo />;
-```
+-> Die frühere `GlassPerformanceDemo`-Komponente wurde entfernt.  
+ Nutze stattdessen den interaktiven Storybook-Viewport oder die Playwright-Szenarien
+(`tests/e2e/roles.spec.ts`, `tests/e2e/smoke.spec.ts`), um Legacy- vs. Performance-
+Styles zu vergleichen. Für manuelle Vergleiche einfach im Dev-Server
+`/design-directions` öffnen und die Themes per DevTools toggeln.
 
 ### FPS-Monitoring
 
