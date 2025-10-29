@@ -86,7 +86,15 @@ deeplink() {
   mkdir -p tests/e2e
   cat > tests/e2e/deeplink.spec.ts <<'TS'
 import { test, expect } from '@playwright/test';
-const routes = ['/quickstart', '/models', '/settings'];
+const routes = [
+  '/quickstart',
+  '/models',
+  '/settings/api',
+  '/settings/memory',
+  '/settings/filters',
+  '/settings/appearance',
+  '/settings/data',
+];
 for (const route of routes) {
   test(`SPA deep link + reload: ${route}`, async ({ page }) => {
     await page.goto(route);

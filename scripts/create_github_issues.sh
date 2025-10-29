@@ -243,7 +243,15 @@ npx playwright test -g 'SPA deep link'
 **Fix (Test-Snippet)**
 \`\`\`ts
 import { test, expect } from '@playwright/test';
-const routes = ['/quickstart', '/models', '/settings'];
+const routes = [
+  '/quickstart',
+  '/models',
+  '/settings/api',
+  '/settings/memory',
+  '/settings/filters',
+  '/settings/appearance',
+  '/settings/data',
+];
 for (const route of routes) {
   test(\`SPA deep link + reload: \${route}\`, async ({ page }) => {
     await page.goto(route);

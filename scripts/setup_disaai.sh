@@ -136,7 +136,15 @@ fi
 cat > tests/e2e/deeplink.spec.ts <<'EOF'
 import { test, expect } from '@playwright/test';
 
-const routes = ['/quickstart', '/models', '/settings'];
+const routes = [
+  '/quickstart',
+  '/models',
+  '/settings/api',
+  '/settings/memory',
+  '/settings/filters',
+  '/settings/appearance',
+  '/settings/data',
+];
 
 for (const route of routes) {
   test(`SPA deep link + reload: ${route}`, async ({ page }) => {
@@ -300,4 +308,3 @@ CI blockt Merges, wenn E2E rot ist. Genau so soll es sein.
 TXT
 
 echo ">> Fertig."
-
