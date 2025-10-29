@@ -63,16 +63,23 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
     >
       <header className="sticky top-0 z-40 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/90 backdrop-blur-lg">
         <div className="flex items-center justify-between gap-3 px-4 py-3 pt-[env(safe-area-inset-top)]">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
               Disa AI
             </span>
-            <h1 className="text-token-h2 text-[var(--color-text-primary)]">{title}</h1>
+            <div>
+              <h1 className="text-token-h1 text-[var(--color-text-primary)] leading-tight">
+                {title}
+              </h1>
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                {ROUTE_TITLES[activePath] ?? "Mobile Studio"}
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)]/70 text-[var(--color-text-secondary)] shadow-[var(--shadow-surface)] transition-all hover:bg-[var(--color-surface-card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
               aria-label="Design-Roadmap"
               onClick={() => navigate("/design-directions")}
             >
@@ -80,7 +87,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
             </button>
             <button
               type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)]/70 text-[var(--color-text-secondary)] shadow-[var(--shadow-surface)] transition-all hover:bg-[var(--color-surface-card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
               aria-label="Hauptmenü öffnen"
               onClick={() => setIsOverflowOpen(true)}
             >

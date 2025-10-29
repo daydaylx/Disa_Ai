@@ -1,5 +1,7 @@
 import { Fragment } from "react";
 
+import { MobilePageShell } from "../../components/layout/MobilePageShell";
+import { GlassCard } from "../../components/ui/GlassCard";
 import { cn } from "../../lib/utils";
 
 type DirectionId = "A" | "B" | "C";
@@ -164,10 +166,10 @@ function PrototypeScreen({
   );
 
   const cards = Array.from({ length: 3 }).map((_, index) => (
-    <div
+    <GlassCard
       key={`${direction}-${variant}-card-${index}`}
       className={cn(
-        "rounded-[var(--radius-card-inner)] border p-3 text-sm",
+        "rounded-[var(--radius-card-inner)] border p-3 text-sm shadow-none",
         direction === "A" &&
           "bg-[color-mix(in_srgb,var(--color-surface-card)_70%,transparent)] border-[color-mix(in_srgb,var(--color-text-inverse)_25%,transparent)] text-[color-mix(in_srgb,var(--color-text-inverse)_90%,transparent)] shadow-[var(--shadow-surface)]",
         direction === "B" &&
@@ -184,7 +186,7 @@ function PrototypeScreen({
         Responsive Tokens sichern Abstände ({4 * (index + 1)}px Raster) und halten Typografie bei
         max. 32px.
       </p>
-    </div>
+    </GlassCard>
   ));
 
   const footer = (
@@ -213,102 +215,118 @@ function PrototypeScreen({
   );
 
   return (
-    <section className={cn(shared, wrapperClass)}>
+    <GlassCard className={cn(shared, wrapperClass)}>
       {header}
       {variant === "primary" ? (
         <div className="grid gap-3">
-          <div className="rounded-[var(--radius-card-inner)] border border-current/20 p-3 text-sm">
+          <GlassCard className="border-current/20 bg-transparent p-3 text-sm shadow-none">
             <p>
               Top App Bar mit Overflow + Tabs. Blur nur für Richtung A aktiv (backdrop-blur-sm).
             </p>
-          </div>
+          </GlassCard>
           {cards}
         </div>
       ) : (
         <div className="space-y-3">
-          <div className="rounded-[var(--radius-card-inner)] border border-current/20 p-3 text-sm">
+          <GlassCard className="border-current/20 bg-transparent p-3 text-sm shadow-none">
             <p>Sticky Section Header, Scroll-Container pro Bereich, Fokusrahmen sichtbar.</p>
-          </div>
+          </GlassCard>
           <div className="grid gap-2 sm:grid-cols-2">{cards.slice(0, 2)}</div>
         </div>
       )}
       {footer}
-    </section>
+    </GlassCard>
   );
 }
 
 export function DesignDirectionShowcase() {
+  const recommended: DirectionId = "B";
+
   return (
-    <div className="space-y-8 px-4 py-8">
+    <MobilePageShell contentClassName="space-y-8 py-8">
       <div className="space-y-3 text-center">
-        <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
+        <span className="brand-chip inline-flex w-fit items-center justify-center px-3 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
           Designrichtungen
-        </p>
-        <h1 className="text-2xl font-semibold text-[var(--color-text-primary)]">
+        </span>
+        <h1 className="text-token-h1 text-[var(--color-text-primary)]">
           Richtungsvergleich & Code-Prototypen
         </h1>
-        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-[var(--color-text-secondary)]">
+        <p className="mx-auto max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)]">
           Alle Varianten basieren auf den neuen Tokens (--fg*, --bg*, --acc*). Screens lassen sich
           direkt in Vite laden und beweisen Scroll-, Typo- und Kontrast-Vorgaben.
         </p>
       </div>
 
       <div className="space-y-10">
-        {DIRECTIONS.map((direction) => (
-          <article
-            key={direction.id}
-            className="rounded-[var(--radius-card)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-base)] p-4 shadow-[var(--shadow-surface)] sm:p-6"
-          >
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="space-y-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
-                  Option {direction.id}
-                </span>
-                <div>
-                  <h2 className="text-xl font-semibold text-[var(--color-text-primary)]">
-                    {direction.name}
-                  </h2>
-                  <p className="text-sm text-[var(--color-text-secondary)]">{direction.subtitle}</p>
+        {DIRECTIONS.map((direction) => {
+          const isRecommended = direction.id === recommended;
+          return (
+            <GlassCard
+              key={direction.id}
+              className={cn(
+                "space-y-6 p-4 sm:p-6",
+                isRecommended &&
+                  "border-[var(--color-brand-primary)] bg-[var(--color-brand-subtle)]/60 shadow-[var(--shadow-surface-prominent)]",
+              )}
+            >
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-2">
+                  <span className="text-xs font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
+                    Option {direction.id}
+                  </span>
+                  <div>
+                    <h2 className="text-token-h2 text-[var(--color-text-primary)]">
+                      {direction.name}
+                    </h2>
+                    <p className="text-sm text-[var(--color-text-secondary)]">
+                      {direction.subtitle}
+                    </p>
+                    {isRecommended ? (
+                      <span className="mt-1 inline-flex items-center gap-2 rounded-full border border-[var(--color-brand-primary)] bg-[var(--color-brand-subtle)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-brand-strong)]">
+                        Empfohlen
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-              <div
-                className="h-16 w-32 rounded-[var(--radius-card-inner)] border border-[var(--color-border-subtle)]"
-                style={{ background: direction.palette.bg }}
-                aria-label={`Palette ${direction.name}`}
-              />
-            </div>
-
-            <p className="mt-4 text-sm leading-relaxed text-[var(--color-text-secondary)]">
-              {direction.description}
-            </p>
-            <p className="text-xs font-medium uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
-              Fokus: {direction.focus}
-            </p>
-
-            <dl className="mt-4 grid gap-3 text-sm text-[var(--color-text-secondary)] sm:grid-cols-2 lg:grid-cols-4">
-              {Object.entries(direction.metrics).map(([key, value]) => (
-                <Fragment key={key}>
-                  <dt className="text-xs uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
-                    {key}
-                  </dt>
-                  <dd className="font-semibold text-[var(--color-text-primary)]">{value}</dd>
-                </Fragment>
-              ))}
-            </dl>
-
-            <div className="mt-6 grid gap-4 lg:grid-cols-2">
-              {direction.screens.map((screen) => (
-                <PrototypeScreen
-                  key={screen.id}
-                  direction={direction.id}
-                  variant={screen.variant}
-                  label={screen.label}
+                <div
+                  className="h-16 w-32 rounded-[var(--radius-card-inner)] border border-[var(--color-border-subtle)]"
+                  style={{ background: direction.palette.bg }}
+                  aria-label={`Palette ${direction.name}`}
                 />
-              ))}
-            </div>
-          </article>
-        ))}
+              </div>
+
+              <p className="text-sm leading-6 text-[var(--color-text-secondary)]">
+                {direction.description}
+              </p>
+              <p className="text-xs font-medium uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
+                Fokus: {direction.focus}
+              </p>
+
+              <dl className="mt-4 grid gap-3 text-sm text-[var(--color-text-secondary)] sm:grid-cols-2 lg:grid-cols-4">
+                {Object.entries(direction.metrics).map(([key, value]) => (
+                  <Fragment key={key}>
+                    <dt className="text-xs uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
+                      {key}
+                    </dt>
+                    <dd className="font-semibold text-[var(--color-text-primary)]">{value}</dd>
+                  </Fragment>
+                ))}
+              </dl>
+
+              <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                {direction.screens.map((screen) => (
+                  <PrototypeScreen
+                    key={screen.id}
+                    direction={direction.id}
+                    variant={screen.variant}
+                    label={screen.label}
+                  />
+                ))}
+              </div>
+            </GlassCard>
+          );
+        })}
       </div>
-    </div>
+    </MobilePageShell>
   );
 }
