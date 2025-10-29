@@ -146,8 +146,9 @@ export function ModelCard({
               <p
                 className={cn(
                   "mt-2 text-sm leading-relaxed text-text-secondary",
-                  !isOpen && (isMobile ? "line-clamp-3" : "line-clamp-2"),
+                  isMobile ? "line-clamp-3" : "line-clamp-2",
                 )}
+                aria-hidden={isOpen}
               >
                 {description}
               </p>
@@ -163,6 +164,11 @@ export function ModelCard({
                   isMobile && "text-sm",
                 )}
               >
+                {description && (
+                  <p className="text-sm leading-relaxed text-text-secondary whitespace-pre-line">
+                    {description}
+                  </p>
+                )}
                 <dl className="grid grid-cols-1 gap-3 text-xs md:grid-cols-2 md:text-sm">
                   <div className="space-y-1">
                     <dt className="text-text-strong font-semibold uppercase tracking-wide">
