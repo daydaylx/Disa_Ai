@@ -79,10 +79,10 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
             </div>
           </div>
 
-          <Button 
-            onClick={handleDismiss} 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            onClick={handleDismiss}
+            variant="ghost"
+            size="icon"
             className="h-8 w-8"
             aria-label="Installations-Prompt schließen"
           >
