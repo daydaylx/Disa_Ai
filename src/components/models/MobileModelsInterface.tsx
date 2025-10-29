@@ -483,7 +483,7 @@ export function MobileModelsInterface() {
   );
 
   return (
-    <div className="mobile-models-container flex min-h-0 flex-1 flex-col gap-4 pb-6 text-[var(--color-text-primary)] overflow-y-auto">
+    <div className="mobile-models-container flex min-h-0 flex-1 flex-col text-[var(--color-text-primary)] overflow-y-auto">
       <div className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/95 backdrop-blur">
         <div className="space-y-3 px-page-x py-3">
           <div className="relative">
@@ -535,181 +535,180 @@ export function MobileModelsInterface() {
         </div>
       </div>
 
-      <header
-        className="space-y-4 px-page-x pt-4 text-[var(--color-text-primary)]"
-        data-testid="models-title"
-      >
-        <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
-          🤖 Modelle
-        </span>
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">KI-Modellkatalog</h1>
-          <p className="max-w-2xl text-sm leading-relaxed opacity-80">
-            Wähle das perfekte{" "}
-            <Tooltip content="Künstliche Intelligenz Sprachmodelle, die auf verschiedene Aufgaben spezialisiert sind">
-              KI-Modell
-            </Tooltip>{" "}
-            für deine Aufgabe. Von schnellen kostenlosen Modellen für alltägliche Chats bis zu
-            leistungsstarken{" "}
-            <Tooltip content="Kostenpflichtige Modelle mit höherer Leistung und besserer Qualität">
-              Premium-Modellen
-            </Tooltip>{" "}
-            für komplexe Analysen.
-          </p>
-        </div>
-
-        {safeSelectedLabel && (
-          <div className="flex items-center gap-2 rounded-lg bg-brand/10 border border-brand/20 px-3 py-2">
-            <span className="text-xs opacity-75">Aktuell ausgewählt:</span>
-            <span className="font-semibold text-brand">{safeSelectedLabel}</span>
-          </div>
-        )}
-      </header>
-
-      <Card padding="md" className="space-y-4 text-[var(--color-text-primary)] mx-page-x">
-        <div className="space-y-2">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] opacity-70">
-            Studio Fokus
+      <main className="space-y-section-gap px-page-x pb-page-y pt-page-y">
+        <header className="space-y-stack-gap" data-testid="models-title">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
+            🤖 Modelle
           </span>
-          <h2 className="text-lg font-semibold">Aktive Rolle</h2>
-        </div>
-        {activeRole && activeRoleSummary ? (
           <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
-              <span>{activeRole.name}</span>
-              {activeRole.category && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide opacity-80">
-                  {activeRole.category}
-                </span>
-              )}
+            <h1 className="text-2xl font-semibold tracking-tight">KI-Modellkatalog</h1>
+            <p className="max-w-2xl text-sm leading-relaxed opacity-80">
+              Wähle das perfekte{" "}
+              <Tooltip content="Künstliche Intelligenz Sprachmodelle, die auf verschiedene Aufgaben spezialisiert sind">
+                KI-Modell
+              </Tooltip>{" "}
+              für deine Aufgabe. Von schnellen kostenlosen Modellen für alltägliche Chats bis zu
+              leistungsstarken{" "}
+              <Tooltip content="Kostenpflichtige Modelle mit höherer Leistung und besserer Qualität">
+                Premium-Modellen
+              </Tooltip>{" "}
+              für komplexe Analysen.
+            </p>
+          </div>
+
+          {safeSelectedLabel && (
+            <div className="flex items-center gap-2 rounded-lg bg-brand/10 border border-brand/20 px-3 py-2">
+              <span className="text-xs opacity-75">Aktuell ausgewählt:</span>
+              <span className="font-semibold text-brand">{safeSelectedLabel}</span>
             </div>
-            <p className="text-sm leading-6 opacity-80">{activeRoleSummary}</p>
-          </div>
-        ) : (
-          <p className="text-sm opacity-75">Standard (keine Rolle ausgewählt)</p>
-        )}
-        <p className="text-xs opacity-65">
-          Passe Stimme, Tonalität und Badges flexibel im Rollen-Studio an.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          <Link to="/roles" className="inline-flex">
-            <Button variant="brand" size="sm" className="touch-target">
-              🎭 Rollen-Studio öffnen
-            </Button>
-          </Link>
-          <Link to="/chat" className="inline-flex">
-            <Button variant="outline" size="sm" className="touch-target">
-              💬 Chat starten
-            </Button>
-          </Link>
-        </div>
-      </Card>
+          )}
+        </header>
 
-      {/* Quick Help Section */}
-      <Card padding="sm" className="bg-blue-50 border-blue-200 text-blue-900 mx-page-x">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="text-blue-600">💡</span>
-            <h3 className="text-sm font-semibold">Schnelle Orientierung</h3>
+        <Card padding="md" className="space-y-4 text-[var(--color-text-primary)]">
+          <div className="space-y-2">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] opacity-70">
+              Studio Fokus
+            </span>
+            <h2 className="text-lg font-semibold">Aktive Rolle</h2>
           </div>
-          <div className="text-xs space-y-1">
-            <p>
-              <strong>Neu hier?</strong> Starte mit{" "}
-              <Tooltip content="Kostenlose Modelle ohne Limits für den Einstieg">
-                ⚡ Schnellen Kostenlosen
-              </Tooltip>{" "}
-              Modellen.
-            </p>
-            <p>
-              <strong>Wichtige Aufgaben?</strong> Nutze{" "}
-              <Tooltip content="Kostenpflichtige Modelle mit höchster Qualität und Zuverlässigkeit">
-                🏆 Premium
-              </Tooltip>{" "}
-              Modelle für beste Ergebnisse.
-            </p>
-            <p>
-              <strong>Bilder verarbeiten?</strong> Wähle{" "}
-              <Tooltip content="Modelle die sowohl Text als auch Bilder verstehen können">
-                🖼️ Multimodale
-              </Tooltip>{" "}
-              Modelle.
-            </p>
-          </div>
-        </div>
-      </Card>
-
-      {filteredModelGroups.map((group) => {
-        const isGroupExpanded = expandedGroups[group.id] ?? true;
-        return (
-          <section
-            key={group.id}
-            aria-labelledby={`models-${group.id}`}
-            className="space-y-2 px-page-x pb-page-y last:pb-page-y"
-          >
-            <div
-              className="flex flex-col gap-2 touch-target"
-              onClick={() => toggleGroup(group.id)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  toggleGroup(group.id);
-                }
-              }}
-            >
-              <div className="space-y-1">
-                <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
-                  {group.badge}
-                </span>
-                {/* Changed from h2 to h3 to maintain proper heading hierarchy */}
-                <h3 id={`models-${group.id}`} className="text-lg font-semibold">
-                  {group.title}
-                  {!isGroupExpanded && (
-                    <span className="text-xs font-normal text-text-muted ml-2">
-                      ({group.models.length} Modelle)
-                    </span>
-                  )}
-                </h3>
+          {activeRole && activeRoleSummary ? (
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+                <span>{activeRole.name}</span>
+                {activeRole.category && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide opacity-80">
+                    {activeRole.category}
+                  </span>
+                )}
               </div>
-              <span className="text-xs font-medium uppercase tracking-wide opacity-60">
-                {group.models.length} Modelle
-              </span>
+              <p className="text-sm leading-6 opacity-80">{activeRoleSummary}</p>
             </div>
+          ) : (
+            <p className="text-sm opacity-75">Standard (keine Rolle ausgewählt)</p>
+          )}
+          <p className="text-xs opacity-65">
+            Passe Stimme, Tonalität und Badges flexibel im Rollen-Studio an.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link to="/roles" className="inline-flex">
+              <Button variant="brand" size="sm" className="touch-target">
+                🎭 Rollen-Studio öffnen
+              </Button>
+            </Link>
+            <Link to="/chat" className="inline-flex">
+              <Button variant="outline" size="sm" className="touch-target">
+                💬 Chat starten
+              </Button>
+            </Link>
+          </div>
+        </Card>
 
-            <p className="max-w-2xl text-sm opacity-75">{group.description}</p>
+        {/* Quick Help Section */}
+        <Card padding="sm" className="bg-blue-50 border-blue-200 text-blue-900">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-blue-600">💡</span>
+              <h3 className="text-sm font-semibold">Schnelle Orientierung</h3>
+            </div>
+            <div className="text-xs space-y-1">
+              <p>
+                <strong>Neu hier?</strong> Starte mit{" "}
+                <Tooltip content="Kostenlose Modelle ohne Limits für den Einstieg">
+                  ⚡ Schnellen Kostenlosen
+                </Tooltip>{" "}
+                Modellen.
+              </p>
+              <p>
+                <strong>Wichtige Aufgaben?</strong> Nutze{" "}
+                <Tooltip content="Kostenpflichtige Modelle mit höchster Qualität und Zuverlässigkeit">
+                  🏆 Premium
+                </Tooltip>{" "}
+                Modelle für beste Ergebnisse.
+              </p>
+              <p>
+                <strong>Bilder verarbeiten?</strong> Wähle{" "}
+                <Tooltip content="Modelle die sowohl Text als auch Bilder verstehen können">
+                  🖼️ Multimodale
+                </Tooltip>{" "}
+                Modelle.
+              </p>
+            </div>
+          </div>
+        </Card>
 
-            {isGroupExpanded &&
-              (() => {
-                const containsOpenModel = group.models.some((model) => model.id === openId);
-                const useVirtualList = group.models.length >= 12 && !containsOpenModel;
-                if (useVirtualList) {
-                  const height = Math.min(560, Math.max(320, group.models.length * 150));
+        {filteredModelGroups.map((group) => {
+          const isGroupExpanded = expandedGroups[group.id] ?? true;
+          return (
+            <section
+              key={group.id}
+              aria-labelledby={`models-${group.id}`}
+              className="space-y-stack-gap"
+            >
+              <div
+                className="flex flex-col gap-2 touch-target"
+                onClick={() => toggleGroup(group.id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleGroup(group.id);
+                  }
+                }}
+              >
+                <div className="space-y-1">
+                  <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-70">
+                    {group.badge}
+                  </span>
+                  {/* Changed from h2 to h3 to maintain proper heading hierarchy */}
+                  <h3 id={`models-${group.id}`} className="text-lg font-semibold">
+                    {group.title}
+                    {!isGroupExpanded && (
+                      <span className="text-xs font-normal text-text-muted ml-2">
+                        ({group.models.length} Modelle)
+                      </span>
+                    )}
+                  </h3>
+                </div>
+                <span className="text-xs font-medium uppercase tracking-wide opacity-60">
+                  {group.models.length} Modelle
+                </span>
+              </div>
+
+              <p className="max-w-2xl text-sm opacity-75">{group.description}</p>
+
+              {isGroupExpanded &&
+                (() => {
+                  const containsOpenModel = group.models.some((model) => model.id === openId);
+                  const useVirtualList = group.models.length >= 12 && !containsOpenModel;
+                  if (useVirtualList) {
+                    const height = Math.min(560, Math.max(320, group.models.length * 150));
+                    return (
+                      <VirtualList
+                        items={group.models}
+                        keyExtractor={(model) => model.id}
+                        itemHeight={168}
+                        virtualizationThreshold={8}
+                        estimatedItemHeight={168}
+                        height={height}
+                        className="rounded-[var(--radius-card-inner)] border border-border-hairline bg-surface-subtle/20"
+                        renderItem={(model) => (
+                          <div className="px-1 py-1">{renderModelCard(model)}</div>
+                        )}
+                      />
+                    );
+                  }
+
                   return (
-                    <VirtualList
-                      items={group.models}
-                      keyExtractor={(model) => model.id}
-                      itemHeight={168}
-                      virtualizationThreshold={8}
-                      estimatedItemHeight={168}
-                      height={height}
-                      className="rounded-[var(--radius-card-inner)] border border-border-hairline bg-surface-subtle/20"
-                      renderItem={(model) => (
-                        <div className="px-1 py-1">{renderModelCard(model)}</div>
-                      )}
-                    />
+                    <div className="grid w-full grid-cols-1 gap-3">
+                      {group.models.map((model) => renderModelCard(model))}
+                    </div>
                   );
-                }
-
-                return (
-                  <div className="grid w-full grid-cols-1 gap-3">
-                    {group.models.map((model) => renderModelCard(model))}
-                  </div>
-                );
-              })()}
-          </section>
-        );
-      })}
+                })()}
+            </section>
+          );
+        })}
+      </main>
     </div>
   );
 }
