@@ -16,6 +16,7 @@ import { useSettings } from "../../hooks/useSettings";
 import { useTheme } from "../../hooks/useTheme";
 import { getConversationStats } from "../../lib/conversation-manager";
 import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
+import { cn } from "../../lib/utils";
 
 interface OverviewCard {
   id: string;
@@ -108,7 +109,12 @@ export function SettingsOverview() {
 
   return (
     <div className="space-y-6 pb-12">
-      <section className="rounded-[var(--radius-card)] border border-brand/30 bg-brand/10 px-4 py-4 text-[var(--color-brand-strong)]">
+      <section
+        className={cn(
+          "card-glass-performance",
+          "rounded-[var(--radius-card)] border border-brand/30 bg-brand/10 px-4 py-4 text-[var(--color-brand-strong)]",
+        )}
+      >
         <h2 className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--color-brand-strong)]">
           Schnellstart
         </h2>
@@ -141,7 +147,7 @@ export function SettingsOverview() {
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <Card key={card.id} interactive="lift" className="group">
+              <Card key={card.id} interactive="lift" className="group card-glass-performance">
                 <Link to={card.to} className="flex h-full flex-col focus-visible:outline-none">
                   <CardHeader className="flex flex-row items-start gap-3">
                     <span className="grid h-10 w-10 place-content-center rounded-full bg-surface-subtle text-brand">
@@ -177,7 +183,9 @@ export function SettingsOverview() {
 
       <section
         id="settings-shortcuts"
-        className="rounded-[var(--radius-card)] border border-border-subtle bg-surface-subtle px-4 py-4"
+        className={cn(
+          "card-glass-performance rounded-[var(--radius-card)] border border-border-subtle bg-surface-subtle/90 px-4 py-4",
+        )}
         tabIndex={-1}
       >
         <header className="flex items-center gap-2">

@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useStudio } from "../../app/state/StudioContext";
+import { cn } from "../../lib/utils";
 import { Button, Card } from "../ui";
 import { ModelCard } from "../ui/ModelCard";
 import { useToasts } from "../ui/toast/ToastsProvider";
@@ -43,6 +44,9 @@ type ModelDefinition = {
   ctx?: number;
   description: string;
 };
+
+const glassCardClass =
+  "card-glass-performance rounded-[var(--radius-card)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)]/85 backdrop-blur-sm shadow-[var(--shadow-surface)]";
 
 // Schnelle kostenlose Modelle für alltägliche Chats
 const quickFreeModels = [
@@ -564,7 +568,10 @@ export function MobileModelsInterface() {
           )}
         </header>
 
-        <Card padding="md" className="space-y-4 text-[var(--color-text-primary)]">
+        <Card
+          padding="md"
+          className={cn(glassCardClass, "space-y-4 text-[var(--color-text-primary)]")}
+        >
           <div className="space-y-2">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] opacity-70">
               Studio Fokus
@@ -604,7 +611,10 @@ export function MobileModelsInterface() {
         </Card>
 
         {/* Quick Help Section */}
-        <Card padding="sm" className="bg-blue-50 border-blue-200 text-blue-900">
+        <Card
+          padding="sm"
+          className={cn(glassCardClass, "bg-blue-50/80 border-blue-200/60 text-blue-900")}
+        >
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="text-blue-600">💡</span>
@@ -642,7 +652,7 @@ export function MobileModelsInterface() {
             <section
               key={group.id}
               aria-labelledby={`models-${group.id}`}
-              className="space-y-stack-gap"
+              className={cn(glassCardClass, "space-y-stack-gap p-4")}
             >
               <div
                 className="flex flex-col gap-2 touch-target"

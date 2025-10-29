@@ -35,12 +35,16 @@ import {
   importConversations,
 } from "../../lib/conversation-manager";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
+import { cn } from "../../lib/utils";
 
 const themeOptions = [
   { value: "system", label: "System" },
   { value: "light", label: "Hell" },
   { value: "dark", label: "Dunkel" },
 ];
+
+const glassCardClass =
+  "card-glass-performance rounded-[var(--radius-card)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)]/85 backdrop-blur-sm shadow-[var(--shadow-surface)]";
 
 export type SettingsSectionKey = "api" | "memory" | "filters" | "appearance" | "data";
 
@@ -293,7 +297,12 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               <Sparkles className="h-4 w-4" />
             </Button>
           </div>
-          <div className="rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-subtle)] p-3 text-xs text-[var(--color-text-secondary)]">
+          <div
+            className={cn(
+              glassCardClass,
+              "rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-subtle)]/90 p-3 text-xs text-[var(--color-text-secondary)]",
+            )}
+          >
             <p>
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
               {stats.modelsUsed.length} Modelle
@@ -486,10 +495,7 @@ function SettingsSection({
   status?: { label: string; variant: BadgeProps["variant"] };
 }) {
   return (
-    <section
-      id={id}
-      className="rounded-[var(--radius-card)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)] shadow-[var(--shadow-surface)]"
-    >
+    <section id={id} className={cn(glassCardClass)}>
       <div className="flex items-start gap-3 border-b border-[var(--color-border-hairline)] px-4 py-3">
         <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card-small)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)]">
           <Icon className="h-4 w-4" aria-hidden />
