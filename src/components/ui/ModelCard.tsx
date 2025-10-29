@@ -153,6 +153,45 @@ export function ModelCard({
               </p>
             )}
 
+            {isOpen && (
+              <div
+                id={detailId}
+                role="region"
+                aria-live="polite"
+                className={cn(
+                  "mt-3 space-y-3 rounded-lg border border-border-subtle bg-surface-subtle/60 p-3",
+                  isMobile && "text-sm",
+                )}
+              >
+                <dl className="grid grid-cols-1 gap-3 text-xs md:grid-cols-2 md:text-sm">
+                  <div className="space-y-1">
+                    <dt className="text-text-strong font-semibold uppercase tracking-wide">
+                      Kontextlänge
+                    </dt>
+                    <dd className="font-mono">{formatContext(contextTokens)}</dd>
+                  </div>
+                  <div className="space-y-1">
+                    <dt className="text-text-strong font-semibold uppercase tracking-wide">
+                      Provider
+                    </dt>
+                    <dd>{provider}</dd>
+                  </div>
+                  <div className="space-y-1">
+                    <dt className="text-text-strong font-semibold uppercase tracking-wide">
+                      Preis Eingabe
+                    </dt>
+                    <dd className="font-mono">{formatPrice(priceIn)}</dd>
+                  </div>
+                  <div className="space-y-1">
+                    <dt className="text-text-strong font-semibold uppercase tracking-wide">
+                      Preis Ausgabe
+                    </dt>
+                    <dd className="font-mono">{formatPrice(priceOut)}</dd>
+                  </div>
+                </dl>
+              </div>
+            )}
+
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border-divider">
               <div className="flex items-center gap-2">
                 <Badge
@@ -179,46 +218,6 @@ export function ModelCard({
             </div>
           </div>
         </div>
-
-        {isOpen && (
-          <div
-            id={detailId}
-            role="region"
-            aria-live="polite"
-            className={cn(
-              "mt-4 pt-4 border-t border-border-divider relative z-10",
-              isMobile && "max-w-full",
-            )}
-          >
-            <p className="text-description-base text-text-secondary mb-3">{description}</p>
-            <div className="text-description-sm grid grid-cols-2 gap-3">
-              <div>
-                <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
-                  Kontextlänge
-                </dt>
-                <dd className="mt-1 font-mono">{formatContext(contextTokens)}</dd>
-              </div>
-              <div>
-                <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
-                  Provider
-                </dt>
-                <dd className="mt-1">{provider}</dd>
-              </div>
-              <div>
-                <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
-                  Input
-                </dt>
-                <dd className="mt-1 font-mono">{formatPrice(priceIn)}</dd>
-              </div>
-              <div>
-                <dt className="text-text-strong font-semibold text-xs uppercase tracking-wide">
-                  Output
-                </dt>
-                <dd className="mt-1 font-mono">{formatPrice(priceOut)}</dd>
-              </div>
-            </div>
-          </div>
-        )}
         {/* Info button positioned absolutely outside the Card to avoid nested interactive elements */}
         <button
           type="button"
