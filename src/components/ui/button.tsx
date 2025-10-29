@@ -8,6 +8,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     | "ghost"
     | "outline"
     | "brand"
+    | "brand-soft"
     | "destructive"
     | "primary"
     | "secondary"
@@ -30,6 +31,8 @@ const buttonVariants = (
       "bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] hover:bg-[var(--color-brand-primary-hover)]",
     brand:
       "bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] hover:bg-[var(--color-brand-primary-hover)]",
+    "brand-soft":
+      "bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)] border border-[var(--color-brand-subtle)] hover:bg-[var(--color-brand-primary)] hover:text-[var(--color-text-on-brand)]",
     secondary:
       "bg-[var(--color-action-secondary-bg)] text-[var(--color-action-secondary-fg)] border border-[var(--color-action-secondary-border)] hover:bg-[var(--color-action-secondary-hover)]",
     destructive:
