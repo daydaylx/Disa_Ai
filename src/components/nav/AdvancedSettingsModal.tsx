@@ -25,6 +25,7 @@ import {
   getConversationStats,
   importConversations,
 } from "../../lib/conversation-manager";
+import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
 import { BUILD_ID } from "../../lib/pwa/registerSW";
 import { Button } from "../ui/button";
 import { Drawer } from "../ui/drawer/Drawer";
@@ -90,9 +91,9 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
   useEffect(() => {
     if (isOpen) {
       try {
-        const storedKey = sessionStorage.getItem("openrouter-key") ?? "";
+        const storedKey = readApiKey() ?? "";
         setApiKey(storedKey);
-        setKeyStatus(storedKey.length > 0 ? "present" : "empty");
+        setKeyStatus(hasStoredApiKey() ? "present" : "empty");
       } catch {
         toasts.push({
           kind: "error",
@@ -119,7 +120,7 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
           return;
         }
 
-        sessionStorage.setItem("openrouter-key", trimmedKey);
+        writeApiKey(trimmedKey);
         setKeyStatus("present");
         toasts.push({
           kind: "success",
@@ -127,7 +128,7 @@ export default function AdvancedSettingsModal({ isOpen, onClose }: AdvancedSetti
           message: "Der API-Schlüssel wird sicher in der Session gespeichert.",
         });
       } else {
-        sessionStorage.removeItem("openrouter-key");
+        writeApiKey("");
         setKeyStatus("empty");
         toasts.push({
           kind: "success",

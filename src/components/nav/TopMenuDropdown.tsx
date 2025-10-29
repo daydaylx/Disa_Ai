@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { getConversationStats } from "../../lib/conversation-manager";
+import { readApiKey } from "../../lib/openrouter/key";
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
@@ -51,8 +52,8 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
   useEffect(() => {
     if (isOpen) {
       try {
-        const storedKey = sessionStorage.getItem("openrouter-key") ?? "";
-        setApiKeyStatus(storedKey.length > 0 ? "present" : "empty");
+        const storedKey = readApiKey();
+        setApiKeyStatus(storedKey ? "present" : "empty");
       } catch {
         setApiKeyStatus("empty");
       }

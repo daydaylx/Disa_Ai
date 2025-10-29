@@ -15,6 +15,7 @@ import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import { useTheme } from "../../hooks/useTheme";
 import { getConversationStats } from "../../lib/conversation-manager";
+import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
 
 interface OverviewCard {
   id: string;
@@ -31,17 +32,12 @@ export function SettingsOverview() {
   const { settings } = useSettings();
   const { preference } = useTheme();
   const { isEnabled: memoryEnabled } = useMemory();
-  const [hasApiKey, setHasApiKey] = useState(false);
+  const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const location = useLocation();
   const stats = useMemo(() => getConversationStats(), []);
 
   useEffect(() => {
-    try {
-      const storedKey = sessionStorage.getItem("openrouter-key");
-      setHasApiKey(Boolean(storedKey && storedKey.trim().length > 0));
-    } catch {
-      setHasApiKey(false);
-    }
+    setHasApiKey(hasStoredApiKey());
   }, []);
 
   useEffect(() => {

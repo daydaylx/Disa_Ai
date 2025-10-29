@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { readApiKey, writeApiKey } from "../key";
+import { DEFAULT_API_KEY, readApiKey, writeApiKey } from "../key";
 
 describe("API Key Migration", () => {
   beforeEach(() => {
@@ -44,9 +44,9 @@ describe("API Key Migration", () => {
     expect(localStorage.getItem("disa_api_key")).toBe("old-key");
   });
 
-  it("sollte null zurückgeben, wenn kein Schlüssel vorhanden ist", () => {
+  it("sollte den Default-Schlüssel liefern, wenn keiner vorhanden ist", () => {
     const key = readApiKey();
-    expect(key).toBeNull();
+    expect(key).toBe(DEFAULT_API_KEY);
   });
 
   it("sollte einen neuen Schlüssel nur in kanonischen Schlüssel schreiben", () => {

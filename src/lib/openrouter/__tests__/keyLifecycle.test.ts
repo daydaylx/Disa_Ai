@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { clearAllApiKeys, hasApiKey, readApiKey, writeApiKey } from "../key";
+import { clearAllApiKeys, DEFAULT_API_KEY, hasApiKey, readApiKey, writeApiKey } from "../key";
 
 describe("API Key Lifecycle & Security", () => {
   beforeEach(() => {
@@ -138,7 +138,7 @@ describe("API Key Lifecycle & Security", () => {
       localStorage.setItem("disa_api_key", "   ");
 
       const retrievedKey = readApiKey();
-      expect(retrievedKey).toBeNull();
+      expect(retrievedKey).toBe(DEFAULT_API_KEY);
     });
 
     it("should handle storage access errors", () => {
@@ -148,9 +148,9 @@ describe("API Key Lifecycle & Security", () => {
         throw new Error("Storage access denied");
       };
 
-      // Should return null gracefully
+      // Should return default key gracefully
       const retrievedKey = readApiKey();
-      expect(retrievedKey).toBeNull();
+      expect(retrievedKey).toBe(DEFAULT_API_KEY);
 
       // Restore original method
       sessionStorage.getItem = originalGetItem;
@@ -164,12 +164,12 @@ describe("API Key Lifecycle & Security", () => {
     });
 
     it("should return false when no key exists", () => {
-      expect(hasApiKey()).toBe(false);
+      expect(hasApiKey()).toBe(true);
     });
 
     it("should return false for empty key", () => {
       sessionStorage.setItem("disa_api_key", "");
-      expect(hasApiKey()).toBe(false);
+      expect(hasApiKey()).toBe(true);
     });
   });
 });

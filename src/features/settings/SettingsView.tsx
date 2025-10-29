@@ -34,6 +34,7 @@ import {
   getConversationStats,
   importConversations,
 } from "../../lib/conversation-manager";
+import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
 
 const themeOptions = [
   { value: "system", label: "System" },
@@ -58,10 +59,10 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     useSettings();
   const { preference, setPreference } = useTheme();
   const { toggleMemory, clearAllMemory, isEnabled: memoryEnabled } = useMemory();
-  const [hasApiKey, setHasApiKey] = useState(false);
+  const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const [apiKey, setApiKey] = useState(() => {
     try {
-      return sessionStorage.getItem("openrouter-key") ?? "";
+      return readApiKey() ?? "";
     } catch {
       return "";
     }
@@ -70,12 +71,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
   const [stats, setStats] = useState(() => getConversationStats());
 
   useEffect(() => {
-    try {
-      const storedKey = sessionStorage.getItem("openrouter-key");
-      setHasApiKey(Boolean(storedKey && storedKey.trim().length > 0));
-    } catch {
-      setHasApiKey(false);
-    }
+    setHasApiKey(hasStoredApiKey());
   }, []);
 
   const refreshStats = () => {
@@ -86,7 +82,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     try {
       const trimmed = apiKey.trim();
       if (!trimmed) {
-        sessionStorage.removeItem("openrouter-key");
+        writeApiKey("");
         setHasApiKey(false);
         toasts.push({
           kind: "success",
@@ -103,7 +99,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
         });
         return;
       }
-      sessionStorage.setItem("openrouter-key", trimmed);
+      writeApiKey(trimmed);
       setHasApiKey(true);
       toasts.push({
         kind: "success",
