@@ -9,8 +9,10 @@ import {
   Sparkles,
   Upload,
 } from "lucide-react";
-import { type ComponentType, type ReactNode, useRef, useState } from "react";
+import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
+import { Badge, type BadgeProps } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
@@ -56,6 +58,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     useSettings();
   const { preference, setPreference } = useTheme();
   const { toggleMemory, clearAllMemory, isEnabled: memoryEnabled } = useMemory();
+  const [hasApiKey, setHasApiKey] = useState(false);
   const [apiKey, setApiKey] = useState(() => {
     try {
       return sessionStorage.getItem("openrouter-key") ?? "";
@@ -66,6 +69,15 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
   const [showKey, setShowKey] = useState(false);
   const [stats, setStats] = useState(() => getConversationStats());
 
+  useEffect(() => {
+    try {
+      const storedKey = sessionStorage.getItem("openrouter-key");
+      setHasApiKey(Boolean(storedKey && storedKey.trim().length > 0));
+    } catch {
+      setHasApiKey(false);
+    }
+  }, []);
+
   const refreshStats = () => {
     setStats(getConversationStats());
   };
@@ -75,6 +87,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       const trimmed = apiKey.trim();
       if (!trimmed) {
         sessionStorage.removeItem("openrouter-key");
+        setHasApiKey(false);
         toasts.push({
           kind: "success",
           title: "API-Key entfernt",
@@ -91,6 +104,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
         return;
       }
       sessionStorage.setItem("openrouter-key", trimmed);
+      setHasApiKey(true);
       toasts.push({
         kind: "success",
         title: "API-Key gespeichert",
@@ -381,13 +395,53 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     ? sectionConfigs.filter((config) => config.id === section)
     : sectionConfigs;
   const sectionsToRender = visibleSections.length > 0 ? visibleSections : sectionConfigs;
+  const sectionStatuses: Record<
+    SettingsSectionKey,
+    { label: string; variant: BadgeProps["variant"] }
+  > = {
+    api: {
+      label: hasApiKey ? "Key aktiv" : "Nicht gesetzt",
+      variant: hasApiKey ? "success" : "warning",
+    },
+    memory: {
+      label: memoryEnabled ? "Gedächtnis aktiv" : "Neutral",
+      variant: memoryEnabled ? "success" : "muted",
+    },
+    filters: {
+      label: settings.showNSFWContent ? "Explizit" : "Gefiltert",
+      variant: settings.showNSFWContent ? "warning" : "success",
+    },
+    appearance: {
+      label:
+        preference === "system"
+          ? "System folgt"
+          : preference === "dark"
+            ? "Dunkles Theme"
+            : "Helles Theme",
+      variant: preference === "system" ? "info" : "muted",
+    },
+    data: {
+      label:
+        stats.totalConversations > 0
+          ? `${stats.totalConversations} Verläufe`
+          : "Keine lokalen Daten",
+      variant: stats.totalConversations > 0 ? "muted" : "info",
+    },
+  };
   const headerTitle = section ? (sectionsToRender[0]?.title ?? "Einstellungen") : "Einstellungen";
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <header className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/95 px-4 py-3 backdrop-blur">
         <div className="flex items-center justify-between text-sm">
-          <div>
+          <div className="space-y-1">
+            {section ? (
+              <Button asChild variant="ghost" size="sm" className="px-0 text-xs font-medium">
+                <Link to="/settings" className="inline-flex items-center gap-1 text-xs">
+                  ← Übersicht
+                </Link>
+              </Button>
+            ) : null}
             <p className="text-xs uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
               Kontrolle
             </p>
@@ -410,6 +464,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             icon={config.icon}
             title={config.title}
             description={config.description}
+            status={sectionStatuses[config.id]}
           >
             {config.content}
           </SettingsSection>
@@ -425,12 +480,14 @@ function SettingsSection({
   title,
   description,
   children,
+  status,
 }: {
   id: string;
   icon: ComponentType<{ className?: string }>;
   title: string;
   description: string;
   children: ReactNode;
+  status?: { label: string; variant: BadgeProps["variant"] };
 }) {
   return (
     <section
@@ -441,8 +498,15 @@ function SettingsSection({
         <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card-small)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)]">
           <Icon className="h-4 w-4" aria-hidden />
         </span>
-        <div>
-          <h2 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h2>
+        <div className="flex flex-1 flex-col gap-1">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h2>
+            {status ? (
+              <Badge variant={status.variant} size="sm">
+                {status.label}
+              </Badge>
+            ) : null}
+          </div>
           <p className="text-sm text-[var(--color-text-secondary)]">{description}</p>
         </div>
       </div>

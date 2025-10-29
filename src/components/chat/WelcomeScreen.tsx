@@ -1,9 +1,11 @@
 import { History, Plus } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import type { DiscussionPresetKey } from "../../prompts/discussion/presets";
 import { discussionPresetOptions } from "../../prompts/discussion/presets";
 import Accordion from "../ui/Accordion";
 import { Button } from "../ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -85,6 +87,41 @@ export function WelcomeScreen({
       </header>
 
       <section aria-labelledby="discussion-heading" className="pb-8">
+        <Card tone="muted" padding="md" elevation="surface" className="mb-6">
+          <CardHeader className="gap-2 px-0 pt-0">
+            <CardTitle className="text-base font-semibold text-text-primary">
+              Schneller Einstieg
+            </CardTitle>
+            <CardDescription className="text-sm text-text-secondary">
+              Drei Schritte helfen dir, schneller loszulegen. Du kannst jederzeit zu den
+              Einstellungen springen.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 px-0 pb-0 text-sm text-text-secondary">
+            <ul className="space-y-2">
+              <li>
+                <strong className="text-text-primary">API-Key speichern:</strong> Hinterlege
+                optional deinen OpenRouter-Schlüssel für höhere Limits.
+              </li>
+              <li>
+                <strong className="text-text-primary">Gedächtnis aktivieren:</strong> Lass Disa sich
+                an Kontexte erinnern und Daten lokal ablegen.
+              </li>
+              <li>
+                <strong className="text-text-primary">Theme auswählen:</strong> Passe Darstellung
+                und Kontrast an deine Umgebung an.
+              </li>
+            </ul>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild size="sm" variant="brand-soft">
+                <Link to="/settings">Zu den Einstellungen</Link>
+              </Button>
+              <Button asChild size="sm" variant="secondary">
+                <Link to="/settings/api">API-Key hinzufügen</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
         {/* Discussion Section */}
         <div className="bg-surface-0/70 border-border/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
           <div className="flex-1 space-y-1">
