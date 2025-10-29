@@ -203,9 +203,11 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
 
               <div className="role-text">
                 <p
+                  id={detailId}
                   className={cn(
                     "role-description-typography typography-base text-medium-contrast",
-                    isMobile ? "text-body-base line-clamp-3" : "text-body-small line-clamp-2",
+                    isMobile ? "text-body-base" : "text-body-small",
+                    !expanded && (isMobile ? "line-clamp-3" : "line-clamp-2"),
                   )}
                 >
                   {description}
@@ -213,27 +215,6 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
               </div>
             </div>
           </div>
-
-          {/* Expanded Details Section */}
-          {expanded && (
-            <div
-              id={detailId}
-              className={cn(
-                "expanded-details",
-                "mt-4 pt-4 border-t border-border-subtle",
-                "typography-base",
-              )}
-            >
-              <p
-                className={cn(
-                  "role-description-typography whitespace-pre-line text-medium-contrast",
-                  isMobile ? "text-body-base" : "text-body-small",
-                )}
-              >
-                {description}
-              </p>
-            </div>
-          )}
         </Card>
         {/* Info Toggle - Positioned absolutely top-right - Separate from card */}
         <InfoToggle />

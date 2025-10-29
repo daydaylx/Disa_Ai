@@ -681,7 +681,8 @@ export function MobileModelsInterface() {
 
             {isGroupExpanded &&
               (() => {
-                const useVirtualList = group.models.length >= 12;
+                const containsOpenModel = group.models.some((model) => model.id === openId);
+                const useVirtualList = group.models.length >= 12 && !containsOpenModel;
                 if (useVirtualList) {
                   const height = Math.min(560, Math.max(320, group.models.length * 150));
                   return (

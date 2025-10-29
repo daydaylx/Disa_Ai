@@ -146,7 +146,7 @@ export function ModelCard({
               <p
                 className={cn(
                   "mt-2 text-sm leading-relaxed text-text-secondary",
-                  isMobile ? "line-clamp-3" : "line-clamp-2",
+                  !isOpen && (isMobile ? "line-clamp-3" : "line-clamp-2"),
                 )}
               >
                 {description}
@@ -187,7 +187,7 @@ export function ModelCard({
             aria-live="polite"
             className={cn(
               "mt-4 pt-4 border-t border-border-divider relative z-10",
-              isMobile && "max-w-full overflow-hidden",
+              isMobile && "max-w-full",
             )}
           >
             <p className="text-description-base text-text-secondary mb-3">{description}</p>
