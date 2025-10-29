@@ -1,6 +1,6 @@
 import { Menu, PanelTopDashed } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -135,21 +135,18 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
             <ul className="mt-2 space-y-2">
               {NAV_ITEMS.map((item) => (
                 <li key={`drawer-${item.path}`}>
-                  <button
-                    type="button"
+                  <Link
+                    to={item.path}
                     className={cn(
-                      "w-full rounded-[var(--radius-card-inner)] border px-4 py-3 text-left text-sm font-medium",
+                      "block w-full rounded-[var(--radius-card-inner)] border px-4 py-3 text-left text-sm font-medium transition-colors",
                       activePath === item.path
                         ? "border-[var(--color-brand-primary)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)]"
                         : "border-[var(--color-border-hairline)] hover:border-[var(--color-border-subtle)]",
                     )}
-                    onClick={() => {
-                      setIsOverflowOpen(false);
-                      void navigate(item.path);
-                    }}
+                    onClick={() => setIsOverflowOpen(false)}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -162,20 +159,18 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
             <div className="mt-2 grid gap-2">
               {[
                 { label: "Design Matrix", path: "/design-directions" },
+                { label: "Design Matrix · Option B", path: "/design-directions#B" },
                 { label: "Impressum", path: "/impressum" },
                 { label: "Datenschutz", path: "/datenschutz" },
               ].map((link) => (
-                <button
+                <Link
                   key={link.path}
-                  type="button"
-                  className="w-full rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] px-4 py-2 text-left text-sm hover:border-[var(--color-border-subtle)]"
-                  onClick={() => {
-                    setIsOverflowOpen(false);
-                    void navigate(link.path);
-                  }}
+                  to={link.path}
+                  className="block w-full rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] px-4 py-2 text-left text-sm hover:border-[var(--color-border-subtle)]"
+                  onClick={() => setIsOverflowOpen(false)}
                 >
                   {link.label}
-                </button>
+                </Link>
               ))}
             </div>
           </section>
