@@ -1,6 +1,6 @@
 import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
@@ -32,6 +32,7 @@ export function SettingsOverview() {
   const { preference } = useTheme();
   const { isEnabled: memoryEnabled } = useMemory();
   const [hasApiKey, setHasApiKey] = useState(false);
+  const location = useLocation();
   const stats = useMemo(() => getConversationStats(), []);
 
   useEffect(() => {
@@ -42,6 +43,15 @@ export function SettingsOverview() {
       setHasApiKey(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (!location.hash) return;
+    const targetId = location.hash.replace("#", "");
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [location.hash]);
 
   const cards: OverviewCard[] = [
     {
@@ -169,7 +179,11 @@ export function SettingsOverview() {
         </div>
       </section>
 
-      <section className="rounded-[var(--radius-card)] border border-border-subtle bg-surface-subtle px-4 py-4">
+      <section
+        id="settings-shortcuts"
+        className="rounded-[var(--radius-card)] border border-border-subtle bg-surface-subtle px-4 py-4"
+        tabIndex={-1}
+      >
         <header className="flex items-center gap-2">
           <Waves className="h-5 w-5 text-brand" aria-hidden />
           <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-text-tertiary">

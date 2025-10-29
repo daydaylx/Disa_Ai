@@ -1,21 +1,25 @@
 import {
+  ChevronDown,
   Cpu,
-  Download,
   FileText,
   Key,
+  Keyboard,
   Menu,
   MessageSquare,
+  Palette,
   Settings,
+  SlidersHorizontal,
   Smartphone,
   Upload,
   User,
   X,
 } from "lucide-react";
+import type { ComponentType } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
-import { exportConversations, getConversationStats } from "../../lib/conversation-manager";
+import { getConversationStats } from "../../lib/conversation-manager";
 import { hapticFeedback } from "../../lib/touch/haptics";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
@@ -23,8 +27,19 @@ interface TopMenuDropdownProps {
   onOpenAdvancedSettings?: () => void;
 }
 
+interface SettingsMenuItem {
+  id: string;
+  label: string;
+  description?: string;
+  icon: ComponentType<{ className?: string }>;
+  action: () => void;
+  meta?: string;
+  metaClassName?: string;
+}
+
 export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [apiKeyStatus, setApiKeyStatus] = useState<"empty" | "present">("empty");
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -46,11 +61,13 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
   const handleToggle = () => {
     hapticFeedback.tap();
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
+    setIsSettingsMenuOpen(false);
   };
 
   const handleClose = () => {
     setIsOpen(false);
+    setIsSettingsMenuOpen(false);
   };
 
   const handleNavigation = (path: string) => {
@@ -60,42 +77,6 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
   const handleApiKeySettings = () => {
     // Redirect to the secure Advanced Settings Modal for API key management
-    onOpenAdvancedSettings?.();
-    handleClose();
-  };
-
-  const handleExportChats = () => {
-    try {
-      const exportData = exportConversations();
-      const dataStr = JSON.stringify(exportData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: "application/json" });
-
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `disa-ai-chats-${new Date().toISOString().split("T")[0]}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-
-      toasts.push({
-        kind: "success",
-        title: "Export erfolgreich",
-        message: `${exportData.metadata.totalConversations} Konversationen exportiert`,
-      });
-    } catch {
-      toasts.push({
-        kind: "error",
-        title: "Export fehlgeschlagen",
-        message: "Die Chats konnten nicht exportiert werden.",
-      });
-    }
-    handleClose();
-  };
-
-  const handleImportChats = () => {
-    // Redirect to Advanced Settings Modal for full import functionality
     onOpenAdvancedSettings?.();
     handleClose();
   };
@@ -121,6 +102,11 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
   const handleAdvancedSettings = () => {
     onOpenAdvancedSettings?.();
     handleClose();
+  };
+
+  const toggleSettingsMenu = () => {
+    hapticFeedback.tap();
+    setIsSettingsMenuOpen((prev) => !prev);
   };
 
   // Close menu when clicking outside
@@ -158,6 +144,53 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
 
   // Get conversation stats for quick info (memoized for performance)
   const stats = useMemo(() => getConversationStats(), []);
+
+  const settingsMenuItems: SettingsMenuItem[] = [
+    {
+      id: "general",
+      label: "Allgemein",
+      description: "Übersicht & Grundeinstellungen",
+      icon: SlidersHorizontal,
+      action: () => handleNavigation("/settings"),
+    },
+    {
+      id: "appearance",
+      label: "Darstellung",
+      description: "Theme, Kontrast & Bewegung festlegen",
+      icon: Palette,
+      action: () => handleNavigation("/settings/appearance"),
+    },
+    {
+      id: "shortcuts",
+      label: "Tastaturkürzel",
+      description: "Gesten & Shortcuts konfigurieren",
+      icon: Keyboard,
+      action: () => handleNavigation("/settings#settings-shortcuts"),
+    },
+    {
+      id: "api",
+      label: "API-Schlüssel",
+      description: "OpenRouter-Schlüssel verwalten",
+      icon: Key,
+      action: handleApiKeySettings,
+      meta: apiKeyStatus === "present" ? "Gesetzt" : "Nicht gesetzt",
+      metaClassName: apiKeyStatus === "present" ? "text-green-500" : "text-muted",
+    },
+    {
+      id: "data",
+      label: "Import & Export",
+      description: "Konversationen sichern oder wiederherstellen",
+      icon: Upload,
+      action: () => handleNavigation("/settings/data"),
+    },
+    {
+      id: "advanced",
+      label: "Alle Einstellungen",
+      description: "Erweiterte Optionen und Spezialfunktionen",
+      icon: Settings,
+      action: handleAdvancedSettings,
+    },
+  ];
 
   return (
     <div className="relative">
@@ -241,83 +274,97 @@ export default function TopMenuDropdown({ onOpenAdvancedSettings }: TopMenuDropd
                   </div>
                 </div>
 
-                {/* Quick Settings */}
+                {/* Settings Submenu */}
                 <div className="mb-3">
                   <h3 className="text-strong px-2 py-1 text-xs font-semibold uppercase tracking-wider">
-                    Schnellzugriff
+                    Einstellungen
                   </h3>
                   <div className="space-y-1">
                     <button
-                      onClick={handleApiKeySettings}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
+                      onClick={toggleSettingsMenu}
+                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
                       role="menuitem"
+                      aria-expanded={isSettingsMenuOpen}
+                      aria-controls="settings-submenu"
                     >
-                      <Key className="h-4 w-4 text-[var(--fg)]" />
-                      <div className="flex-1">
-                        <span className="text-standard text-sm truncate">API-Schlüssel</span>
-                        <div className="mt-0.5 flex items-center gap-1">
-                          <div
-                            className={`h-1.5 w-1.5 rounded-full ${
-                              apiKeyStatus === "present" ? "bg-green-500" : "bg-gray-500"
-                            }`}
-                          />
-                          <span className="text-xs text-muted truncate">
-                            {apiKeyStatus === "present" ? "Gesetzt" : "Nicht gesetzt"}
-                          </span>
-                        </div>
+                      <Settings className="h-4 w-4 text-[var(--fg)]" aria-hidden="true" />
+                      <div className="flex flex-1 flex-col text-left">
+                        <span className="text-standard text-sm font-medium">Einstellungen</span>
+                        <span className="text-xs text-muted">Alle Optionen an einem Ort</span>
                       </div>
+                      <ChevronDown
+                        aria-hidden="true"
+                        className={`h-4 w-4 text-muted transition-transform ${
+                          isSettingsMenuOpen ? "rotate-180" : ""
+                        }`}
+                      />
                     </button>
 
-                    <button
-                      onClick={handleExportChats}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
-                      role="menuitem"
-                    >
-                      <Download className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm truncate">Chats exportieren</span>
-                    </button>
-
-                    <button
-                      onClick={handleImportChats}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
-                      role="menuitem"
-                    >
-                      <Upload className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm truncate">Chats importieren</span>
-                    </button>
-
-                    {canInstall && !isInstalled && (
-                      <button
-                        onClick={handleInstallPWA}
-                        className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
-                        role="menuitem"
+                    {isSettingsMenuOpen && (
+                      <div
+                        id="settings-submenu"
+                        className="space-y-1 rounded-lg border border-[var(--glass-border)] bg-black/5 px-2 py-2"
+                        role="group"
+                        aria-label="Einstellungen Untermenü"
                       >
-                        <Smartphone className="h-4 w-4 text-[var(--fg)]" />
-                        <div className="flex-1">
-                          <span className="text-standard text-sm truncate">App installieren</span>
-                          <div className="text-xs text-muted truncate">Als native App nutzen</div>
-                        </div>
-                      </button>
+                        {settingsMenuItems.map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <button
+                              key={item.id}
+                              onClick={item.action}
+                              className="touch-target-preferred flex w-full items-center gap-3 rounded-md px-3 py-3 text-left text-sm leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                              role="menuitem"
+                            >
+                              <Icon className="h-4 w-4 text-[var(--fg)]" aria-hidden="true" />
+                              <div className="flex flex-1 flex-col">
+                                <span className="text-standard text-sm font-medium">
+                                  {item.label}
+                                </span>
+                                {item.description ? (
+                                  <span className="text-xs text-muted">{item.description}</span>
+                                ) : null}
+                                {item.meta ? (
+                                  <span
+                                    className={`text-xs ${
+                                      item.metaClassName ? item.metaClassName : "text-muted"
+                                    }`}
+                                  >
+                                    {item.meta}
+                                  </span>
+                                ) : null}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
                     )}
                   </div>
                 </div>
 
-                {/* Advanced Settings */}
-                <div className="mb-3">
-                  <h3 className="text-strong px-2 py-1 text-xs font-semibold uppercase tracking-wider">
-                    Erweitert
-                  </h3>
-                  <div className="space-y-1">
-                    <button
-                      onClick={handleAdvancedSettings}
-                      className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring truncate"
-                      role="menuitem"
-                    >
-                      <Settings className="h-4 w-4 text-[var(--fg)]" />
-                      <span className="text-standard text-sm truncate">Alle Einstellungen</span>
-                    </button>
+                {/* App Aktionen */}
+                {canInstall && !isInstalled && (
+                  <div className="mb-3">
+                    <h3 className="text-strong px-2 py-1 text-xs font-semibold uppercase tracking-wider">
+                      App
+                    </h3>
+                    <div className="space-y-1">
+                      <button
+                        onClick={handleInstallPWA}
+                        className="touch-target-preferred flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left leading-relaxed transition-all duration-180 ease-out motion-reduce:transition-none hover-state focus-ring"
+                        role="menuitem"
+                      >
+                        <Smartphone className="h-4 w-4 text-[var(--fg)]" aria-hidden="true" />
+                        <div className="flex flex-1 flex-col text-left">
+                          <span className="text-standard text-sm font-medium">
+                            App installieren
+                          </span>
+                          <span className="text-xs text-muted">Als native App nutzen</span>
+                        </div>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Legal & Info */}
                 <div className="border-t border-[var(--glass-border)] pt-2">
