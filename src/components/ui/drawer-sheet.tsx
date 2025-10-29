@@ -19,13 +19,17 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
   const sheetRef = useRef<HTMLDivElement>(null);
   const closedViaHistoryRef = useRef(false);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const previousBodyOverflowRef = useRef<string | null>(null);
+  const historyMarkerRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!isOpen) return undefined;
+    if (typeof window === "undefined") return undefined;
 
     closedViaHistoryRef.current = false;
 
     previousFocusRef.current = document.activeElement as HTMLElement | null;
+    previousBodyOverflowRef.current = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -65,7 +69,12 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("popstate", handlePopState);
 
-    const marker = { ...window.history.state, [HISTORY_FLAG]: Date.now() };
+    historyMarkerRef.current = Date.now();
+    const existingState = (window.history.state ?? null) as Record<string, unknown> | null;
+    const marker = {
+      ...(existingState ?? {}),
+      [HISTORY_FLAG]: historyMarkerRef.current,
+    };
     window.history.pushState(marker, "");
 
     const focusTimeout = window.setTimeout(() => {
@@ -79,11 +88,24 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
       window.clearTimeout(focusTimeout);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("popstate", handlePopState);
-      document.body.style.overflow = "";
-      previousFocusRef.current?.focus();
-      if (!closedViaHistoryRef.current) {
+      if (previousBodyOverflowRef.current !== null) {
+        document.body.style.overflow = previousBodyOverflowRef.current;
+      } else {
+        document.body.style.overflow = "";
+      }
+      previousBodyOverflowRef.current = null;
+      previousFocusRef.current?.focus?.();
+      const currentState = (window.history.state ?? null) as Record<string, unknown> | null;
+      const stateMarker = currentState?.[HISTORY_FLAG];
+      if (
+        !closedViaHistoryRef.current &&
+        historyMarkerRef.current !== null &&
+        typeof stateMarker === "number" &&
+        stateMarker === historyMarkerRef.current
+      ) {
         window.history.back();
       }
+      historyMarkerRef.current = null;
       closedViaHistoryRef.current = false;
     };
   }, [isOpen, onClose]);
@@ -91,10 +113,10 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex flex-col justify-end bg-[var(--color-overlay-scrim)]/80">
+    <div className="fixed inset-0 z-50 flex bg-[var(--color-overlay-scrim)]/80">
       <button
         aria-label="Overlay schließen"
-        className="absolute inset-0 h-full w-full"
+        className="absolute inset-0 h-full w-full cursor-pointer"
         onClick={onClose}
       />
       <div
@@ -103,29 +125,30 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
         aria-modal="true"
         aria-label={title}
         className={cn(
-          "relative rounded-t-[var(--radius-card)] border border-[var(--color-border-hairline)]",
+          "relative ml-auto flex h-full w-full max-w-[min(22rem,calc(100vw-3rem))] flex-col",
+          "border-l border-[var(--color-border-hairline)]",
           "bg-[var(--color-overlay-dialog-bg)] text-[var(--color-text-primary)]",
           "shadow-[var(--shadow-overlay)]",
-          "pb-[calc(env(safe-area-inset-bottom)+1rem)]",
-          "animate-in slide-in-from-bottom duration-medium",
+          "pb-[max(env(safe-area-inset-bottom),1rem)] pt-[max(env(safe-area-inset-top),1rem)]",
+          "animate-in slide-in-from-right duration-medium",
         )}
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-[var(--color-border-hairline)] px-5 py-4">
+        <div className="flex items-center justify-between border-b border-[var(--color-border-hairline)] px-6 pb-4">
           <h2 className="text-base font-semibold">{title}</h2>
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)]"
             onClick={onClose}
           >
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
-        <div className="max-h-[65dvh] overflow-y-auto px-5 py-4 text-sm leading-relaxed">
-          {children}
-        </div>
+        <div className="flex-1 overflow-y-auto px-6 py-4 text-sm leading-relaxed">{children}</div>
         {footer ? (
-          <div className="border-t border-[var(--color-border-hairline)] px-5 py-3">{footer}</div>
+          <div className="border-t border-[var(--color-border-hairline)] px-6 pt-3">
+            <div className="pb-[env(safe-area-inset-bottom)]">{footer}</div>
+          </div>
         ) : null}
       </div>
     </div>,
