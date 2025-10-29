@@ -1,6 +1,6 @@
-import { MoreVertical, PanelTopDashed } from "lucide-react";
+import { Menu, PanelTopDashed } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -62,15 +62,12 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
       style={{ minHeight: "calc(100dvh + var(--keyboard-height, 0px))" }}
     >
       <header className="sticky top-0 z-40 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/90 backdrop-blur-lg">
-        <div
-          className="flex items-center justify-between gap-3 px-4 pt-[env(safe-area-inset-top)]"
-          style={{ height: "4.25rem" }}
-        >
+        <div className="flex items-center justify-between gap-3 px-4 py-3 pt-[env(safe-area-inset-top)]">
           <div className="flex flex-col">
             <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
               Disa AI
             </span>
-            <h1 className="text-lg font-semibold text-[var(--color-text-primary)]">{title}</h1>
+            <h1 className="text-token-h2 text-[var(--color-text-primary)]">{title}</h1>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -84,43 +81,13 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
             <button
               type="button"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)]"
-              aria-label="Overflow-Menü öffnen"
+              aria-label="Hauptmenü öffnen"
               onClick={() => setIsOverflowOpen(true)}
             >
-              <MoreVertical className="h-5 w-5" aria-hidden="true" />
+              <Menu className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>
-        <nav
-          className="overflow-x-auto border-t border-[var(--color-border-hairline)] px-2 py-2"
-          role="tablist"
-          aria-label="Hauptbereiche"
-        >
-          <ol className="flex min-w-full gap-2">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.path} role="presentation">
-                <NavLink
-                  to={item.path}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center justify-center rounded-[var(--radius-pill)] px-4 py-2 text-sm font-semibold transition-all",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)]",
-                      isActive
-                        ? "bg-[var(--color-brand-primary)] text-[var(--color-brand-on-primary)] shadow-[var(--shadow-surface)]"
-                        : "bg-transparent text-[var(--color-text-secondary)] border border-[var(--color-border-hairline)]",
-                      !isActive &&
-                        "hover:border-[var(--color-border-subtle)] hover:text-[var(--color-text-primary)]",
-                    )
-                  }
-                  role="tab"
-                  aria-selected={activePath === item.path}
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ol>
-        </nav>
       </header>
 
       <main
