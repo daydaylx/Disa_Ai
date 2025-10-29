@@ -439,14 +439,12 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
                 </Link>
               </Button>
             ) : null}
-            <p className="text-xs uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
+            <span className="brand-chip inline-flex w-fit items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
               Kontrolle
-            </p>
-            <h1 className="text-lg font-semibold text-[var(--color-text-primary)]">
-              {headerTitle}
-            </h1>
+            </span>
+            <h1 className="text-token-h1 text-text-strong font-semibold">{headerTitle}</h1>
           </div>
-          <div className="text-right text-xs text-[var(--color-text-secondary)]">
+          <div className="text-right text-xs text-text-muted leading-5">
             <p>{stats.totalMessages} Nachrichten</p>
             <p>{stats.totalConversations} Verläufe</p>
           </div>

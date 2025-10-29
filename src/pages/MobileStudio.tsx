@@ -186,21 +186,29 @@ export default function MobileStudio() {
     <MobilePageShell contentClassName="mobile-studio-container flex min-h-0 flex-1 flex-col overflow-y-auto px-page-x pb-page-y pt-page-y">
       <header className="mb-section-gap space-y-stack-gap">
         <div className="space-y-2">
-          <span className="brand-chip w-fit">{t.studio.chip}</span>
-          <h1 className="text-text-0 text-balance text-2xl font-semibold">{t.studio.title}</h1>
-          <p className="text-text-1 mt-1 text-pretty text-base leading-7">{t.studio.description}</p>
+          <span className="brand-chip w-fit text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-brand-strong)]">
+            {t.studio.chip}
+          </span>
+          <h1 className="text-token-h1 text-text-strong text-balance font-semibold">
+            {t.studio.title}
+          </h1>
+          <p className="text-text-muted mt-1 text-pretty text-base leading-7">
+            {t.studio.description}
+          </p>
         </div>
 
         {activeRole ? (
           <aside aria-label={t.studio.activeRole.label}>
             <GlassCard className="brand-panel card-depth text-text-1 flex items-start justify-between gap-4 px-5 py-4 text-xs">
               <div className="space-y-1">
-                <span className="brand-chip w-fit">{t.studio.activeRole.chip}</span>
-                <p className="text-text-1 text-xs font-semibold uppercase tracking-wide">
+                <span className="brand-chip w-fit text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-brand-strong)]">
+                  {t.studio.activeRole.chip}
+                </span>
+                <p className="text-text-muted text-xs font-semibold uppercase tracking-wide">
                   {t.studio.activeRole.label}
                 </p>
-                <p className="text-text-0 text-base font-semibold">{activeRole.name}</p>
-                <p className="text-text-1 whitespace-pre-line text-sm leading-5">
+                <p className="text-token-h3 text-text-strong font-semibold">{activeRole.name}</p>
+                <p className="text-text-muted whitespace-pre-line text-sm leading-5">
                   {summariseRole(activeRole)}
                 </p>
               </div>

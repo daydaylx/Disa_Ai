@@ -105,10 +105,10 @@ export function SettingsOverview() {
     <div className="space-y-6 pb-12">
       <section>
         <GlassCard className="rounded-[var(--radius-card)] border-brand/30 bg-brand/10 px-4 py-4 text-[var(--color-brand-strong)]">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--color-brand-strong)]">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-brand-strong)]">
             Schnellstart
           </h2>
-          <p className="mt-2 text-sm text-[var(--color-brand-strong)]/90">
+          <p className="mt-2 text-sm text-[var(--color-brand-strong)]/90 leading-6">
             Richte zuerst deinen API-Key ein, aktiviere anschließend das Gedächtnis und wähle dein
             Lieblings-Theme. Du kannst jederzeit wieder hierher zurückkehren.
           </p>
@@ -128,7 +128,7 @@ export function SettingsOverview() {
           <h2 className="text-xs font-semibold uppercase tracking-[0.3em] text-text-tertiary">
             Einstellungen
           </h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary leading-6">
             Eine klare Übersicht über die wichtigsten Bereiche. Tippe auf eine Karte, um direkt zum
             Detail zu springen.
           </p>

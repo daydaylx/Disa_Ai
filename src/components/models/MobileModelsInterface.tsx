@@ -538,12 +538,14 @@ export function MobileModelsInterface() {
 
       <main className="space-y-section-gap px-page-x pb-page-y pt-page-y">
         <header className="space-y-stack-gap" data-testid="models-title">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
+          <span className="brand-chip inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
             🤖 Modelle
           </span>
           <div className="space-y-2">
-            <h1 className="text-2xl font-semibold tracking-tight">KI-Modellkatalog</h1>
-            <p className="max-w-2xl text-sm leading-relaxed opacity-80">
+            <h1 className="text-token-h1 text-text-strong font-semibold tracking-tight">
+              KI-Modellkatalog
+            </h1>
+            <p className="max-w-2xl text-sm leading-relaxed text-text-muted">
               Wähle das perfekte{" "}
               <Tooltip content="Künstliche Intelligenz Sprachmodelle, die auf verschiedene Aufgaben spezialisiert sind">
                 KI-Modell
@@ -567,10 +569,10 @@ export function MobileModelsInterface() {
 
         <GlassCard padding="md" className="space-y-4 text-[var(--color-text-primary)]">
           <div className="space-y-2">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] opacity-70">
+            <span className="brand-chip inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] opacity-70">
               Studio Fokus
             </span>
-            <h2 className="text-lg font-semibold">Aktive Rolle</h2>
+            <h2 className="text-token-h3 text-text-strong font-semibold">Aktive Rolle</h2>
           </div>
           {activeRole && activeRoleSummary ? (
             <div className="space-y-2">
@@ -582,12 +584,12 @@ export function MobileModelsInterface() {
                   </span>
                 )}
               </div>
-              <p className="text-sm leading-6 opacity-80">{activeRoleSummary}</p>
+              <p className="text-sm leading-6 text-text-muted">{activeRoleSummary}</p>
             </div>
           ) : (
-            <p className="text-sm opacity-75">Standard (keine Rolle ausgewählt)</p>
+            <p className="text-sm text-text-muted">Standard (keine Rolle ausgewählt)</p>
           )}
-          <p className="text-xs opacity-65">
+          <p className="text-xs text-text-muted">
             Passe Stimme, Tonalität und Badges flexibel im Rollen-Studio an.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -609,9 +611,11 @@ export function MobileModelsInterface() {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="text-blue-600">💡</span>
-              <h3 className="text-sm font-semibold">Schnelle Orientierung</h3>
+              <h3 className="text-token-h4 text-text-strong font-semibold">
+                Schnelle Orientierung
+              </h3>
             </div>
-            <div className="text-xs space-y-1">
+            <div className="text-xs space-y-1 text-text-muted">
               <p>
                 <strong>Neu hier?</strong> Starte mit{" "}
                 <Tooltip content="Kostenlose Modelle ohne Limits für den Einstieg">
