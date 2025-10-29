@@ -59,28 +59,16 @@
 2. Optimize bundle size
 3. Add proper lazy loading
 
-### 3. Mobile UI Problems 📱 HIGH
+### 3. Mobile UI Problems 📱 – behoben am 29.10.2025
 
-**Problem**: Non-scrollable model/settings pages
+**Status**: Die nicht scrollbare Einstellungsansicht wurde durch eine
+multi-sektionale Navigation ersetzt (`/settings/api`, `/settings/memory`, …).
+Damit sind alle Optionen auf Mobilgeräten erreichbar, ohne horizontales Scrollen.
 
-- Users cannot access all content on mobile screens
-- Critical functionality is unreachable
+**Nächste Schritte**:
 
-**Impact**:
-
-- Incomplete user experience on mobile
-- Lost functionality for key features
-- Frustration with core app features
-
-**Solution**:
-
-```css
-.scrollable-section {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: calc(100vh - var(--header-height) - var(--footer-height));
-}
-```
+- Fokus auf Touch-Targets & Glassmorphism-Kontrast (bleiben offen)
+- Monitoring der neuen Routen in Playwright-/Smoke-Tests
 
 ### 4. Heading Order Violations ⚠️ HIGH
 
@@ -114,7 +102,7 @@
 
 1. Fix nested interactive controls in role cards
 2. Correct heading order violations
-3. Implement scrolling for model/settings pages
+3. (✔︎ erledigt 29.10.2025) Mobile Settings-Navigation testen & überwachen
 
 ### Week 1:
 

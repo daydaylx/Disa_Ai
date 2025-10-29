@@ -19,9 +19,9 @@ Our comprehensive audit of the Disa AI application has revealed several critical
    - Total Blocking Time: 1,090ms (should be <300ms)
 
 3. **Mobile UI Defects**
-   - Non-scrollable model/settings pages
    - Glassmorphism readability issues
    - Improper touch target sizes
+   - (✅ 29.10.2025) Einstellungen sind jetzt in eigenständige mobile Screens aufgeteilt
 
 ### 🟡 High Priority Issues
 
@@ -41,7 +41,7 @@ Our comprehensive audit of the Disa AI application has revealed several critical
 
 - [ ] Resolve nested interactive controls
 - [ ] Fix heading order violations
-- [ ] Enable scrolling on model/settings pages
+- [x] Reorganize settings navigation für mobile Nutzung
 - [ ] Improve glassmorphism text contrast
 
 ### Phase 2: Performance Optimization (Week 3-4)

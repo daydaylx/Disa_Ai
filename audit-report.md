@@ -187,7 +187,7 @@ While the current implementation stores API keys in sessionStorage (more secure 
 1. Fix heading order violations
 2. Add missing accessible names to buttons
 3. Increase touch target sizes
-4. Implement proper scrolling for model/settings pages
+4. **Erledigt 29.10.2025:** Settings in mobile Navigation aufteilen (ersetzt Scroll-Workaround)
 
 ### Short-term Goals (1-2 weeks)
 

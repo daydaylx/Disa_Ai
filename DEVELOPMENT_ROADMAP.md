@@ -13,7 +13,7 @@
 
 #### Mobile UI Fixes
 
-- [ ] Enable scrolling on model/settings pages
+- [x] Reorganize Settings in mobile Navigation (ersetzt Scroll-Workaround)
 - [ ] Fix hamburger menu functionality and submenu navigation
 - [ ] Resolve glassmorphism readability issues with text contrast
 
