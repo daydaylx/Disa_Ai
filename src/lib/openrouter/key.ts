@@ -3,7 +3,7 @@ const CANONICAL_KEY = "openrouter-key";
 
 // Default OpenRouter key provided by the application
 export const DEFAULT_API_KEY =
-  "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";
+  "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";
 
 // Flag to determine whether the user has overridden the default key
 const OVERRIDE_FLAG = "openrouter-key-override";
