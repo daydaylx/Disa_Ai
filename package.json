@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/build-info.js",
+    "generate-tokens": "node scripts/generate-tokens.mjs",
+    "prebuild": "node scripts/build-info.js && npm run generate-tokens",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
     "preview": "node ./scripts/run-preview.mjs",
