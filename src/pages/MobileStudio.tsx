@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useStudio } from "../app/state/StudioContext";
+import { MobilePageShell } from "../components/layout/MobilePageShell";
 import { RoleCard } from "../components/studio/RoleCard";
 import { Button } from "../components/ui";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
@@ -181,7 +182,7 @@ export default function MobileStudio() {
   };
 
   return (
-    <div className="mobile-studio-container flex min-h-0 flex-1 flex-col overflow-y-auto px-page-x pb-page-y pt-page-y">
+    <MobilePageShell contentClassName="mobile-studio-container flex min-h-0 flex-1 flex-col overflow-y-auto px-page-x pb-page-y pt-page-y">
       <header className="mb-section-gap space-y-stack-gap">
         <div className="space-y-2">
           <span className="brand-chip w-fit">{t.studio.chip}</span>
@@ -392,6 +393,6 @@ export default function MobileStudio() {
           <span>{t.studio.actions.resetRole}</span>
         </Button>
       </div>
-    </div>
+    </MobilePageShell>
   );
 }

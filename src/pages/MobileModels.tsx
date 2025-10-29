@@ -1,3 +1,4 @@
+import { MobilePageShell } from "../components/layout/MobilePageShell";
 import { MobileModelsInterface } from "../components/models/MobileModelsInterface";
 
 /**
@@ -8,8 +9,8 @@ import { MobileModelsInterface } from "../components/models/MobileModelsInterfac
  */
 export default function MobileModels() {
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <MobilePageShell contentClassName="flex min-h-0 flex-1 flex-col">
       <MobileModelsInterface />
-    </div>
+    </MobilePageShell>
   );
 }
