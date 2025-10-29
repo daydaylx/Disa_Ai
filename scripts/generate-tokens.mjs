@@ -6,33 +6,33 @@
  * This eliminates runtime token calculation for faster theme switching
  */
 
-import { readFileSync, writeFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { readFileSync, writeFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const projectRoot = join(__dirname, '..');
+const projectRoot = join(__dirname, "..");
 
-console.log('🎨 Generating build-time design tokens...');
+console.log("🎨 Generating build-time design tokens...");
 
 // Import token data (we'll read the compiled JS output)
-const tokensPath = join(projectRoot, 'src/styles/tokens');
+const tokensPath = join(projectRoot, "src/styles/tokens");
 
 // Helper function to traverse and generate CSS variables
-function generateCssVariables(mapping, source, prefix = '') {
+function generateCssVariables(mapping, source, prefix = "") {
   const variables = {};
 
   for (const [key, reference] of Object.entries(mapping)) {
     const value = source[key];
 
-    if (typeof reference === 'string') {
-      if (typeof value === 'undefined' || value === null) continue;
+    if (typeof reference === "string") {
+      if (typeof value === "undefined" || value === null) continue;
       variables[reference] = String(value);
       continue;
     }
 
-    if (typeof value === 'object' && value !== null) {
+    if (typeof value === "object" && value !== null) {
       Object.assign(variables, generateCssVariables(reference, value, prefix));
     }
   }
@@ -509,9 +509,14 @@ const preCalculatedTokens = {
   dark: darkVariables,
 };
 
-const outputContent = `// ⚡ Pre-calculated Design Tokens
-// Generated at build-time for optimal performance
-// Do not edit manually - run 'npm run generate-tokens' to regenerate
+const outputHeader = [
+  "/* eslint-disable no-restricted-syntax */",
+  "// ⚡ Pre-calculated Design Tokens",
+  "// Generated at build-time for optimal performance",
+  "// Do not edit manually - run 'npm run generate-tokens' to regenerate",
+].join("\n");
+
+const outputContent = `${outputHeader}
 
 export type CssVariableMap = Record<string, string>;
 
@@ -523,10 +528,10 @@ export const preCalculatedTokens: Record<'light' | 'dark', CssVariableMap> = ${J
 `;
 
 // Write the generated file
-const outputPath = join(projectRoot, 'src/styles/design-tokens.generated.ts');
-writeFileSync(outputPath, outputContent, 'utf8');
+const outputPath = join(projectRoot, "src/styles/design-tokens.generated.ts");
+writeFileSync(outputPath, `${outputContent}`, "utf8");
 
 console.log(`✅ Generated ${Object.keys(lightVariables).length} pre-calculated tokens`);
 console.log(`📁 Written to: ${outputPath}`);
 console.log(`🚀 Performance gain: ~60% faster theme switching`);
-console.log('🎯 Next: Update design-tokens.ts to use pre-calculated tokens');
+console.log("🎯 Next: Update design-tokens.ts to use pre-calculated tokens");
