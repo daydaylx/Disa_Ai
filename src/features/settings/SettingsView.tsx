@@ -324,28 +324,63 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       description: "Wähle Theme und respektiere Systempräferenzen.",
       icon: Sparkles,
       content: (
-        <div className="space-y-3">
-          <Label
-            htmlFor="theme-select"
-            className="text-xs font-semibold uppercase tracking-[0.3em]"
-          >
-            Farbschema
-          </Label>
-          <Select value={preference} onValueChange={handleThemeChange}>
-            <SelectTrigger id="theme-select">
-              <SelectValue placeholder="System" />
-            </SelectTrigger>
-            <SelectContent>
-              {themeOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-[var(--color-text-secondary)]">
-            Tokens werden live aktualisiert. Blur-Intensität respektiert prefers-reduced-motion.
-          </p>
+        <div className="space-y-4">
+          <div className="space-y-3">
+            <Label
+              htmlFor="theme-select"
+              className="text-xs font-semibold uppercase tracking-[0.3em]"
+            >
+              Farbschema
+            </Label>
+            <Select value={preference} onValueChange={handleThemeChange}>
+              <SelectTrigger id="theme-select">
+                <SelectValue placeholder="System" />
+              </SelectTrigger>
+              <SelectContent>
+                {themeOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-[var(--color-text-secondary)]">
+              Tokens werden live aktualisiert. Blur-Intensität respektiert prefers-reduced-motion.
+            </p>
+          </div>
+
+          <GlassCard className="space-y-3 border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)]/40">
+            <div className="flex items-center justify-between gap-3">
+              <div className="space-y-1">
+                <span className="brand-chip inline-flex w-fit text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-brand-strong)]">
+                  Design Matrix
+                </span>
+                <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                  Option B · Fluent-2 Soft-Depth
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)]">
+                  Sanfte Layer, klare Typografie und performante Schatten. Empfohlene Basis für das
+                  aktuelle Erscheinungsbild.
+                </p>
+              </div>
+              <div className="hidden h-14 w-24 rounded-[var(--radius-card-inner)] border border-[var(--color-border-subtle)] bg-[linear-gradient(160deg,color-mix(in_srgb,var(--bg1) 95%,transparent) 0%,color-mix(in_srgb,var(--bg1) 75%,var(--bg2)) 40%,color-mix(in_srgb,var(--bg2) 80%,transparent) 100%)] sm:block" />
+            </div>
+            <div className="flex flex-wrap gap-2 text-xs text-[var(--color-text-secondary)]">
+              <span>Lesbarkeit 5.6 : 1</span>
+              <span>Blur-frei</span>
+              <span>Tokens ready</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="brand" size="sm" asChild>
+                <Link to="/design-directions">Design-Matrix öffnen</Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <a href="/design-directions#B" className="uppercase tracking-[0.3em] text-[10px]">
+                  Option B vergleichen
+                </a>
+              </Button>
+            </div>
+          </GlassCard>
         </div>
       ),
     },
