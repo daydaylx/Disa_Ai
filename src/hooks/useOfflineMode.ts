@@ -18,7 +18,7 @@ import {
   updateLastSync,
   updateMessageSyncStatus,
 } from "../lib/offline-storage";
-import type { Message } from "../ui/types";
+import type { Message } from "../types";
 
 /**
  * Hook for offline mode functionality

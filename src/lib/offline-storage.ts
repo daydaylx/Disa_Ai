@@ -5,7 +5,7 @@
  * with sync capabilities and storage optimization
  */
 
-import type { Message } from "../ui/types";
+import type { Message } from "../types";
 
 export interface OfflineMessage extends Message {
   /** Local storage ID */

@@ -5,7 +5,7 @@
 
 // ==================== Message Types ====================
 
-export type Role = "user" | "assistant" | "system";
+export type Role = "user" | "assistant" | "system" | "tool";
 
 /**
  * Base message interface used throughout the application
