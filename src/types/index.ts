@@ -47,10 +47,3 @@ export interface ChatSession {
   createdAt: number;
   updatedAt: number;
 }
-
-// ==================== UI Component Props ====================
-
-export interface ChatAreaProps {
-  messages: Message[];
-  onSend: (message: string) => void;
-}

@@ -67,19 +67,19 @@ Diese Punkte betreffen die Grundarchitektur der Präsentationsschicht und haben 
 
 ### 8. Redundante und veraltete Dateien
 
-- **Problem:** Im Repository befinden sich veraltete Build-Artefakte (`index-build.html`, `index-correct.html`) und wahrscheinlich ungenutzte Komponenten (`SidePanel.tsx`).
-- **Auswirkung:** Unnötige Dateien, die das Repository aufblähen und zu Verwirrung führen können.
-- **Lösung:** Entfernen Sie die redundanten HTML-Dateien und überprüfen Sie die Verwendung von `SidePanel.tsx` und entfernen Sie es gegebenenfalls.
+- **Problem:** Historisch lagen veraltete Build-Artefakte (`index-build.html`, `index-correct.html`) sowie ungenutzte Komponenten (z. B. `SidePanel.tsx`) im Repo.
+- **Auswirkung:** Solche Altlasten blähen das Repository auf und erzeugen Verwirrung.
+- **Aktueller Stand:** Die Altkomponenten wurden entfernt; behalten Sie das Muster im Blick und löschen Sie vergleichbare Artefakte frühzeitig.
 
 ---
 
 ## P4 (Niedrig) - Clean Code
 
-### 9. Typ-Definition nicht zentralisiert
+### 9. Typ-Definition zentralisiert halten
 
-- **Problem:** Der `Message`-Typ ist direkt in `ChatArea.tsx` definiert.
-- **Auswirkung:** Der Typ kann nicht einfach wiederverwendet werden.
-- **Lösung:** Verschieben Sie die Typ-Definition in eine zentrale `src/types/index.ts` Datei.
+- **Problem (historisch):** Der `Message`-Typ lag einst direkt in `ChatArea.tsx`.
+- **Auswirkung:** Der Typ ließ sich schwer wiederverwenden.
+- **Aktueller Stand:** Der Typ ist nun in `src/types/index.ts` zentralisiert; achten Sie darauf, zukünftige Erweiterungen ebenfalls dort zu bündeln.
 
 ### 10. Komplexe Logik in UI-Komponente
 

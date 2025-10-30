@@ -1,9 +1,17 @@
-import type { Message } from "../ui/chat/types";
+export type ThreadMessageRole = "user" | "assistant" | "system";
+
+export interface ThreadMessage {
+  id: string;
+  role: ThreadMessageRole;
+  content: string;
+  createdAt: string;
+  language?: string;
+}
 
 export interface Thread {
   id: string;
   title: string;
-  messages: Message[];
+  messages: ThreadMessage[];
   createdAt: string;
   updatedAt: string;
   isPinned: boolean;
@@ -59,7 +67,7 @@ export class ThreadStorage {
     }
   }
 
-  createThread(title: string, messages: Message[] = []): Thread {
+  createThread(title: string, messages: ThreadMessage[] = []): Thread {
     const now = new Date().toISOString();
     const thread: Thread = {
       id: crypto.randomUUID(),
@@ -171,7 +179,7 @@ export class ThreadStorage {
     });
   }
 
-  addMessageToThread(threadId: string, message: Message): Thread | null {
+  addMessageToThread(threadId: string, message: ThreadMessage): Thread | null {
     const thread = this.threads.get(threadId);
     if (!thread) return null;
 

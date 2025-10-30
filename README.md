@@ -134,7 +134,7 @@ src/
 
 Der Prozess von der Nutzereingabe bis zur Anzeige der KI-Antwort ist eine zentrale Funktion und folgt diesem Ablauf:
 
-1.  **Eingabe**: Der Nutzer tippt eine Nachricht in die `Composer`-Komponente (`src/components/Composer.tsx`). Der Zustand der Eingabe wird lokal verwaltet.
+1.  **Eingabe**: Der Nutzer tippt eine Nachricht in die `ChatComposer`-Komponente (`src/components/chat/ChatComposer.tsx`). Der Zustand der Eingabe wird lokal verwaltet.
 2.  **Senden**: Bei Klick auf "Senden" oder Drücken der Enter-Taste wird die `append`-Funktion aus dem `useChat`-Hook (`src/hooks/useChat.ts`) aufgerufen.
 3.  **Zustands-Update im Hook**: `useChat` fügt die neue Nutzernachricht sofort zum Nachrichten-Array hinzu und setzt den `isLoading`-Status auf `true`. Dies sorgt für eine sofortige UI-Rückmeldung.
 4.  **API-Anfrage**: Der Hook ruft die `chatStream`-Funktion in `src/api/openrouter.ts` auf. Zuvor werden die Nachrichten-Historie und ein optionaler System-Prompt vorbereitet.
@@ -150,7 +150,7 @@ Der Prozess von der Nutzereingabe bis zur Anzeige der KI-Antwort ist eine zentra
 
 Die UI ist aus kleinen, wiederverwendbaren Bausteinen aufgebaut.
 
-- **`Composer.tsx`**: Eine kontrollierte Komponente, die das `textarea`-Eingabefeld und die Senden/Stopp-Buttons kapselt. Die Logik zum Senden (Enter-Taste) und die Deaktivierungs-Logik (z.B. während des Streamings) sind hier implementiert.
+- **`ChatComposer.tsx`**: Eine kontrollierte Komponente, die das Eingabefeld sowie Senden/Stopp-Logik kapselt (z. B. Enter-Verhalten, Sperren während laufender Streams).
 - **`ModelPicker.tsx`**: Eine komplexe Komponente zur Auswahl des KI-Modells.
   - Sie lädt den Modellkatalog aus `src/config/models.ts`.
   - Bietet umfangreiche Filter- (nach Preis, Provider, Features) und Sortierfunktionen.

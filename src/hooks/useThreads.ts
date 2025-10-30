@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import type { Thread, ThreadSummary } from "../data/threads";
+import type { Thread, ThreadMessage, ThreadSummary } from "../data/threads";
 import { ThreadStorage } from "../data/threads";
-import type { Message } from "../ui/chat/types";
 
 export function useThreads() {
   const [threads, setThreads] = useState<ThreadSummary[]>([]);
@@ -22,7 +21,7 @@ export function useThreads() {
   }, [storage]);
 
   const createThread = useCallback(
-    (title: string, messages: Message[] = []) => {
+    (title: string, messages: ThreadMessage[] = []) => {
       const newThread = storage.createThread(title, messages);
       refreshThreads();
       return newThread;
@@ -89,7 +88,7 @@ export function useThreads() {
   );
 
   const addMessageToThread = useCallback(
-    (threadId: string, message: Message) => {
+    (threadId: string, message: ThreadMessage) => {
       const updatedThread = storage.addMessageToThread(threadId, message);
       if (updatedThread) {
         refreshThreads();
