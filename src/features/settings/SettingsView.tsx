@@ -423,10 +423,9 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     },
   ];
 
-  const visibleSections = section
+  const sectionsToRender = section
     ? sectionConfigs.filter((config) => config.id === section)
     : sectionConfigs;
-  const sectionsToRender = visibleSections.length > 0 ? visibleSections : sectionConfigs;
   const sectionStatuses: Record<
     SettingsSectionKey,
     { label: string; variant: BadgeProps["variant"] }
