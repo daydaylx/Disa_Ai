@@ -484,38 +484,3 @@ export async function loadModelCatalog(
     return emergencyModels;
   }
 }
-
-/** Wählt ein Default-Modell aus der Liste. */
-export function chooseDefaultModel(
-  list: ModelEntry[],
-  opts?: { allow?: string[] | null; preferFree?: boolean },
-): string | null {
-  if (!list || list.length === 0) return null;
-
-  // 1) allow-Liste hat Vorrang
-  const allow = opts?.allow && opts.allow.length ? opts.allow : null;
-  if (allow) {
-    const match = list.find((m) => allow.includes(m.id));
-    if (match) return match.id;
-  }
-
-  // 2) Free bevorzugen
-  if (opts?.preferFree) {
-    const free = list.find((m) => m.safety === "free");
-    if (free) return free.id;
-  }
-
-  // 3) Heuristik über gängige Kandidaten
-  const preferred = list.find((m) =>
-    /gpt-4o|o4-mini|mistral|mistralai|gemma|qwen|phi|llama/i.test(m.id),
-  );
-  if (preferred) return preferred.id;
-
-  // 4) Fallback
-  return list[0]!.id;
-}
-
-/** Einfache Label-Funktion (alte Signatur beibehalten). */
-export function labelForModel(id: string, preferredLabel?: string): string {
-  return preferredLabel && preferredLabel.trim().length > 0 ? preferredLabel : id;
-}
