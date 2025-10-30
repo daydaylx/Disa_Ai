@@ -5,16 +5,6 @@
  * to ensure consistency and make maintenance easier.
  */
 
-// API Configuration
-export const API_CONFIG = {
-  /** OpenRouter API endpoint for chat completions */
-  ENDPOINT: "https://openrouter.ai/api/v1/chat/completions",
-  /** Base URL for OpenRouter API */
-  BASE_URL: "https://openrouter.ai/api/v1",
-  /** Default model to use when none is selected */
-  DEFAULT_MODEL: "meta-llama/llama-3.3-70b-instruct:free",
-} as const;
-
 // Storage Keys
 export const STORAGE_KEYS = {
   /** API Key storage keys (in priority order for migration) */
@@ -57,19 +47,3 @@ export const APP_CONFIG = {
   /** Session storage prefix */
   SESSION_PREFIX: "disa_",
 } as const;
-
-/**
- * Get all valid API key names for validation and migration
- * @returns Array of valid API key storage names
- */
-export function getAllowedApiKeyNames(): readonly string[] {
-  return STORAGE_KEYS.API_KEYS;
-}
-
-/**
- * Get the primary API key storage name
- * @returns The main API key storage name to use
- */
-export function getPrimaryApiKeyName(): string {
-  return STORAGE_KEYS.API_KEYS[0];
-}

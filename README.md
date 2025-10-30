@@ -151,12 +151,8 @@ Der Prozess von der Nutzereingabe bis zur Anzeige der KI-Antwort ist eine zentra
 Die UI ist aus kleinen, wiederverwendbaren Bausteinen aufgebaut.
 
 - **`ChatComposer.tsx`**: Eine kontrollierte Komponente, die das Eingabefeld sowie Senden/Stopp-Logik kapselt (z. B. Enter-Verhalten, Sperren während laufender Streams).
-- **`ModelPicker.tsx`**: Eine komplexe Komponente zur Auswahl des KI-Modells.
-  - Sie lädt den Modellkatalog aus `src/config/models.ts`.
-  - Bietet umfangreiche Filter- (nach Preis, Provider, Features) und Sortierfunktionen.
-  - Favoriten werden im `localStorage` gespeichert.
-  - Die Liste wird mit einer "Infinite Scroll"-Logik virtualisiert, um auch bei hunderten von Modellen performant zu bleiben.
-- **`CodeBlock.tsx`**: Stellt Code-Blöcke in den Chat-Nachrichten dar. Implementiert Syntax-Hervorhebung und eine "Kopieren"-Funktion.
+- **`MobileModelsInterface.tsx`**: Das mobile Modell-Explorer-Interface lädt den Katalog (`src/config/models.ts`), bietet Filter/Sortier-Funktionen und virtualisiert lange Listen.
+- **`ChatMessage.tsx`**: Rendert Chatnachrichten inklusive Inline-Code-Blöcken mit Syntax-Highlighting und Kopierfunktion.
 - **Primitives (`src/components/ui/`)**: Basis-Komponenten wie `Button`, `Card`, `Input` etc. basieren auf `Radix UI` für maximale Barrierefreiheit und werden mit `tailwind-merge` und `clsx` für flexibles Styling erweitert.
 
 ### Konfiguration & Personas
@@ -165,8 +161,8 @@ Die Anwendung ist hochgradig konfigurierbar, um Flexibilität und einfache Wartu
 
 - **Statische Konstanten (`src/config/defaults.ts`)**
   Diese Datei ist die "Single Source of Truth" für alle hartkodierten Werte, die an mehreren Stellen in der App verwendet werden. Sie verhindert "magische Strings" und erleichtert globale Änderungen.
-  - `API_CONFIG`: Definiert Endpunkte und das Standard-Fallback-Modell (`meta-llama/llama-3.3-70b-instruct:free`).
   - `STORAGE_KEYS`: Legt die exakten Namen für Schlüssel im `sessionStorage` und `localStorage` fest (z.B. `disa_api_key`, `disa_settings_v1`).
+  - `REQUEST_CONFIG` & `APP_CONFIG`: Enthalten Timeout-/Retry-Defaults sowie Präfixe und Versionsangaben für gespeicherte Daten.
 
 - **Umgebungsvariablen (`src/config/env.ts`)**
   Diese Datei ist für die Verarbeitung von Build-Zeit-Variablen zuständig, die über eine `.env`-Datei oder den Build-Prozess bereitgestellt werden (alle mit `VITE_` Präfix).

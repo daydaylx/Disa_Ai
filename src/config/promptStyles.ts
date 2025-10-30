@@ -5,8 +5,8 @@ import type { StyleKey } from "./settings";
  * - Sprache/Locale
  * - Sicherheitsrahmen (abhängig von NSFW-Flag)
  * - Klare, nüchterne Ausgaberichtlinien
- * Hinweis: Der eigentliche Stiltext (Direktheit etc.) wird separat
- * über generateRoleStyleText zugemischt. Hier bleibt es neutral.
+ * Hinweis: Stilüberlagerungen (z. B. aus Personas) werden an anderer Stelle
+ * ergänzt; dieser Basisrahmen bleibt neutral.
  */
 export function buildSystemPrompt(opts: {
   nsfw: boolean;
@@ -32,8 +32,7 @@ export function buildSystemPrompt(opts: {
         "Keine Anleitungen zu illegalen, gefährlichen oder schädlichen Handlungen. Bei Grenzfällen höflich ablehnen und sichere Alternativen nennen.",
       ];
 
-  // Der konkrete Stil kommt aus styleEngine (generateRoleStyleText) oben drauf.
-  // Hier bleibt der Basisrahmen neutral/konstant.
+  // Stil-Overlays werden außerhalb dieser Funktion ergänzt – Basis bleibt konstant.
   return [...common, ...safety].join("\n");
 }
 
