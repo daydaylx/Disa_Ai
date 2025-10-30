@@ -863,7 +863,7 @@ textarea {
   gap: var(--space-lg);
 }
 
-/* Mobile-specific roles grid - moved to mobile-layout.css */
+/* Mobile-specific roles grid - see mobile-components.css */
 
 /* Mobile-specific studio container */
 .mobile-studio-container {

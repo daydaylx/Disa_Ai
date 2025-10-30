@@ -26,7 +26,7 @@ This document summarizes all the changes made to implement a mobile-first design
 
 ### 4. Mobile Styles
 - `src/styles/mobile-enhanced.css` - Enhanced mobile-first CSS layout system
-- `src/styles/mobile-layout.css` - Mobile layout utilities and components
+- `src/styles/mobile-components.css` - Mobile layout components (Cards, Buttons, Chat)
 - `src/styles/mobile-design-tokens.css` - Mobile-specific design tokens
 
 ### 5. Documentation

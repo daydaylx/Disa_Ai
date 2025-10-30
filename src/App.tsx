@@ -6,7 +6,7 @@ import "./styles/bottomsheet.css"; // Bottom sheet specific styles
 import "./ui/base.css"; // Reset & base styles
 import "./styles/a11y-improvements.css"; // A11y improvements
 import "./styles/mobile-enhanced.css"; // Mobile-enhanced styles
-import "./styles/mobile-layout.css"; // Mobile layout styles
+import "./styles/mobile-components.css"; // Mobile component styles
 
 import React from "react";
 
