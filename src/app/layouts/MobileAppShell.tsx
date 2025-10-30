@@ -68,7 +68,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
               Disa AI
             </span>
             <div>
-              <h1 className="text-token-h1 text-[var(--color-text-primary)] leading-tight">
+              <h1 className="text-xl font-semibold text-[var(--color-text-primary)] leading-tight">
                 {title}
               </h1>
               <p className="text-xs text-[var(--color-text-secondary)]">

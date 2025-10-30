@@ -1,18 +1,19 @@
-import { Bot, Home, Users } from "lucide-react";
+import { Bot, MessageCircle, Settings, Users } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import { cn } from "../../lib/utils";
 
 const navItems = [
-  { path: "/chat", icon: Home, label: "Chat" },
-  { path: "/models", icon: Bot, label: "Modelle" },
+  { path: "/chat", icon: MessageCircle, label: "Chat" },
   { path: "/roles", icon: Users, label: "Rollen" },
+  { path: "/models", icon: Bot, label: "Modelle" },
+  { path: "/settings", icon: Settings, label: "Einstellungen" },
 ];
 
 export function MobileNavigation() {
   return (
     <nav
-      className="bottom-navigation bg-surface-base/90 fixed bottom-0 z-20 w-full border-t border-border backdrop-blur-xl"
+      className="bottom-navigation bg-[var(--color-surface-base)]/90 fixed bottom-0 z-20 w-full border-t border-[var(--color-border-hairline)] backdrop-blur-xl"
       role="navigation"
       aria-label="Hauptnavigation"
     >
@@ -24,7 +25,9 @@ export function MobileNavigation() {
             className={({ isActive }) =>
               cn(
                 "nav-item flex flex-col items-center justify-center text-sm font-medium transition-colors touch-target-preferred",
-                isActive ? "text-brand" : "text-text-secondary hover:text-text-primary",
+                isActive
+                  ? "text-[var(--color-brand-primary)]"
+                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]",
               )
             }
             aria-label={item.label}
