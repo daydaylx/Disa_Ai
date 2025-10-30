@@ -20,10 +20,6 @@
   );
 
   /* Touch targets for mobile */
-  --touch-target-minimum: 48px;
-  --touch-target-comfortable: 56px;
-  --touch-target-relaxed: 64px;
-  --touch-target-spacious: 72px;
 
   /* Mobile spacing scale */
   --space-mobile-xs: 0.25rem;
@@ -1083,9 +1079,23 @@
   }
 
   .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-fade-in-down,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-scale-in,
   .animate-pulse,
-  .animate-bounce {
-    animation: none;
+  .animate-bounce,
+  .animate-shimmer,
+  .animate-glow,
+  .animate-float,
+  .touch-ripple::after,
+  .hover-lift,
+  .hover-scale,
+  .hover-glow {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 
