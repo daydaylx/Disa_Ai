@@ -10,6 +10,7 @@
  */
 
 /* Import consolidated styles */
+@import "./styles/z-index-system.css"; /* FIRST: Establish z-index hierarchy */
 @import "./styles/tokens.css";
 @import "./styles/base.css";
 @import "./styles/components.css";

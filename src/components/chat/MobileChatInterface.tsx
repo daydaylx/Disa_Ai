@@ -750,7 +750,7 @@ export function MobileChatInterface() {
         isLoading={isLoading}
         canSend={!!input.trim()}
         placeholder="Nachricht an Disa AI schreiben..."
-        className="z-[110]"
+        className="z-composer"
       />
 
       {/* Mobile Chat History Sidebar using BottomSheet */}

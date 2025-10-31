@@ -90,20 +90,7 @@
   font-family: var(--font-family-sans);
 }
 
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--color-border-hairline);
-  background: color-mix(in srgb, var(--color-surface-base) 80%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--layout-content-padding-x);
-  padding-top: env(safe-area-inset-top, 0px);
-  height: var(--layout-header-height);
-}
+/* .app-header moved to mobile-enhanced.css to avoid position conflicts */
 
 .main-content {
   flex: 1 1 auto;
@@ -119,22 +106,7 @@
   background: var(--color-surface-base);
 }
 
-.bottom-navigation {
-  position: sticky;
-  inset: auto 0 0 0;
-  z-index: 50;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  background: color-mix(in srgb, var(--color-surface-card) 85%, transparent);
-  border-top: 1px solid var(--color-border-hairline);
-  padding-bottom: calc(env(safe-area-inset-bottom) + var(--space-sm));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  height: var(--layout-bottom-nav-height);
-}
+/* .bottom-navigation moved to mobile-enhanced.css to avoid position conflicts */
 
 /* ============================================================================
    NAVIGATION
@@ -296,7 +268,7 @@
   box-shadow: var(--shadow-raised);
   border-top: 1px solid var(--color-border-subtle);
   z-index: 40;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--space-lg));
+  padding-bottom: calc(var(--inset-b) + var(--space-lg));
 }
 
 .chat-input-form {

@@ -1,0 +1,166 @@
+/**
+ * Z-Index System - Single Source of Truth
+ *
+ * Provides a centralized z-index hierarchy to prevent layering conflicts.
+ * All z-index values should use these CSS variables instead of hardcoded numbers.
+ *
+ * Hierarchy (10 layers):
+ * 0-9:    Base content and backgrounds
+ * 10-99:  Content layers (headers, sticky elements)
+ * 100-199: UI Chrome (navigation, toolbars)
+ * 200-299: Overlays (composers, drawers)
+ * 300-399: Sheets and modals
+ * 400-499: Popovers and dropdowns
+ * 500-999: System UI (toasts, tooltips)
+ * 1000+:  Critical system (skip links, debug)
+ */
+
+:root {
+  /* Layer 0: Base - Backgrounds and lowest elements */
+  --z-background: 0;
+  --z-base: 1;
+
+  /* Layer 1: Content - Regular content flow */
+  --z-content: 10;
+  --z-sticky-header: 20;
+  --z-sticky-content: 30;
+
+  /* Layer 2: UI Chrome - Navigation and persistent UI */
+  --z-header: 100;
+  --z-navigation: 100;
+  --z-bottom-nav: 100;
+  --z-sidebar: 90;
+
+  /* Layer 3: Overlays - Floating elements above chrome */
+  --z-composer: 110; /* Chat input composer */
+  --z-fab: 120; /* Floating action buttons */
+  --z-drawer: 200; /* Side drawers */
+  --z-bottom-sheet: 300; /* Bottom sheets */
+
+  /* Layer 4: Modals - Full-screen overlays */
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+
+  /* Layer 5: Popovers - Context menus and dropdowns */
+  --z-popover: 600;
+  --z-dropdown: 700;
+  --z-tooltip: 800;
+
+  /* Layer 6: System - Notifications and system UI */
+  --z-toast: 1000;
+  --z-notification: 1100;
+
+  /* Layer 7: Critical - Skip links and debug overlays */
+  --z-skip-link: 9999;
+  --z-debug: 10000;
+}
+
+/*
+ * Apply z-index system classes
+ * These classes should be used instead of inline z-index values
+ */
+
+/* Base layers */
+.z-background {
+  z-index: var(--z-background);
+}
+.z-base {
+  z-index: var(--z-base);
+}
+
+/* Content layers */
+.z-content {
+  z-index: var(--z-content);
+}
+.z-sticky-header {
+  z-index: var(--z-sticky-header);
+}
+.z-sticky-content {
+  z-index: var(--z-sticky-content);
+}
+
+/* UI Chrome */
+.z-header {
+  z-index: var(--z-header);
+}
+.z-navigation {
+  z-index: var(--z-navigation);
+}
+.z-bottom-nav {
+  z-index: var(--z-bottom-nav);
+}
+.z-sidebar {
+  z-index: var(--z-sidebar);
+}
+
+/* Overlays */
+.z-composer {
+  z-index: var(--z-composer);
+}
+.z-fab {
+  z-index: var(--z-fab);
+}
+.z-drawer {
+  z-index: var(--z-drawer);
+}
+.z-bottom-sheet {
+  z-index: var(--z-bottom-sheet);
+}
+
+/* Modals */
+.z-modal-backdrop {
+  z-index: var(--z-modal-backdrop);
+}
+.z-modal {
+  z-index: var(--z-modal);
+}
+
+/* Popovers */
+.z-popover {
+  z-index: var(--z-popover);
+}
+.z-dropdown {
+  z-index: var(--z-dropdown);
+}
+.z-tooltip {
+  z-index: var(--z-tooltip);
+}
+
+/* System */
+.z-toast {
+  z-index: var(--z-toast);
+}
+.z-notification {
+  z-index: var(--z-notification);
+}
+
+/* Critical */
+.z-skip-link {
+  z-index: var(--z-skip-link);
+}
+.z-debug {
+  z-index: var(--z-debug);
+}
+
+/*
+ * Legacy support - gradually migrate away from these
+ * TODO: Remove these classes once all components use the new system
+ */
+.z-10 {
+  z-index: var(--z-content);
+}
+.z-20 {
+  z-index: var(--z-sticky-header);
+}
+.z-40 {
+  z-index: var(--z-fab);
+}
+.z-50 {
+  z-index: var(--z-drawer);
+}
+.z-90 {
+  z-index: var(--z-sidebar);
+}
+.z-100 {
+  z-index: var(--z-header);
+}

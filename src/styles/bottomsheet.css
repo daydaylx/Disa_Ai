@@ -6,7 +6,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: var(--z-bottom-sheet);
 }
 
 /* Smooth transitions optimized for mobile */
@@ -35,7 +35,7 @@
 /* Safe area adjustments for mobile devices */
 @supports (env(safe-area-inset-bottom)) {
   .bottom-sheet-safe-area {
-    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    padding-bottom: calc(1rem + var(--inset-b));
   }
 }
 
