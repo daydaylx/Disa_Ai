@@ -13,8 +13,8 @@ import { RoleCard } from "../studio/RoleCard";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { ChatStatusBanner } from "./ChatStatusBanner";
-import { VirtualizedMessageList } from "./VirtualizedMessageList";
 import { createRoleQuickstarts, formatQuickstartTag } from "./quickstartHelpers";
+import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
   {
@@ -176,10 +176,10 @@ export function ChatList({
           <div className="flex flex-col gap-5 px-1 py-3">
             <div className="brand-panel space-y-4 p-6">
               <span className="brand-chip w-fit">Disa&nbsp;AI Studio</span>
-              <h1 className="text-text-primary text-2xl font-semibold leading-tight">
+              <h1 className="text-heading-lg text-high-contrast">
                 Was möchtest du heute erschaffen?
               </h1>
-              <p className="text-text-secondary text-sm leading-relaxed">
+              <p className="text-body-base text-medium-contrast">
                 Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
                 Sekunden.
               </p>
@@ -264,12 +264,7 @@ export function ChatList({
             <div className="space-y-2 px-1">
               {SUGGESTION_ACTIONS.map((item) => {
                 return (
-                  <Card
-                    key={item.label}
-                    elevation="raised"
-                    interactive="gentle"
-                    padding="md"
-                  >
+                  <Card key={item.label} elevation="raised" interactive="gentle" padding="md">
                     <button
                       type="button"
                       onClick={() => onQuickstartFlow?.(item.prompt, false)}

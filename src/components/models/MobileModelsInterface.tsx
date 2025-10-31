@@ -538,14 +538,10 @@ export function MobileModelsInterface() {
 
       <main className="space-y-section-gap px-page-x pb-page-y pt-page-y">
         <header className="space-y-stack-gap" data-testid="models-title">
-          <span className="brand-chip inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-subtle px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] opacity-80">
-            🤖 Modelle
-          </span>
+          <span className="brand-chip w-fit">🤖 Modelle</span>
           <div className="space-y-2">
-            <h1 className="text-token-h1 text-text-strong font-semibold tracking-tight">
-              KI-Modellkatalog
-            </h1>
-            <p className="max-w-2xl text-sm leading-relaxed text-text-muted">
+            <h1 className="text-heading-lg text-high-contrast">KI-Modellkatalog</h1>
+            <p className="max-w-2xl text-body-base text-medium-contrast">
               Wähle das perfekte{" "}
               <Tooltip content="Künstliche Intelligenz Sprachmodelle, die auf verschiedene Aufgaben spezialisiert sind">
                 KI-Modell
