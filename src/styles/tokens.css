@@ -531,7 +531,105 @@
    DARK THEME
    ============================================================================ */
 
-:root[data-theme="dark"],
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Core colors */
+  --fg0: #f5f6ff;
+  --fg1: #c2c7da;
+  --fg2: #8d94ad;
+  --fg-invert: #06080f;
+  --fg-muted: color-mix(in srgb, var(--fg2) 70%, rgba(8, 10, 18, 0.6));
+
+  --bg0: #06080f;
+  --bg1: #0f1424;
+  --bg2: #1b2235;
+
+  --acc1: #7f96ff;
+  --acc1-strong: #a8b5ff;
+  --acc2: #ff8591;
+  --acc2-strong: #ff5c6c;
+
+  --ok: #31d193;
+  --warn: #ffb74d;
+  --err: #ff6b6b;
+  --info: #5aa8ff;
+
+  /* Elevation */
+  --elev-0: 0 0 0 0 rgba(0, 0, 0, 0);
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --elev-2: 0 4px 10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --elev-4: 0 10px 26px rgba(0, 0, 0, 0.65), 0 3px 8px rgba(0, 0, 0, 0.55);
+  --elev-8: 0 20px 48px rgba(0, 0, 0, 0.75), 0 6px 14px rgba(0, 0, 0, 0.6);
+
+  /* Category colors - dark mode adaptations */
+  --role-accent-alltag-text: var(--role-accent-alltag-200);
+  --role-accent-alltag-text-on: var(--role-accent-alltag-900);
+  --role-accent-alltag-bg: var(--role-accent-alltag-900);
+  --role-accent-alltag-bg-hover: var(--role-accent-alltag-800);
+  --role-accent-alltag-bg-subtle: var(--role-accent-alltag-900);
+  --role-accent-alltag-border: var(--role-accent-alltag-700);
+  --role-accent-alltag-border-strong: var(--role-accent-alltag-600);
+  --role-accent-alltag-chip-bg: var(--role-accent-alltag-800);
+  --role-accent-alltag-chip-text: var(--role-accent-alltag-200);
+  --role-accent-alltag-chip-border: var(--role-accent-alltag-700);
+
+  --role-accent-business-text: var(--role-accent-business-200);
+  --role-accent-business-text-on: var(--role-accent-business-900);
+  --role-accent-business-bg: var(--role-accent-business-900);
+  --role-accent-business-bg-hover: var(--role-accent-business-800);
+  --role-accent-business-bg-subtle: var(--role-accent-business-900);
+  --role-accent-business-border: var(--role-accent-business-700);
+  --role-accent-business-border-strong: var(--role-accent-business-600);
+  --role-accent-business-chip-bg: var(--role-accent-business-800);
+  --role-accent-business-chip-text: var(--role-accent-business-200);
+  --role-accent-business-chip-border: var(--role-accent-business-700);
+
+  --role-accent-kreativ-text: var(--role-accent-kreativ-200);
+  --role-accent-kreativ-text-on: var(--role-accent-kreativ-900);
+  --role-accent-kreativ-bg: var(--role-accent-kreativ-900);
+  --role-accent-kreativ-bg-hover: var(--role-accent-kreativ-800);
+  --role-accent-kreativ-bg-subtle: var(--role-accent-kreativ-900);
+  --role-accent-kreativ-border: var(--role-accent-kreativ-700);
+  --role-accent-kreativ-border-strong: var(--role-accent-kreativ-600);
+  --role-accent-kreativ-chip-bg: var(--role-accent-kreativ-800);
+  --role-accent-kreativ-chip-text: var(--role-accent-kreativ-200);
+  --role-accent-kreativ-chip-border: var(--role-accent-kreativ-700);
+
+  --role-accent-bildung-text: var(--role-accent-bildung-200);
+  --role-accent-bildung-text-on: var(--role-accent-bildung-900);
+  --role-accent-bildung-bg: var(--role-accent-bildung-900);
+  --role-accent-bildung-bg-hover: var(--role-accent-bildung-800);
+  --role-accent-bildung-bg-subtle: var(--role-accent-bildung-900);
+  --role-accent-bildung-border: var(--role-accent-bildung-700);
+  --role-accent-bildung-border-strong: var(--role-accent-bildung-600);
+  --role-accent-bildung-chip-bg: var(--role-accent-bildung-800);
+  --role-accent-bildung-chip-text: var(--role-accent-bildung-200);
+  --role-accent-bildung-chip-border: var(--role-accent-bildung-700);
+
+  --role-accent-familie-text: var(--role-accent-familie-200);
+  --role-accent-familie-text-on: var(--role-accent-familie-900);
+  --role-accent-familie-bg: var(--role-accent-familie-900);
+  --role-accent-familie-bg-hover: var(--role-accent-familie-800);
+  --role-accent-familie-bg-subtle: var(--role-accent-familie-900);
+  --role-accent-familie-border: var(--role-accent-familie-700);
+  --role-accent-familie-border-strong: var(--role-accent-familie-600);
+  --role-accent-familie-chip-bg: var(--role-accent-familie-800);
+  --role-accent-familie-chip-text: var(--role-accent-familie-200);
+  --role-accent-familie-chip-border: var(--role-accent-familie-700);
+
+  --role-accent-beratung-text: var(--role-accent-beratung-200);
+  --role-accent-beratung-text-on: var(--role-accent-beratung-900);
+  --role-accent-beratung-bg: var(--role-accent-beratung-900);
+  --role-accent-beratung-bg-hover: var(--role-accent-beratung-800);
+  --role-accent-beratung-bg-subtle: var(--role-accent-beratung-900);
+  --role-accent-beratung-border: var(--role-accent-beratung-700);
+  --role-accent-beratung-border-strong: var(--role-accent-beratung-600);
+  --role-accent-beratung-chip-bg: var(--role-accent-beratung-800);
+  --role-accent-beratung-chip-text: var(--role-accent-beratung-200);
+  --role-accent-beratung-chip-border: var(--role-accent-beratung-700);
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;

@@ -4,8 +4,13 @@ import { Link, useLocation } from "react-router-dom";
 
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
-import { GlassCard } from "../../components/ui/GlassCard";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import { useTheme } from "../../hooks/useTheme";
@@ -104,7 +109,11 @@ export function SettingsOverview() {
   return (
     <div className="space-y-6 pb-12">
       <section>
-        <GlassCard className="rounded-[var(--radius-card)] border-brand/30 bg-brand/10 px-4 py-4 text-[var(--color-brand-strong)]">
+        <Card
+          tone="translucent"
+          elevation="surface"
+          className="rounded-[var(--radius-card)] border-brand/30 bg-brand/10 px-4 py-4 text-[var(--color-brand-strong)]"
+        >
           <h2 className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-brand-strong)]">
             Schnellstart
           </h2>
@@ -120,7 +129,7 @@ export function SettingsOverview() {
               <Link to="/settings/memory">Gedächtnis konfigurieren</Link>
             </Button>
           </div>
-        </GlassCard>
+        </Card>
       </section>
 
       <section className="space-y-3">
@@ -138,7 +147,13 @@ export function SettingsOverview() {
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <GlassCard key={card.id} interactive="lift" className="group">
+              <Card
+                key={card.id}
+                tone="translucent"
+                elevation="surface"
+                interactive="lift"
+                className="group"
+              >
                 <Link to={card.to} className="flex h-full flex-col focus-visible:outline-none">
                   <CardHeader className="flex flex-row items-start gap-3">
                     <span className="grid h-10 w-10 place-content-center rounded-full bg-surface-subtle text-brand">
@@ -166,14 +181,18 @@ export function SettingsOverview() {
                     </span>
                   </CardContent>
                 </Link>
-              </GlassCard>
+              </Card>
             );
           })}
         </div>
       </section>
 
       <section id="settings-shortcuts" tabIndex={-1}>
-        <GlassCard className="rounded-[var(--radius-card)] border-border-subtle bg-surface-subtle/90 px-4 py-4">
+        <Card
+          tone="translucent"
+          elevation="surface"
+          className="rounded-[var(--radius-card)] border-border-subtle bg-surface-subtle/90 px-4 py-4"
+        >
           <header className="flex items-center gap-2">
             <Waves className="h-5 w-5 text-brand" aria-hidden />
             <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-text-tertiary">
@@ -194,7 +213,7 @@ export function SettingsOverview() {
               wechselt das Theme – perfekt zum schnellen Check.
             </li>
           </ul>
-        </GlassCard>
+        </Card>
       </section>
     </div>
   );

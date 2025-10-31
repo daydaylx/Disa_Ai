@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { Button } from "../ui";
-import { GlassCard } from "../ui/GlassCard";
+import { Card } from "../ui/card";
 import { ModelCard } from "../ui/ModelCard";
 import { useToasts } from "../ui/toast/ToastsProvider";
 import { VirtualList } from "../ui/VirtualList";
@@ -567,7 +567,12 @@ export function MobileModelsInterface() {
           )}
         </header>
 
-        <GlassCard padding="md" className="space-y-4 text-[var(--color-text-primary)]">
+        <Card
+          tone="translucent"
+          elevation="surface"
+          padding="md"
+          className="space-y-4 text-[var(--color-text-primary)]"
+        >
           <div className="space-y-2">
             <span className="brand-chip inline-flex w-fit items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] opacity-70">
               Studio Fokus
@@ -604,10 +609,15 @@ export function MobileModelsInterface() {
               </Button>
             </Link>
           </div>
-        </GlassCard>
+        </Card>
 
         {/* Quick Help Section */}
-        <GlassCard padding="sm" className="bg-blue-50/80 border-blue-200/60 text-blue-900">
+        <Card
+          tone="translucent"
+          elevation="surface"
+          padding="sm"
+          className="bg-blue-50/80 border-blue-200/60 text-blue-900"
+        >
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="text-blue-600">💡</span>
@@ -639,13 +649,15 @@ export function MobileModelsInterface() {
               </p>
             </div>
           </div>
-        </GlassCard>
+        </Card>
 
         {filteredModelGroups.map((group) => {
           const isGroupExpanded = expandedGroups[group.id] ?? true;
           return (
-            <GlassCard
+            <Card
               key={group.id}
+              tone="translucent"
+              elevation="surface"
               aria-labelledby={`models-${group.id}`}
               className="space-y-stack-gap p-4"
             >
@@ -710,7 +722,7 @@ export function MobileModelsInterface() {
                     </div>
                   );
                 })()}
-            </GlassCard>
+            </Card>
           );
         })}
       </main>

@@ -24,7 +24,7 @@ export function useQuickstartManager() {
   const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
   const [usage, setUsage] = useState<Map<string, QuickstartUsage>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   // Load usage data from localStorage
   useEffect(() => {
@@ -49,29 +49,51 @@ export function useQuickstartManager() {
     }
   }, [usage]);
 
+  const reload = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      let fallbackError: Error | null = null;
+
+      const actions = await getQuickstartsWithFallback({
+        onFallback: ({ reason, error }) => {
+          if (reason === "empty") {
+            fallbackError = new Error("Keine Schnellstarts verfügbar.");
+          } else if (reason === "error") {
+            fallbackError =
+              error instanceof Error
+                ? error
+                : new Error(error ? String(error) : "Unbekannter Fehler");
+          }
+        },
+      });
+
+      if (fallbackError) {
+        setError(fallbackError);
+      } else {
+        setError(null);
+      }
+
+      if (actions.length === 0) {
+        setQuickstarts([]);
+      } else {
+        setQuickstarts(actions);
+      }
+    } catch (err) {
+      const fallbackError =
+        err instanceof Error ? err : new Error(err ? String(err) : "Unbekannter Fehler");
+      setError(fallbackError);
+      setQuickstarts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   // Load quickstarts on mount
   useEffect(() => {
-    const loadQuickstarts = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const actions = await getQuickstartsWithFallback();
-
-        if (actions.length === 0) {
-          setError("Keine Schnellstarts verfügbar");
-        } else {
-          setQuickstarts(actions);
-        }
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Unbekannter Fehler";
-        setError(`Fehler beim Laden: ${errorMessage}`);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void loadQuickstarts();
-  }, []);
+    void reload();
+  }, [reload]);
 
   // Track quickstart usage
   const trackUsage = useCallback((id: string) => {
@@ -156,5 +178,6 @@ export function useQuickstartManager() {
     togglePin,
     isPinned,
     getUsageStats,
+    reload,
   };
 }

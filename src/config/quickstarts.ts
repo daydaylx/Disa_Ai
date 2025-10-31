@@ -87,40 +87,52 @@ export function getQuickstarts(): QuickstartAction[] {
 
 export async function loadQuickstarts(): Promise<QuickstartAction[]> {
   try {
-    // Try to load external config first
     const response = await fetch("/quickstarts.json", {
       cache: "no-store",
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      const parsed = quickstartsSchema.safeParse(data);
-
-      if (parsed.success) {
-        return parsed.data;
-      } else {
-        console.warn("Invalid quickstarts config, falling back to defaults:", parsed.error);
-      }
+    if (!response.ok) {
+      throw new Error(`Quickstarts request failed with status ${response.status ?? "unknown"}`);
     }
+
+    const data = await response.json();
+    const parsed = quickstartsSchema.safeParse(data);
+
+    if (!parsed.success) {
+      const validationError = new Error("Invalid quickstarts config");
+      (validationError as Error & { issues?: unknown }).issues = parsed.error;
+      throw validationError;
+    }
+
+    return parsed.data;
   } catch (error) {
     console.warn("Failed to load external quickstarts, using defaults:", error);
+    throw error instanceof Error ? error : new Error(String(error));
   }
-
-  return defaultQuickstarts;
 }
 
 export function getQuickstartById(id: string): QuickstartAction | undefined {
   return defaultQuickstarts.find((q) => q.id === id);
 }
 
-// Fix für Issue #79: Aktualisiere Fallback-Laden um externe Config zu nutzen
-export async function getQuickstartsWithFallback(): Promise<QuickstartAction[]> {
+type QuickstartFallbackReason = "empty" | "error";
+
+interface QuickstartFallbackEvent {
+  reason: QuickstartFallbackReason;
+  error?: unknown;
+}
+
+export async function getQuickstartsWithFallback(options?: {
+  onFallback?: (event: QuickstartFallbackEvent) => void;
+}): Promise<QuickstartAction[]> {
   try {
     const external = await loadQuickstarts();
     if (external.length > 0) {
       return external;
     }
+    options?.onFallback?.({ reason: "empty" });
   } catch (error) {
+    options?.onFallback?.({ reason: "error", error });
     console.warn("External quickstarts not available, using defaults:", error);
   }
   return defaultQuickstarts;

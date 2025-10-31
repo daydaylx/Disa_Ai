@@ -5,11 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useStudio } from "../app/state/StudioContext";
 import { MobilePageShell } from "../components/layout/MobilePageShell";
 import { RoleCard } from "../components/studio/RoleCard";
-import { Button } from "../components/ui";
-import { GlassCard } from "../components/ui/GlassCard";
+import { Button, Card } from "../components/ui";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import type { Role } from "../data/roles";
-import { loadRoles } from "../data/roles";
 import { useTranslation } from "../hooks/useTranslation";
 
 const CATEGORY_ORDER = [
@@ -44,10 +42,9 @@ function summariseRole(role: Role): string {
 }
 
 export default function MobileStudio() {
-  const { roles, activeRole, setActiveRole } = useStudio();
+  const { roles, rolesLoading, roleLoadError, refreshRoles, activeRole, setActiveRole } =
+    useStudio();
   const { t } = useTranslation();
-  const [roleList, setRoleList] = useState<Role[]>(roles);
-  const [isLoadingRoles, setIsLoadingRoles] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<"all" | CategoryKey>("all");
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
@@ -55,46 +52,29 @@ export default function MobileStudio() {
   const toasts = useToasts();
 
   useEffect(() => {
-    let mounted = true;
-    const fetchRoles = async () => {
-      try {
-        setIsLoadingRoles(true);
-        const loaded = await loadRoles();
-        if (!mounted) return;
-        const merged = [...roles, ...loaded];
-        const uniqueById = merged.reduce<Role[]>((acc, entry) => {
-          if (!acc.some((item) => item.id === entry.id)) {
-            acc.push(entry);
-          }
-          return acc;
-        }, []);
-        setRoleList(uniqueById);
-      } catch (error) {
-        toasts.push({
-          kind: "error",
-          title: "Fehler beim Laden zusätzlicher Rollen",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        setRoleList(roles);
-      } finally {
-        if (mounted) {
-          setIsLoadingRoles(false);
-        }
-      }
-    };
-
-    void fetchRoles();
-    return () => {
-      mounted = false;
-    };
-  }, [roles, toasts]);
+    if (roleLoadError) {
+      toasts.push({
+        kind: "error",
+        title: "Fehler beim Laden zusätzlicher Rollen",
+        message: roleLoadError,
+        actions: [
+          {
+            label: "Erneut versuchen",
+            onClick: () => {
+              void refreshRoles();
+            },
+          },
+        ],
+      });
+    }
+  }, [roleLoadError, refreshRoles, toasts]);
 
   const availableRoles = useMemo(() => {
-    if (activeRole && !roleList.some((role) => role.id === activeRole.id)) {
-      return [...roleList, activeRole];
+    if (activeRole && !roles.some((role) => role.id === activeRole.id)) {
+      return [...roles, activeRole];
     }
-    return roleList;
-  }, [roleList, activeRole]);
+    return roles;
+  }, [roles, activeRole]);
 
   const handleResetRole = () => {
     setActiveRole(null);
@@ -199,7 +179,11 @@ export default function MobileStudio() {
 
         {activeRole ? (
           <aside aria-label={t.studio.activeRole.label}>
-            <GlassCard className="brand-panel card-depth text-text-secondary flex items-start justify-between gap-4 px-5 py-4 text-xs">
+            <Card
+              tone="translucent"
+              elevation="surface"
+              className="brand-panel text-text-secondary flex items-start justify-between gap-4 px-5 py-4 text-xs"
+            >
               <div className="space-y-1">
                 <span className="brand-chip w-fit text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-brand-strong)]">
                   {t.studio.activeRole.chip}
@@ -221,13 +205,13 @@ export default function MobileStudio() {
                 <RotateCcw className="text-text-secondary h-3.5 w-3.5" />
                 {t.studio.activeRole.reset}
               </Button>
-            </GlassCard>
+            </Card>
           </aside>
         ) : null}
 
         <div className="space-y-3">
           <div className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/95 backdrop-blur">
-            <GlassCard className="space-y-3 px-page-x py-3">
+            <Card tone="translucent" elevation="surface" className="space-y-3 px-page-x py-3">
               <div className="relative flex-1">
                 <Search
                   className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-tertiary)]"
@@ -262,7 +246,7 @@ export default function MobileStudio() {
                   {selectedCategory === "all" ? t.studio.filter.all : selectedCategory}
                 </span>
               </div>
-            </GlassCard>
+            </Card>
           </div>
 
           {/* Mobile-friendly vertical category list */}
@@ -317,16 +301,16 @@ export default function MobileStudio() {
       </header>
 
       <div className="space-y-section-gap pb-page-y" data-testid="role-card-grid">
-        {isLoadingRoles && orderedRoles.length === 0 ? (
-          <div className="border-border bg-surface-card text-text-secondary flex items-center justify-center rounded-lg border p-6 text-sm touch-target">
+        {rolesLoading && orderedRoles.length === 0 ? (
+          <Card className="border-border text-text-secondary flex items-center justify-center rounded-lg border p-6 text-sm touch-target">
             {t.studio.loading}
-          </div>
+          </Card>
         ) : null}
         {totalMatchCount === 0 ? (
-          <div className="border-border bg-surface-card text-text-secondary space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
+          <Card className="border-border text-text-secondary space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
             <p>{t.studio.noResults}</p>
             <p className="text-text-secondary text-xs">{t.studio.noResultsHint}</p>
-          </div>
+          </Card>
         ) : (
           resolvedCategoriesToRender.map((category) => {
             const roles = groupedRoles[category];
@@ -341,7 +325,11 @@ export default function MobileStudio() {
                 className="space-y-stack-gap"
                 aria-labelledby={`category-${category}`}
               >
-                {selectedCategory !== "all" && (
+                {selectedCategory === "all" ? (
+                  <h2 id={`category-${category}`} className="sr-only">
+                    {category} ({roles.length})
+                  </h2>
+                ) : (
                   <div className="flex items-center justify-between gap-3">
                     <h2
                       id={`category-${category}`}

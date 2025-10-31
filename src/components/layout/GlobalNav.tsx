@@ -57,8 +57,7 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)]/70 text-[var(--color-text-secondary)] shadow-[var(--shadow-surface)] transition-all hover:bg-[var(--color-surface-card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
-            aria-label="Design-Roadmap"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-hairline)] bg-card/70 text-[var(--color-text-secondary)] shadow-[var(--shadow-surface)] transition-all hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
             onClick={() => navigate("/design-directions")}
           >
             <PanelTopDashed className="h-5 w-5" aria-hidden="true" />

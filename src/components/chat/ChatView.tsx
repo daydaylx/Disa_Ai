@@ -69,7 +69,7 @@ export function ChatView({
         {isLoading && (
           <div className="mobile-chat-loading animate-fade-in flex justify-start">
             {/* Loading Indicator */}
-            <div className="border-border mr-12 max-w-[85%] rounded-lg border bg-surface-card p-4">
+            <Card className="border-border mr-12 max-w-[85%] rounded-lg border p-4">
               <div className="flex items-center space-x-3">
                 <div className="flex space-x-1">
                   <div className="h-2 w-2 rounded-full bg-brand-primary motion-safe:animate-bounce"></div>
@@ -80,7 +80,7 @@ export function ChatView({
                   Disa denkt nach...
                 </span>
               </div>
-            </div>
+            </Card>
           </div>
         )}
         <div ref={messagesEndRef} />
