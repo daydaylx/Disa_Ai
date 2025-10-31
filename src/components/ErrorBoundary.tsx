@@ -120,7 +120,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="bg-surface-base flex min-h-dvh items-center justify-center p-4">
-          <div className="bg-surface-card shadow-level w-full max-w-2xl rounded-lg p-8">
+          <Card className="shadow-level w-full max-w-2xl rounded-lg p-8">
             <div className="mb-8 text-center">
               <div className="bg-danger/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <svg
@@ -184,7 +184,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </button>
               <button
                 onClick={this.handleReset}
-                className="bg-surface-subtle text-text-primary hover:bg-surface-card flex-1 rounded-lg px-4 py-2 transition-colors"
+                className="bg-surface-subtle text-text-primary hover:bg-card flex-1 rounded-lg px-4 py-2 transition-colors"
               >
                 App zurücksetzen
               </button>
@@ -217,7 +217,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
               </details>
             </div>
-          </div>
+          </Card>
         </div>
       );
     }

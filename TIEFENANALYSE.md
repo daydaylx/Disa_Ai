@@ -52,6 +52,8 @@
 
 - **DOPPELT / ÜBERLAPPEND:** **Komplexe CSS-Struktur.** In `App.tsx` und `main.tsx` werden **mindestens 9 verschiedene CSS-Dateien** importiert. Darunter Tailwind, `design-tokens.css`, `mobile-fixes.css`, `bottomsheet.css` und `theme/tokens.css` (mit "Fluent 2"-Bezug). Diese hohe Anzahl an globalen Stylesheets stellt eine **signifikante technische Schuld** dar. Es ist unklar, welche Regeln Vorrang haben und woher bestimmte Styles kommen. Dies erschwert die Wartung des Stylings erheblich.
 - **INKONSISTENZ:** Die Komponente in `Glass.tsx` heißt intern `SoftDepthSurface`. Dies ist eine kleine, aber vermeidbare Inkonsistenz zwischen Dateiname und Komponentenname.
+- **BEHOBEN (31.10.2025):** Die fehlerhafte Überschriften-Hierarchie in den Rollengittern wurde korrigiert (`src/pages/MobileStudio.tsx`, `src/components/studio/MobileRolesInterface.tsx`) und Icon-only-Buttons in Composer sowie Memory-Panel erhielten explizite `aria-labels` für Screenreader (`src/components/chat/ChatComposer.tsx`, `src/components/memory/MemoryPanel.tsx`).
+- **BEHOBEN (31.10.2025):** Rollen werden nun zentral im `StudioContext` über `loadRoles()` aus dem RoleStore geladen; Komponenten greifen nicht mehr per Direkt-Import auf `persona.json` zu (`src/app/state/StudioContext.tsx`, `src/pages/MobileStudio.tsx`, `src/components/studio/MobileRolesInterface.tsx`).
 - **Stärken (keine Schulden):**
   - **Hervorragendes Testing:** Umfassende Unit- und E2E-Tests.
   - **Strikte Code-Qualität:** ESLint, Prettier und TypeScript werden konsequent und automatisiert eingesetzt.

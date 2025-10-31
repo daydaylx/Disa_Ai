@@ -149,6 +149,7 @@ export function ChatComposer({
                 variant="ghost"
                 className="h-12 w-12 text-text-secondary hover:bg-surface-subtle hover:text-text-primary"
                 title="Letzte Antwort erneut anfordern"
+                aria-label="Letzte Antwort erneut anfordern"
               >
                 <RotateCcw className="h-5 w-5" />
               </Button>
@@ -161,7 +162,7 @@ export function ChatComposer({
                 variant="destructive"
                 className="h-12 w-12"
                 title="Ausgabe stoppen"
-                aria-label="Nachricht wird gesendet..."
+                aria-label="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
                 <Square className="h-5 w-5" />
@@ -176,6 +177,7 @@ export function ChatComposer({
                 className="h-12 w-12 shadow-surface"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
+                aria-label="Nachricht senden"
                 data-testid="composer-send"
               >
                 <Send className="h-5 w-5" />

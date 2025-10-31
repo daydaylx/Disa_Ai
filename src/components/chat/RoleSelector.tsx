@@ -110,7 +110,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "border-border bg-surface-card hover:border-brand group flex w-full items-center justify-between rounded-lg border p-4 text-left transition-all",
+          "border-border bg-card hover:border-brand group flex w-full items-center justify-between rounded-lg border p-4 text-left transition-all",
           isOpen && "border-brand",
         )}
       >
@@ -145,7 +145,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
       </button>
 
       {isOpen && (
-        <div className="border-border bg-surface-card mt-4 space-y-4 rounded-lg border">
+        <div className="border-border bg-card mt-4 space-y-4 rounded-lg border">
           <div className="p-4 pb-0">
             <div className="relative">
               <Search className="text-text-secondary absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />

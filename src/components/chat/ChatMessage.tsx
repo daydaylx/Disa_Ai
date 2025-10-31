@@ -26,7 +26,7 @@ function CodeBlock({ children, language }: { children: string; language?: string
         <Button
           variant="ghost"
           size="icon"
-          className="text-text-secondary hover:bg-surface-card hover:text-text-primary h-8 w-8"
+          className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
           onClick={() => void navigator.clipboard?.writeText(children)}
         >
           <Copy className="h-4 w-4" />
@@ -127,7 +127,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
             {message.model && (
               <Badge
                 variant="secondary"
-                className="border-border bg-surface-card text-text-secondary text-xs"
+                className="border-border bg-card text-text-secondary text-xs"
               >
                 {message.model}
               </Badge>
@@ -141,7 +141,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           </div>
         )}
 
-        <div className={cn("border-border bg-surface-card rounded-lg border", bubbleClass, "p-4")}>
+        <div className={cn("border-border bg-card rounded-lg border", bubbleClass, "p-4")}>
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
@@ -167,7 +167,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
             <Button
               variant="ghost"
               size="icon"
-              className="text-text-secondary hover:bg-surface-card hover:text-text-primary h-8 w-8"
+              className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
               onClick={handleCopy}
               title="Nachricht kopieren"
               data-testid="message.copy"
@@ -178,7 +178,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-text-secondary hover:bg-surface-card hover:text-text-primary h-8 w-8"
+                className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
                 onClick={handleRetry}
                 title="Antwort erneut anfordern"
                 data-testid="message.retry"

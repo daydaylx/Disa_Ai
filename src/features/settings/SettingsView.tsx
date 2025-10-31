@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 
 import { Badge, type BadgeProps } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import { GlassCard } from "../../components/ui/GlassCard";
+import { Card } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import {
@@ -294,12 +294,16 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               <Sparkles className="h-4 w-4" />
             </Button>
           </div>
-          <GlassCard className="rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-subtle)]/90 p-3 text-xs text-[var(--color-text-secondary)]">
+          <Card
+            tone="translucent"
+            elevation="surface"
+            className="rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-subtle)]/90 p-3 text-xs text-[var(--color-text-secondary)]"
+          >
             <p>
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
               {stats.modelsUsed.length} Modelle
             </p>
-          </GlassCard>
+          </Card>
         </div>
       ),
     },
@@ -349,7 +353,11 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             </p>
           </div>
 
-          <GlassCard className="space-y-3 border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)]/40">
+          <Card
+            tone="translucent"
+            elevation="surface"
+            className="space-y-3 border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)]/40"
+          >
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <span className="brand-chip inline-flex w-fit text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-brand-strong)]">
@@ -380,7 +388,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
                 </a>
               </Button>
             </div>
-          </GlassCard>
+          </Card>
         </div>
       ),
     },
@@ -520,7 +528,7 @@ function SettingsSection({
 }) {
   return (
     <section id={id}>
-      <GlassCard>
+      <Card tone="translucent" elevation="surface">
         <div className="flex items-start gap-3 border-b border-[var(--color-border-hairline)] px-4 py-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card-small)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)]">
             <Icon className="h-4 w-4" aria-hidden />
@@ -538,7 +546,7 @@ function SettingsSection({
           </div>
         </div>
         <div className="space-y-4 px-4 py-4 text-[var(--color-text-primary)]">{children}</div>
-      </GlassCard>
+      </Card>
     </section>
   );
 }

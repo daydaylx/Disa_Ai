@@ -2,8 +2,8 @@ import { Book, Code, MessageSquare } from "lucide-react";
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 
 import { cn } from "../../lib/utils";
-import { SoftDepthSurface } from "../SoftDepthSurface";
 import { Badge } from "../ui/badge";
+import { Card } from "../ui/card";
 
 export type StartTileAction = { type: "new-chat" } | { type: "set-role"; roleId: string };
 
@@ -58,9 +58,10 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
           : null;
 
         return (
-          <SoftDepthSurface
+          <Card
             key={tile.id}
-            variant="subtle"
+            tone="muted"
+            elevation="surface-subtle"
             asChild
             className={cn(
               "rounded-base border-border/60 group relative flex h-full min-h-[var(--touch-comfortable)] flex-col overflow-hidden border p-3 text-left transition-all duration-200",
@@ -93,7 +94,7 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
                 </Badge>
               </div>
             </button>
-          </SoftDepthSurface>
+          </Card>
         );
       })}
     </div>

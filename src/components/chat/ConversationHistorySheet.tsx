@@ -1,5 +1,7 @@
 import { Clock, MessageSquare, Plus, Trash2 } from "lucide-react";
 
+import { Card } from "@/components/ui/card";
+
 import type { Conversation } from "../../lib/conversation-manager";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
 import { cn } from "../../lib/utils";
@@ -29,7 +31,7 @@ export function ConversationHistorySheet({
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Chat-Verlauf">
       <div className="max-h-[65vh] overflow-y-auto px-6 py-4">
         {conversations.length === 0 ? (
-          <div className="border-border bg-surface-card flex min-h-[280px] items-center justify-center rounded-lg border p-6">
+          <Card className="border-border flex min-h-[280px] items-center justify-center rounded-lg border p-6">
             <div className="max-w-xs space-y-4 text-center">
               <div className="border-border bg-surface-subtle mx-auto flex h-16 w-16 items-center justify-center rounded-full border">
                 <MessageSquare className="text-text-secondary h-8 w-8" />
@@ -45,7 +47,7 @@ export function ConversationHistorySheet({
                 Erste Unterhaltung starten
               </Button>
             </div>
-          </div>
+          </Card>
         ) : (
           <ul className="space-y-3">
             {conversations.map((conversation) => {
@@ -59,9 +61,9 @@ export function ConversationHistorySheet({
 
               return (
                 <li key={conversation.id} className="group relative">
-                  <div
+                  <Card
                     className={cn(
-                      "border-border bg-surface-subtle text-text-primary hover:bg-surface-card rounded-lg border p-5 text-left transition-colors",
+                      "border-border bg-surface-subtle text-text-primary hover:bg-card rounded-lg border p-5 text-left transition-colors",
                       isActive && "ring-brand ring-2",
                     )}
                   >
@@ -123,7 +125,7 @@ export function ConversationHistorySheet({
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
-                  </div>
+                  </Card>
                 </li>
               );
             })}

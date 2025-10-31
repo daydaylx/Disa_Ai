@@ -21,7 +21,5 @@
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     }
   },
-  "tools": {
-    "approvalMode": "plan"
-  }
+  "approvalMode": "plan"
 }

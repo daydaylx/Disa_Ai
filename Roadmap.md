@@ -2,6 +2,12 @@
 
 Das Projekt ist funktional und auf einer professionellen technischen Basis aufgebaut, leidet aber unter einer hohen Komplexität und Uneinheitlichkeit im Styling (CSS). Die Roadmap zielt darauf ab, diese technischen Schulden zu beseitigen, die UI/UX zu konsolidieren und eine saubere, dokumentierte Struktur für die zukünftige Weiterentwicklung durch KI-Agenten zu schaffen.
 
+## Status-Update (31.10.2025)
+
+- Überschriften-Hierarchie in den mobilen Rollengittern ist wieder WCAG-konform (`src/pages/MobileStudio.tsx`, `src/components/studio/MobileRolesInterface.tsx`).
+- Icon-only-Steuerflächen im Composer und Memory-Panel besitzen jetzt deutsche Screenreader-Beschriftungen (`src/components/chat/ChatComposer.tsx`, `src/components/memory/MemoryPanel.tsx`).
+- Rollen-Konfiguration wird zentral über den `StudioContext` geladen (`src/app/state/StudioContext.tsx`), Verbraucher wie `MobileStudio`/`MobileRolesInterface` greifen nicht mehr direkt auf `persona.json` zu.
+
 ## Phase 1: Bestandsaufnahme & Aufräumen
 
 - **Projektstruktur finalisieren:** Das bestehende technische Überblicksdokument (`TIEFENANALYSE.md`) als Referenz für die Architektur verwenden und bei Änderungen aktualisieren.

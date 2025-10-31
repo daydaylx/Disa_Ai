@@ -140,12 +140,10 @@ describe("Quickstarts Configuration", () => {
       });
 
       const consoleSpy = vi.spyOn(console, "warn");
-      const result = await loadQuickstarts();
-
-      expect(result).toEqual(defaultQuickstarts);
+      await expect(loadQuickstarts()).rejects.toThrow("Invalid quickstarts config");
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Invalid quickstarts config, falling back to defaults:",
-        expect.any(Object),
+        "Failed to load external quickstarts, using defaults:",
+        expect.any(Error),
       );
     });
 
@@ -153,9 +151,7 @@ describe("Quickstarts Configuration", () => {
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       const consoleSpy = vi.spyOn(console, "warn");
-      const result = await loadQuickstarts();
-
-      expect(result).toEqual(defaultQuickstarts);
+      await expect(loadQuickstarts()).rejects.toThrow("Network error");
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to load external quickstarts, using defaults:",
         expect.any(Error),
@@ -168,9 +164,7 @@ describe("Quickstarts Configuration", () => {
         status: 404,
       });
 
-      const result = await loadQuickstarts();
-      // HTTP-Fehler führt nicht zum catch-Block, sondern überspringt nur den if (response.ok)
-      expect(result).toEqual(defaultQuickstarts);
+      await expect(loadQuickstarts()).rejects.toThrow("Quickstarts request failed with status 404");
     });
 
     it("sollte auf Defaults fallback bei JSON-Parse-Fehler", async () => {
@@ -180,9 +174,7 @@ describe("Quickstarts Configuration", () => {
       });
 
       const consoleSpy = vi.spyOn(console, "warn");
-      const result = await loadQuickstarts();
-
-      expect(result).toEqual(defaultQuickstarts);
+      await expect(loadQuickstarts()).rejects.toThrow("Invalid JSON");
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to load external quickstarts, using defaults:",
         expect.any(Error),
@@ -213,29 +205,42 @@ describe("Quickstarts Configuration", () => {
       expect(result).toEqual(externalConfig);
     });
 
-    it("sollte Defaults verwenden wenn externe Config leer ist", async () => {
+    it("sollte Defaults verwenden wenn externe Config leer ist und Fallback melden", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve([]),
       });
 
-      const result = await getQuickstartsWithFallback();
+      const fallbackSpy = vi.fn();
+      const result = await getQuickstartsWithFallback({
+        onFallback: fallbackSpy,
+      });
 
       // getQuickstartsWithFallback prüft external.length > 0, also fallen leere Arrays auf defaults zurück
       expect(result).toEqual(defaultQuickstarts);
+      expect(fallbackSpy).toHaveBeenCalledWith({ reason: "empty" });
     });
 
-    it("sollte Defaults verwenden bei Fehler", async () => {
+    it("sollte Defaults verwenden bei Fehler und Fallback melden", async () => {
       mockFetch.mockRejectedValueOnce(new Error("Fetch failed"));
 
       const consoleSpy = vi.spyOn(console, "warn");
-      const result = await getQuickstartsWithFallback();
+      const fallbackSpy = vi.fn();
+      const result = await getQuickstartsWithFallback({
+        onFallback: fallbackSpy,
+      });
 
       expect(result).toEqual(defaultQuickstarts);
       // getQuickstartsWithFallback ruft loadQuickstarts auf, das loggt "Failed to load..."
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to load external quickstarts, using defaults:",
         expect.any(Error),
+      );
+      expect(fallbackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          reason: "error",
+          error: expect.any(Error),
+        }),
       );
     });
   });

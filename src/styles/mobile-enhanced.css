@@ -576,7 +576,7 @@
   }
 
   /* Remove movement effects for tiles */
-  .soft-tile:hover,
+
   .soft-surface:hover,
   .surface-card:hover,
   .card-depth:hover {

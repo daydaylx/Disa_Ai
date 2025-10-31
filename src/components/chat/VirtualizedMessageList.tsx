@@ -106,7 +106,7 @@ export function VirtualizedMessageList({
         <div className="sticky top-0 z-10 flex justify-center py-2">
           <button
             onClick={loadOlderMessages}
-            className="border-border bg-surface-card text-text-secondary hover:bg-surface-subtle focus-visible:ring-brand rounded-full border px-4 py-2 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2"
+            className="border-border bg-card text-text-secondary hover:bg-surface-subtle focus-visible:ring-brand rounded-full border px-4 py-2 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2"
             data-testid="load-older-messages"
           >
             ↑ {hiddenCount} ältere Nachrichten laden
@@ -128,7 +128,7 @@ export function VirtualizedMessageList({
 
       {isLoading && (
         <div className="flex items-start gap-4 px-4 py-6">
-          <div className="border-border bg-surface-card text-text-secondary flex h-9 w-9 items-center justify-center rounded-full border">
+          <Card className="border-border text-text-secondary flex h-9 w-9 items-center justify-center rounded-full border">
             <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
               <path
                 d="M12 3a9 9 0 019 9"
@@ -147,8 +147,8 @@ export function VirtualizedMessageList({
                 className="opacity-20"
               />
             </svg>
-          </div>
-          <div className="border-border bg-surface-card text-text-secondary flex-1 rounded-lg border p-4 text-sm">
+          </Card>
+          <Card className="border-border text-text-secondary flex-1 rounded-lg border p-4 text-sm">
             <div className="text-text-secondary flex items-center gap-2 text-xs uppercase tracking-wider">
               <span>Assistent</span>
               <span className="bg-text-1 inline-flex h-1.5 w-1.5 animate-pulse rounded-full" />
@@ -165,7 +165,7 @@ export function VirtualizedMessageList({
                 style={{ animationDelay: "0.3s" }}
               />
             </div>
-          </div>
+          </Card>
         </div>
       )}
 
@@ -173,7 +173,7 @@ export function VirtualizedMessageList({
         <div className="flex justify-center py-2">
           <button
             onClick={() => scrollToBottom()}
-            className="border-border bg-surface-card text-text-secondary hover:bg-surface-subtle inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs transition-colors"
+            className="border-border bg-card text-text-secondary hover:bg-surface-subtle inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs transition-colors"
             aria-label="Zu neuen Nachrichten scrollen"
           >
             ↓ Nach unten

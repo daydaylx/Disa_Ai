@@ -1,6 +1,8 @@
 import { AlertTriangle, Smartphone } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
+import { Card } from "@/components/ui/card";
+
 interface MobileOnlyGateProps {
   children: React.ReactNode;
 }
@@ -100,19 +102,19 @@ export function MobileOnlyGate({ children }: MobileOnlyGateProps) {
   if (state === "unknown") {
     return (
       <div className="bg-surface-base text-text-primary flex min-h-screen items-center justify-center">
-        <div className="border-border bg-surface-card max-w-sm rounded-lg border text-center">
+        <Card className="border-border max-w-sm rounded-lg border text-center">
           <div className="flex flex-col items-center gap-4 px-6 py-8">
             <Smartphone className="text-text-secondary h-8 w-8" />
             <p className="text-text-secondary">Geräteprüfung läuft…</p>
           </div>
-        </div>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="bg-surface-base text-text-primary flex min-h-screen items-center justify-center px-6 py-10">
-      <div className="border-border bg-surface-card max-w-md rounded-lg border text-center">
+      <Card className="border-border max-w-md rounded-lg border text-center">
         <div className="relative flex flex-col items-center gap-5 px-8 py-10">
           <div className="border-border bg-surface-subtle text-text-primary flex h-16 w-16 items-center justify-center rounded-full border">
             <AlertTriangle className="h-8 w-8" />
@@ -139,7 +141,7 @@ export function MobileOnlyGate({ children }: MobileOnlyGateProps) {
 
           {reason ? <p className="text-text-secondary/70 text-xs">{reason}</p> : null}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

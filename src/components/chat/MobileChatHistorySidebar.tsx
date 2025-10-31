@@ -144,7 +144,7 @@ export function MobileChatHistorySidebar({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Konversationen suchen..."
-              className="border-border bg-surface-card text-text-primary placeholder:text-text-secondary focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-3 pl-10 pr-12 text-sm focus:outline-none focus:ring-2 touch-target"
+              className="border-border bg-card text-text-primary placeholder:text-text-secondary focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-3 pl-10 pr-12 text-sm focus:outline-none focus:ring-2 touch-target"
               aria-label="Konversationen suchen"
             />
             <History className="text-text-secondary pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
@@ -176,21 +176,21 @@ export function MobileChatHistorySidebar({
           {/* Mobile-optimized conversation list */}
           <div className="space-y-3 max-h-[60vh] overflow-y-auto">
             {filteredConversations.length === 0 ? (
-              <div className="border-border bg-surface-card text-text-secondary space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
+              <Card className="border-border text-text-secondary space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
                 <p>Keine Konversationen gefunden</p>
                 <p className="text-text-secondary text-xs">Versuche es mit anderen Suchbegriffen</p>
-              </div>
+              </Card>
             ) : (
               filteredConversations.map((conversation) => {
                 const isActive = activeId === conversation.id;
                 const messageCount = conversation.messages?.length || 0;
 
                 return (
-                  <div
+                  <Card
                     key={conversation.id}
                     onClick={() => handleSelectConversation(conversation.id)}
                     className={cn(
-                      "border-border bg-surface-card flex cursor-pointer flex-col gap-2 rounded-lg border p-3 transition-colors duration-150 ease-out motion-reduce:transition-none touch-target",
+                      "border-border flex cursor-pointer flex-col gap-2 rounded-lg border p-3 transition-colors duration-150 ease-out motion-reduce:transition-none touch-target",
                       isActive
                         ? "border-brand bg-brand/10 hover:bg-brand/15"
                         : "hover:border-border-strong hover:bg-surface-subtle",
@@ -203,7 +203,9 @@ export function MobileChatHistorySidebar({
                         handleSelectConversation(conversation.id);
                       }
                     }}
-                    aria-label={`Konversation vom ${new Date(conversation.createdAt).toLocaleDateString()}`}
+                    aria-label={`Konversation vom ${new Date(
+                      conversation.createdAt,
+                    ).toLocaleDateString()}`}
                   >
                     <div className="flex items-start justify-between">
                       <h3 className="text-text-primary text-sm font-semibold [hyphens:auto]">
@@ -230,7 +232,7 @@ export function MobileChatHistorySidebar({
                         })}
                       </span>
                     </div>
-                  </div>
+                  </Card>
                 );
               })
             )}

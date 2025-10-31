@@ -296,7 +296,7 @@ Alle Komponenten implementieren:
 
 ```tsx
 // Vorher:
-<div className="soft-surface soft-tile">
+<div className="soft-surface">
   Content
 </div>
 
