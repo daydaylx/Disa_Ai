@@ -1,11 +1,19 @@
 import { History, Plus, Trash2, X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { Conversation } from "../../lib/conversation-manager";
 import { deleteConversation } from "../../lib/conversation-manager";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
@@ -43,8 +51,11 @@ export function MobileChatHistorySidebar({
     [onClose, onSelect],
   );
 
-  const handleDeleteConversation = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleDeleteConversation = (
+    id: string,
+    event: ReactMouseEvent<HTMLButtonElement>,
+  ): void => {
+    event.stopPropagation();
     if (
       !confirm(
         "Möchtest du diese Konversation wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -197,9 +208,9 @@ export function MobileChatHistorySidebar({
                     )}
                     role="button"
                     tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
+                    onKeyDown={(event: ReactKeyboardEvent<HTMLDivElement>) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
                         handleSelectConversation(conversation.id);
                       }
                     }}

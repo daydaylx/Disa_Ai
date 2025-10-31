@@ -57,14 +57,12 @@ export default function MobileStudio() {
         kind: "error",
         title: "Fehler beim Laden zusätzlicher Rollen",
         message: roleLoadError,
-        actions: [
-          {
-            label: "Erneut versuchen",
-            onClick: () => {
-              void refreshRoles();
-            },
+        action: {
+          label: "Erneut versuchen",
+          onClick: () => {
+            void refreshRoles();
           },
-        ],
+        },
       });
     }
   }, [roleLoadError, refreshRoles, toasts]);

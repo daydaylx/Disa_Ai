@@ -6,6 +6,7 @@ import { useQuickstartManager } from "../../hooks/useQuickstartManager";
 import { Button } from "../ui/button";
 import { ChatStatusBanner } from "./ChatStatusBanner";
 import { QuickstartTile } from "./QuickstartTile";
+import { createRoleQuickstarts } from "./quickstartHelpers";
 
 interface QuickstartGridProps {
   onQuickstartTap: (action: QuickstartAction) => void;
@@ -115,7 +116,7 @@ export function QuickstartGrid({
   return (
     <div className="space-y-3 p-4">
       {error ? <ChatStatusBanner error={error} onRetry={reload} className="px-1" /> : null}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         {quickstartsToDisplay.map((action, index) => (
           <QuickstartTile
             key={action.id}

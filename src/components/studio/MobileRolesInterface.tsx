@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useStudio } from "../../app/state/StudioContext";
 import type { Role } from "../../data/roles";
 import { useTranslation } from "../../hooks/useTranslation";
-import { Button } from "../ui";
+import { Button, Card } from "../ui";
 import { useToasts } from "../ui/toast/ToastsProvider";
 import { RoleCard } from "./RoleCard";
 
@@ -56,14 +56,12 @@ export function MobileRolesInterface() {
         kind: "error",
         title: "Fehler beim Laden zusätzlicher Rollen",
         message: roleLoadError,
-        actions: [
-          {
-            label: "Erneut versuchen",
-            onClick: () => {
-              void refreshRoles();
-            },
+        action: {
+          label: "Erneut versuchen",
+          onClick: () => {
+            void refreshRoles();
           },
-        ],
+        },
       });
     }
   }, [roleLoadError, refreshRoles, toasts]);

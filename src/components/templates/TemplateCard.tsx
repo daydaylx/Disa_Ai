@@ -37,7 +37,7 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
 
   return (
     <Card
-      interactive
+      interactive="gentle"
       role="button"
       tabIndex={0}
       aria-label={`${template.name} auswählen`}
@@ -49,7 +49,7 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
         }
       }}
       className={cn(
-        "focus-visible:ring-brand group relative cursor-pointer motion-safe:hover:-translate-y-[1px]",
+        "focus-visible:ring-brand group relative cursor-pointer",
         className,
       )}
     >

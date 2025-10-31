@@ -61,18 +61,19 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
           <Card
             key={tile.id}
             tone="muted"
-            elevation="surface-subtle"
-            asChild
+            elevation="raised"
+            interactive="gentle"
+            padding="md"
             className={cn(
-              "rounded-base border-border/60 group relative flex h-full min-h-[var(--touch-comfortable)] flex-col overflow-hidden border p-3 text-left transition-all duration-200",
-              "hover:border-brand focus-visible:ring-brand-weak focus-visible:ring-offset-surface-1 hover:before:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-safe:hover:-translate-y-[1px]",
-              "touch-target active:scale-95",
+              "group relative flex h-full min-h-[var(--touch-comfortable)] flex-col overflow-hidden",
+              "focus-visible:ring-brand-weak focus-visible:ring-offset-surface-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+              "touch-target",
             )}
           >
             <button
               type="button"
               onClick={() => onTileClick(tile.action)}
-              className="relative z-10 flex h-full flex-col gap-2.5 text-left"
+              className="relative z-10 flex h-full w-full flex-col gap-2.5 text-left"
             >
               {backgroundIcon && (
                 <span className="pointer-events-none absolute -right-8 -top-8 opacity-5 transition-opacity duration-200 group-hover:opacity-10">

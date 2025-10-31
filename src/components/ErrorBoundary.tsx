@@ -3,6 +3,7 @@ import React, { Component } from "react";
 
 import { getEnvConfig, getEnvironmentErrors, isEnvironmentValid } from "../config/env";
 import { logger } from "../lib/utils/production-logger";
+import { Card } from "./ui/card";
 
 interface Props {
   children: ReactNode;

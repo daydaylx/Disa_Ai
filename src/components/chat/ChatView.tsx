@@ -3,6 +3,7 @@ import { type RefObject } from "react";
 
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { MessageBubble } from "./MessageBubble";
 

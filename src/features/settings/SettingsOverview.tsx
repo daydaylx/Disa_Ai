@@ -151,7 +151,7 @@ export function SettingsOverview() {
                 key={card.id}
                 tone="translucent"
                 elevation="surface"
-                interactive="lift"
+                interactive="gentle"
                 className="group"
               >
                 <Link to={card.to} className="flex h-full flex-col focus-visible:outline-none">

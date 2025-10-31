@@ -2,26 +2,44 @@
   "mcpServers": {
     "fs": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/david/dev/mein-projekt"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/david/dev/mein-projekt"
+      ]
     },
     "git": {
       "command": "uvx",
-      "args": ["mcp-server-git", "--repository", "."]
+      "args": [
+        "mcp-server-git",
+        "--repository",
+        "."
+      ]
     },
     "fetch": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-fetch"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ]
     },
     "time": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-time"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-time"
+      ]
     },
     "seq": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
     }
   },
   "tools": {
     "approvalMode": "plan"
-  }
+  },
+  "$version": 2
 }

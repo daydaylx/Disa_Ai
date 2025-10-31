@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { getQuickstartsWithFallback } from "../../config/quickstarts";
-import { getRoles } from "../../data/roles";
 import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import type { Conversation } from "../../lib/conversation-manager";
@@ -12,8 +11,10 @@ import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { RoleCard } from "../studio/RoleCard";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 import { ChatStatusBanner } from "./ChatStatusBanner";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
+import { createRoleQuickstarts, formatQuickstartTag } from "./quickstartHelpers";
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
   {
@@ -32,30 +33,6 @@ const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
 
 const QUICKSTART_FALLBACK_SUBTITLE =
   "Starte mit einer vorgefertigten Idee und komm sofort ins Schreiben.";
-
-function formatQuickstartTag(tag: string) {
-  const normalised = tag.replace(/[-_]/g, " ");
-  return normalised.charAt(0).toUpperCase() + normalised.slice(1);
-}
-
-function createRoleQuickstarts(): QuickstartAction[] {
-  const roles = getRoles();
-  if (roles.length === 0) return [];
-  return [...roles]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 4)
-    .map((role) => ({
-      id: `role-${role.id}`,
-      title: role.name,
-      subtitle: role.description ?? "Aktiviere diese Chat-Rolle und starte mit einer ersten Frage.",
-      gradient: "from-brand/20 via-brand/0 to-brand/5",
-      flowId: `role.${role.id}`,
-      autosend: false,
-      persona: role.id,
-      prompt: `Starte ein Gespräch als ${role.name}.`,
-      tags: role.tags,
-    }));
-}
 
 interface ChatListProps {
   messages: ChatMessageType[];
@@ -217,7 +194,9 @@ export function ChatList({
                   {Array.from({ length: 4 }).map((_, index) => (
                     <Card
                       key={`quickstart-skeleton-${index}`}
-                      className="border-border animate-pulse rounded-lg border p-4"
+                      elevation="surface"
+                      padding="md"
+                      className="animate-pulse"
                     >
                       <div className="bg-surface-subtle h-4 w-32 rounded" />
                       <div className="bg-surface-subtle mt-2 h-3 w-48 rounded" />
@@ -287,7 +266,9 @@ export function ChatList({
                 return (
                   <Card
                     key={item.label}
-                    className="border-border hover:bg-surface-subtle rounded-lg border p-4 transition-colors"
+                    elevation="raised"
+                    interactive="gentle"
+                    padding="md"
                   >
                     <button
                       type="button"
@@ -332,10 +313,11 @@ export function ChatList({
                     return (
                       <Card
                         key={conversation.id}
-                        className={cn(
-                          "border-border hover:bg-surface-subtle group relative flex items-start gap-3 rounded-lg border p-4 transition-colors",
-                          isActive && "ring-brand ring-2",
-                        )}
+                        elevation="raised"
+                        interactive="gentle"
+                        padding="md"
+                        state={isActive ? "selected" : "default"}
+                        className="group relative flex items-start gap-3"
                       >
                         <button
                           type="button"
