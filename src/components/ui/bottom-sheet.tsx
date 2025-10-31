@@ -88,23 +88,23 @@ export function BottomSheet({ isOpen, onClose, title, children, className }: Bot
         ref={sheetRef}
         className={cn(
           "mobile-chat-history-sidebar animate-in slide-in-from-bottom fixed inset-x-0 bottom-0 max-h-[90vh] duration-300",
-          "border-border bg-surface-1 rounded-t-lg border-t",
+          "border-border bg-surface-card rounded-t-lg border-t",
           "pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-center pb-2 pt-3">
-          <div className="bg-surface-2 h-1 w-10 rounded-full" />
+          <div className="bg-surface-subtle h-1 w-10 rounded-full" />
         </div>
 
         <div className="border-border flex items-center justify-between border-b px-6 py-4">
-          <h2 id="bottom-sheet-title" className="text-text-0 text-xl font-semibold">
+          <h2 id="bottom-sheet-title" className="text-text-primary text-xl font-semibold">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="tap-target bg-surface-2 text-text-1 hover:bg-surface-2 hover:text-text-0 flex h-10 w-10 items-center justify-center rounded-full transition-colors touch-target"
+            className="tap-target bg-surface-subtle text-text-secondary hover:bg-surface-subtle hover:text-text-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors touch-target"
             aria-label="Schließen"
           >
             <X className="h-5 w-5" />

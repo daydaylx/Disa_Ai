@@ -1,12 +1,4 @@
-import "./index.css"; // Tailwind base/components/utilities
-import "./styles/design-tokens.css"; // Design tokens (CSS variables)
-import "./styles/overlay-tokens.css"; // WCAG AA compliant overlay & menu tokens
-import "./styles/mobile-fixes.css"; // Mobile viewport and scaling fixes
-import "./styles/bottomsheet.css"; // Bottom sheet specific styles
-import "./ui/base.css"; // Reset & base styles
-import "./styles/a11y-improvements.css"; // A11y improvements
-import "./styles/mobile-enhanced.css"; // Mobile-enhanced styles
-import "./styles/mobile-components.css"; // Mobile component styles
+import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
 
 import React from "react";
 

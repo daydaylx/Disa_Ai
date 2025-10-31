@@ -9,7 +9,7 @@ interface SkeletonProps {
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className, children }) => {
   return (
-    <div className={cn("bg-surface-2 animate-pulse rounded-md", className)} aria-hidden="true">
+    <div className={cn("bg-surface-subtle animate-pulse rounded-md", className)} aria-hidden="true">
       {children}
     </div>
   );
@@ -101,7 +101,7 @@ export const TypingIndicator: React.FC<{ className?: string }> = ({ className })
       aria-live="polite"
       aria-label="KI tippt..."
     >
-      <div className="text-text-1 flex items-center space-x-2">
+      <div className="text-text-secondary flex items-center space-x-2">
         <LoadingDots />
         <span className="text-sm">KI tippt...</span>
       </div>

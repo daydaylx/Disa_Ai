@@ -48,7 +48,9 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
             )}
           />
         </div>
-        {text && <span className={cn(textSizes[size], "text-text-1 animate-pulse")}>{text}</span>}
+        {text && (
+          <span className={cn(textSizes[size], "text-text-secondary animate-pulse")}>{text}</span>
+        )}
       </div>
     );
   }
@@ -57,7 +59,9 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
     return (
       <div className={cn("flex items-center gap-2", className)}>
         <div className={cn(sizeClasses[size], "bg-accent1 animate-pulse rounded-full")} />
-        {text && <span className={cn(textSizes[size], "text-text-1 animate-pulse")}>{text}</span>}
+        {text && (
+          <span className={cn(textSizes[size], "text-text-secondary animate-pulse")}>{text}</span>
+        )}
       </div>
     );
   }
@@ -67,7 +71,7 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
       <div className={cn("relative overflow-hidden", className)}>
         <div className="from-accent1/20 via-accent1/60 to-accent1/20 animate-shimmer h-2 w-24 rounded-full bg-gradient-to-r" />
         {text && (
-          <span className={cn(textSizes[size], "text-text-1 mt-1 block animate-pulse")}>
+          <span className={cn(textSizes[size], "text-text-secondary mt-1 block animate-pulse")}>
             {text}
           </span>
         )}
@@ -84,7 +88,7 @@ export function Loading({ variant = "dots", size = "md", className, text }: Load
             "border-accent1/20 border-t-accent1 animate-spin rounded-full border-2",
           )}
         />
-        {text && <span className={cn(textSizes[size], "text-text-1")}>{text}</span>}
+        {text && <span className={cn(textSizes[size], "text-text-secondary")}>{text}</span>}
       </div>
     );
   }
@@ -108,7 +112,7 @@ export function LoadingBubble({ text = "Disa denkt nach...", className }: Loadin
       >
         <div className="flex items-center space-x-3">
           <Loading variant="dots" size="md" />
-          <span className="text-text-1 animate-pulse text-sm">{text}</span>
+          <span className="text-text-secondary animate-pulse text-sm">{text}</span>
         </div>
         {/* Subtle shimmer effect */}
         <div className="from-accent1/20 via-accent1/40 to-accent1/20 animate-shimmer mt-2 h-1 rounded-full bg-gradient-to-r" />

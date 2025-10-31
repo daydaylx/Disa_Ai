@@ -195,7 +195,7 @@ export function MobileRolesInterface() {
 
         {activeRole ? (
           <aside
-            className="brand-panel card-depth text-text-1 flex items-start justify-between gap-4 px-5 py-4 text-xs"
+            className="brand-panel card-depth text-text-secondary flex items-start justify-between gap-4 px-5 py-4 text-xs"
             aria-label={t.studio.activeRole.label}
           >
             <div className="space-y-1">
@@ -216,7 +216,7 @@ export function MobileRolesInterface() {
               aria-label={t.studio.activeRole.resetAria}
               className="touch-target h-10 w-10"
             >
-              <RotateCcw className="text-text-1 h-3.5 w-3.5" />
+              <RotateCcw className="text-text-secondary h-3.5 w-3.5" />
               {t.studio.activeRole.reset}
             </Button>
           </aside>
@@ -227,7 +227,7 @@ export function MobileRolesInterface() {
           <div className="flex flex-col gap-4">
             <div className="relative flex-1">
               <Search
-                className="text-text-1 pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                className="text-text-secondary pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
                 aria-hidden="true"
               />
               <input
@@ -235,7 +235,7 @@ export function MobileRolesInterface() {
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder={t.studio.search.placeholder}
-                className="border-border bg-surface-1 text-text-0 placeholder:text-text-1 focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-2.5 pl-10 pr-12 text-sm focus:outline-none focus:ring-2 touch-target"
+                className="border-border bg-surface-card text-text-primary placeholder:text-text-secondary focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-2.5 pl-10 pr-12 text-sm focus:outline-none focus:ring-2 touch-target"
                 aria-label={t.studio.search.ariaLabel}
               />
               {searchTerm ? (
@@ -243,16 +243,16 @@ export function MobileRolesInterface() {
                   variant="ghost"
                   size="icon"
                   onClick={handleClearSearch}
-                  className="text-text-1 absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 touch-target"
+                  className="text-text-secondary absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 touch-target"
                   aria-label={t.studio.search.clearAria}
                 >
                   <X className="h-4 w-4" />
                 </Button>
               ) : null}
             </div>
-            <div className="text-text-1 flex items-center gap-3 text-xs">
-              <Filter className="text-text-1 h-5 w-5" />
-              <span className="border-border bg-surface-1 text-text-1 rounded-full border px-4 py-2 touch-target">
+            <div className="text-text-secondary flex items-center gap-3 text-xs">
+              <Filter className="text-text-secondary h-5 w-5" />
+              <span className="border-border bg-surface-card text-text-secondary rounded-full border px-4 py-2 touch-target">
                 {t.studio.filter.visible(totalMatchCount, orderedRoles.length)}
               </span>
             </div>
@@ -311,14 +311,14 @@ export function MobileRolesInterface() {
 
       <div className="space-y-section-gap pb-page-y" data-testid="role-card-grid">
         {isLoadingRoles && orderedRoles.length === 0 ? (
-          <div className="border-border bg-surface-1 text-text-1 flex items-center justify-center rounded-lg border p-6 text-sm touch-target">
+          <div className="border-border bg-surface-card text-text-secondary flex items-center justify-center rounded-lg border p-6 text-sm touch-target">
             {t.studio.loading}
           </div>
         ) : null}
         {totalMatchCount === 0 ? (
-          <div className="border-border bg-surface-1 text-text-1 space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
+          <div className="border-border bg-surface-card text-text-secondary space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
             <p>{t.studio.noResults}</p>
-            <p className="text-text-1 text-xs">{t.studio.noResultsHint}</p>
+            <p className="text-text-secondary text-xs">{t.studio.noResultsHint}</p>
           </div>
         ) : (
           resolvedCategoriesToRender.map((category) => {
@@ -385,7 +385,7 @@ export function MobileRolesInterface() {
       <div className="mt-5 flex flex-col gap-2.5">
         <Button onClick={handleNavigateToChat} className="touch-target">
           <span className="text-pretty">{t.studio.actions.goToChat}</span>
-          <ArrowRight className="text-text-1 h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+          <ArrowRight className="text-text-secondary h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
         </Button>
         <Button
           variant="outline"
@@ -394,7 +394,7 @@ export function MobileRolesInterface() {
           aria-disabled={!activeRole}
           className="touch-target"
         >
-          <RotateCcw className="text-text-1 h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+          <RotateCcw className="text-text-secondary h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
           <span>{t.studio.actions.resetRole}</span>
         </Button>
       </div>

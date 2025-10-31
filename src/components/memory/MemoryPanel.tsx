@@ -64,7 +64,7 @@ export function MemoryPanel({
           </Button>
         </div>
         {threadTitle && (
-          <p className="text-text-1 truncate text-xs" title={threadTitle}>
+          <p className="text-text-secondary truncate text-xs" title={threadTitle}>
             {threadTitle}
           </p>
         )}
@@ -74,7 +74,7 @@ export function MemoryPanel({
         <CardContent className="space-y-3 pt-0">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <h4 className="text-text-1 text-xs font-medium">
+              <h4 className="text-text-secondary text-xs font-medium">
                 Gespeicherte Punkte ({memoryPoints.length}/12)
               </h4>
               {onAddNote && (
@@ -95,23 +95,23 @@ export function MemoryPanel({
                 {memoryPoints.map((point, index) => (
                   <div
                     key={index}
-                    className="border-border bg-surface-2 rounded border p-2 text-xs"
+                    className="border-border bg-surface-subtle rounded border p-2 text-xs"
                   >
-                    <span className="text-text-0">• {point}</span>
+                    <span className="text-text-primary">• {point}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-text-1 p-2 text-center text-xs italic">
+              <div className="text-text-secondary p-2 text-center text-xs italic">
                 Noch keine Gedächtnis-Punkte gespeichert
               </div>
             )}
           </div>
 
           {showAddNote && onAddNote && (
-            <div className="border-border bg-surface-2 space-y-2 rounded-lg border p-3">
+            <div className="border-border bg-surface-subtle space-y-2 rounded-lg border p-3">
               <div className="flex items-center justify-between">
-                <h5 className="text-text-1 text-xs font-medium">Notiz hinzufügen</h5>
+                <h5 className="text-text-secondary text-xs font-medium">Notiz hinzufügen</h5>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -154,7 +154,7 @@ export function MemoryPanel({
           )}
 
           {isLoading && (
-            <div className="text-text-1 flex items-center gap-2 text-xs">
+            <div className="text-text-secondary flex items-center gap-2 text-xs">
               <div className="border-border h-3 w-3 animate-spin rounded-full border border-t-transparent" />
               Aktualisiere Gedächtnis...
             </div>

@@ -175,7 +175,7 @@ export default function Chat() {
   }, [input, append, setInput]);
 
   return (
-    <div className="mobile-chat-container text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]">
+    <div className="mobile-chat-container text-text-primary relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]">
       {/* Background */}
       <div className="pointer-events-none fixed inset-0" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(150%_120%_at_12%_10%,rgba(var(--color-surface-base),0.18)_0%,transparent_65%)]" />

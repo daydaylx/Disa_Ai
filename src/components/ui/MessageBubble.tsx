@@ -12,7 +12,7 @@ const MessageBubble = React.forwardRef<HTMLDivElement, MessageBubbleProps>(
 
     const bubbleClasses = cn(
       "max-w-[80%] rounded-2xl px-4 py-3",
-      variant === "user" ? "bg-brand text-white" : "bg-surface-1 text-text-0",
+      variant === "user" ? "bg-brand text-white" : "bg-surface-card text-text-primary",
       className,
     );
 

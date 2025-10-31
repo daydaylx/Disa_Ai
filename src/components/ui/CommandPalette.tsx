@@ -176,10 +176,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         <p id="command-palette-description" className="sr-only">
           Verwende die Pfeiltasten zur Navigation, Enter zum Ausführen, Escape zum Schließen
         </p>
-        <div className="border-border bg-surface-1 shadow-level overflow-hidden rounded-lg border">
+        <div className="border-border bg-surface-card shadow-level overflow-hidden rounded-lg border">
           <div className="border-border flex items-center border-b px-4">
             <svg
-              className="text-text-1 h-5 w-5"
+              className="text-text-secondary h-5 w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
@@ -193,7 +193,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             <input
               ref={searchRef}
               type="text"
-              className="text-text-0 placeholder:text-text-1 h-12 w-full border-0 bg-transparent pl-3 pr-4 focus:ring-0 sm:text-sm"
+              className="text-text-primary placeholder:text-text-secondary h-12 w-full border-0 bg-transparent pl-3 pr-4 focus:ring-0 sm:text-sm"
               placeholder={placeholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -229,7 +229,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     "transition-colors duration-150",
                     index === selectedIndex
                       ? "bg-brand text-white"
-                      : "text-text-1 hover:bg-surface-2",
+                      : "text-text-secondary hover:bg-surface-subtle",
                     command.disabled && "cursor-not-allowed opacity-50",
                   )}
                   onClick={() => handleCommandClick(command, index)}
@@ -242,7 +242,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={cn(
                         "mr-3 h-5 w-5 flex-shrink-0",
-                        index === selectedIndex ? "text-white" : "text-text-1",
+                        index === selectedIndex ? "text-white" : "text-text-secondary",
                       )}
                     >
                       {command.icon}
@@ -253,7 +253,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={cn(
                         "truncate font-medium",
-                        index === selectedIndex ? "text-white" : "text-text-0",
+                        index === selectedIndex ? "text-white" : "text-text-primary",
                       )}
                     >
                       {command.title}
@@ -262,7 +262,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       <div
                         className={cn(
                           "truncate text-sm",
-                          index === selectedIndex ? "text-white/80" : "text-text-1",
+                          index === selectedIndex ? "text-white/80" : "text-text-secondary",
                         )}
                       >
                         {command.description}
@@ -274,7 +274,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div
                       className={cn(
                         "ml-3 font-mono text-xs",
-                        index === selectedIndex ? "text-white/80" : "text-text-1",
+                        index === selectedIndex ? "text-white/80" : "text-text-secondary",
                       )}
                     >
                       {command.shortcut}
@@ -284,7 +284,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               ))}
             </ul>
           ) : (
-            <div className="text-text-1 px-4 py-14 text-center text-sm">
+            <div className="text-text-secondary px-4 py-14 text-center text-sm">
               Keine Befehle gefunden für "{query}"
             </div>
           )}

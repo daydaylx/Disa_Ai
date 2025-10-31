@@ -23,7 +23,7 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
       case "advanced":
         return "bg-danger-bg text-danger border-danger/40";
       default:
-        return "bg-surface-2 text-text-1 border-border";
+        return "bg-surface-subtle text-text-secondary border-border";
     }
   };
 
@@ -61,17 +61,17 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
               <CardTitle className="group-hover:text-brand text-lg font-semibold transition-colors">
                 {template.name}
               </CardTitle>
-              <CardDescription className="text-text-1 mt-1 text-sm">
+              <CardDescription className="text-text-secondary mt-1 text-sm">
                 {template.description}
               </CardDescription>
             </div>
           </div>
-          <ChevronRight className="text-text-1 group-hover:text-brand h-5 w-5 transition-colors" />
+          <ChevronRight className="text-text-secondary group-hover:text-brand h-5 w-5 transition-colors" />
         </div>
       </CardHeader>
 
       <CardContent className="pt-0">
-        <div className="text-text-1 mb-4 flex items-center gap-4 text-sm">
+        <div className="text-text-secondary mb-4 flex items-center gap-4 text-sm">
           {template.estimatedTime && (
             <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
@@ -106,18 +106,18 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
         </div>
 
         <div className="mb-4">
-          <div className="text-text-0 mb-2 text-sm font-medium">Sample prompts:</div>
+          <div className="text-text-primary mb-2 text-sm font-medium">Sample prompts:</div>
           <div className="space-y-1">
             {template.starterPrompts.slice(0, 2).map((prompt, index) => (
               <div
                 key={index}
-                className="bg-surface-2 text-text-1 line-clamp-1 rounded px-2 py-1 text-xs"
+                className="bg-surface-subtle text-text-secondary line-clamp-1 rounded px-2 py-1 text-xs"
               >
                 "{prompt}"
               </div>
             ))}
             {template.starterPrompts.length > 2 && (
-              <div className="text-text-1 text-xs italic">
+              <div className="text-text-secondary text-xs italic">
                 +{template.starterPrompts.length - 2} more prompts
               </div>
             )}

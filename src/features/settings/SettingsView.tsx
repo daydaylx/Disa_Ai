@@ -462,7 +462,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
   const headerTitle = section ? (sectionsToRender[0]?.title ?? "Einstellungen") : "Einstellungen";
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-dvh flex-1 flex-col overflow-y-auto">
       <header className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/95 px-4 py-3 backdrop-blur">
         <div className="flex items-center justify-between text-sm">
           <div className="space-y-1">

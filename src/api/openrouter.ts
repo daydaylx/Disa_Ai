@@ -214,6 +214,39 @@ export async function chatStream(
   });
 }
 
+/**
+ * Check API connectivity by fetching the models endpoint
+ * @param opts - Optional timeout and signal configuration
+ * @returns Promise that resolves if API is reachable, rejects otherwise
+ */
+export async function checkApiHealth(opts?: {
+  timeoutMs?: number;
+  signal?: AbortSignal;
+}): Promise<void> {
+  const MODELS_ENDPOINT = "https://openrouter.ai/api/v1/models";
+  const timeoutMs = opts?.timeoutMs ?? 3000;
+
+  try {
+    const res = await fetchWithTimeoutAndRetry(MODELS_ENDPOINT, {
+      timeoutMs,
+      signal: opts?.signal,
+      maxRetries: 0, // No retries for health checks
+      fetchOptions: {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`API health check failed with status ${res.status}`);
+    }
+  } catch (error) {
+    throw mapError(error);
+  }
+}
+
 function combineSignals(signals: AbortSignal[]): AbortSignal {
   // Use native AbortSignal.any() to avoid race conditions
   // Available in Node.js v20.7.0+ and modern browsers

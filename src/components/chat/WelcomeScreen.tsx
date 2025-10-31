@@ -86,7 +86,7 @@ export function WelcomeScreen({
 
       <section aria-labelledby="discussion-heading" className="pb-8">
         {/* Discussion Section */}
-        <div className="bg-surface-0/70 border-border/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
+        <div className="bg-surface-base/70 border-border-subtle/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
           <div className="flex-1 space-y-1">
             <h2
               id="discussion-heading"

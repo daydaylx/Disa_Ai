@@ -28,7 +28,7 @@ function Tooltip({
       <span className="text-text-muted opacity-60 group-hover:opacity-100 transition-opacity">
         ℹ️
       </span>
-      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs text-text-0 bg-surface-1 border border-border-subtle rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg backdrop-blur-md">
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs text-text-primary bg-surface-card border border-border-subtle rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg backdrop-blur-md">
         {content}
       </span>
     </span>
