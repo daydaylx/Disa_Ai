@@ -80,7 +80,7 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
                   {backgroundIcon}
                 </span>
               )}
-              <span className="rounded-base bg-brand/15 text-brand flex h-8 w-8 items-center justify-center">
+              <span className="rounded-lg bg-brand/15 text-brand flex h-8 w-8 items-center justify-center">
                 {tile.icon}
               </span>
               <div className="space-y-0.5">

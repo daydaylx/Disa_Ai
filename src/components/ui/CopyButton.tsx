@@ -109,7 +109,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
       type="button"
       onClick={handleCopy}
       className={cn(
-        "rounded-base focus-visible:ring-brand-weak focus-visible:ring-offset-surface-0 inline-flex items-center justify-center border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60",
+        "rounded-lg focus-visible:ring-brand-weak focus-visible:ring-offset-surface-0 inline-flex items-center justify-center border text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60",
         sizeClasses[size],
         variantClasses[variant],
         className,

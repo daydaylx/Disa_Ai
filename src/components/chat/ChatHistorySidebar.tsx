@@ -119,7 +119,7 @@ export function ChatHistorySidebar({
                     size="sm"
                     onClick={() => setFilterType("all")}
                     className={cn(
-                      "rounded-base hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
+                      "rounded-lg hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "all" &&
                         "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
                     )}
@@ -132,7 +132,7 @@ export function ChatHistorySidebar({
                     size="sm"
                     onClick={() => setFilterType("favorites")}
                     className={cn(
-                      "rounded-base hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
+                      "rounded-lg hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "favorites" &&
                         "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
                     )}
@@ -145,7 +145,7 @@ export function ChatHistorySidebar({
                     size="sm"
                     onClick={() => setFilterType("recent")}
                     className={cn(
-                      "rounded-base hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
+                      "rounded-lg hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "recent" &&
                         "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
                     )}
