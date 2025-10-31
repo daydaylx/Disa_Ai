@@ -199,7 +199,7 @@ export default function MobileStudio() {
 
         {activeRole ? (
           <aside aria-label={t.studio.activeRole.label}>
-            <GlassCard className="brand-panel card-depth text-text-1 flex items-start justify-between gap-4 px-5 py-4 text-xs">
+            <GlassCard className="brand-panel card-depth text-text-secondary flex items-start justify-between gap-4 px-5 py-4 text-xs">
               <div className="space-y-1">
                 <span className="brand-chip w-fit text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-brand-strong)]">
                   {t.studio.activeRole.chip}
@@ -216,9 +216,9 @@ export default function MobileStudio() {
                 variant="ghost"
                 onClick={handleResetRole}
                 aria-label={t.studio.activeRole.resetAria}
-                className="touch-target bg-surface-2 text-text-1 hover:bg-surface-2 hover:text-text-0 flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+                className="touch-target bg-surface-subtle text-text-secondary hover:bg-surface-subtle hover:text-text-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors"
               >
-                <RotateCcw className="text-text-1 h-3.5 w-3.5" />
+                <RotateCcw className="text-text-secondary h-3.5 w-3.5" />
                 {t.studio.activeRole.reset}
               </Button>
             </GlassCard>
@@ -318,14 +318,14 @@ export default function MobileStudio() {
 
       <div className="space-y-section-gap pb-page-y" data-testid="role-card-grid">
         {isLoadingRoles && orderedRoles.length === 0 ? (
-          <div className="border-border bg-surface-1 text-text-1 flex items-center justify-center rounded-lg border p-6 text-sm touch-target">
+          <div className="border-border bg-surface-card text-text-secondary flex items-center justify-center rounded-lg border p-6 text-sm touch-target">
             {t.studio.loading}
           </div>
         ) : null}
         {totalMatchCount === 0 ? (
-          <div className="border-border bg-surface-1 text-text-1 space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
+          <div className="border-border bg-surface-card text-text-secondary space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
             <p>{t.studio.noResults}</p>
-            <p className="text-text-1 text-xs">{t.studio.noResultsHint}</p>
+            <p className="text-text-secondary text-xs">{t.studio.noResultsHint}</p>
           </div>
         ) : (
           resolvedCategoriesToRender.map((category) => {
@@ -345,10 +345,12 @@ export default function MobileStudio() {
                   <div className="flex items-center justify-between gap-3">
                     <h2
                       id={`category-${category}`}
-                      className="text-text-1 text-balance text-base font-semibold"
+                      className="text-text-secondary text-balance text-base font-semibold"
                     >
                       {category}
-                      <span className="text-text-1 ml-2 text-sm font-medium">({roles.length})</span>
+                      <span className="text-text-secondary ml-2 text-sm font-medium">
+                        ({roles.length})
+                      </span>
                     </h2>
                     <Button
                       variant="link"
@@ -388,7 +390,7 @@ export default function MobileStudio() {
       <div className="mt-5 flex flex-col gap-2.5">
         <Button onClick={handleNavigateToChat} className="touch-target">
           <span className="text-pretty">{t.studio.actions.goToChat}</span>
-          <ArrowRight className="text-text-1 h-5 w-5" aria-hidden="true" />
+          <ArrowRight className="text-text-secondary h-5 w-5" aria-hidden="true" />
         </Button>
         <Button
           variant="outline"
@@ -397,7 +399,7 @@ export default function MobileStudio() {
           aria-disabled={!activeRole}
           className="touch-target"
         >
-          <RotateCcw className="text-text-1 h-5 w-5" aria-hidden="true" />
+          <RotateCcw className="text-text-secondary h-5 w-5" aria-hidden="true" />
           <span>{t.studio.actions.resetRole}</span>
         </Button>
       </div>

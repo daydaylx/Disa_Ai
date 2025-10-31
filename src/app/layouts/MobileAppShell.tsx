@@ -1,8 +1,8 @@
-import { Menu, PanelTopDashed } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
+import { GlobalNav, NAV_ITEMS } from "../../components/layout/GlobalNav";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
@@ -12,30 +12,6 @@ import { cn } from "../../lib/utils";
 interface MobileAppShellProps {
   children: ReactNode;
 }
-const ROUTE_TITLES: Record<string, string> = {
-  "/chat": "Chat",
-  "/roles": "Rollen",
-  "/models": "Modelle",
-  "/settings": "Einstellungen",
-  "/settings/api": "API-Key",
-  "/settings/memory": "Verlauf & Gedächtnis",
-  "/settings/filters": "Inhalte & Filter",
-  "/settings/appearance": "Darstellung",
-  "/settings/data": "Import & Export",
-  "/design-directions": "Design Matrix",
-};
-
-const NAV_ITEMS = [
-  { path: "/chat", label: "Chat" },
-  { path: "/roles", label: "Rollen" },
-  { path: "/models", label: "Modelle" },
-  { path: "/settings", label: "Einstellungen" },
-  { path: "/settings/api", label: "API" },
-  { path: "/settings/memory", label: "Verlauf" },
-  { path: "/settings/filters", label: "Filter" },
-  { path: "/settings/appearance", label: "Darstellung" },
-  { path: "/settings/data", label: "Daten" },
-];
 
 export function MobileAppShell({ children }: MobileAppShellProps) {
   const location = useLocation();
@@ -48,10 +24,8 @@ interface MobileAppShellLayoutProps {
 }
 
 function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps) {
-  const navigate = useNavigate();
   const [isOverflowOpen, setIsOverflowOpen] = useState(false);
 
-  const title = ROUTE_TITLES[location.pathname] ?? "Disa AI";
   const activePath = useMemo(() => {
     return NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
   }, [location.pathname]);
@@ -61,41 +35,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
       className="relative flex min-h-[100dvh] flex-col bg-[var(--color-surface-canvas)] text-[var(--color-text-primary)]"
       style={{ minHeight: "calc(100dvh + var(--keyboard-height, 0px))" }}
     >
-      <header className="sticky top-0 z-40 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/90 backdrop-blur-lg">
-        <div className="flex items-center justify-between gap-3 px-4 py-3 pt-[env(safe-area-inset-top)]">
-          <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
-              Disa AI
-            </span>
-            <div>
-              <h1 className="text-xl font-semibold text-[var(--color-text-primary)] leading-tight">
-                {title}
-              </h1>
-              <p className="text-xs text-[var(--color-text-secondary)]">
-                {ROUTE_TITLES[activePath] ?? "Mobile Studio"}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)]/70 text-[var(--color-text-secondary)] shadow-[var(--shadow-surface)] transition-all hover:bg-[var(--color-surface-card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
-              aria-label="Design-Roadmap"
-              onClick={() => navigate("/design-directions")}
-            >
-              <PanelTopDashed className="h-5 w-5" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-hairline)] bg-[var(--color-surface-card)]/70 text-[var(--color-text-secondary)] shadow-[var(--shadow-surface)] transition-all hover:bg-[var(--color-surface-card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
-              aria-label="Hauptmenü öffnen"
-              onClick={() => setIsOverflowOpen(true)}
-            >
-              <Menu className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-      </header>
+      <GlobalNav onMenuClick={() => setIsOverflowOpen(true)} />
 
       <main
         id="main"

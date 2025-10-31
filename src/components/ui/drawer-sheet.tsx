@@ -20,6 +20,8 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
   const closedViaHistoryRef = useRef(false);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const previousBodyOverflowRef = useRef<string | null>(null);
+  const previousBodyPositionRef = useRef<string | null>(null);
+  const previousScrollYRef = useRef<number>(0);
   const historyMarkerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -29,8 +31,16 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
     closedViaHistoryRef.current = false;
 
     previousFocusRef.current = document.activeElement as HTMLElement | null;
+
+    // Enhanced scroll lock for iOS Safari
+    previousScrollYRef.current = window.scrollY;
     previousBodyOverflowRef.current = document.body.style.overflow;
+    previousBodyPositionRef.current = document.body.style.position;
+
     document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${previousScrollYRef.current}px`;
+    document.body.style.width = "100%";
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -88,13 +98,28 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
       window.clearTimeout(focusTimeout);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("popstate", handlePopState);
+
+      // Restore scroll position and body styles
       if (previousBodyOverflowRef.current !== null) {
         document.body.style.overflow = previousBodyOverflowRef.current;
       } else {
         document.body.style.overflow = "";
       }
+      if (previousBodyPositionRef.current !== null) {
+        document.body.style.position = previousBodyPositionRef.current;
+      } else {
+        document.body.style.position = "";
+      }
+      document.body.style.top = "";
+      document.body.style.width = "";
+
+      // Restore scroll position
+      window.scrollTo(0, previousScrollYRef.current);
+
       previousBodyOverflowRef.current = null;
+      previousBodyPositionRef.current = null;
       previousFocusRef.current?.focus?.();
+
       const currentState = (window.history.state ?? null) as Record<string, unknown> | null;
       const stateMarker = currentState?.[HISTORY_FLAG];
       if (

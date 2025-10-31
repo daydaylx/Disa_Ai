@@ -160,7 +160,7 @@ export function ChatHistorySidebar({
             <div className="px-page-x mt-4 flex-1 overflow-y-auto pb-2 md:px-6">
               {Object.entries(groupedConversations).map(([groupName, groupConversations]) => (
                 <div key={groupName} className="mb-6">
-                  <h3 className="text-text-1 mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
+                  <h3 className="text-text-secondary mb-2 px-2 text-xs font-semibold uppercase tracking-wider">
                     {groupName}
                   </h3>
                   <ul className="space-y-2">
@@ -206,11 +206,11 @@ export function ChatHistorySidebar({
                               </div>
                               <div className="flex flex-col items-end gap-1">
                                 {Number.isFinite(lastActivity) && (
-                                  <span className="text-text-1 text-xs">
+                                  <span className="text-text-secondary text-xs">
                                     {formatRelativeTime(lastActivity)}
                                   </span>
                                 )}
-                                <div className="text-text-1 flex items-center gap-1 text-xs">
+                                <div className="text-text-secondary flex items-center gap-1 text-xs">
                                   <MessageSquare className="h-3 w-3" />
                                   <span>{messageCount}</span>
                                 </div>

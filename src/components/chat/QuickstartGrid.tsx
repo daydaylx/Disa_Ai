@@ -68,12 +68,12 @@ export function QuickstartGrid({
     return (
       <div className="flex min-h-[280px] items-center justify-center p-4">
         <div className="max-w-xs space-y-4 text-center">
-          <div className="border-border bg-surface-2 mx-auto flex h-16 w-16 items-center justify-center rounded-full border">
-            <Sparkles className="text-text-1 h-8 w-8" />
+          <div className="border-border bg-surface-subtle mx-auto flex h-16 w-16 items-center justify-center rounded-full border">
+            <Sparkles className="text-text-secondary h-8 w-8" />
           </div>
           <div className="space-y-2">
-            <h3 className="typo-h5 text-text-0">Keine Schnellstarts verfügbar</h3>
-            <p className="typo-body-sm text-text-1">
+            <h3 className="typo-h5 text-text-primary">Keine Schnellstarts verfügbar</h3>
+            <p className="typo-body-sm text-text-secondary">
               Schnellstarts helfen dir, häufige Aufgaben mit einem Tippen zu starten. Sie werden
               automatisch geladen.
             </p>

@@ -119,8 +119,8 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="bg-surface-0 flex min-h-dvh items-center justify-center p-4">
-          <div className="bg-surface-1 shadow-level w-full max-w-2xl rounded-lg p-8">
+        <div className="bg-surface-base flex min-h-dvh items-center justify-center p-4">
+          <div className="bg-surface-card shadow-level w-full max-w-2xl rounded-lg p-8">
             <div className="mb-8 text-center">
               <div className="bg-danger/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <svg
@@ -137,15 +137,15 @@ export class ErrorBoundary extends Component<Props, State> {
                   />
                 </svg>
               </div>
-              <h1 className="text-text-0 mb-2 text-2xl font-bold">Anwendungsfehler</h1>
-              <p className="text-text-1">
+              <h1 className="text-text-primary mb-2 text-2xl font-bold">Anwendungsfehler</h1>
+              <p className="text-text-secondary">
                 Die Anwendung ist auf einen unerwarteten Fehler gestoßen
               </p>
             </div>
 
-            <div className="bg-surface-2 mb-6 rounded-lg p-4">
-              <h2 className="text-text-0 mb-2 font-semibold">Fehlerdetails</h2>
-              <div className="text-text-1 space-y-1 text-sm">
+            <div className="bg-surface-subtle mb-6 rounded-lg p-4">
+              <h2 className="text-text-primary mb-2 font-semibold">Fehlerdetails</h2>
+              <div className="text-text-secondary space-y-1 text-sm">
                 <div>
                   <strong>Fehler-ID:</strong> {errorId}
                 </div>
@@ -184,7 +184,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </button>
               <button
                 onClick={this.handleReset}
-                className="bg-surface-2 text-text-0 hover:bg-surface-1 flex-1 rounded-lg px-4 py-2 transition-colors"
+                className="bg-surface-subtle text-text-primary hover:bg-surface-card flex-1 rounded-lg px-4 py-2 transition-colors"
               >
                 App zurücksetzen
               </button>
@@ -198,10 +198,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
             <div className="border-border mt-6 border-t pt-6">
               <details className="text-sm">
-                <summary className="text-text-1 hover:text-text-0 cursor-pointer">
+                <summary className="text-text-secondary hover:text-text-primary cursor-pointer">
                   Technische Details anzeigen
                 </summary>
-                <div className="bg-surface-2 text-text-0 mt-4 max-h-40 overflow-auto rounded p-4 font-mono text-xs">
+                <div className="bg-surface-subtle text-text-primary mt-4 max-h-40 overflow-auto rounded p-4 font-mono text-xs">
                   <div>
                     <strong>Stack Trace:</strong>
                   </div>
@@ -263,13 +263,8 @@ export function StartupDiagnostics({ children }: { children: ReactNode }) {
               const controller = new AbortController();
               const timeoutId = setTimeout(() => controller.abort(), 3000);
 
-              const config = getEnvConfig();
-              if (config.VITE_OPENROUTER_BASE_URL) {
-                await fetch(config.VITE_OPENROUTER_BASE_URL + "/models", {
-                  method: "GET",
-                  signal: controller.signal,
-                });
-              }
+              const { checkApiHealth } = await import("../api/openrouter");
+              await checkApiHealth({ timeoutMs: 3000, signal: controller.signal });
 
               clearTimeout(timeoutId);
             } catch {

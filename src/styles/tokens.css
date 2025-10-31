@@ -1,0 +1,673 @@
+/**
+ * Design Tokens - Consolidated
+ *
+ * All design tokens consolidated from:
+ * - design-tokens.css
+ * - theme/tokens.css
+ * - mobile-design-tokens.css
+ * - category-tonal-scales.css
+ *
+ * Provides a single source of truth for all design values.
+ */
+
+:root {
+  /* ========================================================================
+     COLOR SYSTEM - Base Colors
+     ======================================================================== */
+
+  /* Core colors (light theme default) */
+  --fg0: #0f1724;
+  --fg1: #4a5163;
+  --fg2: #676d82;
+  --fg-invert: #f6f7ff;
+  --fg-muted: color-mix(in srgb, var(--fg1) 65%, var(--bg1));
+
+  --bg0: #e9ecf4;
+  --bg1: #fdfdff;
+  --bg2: #dfe3f0;
+
+  --acc1: #4b63ff;
+  --acc1-strong: #3748df;
+  --acc2: #f45d69;
+  --acc2-strong: #d63b4b;
+
+  --ok: #0d8f62;
+  --warn: #b26a00;
+  --err: #c13a32;
+  --info: #0d73d6;
+
+  /* Semantic color tokens */
+  --color-surface-canvas: var(--bg0);
+  --color-surface-base: var(--bg1);
+  --color-surface-subtle: color-mix(in srgb, var(--bg1) 80%, var(--bg2));
+  --color-surface-muted: var(--bg2);
+  --color-surface-raised: color-mix(in srgb, var(--bg1) 95%, rgba(255, 255, 255, 0.85));
+  --color-surface-card: var(--bg1);
+  --color-surface-popover: color-mix(in srgb, var(--bg1) 98%, rgba(255, 255, 255, 0.9));
+  --color-surface-overlay: color-mix(in srgb, var(--bg1) 92%, rgba(15, 18, 32, 0.65));
+
+  --color-text-primary: var(--fg0);
+  --color-text-secondary: var(--fg1);
+  --color-text-tertiary: var(--fg2);
+  --color-text-muted: var(--fg-muted);
+  --color-text-inverse: var(--fg-invert);
+  --color-text-on-brand: var(--fg-invert);
+  --color-text-on-accent: var(--fg-invert);
+  --color-text-link: var(--acc1);
+  --color-text-link-hover: var(--acc1-strong);
+
+  --color-brand-primary: var(--acc1);
+  --color-brand-primary-hover: var(--acc1-strong);
+  --color-brand-primary-active: color-mix(in srgb, var(--acc1) 80%, #0b1020);
+  --color-brand-subtle: color-mix(in srgb, var(--acc1) 10%, var(--bg1));
+  --color-brand-strong: var(--acc1-strong);
+  --color-brand-on-primary: var(--fg-invert);
+  --brand-rgb: 75, 99, 255;
+
+  --color-border-hairline: color-mix(in srgb, var(--fg0) 8%, transparent);
+  --color-border-subtle: color-mix(in srgb, var(--fg0) 15%, transparent);
+  --color-border-strong: color-mix(in srgb, var(--fg0) 30%, transparent);
+  --color-border-focus: var(--acc1);
+  --color-border-divider: color-mix(in srgb, var(--fg0) 12%, transparent);
+
+  /* Status colors */
+  --color-status-success-fg: var(--ok);
+  --color-status-success-bg: color-mix(in srgb, var(--ok) 14%, var(--bg1));
+  --color-status-success-border: color-mix(in srgb, var(--ok) 45%, var(--bg2));
+  --color-status-warning-fg: var(--warn);
+  --color-status-warning-bg: color-mix(in srgb, var(--warn) 20%, var(--bg1));
+  --color-status-warning-border: color-mix(in srgb, var(--warn) 55%, var(--bg2));
+  --color-status-danger-fg: var(--err);
+  --color-status-danger-bg: color-mix(in srgb, var(--err) 16%, var(--bg1));
+  --color-status-danger-border: color-mix(in srgb, var(--err) 50%, var(--bg2));
+  --color-status-info-fg: var(--info);
+  --color-status-info-bg: color-mix(in srgb, var(--info) 14%, var(--bg1));
+  --color-status-info-border: color-mix(in srgb, var(--info) 48%, var(--bg2));
+
+  /* Action colors */
+  --color-action-primary-bg: var(--acc1);
+  --color-action-primary-hover: var(--acc1-strong);
+  --color-action-primary-active: color-mix(in srgb, var(--acc1) 75%, #05070f);
+  --color-action-primary-fg: var(--fg-invert);
+  --color-action-primary-focus-ring: color-mix(in srgb, var(--acc1) 35%, transparent);
+
+  --color-action-secondary-bg: color-mix(in srgb, var(--bg1) 90%, var(--bg2));
+  --color-action-secondary-hover: color-mix(in srgb, var(--bg1) 70%, var(--bg2));
+  --color-action-secondary-active: color-mix(in srgb, var(--bg1) 50%, var(--bg2));
+  --color-action-secondary-fg: var(--fg0);
+  --color-action-secondary-border: color-mix(in srgb, var(--fg0) 18%, transparent);
+  --color-action-secondary-border-hover: color-mix(in srgb, var(--fg0) 30%, transparent);
+  --color-action-secondary-focus-ring: color-mix(in srgb, var(--acc1) 25%, transparent);
+
+  --color-action-ghost-fg: var(--fg0);
+  --color-action-ghost-hover: color-mix(in srgb, var(--fg0) 6%, transparent);
+  --color-action-ghost-active: color-mix(in srgb, var(--fg0) 12%, transparent);
+  --color-action-ghost-focus-ring: color-mix(in srgb, var(--acc1) 25%, transparent);
+
+  --color-action-destructive-bg: var(--err);
+  --color-action-destructive-hover: color-mix(in srgb, var(--err) 90%, #6a0f0a);
+  --color-action-destructive-active: color-mix(in srgb, var(--err) 80%, #280402);
+  --color-action-destructive-fg: var(--fg-invert);
+  --color-action-destructive-focus-ring: color-mix(in srgb, var(--err) 35%, transparent);
+
+  /* Control colors */
+  --color-control-field-bg: color-mix(in srgb, var(--bg1) 92%, rgba(255, 255, 255, 0.9));
+  --color-control-field-hover: color-mix(in srgb, var(--bg1) 96%, rgba(255, 255, 255, 0.9));
+  --color-control-field-disabled: color-mix(in srgb, var(--bg2) 80%, rgba(255, 255, 255, 0.85));
+  --color-control-field-fg: var(--fg0);
+  --color-control-field-placeholder: var(--fg2);
+  --color-control-field-border: color-mix(in srgb, var(--fg0) 12%, transparent);
+  --color-control-field-border-hover: color-mix(in srgb, var(--fg0) 22%, transparent);
+  --color-control-field-border-active: var(--acc1);
+  --color-control-field-focus-ring: color-mix(in srgb, var(--acc1) 35%, transparent);
+
+  --color-control-chip-bg: color-mix(in srgb, var(--bg1) 70%, var(--acc1) 10%);
+  --color-control-chip-hover: color-mix(in srgb, var(--bg1) 60%, var(--acc1) 15%);
+  --color-control-chip-fg: var(--fg0);
+  --color-control-chip-border: color-mix(in srgb, var(--fg0) 18%, transparent);
+
+  /* ========================================================================
+     ELEVATION & SHADOWS
+     ======================================================================== */
+
+  --elev-0: 0 0 0 0 rgba(0, 0, 0, 0);
+  --elev-1: 0 1px 2px rgba(9, 12, 20, 0.08), 0 0 0 1px rgba(9, 12, 20, 0.04);
+  --elev-2: 0 3px 8px rgba(9, 12, 20, 0.12), 0 1px 1px rgba(9, 12, 20, 0.06);
+  --elev-4: 0 8px 20px rgba(9, 12, 20, 0.16), 0 2px 6px rgba(9, 12, 20, 0.08);
+  --elev-8: 0 16px 40px rgba(9, 12, 20, 0.2), 0 4px 12px rgba(9, 12, 20, 0.12);
+
+  --shadow-surface: var(--elev-1);
+  --shadow-raised: var(--elev-2);
+  --shadow-overlay: var(--elev-4);
+  --shadow-popover: var(--elev-8);
+  --shadow-focus: 0 0 0 3px color-mix(in srgb, var(--acc1) 30%, transparent);
+  --shadow-surface-subtle: var(--elev-1);
+  --shadow-surface-prominent: var(--elev-4);
+  --shadow-surface-hover: var(--elev-2);
+  --shadow-surface-active: var(--elev-1);
+  --shadow-glow-brand: 0 0 0 3px color-mix(in srgb, var(--acc1) 35%, transparent);
+  --shadow-glow-success: 0 0 0 3px color-mix(in srgb, var(--ok) 35%, transparent);
+  --shadow-glow-warning: 0 0 0 3px color-mix(in srgb, var(--warn) 35%, transparent);
+  --shadow-glow-error: 0 0 0 3px color-mix(in srgb, var(--err) 35%, transparent);
+  --shadow-card: var(--shadow-surface);
+  --shadow-card-hover: 0 12px 32px rgba(9, 12, 20, 0.2);
+  --neon: 0 0 0 4px rgba(75, 99, 255, 0.35);
+  --neon-strong: 0 0 0 8px rgba(75, 99, 255, 0.25);
+
+  /* ========================================================================
+     MOTION & TRANSITIONS
+     ======================================================================== */
+
+  --motion-duration-micro: 120ms;
+  --motion-duration-small: 150ms;
+  --motion-duration-medium: 180ms;
+  --motion-duration-large: 200ms;
+  --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-easing-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-easing-accelerate: cubic-bezier(0.8, 0, 1, 1);
+  --motion-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+
+  --transition-fast: var(--motion-duration-micro);
+  --transition-normal: var(--motion-duration-large);
+  --transition-slow: 320ms;
+  --transition-smooth: var(--motion-easing-standard);
+  --transition-spring: var(--motion-easing-emphasized);
+
+  /* ========================================================================
+     TYPOGRAPHY
+     ======================================================================== */
+
+  --font-family-sans:
+    "Inter Variable", "Inter", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-family-mono:
+    "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-family-numeric: "Inter Variable", "Segoe UI", system-ui, sans-serif;
+
+  /* Font sizes */
+  --type-12: 0.75rem;
+  --type-14: 0.875rem;
+  --type-16: 1rem;
+  --type-18: 1.125rem;
+  --type-20: 1.25rem;
+  --type-24: 1.5rem;
+  --type-28: 1.75rem;
+  --type-32: 2rem;
+
+  /* Line heights */
+  --line-tight: 1.2;
+  --line-snug: 1.35;
+  --line-relaxed: 1.5;
+
+  /* Display */
+  --font-size-display: var(--type-32);
+  --line-height-display: calc(var(--type-32) * 1.25);
+  --font-weight-display: 600;
+  --letter-spacing-display: -0.01em;
+
+  /* Headline */
+  --font-size-headline: var(--type-28);
+  --line-height-headline: calc(var(--type-28) * 1.25);
+  --font-weight-headline: 600;
+  --letter-spacing-headline: -0.008em;
+
+  /* Title */
+  --font-size-title: var(--type-24);
+  --line-height-title: calc(var(--type-24) * 1.25);
+  --font-weight-title: 600;
+  --letter-spacing-title: -0.006em;
+
+  /* Subtitle */
+  --font-size-subtitle: var(--type-20);
+  --line-height-subtitle: calc(var(--type-20) * var(--line-snug));
+  --font-weight-subtitle: 500;
+  --letter-spacing-subtitle: -0.002em;
+
+  /* Body */
+  --font-size-body: var(--type-16);
+  --line-height-body: calc(var(--type-16) * var(--line-relaxed));
+  --font-weight-body: 400;
+
+  --font-size-body-strong: var(--type-16);
+  --line-height-body-strong: calc(var(--type-16) * var(--line-relaxed));
+  --font-weight-body-strong: 600;
+
+  --font-size-body-small: var(--type-14);
+  --line-height-body-small: calc(var(--type-14) * var(--line-relaxed));
+  --font-weight-body-small: 400;
+
+  /* Caption & Labels */
+  --font-size-caption: var(--type-12);
+  --line-height-caption: calc(var(--type-12) * var(--line-snug));
+  --font-weight-caption: 500;
+
+  --font-size-label: var(--type-14);
+  --line-height-label: calc(var(--type-14) * var(--line-snug));
+  --font-weight-label: 600;
+  --letter-spacing-label: 0.04em;
+  --text-transform-label: uppercase;
+
+  --font-size-mono: var(--type-14);
+  --line-height-mono: calc(var(--type-14) * var(--line-relaxed));
+  --font-weight-mono: 500;
+
+  /* Card typography */
+  --font-size-title-hero: var(--type-24);
+  --line-height-title-hero: calc(var(--type-24) * var(--line-snug));
+  --font-weight-title-hero: 600;
+
+  --font-size-title-lg: var(--type-20);
+  --line-height-title-lg: calc(var(--type-20) * var(--line-snug));
+  --font-weight-title-lg: 600;
+
+  --font-size-title-base: var(--type-18);
+  --line-height-title-base: calc(var(--type-18) * var(--line-snug));
+  --font-weight-title-base: 600;
+
+  --font-size-title-sm: var(--type-16);
+  --line-height-title-sm: calc(var(--type-16) * var(--line-relaxed));
+  --font-weight-title-sm: 600;
+
+  --font-size-description-lg: var(--type-16);
+  --line-height-description-lg: calc(var(--type-16) * var(--line-relaxed));
+  --font-weight-description-lg: 400;
+
+  --font-size-description-base: var(--type-14);
+  --line-height-description-base: calc(var(--type-14) * var(--line-relaxed));
+  --font-weight-description-base: 400;
+
+  --font-size-description-sm: var(--type-12);
+  --line-height-description-sm: calc(var(--type-12) * var(--line-relaxed));
+  --font-weight-description-sm: 400;
+
+  --font-size-metadata: var(--type-12);
+  --line-height-metadata: calc(var(--type-12) * var(--line-snug));
+  --font-weight-metadata: 600;
+  --letter-spacing-metadata: 0.08em;
+  --text-transform-metadata: uppercase;
+
+  --font-size-card-label: var(--type-12);
+  --line-height-card-label: calc(var(--type-12) * var(--line-snug));
+  --font-weight-card-label: 600;
+
+  --font-size-badge: var(--type-12);
+  --font-size-input: var(--type-16);
+
+  /* ========================================================================
+     SPACING
+     ======================================================================== */
+
+  --space-none: 0px;
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 4rem;
+
+  --space-stack-xs: 0.5rem;
+  --space-stack-sm: 0.75rem;
+  --space-stack-md: 1rem;
+  --space-stack-lg: 1.5rem;
+  --space-inline-sm: 0.5rem;
+  --space-inline-md: 0.75rem;
+  --space-inline-lg: 1rem;
+  --space-section: 3rem;
+  --space-container-x: 1rem;
+  --space-container-y: 1.5rem;
+
+  /* ========================================================================
+     SIZES
+     ======================================================================== */
+
+  --size-touch-compact: 2.75rem;
+  --size-touch-comfortable: 3rem;
+  --size-touch-relaxed: 3.5rem;
+  --size-touch-spacious: 4rem;
+
+  --size-scrollbar: 0.5rem;
+  --size-ripple-max: 12.5rem;
+  --size-bottomsheet-handle: 0.3125rem;
+  --size-bottomsheet-handle-width: 2.5rem;
+  --size-bottomsheet-border: 0.125rem;
+
+  /* ========================================================================
+     RADII
+     ======================================================================== */
+
+  --radius-none: 0px;
+  --radius-2: 2px;
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+
+  --radius-xs: var(--radius-2);
+  --radius-sm: var(--radius-4);
+  --radius-md: var(--radius-8);
+  --radius-lg: var(--radius-12);
+  --radius-xl: var(--radius-16);
+  --radius-pill: var(--radius-16);
+  --radius-full: 50%;
+  --radius-scrollbar: var(--radius-16);
+  --radius-focus: var(--radius-4);
+  --radius-toast: var(--radius-12);
+  --radius-install-prompt: var(--radius-12);
+  --radius-button: var(--radius-12);
+  --radius-badge: var(--radius-8);
+  --radius-card: var(--radius-12);
+  --radius-card-inner: var(--radius-8);
+  --radius-card-small: var(--radius-4);
+  --radius-avatar: 50%;
+
+  /* ========================================================================
+     LAYOUT (Mobile-first)
+     ======================================================================== */
+
+  --layout-sidebar-width: 0px;
+  --layout-header-height: 4rem;
+  --layout-footer-height: 5rem;
+  --layout-bottom-nav-height: 4rem;
+  --layout-content-padding-x: 1rem;
+  --layout-content-padding-y: 1rem;
+  --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
+  --layout-main-pb: calc(
+    var(--layout-bottom-nav-height) + var(--layout-content-padding-y) +
+      env(safe-area-inset-bottom, 0px)
+  );
+
+  /* ========================================================================
+     SAFE AREA & VIEWPORT
+     ======================================================================== */
+
+  --vh: 1vh;
+  --mobile-safe-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-right: env(safe-area-inset-right, 0px);
+  --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-safe-left: env(safe-area-inset-left, 0px);
+
+  /* ========================================================================
+     CATEGORY ACCENT COLORS
+     ======================================================================== */
+
+  /* Alltag - Warm amber tones */
+  --role-accent-alltag-50: hsl(30 12% 96%);
+  --role-accent-alltag-100: hsl(30 14% 92%);
+  --role-accent-alltag-200: hsl(30 16% 85%);
+  --role-accent-alltag-300: hsl(30 18% 75%);
+  --role-accent-alltag-400: hsl(30 20% 65%);
+  --role-accent-alltag-500: hsl(30 18% 55%);
+  --role-accent-alltag-600: hsl(30 20% 45%);
+  --role-accent-alltag-700: hsl(30 22% 38%);
+  --role-accent-alltag-800: hsl(30 24% 30%);
+  --role-accent-alltag-900: hsl(30 26% 22%);
+  --role-accent-alltag-text: var(--role-accent-alltag-900);
+  --role-accent-alltag-text-on: var(--role-accent-alltag-50);
+  --role-accent-alltag-bg: var(--role-accent-alltag-100);
+  --role-accent-alltag-bg-hover: var(--role-accent-alltag-200);
+  --role-accent-alltag-bg-subtle: var(--role-accent-alltag-50);
+  --role-accent-alltag-border: var(--role-accent-alltag-300);
+  --role-accent-alltag-border-strong: var(--role-accent-alltag-400);
+  --role-accent-alltag-chip-bg: var(--role-accent-alltag-100);
+  --role-accent-alltag-chip-text: var(--role-accent-alltag-800);
+  --role-accent-alltag-chip-border: var(--role-accent-alltag-200);
+
+  /* Business - Steel blue */
+  --role-accent-business-50: hsl(210 12% 96%);
+  --role-accent-business-100: hsl(210 14% 92%);
+  --role-accent-business-200: hsl(210 16% 85%);
+  --role-accent-business-300: hsl(210 18% 75%);
+  --role-accent-business-400: hsl(210 20% 65%);
+  --role-accent-business-500: hsl(210 18% 56%);
+  --role-accent-business-600: hsl(210 20% 46%);
+  --role-accent-business-700: hsl(210 22% 38%);
+  --role-accent-business-800: hsl(210 24% 30%);
+  --role-accent-business-900: hsl(210 26% 22%);
+  --role-accent-business-text: var(--role-accent-business-900);
+  --role-accent-business-text-on: var(--role-accent-business-50);
+  --role-accent-business-bg: var(--role-accent-business-100);
+  --role-accent-business-bg-hover: var(--role-accent-business-200);
+  --role-accent-business-bg-subtle: var(--role-accent-business-50);
+  --role-accent-business-border: var(--role-accent-business-300);
+  --role-accent-business-border-strong: var(--role-accent-business-400);
+  --role-accent-business-chip-bg: var(--role-accent-business-100);
+  --role-accent-business-chip-text: var(--role-accent-business-800);
+  --role-accent-business-chip-border: var(--role-accent-business-200);
+
+  /* Kreativ - Violet */
+  --role-accent-kreativ-50: hsl(275 12% 96%);
+  --role-accent-kreativ-100: hsl(275 14% 92%);
+  --role-accent-kreativ-200: hsl(275 16% 85%);
+  --role-accent-kreativ-300: hsl(275 18% 75%);
+  --role-accent-kreativ-400: hsl(275 20% 65%);
+  --role-accent-kreativ-500: hsl(275 20% 55%);
+  --role-accent-kreativ-600: hsl(275 22% 45%);
+  --role-accent-kreativ-700: hsl(275 24% 38%);
+  --role-accent-kreativ-800: hsl(275 26% 30%);
+  --role-accent-kreativ-900: hsl(275 28% 22%);
+  --role-accent-kreativ-text: var(--role-accent-kreativ-900);
+  --role-accent-kreativ-text-on: var(--role-accent-kreativ-50);
+  --role-accent-kreativ-bg: var(--role-accent-kreativ-100);
+  --role-accent-kreativ-bg-hover: var(--role-accent-kreativ-200);
+  --role-accent-kreativ-bg-subtle: var(--role-accent-kreativ-50);
+  --role-accent-kreativ-border: var(--role-accent-kreativ-300);
+  --role-accent-kreativ-border-strong: var(--role-accent-kreativ-400);
+  --role-accent-kreativ-chip-bg: var(--role-accent-kreativ-100);
+  --role-accent-kreativ-chip-text: var(--role-accent-kreativ-800);
+  --role-accent-kreativ-chip-border: var(--role-accent-kreativ-200);
+
+  /* Bildung - Cyan-blue */
+  --role-accent-bildung-50: hsl(195 12% 96%);
+  --role-accent-bildung-100: hsl(195 14% 92%);
+  --role-accent-bildung-200: hsl(195 16% 85%);
+  --role-accent-bildung-300: hsl(195 18% 75%);
+  --role-accent-bildung-400: hsl(195 20% 65%);
+  --role-accent-bildung-500: hsl(195 18% 56%);
+  --role-accent-bildung-600: hsl(195 20% 46%);
+  --role-accent-bildung-700: hsl(195 22% 38%);
+  --role-accent-bildung-800: hsl(195 24% 30%);
+  --role-accent-bildung-900: hsl(195 26% 22%);
+  --role-accent-bildung-text: var(--role-accent-bildung-900);
+  --role-accent-bildung-text-on: var(--role-accent-bildung-50);
+  --role-accent-bildung-bg: var(--role-accent-bildung-100);
+  --role-accent-bildung-bg-hover: var(--role-accent-bildung-200);
+  --role-accent-bildung-bg-subtle: var(--role-accent-bildung-50);
+  --role-accent-bildung-border: var(--role-accent-bildung-300);
+  --role-accent-bildung-border-strong: var(--role-accent-bildung-400);
+  --role-accent-bildung-chip-bg: var(--role-accent-bildung-100);
+  --role-accent-bildung-chip-text: var(--role-accent-bildung-800);
+  --role-accent-bildung-chip-border: var(--role-accent-bildung-200);
+
+  /* Familie - Warm coral */
+  --role-accent-familie-50: hsl(5 12% 96%);
+  --role-accent-familie-100: hsl(5 14% 92%);
+  --role-accent-familie-200: hsl(5 16% 85%);
+  --role-accent-familie-300: hsl(5 18% 75%);
+  --role-accent-familie-400: hsl(5 20% 65%);
+  --role-accent-familie-500: hsl(5 16% 56%);
+  --role-accent-familie-600: hsl(5 18% 46%);
+  --role-accent-familie-700: hsl(5 20% 38%);
+  --role-accent-familie-800: hsl(5 22% 30%);
+  --role-accent-familie-900: hsl(5 24% 22%);
+  --role-accent-familie-text: var(--role-accent-familie-900);
+  --role-accent-familie-text-on: var(--role-accent-familie-50);
+  --role-accent-familie-bg: var(--role-accent-familie-100);
+  --role-accent-familie-bg-hover: var(--role-accent-familie-200);
+  --role-accent-familie-bg-subtle: var(--role-accent-familie-50);
+  --role-accent-familie-border: var(--role-accent-familie-300);
+  --role-accent-familie-border-strong: var(--role-accent-familie-400);
+  --role-accent-familie-chip-bg: var(--role-accent-familie-100);
+  --role-accent-familie-chip-text: var(--role-accent-familie-800);
+  --role-accent-familie-chip-border: var(--role-accent-familie-200);
+
+  /* Beratung - Soft green */
+  --role-accent-beratung-50: hsl(145 12% 96%);
+  --role-accent-beratung-100: hsl(145 14% 92%);
+  --role-accent-beratung-200: hsl(145 16% 85%);
+  --role-accent-beratung-300: hsl(145 18% 75%);
+  --role-accent-beratung-400: hsl(145 20% 65%);
+  --role-accent-beratung-500: hsl(145 18% 55%);
+  --role-accent-beratung-600: hsl(145 20% 45%);
+  --role-accent-beratung-700: hsl(145 22% 38%);
+  --role-accent-beratung-800: hsl(145 24% 30%);
+  --role-accent-beratung-900: hsl(145 26% 22%);
+  --role-accent-beratung-text: var(--role-accent-beratung-900);
+  --role-accent-beratung-text-on: var(--role-accent-beratung-50);
+  --role-accent-beratung-bg: var(--role-accent-beratung-100);
+  --role-accent-beratung-bg-hover: var(--role-accent-beratung-200);
+  --role-accent-beratung-bg-subtle: var(--role-accent-beratung-50);
+  --role-accent-beratung-border: var(--role-accent-beratung-300);
+  --role-accent-beratung-border-strong: var(--role-accent-beratung-400);
+  --role-accent-beratung-chip-bg: var(--role-accent-beratung-100);
+  --role-accent-beratung-chip-text: var(--role-accent-beratung-800);
+  --role-accent-beratung-chip-border: var(--role-accent-beratung-200);
+}
+
+/* ============================================================================
+   DARK THEME
+   ============================================================================ */
+
+:root[data-theme="dark"],
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    /* Core colors */
+    --fg0: #f5f6ff;
+    --fg1: #c2c7da;
+    --fg2: #8d94ad;
+    --fg-invert: #06080f;
+    --fg-muted: color-mix(in srgb, var(--fg2) 70%, rgba(8, 10, 18, 0.6));
+
+    --bg0: #06080f;
+    --bg1: #0f1424;
+    --bg2: #1b2235;
+
+    --acc1: #7f96ff;
+    --acc1-strong: #a8b5ff;
+    --acc2: #ff8591;
+    --acc2-strong: #ff5c6c;
+
+    --ok: #31d193;
+    --warn: #ffb74d;
+    --err: #ff6b6b;
+    --info: #5aa8ff;
+
+    /* Elevation */
+    --elev-0: 0 0 0 0 rgba(0, 0, 0, 0);
+    --elev-1: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --elev-2: 0 4px 10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --elev-4: 0 10px 26px rgba(0, 0, 0, 0.65), 0 3px 8px rgba(0, 0, 0, 0.55);
+    --elev-8: 0 20px 48px rgba(0, 0, 0, 0.75), 0 6px 14px rgba(0, 0, 0, 0.6);
+
+    /* Category colors - dark mode adaptations */
+    --role-accent-alltag-text: var(--role-accent-alltag-200);
+    --role-accent-alltag-text-on: var(--role-accent-alltag-900);
+    --role-accent-alltag-bg: var(--role-accent-alltag-900);
+    --role-accent-alltag-bg-hover: var(--role-accent-alltag-800);
+    --role-accent-alltag-bg-subtle: var(--role-accent-alltag-900);
+    --role-accent-alltag-border: var(--role-accent-alltag-700);
+    --role-accent-alltag-border-strong: var(--role-accent-alltag-600);
+    --role-accent-alltag-chip-bg: var(--role-accent-alltag-800);
+    --role-accent-alltag-chip-text: var(--role-accent-alltag-200);
+    --role-accent-alltag-chip-border: var(--role-accent-alltag-700);
+
+    --role-accent-business-text: var(--role-accent-business-200);
+    --role-accent-business-text-on: var(--role-accent-business-900);
+    --role-accent-business-bg: var(--role-accent-business-900);
+    --role-accent-business-bg-hover: var(--role-accent-business-800);
+    --role-accent-business-bg-subtle: var(--role-accent-business-900);
+    --role-accent-business-border: var(--role-accent-business-700);
+    --role-accent-business-border-strong: var(--role-accent-business-600);
+    --role-accent-business-chip-bg: var(--role-accent-business-800);
+    --role-accent-business-chip-text: var(--role-accent-business-200);
+    --role-accent-business-chip-border: var(--role-accent-business-700);
+
+    --role-accent-kreativ-text: var(--role-accent-kreativ-200);
+    --role-accent-kreativ-text-on: var(--role-accent-kreativ-900);
+    --role-accent-kreativ-bg: var(--role-accent-kreativ-900);
+    --role-accent-kreativ-bg-hover: var(--role-accent-kreativ-800);
+    --role-accent-kreativ-bg-subtle: var(--role-accent-kreativ-900);
+    --role-accent-kreativ-border: var(--role-accent-kreativ-700);
+    --role-accent-kreativ-border-strong: var(--role-accent-kreativ-600);
+    --role-accent-kreativ-chip-bg: var(--role-accent-kreativ-800);
+    --role-accent-kreativ-chip-text: var(--role-accent-kreativ-200);
+    --role-accent-kreativ-chip-border: var(--role-accent-kreativ-700);
+
+    --role-accent-bildung-text: var(--role-accent-bildung-200);
+    --role-accent-bildung-text-on: var(--role-accent-bildung-900);
+    --role-accent-bildung-bg: var(--role-accent-bildung-900);
+    --role-accent-bildung-bg-hover: var(--role-accent-bildung-800);
+    --role-accent-bildung-bg-subtle: var(--role-accent-bildung-900);
+    --role-accent-bildung-border: var(--role-accent-bildung-700);
+    --role-accent-bildung-border-strong: var(--role-accent-bildung-600);
+    --role-accent-bildung-chip-bg: var(--role-accent-bildung-800);
+    --role-accent-bildung-chip-text: var(--role-accent-bildung-200);
+    --role-accent-bildung-chip-border: var(--role-accent-bildung-700);
+
+    --role-accent-familie-text: var(--role-accent-familie-200);
+    --role-accent-familie-text-on: var(--role-accent-familie-900);
+    --role-accent-familie-bg: var(--role-accent-familie-900);
+    --role-accent-familie-bg-hover: var(--role-accent-familie-800);
+    --role-accent-familie-bg-subtle: var(--role-accent-familie-900);
+    --role-accent-familie-border: var(--role-accent-familie-700);
+    --role-accent-familie-border-strong: var(--role-accent-familie-600);
+    --role-accent-familie-chip-bg: var(--role-accent-familie-800);
+    --role-accent-familie-chip-text: var(--role-accent-familie-200);
+    --role-accent-familie-chip-border: var(--role-accent-familie-700);
+
+    --role-accent-beratung-text: var(--role-accent-beratung-200);
+    --role-accent-beratung-text-on: var(--role-accent-beratung-900);
+    --role-accent-beratung-bg: var(--role-accent-beratung-900);
+    --role-accent-beratung-bg-hover: var(--role-accent-beratung-800);
+    --role-accent-beratung-bg-subtle: var(--role-accent-beratung-900);
+    --role-accent-beratung-border: var(--role-accent-beratung-700);
+    --role-accent-beratung-border-strong: var(--role-accent-beratung-600);
+    --role-accent-beratung-chip-bg: var(--role-accent-beratung-800);
+    --role-accent-beratung-chip-text: var(--role-accent-beratung-200);
+    --role-accent-beratung-chip-border: var(--role-accent-beratung-700);
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  :root {
+    --layout-sidebar-width: 4rem;
+    --layout-content-padding-x: 1.5rem;
+    --layout-content-padding-y: 1.5rem;
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  :root {
+    --layout-content-padding-x: 2rem;
+    --layout-content-padding-y: 2rem;
+  }
+}
+
+/* Large desktop (1280px+) */
+@media (min-width: 1280px) {
+  :root {
+    --layout-sidebar-width: 5rem;
+    --layout-content-padding-x: 2.5rem;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-micro: 0ms;
+    --motion-duration-small: 0ms;
+    --motion-duration-medium: 0ms;
+    --motion-duration-large: 0ms;
+  }
+}

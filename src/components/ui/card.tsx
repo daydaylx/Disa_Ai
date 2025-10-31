@@ -11,16 +11,8 @@ const cardVariants = cva(
         default: "",
         muted: "bg-surface-subtle text-text-secondary border-border-subtle",
         contrast: "bg-surface-popover text-text-inverse border-border-strong",
-        // LEGACY (Performance Warning - Use glass-performance variants)
-        glass: "backdrop-blur-sm bg-surface-card/80 border-border/30",
-        "glass-subtle": "backdrop-blur-sm bg-surface-card/85 border-border/25",
-        "glass-medium": "backdrop-blur-md bg-surface-card/70 border-border/20",
-        "glass-strong": "backdrop-blur-lg bg-surface-card/60 border-border/15",
-        // PERFORMANCE-OPTIMIZED (Mobile-first with 60fps budget)
-        "glass-performance": "glass-mobile bg-surface-card/85 border-border/25",
-        "glass-performance-subtle": "glass-subtle bg-surface-card/90 border-border/20",
-        "glass-performance-modal": "glass-modal bg-surface-card/80 border-border/30",
-        "glass-performance-critical": "glass-critical bg-surface-card/95 border-border/15",
+        translucent:
+          "backdrop-blur-sm bg-surface-card/80 text-text-primary border-border-subtle shadow-surface",
         solid: "bg-surface-card border-border",
         outlined: "bg-transparent border-border-strong",
       },
@@ -100,10 +92,6 @@ const cardVariants = cva(
         class: "shadow-overlay",
       },
       {
-        tone: "glass",
-        class: "border-border/20",
-      },
-      {
         intent: "primary",
         interactive: "gentle",
         class: "motion-safe:hover:bg-brand/10",
@@ -137,6 +125,11 @@ const cardVariants = cva(
         class: "touch-target min-h-[44px]",
       },
       {
+        tone: "translucent",
+        interactive: ["gentle", "dramatic"],
+        class: "motion-safe:hover:bg-surface-card/90 motion-safe:hover:backdrop-blur-md",
+      },
+      {
         intent: "primary",
         interactive: "glow",
         class:
@@ -161,36 +154,6 @@ const cardVariants = cva(
         state: "loading",
         interactive: false,
         class: "cursor-wait pointer-events-none",
-      },
-      {
-        tone: "glass",
-        interactive: ["gentle", "dramatic"],
-        class: "motion-safe:hover:bg-surface-card/90 motion-safe:hover:backdrop-blur-lg",
-      },
-      // PERFORMANCE-OPTIMIZED HOVER EFFECTS
-      {
-        tone: "glass-performance",
-        interactive: ["gentle", "dramatic"],
-        class:
-          "motion-safe:hover:bg-surface-card/95 motion-safe:hover:shadow-[var(--glass-highlight-top)]",
-      },
-      {
-        tone: "glass-performance-subtle",
-        interactive: ["gentle", "dramatic"],
-        class:
-          "motion-safe:hover:bg-surface-card/95 motion-safe:hover:shadow-[var(--glass-depth-medium)]",
-      },
-      {
-        tone: "glass-performance-modal",
-        interactive: ["gentle", "dramatic"],
-        class:
-          "motion-safe:hover:bg-surface-card/90 motion-safe:hover:shadow-[var(--glass-highlight-sophisticated)]",
-      },
-      {
-        tone: "glass-performance-critical",
-        interactive: ["gentle", "dramatic"],
-        class:
-          "motion-safe:hover:bg-surface-card/98 motion-safe:hover:shadow-[var(--glass-depth-light)]",
       },
     ],
     defaultVariants: {

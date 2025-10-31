@@ -99,11 +99,11 @@ export function MobileOnlyGate({ children }: MobileOnlyGateProps) {
 
   if (state === "unknown") {
     return (
-      <div className="bg-surface-0 text-text-0 flex min-h-screen items-center justify-center">
-        <div className="border-border bg-surface-1 max-w-sm rounded-lg border text-center">
+      <div className="bg-surface-base text-text-primary flex min-h-screen items-center justify-center">
+        <div className="border-border bg-surface-card max-w-sm rounded-lg border text-center">
           <div className="flex flex-col items-center gap-4 px-6 py-8">
-            <Smartphone className="text-text-1 h-8 w-8" />
-            <p className="text-text-1">Geräteprüfung läuft…</p>
+            <Smartphone className="text-text-secondary h-8 w-8" />
+            <p className="text-text-secondary">Geräteprüfung läuft…</p>
           </div>
         </div>
       </div>
@@ -111,31 +111,33 @@ export function MobileOnlyGate({ children }: MobileOnlyGateProps) {
   }
 
   return (
-    <div className="bg-surface-0 text-text-0 flex min-h-screen items-center justify-center px-6 py-10">
-      <div className="border-border bg-surface-1 max-w-md rounded-lg border text-center">
+    <div className="bg-surface-base text-text-primary flex min-h-screen items-center justify-center px-6 py-10">
+      <div className="border-border bg-surface-card max-w-md rounded-lg border text-center">
         <div className="relative flex flex-col items-center gap-5 px-8 py-10">
-          <div className="border-border bg-surface-2 text-text-0 flex h-16 w-16 items-center justify-center rounded-full border">
+          <div className="border-border bg-surface-subtle text-text-primary flex h-16 w-16 items-center justify-center rounded-full border">
             <AlertTriangle className="h-8 w-8" />
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-text-0 text-xl font-semibold">Nur auf Mobilgeräten verfügbar</h1>
-            <p className="text-text-1 text-sm">
+            <h1 className="text-text-primary text-xl font-semibold">
+              Nur auf Mobilgeräten verfügbar
+            </h1>
+            <p className="text-text-secondary text-sm">
               Dieses Interface wurde speziell für Smartphones und Tablets entwickelt. Bitte öffne
               die App auf einem Mobilgerät, um fortzufahren.
             </p>
           </div>
 
-          <div className="border-border bg-surface-2 text-text-1 w-full rounded-lg border p-4 text-sm">
+          <div className="border-border bg-surface-subtle text-text-secondary w-full rounded-lg border p-4 text-sm">
             <p>Nächste Schritte:</p>
-            <ol className="text-text-1 mt-3 list-decimal space-y-2 pl-5 text-left">
+            <ol className="text-text-secondary mt-3 list-decimal space-y-2 pl-5 text-left">
               <li>QR-Code oder Link auf deinem Mobilgerät öffnen.</li>
               <li>Im mobilen Browser die Seite laden.</li>
               <li>Optional als PWA installieren, um Vollbild zu erhalten.</li>
             </ol>
           </div>
 
-          {reason ? <p className="text-text-1/70 text-xs">{reason}</p> : null}
+          {reason ? <p className="text-text-secondary/70 text-xs">{reason}</p> : null}
         </div>
       </div>
     </div>

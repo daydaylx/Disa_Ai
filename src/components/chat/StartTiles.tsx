@@ -2,7 +2,7 @@ import { Book, Code, MessageSquare } from "lucide-react";
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 
 import { cn } from "../../lib/utils";
-import { SoftDepthSurface } from "../Glass";
+import { SoftDepthSurface } from "../SoftDepthSurface";
 import { Badge } from "../ui/badge";
 
 export type StartTileAction = { type: "new-chat" } | { type: "set-role"; roleId: string };
@@ -82,10 +82,12 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
                 {tile.icon}
               </span>
               <div className="space-y-0.5">
-                <div className="text-text-0 text-xs font-semibold sm:text-sm">{tile.title}</div>
-                <p className="text-text-1 text-xs leading-snug">{tile.subtitle}</p>
+                <div className="text-text-primary text-xs font-semibold sm:text-sm">
+                  {tile.title}
+                </div>
+                <p className="text-text-secondary text-xs leading-snug">{tile.subtitle}</p>
               </div>
-              <div className="text-text-1 mt-auto flex items-center gap-1.5 text-xs">
+              <div className="text-text-secondary mt-auto flex items-center gap-1.5 text-xs">
                 <Badge variant="outline" className="px-1.5 py-0.5 text-xs">
                   Start
                 </Badge>

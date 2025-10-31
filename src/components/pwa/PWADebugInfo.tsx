@@ -67,10 +67,10 @@ export function PWADebugInfo() {
 
   return (
     <div className="fixed right-4 top-20 z-40 max-w-sm">
-      <div className="border-border bg-surface-1 shadow-level rounded-lg border p-4">
+      <div className="border-border bg-surface-card shadow-level rounded-lg border p-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-text-0 text-sm font-semibold">PWA Debug Info</h3>
+            <h3 className="text-text-primary text-sm font-semibold">PWA Debug Info</h3>
             <Button
               onClick={() => setIsVisible(false)}
               variant="ghost"
@@ -83,7 +83,7 @@ export function PWADebugInfo() {
             </Button>
           </div>
 
-          <div className="text-text-1 space-y-1 text-xs">
+          <div className="text-text-secondary space-y-1 text-xs">
             <div>
               <span className="font-medium">Platform:</span>{" "}
               {debugInfo.isIOS ? "iOS" : debugInfo.isAndroid ? "Android" : "Desktop"}
@@ -118,8 +118,8 @@ export function PWADebugInfo() {
           </div>
 
           <div className="border-border mt-3 border-t pt-2">
-            <p className="text-text-1 text-xs">PWA installiert sich nur wenn:</p>
-            <ul className="text-text-1 mt-1 space-y-0.5 text-xs">
+            <p className="text-text-secondary text-xs">PWA installiert sich nur wenn:</p>
+            <ul className="text-text-secondary mt-1 space-y-0.5 text-xs">
               <li>• HTTPS (nicht localhost)</li>
               <li>• Chrome/Android</li>
               <li>• Manifest vorhanden</li>

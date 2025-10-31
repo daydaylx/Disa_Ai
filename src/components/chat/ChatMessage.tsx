@@ -18,22 +18,22 @@ interface ChatMessageProps {
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   return (
-    <div className="border-border bg-surface-2 relative my-4 overflow-hidden rounded-lg border">
+    <div className="border-border bg-surface-subtle relative my-4 overflow-hidden rounded-lg border">
       <div className="border-border flex items-center justify-between border-b px-4 py-2">
-        <span className="text-text-1 text-xs font-medium uppercase tracking-wide">
+        <span className="text-text-secondary text-xs font-medium uppercase tracking-wide">
           {language || "Text"}
         </span>
         <Button
           variant="ghost"
           size="icon"
-          className="text-text-1 hover:bg-surface-1 hover:text-text-0 h-8 w-8"
+          className="text-text-secondary hover:bg-surface-card hover:text-text-primary h-8 w-8"
           onClick={() => void navigator.clipboard?.writeText(children)}
         >
           <Copy className="h-4 w-4" />
         </Button>
       </div>
       <pre className="overflow-x-auto p-4">
-        <code className="text-text-0 text-sm leading-relaxed">{children}</code>
+        <code className="text-text-primary text-sm leading-relaxed">{children}</code>
       </pre>
     </div>
   );
@@ -109,7 +109,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
     >
       <div className={cn("relative", isSystem && "hidden")}>
         <Avatar className="border-border h-9 w-9 border">
-          <AvatarFallback className={cn("bg-surface-2 text-text-0")}>
+          <AvatarFallback className={cn("bg-surface-subtle text-text-primary")}>
             {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
           </AvatarFallback>
         </Avatar>
@@ -119,18 +119,21 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
         {!isSystem && (
           <div
             className={cn(
-              "text-text-1 flex items-center gap-2 text-[13px]",
+              "text-text-secondary flex items-center gap-2 text-[13px]",
               isUser && "justify-end",
             )}
           >
-            <span className="text-text-0 font-medium">{isUser ? "Ich" : "Assistent"}</span>
+            <span className="text-text-primary font-medium">{isUser ? "Ich" : "Assistent"}</span>
             {message.model && (
-              <Badge variant="secondary" className="border-border bg-surface-1 text-text-1 text-xs">
+              <Badge
+                variant="secondary"
+                className="border-border bg-surface-card text-text-secondary text-xs"
+              >
                 {message.model}
               </Badge>
             )}
             {message.tokens && (
-              <Badge variant="outline" className="border-border text-text-1 text-xs">
+              <Badge variant="outline" className="border-border text-text-secondary text-xs">
                 {message.tokens} Token
               </Badge>
             )}
@@ -138,7 +141,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           </div>
         )}
 
-        <div className={cn("border-border bg-surface-1 rounded-lg border", bubbleClass, "p-4")}>
+        <div className={cn("border-border bg-surface-card rounded-lg border", bubbleClass, "p-4")}>
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
@@ -164,7 +167,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
             <Button
               variant="ghost"
               size="icon"
-              className="text-text-1 hover:bg-surface-1 hover:text-text-0 h-8 w-8"
+              className="text-text-secondary hover:bg-surface-card hover:text-text-primary h-8 w-8"
               onClick={handleCopy}
               title="Nachricht kopieren"
               data-testid="message.copy"
@@ -175,7 +178,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-text-1 hover:bg-surface-1 hover:text-text-0 h-8 w-8"
+                className="text-text-secondary hover:bg-surface-card hover:text-text-primary h-8 w-8"
                 onClick={handleRetry}
                 title="Antwort erneut anfordern"
                 data-testid="message.retry"

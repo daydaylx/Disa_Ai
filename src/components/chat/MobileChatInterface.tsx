@@ -529,7 +529,7 @@ export function MobileChatInterface() {
   }));
 
   return (
-    <div className="chat-container text-text-0 relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]">
+    <div className="chat-container text-text-primary relative min-h-dvh overflow-hidden bg-[var(--surface-bg)]">
       {/* Background gradients - soft depth aura */}
       <div className="pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(150%_120%_at_12%_10%,rgba(var(--color-surface-base),0.18)_0%,transparent_65%)]" />
@@ -582,7 +582,7 @@ export function MobileChatInterface() {
           </header>
 
           <section aria-labelledby="discussion-heading" className="pb-8">
-            <div className="bg-surface-0/70 border-border/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
+            <div className="bg-surface-base/70 border-border-subtle/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
               <div className="flex-1 space-y-1">
                 <h2
                   id="discussion-heading"
@@ -665,7 +665,7 @@ export function MobileChatInterface() {
           </section>
 
           {currentSystemPrompt === GAME_SYSTEM_PROMPTS["wer-bin-ich"] && (
-            <div className="text-text-0 mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm">
+            <div className="text-text-primary mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm">
               <p className="font-medium">Spiel-Hinweis:</p>
               <p>
                 Denke dir eine Entität aus und antworte auf die Fragen der KI nur mit{" "}
@@ -677,7 +677,7 @@ export function MobileChatInterface() {
           )}
 
           {currentSystemPrompt === GAME_SYSTEM_PROMPTS["quiz"] && (
-            <div className="text-text-0 mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm">
+            <div className="text-text-primary mb-4 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4 text-sm">
               <p className="font-medium">Spiel-Hinweis:</p>
               <p>
                 Antworte mit <strong>A</strong>, <strong>B</strong>, <strong>C</strong> oder{" "}
@@ -731,7 +731,7 @@ export function MobileChatInterface() {
             </div>
           </header>
 
-          <div className="chat-messages bg-surface-0/70 border-border/45 mx-auto flex h-full w-full max-w-[var(--max-content-width)] flex-col gap-4 rounded-lg border p-4">
+          <div className="chat-messages bg-surface-base/70 border-border-subtle/45 mx-auto flex h-full w-full max-w-[var(--max-content-width)] flex-col gap-4 rounded-lg border p-4">
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
@@ -744,7 +744,7 @@ export function MobileChatInterface() {
                       <div className="mobile-chat-loading-dot bg-accent2 h-2 w-2 rounded-full [animation-delay:0.15s] motion-safe:animate-bounce"></div>
                       <div className="mobile-chat-loading-dot bg-accent1 h-2 w-2 rounded-full [animation-delay:0.3s] motion-safe:animate-bounce"></div>
                     </div>
-                    <span className="text-text-1 text-sm motion-safe:animate-pulse">
+                    <span className="text-text-secondary text-sm motion-safe:animate-pulse">
                       Disa denkt nach...
                     </span>
                     <div className="bg-accent1 h-2 w-2 rounded-full motion-safe:animate-pulse"></div>
@@ -759,11 +759,11 @@ export function MobileChatInterface() {
       )}
 
       <div
-        className="chat-input-container safe-px bg-surface-0/90 border-border sticky bottom-0 z-40 border-t pt-2 backdrop-blur-xl"
+        className="chat-input-container safe-px bg-surface-base/90 border-border sticky bottom-0 z-40 border-t pt-2 backdrop-blur-xl"
         style={{ paddingBottom: "calc(var(--mobile-safe-bottom) + var(--spacing-lg))" }}
       >
         <div className="mx-auto w-full max-w-[var(--max-content-width)]">
-          <div className="chat-input-form border-border bg-surface-1 rounded-lg border p-2">
+          <div className="chat-input-form border-border bg-surface-card rounded-lg border p-2">
             <div className="flex-1">
               <Textarea
                 ref={textareaRef}
@@ -771,7 +771,7 @@ export function MobileChatInterface() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Nachricht an Disa AI schreiben..."
-                className="chat-textarea text-text-0 placeholder:text-text-1 max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0 touch-target"
+                className="chat-textarea text-text-primary placeholder:text-text-secondary max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0 touch-target"
                 rows={1}
                 aria-label="Nachricht an Disa AI eingeben"
                 aria-describedby="input-help-text"
@@ -790,12 +790,12 @@ export function MobileChatInterface() {
             </Button>
           </div>
 
-          <div className="text-text-1 mt-2 flex items-center justify-between text-xs">
+          <div className="text-text-secondary mt-2 flex items-center justify-between text-xs">
             <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
             {isLoading && (
               <span className="animate-fade-in flex items-center gap-2" aria-live="polite">
                 <span className="bg-accent1 inline-flex h-2 w-2 rounded-full motion-safe:animate-pulse"></span>
-                <span className="text-text-1">Disa tippt...</span>
+                <span className="text-text-secondary">Disa tippt...</span>
                 <div className="flex space-x-1">
                   <div className="bg-accent2 h-1 w-1 rounded-full motion-safe:animate-bounce"></div>
                   <div className="bg-accent1 h-1 w-1 rounded-full [animation-delay:0.1s] motion-safe:animate-bounce"></div>

@@ -1,51 +1,41 @@
-/* Import typography system */
-@import "./styles/typography.css";
-@import "./styles/mobile-design-tokens.css";
-@import "./styles/mobile-base.css";
-@import "./styles/mobile-fixes.css";
-@import "./styles/mobile-components.css";
-@import "./styles/mobile-enhanced.css";
-@import "./styles/mobile-utilities.css";
-@import "./styles/category-tonal-scales.css";
-@import "./styles/performance-glass-system.css";
-@import "./styles/mobile-navigation-performance.css";
+/**
+ * Main CSS Entry Point - Consolidated
+ *
+ * This file imports the consolidated CSS structure:
+ * - tokens.css: All design tokens
+ * - base.css: Resets, viewport fixes, accessibility
+ * - components.css: All component styles and utilities
+ *
+ * Plus project-specific Fluent 2 Soft-Depth surfaces.
+ */
 
+/* Import consolidated styles */
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/components.css";
+
+/* Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   PROJECT-SPECIFIC STYLES
+   ============================================================================ */
+
 @layer base {
   html {
-    -webkit-text-size-adjust: none;
-    text-size-adjust: none;
-    scroll-behavior: smooth;
     color-scheme: dark;
   }
 
-  body {
-    /* iOS fallback for older browsers */
-    min-height: 100vh;
-    min-height: 100dvh;
-    background: var(--color-surface-canvas);
-    color: var(--color-text-primary);
-    font-family: var(--font-family-sans);
-    font-size: var(--font-body);
-    line-height: 1.55;
-    overflow-x: hidden;
-    position: relative;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-  }
-
   body::after {
-    content: \"\";
+    content: "";
     position: fixed;
     inset: -20vh;
     pointer-events: none;
     background-image: radial-gradient(
       1px 1px at 20% 20%,
-      rgba(255, 255, 255, calc(var(--canvas-noise-opacity) * 0.6)) 0%,
+      rgba(255, 255, 255, calc(var(--canvas-noise-opacity, 0.18) * 0.6)) 0%,
       transparent 100%
     );
     background-size: 360px 360px;
@@ -56,474 +46,22 @@
 
   #root {
     min-height: 100dvh;
-    background: transparent; /* Allow body gradient to show through */
+    background: transparent;
     position: relative;
     z-index: 1;
   }
 
   .safe-px {
-    padding-left: calc(var(--page-padding-x) + var(--mobile-safe-left));
-    padding-right: calc(var(--page-padding-x) + var(--mobile-safe-right));
-  }
-
-  @layer utilities {
-    .overflow-wrap-anywhere {
-      overflow-wrap: anywhere;
-    }
-  }
-  h1,
-  h2,
-  h3 {
-    text-wrap: balance;
-  }
-
-  p,
-  li,
-  blockquote,
-  figcaption {
-    text-wrap: pretty;
-  }
-
-  a {
-    color: var(--acc1);
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
-  ::selection {
-    background-color: rgba(111, 211, 255, 0.18);
-    color: var(--fg);
-  }
-
-  *:focus-visible {
-    outline: 2px solid var(--acc1);
-    outline-offset: 3px;
-    border-radius: var(--radius-focus);
-  }
-
-  textarea {
-    caret-color: var(--acc1);
-  }
-
-  ::-webkit-scrollbar {
-    width: var(--size-scrollbar);
-    height: var(--size-scrollbar);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: var(--radius-scrollbar);
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  /* Enhanced animations for a more polished experience */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideInRight {
-    from {
-      opacity: 0;
-      transform: translateX(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.8;
-    }
-  }
-
-  @keyframes bounce {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-4px);
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200px 0;
-    }
-    100% {
-      background-position: calc(200px + 100%) 0;
-    }
-  }
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-6px);
-    }
-  }
-
-  @keyframes glow {
-    0%,
-    100% {
-      box-shadow: var(--neon);
-    }
-    50% {
-      box-shadow: var(--neon-strong);
-    }
-  }
-
-  /* Animation utility classes */
-  .animate-fade-in {
-    animation: fadeIn var(--transition-normal) var(--transition-smooth) forwards;
-  }
-
-  .animate-fade-in-up {
-    animation: fadeInUp var(--transition-normal) var(--transition-smooth) forwards;
-  }
-
-  .animate-fade-in-down {
-    animation: fadeInDown var(--transition-normal) var(--transition-smooth) forwards;
-  }
-
-  .animate-slide-in-right {
-    animation: slideInRight var(--transition-normal) var(--transition-smooth) forwards;
-  }
-
-  .animate-slide-in-left {
-    animation: slideInLeft var(--transition-normal) var(--transition-smooth) forwards;
-  }
-
-  .animate-scale-in {
-    animation: scaleIn var(--transition-normal) var(--transition-spring) forwards;
-  }
-
-  .animate-pulse {
-    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .animate-bounce {
-    animation: bounce 1s infinite;
-  }
-
-  .animate-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    background-size: 200px 100%;
-    animation: shimmer 2s infinite;
-  }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite;
-  }
-
-  /* Page transitions */
-  .animate-page-transition {
-    animation: fadeIn var(--transition-slow) var(--transition-smooth);
-  }
-
-  /* Staggered animations for lists */
-  .animate-stagger-1 {
-    animation-delay: 0ms;
-  }
-  .animate-stagger-2 {
-    animation-delay: 50ms;
-  }
-  .animate-stagger-3 {
-    animation-delay: 100ms;
-  }
-  .animate-stagger-4 {
-    animation-delay: 150ms;
-  }
-  .animate-stagger-5 {
-    animation-delay: 200ms;
-  }
-
-  /* Smooth transitions for interactive elements */
-  .transition-smooth {
-    transition: all var(--transition-normal) var(--transition-smooth);
-  }
-
-  .transition-smooth-slow {
-    transition: all var(--transition-slow) var(--transition-smooth);
-  }
-
-  .transition-smooth-fast {
-    transition: all var(--transition-fast) var(--transition-smooth);
-  }
-
-  /* Hover effects with smooth transitions */
-  .hover-lift {
-    transition: transform var(--transition-normal) var(--transition-smooth);
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-2px);
-  }
-
-  .hover-scale {
-    transition: transform var(--transition-normal) var(--transition-smooth);
-  }
-
-  .hover-scale:hover {
-    transform: scale(1.02);
-  }
-
-  .hover-glow {
-    transition: box-shadow var(--transition-normal) var(--transition-smooth);
-  }
-
-  .hover-glow:hover {
-    box-shadow: var(--neon);
-  }
-
-  /* Touch feedback for mobile interactions */
-  @media (hover: none) and (pointer: coarse) {
-    /* Touch-optimized tap targets */
-    .touch-target {
-      min-height: var(--touch-target-comfortable);
-      min-width: var(--touch-target-comfortable);
-      position: relative;
-    }
-
-    /* Touch feedback states */
-    .touch-target:active {
-      transform: scale(0.98);
-      transition: transform var(--transition-fast) var(--transition-smooth);
-    }
-
-    /* Enhanced touch feedback for buttons */
-    button:active,
-    .button-touch:active {
-      transform: scale(0.95);
-      transition: transform var(--transition-fast) var(--transition-smooth);
-    }
-
-    /* Touch feedback for interactive elements */
-    .touch-interactive:active {
-      background-color: var(--active-bg);
-      transform: scale(0.98);
-      transition: all var(--transition-fast) var(--transition-smooth);
-    }
-
-    /* Ripple effect for touch */
-    .touch-ripple {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .touch-ripple::before {
-      content: \"\";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition:
-        width var(--transition-normal) var(--transition-smooth),
-        height var(--transition-normal) var(--transition-smooth);
-    }
-
-    .touch-ripple:active::before {
-      width: var(--size-ripple-max);
-      height: var(--size-ripple-max);
-    }
-
-    /* Haptic feedback simulation with visual feedback */
-    .haptic-feedback {
-      position: relative;
-    }
-
-    .haptic-feedback:active {
-      animation: haptic-pulse 0.15s ease-out;
-    }
-
-    @keyframes haptic-pulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(0.95);
-        opacity: 0.8;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    /* Improved touch targets on pure touch devices */
-    @media (max-width: 768px) {
-      .touch-target-mobile {
-        min-height: var(--touch-comfortable);
-        min-width: var(--touch-comfortable);
-        padding: var(--space-2) var(--space-3);
-      }
-
-      /* Larger touch areas for mobile */
-      .mobile-touch-area {
-        min-height: var(--touch-large);
-        min-width: var(--touch-large);
-      }
-    }
-  }
-
-  /* Touch device specific adjustments */
-  @media (hover: none) and (pointer: coarse) {
-    .touch-target {
-      transition: none;
-    }
-
-    .touch-target:active {
-      transform: scale(0.95);
-      transition: transform var(--transition-fast) var(--transition-smooth);
-    }
-
-    .button-touch:active {
-      transform: scale(0.98);
-      transition: transform var(--transition-fast) var(--transition-smooth);
-    }
-
-    .touch-interactive:active {
-      background-color: var(--active-bg);
-      transform: scale(0.95);
-      transition: all var(--transition-fast) var(--transition-smooth);
-    }
-  }
-
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    .app-header,
-    .bottom-navigation,
-    .mobile-card,
-    .chat-input-container {
-      border-width: 2px;
-    }
-
-    .mobile-btn {
-      border-width: 2px;
-    }
-  }
-
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-
-    .animate-fade-in,
-    .animate-fade-in-up,
-    .animate-fade-in-down,
-    .animate-slide-in-right,
-    .animate-slide-in-left,
-    .animate-scale-in,
-    .animate-pulse,
-    .animate-bounce,
-    .animate-shimmer,
-    .animate-float,
-    .animate-glow,
-    .hover-lift,
-    .hover-scale,
-    .hover-glow,
-    .touch-ripple::before {
-      animation: none !important;
-      transform: none !important;
-      transition: none !important;
-    }
-
-    /* Remove movement effects for tiles */
-    .soft-tile:hover,
-    .soft-surface:hover,
-    .surface-card:hover,
-    .card-depth:hover {
-      transform: none !important;
-      box-shadow: var(--shadow-surface);
-    }
-
-    /* Remove movement effects for StartTiles */
-    .group:hover {
-      transform: none !important;
-    }
+    padding-left: calc(var(--page-padding-x, var(--space-lg)) + var(--mobile-safe-left));
+    padding-right: calc(var(--page-padding-x, var(--space-lg)) + var(--mobile-safe-right));
   }
 }
 
 @layer components {
-  /* Fluent 2 Soft-Depth surfaces */
+  /* ========================================================================
+     FLUENT 2 SOFT-DEPTH SURFACES
+     ======================================================================== */
+
   .soft-surface,
   .soft-surface--subtle,
   .soft-surface--standard,
@@ -607,9 +145,9 @@
   .card-depth {
     position: relative;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--border-card);
-    background-color: var(--surface-card-default);
-    color: var(--text-strong);
+    border: 1px solid var(--color-border-subtle);
+    background-color: var(--color-surface-card);
+    color: var(--color-text-primary);
     box-shadow: var(--shadow-card);
     transition:
       background-color var(--transition-normal) var(--transition-smooth),
@@ -621,8 +159,8 @@
 
   .surface-card:hover,
   .card-depth:hover {
-    background-color: var(--surface-card-hover);
-    border-color: var(--border-card-strong);
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-border-strong);
     box-shadow: var(--shadow-card-hover);
     transform: translateY(-2px);
   }
@@ -630,10 +168,10 @@
   .surface-card:focus-visible,
   .card-depth:focus-visible {
     outline: none;
-    border-color: var(--border-card-strong);
+    border-color: var(--color-border-strong);
     box-shadow:
       var(--shadow-card-hover),
-      0 0 0 3px rgba(var(--brand-rgb), 0.4);
+      0 0 0 3px color-mix(in srgb, var(--color-brand-primary) 40%, transparent);
   }
 
   .surface-card *,
@@ -671,6 +209,120 @@
     box-shadow: var(--shadow-raised);
   }
 
+  /* ========================================================================
+     BRAND COMPONENTS
+     ======================================================================== */
+
+  .brand-rail {
+    background: linear-gradient(
+      120deg,
+      rgba(111, 211, 255, 0.92) 0%,
+      rgba(111, 211, 255, 0.88) 35%,
+      rgba(255, 159, 111, 0.85) 100%
+    );
+    box-shadow: 0 18px 42px rgba(111, 211, 255, 0.28);
+  }
+
+  .brand-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in srgb, var(--color-brand-primary) 28%, transparent);
+    background: color-mix(in srgb, var(--color-brand-primary) 14%, transparent);
+    color: var(--color-brand-primary);
+    padding: 0.25rem 0.75rem;
+    font-size: var(--font-size-badge);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all var(--transition-normal) var(--transition-smooth);
+  }
+
+  .brand-chip:hover {
+    background: color-mix(in srgb, var(--color-brand-primary) 18%, transparent);
+    border-color: color-mix(in srgb, var(--color-brand-primary) 42%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .brand-panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(111, 211, 255, 0.32);
+    background:
+      linear-gradient(135deg, rgba(111, 211, 255, 0.12) 0%, transparent 55%),
+      linear-gradient(200deg, rgba(255, 159, 111, 0.14) 0%, transparent 70%),
+      var(--color-surface-base);
+    box-shadow: 0 18px 42px rgba(111, 211, 255, 0.28);
+  }
+
+  .brand-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.55;
+    background: radial-gradient(140% 120% at 90% 0%, rgba(111, 211, 255, 0.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .brand-panel::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background-image: radial-gradient(
+      circle at center,
+      rgba(111, 211, 255, 0.16) 0%,
+      transparent 55%
+    );
+    background-size: 140px 140px;
+    transform: rotate(12deg);
+    animation: brand-grid-pan 18s linear infinite;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .brand-panel > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes brand-grid-pan {
+    from {
+      transform: rotate(12deg) translate3d(0, 0, 0);
+    }
+    to {
+      transform: rotate(12deg) translate3d(-140px, -140px, 0);
+    }
+  }
+
+  .brand-icon-active {
+    background: rgba(111, 211, 255, 0.15);
+    color: var(--color-brand-primary);
+    box-shadow:
+      0 0 0 1px rgba(111, 211, 255, 0.22),
+      0 8px 20px -12px rgba(111, 211, 255, 0.6);
+    transition: all var(--transition-normal) var(--transition-smooth);
+  }
+
+  .brand-icon-active:hover {
+    background: rgba(111, 211, 255, 0.2);
+    box-shadow:
+      0 0 0 1px rgba(111, 211, 255, 0.3),
+      0 12px 24px -12px rgba(111, 211, 255, 0.7);
+  }
+
+  .brand-label-active {
+    color: var(--color-brand-primary);
+  }
+
+  .surface-card--raised {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* ========================================================================
+     RESPONSIVE & ACCESSIBILITY OVERRIDES
+     ======================================================================== */
+
   @media (prefers-contrast: more) {
     .soft-surface,
     .soft-surface--subtle,
@@ -686,9 +338,9 @@
 
     .surface-card,
     .card-depth {
-      border-color: var(--border-card-strong);
+      border-color: var(--color-border-strong);
       box-shadow: var(--shadow-card-hover);
-      background-color: var(--surface-card-hover);
+      background-color: var(--color-surface-raised);
     }
   }
 
@@ -719,111 +371,9 @@
       transform: none;
       box-shadow: var(--shadow-card);
     }
-  }
 
-  .brand-rail {
-    background: linear-gradient(
-      120deg,
-      rgb(111, 211, 255, 0.92) 0%,
-      rgb(111, 211, 255, 0.88) 35%,
-      rgb(255, 159, 111, 0.85) 100%
-    );
-    box-shadow: 0 18px 42px rgb(111, 211, 255, 0.28);
-  }
-
-  .brand-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    border-radius: var(--radius-base);
-    border: 1px solid rgba(var(--brand-rgb), 0.28);
-    background: rgba(var(--brand-rgb), 0.14);
-    color: var(--brand);
-    padding: 0.25rem 0.75rem;
-    font-size: var(--font-size-badge);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: all var(--transition-normal) var(--transition-smooth);
-  }
-
-  .brand-chip:hover {
-    background: rgba(var(--brand-rgb), 0.18);
-    border-color: rgba(var(--brand-rgb), 0.42);
-    transform: translateY(-1px);
-  }
-
-  .brand-panel {
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-xl);
-    border: 1px solid rgb(111, 211, 255, 0.32);
-    background:
-      linear-gradient(135deg, rgb(111, 211, 255, 0.12) 0%, transparent 55%),
-      linear-gradient(200deg, rgb(255, 159, 111, 0.14) 0%, transparent 70%),
-      var(--color-surface-base);
-    box-shadow: 0 18px 42px rgb(111, 211, 255, 0.28);
-  }
-
-  .brand-panel::after {
-    content: \"\";
-    position: absolute;
-    inset: 0;
-    opacity: 0.55;
-    background: radial-gradient(140% 120% at 90% 0%, rgb(111, 211, 255, 0.18) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .brand-panel::before {
-    content: \"\";
-    position: absolute;
-    inset: -40%;
-    background-image: radial-gradient(
-      circle at center,
-      rgb(111, 211, 255, 0.16) 0%,
-      transparent 55%
-    );
-    background-size: 140px 140px;
-    transform: rotate(12deg);
-    animation: brand-grid-pan 18s linear infinite;
-    opacity: 0.35;
-    pointer-events: none;
-  }
-
-  .brand-panel > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .brand-icon-active {
-    background: rgb(111, 211, 255, 0.15);
-    color: var(--acc1);
-    box-shadow:
-      0 0 0 1px rgb(111, 211, 255, 0.22),
-      0 8px 20px -12px rgb(111, 211, 255, 0.6);
-    transition: all var(--transition-normal) var(--transition-smooth);
-  }
-
-  .brand-icon-active:hover {
-    background: rgb(111, 211, 255, 0.2);
-    box-shadow:
-      0 0 0 1px rgb(111, 211, 255, 0.3),
-      0 12px 24px -12px rgb(111, 211, 255, 0.7);
-  }
-
-  .brand-label-active {
-    color: var(--acc1);
-  }
-
-  .surface-card--raised {
-    box-shadow: var(--shadow-card-hover);
-  }
-}
-
-@keyframes brand-grid-pan {
-  from {
-    transform: rotate(12deg) translate3d(0, 0, 0);
-  }
-  to {
-    transform: rotate(12deg) translate3d(-140px, -140px, 0);
+    .brand-panel::before {
+      animation: none;
+    }
   }
 }

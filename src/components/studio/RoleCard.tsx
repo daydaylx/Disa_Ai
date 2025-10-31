@@ -191,7 +191,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
                   {isActive && (
                     <span
                       className={cn(
-                        "text-text-1 text-xs rounded-full border border-border-subtle bg-surface-subtle",
+                        "text-text-secondary text-xs rounded-full border border-border-subtle bg-surface-subtle",
                         isMobile ? "px-3 py-1 touch-target" : "px-2 py-0.5",
                       )}
                     >

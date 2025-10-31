@@ -120,16 +120,16 @@ export function MobileChatHistorySidebar({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-center pb-2 pt-3">
-          <div className="bg-surface-2 h-1 w-10 rounded-full" />
+          <div className="bg-surface-subtle h-1 w-10 rounded-full" />
         </div>
 
         <div className="border-border flex items-center justify-between border-b px-6 py-4">
-          <h2 id="chat-history-title" className="text-text-0 text-xl font-semibold">
+          <h2 id="chat-history-title" className="text-text-primary text-xl font-semibold">
             Chat-Verlauf
           </h2>
           <button
             onClick={onClose}
-            className="tap-target bg-surface-2 text-text-1 hover:bg-surface-2 hover:text-text-0 flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+            className="tap-target bg-surface-subtle text-text-secondary hover:bg-surface-subtle hover:text-text-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors"
             aria-label="Schließen"
           >
             <X className="h-5 w-5" />
@@ -144,16 +144,16 @@ export function MobileChatHistorySidebar({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Konversationen suchen..."
-              className="border-border bg-surface-1 text-text-0 placeholder:text-text-1 focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-3 pl-10 pr-12 text-sm focus:outline-none focus:ring-2 touch-target"
+              className="border-border bg-surface-card text-text-primary placeholder:text-text-secondary focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-3 pl-10 pr-12 text-sm focus:outline-none focus:ring-2 touch-target"
               aria-label="Konversationen suchen"
             />
-            <History className="text-text-1 pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+            <History className="text-text-secondary pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
             {searchTerm && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleClearSearch}
-                className="text-text-1 absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 touch-target"
+                className="text-text-secondary absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 touch-target"
                 aria-label="Suche löschen"
               >
                 <X className="h-4 w-4" />
@@ -176,9 +176,9 @@ export function MobileChatHistorySidebar({
           {/* Mobile-optimized conversation list */}
           <div className="space-y-3 max-h-[60vh] overflow-y-auto">
             {filteredConversations.length === 0 ? (
-              <div className="border-border bg-surface-1 text-text-1 space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
+              <div className="border-border bg-surface-card text-text-secondary space-y-3 rounded-lg border p-6 text-center text-sm touch-target">
                 <p>Keine Konversationen gefunden</p>
-                <p className="text-text-1 text-xs">Versuche es mit anderen Suchbegriffen</p>
+                <p className="text-text-secondary text-xs">Versuche es mit anderen Suchbegriffen</p>
               </div>
             ) : (
               filteredConversations.map((conversation) => {
@@ -190,10 +190,10 @@ export function MobileChatHistorySidebar({
                     key={conversation.id}
                     onClick={() => handleSelectConversation(conversation.id)}
                     className={cn(
-                      "border-border bg-surface-1 flex cursor-pointer flex-col gap-2 rounded-lg border p-3 transition-colors duration-150 ease-out motion-reduce:transition-none touch-target",
+                      "border-border bg-surface-card flex cursor-pointer flex-col gap-2 rounded-lg border p-3 transition-colors duration-150 ease-out motion-reduce:transition-none touch-target",
                       isActive
                         ? "border-brand bg-brand/10 hover:bg-brand/15"
-                        : "hover:border-border-strong hover:bg-surface-2",
+                        : "hover:border-border-strong hover:bg-surface-subtle",
                     )}
                     role="button"
                     tabIndex={0}
@@ -206,24 +206,24 @@ export function MobileChatHistorySidebar({
                     aria-label={`Konversation vom ${new Date(conversation.createdAt).toLocaleDateString()}`}
                   >
                     <div className="flex items-start justify-between">
-                      <h3 className="text-text-0 text-sm font-semibold [hyphens:auto]">
+                      <h3 className="text-text-primary text-sm font-semibold [hyphens:auto]">
                         {conversation.title}
                       </h3>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={(e) => handleDeleteConversation(conversation.id, e)}
-                        className="text-text-1 hover:bg-surface-2 hover:text-text-0 h-8 w-8 touch-target"
+                        className="text-text-secondary hover:bg-surface-subtle hover:text-text-primary h-8 w-8 touch-target"
                         aria-label={`Konversation "${conversation.title}" löschen`}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-text-1">
+                      <span className="text-text-secondary">
                         {messageCount} {messageCount === 1 ? "Nachricht" : "Nachrichten"}
                       </span>
-                      <span className="text-text-2">
+                      <span className="text-text-tertiary">
                         {new Date(conversation.updatedAt).toLocaleDateString([], {
                           month: "short",
                           day: "numeric",

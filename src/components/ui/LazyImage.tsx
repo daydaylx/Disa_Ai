@@ -91,7 +91,7 @@ export function LazyImage({
   );
 
   const defaultFallback = (
-    <div className="bg-surface-1 text-text-1 flex h-full w-full items-center justify-center">
+    <div className="bg-surface-card text-text-secondary flex h-full w-full items-center justify-center">
       <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
@@ -148,7 +148,7 @@ export function LazyImage({
       )}
 
       {loadState === "loading" && !placeholder && (
-        <div className="bg-surface-1/50 absolute inset-0 flex items-center justify-center">
+        <div className="bg-surface-card/50 absolute inset-0 flex items-center justify-center">
           <div className="border-border border-t-brand h-4 w-4 animate-spin rounded-full border-2" />
         </div>
       )}
@@ -201,7 +201,7 @@ export function LazyAvatar({
   ) : (
     <div
       className={cn(
-        "bg-surface-2 text-text-1 flex items-center justify-center rounded-full",
+        "bg-surface-subtle text-text-secondary flex items-center justify-center rounded-full",
         sizeClasses[size],
       )}
     >

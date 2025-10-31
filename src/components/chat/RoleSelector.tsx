@@ -110,7 +110,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "border-border bg-surface-1 hover:border-brand group flex w-full items-center justify-between rounded-lg border p-4 text-left transition-all",
+          "border-border bg-surface-card hover:border-brand group flex w-full items-center justify-between rounded-lg border p-4 text-left transition-all",
           isOpen && "border-brand",
         )}
       >
@@ -118,35 +118,37 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
           <div
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-full",
-              selectedRole ? "bg-brand/20" : "bg-surface-2",
+              selectedRole ? "bg-brand/20" : "bg-surface-subtle",
             )}
           >
             {selectedRole ? (
               <Bot className="text-brand h-5 w-5" />
             ) : (
-              <User className="text-text-1 h-5 w-5" />
+              <User className="text-text-secondary h-5 w-5" />
             )}
           </div>
           <div className="flex flex-col items-start text-left">
-            <span className="text-text-0 font-semibold">{selectedRole?.name || "Standard"}</span>
-            <span className="text-text-1 text-xs">
+            <span className="text-text-primary font-semibold">
+              {selectedRole?.name || "Standard"}
+            </span>
+            <span className="text-text-secondary text-xs">
               {selectedRole?.category || "Keine Rolle gewählt"}
             </span>
           </div>
         </div>
         <ChevronDown
           className={cn(
-            "text-text-1 group-hover:text-text-0 h-5 w-5 transition-transform",
+            "text-text-secondary group-hover:text-text-primary h-5 w-5 transition-transform",
             isOpen && "text-brand rotate-180",
           )}
         />
       </button>
 
       {isOpen && (
-        <div className="border-border bg-surface-1 mt-4 space-y-4 rounded-lg border">
+        <div className="border-border bg-surface-card mt-4 space-y-4 rounded-lg border">
           <div className="p-4 pb-0">
             <div className="relative">
-              <Search className="text-text-1 absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+              <Search className="text-text-secondary absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -182,14 +184,16 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
             <div className="border-border border-t px-4 pt-4">
               <button
                 onClick={handleClearRole}
-                className="hover:bg-surface-2 flex w-full items-center gap-4 rounded-lg p-4 text-left transition-colors"
+                className="hover:bg-surface-subtle flex w-full items-center gap-4 rounded-lg p-4 text-left transition-colors"
               >
-                <div className="bg-surface-2 flex h-8 w-8 items-center justify-center rounded-full">
-                  <User className="text-text-1 h-4 w-4" />
+                <div className="bg-surface-subtle flex h-8 w-8 items-center justify-center rounded-full">
+                  <User className="text-text-secondary h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-text-0 text-sm font-medium">Standard (Keine Rolle)</div>
-                  <div className="text-text-1 text-xs">Zurücksetzen</div>
+                  <div className="text-text-primary text-sm font-medium">
+                    Standard (Keine Rolle)
+                  </div>
+                  <div className="text-text-secondary text-xs">Zurücksetzen</div>
                 </div>
               </button>
             </div>
@@ -199,13 +203,13 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
             {isLoadingRoles ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <div className="mb-2 text-lg">⏳</div>
-                <div className="text-text-1 text-sm">Lade Rollen...</div>
+                <div className="text-text-secondary text-sm">Lade Rollen...</div>
               </div>
             ) : filteredRoles.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <div className="mb-2 text-lg">🔍</div>
-                <div className="text-text-1 text-sm">Keine Rollen gefunden</div>
-                <div className="text-text-1/70 text-xs">Versuche einen anderen Filter</div>
+                <div className="text-text-secondary text-sm">Keine Rollen gefunden</div>
+                <div className="text-text-secondary/70 text-xs">Versuche einen anderen Filter</div>
               </div>
             ) : (
               <div className="space-y-2">
@@ -220,25 +224,25 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
                         "relative flex w-full items-start gap-4 rounded-lg p-4 text-left transition-all",
                         selectedRole?.id === role.id
                           ? "bg-brand/20 ring-brand/50 ring-1"
-                          : "hover:bg-surface-2",
+                          : "hover:bg-surface-subtle",
                       )}
                     >
                       <div
                         className={cn(
                           "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
-                          selectedRole?.id === role.id ? "bg-brand/30" : "bg-surface-2",
+                          selectedRole?.id === role.id ? "bg-brand/30" : "bg-surface-subtle",
                         )}
                       >
                         <Bot
                           className={cn(
                             "h-5 w-5",
-                            selectedRole?.id === role.id ? "text-brand" : "text-text-1",
+                            selectedRole?.id === role.id ? "text-brand" : "text-text-secondary",
                           )}
                         />
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start gap-2">
-                          <span className="text-text-0 break-words text-sm font-medium">
+                          <span className="text-text-primary break-words text-sm font-medium">
                             {role.name}
                           </span>
                           {selectedRole?.id === role.id && (
@@ -269,7 +273,7 @@ export function RoleSelector({ selectedRole, onRoleChange, className }: RoleSele
                           )}
                         </div>
                         {summary && (
-                          <p className="text-text-1 mt-2 whitespace-pre-line break-words text-xs leading-5">
+                          <p className="text-text-secondary mt-2 whitespace-pre-line break-words text-xs leading-5">
                             {summary}
                           </p>
                         )}

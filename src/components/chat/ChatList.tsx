@@ -159,10 +159,10 @@ export function ChatList({
           <div className="flex flex-col gap-5 px-1 py-3">
             <div className="brand-panel space-y-4 p-6">
               <span className="brand-chip w-fit">Disa&nbsp;AI Studio</span>
-              <h1 className="text-text-0 text-2xl font-semibold leading-tight">
+              <h1 className="text-text-primary text-2xl font-semibold leading-tight">
                 Was möchtest du heute erschaffen?
               </h1>
-              <p className="text-text-1 text-sm leading-relaxed">
+              <p className="text-text-secondary text-sm leading-relaxed">
                 Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
                 Sekunden.
               </p>
@@ -178,22 +178,22 @@ export function ChatList({
                     return (
                       <div
                         key={`quickstart-skeleton-${index}`}
-                        className="border-border bg-surface-1 animate-pulse rounded-lg border p-4"
+                        className="border-border bg-surface-card animate-pulse rounded-lg border p-4"
                       >
-                        <div className="bg-surface-2 h-4 w-32 rounded" />
-                        <div className="bg-surface-2 mt-2 h-3 w-48 rounded" />
+                        <div className="bg-surface-subtle h-4 w-32 rounded" />
+                        <div className="bg-surface-subtle mt-2 h-3 w-48 rounded" />
                       </div>
                     );
                   })}
                 </div>
               ) : quickstartError ? (
-                <div className="border-danger bg-surface-1 rounded-lg border p-6 text-center">
-                  <h3 className="text-text-0 text-lg font-semibold">
+                <div className="border-danger bg-surface-card rounded-lg border p-6 text-center">
+                  <h3 className="text-text-primary text-lg font-semibold">
                     {quickstartError.includes("verfügbar")
                       ? "Keine Schnellstarts verfügbar"
                       : "Konfigurationsfehler"}
                   </h3>
-                  <p className="text-text-1 mt-2 text-sm">{quickstartError}</p>
+                  <p className="text-text-secondary mt-2 text-sm">{quickstartError}</p>
                   <Button
                     onClick={handleStartStandardChat}
                     className="mt-4"
@@ -233,15 +233,15 @@ export function ChatList({
                 return (
                   <div
                     key={item.label}
-                    className="border-border bg-surface-1 hover:bg-surface-2 rounded-lg border p-4 transition-colors"
+                    className="border-border bg-surface-card hover:bg-surface-subtle rounded-lg border p-4 transition-colors"
                   >
                     <button
                       type="button"
                       onClick={() => onQuickstartFlow?.(item.prompt, false)}
-                      className="text-text-0 flex w-full items-center justify-between gap-3 text-sm font-medium transition-colors"
+                      className="text-text-primary flex w-full items-center justify-between gap-3 text-sm font-medium transition-colors"
                     >
                       <span className="text-left">{item.label}</span>
-                      <MessageSquare className="text-text-1 h-4 w-4" />
+                      <MessageSquare className="text-text-secondary h-4 w-4" />
                     </button>
                   </div>
                 );
@@ -251,14 +251,14 @@ export function ChatList({
             {recentConversations.length > 0 && (
               <div className="space-y-3 px-1 pt-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-text-1 text-xs font-semibold uppercase tracking-wider">
+                  <h2 className="text-text-secondary text-xs font-semibold uppercase tracking-wider">
                     Letzte Chats
                   </h2>
                   {onShowHistory && (
                     <button
                       type="button"
                       onClick={onShowHistory}
-                      className="text-text-1 hover:text-text-0 text-xs font-medium transition-colors"
+                      className="text-text-secondary hover:text-text-primary text-xs font-medium transition-colors"
                     >
                       Alle ansehen
                     </button>
@@ -279,7 +279,7 @@ export function ChatList({
                       <div
                         key={conversation.id}
                         className={cn(
-                          "border-border bg-surface-1 hover:bg-surface-2 group relative flex items-start gap-3 rounded-lg border p-4 transition-colors",
+                          "border-border bg-surface-card hover:bg-surface-subtle group relative flex items-start gap-3 rounded-lg border p-4 transition-colors",
                           isActive && "ring-brand ring-2",
                         )}
                       >
@@ -289,12 +289,12 @@ export function ChatList({
                           onClick={() => onSelectConversation?.(conversation.id)}
                         >
                           <div className="flex items-center gap-2">
-                            <span className="text-text-0 text-sm font-semibold">
+                            <span className="text-text-primary text-sm font-semibold">
                               {conversation.title}
                             </span>
                           </div>
                           <p
-                            className="text-text-1 mt-1 text-xs"
+                            className="text-text-secondary mt-1 text-xs"
                             style={{
                               display: "-webkit-box",
                               WebkitLineClamp: 2,
@@ -304,7 +304,7 @@ export function ChatList({
                           >
                             {preview}
                           </p>
-                          <div className="text-text-1 mt-3 flex flex-wrap items-center gap-3 text-xs">
+                          <div className="text-text-secondary mt-3 flex flex-wrap items-center gap-3 text-xs">
                             {Number.isFinite(lastActivity) && (
                               <span className="inline-flex items-center gap-1">
                                 <Clock className="h-3.5 w-3.5" />
@@ -322,7 +322,7 @@ export function ChatList({
                             variant="ghost"
                             size="icon"
                             onClick={() => onDeleteConversation(conversation.id)}
-                            className="text-text-1 hover:bg-surface-2 hover:text-danger absolute right-2 top-2 h-8 w-8 opacity-0 group-hover:opacity-100"
+                            className="text-text-secondary hover:bg-surface-subtle hover:text-danger absolute right-2 top-2 h-8 w-8 opacity-0 group-hover:opacity-100"
                             aria-label="Verlauf löschen"
                           >
                             <Trash2 className="h-4 w-4" />
