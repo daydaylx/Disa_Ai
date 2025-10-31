@@ -1,5 +1,5 @@
 import { Clock, MessageSquare, Trash2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { getQuickstartsWithFallback } from "../../config/quickstarts";
@@ -12,6 +12,7 @@ import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { RoleCard } from "../studio/RoleCard";
 import { Button } from "../ui/button";
+import { ChatStatusBanner } from "./ChatStatusBanner";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
 const SUGGESTION_ACTIONS: Array<{ label: string; prompt: string }> = [
@@ -89,7 +90,7 @@ export function ChatList({
 }: ChatListProps) {
   const [quickstarts, setQuickstarts] = useState<QuickstartAction[]>([]);
   const [isLoadingQuickstarts, setIsLoadingQuickstarts] = useState(true);
-  const [quickstartError, setQuickstartError] = useState<string | null>(null);
+  const [quickstartError, setQuickstartError] = useState<Error | null>(null);
   const [activeQuickstart, setActiveQuickstart] = useState<string | null>(null);
 
   const { startQuickstartFlow } = useQuickstartFlow({
@@ -102,34 +103,73 @@ export function ChatList({
     enabled: true,
   });
 
+  const isMountedRef = useRef(true);
+
   useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        setIsLoadingQuickstarts(true);
-        setQuickstartError(null);
-        const actions = await getQuickstartsWithFallback();
-        if (!mounted) return;
-        if (actions.length > 0) {
-          setQuickstarts(actions);
-        } else {
-          setQuickstarts(createRoleQuickstarts());
-        }
-      } catch (error) {
-        if (!mounted) return;
-        const message = error instanceof Error ? error.message : "Unbekannter Fehler";
-        setQuickstartError(message);
-        setQuickstarts(createRoleQuickstarts());
-      } finally {
-        if (mounted) {
-          setIsLoadingQuickstarts(false);
-        }
-      }
-    })();
     return () => {
-      mounted = false;
+      isMountedRef.current = false;
     };
   }, []);
+
+  const loadQuickstartData = useCallback(async () => {
+    setIsLoadingQuickstarts(true);
+    setQuickstartError(null);
+
+    let fallbackReason: "empty" | "error" | null = null;
+    let fallbackError: Error | null = null;
+
+    try {
+      const actions = await getQuickstartsWithFallback({
+        onFallback: ({ reason, error }) => {
+          fallbackReason = reason;
+          if (reason === "empty") {
+            fallbackError = new Error(
+              "Keine Schnellstarts verfügbar. Wir zeigen alternative Rollen.",
+            );
+          } else if (reason === "error") {
+            fallbackError =
+              error instanceof Error
+                ? error
+                : new Error(error ? String(error) : "Fehler beim Laden der Schnellstarts.");
+          }
+        },
+      });
+
+      if (!isMountedRef.current) return;
+
+      if (fallbackReason) {
+        setQuickstartError(fallbackError);
+        if (fallbackReason === "error") {
+          setQuickstarts(createRoleQuickstarts());
+        } else {
+          setQuickstarts(actions.length > 0 ? actions : createRoleQuickstarts());
+        }
+      } else {
+        setQuickstartError(null);
+        setQuickstarts(actions);
+      }
+    } catch (error) {
+      if (!isMountedRef.current) return;
+      const fallback =
+        error instanceof Error
+          ? error
+          : new Error(error ? String(error) : "Fehler beim Laden der Schnellstarts.");
+      setQuickstartError(fallback);
+      setQuickstarts(createRoleQuickstarts());
+    } finally {
+      if (isMountedRef.current) {
+        setIsLoadingQuickstarts(false);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadQuickstartData();
+  }, [loadQuickstartData]);
+
+  const handleQuickstartReload = useCallback(() => {
+    void loadQuickstartData();
+  }, [loadQuickstartData]);
 
   const handleQuickstartClick = (action: QuickstartAction) => {
     setActiveQuickstart(action.id);
@@ -174,56 +214,70 @@ export function ChatList({
             <div className="space-y-3 px-1">
               {isLoadingQuickstarts ? (
                 <div className="grid gap-3">
-                  {Array.from({ length: 4 }).map((_, index) => {
-                    return (
-                      <div
-                        key={`quickstart-skeleton-${index}`}
-                        className="border-border bg-surface-card animate-pulse rounded-lg border p-4"
-                      >
-                        <div className="bg-surface-subtle h-4 w-32 rounded" />
-                        <div className="bg-surface-subtle mt-2 h-3 w-48 rounded" />
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : quickstartError ? (
-                <div className="border-danger bg-surface-card rounded-lg border p-6 text-center">
-                  <h3 className="text-text-primary text-lg font-semibold">
-                    {quickstartError.includes("verfügbar")
-                      ? "Keine Schnellstarts verfügbar"
-                      : "Konfigurationsfehler"}
-                  </h3>
-                  <p className="text-text-secondary mt-2 text-sm">{quickstartError}</p>
-                  <Button
-                    onClick={handleStartStandardChat}
-                    className="mt-4"
-                    variant="brand"
-                    data-testid="start-standard-chat"
-                  >
-                    Direkt im Chat starten
-                  </Button>
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <Card
+                      key={`quickstart-skeleton-${index}`}
+                      className="border-border animate-pulse rounded-lg border p-4"
+                    >
+                      <div className="bg-surface-subtle h-4 w-32 rounded" />
+                      <div className="bg-surface-subtle mt-2 h-3 w-48 rounded" />
+                    </Card>
+                  ))}
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {quickstarts.map((action) => {
-                    const badge = action.tags?.[0]
-                      ? formatQuickstartTag(action.tags[0]!)
-                      : "Schnellstart";
-
-                    return (
-                      <RoleCard
-                        key={action.id}
-                        data-testid={`quickstart-${action.id}`}
-                        title={action.title}
-                        description={action.subtitle ?? QUICKSTART_FALLBACK_SUBTITLE}
-                        badge={badge}
-                        isActive={activeQuickstart === action.id}
-                        disabled={isQuickstartLoading && activeQuickstart !== action.id}
-                        onClick={() => handleQuickstartClick(action)}
-                        className="min-h-[140px]"
+                  {quickstartError ? (
+                    <div className="space-y-3">
+                      <ChatStatusBanner
+                        error={quickstartError}
+                        onRetry={handleQuickstartReload}
+                        className="px-3"
                       />
-                    );
-                  })}
+                      <Button
+                        onClick={handleStartStandardChat}
+                        className="w-full"
+                        variant="brand"
+                        data-testid="start-standard-chat"
+                      >
+                        Direkt im Chat starten
+                      </Button>
+                    </div>
+                  ) : null}
+
+                  {quickstarts.length === 0 ? (
+                    <Card className="border-border rounded-lg border p-6 text-center">
+                      <h3 className="text-text-primary text-lg font-semibold">
+                        Keine Schnellstarts verfügbar
+                      </h3>
+                      <p className="text-text-secondary mt-2 text-sm">
+                        Wir konnten keine Schnellstarts laden. Versuche es später erneut oder starte
+                        direkt einen Chat.
+                      </p>
+                      <Button onClick={handleQuickstartReload} className="mt-4" variant="secondary">
+                        Erneut laden
+                      </Button>
+                    </Card>
+                  ) : (
+                    quickstarts.map((action) => {
+                      const badge = action.tags?.[0]
+                        ? formatQuickstartTag(action.tags[0]!)
+                        : "Schnellstart";
+
+                      return (
+                        <RoleCard
+                          key={action.id}
+                          data-testid={`quickstart-${action.id}`}
+                          title={action.title}
+                          description={action.subtitle ?? QUICKSTART_FALLBACK_SUBTITLE}
+                          badge={badge}
+                          isActive={activeQuickstart === action.id}
+                          disabled={isQuickstartLoading && activeQuickstart !== action.id}
+                          onClick={() => handleQuickstartClick(action)}
+                          className="min-h-[140px]"
+                        />
+                      );
+                    })
+                  )}
                 </div>
               )}
             </div>
@@ -231,9 +285,9 @@ export function ChatList({
             <div className="space-y-2 px-1">
               {SUGGESTION_ACTIONS.map((item) => {
                 return (
-                  <div
+                  <Card
                     key={item.label}
-                    className="border-border bg-surface-card hover:bg-surface-subtle rounded-lg border p-4 transition-colors"
+                    className="border-border hover:bg-surface-subtle rounded-lg border p-4 transition-colors"
                   >
                     <button
                       type="button"
@@ -243,7 +297,7 @@ export function ChatList({
                       <span className="text-left">{item.label}</span>
                       <MessageSquare className="text-text-secondary h-4 w-4" />
                     </button>
-                  </div>
+                  </Card>
                 );
               })}
             </div>
@@ -276,10 +330,10 @@ export function ChatList({
                     const lastActivity = new Date(lastActivityString).getTime();
 
                     return (
-                      <div
+                      <Card
                         key={conversation.id}
                         className={cn(
-                          "border-border bg-surface-card hover:bg-surface-subtle group relative flex items-start gap-3 rounded-lg border p-4 transition-colors",
+                          "border-border hover:bg-surface-subtle group relative flex items-start gap-3 rounded-lg border p-4 transition-colors",
                           isActive && "ring-brand ring-2",
                         )}
                       >
@@ -328,7 +382,7 @@ export function ChatList({
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         )}
-                      </div>
+                      </Card>
                     );
                   })}
                 </div>

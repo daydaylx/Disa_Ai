@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 
 import { MobilePageShell } from "../../components/layout/MobilePageShell";
-import { GlassCard } from "../../components/ui/GlassCard";
+import { Card } from "../../components/ui/card";
 import { cn } from "../../lib/utils";
 
 type DirectionId = "A" | "B" | "C";
@@ -166,8 +166,10 @@ function PrototypeScreen({
   );
 
   const cards = Array.from({ length: 3 }).map((_, index) => (
-    <GlassCard
+    <Card
       key={`${direction}-${variant}-card-${index}`}
+      tone="translucent"
+      elevation="surface"
       className={cn(
         "rounded-[var(--radius-card-inner)] border p-3 text-sm shadow-none",
         direction === "A" &&
@@ -186,7 +188,7 @@ function PrototypeScreen({
         Responsive Tokens sichern Abstände ({4 * (index + 1)}px Raster) und halten Typografie bei
         max. 32px.
       </p>
-    </GlassCard>
+    </Card>
   ));
 
   const footer = (
@@ -215,27 +217,35 @@ function PrototypeScreen({
   );
 
   return (
-    <GlassCard className={cn(shared, wrapperClass)}>
+    <Card tone="translucent" elevation="surface" className={cn(shared, wrapperClass)}>
       {header}
       {variant === "primary" ? (
         <div className="grid gap-3">
-          <GlassCard className="border-current/20 bg-transparent p-3 text-sm shadow-none">
+          <Card
+            tone="translucent"
+            elevation="surface"
+            className="border-current/20 bg-transparent p-3 text-sm shadow-none"
+          >
             <p>
               Top App Bar mit Overflow + Tabs. Blur nur für Richtung A aktiv (backdrop-blur-sm).
             </p>
-          </GlassCard>
+          </Card>
           {cards}
         </div>
       ) : (
         <div className="space-y-3">
-          <GlassCard className="border-current/20 bg-transparent p-3 text-sm shadow-none">
+          <Card
+            tone="translucent"
+            elevation="surface"
+            className="border-current/20 bg-transparent p-3 text-sm shadow-none"
+          >
             <p>Sticky Section Header, Scroll-Container pro Bereich, Fokusrahmen sichtbar.</p>
-          </GlassCard>
+          </Card>
           <div className="grid gap-2 sm:grid-cols-2">{cards.slice(0, 2)}</div>
         </div>
       )}
       {footer}
-    </GlassCard>
+    </Card>
   );
 }
 
@@ -261,8 +271,10 @@ export function DesignDirectionShowcase() {
         {DIRECTIONS.map((direction) => {
           const isRecommended = direction.id === recommended;
           return (
-            <GlassCard
+            <Card
               key={direction.id}
+              tone="translucent"
+              elevation="surface"
               className={cn(
                 "space-y-6 p-4 sm:p-6",
                 isRecommended &&
@@ -323,7 +335,7 @@ export function DesignDirectionShowcase() {
                   />
                 ))}
               </div>
-            </GlassCard>
+            </Card>
           );
         })}
       </div>

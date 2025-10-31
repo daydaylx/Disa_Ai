@@ -1,6 +1,8 @@
 import { Info } from "lucide-react";
 import { useState } from "react";
 
+import { Card } from "@/components/ui/card";
+
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { Button } from "../ui/button";
 
@@ -67,7 +69,7 @@ export function PWADebugInfo() {
 
   return (
     <div className="fixed right-4 top-20 z-40 max-w-sm">
-      <div className="border-border bg-surface-card shadow-level rounded-lg border p-4">
+      <Card className="border-border shadow-level rounded-lg border p-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-text-primary text-sm font-semibold">PWA Debug Info</h3>
@@ -128,7 +130,7 @@ export function PWADebugInfo() {
             </ul>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
