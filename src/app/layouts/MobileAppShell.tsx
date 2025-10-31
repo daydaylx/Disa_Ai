@@ -33,7 +33,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
   return (
     <div
       className="relative flex min-h-[100dvh] flex-col bg-[var(--color-surface-canvas)] text-[var(--color-text-primary)]"
-      style={{ minHeight: "calc(100dvh + var(--keyboard-height, 0px))" }}
+      style={{ minHeight: "calc(100dvh + var(--keyboard-offset, 0px))" }}
     >
       <GlobalNav onMenuClick={() => setIsOverflowOpen(true)} />
 

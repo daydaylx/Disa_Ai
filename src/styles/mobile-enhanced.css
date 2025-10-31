@@ -311,60 +311,7 @@
   overscroll-behavior: contain;
 }
 
-.chat-input-container {
-  padding: var(--space-mobile-sm) 0;
-  border-top: 1px solid var(--color-border-subtle);
-  background: var(--color-surface-base);
-  position: sticky;
-  bottom: 0;
-  z-index: 40;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-lg));
-}
-
-.chat-input-form {
-  display: flex;
-  gap: var(--space-mobile-sm);
-  align-items: flex-end;
-}
-
-.chat-textarea {
-  flex: 1;
-  min-height: var(--input-mobile-height);
-  max-height: 120px;
-  padding: var(--input-mobile-padding-y) var(--input-mobile-padding-x);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--input-mobile-border-radius);
-  background: var(--color-control-field-bg);
-  color: var(--color-control-field-fg);
-  font-size: var(--input-mobile-font-size);
-  resize: none;
-  transition: all var(--motion-duration-small) var(--motion-easing-standard);
-}
-
-.chat-textarea:focus {
-  outline: 2px solid var(--color-border-focus);
-  outline-offset: 2px;
-  border-color: var(--color-border-focus);
-  background: var(--color-control-field-hover);
-}
-
-.chat-send-btn {
-  min-height: var(--btn-mobile-height);
-  min-width: var(--btn-mobile-height);
-  border-radius: var(--radius-full);
-  background: var(--color-brand-primary);
-  color: var(--color-text-on-brand);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--motion-duration-small) var(--motion-easing-standard);
-}
-
-.chat-send-btn:disabled {
-  background: var(--color-control-field-disabled);
-  color: var(--color-text-muted);
-  cursor: not-allowed;
-}
+/* Chat input styles removed - now handled by ChatComposer component */
 
 /* Mobile message bubbles */
 .message-bubble {

@@ -60,6 +60,16 @@ export function ChatComposer({
     }
   };
 
+  const handleFocus = () => {
+    // iOS Safari keyboard handling - scroll input into view
+    setTimeout(() => {
+      textareaRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 300); // Wait for keyboard animation to complete
+  };
+
   const handleSend = () => {
     if (value.trim() && canSend && !isLoading && !disabled) {
       onSend();
@@ -87,8 +97,10 @@ export function ChatComposer({
   return (
     <div
       className={cn(
-        "safe-bottom px-2 pt-4 transition-all duration-200",
-        viewport.isKeyboardOpen ? "pb-4" : "pb-[calc(var(--inset-b)+1.5rem)]",
+        "px-2 pt-4 transition-all duration-200",
+        viewport.isKeyboardOpen
+          ? "pb-[calc(1rem+var(--inset-b))]"
+          : "pb-[calc(1.5rem+var(--inset-b))]",
         className,
       )}
       style={{
@@ -129,6 +141,7 @@ export function ChatComposer({
               value={value}
               onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={handleFocus}
               placeholder={placeholder}
               disabled={isComposerDisabled}
               readOnly={isQuickstartLoading}

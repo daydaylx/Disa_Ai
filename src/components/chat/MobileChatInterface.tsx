@@ -1,4 +1,4 @@
-import { History, Plus, Send } from "lucide-react";
+import { History, Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -39,9 +39,9 @@ import { BottomSheet } from "../ui/bottom-sheet";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Textarea } from "../ui/textarea";
 import { useToasts } from "../ui/toast/ToastsProvider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { ChatComposer } from "./ChatComposer";
 import { ChatHistorySidebar } from "./ChatHistorySidebar";
 import { MessageBubbleCard } from "./MessageBubbleCard";
 
@@ -64,7 +64,6 @@ export function MobileChatInterface() {
   const [discussionPreset, setDiscussionPresetState] =
     useState<DiscussionPresetKey>(getDiscussionPreset);
   const toasts = useToasts();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const discussionSessionRef = useRef<DiscussionSession | null>(null);
   const requestOptionsRef = useRef<ChatRequestOptions | null>(null);
   const strictRetryTracker = useRef<Set<string>>(new Set());
@@ -324,13 +323,6 @@ export function MobileChatInterface() {
     }
   }, [isHistoryOpen]);
 
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
-    }
-  }, [input]);
-
   const handleSend = useCallback(() => {
     if (!input.trim()) return;
 
@@ -340,13 +332,6 @@ export function MobileChatInterface() {
     });
     setInput("");
   }, [input, append]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
 
   const handleSelectConversation = useCallback(
     (id: string) => {
@@ -758,54 +743,15 @@ export function MobileChatInterface() {
         </>
       )}
 
-      <div
-        className="chat-input-container safe-px bg-surface-base/90 border-border sticky bottom-0 z-40 border-t pt-2 backdrop-blur-xl"
-        style={{ paddingBottom: "calc(var(--mobile-safe-bottom) + var(--spacing-lg))" }}
-      >
-        <div className="mx-auto w-full max-w-[var(--max-content-width)]">
-          <div className="chat-input-form border-border bg-surface-card rounded-lg border p-2">
-            <div className="flex-1">
-              <Textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Nachricht an Disa AI schreiben..."
-                className="chat-textarea text-text-primary placeholder:text-text-secondary max-h-[200px] min-h-[60px] w-full resize-none border-0 bg-transparent px-4 py-3 text-sm focus:ring-0 touch-target"
-                rows={1}
-                aria-label="Nachricht an Disa AI eingeben"
-                aria-describedby="input-help-text"
-              />
-            </div>
-
-            <Button
-              onClick={handleSend}
-              disabled={!input.trim() || isLoading}
-              size="icon"
-              className="chat-send-btn h-12 w-12 shrink-0 touch-target"
-              aria-label={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden"}
-              title={isLoading ? "Nachricht wird gesendet..." : "Nachricht senden (Enter)"}
-            >
-              <Send className="h-5 w-5" aria-hidden="true" />
-            </Button>
-          </div>
-
-          <div className="text-text-secondary mt-2 flex items-center justify-between text-xs">
-            <span id="input-help-text">↵ Senden • Shift+↵ Neue Zeile</span>
-            {isLoading && (
-              <span className="animate-fade-in flex items-center gap-2" aria-live="polite">
-                <span className="bg-accent1 inline-flex h-2 w-2 rounded-full motion-safe:animate-pulse"></span>
-                <span className="text-text-secondary">Disa tippt...</span>
-                <div className="flex space-x-1">
-                  <div className="bg-accent2 h-1 w-1 rounded-full motion-safe:animate-bounce"></div>
-                  <div className="bg-accent1 h-1 w-1 rounded-full [animation-delay:0.1s] motion-safe:animate-bounce"></div>
-                  <div className="bg-accent2 h-1 w-1 rounded-full [animation-delay:0.2s] motion-safe:animate-bounce"></div>
-                </div>
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
+      <ChatComposer
+        value={input}
+        onChange={setInput}
+        onSend={handleSend}
+        isLoading={isLoading}
+        canSend={!!input.trim()}
+        placeholder="Nachricht an Disa AI schreiben..."
+        className="z-[110]"
+      />
 
       {/* Mobile Chat History Sidebar using BottomSheet */}
       <BottomSheet
