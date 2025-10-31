@@ -13,7 +13,7 @@ const navItems = [
 export function MobileNavigation() {
   return (
     <nav
-      className="bottom-navigation bg-[var(--color-surface-base)]/90 fixed bottom-0 z-20 w-full border-t border-[var(--color-border-hairline)] backdrop-blur-xl"
+      className="bottom-navigation fixed bottom-0 z-20 w-full border-t border-[var(--color-border-hairline)] bg-surface-base backdrop-blur-xl shadow-[var(--shadow-surface)]"
       role="navigation"
       aria-label="Hauptnavigation"
     >

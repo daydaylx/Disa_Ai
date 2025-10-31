@@ -39,7 +39,7 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
     NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/90 backdrop-blur-lg">
+    <header className="sticky top-0 z-40 border-b border-[var(--color-border-hairline)] bg-surface-base backdrop-blur-lg shadow-[var(--shadow-surface)]">
       <div className="flex items-center justify-between gap-3 px-4 py-3 pt-[env(safe-area-inset-top)]">
         <div className="flex flex-col gap-1">
           <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">

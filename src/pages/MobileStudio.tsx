@@ -210,7 +210,7 @@ export default function MobileStudio() {
         ) : null}
 
         <div className="space-y-3">
-          <div className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--color-surface-base)]/95 backdrop-blur">
+          <div className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-surface-base backdrop-blur shadow-[var(--shadow-surface)]">
             <Card tone="translucent" elevation="surface" className="space-y-3 px-page-x py-3">
               <div className="relative flex-1">
                 <Search
