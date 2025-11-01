@@ -48,10 +48,7 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
           handleUse();
         }
       }}
-      className={cn(
-        "focus-visible:ring-brand group relative cursor-pointer",
-        className,
-      )}
+      className={cn("focus-visible:ring-brand group relative cursor-pointer", className)}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
