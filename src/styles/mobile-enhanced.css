@@ -5,20 +5,7 @@
 
 /* Base mobile-first layout */
 :root {
-  /* Mobile layout variables */
-  --layout-sidebar-width: 0px; /* Hidden on mobile */
-  --layout-header-height: 4rem;
-  --layout-footer-height: 5rem;
-  --layout-bottom-nav-height: 4rem;
-  --layout-content-padding-x: 1rem;
-  --layout-content-padding-y: 1rem;
-
-  /* Main content area calculation */
-  --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
-  --layout-main-pb: calc(
-    var(--layout-bottom-nav-height) + var(--layout-content-padding-y) +
-      env(safe-area-inset-bottom, 0px)
-  );
+  /* NOTE: Layout variables moved to /src/styles/tokens.css to prevent duplication */
 
   /* Touch targets for mobile */
   --touch-target-minimum: 48px;

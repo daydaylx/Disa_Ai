@@ -301,29 +301,8 @@ a {
   outline-offset: var(--size-bottomsheet-border);
 }
 
-/* Touch target helpers */
-.touch-target {
-  min-height: var(--size-touch-comfortable);
-  min-width: var(--size-touch-comfortable);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.touch-target-preferred {
-  min-height: var(--size-touch-comfortable);
-  min-width: var(--size-touch-comfortable);
-}
-
-.touch-target-large {
-  min-height: var(--size-touch-relaxed);
-  min-width: var(--size-touch-relaxed);
-}
-
-.touch-target-spacious {
-  min-height: var(--size-touch-spacious);
-  min-width: var(--size-touch-spacious);
-}
+/* NOTE: Touch target utilities moved to /src/styles/mobile-base.css and mobile-enhanced.css */
+/* This prevents duplication and ensures mobile-first approach with consistent 56px targets */
 
 /* ============================================================================
    BOTTOM SHEET STYLES
