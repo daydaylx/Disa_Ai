@@ -163,11 +163,11 @@ export function MobileRolesInterface() {
     <div className="px-page-x pb-page-y pt-page-y flex h-full flex-col">
       <header className="mb-section-gap space-y-stack-gap">
         <div className="space-y-2">
-          <span className="brand-chip w-fit">{t.studio.chip}</span>
-          <h1 className="role-title-typography text-heading-lg text-high-contrast">
+          <span className="brand-chip w-fit typo-badge-enhanced">{t.studio.chip}</span>
+          <h1 className="role-title-typography text-heading-lg text-high-contrast typo-display-enhanced">
             {t.studio.title}
           </h1>
-          <p className="role-description-typography text-body-base text-medium-contrast reading-width-wide">
+          <p className="role-description-typography text-body-base text-medium-contrast reading-width-wide typo-body-enhanced">
             {t.studio.description}
           </p>
         </div>
@@ -180,14 +180,16 @@ export function MobileRolesInterface() {
             aria-label={t.studio.activeRole.label}
           >
             <div className="space-y-1">
-              <span className="brand-chip w-fit">{t.studio.activeRole.chip}</span>
-              <p className="text-heading-xs text-medium-contrast hyphens-none">
+              <span className="brand-chip w-fit typo-badge-enhanced">
+                {t.studio.activeRole.chip}
+              </span>
+              <p className="text-heading-xs text-medium-contrast hyphens-none typo-micro-enhanced">
                 {t.studio.activeRole.label}
               </p>
-              <p className="role-title-typography text-heading-sm text-high-contrast">
+              <p className="role-title-typography text-heading-sm text-high-contrast typo-headline-enhanced">
                 {activeRole.name}
               </p>
-              <p className="role-description-typography text-body-small text-medium-contrast reading-width">
+              <p className="role-description-typography text-body-small text-medium-contrast reading-width typo-body-enhanced">
                 {summariseRole(activeRole)}
               </p>
             </div>
@@ -353,7 +355,7 @@ export function MobileRolesInterface() {
                         defaultExpanded={activeRole?.id === role.id}
                         aria-label={t.studio.actions.selectRole(role.name)}
                         data-testid={`role-card-${role.id}`}
-                        className="touch-target"
+                        className="touch-target hover-lift-glow tap-bounce"
                         isMobile={true}
                       />
                     ))}
@@ -366,7 +368,7 @@ export function MobileRolesInterface() {
       </div>
 
       <div className="mt-5 flex flex-col gap-2.5">
-        <Button onClick={handleNavigateToChat} className="touch-target">
+        <Button onClick={handleNavigateToChat} className="touch-target tap-bounce focus-glow">
           <span className="text-pretty">{t.studio.actions.goToChat}</span>
           <ArrowRight className="text-text-secondary h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
         </Button>
@@ -375,7 +377,7 @@ export function MobileRolesInterface() {
           onClick={handleResetRole}
           disabled={!activeRole}
           aria-disabled={!activeRole}
-          className="touch-target"
+          className="touch-target tap-bounce focus-soft"
         >
           <RotateCcw className="text-text-secondary h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
           <span>{t.studio.actions.resetRole}</span>

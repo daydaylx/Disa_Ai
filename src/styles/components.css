@@ -76,6 +76,109 @@
   font-weight: 400;
 }
 
+/* Typography Excellence - OpenType Features */
+.typo-display-enhanced {
+  font-size: var(--font-size-display-fluid);
+  line-height: var(--line-height-display);
+  font-weight: var(--font-weight-display);
+  letter-spacing: var(--letter-spacing-display);
+  font-feature-settings: var(--font-feature-display);
+  font-variant-caps: normal;
+}
+
+.typo-headline-enhanced {
+  font-size: var(--font-size-headline-fluid);
+  line-height: var(--line-height-headline);
+  font-weight: var(--font-weight-headline);
+  letter-spacing: var(--letter-spacing-headline);
+  font-feature-settings: var(--font-feature-headline);
+}
+
+.typo-body-enhanced {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
+  font-feature-settings: var(--font-feature-body);
+  text-rendering: optimizeLegibility;
+}
+
+.typo-mono-enhanced {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-body-small);
+  font-feature-settings: var(--font-feature-mono);
+  font-variant-ligatures: common-ligatures;
+}
+
+/* Micro-Copy Excellence */
+.typo-badge-enhanced {
+  font-size: var(--font-size-badge-fluid);
+  line-height: var(--line-height-badge);
+  font-weight: var(--font-weight-badge);
+  letter-spacing: var(--letter-spacing-badge);
+  text-transform: var(--text-transform-badge);
+  font-feature-settings: var(--font-feature-badge);
+}
+
+.typo-tooltip-enhanced {
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  font-weight: var(--font-weight-tooltip);
+  font-feature-settings: var(--font-feature-tooltip);
+}
+
+.typo-micro-enhanced {
+  font-size: var(--font-size-micro);
+  line-height: var(--line-height-micro);
+  font-weight: var(--font-weight-micro);
+  letter-spacing: var(--letter-spacing-micro);
+  opacity: var(--opacity-micro-text);
+  font-feature-settings: var(--font-feature-micro);
+}
+
+/* Fluid Typography Responsive Utilities */
+.text-responsive-display {
+  font-size: var(--font-size-display-fluid);
+}
+
+.text-responsive-headline {
+  font-size: var(--font-size-headline-fluid);
+}
+
+.text-responsive-badge {
+  font-size: var(--font-size-badge-fluid);
+}
+
+/* OpenType Feature Toggles */
+.font-features-display {
+  font-feature-settings: var(--font-feature-display);
+}
+
+.font-features-headline {
+  font-feature-settings: var(--font-feature-headline);
+}
+
+.font-features-body {
+  font-feature-settings: var(--font-feature-body);
+}
+
+.font-features-mono {
+  font-feature-settings: var(--font-feature-mono);
+  font-variant-ligatures: common-ligatures;
+}
+
+.font-features-badge {
+  font-feature-settings: var(--font-feature-badge);
+}
+
+.font-features-tooltip {
+  font-feature-settings: var(--font-feature-tooltip);
+}
+
+.font-features-micro {
+  font-feature-settings: var(--font-feature-micro);
+}
+
 /* ============================================================================
    LAYOUT COMPONENTS
    ============================================================================ */
@@ -813,6 +916,312 @@
 }
 
 /* ============================================================================
+   GLASSMORPHISM UTILITIES
+   ============================================================================ */
+
+/* Glass Surface Variants */
+.glass-subtle {
+  background: var(--glass-subtle);
+  backdrop-filter: var(--blur-subtle);
+  border: var(--border-soft-subtle);
+}
+
+.glass-medium {
+  background: var(--glass-medium);
+  backdrop-filter: var(--blur-medium);
+  border: var(--border-soft-medium);
+}
+
+.glass-strong {
+  background: var(--glass-strong);
+  backdrop-filter: var(--blur-strong);
+  border: var(--border-soft-strong);
+}
+
+/* Soft Border Utilities */
+.border-soft {
+  border: var(--border-soft-subtle);
+}
+
+.border-soft-medium {
+  border: var(--border-soft-medium);
+}
+
+.border-soft-strong {
+  border: var(--border-soft-strong);
+}
+
+/* Enhanced Shadow Utilities */
+.shadow-elevated {
+  box-shadow: var(--shadow-elevated-glow);
+}
+
+.shadow-floating {
+  box-shadow: var(--shadow-floating);
+}
+
+/* Advanced Elevation Utilities */
+.shadow-depth-1 {
+  box-shadow: var(--shadow-depth-1);
+}
+
+.shadow-depth-2 {
+  box-shadow: var(--shadow-depth-2);
+}
+
+.shadow-depth-3 {
+  box-shadow: var(--shadow-depth-3);
+}
+
+.shadow-depth-4 {
+  box-shadow: var(--shadow-depth-4);
+}
+
+.shadow-depth-5 {
+  box-shadow: var(--shadow-depth-5);
+}
+
+.shadow-depth-6 {
+  box-shadow: var(--shadow-depth-6);
+}
+
+/* Interactive Shadow States */
+.shadow-hover-lift {
+  transition: box-shadow 280ms ease;
+}
+
+.shadow-hover-lift:hover {
+  box-shadow: var(--shadow-hover-lift);
+}
+
+.shadow-active-press:active {
+  box-shadow: var(--shadow-active-press);
+}
+
+.shadow-dragging {
+  box-shadow: var(--shadow-dragging);
+}
+
+/* Ambient Glow Effects */
+.ambient-glow-subtle {
+  position: relative;
+}
+
+.ambient-glow-subtle::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  background: transparent;
+  box-shadow: var(--ambient-glow-subtle);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ambient-glow-subtle:hover::before {
+  opacity: 1;
+}
+
+.ambient-glow-medium {
+  position: relative;
+}
+
+.ambient-glow-medium::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  background: transparent;
+  box-shadow: var(--ambient-glow-medium);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ambient-glow-medium:hover::before {
+  opacity: 1;
+}
+
+.ambient-glow-strong {
+  position: relative;
+}
+
+.ambient-glow-strong::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  background: transparent;
+  box-shadow: var(--ambient-glow-strong);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ambient-glow-strong:hover::before {
+  opacity: 1;
+}
+
+/* Micro-Interaction Utilities */
+.hover-lift-glow {
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.45, 0.64, 1),
+    box-shadow 280ms ease;
+}
+
+.hover-lift-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover-lift);
+}
+
+.tap-bounce {
+  transition:
+    transform 80ms ease-out,
+    box-shadow 120ms ease;
+}
+
+.tap-bounce:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-active-press);
+}
+
+/* Enhanced Focus States */
+.focus-glow:focus-visible {
+  outline: none;
+  border-color: transparent;
+  box-shadow:
+    0 0 0 2px var(--color-brand-primary),
+    0 0 12px color-mix(in srgb, var(--color-brand-primary) 40%, transparent),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.focus-soft:focus-visible {
+  outline: none;
+  border: var(--border-soft-medium);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--color-brand-primary) 25%, transparent),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================================
+   FLOATING & DRAGGING STATES
+   ============================================================================ */
+
+/* Floating State - Applied via JS when element should float */
+.floating {
+  position: relative;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-floating);
+  z-index: 50;
+  transition: all 300ms cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+/* Dragging State - Applied via JS during drag operations */
+.dragging {
+  position: relative;
+  transform: translateY(-12px) scale(1.05) rotate(2deg);
+  box-shadow: var(--shadow-dragging);
+  z-index: 100;
+  transition: none; /* Immediate response during drag */
+  cursor: grabbing;
+}
+
+.dragging::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  background: transparent;
+  box-shadow: var(--ambient-glow-strong);
+  border-radius: inherit;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Drag Over Target - Applied to drop zones */
+.drag-over {
+  position: relative;
+  background: color-mix(in srgb, var(--color-brand-primary) 8%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--color-brand-primary) 40%, transparent);
+  transform: scale(1.02);
+  transition: all 200ms ease;
+}
+
+.drag-over::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 25%,
+    color-mix(in srgb, var(--color-brand-primary) 3%, transparent) 25%,
+    color-mix(in srgb, var(--color-brand-primary) 3%, transparent) 50%,
+    transparent 50%,
+    transparent 75%,
+    color-mix(in srgb, var(--color-brand-primary) 3%, transparent) 75%
+  );
+  background-size: 20px 20px;
+  animation: drag-over-pattern 2s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@keyframes drag-over-pattern {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+/* Drag Preview - For custom drag previews */
+.drag-preview {
+  opacity: 0.9;
+  transform: rotate(3deg);
+  box-shadow: var(--shadow-depth-6);
+  border: 1px solid color-mix(in srgb, var(--color-brand-primary) 30%, transparent);
+  background: color-mix(in srgb, var(--color-surface-card) 95%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+/* Sortable Item States */
+.sortable-ghost {
+  opacity: 0.4;
+  background: color-mix(in srgb, var(--color-brand-primary) 10%, transparent);
+  transform: scale(0.95);
+  transition: all 200ms ease;
+}
+
+.sortable-chosen {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-depth-4);
+  z-index: 10;
+}
+
+/* Modal/Popover Floating States */
+.modal-floating {
+  animation: modal-float-in 400ms cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
+}
+
+@keyframes modal-float-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    box-shadow: var(--shadow-depth-2);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: var(--shadow-depth-6);
+  }
+}
+
+/* ============================================================================
    REDUCED MOTION OVERRIDES
    ============================================================================ */
 
@@ -831,6 +1240,15 @@
   .hover-lift,
   .hover-scale,
   .hover-glow,
+  .hover-lift-glow,
+  .tap-bounce,
+  .floating,
+  .dragging,
+  .drag-over,
+  .drag-preview,
+  .sortable-ghost,
+  .sortable-chosen,
+  .modal-floating,
   .touch-ripple::after {
     animation: none !important;
     transform: none !important;

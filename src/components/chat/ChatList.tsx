@@ -175,11 +175,11 @@ export function ChatList({
         {messages.length === 0 ? (
           <div className="flex flex-col gap-5 px-1 py-3">
             <div className="brand-panel space-y-4 p-6">
-              <span className="brand-chip w-fit">Disa&nbsp;AI Studio</span>
-              <h1 className="text-heading-lg text-high-contrast">
+              <span className="brand-chip w-fit typo-badge-enhanced">Disa&nbsp;AI Studio</span>
+              <h1 className="text-heading-lg text-high-contrast typo-display-enhanced">
                 Was möchtest du heute erschaffen?
               </h1>
-              <p className="text-body-base text-medium-contrast">
+              <p className="text-body-base text-medium-contrast typo-body-enhanced">
                 Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
                 Sekunden.
               </p>
@@ -252,7 +252,7 @@ export function ChatList({
                           isActive={activeQuickstart === action.id}
                           disabled={isQuickstartLoading && activeQuickstart !== action.id}
                           onClick={() => handleQuickstartClick(action)}
-                          className="min-h-[140px]"
+                          className="min-h-[140px] hover-lift-glow tap-bounce"
                         />
                       );
                     })
@@ -264,11 +264,17 @@ export function ChatList({
             <div className="space-y-2 px-1">
               {SUGGESTION_ACTIONS.map((item) => {
                 return (
-                  <Card key={item.label} elevation="raised" interactive="gentle" padding="md">
+                  <Card
+                    key={item.label}
+                    elevation="depth-3"
+                    interactive="depth-hover"
+                    padding="md"
+                    className="border-soft"
+                  >
                     <button
                       type="button"
                       onClick={() => onQuickstartFlow?.(item.prompt, false)}
-                      className="text-text-primary flex w-full items-center justify-between gap-3 text-sm font-medium transition-colors"
+                      className="text-text-primary flex w-full items-center justify-between gap-3 text-sm font-medium transition-colors tap-bounce focus-soft"
                     >
                       <span className="text-left">{item.label}</span>
                       <MessageSquare className="text-text-secondary h-4 w-4" />
@@ -281,14 +287,14 @@ export function ChatList({
             {recentConversations.length > 0 && (
               <div className="space-y-3 px-1 pt-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-text-secondary text-xs font-semibold uppercase tracking-wider">
+                  <h2 className="text-text-secondary text-xs font-semibold uppercase tracking-wider typo-micro-enhanced">
                     Letzte Chats
                   </h2>
                   {onShowHistory && (
                     <button
                       type="button"
                       onClick={onShowHistory}
-                      className="text-text-secondary hover:text-text-primary text-xs font-medium transition-colors"
+                      className="text-text-secondary hover:text-text-primary text-xs font-medium transition-colors typo-micro-enhanced"
                     >
                       Alle ansehen
                     </button>
@@ -308,15 +314,15 @@ export function ChatList({
                     return (
                       <Card
                         key={conversation.id}
-                        elevation="raised"
-                        interactive="gentle"
+                        elevation="depth-2"
+                        interactive="ambient-subtle"
                         padding="md"
                         state={isActive ? "selected" : "default"}
-                        className="group relative flex items-start gap-3"
+                        className="group relative flex items-start gap-3 border-soft"
                       >
                         <button
                           type="button"
-                          className="flex-1 text-left"
+                          className="flex-1 text-left tap-bounce focus-soft"
                           onClick={() => onSelectConversation?.(conversation.id)}
                         >
                           <div className="flex items-center gap-2">
@@ -337,12 +343,12 @@ export function ChatList({
                           </p>
                           <div className="text-text-secondary mt-3 flex flex-wrap items-center gap-3 text-xs">
                             {Number.isFinite(lastActivity) && (
-                              <span className="inline-flex items-center gap-1">
+                              <span className="inline-flex items-center gap-1 typo-micro-enhanced">
                                 <Clock className="h-3.5 w-3.5" />
                                 {formatRelativeTime(lastActivity)}
                               </span>
                             )}
-                            <span className="inline-flex items-center gap-1">
+                            <span className="inline-flex items-center gap-1 typo-micro-enhanced">
                               <MessageSquare className="h-3.5 w-3.5" />
                               {messageCount} Nachricht{messageCount === 1 ? "" : "en"}
                             </span>

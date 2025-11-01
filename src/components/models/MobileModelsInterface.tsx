@@ -28,7 +28,7 @@ function Tooltip({
       <span className="text-text-muted opacity-60 group-hover:opacity-100 transition-opacity">
         ℹ️
       </span>
-      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs text-text-primary bg-surface-card border border-border-subtle rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg backdrop-blur-md">
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs text-text-primary bg-surface-card border border-border-subtle rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg backdrop-blur-md typo-tooltip-enhanced">
         {content}
       </span>
     </span>
@@ -538,10 +538,12 @@ export function MobileModelsInterface() {
 
       <main className="space-y-section-gap px-page-x pb-page-y pt-page-y">
         <header className="space-y-stack-gap" data-testid="models-title">
-          <span className="brand-chip w-fit">🤖 Modelle</span>
+          <span className="brand-chip w-fit typo-badge-enhanced">🤖 Modelle</span>
           <div className="space-y-2">
-            <h1 className="text-heading-lg text-high-contrast">KI-Modellkatalog</h1>
-            <p className="max-w-2xl text-body-base text-medium-contrast">
+            <h1 className="text-heading-lg text-high-contrast typo-headline-enhanced">
+              KI-Modellkatalog
+            </h1>
+            <p className="max-w-2xl text-body-base text-medium-contrast typo-body-enhanced">
               Wähle das perfekte{" "}
               <Tooltip content="Künstliche Intelligenz Sprachmodelle, die auf verschiedene Aufgaben spezialisiert sind">
                 KI-Modell

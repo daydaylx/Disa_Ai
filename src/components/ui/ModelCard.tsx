@@ -94,6 +94,7 @@ export function ModelCard({
           "category-border category-tint category-focus relative w-full overflow-hidden",
           "transition-all duration-200 ease-out",
           "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
+          "hover-lift-glow tap-bounce focus-glow",
           isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
           isMobile && "mobile-model-card touch-target",
         )}

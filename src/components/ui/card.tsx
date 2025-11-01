@@ -27,6 +27,15 @@ const cardVariants = cva(
         "surface-prominent": "shadow-[var(--shadow-surface-prominent)]",
         "surface-hover": "shadow-[var(--shadow-surface-hover)]",
         "surface-active": "shadow-[var(--shadow-surface-active)]",
+        // Advanced Depth System
+        "depth-1": "shadow-depth-1",
+        "depth-2": "shadow-depth-2",
+        "depth-3": "shadow-depth-3",
+        "depth-4": "shadow-depth-4",
+        "depth-5": "shadow-depth-5",
+        "depth-6": "shadow-depth-6",
+        floating: "shadow-floating",
+        elevated: "shadow-elevated",
       },
       interactive: {
         false: "",
@@ -47,6 +56,19 @@ const cardVariants = cva(
           "motion-safe:hover:shadow-[var(--shadow-glow-warning)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
         "glow-error":
           "motion-safe:hover:shadow-[var(--shadow-glow-error)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        // Advanced Interactive States
+        "depth-hover":
+          "motion-safe:hover:-translate-y-[2px] motion-safe:hover:shadow-[var(--shadow-hover-lift)] cursor-pointer motion-safe:transition-all motion-safe:duration-280 motion-safe:ease-out",
+        "depth-press":
+          "motion-safe:active:translate-y-[1px] motion-safe:active:scale-[0.98] motion-safe:active:shadow-[var(--shadow-active-press)] cursor-pointer motion-safe:transition-all motion-safe:duration-120 motion-safe:ease-out",
+        "floating-hover":
+          "motion-safe:hover:-translate-y-[3px] motion-safe:hover:shadow-floating cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "ambient-subtle":
+          "ambient-glow-subtle cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "ambient-medium":
+          "ambient-glow-medium cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+        "ambient-strong":
+          "ambient-glow-strong cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
       },
       padding: {
         none: "",

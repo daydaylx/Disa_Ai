@@ -5,8 +5,8 @@ import type { QuickstartAction } from "../../config/quickstarts";
 import { useQuickstartManager } from "../../hooks/useQuickstartManager";
 import { Button } from "../ui/button";
 import { ChatStatusBanner } from "./ChatStatusBanner";
-import { QuickstartTile } from "./QuickstartTile";
 import { createRoleQuickstarts } from "./quickstartHelpers";
+import { QuickstartTile } from "./QuickstartTile";
 
 interface QuickstartGridProps {
   onQuickstartTap: (action: QuickstartAction) => void;
