@@ -1,5 +1,5 @@
-import { DesignDirectionShowcase } from "../features/design-directions/DesignDirectionShowcase";
+import { NeomorphicDemo } from "../components/demos/NeomorphicDemo";
 
 export default function DesignDirectionsPage() {
-  return <DesignDirectionShowcase />;
+  return <NeomorphicDemo />;
 }
