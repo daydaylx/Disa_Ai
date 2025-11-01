@@ -8,6 +8,7 @@ const TOOLS_DIR = dirname(TOOL_PATH);
 const PROJECT_ROOT = dirname(TOOLS_DIR);
 const SRC_DIR = join(PROJECT_ROOT, "src");
 const TOKEN_FILE = join(SRC_DIR, "styles", "design-tokens.css");
+const TOKENS_FILE = join(SRC_DIR, "styles", "tokens.css");
 
 const HEX_REGEX = /#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})(?![0-9a-fA-F])/g;
 
@@ -36,7 +37,7 @@ async function main() {
   const offenders = [];
 
   for (const filePath of cssFiles) {
-    if (filePath === TOKEN_FILE) continue;
+    if (filePath === TOKEN_FILE || filePath === TOKENS_FILE) continue;
 
     const content = await readFile(filePath, "utf8");
     const matches = [...content.matchAll(HEX_REGEX)];
