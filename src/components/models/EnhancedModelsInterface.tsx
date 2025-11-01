@@ -15,19 +15,102 @@ import {
   Star,
   Zap,
 } from "lucide-react";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
+import { loadModelCatalog, type ModelEntry } from "../../config/models";
 import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
-// Import existing models data for migration
-import { MODELS } from "../../data/models";
 import type { EnhancedModel, FilterState } from "../../types/enhanced-interfaces";
-import { migrateModel } from "../../types/enhanced-interfaces";
 import { Button } from "../ui";
 import { Card } from "../ui/card";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
 interface EnhancedModelsInterfaceProps {
   className?: string;
+}
+
+// Helper function to convert ModelEntry to EnhancedModel
+function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
+  const isFree = entry.pricing?.in === 0 || entry.pricing?.out === 0 || entry.tags.includes("free");
+
+  return {
+    // Core properties from ModelEntry
+    id: entry.id,
+    label: entry.label || entry.id,
+    provider: entry.provider || entry.id.split("/")[0] || "unknown",
+    description: entry.description || `${entry.label || entry.id} AI model`,
+
+    // Pricing
+    pricing: {
+      inputPrice: entry.pricing?.in || 0,
+      outputPrice: entry.pricing?.out || 0,
+      currency: "USD",
+      isFree,
+    },
+
+    // Context
+    context: {
+      maxTokens: entry.ctx || 4096,
+      effectiveTokens: Math.floor((entry.ctx || 4096) * 0.8),
+    },
+
+    // Performance scores (estimated based on model characteristics)
+    performance: {
+      speed: isFree ? 75 : 85,
+      reliability: 90,
+      quality: isFree ? 80 : 90,
+      efficiency: isFree ? 95 : 80,
+    },
+
+    // Enhanced categorization
+    tags: entry.tags,
+    category: categorizeModelFromTags(entry.tags, isFree),
+    tier: isFree ? "free" : determineTierFromPrice(entry.pricing?.in || 0),
+
+    // Favorites & Usage (default values)
+    isFavorite: false,
+    lastUsed: null,
+    usage: {
+      count: 0,
+      totalTokensUsed: 0,
+      averageSessionTokens: 0,
+      lastAccess: null,
+    },
+
+    // Capabilities (inferred from tags and id)
+    capabilities: {
+      multimodal: entry.tags.includes("multimodal") || entry.id.includes("vision"),
+      codeGeneration: entry.tags.includes("coding") || entry.id.includes("code"),
+      reasoning: entry.tags.includes("reasoning") || entry.tags.includes("advanced"),
+      creative: entry.tags.includes("creative") || entry.id.includes("creative"),
+      analysis: entry.tags.includes("analysis") || entry.tags.includes("reasoning"),
+      translation: true, // Assume most models can translate
+    },
+
+    // Mobile optimization
+    mobile: {
+      recommendedForMobile: true,
+      offlineCapable: false,
+    },
+  };
+}
+
+// Helper function to categorize models based on tags
+function categorizeModelFromTags(tags: string[], isFree: boolean): any {
+  if (isFree && tags.includes("fast")) return "quick-free";
+  if (isFree) return "strong-free";
+  if (tags.includes("multimodal")) return "multimodal";
+  if (tags.includes("creative")) return "creative-uncensored";
+  if (tags.includes("budget")) return "budget-specialist";
+  if (tags.includes("premium")) return "premium-models";
+  return "chat-allrounder";
+}
+
+// Helper function to determine tier from price
+function determineTierFromPrice(price: number): "free" | "budget" | "premium" | "enterprise" {
+  if (price === 0) return "free";
+  if (price < 0.001) return "budget";
+  if (price < 0.01) return "premium";
+  return "enterprise";
 }
 
 // Performance scores visualization component
@@ -241,10 +324,33 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     sortDirection: "asc",
   });
 
-  // Convert legacy models to enhanced models
-  const enhancedModels = useMemo(() => {
-    return MODELS.map(migrateModel);
-  }, []);
+  // Load models dynamically from OpenRouter
+  const [enhancedModels, setEnhancedModels] = useState<EnhancedModel[]>([]);
+  const [isLoadingModels, setIsLoadingModels] = useState(true);
+
+  useEffect(() => {
+    const loadModels = async () => {
+      try {
+        setIsLoadingModels(true);
+        const modelEntries = await loadModelCatalog();
+        const converted = modelEntries.map(modelEntryToEnhanced);
+        setEnhancedModels(converted);
+      } catch (error) {
+        console.error("Failed to load models:", error);
+        push({
+          kind: "error",
+          title: "Fehler beim Laden",
+          message: "Modelle konnten nicht geladen werden",
+        });
+        // Fallback to empty array
+        setEnhancedModels([]);
+      } finally {
+        setIsLoadingModels(false);
+      }
+    };
+
+    void loadModels();
+  }, [push]);
 
   // Filtered and sorted models
   const filteredModels = useMemo(() => {
@@ -357,6 +463,20 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       title: `${selectedModels.size} Modelle werden verglichen`,
     });
   }, [selectedModels.size, push]);
+
+  // Show loading state while models are being loaded
+  if (isLoadingModels) {
+    return (
+      <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-3"></div>
+            <p className="text-text-muted">Lade Modelle...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
