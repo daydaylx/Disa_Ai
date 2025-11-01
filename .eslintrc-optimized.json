@@ -1,0 +1,14 @@
+{
+  "extends": ["./eslint.config.mjs"],
+  "rules": {
+    "no-restricted-syntax": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*-optimized.ts", "*-optimized.tsx"],
+      "rules": {
+        "no-restricted-syntax": "off"
+      }
+    }
+  ]
+}
