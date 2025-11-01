@@ -316,8 +316,8 @@ Create reusable stagger utility for lists:
 ```typescript
 export function useStaggerAnimation(itemCount: number, baseDelay: number = 50) {
   return {
-    getItemDelay: (index: number) => `${index * baseDelay}ms`,
-    getItemClassName: (index: number) => `stagger-item-${index}`,
+    getItemDelay: (index: number) => `$&#123;index * baseDelay&#125;ms`,
+    getItemClassName: (index: number) => `stagger-item-$&#123;index&#125;`,
     getCSSRules: () => {
       // Generate CSS rules for each index
     },
@@ -336,7 +336,7 @@ messages.map((msg, i) => (
     key={msg.id}
     message={msg}
     style={{
-      animation: `messageSlideIn 300ms ease-out ${stagger.getItemDelay(i)} both`
+      animation: `messageSlideIn 300ms ease-out $&#123;stagger.getItemDelay(i)&#125; both`
     }}
   />
 ))
