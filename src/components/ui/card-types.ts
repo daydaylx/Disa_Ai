@@ -48,92 +48,12 @@ export interface ExtendedCardProps extends BaseCardProps, CardVariantProps {
 // Status card types
 export type StatusType = "loading" | "success" | "error" | "warning" | "info";
 
-export interface StatusCardProps extends Omit<ExtendedCardProps, "intent" | "state"> {
-  /**
-   * The type of status to display
-   */
-  status: StatusType;
-
-  /**
-   * The main title/message
-   */
-  title: string;
-
-  /**
-   * Additional description or details
-   */
-  description?: string;
-
-  /**
-   * Custom action buttons or elements
-   */
-  actions?: React.ReactNode;
-
-  /**
-   * Whether to show the default icon for the status type
-   * @default true
-   */
-  showIcon?: boolean;
-
-  /**
-   * Custom icon to override the default
-   */
-  customIcon?: React.ReactNode;
-
-  /**
-   * Whether the card can be dismissed
-   * @default false
-   */
-  dismissible?: boolean;
-
-  /**
-   * Callback when dismiss button is clicked
-   */
-  onDismiss?: () => void;
-}
+// StatusCardProps are defined in ./StatusCard.tsx
 
 // Discussion topic card types
 export type DiscussionCategory = "curiosity" | "future" | "society" | "general";
 
-export interface DiscussionTopicCardProps extends Omit<ExtendedCardProps, "onCardClick"> {
-  /**
-   * The main title/question for the discussion topic
-   */
-  title: string;
-
-  /**
-   * Additional hint or description about the topic
-   */
-  hint?: string;
-
-  /**
-   * Category or theme of the discussion (affects styling)
-   * @default "general"
-   */
-  category?: DiscussionCategory;
-
-  /**
-   * Whether this topic is currently selected or active
-   * @default false
-   */
-  isSelected?: boolean;
-
-  /**
-   * Whether this topic is disabled/unavailable
-   * @default false
-   */
-  isDisabled?: boolean;
-
-  /**
-   * Callback when the topic is clicked
-   */
-  onTopicClick?: (title: string) => void;
-
-  /**
-   * Additional action button (optional)
-   */
-  actionButton?: React.ReactNode;
-}
+// DiscussionTopicCardProps are defined in ./DiscussionTopicCard.tsx
 
 // Interactive card with advanced features
 export interface AdvancedInteractiveCardProps
@@ -244,80 +164,9 @@ export interface MenuItem {
   disabled?: boolean;
 }
 
-// Model card specific props
-export interface ModelCardProps
-  extends Omit<AdvancedInteractiveCardProps, "leading" | "title" | "subtitle"> {
-  /**
-   * Name of the AI model
-   */
-  modelName: string;
+// Model card specific props are defined in ./ModelCard.tsx
 
-  /**
-   * Provider of the model (e.g., "OpenAI", "Anthropic")
-   */
-  modelProvider: string;
-
-  /**
-   * Description of the model's capabilities
-   */
-  modelDescription?: string;
-
-  /**
-   * Icon representing the model or provider
-   */
-  modelIcon?: React.ReactNode;
-
-  /**
-   * Whether this model is currently active/selected
-   * @default false
-   */
-  isActive?: boolean;
-
-  /**
-   * Callback when model is selected
-   */
-  onSelectModel?: () => void;
-}
-
-// Conversation card specific props
-export interface ConversationCardProps
-  extends Omit<AdvancedInteractiveCardProps, "title" | "subtitle"> {
-  /**
-   * Title/name of the conversation
-   */
-  conversationTitle: string;
-
-  /**
-   * Preview of the last message in the conversation
-   */
-  lastMessage?: string;
-
-  /**
-   * When the conversation was last updated
-   */
-  timestamp?: Date;
-
-  /**
-   * Total number of messages in the conversation
-   */
-  messageCount?: number;
-
-  /**
-   * Whether this conversation is currently active
-   * @default false
-   */
-  isActive?: boolean;
-
-  /**
-   * Callback when conversation is selected
-   */
-  onSelectConversation?: () => void;
-
-  /**
-   * Callback when conversation should be deleted
-   */
-  onDeleteConversation?: () => void;
-}
+// ConversationCardProps are defined in ./InteractiveCard.tsx
 
 // Grid layout props
 export interface CardGridProps extends React.HTMLAttributes<HTMLDivElement> {

@@ -7,6 +7,7 @@ import { StudioProvider } from "./app/state/StudioContext";
 import { MobileOnlyGate } from "./components/layout/MobileOnlyGate";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
 import { TooltipProvider } from "./components/ui/tooltip";
+import { FavoritesProvider } from "./contexts/FavoritesContext";
 
 export default function App() {
   // Initialize viewport height with optimized throttling for scroll performance
@@ -33,11 +34,13 @@ export default function App() {
   return (
     <TooltipProvider>
       <StudioProvider>
-        <ToastsProvider>
-          <MobileOnlyGate>
-            <Router />
-          </MobileOnlyGate>
-        </ToastsProvider>
+        <FavoritesProvider>
+          <ToastsProvider>
+            <MobileOnlyGate>
+              <Router />
+            </MobileOnlyGate>
+          </ToastsProvider>
+        </FavoritesProvider>
       </StudioProvider>
     </TooltipProvider>
   );

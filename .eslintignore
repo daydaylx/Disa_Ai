@@ -1,0 +1,10 @@
+dist/
+node_modules/
+.env
+*.md
+public/
+*.config.js
+*.config.ts
+vite.config.ts
+*.d.ts
+tailwind.config.optimized.ts

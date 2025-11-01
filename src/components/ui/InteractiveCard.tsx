@@ -230,49 +230,8 @@ export const InteractiveCard = React.forwardRef<HTMLDivElement, InteractiveCardP
 
 InteractiveCard.displayName = "InteractiveCard";
 
-// Specialized variants
-export interface ModelCardProps
-  extends Omit<InteractiveCardProps, "leading" | "title" | "subtitle"> {
-  modelName: string;
-  modelProvider: string;
-  modelDescription?: string;
-  modelIcon?: React.ReactNode;
-  isActive?: boolean;
-  onSelectModel?: () => void;
-}
-
-export const ModelCard = React.forwardRef<HTMLDivElement, ModelCardProps>(
-  (
-    {
-      modelName,
-      modelProvider,
-      modelDescription,
-      modelIcon,
-      isActive = false,
-      onSelectModel,
-      ...props
-    },
-    ref,
-  ) => (
-    <InteractiveCard
-      ref={ref}
-      title={modelName}
-      subtitle={modelProvider}
-      leading={modelIcon}
-      selected={isActive}
-      selectable={true}
-      onCardClick={onSelectModel}
-      intent={isActive ? "primary" : "default"}
-      {...props}
-    >
-      {modelDescription && (
-        <p className="text-sm leading-relaxed text-text-muted">{modelDescription}</p>
-      )}
-    </InteractiveCard>
-  ),
-);
-
-ModelCard.displayName = "ModelCard";
+// Specialized variants can be added here if needed
+// Note: Dedicated ModelCard component exists in ./ModelCard.tsx
 
 export interface ConversationCardProps extends Omit<InteractiveCardProps, "title" | "subtitle"> {
   conversationTitle: string;

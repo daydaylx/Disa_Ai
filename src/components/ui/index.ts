@@ -21,11 +21,11 @@ export { ModelCard } from "./ModelCard";
 // Enhanced Card System
 export type {
   CardVariantProps,
-  ConversationCardProps,
-  ModelCardProps as ModelCardTypeProps,
+  // ConversationCardProps are exported from ./InteractiveCard
+  // ModelCardProps are defined in ./ModelCard.tsx and exported above
 } from "./card-types";
 export * from "./DiscussionTopicCard";
-export * from "./InteractiveCard";
+export * from "./InteractiveCard"; // exports ConversationCardProps
 export * from "./StatusCard";
 
 // Card System Utilities
