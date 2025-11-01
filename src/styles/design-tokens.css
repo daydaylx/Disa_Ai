@@ -106,6 +106,119 @@
   --line-height-mono: calc(var(--type-14) * var(--line-relaxed));
   --font-weight-mono: 500;
 
+  /* Button Gradient System - Premium Visual Hierarchy */
+
+  /* Primary Brand Gradients */
+  --gradient-brand-primary: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    color-mix(in srgb, var(--color-brand-primary) 85%, var(--color-brand-secondary) 15%) 100%
+  );
+  --gradient-brand-primary-hover: linear-gradient(
+    135deg,
+    var(--color-brand-primary-hover) 0%,
+    color-mix(in srgb, var(--color-brand-primary-hover) 80%, var(--color-brand-secondary) 20%) 100%
+  );
+  --gradient-brand-primary-active: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-brand-primary) 90%, black 10%) 0%,
+    color-mix(in srgb, var(--color-brand-primary) 75%, var(--color-brand-secondary) 25%) 100%
+  );
+
+  /* Premium Gradient with Depth */
+  --gradient-brand-premium: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    color-mix(in srgb, var(--color-brand-primary) 70%, var(--color-brand-secondary) 30%) 50%,
+    color-mix(in srgb, var(--color-brand-primary) 85%, white 15%) 100%
+  );
+  --gradient-brand-premium-hover: linear-gradient(
+    135deg,
+    var(--color-brand-primary-hover) 0%,
+    color-mix(in srgb, var(--color-brand-primary-hover) 65%, var(--color-brand-secondary) 35%) 50%,
+    color-mix(in srgb, var(--color-brand-primary-hover) 80%, white 20%) 100%
+  );
+
+  /* Secondary Gradients */
+  --gradient-secondary: linear-gradient(
+    135deg,
+    var(--color-surface-raised) 0%,
+    color-mix(in srgb, var(--color-surface-raised) 95%, var(--color-border-subtle) 5%) 100%
+  );
+  --gradient-secondary-hover: linear-gradient(
+    135deg,
+    var(--color-surface-subtle) 0%,
+    color-mix(in srgb, var(--color-surface-subtle) 90%, var(--color-border) 10%) 100%
+  );
+
+  /* Soft Brand Gradients */
+  --gradient-brand-soft: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-brand-primary) 15%, transparent) 0%,
+    color-mix(in srgb, var(--color-brand-primary) 8%, transparent) 100%
+  );
+  --gradient-brand-soft-hover: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-brand-primary) 25%, transparent) 0%,
+    color-mix(in srgb, var(--color-brand-primary) 12%, transparent) 100%
+  );
+
+  /* Status Gradients */
+  --gradient-success: linear-gradient(
+    135deg,
+    var(--color-status-success) 0%,
+    color-mix(in srgb, var(--color-status-success) 85%, white 15%) 100%
+  );
+  --gradient-success-hover: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-status-success) 90%, black 10%) 0%,
+    color-mix(in srgb, var(--color-status-success) 80%, white 20%) 100%
+  );
+
+  --gradient-warning: linear-gradient(
+    135deg,
+    var(--color-status-warning) 0%,
+    color-mix(in srgb, var(--color-status-warning) 85%, white 15%) 100%
+  );
+  --gradient-warning-hover: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-status-warning) 90%, black 10%) 0%,
+    color-mix(in srgb, var(--color-status-warning) 80%, white 20%) 100%
+  );
+
+  --gradient-error: linear-gradient(
+    135deg,
+    var(--color-status-error) 0%,
+    color-mix(in srgb, var(--color-status-error) 85%, white 15%) 100%
+  );
+  --gradient-error-hover: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-status-error) 90%, black 10%) 0%,
+    color-mix(in srgb, var(--color-status-error) 80%, white 20%) 100%
+  );
+
+  /* Subtle Glass Gradients */
+  --gradient-glass-subtle: linear-gradient(
+    135deg,
+    var(--glass-medium) 0%,
+    var(--glass-subtle) 100%
+  );
+  --gradient-glass-hover: linear-gradient(135deg, var(--glass-strong) 0%, var(--glass-medium) 100%);
+
+  /* Depth Gradients - Work with elevation system */
+  --gradient-elevated: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-surface-card) 100%, white 3%) 0%,
+    var(--color-surface-card) 50%,
+    color-mix(in srgb, var(--color-surface-card) 97%, black 3%) 100%
+  );
+  --gradient-elevated-hover: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-surface-card) 100%, white 5%) 0%,
+    color-mix(in srgb, var(--color-surface-card) 98%, white 2%) 50%,
+    color-mix(in srgb, var(--color-surface-card) 95%, black 5%) 100%
+  );
+
   /* Typography Excellence - OpenType Features */
   --font-feature-display:
     "ss01" 1, /* Stylistic Set 1 for display text */ "cv01" 1,

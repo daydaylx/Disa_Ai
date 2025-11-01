@@ -9,6 +9,15 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     | "outline"
     | "brand"
     | "brand-soft"
+    | "brand-gradient"
+    | "brand-premium"
+    | "secondary-gradient"
+    | "brand-soft-gradient"
+    | "success-gradient"
+    | "warning-gradient"
+    | "error-gradient"
+    | "glass"
+    | "elevated"
     | "destructive"
     | "primary"
     | "secondary"
@@ -33,6 +42,20 @@ const buttonVariants = (
       "bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] hover:bg-[var(--color-brand-primary-hover)]",
     "brand-soft":
       "bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)] border border-[var(--color-brand-subtle)] hover:bg-[var(--color-brand-primary)] hover:text-[var(--color-text-on-brand)]",
+
+    /* Gradient Button Variants - Premium Visual Hierarchy */
+    "brand-gradient": "btn-gradient-brand text-[var(--color-text-on-brand)] shadow-lg",
+    "brand-premium": "btn-gradient-brand-premium text-[var(--color-text-on-brand)] shadow-xl",
+    "secondary-gradient":
+      "btn-gradient-secondary text-[var(--color-text-primary)] border border-[var(--color-border-subtle)]",
+    "brand-soft-gradient":
+      "btn-gradient-brand-soft text-[var(--color-brand-strong)] border border-[var(--color-brand-subtle)]",
+    "success-gradient": "btn-gradient-success text-[var(--color-text-on-status)] shadow-md",
+    "warning-gradient": "btn-gradient-warning text-[var(--color-text-on-status)] shadow-md",
+    "error-gradient": "btn-gradient-error text-[var(--color-text-on-status)] shadow-md",
+    glass: "btn-gradient-glass text-[var(--color-text-primary)] shadow-lg",
+    elevated: "btn-gradient-elevated text-[var(--color-text-primary)]",
+
     secondary:
       "bg-[var(--color-action-secondary-bg)] text-[var(--color-action-secondary-fg)] border border-[var(--color-action-secondary-border)] hover:bg-[var(--color-action-secondary-hover)]",
     destructive:

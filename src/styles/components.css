@@ -180,6 +180,192 @@
 }
 
 /* ============================================================================
+   BUTTON GRADIENT UTILITIES - Premium Visual Hierarchy
+   ============================================================================ */
+
+/* Brand Gradient Utilities */
+.btn-gradient-brand {
+  background: var(--gradient-brand-primary);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-brand:hover {
+  background: var(--gradient-brand-primary-hover);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-raised);
+}
+
+.btn-gradient-brand:active {
+  background: var(--gradient-brand-primary-active);
+  transform: scale(0.98);
+}
+
+.btn-gradient-brand-premium {
+  background: var(--gradient-brand-premium);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-brand-premium:hover {
+  background: var(--gradient-brand-premium-hover);
+  transform: scale(1.03);
+  box-shadow: var(--shadow-overlay);
+}
+
+.btn-gradient-brand-premium:active {
+  transform: scale(0.97);
+}
+
+/* Secondary Gradient Utilities */
+.btn-gradient-secondary {
+  background: var(--gradient-secondary);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-secondary:hover {
+  background: var(--gradient-secondary-hover);
+  transform: scale(1.01);
+  box-shadow: var(--shadow-surface-hover);
+}
+
+.btn-gradient-secondary:active {
+  transform: scale(0.99);
+}
+
+/* Brand Soft Gradient Utilities */
+.btn-gradient-brand-soft {
+  background: var(--gradient-brand-soft);
+  backdrop-filter: blur(8px);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-brand-soft:hover {
+  background: var(--gradient-brand-soft-hover);
+  transform: scale(1.01);
+  box-shadow: var(--shadow-surface);
+}
+
+.btn-gradient-brand-soft:active {
+  transform: scale(0.99);
+}
+
+/* Status Gradient Utilities */
+.btn-gradient-success {
+  background: var(--gradient-success);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-success:hover {
+  background: var(--gradient-success-hover);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-surface-hover);
+}
+
+.btn-gradient-success:active {
+  transform: scale(0.98);
+}
+
+.btn-gradient-warning {
+  background: var(--gradient-warning);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-warning:hover {
+  background: var(--gradient-warning-hover);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-surface-hover);
+}
+
+.btn-gradient-warning:active {
+  transform: scale(0.98);
+}
+
+.btn-gradient-error {
+  background: var(--gradient-error);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-error:hover {
+  background: var(--gradient-error-hover);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-surface-hover);
+}
+
+.btn-gradient-error:active {
+  transform: scale(0.98);
+}
+
+/* Glass and Elevated Gradient Utilities */
+.btn-gradient-glass {
+  background: var(--gradient-glass-subtle);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-glass:hover {
+  background: var(--gradient-glass-hover);
+  transform: scale(1.01);
+  box-shadow: var(--shadow-overlay);
+}
+
+.btn-gradient-glass:active {
+  transform: scale(0.99);
+}
+
+.btn-gradient-elevated {
+  background: var(--gradient-elevated);
+  box-shadow: var(--shadow-raised);
+  transition: all 300ms ease;
+}
+
+.btn-gradient-elevated:hover {
+  background: var(--gradient-elevated-hover);
+  transform: scale(1.01);
+  box-shadow: var(--shadow-overlay);
+}
+
+.btn-gradient-elevated:active {
+  transform: scale(0.99);
+}
+
+/* Accessibility: Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .btn-gradient-brand,
+  .btn-gradient-brand-premium,
+  .btn-gradient-secondary,
+  .btn-gradient-brand-soft,
+  .btn-gradient-success,
+  .btn-gradient-warning,
+  .btn-gradient-error,
+  .btn-gradient-glass,
+  .btn-gradient-elevated {
+    transition: background 150ms ease;
+  }
+
+  .btn-gradient-brand:hover,
+  .btn-gradient-brand-premium:hover,
+  .btn-gradient-secondary:hover,
+  .btn-gradient-brand-soft:hover,
+  .btn-gradient-success:hover,
+  .btn-gradient-warning:hover,
+  .btn-gradient-error:hover,
+  .btn-gradient-glass:hover,
+  .btn-gradient-elevated:hover,
+  .btn-gradient-brand:active,
+  .btn-gradient-brand-premium:active,
+  .btn-gradient-secondary:active,
+  .btn-gradient-brand-soft:active,
+  .btn-gradient-success:active,
+  .btn-gradient-warning:active,
+  .btn-gradient-error:active,
+  .btn-gradient-glass:active,
+  .btn-gradient-elevated:active {
+    transform: none;
+  }
+}
+
+/* ============================================================================
    LAYOUT COMPONENTS
    ============================================================================ */
 

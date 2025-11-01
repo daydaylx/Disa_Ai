@@ -183,7 +183,7 @@ export function ChatList({
                 Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
                 Sekunden.
               </p>
-              <Button onClick={handleStartStandardChat} className="w-full" variant="brand">
+              <Button onClick={handleStartStandardChat} className="w-full" variant="brand-premium">
                 Neues Gespräch beginnen
               </Button>
             </div>
@@ -215,7 +215,7 @@ export function ChatList({
                       <Button
                         onClick={handleStartStandardChat}
                         className="w-full"
-                        variant="brand"
+                        variant="brand-gradient"
                         data-testid="start-standard-chat"
                       >
                         Direkt im Chat starten
@@ -232,7 +232,11 @@ export function ChatList({
                         Wir konnten keine Schnellstarts laden. Versuche es später erneut oder starte
                         direkt einen Chat.
                       </p>
-                      <Button onClick={handleQuickstartReload} className="mt-4" variant="secondary">
+                      <Button
+                        onClick={handleQuickstartReload}
+                        className="mt-4"
+                        variant="secondary-gradient"
+                      >
                         Erneut laden
                       </Button>
                     </Card>
