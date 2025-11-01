@@ -5,8 +5,17 @@
  * For testing and demonstration purposes
  */
 
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 
 export function NeomorphicDemo() {
   return (
@@ -209,6 +218,243 @@ export function NeomorphicDemo() {
                 <Button variant="neumorphic" className="w-full">
                   Neumorphic Focus
                 </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Phase 3: Dialog & Modal Variants */}
+        <section className="space-y-6">
+          <h2 className="text-xl font-semibold text-text-primary">
+            Dialog & Modal Variants (Phase 3)
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h3 className="font-medium">Dialog Variants</h3>
+              <div className="space-y-3">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="neumorphic">Default Dialog</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Default Dialog</DialogTitle>
+                      <DialogDescription>
+                        Standard dialog with regular styling for comparison.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <p className="text-text-secondary">
+                      This is the default dialog implementation with standard overlay and content
+                      styling.
+                    </p>
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="neumorphic">Neumorphic Dialog</Button>
+                  </DialogTrigger>
+                  <DialogContent variant="neumorphic" overlayVariant="neumorphic">
+                    <DialogHeader>
+                      <DialogTitle>🎨 Neumorphic Dialog</DialogTitle>
+                      <DialogDescription>
+                        Soft UI dialog with dual-directional shadows and floating effect.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <p className="text-text-secondary">
+                      This dialog uses neomorphic styling with soft backdrop blur and elevated
+                      content surfaces.
+                    </p>
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="glass">Glass Dialog</Button>
+                  </DialogTrigger>
+                  <DialogContent variant="glass" overlayVariant="glass">
+                    <DialogHeader>
+                      <DialogTitle>✨ Glass Dialog</DialogTitle>
+                      <DialogDescription>
+                        Glassmorphism effect with backdrop blur and transparency.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <p className="text-text-secondary">
+                      Glass-like effect with enhanced backdrop blur and translucent surfaces.
+                    </p>
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="elevated">Floating Dialog</Button>
+                  </DialogTrigger>
+                  <DialogContent variant="floating" overlayVariant="soft">
+                    <DialogHeader>
+                      <DialogTitle>🚀 Floating Dialog</DialogTitle>
+                      <DialogDescription>
+                        Enhanced elevation with hover effects and depth.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <p className="text-text-secondary">
+                      Floating effect with enhanced shadows and subtle hover interactions.
+                    </p>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-medium">Dialog Features</h3>
+              <div className="neo-card-base">
+                <h4 className="font-semibold mb-3">🎯 Enhanced Features</h4>
+                <ul className="space-y-2 text-sm text-text-secondary">
+                  <li>• Soft backdrop blur with neomorphic overlay</li>
+                  <li>• Multiple variant support (neumorphic, glass, floating)</li>
+                  <li>• Enhanced close button with neomorphic styling</li>
+                  <li>• Configurable size and padding options</li>
+                  <li>• Smooth animations with depth transitions</li>
+                  <li>• Accessibility compliant keyboard navigation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Phase 3: Badge & Chip Variants */}
+        <section className="space-y-6">
+          <h2 className="text-xl font-semibold text-text-primary">
+            Badge & Chip Variants (Phase 3)
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="space-y-4">
+              <h3 className="font-medium">Standard Badges</h3>
+              <div className="flex flex-wrap gap-2">
+                <Badge>Default</Badge>
+                <Badge variant="secondary">Secondary</Badge>
+                <Badge variant="outline">Outline</Badge>
+                <Badge variant="muted">Muted</Badge>
+                <Badge variant="brand">Brand</Badge>
+                <Badge variant="success">Success</Badge>
+                <Badge variant="warning">Warning</Badge>
+                <Badge variant="error">Error</Badge>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-medium">Neomorphic Badges</h3>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="neumorphic">Neumorphic</Badge>
+                <Badge variant="neumorphic-brand">Brand</Badge>
+                <Badge variant="neumorphic-success">Success</Badge>
+                <Badge variant="neumorphic-warning">Warning</Badge>
+                <Badge variant="neumorphic-error">Error</Badge>
+                <Badge variant="neumorphic-pressed">Pressed</Badge>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-medium">Badge Sizes</h3>
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge variant="neumorphic" size="xs">
+                  Extra Small
+                </Badge>
+                <Badge variant="neumorphic" size="sm">
+                  Small
+                </Badge>
+                <Badge variant="neumorphic" size="md">
+                  Medium
+                </Badge>
+                <Badge variant="neumorphic" size="lg">
+                  Large
+                </Badge>
+              </div>
+            </div>
+          </div>
+
+          <div className="neo-card-base">
+            <h4 className="font-semibold mb-3">🏷️ Badge Features</h4>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <h5 className="font-medium mb-2">🎨 Visual Features</h5>
+                <ul className="space-y-1 text-text-secondary">
+                  <li>• Dual-directional neomorphic shadows</li>
+                  <li>• Soft raised and pressed states</li>
+                  <li>• Color-coded variants with glow effects</li>
+                  <li>• Smooth hover transitions</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-medium mb-2">⚡ Interactive Features</h5>
+                <ul className="space-y-1 text-text-secondary">
+                  <li>• Shadow transitions on hover</li>
+                  <li>• Multiple size options (xs, sm, md, lg)</li>
+                  <li>• Status-specific glow colors</li>
+                  <li>• Consistent with design system</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Phase 3: Navigation Examples */}
+        <section className="space-y-6">
+          <h2 className="text-xl font-semibold text-text-primary">Navigation Variants (Phase 3)</h2>
+
+          <div className="space-y-6">
+            <div className="neo-card-base">
+              <h4 className="font-semibold mb-3">🧭 Navigation Features</h4>
+              <p className="text-text-secondary text-sm mb-4">
+                Navigation components now support multiple variants for different visual styles and
+                interaction patterns.
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <h5 className="font-medium mb-2">🎨 GlobalNav Variants</h5>
+                  <ul className="space-y-1 text-text-secondary">
+                    <li>
+                      • <code>default</code> - Standard header styling
+                    </li>
+                    <li>
+                      • <code>neumorphic</code> - Soft UI with dual shadows
+                    </li>
+                    <li>
+                      • <code>glass</code> - Glassmorphism with backdrop blur
+                    </li>
+                    <li>
+                      • <code>floating</code> - Elevated with hover effects
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium mb-2">📱 MobileNavigation Variants</h5>
+                  <ul className="space-y-1 text-text-secondary">
+                    <li>
+                      • <code>default</code> - Standard bottom navigation
+                    </li>
+                    <li>
+                      • <code>neumorphic</code> - Soft raised nav items
+                    </li>
+                    <li>
+                      • <code>glass</code> - Translucent with blur effects
+                    </li>
+                    <li>
+                      • <code>floating</code> - Floating active indicators
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-4 p-4 bg-surface-subtle/50 rounded-lg">
+                <p className="text-xs text-text-secondary">
+                  <strong>Usage:</strong>{" "}
+                  <code>{'<GlobalNav variant="neumorphic" onMenuClick={...} />'}</code>
+                  <br />
+                  <strong>Usage:</strong> <code>{'<MobileNavigation variant="glass" />'}</code>
+                </p>
               </div>
             </div>
           </div>

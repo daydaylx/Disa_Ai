@@ -186,6 +186,7 @@
   --surface-neumorphic-raised: color-mix(in srgb, var(--bg1) 95%, white 5%);
   --surface-neumorphic-pressed: color-mix(in srgb, var(--bg1) 92%, black 8%);
   --surface-neumorphic-floating: color-mix(in srgb, var(--bg1) 98%, white 2%);
+  --surface-neumorphic-overlay: color-mix(in srgb, var(--bg0) 35%, rgba(9, 12, 20, 0.4));
 
   /* Neomorphic Borders (subtle highlights/lowlights) */
   --border-neumorphic-light: 1px solid rgba(255, 255, 255, 0.1);
@@ -637,6 +638,7 @@
   --surface-neumorphic-raised: color-mix(in srgb, var(--bg1) 92%, white 8%);
   --surface-neumorphic-pressed: color-mix(in srgb, var(--bg1) 88%, black 12%);
   --surface-neumorphic-floating: color-mix(in srgb, var(--bg1) 96%, white 4%);
+  --surface-neumorphic-overlay: color-mix(in srgb, var(--bg0) 25%, rgba(0, 0, 0, 0.6));
 
   /* Dark mode neomorphic borders */
   --border-neumorphic-light: 1px solid rgba(255, 255, 255, 0.06);

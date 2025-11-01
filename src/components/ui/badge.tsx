@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1 rounded-pill border px-2.5 py-1 text-[12px] font-medium uppercase tracking-wide transition-colors",
+  "inline-flex items-center gap-1 rounded-pill border px-2.5 py-1 text-[12px] font-medium uppercase tracking-wide transition-[colors,box-shadow]",
   {
     variants: {
       variant: {
@@ -19,6 +19,19 @@ const badgeVariants = cva(
         warning: "border-transparent bg-status-warning-fg/10 text-status-warning-fg",
         error: "border-transparent bg-status-danger-fg/10 text-status-danger-fg",
         info: "border-transparent bg-status-info-fg/10 text-status-info-fg",
+        // Neomorphic variants
+        neumorphic:
+          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-text-primary shadow-neo-sm motion-safe:hover:shadow-neo-md motion-safe:transition-shadow motion-safe:duration-200",
+        "neumorphic-pressed":
+          "border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-pressed)] text-text-primary shadow-inset-subtle",
+        "neumorphic-brand":
+          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-brand shadow-neo-sm motion-safe:hover:shadow-[var(--shadow-glow-brand)] motion-safe:transition-shadow motion-safe:duration-200",
+        "neumorphic-success":
+          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-success-fg shadow-neo-sm motion-safe:hover:shadow-[var(--shadow-glow-success)] motion-safe:transition-shadow motion-safe:duration-200",
+        "neumorphic-warning":
+          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-warning-fg shadow-neo-sm motion-safe:hover:shadow-[var(--shadow-glow-warning)] motion-safe:transition-shadow motion-safe:duration-200",
+        "neumorphic-error":
+          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-danger-fg shadow-neo-sm motion-safe:hover:shadow-[var(--shadow-glow-error)] motion-safe:transition-shadow motion-safe:duration-200",
       },
       size: {
         xs: "text-[10px] px-1.5 py-0.5",
