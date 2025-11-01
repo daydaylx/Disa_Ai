@@ -16,6 +16,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { CrossComponentDemo } from "./CrossComponentDemo";
+import { UniversalStateDemo } from "./UniversalStateDemo";
 
 export function NeomorphicDemo() {
   return (
@@ -460,30 +462,214 @@ export function NeomorphicDemo() {
           </div>
         </section>
 
-        {/* Design System Info */}
+        {/* Phase 4: Universal State System */}
         <section className="space-y-6">
-          <h2 className="text-xl font-semibold text-text-primary">Design System Info</h2>
+          <h2 className="text-xl font-semibold text-text-primary">
+            🚀 Phase 4: States & Interactions (NEW)
+          </h2>
 
           <div className="neo-card-base">
-            <h3 className="font-semibold mb-4">✨ Neomorphism Features</h3>
-            <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <h3 className="font-semibold mb-4">✨ Universal State System</h3>
+            <p className="text-text-secondary text-sm mb-4">
+              Advanced state management and interaction patterns with enhanced accessibility and
+              performance-optimized animations.
+            </p>
+            <div className="grid md:grid-cols-3 gap-4 text-sm">
               <div>
-                <h4 className="font-medium mb-2">🎨 Visual</h4>
+                <h4 className="font-medium mb-2">🎭 State Management</h4>
                 <ul className="space-y-1 text-text-secondary">
-                  <li>• Dual-directional shadows</li>
-                  <li>• Soft, organic surfaces</li>
-                  <li>• Ambient light simulation</li>
-                  <li>• Color-mix based depths</li>
+                  <li>• Universal UI state hook</li>
+                  <li>• Automatic data attributes</li>
+                  <li>• Built-in event handlers</li>
+                  <li>• State synchronization</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium mb-2">⚙️ Technical</h4>
+                <h4 className="font-medium mb-2">🔗 Cross-Component</h4>
                 <ul className="space-y-1 text-text-secondary">
-                  <li>• CSS Custom Properties</li>
-                  <li>• Tailwind Integration</li>
-                  <li>• Dark Mode Support</li>
-                  <li>• Accessibility Compliant</li>
+                  <li>• Coordinated interactions</li>
+                  <li>• Responsive patterns</li>
+                  <li>• Event cascading</li>
+                  <li>• Group state management</li>
                 </ul>
+              </div>
+              <div>
+                <h4 className="font-medium mb-2">⚡ Performance</h4>
+                <ul className="space-y-1 text-text-secondary">
+                  <li>• GPU acceleration</li>
+                  <li>• Motion preferences</li>
+                  <li>• Animation batching</li>
+                  <li>• Performance monitoring</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <UniversalStateDemo />
+        </section>
+
+        {/* Phase 4: Cross-Component Interactions */}
+        <section className="space-y-6">
+          <CrossComponentDemo />
+        </section>
+
+        {/* Phase 4: Performance Demo */}
+        <section className="space-y-6">
+          <h2 className="text-xl font-semibold text-text-primary">Performance Optimizations</h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="neo-card-base">
+              <h3 className="font-semibold mb-4">🏎️ Animation Performance</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-surface-subtle rounded-lg">
+                  <span className="text-sm">GPU Acceleration</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    Active
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-subtle rounded-lg">
+                  <span className="text-sm">Motion Preferences</span>
+                  <Badge variant="neumorphic" size="sm">
+                    Respected
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-subtle rounded-lg">
+                  <span className="text-sm">Frame Rate</span>
+                  <Badge variant="neumorphic-brand" size="sm">
+                    60fps
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-subtle rounded-lg">
+                  <span className="text-sm">DOM Batching</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    Enabled
+                  </Badge>
+                </div>
+              </div>
+            </div>
+
+            <div className="neo-card-base">
+              <h3 className="font-semibold mb-4">♿ Accessibility Features</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-surface-subtle rounded-lg">
+                  <span className="text-sm">WCAG AA Compliance</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    ✓
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-subtle rounded-lg">
+                  <span className="text-sm">Keyboard Navigation</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    ✓
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-subtle rounded-lg">
+                  <span className="text-sm">Screen Reader Support</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    ✓
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-surface-subtle rounded-lg">
+                  <span className="text-sm">High Contrast Mode</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    ✓
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="neo-card-base">
+            <h4 className="font-semibold mb-3">🔧 Technical Implementation</h4>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <h5 className="font-medium mb-2">Performance Features</h5>
+                <ul className="space-y-1 text-text-secondary">
+                  <li>
+                    • <code>will-change</code> optimization
+                  </li>
+                  <li>
+                    • <code>transform3d</code> GPU layers
+                  </li>
+                  <li>
+                    • <code>requestAnimationFrame</code> batching
+                  </li>
+                  <li>• Intersection Observer for visibility</li>
+                  <li>• Debounced/throttled event handlers</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-medium mb-2">Accessibility Features</h5>
+                <ul className="space-y-1 text-text-secondary">
+                  <li>• ARIA attributes automation</li>
+                  <li>• Focus management utilities</li>
+                  <li>• Motion preference detection</li>
+                  <li>• Color contrast validation</li>
+                  <li>• Keyboard event handling</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Design System Info */}
+        <section className="space-y-6">
+          <h2 className="text-xl font-semibold text-text-primary">Design System Evolution</h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="neo-card-base">
+              <h3 className="font-semibold mb-4">📋 Implementation Phases</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Phase 1-2: Foundation & Core</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    Complete
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Phase 3: Containers & Layout</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    Complete
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Phase 4: States & Interactions</span>
+                  <Badge variant="neumorphic-brand" size="sm">
+                    Active
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Performance Optimization</span>
+                  <Badge variant="neumorphic-success" size="sm">
+                    Complete
+                  </Badge>
+                </div>
+              </div>
+            </div>
+
+            <div className="neo-card-base">
+              <h3 className="font-semibold mb-4">✨ Neomorphism Features</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <h4 className="font-medium mb-2">🎨 Visual</h4>
+                  <ul className="space-y-1 text-text-secondary">
+                    <li>• Dual-directional shadows</li>
+                    <li>• Soft, organic surfaces</li>
+                    <li>• Ambient light simulation</li>
+                    <li>• Color-mix based depths</li>
+                    <li>• Micro-interactions</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-medium mb-2">⚙️ Technical</h4>
+                  <ul className="space-y-1 text-text-secondary">
+                    <li>• CSS Custom Properties</li>
+                    <li>• Tailwind Integration</li>
+                    <li>• Dark Mode Support</li>
+                    <li>• Universal State System</li>
+                    <li>• Performance Optimized</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

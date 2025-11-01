@@ -228,6 +228,59 @@
   --transition-spring: var(--motion-easing-emphasized);
 
   /* ========================================================================
+     NEOMORPHIC ANIMATION TOKENS - Universal State System
+     ======================================================================== */
+
+  /* Neomorphic-specific transition durations */
+  --neo-transition-fast: var(--motion-duration-micro);
+  --neo-transition-normal: var(--motion-duration-small);
+  --neo-transition-slow: var(--motion-duration-medium);
+  --neo-transition-depth: var(--motion-duration-large);
+
+  /* Neomorphic easing functions */
+  --neo-easing-gentle: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --neo-easing-press: cubic-bezier(0.4, 0, 0.6, 1);
+  --neo-easing-lift: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --neo-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --neo-easing-smooth: var(--motion-easing-standard);
+
+  /* Universal state animation tokens */
+  --ui-state-transition-all: all var(--neo-transition-normal) var(--neo-easing-gentle);
+  --ui-state-transition-shadow: box-shadow var(--neo-transition-normal) var(--neo-easing-gentle);
+  --ui-state-transition-transform: transform var(--neo-transition-normal) var(--neo-easing-gentle);
+  --ui-state-transition-colors:
+    background-color var(--neo-transition-fast) var(--neo-easing-gentle),
+    color var(--neo-transition-fast) var(--neo-easing-gentle),
+    border-color var(--neo-transition-fast) var(--neo-easing-gentle);
+
+  /* Focus animation tokens */
+  --ui-focus-ring-transition:
+    opacity var(--neo-transition-fast) var(--neo-easing-gentle),
+    transform var(--neo-transition-fast) var(--neo-easing-gentle);
+  --ui-focus-scale: scale(1.02);
+  --ui-focus-glow:
+    0 0 0 4px var(--color-action-primary-focus-ring), 0 2px 8px rgba(var(--brand-rgb), 0.25);
+
+  /* Hover animation tokens */
+  --ui-hover-lift: translateY(-1px);
+  --ui-hover-scale: scale(1.01);
+  --ui-hover-glow-subtle: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  /* Active/pressed animation tokens */
+  --ui-active-press: translateY(1px) scale(0.98);
+  --ui-active-transition: transform var(--neo-transition-fast) var(--neo-easing-press);
+
+  /* Loading animation tokens */
+  --ui-loading-opacity: 0.7;
+  --ui-loading-pulse: pulse 1.5s ease-in-out infinite;
+  --ui-loading-shimmer: shimmer 2s ease-in-out infinite;
+
+  /* Success/Error state animations */
+  --ui-success-glow: 0 0 8px rgba(13, 143, 98, 0.3);
+  --ui-error-glow: 0 0 8px rgba(193, 58, 50, 0.3);
+  --ui-state-notification-bounce: bounce-in 0.3s var(--neo-easing-bounce);
+
+  /* ========================================================================
      TYPOGRAPHY
      ======================================================================== */
 
