@@ -219,6 +219,53 @@
     color-mix(in srgb, var(--color-surface-card) 95%, black 5%) 100%
   );
 
+  /* Input Field Elevation System - Premium Depth Effects */
+
+  /* Elevated Input Backgrounds */
+  --input-elevated-bg: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--color-surface-card) 100%, white 2%) 0%,
+    var(--color-surface-card) 60%,
+    color-mix(in srgb, var(--color-surface-card) 98%, black 2%) 100%
+  );
+  --input-elevated-bg-focus: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--color-surface-card) 100%, white 4%) 0%,
+    color-mix(in srgb, var(--color-surface-card) 99%, white 1%) 60%,
+    color-mix(in srgb, var(--color-surface-card) 96%, black 4%) 100%
+  );
+
+  /* Glass Input Effects */
+  --input-glass-bg: color-mix(in srgb, var(--color-surface-card) 85%, transparent);
+  --input-glass-bg-focus: color-mix(in srgb, var(--color-surface-card) 90%, transparent);
+  --input-glass-border: color-mix(in srgb, var(--color-border-subtle) 60%, transparent);
+  --input-glass-border-focus: color-mix(in srgb, var(--color-brand-primary) 40%, transparent);
+
+  /* Inset Shadow Effects for Depth */
+  --input-inset-subtle: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  --input-inset-medium: inset 0 2px 4px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --input-inset-strong: inset 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+
+  /* Focus Glow Effects */
+  --input-focus-glow-subtle: 0 0 0 3px
+    color-mix(in srgb, var(--color-brand-primary) 20%, transparent);
+  --input-focus-glow-medium:
+    0 0 0 3px color-mix(in srgb, var(--color-brand-primary) 25%, transparent),
+    0 4px 12px color-mix(in srgb, var(--color-brand-primary) 15%, transparent);
+  --input-focus-glow-strong:
+    0 0 0 3px color-mix(in srgb, var(--color-brand-primary) 30%, transparent),
+    0 6px 20px color-mix(in srgb, var(--color-brand-primary) 20%, transparent),
+    0 0 12px color-mix(in srgb, var(--color-brand-primary) 10%, transparent);
+
+  /* Floating Label Effects */
+  --input-label-float-bg: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--color-surface-card) 10%,
+    var(--color-surface-card) 90%,
+    transparent 100%
+  );
+
   /* Typography Excellence - OpenType Features */
   --font-feature-display:
     "ss01" 1, /* Stylistic Set 1 for display text */ "cv01" 1,

@@ -366,6 +366,198 @@
 }
 
 /* ============================================================================
+   INPUT FIELD ELEVATION UTILITIES - Premium Depth Effects
+   ============================================================================ */
+
+/* Base Elevated Input */
+.input-elevated {
+  background: var(--input-elevated-bg);
+  box-shadow: var(--input-inset-subtle);
+  border: 1px solid var(--color-border-subtle);
+  transition: all 250ms ease;
+}
+
+.input-elevated:focus {
+  background: var(--input-elevated-bg-focus);
+  box-shadow: var(--input-inset-medium), var(--input-focus-glow-medium);
+  border-color: var(--color-brand-primary);
+  outline: none;
+}
+
+/* Glass Input Field */
+.input-glass {
+  background: var(--input-glass-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--input-glass-border);
+  box-shadow: var(--input-inset-subtle);
+  transition: all 250ms ease;
+}
+
+.input-glass:focus {
+  background: var(--input-glass-bg-focus);
+  backdrop-filter: blur(12px);
+  border-color: var(--input-glass-border-focus);
+  box-shadow: var(--input-inset-medium), var(--input-focus-glow-subtle);
+  outline: none;
+}
+
+/* Inset Depth Variants */
+.input-inset-subtle {
+  box-shadow: var(--input-inset-subtle);
+  transition: box-shadow 250ms ease;
+}
+
+.input-inset-subtle:focus {
+  box-shadow: var(--input-inset-medium), var(--input-focus-glow-subtle);
+  outline: none;
+}
+
+.input-inset-medium {
+  box-shadow: var(--input-inset-medium);
+  transition: box-shadow 250ms ease;
+}
+
+.input-inset-medium:focus {
+  box-shadow: var(--input-inset-strong), var(--input-focus-glow-medium);
+  outline: none;
+}
+
+.input-inset-strong {
+  box-shadow: var(--input-inset-strong);
+  transition: box-shadow 250ms ease;
+}
+
+.input-inset-strong:focus {
+  box-shadow: var(--input-inset-strong), var(--input-focus-glow-strong);
+  outline: none;
+}
+
+/* Premium Focus Glow Variants */
+.input-focus-glow-subtle:focus {
+  box-shadow: var(--input-focus-glow-subtle);
+  outline: none;
+}
+
+.input-focus-glow-medium:focus {
+  box-shadow: var(--input-focus-glow-medium);
+  outline: none;
+}
+
+.input-focus-glow-strong:focus {
+  box-shadow: var(--input-focus-glow-strong);
+  outline: none;
+}
+
+/* Floating Label Support */
+.input-floating-label {
+  position: relative;
+}
+
+.input-floating-label label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  font-size: 14px;
+  pointer-events: none;
+  transition: all 200ms ease;
+  background: var(--input-label-float-bg);
+  padding: 0 4px;
+  z-index: 1;
+}
+
+.input-floating-label input:focus + label,
+.input-floating-label input:not(:placeholder-shown) + label {
+  top: 0;
+  left: 8px;
+  font-size: 12px;
+  color: var(--color-brand-primary);
+  background: var(--color-surface-card);
+}
+
+/* Multi-State Input Effects */
+.input-surface-raised {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-surface);
+  transition: all 250ms ease;
+}
+
+.input-surface-raised:focus {
+  box-shadow: var(--shadow-surface-hover), var(--input-focus-glow-medium);
+  border-color: var(--color-brand-primary);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.input-surface-floating {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-floating);
+  transition: all 250ms ease;
+}
+
+.input-surface-floating:focus {
+  box-shadow: var(--shadow-elevated), var(--input-focus-glow-strong);
+  border-color: var(--color-brand-primary);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* Enhanced Input States */
+.input-enhanced-success {
+  border-color: var(--color-status-success);
+}
+
+.input-enhanced-success:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-status-success) 20%, transparent);
+  outline: none;
+}
+
+.input-enhanced-warning {
+  border-color: var(--color-status-warning);
+}
+
+.input-enhanced-warning:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-status-warning) 20%, transparent);
+  outline: none;
+}
+
+.input-enhanced-error {
+  border-color: var(--color-status-error);
+}
+
+.input-enhanced-error:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-status-error) 20%, transparent);
+  outline: none;
+}
+
+/* Accessibility: Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .input-elevated,
+  .input-glass,
+  .input-inset-subtle,
+  .input-inset-medium,
+  .input-inset-strong,
+  .input-surface-raised,
+  .input-surface-floating {
+    transition:
+      box-shadow 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .input-surface-raised:focus,
+  .input-surface-floating:focus {
+    transform: none;
+  }
+
+  .input-floating-label label {
+    transition: all 150ms ease;
+  }
+}
+
+/* ============================================================================
    LAYOUT COMPONENTS
    ============================================================================ */
 

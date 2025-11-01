@@ -218,7 +218,7 @@ export function MobileRolesInterface() {
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder={t.studio.search.placeholder}
-                className="border-border bg-card text-text-primary placeholder:text-text-secondary focus:border-brand focus:ring-brand min-h-[48px] w-full rounded-lg border py-2.5 pl-10 pr-12 text-sm focus:outline-none focus:ring-2 touch-target"
+                className="input-elevated min-h-[48px] w-full rounded-lg py-2.5 pl-10 pr-12 text-sm touch-target text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
                 aria-label={t.studio.search.ariaLabel}
               />
               {searchTerm ? (
