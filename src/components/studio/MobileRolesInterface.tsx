@@ -194,7 +194,7 @@ export function MobileRolesInterface() {
               </p>
             </div>
             <Button
-              variant="ghost"
+              variant="ghost-enhanced"
               onClick={handleResetRole}
               aria-label={t.studio.activeRole.resetAria}
               className="touch-target h-10 w-10"
@@ -223,10 +223,10 @@ export function MobileRolesInterface() {
               />
               {searchTerm ? (
                 <Button
-                  variant="ghost"
+                  variant="ghost-enhanced"
                   size="icon"
                   onClick={handleClearSearch}
-                  className="text-text-secondary absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 touch-target"
+                  className="absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 touch-target"
                   aria-label={t.studio.search.clearAria}
                 >
                   <X className="h-4 w-4" />

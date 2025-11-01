@@ -6,6 +6,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?:
     | "default"
     | "ghost"
+    | "ghost-enhanced"
+    | "ghost-brand"
+    | "ghost-glass"
+    | "ghost-glow-subtle"
+    | "ghost-glow-medium"
+    | "ghost-glow-strong"
+    | "ghost-elevated"
+    | "ghost-floating"
+    | "ghost-success"
+    | "ghost-warning"
+    | "ghost-error"
     | "outline"
     | "brand"
     | "brand-soft"
@@ -56,11 +67,24 @@ const buttonVariants = (
     glass: "btn-gradient-glass text-[var(--color-text-primary)] shadow-lg",
     elevated: "btn-gradient-elevated text-[var(--color-text-primary)]",
 
+    /* Enhanced Ghost Button Variants - Premium Transparency Effects */
+    ghost: "hover:bg-[var(--color-action-ghost-hover)] hover:text-[var(--color-action-ghost-fg)]",
+    "ghost-enhanced": "btn-ghost-enhanced",
+    "ghost-brand": "btn-ghost-brand",
+    "ghost-glass": "btn-ghost-glass",
+    "ghost-glow-subtle": "btn-ghost-glow-subtle",
+    "ghost-glow-medium": "btn-ghost-glow-medium",
+    "ghost-glow-strong": "btn-ghost-glow-strong",
+    "ghost-elevated": "btn-ghost-elevated",
+    "ghost-floating": "btn-ghost-floating",
+    "ghost-success": "btn-ghost-success",
+    "ghost-warning": "btn-ghost-warning",
+    "ghost-error": "btn-ghost-error",
+
     secondary:
       "bg-[var(--color-action-secondary-bg)] text-[var(--color-action-secondary-fg)] border border-[var(--color-action-secondary-border)] hover:bg-[var(--color-action-secondary-hover)]",
     destructive:
       "bg-[var(--color-action-destructive-bg)] text-[var(--color-action-destructive-fg)] hover:bg-[var(--color-action-destructive-hover)]",
-    ghost: "hover:bg-[var(--color-action-ghost-hover)] hover:text-[var(--color-action-ghost-fg)]",
     outline:
       "border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-primary)]",
     link: "text-[var(--color-text-link)] underline-offset-4 hover:underline hover:text-[var(--color-text-link-hover)]",

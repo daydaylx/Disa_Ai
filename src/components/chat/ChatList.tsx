@@ -360,10 +360,10 @@ export function ChatList({
                         </button>
                         {onDeleteConversation && (
                           <Button
-                            variant="ghost"
+                            variant="ghost-error"
                             size="icon"
                             onClick={() => onDeleteConversation(conversation.id)}
-                            className="text-text-secondary hover:bg-surface-subtle hover:text-danger absolute right-2 top-2 h-8 w-8 opacity-0 group-hover:opacity-100"
+                            className="absolute right-2 top-2 h-8 w-8 opacity-0 group-hover:opacity-100"
                             aria-label="Verlauf löschen"
                           >
                             <Trash2 className="h-4 w-4" />
