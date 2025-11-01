@@ -236,6 +236,28 @@ export const tailwindShadows = {
   overlay: cssVar("--shadow-overlay"),
   popover: cssVar("--shadow-popover"),
   focus: cssVar("--shadow-focus"),
+
+  // Neomorphic shadows
+  "neo-sm": cssVar("--shadow-neumorphic-sm"),
+  "neo-md": cssVar("--shadow-neumorphic-md"),
+  "neo-lg": cssVar("--shadow-neumorphic-lg"),
+  "neo-xl": cssVar("--shadow-neumorphic-xl"),
+
+  // Neomorphic inset shadows
+  "inset-subtle": cssVar("--shadow-inset-subtle"),
+  "inset-medium": cssVar("--shadow-inset-medium"),
+  "inset-strong": cssVar("--shadow-inset-strong"),
+
+  // Depth shadows (for existing components)
+  "depth-1": cssVar("--shadow-depth-1"),
+  "depth-2": cssVar("--shadow-depth-2"),
+  "depth-3": cssVar("--shadow-depth-3"),
+  "depth-4": cssVar("--shadow-depth-4"),
+  "depth-5": cssVar("--shadow-depth-5"),
+  "depth-6": cssVar("--shadow-depth-6"),
+
+  // Neomorphic focus
+  "focus-neo": cssVar("--shadow-focus-neumorphic"),
 } as const;
 
 export const tailwindFontFamily = {

@@ -32,7 +32,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     | "destructive"
     | "primary"
     | "secondary"
-    | "link";
+    | "link"
+    | "neumorphic";
   size?: "default" | "sm" | "lg" | "icon";
   asChild?: boolean;
 }
@@ -88,6 +89,10 @@ const buttonVariants = (
     outline:
       "border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-primary)]",
     link: "text-[var(--color-text-link)] underline-offset-4 hover:underline hover:text-[var(--color-text-link-hover)]",
+
+    /* Neomorphism (Soft UI) Variant */
+    neumorphic:
+      "neo-button-base text-[var(--color-text-primary)] hover:shadow-neo-lg active:shadow-inset-subtle focus-visible:shadow-focus-neo transition-all duration-200 ease-out",
   };
 
   const sizeClasses = {

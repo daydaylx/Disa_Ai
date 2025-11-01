@@ -1584,6 +1584,170 @@
   box-shadow: var(--shadow-depth-6);
 }
 
+/* ============================================================================
+   NEOMORPHISM (SOFT UI) UTILITY CLASSES
+   ============================================================================ */
+
+/* Core Neomorphic Surfaces */
+.neo-raised {
+  background-color: var(--surface-neumorphic-raised);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: var(--shadow-neumorphic-md);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+}
+
+.neo-pressed {
+  background-color: var(--surface-neumorphic-pressed);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: var(--shadow-inset-medium);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+}
+
+.neo-flat {
+  background-color: var(--surface-neumorphic-base);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: none;
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+}
+
+/* Neomorphic Size Variants */
+.neo-raised-sm {
+  background-color: var(--surface-neumorphic-raised);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: var(--shadow-neumorphic-sm);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+}
+
+.neo-raised-lg {
+  background-color: var(--surface-neumorphic-raised);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: var(--shadow-neumorphic-lg);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+}
+
+.neo-raised-xl {
+  background-color: var(--surface-neumorphic-floating);
+  border: var(--border-neumorphic-light);
+  box-shadow: var(--shadow-neumorphic-xl);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+}
+
+/* Neomorphic Inset Variants */
+.neo-pressed-subtle {
+  background-color: var(--surface-neumorphic-pressed);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: var(--shadow-inset-subtle);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+}
+
+.neo-pressed-strong {
+  background-color: var(--surface-neumorphic-pressed);
+  border: var(--border-neumorphic-dark);
+  box-shadow: var(--shadow-inset-strong);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+}
+
+/* Neomorphic Interactive States */
+.neo-raised:hover {
+  background-color: var(--surface-neumorphic-floating);
+  box-shadow: var(--shadow-neumorphic-lg);
+  transform: translateY(-1px);
+}
+
+.neo-raised:active {
+  background-color: var(--surface-neumorphic-pressed);
+  box-shadow: var(--shadow-inset-subtle);
+  transform: translateY(0);
+}
+
+.neo-raised:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus-neumorphic);
+}
+
+.neo-pressed:hover {
+  background-color: var(--surface-neumorphic-base);
+  box-shadow: var(--shadow-inset-subtle);
+}
+
+.neo-pressed:active {
+  background-color: var(--surface-neumorphic-pressed);
+  box-shadow: var(--shadow-inset-strong);
+}
+
+.neo-pressed:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus-neumorphic);
+}
+
+.neo-flat:hover {
+  background-color: var(--surface-neumorphic-raised);
+  box-shadow: var(--shadow-neumorphic-sm);
+}
+
+.neo-flat:active {
+  background-color: var(--surface-neumorphic-pressed);
+  box-shadow: var(--shadow-inset-subtle);
+}
+
+.neo-flat:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus-neumorphic);
+}
+
+/* Disabled States */
+.neo-raised:disabled,
+.neo-pressed:disabled,
+.neo-flat:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-neumorphic-sm);
+}
+
+.neo-raised:disabled:hover,
+.neo-pressed:disabled:hover,
+.neo-flat:disabled:hover {
+  background-color: var(--surface-neumorphic-base);
+  box-shadow: var(--shadow-neumorphic-sm);
+  transform: none;
+}
+
+/* Utility Mixins for Common Patterns */
+.neo-button-base {
+  background-color: var(--surface-neumorphic-raised);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: var(--shadow-neumorphic-md);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm) var(--space-lg);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.neo-input-base {
+  background-color: var(--surface-neumorphic-pressed);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: var(--shadow-inset-medium);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-primary);
+  background-color: var(--surface-neumorphic-base);
+}
+
+.neo-card-base {
+  background-color: var(--surface-neumorphic-raised);
+  border: var(--border-neumorphic-subtle);
+  box-shadow: var(--shadow-neumorphic-md);
+  transition: all var(--motion-duration-medium) var(--motion-easing-standard);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  overflow: hidden;
+}
+
 /* Interactive Shadow States */
 .shadow-hover-lift {
   transition: box-shadow 280ms ease;

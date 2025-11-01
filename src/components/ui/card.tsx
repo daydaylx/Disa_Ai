@@ -15,6 +15,8 @@ const cardVariants = cva(
           "backdrop-blur-sm bg-surface-card/80 text-text-primary border-border-subtle shadow-surface",
         solid: "bg-surface-card border-border",
         outlined: "bg-transparent border-border-strong",
+        neumorphic:
+          "bg-[var(--surface-neumorphic-raised)] text-text-primary border-[var(--border-neumorphic-subtle)] shadow-neo-md",
       },
       elevation: {
         none: "shadow-none",
@@ -176,6 +178,36 @@ const cardVariants = cva(
         state: "loading",
         interactive: false,
         class: "cursor-wait pointer-events-none",
+      },
+      // Neomorphic tone compound variants
+      {
+        tone: "neumorphic",
+        interactive: "gentle",
+        class:
+          "motion-safe:hover:shadow-neo-lg motion-safe:hover:bg-[var(--surface-neumorphic-floating)] motion-safe:hover:-translate-y-[2px] motion-safe:transition-all motion-safe:duration-200",
+      },
+      {
+        tone: "neumorphic",
+        interactive: "dramatic",
+        class:
+          "motion-safe:hover:shadow-neo-xl motion-safe:hover:bg-[var(--surface-neumorphic-floating)] motion-safe:hover:-translate-y-[4px] motion-safe:hover:scale-[1.02] motion-safe:transition-all motion-safe:duration-300",
+      },
+      {
+        tone: "neumorphic",
+        interactive: "press",
+        class:
+          "motion-safe:active:shadow-inset-subtle motion-safe:active:bg-[var(--surface-neumorphic-pressed)] motion-safe:active:translate-y-[1px] motion-safe:active:scale-[0.98] motion-safe:transition-all motion-safe:duration-100",
+      },
+      {
+        tone: "neumorphic",
+        interactive: "subtle",
+        class:
+          "motion-safe:hover:bg-[var(--surface-neumorphic-floating)] motion-safe:hover:border-[var(--border-neumorphic-light)] motion-safe:transition-all motion-safe:duration-150",
+      },
+      {
+        tone: "neumorphic",
+        elevation: ["depth-1", "depth-2", "depth-3", "depth-4", "depth-5", "depth-6"],
+        class: "border-[var(--border-neumorphic-light)]",
       },
     ],
     defaultVariants: {

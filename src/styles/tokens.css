@@ -155,6 +155,58 @@
   --neon-strong: 0 0 0 8px rgba(75, 99, 255, 0.25);
 
   /* ========================================================================
+     NEOMORPHISM (SOFT UI) SYSTEM
+     ======================================================================== */
+
+  /* Ambient Light Direction for consistent shadow patterns */
+  --light-direction-x: -1; /* -1 = left, 1 = right */
+  --light-direction-y: -1; /* -1 = top, 1 = bottom */
+  --light-angle: 315deg; /* Light source angle for gradients */
+
+  /* Neomorphic Inset Shadows (for pressed/input states) */
+  --shadow-inset-subtle:
+    inset 2px 2px 5px rgba(9, 12, 20, 0.1), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+  --shadow-inset-medium:
+    inset 4px 4px 10px rgba(9, 12, 20, 0.15), inset -4px -4px 10px rgba(255, 255, 255, 0.08);
+  --shadow-inset-strong:
+    inset 6px 6px 15px rgba(9, 12, 20, 0.2), inset -6px -6px 15px rgba(255, 255, 255, 0.1);
+
+  /* Neomorphic Raised Shadows (dual-directional for soft UI) */
+  --shadow-neumorphic-sm:
+    3px 3px 6px rgba(9, 12, 20, 0.12), -3px -3px 6px rgba(255, 255, 255, 0.08);
+  --shadow-neumorphic-md:
+    6px 6px 12px rgba(9, 12, 20, 0.15), -6px -6px 12px rgba(255, 255, 255, 0.1);
+  --shadow-neumorphic-lg:
+    10px 10px 20px rgba(9, 12, 20, 0.18), -10px -10px 20px rgba(255, 255, 255, 0.12);
+  --shadow-neumorphic-xl:
+    15px 15px 30px rgba(9, 12, 20, 0.22), -15px -15px 30px rgba(255, 255, 255, 0.15);
+
+  /* Neomorphic Surfaces (enhanced base colors for depth) */
+  --surface-neumorphic-base: var(--bg1);
+  --surface-neumorphic-raised: color-mix(in srgb, var(--bg1) 95%, white 5%);
+  --surface-neumorphic-pressed: color-mix(in srgb, var(--bg1) 92%, black 8%);
+  --surface-neumorphic-floating: color-mix(in srgb, var(--bg1) 98%, white 2%);
+
+  /* Neomorphic Borders (subtle highlights/lowlights) */
+  --border-neumorphic-light: 1px solid rgba(255, 255, 255, 0.1);
+  --border-neumorphic-dark: 1px solid rgba(9, 12, 20, 0.05);
+  --border-neumorphic-subtle: 1px solid color-mix(in srgb, var(--bg1) 85%, white 15%);
+
+  /* Depth Shadow System (referenced by components) */
+  --shadow-depth-1: var(--shadow-neumorphic-sm);
+  --shadow-depth-2: var(--shadow-neumorphic-md);
+  --shadow-depth-3: var(--shadow-neumorphic-lg);
+  --shadow-depth-4: var(--shadow-neumorphic-xl);
+  --shadow-depth-5:
+    20px 20px 40px rgba(9, 12, 20, 0.25), -20px -20px 40px rgba(255, 255, 255, 0.18);
+  --shadow-depth-6: 30px 30px 60px rgba(9, 12, 20, 0.3), -30px -30px 60px rgba(255, 255, 255, 0.22);
+
+  /* Neomorphic Focus States (soft glow + inset) */
+  --shadow-focus-neumorphic:
+    inset 0 0 0 1px var(--acc1), 0 0 0 3px color-mix(in srgb, var(--acc1) 25%, transparent),
+    var(--shadow-inset-subtle);
+
+  /* ========================================================================
      MOTION & TRANSITIONS
      ======================================================================== */
 
@@ -561,6 +613,48 @@
   --elev-2: 0 4px 10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
   --elev-4: 0 10px 26px rgba(0, 0, 0, 0.65), 0 3px 8px rgba(0, 0, 0, 0.55);
   --elev-8: 0 20px 48px rgba(0, 0, 0, 0.75), 0 6px 14px rgba(0, 0, 0, 0.6);
+
+  /* NEOMORPHISM DARK MODE OVERRIDES */
+
+  /* Dark mode neomorphic inset shadows (subtler, more highlights) */
+  --shadow-inset-subtle:
+    inset 2px 2px 5px rgba(0, 0, 0, 0.4), inset -2px -2px 5px rgba(255, 255, 255, 0.03);
+  --shadow-inset-medium:
+    inset 4px 4px 10px rgba(0, 0, 0, 0.5), inset -4px -4px 10px rgba(255, 255, 255, 0.05);
+  --shadow-inset-strong:
+    inset 6px 6px 15px rgba(0, 0, 0, 0.6), inset -6px -6px 15px rgba(255, 255, 255, 0.08);
+
+  /* Dark mode neomorphic raised shadows (stronger darks, subtle lights) */
+  --shadow-neumorphic-sm: 3px 3px 6px rgba(0, 0, 0, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.03);
+  --shadow-neumorphic-md: 6px 6px 12px rgba(0, 0, 0, 0.6), -6px -6px 12px rgba(255, 255, 255, 0.05);
+  --shadow-neumorphic-lg:
+    10px 10px 20px rgba(0, 0, 0, 0.7), -10px -10px 20px rgba(255, 255, 255, 0.08);
+  --shadow-neumorphic-xl:
+    15px 15px 30px rgba(0, 0, 0, 0.8), -15px -15px 30px rgba(255, 255, 255, 0.1);
+
+  /* Dark mode neomorphic surfaces */
+  --surface-neumorphic-base: var(--bg1);
+  --surface-neumorphic-raised: color-mix(in srgb, var(--bg1) 92%, white 8%);
+  --surface-neumorphic-pressed: color-mix(in srgb, var(--bg1) 88%, black 12%);
+  --surface-neumorphic-floating: color-mix(in srgb, var(--bg1) 96%, white 4%);
+
+  /* Dark mode neomorphic borders */
+  --border-neumorphic-light: 1px solid rgba(255, 255, 255, 0.06);
+  --border-neumorphic-dark: 1px solid rgba(0, 0, 0, 0.3);
+  --border-neumorphic-subtle: 1px solid color-mix(in srgb, var(--bg1) 80%, white 20%);
+
+  /* Dark mode depth shadows (updated for neomorphic system) */
+  --shadow-depth-1: var(--shadow-neumorphic-sm);
+  --shadow-depth-2: var(--shadow-neumorphic-md);
+  --shadow-depth-3: var(--shadow-neumorphic-lg);
+  --shadow-depth-4: var(--shadow-neumorphic-xl);
+  --shadow-depth-5: 20px 20px 40px rgba(0, 0, 0, 0.85), -20px -20px 40px rgba(255, 255, 255, 0.12);
+  --shadow-depth-6: 30px 30px 60px rgba(0, 0, 0, 0.9), -30px -30px 60px rgba(255, 255, 255, 0.15);
+
+  /* Dark mode neomorphic focus */
+  --shadow-focus-neumorphic:
+    inset 0 0 0 1px var(--acc1), 0 0 0 3px color-mix(in srgb, var(--acc1) 20%, transparent),
+    var(--shadow-inset-subtle);
 
   /* Category colors - dark mode adaptations */
   --role-accent-alltag-text: var(--role-accent-alltag-200);
