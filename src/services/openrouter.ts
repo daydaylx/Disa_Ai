@@ -1,7 +1,7 @@
 /* eslint-disable no-empty */
 import { getEnvConfigSafe } from "../config/env";
 import { mapError } from "../lib/errors";
-import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
+import { fetchJson } from "../lib/http";
 import { readApiKey, writeApiKey } from "../lib/openrouter/key";
 
 interface ToastItem {
@@ -82,17 +82,11 @@ export async function getRawModels(
   } catch {}
 
   try {
-    const res = await fetchWithTimeoutAndRetry(`${getApiBase()}/models`, {
+    const data = await fetchJson(`${getApiBase()}/models`, {
+      headers: buildHeaders(explicitKey),
       timeoutMs: 15000,
-      maxRetries: 2,
-      retryDelayMs: 1000,
-      fetchOptions: {
-        headers: buildHeaders(explicitKey),
-      },
+      retries: 2,
     });
-
-    if (!res.ok) throw mapError(res);
-    const data = await res.json().catch(() => ({}));
     const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
 
     try {

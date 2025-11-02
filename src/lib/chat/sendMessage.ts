@@ -1,6 +1,6 @@
 import type { ChatMessage } from "../../types/chat";
 import { mapError, RateLimitError } from "../errors";
-import { fetchWithTimeoutAndRetry } from "../net/fetchTimeout";
+import { fetchJson } from "../http";
 import { TokenBucket } from "../net/rateLimit";
 import { CHAT_ENDPOINT, getApiKey } from "./config";
 
@@ -46,28 +46,18 @@ export async function sendMessage(opts: SendOptions): Promise<{ content: string 
     return { content: "Demo-Antwort (kein API-Key)." };
   }
 
-  const init: Omit<RequestInit, "signal"> & { signal?: AbortSignal } = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": location.origin,
-      "X-Title": "Disa_Ai",
-    },
-    body: JSON.stringify(body),
-    cache: "no-store",
-    referrerPolicy: "no-referrer",
-  };
-  if (opts.signal) {
-    init.signal = opts.signal;
-  }
-
   try {
-    const res = await fetchWithTimeoutAndRetry(url, init);
-    if (!res.ok) {
-      throw mapError(res);
-    }
-    const json = await res.json().catch(() => null);
+    const json = await fetchJson(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": location.origin,
+        "X-Title": "Disa_Ai",
+      },
+      body: body,
+      signal: opts.signal,
+    });
     const content = json?.choices?.[0]?.message?.content ?? "";
     if (!content) throw mapError(new Error("Leere Antwort vom Server"));
     return { content };

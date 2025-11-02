@@ -6,74 +6,6 @@ export interface FetchWithTimeoutOptions {
   fetchOptions?: Omit<globalThis.RequestInit, "signal">;
 }
 
-export async function fetchWithTimeout(
-  url: string,
-  options: FetchWithTimeoutOptions = {},
-): Promise<Response> {
-  const { timeoutMs = 30000, signal: userSignal, fetchOptions = {} } = options;
-
-  const combinedController = new AbortController();
-
-  let timeoutId: NodeJS.Timeout | null = null;
-  let isTimeout = false;
-  let isUserAbort = false;
-
-  const cleanup = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      timeoutId = null;
-    }
-  };
-
-  const abortBoth = (reason: "timeout" | "user") => {
-    cleanup();
-    if (reason === "timeout") isTimeout = true;
-    if (reason === "user") isUserAbort = true;
-    combinedController.abort();
-  };
-
-  // Check if user signal is already aborted
-  if (userSignal?.aborted) {
-    cleanup();
-    throw new AbortError();
-  }
-
-  // Set up timeout
-  timeoutId = setTimeout(() => abortBoth("timeout"), timeoutMs);
-
-  // Set up user signal listener
-  if (userSignal) {
-    userSignal.addEventListener("abort", () => abortBoth("user"), { once: true });
-  }
-
-  try {
-    const response = await fetch(url, {
-      ...fetchOptions,
-      signal: combinedController.signal,
-    });
-    cleanup();
-    return response;
-  } catch (error) {
-    cleanup();
-
-    // Handle abort errors with proper priority
-    if (error instanceof DOMException && error.name === "AbortError") {
-      // User abort takes priority over timeout
-      if (isUserAbort) {
-        throw new AbortError();
-      }
-      if (isTimeout) {
-        throw new TimeoutError(`Request timeout after ${timeoutMs}ms`, { cause: error });
-      }
-      // Fallback for other abort scenarios
-      throw new AbortError();
-    }
-
-    // For other errors (e.g., TypeError for network problems) use the mapper
-    throw mapError(error);
-  }
-}
-
 export async function fetchWithTimeoutAndRetry(
   url: string,
   options: FetchWithTimeoutOptions & {
@@ -88,15 +20,51 @@ export async function fetchWithTimeoutAndRetry(
     retryDelayMs = 1000,
     retryBackoffMultiplier = 2,
     retryOn = (res) => res.status === 429 || (res.status >= 500 && res.status < 600),
-    ...fetchOptions
+    timeoutMs = 30000,
+    signal: userSignal,
+    fetchOptions = {},
   } = options;
 
   let lastError: unknown;
   let delayMs = retryDelayMs;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const combinedController = new AbortController();
+    let timeoutId: NodeJS.Timeout | null = null;
+    let isTimeout = false;
+    let isUserAbort = false;
+
+    const cleanup = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+    };
+
+    const abortBoth = (reason: "timeout" | "user") => {
+      cleanup();
+      if (reason === "timeout") isTimeout = true;
+      if (reason === "user") isUserAbort = true;
+      combinedController.abort();
+    };
+
+    if (userSignal?.aborted) {
+      cleanup();
+      throw new AbortError();
+    }
+
+    timeoutId = setTimeout(() => abortBoth("timeout"), timeoutMs);
+
+    if (userSignal) {
+      userSignal.addEventListener("abort", () => abortBoth("user"), { once: true });
+    }
+
     try {
-      const response = await fetchWithTimeout(url, fetchOptions);
+      const response = await fetch(url, {
+        ...fetchOptions,
+        signal: combinedController.signal,
+      });
+      cleanup();
 
       if (!response.ok) {
         if (!retryOn(response)) {
@@ -115,7 +83,20 @@ export async function fetchWithTimeoutAndRetry(
 
       void response.body?.cancel();
     } catch (error) {
-      lastError = error;
+      cleanup();
+
+      if (error instanceof DOMException && error.name === "AbortError") {
+        if (isUserAbort) {
+          throw new AbortError();
+        }
+        if (isTimeout) {
+          lastError = new TimeoutError(`Request timeout after ${timeoutMs}ms`, { cause: error });
+        } else {
+          lastError = new AbortError();
+        }
+      } else {
+        lastError = error;
+      }
 
       if (error instanceof AbortError) {
         throw error;
@@ -126,7 +107,7 @@ export async function fetchWithTimeoutAndRetry(
       }
     }
 
-    if (fetchOptions.signal?.aborted) {
+    if (userSignal?.aborted) {
       throw new AbortError();
     }
 
@@ -137,12 +118,12 @@ export async function fetchWithTimeoutAndRetry(
         reject(new AbortError());
       };
 
-      if (fetchOptions.signal) {
-        if (fetchOptions.signal.aborted) {
+      if (userSignal) {
+        if (userSignal.aborted) {
           onAbort();
           return;
         }
-        fetchOptions.signal.addEventListener("abort", onAbort, { once: true });
+        userSignal.addEventListener("abort", onAbort, { once: true });
       }
     });
 

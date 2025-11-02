@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import type { Conversation } from "../../lib/conversation-manager";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
 import { cn } from "../../lib/utils";
-import { BottomSheet } from "../ui/bottom-sheet";
+import { BottomSheet } from "../ui/BottomSheet";
 import { Button } from "../ui/button";
 
 interface ConversationHistorySheetProps {

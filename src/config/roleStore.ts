@@ -1,6 +1,5 @@
-import { z } from "zod";
-
 import { mapError } from "../lib/errors";
+import { type Role } from "../lib/validators/roles";
 import type { Safety } from "./models";
 
 /** Öffentliche Typen – exakt-optional-freundlich: Property weglassen statt `undefined` setzen */
@@ -25,26 +24,8 @@ let _error: string | null = null;
 
 /* -------------------- Validation -------------------- */
 
-const safetySchema = z.union([
-  z.literal("any"),
-  z.literal("moderate"),
-  z.literal("strict"),
-  z.literal("loose"),
-]);
-
-const roleSchema = z.object({
-  id: z.string().trim().min(1).max(64),
-  name: z.string().trim().min(1).max(128),
-  system: z.string().trim().min(1).max(4000).optional(),
-  allow: z.array(z.string().trim().min(1)).optional(),
-  policy: safetySchema.optional(),
-  styleOverlay: z.string().trim().min(1).max(128).optional(),
-  tags: z.array(z.string().trim().min(1).max(32)).optional(),
-});
-const rolesSchema = z.array(roleSchema);
-
 /* Entfernt `undefined`-Properties aus optionalen Feldern (für exactOptionalPropertyTypes) */
-function sanitize(list: z.infer<typeof rolesSchema>): RoleTemplate[] {
+function sanitize(list: Role[]): RoleTemplate[] {
   return list.map((r) => ({
     id: r.id,
     name: r.name,

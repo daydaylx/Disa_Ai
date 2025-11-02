@@ -83,6 +83,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/browser": "3.2.4",
     "autoprefixer": "^10.4.21",
+    "depcheck": "^1.4.7",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",

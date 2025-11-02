@@ -1,4 +1,5 @@
 import { mapError } from "../lib/errors";
+import { fetchJson } from "../lib/http";
 import { chatConcurrency } from "../lib/net/concurrency";
 import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey } from "../lib/openrouter/key";
@@ -71,23 +72,16 @@ export async function chatOnce(
     try {
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
-      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
+      const body = { model, messages, stream: false };
+      const data = await fetchJson(ENDPOINT, {
+        method: "POST",
+        headers,
+        body,
         timeoutMs: 30000,
+        retries: 2,
         signal: combinedSignal,
-        maxRetries: 2,
-        retryDelayMs: 1000,
-        fetchOptions: {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ model, messages, stream: false }),
-        },
       });
 
-      if (!res.ok) {
-        throw mapError(res);
-      }
-
-      const data = await res.json();
       const text = data?.choices?.[0]?.message?.content ?? "";
       return { text, raw: data };
     } catch (error) {
@@ -227,21 +221,15 @@ export async function checkApiHealth(opts?: {
   const timeoutMs = opts?.timeoutMs ?? 3000;
 
   try {
-    const res = await fetchWithTimeoutAndRetry(MODELS_ENDPOINT, {
-      timeoutMs,
-      signal: opts?.signal,
-      maxRetries: 0, // No retries for health checks
-      fetchOptions: {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    await fetchJson(MODELS_ENDPOINT, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
       },
+      timeoutMs,
+      retries: 0,
+      signal: opts?.signal,
     });
-
-    if (!res.ok) {
-      throw new Error(`API health check failed with status ${res.status}`);
-    }
   } catch (error) {
     throw mapError(error);
   }

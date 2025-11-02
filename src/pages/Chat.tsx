@@ -1,9 +1,6 @@
-import { useCallback, useEffect, useRef } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
-import { ChatHistorySidebar } from "../components/chat/ChatHistorySidebar";
-import { ChatView } from "../components/chat/ChatView";
-import { MobileChatHistorySidebar } from "../components/chat/MobileChatHistorySidebar";
 import { WelcomeScreen } from "../components/chat/WelcomeScreen";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { DISCUSSION_CARD_HINT, discussionTopicConfig } from "../config/discussion-topics";
@@ -12,6 +9,8 @@ import { useConversationManager } from "../hooks/useConversationManager";
 import { useDiscussion } from "../hooks/useDiscussion";
 import { useIsMobile } from "../hooks/useMediaQuery";
 import { saveConversation } from "../lib/conversation-manager";
+const ChatHistorySidebar = lazy(() => import("../components/chat/ChatHistorySidebar"));
+const MobileChatHistorySidebar = lazy(() => import("../components/chat/MobileChatHistorySidebar"));
 
 const DISCUSSION_SECTIONS = [
   {
@@ -215,25 +214,27 @@ export default function Chat() {
       />
 
       {/* Responsive History Sidebar */}
-      {isMobile ? (
-        <MobileChatHistorySidebar
-          isOpen={isHistoryOpen}
-          onClose={closeHistory}
-          conversations={conversations}
-          activeId={activeConversationId}
-          onSelect={selectConversation}
-          onDelete={deleteConversation}
-        />
-      ) : (
-        <ChatHistorySidebar
-          isOpen={isHistoryOpen}
-          onClose={closeHistory}
-          conversations={conversations}
-          activeId={activeConversationId}
-          onSelect={selectConversation}
-          onDelete={deleteConversation}
-        />
-      )}
+      <Suspense fallback={<div>Lade Verlauf...</div>}>
+        {isMobile ? (
+          <MobileChatHistorySidebar
+            isOpen={isHistoryOpen}
+            onClose={closeHistory}
+            conversations={conversations}
+            activeId={activeConversationId}
+            onSelect={selectConversation}
+            onDelete={deleteConversation}
+          />
+        ) : (
+          <ChatHistorySidebar
+            isOpen={isHistoryOpen}
+            onClose={closeHistory}
+            conversations={conversations}
+            activeId={activeConversationId}
+            onSelect={selectConversation}
+            onDelete={deleteConversation}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }
