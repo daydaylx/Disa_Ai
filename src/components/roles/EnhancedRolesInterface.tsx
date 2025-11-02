@@ -10,9 +10,10 @@ import { useCallback, useMemo, useState } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
+import { cn } from "../../lib/utils";
 import type { EnhancedRole, FilterState } from "../../types/enhanced-interfaces";
 import { migrateRole } from "../../types/enhanced-interfaces";
-import { Button } from "../ui";
+import { Badge, Button } from "../ui";
 import { Card } from "../ui/card";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
@@ -21,15 +22,47 @@ interface EnhancedRolesInterfaceProps {
 }
 
 // Category mapping for consistent theming
-const CATEGORY_COLORS: Record<string, string> = {
-  Alltag: "bg-blue-100 text-blue-700",
-  "Business & Karriere": "bg-purple-100 text-purple-700",
-  "Kreativ & Unterhaltung": "bg-pink-100 text-pink-700",
-  "Lernen & Bildung": "bg-cyan-100 text-cyan-700",
-  "Leben & Familie": "bg-green-100 text-green-700",
-  "Experten & Beratung": "bg-red-100 text-red-700",
-  Erwachsene: "bg-yellow-100 text-yellow-700",
-  Spezial: "bg-gray-100 text-gray-700",
+type CategoryPalette = {
+  bg: string;
+  border: string;
+  text: string;
+  hoverBg?: string;
+  activeBg?: string;
+  activeBorder?: string;
+  activeText?: string;
+};
+
+const createPalette = (slug: string): CategoryPalette => ({
+  bg: `bg-[var(--role-accent-${slug}-chip-bg)]`,
+  border: `border-[var(--role-accent-${slug}-chip-border)]`,
+  text: `text-[var(--role-accent-${slug}-chip-text)]`,
+  hoverBg: `hover:bg-[var(--role-accent-${slug}-bg-hover)]`,
+  activeBg: `bg-[var(--role-accent-${slug}-bg-subtle)]`,
+  activeBorder: `border-[var(--role-accent-${slug}-border-strong)]`,
+  activeText: `text-[var(--role-accent-${slug}-text)]`,
+});
+
+const CATEGORY_PALETTES: Record<string, CategoryPalette> = {
+  Alltag: createPalette("alltag"),
+  "Business & Karriere": createPalette("business"),
+  "Kreativ & Unterhaltung": createPalette("kreativ"),
+  "Lernen & Bildung": createPalette("bildung"),
+  "Leben & Familie": createPalette("familie"),
+  "Experten & Beratung": createPalette("beratung"),
+};
+
+const DEFAULT_CATEGORY_PALETTE: CategoryPalette = {
+  bg: "bg-[var(--surface-neumorphic-raised)]",
+  border: "border-[var(--border-neumorphic-subtle)]",
+  text: "text-[var(--color-text-secondary)]",
+  hoverBg: "hover:bg-[var(--surface-neumorphic-base)]",
+  activeBg: "bg-[var(--surface-neumorphic-floating)]",
+  activeBorder: "border-[var(--border-neumorphic-light)]",
+  activeText: "text-[var(--color-text-primary)]",
+};
+
+const getCategoryPalette = (category: string): CategoryPalette => {
+  return CATEGORY_PALETTES[category] ?? DEFAULT_CATEGORY_PALETTE;
 };
 
 const CATEGORY_ORDER = [
@@ -67,19 +100,38 @@ function CategoryPill({
   count: number;
   onClick: () => void;
 }) {
-  const colorClass = CATEGORY_COLORS[category] || "bg-gray-100 text-gray-700";
+  const palette = getCategoryPalette(category);
 
   return (
     <button
-      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+      className={cn(
+        "group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:shadow-focus-neo",
+        palette.border,
+        palette.bg,
+        palette.text,
+        palette.hoverBg,
         isSelected
-          ? `${colorClass} ring-2 ring-offset-2 ring-current`
-          : `${colorClass} opacity-70 hover:opacity-100`
-      }`}
+          ? cn(
+              "translate-y-[-1px] shadow-[var(--shadow-glow-brand-subtle)]",
+              palette.activeBg,
+              palette.activeBorder,
+              palette.activeText,
+            )
+          : "opacity-80 hover:opacity-100 hover:-translate-y-[1px] hover:shadow-neo-sm",
+      )}
       onClick={onClick}
     >
       <span>{category}</span>
-      <span className="text-xs bg-white/30 px-1.5 py-0.5 rounded-full">{count}</span>
+      <span
+        className={cn(
+          "rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] transition-colors",
+          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-pressed)] text-[var(--color-text-tertiary)] shadow-[var(--shadow-inset-subtle)]",
+          isSelected &&
+            "border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)]",
+        )}
+      >
+        {count}
+      </span>
     </button>
   );
 }
@@ -102,7 +154,7 @@ function DenseRoleCard({
   onToggleFavorite: () => void;
   onActivate: () => void;
 }) {
-  const categoryColor = CATEGORY_COLORS[role.category || "Spezial"] || "bg-gray-100 text-gray-700";
+  const categoryPalette = getCategoryPalette(role.category || "Spezial");
 
   return (
     <Card
@@ -134,16 +186,25 @@ function DenseRoleCard({
           </div>
 
           <div className="flex items-center gap-2 mb-2">
-            <span className={`px-2 py-1 text-xs rounded-full ${categoryColor}`}>
+            <span
+              className={cn(
+                "rounded-full border px-2 py-1 text-xs transition-colors",
+                categoryPalette.border,
+                categoryPalette.bg,
+                categoryPalette.text,
+              )}
+            >
               {role.category}
             </span>
             {role.tags?.slice(0, 2).map((tag) => (
-              <span
+              <Badge
                 key={tag}
-                className="px-2 py-1 text-xs bg-surface-subtle text-text-secondary rounded-full"
+                variant="neumorphic"
+                size="sm"
+                className="normal-case px-2 py-[2px] text-[11px] font-medium tracking-[0.02em]"
               >
                 #{tag}
-              </span>
+              </Badge>
             ))}
           </div>
 

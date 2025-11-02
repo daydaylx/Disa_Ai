@@ -125,26 +125,34 @@ export class MobileToastManager {
       }
 
       .mobile-toast--success {
+        background: rgba(var(--ok-rgb), 0.65);
         background: color-mix(in srgb, var(--ok) 65%, var(--bg1));
         color: var(--fg-invert);
+        border-color: rgba(var(--ok-rgb), 0.45);
         border-color: color-mix(in srgb, var(--ok) 45%, transparent);
       }
 
       .mobile-toast--error {
+        background: rgba(var(--err-rgb), 0.65);
         background: color-mix(in srgb, var(--err) 65%, var(--bg1));
         color: var(--fg-invert);
+        border-color: rgba(var(--err-rgb), 0.45);
         border-color: color-mix(in srgb, var(--err) 45%, transparent);
       }
 
       .mobile-toast--warning {
+        background: rgba(var(--warn-rgb), 0.6);
         background: color-mix(in srgb, var(--warn) 60%, var(--bg1));
         color: var(--fg-invert);
+        border-color: rgba(var(--warn-rgb), 0.45);
         border-color: color-mix(in srgb, var(--warn) 45%, transparent);
       }
 
       .mobile-toast--info {
+        background: rgba(var(--info-rgb), 0.6);
         background: color-mix(in srgb, var(--info) 60%, var(--bg1));
         color: var(--fg-invert);
+        border-color: rgba(var(--info-rgb), 0.45);
         border-color: color-mix(in srgb, var(--info) 45%, transparent);
       }
 
@@ -159,8 +167,10 @@ export class MobileToastManager {
       }
 
       .mobile-toast__action {
+        background: rgba(255, 255, 255, 0.18);
         background: color-mix(in srgb, currentColor 18%, transparent);
         border: var(--border-neumorphic-light);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
         box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 30%, transparent);
         color: inherit;
         padding: calc(var(--space-xs) - 4px) var(--space-sm);
@@ -172,10 +182,12 @@ export class MobileToastManager {
       }
 
       .mobile-toast__action:hover {
+        background: rgba(255, 255, 255, 0.25);
         background: color-mix(in srgb, currentColor 25%, transparent);
       }
 
       .mobile-toast__action:active {
+        background: rgba(255, 255, 255, 0.35);
         background: color-mix(in srgb, currentColor 35%, transparent);
         transform: scale(0.97);
       }

@@ -49,7 +49,7 @@ const TabComponent: React.FC<TabProps> = ({ value, label }) => {
       onClick={handleClick}
       className={`rounded-lg border px-3 py-2 text-sm ${
         isSelected
-          ? "border-[var(--acc1)] text-[var(--acc1)] shadow-[var(--neon)]"
+          ? "border-[var(--acc1)] text-[var(--acc1)] shadow-[var(--shadow-focus-neumorphic)]"
           : "border-white/10 text-[var(--fg-dim)]"
       }`}
     >

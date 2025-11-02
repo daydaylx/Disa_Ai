@@ -33,6 +33,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const listRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const supportsColorMix =
+    typeof CSS !== "undefined" && CSS.supports("color", "color-mix(in srgb, white 50%, black)");
+  const accentTintColor = supportsColorMix
+    ? "color-mix(in srgb, var(--acc1) 70%, white)"
+    : "rgba(var(--brand-rgb), 0.72)";
 
   const filteredCommands = React.useMemo(() => {
     if (!query.trim()) return commands;
@@ -223,9 +228,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             >
               {filteredCommands.map((command, index) => {
                 const isActive = index === selectedIndex;
-                const accentTint = isActive
-                  ? { color: "color-mix(in srgb, var(--acc1) 70%, white)" }
-                  : undefined;
+                const accentTint = isActive ? { color: accentTintColor } : undefined;
 
                 return (
                   <li

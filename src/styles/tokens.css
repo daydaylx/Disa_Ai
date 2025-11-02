@@ -63,6 +63,10 @@
   --color-brand-strong: var(--acc1-strong);
   --color-brand-on-primary: var(--fg-invert);
   --brand-rgb: 75, 99, 255;
+  --ok-rgb: 13, 143, 98;
+  --warn-rgb: 178, 106, 0;
+  --err-rgb: 193, 58, 50;
+  --info-rgb: 13, 115, 214;
 
   --color-border-hairline: color-mix(in srgb, var(--fg0) 8%, transparent);
   --color-border-subtle: color-mix(in srgb, var(--fg0) 15%, transparent);
@@ -148,10 +152,8 @@
   --shadow-glow-error: var(--shadow-glow-error-subtle);
 
   --shadow-glow-neutral-subtle: 0 0 10px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(15, 23, 42, 0.12);
-
-  /* Legacy neon (deprecated) */
-  --neon: 0 0 0 4px rgba(75, 99, 255, 0.2);
-  --neon-strong: 0 0 0 8px rgba(75, 99, 255, 0.16);
+  --shadow-neumorphic-icon:
+    2px 2px 4px rgba(9, 12, 20, 0.2), -2px -2px 4px rgba(255, 255, 255, 0.08);
 
   /* ========================================================================
      NEOMORPHISM (SOFT UI) SYSTEM
@@ -698,6 +700,8 @@
 
   /* Dark mode neomorphic raised shadows (stronger darks, subtle lights) */
   --shadow-neumorphic-sm: 3px 3px 6px rgba(0, 0, 0, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.03);
+  --shadow-neumorphic-icon:
+    2px 2px 4px rgba(0, 0, 0, 0.32), -2px -2px 4px rgba(255, 255, 255, 0.04);
   --shadow-neumorphic-md: 6px 6px 12px rgba(0, 0, 0, 0.6), -6px -6px 12px rgba(255, 255, 255, 0.05);
   --shadow-neumorphic-lg:
     10px 10px 20px rgba(0, 0, 0, 0.7), -10px -10px 20px rgba(255, 255, 255, 0.08);

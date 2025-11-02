@@ -151,13 +151,13 @@ export function ChatHistorySidebar({
               </div>
             </div>
 
-            <div className="mt-2 flex-1 overflow-y-auto px-[clamp(12px,4vw,20px)] pb-4 md:px-6">
+            <div className="mt-2 flex-1 overflow-y-auto px-[clamp(12px,4vw,20px)] pb-4 md:px-6 scroll-pt-[72px]">
               {Object.entries(groupedConversations).map(([groupName, groupConversations]) => (
                 <div key={groupName} className="mb-6">
                   <h3 className="text-text-tertiary mb-2 px-1 text-xs font-semibold uppercase tracking-[0.12em]">
                     {groupName}
                   </h3>
-                  <ul className="space-y-2">
+                  <ul className="space-y-2" role="listbox" aria-label="Gespeicherte Chats">
                     {groupConversations.map((conversation) => {
                       const messageCount =
                         conversation.messageCount ?? conversation.messages?.length ?? 0;
@@ -170,15 +170,24 @@ export function ChatHistorySidebar({
                       const isActive = conversation.id === activeId;
 
                       return (
-                        <li key={conversation.id}>
+                        <li key={conversation.id} role="presentation">
                           <div
                             className={cn(
-                              "group relative cursor-pointer rounded-[var(--radius-lg)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-[clamp(16px,4vw,20px)] shadow-none transition-[transform,box-shadow,border] duration-200",
+                              "group relative flex cursor-pointer rounded-[var(--radius-lg)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-[clamp(16px,4vw,20px)] shadow-none transition-[transform,box-shadow,border] duration-200",
                               "hover:-translate-y-[2px] hover:shadow-neo-sm",
                               isActive &&
                                 "border-[var(--acc1)] shadow-[var(--shadow-glow-brand-subtle)]",
                             )}
                             onClick={() => onSelect(conversation.id)}
+                            role="option"
+                            aria-selected={isActive}
+                            tabIndex={0}
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault();
+                                onSelect(conversation.id);
+                              }
+                            }}
                           >
                             <div className="flex items-start justify-between gap-3">
                               <div className="min-w-0 flex-1">
@@ -218,7 +227,7 @@ export function ChatHistorySidebar({
                                 event.stopPropagation();
                                 onDelete(conversation.id);
                               }}
-                              className="absolute right-2 top-2 h-8 w-8 text-text-muted opacity-0 transition-opacity duration-150 hover:text-danger group-hover:opacity-100"
+                              className="absolute right-2 top-2 h-8 w-8 text-text-muted opacity-0 transition-opacity duration-150 hover:text-danger focus-visible:shadow-focus-neo focus-visible:outline-none group-hover:opacity-100"
                               aria-label="Konversation löschen"
                             >
                               <X className="h-4 w-4" />

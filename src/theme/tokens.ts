@@ -22,10 +22,6 @@ const surfaceColors = {
   card: cssVar("--surface-neumorphic-floating"),
   popover: cssVar("--surface-neumorphic-floating"),
   overlay: cssVar("--surface-neumorphic-overlay"),
-  "0": cssVar("--surface-0"),
-  "1": cssVar("--surface-1"),
-  "2": cssVar("--surface-2"),
-  "3": cssVar("--surface-3"),
 } as const;
 
 const textColors = {
@@ -41,9 +37,6 @@ const textColors = {
   linkHover: cssVar("--color-text-link-hover"),
   strong: cssVar("--color-text-primary"),
   subtle: cssVar("--color-text-secondary"),
-  "0": cssVar("--color-text-primary"),
-  "1": cssVar("--color-text-secondary"),
-  "2": cssVar("--color-text-tertiary"),
 } as const;
 
 const brandColors = {

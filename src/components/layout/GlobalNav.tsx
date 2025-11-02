@@ -37,10 +37,10 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
     NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
 
   const headerClass =
-    "sticky top-0 z-40 border-b border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] backdrop-blur-lg shadow-neo-md";
+    "sticky top-0 z-40 border-b border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-floating)] backdrop-blur-md shadow-[var(--shadow-inset-subtle)]";
 
   const menuButtonClass =
-    "neo-button-base flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-secondary)] transition-[box-shadow,transform] hover:shadow-neo-lg active:shadow-inset-subtle focus-visible:shadow-focus-neo focus-visible:outline-none";
+    "flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-secondary)] shadow-neo-sm transition-all duration-200 hover:-translate-y-[1px] hover:shadow-neo-md active:translate-y-[1px] active:shadow-[var(--shadow-inset-subtle)] focus-visible:shadow-focus-neo focus-visible:outline-none";
 
   return (
     <header className={headerClass}>

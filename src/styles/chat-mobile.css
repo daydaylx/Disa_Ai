@@ -18,8 +18,10 @@
 /* Chat header - mobile optimized */
 .mobile-chat-header {
   padding: var(--space-md) clamp(12px, 4vw, 20px);
-  border-bottom: var(--border-neumorphic-subtle);
+  border: var(--border-neumorphic-dark);
   background: var(--surface-neumorphic-floating);
+  box-shadow: var(--shadow-inset-subtle);
+  border-radius: var(--radius-xl);
   position: sticky;
   top: 0;
   z-index: 10;

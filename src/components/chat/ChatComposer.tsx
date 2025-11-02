@@ -41,6 +41,11 @@ export function ChatComposer({
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
+  const supportsColorMix =
+    typeof CSS !== "undefined" && CSS.supports("color", "color-mix(in srgb, white 50%, black)");
+  const pingBackground = supportsColorMix
+    ? "color-mix(in srgb, var(--color-brand-primary) 45%, transparent)"
+    : "rgba(var(--brand-rgb), 0.45)";
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -131,7 +136,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-lg border border-border-subtle bg-[var(--surface-neumorphic-floating)] p-2",
+            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] backdrop-blur-sm",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -207,7 +212,10 @@ export function ChatComposer({
           <span className="inline-flex items-center justify-center gap-2">
             {(isLoading || isComposerDisabled) && (
               <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 bg-[color-mix(in_srgb,var(--color-brand-primary)_45%,transparent)]" />
+                <span
+                  className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                  style={{ background: pingBackground }}
+                />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-brand-primary)]" />
               </span>
             )}

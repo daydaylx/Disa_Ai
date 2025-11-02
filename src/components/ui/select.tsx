@@ -52,8 +52,8 @@ const SelectTrigger = React.forwardRef<
 
         // Interactive States
         "transition-all duration-200 ease-out",
-        "hover:bg-[var(--surface-neumorphic-raised)]",
-        "hover:shadow-[var(--shadow-inset-medium)]",
+        "hover:bg-[var(--surface-neumorphic-base)]",
+        "hover:shadow-[var(--shadow-inset-subtle)]",
 
         // Focus State (Dramatic Neomorphic)
         "focus-visible:outline-none",
@@ -88,8 +88,7 @@ const SelectTrigger = React.forwardRef<
             "data-[state=open]:opacity-100",
             "data-[state=open]:scale-110",
             // Neomorphic icon effect
-            "drop-shadow-[0_1px_2px_rgba(9,12,20,0.1)]",
-            "data-[state=open]:drop-shadow-[0_2px_4px_rgba(9,12,20,0.15)]",
+            "shadow-[var(--shadow-neumorphic-icon)]",
           )}
         />
       </SelectPrimitive.Icon>
@@ -114,7 +113,7 @@ const SelectScrollUpButton = React.forwardRef<
     )}
     {...props}
   >
-    <ChevronUp className="h-4 w-4 drop-shadow-[0_1px_2px_rgba(9,12,20,0.1)]" />
+    <ChevronUp className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -135,7 +134,7 @@ const SelectScrollDownButton = React.forwardRef<
     )}
     {...props}
   >
-    <ChevronDown className="h-4 w-4 drop-shadow-[0_1px_2px_rgba(9,12,20,0.1)]" />
+    <ChevronDown className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
@@ -159,7 +158,7 @@ const SelectContent = React.forwardRef<
 
         // Dramatic Neomorphic Floating Panel
         "bg-[var(--surface-neumorphic-floating)]",
-        "border-[var(--border-neumorphic-light)]",
+        "border-[var(--border-neumorphic-subtle)]",
         "shadow-[var(--shadow-neumorphic-dramatic)]",
 
         // Backdrop Effect
@@ -301,7 +300,7 @@ const SelectItem = React.forwardRef<
         <Check
           className={cn(
             "h-4 w-4",
-            "drop-shadow-[0_1px_2px_rgba(9,12,20,0.2)]",
+            "shadow-[var(--shadow-neumorphic-icon)]",
             "animate-in zoom-in-75 duration-200",
           )}
         />

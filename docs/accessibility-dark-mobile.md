@@ -10,7 +10,7 @@ Ziel: Sicherstellen, dass das neue Dark-Only UI tastatur- und kontrastseitig rob
 | --- | --- | --- |
 | Chat Start | `Tab` führt Reihenfolge: „Neuer Chat“, „Verlauf öffnen“, Preset-Select → Accordion Buttons | Fokus sichtbar via `shadow-focus-neo`; CTA hat zusätzlich scale |
 | Command Palette | `Ctrl+K` (Desktop) → Liste erhält `aria-selected`; Pfeiltasten und `Enter` funktionieren | Close-Button hat Fokusring. `color-mix` Tints kontrastreich |
-| Chat History Drawer | Keyboard öffnet Drawer, Items fokussierbar; Delete-Button `Enter`-triggerbar | Hover/Fokus-Shadow sichtbar, Outline optional |
+| Chat History Drawer | Keyboard öffnet Drawer, Items fokussierbar; Delete-Button `Enter`-triggerbar | `role=listbox` + `aria-selected` aktiv, Fokus-Schatten sichtbar |
 | Settings Overview | Karten per `Tab` erreichbar (Link-Wrapper). Status-Badges nicht fokussierbar (rein informativ) | CTA „Details anzeigen“ reagiert auf Enter/Space |
 | Templates | Ganze Card `role=button` -> Enter/Space starten Template. Hover & Focus ring sichtbar | Delete/Preview optional? (Preview optional) |
 
@@ -18,7 +18,7 @@ Ziel: Sicherstellen, dass das neue Dark-Only UI tastatur- und kontrastseitig rob
 - `CommandPalette`: `role="dialog"` + `aria-labelledby`/`aria-describedby` vorhanden.  
 - `Accordion` (Welcome) nutzt eigene `Accordion`-Komponente (Radix). Labels/Meta werden gelesen.  
 - Template Cards: `aria-label` im Root-Button vorhanden.  
-- Chat History Items: keine `aria-selected`. Optionales Enhancement: `role="listbox"` + `aria-selected` pro Item (kann später folgen).
+- Chat History Items: `role="listbox"` + `aria-selected` umgesetzt; Fokus folgt aktivem Chat.  
 
 ## Farb-/Kontrastchecks
 - Primärtexte: `text-text-primary` (#f6f7ff auf #0f1424) -> Kontrast ~12:1.  
@@ -32,9 +32,9 @@ Ziel: Sicherstellen, dass das neue Dark-Only UI tastatur- und kontrastseitig rob
 - Keine parallax-Effekte oder persistente Animationen.
 
 ## Offene Punkte / ToDos
-1. **Automatisierter Lighthouse-Lauf**: CLI scheiterte mangels Chrome. Empfohlen: in CI (GitHub Action) laufen lassen.  
-2. **List Accessibility**: Chat History könnte `aria-selected`/`role=listbox` erhalten, um NVDA/VoiceOver Klarheit zu geben.  
-3. **Tooltip Delay**: Radix öffnet sofort; überlegen, global Delay/HoverIntent zu setzen (nicht kritisch).  
-4. **Color-mix Fallback**: Safari 15 benötigt Fallback; aktuell ≥16.4 OK. Optional: `@supports (color: color-mix(...))` -> Alternative Farbe definieren.
+1. **Automatisierter Lighthouse-Lauf**: ✅ Aktiv (siehe `.github/workflows/lighthouse.yml`, läuft auf `push`/`PR` gegen `main`).  
+2. **Tooltip Delay**: Radix öffnet sofort; überlegen, global Delay/HoverIntent zu setzen (nicht kritisch).  
+3. **Color-mix Fallback**: Safari <16.4 benötigt Fallback; Brand-CTA, Toasts, Command-Palette-Descriptions & Composer-Ping nutzen RGBA-Backup, weitere Komponenten folgen.  
+4. **Runtime Error Monitoring**: Produktionsfehler `ReferenceError: Cannot access 'i' before initialization` verhindert Interaktion – Ursachenanalyse erforderlich.
 
 **Fazit:** Dark-Only UI erfüllt praxisrelevante Tastatur- und Kontrastanforderungen. Keine Blocker; oben genannte Punkte als Follow-up aufnehmen.
