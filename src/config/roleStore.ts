@@ -44,7 +44,7 @@ function loadCache(): RoleTemplate[] | null {
     const raw = localStorage.getItem(SS_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as unknown;
-    const ok = rolesSchema.safeParse(parsed);
+    const ok = RoleListSchema.safeParse(parsed);
     return ok.success ? sanitize(ok.data) : null;
   } catch {
     return null;
@@ -84,7 +84,7 @@ async function tryLoadRoles(signal?: AbortSignal): Promise<RoleTemplate[] | null
           ? ((data as Record<string, unknown>)["styles"] as unknown[])
           : null;
       if (!arr) continue;
-      const parsed = rolesSchema.safeParse(arr);
+      const parsed = RoleListSchema.safeParse(arr);
       if (parsed.success) return sanitize(parsed.data);
     } catch {
       // next candidate
