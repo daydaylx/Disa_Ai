@@ -99,7 +99,7 @@ export class MobileToastManager {
         padding: calc(var(--space-sm) - 4px) var(--space-sm);
         margin: calc(var(--space-xs) - 4px) 0;
         max-width: calc(100vw - 32px);
-        box-shadow: var(--shadow-neumorphic-lg);
+        box-shadow: var(--shadow-neumorphic-md);
         border: var(--border-neumorphic-light);
         background: var(--color-overlay-toast-bg);
         color: var(--color-overlay-toast-fg);

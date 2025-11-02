@@ -17,18 +17,10 @@ import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
 import { Switch } from "../../components/ui/Switch";
 import { useToasts } from "../../components/ui/toast/ToastsProvider";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
-import { useTheme } from "../../hooks/useTheme";
 import {
   cleanupOldConversations,
   exportConversations,
@@ -36,12 +28,6 @@ import {
   importConversations,
 } from "../../lib/conversation-manager";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
-
-const themeOptions = [
-  { value: "system", label: "System" },
-  { value: "light", label: "Hell" },
-  { value: "dark", label: "Dunkel" },
-];
 
 export type SettingsSectionKey = "api" | "memory" | "filters" | "appearance" | "data";
 
@@ -56,9 +42,7 @@ interface SettingsSectionConfig {
 export function SettingsView({ section }: { section?: SettingsSectionKey }) {
   const toasts = useToasts();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { settings, toggleNSFWContent, toggleAnalytics, toggleNotifications, setTheme } =
-    useSettings();
-  const { preference, setPreference } = useTheme();
+  const { settings, toggleNSFWContent, toggleAnalytics, toggleNotifications } = useSettings();
   const { toggleMemory, clearAllMemory, isEnabled: memoryEnabled } = useMemory();
   const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const [apiKey, setApiKey] = useState(() => {
@@ -178,12 +162,6 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       message:
         deleted > 0 ? `${deleted} Konversationen entfernt.` : "Keine alten Verläufe gefunden.",
     });
-  };
-
-  const handleThemeChange = (value: string) => {
-    setPreference(value as typeof preference);
-    setTheme(value === "system" ? "auto" : (value as "light" | "dark"));
-    toasts.push({ kind: "success", title: "Theme aktualisiert", message: `Modus: ${value}` });
   };
 
   const sectionConfigs: SettingsSectionConfig[] = [
@@ -325,38 +303,21 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     {
       id: "appearance",
       title: "Darstellung",
-      description: "Wähle Theme und respektiere Systempräferenzen.",
+      description: "Das dunkle Design ist dauerhaft aktiv.",
       icon: Sparkles,
       content: (
-        <div className="space-y-4">
-          <div className="space-y-3">
-            <Label
-              htmlFor="theme-select"
-              className="text-xs font-semibold uppercase tracking-[0.3em]"
-            >
-              Farbschema
-            </Label>
-            <Select value={preference} onValueChange={handleThemeChange}>
-              <SelectTrigger id="theme-select">
-                <SelectValue placeholder="System" />
-              </SelectTrigger>
-              <SelectContent>
-                {themeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold uppercase tracking-[0.3em]">Farbschema</Label>
             <p className="text-xs text-[var(--color-text-secondary)]">
-              Tokens werden live aktualisiert. Blur-Intensität respektiert prefers-reduced-motion.
+              Der Dunkelmodus ist standardmäßig aktiv und kann nicht deaktiviert werden. Alle
+              Oberflächen, Tokens und Kontraste sind auf die dunkle Darstellung optimiert.
             </p>
           </div>
-
           <Card
-            tone="translucent"
+            tone="neo-floating"
             elevation="surface"
-            className="space-y-3 border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)]/40"
+            className="space-y-3 border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)]"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
@@ -364,11 +325,11 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
                   Designsystem
                 </span>
                 <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
-                  Fluent-2 Soft-Depth · Live
+                  Fluent-2 Soft-Depth · Dark
                 </h3>
                 <p className="text-xs text-[var(--color-text-secondary)]">
-                  Sanfte Layer, klare Typografie und performante Schatten – exakt die Variante, die
-                  in der App aktiv ist.
+                  Sanfte Layer, klare Typografie und performante Schatten – optimiert für geringe
+                  Umgebungshelligkeit und OLED/AMOLED-Displays.
                 </p>
               </div>
               <div className="hidden h-14 w-24 rounded-[var(--radius-card-inner)] border border-[var(--color-border-subtle)] bg-[linear-gradient(160deg,color-mix(in_srgb,var(--bg1) 95%,transparent) 0%,color-mix(in_srgb,var(--bg1) 75%,var(--bg2)) 40%,color-mix(in_srgb,var(--bg2) 80%,transparent) 100%)] sm:block" />
@@ -376,11 +337,14 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             <div className="flex flex-wrap gap-2 text-xs text-[var(--color-text-secondary)]">
               <span>Lesbarkeit 5.6 : 1</span>
               <span>Blur-frei</span>
-              <span>Tokens ready</span>
+              <span>OLED-optimiert</span>
             </div>
             <p className="text-xs text-[var(--color-text-secondary)]">
-              Die Soft-Depth Oberfläche ist bereits aktiv – optimiere Details über die Optionen
-              oben.
+              Farb- und Tiefeneffekte respektieren automatisch deine Geräteeinstellungen wie
+              <code className="mx-1 rounded bg-[var(--surface-neumorphic-pressed)] px-1 text-[10px]">
+                prefers-reduced-motion
+              </code>
+              oder Kontrastverbesserungen.
             </p>
           </Card>
         </div>
@@ -445,13 +409,8 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       variant: settings.showNSFWContent ? "warning" : "success",
     },
     appearance: {
-      label:
-        preference === "system"
-          ? "System folgt"
-          : preference === "dark"
-            ? "Dunkles Theme"
-            : "Helles Theme",
-      variant: preference === "system" ? "info" : "muted",
+      label: "Dunkles Theme",
+      variant: "success",
     },
     data: {
       label:

@@ -142,6 +142,15 @@ Alle Design Tokens sind zentral definiert in:
 
 /* Focus */
 --shadow-focus-neumorphic
+
+/* Accent Glows */
+--shadow-glow-brand-subtle
+--shadow-glow-brand
+--shadow-glow-brand-strong
+--shadow-glow-success-subtle
+--shadow-glow-warning-subtle
+--shadow-glow-error-subtle
+--shadow-glow-neutral-subtle
 ```
 
 ### Motion System
@@ -172,6 +181,22 @@ Alle Design Tokens sind zentral definiert in:
 --type-28: 1.75rem; /* Large Headline */
 --type-32: 2rem; /* Display */
 ```
+
+#### Fokus & Glow Leitlinien
+
+- Standard-Fokuszustand: `shadow-focus-neumorphic` + keine dauerhafte Glanzkante.
+- Glow-Akzente sparsam einsetzen – max. ein Element pro Viewportbereich.
+  - `--shadow-glow-brand-subtle`: Standard-Hover (Buttons, Chips).
+  - `--shadow-glow-brand-strong`: ausschließlich für Hero CTAs.
+  - Status-Glows (Success/Warning/Error) nur auf Feedback-Komponenten.
+
+#### Mobile Layout Guidelines
+
+- Basis-Untergrund: `--surface-neumorphic-base`; Container: `--surface-neumorphic-floating`.
+- Gutter: `var(--mobile-gutter)` (clamp 12–20 px) in Kombination mit Safe-Area Insets.
+- Scrollbare Listen mit `scroll-padding-bottom` für On-Screen-Keyboard-Komfort (Composer etc.).
+- Touch-Targets ≥ 48 px Höhe, Buttons nutzen `shadow-neo-sm/md` für Hover, `shadow-inset-*` für Active.
+- Sticky Footer/Overlays: `shadow-neumorphic-md`, keine großflächigen Glows.
 
 ### Spacing Scale
 

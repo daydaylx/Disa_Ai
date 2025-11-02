@@ -12,14 +12,11 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      // Dramatic Neomorphic Tabs Container
-      "inline-flex h-12 items-center justify-center rounded-[var(--radius-lg)] p-1.5 transition-all duration-300 ease-out",
-      "bg-[var(--surface-neumorphic-base)]",
-      "shadow-[var(--shadow-inset-subtle)]",
+      "inline-flex h-11 items-center justify-center gap-1 rounded-[var(--radius-lg)] p-1 transition-colors",
+      "bg-[var(--surface-neumorphic-raised)]",
       "border border-[var(--border-neumorphic-subtle)]",
+      "shadow-[var(--shadow-inset-subtle)]",
       "text-[var(--color-text-secondary)]",
-      // Enhanced Interactive States
-      "hover:shadow-[var(--shadow-inset-medium)]",
       "focus-within:shadow-[var(--shadow-inset-medium)]",
       className,
     )}
@@ -35,37 +32,18 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      // Dramatic Neomorphic Tab Trigger
-      "inline-flex min-h-[38px] items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] px-4 py-2 text-sm font-semibold transition-all duration-300 ease-out",
+      "inline-flex min-h-[36px] items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] px-3.5 py-2 text-sm font-semibold transition-[color,background,box-shadow,transform] duration-200 ease-out",
       "text-[var(--color-text-secondary)]",
-
-      // Default State (Inactive)
       "hover:text-[var(--color-text-primary)]",
-      "hover:bg-[var(--surface-neumorphic-raised)]",
-      "hover:shadow-[var(--shadow-neumorphic-sm)]",
-      "hover:-translate-y-0.5",
-
-      // Active State - Dramatically Raised
+      "hover:bg-[var(--surface-neumorphic-floating)]",
+      "hover:shadow-neo-sm",
       "data-[state=active]:bg-[var(--surface-neumorphic-floating)]",
-      "data-[state=active]:shadow-[var(--shadow-neumorphic-lg)]",
       "data-[state=active]:text-[var(--acc1)]",
-      "data-[state=active]:font-bold",
-      "data-[state=active]:-translate-y-1",
-      "data-[state=active]:scale-105",
+      "data-[state=active]:shadow-neo-md",
       "data-[state=active]:border data-[state=active]:border-[var(--border-neumorphic-light)]",
-
-      // Enhanced Active Hover
-      "data-[state=active]:hover:shadow-[var(--shadow-neumorphic-xl)]",
-      "data-[state=active]:hover:-translate-y-1.5",
-      "data-[state=active]:hover:scale-110",
-      "data-[state=active]:hover:shadow-[0_0_20px_rgba(75,99,255,0.3)]",
-
-      // Focus States
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--acc1)]/50 focus-visible:ring-offset-2",
-
-      // Disabled State
+      "data-[state=active]:hover:shadow-neo-lg",
+      "focus-visible:outline-none focus-visible:shadow-focus-neo",
       "disabled:pointer-events-none disabled:opacity-40 disabled:shadow-none",
-
       className,
     )}
     {...props}
@@ -80,19 +58,12 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      // Dramatic Neomorphic Content Container
-      "mt-4 rounded-[var(--radius-lg)] p-6 transition-all duration-500 ease-out",
+      "mt-4 rounded-[var(--radius-lg)] p-5 transition-opacity duration-300",
       "bg-[var(--surface-neumorphic-floating)]",
-      "shadow-[var(--shadow-neumorphic-md)]",
-      "border border-[var(--border-neumorphic-light)]",
-
-      // Enhanced Focus State
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--acc1)]/50 focus-visible:ring-offset-2",
-      "focus-visible:shadow-[var(--shadow-neumorphic-lg)]",
-
-      // Content Animation
-      "animate-in slide-in-from-bottom-2 fade-in-0 duration-500",
-
+      "shadow-neo-sm",
+      "border border-[var(--border-neumorphic-subtle)]",
+      "focus-visible:outline-none focus-visible:shadow-focus-neo",
+      "animate-in fade-in-0 duration-300",
       className,
     )}
     {...props}

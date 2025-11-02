@@ -45,11 +45,19 @@ body {
   color: var(--color-text-primary, var(--fg0));
   font-family: var(--font-family-sans);
   padding-top: var(--mobile-safe-top);
-  padding-bottom: var(--mobile-safe-bottom);
-  padding-left: var(--mobile-safe-left);
-  padding-right: var(--mobile-safe-right);
+  padding-bottom: calc(var(--mobile-gutter) + var(--mobile-safe-bottom));
+  padding-left: calc(var(--mobile-gutter) + var(--mobile-safe-left));
+  padding-right: calc(var(--mobile-gutter) + var(--mobile-safe-right));
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-left: var(--mobile-safe-left);
+    padding-right: var(--mobile-safe-right);
+    padding-bottom: var(--mobile-safe-bottom);
+  }
 }
 
 #app {

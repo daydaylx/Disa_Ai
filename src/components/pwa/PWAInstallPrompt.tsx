@@ -2,6 +2,7 @@ import { Download, Smartphone, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
+import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
@@ -50,16 +51,19 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
 
   return (
     <div
-      className={`fixed bottom-4 left-4 right-4 z-[9999] md:left-auto md:right-4 md:max-w-sm lg:max-w-md ${className || ""}`}
+      className={cn(
+        "fixed bottom-4 left-4 right-4 z-[9999] md:left-auto md:right-4 md:max-w-sm lg:max-w-md",
+        className,
+      )}
     >
-      <div className="border-border max-h-[40vh] overflow-y-auto rounded-lg border bg-surface-popover p-4 shadow-neo-xl sm:max-h-none sm:p-6">
+      <div className="max-h-[40vh] overflow-y-auto rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-4 shadow-neo-md sm:max-h-none sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">
               <Smartphone className="text-text-primary h-5 w-5" />
               <h3 className="text-text-primary font-semibold">Disa AI installieren</h3>
             </div>
-            <p className="text-text-secondary mb-3 text-xs leading-tight sm:mb-4 sm:text-sm">
+            <p className="text-text-secondary mb-3 text-xs leading-relaxed sm:mb-4 sm:text-sm">
               Installiere Disa AI als App für schnelleren Zugriff und bessere Performance.
             </p>
 

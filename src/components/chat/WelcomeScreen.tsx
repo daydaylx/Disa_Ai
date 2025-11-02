@@ -41,29 +41,23 @@ export function WelcomeScreen({
   return (
     <>
       <header className="mobile-chat-header space-y-stack-gap">
-        {/* Welcome Header */}
         <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">
+          <p className="text-xs font-semibold uppercase tracking-[0.26em] text-text-tertiary">
             Chat-Start
           </p>
           <h1 className="text-token-h1 text-text-strong text-balance font-semibold">
             Disa&nbsp;AI Chat
           </h1>
-          <p className="text-sm leading-6 text-text-muted">
+          <p className="text-sm leading-6 text-text-secondary">
             Starte eine Unterhaltung oder nutze die Schnellstarts für wiederkehrende Aufgaben.
           </p>
         </div>
         <div
-          className="flex flex-wrap items-center gap-2 justify-center"
+          className="flex flex-wrap items-center justify-center gap-2"
           role="toolbar"
           aria-label="Chat-Aktionen"
         >
-          <Button
-            onClick={newConversation}
-            variant="brand"
-            size="lg"
-            className="shadow-glow-brand mobile-btn mobile-btn-primary touch-target"
-          >
+          <Button onClick={newConversation} variant="brand" size="lg" dramatic>
             <Plus className="h-4 w-4" aria-hidden="true" />
             <span>Neuer Chat</span>
           </Button>
@@ -71,10 +65,9 @@ export function WelcomeScreen({
             <TooltipTrigger asChild>
               <Button
                 onClick={openHistory}
-                variant="secondary"
+                variant="outline"
                 size="icon"
                 aria-label="Chat-Verlauf öffnen"
-                className="mobile-btn mobile-btn-secondary touch-target"
               >
                 <History className="h-5 w-5" aria-hidden="true" />
               </Button>
@@ -86,15 +79,15 @@ export function WelcomeScreen({
 
       <section aria-labelledby="discussion-heading" className="pb-8">
         {/* Discussion Section */}
-        <div className="bg-surface-base/70 border-border-subtle/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
+        <div className="mb-5 flex flex-col gap-4 rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-[clamp(16px,5vw,24px)] shadow-neo-sm">
           <div className="flex-1 space-y-1">
             <h2
               id="discussion-heading"
-              className="text-text-subtle text-[11px] font-semibold uppercase tracking-[0.24em]"
+              className="text-text-tertiary text-[11px] font-semibold uppercase tracking-[0.24em]"
             >
               Diskussionen
             </h2>
-            <p className="text-xs leading-6 text-text-muted">
+            <p className="text-xs leading-6 text-text-secondary">
               Ein Absatz, 5–10 Sätze, Abschlussfrage inklusive.
             </p>
           </div>
@@ -102,7 +95,7 @@ export function WelcomeScreen({
             <Label
               id="discussion-style-label"
               htmlFor="discussion-style"
-              className="mb-1 block text-xs font-semibold uppercase tracking-[0.24em] text-text-muted"
+              className="mb-1 block text-xs font-semibold uppercase tracking-[0.24em] text-text-tertiary"
             >
               Stil auswählen
             </Label>
@@ -137,7 +130,7 @@ export function WelcomeScreen({
                       type="button"
                       onClick={() => startDiscussion(topic.prompt)}
                       title={topic.hint}
-                      className="mobile-card touch-target group flex flex-col gap-1 rounded-md border px-3 py-2 text-left transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                      className="group flex flex-col gap-1 rounded-[var(--radius-lg)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] px-3 py-2 text-left shadow-none transition-[background,box-shadow,transform] duration-150 focus-visible:outline-none focus-visible:shadow-focus-neo hover:-translate-y-[2px] hover:shadow-neo-sm"
                     >
                       <span className="text-text-strong text-sm font-medium [hyphens:auto]">
                         {topic.title}

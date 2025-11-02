@@ -32,245 +32,141 @@ const buttonVariants = (
   dramatic: boolean = false,
 ) => {
   const baseClasses = [
-    // Core Layout
     "inline-flex items-center justify-center gap-2",
     "font-medium tracking-[-0.01em]",
-
-    // Enhanced Transitions for Dramatic Effects
-    "transition-all duration-300 ease-out",
-
-    // Disabled State
+    "transition-[background,box-shadow,transform] duration-200 ease-out",
     "disabled:pointer-events-none disabled:opacity-50",
-    "disabled:shadow-[var(--shadow-neumorphic-sm)]",
-    "disabled:transform-none",
+    "disabled:shadow-neo-sm disabled:translate-y-0",
   ].join(" ");
 
   const coreVariantClasses = {
-    // === NEOMORPHIC VARIANTS (Primary System) ===
     "neo-subtle": [
       "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-[var(--shadow-neumorphic-sm)]",
-      "border-[var(--border-neumorphic-light)]",
+      "shadow-neo-sm",
+      "border border-[var(--border-neumorphic-light)]",
       "text-[var(--color-text-primary)]",
-      "rounded-[var(--radius-lg)]",
-
-      // Hover State
-      "hover:shadow-[var(--shadow-neumorphic-md)]",
+      dramatic ? "hover:-translate-y-[2px]" : "hover:translate-y-[-1px]",
+      "hover:shadow-neo-md",
       "hover:bg-[var(--surface-neumorphic-floating)]",
-      dramatic ? "hover:transform hover:translateY(-2px)" : "",
-
-      // Active State
+      "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-subtle)]",
-      "active:bg-[var(--surface-neumorphic-pressed)]",
-      "active:transform active:translateY(1px)",
-
-      // Focus State
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-      "focus-visible:border-[var(--acc1)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
+      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+    ].join(" "),
     "neo-medium": [
       "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-[var(--shadow-neumorphic-md)]",
-      "border-[var(--border-neumorphic-light)]",
+      "shadow-neo-md",
+      "border border-[var(--border-neumorphic-light)]",
       "text-[var(--color-text-primary)]",
-      "rounded-[var(--radius-lg)]",
-
-      // Hover State
-      "hover:shadow-[var(--shadow-neumorphic-lg)]",
+      dramatic ? "hover:-translate-y-[3px]" : "hover:-translate-y-[2px]",
+      "hover:shadow-neo-lg",
       "hover:bg-[var(--surface-neumorphic-floating)]",
-      dramatic ? "hover:transform hover:translateY(-3px)" : "",
-
-      // Active State
+      "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-medium)]",
-      "active:bg-[var(--surface-neumorphic-pressed)]",
-      "active:transform active:translateY(1.5px)",
-
-      // Focus State
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-      "focus-visible:border-[var(--acc1)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
+      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+    ].join(" "),
     "neo-dramatic": [
-      "bg-[var(--surface-neumorphic-floating)]",
-      "shadow-[var(--shadow-neumorphic-lg)]",
-      "border-[var(--border-neumorphic-light)]",
-      "text-[var(--color-text-primary)]",
-      "rounded-[var(--radius-xl)]",
-
-      // Gradient Overlay for Enhanced Depth
-      "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
-
-      // Hover State
-      "hover:shadow-[var(--shadow-neumorphic-xl)]",
-      "hover:bg-gradient-to-br hover:from-white hover:to-[var(--surface-neumorphic-floating)]",
-      dramatic ? "hover:transform hover:translateY(-4px)" : "",
-
-      // Active State
-      "active:shadow-[var(--shadow-inset-strong)]",
-      "active:bg-[var(--surface-neumorphic-pressed)]",
-      "active:transform active:translateY(2px)",
-
-      // Focus State
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-      "focus-visible:border-[var(--acc1)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
-    "neo-extreme": [
-      "bg-[var(--surface-neumorphic-floating)]",
-      "shadow-[var(--shadow-neumorphic-dramatic)]",
-      "border-[var(--border-neumorphic-light)]",
-      "text-[var(--color-text-primary)]",
-      "rounded-[var(--radius-xl)]",
-
-      // Extreme Gradient and Effects
-      "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
-      "before:absolute before:inset-0 before:rounded-[var(--radius-xl)] before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none",
       "relative",
-
-      // Hover State
+      "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
+      "border border-[var(--border-neumorphic-light)]",
+      "text-[var(--color-text-primary)]",
+      "rounded-[var(--radius-xl)]",
+      "shadow-neo-lg",
+      dramatic ? "hover:-translate-y-[4px]" : "hover:-translate-y-[3px]",
+      "hover:shadow-neo-xl",
+      "hover:bg-gradient-to-br hover:from-white hover:to-[var(--surface-neumorphic-floating)]",
+      "active:translate-y-[2px]",
+      "active:shadow-[var(--shadow-inset-strong)]",
+      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+    ].join(" "),
+    "neo-extreme": [
+      "relative",
+      "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
+      "border border-[var(--border-neumorphic-light)]",
+      "text-[var(--color-text-primary)]",
+      "rounded-[var(--radius-xl)]",
+      "before:pointer-events-none before:absolute before:inset-0 before:rounded-[var(--radius-xl)] before:bg-gradient-to-br before:from-white/18 before:to-transparent",
+      "shadow-[var(--shadow-neumorphic-dramatic)]",
+      dramatic ? "hover:-translate-y-[6px] hover:scale-[1.03]" : "hover:-translate-y-[4px]",
       "hover:shadow-[var(--shadow-neumorphic-extreme)]",
-      "hover:bg-gradient-to-br hover:from-white hover:via-[var(--surface-neumorphic-floating)] hover:to-[var(--acc1)]",
-      dramatic ? "hover:transform hover:translateY(-6px) hover:scale-105" : "",
-
-      // Active State
+      "hover:bg-gradient-to-br hover:from-white hover:via-[var(--surface-neumorphic-floating)] hover:to-[var(--acc1)]/15",
+      "active:translate-y-[2px]",
       "active:shadow-[var(--shadow-inset-extreme)]",
-      "active:bg-[var(--surface-neumorphic-pressed)]",
-      "active:transform active:translateY(3px) active:scale-95",
-
-      // Focus State
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-      "focus-visible:border-[var(--acc1)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
-    // === LEGACY VARIANTS (Converted to Neomorphic) ===
+      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+    ].join(" "),
     brand: [
       "bg-gradient-to-br from-[var(--acc1)] to-[var(--acc2)]",
-      "shadow-[var(--shadow-neumorphic-lg)]",
-      "border-[var(--border-neumorphic-light)]",
+      "border border-[var(--border-neumorphic-light)]",
       "text-white font-semibold",
       "rounded-[var(--radius-lg)]",
-
-      "hover:shadow-[var(--shadow-neumorphic-xl)]",
+      "shadow-neo-md",
+      dramatic ? "hover:-translate-y-[3px]" : "hover:-translate-y-[2px]",
+      "hover:shadow-neo-lg",
       "hover:bg-gradient-to-br hover:from-[var(--acc1)] hover:via-[var(--acc2)] hover:to-[var(--acc1)]",
-      dramatic ? "hover:transform hover:translateY(-3px)" : "",
-
+      "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
+      "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-medium)]",
-      "active:transform active:translateY(1px)",
-
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
+    ].join(" "),
     "brand-soft": [
       "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-[var(--shadow-neumorphic-md)]",
-      "border-2 border-[var(--acc1)]",
+      "border border-[var(--acc1)]/45",
       "text-[var(--acc1)] font-semibold",
       "rounded-[var(--radius-lg)]",
-
-      "hover:shadow-[var(--shadow-neumorphic-lg)]",
-      "hover:bg-gradient-to-br hover:from-[var(--acc1)]/10 hover:to-[var(--acc2)]/10",
-      dramatic ? "hover:transform hover:translateY(-2px)" : "",
-
+      "shadow-neo-md",
+      "hover:shadow-neo-lg",
+      "hover:bg-gradient-to-br hover:from-[var(--acc1)]/12 hover:to-[var(--acc2)]/12",
+      "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
+      "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-subtle)]",
-      "active:transform active:translateY(1px)",
-
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
+    ].join(" "),
     destructive: [
       "bg-gradient-to-br from-[var(--err)] to-[var(--err-hover)]",
-      "shadow-[var(--shadow-neumorphic-lg)]",
-      "border-[var(--border-neumorphic-light)]",
+      "border border-[var(--border-neumorphic-light)]",
       "text-white font-semibold",
       "rounded-[var(--radius-lg)]",
-
-      "hover:shadow-[var(--shadow-neumorphic-xl)]",
-      "hover:bg-gradient-to-br hover:from-[var(--err-hover)] hover:to-[var(--err)]",
-      dramatic ? "hover:transform hover:translateY(-3px)" : "",
-
+      "shadow-neo-md",
+      "hover:shadow-neo-lg",
+      dramatic ? "hover:-translate-y-[3px]" : "hover:-translate-y-[2px]",
+      "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-error-subtle)]",
+      "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-medium)]",
-      "active:transform active:translateY(1px)",
-
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
+    ].join(" "),
     ghost: [
       "bg-transparent",
-      "shadow-none",
-      "border-transparent",
+      "border border-transparent",
       "text-[var(--color-text-secondary)]",
       "rounded-[var(--radius-lg)]",
-
+      "shadow-none",
       "hover:bg-[var(--surface-neumorphic-raised)]",
-      "hover:shadow-[var(--shadow-neumorphic-sm)]",
+      "hover:shadow-neo-sm",
       "hover:text-[var(--color-text-primary)]",
-      dramatic ? "hover:transform hover:translateY(-1px)" : "",
-
+      dramatic ? "hover:-translate-y-[1px]" : "",
       "active:shadow-[var(--shadow-inset-subtle)]",
       "active:bg-[var(--surface-neumorphic-pressed)]",
-
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-      "focus-visible:bg-[var(--surface-neumorphic-raised)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
+      "focus-visible:outline-none focus-visible:shadow-focus-neo",
+    ].join(" "),
     outline: [
       "bg-transparent",
-      "shadow-[var(--shadow-inset-subtle)]",
       "border-2 border-[var(--border-neumorphic-subtle)]",
       "text-[var(--color-text-primary)]",
       "rounded-[var(--radius-lg)]",
-
-      "hover:bg-[var(--surface-neumorphic-raised)]",
-      "hover:shadow-[var(--shadow-neumorphic-sm)]",
+      "shadow-[var(--shadow-inset-subtle)]",
       "hover:border-[var(--border-neumorphic-light)]",
-      dramatic ? "hover:transform hover:translateY(-2px)" : "",
-
+      "hover:bg-[var(--surface-neumorphic-raised)]",
+      "hover:shadow-neo-sm",
+      dramatic ? "hover:-translate-y-[1px]" : "",
       "active:shadow-[var(--shadow-inset-medium)]",
       "active:bg-[var(--surface-neumorphic-pressed)]",
-
-      "focus-visible:outline-none",
-      "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-    ]
-      .filter(Boolean)
-      .join(" "),
-
+      "focus-visible:outline-none focus-visible:shadow-focus-neo",
+    ].join(" "),
     link: [
-      "bg-transparent shadow-none border-transparent",
-      "text-[var(--acc1)] underline-offset-4",
+      "bg-transparent",
+      "border border-transparent",
+      "text-[var(--acc1)]",
       "rounded-[var(--radius-md)]",
-
-      "hover:underline hover:text-[var(--acc2)]",
-      "hover:bg-[var(--surface-neumorphic-base)]",
-      "hover:shadow-[var(--shadow-inset-subtle)]",
-
-      "focus-visible:outline-none",
-      "focus-visible:bg-[var(--surface-neumorphic-raised)]",
-      "focus-visible:shadow-[var(--shadow-neumorphic-sm)]",
+      "shadow-none",
+      "hover:underline",
+      "hover:text-[var(--acc2)]",
+      "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
     ].join(" "),
   } as const satisfies Record<
     Exclude<ButtonProps["variant"], "default" | "secondary" | "neumorphic">,

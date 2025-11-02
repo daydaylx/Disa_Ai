@@ -4,16 +4,9 @@ import { Link, useLocation } from "react-router-dom";
 
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
+import { Card, CardDescription, CardTitle } from "../../components/ui/card";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
-import { useTheme } from "../../hooks/useTheme";
 import { getConversationStats } from "../../lib/conversation-manager";
 import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
 
@@ -30,7 +23,6 @@ interface OverviewCard {
 
 export function SettingsOverview() {
   const { settings } = useSettings();
-  const { preference } = useTheme();
   const { isEnabled: memoryEnabled } = useMemory();
   const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const location = useLocation();
@@ -81,16 +73,11 @@ export function SettingsOverview() {
     {
       id: "appearance",
       title: "Darstellung",
-      description: "Theme, Kontraste und Bewegungspräferenzen einstellen.",
+      description: "Dunkles Design – optimiert für geringe Umgebungshelligkeit.",
       to: "/settings/appearance",
       icon: Palette,
-      statusLabel:
-        preference === "system"
-          ? "System folgt"
-          : preference === "dark"
-            ? "Dunkles Theme"
-            : "Helles Theme",
-      statusVariant: preference === "system" ? "info" : "muted",
+      statusLabel: "Dunkles Theme",
+      statusVariant: "success",
     },
     {
       id: "data",
@@ -110,22 +97,22 @@ export function SettingsOverview() {
     <div className="space-y-6 pb-12">
       <section>
         <Card
-          tone="translucent"
+          tone="neo-floating"
           elevation="surface"
-          className="rounded-[var(--radius-card)] border-brand/30 bg-brand/10 px-4 py-4 text-[var(--color-brand-strong)]"
+          className="rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] px-5 py-4 text-[var(--color-text-primary)] shadow-neo-sm"
         >
-          <h2 className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-brand-strong)]">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-text-tertiary)]">
             Schnellstart
           </h2>
-          <p className="mt-2 text-sm text-[var(--color-brand-strong)]/90 leading-6">
-            Richte zuerst deinen API-Key ein, aktiviere anschließend das Gedächtnis und wähle dein
-            Lieblings-Theme. Du kannst jederzeit wieder hierher zurückkehren.
+          <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
+            Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis. Das dunkle
+            Design ist bereits aktiv – passe Details jederzeit später an.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <Button asChild size="sm" variant="brand-soft">
+            <Button asChild size="sm" variant="brand">
               <Link to="/settings/api">API-Key speichern</Link>
             </Button>
-            <Button asChild size="sm" variant="secondary">
+            <Button asChild size="sm" variant="outline">
               <Link to="/settings/memory">Gedächtnis konfigurieren</Link>
             </Button>
           </div>
@@ -154,9 +141,12 @@ export function SettingsOverview() {
                 interactive="gentle"
                 className="group"
               >
-                <Link to={card.to} className="flex h-full flex-col focus-visible:outline-none">
-                  <CardHeader className="flex flex-row items-start gap-3">
-                    <span className="grid h-10 w-10 place-content-center rounded-full bg-surface-subtle text-brand">
+                <Link
+                  to={card.to}
+                  className="flex h-full flex-col rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-4 shadow-neo-sm transition-shadow duration-200 focus-visible:outline-none focus-visible:shadow-focus-neo hover:shadow-neo-md"
+                >
+                  <div className="flex flex-row items-start gap-3">
+                    <span className="grid h-10 w-10 place-content-center rounded-full border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--acc1)] shadow-neo-sm">
                       <Icon className="h-5 w-5" aria-hidden />
                     </span>
                     <div className="flex flex-1 flex-col gap-2">
@@ -173,13 +163,13 @@ export function SettingsOverview() {
                       </CardDescription>
                       {card.meta ? <p className="text-xs text-text-tertiary">{card.meta}</p> : null}
                     </div>
-                  </CardHeader>
-                  <CardContent className="mt-auto flex items-center justify-between text-sm text-brand">
+                  </div>
+                  <div className="mt-4 flex items-center justify-between border-t border-[var(--border-neumorphic-subtle)] pt-3 text-sm text-[var(--acc1)]">
                     <span className="font-medium">Details anzeigen</span>
                     <span aria-hidden className="transition-transform group-hover:translate-x-1">
                       →
                     </span>
-                  </CardContent>
+                  </div>
                 </Link>
               </Card>
             );
@@ -189,12 +179,12 @@ export function SettingsOverview() {
 
       <section id="settings-shortcuts" tabIndex={-1}>
         <Card
-          tone="translucent"
+          tone="neo-floating"
           elevation="surface"
-          className="rounded-[var(--radius-card)] border-border-subtle bg-surface-subtle/90 px-4 py-4"
+          className="rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] px-4 py-4 shadow-neo-sm"
         >
           <header className="flex items-center gap-2">
-            <Waves className="h-5 w-5 text-brand" aria-hidden />
+            <Waves className="h-5 w-5 text-[var(--acc1)]" aria-hidden />
             <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-text-tertiary">
               Gesten & Shortcuts
             </h2>

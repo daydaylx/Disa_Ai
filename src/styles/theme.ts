@@ -9,36 +9,23 @@ type ThemeState = {
 type ThemeListener = (state: ThemeState) => void;
 
 const STORAGE_KEY = "disaai.ui.theme";
-
-function getSystemMode(): ColorMode {
-  if (typeof window === "undefined") return "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
+const DEFAULT_PREFERENCE: ThemePreference = "dark";
+const DEFAULT_MODE: ColorMode = "dark";
 
 function resolveMode(preference: ThemePreference): ColorMode {
-  return preference === "system" ? getSystemMode() : preference;
+  void preference;
+  return DEFAULT_MODE;
 }
 
 function readStoredPreference(): ThemePreference {
-  if (typeof window === "undefined") return "system";
-
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "light" || stored === "dark" || stored === "system") {
-      return stored;
-    }
-  } catch (error) {
-    console.warn("Failed to read theme preference", error);
-  }
-
-  return "system";
+  return DEFAULT_PREFERENCE;
 }
 
 function persistPreference(preference: ThemePreference) {
+  void preference;
   if (typeof window === "undefined") return;
-
   try {
-    window.localStorage.setItem(STORAGE_KEY, preference);
+    window.localStorage.setItem(STORAGE_KEY, DEFAULT_PREFERENCE);
   } catch (error) {
     console.warn("Failed to persist theme preference", error);
   }
@@ -51,13 +38,8 @@ function applyDocumentTheme(state: ThemeState) {
   root.setAttribute("data-theme", state.mode);
   root.setAttribute("data-theme-preference", state.preference);
 
-  if (state.mode === "dark") {
-    root.classList.add("dark");
-    root.classList.remove("light");
-  } else {
-    root.classList.remove("dark");
-    root.classList.add("light");
-  }
+  root.classList.add("dark");
+  root.classList.remove("light");
 }
 
 class ThemeController {
@@ -80,10 +62,6 @@ class ThemeController {
     this.initialized = true;
 
     applyDocumentTheme(this.state);
-
-    this.mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    this.mediaQuery.addEventListener("change", this.handleSystemChange);
-    window.addEventListener("storage", this.handleStorage);
   }
 
   destroy() {
@@ -99,24 +77,24 @@ class ThemeController {
   }
 
   setPreference(preference: ThemePreference) {
+    void preference;
     const nextState: ThemeState = {
-      preference,
-      mode: resolveMode(preference),
+      preference: DEFAULT_PREFERENCE,
+      mode: DEFAULT_MODE,
     };
 
-    if (nextState.preference === this.state.preference && nextState.mode === this.state.mode) {
+    if (this.state.preference === nextState.preference && this.state.mode === nextState.mode) {
       return;
     }
 
     this.state = nextState;
-    persistPreference(preference);
+    persistPreference(DEFAULT_PREFERENCE);
     applyDocumentTheme(this.state);
     this.notify();
   }
 
   toggle() {
-    const nextMode: ColorMode = this.state.mode === "dark" ? "light" : "dark";
-    this.setPreference(nextMode);
+    this.setPreference(DEFAULT_PREFERENCE);
   }
 
   subscribe(listener: ThemeListener) {
@@ -128,21 +106,11 @@ class ThemeController {
   }
 
   private handleSystemChange = () => {
-    if (this.state.preference !== "system") return;
-
-    const nextMode = resolveMode("system");
-    if (nextMode === this.state.mode) return;
-
-    this.state = { preference: "system", mode: nextMode };
-    applyDocumentTheme(this.state);
-    this.notify();
+    // No-op; dark mode is enforced.
   };
 
-  private handleStorage = (event: StorageEvent) => {
-    if (event.key !== STORAGE_KEY || event.newValue === event.oldValue) return;
-
-    const stored = readStoredPreference();
-    this.setPreference(stored);
+  private handleStorage = () => {
+    // No-op; external changes cannot override dark mode.
   };
 
   private notify() {

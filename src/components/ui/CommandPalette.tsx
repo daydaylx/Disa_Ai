@@ -159,7 +159,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/50" onClick={onClose} aria-hidden="true" />
+      <div
+        className="fixed inset-0 z-50 bg-[var(--surface-neumorphic-overlay)]/75 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
       <div
         ref={dialogRef}
@@ -176,8 +180,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         <p id="command-palette-description" className="sr-only">
           Verwende die Pfeiltasten zur Navigation, Enter zum Ausführen, Escape zum Schließen
         </p>
-        <div className="border-border bg-surface-card shadow-depth-4 overflow-hidden rounded-lg border">
-          <div className="border-border flex items-center border-b px-4">
+        <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] shadow-neo-md">
+          <div className="flex items-center gap-2 border-b border-[var(--border-neumorphic-subtle)] px-4 py-2">
             <svg
               className="text-text-secondary h-5 w-5"
               viewBox="0 0 20 20"
@@ -193,7 +197,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             <input
               ref={searchRef}
               type="text"
-              className="text-text-primary placeholder:text-text-secondary h-12 w-full border-0 bg-transparent pl-3 pr-4 focus:ring-0 sm:text-sm"
+              className="text-text-primary placeholder:text-text-muted h-11 w-full rounded-[var(--radius-lg)] border border-transparent bg-transparent pl-3 pr-2 focus:border-[var(--acc1)] focus:outline-none focus:shadow-focus-neo sm:text-sm"
               placeholder={placeholder}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -217,71 +221,72 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               role="listbox"
               aria-labelledby="command-palette-title"
             >
-              {filteredCommands.map((command, index) => (
-                <li
-                  key={command.id}
-                  ref={(el) => {
-                    itemRefs.current[index] = el;
-                  }}
-                  id={`command-${command.id}`}
-                  className={cn(
-                    "group flex cursor-pointer select-none items-center rounded-lg px-3 py-2",
-                    "transition-colors duration-150",
-                    index === selectedIndex
-                      ? "bg-brand text-white"
-                      : "text-text-secondary hover:bg-surface-subtle",
-                    command.disabled && "cursor-not-allowed opacity-50",
-                  )}
-                  onClick={() => handleCommandClick(command, index)}
-                  onMouseEnter={() => setSelectedIndex(index)}
-                  role="option"
-                  aria-selected={index === selectedIndex}
-                  aria-disabled={command.disabled}
-                >
-                  {command.icon && (
-                    <div
-                      className={cn(
-                        "mr-3 h-5 w-5 flex-shrink-0",
-                        index === selectedIndex ? "text-white" : "text-text-secondary",
-                      )}
-                    >
-                      {command.icon}
-                    </div>
-                  )}
+              {filteredCommands.map((command, index) => {
+                const isActive = index === selectedIndex;
+                const accentTint = isActive
+                  ? { color: "color-mix(in srgb, var(--acc1) 70%, white)" }
+                  : undefined;
 
-                  <div className="min-w-0 flex-1">
-                    <div
-                      className={cn(
-                        "truncate font-medium",
-                        index === selectedIndex ? "text-white" : "text-text-primary",
-                      )}
-                    >
-                      {command.title}
-                    </div>
-                    {command.description && (
+                return (
+                  <li
+                    key={command.id}
+                    ref={(el) => {
+                      itemRefs.current[index] = el;
+                    }}
+                    id={`command-${command.id}`}
+                    className={cn(
+                      "group flex cursor-pointer select-none items-center gap-3 rounded-[var(--radius-lg)] px-3 py-2 transition-[background,color,box-shadow] duration-150",
+                      isActive
+                        ? "bg-brand/12 text-[var(--acc1)] shadow-[var(--shadow-glow-brand-subtle)]"
+                        : "text-text-secondary hover:bg-[var(--surface-neumorphic-raised)] hover:text-[var(--color-text-primary)]",
+                      command.disabled && "cursor-not-allowed opacity-40",
+                    )}
+                    onClick={() => handleCommandClick(command, index)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                    role="option"
+                    aria-selected={isActive}
+                    aria-disabled={command.disabled}
+                  >
+                    {command.icon && (
                       <div
                         className={cn(
-                          "truncate text-sm",
-                          index === selectedIndex ? "text-white/80" : "text-text-secondary",
+                          "h-5 w-5 flex-shrink-0",
+                          isActive ? "text-[var(--acc1)]" : "text-text-secondary",
                         )}
                       >
-                        {command.description}
+                        {command.icon}
                       </div>
                     )}
-                  </div>
 
-                  {command.shortcut && (
-                    <div
-                      className={cn(
-                        "ml-3 font-mono text-xs",
-                        index === selectedIndex ? "text-white/80" : "text-text-secondary",
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className={cn(
+                          "truncate font-medium",
+                          isActive ? "text-[var(--acc1)]" : "text-text-primary",
+                        )}
+                      >
+                        {command.title}
+                      </div>
+                      {command.description && (
+                        <div className="truncate text-sm" style={accentTint}>
+                          {command.description}
+                        </div>
                       )}
-                    >
-                      {command.shortcut}
                     </div>
-                  )}
-                </li>
-              ))}
+
+                    {command.shortcut && (
+                      <div
+                        className={cn(
+                          "ml-3 font-mono text-xs",
+                          isActive ? "text-[var(--acc1)]" : "text-text-secondary",
+                        )}
+                      >
+                        {command.shortcut}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <div className="text-text-secondary px-4 py-14 text-center text-sm">

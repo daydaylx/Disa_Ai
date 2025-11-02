@@ -17,32 +17,13 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
   const getDifficultyColor = (difficulty?: string) => {
     switch (difficulty) {
       case "beginner":
-        return [
-          "bg-gradient-to-r from-[var(--succ)]/15 to-[var(--succ)]/10",
-          "text-[var(--succ)]",
-          "border-[var(--succ)]/30",
-          "shadow-[0_0_8px_rgba(34,197,94,0.2)]",
-        ].join(" ");
+        return "bg-[var(--succ)]/12 text-[var(--succ)] border-[var(--succ)]/30";
       case "intermediate":
-        return [
-          "bg-gradient-to-r from-[var(--warn)]/15 to-[var(--warn)]/10",
-          "text-[var(--warn)]",
-          "border-[var(--warn)]/30",
-          "shadow-[0_0_8px_rgba(234,179,8,0.2)]",
-        ].join(" ");
+        return "bg-[var(--warn)]/12 text-[var(--warn)] border-[var(--warn)]/30";
       case "advanced":
-        return [
-          "bg-gradient-to-r from-[var(--err)]/15 to-[var(--err)]/10",
-          "text-[var(--err)]",
-          "border-[var(--err)]/30",
-          "shadow-[0_0_8px_rgba(239,68,68,0.2)]",
-        ].join(" ");
+        return "bg-[var(--err)]/12 text-[var(--err)] border-[var(--err)]/30";
       default:
-        return [
-          "bg-[var(--surface-neumorphic-raised)]",
-          "text-[var(--color-text-secondary)]",
-          "border-[var(--border-neumorphic-light)]",
-        ].join(" ");
+        return "bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-secondary)] border-[var(--border-neumorphic-subtle)]";
     }
   };
 
@@ -56,8 +37,8 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
 
   return (
     <Card
-      tone="neo-raised"
-      depth="depth-4"
+      tone="neo-floating"
+      depth="depth-2"
       interactive="neo-gentle"
       role="button"
       tabIndex={0}
@@ -70,67 +51,40 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
         }
       }}
       className={cn(
-        "group relative cursor-pointer transition-all duration-500 ease-out overflow-hidden",
-        "hover:shadow-[var(--shadow-neumorphic-lg)]",
-        "hover:-translate-y-2",
-        "hover:scale-[1.02]",
-        "focus-visible:ring-2 focus-visible:ring-[var(--acc1)]/50",
+        "group relative cursor-pointer overflow-hidden border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] shadow-neo-sm transition-[transform,box-shadow] duration-200",
+        "hover:-translate-y-[2px] hover:shadow-neo-md",
+        "focus-visible:outline-none focus-visible:shadow-focus-neo",
         className,
       )}
     >
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            {/* Dramatic Template Icon */}
+            {/* Template Icon */}
             {template.icon && (
               <div
                 className={cn(
-                  "flex items-center justify-center rounded-[var(--radius-lg)] transition-all duration-300",
-                  "bg-gradient-to-br from-[var(--acc1)] to-[var(--acc2)]",
-                  "shadow-[var(--shadow-neumorphic-md)]",
-                  "border border-white/20",
-                  "text-2xl",
-                  "h-12 w-12",
-                  "group-hover:shadow-[var(--shadow-neumorphic-lg)]",
-                  "group-hover:scale-110",
-                  "group-hover:rotate-3",
+                  "flex h-12 w-12 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] text-2xl text-[var(--acc1)] shadow-neo-sm transition-[background,box-shadow,transform] duration-200",
+                  "group-hover:-translate-y-[1px] group-hover:shadow-neo-md",
                 )}
               >
-                <span className="inline-flex items-center justify-center text-white shadow-glow-brand">
-                  {template.icon}
-                </span>
+                {template.icon}
               </div>
             )}
             <div className="flex-1">
-              <CardTitle
-                className={cn(
-                  "text-lg font-bold transition-colors duration-300",
-                  "text-[var(--color-text-primary)]",
-                  "group-hover:text-[var(--acc1)]",
-                )}
-              >
+              <CardTitle className="text-lg font-semibold text-[var(--color-text-primary)]">
                 {template.name}
               </CardTitle>
-              <CardDescription
-                className={cn(
-                  "mt-1 text-sm leading-relaxed transition-colors duration-200",
-                  "text-[var(--color-text-secondary)]",
-                  "group-hover:text-[var(--color-text-primary)]",
-                )}
-              >
+              <CardDescription className="mt-1 text-sm leading-relaxed text-[var(--color-text-secondary)]">
                 {template.description}
               </CardDescription>
             </div>
           </div>
 
-          {/* Dramatic Chevron */}
           <ChevronRight
             className={cn(
-              "h-6 w-6 transition-all duration-300",
-              "text-[var(--color-text-secondary)]",
-              "group-hover:text-[var(--acc1)]",
-              "group-hover:translate-x-1",
-              "group-hover:scale-110",
+              "h-5 w-5 text-[var(--color-text-tertiary)] transition-transform duration-200",
+              "group-hover:translate-x-[2px] group-hover:text-[var(--acc1)]",
             )}
           />
         </div>
@@ -138,17 +92,12 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
 
       <CardContent className="pt-0 space-y-4">
         {/* Enhanced Metadata Section */}
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-3 text-sm">
           {template.estimatedTime && (
             <div
               className={cn(
-                "flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-md)] transition-all duration-200",
-                "bg-[var(--surface-neumorphic-raised)]",
-                "shadow-[var(--shadow-neumorphic-sm)]",
-                "border border-[var(--border-neumorphic-light)]",
-                "text-[var(--color-text-secondary)]",
-                "hover:shadow-[var(--shadow-neumorphic-md)]",
-                "hover:text-[var(--color-text-primary)]",
+                "flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] px-3 py-1.5 text-[var(--color-text-secondary)] shadow-none transition-[background,box-shadow] duration-150",
+                "hover:bg-[var(--surface-neumorphic-floating)] hover:shadow-neo-sm",
               )}
             >
               <Clock className="h-4 w-4" />
@@ -159,10 +108,8 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
             <Badge
               variant="outline"
               className={cn(
-                "text-xs font-semibold transition-all duration-200",
-                "shadow-[var(--shadow-neumorphic-sm)]",
-                "hover:shadow-[var(--shadow-neumorphic-md)]",
-                "hover:-translate-y-0.5",
+                "text-xs font-semibold transition-[box-shadow,transform] duration-150",
+                "hover:-translate-y-[1px] hover:shadow-neo-sm",
                 getDifficultyColor(template.difficulty),
               )}
             >
@@ -176,12 +123,11 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
           <Badge
             variant="secondary"
             className={cn(
-              "text-xs font-semibold transition-all duration-200",
-              "bg-gradient-to-r from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
-              "shadow-[var(--shadow-neumorphic-sm)]",
-              "border border-[var(--border-neumorphic-light)]",
-              "hover:shadow-[var(--shadow-neumorphic-md)]",
-              "hover:-translate-y-0.5",
+              "text-xs font-semibold transition-[background,box-shadow,transform] duration-150",
+              "border border-[var(--border-neumorphic-subtle)]",
+              "bg-[var(--surface-neumorphic-raised)]",
+              "hover:bg-[var(--surface-neumorphic-floating)]",
+              "hover:-translate-y-[1px] hover:shadow-neo-sm",
             )}
           >
             {template.category}
@@ -191,13 +137,11 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
               key={tag}
               variant="outline"
               className={cn(
-                "text-xs transition-all duration-200",
-                "bg-[var(--surface-neumorphic-base)]",
-                "shadow-[var(--shadow-inset-subtle)]",
+                "text-xs transition-[background,box-shadow,transform] duration-150",
                 "border border-[var(--border-neumorphic-subtle)]",
+                "bg-[var(--surface-neumorphic-floating)]",
                 "hover:bg-[var(--surface-neumorphic-raised)]",
-                "hover:shadow-[var(--shadow-neumorphic-sm)]",
-                "hover:-translate-y-0.5",
+                "hover:-translate-y-[1px] hover:shadow-neo-sm",
               )}
             >
               <Tag className="mr-1 h-3 w-3" />

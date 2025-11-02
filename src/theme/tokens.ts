@@ -208,6 +208,9 @@ export const tailwindSpacing = {
   ...baseSpacingSemantic,
   ...baseSpacingTouch,
   ...baseSpacingFixed,
+  "mobile-gutter": "var(--mobile-gutter)",
+  "mobile-touch-gap": "var(--mobile-touch-gap)",
+  "mobile-card-padding": "var(--mobile-card-padding)",
 } as const;
 
 export const tailwindRadii = {
@@ -261,9 +264,15 @@ export const tailwindShadows = {
 
   // Glow accents
   "glow-brand": cssVar("--shadow-glow-brand"),
+  "glow-brand-subtle": cssVar("--shadow-glow-brand-subtle"),
+  "glow-brand-strong": cssVar("--shadow-glow-brand-strong"),
   "glow-success": cssVar("--shadow-glow-success"),
+  "glow-success-subtle": cssVar("--shadow-glow-success-subtle"),
   "glow-warning": cssVar("--shadow-glow-warning"),
+  "glow-warning-subtle": cssVar("--shadow-glow-warning-subtle"),
   "glow-error": cssVar("--shadow-glow-error"),
+  "glow-error-subtle": cssVar("--shadow-glow-error-subtle"),
+  "glow-neutral-subtle": cssVar("--shadow-glow-neutral-subtle"),
 } as const;
 
 export const tailwindFontFamily = {
@@ -333,9 +342,9 @@ export const textStyles: Record<
     fontWeight: 500,
     letterSpacing: "-0.002em",
   },
-  body: { fontSize: pxToRem(16), lineHeight: pxToRem(24), fontWeight: 400 },
-  bodyStrong: { fontSize: pxToRem(16), lineHeight: pxToRem(24), fontWeight: 600 },
-  bodySmall: { fontSize: pxToRem(14), lineHeight: pxToRem(20), fontWeight: 400 },
+  body: { fontSize: pxToRem(16), lineHeight: pxToRem(26), fontWeight: 400 },
+  bodyStrong: { fontSize: pxToRem(16), lineHeight: pxToRem(26), fontWeight: 600 },
+  bodySmall: { fontSize: pxToRem(14), lineHeight: pxToRem(22), fontWeight: 400 },
   caption: {
     fontSize: pxToRem(12),
     lineHeight: pxToRem(18),
@@ -346,7 +355,7 @@ export const textStyles: Record<
     fontSize: pxToRem(12),
     lineHeight: pxToRem(16),
     fontWeight: 600,
-    letterSpacing: "0.08em",
+    letterSpacing: "0.06em",
     textTransform: "uppercase",
   },
   mono: { fontSize: pxToRem(13), lineHeight: pxToRem(20), fontWeight: 500 },

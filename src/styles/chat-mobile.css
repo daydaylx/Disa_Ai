@@ -11,11 +11,13 @@
   max-height: calc(100dvh - var(--layout-header-height) - var(--layout-bottom-nav-height));
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--layout-content-padding-y));
   background: var(--surface-neumorphic-base);
+  padding-left: clamp(12px, 4vw, 20px);
+  padding-right: clamp(12px, 4vw, 20px);
 }
 
 /* Chat header - mobile optimized */
 .mobile-chat-header {
-  padding: var(--space-md) var(--layout-content-padding-x);
+  padding: var(--space-md) clamp(12px, 4vw, 20px);
   border-bottom: var(--border-neumorphic-subtle);
   background: var(--surface-neumorphic-floating);
   position: sticky;
@@ -43,12 +45,13 @@
 .mobile-chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-md) var(--layout-content-padding-x);
+  padding: var(--space-md) 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
   -webkit-overflow-scrolling: touch;
   background: var(--surface-neumorphic-base);
+  scroll-padding-bottom: 96px;
 }
 
 /* Individual message bubble - mobile optimized */
@@ -85,7 +88,7 @@
 
 /* Chat input area - mobile optimized */
 .mobile-chat-input-container {
-  padding: var(--space-sm) var(--layout-content-padding-x);
+  padding: var(--space-sm) 0;
   border-top: var(--border-neumorphic-subtle);
   background: var(--surface-neumorphic-base);
   position: sticky;
@@ -251,7 +254,7 @@
   background: var(--surface-neumorphic-base);
   border-top-left-radius: var(--radius-xl);
   border-top-right-radius: var(--radius-xl);
-  padding: var(--space-md) var(--layout-content-padding-x);
+  padding: var(--space-md) clamp(12px, 4vw, 20px);
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--layout-content-padding-y));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -288,7 +291,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  padding: var(--space-md);
+  padding: clamp(16px, 4vw, 20px);
   border-radius: var(--radius-md);
   border: var(--border-neumorphic-subtle);
   background: var(--surface-neumorphic-floating);
@@ -300,6 +303,7 @@
   background: var(--surface-neumorphic-raised);
   border-color: var(--color-border-strong);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-neumorphic-sm);
 }
 
 .mobile-chat-history-item h3 {
