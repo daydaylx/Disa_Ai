@@ -45,7 +45,7 @@ const buttonVariants = (
     "disabled:transform-none",
   ].join(" ");
 
-  const variantClasses = {
+  const coreVariantClasses = {
     // === NEOMORPHIC VARIANTS (Primary System) ===
     "neo-subtle": [
       "bg-[var(--surface-neumorphic-raised)]",
@@ -272,12 +272,21 @@ const buttonVariants = (
       "focus-visible:bg-[var(--surface-neumorphic-raised)]",
       "focus-visible:shadow-[var(--shadow-neumorphic-sm)]",
     ].join(" "),
+  } as const satisfies Record<
+    Exclude<ButtonProps["variant"], "default" | "secondary" | "neumorphic">,
+    string
+  >;
 
-    // Deprecated variants (mapped to neomorphic equivalents)
-    default: variantClasses["neo-medium" as keyof typeof variantClasses],
-    secondary: variantClasses["neo-subtle" as keyof typeof variantClasses],
-    neumorphic: variantClasses["neo-medium" as keyof typeof variantClasses],
+  const deprecatedVariantClasses = {
+    default: coreVariantClasses["neo-medium"],
+    secondary: coreVariantClasses["neo-subtle"],
+    neumorphic: coreVariantClasses["neo-medium"],
   } as const;
+
+  const variantClasses: Record<ButtonProps["variant"], string> = {
+    ...coreVariantClasses,
+    ...deprecatedVariantClasses,
+  };
 
   const sizeClasses = {
     xs: "h-7 px-2 py-1 text-xs rounded-[var(--radius-md)]",
