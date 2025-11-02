@@ -1,3 +1,5 @@
+import { defaultRolesData } from "./roles.dataset";
+
 export interface Role {
   id: string;
   name: string;
@@ -13,27 +15,8 @@ export interface Role {
   };
 }
 
-let cachedDefaultRoles: Role[] | null = null;
-let cachedCombinedRoles: Role[] | null = null;
-
-const defaultRolesPromise: Promise<Role[]> = import("./roles.dataset")
-  .then((module) => {
-    cachedDefaultRoles = module.defaultRolesData;
-    return cachedDefaultRoles;
-  })
-  .catch((error) => {
-    console.error("[Roles] Failed to load static roles dataset:", error);
-    cachedDefaultRoles = [];
-    return cachedDefaultRoles;
-  });
-
-async function ensureDefaultRoles(): Promise<Role[]> {
-  return cachedDefaultRoles ?? (await defaultRolesPromise);
-}
-
-function getCachedRoles(): Role[] {
-  return cachedCombinedRoles ?? cachedDefaultRoles ?? [];
-}
+let cachedDefaultRoles: Role[] = [...defaultRolesData];
+let cachedCombinedRoles: Role[] = [...defaultRolesData];
 
 // Helper functions
 export async function loadRoles(): Promise<Role[]> {
@@ -56,14 +39,22 @@ export async function loadRoles(): Promise<Role[]> {
     },
   }));
 
-  const baseRoles = await ensureDefaultRoles();
-  const merged = [...baseRoles, ...externalRolesFormatted];
-  cachedCombinedRoles = merged;
-  return merged;
+  const baseRoles = [...cachedDefaultRoles];
+  const merged = new Map<string, Role>();
+  for (const role of baseRoles) {
+    merged.set(role.id, role);
+  }
+  for (const role of externalRolesFormatted) {
+    if (!merged.has(role.id)) {
+      merged.set(role.id, role);
+    }
+  }
+  cachedCombinedRoles = Array.from(merged.values());
+  return cachedCombinedRoles;
 }
 
 export function getRoles(): Role[] {
-  return getCachedRoles();
+  return cachedCombinedRoles;
 }
 
 // Kategorisiert externe Rollen basierend auf Tags/Namen
@@ -186,18 +177,16 @@ function getAccentColorForRole(role: { name: string; tags?: string[] }): string 
 }
 
 export function getRoleById(id: string): Role | undefined {
-  return getCachedRoles().find((p) => p.id === id);
+  return cachedCombinedRoles.find((p) => p.id === id);
 }
 
 export function getRolesByCategory(category: string): Role[] {
-  return getCachedRoles().filter((p) => p.category === category);
+  return cachedCombinedRoles.filter((p) => p.category === category);
 }
 
 export function getCategories(): string[] {
   const categories = new Set(
-    getCachedRoles()
-      .map((p) => p.category)
-      .filter((c): c is string => Boolean(c)),
+    cachedCombinedRoles.map((p) => p.category).filter((c): c is string => Boolean(c)),
   );
   return Array.from(categories);
 }

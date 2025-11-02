@@ -7,7 +7,6 @@
 
 import { Filter, Hash, Search, Settings, Star, TrendingUp, Users } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
@@ -49,7 +48,7 @@ function UsageIndicator({ count }: { count: number }) {
   if (count === 0) return null;
 
   return (
-    <div className="flex items-center gap-1 text-xs text-text-muted">
+    <div className="flex items-center gap-1 text-xs text-text-secondary">
       <TrendingUp className="w-3 h-3" />
       <span>{count}x genutzt</span>
     </div>
@@ -107,24 +106,33 @@ function DenseRoleCard({
 
   return (
     <Card
-      className={`p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
-        isActive ? "ring-2 ring-primary ring-offset-2 bg-primary/5" : ""
+      className={`p-4 transition-all duration-200 hover:shadow-md ${
+        isActive ? "ring-2 ring-[var(--color-brand-primary)] ring-offset-2" : ""
       }`}
-      onClick={onSelect}
     >
-      {/* Header Row */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1 min-w-0">
+      <div className="flex items-start gap-3">
+        <button
+          type="button"
+          data-testid={`role-card-${role.id}`}
+          aria-pressed={isActive}
+          className="flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
+          onClick={onSelect}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              onSelect();
+            }
+          }}
+        >
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-medium text-text-strong truncate">{role.name}</h3>
             {isActive && (
-              <div className="px-2 py-0.5 bg-primary text-white text-xs rounded-full font-medium">
+              <div className="px-2 py-0.5 rounded-full border border-[var(--color-brand-primary)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)] text-xs font-medium">
                 AKTIV
               </div>
             )}
           </div>
 
-          {/* Category & Tags */}
           <div className="flex items-center gap-2 mb-2">
             <span className={`px-2 py-1 text-xs rounded-full ${categoryColor}`}>
               {role.category}
@@ -132,29 +140,29 @@ function DenseRoleCard({
             {role.tags?.slice(0, 2).map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-1 text-xs bg-surface-subtle text-text-muted rounded-full"
+                className="px-2 py-1 text-xs bg-surface-subtle text-text-secondary rounded-full"
               >
                 #{tag}
               </span>
             ))}
           </div>
 
-          {/* Description */}
-          <p className="text-sm text-text-muted line-clamp-2 leading-relaxed">
+          <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
             {role.description || "Spezialisierte KI-Rolle für verschiedene Anwendungsfälle"}
           </p>
-        </div>
+        </button>
 
-        {/* Actions */}
-        <div className="flex flex-col items-center gap-1 ml-3">
+        <div className="flex flex-col items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
             className="p-1.5 h-auto"
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite();
-            }}
+            aria-label={
+              isFavorite
+                ? `${role.name} aus Favoriten entfernen`
+                : `${role.name} zu Favoriten hinzufügen`
+            }
+            onClick={onToggleFavorite}
           >
             <Star
               className={`w-4 h-4 ${isFavorite ? "fill-yellow-400 text-yellow-400" : "text-text-muted"}`}
@@ -162,26 +170,17 @@ function DenseRoleCard({
           </Button>
 
           {!isActive && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="px-2 py-1 text-xs"
-              onClick={(e) => {
-                e.stopPropagation();
-                onActivate();
-              }}
-            >
+            <Button variant="ghost" size="sm" className="px-2 py-1 text-xs" onClick={onActivate}>
               Aktivieren
             </Button>
           )}
         </div>
       </div>
 
-      {/* Footer Stats */}
-      <div className="flex items-center justify-between text-xs">
+      <div className="mt-3 flex items-center justify-between text-xs">
         <UsageIndicator count={usageCount} />
 
-        <div className="flex items-center gap-2 text-text-muted">
+        <div className="flex items-center gap-2 text-text-secondary">
           {role.allowedModels && <span>{role.allowedModels.length} Modelle</span>}
           <span className="w-1 h-1 bg-current rounded-full" />
           <span>{role.metadata?.isBuiltIn ? "Standard" : "Benutzerdefiniert"}</span>
@@ -193,7 +192,6 @@ function DenseRoleCard({
 
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
-  const navigate = useNavigate();
   const { push } = useToasts();
   const { roles, activeRole, setActiveRole } = useStudio();
   const { toggleRoleFavorite, isRoleFavorite, trackRoleUsage, usage } = useFavorites();
@@ -304,23 +302,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   const favoriteRoles = getFavoriteRoles(enhancedRoles);
 
   // Handlers
-  const handleSelectRole = useCallback(
-    (role: EnhancedRole) => {
-      // Track usage
-      trackRoleUsage(role.id);
-
-      push({
-        kind: "success",
-        title: `${role.name} ausgewählt`,
-        message: role.description || undefined,
-      });
-
-      // Navigate to chat with this role
-      void navigate("/chat");
-    },
-    [trackRoleUsage, push, navigate],
-  );
-
   const handleActivateRole = useCallback(
     (role: EnhancedRole) => {
       // Convert enhanced role back to legacy format for setActiveRole
@@ -453,7 +434,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   onClick={() => handleActivateRole(role)}
                 >
                   <span className="font-medium">{role.name}</span>
-                  <span className="ml-1 text-xs text-text-muted">{role.category}</span>
+                  <span className="ml-1 text-xs text-text-secondary">{role.category}</span>
                 </button>
               ))}
             </div>
@@ -529,7 +510,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         <div className="p-4">
           {/* Results Header */}
           <div className="flex items-center justify-between mb-4">
-            <div className="text-sm text-text-muted">
+            <div className="text-sm text-text-secondary">
               {filteredRoles.length} Rollen gefunden
               {searchQuery && ` für "${searchQuery}"`}
               {selectedCategory && ` in ${selectedCategory}`}
@@ -547,7 +528,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           </div>
 
           {/* Roles Grid */}
-          <div className="space-y-3">
+          <div className="space-y-3" data-testid="role-card-grid">
             {filteredRoles.map((role) => (
               <DenseRoleCard
                 key={role.id}
@@ -555,7 +536,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 isActive={activeRole?.id === role.id}
                 isFavorite={isRoleFavorite(role.id)}
                 usageCount={usage.roles[role.id]?.count || 0}
-                onSelect={() => handleSelectRole(role)}
+                onSelect={() => handleActivateRole(role)}
                 onToggleFavorite={() => handleToggleFavorite(role)}
                 onActivate={() => handleActivateRole(role)}
               />
@@ -565,10 +546,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           {filteredRoles.length === 0 && (
             <div className="text-center py-12">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface-subtle flex items-center justify-center">
-                <Users className="w-8 h-8 text-text-muted" />
+                <Users className="w-8 h-8 text-text-secondary" />
               </div>
               <h3 className="text-lg font-medium text-text-strong mb-2">Keine Rollen gefunden</h3>
-              <p className="text-text-muted">
+              <p className="text-text-secondary">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
                   : selectedCategory
