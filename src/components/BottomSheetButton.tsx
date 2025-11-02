@@ -66,7 +66,7 @@ export const BottomSheetButton: React.FC = () => {
       {/* Floating Button to open the bottom sheet */}
       <Button
         type="button"
-        variant="primary"
+        variant="brand"
         size="icon"
         onClick={toggleSheet}
         className="fixed bottom-[var(--space-md)] right-[var(--space-md)] z-30 shadow-raised"

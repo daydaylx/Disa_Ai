@@ -136,6 +136,10 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
+    define: {
+      "process.env.NODE_ENV": JSON.stringify("production"),
+      __DEV__: "false",
+    },
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
     server: {
@@ -182,11 +186,27 @@ export default defineConfig(({ mode }) => {
             if (id.includes("src/components/ui")) {
               return "ui-components";
             }
+            if (id.includes("src/components/models")) {
+              return "models-components";
+            }
+            if (id.includes("src/components/roles")) {
+              return "roles-components";
+            }
             if (id.includes("src/features")) {
               return "feature-components";
             }
             if (id.includes("src/pages")) {
-              return "pages";
+              const parts = id.split("src/pages/")[1];
+              if (parts) {
+                const normalized = parts
+                  .replace(/\\+/g, "/")
+                  .split("/")[0]
+                  .replace(/\.(tsx|ts|jsx|js)$/, "")
+                  .replace(/[^a-zA-Z0-9]+/g, "-")
+                  .toLowerCase();
+                return normalized ? `page-${normalized}` : "page-shared";
+              }
+              return "page-shared";
             }
             if (id.includes("src/hooks")) {
               return "hooks";

@@ -98,8 +98,6 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
             </h3>
             <div className="mt-2 grid gap-2">
               {[
-                { label: "Design Matrix", path: "/design-directions" },
-                { label: "Design Matrix · Option B", path: "/design-directions#B" },
                 { label: "Impressum", path: "/impressum" },
                 { label: "Datenschutz", path: "/datenschutz" },
               ].map((link) => (

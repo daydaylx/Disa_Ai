@@ -771,7 +771,7 @@ const cardVariants = cva(baseClasses, {
 // Inconsistent across codebase:
 useState<boolean>("isLoading")           // ChatComposer
 useState<"idle" | "loading" | "loaded" | "error">() // LazyImage
-state={{ "loading" | "disabled" | "selected" | "default" }} // Card
+state=&#123;&#123; "loading" | "disabled" | "selected" | "default" &#125;&#125; // Card
 ```
 
 **Impact:** Difficult to create consistent micro-interactions, animations behave differently across components
@@ -935,9 +935,9 @@ focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]
 messages.map((msg, i) => (
   <ChatMessage
     key={msg.id}
-    style={{
+    style=&#123;&#123;
       animation: `messageSlideIn 300ms ease-out ${i * 50}ms both`
-    }}
+    &#125;&#125;
   />
 ))
 ```

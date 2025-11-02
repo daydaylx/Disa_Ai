@@ -52,11 +52,11 @@ Stand: 2025-10-22
 
 ### Navigation & Komponenten-Legacy
 - `src/components/layout/Menu.tsx:1-112`  
-  - **Befund:** Legacy-Bottom-Nav kombiniert mit BrandWordmark, nutzt `var(--glass-overlay-*)` und Inline-Safe-Area (`style={{ paddingBottom: "calc(...)" }}`). Nicht mehr kompatibel mit neuem Router-Setup.  
+  - **Befund:** Legacy-Bottom-Nav kombiniert mit BrandWordmark, nutzt `var(--glass-overlay-*)` und Inline-Safe-Area (`style=&#123;&#123; paddingBottom: "calc(...)" &#125;&#125;`). Nicht mehr kompatibel mit neuem Router-Setup.  
   - **Entsorgungsplan:** Durch neue Header-/Bottom-Navigation ersetzen; Routen-Definition zentralisieren, Inline-Styles eliminieren.
 
 - `src/components/nav/SettingsFAB.tsx:9-23`  
-  - **Befund:** Separater Floating-Button mit Inline-Positionierung (`style={{ bottom: ... }}`) und alten Border/Surface-Variablen (`--surface-1`, `--text-0`).  
+  - **Befund:** Separater Floating-Button mit Inline-Positionierung (`style=&#123;&#123; bottom: ... &#125;&#125;`) und alten Border/Surface-Variablen (`--surface-1`, `--text-0`).  
   - **Entsorgungsplan:** Funktion in neue Navigation integrieren, Datei löschen.
 
 - `src/components/Header.tsx:15-84`  
@@ -77,7 +77,7 @@ Stand: 2025-10-22
   - **Entsorgungsplan:** Ersetzen durch Token-Referenzen (`var(--color-status-*)`), optionale JS-Fallbacks streichen.
 
 - Inline Safe-Area / Height Styles (`src/components/shell/AppShell.tsx:15`, `src/components/Composer.tsx:29`, `src/pages/ChatV2.tsx:765`, `src/components/layout/Menu.tsx:45`, `src/components/nav/SettingsFAB.tsx:14`)  
-  - **Befund:** `style={{ minHeight: "var(--vh, 100dvh)" }}` etc. blockieren Purge und erschweren Dark/Light-Adaption.  
+  - **Befund:** `style=&#123;&#123; minHeight: "var(--vh, 100dvh)" &#125;&#125;` etc. blockieren Purge und erschweren Dark/Light-Adaption.  
   - **Entsorgungsplan:** Tailwind-CSS-Custom-Utilities auf Basis der neuen Tokens (z. B. `min-h-screen-dynamic`, `pb-safe`) schaffen.
 
 - `src/components/ui/Skeleton.tsx:145-166`, `src/components/ui/CommandPalette.tsx:167`, `src/components/chat/*`  

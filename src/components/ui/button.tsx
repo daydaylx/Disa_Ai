@@ -5,33 +5,12 @@ import { cn } from "../../lib/utils";
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
     | "default"
-    | "ghost"
-    | "ghost-enhanced"
-    | "ghost-brand"
-    | "ghost-glass"
-    | "ghost-glow-subtle"
-    | "ghost-glow-medium"
-    | "ghost-glow-strong"
-    | "ghost-elevated"
-    | "ghost-floating"
-    | "ghost-success"
-    | "ghost-warning"
-    | "ghost-error"
-    | "outline"
     | "brand"
     | "brand-soft"
-    | "brand-gradient"
-    | "brand-premium"
-    | "secondary-gradient"
-    | "brand-soft-gradient"
-    | "success-gradient"
-    | "warning-gradient"
-    | "error-gradient"
-    | "glass"
-    | "elevated"
-    | "destructive"
-    | "primary"
     | "secondary"
+    | "destructive"
+    | "ghost"
+    | "outline"
     | "link"
     | "neumorphic";
   size?: "default" | "sm" | "lg" | "icon";
@@ -43,56 +22,26 @@ const buttonVariants = (
   size: ButtonProps["size"] = "default",
 ) => {
   const baseClasses =
-    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)] disabled:pointer-events-none disabled:opacity-50";
 
   const variantClasses = {
     default:
-      "bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] hover:bg-[var(--color-brand-primary-hover)]",
-    primary:
-      "bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] hover:bg-[var(--color-brand-primary-hover)]",
+      "border border-[var(--color-border-subtle)] bg-[var(--color-surface-card)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-subtle)]",
     brand:
       "bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] hover:bg-[var(--color-brand-primary-hover)]",
     "brand-soft":
-      "bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)] border border-[var(--color-brand-subtle)] hover:bg-[var(--color-brand-primary)] hover:text-[var(--color-text-on-brand)]",
-
-    /* Gradient Button Variants - Premium Visual Hierarchy */
-    "brand-gradient": "btn-gradient-brand text-[var(--color-text-on-brand)] shadow-lg",
-    "brand-premium": "btn-gradient-brand-premium text-[var(--color-text-on-brand)] shadow-xl",
-    "secondary-gradient":
-      "btn-gradient-secondary text-[var(--color-text-primary)] border border-[var(--color-border-subtle)]",
-    "brand-soft-gradient":
-      "btn-gradient-brand-soft text-[var(--color-brand-strong)] border border-[var(--color-brand-subtle)]",
-    "success-gradient": "btn-gradient-success text-[var(--color-text-on-status)] shadow-md",
-    "warning-gradient": "btn-gradient-warning text-[var(--color-text-on-status)] shadow-md",
-    "error-gradient": "btn-gradient-error text-[var(--color-text-on-status)] shadow-md",
-    glass: "btn-gradient-glass text-[var(--color-text-primary)] shadow-lg",
-    elevated: "btn-gradient-elevated text-[var(--color-text-primary)]",
-
-    /* Enhanced Ghost Button Variants - Premium Transparency Effects */
-    ghost: "hover:bg-[var(--color-action-ghost-hover)] hover:text-[var(--color-action-ghost-fg)]",
-    "ghost-enhanced": "btn-ghost-enhanced",
-    "ghost-brand": "btn-ghost-brand",
-    "ghost-glass": "btn-ghost-glass",
-    "ghost-glow-subtle": "btn-ghost-glow-subtle",
-    "ghost-glow-medium": "btn-ghost-glow-medium",
-    "ghost-glow-strong": "btn-ghost-glow-strong",
-    "ghost-elevated": "btn-ghost-elevated",
-    "ghost-floating": "btn-ghost-floating",
-    "ghost-success": "btn-ghost-success",
-    "ghost-warning": "btn-ghost-warning",
-    "ghost-error": "btn-ghost-error",
-
+      "border border-[var(--color-brand-subtle)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)] hover:bg-[var(--color-brand-subtle)]/80",
     secondary:
-      "bg-[var(--color-action-secondary-bg)] text-[var(--color-action-secondary-fg)] border border-[var(--color-action-secondary-border)] hover:bg-[var(--color-action-secondary-hover)]",
+      "border border-[var(--color-action-secondary-border)] bg-[var(--color-action-secondary-bg)] text-[var(--color-action-secondary-fg)] hover:bg-[var(--color-action-secondary-hover)]",
     destructive:
-      "bg-[var(--color-action-destructive-bg)] text-[var(--color-action-destructive-fg)] hover:bg-[var(--color-action-destructive-hover)]",
+      "border border-[var(--color-status-danger-border)] bg-[var(--color-status-danger-bg)] text-[var(--color-status-danger-fg)] hover:bg-[var(--color-status-danger-bg)]/80",
+    ghost:
+      "bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-action-ghost-hover)] hover:text-[var(--color-action-ghost-fg)]",
     outline:
-      "border border-[var(--color-border-subtle)] bg-[var(--color-surface-base)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-primary)]",
+      "border border-[var(--color-border-subtle)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-surface-subtle)]",
     link: "text-[var(--color-text-link)] underline-offset-4 hover:underline hover:text-[var(--color-text-link-hover)]",
-
-    /* Neomorphism (Soft UI) Variant */
     neumorphic:
-      "neo-button-base text-[var(--color-text-primary)] hover:shadow-neo-lg active:shadow-inset-subtle focus-visible:shadow-focus-neo transition-all duration-200 ease-out",
+      "neo-button-base text-[var(--color-text-primary)] hover:shadow-neo-lg active:shadow-inset-subtle focus-visible:shadow-focus-neo transition-[box-shadow,transform] duration-200 ease-out",
   };
 
   const sizeClasses = {

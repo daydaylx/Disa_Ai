@@ -335,9 +335,9 @@ messages.map((msg, i) => (
   <ChatMessage
     key={msg.id}
     message={msg}
-    style={{
+    style=&#123;&#123;
       animation: `messageSlideIn 300ms ease-out $&#123;stagger.getItemDelay(i)&#125; both`
-    }}
+    &#125;&#125;
   />
 ))
 ```

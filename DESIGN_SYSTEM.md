@@ -89,38 +89,6 @@ import { SoftDepthSurface } from "@/components/SoftDepthSurface";
 
 ---
 
-### ⚠️ Wrapper: `GlassCard` (Backwards Compatibility)
-
-**Datei:** `src/components/ui/GlassCard.tsx`
-**Status:** ⚠️ **Wrapper** - Nur für Backwards Compatibility
-
-**Funktion:**
-
-```typescript
-// GlassCard ist nur ein Wrapper:
-<GlassCard /> === <Card tone="translucent" elevation="surface" />
-```
-
-**Verwendung in 6 Dateien:**
-
-- `src/components/models/MobileModelsInterface.tsx`
-- `src/pages/MobileStudio.tsx`
-- `src/features/settings/SettingsOverview.tsx`
-- `src/features/settings/SettingsView.tsx`
-- `src/features/design-directions/DesignDirectionShowcase.tsx`
-
-**Empfehlung:** Ersetze schrittweise durch direkte `Card`-Verwendung:
-
-```tsx
-// Vorher:
-<GlassCard>Content</GlassCard>
-
-// Nachher:
-<Card tone="translucent" elevation="surface">Content</Card>
-```
-
----
-
 ## Design Tokens
 
 Alle Design Tokens sind zentral definiert in:

@@ -88,10 +88,5 @@ export default {
       },
     },
   },
-  safelist: [
-    {
-      pattern: /(grid|flex|gap|items|justify)-(.*)/,
-    },
-  ],
   plugins: [],
 } satisfies Config;

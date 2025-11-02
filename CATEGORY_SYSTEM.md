@@ -163,8 +163,7 @@ src/
 │       └── category-tonal-scales.ts # TypeScript Token-Definitionen
 ├── utils/
 │   └── category-mapping.ts      # Kategorie-Normalisierung
-└── components/demo/
-    └── CategoryDemo.tsx         # Test & Demo-Komponente
+# Demo-Komponenten wurden entfernt – nutze die produktiven Views als Referenz
 ```
 
 ## 🚀 Quick Start

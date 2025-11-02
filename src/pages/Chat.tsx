@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
+import { ChatView } from "../components/chat/ChatView";
 import { WelcomeScreen } from "../components/chat/WelcomeScreen";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { DISCUSSION_CARD_HINT, discussionTopicConfig } from "../config/discussion-topics";
@@ -9,8 +10,16 @@ import { useConversationManager } from "../hooks/useConversationManager";
 import { useDiscussion } from "../hooks/useDiscussion";
 import { useIsMobile } from "../hooks/useMediaQuery";
 import { saveConversation } from "../lib/conversation-manager";
-const ChatHistorySidebar = lazy(() => import("../components/chat/ChatHistorySidebar"));
-const MobileChatHistorySidebar = lazy(() => import("../components/chat/MobileChatHistorySidebar"));
+const ChatHistorySidebar = lazy(() =>
+  import("../components/chat/ChatHistorySidebar").then((module) => ({
+    default: module.ChatHistorySidebar,
+  })),
+);
+const MobileChatHistorySidebar = lazy(() =>
+  import("../components/chat/MobileChatHistorySidebar").then((module) => ({
+    default: module.MobileChatHistorySidebar,
+  })),
+);
 
 const DISCUSSION_SECTIONS = [
   {

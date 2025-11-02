@@ -183,7 +183,7 @@ export function ChatList({
                 Nutze die vorgeschlagenen Flows oder stelle einfach deine Frage. Disa AI reagiert in
                 Sekunden.
               </p>
-              <Button onClick={handleStartStandardChat} className="w-full" variant="brand-premium">
+              <Button onClick={handleStartStandardChat} className="w-full" variant="brand">
                 Neues Gespräch beginnen
               </Button>
             </div>
@@ -214,8 +214,8 @@ export function ChatList({
                       />
                       <Button
                         onClick={handleStartStandardChat}
-                        className="w-full"
-                        variant="brand-gradient"
+                        className="w-full shadow-raised"
+                        variant="brand"
                         data-testid="start-standard-chat"
                       >
                         Direkt im Chat starten
@@ -232,11 +232,7 @@ export function ChatList({
                         Wir konnten keine Schnellstarts laden. Versuche es später erneut oder starte
                         direkt einen Chat.
                       </p>
-                      <Button
-                        onClick={handleQuickstartReload}
-                        className="mt-4"
-                        variant="secondary-gradient"
-                      >
+                      <Button onClick={handleQuickstartReload} className="mt-4" variant="secondary">
                         Erneut laden
                       </Button>
                     </Card>
@@ -360,10 +356,10 @@ export function ChatList({
                         </button>
                         {onDeleteConversation && (
                           <Button
-                            variant="ghost-error"
+                            variant="ghost"
                             size="icon"
                             onClick={() => onDeleteConversation(conversation.id)}
-                            className="absolute right-2 top-2 h-8 w-8 opacity-0 group-hover:opacity-100"
+                            className="absolute right-2 top-2 h-8 w-8 text-[var(--color-status-danger-fg)] opacity-0 transition-opacity group-hover:opacity-100 hover:bg-[var(--color-status-danger-bg)]/40"
                             aria-label="Verlauf löschen"
                           >
                             <Trash2 className="h-4 w-4" />

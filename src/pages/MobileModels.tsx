@@ -1,5 +1,12 @@
+import { lazy, Suspense } from "react";
+
 import { MobilePageShell } from "../components/layout/MobilePageShell";
-import { EnhancedModelsInterface } from "../components/models/EnhancedModelsInterface";
+
+const EnhancedModelsInterface = lazy(() =>
+  import("../components/models/EnhancedModelsInterface").then((module) => ({
+    default: module.EnhancedModelsInterface,
+  })),
+);
 
 /**
  * MobileModels Page - Enhanced Mobile Model Selection Interface
@@ -10,7 +17,15 @@ import { EnhancedModelsInterface } from "../components/models/EnhancedModelsInte
 export default function MobileModels() {
   return (
     <MobilePageShell contentClassName="flex min-h-0 flex-1 flex-col">
-      <EnhancedModelsInterface />
+      <Suspense
+        fallback={
+          <div className="flex flex-1 items-center justify-center p-6 text-sm text-text-muted">
+            Modelle werden geladen…
+          </div>
+        }
+      >
+        <EnhancedModelsInterface />
+      </Suspense>
     </MobilePageShell>
   );
 }

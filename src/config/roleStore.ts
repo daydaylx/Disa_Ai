@@ -1,5 +1,6 @@
 import { mapError } from "../lib/errors";
-import { type Role } from "../lib/validators/roles";
+import type { Role } from "../lib/validators/roles";
+import { RoleListSchema } from "../lib/validators/roles";
 import type { Safety } from "./models";
 
 /** Öffentliche Typen – exakt-optional-freundlich: Property weglassen statt `undefined` setzen */

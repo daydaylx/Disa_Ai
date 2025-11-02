@@ -202,7 +202,7 @@ Automatische Anpassung über CSS:
 
 ```bash
 # Visueller Test aller Varianten
-# Siehe: /src/components/demo/CategoryDemo.tsx
+# Praxisbeispiele findest du direkt in den produktiven Views (z. B. `ChatList` und `EnhancedRolesInterface`).
 
 # Automatische Kontrast-Validierung
 npm run accessibility-test

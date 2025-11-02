@@ -8,7 +8,6 @@ import { MobileAppShell } from "./layouts/MobileAppShell";
 const ChatPage = lazy(() => import("../pages/Chat"));
 const ModelsPage = lazy(() => import("../pages/MobileModels"));
 const RolesPage = lazy(() => import("../pages/MobileStudio"));
-const DesignDirectionsPage = lazy(() => import("../pages/DesignDirections"));
 const SettingsOverviewPage = lazy(() => import("../pages/SettingsOverviewPage"));
 const SettingsApiPage = lazy(() => import("../pages/SettingsApi"));
 const SettingsMemoryPage = lazy(() => import("../pages/SettingsMemory"));
@@ -188,25 +187,6 @@ const router = createBrowserRouter(
               }
             >
               <SettingsDataPage />
-            </Suspense>
-          </ErrorBoundary>
-        </MobileAppShell>
-      ),
-    },
-    {
-      path: "/design-directions",
-      element: (
-        <MobileAppShell>
-          <ErrorBoundary>
-            <Suspense
-              fallback={
-                <div
-                  className="h-4 w-24 animate-pulse rounded bg-gray-300"
-                  aria-label="Laden..."
-                ></div>
-              }
-            >
-              <DesignDirectionsPage />
             </Suspense>
           </ErrorBoundary>
         </MobileAppShell>
