@@ -544,7 +544,7 @@ export function MobileChatInterface() {
                 onClick={handleNewConversation}
                 variant="brand"
                 size="lg"
-                className="shadow-neon mobile-btn mobile-btn-primary touch-target"
+                className="shadow-glow-brand mobile-btn mobile-btn-primary touch-target"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 <span>Neuer Chat</span>
@@ -694,7 +694,7 @@ export function MobileChatInterface() {
                 onClick={handleNewConversation}
                 variant="brand"
                 size="lg"
-                className="mobile-btn mobile-btn-primary shadow-neon touch-target"
+                className="mobile-btn mobile-btn-primary shadow-glow-brand touch-target"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 <span>Neue Unterhaltung</span>

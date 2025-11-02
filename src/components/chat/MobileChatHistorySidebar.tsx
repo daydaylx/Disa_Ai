@@ -177,7 +177,7 @@ export function MobileChatHistorySidebar({
             <Button
               onClick={handleNewConversation}
               variant="brand"
-              className="w-full shadow-neon touch-target"
+              className="w-full shadow-glow-brand touch-target"
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
               <span>Neue Konversation</span>

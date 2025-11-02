@@ -96,7 +96,9 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
                   "group-hover:rotate-3",
                 )}
               >
-                <span className="text-white drop-shadow-sm">{template.icon}</span>
+                <span className="inline-flex items-center justify-center text-white shadow-glow-brand">
+                  {template.icon}
+                </span>
               </div>
             )}
             <div className="flex-1">

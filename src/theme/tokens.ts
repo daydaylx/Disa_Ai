@@ -258,6 +258,12 @@ export const tailwindShadows = {
 
   // Neomorphic focus
   "focus-neo": cssVar("--shadow-focus-neumorphic"),
+
+  // Glow accents
+  "glow-brand": cssVar("--shadow-glow-brand"),
+  "glow-success": cssVar("--shadow-glow-success"),
+  "glow-warning": cssVar("--shadow-glow-warning"),
+  "glow-error": cssVar("--shadow-glow-error"),
 } as const;
 
 export const tailwindFontFamily = {

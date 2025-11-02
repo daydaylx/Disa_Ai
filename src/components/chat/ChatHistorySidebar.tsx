@@ -121,7 +121,7 @@ export function ChatHistorySidebar({
                     className={cn(
                       "rounded-lg hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "all" &&
-                        "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
+                        "border-brand/40 bg-brand/15 text-brand shadow-glow-brand focus-visible:border-border-focus",
                     )}
                   >
                     <MessageSquare className="h-3 w-3" />
@@ -134,7 +134,7 @@ export function ChatHistorySidebar({
                     className={cn(
                       "rounded-lg hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "favorites" &&
-                        "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
+                        "border-brand/40 bg-brand/15 text-brand shadow-glow-brand focus-visible:border-border-focus",
                     )}
                   >
                     <Star className="h-3 w-3" />
@@ -147,7 +147,7 @@ export function ChatHistorySidebar({
                     className={cn(
                       "rounded-lg hover:text-text-strong border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-text-muted transition-colors",
                       filterType === "recent" &&
-                        "border-brand/40 bg-brand/15 text-brand shadow-neon focus-visible:border-border-focus",
+                        "border-brand/40 bg-brand/15 text-brand shadow-glow-brand focus-visible:border-border-focus",
                     )}
                   >
                     <Clock className="h-3 w-3" />

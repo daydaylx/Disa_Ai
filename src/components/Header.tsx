@@ -176,7 +176,9 @@ export const Header: React.FC<HeaderProps> = ({
               "hover:shadow-[0_0_20px_rgba(75,99,255,0.3)]",
             )}
           >
-            <span className="text-lg font-bold text-white drop-shadow-sm">DA</span>
+            <span className="inline-flex items-center justify-center rounded-sm px-1 text-lg font-bold text-white shadow-glow-brand">
+              DA
+            </span>
           </div>
           <div className="flex min-w-0 flex-col gap-1">
             <div className="text-lg font-semibold leading-tight text-[var(--color-text-primary)]">

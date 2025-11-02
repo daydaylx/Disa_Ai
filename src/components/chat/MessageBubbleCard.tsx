@@ -154,7 +154,9 @@ export function MessageBubbleCard({
             style={badgeStyles}
           >
             <span className="text-base">{config.badgeIcon}</span>
-            <span className="font-bold text-white drop-shadow-sm">{author}</span>
+            <span className="inline-flex items-center font-bold text-white shadow-glow-brand">
+              {author}
+            </span>
             {label && (
               <>
                 <span className="text-white/70 font-normal">•</span>

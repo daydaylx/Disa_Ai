@@ -42,7 +42,7 @@ export function ChatView({
             onClick={newConversation}
             variant="brand"
             size="lg"
-            className="shadow-neon mobile-btn mobile-btn-primary touch-target"
+            className="shadow-glow-brand mobile-btn mobile-btn-primary touch-target"
           >
             <Plus className="h-4 w-4" />
             <span>Neue Unterhaltung</span>
