@@ -153,7 +153,7 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
           "relative ml-auto flex h-full w-full max-w-[min(22rem,calc(100vw-3rem))] flex-col",
           "border-l border-[var(--color-border-hairline)]",
           "bg-surface-base/75 backdrop-blur-[3px] text-[var(--color-text-primary)]",
-          "shadow-[var(--shadow-overlay)]",
+          "shadow-[var(--shadow-neumorphic-lg)]",
           "pb-[max(env(safe-area-inset-bottom),1rem)] pt-[max(env(safe-area-inset-top),1rem)]",
           "animate-in slide-in-from-right duration-medium",
         )}

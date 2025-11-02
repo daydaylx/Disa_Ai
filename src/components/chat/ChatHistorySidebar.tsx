@@ -76,7 +76,7 @@ export function ChatHistorySidebar({
           paddingBottom: "calc(var(--mobile-safe-bottom) + var(--spacing-xl))",
         }}
       >
-        <div className="border-border flex h-full w-full flex-col border bg-surface-popover shadow-popover md:rounded-lg">
+        <div className="border-border flex h-full w-full flex-col border bg-[var(--surface-neumorphic-floating)] shadow-neo-xl md:rounded-lg">
           <div className="flex h-full flex-col overflow-hidden">
             <div className="px-page-x flex flex-col gap-5 md:px-6">
               <div className="flex items-center justify-between">
@@ -107,7 +107,7 @@ export function ChatHistorySidebar({
                   <input
                     type="text"
                     placeholder="Chats durchsuchen..."
-                    className="border-border focus-visible:ring-brand w-full border bg-surface-card pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted focus-visible:border-border-focus focus-visible:outline-none focus-visible:ring-2"
+                    className="border-border focus-visible:ring-brand w-full border bg-[var(--surface-neumorphic-floating)] pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted focus-visible:border-border-focus focus-visible:outline-none focus-visible:ring-2"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -179,7 +179,7 @@ export function ChatHistorySidebar({
                         <li key={conversation.id}>
                           <div
                             className={cn(
-                              "border-border group relative cursor-pointer rounded-[var(--radius-lg)] border bg-surface-card p-4 text-left text-text-primary transition-all duration-small ease-standard hover:-translate-y-[1px] hover:shadow-raised",
+                              "border-border group relative cursor-pointer rounded-[var(--radius-lg)] border bg-[var(--surface-neumorphic-floating)] p-4 text-left text-text-primary transition-all duration-small ease-standard hover:-translate-y-[1px] hover:shadow-neo-md",
                               isActive && "ring-brand ring-2",
                             )}
                             onClick={() => onSelect(conversation.id)}
@@ -240,7 +240,7 @@ export function ChatHistorySidebar({
               {filteredConversations.length === 0 && (
                 <div className="flex h-full flex-col items-center justify-center px-4 text-center">
                   <div className="max-w-xs space-y-4">
-                    <div className="border-border mx-auto flex h-16 w-16 items-center justify-center rounded-full border bg-surface-card">
+                    <div className="border-border mx-auto flex h-16 w-16 items-center justify-center rounded-full border bg-[var(--surface-neumorphic-floating)]">
                       <MessageSquare className="h-8 w-8 text-text-muted" />
                     </div>
                     <div className="space-y-2">

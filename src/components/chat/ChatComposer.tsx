@@ -112,13 +112,13 @@ export function ChatComposer({
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="bg-surface-subtle border-border-hairline inline-flex items-center gap-1 rounded-full border px-3 py-1 text-text-secondary">
+                <span className="border-border-hairline inline-flex items-center gap-1 rounded-full border bg-[var(--surface-neumorphic-floating)] px-3 py-1 text-text-secondary">
                   <Zap className="h-3 w-3" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="bg-surface-subtle border-border-hairline inline-flex items-center gap-2 rounded-full border px-3 py-1 text-text-secondary">
+                <span className="border-border-hairline inline-flex items-center gap-2 rounded-full border bg-[var(--surface-neumorphic-floating)] px-3 py-1 text-text-secondary">
                   Maximal: {maxTokens}
                 </span>
               )}
@@ -131,7 +131,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-lg border border-border-subtle bg-surface-card p-2",
+            "flex items-end gap-2 rounded-lg border border-border-subtle bg-[var(--surface-neumorphic-floating)] p-2",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -160,7 +160,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="h-12 w-12 text-text-secondary hover:bg-surface-subtle hover:text-text-primary"
+                className="h-12 w-12 text-text-secondary hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
@@ -187,7 +187,7 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="brand"
-                className="h-12 w-12 shadow-surface"
+                className="h-12 w-12 shadow-neo-sm"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 aria-label="Nachricht senden"

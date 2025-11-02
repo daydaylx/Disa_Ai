@@ -52,7 +52,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
     <div
       className={`fixed bottom-4 left-4 right-4 z-[9999] md:left-auto md:right-4 md:max-w-sm lg:max-w-md ${className || ""}`}
     >
-      <div className="border-border max-h-[40vh] overflow-y-auto rounded-lg border bg-surface-popover p-4 shadow-popover sm:max-h-none sm:p-6">
+      <div className="border-border max-h-[40vh] overflow-y-auto rounded-lg border bg-surface-popover p-4 shadow-neo-xl sm:max-h-none sm:p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">

@@ -69,7 +69,7 @@ export function PWADebugInfo() {
 
   return (
     <div className="fixed right-4 top-20 z-40 max-w-sm">
-      <Card className="border-border shadow-level rounded-lg border p-4">
+      <Card className="border-border shadow-depth-4 rounded-lg border p-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-text-primary text-sm font-semibold">PWA Debug Info</h3>

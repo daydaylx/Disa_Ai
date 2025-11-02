@@ -32,7 +32,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
 
   return (
     <div
-      className="relative flex min-h-[100dvh] flex-col bg-[var(--color-surface-canvas)] text-[var(--color-text-primary)]"
+      className="relative flex min-h-[100dvh] flex-col bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)]"
       style={{ minHeight: "calc(100dvh + var(--keyboard-offset, 0px))" }}
     >
       <GlobalNav onMenuClick={() => setIsOverflowOpen(true)} />
@@ -47,7 +47,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
         </div>
       </main>
 
-      <footer className="border-t border-[var(--color-border-hairline)] bg-[var(--color-surface-base)] px-4 py-4 text-xs text-[var(--color-text-secondary)]">
+      <footer className="border-t border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)] px-4 py-4 text-xs text-[var(--color-text-secondary)]">
         <div className="mx-auto flex w-full max-w-[var(--max-content-width,480px)] flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
             <span>Mobile Studio Preview</span>

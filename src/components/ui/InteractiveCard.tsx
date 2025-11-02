@@ -177,7 +177,7 @@ export const InteractiveCard = React.forwardRef<HTMLDivElement, InteractiveCardP
 
                 {/* Simple dropdown menu */}
                 {isMenuOpen && menuItems.length > 0 && (
-                  <div className="border-border absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border bg-surface-popover shadow-overlay">
+                  <div className="border-border absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border bg-surface-popover shadow-neo-xl">
                     {menuItems.map((item, index) => (
                       <button
                         key={index}

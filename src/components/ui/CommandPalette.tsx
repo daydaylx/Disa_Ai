@@ -176,7 +176,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         <p id="command-palette-description" className="sr-only">
           Verwende die Pfeiltasten zur Navigation, Enter zum Ausführen, Escape zum Schließen
         </p>
-        <div className="border-border bg-surface-card shadow-level overflow-hidden rounded-lg border">
+        <div className="border-border bg-surface-card shadow-depth-4 overflow-hidden rounded-lg border">
           <div className="border-border flex items-center border-b px-4">
             <svg
               className="text-text-secondary h-5 w-5"

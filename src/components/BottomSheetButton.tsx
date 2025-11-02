@@ -69,7 +69,7 @@ export const BottomSheetButton: React.FC = () => {
         variant="brand"
         size="icon"
         onClick={toggleSheet}
-        className="fixed bottom-[var(--space-md)] right-[var(--space-md)] z-30 shadow-raised"
+        className="fixed bottom-[var(--space-md)] right-[var(--space-md)] z-30 shadow-neo-md"
         aria-label="Menü öffnen"
       >
         <Menu className="h-5 w-5" />

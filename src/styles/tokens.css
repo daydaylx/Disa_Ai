@@ -127,30 +127,14 @@
   --color-control-chip-border: color-mix(in srgb, var(--fg0) 18%, transparent);
 
   /* ========================================================================
-     ELEVATION & SHADOWS
+     SHADOW & GLOW EFFECTS
      ======================================================================== */
 
-  --elev-0: 0 0 0 0 rgba(0, 0, 0, 0);
-  --elev-1: 0 1px 2px rgba(9, 12, 20, 0.08), 0 0 0 1px rgba(9, 12, 20, 0.04);
-  --elev-2: 0 3px 8px rgba(9, 12, 20, 0.12), 0 1px 1px rgba(9, 12, 20, 0.06);
-  --elev-4: 0 8px 20px rgba(9, 12, 20, 0.16), 0 2px 6px rgba(9, 12, 20, 0.08);
-  --elev-8: 0 16px 40px rgba(9, 12, 20, 0.2), 0 4px 12px rgba(9, 12, 20, 0.12);
-
-  --shadow-surface: var(--elev-1);
-  --shadow-raised: var(--elev-2);
-  --shadow-overlay: var(--elev-4);
-  --shadow-popover: var(--elev-8);
   --shadow-focus: 0 0 0 3px color-mix(in srgb, var(--acc1) 30%, transparent);
-  --shadow-surface-subtle: var(--elev-1);
-  --shadow-surface-prominent: var(--elev-4);
-  --shadow-surface-hover: var(--elev-2);
-  --shadow-surface-active: var(--elev-1);
   --shadow-glow-brand: 0 0 0 3px color-mix(in srgb, var(--acc1) 35%, transparent);
   --shadow-glow-success: 0 0 0 3px color-mix(in srgb, var(--ok) 35%, transparent);
   --shadow-glow-warning: 0 0 0 3px color-mix(in srgb, var(--warn) 35%, transparent);
   --shadow-glow-error: 0 0 0 3px color-mix(in srgb, var(--err) 35%, transparent);
-  --shadow-card: var(--shadow-surface);
-  --shadow-card-hover: 0 12px 32px rgba(9, 12, 20, 0.2);
   --neon: 0 0 0 4px rgba(75, 99, 255, 0.35);
   --neon-strong: 0 0 0 8px rgba(75, 99, 255, 0.25);
 
@@ -670,13 +654,6 @@
   --err: #ff6b6b;
   --info: #5aa8ff;
 
-  /* Elevation */
-  --elev-0: 0 0 0 0 rgba(0, 0, 0, 0);
-  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
-  --elev-2: 0 4px 10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  --elev-4: 0 10px 26px rgba(0, 0, 0, 0.65), 0 3px 8px rgba(0, 0, 0, 0.55);
-  --elev-8: 0 20px 48px rgba(0, 0, 0, 0.75), 0 6px 14px rgba(0, 0, 0, 0.6);
-
   /* NEOMORPHISM DARK MODE OVERRIDES */
 
   /* Dark mode neomorphic inset shadows (subtler, more highlights) */
@@ -820,13 +797,6 @@
     --warn: #ffb74d;
     --err: #ff6b6b;
     --info: #5aa8ff;
-
-    /* Elevation */
-    --elev-0: 0 0 0 0 rgba(0, 0, 0, 0);
-    --elev-1: 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
-    --elev-2: 0 4px 10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
-    --elev-4: 0 10px 26px rgba(0, 0, 0, 0.65), 0 3px 8px rgba(0, 0, 0, 0.55);
-    --elev-8: 0 20px 48px rgba(0, 0, 0, 0.75), 0 6px 14px rgba(0, 0, 0, 0.6);
 
     /* Category colors - dark mode adaptations */
     --role-accent-alltag-text: var(--role-accent-alltag-200);

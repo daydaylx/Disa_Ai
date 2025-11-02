@@ -99,8 +99,8 @@ export class MobileToastManager {
         padding: calc(var(--space-sm) - 4px) var(--space-sm);
         margin: calc(var(--space-xs) - 4px) 0;
         max-width: calc(100vw - 32px);
-        box-shadow: var(--shadow-overlay);
-        border: 1px solid var(--color-overlay-dialog-border);
+        box-shadow: var(--shadow-neumorphic-lg);
+        border: var(--border-neumorphic-light);
         background: var(--color-overlay-toast-bg);
         color: var(--color-overlay-toast-fg);
         display: flex;
@@ -160,7 +160,8 @@ export class MobileToastManager {
 
       .mobile-toast__action {
         background: color-mix(in srgb, currentColor 18%, transparent);
-        border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+        border: var(--border-neumorphic-light);
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 30%, transparent);
         color: inherit;
         padding: calc(var(--space-xs) - 4px) var(--space-sm);
         border-radius: var(--radius-badge);

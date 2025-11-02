@@ -86,11 +86,11 @@
   }
 
   .elevated {
-    box-shadow: var(--shadow-raised);
+    box-shadow: var(--shadow-neumorphic-md);
   }
 
   .elevated-strong {
-    box-shadow: var(--shadow-overlay);
+    box-shadow: var(--shadow-neumorphic-lg);
   }
 
   /* ========================================================================
@@ -112,7 +112,7 @@
     align-items: center;
     gap: 0.4rem;
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in srgb, var(--color-brand-primary) 28%, transparent);
+    border: var(--border-neumorphic-light);
     background: color-mix(in srgb, var(--color-brand-primary) 14%, transparent);
     color: var(--color-brand-primary);
     padding: 0.25rem 0.75rem;
@@ -132,11 +132,11 @@
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-xl);
-    border: 1px solid rgba(111, 211, 255, 0.32);
+    border: var(--border-neumorphic-subtle);
     background:
       linear-gradient(135deg, rgba(111, 211, 255, 0.12) 0%, transparent 55%),
       linear-gradient(200deg, rgba(255, 159, 111, 0.14) 0%, transparent 70%),
-      var(--color-surface-base);
+      var(--surface-neumorphic-base);
     box-shadow: var(--shadow-depth-5);
   }
 
@@ -200,7 +200,7 @@
   }
 
   .surface-card--raised {
-    box-shadow: var(--shadow-card-hover);
+    box-shadow: var(--shadow-neumorphic-lg);
   }
 
   /* ========================================================================
@@ -216,15 +216,15 @@
     .soft-surface-panel,
     .soft-surface-chrome {
       border-color: var(--color-border-strong);
-      box-shadow: var(--shadow-raised);
-      background-color: var(--color-surface-card);
+      box-shadow: var(--shadow-neumorphic-md);
+      background-color: var(--surface-neumorphic-floating);
     }
 
     .surface-card,
     .card-depth {
       border-color: var(--color-border-strong);
-      box-shadow: var(--shadow-card-hover);
-      background-color: var(--color-surface-raised);
+      box-shadow: var(--shadow-neumorphic-lg);
+      background-color: var(--surface-neumorphic-raised);
     }
   }
 
@@ -253,7 +253,7 @@
     .surface-card:hover,
     .card-depth:hover {
       transform: none;
-      box-shadow: var(--shadow-card);
+      box-shadow: var(--shadow-neumorphic-md);
     }
 
     .brand-panel::before {

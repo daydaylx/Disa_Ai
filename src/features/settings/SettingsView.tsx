@@ -297,7 +297,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
           <Card
             tone="translucent"
             elevation="surface"
-            className="rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] bg-[var(--color-surface-subtle)]/90 p-3 text-xs text-[var(--color-text-secondary)]"
+            className="rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)]/90 p-3 text-xs text-[var(--color-text-secondary)]"
           >
             <p>
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
@@ -465,7 +465,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-surface-base px-4 py-3 backdrop-blur shadow-[var(--shadow-surface)]">
+      <header className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)] px-4 py-3 backdrop-blur shadow-neo-sm">
         <div className="flex items-center justify-between text-sm">
           <div className="space-y-1">
             {section ? (

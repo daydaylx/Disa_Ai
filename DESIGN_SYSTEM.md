@@ -123,18 +123,25 @@ Alle Design Tokens sind zentral definiert in:
 ### Elevation System (Soft-Depth)
 
 ```css
-/* Shadows */
---shadow-surface: var(--elev-1);
---shadow-raised: var(--elev-2);
---shadow-overlay: var(--elev-4);
---shadow-popover: var(--elev-8);
---shadow-focus: 0 0 0 3px color-mix(...);
+/* Neomorphic Raised Shadows */
+--shadow-neumorphic-sm
+--shadow-neumorphic-md
+--shadow-neumorphic-lg
+--shadow-neumorphic-xl
+--shadow-neumorphic-dramatic
+--shadow-neumorphic-extreme
 
-/* Neo-Depth Extensions */
---shadow-surface-subtle
---shadow-surface-prominent
---shadow-surface-hover
---shadow-surface-active
+/* Neomorphic Inset Shadows */
+--shadow-inset-subtle
+--shadow-inset-medium
+--shadow-inset-strong
+--shadow-inset-extreme
+
+/* Depth Aliases */
+--shadow-depth-1 … --shadow-depth-8
+
+/* Focus */
+--shadow-focus-neumorphic
 ```
 
 ### Motion System

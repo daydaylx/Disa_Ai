@@ -115,7 +115,7 @@ function DenseRoleCard({
           type="button"
           data-testid={`role-card-${role.id}`}
           aria-pressed={isActive}
-          className="flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]"
+          className="flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-neumorphic-base)]"
           onClick={onSelect}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {

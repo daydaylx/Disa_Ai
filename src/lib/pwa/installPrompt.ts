@@ -69,7 +69,7 @@ function showInstallPrompt(): void {
       color: white;
       padding: var(--space-md);
       border-radius: var(--radius-install-prompt);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--shadow-neumorphic-lg);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -92,7 +92,7 @@ function showInstallPrompt(): void {
       <button id="pwa-dismiss-btn" style="
         background: transparent;
         color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: var(--border-neumorphic-light);
         padding: calc(var(--space-sm) - 4px) var(--space-md);
         border-radius: var(--radius-focus);
         cursor: pointer;

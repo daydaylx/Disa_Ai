@@ -214,7 +214,7 @@ export function ChatList({
                       />
                       <Button
                         onClick={handleStartStandardChat}
-                        className="w-full shadow-raised"
+                        className="w-full shadow-neo-md"
                         variant="brand"
                         data-testid="start-standard-chat"
                       >

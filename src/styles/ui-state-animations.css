@@ -316,12 +316,12 @@
  * Ghost variant enhancements
  */
 .ui-variant-ghost.ui-hover:not(.ui-disabled):not(.ui-loading) {
-  background-color: var(--color-surface-subtle);
+  background-color: var(--surface-neumorphic-floating);
   transform: var(--ui-hover-scale);
 }
 
 .ui-variant-ghost.ui-active:not(.ui-disabled):not(.ui-loading) {
-  background-color: var(--color-surface-muted);
+  background-color: var(--surface-neumorphic-pressed);
   transform: scale(0.95);
 }
 
@@ -721,8 +721,9 @@ select.ui-focus {
 @media (prefers-reduced-motion: reduce) {
   .neo-dramatic-scale:hover {
     /* Fallback to border highlight for reduced motion */
-    border: 2px solid var(--color-brand-primary);
-    transition: border-color 0.2s ease;
+    box-shadow: 0 0 0 2px var(--color-brand-primary);
+    border: none;
+    transition: box-shadow 0.2s ease;
   }
 }
 
@@ -755,13 +756,13 @@ select.ui-focus {
 @media (prefers-contrast: high) {
   .neo-dramatic-fallback {
     /* Replace dramatic shadows with high contrast borders */
-    box-shadow: none !important;
-    border: 3px solid var(--color-text-primary);
-    background: var(--color-surface-base);
+    border: none;
+    box-shadow: 0 0 0 3px var(--color-text-primary) !important;
+    background: var(--surface-neumorphic-base);
   }
 
   .neo-dramatic-fallback:hover {
-    border-color: var(--color-brand-primary);
+    box-shadow: 0 0 0 3px var(--color-brand-primary) !important;
     background: var(--color-brand-subtle);
   }
 
@@ -885,7 +886,7 @@ select.ui-focus {
 @media (prefers-reduced-motion: reduce) {
   .neo-safe-motion:hover {
     /* Subtle color change instead of transform */
-    background-color: var(--color-surface-raised);
+    background-color: var(--surface-neumorphic-raised);
     border-color: var(--color-brand-primary);
     transition:
       background-color 0.3s ease,

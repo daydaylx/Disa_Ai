@@ -104,7 +104,7 @@ export function ModelCard({
       >
         <div className="flex items-start gap-3">
           <div className="relative flex-shrink-0">
-            <Avatar size="md" className={cn("shadow-surface-subtle", isMobile && "touch-target")}>
+            <Avatar size="md" className={cn("shadow-neo-sm", isMobile && "touch-target")}>
               {provider.slice(0, 1)}
             </Avatar>
             {providerTier === "premium" && (
@@ -235,7 +235,7 @@ export function ModelCard({
           aria-label={isOpen ? "Modelldetails verbergen" : "Modelldetails anzeigen"}
           aria-expanded={isOpen}
           className={cn(
-            "absolute top-3 right-3 flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)]",
+            "absolute top-3 right-3 flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-neumorphic-base)]",
             isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
           )}
         >

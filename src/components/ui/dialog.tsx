@@ -55,9 +55,9 @@ const dialogContentVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-[var(--radius-xl)] border border-overlay-dialog-border bg-overlay-dialog shadow-overlay",
+          "rounded-[var(--radius-xl)] border border-overlay-dialog-border bg-overlay-dialog shadow-neo-xl",
         glass:
-          "rounded-[var(--radius-xl)] border border-overlay-dialog-border/40 bg-overlay-dialog/80 backdrop-blur-xl shadow-overlay supports-[backdrop-filter]:bg-overlay-dialog/60",
+          "rounded-[var(--radius-xl)] border border-overlay-dialog-border/40 bg-overlay-dialog/80 backdrop-blur-xl shadow-neo-xl supports-[backdrop-filter]:bg-overlay-dialog/60",
         neumorphic:
           "rounded-[var(--radius-2xl)] border border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-floating)] shadow-neo-xl motion-safe:hover:shadow-floating motion-safe:transition-shadow motion-safe:duration-300",
         floating:

@@ -10,13 +10,14 @@
   height: 100%;
   max-height: calc(100dvh - var(--layout-header-height) - var(--layout-bottom-nav-height));
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--layout-content-padding-y));
+  background: var(--surface-neumorphic-base);
 }
 
 /* Chat header - mobile optimized */
 .mobile-chat-header {
   padding: var(--space-md) var(--layout-content-padding-x);
-  border-bottom: 1px solid var(--color-border-subtle);
-  background: var(--color-surface-base);
+  border-bottom: var(--border-neumorphic-subtle);
+  background: var(--surface-neumorphic-floating);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -47,6 +48,7 @@
   flex-direction: column;
   gap: var(--space-md);
   -webkit-overflow-scrolling: touch;
+  background: var(--surface-neumorphic-base);
 }
 
 /* Individual message bubble - mobile optimized */
@@ -70,22 +72,22 @@
   align-self: flex-start;
   background: var(--surface-neumorphic-floating);
   color: var(--color-text-primary);
-  border: 1px solid var(--color-border-subtle);
+  border: var(--border-neumorphic-subtle);
   border-bottom-left-radius: var(--radius-sm);
 }
 
 .mobile-message-bubble:hover {
-  background-color: var(--color-surface-raised);
+  background-color: var(--surface-neumorphic-raised);
   border-color: var(--color-border-strong);
-  box-shadow: var(--shadow-raised);
+  box-shadow: var(--shadow-neumorphic-md);
   transform: translateY(-2px);
 }
 
 /* Chat input area - mobile optimized */
 .mobile-chat-input-container {
   padding: var(--space-sm) var(--layout-content-padding-x);
-  border-top: 1px solid var(--color-border-subtle);
-  background: var(--color-surface-base);
+  border-top: var(--border-neumorphic-subtle);
+  background: var(--surface-neumorphic-base);
   position: sticky;
   bottom: 0;
   z-index: 10;
@@ -103,7 +105,7 @@
   min-height: var(--touch-target-comfortable);
   max-height: 120px;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border-subtle);
+  border: var(--border-neumorphic-subtle);
   border-radius: var(--radius-lg);
   background: var(--color-control-field-bg);
   color: var(--color-control-field-fg);
@@ -168,7 +170,7 @@
   border-radius: var(--radius-xl);
   padding: var(--space-md);
   background: var(--surface-neumorphic-floating);
-  border: 1px solid var(--color-border-subtle);
+  border: var(--border-neumorphic-subtle);
   border-bottom-left-radius: var(--radius-sm);
 }
 
@@ -238,7 +240,7 @@
   left: 0;
   right: 0;
   z-index: var(--z-drawer);
-  background: var(--color-surface-overlay);
+  background: var(--surface-neumorphic-overlay);
   display: flex;
   align-items: flex-end;
 }
@@ -246,7 +248,7 @@
 .mobile-chat-history-content {
   width: 100%;
   max-height: 80dvh;
-  background: var(--color-surface-base);
+  background: var(--surface-neumorphic-base);
   border-top-left-radius: var(--radius-xl);
   border-top-right-radius: var(--radius-xl);
   padding: var(--space-md) var(--layout-content-padding-x);
@@ -261,7 +263,7 @@
   justify-content: space-between;
   margin-bottom: var(--space-stack-md);
   padding-bottom: var(--space-stack-sm);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: var(--border-neumorphic-subtle);
 }
 
 .mobile-chat-history-close {
@@ -288,14 +290,14 @@
   gap: var(--space-sm);
   padding: var(--space-md);
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-subtle);
+  border: var(--border-neumorphic-subtle);
   background: var(--surface-neumorphic-floating);
   margin-bottom: var(--space-md);
   transition: all var(--motion-duration-small) var(--motion-easing-standard);
 }
 
 .mobile-chat-history-item:hover {
-  background: var(--color-surface-raised);
+  background: var(--surface-neumorphic-raised);
   border-color: var(--color-border-strong);
   transform: translateY(-1px);
 }
@@ -337,14 +339,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-raised);
+  box-shadow: var(--shadow-neumorphic-md);
   transition: all var(--motion-duration-small) var(--motion-easing-standard);
 }
 
 .mobile-chat-settings-fab:hover {
   background: var(--color-brand-primary-hover);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-overlay);
+  box-shadow: var(--shadow-neumorphic-lg);
 }
 
 /* Responsive adjustments for tablet and desktop */

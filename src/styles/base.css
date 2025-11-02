@@ -41,7 +41,7 @@ body {
   overflow-x: hidden;
   position: relative;
   overscroll-behavior: none;
-  background: var(--color-surface-canvas, var(--bg0));
+  background: var(--surface-neumorphic-base);
   color: var(--color-text-primary, var(--fg0));
   font-family: var(--font-family-sans);
   padding-top: var(--mobile-safe-top);

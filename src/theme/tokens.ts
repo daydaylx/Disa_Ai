@@ -3,7 +3,7 @@ const pxToRem = (px: number): string => `${(px / 16).toFixed(4).replace(/\.?0+$/
 const cssVar = (name: string): string => `var(${name})`;
 
 export const COLOR_TOKENS = {
-  surface: cssVar("--color-surface-base"),
+  surface: cssVar("--surface-neumorphic-base"),
   onSurface: cssVar("--color-text-primary"),
   primary: cssVar("--color-brand-primary"),
   secondary: cssVar("--color-text-secondary"),
@@ -13,15 +13,15 @@ export const COLOR_TOKENS = {
 } as const;
 
 const surfaceColors = {
-  DEFAULT: cssVar("--color-surface-base"),
-  canvas: cssVar("--color-surface-canvas"),
-  base: cssVar("--color-surface-base"),
-  subtle: cssVar("--color-surface-subtle"),
-  muted: cssVar("--color-surface-muted"),
-  raised: cssVar("--color-surface-raised"),
-  card: cssVar("--color-surface-card"),
-  popover: cssVar("--color-surface-popover"),
-  overlay: cssVar("--color-surface-overlay"),
+  DEFAULT: cssVar("--surface-neumorphic-base"),
+  canvas: cssVar("--surface-neumorphic-base"),
+  base: cssVar("--surface-neumorphic-base"),
+  subtle: cssVar("--surface-neumorphic-floating"),
+  muted: cssVar("--surface-neumorphic-pressed"),
+  raised: cssVar("--surface-neumorphic-raised"),
+  card: cssVar("--surface-neumorphic-floating"),
+  popover: cssVar("--surface-neumorphic-floating"),
+  overlay: cssVar("--surface-neumorphic-overlay"),
   "0": cssVar("--surface-0"),
   "1": cssVar("--surface-1"),
   "2": cssVar("--surface-2"),
@@ -228,14 +228,14 @@ export const tailwindRadii = {
 } as const;
 
 export const tailwindShadows = {
-  sm: cssVar("--shadow-surface"),
-  md: cssVar("--shadow-raised"),
-  lg: cssVar("--shadow-overlay"),
-  surface: cssVar("--shadow-surface"),
-  raised: cssVar("--shadow-raised"),
-  overlay: cssVar("--shadow-overlay"),
-  popover: cssVar("--shadow-popover"),
-  focus: cssVar("--shadow-focus"),
+  sm: cssVar("--shadow-neumorphic-sm"),
+  md: cssVar("--shadow-neumorphic-md"),
+  lg: cssVar("--shadow-neumorphic-lg"),
+  surface: cssVar("--shadow-neumorphic-sm"),
+  raised: cssVar("--shadow-neumorphic-md"),
+  overlay: cssVar("--shadow-neumorphic-lg"),
+  popover: cssVar("--shadow-neumorphic-xl"),
+  focus: cssVar("--shadow-focus-neumorphic"),
 
   // Neomorphic shadows
   "neo-sm": cssVar("--shadow-neumorphic-sm"),

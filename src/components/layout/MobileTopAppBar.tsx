@@ -19,7 +19,7 @@ export function MobileTopAppBar({ onMenuToggle }: MobileTopAppBarProps) {
 
   return (
     <header
-      className="app-header fixed top-0 z-20 w-full border-b border-border bg-surface-base backdrop-blur-xl shadow-[var(--shadow-surface)]"
+      className="app-header fixed top-0 z-20 w-full border-b border-border bg-[var(--surface-neumorphic-floating)] backdrop-blur-xl shadow-neo-sm"
       role="banner"
     >
       <div className="mx-auto flex h-16 max-w-[var(--max-content-width)] items-center justify-between px-4 pt-[env(safe-area-inset-top,0px)]">

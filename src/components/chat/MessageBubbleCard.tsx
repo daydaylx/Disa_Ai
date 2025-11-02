@@ -92,8 +92,8 @@ export function MessageBubbleCard({
   const badgeStyles: CSSProperties = {
     backgroundColor: config.accentColor,
     color: "white",
-    boxShadow: `0 0 8px ${config.glowColor}`,
-    border: `1px solid ${config.accentColor}`,
+    boxShadow: `0 0 8px ${config.glowColor}, inset 0 0 0 1px ${config.accentColor}`,
+    border: "var(--border-neumorphic-light)",
   };
 
   return (

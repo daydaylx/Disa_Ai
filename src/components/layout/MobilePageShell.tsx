@@ -12,7 +12,7 @@ export function MobilePageShell({ children, className, contentClassName }: Mobil
   return (
     <div
       className={cn(
-        "relative min-h-dvh overflow-hidden bg-[var(--color-surface-canvas)] text-[var(--color-text-primary)]",
+        "relative min-h-dvh overflow-hidden bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)]",
         className,
       )}
     >

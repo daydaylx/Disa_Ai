@@ -121,7 +121,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="bg-surface-base flex min-h-dvh items-center justify-center p-4">
-          <Card className="shadow-level w-full max-w-2xl rounded-lg p-8">
+          <Card className="shadow-depth-4 w-full max-w-2xl rounded-lg p-8">
             <div className="mb-8 text-center">
               <div className="bg-danger/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <svg
