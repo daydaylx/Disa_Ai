@@ -32,86 +32,133 @@ export function MessageBubbleCard({
 }: MessageBubbleCardProps) {
   const { iso, label } = formatTimestamp(timestamp);
 
+  // Dramatic Neomorphic Configuration
   const cardConfig: Record<
     MessageBubbleVariant,
     {
       alignment: "justify-start" | "justify-end";
+      // Card Properties
+      tone: "neo-raised" | "neo-inset" | "neo-floating";
+      elevation: "medium" | "subtle" | "strong";
+      interactive: "neo-gentle" | false;
+      // Visual Properties
       accentColor: string;
-      bubbleTint: number;
-      badgeTint: number;
-      badgeText: string;
+      glowColor: string;
       badgeIcon: string;
+      badgeVariant: "neo-raised" | "neo-floating";
     }
   > = {
     assistant: {
       alignment: "justify-start",
-      accentColor: "var(--color-brand-primary)",
-      bubbleTint: 6,
-      badgeTint: 14,
-      badgeText: "var(--color-brand-strong)",
+      // Received Message - Subtle Inset
+      tone: "neo-inset",
+      elevation: "subtle",
+      interactive: "neo-gentle",
+      // AI Brand Colors
+      accentColor: "var(--acc1)",
+      glowColor: "rgba(75, 99, 255, 0.3)",
       badgeIcon: "🤖",
+      badgeVariant: "neo-floating",
     },
     user: {
       alignment: "justify-end",
+      // Sent Message - Dramatically Raised
+      tone: "neo-floating",
+      elevation: "strong",
+      interactive: "neo-gentle",
+      // User Brand Colors
       accentColor: "var(--acc2)",
-      bubbleTint: 5,
-      badgeTint: 12,
-      badgeText: "var(--color-text-primary)",
+      glowColor: "rgba(245, 93, 105, 0.3)",
       badgeIcon: "👤",
+      badgeVariant: "neo-raised",
     },
   };
 
   const config = cardConfig[variant];
+
+  // Enhanced Styling with CSS Variables
   const bubbleStyles: CSSProperties = {
-    background: `color-mix(in srgb, ${config.accentColor} ${config.bubbleTint}%, var(--color-surface-card))`,
-    borderColor: `color-mix(in srgb, ${config.accentColor} 18%, var(--color-border-hairline))`,
-  };
-  const badgeStyles: CSSProperties = {
-    background: `color-mix(in srgb, ${config.accentColor} ${config.badgeTint}%, var(--color-surface-card))`,
-    borderColor: `color-mix(in srgb, ${config.accentColor} 32%, transparent)`,
-    color: config.badgeText,
-  };
+    "--message-accent": config.accentColor,
+    "--message-glow": config.glowColor,
+  } as CSSProperties;
+
+  // Accent Bar Styling
   const accentStyles: CSSProperties = {
-    background: `color-mix(in srgb, ${config.accentColor} 65%, transparent)`,
+    backgroundColor: config.accentColor,
+    boxShadow: `0 0 12px ${config.glowColor}`,
+  };
+
+  // Badge Styling
+  const badgeStyles: CSSProperties = {
+    backgroundColor: config.accentColor,
+    color: "white",
+    boxShadow: `0 0 8px ${config.glowColor}`,
+    border: `1px solid ${config.accentColor}`,
   };
 
   return (
     <div className={cn("flex w-full", config.alignment)}>
       <Card
         role="article"
-        tone="default"
-        elevation="surface"
-        interactive={false}
+        tone={config.tone}
+        depth={config.elevation}
+        interactive={config.interactive}
         padding="none"
         className={cn(
-          "relative w-full max-w-[min(100%,640px)] overflow-visible border border-border-hairline text-text-primary",
+          "relative w-full max-w-[min(100%,640px)] overflow-visible transition-all duration-300 ease-out",
+          // Dramatic Message Bubble Enhancements
+          variant === "user" && [
+            "hover:shadow-[var(--shadow-neumorphic-xl)]",
+            "hover:-translate-y-1",
+            "hover:scale-[1.02]",
+          ],
+          variant === "assistant" && ["hover:shadow-[inset_0_8px_16px_rgba(9,12,20,0.12)]"],
           className,
         )}
         style={bubbleStyles}
         {...props}
       >
+        {/* Dramatic Accent Bar */}
         <span
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute top-4 bottom-4 w-1 rounded-full",
-            variant === "assistant" ? "left-2" : "right-2",
+            "pointer-events-none absolute top-4 bottom-4 w-1.5 rounded-full transition-all duration-300",
+            variant === "assistant" ? "left-3" : "right-3",
+            // Enhanced accent bar for user messages
+            variant === "user" && "group-hover:w-2 group-hover:shadow-lg",
           )}
           style={accentStyles}
         />
-        {/* Role Badge Header */}
-        <CardHeader className="pb-2">
+
+        {/* Dramatic Role Badge Header */}
+        <CardHeader className="pb-3">
           <div
             className={cn(
-              "inline-flex max-w-fit items-center gap-2 rounded-[var(--radius-card-inner)] border px-3 py-1.5 text-sm font-medium",
+              "inline-flex max-w-fit items-center gap-2.5 rounded-[var(--radius-lg)] px-4 py-2 text-sm font-semibold transition-all duration-300",
+              // Neomorphic Badge Base
+              "bg-gradient-to-br from-white/20 via-white/10 to-transparent",
+              "backdrop-blur-sm border",
+              // Variant-specific styling
+              variant === "assistant" && [
+                "shadow-[var(--shadow-neumorphic-sm)]",
+                "border-[var(--border-neumorphic-light)]",
+                "hover:shadow-[var(--shadow-neumorphic-md)]",
+              ],
+              variant === "user" && [
+                "shadow-[var(--shadow-neumorphic-md)]",
+                "border-[var(--border-neumorphic-light)]",
+                "hover:shadow-[var(--shadow-neumorphic-lg)]",
+                "hover:-translate-y-0.5",
+              ],
             )}
             style={badgeStyles}
           >
-            <span className="text-sm">{config.badgeIcon}</span>
-            <span className="font-semibold">{author}</span>
+            <span className="text-base">{config.badgeIcon}</span>
+            <span className="font-bold text-white drop-shadow-sm">{author}</span>
             {label && (
               <>
-                <span className="text-current/50">•</span>
-                <time className="text-xs opacity-75" dateTime={iso} title={iso}>
+                <span className="text-white/70 font-normal">•</span>
+                <time className="text-xs text-white/80 font-medium" dateTime={iso} title={iso}>
                   {label}
                 </time>
               </>
@@ -119,12 +166,28 @@ export function MessageBubbleCard({
           </div>
         </CardHeader>
 
-        {/* Message Content with Enhanced Typography */}
-        <CardContent className="pt-0">
-          <div className="text-text-primary whitespace-pre-wrap text-sm leading-relaxed">
+        {/* Enhanced Message Content */}
+        <CardContent className="pt-0 pb-6">
+          <div
+            className={cn(
+              "whitespace-pre-wrap text-sm leading-relaxed transition-colors duration-200",
+              "text-[var(--color-text-primary)]",
+              // Enhanced readability
+              "selection:bg-[var(--acc1)]/20 selection:text-[var(--color-text-primary)]",
+            )}
+          >
             {body}
           </div>
         </CardContent>
+
+        {/* Dramatic Inner Glow Effect */}
+        <div
+          className="absolute inset-0 rounded-[var(--radius-lg)] pointer-events-none opacity-30"
+          style={{
+            background: `radial-gradient(circle at ${variant === "user" ? "right" : "left"} center, ${config.glowColor} 0%, transparent 70%)`,
+            filter: "blur(20px)",
+          }}
+        />
       </Card>
     </div>
   );

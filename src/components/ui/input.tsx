@@ -2,14 +2,72 @@ import React from "react";
 
 import { cn } from "../../lib/utils";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  /** Neomorphic variant for different depth levels */
+  variant?: "default" | "subtle" | "medium" | "strong";
+  /** Size variant for different touch targets */
+  size?: "sm" | "md" | "lg";
+}
 
-const inputBaseClasses =
-  "flex h-10 w-full rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-surface-card)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-base)] disabled:cursor-not-allowed disabled:opacity-50";
+const inputVariants = {
+  default: "neo-inset-subtle",
+  subtle: "neo-inset-subtle",
+  medium: "neo-inset-medium",
+  strong: "neo-inset-strong",
+};
+
+const inputSizes = {
+  sm: "h-8 px-2 py-1 text-xs",
+  md: "h-10 px-3 py-2 text-sm",
+  lg: "h-12 px-4 py-3 text-base",
+};
+
+const inputBaseClasses = [
+  // Layout & Structure
+  "flex w-full rounded-[var(--radius-md)]",
+
+  // Neomorphic Foundation
+  "bg-[var(--surface-neumorphic-base)]",
+  "border-[var(--border-neumorphic-subtle)]",
+
+  // Typography
+  "text-[var(--color-text-primary)]",
+  "placeholder:text-[var(--color-text-muted)]",
+  "font-medium tracking-[-0.01em]",
+
+  // Transitions
+  "transition-all duration-200 ease-out",
+
+  // Focus States (Dramatic Neomorphic)
+  "focus-visible:outline-none",
+  "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
+  "focus-visible:border-[var(--acc1)]",
+  "focus-visible:bg-[var(--surface-neumorphic-floating)]",
+
+  // States
+  "disabled:cursor-not-allowed",
+  "disabled:opacity-50",
+  "disabled:shadow-[var(--shadow-inset-subtle)]",
+
+  // Hover Enhancement
+  "hover:bg-[var(--surface-neumorphic-raised)]",
+  "hover:shadow-[var(--shadow-inset-medium)]",
+
+  // Dark Mode Optimization
+  "dark:bg-[var(--surface-neumorphic-base)]",
+  "dark:border-[var(--border-neumorphic-dark)]",
+].join(" ");
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
-    return <input type={type} className={cn(inputBaseClasses, className)} ref={ref} {...props} />;
+  ({ className, type, variant = "default", size = "md", ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(inputBaseClasses, inputVariants[variant], inputSizes[size], className)}
+        ref={ref}
+        {...props}
+      />
+    );
   },
 );
 Input.displayName = "Input";

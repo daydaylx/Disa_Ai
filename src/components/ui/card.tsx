@@ -4,140 +4,310 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const cardVariants = cva(
-  "relative isolate overflow-hidden rounded-[var(--radius-card)] border border-border-hairline bg-surface-card text-text-primary shadow-surface transition-[box-shadow,transform,border-color,background,opacity,backdrop-filter] duration-small ease-standard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)]",
+  // Dramatic Neomorphic Foundation
+  "relative isolate overflow-hidden rounded-[var(--radius-xl)] border text-[var(--color-text-primary)] transition-all duration-300 ease-out focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus-neumorphic)] focus-visible:border-[var(--acc1)]",
   {
     variants: {
       tone: {
-        default: "",
-        muted: "bg-surface-subtle text-text-secondary border-border-subtle",
-        contrast: "bg-surface-popover text-text-inverse border-border-strong",
+        // === PRIMARY NEOMORPHIC TONES ===
+        "neo-raised":
+          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-md)]",
+        "neo-floating":
+          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)]",
+        "neo-dramatic":
+          "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-xl)]",
+        "neo-extreme":
+          "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-dramatic)] before:absolute before:inset-0 before:rounded-[var(--radius-xl)] before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none",
+        "neo-inset":
+          "bg-[var(--surface-neumorphic-pressed)] border-[var(--border-neumorphic-dark)] shadow-[var(--shadow-inset-medium)]",
+        "neo-glass":
+          "bg-[var(--surface-neumorphic-floating)]/80 border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)] backdrop-blur-sm",
+
+        // === LEGACY TONES (Converted to Neomorphic) ===
+        /** @deprecated Use neo-raised instead */
+        default:
+          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-subtle)] shadow-[var(--shadow-neumorphic-sm)]",
+        /** @deprecated Use neo-floating instead */
+        muted:
+          "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)] shadow-[var(--shadow-inset-subtle)] text-[var(--color-text-secondary)]",
+        /** @deprecated Use neo-dramatic instead */
+        contrast:
+          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-xl)] text-[var(--color-text-primary)]",
+        /** @deprecated Use neo-glass instead */
         translucent:
-          "backdrop-blur-sm bg-surface-card/80 text-text-primary border-border-subtle shadow-surface",
-        solid: "bg-surface-card border-border",
-        outlined: "bg-transparent border-border-strong",
+          "bg-[var(--surface-neumorphic-floating)]/90 border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)] backdrop-blur-sm",
+        /** @deprecated Use neo-raised instead */
+        solid:
+          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-md)]",
+        /** @deprecated Use neo-inset instead */
+        outlined:
+          "bg-transparent border-2 border-[var(--border-neumorphic-subtle)] shadow-[var(--shadow-inset-subtle)]",
+        /** @deprecated Use neo-floating instead */
         neumorphic:
-          "bg-[var(--surface-neumorphic-raised)] text-text-primary border-[var(--border-neumorphic-subtle)] shadow-neo-md",
+          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)]",
       },
       elevation: {
+        // === DRAMATIC NEOMORPHIC ELEVATION SYSTEM ===
         none: "shadow-none",
-        surface: "shadow-surface",
-        raised: "shadow-raised",
-        overlay: "shadow-overlay",
-        popover: "shadow-popover",
-        // Neo-Depth System Extensions
-        "surface-subtle": "shadow-[var(--shadow-surface-subtle)]",
-        "surface-prominent": "shadow-[var(--shadow-surface-prominent)]",
-        "surface-hover": "shadow-[var(--shadow-surface-hover)]",
-        "surface-active": "shadow-[var(--shadow-surface-active)]",
-        // Advanced Depth System
-        "depth-1": "shadow-depth-1",
-        "depth-2": "shadow-depth-2",
-        "depth-3": "shadow-depth-3",
-        "depth-4": "shadow-depth-4",
-        "depth-5": "shadow-depth-5",
-        "depth-6": "shadow-depth-6",
-        floating: "shadow-floating",
-        elevated: "shadow-elevated",
+        subtle: "shadow-[var(--shadow-neumorphic-sm)]", // 8px shadows
+        medium: "shadow-[var(--shadow-neumorphic-md)]", // 15px shadows
+        strong: "shadow-[var(--shadow-neumorphic-lg)]", // 25px shadows
+        dramatic: "shadow-[var(--shadow-neumorphic-xl)]", // 35px shadows
+        extreme: "shadow-[var(--shadow-neumorphic-dramatic)]", // 45px shadows
+        maximum: "shadow-[var(--shadow-neumorphic-extreme)]", // 60px shadows!
+
+        // === DEPTH SYSTEM (1-8 Levels) ===
+        "depth-1": "shadow-[var(--shadow-depth-1)]", // 8px
+        "depth-2": "shadow-[var(--shadow-depth-2)]", // 15px
+        "depth-3": "shadow-[var(--shadow-depth-3)]", // 25px
+        "depth-4": "shadow-[var(--shadow-depth-4)]", // 35px
+        "depth-5": "shadow-[var(--shadow-depth-5)]", // 45px
+        "depth-6": "shadow-[var(--shadow-depth-6)]", // 60px
+        "depth-7": "shadow-[var(--shadow-depth-7)]", // 75px
+        "depth-8": "shadow-[var(--shadow-depth-8)]", // 100px!!!
+
+        // === LEGACY ELEVATIONS (Mapped to Neomorphic) ===
+        /** @deprecated Use subtle instead */
+        surface: "shadow-[var(--shadow-neumorphic-sm)]",
+        /** @deprecated Use medium instead */
+        raised: "shadow-[var(--shadow-neumorphic-md)]",
+        /** @deprecated Use strong instead */
+        overlay: "shadow-[var(--shadow-neumorphic-lg)]",
+        /** @deprecated Use dramatic instead */
+        popover: "shadow-[var(--shadow-neumorphic-xl)]",
+        /** @deprecated Use extreme instead */
+        floating: "shadow-[var(--shadow-neumorphic-dramatic)]",
+        /** @deprecated Use maximum instead */
+        elevated: "shadow-[var(--shadow-neumorphic-extreme)]",
+
+        // === LEGACY NEO-DEPTH (Deprecated) ===
+        /** @deprecated Use depth-1 instead */
+        "surface-subtle": "shadow-[var(--shadow-depth-1)]",
+        /** @deprecated Use depth-3 instead */
+        "surface-prominent": "shadow-[var(--shadow-depth-3)]",
+        /** @deprecated Use depth-2 instead */
+        "surface-hover": "shadow-[var(--shadow-depth-2)]",
+        /** @deprecated Use depth-1 instead */
+        "surface-active": "shadow-[var(--shadow-depth-1)]",
       },
       interactive: {
         false: "",
-        // Enhanced interactions for Neo-Depth
-        gentle:
-          "motion-safe:hover:-translate-y-[3px] motion-safe:hover:shadow-[var(--shadow-surface-hover)] motion-safe:hover:bg-surface-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
-        dramatic:
-          "motion-safe:hover:-translate-y-[6px] motion-safe:hover:scale-[1.01] motion-safe:hover:shadow-[var(--shadow-surface-prominent)] cursor-pointer motion-safe:transition-all motion-safe:duration-280 motion-safe:ease-out",
-        subtle:
-          "motion-safe:hover:bg-surface-subtle motion-safe:hover:border-border cursor-pointer motion-safe:transition-all motion-safe:duration-150 motion-safe:ease-out",
-        press:
-          "motion-safe:active:translate-y-[1px] motion-safe:active:scale-[0.99] motion-safe:active:shadow-[var(--shadow-surface-active)] cursor-pointer motion-safe:transition-all motion-safe:duration-120 motion-safe:ease-out",
-        lift: "motion-safe:hover:-translate-y-[4px] motion-safe:hover:shadow-[var(--shadow-surface-hover)] motion-safe:focus-visible:translate-y-0 motion-safe:focus-visible:shadow-raised cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out",
-        glow: "motion-safe:hover:shadow-[var(--shadow-glow-brand)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "glow-success":
-          "motion-safe:hover:shadow-[var(--shadow-glow-success)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "glow-warning":
-          "motion-safe:hover:shadow-[var(--shadow-glow-warning)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "glow-error":
-          "motion-safe:hover:shadow-[var(--shadow-glow-error)] cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        // Advanced Interactive States
+
+        // === PRIMARY NEOMORPHIC INTERACTIONS ===
+        "neo-gentle": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-neumorphic-lg)]",
+          "hover:bg-[var(--surface-neumorphic-floating)]",
+          "hover:-translate-y-1",
+          "active:shadow-[var(--shadow-inset-subtle)]",
+          "active:bg-[var(--surface-neumorphic-pressed)]",
+          "active:translate-y-0.5",
+        ].join(" "),
+
+        "neo-dramatic": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-neumorphic-xl)]",
+          "hover:bg-gradient-to-br hover:from-[var(--surface-neumorphic-floating)] hover:to-white",
+          "hover:-translate-y-2 hover:scale-[1.02]",
+          "active:shadow-[var(--shadow-inset-medium)]",
+          "active:bg-[var(--surface-neumorphic-pressed)]",
+          "active:translate-y-1 active:scale-[0.98]",
+        ].join(" "),
+
+        "neo-extreme": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-neumorphic-dramatic)]",
+          "hover:bg-gradient-to-br hover:from-white hover:via-[var(--surface-neumorphic-floating)] hover:to-[var(--acc1)]/10",
+          "hover:-translate-y-3 hover:scale-[1.05]",
+          "active:shadow-[var(--shadow-inset-strong)]",
+          "active:bg-[var(--surface-neumorphic-pressed)]",
+          "active:translate-y-1.5 active:scale-[0.95]",
+        ].join(" "),
+
+        "neo-press": [
+          "cursor-pointer",
+          "active:shadow-[var(--shadow-inset-extreme)]",
+          "active:bg-[var(--surface-neumorphic-pressed)]",
+          "active:translate-y-2 active:scale-[0.96]",
+        ].join(" "),
+
+        "neo-lift": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-neumorphic-extreme)]",
+          "hover:-translate-y-4",
+          "focus-visible:-translate-y-0",
+        ].join(" "),
+
+        // === SEMANTIC GLOW EFFECTS ===
+        "glow-brand": [
+          "cursor-pointer",
+          "hover:shadow-[0_0_40px_rgba(75,99,255,0.4)]",
+          "hover:border-[var(--acc1)]",
+        ].join(" "),
+
+        "glow-success": [
+          "cursor-pointer",
+          "hover:shadow-[0_0_30px_rgba(34,197,94,0.4)]",
+          "hover:border-[var(--succ)]",
+        ].join(" "),
+
+        "glow-warning": [
+          "cursor-pointer",
+          "hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]",
+          "hover:border-[var(--warn)]",
+        ].join(" "),
+
+        "glow-error": [
+          "cursor-pointer",
+          "hover:shadow-[0_0_30px_rgba(239,68,68,0.4)]",
+          "hover:border-[var(--err)]",
+        ].join(" "),
+
+        // === LEGACY INTERACTIONS (Converted to Neomorphic) ===
+        /** @deprecated Use neo-gentle instead */
+        gentle: [
+          "cursor-pointer",
+          "hover:-translate-y-1 hover:shadow-[var(--shadow-neumorphic-md)]",
+          "hover:bg-[var(--surface-neumorphic-raised)]",
+        ].join(" "),
+
+        /** @deprecated Use neo-dramatic instead */
+        dramatic: [
+          "cursor-pointer",
+          "hover:-translate-y-2 hover:scale-[1.01] hover:shadow-[var(--shadow-neumorphic-lg)]",
+        ].join(" "),
+
+        /** @deprecated Use neo-gentle instead */
+        subtle: [
+          "cursor-pointer",
+          "hover:bg-[var(--surface-neumorphic-raised)]",
+          "hover:border-[var(--border-neumorphic-light)]",
+        ].join(" "),
+
+        /** @deprecated Use neo-press instead */
+        press: [
+          "cursor-pointer",
+          "active:translate-y-0.5 active:scale-[0.99]",
+          "active:shadow-[var(--shadow-inset-subtle)]",
+        ].join(" "),
+
+        /** @deprecated Use neo-lift instead */
+        lift: [
+          "cursor-pointer",
+          "hover:-translate-y-1 hover:shadow-[var(--shadow-neumorphic-md)]",
+        ].join(" "),
+
+        /** @deprecated Use glow-brand instead */
+        glow: "cursor-pointer hover:shadow-[var(--shadow-glow-brand)]",
+
+        // === REMOVED LEGACY VARIANTS ===
+        /** @deprecated Use neo-gentle instead */
         "depth-hover":
-          "motion-safe:hover:-translate-y-[2px] motion-safe:hover:shadow-[var(--shadow-hover-lift)] cursor-pointer motion-safe:transition-all motion-safe:duration-280 motion-safe:ease-out",
+          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-neumorphic-md)]",
+        /** @deprecated Use neo-press instead */
         "depth-press":
-          "motion-safe:active:translate-y-[1px] motion-safe:active:scale-[0.98] motion-safe:active:shadow-[var(--shadow-active-press)] cursor-pointer motion-safe:transition-all motion-safe:duration-120 motion-safe:ease-out",
+          "cursor-pointer active:translate-y-0.5 active:scale-[0.98] active:shadow-[var(--shadow-inset-subtle)]",
+        /** @deprecated Use neo-lift instead */
         "floating-hover":
-          "motion-safe:hover:-translate-y-[3px] motion-safe:hover:shadow-floating cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "ambient-subtle":
-          "ambient-glow-subtle cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "ambient-medium":
-          "ambient-glow-medium cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
-        "ambient-strong":
-          "ambient-glow-strong cursor-pointer motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out",
+          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-neumorphic-lg)]",
+        /** @deprecated Removed - use glow-* variants */
+        "ambient-subtle": "cursor-pointer",
+        /** @deprecated Removed - use glow-* variants */
+        "ambient-medium": "cursor-pointer",
+        /** @deprecated Removed - use glow-* variants */
+        "ambient-strong": "cursor-pointer",
       },
       padding: {
         none: "",
-        xs: "p-[var(--space-sm)]",
-        sm: "p-[var(--space-md)]",
-        md: "p-[var(--space-lg)]",
-        lg: "p-[var(--space-xl)]",
-        xl: "p-[var(--space-2xl)]",
+        xs: "p-3", // 12px
+        sm: "p-4", // 16px
+        md: "p-6", // 24px
+        lg: "p-8", // 32px
+        xl: "p-10", // 40px
+        "2xl": "p-12", // 48px
       },
       size: {
         auto: "",
-        sm: "max-w-sm",
-        md: "max-w-md",
-        lg: "max-w-lg",
-        xl: "max-w-xl",
+        xs: "max-w-xs", // 320px
+        sm: "max-w-sm", // 384px
+        md: "max-w-md", // 448px
+        lg: "max-w-lg", // 512px
+        xl: "max-w-xl", // 576px
+        "2xl": "max-w-2xl", // 672px
+        "3xl": "max-w-3xl", // 768px
         full: "w-full",
       },
       intent: {
         default: "",
-        primary: "border-brand bg-brand/5 text-brand-text",
-        secondary: "border-action-secondary bg-action-secondary/5",
-        warning: "border-status-warning bg-status-warning/5 text-status-warning-text",
-        error: "border-status-error bg-status-error/5 text-status-error-text",
-        success: "border-status-success bg-status-success/5 text-status-success-text",
-        info: "border-status-info bg-status-info/5 text-status-info-text",
+        // Neomorphic Semantic Colors with Gradients
+        primary:
+          "border-[var(--acc1)] bg-gradient-to-br from-[var(--acc1)]/5 to-[var(--acc2)]/5 text-[var(--color-text-primary)]",
+        secondary:
+          "border-[var(--color-border-subtle)] bg-gradient-to-br from-[var(--surface-neumorphic-base)] to-[var(--surface-neumorphic-raised)]",
+        warning:
+          "border-[var(--warn)] bg-gradient-to-br from-[var(--warn)]/5 to-[var(--warn)]/10 text-[var(--color-text-primary)]",
+        error:
+          "border-[var(--err)] bg-gradient-to-br from-[var(--err)]/5 to-[var(--err)]/10 text-[var(--color-text-primary)]",
+        success:
+          "border-[var(--succ)] bg-gradient-to-br from-[var(--succ)]/5 to-[var(--succ)]/10 text-[var(--color-text-primary)]",
+        info: "border-[var(--info)] bg-gradient-to-br from-[var(--info)]/5 to-[var(--info)]/10 text-[var(--color-text-primary)]",
       },
       state: {
         default: "",
-        loading: "animate-pulse bg-surface-subtle pointer-events-none",
-        disabled: "opacity-50 pointer-events-none cursor-not-allowed",
-        selected: "border-brand bg-brand/10 ring-2 ring-brand/20",
-        focus: "ring-2 ring-brand/50",
+        loading: "animate-pulse bg-[var(--surface-neumorphic-base)] pointer-events-none opacity-75",
+        disabled:
+          "opacity-40 pointer-events-none cursor-not-allowed shadow-[var(--shadow-inset-subtle)]",
+        selected:
+          "border-[var(--acc1)] bg-gradient-to-br from-[var(--acc1)]/10 to-[var(--acc2)]/10 shadow-[0_0_0_2px_var(--acc1)]/20",
+        focus: "border-[var(--acc1)] shadow-[var(--shadow-focus-neumorphic)]",
+        hover: "shadow-[var(--shadow-neumorphic-lg)] -translate-y-1",
+        active: "shadow-[var(--shadow-inset-medium)] translate-y-0.5",
       },
     },
     compoundVariants: [
+      // === NEOMORPHIC TONE + INTERACTIVE COMBINATIONS ===
       {
-        tone: "muted",
-        class: "border-border-subtle",
+        tone: ["neo-raised", "neo-floating", "neo-dramatic", "neo-extreme"],
+        interactive: ["neo-gentle", "neo-dramatic", "neo-extreme"],
+        class: "min-h-[44px]", // Touch target
       },
       {
-        tone: "contrast",
-        elevation: "overlay",
-        class: "shadow-overlay",
+        tone: "neo-glass",
+        interactive: ["neo-gentle", "neo-dramatic"],
+        class: "hover:bg-[var(--surface-neumorphic-floating)]/95 hover:backdrop-blur-md",
       },
+      {
+        tone: "neo-extreme",
+        interactive: "neo-extreme",
+        class: "hover:shadow-[var(--shadow-neumorphic-extreme)] hover:scale-[1.08]",
+      },
+
+      // === INTENT + INTERACTIVE COMBINATIONS ===
       {
         intent: "primary",
-        interactive: "gentle",
-        class: "motion-safe:hover:bg-brand/10",
+        interactive: ["glow-brand", "neo-gentle", "neo-dramatic"],
+        class: "hover:from-[var(--acc1)]/10 hover:to-[var(--acc2)]/15",
       },
       {
         intent: "error",
-        interactive: "gentle",
-        class: "motion-safe:hover:bg-status-error/10",
+        interactive: ["glow-error", "neo-gentle"],
+        class: "hover:from-[var(--err)]/10 hover:to-[var(--err)]/15",
       },
       {
         intent: "success",
-        interactive: "gentle",
-        class: "motion-safe:hover:bg-status-success/10",
+        interactive: ["glow-success", "neo-gentle"],
+        class: "hover:from-[var(--succ)]/10 hover:to-[var(--succ)]/15",
       },
       {
         intent: "warning",
-        interactive: "gentle",
-        class: "motion-safe:hover:bg-status-warning/10",
+        interactive: ["glow-warning", "neo-gentle"],
+        class: "hover:from-[var(--warn)]/10 hover:to-[var(--warn)]/15",
       },
+
+      // === STATE COMBINATIONS ===
       {
         state: "loading",
-        class: "animate-pulse",
+        class: "animate-pulse cursor-wait pointer-events-none",
       },
       {
         state: "selected",
@@ -145,74 +315,59 @@ const cardVariants = cva(
         class: "cursor-default",
       },
       {
-        interactive: ["gentle", "dramatic", "subtle", "press", "lift", "glow"],
-        class: "touch-target min-h-[44px]",
+        state: "disabled",
+        interactive: false,
+        class: "cursor-not-allowed",
+      },
+      {
+        state: "selected",
+        interactive: ["neo-gentle", "gentle"],
+        class:
+          "hover:from-[var(--acc1)]/15 hover:to-[var(--acc2)]/20 hover:border-[var(--acc1)]/60",
+      },
+
+      // === ELEVATION + TONE COMBINATIONS ===
+      {
+        tone: ["neo-dramatic", "neo-extreme"],
+        elevation: ["dramatic", "extreme", "maximum"],
+        class: "border-[var(--border-neumorphic-light)]",
+      },
+      {
+        tone: "neo-inset",
+        elevation: ["none", "subtle"],
+        class: "border-[var(--border-neumorphic-dark)]",
+      },
+
+      // === ACCESSIBILITY COMBINATIONS ===
+      {
+        interactive: [
+          "neo-gentle",
+          "neo-dramatic",
+          "neo-extreme",
+          "glow-brand",
+          "glow-success",
+          "glow-warning",
+          "glow-error",
+        ],
+        class: "min-h-[44px] touch-target",
+      },
+
+      // === LEGACY SUPPORT (Simplified) ===
+      {
+        tone: "neumorphic",
+        interactive: ["gentle", "dramatic"],
+        class:
+          "hover:shadow-[var(--shadow-neumorphic-lg)] hover:bg-[var(--surface-neumorphic-floating)]",
       },
       {
         tone: "translucent",
         interactive: ["gentle", "dramatic"],
-        class: "motion-safe:hover:bg-surface-card/90 motion-safe:hover:backdrop-blur-md",
-      },
-      {
-        intent: "primary",
-        interactive: "glow",
-        class:
-          "motion-safe:hover:shadow-[0_0_25px_rgba(var(--color-brand-rgb),0.4)] motion-safe:hover:border-brand/60",
-      },
-      {
-        intent: "error",
-        interactive: "glow",
-        class: "motion-safe:hover:shadow-[0_0_20px_rgba(var(--color-status-error-rgb),0.3)]",
-      },
-      {
-        intent: "success",
-        interactive: "glow",
-        class: "motion-safe:hover:shadow-[0_0_20px_rgba(var(--color-status-success-rgb),0.3)]",
-      },
-      {
-        state: "selected",
-        interactive: ["gentle", "subtle"],
-        class: "motion-safe:hover:bg-brand/15 motion-safe:hover:border-brand/40",
-      },
-      {
-        state: "loading",
-        interactive: false,
-        class: "cursor-wait pointer-events-none",
-      },
-      // Neomorphic tone compound variants
-      {
-        tone: "neumorphic",
-        interactive: "gentle",
-        class:
-          "motion-safe:hover:shadow-neo-lg motion-safe:hover:bg-[var(--surface-neumorphic-floating)] motion-safe:hover:-translate-y-[2px] motion-safe:transition-all motion-safe:duration-200",
-      },
-      {
-        tone: "neumorphic",
-        interactive: "dramatic",
-        class:
-          "motion-safe:hover:shadow-neo-xl motion-safe:hover:bg-[var(--surface-neumorphic-floating)] motion-safe:hover:-translate-y-[4px] motion-safe:hover:scale-[1.02] motion-safe:transition-all motion-safe:duration-300",
-      },
-      {
-        tone: "neumorphic",
-        interactive: "press",
-        class:
-          "motion-safe:active:shadow-inset-subtle motion-safe:active:bg-[var(--surface-neumorphic-pressed)] motion-safe:active:translate-y-[1px] motion-safe:active:scale-[0.98] motion-safe:transition-all motion-safe:duration-100",
-      },
-      {
-        tone: "neumorphic",
-        interactive: "subtle",
-        class:
-          "motion-safe:hover:bg-[var(--surface-neumorphic-floating)] motion-safe:hover:border-[var(--border-neumorphic-light)] motion-safe:transition-all motion-safe:duration-150",
-      },
-      {
-        tone: "neumorphic",
-        elevation: ["depth-1", "depth-2", "depth-3", "depth-4", "depth-5", "depth-6"],
-        class: "border-[var(--border-neumorphic-light)]",
+        class: "hover:bg-[var(--surface-neumorphic-floating)]/95 hover:backdrop-blur-md",
       },
     ],
     defaultVariants: {
-      tone: "default",
-      elevation: "surface",
+      tone: "neo-raised", // Changed from "default" to neomorphic
+      elevation: "medium", // Changed from "surface" to medium dramatic
       interactive: false,
       padding: "none",
       size: "auto",

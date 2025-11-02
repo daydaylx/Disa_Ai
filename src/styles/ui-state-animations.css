@@ -116,6 +116,52 @@
   }
 }
 
+@keyframes dramatic-lift {
+  0% {
+    transform: translateY(0) scale(1);
+    box-shadow: var(--shadow-neumorphic-md);
+  }
+  100% {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: var(--shadow-neumorphic-dramatic);
+  }
+}
+
+@keyframes neo-press {
+  0% {
+    transform: scale(1);
+    box-shadow: var(--shadow-neumorphic-md);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: var(--shadow-inset-medium);
+  }
+}
+
+@keyframes dramatic-glow {
+  0%,
+  100% {
+    box-shadow: var(--shadow-neumorphic-lg);
+  }
+  50% {
+    box-shadow:
+      var(--shadow-neumorphic-dramatic),
+      0 0 40px rgba(75, 99, 255, 0.3);
+  }
+}
+
+@keyframes neo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow: var(--shadow-neumorphic-lg);
+  }
+  50% {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-neumorphic-xl);
+  }
+}
+
 /* ============================================================================
    UNIVERSAL STATE CLASSES
    ============================================================================ */
@@ -427,4 +473,466 @@ textarea.ui-focus,
 select.ui-focus {
   transform: none; /* Inputs don't scale on focus */
   box-shadow: var(--ui-focus-glow);
+}
+
+/* ============================================================================
+   DRAMATIC NEOMORPHIC ANIMATIONS
+   ============================================================================ */
+
+/**
+ * Dramatic neomorphic interaction classes
+ */
+.neo-dramatic-lift:hover:not(.ui-disabled):not(.ui-loading) {
+  animation: dramatic-lift 0.3s var(--neo-easing-lift) forwards;
+}
+
+.neo-press:active:not(.ui-disabled):not(.ui-loading) {
+  animation: neo-press 0.15s var(--neo-easing-gentle) forwards;
+}
+
+.neo-dramatic-glow:hover:not(.ui-disabled):not(.ui-loading) {
+  animation: dramatic-glow 2s ease-in-out infinite;
+}
+
+.neo-float {
+  animation: neo-float 3s ease-in-out infinite;
+}
+
+/**
+ * Enhanced button micro-interactions
+ */
+.neo-button-dramatic:hover:not(.ui-disabled):not(.ui-loading) {
+  animation: dramatic-lift 0.3s var(--neo-easing-lift) forwards;
+}
+
+.neo-button-dramatic:active:not(.ui-disabled):not(.ui-loading) {
+  animation: neo-press 0.15s var(--neo-easing-gentle) forwards;
+}
+
+/**
+ * Enhanced card interactions
+ */
+.neo-card-floating:hover:not(.ui-disabled):not(.ui-loading) {
+  animation: dramatic-lift 0.4s var(--neo-easing-lift) forwards;
+}
+
+.neo-card-glow:hover:not(.ui-disabled):not(.ui-loading) {
+  animation: dramatic-glow 2.5s ease-in-out infinite;
+}
+
+/**
+ * Performance-optimized dramatic animations
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .neo-enhanced-performance {
+    will-change: transform, box-shadow;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neo-dramatic-lift:hover,
+  .neo-press:active,
+  .neo-dramatic-glow:hover,
+  .neo-float,
+  .neo-button-dramatic:hover,
+  .neo-button-dramatic:active,
+  .neo-card-floating:hover,
+  .neo-card-glow:hover {
+    animation: none !important;
+  }
+}
+
+/* ============================================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================================ */
+
+/**
+ * GPU-accelerated neomorphic elements
+ */
+.neo-gpu-optimized {
+  transform: translateZ(0);
+  will-change: transform, box-shadow, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/**
+ * Critical rendering path optimization
+ */
+.neo-critical-rendering {
+  contain: layout style paint;
+  content-visibility: auto;
+}
+
+/**
+ * Lazy loading optimization for non-critical neomorphic elements
+ */
+.neo-lazy-load {
+  contain: layout;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 200px;
+}
+
+/**
+ * Shadow optimization classes
+ */
+.neo-shadow-optimized {
+  /* Use composite layers for shadows */
+  isolation: isolate;
+  /* Reduce repaints */
+  transform: translateZ(0);
+}
+
+/**
+ * Mobile performance optimizations
+ */
+@media (hover: none) and (pointer: coarse) {
+  .neo-mobile-optimized {
+    /* Reduce animation complexity on mobile */
+    animation-duration: 0.2s !important;
+    transform: none;
+  }
+
+  .neo-mobile-optimized:hover {
+    /* Disable hover animations on touch devices */
+    animation: none !important;
+  }
+
+  .neo-mobile-optimized:active {
+    /* Use simple scale for touch feedback */
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+}
+
+/**
+ * High refresh rate display optimization
+ */
+@media (min-resolution: 120dpi) {
+  .neo-high-refresh {
+    animation-duration: calc(var(--animation-duration) * 0.8);
+    transition-duration: calc(var(--transition-duration) * 0.8);
+  }
+}
+
+/**
+ * Memory-conscious animations for low-end devices
+ */
+@media (max-width: 768px) and (max-height: 1024px) {
+  .neo-memory-conscious {
+    /* Reduce shadow complexity */
+    box-shadow: var(--shadow-neumorphic-sm) !important;
+    /* Simplify transforms */
+    transform: translateY(-2px) !important;
+  }
+
+  .neo-memory-conscious:hover {
+    box-shadow: var(--shadow-neumorphic-md) !important;
+  }
+}
+
+/**
+ * Battery-saving mode
+ */
+@media (prefers-reduced-motion: reduce) {
+  .neo-battery-saver {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================================
+   ADVANCED DRAMATIC NEOMORPHIC PERFORMANCE
+   ============================================================================ */
+
+/**
+ * Dramatic shadow GPU optimization
+ */
+.neo-dramatic-gpu {
+  /* Force GPU layers for complex shadows */
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  isolation: isolate;
+  contain: layout style paint;
+  /* Prevent shadow bleeding */
+  overflow: hidden;
+  /* Hardware acceleration hints */
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/**
+ * Extreme shadow performance class
+ */
+.neo-extreme-performance {
+  /* Pre-optimize for extreme shadows (100px+) */
+  contain: layout style paint size;
+  content-visibility: auto;
+  transform: translate3d(0, 0, 0);
+  /* Reduce layout thrashing */
+  position: relative;
+  z-index: 1;
+}
+
+/**
+ * Dramatic animation performance optimization
+ */
+.neo-dramatic-optimized {
+  /* Composite layer for complex animations */
+  transform: translateZ(0);
+  will-change: transform, box-shadow, opacity;
+  /* Paint containment for better perf */
+  contain: layout style paint;
+  /* Reduce repaints during dramatic hover effects */
+  isolation: isolate;
+}
+
+/**
+ * Dramatic shadow containment for large elements
+ */
+.neo-large-shadow-container {
+  /* Contains shadow rendering within bounds */
+  contain: layout style paint;
+  /* Prevent expensive reflows from dramatic shadows */
+  overflow: visible;
+  /* GPU layer for shadow rendering */
+  transform: translateZ(0);
+  /* Optimize composite layers */
+  isolation: isolate;
+}
+
+/**
+ * Performance-aware dramatic scaling
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .neo-dramatic-scale:hover {
+    transform: translateZ(0) scale(1.05) translateY(-8px);
+    transition:
+      transform 0.3s var(--neo-easing-lift),
+      box-shadow 0.3s var(--neo-easing-lift);
+    will-change: transform, box-shadow;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neo-dramatic-scale:hover {
+    /* Fallback to border highlight for reduced motion */
+    border: 2px solid var(--color-brand-primary);
+    transition: border-color 0.2s ease;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================================================ */
+
+/**
+ * Screen reader optimization for neomorphic elements
+ */
+.neo-sr-optimized {
+  /* Ensure screen readers can identify interactive elements */
+  position: relative;
+}
+
+.neo-sr-optimized::before {
+  /* Hidden content for screen readers */
+  content: attr(aria-label) " - Interactive neomorphic element";
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+/**
+ * High contrast mode dramatic neomorphic fallback
+ */
+@media (prefers-contrast: high) {
+  .neo-dramatic-fallback {
+    /* Replace dramatic shadows with high contrast borders */
+    box-shadow: none !important;
+    border: 3px solid var(--color-text-primary);
+    background: var(--color-surface-base);
+  }
+
+  .neo-dramatic-fallback:hover {
+    border-color: var(--color-brand-primary);
+    background: var(--color-brand-subtle);
+  }
+
+  .neo-dramatic-fallback:focus {
+    outline: 3px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+}
+
+/**
+ * Enhanced focus management for dramatic effects
+ */
+.neo-dramatic-focus:focus {
+  /* Ensure focus is always visible even with dramatic shadows */
+  outline: 3px solid var(--color-brand-primary);
+  outline-offset: 4px;
+  /* Increase z-index to ensure visibility */
+  z-index: var(--z-popover);
+  position: relative;
+}
+
+/**
+ * Prefers-contrast support for neomorphic elements
+ */
+@media (prefers-contrast: more) {
+  .neo-contrast-enhanced {
+    /* Increase contrast for better visibility */
+    filter: contrast(1.2);
+    box-shadow:
+      var(--shadow-neumorphic-dramatic),
+      0 0 0 1px var(--color-text-primary);
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE PERFORMANCE OPTIMIZATIONS
+   ============================================================================ */
+
+/**
+ * Desktop optimizations for dramatic effects
+ */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .neo-desktop-enhanced {
+    /* Enable full dramatic effects on desktop */
+    animation-duration: 0.3s;
+    transition-duration: 0.3s;
+    will-change: transform, box-shadow, filter;
+  }
+
+  .neo-desktop-enhanced:hover {
+    /* Full dramatic transformation on desktop */
+    transform: translateY(-8px) scale(1.05) rotateX(5deg);
+    box-shadow: var(--shadow-neumorphic-extreme);
+    filter: brightness(1.05);
+  }
+}
+
+/**
+ * Tablet optimizations
+ */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .neo-tablet-optimized {
+    /* Moderate dramatic effects on tablet */
+    animation-duration: 0.25s;
+    transition-duration: 0.25s;
+  }
+
+  .neo-tablet-optimized:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-neumorphic-dramatic);
+  }
+}
+
+/**
+ * Mobile-first dramatic optimizations
+ */
+@media (max-width: 767px) {
+  .neo-mobile-dramatic {
+    /* Lighter dramatic effects on mobile */
+    animation-duration: 0.2s;
+    transition-duration: 0.2s;
+  }
+
+  .neo-mobile-dramatic:active {
+    /* Touch feedback with reduced complexity */
+    transform: scale(0.95);
+    box-shadow: var(--shadow-neumorphic-lg);
+    transition: all 0.1s ease;
+  }
+}
+
+/* ============================================================================
+   ADVANCED MOTION PREFERENCES
+   ============================================================================ */
+
+/**
+ * Granular motion control
+ */
+@media (prefers-reduced-motion: reduce) {
+  /* Completely disable all dramatic animations */
+  .neo-no-motion {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  /* Allow only essential state changes */
+  .neo-essential-motion {
+    animation: none !important;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      opacity 0.2s ease;
+    transform: none !important;
+  }
+}
+
+/**
+ * Safe motion for users who prefer reduced motion but need some feedback
+ */
+@media (prefers-reduced-motion: reduce) {
+  .neo-safe-motion:hover {
+    /* Subtle color change instead of transform */
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-brand-primary);
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .neo-safe-motion:focus {
+    /* Strong focus indication without animation */
+    outline: 3px solid var(--color-brand-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(75, 99, 255, 0.2);
+  }
+}
+
+/* ============================================================================
+   DEVICE-SPECIFIC OPTIMIZATIONS
+   ============================================================================ */
+
+/**
+ * Low-power device optimization
+ */
+@media (max-width: 480px) and (max-height: 800px) {
+  .neo-low-power {
+    /* Minimal effects for low-power devices */
+    box-shadow: var(--shadow-neumorphic-sm) !important;
+    transform: none !important;
+    animation: none !important;
+    transition: opacity 0.2s ease;
+  }
+}
+
+/**
+ * High-performance device enhancements
+ */
+@media (min-width: 1440px) and (min-height: 900px) {
+  .neo-high-performance {
+    /* Enhanced effects for high-performance devices */
+    will-change: transform, box-shadow, filter, opacity;
+    transition-timing-function: var(--neo-easing-emphasized);
+  }
+
+  .neo-high-performance:hover {
+    /* Advanced 3D transformations */
+    transform: translateY(-12px) scale(1.08) rotateX(8deg) rotateY(2deg);
+    box-shadow:
+      var(--shadow-neumorphic-extreme),
+      0 0 60px rgba(75, 99, 255, 0.3);
+    filter: brightness(1.1) saturate(1.1);
+  }
 }

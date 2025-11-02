@@ -163,23 +163,29 @@
   --light-direction-y: -1; /* -1 = top, 1 = bottom */
   --light-angle: 315deg; /* Light source angle for gradients */
 
-  /* Neomorphic Inset Shadows (for pressed/input states) */
+  /* Neomorphic Inset Shadows (for pressed/input states) - DRAMATIC */
   --shadow-inset-subtle:
-    inset 2px 2px 5px rgba(9, 12, 20, 0.1), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+    inset 4px 4px 8px rgba(9, 12, 20, 0.12), inset -4px -4px 8px rgba(255, 255, 255, 0.06);
   --shadow-inset-medium:
-    inset 4px 4px 10px rgba(9, 12, 20, 0.15), inset -4px -4px 10px rgba(255, 255, 255, 0.08);
+    inset 8px 8px 16px rgba(9, 12, 20, 0.18), inset -8px -8px 16px rgba(255, 255, 255, 0.1);
   --shadow-inset-strong:
-    inset 6px 6px 15px rgba(9, 12, 20, 0.2), inset -6px -6px 15px rgba(255, 255, 255, 0.1);
+    inset 12px 12px 24px rgba(9, 12, 20, 0.25), inset -12px -12px 24px rgba(255, 255, 255, 0.12);
+  --shadow-inset-extreme:
+    inset 16px 16px 32px rgba(9, 12, 20, 0.3), inset -16px -16px 32px rgba(255, 255, 255, 0.15);
 
-  /* Neomorphic Raised Shadows (dual-directional for soft UI) */
+  /* Neomorphic Raised Shadows (dual-directional for dramatic depth) */
   --shadow-neumorphic-sm:
-    3px 3px 6px rgba(9, 12, 20, 0.12), -3px -3px 6px rgba(255, 255, 255, 0.08);
+    8px 8px 16px rgba(9, 12, 20, 0.15), -8px -8px 16px rgba(255, 255, 255, 0.1);
   --shadow-neumorphic-md:
-    6px 6px 12px rgba(9, 12, 20, 0.15), -6px -6px 12px rgba(255, 255, 255, 0.1);
+    15px 15px 30px rgba(9, 12, 20, 0.18), -15px -15px 30px rgba(255, 255, 255, 0.12);
   --shadow-neumorphic-lg:
-    10px 10px 20px rgba(9, 12, 20, 0.18), -10px -10px 20px rgba(255, 255, 255, 0.12);
+    25px 25px 50px rgba(9, 12, 20, 0.22), -25px -25px 50px rgba(255, 255, 255, 0.15);
   --shadow-neumorphic-xl:
-    15px 15px 30px rgba(9, 12, 20, 0.22), -15px -15px 30px rgba(255, 255, 255, 0.15);
+    35px 35px 70px rgba(9, 12, 20, 0.25), -35px -35px 70px rgba(255, 255, 255, 0.18);
+  --shadow-neumorphic-dramatic:
+    45px 45px 90px rgba(9, 12, 20, 0.28), -45px -45px 90px rgba(255, 255, 255, 0.2);
+  --shadow-neumorphic-extreme:
+    60px 60px 120px rgba(9, 12, 20, 0.32), -60px -60px 120px rgba(255, 255, 255, 0.22);
 
   /* Neomorphic Surfaces (enhanced base colors for depth) */
   --surface-neumorphic-base: var(--bg1);
@@ -193,14 +199,17 @@
   --border-neumorphic-dark: 1px solid rgba(9, 12, 20, 0.05);
   --border-neumorphic-subtle: 1px solid color-mix(in srgb, var(--bg1) 85%, white 15%);
 
-  /* Depth Shadow System (referenced by components) */
+  /* Depth Shadow System (referenced by components) - DRAMATIC SCALE */
   --shadow-depth-1: var(--shadow-neumorphic-sm);
   --shadow-depth-2: var(--shadow-neumorphic-md);
   --shadow-depth-3: var(--shadow-neumorphic-lg);
   --shadow-depth-4: var(--shadow-neumorphic-xl);
-  --shadow-depth-5:
-    20px 20px 40px rgba(9, 12, 20, 0.25), -20px -20px 40px rgba(255, 255, 255, 0.18);
-  --shadow-depth-6: 30px 30px 60px rgba(9, 12, 20, 0.3), -30px -30px 60px rgba(255, 255, 255, 0.22);
+  --shadow-depth-5: var(--shadow-neumorphic-dramatic);
+  --shadow-depth-6: var(--shadow-neumorphic-extreme);
+  --shadow-depth-7:
+    75px 75px 150px rgba(9, 12, 20, 0.35), -75px -75px 150px rgba(255, 255, 255, 0.25);
+  --shadow-depth-8:
+    100px 100px 200px rgba(9, 12, 20, 0.4), -100px -100px 200px rgba(255, 255, 255, 0.28);
 
   /* Neomorphic Focus States (soft glow + inset) */
   --shadow-focus-neumorphic:
@@ -698,13 +707,21 @@
   --border-neumorphic-dark: 1px solid rgba(0, 0, 0, 0.3);
   --border-neumorphic-subtle: 1px solid color-mix(in srgb, var(--bg1) 80%, white 20%);
 
-  /* Dark mode depth shadows (updated for neomorphic system) */
+  /* Dark mode depth shadows (updated for dramatic neomorphic system) */
   --shadow-depth-1: var(--shadow-neumorphic-sm);
   --shadow-depth-2: var(--shadow-neumorphic-md);
   --shadow-depth-3: var(--shadow-neumorphic-lg);
   --shadow-depth-4: var(--shadow-neumorphic-xl);
   --shadow-depth-5: 20px 20px 40px rgba(0, 0, 0, 0.85), -20px -20px 40px rgba(255, 255, 255, 0.12);
   --shadow-depth-6: 30px 30px 60px rgba(0, 0, 0, 0.9), -30px -30px 60px rgba(255, 255, 255, 0.15);
+  --shadow-depth-7: 45px 45px 90px rgba(0, 0, 0, 0.95), -45px -45px 90px rgba(255, 255, 255, 0.18);
+  --shadow-depth-8: 60px 60px 120px rgba(0, 0, 0, 1), -60px -60px 120px rgba(255, 255, 255, 0.2);
+
+  /* Dark mode dramatic neomorphic shadows */
+  --shadow-neumorphic-dramatic:
+    45px 45px 90px rgba(0, 0, 0, 0.95), -45px -45px 90px rgba(255, 255, 255, 0.18);
+  --shadow-neumorphic-extreme:
+    60px 60px 120px rgba(0, 0, 0, 1), -60px -60px 120px rgba(255, 255, 255, 0.2);
 
   /* Dark mode neomorphic focus */
   --shadow-focus-neumorphic:
@@ -877,6 +894,19 @@
     --role-accent-beratung-chip-bg: var(--role-accent-beratung-800);
     --role-accent-beratung-chip-text: var(--role-accent-beratung-200);
     --role-accent-beratung-chip-border: var(--role-accent-beratung-700);
+
+    /* Dark mode dramatic neomorphic shadows */
+    --shadow-neumorphic-dramatic:
+      45px 45px 90px rgba(0, 0, 0, 0.95), -45px -45px 90px rgba(255, 255, 255, 0.18);
+    --shadow-neumorphic-extreme:
+      60px 60px 120px rgba(0, 0, 0, 1), -60px -60px 120px rgba(255, 255, 255, 0.2);
+
+    /* Dark mode dramatic depth system shadows */
+    --shadow-depth-5: var(--shadow-neumorphic-dramatic);
+    --shadow-depth-6: var(--shadow-neumorphic-extreme);
+    --shadow-depth-7: 75px 75px 150px rgba(0, 0, 0, 1), -75px -75px 150px rgba(255, 255, 255, 0.22);
+    --shadow-depth-8:
+      100px 100px 200px rgba(0, 0, 0, 1), -100px -100px 200px rgba(255, 255, 255, 0.25);
   }
 }
 

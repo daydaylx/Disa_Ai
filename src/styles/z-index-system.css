@@ -142,25 +142,4 @@
   z-index: var(--z-debug);
 }
 
-/*
- * Legacy support - gradually migrate away from these
- * TODO: Remove these classes once all components use the new system
- */
-.z-10 {
-  z-index: var(--z-content);
-}
-.z-20 {
-  z-index: var(--z-sticky-header);
-}
-.z-40 {
-  z-index: var(--z-fab);
-}
-.z-50 {
-  z-index: var(--z-drawer);
-}
-.z-90 {
-  z-index: var(--z-sidebar);
-}
-.z-100 {
-  z-index: var(--z-header);
-}
+/* Legacy z-index classes have been fully migrated to semantic naming */

@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 
+import { cn } from "../../lib/utils";
+
 type AccordionItem = {
   id?: string;
   title: string;
@@ -51,13 +53,14 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
   };
 
   return (
-    <div role="group" aria-label="Accordion">
+    <div role="group" aria-label="Accordion" className="space-y-3">
       {items.map((it, i) => {
         const hid = `${uid}-header-${i}`;
         const pid = `${uid}-panel-${i}`;
         const isOpen = openSet.has(i);
         return (
-          <div key={it.id ?? i} className="mb-2">
+          <div key={it.id ?? i} className="group">
+            {/* Dramatic Neomorphic Accordion Header */}
             <button
               ref={(el) => {
                 headerRefs.current[i] = el;
@@ -67,30 +70,118 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
               aria-expanded={isOpen}
               onClick={() => toggle(i)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className="border-border bg-surface-card hover:bg-surface-subtle focus-visible:ring-brand w-full rounded-lg border px-3 py-3 text-left focus-visible:ring-2"
-              style={{ minHeight: 56 }}
+              className={cn(
+                "w-full text-left transition-all duration-300 ease-out",
+                "rounded-[var(--radius-lg)] px-6 py-4",
+                // Neomorphic Base Styling
+                "bg-[var(--surface-neumorphic-raised)]",
+                "shadow-[var(--shadow-neumorphic-md)]",
+                "border border-[var(--border-neumorphic-light)]",
+                // Enhanced States
+                "hover:shadow-[var(--shadow-neumorphic-lg)]",
+                "hover:-translate-y-0.5",
+                "hover:bg-[var(--surface-neumorphic-floating)]",
+                // Focus State
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--acc1)]/50 focus-visible:ring-offset-2",
+                "focus-visible:shadow-[var(--shadow-neumorphic-lg)]",
+                // Open State - Dramatically Enhanced
+                isOpen && [
+                  "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
+                  "shadow-[var(--shadow-neumorphic-lg)]",
+                  "border-[var(--acc1)]/30",
+                  "rounded-b-none",
+                  "-translate-y-1",
+                ],
+              )}
+              style={{ minHeight: 64 }}
             >
-              <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="truncate font-medium">{it.title}</div>
-                  {it.meta && <div className="text-text-secondary truncate text-xs">{it.meta}</div>}
+              <div className="flex items-center justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <div
+                    className={cn(
+                      "truncate font-semibold transition-colors duration-200",
+                      "text-[var(--color-text-primary)]",
+                      isOpen && "text-[var(--acc1)]",
+                    )}
+                  >
+                    {it.title}
+                  </div>
+                  {it.meta && (
+                    <div
+                      className={cn(
+                        "truncate text-xs mt-1 transition-colors duration-200",
+                        "text-[var(--color-text-secondary)]",
+                        isOpen && "text-[var(--color-text-primary)]",
+                      )}
+                    >
+                      {it.meta}
+                    </div>
+                  )}
                 </div>
-                <span
-                  aria-hidden
-                  className={"transform transition-transform " + (isOpen ? "rotate-90" : "")}
+
+                {/* Dramatic Chevron */}
+                <div
+                  className={cn(
+                    "flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300",
+                    "bg-[var(--surface-neumorphic-base)]",
+                    "shadow-[var(--shadow-inset-subtle)]",
+                    "border border-[var(--border-neumorphic-subtle)]",
+                    isOpen && [
+                      "bg-[var(--acc1)]",
+                      "shadow-[var(--shadow-neumorphic-sm)]",
+                      "transform rotate-90 scale-110",
+                      "border-[var(--acc1)]",
+                    ],
+                  )}
                 >
-                  ▸
-                </span>
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "text-lg font-bold transition-all duration-300",
+                      "text-[var(--color-text-secondary)]",
+                      isOpen ? "text-white rotate-90" : "",
+                    )}
+                  >
+                    ▸
+                  </span>
+                </div>
               </div>
             </button>
+
+            {/* Dramatic Neomorphic Content Panel */}
             <div
               id={pid}
               role="region"
               aria-labelledby={hid}
               hidden={!isOpen}
-              className="border-border bg-surface-card rounded-b-lg border-b border-l border-r px-3 pb-3 pt-2"
+              className={cn(
+                "transition-all duration-500 ease-out",
+                "bg-[var(--surface-neumorphic-floating)]",
+                "shadow-[var(--shadow-neumorphic-lg)]",
+                "border-x border-b border-[var(--border-neumorphic-light)]",
+                "rounded-b-[var(--radius-lg)]",
+                "px-6 py-4",
+                // Animation
+                "animate-in slide-in-from-top-2 fade-in-0 duration-300",
+                // Enhanced visual depth
+                "relative",
+                "before:absolute before:inset-0 before:rounded-b-[var(--radius-lg)]",
+                "before:bg-gradient-to-b before:from-transparent before:to-white/5",
+                "before:pointer-events-none",
+              )}
             >
-              {it.content}
+              <div className="relative z-10 text-[var(--color-text-secondary)] leading-relaxed">
+                {it.content}
+              </div>
+
+              {/* Inner Glow Effect */}
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-8 opacity-10 pointer-events-none"
+                style={{
+                  background: "linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 100%)",
+                  filter: "blur(8px)",
+                }}
+              />
             </div>
           </div>
         );

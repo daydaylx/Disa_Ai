@@ -9,35 +9,43 @@ interface HeaderProps {
   status?: "online" | "offline" | "loading" | "error";
   model?: string;
   tokensUsed?: number;
+  /** Header style variant */
+  variant?: "neo-floating" | "neo-glass" | "neo-dramatic" | "default";
+  /** Enable condensed state enhancement */
+  enhanced?: boolean;
 }
 
 const STATUS_META: Record<
   NonNullable<HeaderProps["status"]>,
-  { label: string; bg: string; dot: string; text: string }
+  { label: string; bg: string; dot: string; text: string; glow: string }
 > = {
   online: {
     label: "Online",
-    bg: "bg-status-success-bg",
-    dot: "bg-status-success",
-    text: "text-status-success",
+    bg: "bg-gradient-to-r from-[var(--succ)]/10 to-[var(--succ)]/5 border-[var(--succ)]/30 shadow-[var(--shadow-neumorphic-sm)]",
+    dot: "bg-[var(--succ)] shadow-[0_0_8px_var(--succ)]/50",
+    text: "text-[var(--succ)]",
+    glow: "hover:shadow-[0_0_15px_var(--succ)]/30",
   },
   offline: {
     label: "Offline",
-    bg: "bg-status-danger-bg",
-    dot: "bg-status-danger",
-    text: "text-status-danger",
+    bg: "bg-gradient-to-r from-[var(--err)]/10 to-[var(--err)]/5 border-[var(--err)]/30 shadow-[var(--shadow-neumorphic-sm)]",
+    dot: "bg-[var(--err)] shadow-[0_0_8px_var(--err)]/50",
+    text: "text-[var(--err)]",
+    glow: "hover:shadow-[0_0_15px_var(--err)]/30",
   },
   loading: {
     label: "Verbinde",
-    bg: "bg-status-warning-bg",
-    dot: "bg-status-warning",
-    text: "text-status-warning",
+    bg: "bg-gradient-to-r from-[var(--warn)]/10 to-[var(--warn)]/5 border-[var(--warn)]/30 shadow-[var(--shadow-neumorphic-sm)]",
+    dot: "bg-[var(--warn)] shadow-[0_0_8px_var(--warn)]/50 animate-pulse",
+    text: "text-[var(--warn)]",
+    glow: "hover:shadow-[0_0_15px_var(--warn)]/30",
   },
   error: {
     label: "Fehler",
-    bg: "bg-status-danger-bg",
-    dot: "bg-status-danger",
-    text: "text-status-danger",
+    bg: "bg-gradient-to-r from-[var(--err)]/10 to-[var(--err)]/5 border-[var(--err)]/30 shadow-[var(--shadow-neumorphic-sm)]",
+    dot: "bg-[var(--err)] shadow-[0_0_8px_var(--err)]/50",
+    text: "text-[var(--err)]",
+    glow: "hover:shadow-[0_0_15px_var(--err)]/30",
   },
 };
 
@@ -45,6 +53,8 @@ export const Header: React.FC<HeaderProps> = ({
   status = "online",
   model = "openrouter/auto",
   tokensUsed = 0,
+  variant = "neo-floating",
+  enhanced = true,
 }) => {
   const [condensed, setCondensed] = React.useState(false);
 
@@ -66,28 +76,121 @@ export const Header: React.FC<HeaderProps> = ({
     );
   };
 
+  const headerVariantClasses = {
+    "neo-floating": [
+      // Floating Header Foundation
+      "bg-[var(--surface-neumorphic-floating)]",
+      "shadow-[var(--shadow-neumorphic-lg)]",
+      "border-b-[var(--border-neumorphic-light)]",
+      "backdrop-blur-xl",
+      // Enhanced Condensed State
+      condensed &&
+        enhanced && [
+          "shadow-[var(--shadow-neumorphic-xl)]",
+          "bg-[var(--surface-neumorphic-floating)]",
+          "scale-[0.98]",
+          "mx-2 mt-2 rounded-[var(--radius-xl)]",
+          "border-[var(--border-neumorphic-light)]",
+        ],
+    ]
+      .filter(Boolean)
+      .flat()
+      .join(" "),
+
+    "neo-glass": [
+      "bg-[var(--surface-neumorphic-floating)]/90",
+      "shadow-[var(--shadow-neumorphic-md)]",
+      "border-b-[var(--border-neumorphic-light)]/50",
+      "backdrop-blur-2xl backdrop-saturate-150",
+      condensed &&
+        enhanced && [
+          "shadow-[var(--shadow-neumorphic-lg)]",
+          "bg-[var(--surface-neumorphic-floating)]/95",
+        ],
+    ]
+      .filter(Boolean)
+      .flat()
+      .join(" "),
+
+    "neo-dramatic": [
+      "bg-gradient-to-r from-[var(--surface-neumorphic-floating)] via-[var(--surface-neumorphic-raised)] to-[var(--surface-neumorphic-floating)]",
+      "shadow-[var(--shadow-neumorphic-xl)]",
+      "border-b-[var(--border-neumorphic-light)]",
+      "backdrop-blur-xl",
+      condensed &&
+        enhanced && [
+          "shadow-[var(--shadow-neumorphic-dramatic)]",
+          "bg-gradient-to-r from-white via-[var(--surface-neumorphic-floating)] to-white",
+          "scale-[0.95]",
+          "mx-4 mt-2 rounded-[var(--radius-2xl)]",
+        ],
+    ]
+      .filter(Boolean)
+      .flat()
+      .join(" "),
+
+    default: [
+      "bg-[var(--surface-neumorphic-raised)]",
+      "shadow-[var(--shadow-neumorphic-sm)]",
+      "border-b-[var(--border-neumorphic-subtle)]",
+      condensed && "shadow-[var(--shadow-neumorphic-md)]",
+    ]
+      .filter(Boolean)
+      .join(" "),
+  };
+
   return (
     <header
       className={cn(
-        "safe-x sticky top-0 z-40 border-b border-border-hairline bg-surface-base pt-safe-top transition-[padding,box-shadow,background-color] duration-small ease-standard",
-        condensed
-          ? "pb-[var(--space-sm)] pt-[var(--space-sm)] shadow-surface"
-          : "pb-[var(--space-md)] pt-[var(--space-md)]",
+        // Base Layout
+        "safe-x sticky top-0 z-40 pt-safe-top",
+        "transition-all duration-300 ease-out",
+
+        // Variant-specific styling
+        headerVariantClasses[variant],
+
+        // Padding based on condensed state
+        condensed ? "pb-3 pt-3" : "pb-4 pt-4",
       )}
     >
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-[var(--space-inline-lg)] px-[var(--space-container-x)]">
-        <div className="flex min-w-0 flex-1 items-center gap-[var(--space-inline-md)]">
-          <div className="flex size-[var(--size-touch-compact)] items-center justify-center rounded-[var(--radius-lg)] bg-brand-subtle">
-            <span className="text-body-strong font-semibold text-brand-primary">DA</span>
+      <div
+        className={cn(
+          "mx-auto flex w-full max-w-6xl items-center justify-between gap-6",
+          enhanced ? "px-6" : "px-4",
+        )}
+      >
+        <div className="flex min-w-0 flex-1 items-center gap-4">
+          {/* Dramatic Neomorphic Logo */}
+          <div
+            className={cn(
+              "flex items-center justify-center rounded-[var(--radius-lg)] transition-all duration-300 ease-out",
+              "bg-gradient-to-br from-[var(--acc1)] to-[var(--acc2)]",
+              "shadow-[var(--shadow-neumorphic-md)]",
+              "size-11",
+              // Enhanced states
+              "hover:shadow-[var(--shadow-neumorphic-lg)]",
+              "hover:scale-105",
+              "active:shadow-[var(--shadow-inset-subtle)]",
+              "active:scale-95",
+              // Brand glow effect
+              "hover:shadow-[0_0_20px_rgba(75,99,255,0.3)]",
+            )}
+          >
+            <span className="text-lg font-bold text-white drop-shadow-sm">DA</span>
           </div>
-          <div className="flex min-w-0 flex-col gap-[var(--space-3xs)]">
-            <div className="text-title font-semibold leading-tight text-text-primary">Disa AI</div>
-            <div className="flex flex-wrap items-center gap-[var(--space-inline-sm)] text-caption text-text-tertiary">
+          <div className="flex min-w-0 flex-col gap-1">
+            <div className="text-lg font-semibold leading-tight text-[var(--color-text-primary)]">
+              Disa AI
+            </div>
+            <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--color-text-tertiary)]">
+              {/* Dramatic Neomorphic Status Badge */}
               <span
                 className={cn(
-                  "inline-flex items-center gap-[var(--space-3xs)] rounded-full px-[var(--space-inline-sm)] py-[var(--space-3xs)]",
+                  "inline-flex items-center gap-2 rounded-full px-3 py-1.5 border transition-all duration-300 ease-out",
                   statusMeta.bg,
                   statusMeta.text,
+                  statusMeta.glow,
+                  "hover:scale-105 cursor-pointer",
                 )}
               >
                 <span
@@ -96,21 +199,52 @@ export const Header: React.FC<HeaderProps> = ({
                 />
                 {statusMeta.label}
               </span>
-              <span className="truncate">{model}</span>
-              {tokensUsed > 0 ? (
-                <span className="text-text-secondary">{tokensUsed} Tokens</span>
-              ) : null}
+
+              {/* Model Info with Neomorphic Container */}
+              <span
+                className={cn(
+                  "truncate px-2 py-1 rounded-md",
+                  "bg-[var(--surface-neumorphic-base)]",
+                  "shadow-[var(--shadow-inset-subtle)]",
+                  "border-[var(--border-neumorphic-subtle)]",
+                  "text-[var(--color-text-secondary)]",
+                  "hover:bg-[var(--surface-neumorphic-raised)]",
+                  "hover:shadow-[var(--shadow-neumorphic-sm)]",
+                  "transition-all duration-200 ease-out",
+                )}
+              >
+                {model}
+              </span>
+
+              {/* Token Counter */}
+              {tokensUsed > 0 && (
+                <span
+                  className={cn(
+                    "px-2 py-1 rounded-md font-medium",
+                    "bg-[var(--surface-neumorphic-raised)]",
+                    "shadow-[var(--shadow-neumorphic-sm)]",
+                    "border-[var(--border-neumorphic-light)]",
+                    "text-[var(--color-text-secondary)]",
+                    "hover:text-[var(--color-text-primary)]",
+                    "transition-all duration-200 ease-out",
+                  )}
+                >
+                  {tokensUsed} Tokens
+                </span>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-[var(--space-inline-sm)]">
+        {/* Enhanced Action Buttons */}
+        <div className="flex shrink-0 items-center gap-2">
           <Button
             type="button"
-            variant="ghost"
+            variant="neo-gentle"
             size="icon"
             aria-label="Schnellmenü öffnen"
             onClick={toggleBottomSheet}
+            className="hover:shadow-[0_0_15px_rgba(75,99,255,0.2)]"
           >
             <Menu className="h-5 w-5" />
           </Button>

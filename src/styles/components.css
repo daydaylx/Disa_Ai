@@ -196,7 +196,7 @@
   font-size: 0.875rem;
   pointer-events: none;
   transition: all 200ms ease;
-  background: var(--color-surface-card);
+  background: var(--surface-neumorphic-floating);
   padding: 0 4px;
   border-radius: var(--radius-sm);
   z-index: 1;
@@ -208,7 +208,7 @@
   left: 10px;
   font-size: 0.75rem;
   color: var(--color-brand-primary);
-  background: var(--color-surface-card);
+  background: var(--surface-neumorphic-floating);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -354,11 +354,11 @@
    ============================================================================ */
 
 .mobile-card {
-  background: var(--color-surface-card);
+  background: var(--surface-neumorphic-floating);
   border-radius: var(--radius-card);
   border: 1px solid var(--color-border-subtle);
   padding: var(--space-lg);
-  box-shadow: var(--shadow-surface);
+  box-shadow: var(--shadow-neumorphic-md);
   transition: all var(--motion-duration-small) var(--motion-easing-standard);
 }
 
@@ -407,7 +407,7 @@
   gap: var(--space-xs);
   padding: var(--space-md);
   border-radius: var(--radius-card);
-  background: var(--color-surface-card);
+  background: var(--surface-neumorphic-floating);
   box-shadow: var(--shadow-raised);
   border-top: 1px solid var(--color-border-subtle);
   z-index: var(--z-composer);
@@ -470,8 +470,8 @@
   max-width: 85%;
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-xl);
-  background: var(--color-surface-card);
-  box-shadow: var(--shadow-surface);
+  background: var(--surface-neumorphic-floating);
+  box-shadow: var(--shadow-neumorphic-md);
   transition: all var(--motion-duration-small) var(--motion-easing-standard);
 }
 
@@ -486,7 +486,7 @@
 .message-bubble-assistant {
   align-self: flex-start;
   margin-right: auto;
-  background: var(--color-surface-card);
+  background: var(--surface-neumorphic-floating);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-subtle);
   border-bottom-left-radius: var(--radius-sm);
@@ -579,9 +579,9 @@
 .mobile-studio-card {
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-card);
-  background: var(--color-surface-card);
+  background: var(--surface-neumorphic-floating);
   padding: var(--space-md);
-  box-shadow: var(--shadow-surface);
+  box-shadow: var(--shadow-neumorphic-md);
 }
 
 /* ============================================================================
@@ -1673,8 +1673,8 @@
   border-radius: var(--card-mobile-border-radius);
   padding: var(--card-mobile-padding);
   border: 1px solid var(--color-border-subtle);
-  background: var(--color-surface-card);
-  box-shadow: var(--shadow-surface);
+  background: var(--surface-neumorphic-floating);
+  box-shadow: var(--shadow-neumorphic-md);
   transition: all var(--motion-duration-small) var(--motion-easing-standard);
 }
 
@@ -1755,7 +1755,7 @@
   border-radius: var(--radius-xl);
   padding: var(--space-mobile-md);
   position: relative;
-  box-shadow: var(--shadow-surface);
+  box-shadow: var(--shadow-neumorphic-md);
   transition: all var(--motion-duration-small) var(--motion-easing-standard);
 }
 
@@ -1768,7 +1768,7 @@
 
 .message-bubble-assistant {
   align-self: flex-start;
-  background: var(--color-surface-card);
+  background: var(--surface-neumorphic-floating);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-subtle);
   border-bottom-left-radius: var(--radius-sm);
@@ -1785,9 +1785,9 @@
   max-width: 85%;
   border-radius: var(--radius-xl);
   padding: var(--space-mobile-md);
-  background: var(--color-surface-card);
+  background: var(--surface-neumorphic-floating);
   border: 1px solid var(--color-border-subtle);
-  box-shadow: var(--shadow-surface);
+  box-shadow: var(--shadow-neumorphic-md);
 }
 
 .mobile-chat-loading-content {
@@ -1960,11 +1960,11 @@
 
   /* Remove movement effects for tiles */
 
-  .soft-surface:hover,
-  .surface-card:hover,
-  .card-depth:hover {
+  .neo-raised:hover,
+  .neo-floating:hover,
+  .neo-inset:hover {
     transform: none !important;
-    box-shadow: var(--shadow-surface);
+    box-shadow: var(--shadow-neumorphic-md);
   }
 
   /* Remove movement effects for StartTiles */
@@ -2058,98 +2058,8 @@
   animation: mobile-shimmer 1.6s linear infinite;
 }
 
-@keyframes mobile-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+/* Duplicate keyframes removed - already defined above */
 
-@keyframes mobile-fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes mobile-fade-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes mobile-slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes mobile-slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes mobile-scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes mobile-bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@keyframes mobile-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(75, 99, 255, 0.35);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(75, 99, 255, 0);
-  }
-}
-
-@keyframes mobile-shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
 /**
  * Unified typography scale with consistent vertical rhythm
  * Optimized for readability at 100%-120% system font size

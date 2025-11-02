@@ -12,22 +12,90 @@ const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "flex min-h-[var(--size-touch-comfortable)] w-full items-center justify-between rounded-[var(--radius-md)] border border-control-field-border bg-control-field px-[var(--space-inline-md)] text-body text-text-primary transition-[background,border-color,box-shadow,color] duration-small ease-standard hover:border-control-field-border-hover hover:bg-control-field-hover focus-visible:border-control-field-border-active focus-visible:shadow-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)] disabled:cursor-not-allowed disabled:bg-control-field-disabled disabled:text-text-muted [&>span]:line-clamp-1",
-      className,
-    )}
-    {...props}
-  >
-    {children}
-    <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-70 transition-transform duration-200 data-[state=open]:rotate-180" />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
-));
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+    /** Neomorphic variant for different depth levels */
+    variant?: "default" | "subtle" | "medium" | "strong";
+    /** Size variant for different heights and padding */
+    size?: "sm" | "md" | "lg";
+  }
+>(({ className, children, variant = "default", size = "md", ...props }, ref) => {
+  const variants = {
+    default: "neo-inset-subtle",
+    subtle: "neo-inset-subtle",
+    medium: "neo-inset-medium",
+    strong: "neo-inset-strong",
+  };
+
+  const sizes = {
+    sm: "min-h-[2rem] px-2 py-1 text-xs",
+    md: "min-h-[2.5rem] px-3 py-2 text-sm",
+    lg: "min-h-[3rem] px-4 py-3 text-base",
+  };
+
+  return (
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        // Base Layout
+        "flex w-full items-center justify-between rounded-[var(--radius-md)]",
+        sizes[size],
+
+        // Neomorphic Foundation (Inset Field Style)
+        "bg-[var(--surface-neumorphic-base)]",
+        "border-[var(--border-neumorphic-subtle)]",
+        variants[variant],
+
+        // Typography
+        "text-[var(--color-text-primary)]",
+        "font-medium tracking-[-0.01em]",
+        "[&>span]:line-clamp-1",
+
+        // Interactive States
+        "transition-all duration-200 ease-out",
+        "hover:bg-[var(--surface-neumorphic-raised)]",
+        "hover:shadow-[var(--shadow-inset-medium)]",
+
+        // Focus State (Dramatic Neomorphic)
+        "focus-visible:outline-none",
+        "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
+        "focus-visible:border-[var(--acc1)]",
+        "focus-visible:bg-[var(--surface-neumorphic-floating)]",
+
+        // Open State
+        "data-[state=open]:shadow-[var(--shadow-focus-neumorphic)]",
+        "data-[state=open]:border-[var(--acc1)]",
+        "data-[state=open]:bg-[var(--surface-neumorphic-floating)]",
+
+        // Disabled State
+        "disabled:cursor-not-allowed",
+        "disabled:opacity-50",
+        "disabled:shadow-[var(--shadow-inset-subtle)]",
+
+        // Dark Mode
+        "dark:bg-[var(--surface-neumorphic-base)]",
+        "dark:border-[var(--border-neumorphic-dark)]",
+
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <SelectPrimitive.Icon asChild>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 opacity-70 transition-all duration-300 ease-out",
+            "data-[state=open]:rotate-180",
+            "data-[state=open]:opacity-100",
+            "data-[state=open]:scale-110",
+            // Neomorphic icon effect
+            "drop-shadow-[0_1px_2px_rgba(9,12,20,0.1)]",
+            "data-[state=open]:drop-shadow-[0_2px_4px_rgba(9,12,20,0.15)]",
+          )}
+        />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  );
+});
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButton = React.forwardRef<
@@ -36,10 +104,17 @@ const SelectScrollUpButton = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollUpButton
     ref={ref}
-    className={cn("flex cursor-default items-center justify-center py-1", className)}
+    className={cn(
+      "flex cursor-default items-center justify-center py-1",
+      "bg-[var(--surface-neumorphic-raised)]",
+      "shadow-[var(--shadow-neumorphic-sm)]",
+      "hover:shadow-[var(--shadow-neumorphic-md)]",
+      "transition-all duration-200 ease-out",
+      className,
+    )}
     {...props}
   >
-    <ChevronUp className="h-4 w-4" />
+    <ChevronUp className="h-4 w-4 drop-shadow-[0_1px_2px_rgba(9,12,20,0.1)]" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -50,10 +125,17 @@ const SelectScrollDownButton = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollDownButton
     ref={ref}
-    className={cn("flex cursor-default items-center justify-center py-1", className)}
+    className={cn(
+      "flex cursor-default items-center justify-center py-1",
+      "bg-[var(--surface-neumorphic-raised)]",
+      "shadow-[var(--shadow-neumorphic-sm)]",
+      "hover:shadow-[var(--shadow-neumorphic-md)]",
+      "transition-all duration-200 ease-out",
+      className,
+    )}
     {...props}
   >
-    <ChevronDown className="h-4 w-4" />
+    <ChevronDown className="h-4 w-4 drop-shadow-[0_1px_2px_rgba(9,12,20,0.1)]" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
@@ -66,9 +148,43 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 min-w-[8rem] overflow-hidden rounded-[var(--radius-lg)] border border-border-subtle bg-surface-popover text-text-primary shadow-popover transition duration-small ease-standard",
-        position === "popper" &&
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        // Animation States
+        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+        "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
+        "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+
+        // Layout
+        "relative z-50 min-w-[8rem] overflow-hidden rounded-[var(--radius-lg)]",
+
+        // Dramatic Neomorphic Floating Panel
+        "bg-[var(--surface-neumorphic-floating)]",
+        "border-[var(--border-neumorphic-light)]",
+        "shadow-[var(--shadow-neumorphic-dramatic)]",
+
+        // Backdrop Effect
+        "backdrop-blur-sm",
+        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none",
+
+        // Typography
+        "text-[var(--color-text-primary)]",
+
+        // Positioning
+        position === "popper" && [
+          "data-[side=bottom]:translate-y-2",
+          "data-[side=left]:-translate-x-2",
+          "data-[side=right]:translate-x-2",
+          "data-[side=top]:-translate-y-2",
+        ],
+
+        // Enhanced Transitions
+        "transition-all duration-300 ease-out",
+
+        // Dark Mode
+        "dark:bg-[var(--surface-neumorphic-floating)]",
+        "dark:border-[var(--border-neumorphic-light)]",
+        "dark:shadow-[var(--shadow-neumorphic-dramatic)]",
+
         className,
       )}
       position={position}
@@ -77,9 +193,11 @@ const SelectContent = React.forwardRef<
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
-          "p-[var(--space-2xs)]",
+          "p-2",
           position === "popper" &&
             "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
+          // Scrollbar styling
+          "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[var(--color-border-subtle)]",
         )}
       >
         {children}
@@ -97,7 +215,22 @@ const SelectLabel = React.forwardRef<
   <SelectPrimitive.Label
     ref={ref}
     className={cn(
-      "px-[var(--space-inline-md)] py-[var(--space-2xs)] text-caption font-semibold text-text-tertiary",
+      // Layout
+      "px-3 py-1.5",
+
+      // Neomorphic Label Style (Subtle Raised)
+      "bg-[var(--surface-neumorphic-raised)]",
+      "shadow-[var(--shadow-neumorphic-sm)]",
+      "rounded-[var(--radius-sm)]",
+      "border-[var(--border-neumorphic-subtle)]",
+
+      // Typography
+      "text-xs font-semibold tracking-wide uppercase",
+      "text-[var(--color-text-tertiary)]",
+
+      // Spacing
+      "mx-1 mb-1",
+
       className,
     )}
     {...props}
@@ -112,14 +245,66 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-[var(--radius-sm)] py-[var(--space-2xs)] pl-[calc(var(--space-inline-md)+var(--space-inline-sm))] pr-[var(--space-inline-md)] text-body text-text-secondary outline-none transition-[background,color] duration-small ease-standard focus:bg-table-hover focus:text-text-primary data-[disabled]:pointer-events-none data-[state=checked]:bg-brand-subtle data-[state=checked]:text-text-primary data-[disabled]:opacity-40",
+      // Layout
+      "relative flex w-full cursor-default select-none items-center",
+      "rounded-[var(--radius-md)] py-2 pl-8 pr-3 mx-1 my-0.5",
+
+      // Neomorphic Base
+      "bg-[var(--surface-neumorphic-base)]",
+      "border-[var(--border-neumorphic-subtle)]",
+
+      // Typography
+      "text-sm text-[var(--color-text-secondary)]",
+      "font-medium tracking-[-0.01em]",
+
+      // Interactive States
+      "transition-all duration-200 ease-out",
+      "outline-none",
+
+      // Hover State (Lift Effect)
+      "hover:bg-[var(--surface-neumorphic-raised)]",
+      "hover:shadow-[var(--shadow-neumorphic-sm)]",
+      "hover:text-[var(--color-text-primary)]",
+      "hover:scale-[1.02]",
+
+      // Focus State
+      "focus:bg-[var(--surface-neumorphic-floating)]",
+      "focus:shadow-[var(--shadow-neumorphic-md)]",
+      "focus:text-[var(--color-text-primary)]",
+      "focus:border-[var(--acc1)]",
+
+      // Selected State (Dramatic Highlight)
+      "data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-[var(--acc1)] data-[state=checked]:to-[var(--acc2)]",
+      "data-[state=checked]:shadow-[var(--shadow-neumorphic-lg)]",
+      "data-[state=checked]:text-white",
+      "data-[state=checked]:font-semibold",
+      "data-[state=checked]:border-[var(--acc1)]",
+
+      // Disabled State
+      "data-[disabled]:pointer-events-none",
+      "data-[disabled]:opacity-40",
+      "data-[disabled]:shadow-none",
+
       className,
     )}
     {...props}
   >
-    <span className="absolute left-[var(--space-inline-md)] flex h-4 w-4 items-center justify-center text-brand-primary">
+    {/* Check Icon Container */}
+    <span
+      className={cn(
+        "absolute left-2 flex h-4 w-4 items-center justify-center",
+        "text-[var(--acc1)]",
+        "data-[state=checked]:text-white",
+      )}
+    >
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" />
+        <Check
+          className={cn(
+            "h-4 w-4",
+            "drop-shadow-[0_1px_2px_rgba(9,12,20,0.2)]",
+            "animate-in zoom-in-75 duration-200",
+          )}
+        />
       </SelectPrimitive.ItemIndicator>
     </span>
 
@@ -134,7 +319,14 @@ const SelectSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
-    className={cn("-mx-[var(--space-2xs)] my-[var(--space-2xs)] h-px bg-border-divider", className)}
+    className={cn(
+      // Neomorphic Inset Line
+      "-mx-1 my-2 h-px",
+      "bg-gradient-to-r from-transparent via-[var(--border-neumorphic-dark)] to-transparent",
+      "shadow-[inset_0_-1px_0_var(--border-neumorphic-light)]",
+
+      className,
+    )}
     {...props}
   />
 ));

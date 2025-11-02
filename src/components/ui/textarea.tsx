@@ -2,14 +2,89 @@ import * as React from "react";
 
 import { cn } from "../../lib/utils";
 
-export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  /** Neomorphic variant for different depth levels */
+  variant?: "default" | "subtle" | "medium" | "strong";
+  /** Size variant for different heights and padding */
+  size?: "sm" | "md" | "lg" | "xl";
+  /** Enable/disable resize functionality */
+  resizable?: boolean;
+}
+
+const textareaVariants = {
+  default: "neo-inset-subtle",
+  subtle: "neo-inset-subtle",
+  medium: "neo-inset-medium",
+  strong: "neo-inset-strong",
+};
+
+const textareaSizes = {
+  sm: "min-h-[4rem] px-2 py-1.5 text-xs",
+  md: "min-h-[6rem] px-3 py-2 text-sm",
+  lg: "min-h-[8rem] px-4 py-3 text-base",
+  xl: "min-h-[12rem] px-5 py-4 text-lg",
+};
+
+const textareaBaseClasses = [
+  // Layout & Structure
+  "flex w-full rounded-[var(--radius-lg)]",
+
+  // Neomorphic Foundation
+  "bg-[var(--surface-neumorphic-base)]",
+  "border-[var(--border-neumorphic-subtle)]",
+
+  // Typography & Content
+  "text-[var(--color-text-primary)]",
+  "placeholder:text-[var(--color-text-muted)]",
+  "font-medium tracking-[-0.01em]",
+  "leading-relaxed",
+
+  // Scrolling & Content Management
+  "overflow-y-auto",
+  "scrollbar-thin scrollbar-track-transparent",
+  "scrollbar-thumb-[var(--color-border-subtle)]",
+
+  // Transitions
+  "transition-all duration-200 ease-out",
+
+  // Focus States (Dramatic Neomorphic)
+  "focus-visible:outline-none",
+  "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
+  "focus-visible:border-[var(--acc1)]",
+  "focus-visible:bg-[var(--surface-neumorphic-floating)]",
+
+  // Enhanced Hover State
+  "hover:bg-[var(--surface-neumorphic-raised)]",
+  "hover:shadow-[var(--shadow-inset-medium)]",
+
+  // Disabled State
+  "disabled:cursor-not-allowed",
+  "disabled:opacity-50",
+  "disabled:shadow-[var(--shadow-inset-subtle)]",
+  "disabled:resize-none",
+
+  // Dark Mode Optimization
+  "dark:bg-[var(--surface-neumorphic-base)]",
+  "dark:border-[var(--border-neumorphic-dark)]",
+  "dark:scrollbar-thumb-[var(--color-border-subtle)]",
+].join(" ");
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, variant = "default", size = "md", resizable = false, ...props }, ref) => {
     return (
       <textarea
         className={cn(
-          "flex min-h-[6rem] w-full resize-none rounded-[var(--radius-md)] border border-control-field-border bg-control-field px-[var(--space-inline-md)] py-[var(--space-xs)] text-body text-text-primary transition-[background,border-color,box-shadow,color] duration-small ease-standard placeholder:text-control-field-placeholder hover:border-control-field-border-hover hover:bg-control-field-hover focus-visible:border-control-field-border-active focus-visible:shadow-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-border-focus)] disabled:cursor-not-allowed disabled:bg-control-field-disabled disabled:text-text-muted disabled:placeholder:text-text-muted",
+          textareaBaseClasses,
+          textareaVariants[variant],
+          textareaSizes[size],
+          resizable ? "resize-y" : "resize-none",
+          // Enhanced resize handle styling for neomorphic aesthetic
+          resizable && [
+            "resize-y",
+            "[&::-webkit-resizer]:bg-[var(--surface-neumorphic-raised)]",
+            "[&::-webkit-resizer]:rounded-br-[var(--radius-md)]",
+            "[&::-webkit-resizer]:shadow-[var(--shadow-neumorphic-sm)]",
+          ],
           className,
         )}
         ref={ref}
