@@ -4,7 +4,7 @@ import { cn } from "../../lib/utils";
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   /** Neomorphic variant for different depth levels */
-  variant?: "default" | "subtle" | "medium" | "strong";
+  variant?: "neo-subtle" | "neo-medium" | "neo-dramatic" | "neo-extreme";
   /** Size variant for different heights and padding */
   size?: "sm" | "md" | "lg" | "xl";
   /** Enable/disable resize functionality */
@@ -12,10 +12,10 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 }
 
 const textareaVariants = {
-  default: "neo-inset-subtle",
-  subtle: "neo-inset-subtle",
-  medium: "neo-inset-medium",
-  strong: "neo-inset-strong",
+  "neo-subtle": "neo-inset-subtle",
+  "neo-medium": "neo-inset-medium",
+  "neo-dramatic": "neo-inset-strong",
+  "neo-extreme": "neo-inset-extreme",
 };
 
 const textareaSizes = {

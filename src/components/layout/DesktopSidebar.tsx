@@ -1,10 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { NAV_ITEMS } from "./GlobalNav";
+
 import { cn } from "../../lib/utils";
+import { NAV_ITEMS } from "./GlobalNav";
 
 export function DesktopSidebar() {
   const location = useLocation();
-  const activePath = NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
+  const activePath =
+    NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
 
   return (
     <aside className="fixed top-0 left-0 z-50 h-full w-64 flex-col border-r border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] p-4 shadow-[var(--shadow-neumorphic-lg)]">
@@ -14,7 +16,7 @@ export function DesktopSidebar() {
       <nav>
         <ul className="space-y-2">
           {NAV_ITEMS.map((item) => (
-            <li key={`desktop-nav-${item.path}">
+            <li key={`desktop-nav-${item.path}`}>
               <Link
                 to={item.path}
                 className={cn(

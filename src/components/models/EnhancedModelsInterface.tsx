@@ -20,11 +20,21 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { MODEL_POLICY } from "../../config/modelPolicy";
 import { loadModelCatalog, type ModelEntry } from "../../config/models";
 import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
-import type { EnhancedModel } from "../../types/enhanced-interfaces";
+import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
-import { Button } from "../ui";
+import {
+  Badge,
+  Button,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui";
 import { Card } from "../ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/Dialog";
+import { useToasts } from "../ui/toast/ToastsProvider";
 
 type SortOption = "name" | "performance" | "price";
 
@@ -193,7 +203,7 @@ const MODEL_CATEGORY_CONFIG: {
 };
 
 // Helper function to categorize models based on tags
-function categorizeModelFromTags(tags: string[], isFree: boolean): ModelCategory {
+export function categorizeModelFromTags(tags: string[], isFree: boolean): ModelCategory {
   // Check free model categories first
   if (isFree) {
     for (const rule of MODEL_CATEGORY_CONFIG.free) {
@@ -245,16 +255,19 @@ function PerformanceBar({
     error: "bg-[var(--err)]",
   };
 
+  // Using the design system for the bar - could use a progress bar component if available
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-text-muted min-w-[60px]">{label}</span>
-      <div className="flex-1 h-2 bg-surface-subtle rounded-full overflow-hidden">
+      <span className="text-xs text-text-secondary min-w-[60px]">{label}</span>
+      <div className="flex-1 h-2 bg-[var(--surface-neumorphic-base)] rounded-full overflow-hidden border border-[var(--border-neumorphic-subtle)] shadow-[var(--shadow-inset-subtle)]">
         <div
-          className={`h-full ${colorClasses[color]} transition-all duration-300`}
+          className={`h-full ${colorClasses[color]} transition-all duration-300 shadow-[inset_0_0_4px_rgba(0,0,0,0.2)]`}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <span className="text-xs font-medium min-w-[30px] text-right">{Math.round(value)}</span>
+      <span className="text-xs font-medium min-w-[30px] text-right text-text-primary">
+        {Math.round(value)}
+      </span>
     </div>
   );
 }
@@ -552,13 +565,13 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           <div className="flex items-center gap-3">
             {/* Search Input */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-              <input
-                type="text"
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
+              <Input
                 placeholder="Modelle durchsuchen..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] shadow-[var(--shadow-inset-subtle)] transition-all duration-200 ease-out focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus-neumorphic)] focus-visible:border-[var(--color-border-focus)] focus-visible:bg-[var(--surface-neumorphic-floating)]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2.5"
+                variant="neo-subtle"
               />
             </div>
 
@@ -629,9 +642,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                   onChange={(e) =>
                     dispatchFilters({ type: "setShowFreeOnly", value: e.target.checked })
                   }
-                  className="rounded"
+                  className="h-4 w-4 rounded border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] shadow-[var(--shadow-inset-subtle)] accent-[var(--acc1)] focus:outline-none focus:ring-0 focus:ring-offset-0"
                 />
-                <span className="text-sm">Nur kostenlose</span>
+                <span className="text-sm text-text-primary">Nur kostenlose</span>
               </label>
 
               <label className="flex items-center gap-2">
@@ -641,22 +654,26 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                   onChange={(e) =>
                     dispatchFilters({ type: "setShowPremiumOnly", value: e.target.checked })
                   }
-                  className="rounded"
+                  className="h-4 w-4 rounded border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] shadow-[var(--shadow-inset-subtle)] accent-[var(--acc1)] focus:outline-none focus:ring-0 focus:ring-offset-0"
                 />
-                <span className="text-sm">Nur Premium</span>
+                <span className="text-sm text-text-primary">Nur Premium</span>
               </label>
 
-              <select
+              <Select
                 value={filters.sortBy}
-                onChange={(e) =>
-                  dispatchFilters({ type: "setSortBy", value: e.target.value as SortOption })
+                onValueChange={(value) =>
+                  dispatchFilters({ type: "setSortBy", value: value as SortOption })
                 }
-                className="px-3 py-1.5 bg-surface-card border border-border-subtle rounded text-sm"
               >
-                <option value="name">Name</option>
-                <option value="performance">Performance</option>
-                <option value="price">Preis</option>
-              </select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Sortieren nach" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="performance">Performance</SelectItem>
+                  <SelectItem value="price">Preis</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         )}

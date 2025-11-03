@@ -4,16 +4,16 @@ import { cn } from "../../lib/utils";
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   /** Neomorphic variant for different depth levels */
-  variant?: "default" | "subtle" | "medium" | "strong";
+  variant?: "neo-subtle" | "neo-medium" | "neo-dramatic" | "neo-extreme";
   /** Size variant for different touch targets */
   size?: "sm" | "md" | "lg";
 }
 
 const inputVariants = {
-  default: "neo-inset-subtle",
-  subtle: "neo-inset-subtle",
-  medium: "neo-inset-medium",
-  strong: "neo-inset-strong",
+  "neo-subtle": "neo-inset-subtle",
+  "neo-medium": "neo-inset-medium",
+  "neo-dramatic": "neo-inset-strong",
+  "neo-extreme": "neo-inset-extreme",
 };
 
 const inputSizes = {

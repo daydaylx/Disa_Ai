@@ -89,11 +89,11 @@ const cardVariants = cva(
       },
       padding: {
         none: "",
-        xs: "p-3", // 12px
-        sm: "p-4", // 16px
-        md: "p-6", // 24px
-        lg: "p-8", // 32px
-        xl: "p-10", // 40px
+        xs: "p-[var(--space-sm)]", // 12px
+        sm: "p-[var(--space-md)]", // 16px
+        md: "p-[var(--space-lg)]", // 24px
+        lg: "p-[var(--space-xl)]", // 32px
+        xl: "p-[var(--space-2xl)]", // 40px
       },
       size: {
         auto: "",

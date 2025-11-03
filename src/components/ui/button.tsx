@@ -40,6 +40,12 @@ const buttonVariants = (
     "disabled:shadow-neo-sm disabled:translate-y-0",
   ].join(" ");
 
+  // Map deprecated variants to their new equivalents
+  const resolvedVariant =
+    variant === "default" || variant === "secondary" || variant === "neumorphic"
+      ? "neo-medium"
+      : variant;
+
   const coreVariantClasses = {
     "neo-subtle": [
       "bg-[var(--surface-neumorphic-raised)]",
@@ -190,7 +196,7 @@ const buttonVariants = (
 
   const deprecatedVariantClasses = {
     default: coreVariantClasses["neo-medium"],
-    secondary: coreVariantClasses["neo-subtle"],
+    secondary: coreVariantClasses["neo-subtle"], // Actually map secondary to neo-subtle to maintain similar appearance
     neumorphic: coreVariantClasses["neo-medium"],
   } as const;
 
