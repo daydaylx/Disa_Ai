@@ -63,10 +63,11 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
       }
     };
 
-    // Create accessible info toggle that's not a nested button
+    // Create accessible info toggle that's not a nested button - using div with button role
     const InfoToggle = ({ className }: { className?: string }) => (
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={handleInfoToggle}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -123,7 +124,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
             filter: "blur(8px)",
           }}
         />
-      </button>
+      </div>
     );
 
     return (
