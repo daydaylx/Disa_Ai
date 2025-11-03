@@ -85,7 +85,7 @@ export function ModelCard({
         role="button"
         tabIndex={0}
         aria-pressed={isSelected}
-        elevation={isSelected ? "surface-prominent" : "raised"}
+        elevation={isSelected ? "dramatic" : "raised"}
         interactive="gentle"
         padding="md"
         state={isSelected ? "selected" : "default"}

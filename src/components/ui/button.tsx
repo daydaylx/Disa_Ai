@@ -170,7 +170,7 @@ const buttonVariants = (
       "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
     ].join(" "),
   } as const satisfies Record<
-    Exclude<ButtonProps["variant"], "default" | "secondary" | "neumorphic">,
+    Exclude<NonNullable<ButtonProps["variant"]>, "default" | "secondary" | "neumorphic">,
     string
   >;
 
@@ -180,7 +180,7 @@ const buttonVariants = (
     neumorphic: coreVariantClasses["neo-medium"],
   } as const;
 
-  const variantClasses: Record<ButtonProps["variant"], string> = {
+  const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
     ...coreVariantClasses,
     ...deprecatedVariantClasses,
   };

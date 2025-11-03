@@ -39,8 +39,8 @@ export function MessageBubbleCard({
       alignment: "justify-start" | "justify-end";
       // Card Properties
       tone: "neo-raised" | "neo-inset" | "neo-floating";
-      elevation: "medium" | "subtle" | "strong";
-      interactive: "neo-gentle" | false;
+      elevation: "none" | "subtle" | "medium" | "raised" | "dramatic";
+      interactive: "gentle" | false;
       // Visual Properties
       accentColor: string;
       glowColor: string;
@@ -53,7 +53,7 @@ export function MessageBubbleCard({
       // Received Message - Subtle Inset
       tone: "neo-inset",
       elevation: "subtle",
-      interactive: "neo-gentle",
+      interactive: "gentle",
       // AI Brand Colors
       accentColor: "var(--acc1)",
       glowColor: "rgba(75, 99, 255, 0.3)",
@@ -64,8 +64,8 @@ export function MessageBubbleCard({
       alignment: "justify-end",
       // Sent Message - Dramatically Raised
       tone: "neo-floating",
-      elevation: "strong",
-      interactive: "neo-gentle",
+      elevation: "dramatic",
+      interactive: "gentle",
       // User Brand Colors
       accentColor: "var(--acc2)",
       glowColor: "rgba(245, 93, 105, 0.3)",
@@ -101,18 +101,19 @@ export function MessageBubbleCard({
       <Card
         role="article"
         tone={config.tone}
-        depth={config.elevation}
+        elevation={config.elevation}
         interactive={config.interactive}
         padding="none"
         className={cn(
           "relative w-full max-w-[min(100%,640px)] overflow-visible transition-all duration-300 ease-out",
           // Dramatic Message Bubble Enhancements
-          variant === "user" && [
-            "hover:shadow-[var(--shadow-neumorphic-xl)]",
-            "hover:-translate-y-1",
-            "hover:scale-[1.02]",
-          ],
-          variant === "assistant" && ["hover:shadow-[inset_0_8px_16px_rgba(9,12,20,0.12)]"],
+          variant === "user" &&
+            [
+              "hover:shadow-[var(--shadow-neumorphic-xl)]",
+              "hover:-translate-y-1",
+              "hover:scale-[1.02]",
+            ].join(" "),
+          variant === "assistant" && "hover:shadow-[inset_0_8px_16px_rgba(9,12,20,0.12)]",
           className,
         )}
         style={bubbleStyles}
@@ -139,17 +140,19 @@ export function MessageBubbleCard({
               "bg-gradient-to-br from-white/20 via-white/10 to-transparent",
               "backdrop-blur-sm border",
               // Variant-specific styling
-              variant === "assistant" && [
-                "shadow-[var(--shadow-neumorphic-sm)]",
-                "border-[var(--border-neumorphic-light)]",
-                "hover:shadow-[var(--shadow-neumorphic-md)]",
-              ],
-              variant === "user" && [
-                "shadow-[var(--shadow-neumorphic-md)]",
-                "border-[var(--border-neumorphic-light)]",
-                "hover:shadow-[var(--shadow-neumorphic-lg)]",
-                "hover:-translate-y-0.5",
-              ],
+              variant === "assistant" &&
+                [
+                  "shadow-[var(--shadow-neumorphic-sm)]",
+                  "border-[var(--border-neumorphic-light)]",
+                  "hover:shadow-[var(--shadow-neumorphic-md)]",
+                ].join(" "),
+              variant === "user" &&
+                [
+                  "shadow-[var(--shadow-neumorphic-md)]",
+                  "border-[var(--border-neumorphic-light)]",
+                  "hover:shadow-[var(--shadow-neumorphic-lg)]",
+                  "hover:-translate-y-0.5",
+                ].join(" "),
             )}
             style={badgeStyles}
           >

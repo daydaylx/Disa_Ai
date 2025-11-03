@@ -37,15 +37,7 @@ const switchSizes = {
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
   (
-    {
-      checked,
-      onChange,
-      id,
-      disabled = false,
-      "aria-describedby": describedBy,
-      size = "md",
-      _variant = "dramatic",
-    },
+    { checked, onChange, id, disabled = false, "aria-describedby": describedBy, size = "md" },
     ref,
   ) => {
     const handleClick = () => {
@@ -76,11 +68,12 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
           "border-[var(--border-neumorphic-dark)]",
 
           // Checked State Track (Illuminated Groove)
-          checked && [
-            "bg-gradient-to-r from-[var(--acc1)] to-[var(--acc2)]",
-            "shadow-[var(--shadow-inset-medium)]",
-            "border-[var(--border-neumorphic-light)]",
-          ],
+          checked &&
+            [
+              "bg-gradient-to-r from-[var(--acc1)] to-[var(--acc2)]",
+              "shadow-[var(--shadow-inset-medium)]",
+              "border-[var(--border-neumorphic-light)]",
+            ].join(" "),
 
           // Hover State
           "hover:shadow-[var(--shadow-inset-extreme)]",
@@ -118,28 +111,30 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
             "bg-gradient-to-br from-white to-[var(--surface-neumorphic-raised)]",
 
             // Checked State Thumb (Enhanced Illumination)
-            checked && [
-              "shadow-[var(--shadow-neumorphic-xl)]",
-              "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--acc1)]",
-              "border-[var(--acc1)]",
-            ],
+            checked &&
+              [
+                "shadow-[var(--shadow-neumorphic-xl)]",
+                "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--acc1)]",
+                "border-[var(--acc1)]",
+              ].join(" "),
 
             // Interactive States
-            !disabled && [
-              // Hover: Subtle lift effect
-              "hover:shadow-[var(--shadow-neumorphic-xl)]",
-              "hover:scale-105",
+            !disabled &&
+              [
+                // Hover: Subtle lift effect
+                "hover:shadow-[var(--shadow-neumorphic-xl)]",
+                "hover:scale-105",
 
-              // Active: Press effect
-              "active:shadow-[var(--shadow-neumorphic-md)]",
-              "active:scale-95",
-            ],
+                // Active: Press effect
+                "active:shadow-[var(--shadow-neumorphic-md)]",
+                "active:scale-95",
+              ].join(" "),
 
             // Disabled State
-            disabled && [
-              "shadow-[var(--shadow-neumorphic-sm)]",
-              "bg-[var(--surface-neumorphic-base)]",
-            ],
+            disabled &&
+              ["shadow-[var(--shadow-neumorphic-sm)]", "bg-[var(--surface-neumorphic-base)]"].join(
+                " ",
+              ),
 
             // Dark Mode Optimization
             "dark:bg-gradient-to-br dark:from-[var(--surface-neumorphic-floating)] dark:to-[var(--surface-neumorphic-base)]",

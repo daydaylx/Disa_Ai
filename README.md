@@ -205,6 +205,7 @@ Die Anwendung ist als Progressive Web App konzipiert, um eine native-ähnliche E
 | **Styling**         | **Tailwind CSS, Radix UI, Lucide Icons**: Utility-First-CSS für schnelles Prototyping; ungestylte, barrierefreie Primitives von Radix; leichtgewichtige Icons. |
 | **State & Routing** | **React Hooks, React Router v6, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.        |
 | **PWA / Offline**   | **Vite PWA Plugin (Workbox)**: Industriestandard zur Erstellung robuster Service Worker und Offline-Fähigkeiten.                                               |
+| **Performance**     | **Virtualized Rendering**: Nachrichten-Virtualisierung für skalierbare Chat-Performance; Lazy Loading für optimierte Ladezeiten.                               |
 | **Unit-Testing**    | **Vitest, Happy DOM, MSW**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung; Mocking von Netzwerk-Anfragen für stabile Tests.                 |
 | **E2E-Testing**     | **Playwright, @axe-core/playwright**: Zuverlässiges Browser-Testing über mehrere Engines; integrierte Accessibility-Prüfungen.                                 |
 | **Code-Qualität**   | **ESLint, Prettier, Husky, lint-staged**: Strikte Regeln für Code-Konsistenz, die automatisch vor jedem Commit erzwungen werden.                               |

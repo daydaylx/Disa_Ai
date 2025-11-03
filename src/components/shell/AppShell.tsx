@@ -61,12 +61,14 @@ export function AppShell({
   return (
     <div
       className={shellClasses}
-      style={{
-        minHeight: "var(--vh, 100dvh)",
-        // Enhanced CSS custom properties for dynamic lighting
-        "--app-ambient-opacity":
-          ambient === "subtle" ? "0.1" : ambient === "medium" ? "0.15" : "0.2",
-      }}
+      style={
+        {
+          minHeight: "var(--vh, 100dvh)",
+          // Enhanced CSS custom properties for dynamic lighting
+          "--app-ambient-opacity":
+            ambient === "subtle" ? "0.1" : ambient === "medium" ? "0.15" : "0.2",
+        } as React.CSSProperties
+      }
     >
       <SkipLink />
 

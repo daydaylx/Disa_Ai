@@ -98,7 +98,7 @@ export function SettingsOverview() {
       <section>
         <Card
           tone="neo-floating"
-          elevation="surface"
+          elevation="subtle"
           className="rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] px-5 py-4 text-[var(--color-text-primary)] shadow-neo-sm"
         >
           <h2 className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-text-tertiary)]">
@@ -136,8 +136,8 @@ export function SettingsOverview() {
             return (
               <Card
                 key={card.id}
-                tone="translucent"
-                elevation="surface"
+                tone="neo-glass"
+                elevation="subtle"
                 interactive="gentle"
                 className="group"
               >
@@ -180,7 +180,7 @@ export function SettingsOverview() {
       <section id="settings-shortcuts" tabIndex={-1}>
         <Card
           tone="neo-floating"
-          elevation="surface"
+          elevation="subtle"
           className="rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] px-4 py-4 shadow-neo-sm"
         >
           <header className="flex items-center gap-2">

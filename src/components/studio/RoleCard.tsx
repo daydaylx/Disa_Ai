@@ -131,8 +131,7 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
         <Card
           ref={ref as any}
           tone={isActive ? "neo-floating" : "neo-raised"}
-          depth={isActive ? "depth-6" : "depth-3"}
-          interactive={isActive ? "neo-dramatic" : "neo-gentle"}
+          interactive={isActive ? "dramatic" : "gentle"}
           padding="lg"
           data-cat={categoryKey}
           className={cn(
@@ -140,25 +139,28 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
             !disabled && "cursor-pointer",
             disabled && "cursor-not-allowed opacity-60",
             // Dramatic Active State
-            isActive && [
-              "bg-gradient-to-br from-[var(--acc1)]/10 via-transparent to-[var(--acc1)]/5",
-              "border-[var(--acc1)]/30",
-              "shadow-[0_0_30px_rgba(75,99,255,0.15)]",
-              "ring-2 ring-[var(--acc1)]/30",
-            ],
+            isActive &&
+              [
+                "bg-gradient-to-br from-[var(--acc1)]/10 via-transparent to-[var(--acc1)]/5",
+                "border-[var(--acc1)]/30",
+                "shadow-[0_0_30px_rgba(75,99,255,0.15)]",
+                "ring-2 ring-[var(--acc1)]/30",
+              ].join(" "),
             // Enhanced Hover States
             !disabled &&
-              !isActive && [
+              !isActive &&
+              [
                 "hover:shadow-[var(--shadow-neumorphic-lg)]",
                 "hover:-translate-y-1",
                 "hover:scale-[1.02]",
-              ],
-            isActive && [
-              "hover:shadow-[var(--shadow-neumorphic-dramatic)]",
-              "hover:-translate-y-2",
-              "hover:scale-[1.03]",
-              "hover:shadow-[0_0_40px_rgba(75,99,255,0.25)]",
-            ],
+              ].join(" "),
+            isActive &&
+              [
+                "hover:shadow-[var(--shadow-neumorphic-dramatic)]",
+                "hover:-translate-y-2",
+                "hover:scale-[1.03]",
+                "hover:shadow-[0_0_40px_rgba(75,99,255,0.25)]",
+              ].join(" "),
             isMobile && "mobile-role-card touch-target",
             // Enhanced padding for info button
             isMobile ? "pr-20" : "pr-16",
@@ -189,11 +191,12 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
                 // Enhanced States
                 "group-hover:shadow-[var(--shadow-neumorphic-lg)]",
                 "group-hover:scale-110",
-                isActive && [
-                  "shadow-[var(--shadow-neumorphic-lg)]",
-                  "shadow-[0_0_20px_rgba(75,99,255,0.4)]",
-                  "scale-105",
-                ],
+                isActive &&
+                  [
+                    "shadow-[var(--shadow-neumorphic-lg)]",
+                    "shadow-[0_0_20px_rgba(75,99,255,0.4)]",
+                    "scale-105",
+                  ].join(" "),
                 isMobile ? "h-14 w-14 text-lg touch-target" : "h-12 w-12 text-base",
               )}
             >

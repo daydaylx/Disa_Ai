@@ -3,7 +3,6 @@ import { ChevronRight, Clock, Tag } from "lucide-react";
 import type { ConversationTemplate } from "../../data/conversationTemplates";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 interface TemplateCardProps {
@@ -38,8 +37,8 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
   return (
     <Card
       tone="neo-floating"
-      depth="depth-2"
-      interactive="neo-gentle"
+      elevation="medium"
+      interactive="gentle"
       role="button"
       tabIndex={0}
       aria-label={`${template.name} auswählen`}
@@ -217,28 +216,33 @@ export function TemplateCard({ template, onUse, onPreview, className }: Template
 
         {/* Enhanced Action Buttons */}
         <div className="flex gap-3 pt-2">
-          <Button
+          <Card
+            interactive="gentle"
+            elevation="medium"
+            className="flex-1 cursor-pointer"
             onClick={(event) => {
               event.stopPropagation();
               handleUse();
             }}
-            variant="neo-medium"
-            className="flex-1"
-            size="md"
           >
-            Use Template
-          </Button>
+            <div className="flex h-10 w-full items-center justify-center rounded-[var(--radius-lg)] px-4 py-2 text-sm font-medium text-[var(--color-text-primary)]">
+              Use Template
+            </div>
+          </Card>
           {onPreview && (
-            <Button
+            <Card
+              interactive="gentle"
+              elevation="subtle"
+              className="cursor-pointer"
               onClick={(event) => {
                 event.stopPropagation();
                 handlePreview();
               }}
-              variant="neo-subtle"
-              size="md"
             >
-              Preview
-            </Button>
+              <div className="flex h-10 w-full items-center justify-center rounded-[var(--radius-lg)] px-4 py-2 text-sm font-medium text-[var(--color-text-primary)]">
+                Preview
+              </div>
+            </Card>
           )}
         </div>
       </CardContent>

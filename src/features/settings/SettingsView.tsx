@@ -273,8 +273,8 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             </Button>
           </div>
           <Card
-            tone="translucent"
-            elevation="surface"
+            tone="neo-glass"
+            elevation="subtle"
             className="rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)]/90 p-3 text-xs text-[var(--color-text-secondary)]"
           >
             <p>
@@ -316,7 +316,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
           </div>
           <Card
             tone="neo-floating"
-            elevation="surface"
+            elevation="subtle"
             className="space-y-3 border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)]"
           >
             <div className="flex items-center justify-between gap-3">
@@ -481,7 +481,7 @@ function SettingsSection({
 }) {
   return (
     <section id={id}>
-      <Card tone="translucent" elevation="surface">
+      <Card tone="neo-glass" elevation="subtle">
         <div className="flex items-start gap-3 border-b border-[var(--color-border-hairline)] px-4 py-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card-small)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)]">
             <Icon className="h-4 w-4" aria-hidden />

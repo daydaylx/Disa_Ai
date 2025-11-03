@@ -194,7 +194,7 @@ export function ChatList({
                   {Array.from({ length: 4 }).map((_, index) => (
                     <Card
                       key={`quickstart-skeleton-${index}`}
-                      elevation="surface"
+                      elevation="subtle"
                       padding="md"
                       className="animate-pulse"
                     >
@@ -266,8 +266,8 @@ export function ChatList({
                 return (
                   <Card
                     key={item.label}
-                    elevation="depth-3"
-                    interactive="depth-hover"
+                    elevation="raised"
+                    interactive="gentle"
                     padding="md"
                     className="border-soft"
                   >
@@ -314,8 +314,8 @@ export function ChatList({
                     return (
                       <Card
                         key={conversation.id}
-                        elevation="depth-2"
-                        interactive="ambient-subtle"
+                        elevation="medium"
+                        interactive="glow-brand"
                         padding="md"
                         state={isActive ? "selected" : "default"}
                         className="group relative flex items-start gap-3 border-soft"

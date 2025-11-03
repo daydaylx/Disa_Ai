@@ -75,7 +75,7 @@ export function QuickstartTile({
   return (
     <Card
       clickable
-      elevation="raised"
+      elevation="medium"
       interactive="gentle"
       padding="md"
       state={isLoading ? "loading" : "default"}

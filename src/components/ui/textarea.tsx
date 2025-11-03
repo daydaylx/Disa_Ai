@@ -79,12 +79,13 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           textareaSizes[size],
           resizable ? "resize-y" : "resize-none",
           // Enhanced resize handle styling for neomorphic aesthetic
-          resizable && [
-            "resize-y",
-            "[&::-webkit-resizer]:bg-[var(--surface-neumorphic-raised)]",
-            "[&::-webkit-resizer]:rounded-br-[var(--radius-md)]",
-            "[&::-webkit-resizer]:shadow-[var(--shadow-neumorphic-sm)]",
-          ],
+          resizable &&
+            [
+              "resize-y",
+              "[&::-webkit-resizer]:bg-[var(--surface-neumorphic-raised)]",
+              "[&::-webkit-resizer]:rounded-br-[var(--radius-md)]",
+              "[&::-webkit-resizer]:shadow-[var(--shadow-neumorphic-sm)]",
+            ].join(" "),
           className,
         )}
         ref={ref}

@@ -106,7 +106,7 @@ export function LoadingBubble({ text = "Disa denkt nach...", className }: Loadin
     <div className={cn("animate-fade-in flex justify-start", className)}>
       <div
         className={cn(
-          cardVariants({ tone: "default", elevation: "surface" }),
+          cardVariants({ tone: "neo-raised", elevation: "medium" }),
           "mr-12 max-w-[85%] rounded-[var(--radius-lg)] border border-border-subtle p-[var(--space-md)]",
         )}
       >

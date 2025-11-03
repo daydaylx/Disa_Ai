@@ -85,7 +85,7 @@ export const DiscussionTopicCard = React.forwardRef<HTMLDivElement, DiscussionTo
         state={isSelected ? "selected" : isDisabled ? "disabled" : "default"}
         interactive={isDisabled ? false : "gentle"}
         padding="sm"
-        elevation="surface"
+        elevation="subtle"
         className={cn(
           "group transition-all duration-200",
           categoryStyle.className,
@@ -163,7 +163,7 @@ export const DiscussionTopicCardSkeleton = React.forwardRef<
     ref={ref}
     state="loading"
     padding="sm"
-    elevation="surface"
+    elevation="subtle"
     className={cn("animate-pulse", className)}
     {...props}
   >

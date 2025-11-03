@@ -242,7 +242,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex shrink-0 items-center gap-2">
           <Button
             type="button"
-            variant="neo-gentle"
+            variant="neo-subtle"
             size="icon"
             aria-label="Schnellmenü öffnen"
             onClick={toggleBottomSheet}

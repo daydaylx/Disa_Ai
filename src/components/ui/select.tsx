@@ -169,12 +169,13 @@ const SelectContent = React.forwardRef<
         "text-[var(--color-text-primary)]",
 
         // Positioning
-        position === "popper" && [
-          "data-[side=bottom]:translate-y-2",
-          "data-[side=left]:-translate-x-2",
-          "data-[side=right]:translate-x-2",
-          "data-[side=top]:-translate-y-2",
-        ],
+        position === "popper" &&
+          [
+            "data-[side=bottom]:translate-y-2",
+            "data-[side=left]:-translate-x-2",
+            "data-[side=right]:translate-x-2",
+            "data-[side=top]:-translate-y-2",
+          ].join(" "),
 
         // Enhanced Transitions
         "transition-all duration-300 ease-out",

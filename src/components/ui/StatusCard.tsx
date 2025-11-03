@@ -103,7 +103,7 @@ export const StatusCard = React.forwardRef<HTMLDivElement, StatusCardProps>(
         ref={ref}
         intent={config.intent}
         state={status === "loading" ? "loading" : "default"}
-        elevation="surface"
+        elevation="subtle"
         padding="md"
         className={cn("relative", className)}
         {...props}

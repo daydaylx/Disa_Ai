@@ -17,7 +17,7 @@ export function StaticSurfaceSection({
   children,
   ...props
 }: StaticSurfaceSectionProps) {
-  const elevation = variant === "raised" ? "raised" : "surface";
+  const elevation = variant === "raised" ? "raised" : "medium";
 
   return (
     <Card elevation={elevation} padding={padding} className={cn("relative", className)} {...props}>

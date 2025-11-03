@@ -60,8 +60,8 @@ export function StartTiles({ onTileClick }: StartTilesProps) {
         return (
           <Card
             key={tile.id}
-            tone="muted"
-            elevation="raised"
+            tone="neo-subtle"
+            elevation="medium"
             interactive="gentle"
             padding="md"
             className={cn(

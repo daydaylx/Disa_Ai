@@ -123,7 +123,7 @@ export const InteractiveCard = React.forwardRef<HTMLDivElement, InteractiveCardP
         onCardClick={handleCardClick}
         state={isLoading ? "loading" : disabled ? "disabled" : selected ? "selected" : "default"}
         interactive={isClickable ? "gentle" : false}
-        elevation="surface"
+        elevation="subtle"
         padding="none"
         className={cn("relative overflow-visible", className)}
         {...props}

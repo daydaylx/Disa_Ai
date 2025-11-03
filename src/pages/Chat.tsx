@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
-import { ChatView } from "../components/chat/ChatView";
+import { ChatList } from "../components/chat/ChatList";
 import { WelcomeScreen } from "../components/chat/WelcomeScreen";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { DISCUSSION_CARD_HINT, discussionTopicConfig } from "../config/discussion-topics";
@@ -201,12 +201,20 @@ export default function Chat() {
             openHistory={openHistory}
           />
         ) : (
-          <ChatView
+          <ChatList
             messages={messages}
             isLoading={isLoading}
-            messagesEndRef={messagesEndRef}
             newConversation={newConversation}
-            openHistory={openHistory}
+            onShowHistory={openHistory}
+            onRetry={(messageId) => {
+              // Implement retry logic if needed
+              console.warn("Retry functionality not implemented for messageId:", messageId);
+            }}
+            onCopy={(content) => {
+              navigator.clipboard.writeText(content).catch((err) => {
+                console.error("Failed to copy content:", err);
+              });
+            }}
           />
         )}
       </main>

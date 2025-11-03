@@ -85,13 +85,14 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--acc1)]/50 focus-visible:ring-offset-2",
                 "focus-visible:shadow-[var(--shadow-neumorphic-lg)]",
                 // Open State - Dramatically Enhanced
-                isOpen && [
-                  "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
-                  "shadow-[var(--shadow-neumorphic-lg)]",
-                  "border-[var(--acc1)]/30",
-                  "rounded-b-none",
-                  "-translate-y-1",
-                ],
+                isOpen &&
+                  [
+                    "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
+                    "shadow-[var(--shadow-neumorphic-lg)]",
+                    "border-[var(--acc1)]/30",
+                    "rounded-b-none",
+                    "-translate-y-1",
+                  ].join(" "),
               )}
               style={{ minHeight: 64 }}
             >
@@ -126,12 +127,13 @@ function Accordion({ items, single = false }: { items: AccordionItem[]; single?:
                     "bg-[var(--surface-neumorphic-base)]",
                     "shadow-[var(--shadow-inset-subtle)]",
                     "border border-[var(--border-neumorphic-subtle)]",
-                    isOpen && [
-                      "bg-[var(--acc1)]",
-                      "shadow-[var(--shadow-neumorphic-sm)]",
-                      "transform rotate-90 scale-110",
-                      "border-[var(--acc1)]",
-                    ],
+                    isOpen &&
+                      [
+                        "bg-[var(--acc1)]",
+                        "shadow-[var(--shadow-neumorphic-sm)]",
+                        "transform rotate-90 scale-110",
+                        "border-[var(--acc1)]",
+                      ].join(" "),
                   )}
                 >
                   <span

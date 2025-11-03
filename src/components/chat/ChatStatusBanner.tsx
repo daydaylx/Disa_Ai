@@ -32,7 +32,7 @@ export function ChatStatusBanner({ error, message, onRetry, className }: ChatSta
 
   return (
     <Card
-      tone="muted"
+      tone="neo-subtle"
       className={cn(
         "border-border flex items-center gap-3 rounded-lg border px-3 py-3 text-sm text-text-secondary",
         className,
