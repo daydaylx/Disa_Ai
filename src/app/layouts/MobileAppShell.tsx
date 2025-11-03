@@ -69,23 +69,30 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
       <DrawerSheet title="Mehr" isOpen={isOverflowOpen} onClose={() => setIsOverflowOpen(false)}>
         <div className="space-y-4">
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
-              Navigation
-            </h3>
-            <ul className="mt-2 space-y-2">
+            <h3 className="text-sm font-semibold text-[var(--color-text-secondary)]">Navigation</h3>
+            <ul className="mt-3 space-y-2">
               {NAV_ITEMS.map((item) => (
                 <li key={`drawer-${item.path}`}>
                   <Link
                     to={item.path}
                     className={cn(
-                      "block w-full rounded-[var(--radius-card-inner)] border px-4 py-3 text-left text-sm font-medium transition-colors",
+                      "group relative flex w-full items-center gap-3 rounded-2xl border border-transparent px-5 py-3 text-sm font-medium transition-all duration-150",
                       activePath === item.path
-                        ? "border-[var(--color-brand-primary)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)]"
-                        : "border-[var(--color-border-hairline)] hover:border-[var(--color-border-subtle)]",
+                        ? "border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_85%,transparent)] text-[var(--color-text-primary)] shadow-[var(--shadow-depth-1)]"
+                        : "text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] hover:bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_70%,transparent)]",
                     )}
                     onClick={() => setIsOverflowOpen(false)}
                   >
-                    {item.label}
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "h-6 w-1 rounded-full transition-colors",
+                        activePath === item.path
+                          ? "bg-[var(--color-brand-primary)]"
+                          : "bg-transparent group-hover:bg-[color-mix(in_srgb,var(--color-brand-primary)_45%,transparent)]",
+                      )}
+                    />
+                    <span className="flex-1">{item.label}</span>
                   </Link>
                 </li>
               ))}
@@ -93,10 +100,10 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
           </section>
 
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
+            <h3 className="text-sm font-semibold text-[var(--color-text-secondary)]">
               Sekundäre Seiten
             </h3>
-            <div className="mt-2 grid gap-2">
+            <div className="mt-3 grid gap-2">
               {[
                 { label: "Impressum", path: "/impressum" },
                 { label: "Datenschutz", path: "/datenschutz" },
@@ -104,7 +111,7 @@ function MobileAppShellLayout({ children, location }: MobileAppShellLayoutProps)
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="block w-full rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] px-4 py-2 text-left text-sm hover:border-[var(--color-border-subtle)]"
+                  className="block w-full rounded-2xl border border-[var(--color-border-hairline)] px-5 py-2.5 text-left text-sm text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-subtle)] hover:bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_65%,transparent)]"
                   onClick={() => setIsOverflowOpen(false)}
                 >
                   {link.label}

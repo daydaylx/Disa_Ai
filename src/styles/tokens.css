@@ -238,10 +238,10 @@
      MOTION & TRANSITIONS
      ======================================================================== */
 
-  --motion-duration-micro: 120ms;
-  --motion-duration-small: 150ms;
-  --motion-duration-medium: 180ms;
-  --motion-duration-large: 200ms;
+  --motion-duration-micro: 110ms;
+  --motion-duration-small: 160ms;
+  --motion-duration-medium: 200ms;
+  --motion-duration-large: 260ms;
   --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --motion-easing-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
   --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
@@ -289,12 +289,12 @@
     0 0 0 4px var(--color-action-primary-focus-ring), 0 2px 8px rgba(var(--brand-rgb), 0.25);
 
   /* Hover animation tokens */
-  --ui-hover-lift: translateY(-1px);
-  --ui-hover-scale: scale(1.01);
+  --ui-hover-lift: translateY(-2px);
+  --ui-hover-scale: scale(1.005);
   --ui-hover-glow-subtle: 0 4px 12px rgba(0, 0, 0, 0.08);
 
   /* Active/pressed animation tokens */
-  --ui-active-press: translateY(1px) scale(0.98);
+  --ui-active-press: translateY(1px) scale(0.99);
   --ui-active-transition: transform var(--neo-transition-fast) var(--neo-easing-press);
 
   /* Loading animation tokens */
@@ -668,25 +668,25 @@
   color-scheme: dark;
 
   /* Core colors */
-  --fg0: #f5f6ff;
-  --fg1: #c2c7da;
-  --fg2: #8d94ad;
-  --fg-invert: #06080f;
-  --fg-muted: color-mix(in srgb, var(--fg2) 70%, rgba(8, 10, 18, 0.6));
+  --fg0: #f4f7ff;
+  --fg1: #c7cee1;
+  --fg2: #95a0bb;
+  --fg-invert: #070a12;
+  --fg-muted: color-mix(in srgb, var(--fg2) 60%, rgba(9, 14, 24, 0.6));
 
-  --bg0: #06080f;
-  --bg1: #0f1424;
-  --bg2: #1b2235;
+  --bg0: #070d18;
+  --bg1: #0d1626;
+  --bg2: #182132;
 
-  --acc1: #7f96ff;
-  --acc1-strong: #a8b5ff;
-  --acc2: #ff8591;
-  --acc2-strong: #ff5c6c;
+  --acc1: #8ea6ff;
+  --acc1-strong: #b8c5ff;
+  --acc2: #ff8f9a;
+  --acc2-strong: #ff6775;
 
   --ok: #31d193;
   --warn: #ffb74d;
   --err: #ff6b6b;
-  --info: #5aa8ff;
+  --info: #6cb6ff;
 
   /* NEOMORPHISM DARK MODE OVERRIDES */
 
@@ -699,42 +699,42 @@
     inset 6px 6px 15px rgba(0, 0, 0, 0.6), inset -6px -6px 15px rgba(255, 255, 255, 0.08);
 
   /* Dark mode neomorphic raised shadows (stronger darks, subtle lights) */
-  --shadow-neumorphic-sm: 3px 3px 6px rgba(0, 0, 0, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.03);
+  --shadow-neumorphic-sm: 2px 2px 4px rgba(0, 0, 0, 0.45), -2px -2px 4px rgba(255, 255, 255, 0.04);
   --shadow-neumorphic-icon:
-    2px 2px 4px rgba(0, 0, 0, 0.32), -2px -2px 4px rgba(255, 255, 255, 0.04);
-  --shadow-neumorphic-md: 6px 6px 12px rgba(0, 0, 0, 0.6), -6px -6px 12px rgba(255, 255, 255, 0.05);
-  --shadow-neumorphic-lg:
-    10px 10px 20px rgba(0, 0, 0, 0.7), -10px -10px 20px rgba(255, 255, 255, 0.08);
+    2px 2px 4px rgba(0, 0, 0, 0.28), -2px -2px 4px rgba(255, 255, 255, 0.06);
+  --shadow-neumorphic-md:
+    4px 4px 10px rgba(0, 0, 0, 0.55), -4px -4px 10px rgba(255, 255, 255, 0.05);
+  --shadow-neumorphic-lg: 8px 8px 18px rgba(0, 0, 0, 0.6), -8px -8px 18px rgba(255, 255, 255, 0.08);
   --shadow-neumorphic-xl:
-    15px 15px 30px rgba(0, 0, 0, 0.8), -15px -15px 30px rgba(255, 255, 255, 0.1);
+    12px 12px 26px rgba(0, 0, 0, 0.68), -12px -12px 26px rgba(255, 255, 255, 0.1);
 
   /* Dark mode neomorphic surfaces */
   --surface-neumorphic-base: var(--bg1);
-  --surface-neumorphic-raised: color-mix(in srgb, var(--bg1) 92%, white 8%);
+  --surface-neumorphic-raised: color-mix(in srgb, var(--bg1) 78%, rgba(255, 255, 255, 0.22));
   --surface-neumorphic-pressed: color-mix(in srgb, var(--bg1) 88%, black 12%);
-  --surface-neumorphic-floating: color-mix(in srgb, var(--bg1) 96%, white 4%);
-  --surface-neumorphic-overlay: color-mix(in srgb, var(--bg0) 25%, rgba(0, 0, 0, 0.6));
+  --surface-neumorphic-floating: color-mix(in srgb, var(--bg1) 70%, rgba(255, 255, 255, 0.3));
+  --surface-neumorphic-overlay: color-mix(in srgb, var(--bg0) 22%, rgba(8, 12, 20, 0.55));
 
   /* Dark mode neomorphic borders */
-  --border-neumorphic-light: 1px solid rgba(255, 255, 255, 0.06);
-  --border-neumorphic-dark: 1px solid rgba(0, 0, 0, 0.3);
-  --border-neumorphic-subtle: 1px solid color-mix(in srgb, var(--bg1) 80%, white 20%);
+  --border-neumorphic-light: 1px solid rgba(255, 255, 255, 0.08);
+  --border-neumorphic-dark: 1px solid rgba(0, 0, 0, 0.28);
+  --border-neumorphic-subtle: 1px solid color-mix(in srgb, var(--bg1) 72%, white 28%);
 
   /* Dark mode depth shadows (updated for dramatic neomorphic system) */
   --shadow-depth-1: var(--shadow-neumorphic-sm);
   --shadow-depth-2: var(--shadow-neumorphic-md);
   --shadow-depth-3: var(--shadow-neumorphic-lg);
   --shadow-depth-4: var(--shadow-neumorphic-xl);
-  --shadow-depth-5: 20px 20px 40px rgba(0, 0, 0, 0.85), -20px -20px 40px rgba(255, 255, 255, 0.12);
-  --shadow-depth-6: 30px 30px 60px rgba(0, 0, 0, 0.9), -30px -30px 60px rgba(255, 255, 255, 0.15);
-  --shadow-depth-7: 45px 45px 90px rgba(0, 0, 0, 0.95), -45px -45px 90px rgba(255, 255, 255, 0.18);
-  --shadow-depth-8: 60px 60px 120px rgba(0, 0, 0, 1), -60px -60px 120px rgba(255, 255, 255, 0.2);
+  --shadow-depth-5: 14px 14px 32px rgba(0, 0, 0, 0.75), -14px -14px 32px rgba(255, 255, 255, 0.12);
+  --shadow-depth-6: 22px 22px 46px rgba(0, 0, 0, 0.82), -22px -22px 46px rgba(255, 255, 255, 0.14);
+  --shadow-depth-7: 30px 30px 68px rgba(0, 0, 0, 0.88), -30px -30px 68px rgba(255, 255, 255, 0.16);
+  --shadow-depth-8: 40px 40px 90px rgba(0, 0, 0, 0.92), -40px -40px 90px rgba(255, 255, 255, 0.18);
 
   /* Dark mode dramatic neomorphic shadows */
   --shadow-neumorphic-dramatic:
-    45px 45px 90px rgba(0, 0, 0, 0.95), -45px -45px 90px rgba(255, 255, 255, 0.18);
+    30px 30px 64px rgba(0, 0, 0, 0.85), -30px -30px 64px rgba(255, 255, 255, 0.16);
   --shadow-neumorphic-extreme:
-    60px 60px 120px rgba(0, 0, 0, 1), -60px -60px 120px rgba(255, 255, 255, 0.2);
+    48px 48px 96px rgba(0, 0, 0, 0.9), -48px -48px 96px rgba(255, 255, 255, 0.18);
 
   /* Dark mode neomorphic focus */
   --shadow-focus-neumorphic:

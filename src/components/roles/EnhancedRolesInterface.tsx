@@ -81,8 +81,8 @@ function UsageIndicator({ count }: { count: number }) {
   if (count === 0) return null;
 
   return (
-    <div className="flex items-center gap-1 text-xs text-text-secondary">
-      <TrendingUp className="w-3 h-3" />
+    <div className="flex items-center gap-1 text-[12px] text-[var(--color-text-secondary)]">
+      <TrendingUp className="h-3 w-3 text-[var(--color-brand-primary)]" />
       <span>{count}x genutzt</span>
     </div>
   );
@@ -104,30 +104,29 @@ function CategoryPill({
 
   return (
     <button
+      type="button"
       className={cn(
-        "group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:shadow-focus-neo",
-        palette.border,
-        palette.bg,
-        palette.text,
-        palette.hoverBg,
+        "group inline-flex min-w-[132px] snap-start items-center gap-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_78%,transparent)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] shadow-[var(--shadow-depth-1)] transition-all duration-150 focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]",
         isSelected
           ? cn(
-              "translate-y-[-1px] shadow-[var(--shadow-glow-brand-subtle)]",
-              palette.activeBg,
+              "border-[var(--color-brand-primary)] text-[var(--color-text-primary)] shadow-[var(--shadow-depth-2)]",
               palette.activeBorder,
-              palette.activeText,
             )
-          : "opacity-80 hover:opacity-100 hover:-translate-y-[1px] hover:shadow-neo-sm",
+          : "hover:-translate-y-0.5 hover:shadow-[var(--shadow-depth-2)]",
       )}
       onClick={onClick}
+      aria-pressed={isSelected}
     >
-      <span>{category}</span>
+      <span
+        aria-hidden="true"
+        className={cn("h-2.5 w-2.5 flex-shrink-0 rounded-full", palette.bg)}
+      />
+      <span className="flex-1 truncate">{category}</span>
       <span
         className={cn(
-          "rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] transition-colors",
-          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-pressed)] text-[var(--color-text-tertiary)] shadow-[var(--shadow-inset-subtle)]",
-          isSelected &&
-            "border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)]",
+          "rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors",
+          "border-[var(--color-border-hairline)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_65%,transparent)] text-[var(--color-text-tertiary)]",
+          isSelected && cn("border-[var(--color-border-subtle)]", palette.text),
         )}
       >
         {count}
@@ -158,16 +157,21 @@ function DenseRoleCard({
 
   return (
     <Card
-      className={`p-4 transition-all duration-200 hover:shadow-md ${
-        isActive ? "ring-2 ring-[var(--color-brand-primary)] ring-offset-2" : ""
-      }`}
+      tone="neo-subtle"
+      elevation="subtle"
+      className={cn(
+        "rounded-2xl border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_84%,transparent)] p-4 shadow-[var(--shadow-depth-1)] transition-transform duration-150",
+        isActive
+          ? "border-[var(--color-brand-primary)] shadow-[var(--shadow-depth-2)]"
+          : "hover:-translate-y-0.5 hover:shadow-[var(--shadow-depth-2)]",
+      )}
     >
       <div className="flex items-start gap-3">
         <button
           type="button"
           data-testid={`role-card-${role.id}`}
           aria-pressed={isActive}
-          className="flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-neumorphic-base)]"
+          className="flex-1 text-left focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)] focus-visible:ring-0"
           onClick={onSelect}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
@@ -176,23 +180,28 @@ function DenseRoleCard({
             }
           }}
         >
-          <div className="flex items-center gap-2 mb-2">
-            <h3 className="font-medium text-text-strong truncate">{role.name}</h3>
+          <div className="mb-2 flex items-center gap-2">
+            <h3 className="truncate text-base font-semibold text-[var(--color-text-primary)]">
+              {role.name}
+            </h3>
             {isActive && (
-              <div className="px-2 py-0.5 rounded-full border border-[var(--color-brand-primary)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)] text-xs font-medium">
-                AKTIV
+              <div className="rounded-full border border-[var(--color-brand-primary)] bg-[color-mix(in_srgb,var(--color-brand-subtle)_70%,var(--surface-neumorphic-floating))] px-2 py-0.5 text-[11px] font-medium text-[var(--color-brand-primary)]">
+                Aktiv
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-2 mb-2">
+          <div className="mb-2 flex flex-wrap items-center gap-1.5">
             <span
               className={cn(
-                "rounded-full border px-2 py-1 text-xs transition-colors",
+                "inline-flex items-center rounded-full border px-2 py-1 text-xs transition-colors",
                 categoryPalette.border,
-                categoryPalette.bg,
                 categoryPalette.text,
               )}
+              style={{
+                background:
+                  "color-mix(in srgb, var(--surface-neumorphic-floating) 75%, transparent)",
+              }}
             >
               {role.category}
             </span>
@@ -201,14 +210,14 @@ function DenseRoleCard({
                 key={tag}
                 variant="neumorphic"
                 size="sm"
-                className="normal-case px-2 py-[2px] text-[11px] font-medium tracking-[0.02em]"
+                className="normal-case rounded-full border border-[var(--color-border-hairline)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_70%,transparent)] px-2 py-[2px] text-[11px] font-medium tracking-[0.02em] text-[var(--color-text-secondary)]"
               >
                 #{tag}
               </Badge>
             ))}
           </div>
 
-          <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
+          <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
             {role.description || "Spezialisierte KI-Rolle für verschiedene Anwendungsfälle"}
           </p>
         </button>
@@ -217,7 +226,7 @@ function DenseRoleCard({
           <Button
             variant="ghost"
             size="sm"
-            className="p-1.5 h-auto"
+            className="h-auto rounded-full p-1.5 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
             aria-label={
               isFavorite
                 ? `${role.name} aus Favoriten entfernen`
@@ -226,24 +235,36 @@ function DenseRoleCard({
             onClick={onToggleFavorite}
           >
             <Star
-              className={`w-4 h-4 ${isFavorite ? "fill-yellow-400 text-yellow-400" : "text-text-muted"}`}
+              className={cn(
+                "h-4 w-4 transition-colors",
+                isFavorite
+                  ? "fill-[var(--color-brand-primary)] text-[var(--color-brand-primary)]"
+                  : "text-[var(--color-text-muted)]",
+              )}
             />
           </Button>
 
           {!isActive && (
-            <Button variant="ghost" size="sm" className="px-2 py-1 text-xs" onClick={onActivate}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="rounded-full px-3 py-1 text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+              onClick={onActivate}
+            >
               Aktivieren
             </Button>
           )}
         </div>
       </div>
 
-      <div className="mt-3 flex items-center justify-between text-xs">
+      <div className="mt-3 flex items-center justify-between text-[12px] text-[var(--color-text-secondary)]">
         <UsageIndicator count={usageCount} />
 
-        <div className="flex items-center gap-2 text-text-secondary">
-          {role.allowedModels && <span>{role.allowedModels.length} Modelle</span>}
-          <span className="w-1 h-1 bg-current rounded-full" />
+        <div className="flex items-center gap-2">
+          {role.allowedModels && (
+            <span className="whitespace-nowrap">{role.allowedModels.length} Modelle</span>
+          )}
+          <span className="h-1 w-1 rounded-full bg-current" />
           <span>{role.metadata?.isBuiltIn ? "Standard" : "Benutzerdefiniert"}</span>
         </div>
       </div>
@@ -481,21 +502,25 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         {/* Favorites Section */}
         {favoriteRoles.length > 0 && !filters.showFavoritesOnly && (
           <div className="px-4 pb-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Star className="w-4 h-4 text-yellow-500" />
-              <span className="text-sm font-medium text-text-strong">
+            <div className="mb-2 flex items-center gap-2 text-[var(--color-text-secondary)]">
+              <Star className="h-4 w-4 text-[var(--color-brand-primary)]" />
+              <span className="text-sm font-medium text-[var(--color-text-primary)]">
                 Favoriten ({favoriteCount.roles})
               </span>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {favoriteRoles.slice(0, 4).map((role) => (
                 <button
                   key={role.id}
-                  className="flex-shrink-0 px-3 py-1.5 bg-surface-card border border-border-subtle rounded-lg text-sm hover:bg-surface-raised transition-colors"
+                  className="flex min-w-[160px] snap-start flex-shrink-0 flex-col rounded-2xl border border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_78%,transparent)] px-3 py-2 text-left text-sm text-[var(--color-text-secondary)] shadow-[var(--shadow-depth-1)] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[var(--shadow-depth-2)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
                   onClick={() => handleActivateRole(role)}
                 >
-                  <span className="font-medium">{role.name}</span>
-                  <span className="ml-1 text-xs text-text-secondary">{role.category}</span>
+                  <span className="font-semibold text-[var(--color-text-primary)]">
+                    {role.name}
+                  </span>
+                  <span className="text-[12px] text-[var(--color-text-secondary)]">
+                    {role.category}
+                  </span>
                 </button>
               ))}
             </div>
@@ -505,11 +530,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         {/* Category Pills */}
         {!selectedCategory && (
           <div className="px-4 pb-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Hash className="w-4 h-4 text-text-muted" />
-              <span className="text-sm font-medium text-text-strong">Kategorien</span>
+            <div className="mb-2 flex items-center gap-2 text-[var(--color-text-secondary)]">
+              <Hash className="h-4 w-4 text-[var(--color-text-secondary)]" />
+              <span className="text-sm font-medium text-[var(--color-text-primary)]">
+                Kategorien
+              </span>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {CATEGORY_ORDER.filter((cat) => (categoryCounts[cat] || 0) > 0).map((category) => (
                 <CategoryPill
                   key={category}

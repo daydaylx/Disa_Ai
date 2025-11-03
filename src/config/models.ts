@@ -117,18 +117,42 @@ function getGermanDescription(
   return undefined;
 }
 
+function normalizePrice(value: unknown): number | undefined {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : undefined;
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return undefined;
+    const parsed = Number.parseFloat(trimmed);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
+}
+
 function toEntry(m: ORModel, descriptions: ModelDescriptionMap): ModelEntry {
   const prov = deriveProvider(m.id);
+  const normalizedPrompt = normalizePrice(m.pricing?.prompt);
+  const normalizedCompletion = normalizePrice(m.pricing?.completion);
+  let pricing: Price | undefined;
+
+  if (normalizedPrompt !== undefined || normalizedCompletion !== undefined) {
+    pricing = {};
+    if (normalizedPrompt !== undefined) {
+      pricing.in = normalizedPrompt;
+    }
+    if (normalizedCompletion !== undefined) {
+      pricing.out = normalizedCompletion;
+    }
+  }
+
   return {
     id: m.id,
     label: m.name ?? m.id,
     description: getGermanDescription(m.id, m.description, descriptions),
     ...(prov ? { provider: prov } : {}),
     ctx: m.context_length,
-    pricing: {
-      in: m.pricing?.prompt,
-      out: m.pricing?.completion,
-    },
+    ...(pricing ? { pricing } : {}),
     tags: m.tags ?? [],
     safety: deriveModelSafety(m),
   };

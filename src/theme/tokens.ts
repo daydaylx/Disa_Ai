@@ -150,17 +150,17 @@ export const tailwindColors = {
 
 const baseSpacingScale = {
   none: "0px",
-  "3xs": pxToRem(2),
-  "2xs": pxToRem(4),
-  xs: pxToRem(6),
-  sm: pxToRem(8),
-  md: pxToRem(12),
-  lg: pxToRem(16),
-  xl: pxToRem(20),
-  "2xl": pxToRem(24),
-  "3xl": pxToRem(32),
-  "4xl": pxToRem(40),
-  "5xl": pxToRem(48),
+  "3xs": pxToRem(4),
+  "2xs": pxToRem(8),
+  xs: pxToRem(12),
+  sm: pxToRem(16),
+  md: pxToRem(20),
+  lg: pxToRem(24),
+  xl: pxToRem(32),
+  "2xl": pxToRem(40),
+  "3xl": pxToRem(48),
+  "4xl": pxToRem(56),
+  "5xl": pxToRem(64),
 } as const;
 
 const baseSpacingSemantic = {
@@ -177,10 +177,10 @@ const baseSpacingSemantic = {
 } as const;
 
 const baseSpacingTouch = {
-  "touch-compact": pxToRem(44),
-  "touch-comfortable": pxToRem(48),
-  "touch-relaxed": pxToRem(56),
-  "touch-spacious": pxToRem(64),
+  "touch-compact": pxToRem(48),
+  "touch-comfortable": pxToRem(56),
+  "touch-relaxed": pxToRem(64),
+  "touch-spacious": pxToRem(72),
 } as const;
 
 const baseSpacingFixed = {
@@ -276,10 +276,10 @@ export const tailwindFontFamily = {
 
 export const tailwindMotion = {
   duration: {
-    micro: "120ms",
+    micro: "110ms",
     small: "160ms",
-    medium: "220ms",
-    large: "320ms",
+    medium: "200ms",
+    large: "260ms",
   },
   easing: {
     standard: "cubic-bezier(0.2, 0, 0, 1)",
@@ -312,44 +312,43 @@ export const textStyles: Record<
   TextStyle
 > = {
   display: {
-    fontSize: pxToRem(40),
-    lineHeight: pxToRem(48),
-    fontWeight: 600,
-    letterSpacing: "-0.02em",
-  },
-  headline: {
     fontSize: pxToRem(32),
     lineHeight: pxToRem(40),
     fontWeight: 600,
-    letterSpacing: "-0.012em",
+    letterSpacing: "-0.015em",
+  },
+  headline: {
+    fontSize: pxToRem(28),
+    lineHeight: pxToRem(36),
+    fontWeight: 600,
+    letterSpacing: "-0.01em",
   },
   title: {
-    fontSize: pxToRem(24),
-    lineHeight: pxToRem(32),
-    fontWeight: 600,
-    letterSpacing: "-0.008em",
-  },
-  subtitle: {
     fontSize: pxToRem(20),
     lineHeight: pxToRem(28),
-    fontWeight: 500,
-    letterSpacing: "-0.002em",
+    fontWeight: 600,
+    letterSpacing: "-0.006em",
   },
-  body: { fontSize: pxToRem(16), lineHeight: pxToRem(26), fontWeight: 400 },
-  bodyStrong: { fontSize: pxToRem(16), lineHeight: pxToRem(26), fontWeight: 600 },
-  bodySmall: { fontSize: pxToRem(14), lineHeight: pxToRem(22), fontWeight: 400 },
+  subtitle: {
+    fontSize: pxToRem(18),
+    lineHeight: pxToRem(26),
+    fontWeight: 500,
+    letterSpacing: "-0.004em",
+  },
+  body: { fontSize: pxToRem(16), lineHeight: pxToRem(24), fontWeight: 400 },
+  bodyStrong: { fontSize: pxToRem(16), lineHeight: pxToRem(24), fontWeight: 600 },
+  bodySmall: { fontSize: pxToRem(14), lineHeight: pxToRem(20), fontWeight: 400 },
   caption: {
     fontSize: pxToRem(12),
-    lineHeight: pxToRem(18),
+    lineHeight: pxToRem(16),
     fontWeight: 500,
-    letterSpacing: "0.02em",
+    letterSpacing: "0.015em",
   },
   label: {
     fontSize: pxToRem(12),
     lineHeight: pxToRem(16),
     fontWeight: 600,
-    letterSpacing: "0.06em",
-    textTransform: "uppercase",
+    letterSpacing: "0.02em",
   },
   mono: { fontSize: pxToRem(13), lineHeight: pxToRem(20), fontWeight: 500 },
 };

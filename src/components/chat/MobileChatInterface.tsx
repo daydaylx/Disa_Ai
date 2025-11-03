@@ -523,15 +523,13 @@ export function MobileChatInterface() {
 
       {messages.length === 0 ? (
         <>
-          <header className="mobile-chat-header space-y-stack-gap">
+          <header className="mobile-chat-header space-y-4">
             <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-text-muted">
-                Chat-Start
-              </p>
-              <h1 className="text-token-h1 text-text-strong text-balance font-semibold">
+              <p className="text-sm font-medium text-[var(--color-text-secondary)]">Chat-Start</p>
+              <h1 className="text-balance text-2xl font-semibold text-[var(--color-text-primary)]">
                 Disa&nbsp;AI Chat
               </h1>
-              <p className="text-sm leading-6 text-text-muted">
+              <p className="text-sm leading-6 text-[var(--color-text-secondary)]">
                 Starte eine Unterhaltung oder nutze die Schnellstarts für wiederkehrende Aufgaben.
               </p>
             </div>
@@ -544,7 +542,7 @@ export function MobileChatInterface() {
                 onClick={handleNewConversation}
                 variant="brand"
                 size="lg"
-                className="shadow-glow-brand mobile-btn mobile-btn-primary touch-target"
+                className="touch-target rounded-full px-4 py-2 text-sm shadow-[var(--shadow-depth-2)] transition-transform duration-150 hover:-translate-y-0.5 hover:shadow-[var(--shadow-depth-3)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 <span>Neuer Chat</span>
@@ -556,7 +554,7 @@ export function MobileChatInterface() {
                     variant="secondary"
                     size="icon"
                     aria-label="Chat-Verlauf öffnen"
-                    className="mobile-btn mobile-btn-secondary touch-target"
+                    className="touch-target h-11 w-11 rounded-2xl border border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_80%,transparent)] text-[var(--color-text-secondary)] shadow-[var(--shadow-depth-1)] transition-all duration-150 hover:-translate-y-0.5 hover:text-[var(--color-text-primary)] hover:shadow-[var(--shadow-depth-2)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
                   >
                     <History className="h-5 w-5" aria-hidden="true" />
                   </Button>
@@ -567,15 +565,15 @@ export function MobileChatInterface() {
           </header>
 
           <section aria-labelledby="discussion-heading" className="pb-8">
-            <div className="bg-surface-base/70 border-border-subtle/45 mb-5 flex flex-col gap-4 rounded-lg border p-4">
+            <div className="mb-5 flex flex-col gap-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_82%,transparent)] p-4 shadow-[var(--shadow-depth-1)]">
               <div className="flex-1 space-y-1">
                 <h2
                   id="discussion-heading"
-                  className="text-text-subtle text-[11px] font-semibold uppercase tracking-[0.24em]"
+                  className="text-sm font-semibold text-[var(--color-text-primary)]"
                 >
                   Diskussionen
                 </h2>
-                <p className="text-xs leading-6 text-text-muted">
+                <p className="text-sm leading-5 text-[var(--color-text-secondary)]">
                   Ein Absatz, 5–{getDiscussionMaxSentences()} Sätze, Abschlussfrage inklusive.
                 </p>
               </div>
@@ -583,11 +581,14 @@ export function MobileChatInterface() {
                 <Label
                   id="discussion-style-label"
                   htmlFor="discussion-style"
-                  className="mb-1 block text-xs font-semibold uppercase tracking-[0.24em] text-text-muted"
+                  className="mb-1 block text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-text-secondary)]"
                 >
                   Stil auswählen
                 </Label>
-                <p id="discussion-style-hint" className="text-text-subtle mb-2 text-xs leading-5">
+                <p
+                  id="discussion-style-hint"
+                  className="mb-2 text-xs leading-5 text-[var(--color-text-secondary)]"
+                >
                   Steuert Tonalität und Strenge der Argumentation. Auswahl wird gespeichert.
                 </p>
                 <Select
@@ -600,7 +601,7 @@ export function MobileChatInterface() {
                     id="discussion-style"
                     aria-describedby="discussion-style-hint"
                     aria-label="Diskussionsstil wählen"
-                    className="mobile-form-select touch-target"
+                    className="mobile-form-select touch-target rounded-2xl border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_80%,transparent)] text-left text-sm text-[var(--color-text-primary)] shadow-[var(--shadow-depth-1)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
                   >
                     <SelectValue placeholder="Stil wählen" />
                   </SelectTrigger>
@@ -623,23 +624,27 @@ export function MobileChatInterface() {
                 defaultOpen: index === 0,
                 content: (
                   <div className="space-y-3">
-                    <p className="text-text-subtle text-xs leading-5">{section.description}</p>
-                    <div className="grid gap-2 grid-cols-1">
+                    <p className="text-xs leading-5 text-[var(--color-text-secondary)]">
+                      {section.description}
+                    </p>
+                    <div className="grid grid-cols-1 gap-2">
                       {section.topics.map((topic) => (
                         <button
                           key={topic.title}
                           type="button"
                           onClick={() => startDiscussion(topic.prompt)}
                           title={topic.hint}
-                          className="mobile-card touch-target group flex flex-col gap-1 rounded-md border px-3 py-2 text-left transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                          className="touch-target group flex flex-col gap-1 rounded-2xl border border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_78%,transparent)] px-3.5 py-2.5 text-left text-sm text-[var(--color-text-primary)] shadow-[var(--shadow-depth-1)] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[var(--shadow-depth-2)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
                         >
                           <span
-                            className="text-text-strong text-sm font-medium [hyphens:auto]"
+                            className="text-sm font-semibold text-[var(--color-text-primary)] [hyphens:auto]"
                             lang="de"
                           >
                             {topic.title}
                           </span>
-                          <span className="text-text-subtle text-xs">{topic.hint}</span>
+                          <span className="text-xs text-[var(--color-text-secondary)]">
+                            {topic.hint}
+                          </span>
                         </button>
                       ))}
                     </div>

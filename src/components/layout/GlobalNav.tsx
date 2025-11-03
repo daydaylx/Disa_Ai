@@ -37,26 +37,27 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
     NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
 
   const headerClass =
-    "sticky top-0 z-40 border-b border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-floating)] backdrop-blur-md shadow-[var(--shadow-inset-subtle)]";
+    "sticky top-0 z-40 border-b border-[var(--color-border-subtle)] bg-[var(--surface-neumorphic-floating)] backdrop-blur-sm supports-[backdrop-filter]:backdrop-blur-md";
 
   const menuButtonClass =
-    "flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-secondary)] shadow-neo-sm transition-all duration-200 hover:-translate-y-[1px] hover:shadow-neo-md active:translate-y-[1px] active:shadow-[var(--shadow-inset-subtle)] focus-visible:shadow-focus-neo focus-visible:outline-none";
+    "flex h-10 w-10 items-center justify-center rounded-2xl border border-[color-mix(in_srgb,var(--color-border-subtle)_60%,transparent)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_85%,transparent)] text-[var(--color-text-secondary)] shadow-[var(--shadow-depth-1)] transition-transform duration-150 hover:-translate-y-[1px] hover:shadow-[var(--shadow-depth-2)] active:translate-y-[1px] active:shadow-none focus-visible:shadow-[var(--shadow-focus)] focus-visible:outline-none";
 
   return (
-    <header className={headerClass}>
-      <div className="flex items-center justify-between gap-3 px-4 py-3 pt-[env(safe-area-inset-top)]">
-        <div className="flex flex-col gap-1">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
-            Disa AI
-          </span>
-          <div>
-            <h1 className="text-xl font-semibold text-[var(--color-text-primary)] leading-tight">
-              {title}
-            </h1>
-            <p className="text-xs text-[var(--color-text-secondary)]">
-              {ROUTE_TITLES[activePath] ?? "Mobile Studio"}
-            </p>
-          </div>
+    <header
+      className={headerClass}
+      style={{
+        background: "color-mix(in srgb, var(--surface-neumorphic-floating) 92%, transparent)",
+      }}
+    >
+      <div className="flex items-center justify-between gap-3 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.5rem)]">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-[11px] font-medium text-[var(--color-text-tertiary)]">Disa AI</span>
+          <h1 className="text-lg font-semibold leading-tight text-[var(--color-text-primary)]">
+            {title}
+          </h1>
+          <p className="text-[12px] text-[var(--color-text-secondary)]">
+            {ROUTE_TITLES[activePath] ?? "Mobile Studio"}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button

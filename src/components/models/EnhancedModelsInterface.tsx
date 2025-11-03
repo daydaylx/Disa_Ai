@@ -28,9 +28,26 @@ interface EnhancedModelsInterfaceProps {
   className?: string;
 }
 
+function coercePrice(value: unknown, fallback = 0): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return fallback;
+    }
+    const parsed = Number.parseFloat(trimmed);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+  return fallback;
+}
+
 // Helper function to convert ModelEntry to EnhancedModel
 function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
-  const isFree = entry.pricing?.in === 0 || entry.pricing?.out === 0 || entry.tags.includes("free");
+  const inputPrice = coercePrice(entry.pricing?.in);
+  const outputPrice = coercePrice(entry.pricing?.out);
+  const isFree = inputPrice === 0 || outputPrice === 0 || entry.tags.includes("free");
 
   return {
     // Core properties from ModelEntry
@@ -41,8 +58,8 @@ function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
 
     // Pricing
     pricing: {
-      inputPrice: entry.pricing?.in || 0,
-      outputPrice: entry.pricing?.out || 0,
+      inputPrice,
+      outputPrice,
       currency: "USD",
       isFree,
     },
@@ -64,7 +81,7 @@ function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
     // Enhanced categorization
     tags: entry.tags,
     category: categorizeModelFromTags(entry.tags, isFree),
-    tier: isFree ? "free" : determineTierFromPrice(entry.pricing?.in || 0),
+    tier: isFree ? "free" : determineTierFromPrice(inputPrice),
 
     // Favorites & Usage (default values)
     isFavorite: false,
