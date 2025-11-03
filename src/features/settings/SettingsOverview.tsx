@@ -135,44 +135,46 @@ export function SettingsOverview() {
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <Card
-                key={card.id}
-                tone="neo-glass"
-                elevation="subtle"
-                interactive="gentle"
-                className="group"
-              >
-                <Link
-                  to={card.to}
-                  className="flex h-full flex-col rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-4 shadow-neo-sm transition-shadow duration-200 focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-accent-subtle)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-accent-surface)] hover:shadow-[var(--shadow-glow-accent-subtle)]"
+              <Link to={card.to} className="focus-visible:outline-none">
+                <Card
+                  key={card.id}
+                  tone="neo-glass"
+                  interactive="glow-accent"
+                  padding="none"
+                  className="h-full group"
+                  clickable
                 >
-                  <div className="flex flex-row items-start gap-3">
-                    <span className="grid h-10 w-10 place-content-center rounded-full border border-[var(--color-accent-border)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-border-focus)] shadow-neo-sm">
-                      <Icon className="h-5 w-5" aria-hidden />
-                    </span>
-                    <div className="flex flex-1 flex-col gap-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <CardTitle className="text-base font-semibold text-text-primary">
-                          {card.title}
-                        </CardTitle>
-                        <Badge variant={card.statusVariant} size="sm">
-                          {card.statusLabel}
-                        </Badge>
+                  <div className="flex h-full flex-col p-4">
+                    <div className="flex flex-row items-start gap-3">
+                      <span className="grid h-10 w-10 place-content-center rounded-full border border-[var(--color-accent-border)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-border-focus)] shadow-neo-sm">
+                        <Icon className="h-5 w-5" aria-hidden />
+                      </span>
+                      <div className="flex flex-1 flex-col gap-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <CardTitle className="text-base font-semibold text-text-primary">
+                            {card.title}
+                          </CardTitle>
+                          <Badge variant={card.statusVariant} size="sm">
+                            {card.statusLabel}
+                          </Badge>
+                        </div>
+                        <CardDescription className="text-sm text-text-secondary">
+                          {card.description}
+                        </CardDescription>
+                        {card.meta ? (
+                          <p className="text-xs text-text-tertiary">{card.meta}</p>
+                        ) : null}
                       </div>
-                      <CardDescription className="text-sm text-text-secondary">
-                        {card.description}
-                      </CardDescription>
-                      {card.meta ? <p className="text-xs text-text-tertiary">{card.meta}</p> : null}
+                    </div>
+                    <div className="mt-4 flex grow items-end justify-between border-t border-[var(--color-border-subtle)] pt-3 text-sm text-[var(--color-border-focus)]">
+                      <span className="font-medium">Details anzeigen</span>
+                      <span aria-hidden className="transition-transform group-hover:translate-x-1">
+                        →
+                      </span>
                     </div>
                   </div>
-                  <div className="mt-4 flex items-center justify-between border-t border-[var(--color-border-subtle)] pt-3 text-sm text-[var(--color-border-focus)]">
-                    <span className="font-medium">Details anzeigen</span>
-                    <span aria-hidden className="transition-transform group-hover:translate-x-1">
-                      →
-                    </span>
-                  </div>
-                </Link>
-              </Card>
+                </Card>
+              </Link>
             );
           })}
         </div>

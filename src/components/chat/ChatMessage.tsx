@@ -141,12 +141,22 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           </div>
         )}
 
-        <div className={cn("border-border bg-card rounded-lg border", bubbleClass, "p-4")}>
+        <Card
+          intent={isUser ? "accent" : "primary"}
+          tone={isUser ? "solid" : "neo-inset"}
+          padding="sm"
+          className={cn(bubbleClass, "w-full")}
+        >
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
                 {part.type === "text" ? (
-                  <div className="whitespace-pre-wrap text-[15px] leading-relaxed">
+                  <div
+                    className={cn(
+                      "whitespace-pre-wrap text-[15px] leading-relaxed",
+                      isUser ? "text-white" : "text-text-primary",
+                    )}
+                  >
                     {part.content}
                   </div>
                 ) : (
@@ -155,7 +165,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
               </div>
             ))}
           </div>
-        </div>
+        </Card>
 
         {!isSystem && showActions && (
           <div

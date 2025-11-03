@@ -192,10 +192,10 @@ function PerformanceBar({
   const percentage = Math.min((value / maxValue) * 100, 100);
 
   const colorClasses = {
-    primary: "bg-primary",
-    success: "bg-green-500",
-    warning: "bg-yellow-500",
-    error: "bg-red-500",
+    primary: "bg-[var(--acc1)]",
+    success: "bg-[var(--ok)]",
+    warning: "bg-[var(--warn)]",
+    error: "bg-[var(--err)]",
   };
 
   return (
@@ -209,41 +209,6 @@ function PerformanceBar({
       </div>
       <span className="text-xs font-medium min-w-[30px] text-right">{Math.round(value)}</span>
     </div>
-  );
-}
-
-// Chip component for tags and badges
-function Chip({
-  children,
-  variant = "default",
-  size = "sm",
-  onClick,
-}: {
-  children: React.ReactNode;
-  variant?: "default" | "primary" | "success" | "warning" | "free";
-  size?: "xs" | "sm";
-  onClick?: () => void;
-}) {
-  const baseClasses = "inline-flex items-center gap-1 rounded-full font-medium transition-colors";
-  const sizeClasses = {
-    xs: "px-2 py-0.5 text-xs",
-    sm: "px-2.5 py-1 text-xs",
-  };
-  const variantClasses = {
-    default: "bg-surface-subtle text-text-muted",
-    primary: "bg-primary/10 text-primary",
-    success: "bg-green-100 text-green-700",
-    warning: "bg-yellow-100 text-yellow-700",
-    free: "bg-emerald-100 text-emerald-700 font-semibold",
-  };
-
-  return (
-    <span
-      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${onClick ? "cursor-pointer hover:opacity-80" : ""}`}
-      onClick={onClick}
-    >
-      {children}
-    </span>
   );
 }
 
@@ -266,11 +231,11 @@ function DenseModelCard({
   return (
     <Card
       clickable
-      interactive="gentle"
+      interactive="glow-accent"
+      tone="neo-raised"
+      elevation="medium"
       state={isSelected ? "selected" : "default"}
-      className={`p-4 transition-all duration-200 hover:shadow-md ${
-        isSelected ? "ring-2 ring-[var(--color-border-focus)] ring-offset-2" : ""
-      }`}
+      className="p-4 transition-all duration-200"
       onCardClick={onSelect}
     >
       {/* Header Row */}
@@ -279,10 +244,10 @@ function DenseModelCard({
           <div className="flex items-center gap-2 mb-1">
             <h3 className="font-medium text-text-strong truncate">{model.label}</h3>
             {model.pricing.isFree && (
-              <Chip variant="free" size="xs">
-                <Zap className="w-3 h-3" />
+              <Badge variant="success" size="sm">
+                <Zap className="w-3 h-3 mr-1" />
                 FREE
-              </Chip>
+              </Badge>
             )}
           </div>
           <p className="text-sm text-text-muted truncate">{model.provider}</p>
@@ -326,38 +291,38 @@ function DenseModelCard({
         <PerformanceBar label="Value" value={model.performance.efficiency} color="warning" />
       </div>
 
-      {/* Chips Row */}
+      {/* Badges Row */}
       <div className="flex items-center gap-2 flex-wrap">
         {/* Price Info */}
         {!model.pricing.isFree && (
-          <Chip variant="default" size="xs">
-            <DollarSign className="w-3 h-3" />
+          <Badge variant="secondary" size="sm">
+            <DollarSign className="w-3 h-3 mr-1" />
             {formatPricePerK(model.pricing.inputPrice)}
-          </Chip>
+          </Badge>
         )}
 
         {/* Context */}
-        <Chip variant="default" size="xs">
+        <Badge variant="secondary" size="sm">
           {formatContext(model.context.maxTokens)}
-        </Chip>
+        </Badge>
 
         {/* Primary Tag */}
         {model.tags[0] && (
-          <Chip variant="primary" size="xs">
+          <Badge variant="accent" size="sm">
             {model.tags[0]}
-          </Chip>
+          </Badge>
         )}
 
         {/* Capabilities */}
         {model.capabilities.multimodal && (
-          <Chip variant="default" size="xs">
+          <Badge variant="secondary" size="sm">
             🖼️
-          </Chip>
+          </Badge>
         )}
         {model.capabilities.codeGeneration && (
-          <Chip variant="default" size="xs">
+          <Badge variant="secondary" size="sm">
             💻
-          </Chip>
+          </Badge>
         )}
       </div>
     </Card>
@@ -698,7 +663,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       {/* Floating Action Button */}
       {selectedModels.size > 0 && (
         <div className="fixed bottom-6 right-6 z-50">
-          <Button className="rounded-full w-14 h-14 shadow-lg" onClick={handleCompareModels}>
+          <Button
+            variant="accent"
+            className="rounded-full w-14 h-14 shadow-lg"
+            onClick={handleCompareModels}
+          >
             <GitCompare className="w-6 h-6" />
             <span className="sr-only">Vergleichen</span>
           </Button>

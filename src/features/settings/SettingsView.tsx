@@ -197,7 +197,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             </Button>
           </div>
           <div className="flex flex-wrap gap-2 text-sm">
-            <Button variant="brand" size="sm" onClick={handleSaveKey}>
+            <Button variant="accent" size="sm" onClick={handleSaveKey}>
               Speichern
             </Button>
             <Button
@@ -359,11 +359,11 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       content: (
         <>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Button variant="brand" className="justify-between" onClick={handleExport}>
+            <Button variant="accent" className="justify-between" onClick={handleExport}>
               Export als JSON
               <Download className="h-4 w-4" />
             </Button>
-            <Button variant="secondary" className="justify-between" onClick={handleImportClick}>
+            <Button variant="neo-subtle" className="justify-between" onClick={handleImportClick}>
               Importieren
               <Upload className="h-4 w-4" />
             </Button>
@@ -524,12 +524,16 @@ function ToggleRow({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] px-4 py-3">
-      <div>
+    <Card
+      tone="neo-subtle"
+      padding="sm"
+      className="flex items-start justify-between gap-4 rounded-[var(--radius-card-inner)] p-3"
+    >
+      <div className="flex-1">
         <p className="text-sm font-medium text-[var(--color-text-primary)]">{label}</p>
         <p className="text-xs text-[var(--color-text-secondary)]">{description}</p>
       </div>
       <Switch id={id} checked={checked} onChange={onChange} aria-label={label} />
-    </div>
+    </Card>
   );
 }
