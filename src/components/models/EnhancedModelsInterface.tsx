@@ -24,7 +24,7 @@ import type { EnhancedModel } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
 import { Button } from "../ui";
 import { Card } from "../ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/Dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/Dialog";
 
 type SortOption = "name" | "performance" | "price";
 
@@ -157,14 +157,61 @@ function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
   };
 }
 
+// Model category mapping configuration
+const MODEL_CATEGORY_CONFIG: {
+  free: Array<{ condition: (tags: string[], isFree: boolean) => boolean; category: ModelCategory }>;
+  paid: Array<{ condition: (tags: string[], isFree: boolean) => boolean; category: ModelCategory }>;
+} = {
+  free: [
+    {
+      condition: (tags, isFree) => isFree && tags.includes("fast"),
+      category: "quick-free",
+    },
+    {
+      condition: (tags, isFree) => isFree,
+      category: "strong-free",
+    },
+  ],
+  paid: [
+    {
+      condition: (tags) => tags.includes("multimodal"),
+      category: "multimodal",
+    },
+    {
+      condition: (tags) => tags.includes("creative"),
+      category: "creative-uncensored",
+    },
+    {
+      condition: (tags) => tags.includes("budget"),
+      category: "budget-specialist",
+    },
+    {
+      condition: (tags) => tags.includes("premium"),
+      category: "premium-models",
+    },
+  ],
+};
+
 // Helper function to categorize models based on tags
-function categorizeModelFromTags(tags: string[], isFree: boolean): any {
-  if (isFree && tags.includes("fast")) return "quick-free";
-  if (isFree) return "strong-free";
-  if (tags.includes("multimodal")) return "multimodal";
-  if (tags.includes("creative")) return "creative-uncensored";
-  if (tags.includes("budget")) return "budget-specialist";
-  if (tags.includes("premium")) return "premium-models";
+function categorizeModelFromTags(tags: string[], isFree: boolean): ModelCategory {
+  // Check free model categories first
+  if (isFree) {
+    for (const rule of MODEL_CATEGORY_CONFIG.free) {
+      if (rule.condition(tags, isFree)) {
+        return rule.category;
+      }
+    }
+  }
+  // Check paid model categories
+  else {
+    for (const rule of MODEL_CATEGORY_CONFIG.paid) {
+      if (rule.condition(tags, isFree)) {
+        return rule.category;
+      }
+    }
+  }
+
+  // Default category
   return "chat-allrounder";
 }
 
@@ -697,10 +744,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     label="Reliability"
                     value={detailsModel.performance.reliability}
                   />
-                  <PerformanceBar
-                    label="Efficiency"
-                    value={detailsModel.performance.efficiency}
-                  />
+                  <PerformanceBar label="Efficiency" value={detailsModel.performance.efficiency} />
                 </div>
               </div>
               <div>
