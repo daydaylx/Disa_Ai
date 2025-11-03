@@ -36,9 +36,7 @@ export default function App() {
       <StudioProvider>
         <FavoritesProvider>
           <ToastsProvider>
-            <MobileOnlyGate>
-              <Router />
-            </MobileOnlyGate>
+            <Router />
           </ToastsProvider>
         </FavoritesProvider>
       </StudioProvider>

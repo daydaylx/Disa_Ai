@@ -24,7 +24,7 @@ import type { EnhancedModel } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
 import { Button } from "../ui";
 import { Card } from "../ui/card";
-import { useToasts } from "../ui/toast/ToastsProvider";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/Dialog";
 
 type SortOption = "name" | "performance" | "price";
 
@@ -630,7 +630,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           </div>
 
           {/* Models Grid */}
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filteredModels.map((model) => (
               <DenseModelCard
                 key={model.id}
@@ -679,53 +679,45 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
         </div>
       )}
 
-      {/* Bottom Sheet for Details (placeholder) */}
-      {detailsModel && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end">
-          <div className="w-full bg-surface-base rounded-t-xl p-6 max-h-[70vh] overflow-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">{detailsModel.label}</h2>
-              <Button variant="ghost" size="sm" onClick={() => setDetailsModel(null)}>
-                <ChevronDown className="w-5 h-5" />
-              </Button>
-            </div>
-
-            <div className="space-y-4">
-              <p className="text-text-muted">{detailsModel.description}</p>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-medium mb-2">Performance</h4>
-                  <div className="space-y-2">
-                    <PerformanceBar label="Speed" value={detailsModel.performance.speed} />
-                    <PerformanceBar label="Quality" value={detailsModel.performance.quality} />
-                    <PerformanceBar
-                      label="Reliability"
-                      value={detailsModel.performance.reliability}
-                    />
-                    <PerformanceBar
-                      label="Efficiency"
-                      value={detailsModel.performance.efficiency}
-                    />
-                  </div>
+      {/* Details Dialog */}
+      <Dialog open={!!detailsModel} onOpenChange={(isOpen) => !isOpen && setDetailsModel(null)}>
+        {detailsModel && (
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{detailsModel.label}</DialogTitle>
+              <DialogDescription>{detailsModel.description}</DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-4 py-4">
+              <div>
+                <h4 className="font-medium mb-2 text-sm text-text-secondary">Performance</h4>
+                <div className="space-y-2">
+                  <PerformanceBar label="Speed" value={detailsModel.performance.speed} />
+                  <PerformanceBar label="Quality" value={detailsModel.performance.quality} />
+                  <PerformanceBar
+                    label="Reliability"
+                    value={detailsModel.performance.reliability}
+                  />
+                  <PerformanceBar
+                    label="Efficiency"
+                    value={detailsModel.performance.efficiency}
+                  />
                 </div>
-
-                <div>
-                  <h4 className="font-medium mb-2">Details</h4>
-                  <div className="space-y-1 text-sm">
-                    <div>Provider: {detailsModel.provider}</div>
-                    <div>Context: {formatContext(detailsModel.context.maxTokens)}</div>
-                    <div>Tier: {detailsModel.tier}</div>
-                    {!detailsModel.pricing.isFree && (
-                      <div>Price: {formatPricePerK(detailsModel.pricing.inputPrice)}</div>
-                    )}
-                  </div>
+              </div>
+              <div>
+                <h4 className="font-medium mb-2 text-sm text-text-secondary">Details</h4>
+                <div className="space-y-1 text-sm text-text-primary">
+                  <div>Provider: {detailsModel.provider}</div>
+                  <div>Context: {formatContext(detailsModel.context.maxTokens)}</div>
+                  <div>Tier: {detailsModel.tier}</div>
+                  {!detailsModel.pricing.isFree && (
+                    <div>Price: {formatPricePerK(detailsModel.pricing.inputPrice)}</div>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </DialogContent>
+        )}
+      </Dialog>
     </div>
   );
 }

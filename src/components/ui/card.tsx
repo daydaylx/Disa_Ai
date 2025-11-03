@@ -21,7 +21,7 @@ const cardVariants = cva(
         "neo-inset":
           "bg-[var(--surface-neumorphic-pressed)] border-[var(--border-neumorphic-dark)] shadow-[var(--shadow-inset-medium)]",
         "neo-glass":
-          "bg-[var(--surface-neumorphic-floating)]/80 border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)] backdrop-blur-sm",
+          "bg-[var(--surface-neumorphic-floating)]/80 border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)] backdrop-blur-md",
       },
       elevation: {
         // === PERFORMANCE-OPTIMIZED ELEVATION SYSTEM ===
@@ -146,6 +146,10 @@ const cardVariants = cva(
       },
 
       // === TONE + INTERACTIVE COMBINATIONS ===
+      {
+        tone: "neo-glass",
+        class: "border-white/10",
+      },
       {
         tone: "neo-glass",
         interactive: ["gentle", "dramatic"],

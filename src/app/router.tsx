@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import { ErrorBoundary } from "../components/ErrorBoundary";
-import { MobileAppShell } from "./layouts/MobileAppShell";
+import { AppShell } from "./layouts/AppShell";
 
 // Lazy-loaded Routes für bessere Performance
 const ChatPage = lazy(() => import("../pages/Chat"));
@@ -24,7 +24,7 @@ const router = createBrowserRouter(
     {
       path: "/roles",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -37,13 +37,13 @@ const router = createBrowserRouter(
               <RolesPage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/chat",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -56,13 +56,13 @@ const router = createBrowserRouter(
               <ChatPage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/models",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -75,13 +75,13 @@ const router = createBrowserRouter(
               <ModelsPage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/settings",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -94,13 +94,13 @@ const router = createBrowserRouter(
               <SettingsOverviewPage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/settings/api",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -113,13 +113,13 @@ const router = createBrowserRouter(
               <SettingsApiPage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/settings/memory",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -132,13 +132,13 @@ const router = createBrowserRouter(
               <SettingsMemoryPage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/settings/filters",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -151,13 +151,13 @@ const router = createBrowserRouter(
               <SettingsFiltersPage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/settings/appearance",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -170,13 +170,13 @@ const router = createBrowserRouter(
               <SettingsAppearancePage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/settings/data",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -189,13 +189,13 @@ const router = createBrowserRouter(
               <SettingsDataPage />
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/impressum",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -229,13 +229,13 @@ const router = createBrowserRouter(
               </div>
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/datenschutz",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -426,13 +426,13 @@ const router = createBrowserRouter(
               </div>
             </Suspense>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {
       path: "/404",
       element: (
-        <MobileAppShell>
+        <AppShell>
           <ErrorBoundary>
             <div className="flex flex-col items-center justify-center py-20">
               <h1 className="text-6xl font-bold">404</h1>
@@ -448,7 +448,7 @@ const router = createBrowserRouter(
               </a>
             </div>
           </ErrorBoundary>
-        </MobileAppShell>
+        </AppShell>
       ),
     },
     {

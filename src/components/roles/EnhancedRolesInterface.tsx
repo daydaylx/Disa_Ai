@@ -625,7 +625,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           </div>
 
           {/* Roles Grid */}
-          <div className="space-y-3" data-testid="role-card-grid">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3" data-testid="role-card-grid">
             {filteredRoles.map((role) => (
               <DenseRoleCard
                 key={role.id}
