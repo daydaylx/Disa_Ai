@@ -54,6 +54,9 @@ Surface Layer System:
 --acc1-strong: #3748df; /* Strong primary */
 --acc2: #f45d69; /* Secondary accent */
 --acc2-strong: #d63b4b; /* Strong secondary */
+--color-accent-surface: color-mix(in srgb, var(--acc2) 14%, white 86%);
+--color-accent-surface-strong: color-mix(in srgb, var(--acc2) 24%, white 76%);
+--color-accent-border: color-mix(in srgb, var(--acc2) 48%, transparent);
 ```
 
 #### Semantic Colors
@@ -78,39 +81,60 @@ Surface Layer System:
 --color-surface-overlay: color-mix(in srgb, var(--bg1) 92%, rgba(15, 18, 32, 0.65));
 ```
 
+### Accent Usage Guidelines
+
+| Zweck                   | Farbe/Baustein                                   |
+| ----------------------- | ------------------------------------------------ |
+| Brand-Aktionen          | `Button variant="brand"` / `--acc1`              |
+| Sekundäre Highlights    | `Button variant="accent"` / `--color-accent-*`   |
+| Filter-/Toggle-Zustände | Ghost → Accent wechseln (z.B. Favoriten, Filter) |
+| Karten-Auswahl          | `Card intent="accent"` oder `state="selected"`   |
+| Kategorie-Badges        | `Badge variant="accent"` oder `category=*`       |
+
+**Regel:** Brand (`--acc1`) signalisiert Kerninteraktionen, Accent (`--acc2`) bringt Wärme/Fokus. Niemals beide gleichzeitig innerhalb eines Elements kombinieren – pro Komponente entscheidet man sich für Brand _oder_ Accent.
+
 ### Shadow System (Dramatic Neumorphic)
 
 #### Light Theme Shadows
 
 ```css
-/* Progressive shadow depth scale */
---shadow-neumorphic-sm: 8px 8px 16px rgba(9, 12, 20, 0.15), -8px -8px 16px rgba(255, 255, 255, 0.1);
+/* Progressive shadow depth scale (Light Theme 2.1) */
+--shadow-neumorphic-sm:
+  6px 6px 14px rgba(9, 12, 20, 0.12), -6px -6px 14px rgba(255, 255, 255, 0.08);
 
 --shadow-neumorphic-md:
-  15px 15px 30px rgba(9, 12, 20, 0.18), -15px -15px 30px rgba(255, 255, 255, 0.12);
+  12px 12px 26px rgba(9, 12, 20, 0.15), -12px -12px 26px rgba(255, 255, 255, 0.1);
 
 --shadow-neumorphic-lg:
-  25px 25px 50px rgba(9, 12, 20, 0.22), -25px -25px 50px rgba(255, 255, 255, 0.15);
+  20px 20px 40px rgba(9, 12, 20, 0.18), -20px -20px 40px rgba(255, 255, 255, 0.12);
 
 --shadow-neumorphic-xl:
-  35px 35px 70px rgba(9, 12, 20, 0.25), -35px -35px 70px rgba(255, 255, 255, 0.18);
+  28px 28px 56px rgba(9, 12, 20, 0.21), -28px -28px 56px rgba(255, 255, 255, 0.14);
 
 --shadow-neumorphic-dramatic:
-  45px 45px 90px rgba(9, 12, 20, 0.28), -45px -45px 90px rgba(255, 255, 255, 0.2);
+  36px 36px 72px rgba(9, 12, 20, 0.23), -36px -36px 72px rgba(255, 255, 255, 0.16);
 
 --shadow-neumorphic-extreme:
-  60px 60px 120px rgba(9, 12, 20, 0.32), -60px -60px 120px rgba(255, 255, 255, 0.22);
+  48px 48px 96px rgba(9, 12, 20, 0.25), -48px -48px 96px rgba(255, 255, 255, 0.18);
 ```
 
 #### Dark Theme Shadows (High Contrast)
 
 ```css
---shadow-neumorphic-sm: 8px 8px 16px rgba(0, 0, 0, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.03);
+--shadow-neumorphic-sm: 3px 3px 8px rgba(0, 0, 0, 0.38), -3px -3px 8px rgba(255, 255, 255, 0.04);
 
---shadow-neumorphic-md:
-  15px 15px 30px rgba(0, 0, 0, 0.7), -15px -15px 30px rgba(255, 255, 255, 0.05);
+--shadow-neumorphic-md: 5px 5px 12px rgba(0, 0, 0, 0.46), -5px -5px 12px rgba(255, 255, 255, 0.05);
 
-/* ... weitere Dark Theme Shadows */
+--shadow-neumorphic-lg: 9px 9px 20px rgba(0, 0, 0, 0.52), -9px -9px 20px rgba(255, 255, 255, 0.07);
+
+--shadow-neumorphic-xl:
+  14px 14px 30px rgba(0, 0, 0, 0.58), -14px -14px 30px rgba(255, 255, 255, 0.08);
+
+--shadow-neumorphic-dramatic:
+  30px 30px 64px rgba(0, 0, 0, 0.74), -30px -30px 64px rgba(255, 255, 255, 0.14);
+
+--shadow-neumorphic-extreme:
+  42px 42px 88px rgba(0, 0, 0, 0.78), -42px -42px 88px rgba(255, 255, 255, 0.15);
 ```
 
 #### Mobile-Optimized Shadows

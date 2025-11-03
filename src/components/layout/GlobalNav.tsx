@@ -1,6 +1,8 @@
 import { Menu } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
+import { Button } from "../ui/button";
+
 const ROUTE_TITLES: Record<string, string> = {
   "/chat": "Chat",
   "/roles": "Rollen",
@@ -37,16 +39,14 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
     NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
 
   const headerClass =
-    "sticky top-0 z-40 border-b border-[var(--color-border-subtle)] bg-[var(--surface-neumorphic-floating)] backdrop-blur-sm supports-[backdrop-filter]:backdrop-blur-md";
-
-  const menuButtonClass =
-    "flex h-10 w-10 items-center justify-center rounded-2xl border border-[color-mix(in_srgb,var(--color-border-subtle)_60%,transparent)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_85%,transparent)] text-[var(--color-text-secondary)] shadow-[var(--shadow-depth-1)] transition-transform duration-150 hover:-translate-y-[1px] hover:shadow-[var(--shadow-depth-2)] active:translate-y-[1px] active:shadow-none focus-visible:shadow-[var(--shadow-focus)] focus-visible:outline-none";
+    "sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_35%,transparent)] bg-gradient-to-r from-[var(--acc2)]/14 via-[var(--surface-neumorphic-floating)] 70% to-transparent backdrop-blur-lg supports-[backdrop-filter]:backdrop-blur-md shadow-[var(--shadow-neumorphic-sm)]";
 
   return (
     <header
       className={headerClass}
       style={{
-        background: "color-mix(in srgb, var(--surface-neumorphic-floating) 92%, transparent)",
+        background:
+          "linear-gradient(90deg, color-mix(in srgb, var(--acc2) 18%, transparent) 0%, color-mix(in srgb, var(--surface-neumorphic-floating) 92%, transparent) 55%, transparent 100%)",
       }}
     >
       <div className="flex items-center justify-between gap-3 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.5rem)]">
@@ -60,14 +60,15 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <Button
             type="button"
-            className={menuButtonClass}
-            aria-label="Hauptmenü öffnen"
+            variant="accent"
+            size="icon"
             onClick={onMenuClick}
+            aria-label="Hauptmenü öffnen"
           >
             <Menu className="h-5 w-5" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       </div>
     </header>

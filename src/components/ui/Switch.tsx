@@ -81,7 +81,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
           // Focus State (Dramatic Neomorphic)
           "focus-visible:outline-none",
           "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-          "focus-visible:border-[var(--acc1)]",
+          "focus-visible:border-[var(--color-border-focus)]",
 
           // Interactive States
           "transition-all duration-300 ease-out",
@@ -115,7 +115,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
               [
                 "shadow-[var(--shadow-neumorphic-xl)]",
                 "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--acc1)]",
-                "border-[var(--acc1)]",
+                "border-[var(--color-border-focus)]",
               ].join(" "),
 
             // Interactive States

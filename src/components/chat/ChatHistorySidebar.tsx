@@ -101,7 +101,7 @@ export function ChatHistorySidebar({
                   <input
                     type="text"
                     placeholder="Chats durchsuchen..."
-                    className="h-11 w-full rounded-[var(--radius-lg)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted shadow-[var(--shadow-inset-subtle)] focus-visible:border-[var(--acc1)] focus-visible:outline-none focus-visible:shadow-focus-neo"
+                    className="h-11 w-full rounded-[var(--radius-lg)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted shadow-[var(--shadow-inset-subtle)] focus-visible:border-[var(--color-border-focus)] focus-visible:outline-none focus-visible:shadow-focus-neo"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />

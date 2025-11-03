@@ -21,6 +21,8 @@ const badgeVariants = cva(
         warning: "border-transparent bg-status-warning-fg/12 text-status-warning-fg",
         error: "border-transparent bg-status-danger-fg/12 text-status-danger-fg",
         info: "border-transparent bg-status-info-fg/12 text-status-info-fg",
+        accent:
+          "border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)] hover:bg-[var(--color-accent-surface-strong)]",
         neumorphic:
           "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-text-primary shadow-none hover:shadow-neo-sm",
         "neumorphic-pressed":
@@ -40,10 +42,26 @@ const badgeVariants = cva(
         md: "text-[12px] px-2.5 py-1",
         lg: "text-[13px] px-3 py-1.5",
       },
+      category: {
+        none: "",
+        alltag:
+          "border-[var(--role-accent-alltag-border)] bg-[var(--role-accent-alltag-chip-bg)] text-[var(--role-accent-alltag-chip-text)]",
+        business:
+          "border-[var(--role-accent-business-border)] bg-[var(--role-accent-business-chip-bg)] text-[var(--role-accent-business-chip-text)]",
+        kreativ:
+          "border-[var(--role-accent-kreativ-border)] bg-[var(--role-accent-kreativ-chip-bg)] text-[var(--role-accent-kreativ-chip-text)]",
+        bildung:
+          "border-[var(--role-accent-bildung-border)] bg-[var(--role-accent-bildung-chip-bg)] text-[var(--role-accent-bildung-chip-text)]",
+        familie:
+          "border-[var(--role-accent-familie-border)] bg-[var(--role-accent-familie-chip-bg)] text-[var(--role-accent-familie-chip-text)]",
+        beratung:
+          "border-[var(--role-accent-beratung-border)] bg-[var(--role-accent-beratung-chip-bg)] text-[var(--role-accent-beratung-chip-text)]",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "md",
+      category: "none",
     },
   },
 );
@@ -52,10 +70,14 @@ export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
-function Badge({ className, variant, size, ...props }: BadgeProps) {
+function Badge({ className, variant, size, category, ...props }: BadgeProps) {
   return (
     <div
-      className={cn("min-h-[22px] items-center", badgeVariants({ variant, size }), className)}
+      className={cn(
+        "min-h-[22px] items-center",
+        badgeVariants({ variant, size, category }),
+        className,
+      )}
       {...props}
     />
   );

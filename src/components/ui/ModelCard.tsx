@@ -1,11 +1,22 @@
 import { Info } from "lucide-react";
-import { useId } from "react";
+import { type CSSProperties, useId } from "react";
 
 import { cn } from "../../lib/utils";
 import { getCategoryData, normalizeCategoryKey } from "../../utils/category-mapping";
+import { formatPricePerK } from "../../utils/pricing";
 import { Avatar } from "./avatar";
 import { Badge } from "./badge";
 import { Card } from "./card";
+
+const BADGE_CATEGORIES = [
+  "alltag",
+  "business",
+  "kreativ",
+  "bildung",
+  "familie",
+  "beratung",
+] as const;
+type BadgeCategory = (typeof BADGE_CATEGORIES)[number];
 
 export interface ModelCardProps {
   id: string;
@@ -22,16 +33,6 @@ export interface ModelCardProps {
   onToggleDetails: () => void;
   providerTier?: "free" | "premium" | "enterprise";
   isMobile?: boolean;
-}
-
-const priceFormatter = new Intl.NumberFormat("de-DE", {
-  minimumFractionDigits: 3,
-  maximumFractionDigits: 3,
-});
-
-function formatPrice(value: number) {
-  if (value === 0) return "Kostenlos";
-  return `${priceFormatter.format(value)}/1M`;
 }
 
 function formatContext(ctx?: number) {
@@ -63,6 +64,18 @@ export function ModelCard({
   const effectiveCategory =
     category || (providerTier === "premium" ? "Modell: Premium" : "Modell: Alltag");
   const categoryKey = normalizeCategoryKey(effectiveCategory);
+  const badgeCategory: BadgeCategory =
+    categoryKey === "model-premium"
+      ? "business"
+      : categoryKey === "model-alltag"
+        ? "alltag"
+        : BADGE_CATEGORIES.includes(categoryKey as BadgeCategory)
+          ? (categoryKey as BadgeCategory)
+          : "alltag";
+  const categoryAccentStyle: CSSProperties = {
+    borderLeftColor: `var(--role-accent-${badgeCategory}-border-strong)`,
+    borderLeftWidth: "4px",
+  };
   const categoryData = getCategoryData(effectiveCategory);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
@@ -97,10 +110,13 @@ export function ModelCard({
           "hover-lift-glow tap-bounce focus-glow",
           isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
           isMobile && "mobile-model-card touch-target",
+          "border-l-[4px]",
+          "pl-5",
         )}
         onClick={onSelect}
         onKeyDown={handleKeyDown}
         data-testid={`${isMobile ? "mobile-" : ""}model-card-${id}`}
+        style={categoryAccentStyle}
       >
         <div className="flex items-start gap-3">
           <div className="relative flex-shrink-0">
@@ -124,21 +140,30 @@ export function ModelCard({
                 <h3 className="text-title-base text-text-strong font-semibold truncate">{name}</h3>
                 <div className="flex items-center gap-2 mt-1">
                   <p className="truncate text-sm text-text-muted">{provider}</p>
-                  <span
+                  <Badge
+                    variant="accent"
+                    category={badgeCategory}
+                    size="xs"
                     className={cn(
-                      "category-badge inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide",
+                      "category-badge inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide shadow-none",
                       isMobile && "touch-target",
                     )}
                   >
-                    <span className="category-dot h-1 w-1 rounded-full" />
+                    <span
+                      className="category-dot h-1.5 w-1.5 rounded-full"
+                      style={{
+                        backgroundColor: `var(--role-accent-${badgeCategory}-border-strong)`,
+                      }}
+                    />
                     {categoryData.label}
-                  </span>
+                  </Badge>
                 </div>
               </div>
 
               <div className="flex flex-col items-end gap-1">
-                <div className="font-mono text-sm text-text-muted">
-                  {priceIn === 0 && priceOut === 0 ? " Kostenlos" : `${priceIn}/${priceOut}M`}
+                <div className="flex flex-col items-end text-xs font-mono text-text-muted">
+                  <span>{formatPricePerK(priceIn)}</span>
+                  <span>{formatPricePerK(priceOut)}</span>
                 </div>
               </div>
             </div>
@@ -187,13 +212,13 @@ export function ModelCard({
                     <dt className="text-text-strong font-semibold uppercase tracking-wide">
                       Preis Eingabe
                     </dt>
-                    <dd className="font-mono">{formatPrice(priceIn)}</dd>
+                    <dd className="font-mono">{formatPricePerK(priceIn)}</dd>
                   </div>
                   <div className="space-y-1">
                     <dt className="text-text-strong font-semibold uppercase tracking-wide">
                       Preis Ausgabe
                     </dt>
-                    <dd className="font-mono">{formatPrice(priceOut)}</dd>
+                    <dd className="font-mono">{formatPricePerK(priceOut)}</dd>
                   </div>
                 </dl>
               </div>

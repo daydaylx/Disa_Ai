@@ -9,6 +9,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     | "neo-dramatic"
     | "neo-extreme"
     | "brand"
+    | "accent"
     | "brand-soft"
     | "destructive"
     | "ghost"
@@ -50,7 +51,7 @@ const buttonVariants = (
       "hover:bg-[var(--surface-neumorphic-floating)]",
       "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-subtle)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--color-border-focus)]",
     ].join(" "),
     "neo-medium": [
       "bg-[var(--surface-neumorphic-raised)]",
@@ -62,7 +63,7 @@ const buttonVariants = (
       "hover:bg-[var(--surface-neumorphic-floating)]",
       "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-medium)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--color-border-focus)]",
     ].join(" "),
     "neo-dramatic": [
       "relative",
@@ -76,7 +77,7 @@ const buttonVariants = (
       "hover:bg-gradient-to-br hover:from-white hover:to-[var(--surface-neumorphic-floating)]",
       "active:translate-y-[2px]",
       "active:shadow-[var(--shadow-inset-strong)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--color-border-focus)]",
     ].join(" "),
     "neo-extreme": [
       "relative",
@@ -91,7 +92,7 @@ const buttonVariants = (
       "hover:bg-gradient-to-br hover:from-white hover:via-[var(--surface-neumorphic-floating)] hover:to-[var(--acc1)]/15",
       "active:translate-y-[2px]",
       "active:shadow-[var(--shadow-inset-extreme)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--color-border-focus)]",
     ].join(" "),
     brand: [
       "bg-[var(--color-brand-primary)]",
@@ -102,9 +103,22 @@ const buttonVariants = (
       dramatic ? "hover:-translate-y-[3px]" : "hover:-translate-y-[2px]",
       "hover:shadow-[var(--shadow-glow-brand-subtle)]",
       "hover:bg-[var(--color-brand-primary-hover)]",
-      "focus-visible:outline-none focus-visible:border-[var(--color-brand-primary)] focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
+      "focus-visible:outline-none focus-visible:border-[var(--color-border-focus)] focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
       "active:translate-y-[1px]",
       "active:bg-[var(--color-brand-primary-active)]",
+      "active:shadow-[var(--shadow-inset-medium)]",
+    ].join(" "),
+    accent: [
+      "bg-[var(--color-accent-surface)]",
+      "border border-[var(--color-accent-border)]",
+      "text-[var(--color-text-on-accent)] font-semibold",
+      "rounded-[var(--radius-lg)]",
+      "shadow-neo-md",
+      dramatic ? "hover:-translate-y-[3px]" : "hover:-translate-y-[2px]",
+      "hover:shadow-[var(--shadow-glow-accent)]",
+      "hover:bg-[var(--color-accent-surface-strong)]",
+      "focus-visible:outline-none focus-visible:border-[var(--color-border-focus)] focus-visible:shadow-[var(--shadow-glow-accent)]",
+      "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-medium)]",
     ].join(" "),
     "brand-soft": [
@@ -115,7 +129,7 @@ const buttonVariants = (
       "shadow-neo-md",
       "hover:shadow-neo-lg",
       "hover:bg-gradient-to-br hover:from-[var(--acc1)]/12 hover:to-[var(--acc2)]/12",
-      "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
+      "focus-visible:outline-none focus-visible:border-[var(--color-border-focus)] focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
       "active:translate-y-[1px]",
       "active:shadow-[var(--shadow-inset-subtle)]",
     ].join(" "),

@@ -1,5 +1,7 @@
 import { getRawModels, type ORModel } from "../services/openrouter";
+import { normalizePrice } from "../utils/pricing";
 import type { ModelDescriptionMap } from "./modelDescriptions";
+import { MODEL_POLICY } from "./modelPolicy";
 
 /** Policy-Typ (wird von rolePolicy/roleStore/Settings importiert) */
 export type Safety = "any" | "moderate" | "strict" | "loose";
@@ -35,24 +37,6 @@ export type CatalogOptions = {
 };
 
 /* ---- interne Helfer ---- */
-
-const RECOMMENDED_MODEL_IDS = [
-  "cognitivecomputations/dolphin3.0-mistral-24b",
-  "cognitivecomputations/dolphin3.0-mistral-24b:free",
-  "cognitivecomputations/dolphin3.0-r1-mistral-24b",
-  "venice/uncensored:free",
-  "teknium/openhermes-2.5-mistral-7b",
-  "huggingfaceh4/zephyr-7b-beta",
-  "undi95/toppy-m-7b",
-  "pygmalionai/mythalion-13b",
-  "gryphe/mythomax-l2-13b",
-  "gryphe/mythomist-7b",
-  "nousresearch/nous-capybara-7b",
-  "jondurbin/airoboros-l2-70b",
-  "undi95/remm-slerp-l2-13b",
-  "sao10k/l3.3-euryale-70b",
-  "sao10k/l3.1-euryale-70b",
-] as const;
 
 let descriptionCache: ModelDescriptionMap | null = null;
 
@@ -117,19 +101,6 @@ function getGermanDescription(
   return undefined;
 }
 
-function normalizePrice(value: unknown): number | undefined {
-  if (typeof value === "number") {
-    return Number.isFinite(value) ? value : undefined;
-  }
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    if (!trimmed) return undefined;
-    const parsed = Number.parseFloat(trimmed);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-  return undefined;
-}
-
 function toEntry(m: ORModel, descriptions: ModelDescriptionMap): ModelEntry {
   const prov = deriveProvider(m.id);
   const normalizedPrompt = normalizePrice(m.pricing?.prompt);
@@ -164,33 +135,46 @@ function byLabel(a: ModelEntry, b: ModelEntry) {
   return A.localeCompare(B);
 }
 
-/* ---- Public API ---- */
+function uniqueIds(values: Iterable<string>): string[] {
+  return Array.from(new Set(values));
+}
+
+function normalizeModelId(id: string): string {
+  return id.replace(/:free$/, "");
+}
 
 /**
  * Generates dynamic fallback models based on OpenRouter API response
  * This creates a more resilient fallback that adapts to available models
  */
 function generateIntelligentFallback(availableModels: ORModel[]): string[] {
-  const preferred = Array.from(RECOMMENDED_MODEL_IDS);
+  const preferred = Array.from(MODEL_POLICY.recommendedModelIds);
   if (!availableModels || availableModels.length === 0) {
     return preferred;
   }
 
   const availableSet = new Set(availableModels.map((m) => m.id));
   const intersection = preferred.filter((id) => availableSet.has(id));
-  return intersection.length > 0 ? intersection : preferred;
+  if (intersection.length > 0) {
+    return intersection;
+  }
+
+  const freeCandidates = availableModels
+    .filter((model) => model.id.includes(":free"))
+    .slice(0, MODEL_POLICY.fallback.maxFreeFallback)
+    .map((model) => model.id);
+
+  return freeCandidates.length > 0 ? freeCandidates : preferred;
 }
 
-/** Multi-layer resilient model ID retrieval with intelligent fallbacks */
-async function getAllowedModelIds(): Promise<string[]> {
+async function loadAllowedIdsFromStyles(): Promise<string[] | null> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000); // Reduced timeout
+  const timeoutId = setTimeout(() => controller.abort(), MODEL_POLICY.fallback.stylesTimeoutMs);
 
   try {
-    // Layer 1: Try to load styles.json
     const response = await fetch("/styles.json", {
       signal: controller.signal,
-      cache: "default", // Allow fresher data
+      cache: "default",
     });
 
     if (!response.ok) {
@@ -198,50 +182,86 @@ async function getAllowedModelIds(): Promise<string[]> {
     }
 
     const stylesData = await response.json();
-    const allowed = new Set<string>();
+    const allowed = new Set<string>(MODEL_POLICY.recommendedModelIds);
 
     if (stylesData?.styles && Array.isArray(stylesData.styles)) {
       for (const style of stylesData.styles) {
         if (style.allow && Array.isArray(style.allow)) {
-          style.allow.forEach((modelId: string) => allowed.add(modelId));
+          for (const modelId of style.allow) {
+            allowed.add(modelId);
+          }
         }
       }
     }
 
-    RECOMMENDED_MODEL_IDS.forEach((id) => allowed.add(id));
-
-    const styleBasedModels = Array.from(allowed);
-
-    // Validate that we have reasonable model coverage
-    if (styleBasedModels.length > 0) {
-      console.warn(`[Models] Loaded ${styleBasedModels.length} models from styles.json`);
-      return styleBasedModels;
-    } else {
-      throw new Error("No models found in styles.json");
+    const result = Array.from(allowed);
+    if (result.length > 0) {
+      console.warn(`[Models] Loaded ${result.length} models from styles.json`);
+      return result;
     }
+
+    return null;
   } catch (error) {
-    console.warn("Failed to load styles.json, attempting dynamic fallback:", error);
-
-    // Layer 2: Try to get dynamic fallback from OpenRouter API
-    try {
-      const availableModels = await getRawModels(undefined, 5000); // 5s timeout for API
-      const intelligentFallback = generateIntelligentFallback(availableModels);
-      console.warn(`[Models] Using intelligent fallback: ${intelligentFallback.length} models`);
-      return intelligentFallback;
-    } catch (apiError) {
-      console.warn("OpenRouter API also failed, using static fallback:", apiError);
-
-      // Layer 3: Static fallback (last resort)
-      const staticFallback = Array.from(RECOMMENDED_MODEL_IDS);
-
-      const uniqueStatic = Array.from(new Set(staticFallback));
-
-      console.warn(`[Models] Using static fallback: ${uniqueStatic.length} models`);
-      return uniqueStatic;
-    }
+    console.warn("[Models] Unable to load styles.json allow-list, falling back.", error);
+    return null;
   } finally {
     clearTimeout(timeoutId);
   }
+}
+
+async function loadAllowedIdsFromApi(): Promise<string[] | null> {
+  try {
+    const availableModels = await getRawModels(undefined, MODEL_POLICY.fallback.apiCacheTtlMs);
+    const intelligentFallback = generateIntelligentFallback(availableModels);
+
+    if (intelligentFallback.length > 0) {
+      console.warn(
+        `[Models] Using intelligent fallback based on API models: ${intelligentFallback.length}`,
+      );
+      return uniqueIds(intelligentFallback);
+    }
+
+    return null;
+  } catch (error) {
+    console.warn("[Models] Unable to build fallback from OpenRouter API.", error);
+    return null;
+  }
+}
+
+function pickAllowedModels(list: ORModel[], allowedIds: string[]): ORModel[] {
+  if (!allowedIds.length) return [];
+  const allowedSet = new Set(allowedIds);
+  return list.filter((model) => allowedSet.has(model.id));
+}
+
+function pickByBaseId(list: ORModel[], allowedIds: string[]): ORModel[] {
+  if (!allowedIds.length) return [];
+  const normalizedAllowed = allowedIds.map(normalizeModelId);
+  return list.filter((model) => normalizedAllowed.includes(normalizeModelId(model.id)));
+}
+
+function pickFreeModels(list: ORModel[]): ORModel[] {
+  return list
+    .filter((model) => model.id.includes(":free"))
+    .slice(0, MODEL_POLICY.fallback.maxFreeFallback);
+}
+
+/* ---- Public API ---- */
+
+/** Multi-layer resilient model ID retrieval with intelligent fallbacks */
+async function getAllowedModelIds(): Promise<string[]> {
+  const styleIds = await loadAllowedIdsFromStyles();
+  if (styleIds?.length) {
+    return uniqueIds(styleIds);
+  }
+
+  const apiIds = await loadAllowedIdsFromApi();
+  if (apiIds?.length) {
+    return uniqueIds(apiIds);
+  }
+
+  console.warn("[Models] Falling back to static recommended model list.");
+  return Array.from(MODEL_POLICY.recommendedModelIds);
 }
 
 /** Enhanced model catalog loading with resilient fallback handling */
@@ -258,70 +278,37 @@ export async function loadModelCatalog(
 
     const list: ORModel[] = Array.isArray(data) ? data : [];
 
-    // Filter models that are both available in API and allowed by configuration
-    const availableAllowed = list.filter((model) => allowedIds.includes(model.id));
-
-    if (availableAllowed.length > 0) {
-      console.warn(`[Models] Successfully loaded ${availableAllowed.length} available models`);
-      return availableAllowed.map((model) => toEntry(model, descriptions)).sort(byLabel);
+    const allowedMatches = pickAllowedModels(list, allowedIds);
+    if (allowedMatches.length > 0) {
+      console.warn(`[Models] Loaded ${allowedMatches.length} configured models from API.`);
+      return allowedMatches.map((model) => toEntry(model, descriptions)).sort(byLabel);
     }
 
-    // If no configured models are available, try intelligent intersection
-    console.warn("[Models] No configured models available, attempting intelligent matching");
-
-    const intelligentMatches = list.filter((model) => {
-      // Match common patterns from allowedIds
-      return allowedIds.some((allowedId) => {
-        const allowedBase = allowedId.replace(/:free$/, "");
-        const modelBase = model.id.replace(/:free$/, "");
-        return (
-          allowedBase === modelBase ||
-          allowedId.includes(model.id) ||
-          model.id.includes(allowedBase)
-        );
-      });
-    });
-
-    if (intelligentMatches.length > 0) {
-      console.warn(`[Models] Found ${intelligentMatches.length} intelligent matches`);
-      return intelligentMatches.map((model) => toEntry(model, descriptions)).sort(byLabel);
+    const baseMatches = pickByBaseId(list, allowedIds);
+    if (baseMatches.length > 0) {
+      console.warn(`[Models] Using ${baseMatches.length} base-ID matches as fallback.`);
+      return baseMatches.map((model) => toEntry(model, descriptions)).sort(byLabel);
     }
 
-    // If still no matches, return the top available free models
-    const fallbackModels = list.filter((model) => model.id.includes(":free")).slice(0, 10); // Limit to prevent overwhelming UI
-
-    if (fallbackModels.length > 0) {
-      console.warn(`[Models] Using ${fallbackModels.length} fallback free models`);
-      return fallbackModels.map((model) => toEntry(model, descriptions)).sort(byLabel);
+    const freeFallback = pickFreeModels(list);
+    if (freeFallback.length > 0) {
+      console.warn(`[Models] Falling back to ${freeFallback.length} free models from API.`);
+      return freeFallback.map((model) => toEntry(model, descriptions)).sort(byLabel);
     }
 
-    // If API returned empty or no free models, use emergency fallback
-    console.warn("[Models] No models available from API, using emergency fallback");
     throw new Error("Empty API response - triggering emergency fallback");
   } catch (error) {
     console.error("[Models] Failed to load model catalog:", error);
 
     // Emergency fallback: Return minimal model set
-    const emergencyModels: ModelEntry[] = [
-      {
-        id: "meta-llama/llama-3.3-70b-instruct:free",
-        label: "Llama 3.3 70B (Free)",
-        description:
-          "Freies 70B-Flaggschiff von Meta mit großer Kontexttiefe und stabiler Performance für alle Aufgaben.",
-        provider: "meta-llama",
-        tags: ["free", "large"],
-        safety: "free",
-      },
-      {
-        id: "mistralai/mistral-nemo:free",
-        label: "Mistral Nemo (Free)",
-        description:
-          "Robustes Long-Context-Modell von Mistral AI. Kostenlos und zuverlässig für Standardaufgaben.",
-        provider: "mistralai",
-        tags: ["free", "medium"],
-        safety: "free",
-      },
-    ];
+    const emergencyModels: ModelEntry[] = MODEL_POLICY.fallback.emergencyModels.map((entry) => ({
+      id: entry.id,
+      label: entry.label,
+      description: entry.description,
+      provider: entry.provider,
+      tags: entry.tags,
+      safety: entry.safety,
+    }));
 
     console.warn(`[Models] Using emergency fallback: ${emergencyModels.length} models`);
     return emergencyModels;

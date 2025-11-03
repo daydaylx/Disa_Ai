@@ -29,18 +29,16 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bottom-navigation fixed bottom-2 left-2 right-2 z-50",
       "mx-auto max-w-sm rounded-[var(--radius-2xl)]",
       // Dramatic Dock Foundation
-      "bg-[var(--surface-neumorphic-floating)]",
+      "bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-floating)]",
       "shadow-[var(--shadow-neumorphic-dramatic)]",
       "border-[var(--border-neumorphic-light)]",
       // Enhanced Blur and Effects
       "backdrop-blur-xl",
       "before:absolute before:inset-0 before:rounded-[var(--radius-2xl)]",
-      "before:bg-gradient-to-r before:from-white/20 before:via-white/10 before:to-white/20",
+      "before:bg-gradient-to-r before:from-[var(--acc2)]/18 before:via-white/12 before:to-[var(--acc1)]/14",
       "before:pointer-events-none",
       // Hover Enhancement
       "transition-all duration-300 ease-out",
-      "hover:shadow-[var(--shadow-neumorphic-extreme)]",
-      "hover:scale-[1.02]",
     ].join(" "),
 
     "neo-floating": [
@@ -139,78 +137,70 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       // === NEW DRAMATIC NEOMORPHIC VARIANTS ===
       "neo-dock": isActive
         ? [
-            // Active State - Highly Raised
-            "text-[var(--acc1)] font-semibold",
+            "text-[var(--color-border-focus)] font-semibold",
             "bg-[var(--surface-neumorphic-floating)]",
-            "shadow-[var(--shadow-neumorphic-lg)]",
-            "border-[var(--border-neumorphic-light)]",
+            "shadow-[var(--shadow-glow-accent-subtle)]",
+            "border-[var(--color-border-focus)]/60",
             "rounded-[var(--radius-lg)] p-2 m-1",
-            // Glow Effect
-            "shadow-[0_0_20px_rgba(75,99,255,0.3)]",
           ].join(" ")
         : [
             // Inactive State
             "text-[var(--color-text-secondary)]",
             "rounded-[var(--radius-lg)] p-2 m-1",
             // Hover State
-            "hover:text-[var(--color-text-primary)]",
+            "hover:text-[var(--color-border-focus)]",
             "hover:bg-[var(--surface-neumorphic-raised)]",
-            "hover:shadow-[var(--shadow-neumorphic-md)]",
-            "hover:border-[var(--border-neumorphic-subtle)]",
+            "hover:shadow-[var(--shadow-glow-accent-subtle)]",
             "hover:-translate-y-0.5",
           ].join(" "),
 
       "neo-floating": isActive
         ? [
-            "text-[var(--acc1)] font-semibold",
+            "text-[var(--color-border-focus)] font-semibold",
             "bg-[var(--surface-neumorphic-floating)]",
-            "shadow-[var(--shadow-neumorphic-xl)]",
+            "shadow-[var(--shadow-glow-accent-subtle)]",
             "rounded-[var(--radius-xl)] p-3 m-1",
-            "border-[var(--border-neumorphic-light)]",
+            "border-[var(--color-border-focus)]/60",
             "-translate-y-1",
           ].join(" ")
         : [
             "text-[var(--color-text-secondary)]",
             "rounded-[var(--radius-lg)] p-2 m-1",
-            "hover:text-[var(--color-text-primary)]",
+            "hover:text-[var(--color-border-focus)]",
             "hover:bg-[var(--surface-neumorphic-raised)]",
-            "hover:shadow-[var(--shadow-neumorphic-lg)]",
+            "hover:shadow-[var(--shadow-glow-accent-subtle)]",
             "hover:-translate-y-0.5",
           ].join(" "),
 
       "neo-dramatic": isActive
         ? [
-            "text-[var(--acc1)] font-bold",
+            "text-[var(--color-border-focus)] font-bold",
             "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
-            "shadow-[var(--shadow-neumorphic-xl)]",
+            "shadow-[var(--shadow-glow-accent)]",
             "rounded-[var(--radius-lg)] p-3 m-2",
-            "border-[var(--border-neumorphic-light)]",
-            "scale-110",
-            // Dramatic Glow
-            "shadow-[0_0_30px_rgba(75,99,255,0.4)]",
+            "border-[var(--color-border-focus)]/60",
           ].join(" ")
         : [
             "text-[var(--color-text-secondary)]",
             "rounded-[var(--radius-md)] p-2 m-1",
-            "hover:text-[var(--color-text-primary)]",
+            "hover:text-[var(--color-border-focus)]",
             "hover:bg-[var(--surface-neumorphic-raised)]",
-            "hover:shadow-[var(--shadow-neumorphic-md)]",
-            "hover:scale-105",
+            "hover:shadow-[var(--shadow-glow-accent-subtle)]",
           ].join(" "),
 
       "neo-glass": isActive
         ? [
-            "text-[var(--acc1)] font-semibold",
+            "text-[var(--color-border-focus)] font-semibold",
             "bg-[var(--surface-neumorphic-floating)]/90",
-            "shadow-[var(--shadow-neumorphic-md)]",
+            "shadow-[var(--shadow-glow-accent-subtle)]",
             "backdrop-blur-xl backdrop-saturate-150",
             "rounded-[var(--radius-lg)] p-2 m-1",
-            "border-[var(--border-neumorphic-light)]",
+            "border-[var(--color-border-focus)]/60",
           ].join(" ")
         : [
             "text-[var(--color-text-secondary)]",
             "rounded-[var(--radius-md)] p-2 m-1",
-            "hover:text-[var(--color-text-primary)]",
+            "hover:text-[var(--color-border-focus)]",
             "hover:bg-[var(--surface-neumorphic-floating)]/60",
             "hover:backdrop-blur-lg",
             "hover:shadow-[var(--shadow-neumorphic-sm)]",
@@ -219,23 +209,23 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       // === LEGACY VARIANTS (Updated) ===
       /** @deprecated Use neo-dock instead */
       default: isActive
-        ? "text-[var(--acc1)] bg-[var(--surface-neumorphic-raised)] shadow-[var(--shadow-neumorphic-sm)] rounded-lg p-2"
-        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-neumorphic-raised)] hover:rounded-lg hover:p-2",
+        ? "text-[var(--color-border-focus)] bg-[var(--surface-neumorphic-raised)] shadow-[var(--shadow-glow-accent-subtle)] rounded-lg p-2 border border-[var(--color-border-focus)]/60"
+        : "text-[var(--color-text-secondary)] hover:text-[var(--color-border-focus)] hover:bg-[var(--surface-neumorphic-raised)] hover:rounded-lg hover:p-2 hover:shadow-[var(--shadow-glow-accent-subtle)]",
 
       /** @deprecated Use neo-floating instead */
       neumorphic: isActive
         ? [
-            "text-[var(--acc1)]",
+            "text-[var(--color-border-focus)]",
             "bg-[var(--surface-neumorphic-raised)]",
-            "shadow-[var(--shadow-neumorphic-md)]",
-            "border-[var(--border-neumorphic-light)]",
+            "shadow-[var(--shadow-glow-accent-subtle)]",
+            "border-[var(--color-border-focus)]/60",
             "rounded-lg p-2",
           ].join(" ")
         : [
             "text-[var(--color-text-secondary)]",
-            "hover:text-[var(--color-text-primary)]",
+            "hover:text-[var(--color-border-focus)]",
             "hover:bg-[var(--surface-neumorphic-raised)]",
-            "hover:shadow-[var(--shadow-neumorphic-sm)]",
+            "hover:shadow-[var(--shadow-glow-accent-subtle)]",
             "hover:rounded-lg hover:p-2",
           ].join(" "),
 

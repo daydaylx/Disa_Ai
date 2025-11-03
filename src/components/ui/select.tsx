@@ -58,12 +58,12 @@ const SelectTrigger = React.forwardRef<
         // Focus State (Dramatic Neomorphic)
         "focus-visible:outline-none",
         "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-        "focus-visible:border-[var(--acc1)]",
+        "focus-visible:border-[var(--color-border-focus)]",
         "focus-visible:bg-[var(--surface-neumorphic-floating)]",
 
         // Open State
         "data-[state=open]:shadow-[var(--shadow-focus-neumorphic)]",
-        "data-[state=open]:border-[var(--acc1)]",
+        "data-[state=open]:border-[var(--color-border-focus)]",
         "data-[state=open]:bg-[var(--surface-neumorphic-floating)]",
 
         // Disabled State

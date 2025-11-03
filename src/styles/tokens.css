@@ -26,8 +26,10 @@
   --bg1: #fdfdff;
   --bg2: #dfe3f0;
 
+  /* Brand (kühles Blau) für primäre Aktionen/Links */
   --acc1: #4b63ff;
   --acc1-strong: #3748df;
+  /* Warme Akzentfarbe für sekundäre Highlights */
   --acc2: #f45d69;
   --acc2-strong: #d63b4b;
 
@@ -35,6 +37,10 @@
   --warn: #b26a00;
   --err: #c13a32;
   --info: #0d73d6;
+
+  --color-accent-surface: color-mix(in srgb, var(--acc2) 14%, white 86%);
+  --color-accent-surface-strong: color-mix(in srgb, var(--acc2) 24%, white 76%);
+  --color-accent-border: color-mix(in srgb, var(--acc2) 48%, transparent);
 
   /* Semantic color tokens */
   --color-surface-canvas: var(--bg0);
@@ -71,7 +77,7 @@
   --color-border-hairline: color-mix(in srgb, var(--fg0) 8%, transparent);
   --color-border-subtle: color-mix(in srgb, var(--fg0) 15%, transparent);
   --color-border-strong: color-mix(in srgb, var(--fg0) 30%, transparent);
-  --color-border-focus: var(--acc1);
+  --color-border-focus: color-mix(in srgb, var(--acc1) 60%, var(--acc2) 40%);
   --color-border-divider: color-mix(in srgb, var(--fg0) 12%, transparent);
 
   /* Status colors */
@@ -122,8 +128,8 @@
   --color-control-field-placeholder: var(--fg2);
   --color-control-field-border: color-mix(in srgb, var(--fg0) 12%, transparent);
   --color-control-field-border-hover: color-mix(in srgb, var(--fg0) 22%, transparent);
-  --color-control-field-border-active: var(--acc1);
-  --color-control-field-focus-ring: color-mix(in srgb, var(--acc1) 35%, transparent);
+  --color-control-field-border-active: color-mix(in srgb, var(--acc1) 55%, var(--acc2) 45%);
+  --color-control-field-focus-ring: color-mix(in srgb, var(--acc2) 32%, transparent);
 
   --color-control-chip-bg: color-mix(in srgb, var(--bg1) 70%, var(--acc1) 10%);
   --color-control-chip-hover: color-mix(in srgb, var(--bg1) 60%, var(--acc1) 15%);
@@ -134,7 +140,7 @@
      SHADOW & GLOW EFFECTS
      ======================================================================== */
 
-  --shadow-focus: 0 0 0 2px color-mix(in srgb, var(--acc1) 28%, transparent);
+  --shadow-focus: 0 0 0 2px color-mix(in srgb, var(--acc1) 22%, transparent);
 
   /* Accent glows (use sparingly) */
   --shadow-glow-brand-subtle:
@@ -143,6 +149,9 @@
     0 0 16px rgba(var(--brand-rgb), 0.32), 0 0 0 2px rgba(var(--brand-rgb), 0.35);
   --shadow-glow-brand-strong:
     0 0 24px rgba(var(--brand-rgb), 0.42), 0 0 0 3px rgba(var(--brand-rgb), 0.45);
+  --shadow-glow-accent-subtle:
+    0 0 14px rgba(244, 93, 105, 0.22), 0 0 0 1px rgba(244, 93, 105, 0.26);
+  --shadow-glow-accent: 0 0 20px rgba(244, 93, 105, 0.32), 0 0 0 2px rgba(244, 93, 105, 0.34);
 
   --shadow-glow-success-subtle: 0 0 12px rgba(13, 143, 98, 0.2), 0 0 0 1px rgba(13, 143, 98, 0.22);
   --shadow-glow-success: var(--shadow-glow-success-subtle);
@@ -166,27 +175,27 @@
 
   /* Neomorphic Inset Shadows (for pressed/input states) - DRAMATIC */
   --shadow-inset-subtle:
-    inset 4px 4px 8px rgba(9, 12, 20, 0.12), inset -4px -4px 8px rgba(255, 255, 255, 0.06);
+    inset 3px 3px 7px rgba(9, 12, 20, 0.1), inset -3px -3px 7px rgba(255, 255, 255, 0.05);
   --shadow-inset-medium:
-    inset 8px 8px 16px rgba(9, 12, 20, 0.18), inset -8px -8px 16px rgba(255, 255, 255, 0.1);
+    inset 6px 6px 14px rgba(9, 12, 20, 0.14), inset -6px -6px 14px rgba(255, 255, 255, 0.08);
   --shadow-inset-strong:
-    inset 12px 12px 24px rgba(9, 12, 20, 0.25), inset -12px -12px 24px rgba(255, 255, 255, 0.12);
+    inset 10px 10px 22px rgba(9, 12, 20, 0.18), inset -10px -10px 22px rgba(255, 255, 255, 0.1);
   --shadow-inset-extreme:
-    inset 16px 16px 32px rgba(9, 12, 20, 0.3), inset -16px -16px 32px rgba(255, 255, 255, 0.15);
+    inset 14px 14px 30px rgba(9, 12, 20, 0.22), inset -14px -14px 30px rgba(255, 255, 255, 0.12);
 
   /* Neomorphic Raised Shadows (dual-directional for dramatic depth) */
   --shadow-neumorphic-sm:
-    8px 8px 16px rgba(9, 12, 20, 0.15), -8px -8px 16px rgba(255, 255, 255, 0.1);
+    6px 6px 14px rgba(9, 12, 20, 0.12), -6px -6px 14px rgba(255, 255, 255, 0.08);
   --shadow-neumorphic-md:
-    15px 15px 30px rgba(9, 12, 20, 0.18), -15px -15px 30px rgba(255, 255, 255, 0.12);
+    12px 12px 26px rgba(9, 12, 20, 0.15), -12px -12px 26px rgba(255, 255, 255, 0.1);
   --shadow-neumorphic-lg:
-    25px 25px 50px rgba(9, 12, 20, 0.22), -25px -25px 50px rgba(255, 255, 255, 0.15);
+    20px 20px 40px rgba(9, 12, 20, 0.18), -20px -20px 40px rgba(255, 255, 255, 0.12);
   --shadow-neumorphic-xl:
-    35px 35px 70px rgba(9, 12, 20, 0.25), -35px -35px 70px rgba(255, 255, 255, 0.18);
+    28px 28px 56px rgba(9, 12, 20, 0.21), -28px -28px 56px rgba(255, 255, 255, 0.14);
   --shadow-neumorphic-dramatic:
-    45px 45px 90px rgba(9, 12, 20, 0.28), -45px -45px 90px rgba(255, 255, 255, 0.2);
+    36px 36px 72px rgba(9, 12, 20, 0.23), -36px -36px 72px rgba(255, 255, 255, 0.16);
   --shadow-neumorphic-extreme:
-    60px 60px 120px rgba(9, 12, 20, 0.32), -60px -60px 120px rgba(255, 255, 255, 0.22);
+    48px 48px 96px rgba(9, 12, 20, 0.25), -48px -48px 96px rgba(255, 255, 255, 0.18);
 
   /* Neomorphic Surfaces (enhanced base colors for depth) */
   --surface-neumorphic-base: var(--bg1);
@@ -688,25 +697,30 @@
   --err: #ff6b6b;
   --info: #6cb6ff;
 
+  --color-accent-surface: color-mix(in srgb, var(--acc2) 28%, var(--bg1) 72%);
+  --color-accent-surface-strong: color-mix(in srgb, var(--acc2) 42%, var(--bg1) 58%);
+  --color-accent-border: color-mix(in srgb, var(--acc2) 55%, transparent);
+
   /* NEOMORPHISM DARK MODE OVERRIDES */
 
   /* Dark mode neomorphic inset shadows (subtler, more highlights) */
   --shadow-inset-subtle:
-    inset 2px 2px 5px rgba(0, 0, 0, 0.4), inset -2px -2px 5px rgba(255, 255, 255, 0.03);
+    inset 2px 2px 5px rgba(0, 0, 0, 0.32), inset -2px -2px 5px rgba(255, 255, 255, 0.02);
   --shadow-inset-medium:
-    inset 4px 4px 10px rgba(0, 0, 0, 0.5), inset -4px -4px 10px rgba(255, 255, 255, 0.05);
+    inset 4px 4px 9px rgba(0, 0, 0, 0.42), inset -4px -4px 9px rgba(255, 255, 255, 0.04);
   --shadow-inset-strong:
-    inset 6px 6px 15px rgba(0, 0, 0, 0.6), inset -6px -6px 15px rgba(255, 255, 255, 0.08);
+    inset 6px 6px 14px rgba(0, 0, 0, 0.52), inset -6px -6px 14px rgba(255, 255, 255, 0.06);
 
   /* Dark mode neomorphic raised shadows (stronger darks, subtle lights) */
-  --shadow-neumorphic-sm: 2px 2px 4px rgba(0, 0, 0, 0.45), -2px -2px 4px rgba(255, 255, 255, 0.04);
+  --shadow-neumorphic-sm: 3px 3px 8px rgba(0, 0, 0, 0.38), -3px -3px 8px rgba(255, 255, 255, 0.04);
   --shadow-neumorphic-icon:
     2px 2px 4px rgba(0, 0, 0, 0.28), -2px -2px 4px rgba(255, 255, 255, 0.06);
   --shadow-neumorphic-md:
-    4px 4px 10px rgba(0, 0, 0, 0.55), -4px -4px 10px rgba(255, 255, 255, 0.05);
-  --shadow-neumorphic-lg: 8px 8px 18px rgba(0, 0, 0, 0.6), -8px -8px 18px rgba(255, 255, 255, 0.08);
+    5px 5px 12px rgba(0, 0, 0, 0.46), -5px -5px 12px rgba(255, 255, 255, 0.05);
+  --shadow-neumorphic-lg:
+    9px 9px 20px rgba(0, 0, 0, 0.52), -9px -9px 20px rgba(255, 255, 255, 0.07);
   --shadow-neumorphic-xl:
-    12px 12px 26px rgba(0, 0, 0, 0.68), -12px -12px 26px rgba(255, 255, 255, 0.1);
+    14px 14px 30px rgba(0, 0, 0, 0.58), -14px -14px 30px rgba(255, 255, 255, 0.08);
 
   /* Dark mode neomorphic surfaces */
   --surface-neumorphic-base: var(--bg1);
@@ -725,21 +739,21 @@
   --shadow-depth-2: var(--shadow-neumorphic-md);
   --shadow-depth-3: var(--shadow-neumorphic-lg);
   --shadow-depth-4: var(--shadow-neumorphic-xl);
-  --shadow-depth-5: 14px 14px 32px rgba(0, 0, 0, 0.75), -14px -14px 32px rgba(255, 255, 255, 0.12);
-  --shadow-depth-6: 22px 22px 46px rgba(0, 0, 0, 0.82), -22px -22px 46px rgba(255, 255, 255, 0.14);
-  --shadow-depth-7: 30px 30px 68px rgba(0, 0, 0, 0.88), -30px -30px 68px rgba(255, 255, 255, 0.16);
-  --shadow-depth-8: 40px 40px 90px rgba(0, 0, 0, 0.92), -40px -40px 90px rgba(255, 255, 255, 0.18);
+  --shadow-depth-5: 16px 16px 34px rgba(0, 0, 0, 0.64), -16px -16px 34px rgba(255, 255, 255, 0.1);
+  --shadow-depth-6: 24px 24px 48px rgba(0, 0, 0, 0.7), -24px -24px 48px rgba(255, 255, 255, 0.12);
+  --shadow-depth-7: 32px 32px 70px rgba(0, 0, 0, 0.76), -32px -32px 70px rgba(255, 255, 255, 0.14);
+  --shadow-depth-8: 40px 40px 90px rgba(0, 0, 0, 0.8), -40px -40px 90px rgba(255, 255, 255, 0.16);
 
   /* Dark mode dramatic neomorphic shadows */
   --shadow-neumorphic-dramatic:
-    30px 30px 64px rgba(0, 0, 0, 0.85), -30px -30px 64px rgba(255, 255, 255, 0.16);
+    30px 30px 64px rgba(0, 0, 0, 0.74), -30px -30px 64px rgba(255, 255, 255, 0.14);
   --shadow-neumorphic-extreme:
-    48px 48px 96px rgba(0, 0, 0, 0.9), -48px -48px 96px rgba(255, 255, 255, 0.18);
+    42px 42px 88px rgba(0, 0, 0, 0.78), -42px -42px 88px rgba(255, 255, 255, 0.15);
 
   /* Dark mode neomorphic focus */
   --shadow-focus-neumorphic:
-    inset 0 0 0 1px var(--acc1), 0 0 0 3px color-mix(in srgb, var(--acc1) 20%, transparent),
-    var(--shadow-inset-subtle);
+    inset 0 0 0 1px color-mix(in srgb, var(--acc1) 70%, var(--acc2) 30%),
+    0 0 0 3px color-mix(in srgb, var(--acc2) 20%, transparent), var(--shadow-inset-subtle);
 
   /* Category colors - dark mode adaptations */
   --role-accent-alltag-text: var(--role-accent-alltag-200);

@@ -204,7 +204,6 @@ export default function Chat() {
           <ChatList
             messages={messages}
             isLoading={isLoading}
-            newConversation={newConversation}
             onShowHistory={openHistory}
             onRetry={(messageId) => {
               // Implement retry logic if needed

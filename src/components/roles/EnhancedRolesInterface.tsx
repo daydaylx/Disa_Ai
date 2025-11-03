@@ -430,7 +430,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 bg-surface-base/95 backdrop-blur-md border-b border-border-hairline">
+      <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
         {/* Search & Quick Actions Row */}
         <div className="px-4 py-3">
           <div className="flex items-center gap-3">
@@ -440,7 +440,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               <input
                 type="text"
                 placeholder="Rollen durchsuchen..."
-                className="w-full pl-10 pr-4 py-2.5 bg-surface-card border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full rounded-lg border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] pl-10 pr-4 py-2.5 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] shadow-[var(--shadow-inset-subtle)] transition-all duration-200 focus-visible:outline-none focus-visible:border-[var(--color-border-focus)] focus-visible:bg-[var(--surface-neumorphic-floating)] focus-visible:shadow-[var(--shadow-focus-neumorphic)]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -448,21 +448,19 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
             {/* Quick Action Buttons */}
             <Button
-              variant="ghost"
+              variant={filters.showFavoritesOnly ? "accent" : "ghost"}
               size="sm"
               className="p-2.5"
               onClick={() =>
                 setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
               }
             >
-              <Star
-                className={`w-4 h-4 ${filters.showFavoritesOnly ? "fill-yellow-400 text-yellow-400" : ""}`}
-              />
+              <Star className="w-4 h-4" />
               <span className="sr-only">Favoriten</span>
             </Button>
 
             <Button
-              variant="ghost"
+              variant={showFilters ? "accent" : "ghost"}
               size="sm"
               className="p-2.5"
               onClick={() => setShowFilters(!showFilters)}
@@ -471,7 +469,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               <span className="sr-only">Filter</span>
             </Button>
 
-            <Button variant="ghost" size="sm" className="p-2.5">
+            <Button variant="brand-soft" size="sm" className="p-2.5">
               <Settings className="w-4 h-4" />
               <span className="sr-only">Einstellungen</span>
             </Button>
@@ -481,21 +479,31 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         {/* Active Role Banner */}
         {activeRole && (
           <div className="px-4 pb-3">
-            <div className="flex items-center gap-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
-              <Users className="w-5 h-5 text-primary" />
+            <Card
+              tone="neo-floating"
+              padding="sm"
+              interactive={false}
+              intent="accent"
+              className="flex items-center gap-3 rounded-[var(--radius-xl)] border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] shadow-[var(--shadow-glow-accent-subtle)]"
+            >
+              <Users className="w-5 h-5 text-[var(--color-border-focus)]" />
               <div className="flex-1">
-                <div className="font-medium text-primary">Aktive Rolle: {activeRole.name}</div>
-                <div className="text-sm text-primary/80">{activeRole.category}</div>
+                <div className="font-medium text-[var(--color-text-on-accent)]">
+                  Aktive Rolle: {activeRole.name}
+                </div>
+                <div className="text-sm text-[var(--color-text-on-accent)]/80">
+                  {activeRole.category}
+                </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setActiveRole(null)}
-                className="text-primary hover:bg-primary/10"
+                className="text-[var(--color-text-on-accent)] hover:bg-[var(--color-accent-surface-strong)]"
               >
                 Deaktivieren
               </Button>
-            </div>
+            </Card>
           </div>
         )}
 
@@ -503,16 +511,17 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         {favoriteRoles.length > 0 && !filters.showFavoritesOnly && (
           <div className="px-4 pb-3">
             <div className="mb-2 flex items-center gap-2 text-[var(--color-text-secondary)]">
-              <Star className="h-4 w-4 text-[var(--color-brand-primary)]" />
+              <Star className="h-4 w-4 text-[var(--color-border-focus)]" />
               <span className="text-sm font-medium text-[var(--color-text-primary)]">
                 Favoriten ({favoriteCount.roles})
               </span>
             </div>
             <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {favoriteRoles.slice(0, 4).map((role) => (
-                <button
+                <Button
                   key={role.id}
-                  className="flex min-w-[160px] snap-start flex-shrink-0 flex-col rounded-2xl border border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_78%,transparent)] px-3 py-2 text-left text-sm text-[var(--color-text-secondary)] shadow-[var(--shadow-depth-1)] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[var(--shadow-depth-2)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
+                  variant={activeRole?.id === role.id ? "accent" : "ghost"}
+                  className="min-w-[160px] snap-start flex-shrink-0 flex-col items-start px-3 py-2 text-left text-sm shadow-[var(--shadow-depth-1)] transition-all duration-150 hover:-translate-y-0.5"
                   onClick={() => handleActivateRole(role)}
                 >
                   <span className="font-semibold text-[var(--color-text-primary)]">
@@ -521,7 +530,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   <span className="text-[12px] text-[var(--color-text-secondary)]">
                     {role.category}
                   </span>
-                </button>
+                </Button>
               ))}
             </div>
           </div>

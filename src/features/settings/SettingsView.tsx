@@ -251,7 +251,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             onChange={() => toggleNotifications()}
           />
           <div className="grid gap-2 sm:grid-cols-2">
-            <Button variant="secondary" className="justify-between" onClick={handleCleanup}>
+            <Button variant="accent" className="justify-between" onClick={handleCleanup}>
               Verlauf komprimieren
               <RefreshCw className="h-4 w-4" />
             </Button>
@@ -273,9 +273,10 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             </Button>
           </div>
           <Card
-            tone="neo-glass"
+            tone="neo-floating"
             elevation="subtle"
-            className="rounded-[var(--radius-card-inner)] border border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)]/90 p-3 text-xs text-[var(--color-text-secondary)]"
+            intent="accent"
+            className="rounded-[var(--radius-card-inner)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)]/90 p-3 text-xs text-[var(--color-text-on-accent)]"
           >
             <p>
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
@@ -424,20 +425,25 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 border-b border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)] px-4 py-3 backdrop-blur shadow-neo-sm">
+      <header className="sticky top-0 z-10 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent px-4 py-3 backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
         <div className="flex items-center justify-between text-sm">
           <div className="space-y-1">
             {section ? (
               <Button asChild variant="ghost" size="sm" className="px-0 text-xs font-medium">
-                <Link to="/settings" className="inline-flex items-center gap-1 text-xs">
+                <Link
+                  to="/settings"
+                  className="inline-flex items-center gap-1 text-xs text-[var(--color-border-focus)]"
+                >
                   ← Übersicht
                 </Link>
               </Button>
             ) : null}
-            <span className="brand-chip inline-flex w-fit items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
+            <span className="brand-chip inline-flex w-fit items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-border-focus)]/70">
               Kontrolle
             </span>
-            <h1 className="text-token-h1 text-text-strong font-semibold">{headerTitle}</h1>
+            <h1 className="text-token-h1 text-[var(--color-text-primary)] font-semibold">
+              {headerTitle}
+            </h1>
           </div>
           <div className="text-right text-xs text-text-muted leading-5">
             <p>{stats.totalMessages} Nachrichten</p>
@@ -481,9 +487,9 @@ function SettingsSection({
 }) {
   return (
     <section id={id}>
-      <Card tone="neo-glass" elevation="subtle">
-        <div className="flex items-start gap-3 border-b border-[var(--color-border-hairline)] px-4 py-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card-small)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-strong)]">
+      <Card tone="neo-floating" elevation="subtle" className="shadow-[var(--shadow-depth-1)]">
+        <div className="flex items-start gap-3 border-b border-[var(--color-border-subtle)] px-4 py-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card-small)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)]">
             <Icon className="h-4 w-4" aria-hidden />
           </span>
           <div className="flex flex-1 flex-col gap-1">

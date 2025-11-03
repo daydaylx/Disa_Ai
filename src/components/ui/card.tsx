@@ -5,7 +5,7 @@ import { cn } from "../../lib/utils";
 
 const cardVariants = cva(
   // Dramatic Neomorphic Foundation - v2.0.0
-  "relative isolate overflow-hidden rounded-[var(--radius-xl)] border text-[var(--color-text-primary)] transition-all duration-300 ease-out focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus-neumorphic)] focus-visible:border-[var(--acc1)]",
+  "relative isolate overflow-hidden rounded-[var(--radius-xl)] border text-[var(--color-text-primary)] transition-all duration-300 ease-out focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus-neumorphic)] focus-visible:border-[var(--color-border-focus)]",
   {
     variants: {
       tone: {
@@ -80,6 +80,12 @@ const cardVariants = cva(
           "hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]",
           "hover:border-[var(--err)]",
         ].join(" "),
+
+        "glow-accent": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-glow-accent)]",
+          "hover:border-[var(--color-border-focus)]",
+        ].join(" "),
       },
       padding: {
         none: "",
@@ -111,6 +117,8 @@ const cardVariants = cva(
         error:
           "border-[var(--err)] bg-gradient-to-br from-[var(--err)]/5 to-[var(--err)]/8 text-[var(--color-text-primary)]",
         info: "border-[var(--info)] bg-gradient-to-br from-[var(--info)]/5 to-[var(--info)]/8 text-[var(--color-text-primary)]",
+        accent:
+          "border-[var(--color-border-focus)] bg-gradient-to-br from-[var(--acc2)]/12 to-[var(--acc1)]/10 text-[var(--color-text-primary)]",
       },
       state: {
         default: "",
@@ -118,8 +126,8 @@ const cardVariants = cva(
         disabled:
           "opacity-40 pointer-events-none cursor-not-allowed shadow-[var(--shadow-inset-subtle)]",
         selected:
-          "border-[var(--acc1)] bg-gradient-to-br from-[var(--acc1)]/8 to-[var(--acc2)]/8 shadow-[0_0_0_2px_var(--acc1)]/20",
-        focus: "border-[var(--acc1)] shadow-[var(--shadow-focus-neumorphic)]",
+          "border-[var(--color-border-focus)] bg-gradient-to-br from-[var(--acc1)]/12 to-[var(--acc2)]/14 shadow-[var(--shadow-glow-accent-subtle)]",
+        focus: "border-[var(--color-border-focus)] shadow-[var(--shadow-focus-neumorphic)]",
       },
     },
     compoundVariants: [
@@ -132,6 +140,7 @@ const cardVariants = cva(
           "glow-success",
           "glow-warning",
           "glow-error",
+          "glow-accent",
         ],
         class: "min-h-[44px] touch-target",
       },
@@ -153,6 +162,11 @@ const cardVariants = cva(
         intent: "primary",
         interactive: ["glow-brand", "gentle", "dramatic"],
         class: "hover:from-[var(--acc1)]/8 hover:to-[var(--acc2)]/12",
+      },
+      {
+        intent: "accent",
+        interactive: ["glow-accent", "gentle"],
+        class: "hover:from-[var(--acc2)]/14 hover:to-[var(--acc1)]/14",
       },
       {
         intent: "success",

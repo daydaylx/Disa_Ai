@@ -17,30 +17,72 @@ import {
 } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
+import { MODEL_POLICY } from "../../config/modelPolicy";
 import { loadModelCatalog, type ModelEntry } from "../../config/models";
 import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
-import type { EnhancedModel, FilterState } from "../../types/enhanced-interfaces";
+import type { EnhancedModel } from "../../types/enhanced-interfaces";
+import { coercePrice, formatPricePerK } from "../../utils/pricing";
 import { Button } from "../ui";
 import { Card } from "../ui/card";
 import { useToasts } from "../ui/toast/ToastsProvider";
 
-interface EnhancedModelsInterfaceProps {
-  className?: string;
+type SortOption = "name" | "performance" | "price";
+
+type ModelFilters = {
+  showFavoritesOnly: boolean;
+  showFreeOnly: boolean;
+  showPremiumOnly: boolean;
+  minPerformanceScore: number;
+  sortBy: SortOption;
+  sortDirection: "asc" | "desc";
+};
+
+type FilterAction =
+  | { type: "toggleFavorites" }
+  | { type: "setShowFreeOnly"; value: boolean }
+  | { type: "setShowPremiumOnly"; value: boolean }
+  | { type: "setMinPerformanceScore"; value: number }
+  | { type: "setSortBy"; value: SortOption }
+  | { type: "setSortDirection"; value: "asc" | "desc" };
+
+const initialFilters: ModelFilters = {
+  showFavoritesOnly: false,
+  showFreeOnly: false,
+  showPremiumOnly: false,
+  minPerformanceScore: 0,
+  sortBy: "name",
+  sortDirection: "asc",
+};
+
+function filterReducer(state: ModelFilters, action: FilterAction): ModelFilters {
+  switch (action.type) {
+    case "toggleFavorites":
+      return { ...state, showFavoritesOnly: !state.showFavoritesOnly };
+    case "setShowFreeOnly":
+      return {
+        ...state,
+        showFreeOnly: action.value,
+        showPremiumOnly: action.value ? false : state.showPremiumOnly,
+      };
+    case "setShowPremiumOnly":
+      return {
+        ...state,
+        showPremiumOnly: action.value,
+        showFreeOnly: action.value ? false : state.showFreeOnly,
+      };
+    case "setMinPerformanceScore":
+      return { ...state, minPerformanceScore: action.value };
+    case "setSortBy":
+      return { ...state, sortBy: action.value };
+    case "setSortDirection":
+      return { ...state, sortDirection: action.value };
+    default:
+      return state;
+  }
 }
 
-function coercePrice(value: unknown, fallback = 0): number {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
-  }
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    if (!trimmed) {
-      return fallback;
-    }
-    const parsed = Number.parseFloat(trimmed);
-    return Number.isFinite(parsed) ? parsed : fallback;
-  }
-  return fallback;
+interface EnhancedModelsInterfaceProps {
+  className?: string;
 }
 
 // Helper function to convert ModelEntry to EnhancedModel
@@ -48,6 +90,10 @@ function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
   const inputPrice = coercePrice(entry.pricing?.in);
   const outputPrice = coercePrice(entry.pricing?.out);
   const isFree = inputPrice === 0 || outputPrice === 0 || entry.tags.includes("free");
+  const { heuristics } = MODEL_POLICY;
+  const maxTokens = entry.ctx ?? heuristics.defaultContextTokens;
+  const effectiveTokens = Math.floor(maxTokens * heuristics.effectiveContextRatio);
+  const performanceProfile = isFree ? heuristics.performance.free : heuristics.performance.paid;
 
   return {
     // Core properties from ModelEntry
@@ -66,16 +112,16 @@ function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
 
     // Context
     context: {
-      maxTokens: entry.ctx || 4096,
-      effectiveTokens: Math.floor((entry.ctx || 4096) * 0.8),
+      maxTokens,
+      effectiveTokens,
     },
 
     // Performance scores (estimated based on model characteristics)
     performance: {
-      speed: isFree ? 75 : 85,
-      reliability: 90,
-      quality: isFree ? 80 : 90,
-      efficiency: isFree ? 95 : 80,
+      speed: performanceProfile.speed,
+      reliability: performanceProfile.reliability,
+      quality: performanceProfile.quality,
+      efficiency: performanceProfile.efficiency,
     },
 
     // Enhanced categorization
@@ -125,8 +171,9 @@ function categorizeModelFromTags(tags: string[], isFree: boolean): any {
 // Helper function to determine tier from price
 function determineTierFromPrice(price: number): "free" | "budget" | "premium" | "enterprise" {
   if (price === 0) return "free";
-  if (price < 0.001) return "budget";
-  if (price < 0.01) return "premium";
+  const { priceTiers } = MODEL_POLICY.heuristics;
+  if (price <= priceTiers.budget) return "budget";
+  if (price <= priceTiers.premium) return "premium";
   return "enterprise";
 }
 
@@ -218,10 +265,13 @@ function DenseModelCard({
 }) {
   return (
     <Card
-      className={`p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
-        isSelected ? "ring-2 ring-primary ring-offset-2" : ""
+      clickable
+      interactive="gentle"
+      state={isSelected ? "selected" : "default"}
+      className={`p-4 transition-all duration-200 hover:shadow-md ${
+        isSelected ? "ring-2 ring-[var(--color-border-focus)] ring-offset-2" : ""
       }`}
-      onClick={onSelect}
+      onCardClick={onSelect}
     >
       {/* Header Row */}
       <div className="flex items-start justify-between mb-3">
@@ -244,6 +294,7 @@ function DenseModelCard({
             variant="ghost"
             size="sm"
             className="p-1.5 h-auto"
+            aria-label={isFavorite ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
             onClick={(e) => {
               e.stopPropagation();
               onToggleFavorite();
@@ -257,6 +308,7 @@ function DenseModelCard({
             variant="ghost"
             size="sm"
             className="p-1.5 h-auto"
+            aria-label="Modelldetails anzeigen"
             onClick={(e) => {
               e.stopPropagation();
               onShowDetails();
@@ -279,7 +331,8 @@ function DenseModelCard({
         {/* Price Info */}
         {!model.pricing.isFree && (
           <Chip variant="default" size="xs">
-            <DollarSign className="w-3 h-3" />${model.pricing.inputPrice.toFixed(3)}/1K
+            <DollarSign className="w-3 h-3" />
+            {formatPricePerK(model.pricing.inputPrice)}
           </Chip>
         )}
 
@@ -322,24 +375,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
   const [showFilters, setShowFilters] = useState(false);
   const [detailsModel, setDetailsModel] = useState<EnhancedModel | null>(null);
-  const [filters, setFilters] = useState<FilterState>({
-    searchQuery: "",
-    searchHistory: [],
-    selectedCategories: [],
-    excludedCategories: [],
-    showFavoritesOnly: false,
-    showRecentlyUsed: false,
-    showBuiltInOnly: false,
-    models: {
-      showFreeOnly: false,
-      showPremiumOnly: false,
-      minPerformanceScore: 0,
-      requiredCapabilities: [],
-      maxPriceRange: [0, 1],
-    },
-    sortBy: "name",
-    sortDirection: "asc",
-  });
+  const [filters, dispatchFilters] = React.useReducer(filterReducer, initialFilters);
 
   // Load models dynamically from OpenRouter
   const [enhancedModels, setEnhancedModels] = useState<EnhancedModel[]>([]);
@@ -390,24 +426,24 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     }
 
     // Free only filter
-    if (filters.models.showFreeOnly) {
+    if (filters.showFreeOnly) {
       filtered = filtered.filter((model) => model.pricing.isFree);
     }
 
     // Premium only filter
-    if (filters.models.showPremiumOnly) {
+    if (filters.showPremiumOnly) {
       filtered = filtered.filter((model) => !model.pricing.isFree);
     }
 
     // Performance score filter
-    if (filters.models.minPerformanceScore > 0) {
+    if (filters.minPerformanceScore > 0) {
       filtered = filtered.filter(
-        (model) => model.performance.quality >= filters.models.minPerformanceScore,
+        (model) => model.performance.quality >= filters.minPerformanceScore,
       );
     }
 
     // Sort
-    filtered.sort((a, b) => {
+    const sorted = [...filtered].sort((a, b) => {
       const direction = filters.sortDirection === "asc" ? 1 : -1;
 
       switch (filters.sortBy) {
@@ -422,7 +458,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       }
     });
 
-    return filtered;
+    return sorted;
   }, [enhancedModels, searchQuery, filters, isModelFavorite]);
 
   // Get favorites for header section
@@ -498,7 +534,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   return (
     <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 bg-surface-base/95 backdrop-blur-md border-b border-border-hairline">
+      <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
         {/* Search & Quick Actions Row */}
         <div className="px-4 py-3">
           <div className="flex items-center gap-3">
@@ -508,7 +544,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <input
                 type="text"
                 placeholder="Modelle durchsuchen..."
-                className="w-full pl-10 pr-4 py-2.5 bg-surface-card border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] shadow-[var(--shadow-inset-subtle)] transition-all duration-200 ease-out focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus-neumorphic)] focus-visible:border-[var(--color-border-focus)] focus-visible:bg-[var(--surface-neumorphic-floating)]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -516,21 +552,17 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
             {/* Quick Action Buttons */}
             <Button
-              variant="ghost"
+              variant={filters.showFavoritesOnly ? "accent" : "ghost"}
               size="sm"
               className="p-2.5"
-              onClick={() =>
-                setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
-              }
+              onClick={() => dispatchFilters({ type: "toggleFavorites" })}
             >
-              <Star
-                className={`w-4 h-4 ${filters.showFavoritesOnly ? "fill-yellow-400 text-yellow-400" : ""}`}
-              />
+              <Star className="w-4 h-4" />
               <span className="sr-only">Favoriten</span>
             </Button>
 
             <Button
-              variant="ghost"
+              variant={showFilters ? "accent" : "ghost"}
               size="sm"
               className="p-2.5"
               onClick={() => setShowFilters(!showFilters)}
@@ -539,7 +571,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <span className="sr-only">Filter</span>
             </Button>
 
-            <Button variant="ghost" size="sm" className="p-2.5">
+            <Button variant="brand-soft" size="sm" className="p-2.5">
               <Settings className="w-4 h-4" />
               <span className="sr-only">Einstellungen</span>
             </Button>
@@ -550,23 +582,25 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
         {favoriteModels.length > 0 && !filters.showFavoritesOnly && (
           <div className="px-4 pb-3">
             <div className="flex items-center gap-2 mb-2">
-              <Star className="w-4 h-4 text-yellow-500" />
+              <Star className="w-4 h-4 text-[var(--color-border-focus)]" />
               <span className="text-sm font-medium text-text-strong">
                 Favoriten ({favoriteCount.models})
               </span>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
               {favoriteModels.slice(0, 6).map((model) => (
-                <button
+                <Button
                   key={model.id}
-                  className="flex-shrink-0 px-3 py-1.5 bg-surface-card border border-border-subtle rounded-lg text-sm hover:bg-surface-raised transition-colors"
+                  variant={selectedModels.has(model.id) ? "accent" : "ghost"}
+                  size="sm"
+                  className="flex-shrink-0 px-3 py-1.5 text-sm"
                   onClick={() => handleSelectModel(model)}
                 >
                   <span className="font-medium">{model.label}</span>
                   {model.pricing.isFree && (
                     <span className="ml-1 text-xs text-emerald-600">FREE</span>
                   )}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -579,12 +613,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  checked={filters.models.showFreeOnly}
+                  checked={filters.showFreeOnly}
                   onChange={(e) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      models: { ...prev.models, showFreeOnly: e.target.checked },
-                    }))
+                    dispatchFilters({ type: "setShowFreeOnly", value: e.target.checked })
                   }
                   className="rounded"
                 />
@@ -594,12 +625,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  checked={filters.models.showPremiumOnly}
+                  checked={filters.showPremiumOnly}
                   onChange={(e) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      models: { ...prev.models, showPremiumOnly: e.target.checked },
-                    }))
+                    dispatchFilters({ type: "setShowPremiumOnly", value: e.target.checked })
                   }
                   className="rounded"
                 />
@@ -608,7 +636,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
               <select
                 value={filters.sortBy}
-                onChange={(e) => setFilters((prev) => ({ ...prev, sortBy: e.target.value as any }))}
+                onChange={(e) =>
+                  dispatchFilters({ type: "setSortBy", value: e.target.value as SortOption })
+                }
                 className="px-3 py-1.5 bg-surface-card border border-border-subtle rounded text-sm"
               >
                 <option value="name">Name</option>
@@ -718,7 +748,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     <div>Context: {formatContext(detailsModel.context.maxTokens)}</div>
                     <div>Tier: {detailsModel.tier}</div>
                     {!detailsModel.pricing.isFree && (
-                      <div>Price: ${detailsModel.pricing.inputPrice.toFixed(4)}/1K tokens</div>
+                      <div>Price: {formatPricePerK(detailsModel.pricing.inputPrice)}</div>
                     )}
                   </div>
                 </div>
