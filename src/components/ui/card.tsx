@@ -58,35 +58,40 @@ const cardVariants = cva(
           "active:translate-y-0.5 active:scale-[0.99]",
         ].join(" "),
 
-        // === SEMANTIC GLOW EFFECTS (Mobile-safe) ===
+        // === SEMANTIC GLOW EFFECTS (Mobile-optimized) ===
         "glow-brand": [
           "cursor-pointer",
-          "hover:shadow-[0_0_20px_rgba(75,99,255,0.3)]",
+          "hover:shadow-[0_0_16px_rgba(75,99,255,0.35)]", // Reduced blur for mobile performance
           "hover:border-[var(--acc1)]",
+          "hover:ring-2 hover:ring-[var(--acc1)]/25 hover:ring-offset-2 hover:ring-offset-transparent",
         ].join(" "),
 
         "glow-success": [
           "cursor-pointer",
-          "hover:shadow-[0_0_15px_rgba(34,197,94,0.3)]",
+          "hover:shadow-[0_0_12px_rgba(34,197,94,0.35)]", // Reduced blur for mobile performance
           "hover:border-[var(--ok)]",
+          "hover:ring-2 hover:ring-[var(--ok)]/25 hover:ring-offset-2 hover:ring-offset-transparent",
         ].join(" "),
 
         "glow-warning": [
           "cursor-pointer",
-          "hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]",
+          "hover:shadow-[0_0_12px_rgba(245,158,11,0.35)]", // Reduced blur for mobile performance
           "hover:border-[var(--warn)]",
+          "hover:ring-2 hover:ring-[var(--warn)]/25 hover:ring-offset-2 hover:ring-offset-transparent",
         ].join(" "),
 
         "glow-error": [
           "cursor-pointer",
-          "hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]",
+          "hover:shadow-[0_0_12px_rgba(239,68,68,0.35)]", // Reduced blur for mobile performance
           "hover:border-[var(--err)]",
+          "hover:ring-2 hover:ring-[var(--err)]/25 hover:ring-offset-2 hover:ring-offset-transparent",
         ].join(" "),
 
         "glow-accent": [
           "cursor-pointer",
           "hover:shadow-[var(--shadow-glow-accent)]",
           "hover:border-[var(--color-border-focus)]",
+          "hover:ring-2 hover:ring-[var(--color-border-focus)]/25 hover:ring-offset-2 hover:ring-offset-transparent",
         ].join(" "),
       },
       padding: {
@@ -113,23 +118,34 @@ const cardVariants = cva(
         secondary:
           "border-[var(--color-border-subtle)] bg-gradient-to-br from-[var(--surface-neumorphic-base)] to-[var(--surface-neumorphic-raised)]",
         success:
-          "border-[var(--ok)] bg-gradient-to-br from-[var(--ok)]/5 to-[var(--ok)]/8 text-[var(--color-text-primary)]",
+          "border-l-4 border-l-[var(--ok)] bg-gradient-to-br from-[var(--ok)]/5 to-[var(--ok)]/8 text-[var(--color-text-primary)]",
         warning:
-          "border-[var(--warn)] bg-gradient-to-br from-[var(--warn)]/5 to-[var(--warn)]/8 text-[var(--color-text-primary)]",
+          "border-l-4 border-l-[var(--warn)] bg-gradient-to-br from-[var(--warn)]/5 to-[var(--warn)]/8 text-[var(--color-text-primary)]",
         error:
-          "border-[var(--err)] bg-gradient-to-br from-[var(--err)]/5 to-[var(--err)]/8 text-[var(--color-text-primary)]",
-        info: "border-[var(--info)] bg-gradient-to-br from-[var(--info)]/5 to-[var(--info)]/8 text-[var(--color-text-primary)]",
+          "border-l-4 border-l-[var(--err)] bg-gradient-to-br from-[var(--err)]/5 to-[var(--err)]/8 text-[var(--color-text-primary)]",
+        info: "border-l-4 border-l-[var(--info)] bg-gradient-to-br from-[var(--info)]/5 to-[var(--info)]/8 text-[var(--color-text-primary)]",
         accent:
-          "border-[var(--color-border-focus)] bg-gradient-to-br from-[var(--acc2)]/12 to-[var(--acc1)]/10 text-[var(--color-text-primary)]",
+          "border-l-4 border-l-[var(--color-border-focus)] bg-gradient-to-br from-[var(--acc2)]/12 to-[var(--acc1)]/10 text-[var(--color-text-primary)]",
+        // Enhanced semantic intents for specific card purposes
+        feature:
+          "border-l-4 border-l-[var(--acc1)] bg-gradient-to-br from-[var(--acc1)]/8 to-[var(--acc2)]/4 text-[var(--color-text-primary)]",
+        announcement:
+          "border-l-4 border-l-[var(--info)] bg-gradient-to-br from-[var(--info)]/10 to-[var(--acc1)]/6 text-[var(--color-text-primary)]",
+        alert:
+          "border-l-4 border-l-[var(--warn)] bg-gradient-to-br from-[var(--warn)]/10 to-[var(--warn)]/6 text-[var(--color-text-primary)]",
+        notification:
+          "border-l-4 border-l-[var(--acc2)] bg-gradient-to-br from-[var(--acc2)]/8 to-[var(--acc1)]/4 text-[var(--color-text-primary)]",
+        data: "border-l-4 border-l-[var(--ok)] bg-gradient-to-br from-[var(--ok)]/6 to-[var(--info)]/4 text-[var(--color-text-primary)]",
       },
       state: {
         default: "",
         loading: "animate-pulse bg-[var(--surface-neumorphic-base)] pointer-events-none opacity-75",
         disabled:
-          "opacity-40 pointer-events-none cursor-not-allowed shadow-[var(--shadow-inset-subtle)]",
+          "opacity-50 pointer-events-none cursor-not-allowed shadow-[var(--shadow-inset-subtle)]",
         selected:
-          "border-[var(--color-border-focus)] bg-gradient-to-br from-[var(--acc1)]/12 to-[var(--acc2)]/14 shadow-[var(--shadow-glow-accent-subtle)]",
-        focus: "border-[var(--color-border-focus)] shadow-[var(--shadow-focus-neumorphic)]",
+          "border-[var(--color-border-focus)] bg-gradient-to-br from-[var(--acc1)]/12 to-[var(--acc2)]/14 shadow-[var(--shadow-glow-accent-subtle)] ring-2 ring-[var(--acc1)]/30 ring-offset-2 ring-offset-transparent",
+        focus:
+          "border-[var(--color-border-focus)] shadow-[var(--shadow-focus-neumorphic)] ring-2 ring-[var(--acc1)]/30 ring-offset-2 ring-offset-transparent",
       },
     },
     compoundVariants: [
@@ -188,6 +204,31 @@ const cardVariants = cva(
         intent: "error",
         interactive: ["glow-error", "gentle"],
         class: "hover:from-[var(--err)]/8 hover:to-[var(--err)]/12",
+      },
+      {
+        intent: "feature",
+        interactive: ["glow-brand", "gentle", "dramatic"],
+        class: "hover:from-[var(--acc1)]/10 hover:to-[var(--acc2)]/8",
+      },
+      {
+        intent: "announcement",
+        interactive: ["glow-accent", "gentle"],
+        class: "hover:from-[var(--info)]/12 hover:to-[var(--acc1)]/8",
+      },
+      {
+        intent: "alert",
+        interactive: ["glow-warning", "gentle"],
+        class: "hover:from-[var(--warn)]/12 hover:to-[var(--warn)]/8",
+      },
+      {
+        intent: "notification",
+        interactive: ["glow-brand", "gentle"],
+        class: "hover:from-[var(--acc2)]/10 hover:to-[var(--acc1)]/6",
+      },
+      {
+        intent: "data",
+        interactive: ["glow-success", "gentle"],
+        class: "hover:from-[var(--ok)]/8 hover:to-[var(--info)]/6",
       },
 
       // === STATE COMBINATIONS ===
@@ -516,6 +557,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
       ref={ref}
       className={cn(
         "flex flex-col gap-[var(--space-stack-sm)] px-[var(--space-lg)] pb-[var(--space-md)] pt-[var(--space-lg)]",
+        "text-[var(--color-text-primary)]", // Ensure high contrast for all text in header
         className,
       )}
       {...props}
@@ -530,6 +572,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
       ref={ref}
       className={cn(
         "text-title font-semibold leading-tight tracking-tight text-text-primary",
+        "text-[var(--color-text-primary)]", // Ensure high contrast for accessibility
         className,
       )}
       {...props}
@@ -544,7 +587,11 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-body leading-relaxed text-text-secondary", className)}
+    className={cn(
+      "text-body leading-relaxed text-text-secondary",
+      "text-[var(--color-text-secondary)]", // Ensure consistent contrast
+      className,
+    )}
     {...props}
   />
 ));
@@ -556,6 +603,7 @@ const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
       ref={ref}
       className={cn(
         "flex flex-col gap-[var(--space-stack-md)] px-[var(--space-lg)] pb-[var(--space-lg)]",
+        "text-[var(--color-text-primary)]", // Ensure high contrast for content text
         className,
       )}
       {...props}
@@ -570,6 +618,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
       ref={ref}
       className={cn(
         "flex items-center justify-between gap-[var(--space-inline-lg)] border-t border-border-divider px-[var(--space-lg)] pb-[var(--space-lg)] pt-[var(--space-md)]",
+        "text-[var(--color-text-primary)]", // Ensure high contrast for footer text
         className,
       )}
       {...props}
