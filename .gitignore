@@ -21,6 +21,7 @@ test-artifacts/
 coverage/
 coverage/.tmp/
 LOGS/
+logs/
 DOCS/
 docs/screenshots/
 screenshots/
