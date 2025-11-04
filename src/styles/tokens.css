@@ -16,26 +16,26 @@
      ======================================================================== */
 
   /* Core colors (light theme default) */
-  --fg0: #0f1724;
+  --fg0: #0a0f1a;
   --fg1: #4a5163;
   --fg2: #676d82;
   --fg-invert: #f6f7ff;
   --fg-muted: color-mix(in srgb, var(--fg1) 65%, var(--bg1));
 
   --bg0: #e9ecf4;
-  --bg1: #fdfdff;
+  --bg1: #ffffff;
   --bg2: #dfe3f0;
 
   /* Brand (kühles Blau) für primäre Aktionen/Links */
-  --acc1: #4b63ff;
-  --acc1-strong: #3748df;
+  --acc1: #5a72f8;
+  --acc1-strong: #4a62e8;
   /* Warme Akzentfarbe für sekundäre Highlights */
-  --acc2: #f45d69;
-  --acc2-strong: #d63b4b;
+  --acc2: #ff7a85;
+  --acc2-strong: #f46a75;
 
-  --ok: #0d8f62;
-  --warn: #b26a00;
-  --err: #c13a32;
+  --ok: #10a372;
+  --warn: #d97706;
+  --err: #e11d48;
   --info: #0d73d6;
 
   --color-accent-surface: color-mix(in srgb, var(--acc2) 14%, white 86%);
@@ -198,17 +198,17 @@
 
   /* Neomorphic Raised Shadows (dual-directional for dramatic depth) */
   --shadow-neumorphic-sm:
-    4px 4px 10px rgba(9, 12, 20, 0.1), -2px -2px 8px rgba(255, 255, 255, 0.06);
+    3px 3px 8px rgba(9, 12, 20, 0.08), -2px -2px 6px rgba(255, 255, 255, 0.05);
   --shadow-neumorphic-md:
-    8px 8px 18px rgba(9, 12, 20, 0.12), -6px -6px 16px rgba(255, 255, 255, 0.07);
+    6px 6px 14px rgba(9, 12, 20, 0.08), -4px -4px 12px rgba(255, 255, 255, 0.05);
   --shadow-neumorphic-lg:
-    14px 14px 28px rgba(9, 12, 20, 0.14), -10px -10px 24px rgba(255, 255, 255, 0.08);
+    10px 10px 22px rgba(9, 12, 20, 0.08), -6px -6px 16px rgba(255, 255, 255, 0.05);
   --shadow-neumorphic-xl:
-    20px 20px 40px rgba(9, 12, 20, 0.16), -14px -14px 36px rgba(255, 255, 255, 0.1);
+    14px 14px 30px rgba(9, 12, 20, 0.08), -8px -8px 20px rgba(255, 255, 255, 0.05);
   --shadow-neumorphic-dramatic:
-    28px 28px 56px rgba(9, 12, 20, 0.18), -20px -20px 50px rgba(255, 255, 255, 0.12);
+    20px 20px 40px rgba(9, 12, 20, 0.08), -12px -12px 30px rgba(255, 255, 255, 0.05);
   --shadow-neumorphic-extreme:
-    36px 36px 72px rgba(9, 12, 20, 0.2), -28px -28px 64px rgba(255, 255, 255, 0.14);
+    28px 28px 56px rgba(9, 12, 20, 0.08), -16px -16px 40px rgba(255, 255, 255, 0.05);
 
   /* Neomorphic Surfaces (enhanced base colors for depth) */
   --surface-neumorphic-base: var(--bg1);
@@ -261,10 +261,10 @@
      ======================================================================== */
 
   --motion-duration-micro: 110ms;
-  --motion-duration-small: 160ms;
-  --motion-duration-medium: 200ms;
-  --motion-duration-large: 260ms;
-  --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-duration-small: 200ms;
+  --motion-duration-medium: 250ms;
+  --motion-duration-large: 300ms;
+  --motion-easing-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
   --motion-easing-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
   --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
   --motion-easing-accelerate: cubic-bezier(0.8, 0, 1, 1);
@@ -352,7 +352,7 @@
   /* Line heights */
   --line-tight: 1.2;
   --line-snug: 1.35;
-  --line-relaxed: 1.5;
+  --line-relaxed: 1.6;
 
   /* Display */
   --font-size-display: var(--type-32);
@@ -379,16 +379,16 @@
   --letter-spacing-subtitle: -0.002em;
 
   /* Body */
-  --font-size-body: var(--type-16);
-  --line-height-body: calc(var(--type-16) * var(--line-relaxed));
+  --font-size-body: var(--type-18);
+  --line-height-body: calc(var(--type-18) * var(--line-relaxed));
   --font-weight-body: 400;
 
-  --font-size-body-strong: var(--type-16);
-  --line-height-body-strong: calc(var(--type-16) * var(--line-relaxed));
+  --font-size-body-strong: var(--type-18);
+  --line-height-body-strong: calc(var(--type-18) * var(--line-relaxed));
   --font-weight-body-strong: 600;
 
-  --font-size-body-small: var(--type-14);
-  --line-height-body-small: calc(var(--type-14) * var(--line-relaxed));
+  --font-size-body-small: var(--type-16);
+  --line-height-body-small: calc(var(--type-16) * var(--line-relaxed));
   --font-weight-body-small: 400;
 
   /* Caption & Labels */
@@ -501,11 +501,11 @@
   --radius-12: 12px;
   --radius-16: 16px;
 
-  --radius-xs: var(--radius-2);
-  --radius-sm: var(--radius-4);
-  --radius-md: var(--radius-8);
-  --radius-lg: var(--radius-12);
-  --radius-xl: var(--radius-16);
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
   --radius-pill: var(--radius-16);
   --radius-full: 50%;
   --radius-scrollbar: var(--radius-16);
@@ -550,16 +550,16 @@
      ======================================================================== */
 
   /* Alltag - Warm amber tones */
-  --role-accent-alltag-50: hsl(30 12% 96%);
-  --role-accent-alltag-100: hsl(30 14% 92%);
-  --role-accent-alltag-200: hsl(30 16% 85%);
-  --role-accent-alltag-300: hsl(30 18% 75%);
-  --role-accent-alltag-400: hsl(30 20% 65%);
-  --role-accent-alltag-500: hsl(30 18% 55%);
-  --role-accent-alltag-600: hsl(30 20% 45%);
-  --role-accent-alltag-700: hsl(30 22% 38%);
-  --role-accent-alltag-800: hsl(30 24% 30%);
-  --role-accent-alltag-900: hsl(30 26% 22%);
+  --role-accent-alltag-50: hsl(30 8% 96%);
+  --role-accent-alltag-100: hsl(30 10% 92%);
+  --role-accent-alltag-200: hsl(30 12% 85%);
+  --role-accent-alltag-300: hsl(30 14% 75%);
+  --role-accent-alltag-400: hsl(30 16% 65%);
+  --role-accent-alltag-500: hsl(30 12% 55%);
+  --role-accent-alltag-600: hsl(30 14% 45%);
+  --role-accent-alltag-700: hsl(30 16% 38%);
+  --role-accent-alltag-800: hsl(30 18% 30%);
+  --role-accent-alltag-900: hsl(30 20% 22%);
   --role-accent-alltag-text: var(--role-accent-alltag-900);
   --role-accent-alltag-text-on: var(--role-accent-alltag-50);
   --role-accent-alltag-bg: var(--role-accent-alltag-100);
@@ -572,16 +572,16 @@
   --role-accent-alltag-chip-border: var(--role-accent-alltag-200);
 
   /* Business - Steel blue */
-  --role-accent-business-50: hsl(210 12% 96%);
-  --role-accent-business-100: hsl(210 14% 92%);
-  --role-accent-business-200: hsl(210 16% 85%);
-  --role-accent-business-300: hsl(210 18% 75%);
-  --role-accent-business-400: hsl(210 20% 65%);
-  --role-accent-business-500: hsl(210 18% 56%);
-  --role-accent-business-600: hsl(210 20% 46%);
-  --role-accent-business-700: hsl(210 22% 38%);
-  --role-accent-business-800: hsl(210 24% 30%);
-  --role-accent-business-900: hsl(210 26% 22%);
+  --role-accent-business-50: hsl(210 8% 96%);
+  --role-accent-business-100: hsl(210 10% 92%);
+  --role-accent-business-200: hsl(210 12% 85%);
+  --role-accent-business-300: hsl(210 14% 75%);
+  --role-accent-business-400: hsl(210 16% 65%);
+  --role-accent-business-500: hsl(210 12% 56%);
+  --role-accent-business-600: hsl(210 14% 46%);
+  --role-accent-business-700: hsl(210 16% 38%);
+  --role-accent-business-800: hsl(210 18% 30%);
+  --role-accent-business-900: hsl(210 20% 22%);
   --role-accent-business-text: var(--role-accent-business-900);
   --role-accent-business-text-on: var(--role-accent-business-50);
   --role-accent-business-bg: var(--role-accent-business-100);
@@ -594,16 +594,16 @@
   --role-accent-business-chip-border: var(--role-accent-business-200);
 
   /* Kreativ - Violet */
-  --role-accent-kreativ-50: hsl(275 12% 96%);
-  --role-accent-kreativ-100: hsl(275 14% 92%);
-  --role-accent-kreativ-200: hsl(275 16% 85%);
-  --role-accent-kreativ-300: hsl(275 18% 75%);
-  --role-accent-kreativ-400: hsl(275 20% 65%);
-  --role-accent-kreativ-500: hsl(275 20% 55%);
-  --role-accent-kreativ-600: hsl(275 22% 45%);
-  --role-accent-kreativ-700: hsl(275 24% 38%);
-  --role-accent-kreativ-800: hsl(275 26% 30%);
-  --role-accent-kreativ-900: hsl(275 28% 22%);
+  --role-accent-kreativ-50: hsl(275 8% 96%);
+  --role-accent-kreativ-100: hsl(275 10% 92%);
+  --role-accent-kreativ-200: hsl(275 12% 85%);
+  --role-accent-kreativ-300: hsl(275 14% 75%);
+  --role-accent-kreativ-400: hsl(275 16% 65%);
+  --role-accent-kreativ-500: hsl(275 14% 55%);
+  --role-accent-kreativ-600: hsl(275 16% 45%);
+  --role-accent-kreativ-700: hsl(275 18% 38%);
+  --role-accent-kreativ-800: hsl(275 20% 30%);
+  --role-accent-kreativ-900: hsl(275 22% 22%);
   --role-accent-kreativ-text: var(--role-accent-kreativ-900);
   --role-accent-kreativ-text-on: var(--role-accent-kreativ-50);
   --role-accent-kreativ-bg: var(--role-accent-kreativ-100);
@@ -616,16 +616,16 @@
   --role-accent-kreativ-chip-border: var(--role-accent-kreativ-200);
 
   /* Bildung - Cyan-blue */
-  --role-accent-bildung-50: hsl(195 12% 96%);
-  --role-accent-bildung-100: hsl(195 14% 92%);
-  --role-accent-bildung-200: hsl(195 16% 85%);
-  --role-accent-bildung-300: hsl(195 18% 75%);
-  --role-accent-bildung-400: hsl(195 20% 65%);
-  --role-accent-bildung-500: hsl(195 18% 56%);
-  --role-accent-bildung-600: hsl(195 20% 46%);
-  --role-accent-bildung-700: hsl(195 22% 38%);
-  --role-accent-bildung-800: hsl(195 24% 30%);
-  --role-accent-bildung-900: hsl(195 26% 22%);
+  --role-accent-bildung-50: hsl(195 8% 96%);
+  --role-accent-bildung-100: hsl(195 10% 92%);
+  --role-accent-bildung-200: hsl(195 12% 85%);
+  --role-accent-bildung-300: hsl(195 14% 75%);
+  --role-accent-bildung-400: hsl(195 16% 65%);
+  --role-accent-bildung-500: hsl(195 12% 56%);
+  --role-accent-bildung-600: hsl(195 14% 46%);
+  --role-accent-bildung-700: hsl(195 16% 38%);
+  --role-accent-bildung-800: hsl(195 18% 30%);
+  --role-accent-bildung-900: hsl(195 20% 22%);
   --role-accent-bildung-text: var(--role-accent-bildung-900);
   --role-accent-bildung-text-on: var(--role-accent-bildung-50);
   --role-accent-bildung-bg: var(--role-accent-bildung-100);
@@ -638,16 +638,16 @@
   --role-accent-bildung-chip-border: var(--role-accent-bildung-200);
 
   /* Familie - Warm coral */
-  --role-accent-familie-50: hsl(5 12% 96%);
-  --role-accent-familie-100: hsl(5 14% 92%);
-  --role-accent-familie-200: hsl(5 16% 85%);
-  --role-accent-familie-300: hsl(5 18% 75%);
-  --role-accent-familie-400: hsl(5 20% 65%);
-  --role-accent-familie-500: hsl(5 16% 56%);
-  --role-accent-familie-600: hsl(5 18% 46%);
-  --role-accent-familie-700: hsl(5 20% 38%);
-  --role-accent-familie-800: hsl(5 22% 30%);
-  --role-accent-familie-900: hsl(5 24% 22%);
+  --role-accent-familie-50: hsl(5 8% 96%);
+  --role-accent-familie-100: hsl(5 10% 92%);
+  --role-accent-familie-200: hsl(5 12% 85%);
+  --role-accent-familie-300: hsl(5 14% 75%);
+  --role-accent-familie-400: hsl(5 16% 65%);
+  --role-accent-familie-500: hsl(5 12% 56%);
+  --role-accent-familie-600: hsl(5 14% 46%);
+  --role-accent-familie-700: hsl(5 16% 38%);
+  --role-accent-familie-800: hsl(5 18% 30%);
+  --role-accent-familie-900: hsl(5 20% 22%);
   --role-accent-familie-text: var(--role-accent-familie-900);
   --role-accent-familie-text-on: var(--role-accent-familie-50);
   --role-accent-familie-bg: var(--role-accent-familie-100);
@@ -660,16 +660,16 @@
   --role-accent-familie-chip-border: var(--role-accent-familie-200);
 
   /* Beratung - Soft green */
-  --role-accent-beratung-50: hsl(145 12% 96%);
-  --role-accent-beratung-100: hsl(145 14% 92%);
-  --role-accent-beratung-200: hsl(145 16% 85%);
-  --role-accent-beratung-300: hsl(145 18% 75%);
-  --role-accent-beratung-400: hsl(145 20% 65%);
-  --role-accent-beratung-500: hsl(145 18% 55%);
-  --role-accent-beratung-600: hsl(145 20% 45%);
-  --role-accent-beratung-700: hsl(145 22% 38%);
-  --role-accent-beratung-800: hsl(145 24% 30%);
-  --role-accent-beratung-900: hsl(145 26% 22%);
+  --role-accent-beratung-50: hsl(145 8% 96%);
+  --role-accent-beratung-100: hsl(145 10% 92%);
+  --role-accent-beratung-200: hsl(145 12% 85%);
+  --role-accent-beratung-300: hsl(145 14% 75%);
+  --role-accent-beratung-400: hsl(145 16% 65%);
+  --role-accent-beratung-500: hsl(145 12% 55%);
+  --role-accent-beratung-600: hsl(145 14% 45%);
+  --role-accent-beratung-700: hsl(145 16% 38%);
+  --role-accent-beratung-800: hsl(145 18% 30%);
+  --role-accent-beratung-900: hsl(145 20% 22%);
   --role-accent-beratung-text: var(--role-accent-beratung-900);
   --role-accent-beratung-text-on: var(--role-accent-beratung-50);
   --role-accent-beratung-bg: var(--role-accent-beratung-100);
