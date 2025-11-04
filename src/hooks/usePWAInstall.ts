@@ -47,15 +47,20 @@ export function usePWAInstall() {
       throw new Error("Install prompt not available");
     }
 
-    await installPromptEvent.prompt();
-    const { outcome } = await installPromptEvent.userChoice;
+    try {
+      await installPromptEvent.prompt();
+      const { outcome } = await installPromptEvent.userChoice;
 
-    if (outcome === "accepted") {
-      setInstalled(true);
-      setInstallPromptEvent(null);
+      if (outcome === "accepted") {
+        setInstalled(true);
+        setInstallPromptEvent(null);
+      }
+
+      return outcome;
+    } catch (error) {
+      console.error("[PWA] Installation prompt failed:", error);
+      throw error;
     }
-
-    return outcome;
   }, [installPromptEvent]);
 
   return {

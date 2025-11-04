@@ -28,8 +28,9 @@ export function setupPwaInstallCapture() {
     const has = navigator.serviceWorker.controller;
     if (!has) {
       const { BUILD_ID } = require("./registerSW");
-      navigator.serviceWorker.register(`/sw.js?build=${BUILD_ID}`).catch(() => {
-        /* still ok */
+      navigator.serviceWorker.register(`/sw.js?build=${BUILD_ID}`).catch((error) => {
+        console.error("[PWA] Service worker registration failed:", error);
+        // still ok - app can function without SW
       });
     }
   }
@@ -49,7 +50,8 @@ export async function promptInstall(): Promise<boolean> {
     deferred = null;
     notify();
     return Boolean(r?.outcome ? r.outcome === "accepted" : true);
-  } catch {
+  } catch (error) {
+    console.error("[PWA] Installation prompt failed:", error);
     deferred = null;
     notify();
     return false;

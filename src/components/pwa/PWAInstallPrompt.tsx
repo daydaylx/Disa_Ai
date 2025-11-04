@@ -25,14 +25,23 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
 
   const handleInstall = async () => {
     try {
-      await requestInstall();
-      toasts.push({
-        kind: "success",
-        title: "Installation gestartet",
-        message: "Folge den Anweisungen deines Browsers, um die App zu installieren.",
-      });
-      setIsVisible(false);
-    } catch {
+      const outcome = await requestInstall();
+      if (outcome === "accepted") {
+        toasts.push({
+          kind: "success",
+          title: "Installation gestartet",
+          message: "Folge den Anweisungen deines Browsers, um die App zu installieren.",
+        });
+        setIsVisible(false);
+      } else {
+        toasts.push({
+          kind: "info",
+          title: "Installation abgelehnt",
+          message: "Du kannst die Installation später erneut versuchen.",
+        });
+      }
+    } catch (error) {
+      console.error("[PWA] Installation failed:", error);
       toasts.push({
         kind: "error",
         title: "Installation fehlgeschlagen",

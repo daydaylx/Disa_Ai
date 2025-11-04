@@ -36,12 +36,20 @@ export function initPWAInstallPrompt(): void {
     installPromptShown = false;
 
     // Store installation status
-    localStorage.setItem("pwa-installed", "true");
+    try {
+      localStorage.setItem("pwa-installed", "true");
+    } catch (error) {
+      console.error("[PWA] Failed to store installation status:", error);
+    }
   });
 
   // Check if already installed
   if (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) {
-    localStorage.setItem("pwa-installed", "true");
+    try {
+      localStorage.setItem("pwa-installed", "true");
+    } catch (error) {
+      console.error("[PWA] Failed to store installation status:", error);
+    }
   }
 }
 
@@ -50,8 +58,14 @@ export function initPWAInstallPrompt(): void {
  */
 function showInstallPrompt(): void {
   if (!deferredPrompt || installPromptShown) return;
-  if (localStorage.getItem("pwa-install-dismissed") === "true") return;
-  if (localStorage.getItem("pwa-installed") === "true") return;
+
+  try {
+    if (localStorage.getItem("pwa-install-dismissed") === "true") return;
+    if (localStorage.getItem("pwa-installed") === "true") return;
+  } catch (error) {
+    console.error("[PWA] Failed to read localStorage:", error);
+    // Continue showing prompt even if localStorage fails
+  }
 
   installPromptShown = true;
 
@@ -103,32 +117,46 @@ function showInstallPrompt(): void {
   document.body.appendChild(installBanner);
 
   // Handle install button click
-  document.getElementById("pwa-install-btn")?.addEventListener("click", async () => {
-    if (!deferredPrompt) return;
+  const installButton = document.getElementById("pwa-install-btn");
+  if (installButton) {
+    installButton.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
 
-    try {
-      await deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
+      try {
+        await deferredPrompt.prompt();
+        const choiceResult = await deferredPrompt.userChoice;
 
-      console.warn("[PWA] User choice:", choiceResult.outcome);
+        console.warn("[PWA] User choice:", choiceResult.outcome);
 
-      if (choiceResult.outcome === "accepted") {
-        localStorage.setItem("pwa-installed", "true");
+        if (choiceResult.outcome === "accepted") {
+          try {
+            localStorage.setItem("pwa-installed", "true");
+          } catch (error) {
+            console.error("[PWA] Failed to store installation status:", error);
+          }
+        }
+      } catch (error) {
+        console.error("[PWA] Installation failed:", error);
       }
-    } catch (error) {
-      console.error("[PWA] Installation failed:", error);
-    }
 
-    // Remove prompt
-    installBanner.remove();
-    deferredPrompt = null;
-  });
+      // Remove prompt
+      installBanner.remove();
+      deferredPrompt = null;
+    });
+  }
 
   // Handle dismiss button click
-  document.getElementById("pwa-dismiss-btn")?.addEventListener("click", () => {
-    localStorage.setItem("pwa-install-dismissed", "true");
-    installBanner.remove();
-  });
+  const dismissButton = document.getElementById("pwa-dismiss-btn");
+  if (dismissButton) {
+    dismissButton.addEventListener("click", () => {
+      try {
+        localStorage.setItem("pwa-install-dismissed", "true");
+      } catch (error) {
+        console.error("[PWA] Failed to store dismissal status:", error);
+      }
+      installBanner.remove();
+    });
+  }
 
   // Auto-hide after 10 seconds
   setTimeout(() => {
@@ -159,7 +187,11 @@ export async function installPWA(): Promise<boolean> {
     const choiceResult = await deferredPrompt.userChoice;
 
     if (choiceResult.outcome === "accepted") {
-      localStorage.setItem("pwa-installed", "true");
+      try {
+        localStorage.setItem("pwa-installed", "true");
+      } catch (error) {
+        console.error("[PWA] Failed to store installation status:", error);
+      }
       return true;
     }
 

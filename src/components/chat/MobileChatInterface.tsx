@@ -333,6 +333,10 @@ export function MobileChatInterface() {
     setInput("");
   }, [input, append]);
 
+  const handleRetry = useCallback(() => {
+    void reload();
+  }, []);
+
   const handleSelectConversation = useCallback(
     (id: string) => {
       const conversation = getConversation(id);
@@ -752,8 +756,10 @@ export function MobileChatInterface() {
         value={input}
         onChange={setInput}
         onSend={handleSend}
+        onRetry={handleRetry}
         isLoading={isLoading}
         canSend={!!input.trim()}
+        canRetry={messages.length > 0}
         placeholder="Nachricht an Disa AI schreiben..."
         className="z-composer"
       />

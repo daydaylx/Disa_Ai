@@ -15,11 +15,12 @@ import {
   Star,
   Zap,
 } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { MODEL_POLICY } from "../../config/modelPolicy";
 import { loadModelCatalog, type ModelEntry } from "../../config/models";
 import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
+import { useFilteredList } from "../../hooks/useFilteredList";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
 import {
@@ -412,6 +413,8 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
   const [showFilters, setShowFilters] = useState(false);
   const [detailsModel, setDetailsModel] = useState<EnhancedModel | null>(null);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const [compareModels, setCompareModels] = useState<EnhancedModel[]>([]);
   const [filters, dispatchFilters] = React.useReducer(filterReducer, initialFilters);
 
   // Load models dynamically from OpenRouter
@@ -442,61 +445,65 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     void loadModels();
   }, [push]);
 
-  // Filtered and sorted models
-  const filteredModels = useMemo(() => {
-    let filtered = enhancedModels;
-
-    // Search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      filtered = filtered.filter(
-        (model) =>
-          model.label.toLowerCase().includes(query) ||
-          model.provider.toLowerCase().includes(query) ||
-          model.tags.some((tag) => tag.toLowerCase().includes(query)),
-      );
-    }
-
-    // Favorites filter
-    if (filters.showFavoritesOnly) {
-      filtered = filtered.filter((model) => isModelFavorite(model.id));
-    }
-
-    // Free only filter
-    if (filters.showFreeOnly) {
-      filtered = filtered.filter((model) => model.pricing.isFree);
-    }
-
-    // Premium only filter
-    if (filters.showPremiumOnly) {
-      filtered = filtered.filter((model) => !model.pricing.isFree);
-    }
-
-    // Performance score filter
-    if (filters.minPerformanceScore > 0) {
-      filtered = filtered.filter(
-        (model) => model.performance.quality >= filters.minPerformanceScore,
-      );
-    }
-
-    // Sort
-    const sorted = [...filtered].sort((a, b) => {
-      const direction = filters.sortDirection === "asc" ? 1 : -1;
-
-      switch (filters.sortBy) {
-        case "name":
-          return direction * a.label.localeCompare(b.label);
-        case "performance":
-          return direction * (b.performance.quality - a.performance.quality);
-        case "price":
-          return direction * (a.pricing.inputPrice - b.pricing.inputPrice);
-        default:
-          return 0;
+  const modelFilterFn = useCallback(
+    (model: EnhancedModel, filters: ModelFilters, searchQuery: string) => {
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase().trim();
+        if (
+          !model.label.toLowerCase().includes(query) &&
+          !model.provider.toLowerCase().includes(query) &&
+          !model.tags.some((tag) => tag.toLowerCase().includes(query))
+        ) {
+          return false;
+        }
       }
-    });
 
-    return sorted;
-  }, [enhancedModels, searchQuery, filters, isModelFavorite]);
+      if (filters.showFavoritesOnly && !isModelFavorite(model.id)) {
+        return false;
+      }
+
+      if (filters.showFreeOnly && !model.pricing.isFree) {
+        return false;
+      }
+
+      if (filters.showPremiumOnly && model.pricing.isFree) {
+        return false;
+      }
+
+      if (
+        filters.minPerformanceScore > 0 &&
+        model.performance.quality < filters.minPerformanceScore
+      ) {
+        return false;
+      }
+
+      return true;
+    },
+    [isModelFavorite],
+  );
+
+  const modelSortFn = useCallback((a: EnhancedModel, b: EnhancedModel, filters: ModelFilters) => {
+    const direction = filters.sortDirection === "asc" ? 1 : -1;
+
+    switch (filters.sortBy) {
+      case "name":
+        return direction * a.label.localeCompare(b.label);
+      case "performance":
+        return direction * (b.performance.quality - a.performance.quality);
+      case "price":
+        return direction * (a.pricing.inputPrice - b.pricing.inputPrice);
+      default:
+        return 0;
+    }
+  }, []);
+
+  const filteredModels = useFilteredList<EnhancedModel>(
+    enhancedModels,
+    filters,
+    searchQuery,
+    modelFilterFn,
+    modelSortFn,
+  );
 
   // Get favorites for header section
   const favoriteModels = getFavoriteModels(enhancedModels);
@@ -547,12 +554,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       return;
     }
 
-    // TODO: Implement comparison modal
-    push({
-      kind: "info",
-      title: `${selectedModels.size} Modelle werden verglichen`,
-    });
-  }, [selectedModels.size, push]);
+    // Get the selected models for comparison
+    const modelsToCompare = enhancedModels.filter((model) => selectedModels.has(model.id));
+    setCompareModels(modelsToCompare);
+    setIsCompareOpen(true);
+  }, [selectedModels, enhancedModels, push]);
 
   // Show loading state while models are being loaded
   if (isLoadingModels) {
@@ -754,6 +760,21 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           )}
         </div>
       )}
+
+      {/* Comparison Dialog */}
+      <Dialog open={isCompareOpen} onOpenChange={setIsCompareOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Modellvergleich</DialogTitle>
+            <DialogDescription>
+              Vergleich von {compareModels.length} ausgewählten Modellen
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            {compareModels.length > 0 && <ModelComparisonTable models={compareModels} />}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Details Dialog */}
       <Dialog open={!!detailsModel} onOpenChange={(isOpen) => !isOpen && setDetailsModel(null)}>
