@@ -104,10 +104,10 @@ const cardVariants = cva(
         full: "w-full",
       },
       intent: {
-        default: "",
+        default: "border-l-4 border-l-transparent",
         // Neomorphic Semantic Colors with Subtle Gradients
         primary:
-          "border-[var(--acc1)] bg-gradient-to-br from-[var(--acc1)]/5 to-[var(--acc2)]/5 text-[var(--color-text-primary)]",
+          "border-l-4 border-l-[var(--acc1)] bg-gradient-to-br from-[var(--acc1)]/5 to-[var(--acc2)]/5 text-[var(--color-text-primary)]",
         secondary:
           "border-[var(--color-border-subtle)] bg-gradient-to-br from-[var(--surface-neumorphic-base)] to-[var(--surface-neumorphic-raised)]",
         success:
@@ -203,7 +203,7 @@ const cardVariants = cva(
     ],
     defaultVariants: {
       tone: "neo-raised",
-      elevation: "medium",
+      elevation: "subtle",
       interactive: false,
       padding: "none",
       size: "auto",
@@ -217,6 +217,67 @@ export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {
   /**
+   * Main title of the card
+   */
+  title?: string;
+  /**
+   * Subtitle or description
+   */
+  subtitle?: string;
+  /**
+   * Leading element (icon, avatar, etc.)
+   */
+  leading?: React.ReactNode;
+  /**
+   * Trailing element (badge, button, etc.)
+   */
+  trailing?: React.ReactNode;
+  /**
+   * Action buttons in footer
+   */
+  actions?: React.ReactNode;
+  /**
+   * Whether the card is selectable
+   */
+  selectable?: boolean;
+  /**
+   * Whether the card is currently selected
+   */
+  selected?: boolean;
+  /**
+   * Whether to show a chevron indicating clickability
+   */
+  showChevron?: boolean;
+  /**
+   * Whether to show a menu button
+   */
+  showMenu?: boolean;
+  /**
+   * Menu items (for dropdown)
+   */
+  menuItems?: Array<{
+    label: string;
+    onClick: () => void;
+    icon?: React.ReactNode;
+    disabled?: boolean;
+  }>;
+  /**
+   * Callback when card is clicked
+   */
+  onCardClick?: () => void;
+  /**
+   * Callback when selection changes
+   */
+  onSelectionChange?: (selected: boolean) => void;
+  /**
+   * Loading state
+   */
+  isLoading?: boolean;
+  /**
+   * Disabled state
+   */
+  disabled?: boolean;
+  /**
    * Whether the card should be rendered as a clickable element
    * @default false
    */
@@ -224,11 +285,7 @@ export interface CardProps
   /**
    * Callback fired when the card is clicked (only if clickable=true)
    */
-  onCardClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  /**
-   * ARIA label for accessibility when clickable
-   */
-  "aria-label"?: string;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 // Export variant props for external use
