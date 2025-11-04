@@ -295,53 +295,30 @@ function DenseModelCard({
       tone="neo-raised"
       elevation="medium"
       state={isSelected ? "selected" : "default"}
-      className="p-4 transition-all duration-200"
+      className="p-4 transition-all duration-200 min-h-[180px]"
       onCardClick={onSelect}
     >
       {/* Header Row */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-medium text-text-strong truncate">{model.label}</h3>
+      <div className="flex flex-col gap-2 mb-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-medium text-text-strong flex-1 min-w-0 pr-2">
+            <span className="truncate inline-block max-w-full" title={model.label}>
+              {model.label}
+            </span>
+          </h3>
+          <div className="flex items-center gap-1">
             {model.pricing.isFree && (
-              <Badge variant="success" size="sm">
+              <Badge variant="success" size="sm" className="whitespace-nowrap">
                 <Zap className="w-3 h-3 mr-1" />
                 FREE
               </Badge>
             )}
           </div>
-          <p className="text-sm text-text-muted truncate">{model.provider}</p>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-1 ml-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="p-1.5 h-auto"
-            aria-label={isFavorite ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite();
-            }}
-          >
-            <Star
-              className={`w-4 h-4 ${isFavorite ? "fill-yellow-400 text-yellow-400" : "text-text-muted"}`}
-            />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="p-1.5 h-auto"
-            aria-label="Modelldetails anzeigen"
-            onClick={(e) => {
-              e.stopPropagation();
-              onShowDetails();
-            }}
-          >
-            <ChevronDown className="w-4 h-4" />
-          </Button>
-        </div>
+        <p className="text-sm text-text-muted" title={model.provider}>
+          {model.provider}
+        </p>
       </div>
 
       {/* Performance Bars */}
@@ -352,7 +329,7 @@ function DenseModelCard({
       </div>
 
       {/* Badges Row */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {/* Price Info */}
         {!model.pricing.isFree && (
           <Badge variant="secondary" size="sm">
@@ -363,27 +340,62 @@ function DenseModelCard({
 
         {/* Context */}
         <Badge variant="secondary" size="sm">
-          {formatContext(model.context.maxTokens)}
+          {formatContext(model.context.maxTokens)} context
         </Badge>
 
         {/* Primary Tag */}
         {model.tags[0] && (
-          <Badge variant="accent" size="sm">
+          <Badge
+            variant="accent"
+            size="sm"
+            className="max-w-[100px] truncate"
+            title={model.tags[0]}
+          >
             {model.tags[0]}
           </Badge>
         )}
 
         {/* Capabilities */}
         {model.capabilities.multimodal && (
-          <Badge variant="secondary" size="sm">
+          <Badge variant="secondary" size="sm" title="Multimodal">
             🖼️
           </Badge>
         )}
         {model.capabilities.codeGeneration && (
-          <Badge variant="secondary" size="sm">
+          <Badge variant="secondary" size="sm" title="Code Generation">
             💻
           </Badge>
         )}
+      </div>
+
+      {/* Action buttons row at bottom */}
+      <div className="flex justify-end gap-1 mt-3">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="p-1.5 h-auto"
+          aria-label={isFavorite ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite();
+          }}
+        >
+          <Star
+            className={`w-4 h-4 ${isFavorite ? "fill-yellow-400 text-yellow-400" : "text-text-muted"}`}
+          />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="p-1.5 h-auto"
+          aria-label="Modelldetails anzeigen"
+          onClick={(e) => {
+            e.stopPropagation();
+            onShowDetails();
+          }}
+        >
+          <ChevronDown className="w-4 h-4" />
+        </Button>
       </div>
     </Card>
   );
