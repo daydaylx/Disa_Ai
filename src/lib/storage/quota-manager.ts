@@ -3,6 +3,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { createObserverManager } from "../observer";
 
 interface StorageQuota {
   quota: number;
@@ -18,12 +19,14 @@ interface StorageCleanupResult {
   strategy: string;
 }
 
+import { createObserverManager } from "../observer";
+
 class StorageQuotaManager {
   private warningThreshold = 0.8; // 80%
   private criticalThreshold = 0.95; // 95%
   private cleanupTarget = 0.7; // Clean to 70%
 
-  private observers: Array<(quota: StorageQuota) => void> = [];
+  private observerManager = createObserverManager<StorageQuota>();
   private checkInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor() {
@@ -103,7 +106,7 @@ class StorageQuotaManager {
       await this.performSmartCleanup();
     }
 
-    this.notifyObservers(quota);
+    this.observerManager.notify(quota);
   }
 
   async performSmartCleanup(): Promise<StorageCleanupResult> {
@@ -198,7 +201,10 @@ class StorageQuotaManager {
     };
   }
 
-  private cleanupCache(aggressive = false): StorageCleanupResult {
+  private cleanupLocalStorage(
+    predicate: (key: string) => boolean,
+    strategy: string,
+  ): StorageCleanupResult {
     let freedBytes = 0;
     let itemsRemoved = 0;
 
@@ -207,15 +213,8 @@ class StorageQuotaManager {
 
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key) {
-          // Cache-Keys identifizieren
-          if (
-            key.startsWith("disa:cache:") ||
-            key.startsWith("disa:models:") ||
-            (aggressive && key.startsWith("disa:roles:"))
-          ) {
-            keysToClean.push(key);
-          }
+        if (key && predicate(key)) {
+          keysToClean.push(key);
         }
       }
 
@@ -228,54 +227,30 @@ class StorageQuotaManager {
         }
       });
     } catch (error) {
-      console.warn("Error cleaning up cache:", error);
+      console.warn(`Error cleaning up ${strategy} data:`, error);
     }
 
     return {
       freedBytes,
       itemsRemoved,
-      strategy: aggressive ? "aggressive-cache" : "cache",
+      strategy,
     };
   }
 
+  private cleanupCache(aggressive = false): StorageCleanupResult {
+    const predicate = (key: string) =>
+      key.startsWith("disa:cache:") ||
+      key.startsWith("disa:models:") ||
+      (aggressive && key.startsWith("disa:roles:"));
+
+    return this.cleanupLocalStorage(predicate, aggressive ? "aggressive-cache" : "cache");
+  }
+
   private cleanupTempData(): StorageCleanupResult {
-    let freedBytes = 0;
-    let itemsRemoved = 0;
+    const predicate = (key: string) =>
+      key.startsWith("disa:temp:") || key.startsWith("disa:prefill") || key.includes(":tmp:");
 
-    try {
-      const keysToClean = [];
-
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key) {
-          // Temporäre Keys identifizieren
-          if (
-            key.startsWith("disa:temp:") ||
-            key.startsWith("disa:prefill") ||
-            key.includes(":tmp:")
-          ) {
-            keysToClean.push(key);
-          }
-        }
-      }
-
-      keysToClean.forEach((key) => {
-        const value = localStorage.getItem(key);
-        if (value) {
-          freedBytes += (key.length + value.length) * 2;
-          localStorage.removeItem(key);
-          itemsRemoved++;
-        }
-      });
-    } catch (error) {
-      console.warn("Error cleaning up temp data:", error);
-    }
-
-    return {
-      freedBytes,
-      itemsRemoved,
-      strategy: "temp-data",
-    };
+    return this.cleanupLocalStorage(predicate, "temp-data");
   }
 
   // Storage Request mit Quota-Check
@@ -329,32 +304,14 @@ class StorageQuotaManager {
   }
 
   onQuotaChange(callback: (quota: StorageQuota) => void): () => void {
-    this.observers.push(callback);
-
-    // Return unsubscribe function
-    return () => {
-      const index = this.observers.indexOf(callback);
-      if (index > -1) {
-        this.observers.splice(index, 1);
-      }
-    };
-  }
-
-  private notifyObservers(quota: StorageQuota): void {
-    this.observers.forEach((callback) => {
-      try {
-        callback(quota);
-      } catch (error) {
-        console.error("Error in quota observer:", error);
-      }
-    });
+    return this.observerManager.subscribe(callback);
   }
 
   destroy(): void {
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
     }
-    this.observers.length = 0;
+    this.observerManager.destroy();
   }
 }
 

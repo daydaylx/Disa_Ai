@@ -49,10 +49,16 @@ test.describe("Smoke Tests", () => {
     await composer.fill("Hallo Welt");
     await composer.press("Enter");
 
-    const userMessage = page.getByRole("article").filter({ hasText: "Hallo Welt" });
+    // Warten, bis die Nachrichten angezeigt werden
+    await page.waitForTimeout(2000);
+
+    // Verwende den korrekten Selektor für die Nachrichtenblase
+    const userMessage = page
+      .locator("[data-testid='message-bubble']")
+      .filter({ hasText: "Hallo Welt" });
     await expect(userMessage).toBeVisible();
 
-    const assistantMessage = page.getByRole("article").filter({
+    const assistantMessage = page.locator("[data-testid='message-bubble']").filter({
       hasText: "Hallo das ist eine Test-Antwort",
     });
     await expect(assistantMessage).toBeVisible();

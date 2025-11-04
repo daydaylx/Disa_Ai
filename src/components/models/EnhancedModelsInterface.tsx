@@ -23,6 +23,7 @@ import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext"
 import { useFilteredList } from "../../hooks/useFilteredList";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
+import { ModelComparisonTable } from "./ModelComparisonTable";
 import {
   Badge,
   Button,
@@ -179,7 +180,7 @@ const MODEL_CATEGORY_CONFIG: {
       category: "quick-free",
     },
     {
-      condition: (tags, isFree) => isFree,
+      condition: (_tags, isFree) => isFree,
       category: "strong-free",
     },
   ],
@@ -631,7 +632,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               </span>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
-              {favoriteModels.slice(0, 6).map((model) => (
+              {favoriteModels.slice(0, 6).map((model: EnhancedModel) => (
                 <Button
                   key={model.id}
                   variant={selectedModels.has(model.id) ? "accent" : "ghost"}

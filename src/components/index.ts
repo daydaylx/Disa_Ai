@@ -14,7 +14,7 @@ export {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "./ui/Dialog";
 export {
   DropdownMenu,
   DropdownMenuContent,

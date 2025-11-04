@@ -91,7 +91,7 @@ interface HeaderRenderProps<T> {
   showFilters: boolean;
   setShowFilters: (show: boolean) => void;
   filters: FilterState;
-  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
+  setFilters: React.Dispatch<FilterAction>;
   favoriteItems: T[];
   selectedItemsCount: number;
 }
@@ -182,9 +182,7 @@ export function EnhancedListInterface<T extends BaseItem>({
     // Apply custom filters
     Object.keys(filters).forEach((key) => {
       if (key.startsWith("filter_")) {
-        const filterKey = key.replace("filter_", "");
-        const filterValue = filters[key];
-        // Custom filter logic would go here based on filterKey and filterValue
+        // Custom filter logic would go here based on the key
       }
     });
 

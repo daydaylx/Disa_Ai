@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useStickToBottom } from "../../hooks/useStickToBottom";
-import { cn } from "../../lib/cn";
+import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Card } from "../ui/card";
 import { ChatMessage } from "./ChatMessage";

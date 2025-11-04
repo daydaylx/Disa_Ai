@@ -4,7 +4,6 @@ import React from "react";
 
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
-import { MobileOnlyGate } from "./components/layout/MobileOnlyGate";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { FavoritesProvider } from "./contexts/FavoritesContext";

@@ -6,6 +6,7 @@ import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
 export type { ChatMessageType } from "../../types/chatMessage";
 
@@ -143,7 +144,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
 
         <Card
           intent={isUser ? "accent" : "primary"}
-          tone={isUser ? "solid" : "neo-inset"}
+          tone={isUser ? "neo-raised" : "neo-inset"}
           padding="sm"
           className={cn(bubbleClass, "w-full")}
         >

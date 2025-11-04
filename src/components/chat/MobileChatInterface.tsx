@@ -43,7 +43,6 @@ import { useToasts } from "../ui/toast/ToastsProvider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { ChatComposer } from "./ChatComposer";
 import { ChatHistorySidebar } from "./ChatHistorySidebar";
-import { MessageBubbleCard } from "./MessageBubbleCard";
 
 const MIN_DISCUSSION_SENTENCES = 5;
 const DISCUSSION_CARD_HINT = "Kurze Spekulationsrunde (5–10 Sätze, Abschlussfrage inklusive).";
@@ -72,7 +71,7 @@ export function MobileChatInterface() {
   const onFinishRef = useRef<(message: ChatMessageType) => void>(() => {});
   const messagesRef = useRef<ChatMessageType[]>([]);
 
-  const { messages, append, isLoading, setMessages } = useChat({
+  const { messages, append, isLoading, setMessages, reload } = useChat({
     onError: (error) => {
       toasts.push({
         kind: "error",
@@ -335,7 +334,7 @@ export function MobileChatInterface() {
 
   const handleRetry = useCallback(() => {
     void reload();
-  }, []);
+  }, [reload]);
 
   const handleSelectConversation = useCallback(
     (id: string) => {
@@ -789,17 +788,30 @@ export function MobileChatInterface() {
 function MessageBubble({ message }: { message: ChatMessageType }) {
   const isUser = message.role === "user";
   const alignmentClass = isUser ? "justify-end" : "justify-start";
+  const bgColorClass = isUser
+    ? "bg-[var(--color-brand-primary)]"
+    : "bg-[var(--surface-neumorphic-floating)]";
+  const textColorClass = isUser ? "text-white" : "text-[var(--color-text-primary)]";
   const offsetClass = isUser ? "ml-12" : "mr-12";
 
   return (
     <div className={`chat-message flex ${alignmentClass} group`} data-testid="message-bubble">
-      <MessageBubbleCard
-        author={isUser ? "Du" : "Disa AI"}
-        body={message.content}
-        timestamp={message.timestamp}
-        variant={isUser ? "user" : "assistant"}
-        className={`max-w-[85%] ${offsetClass} transition-all duration-200 hover:scale-[1.02]`}
-      />
+      <div
+        className={`max-w-[85%] ${offsetClass} rounded-2xl px-4 py-3 shadow-[var(--shadow-depth-1)] ${bgColorClass} ${textColorClass} transition-all duration-200 hover:scale-[1.02]`}
+      >
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-xs font-medium opacity-80">{isUser ? "Du" : "Disa AI"}</span>
+          {message.timestamp && (
+            <span className="text-xs opacity-60">
+              {new Date(message.timestamp).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          )}
+        </div>
+        <div className="whitespace-pre-wrap">{message.content}</div>
+      </div>
     </div>
   );
 }

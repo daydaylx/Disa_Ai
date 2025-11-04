@@ -183,6 +183,36 @@ export function generateCategorySemanticTokens() {
  * CSS Custom Properties for Dark Theme
  * All category tonal scale tokens are defined here for the dark theme context
  */
+
+function generateDarkThemeOverrides() {
+  return Object.entries({ ...generateCategoryTonalTokens(), ...generateCategorySemanticTokens() })
+    .map(([property]) => {
+      // For dark theme, we need to adjust the token names to use darker variants for backgrounds
+      // and lighter variants for text to ensure contrast
+      if (property.includes("-bg") || property.includes("-chip-bg")) {
+        // Use darker backgrounds in dark theme (darker scale)
+        const category = property.split("-")[2]; // gets the category name
+        if (property.includes("-subtle")) {
+          return `  ${property}: var(--role-accent-${category}-900);`;
+        } else {
+          return `  ${property}: var(--role-accent-${category}-800);`;
+        }
+      } else if (property.includes("-text") || property.includes("-chip-text")) {
+        // Use lighter text in dark theme
+        const category = property.split("-")[2]; // gets the category name
+        if (property.includes("-on")) {
+          return `  ${property}: var(--role-accent-${category}-900);`;
+        } else {
+          return `  ${property}: var(--role-accent-${category}-50);`;
+        }
+      } else {
+        const category = property.split("-")[2]; // gets the category name
+        return `  ${property}: var(--role-accent-${category}-300);`;
+      }
+    })
+    .join("\n");
+}
+
 export const categoryTonalTokensCSS = `
 /* Category tonal scales - Light theme defaults */
 :root {
@@ -194,62 +224,12 @@ ${Object.entries({ ...generateCategoryTonalTokens(), ...generateCategorySemantic
 /* Category tonal scales - Dark theme overrides */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-${Object.entries({ ...generateCategoryTonalTokens(), ...generateCategorySemanticTokens() })
-  .map(([property]) => {
-    // For dark theme, we need to adjust the token names to use darker variants for backgrounds
-    // and lighter variants for text to ensure contrast
-    if (property.includes("-bg") || property.includes("-chip-bg")) {
-      // Use darker backgrounds in dark theme (darker scale)
-      const category = property.split("-")[2]; // gets the category name
-      if (property.includes("-subtle")) {
-        return `  ${property}: var(--role-accent-${category}-900);`;
-      } else {
-        return `  ${property}: var(--role-accent-${category}-800);`;
-      }
-    } else if (property.includes("-text") || property.includes("-chip-text")) {
-      // Use lighter text in dark theme
-      const category = property.split("-")[2]; // gets the category name
-      if (property.includes("-on")) {
-        return `  ${property}: var(--role-accent-${category}-900);`;
-      } else {
-        return `  ${property}: var(--role-accent-${category}-50);`;
-      }
-    } else {
-      const category = property.split("-")[2]; // gets the category name
-      return `  ${property}: var(--role-accent-${category}-300);`;
-    }
-  })
-  .join("\n")}
+${generateDarkThemeOverrides()}
   }
 }
 
 [data-theme="dark"] {
-${Object.entries({ ...generateCategoryTonalTokens(), ...generateCategorySemanticTokens() })
-  .map(([property]) => {
-    // For dark theme, we need to adjust the token names to use darker variants for backgrounds
-    // and lighter variants for text to ensure contrast
-    if (property.includes("-bg") || property.includes("-chip-bg")) {
-      // Use darker backgrounds in dark theme (darker scale)
-      const category = property.split("-")[2]; // gets the category name
-      if (property.includes("-subtle")) {
-        return `  ${property}: var(--role-accent-${category}-900);`;
-      } else {
-        return `  ${property}: var(--role-accent-${category}-800);`;
-      }
-    } else if (property.includes("-text") || property.includes("-chip-text")) {
-      // Use lighter text in dark theme
-      const category = property.split("-")[2]; // gets the category name
-      if (property.includes("-on")) {
-        return `  ${property}: var(--role-accent-${category}-900);`;
-      } else {
-        return `  ${property}: var(--role-accent-${category}-50);`;
-      }
-    } else {
-      const category = property.split("-")[2]; // gets the category name
-      return `  ${property}: var(--role-accent-${category}-300);`;
-    }
-  })
-  .join("\n")}
+${generateDarkThemeOverrides()}
 }
 
 /* Category data attribute selectors for easy usage */

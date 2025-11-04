@@ -3,6 +3,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { createObserverManager } from "../observer";
 
 interface PowerState {
   level: "high" | "medium" | "low" | "critical";
@@ -20,6 +21,8 @@ interface PerformanceMetrics {
   cpuUsage: number;
   thermalState: "nominal" | "elevated" | "serious" | "critical";
 }
+
+import { createObserverManager } from "../observer";
 
 class PowerManager {
   private state: PowerState = {
@@ -39,7 +42,7 @@ class PowerManager {
     thermalState: "nominal",
   };
 
-  private observers: Array<(state: PowerState) => void> = [];
+  private observerManager = createObserverManager<PowerState>();
   private perfObserver: PerformanceObserver | null = null;
   private batteryCheckInterval: ReturnType<typeof setInterval> | null = null;
   private fpsCounter = 0;
@@ -90,7 +93,7 @@ class PowerManager {
     }
 
     this.adaptEffectsToResourceState();
-    this.notifyObservers();
+    this.observerManager.notify(this.state);
   }
 
   private initPerformanceMonitoring(): void {
@@ -156,7 +159,7 @@ class PowerManager {
     if (this.state.effectsEnabled) {
       this.state.particlesEnabled = false;
       this.state.matrixRainEnabled = false;
-      this.notifyObservers();
+      this.observerManager.notify(this.state);
     }
   }
 
@@ -164,7 +167,7 @@ class PowerManager {
     if (this.state.level === "high" && this.state.effectsEnabled) {
       this.state.particlesEnabled = true;
       this.state.matrixRainEnabled = true;
-      this.notifyObservers();
+      this.observerManager.notify(this.state);
     }
   }
 
@@ -219,7 +222,7 @@ class PowerManager {
     if (this.state.level === "high" && this.metrics.fps > 45) {
       this.state.animationsEnabled = true;
       this.state.particlesEnabled = true;
-      this.notifyObservers();
+      this.observerManager.notify(this.state);
     }
   }
 
@@ -250,15 +253,7 @@ class PowerManager {
 
   // Public API
   onStateChange(callback: (state: PowerState) => void): () => void {
-    this.observers.push(callback);
-
-    // Return unsubscribe function
-    return () => {
-      const index = this.observers.indexOf(callback);
-      if (index > -1) {
-        this.observers.splice(index, 1);
-      }
-    };
+    return this.observerManager.subscribe(callback);
   }
 
   getCurrentState(): PowerState {
@@ -272,7 +267,7 @@ class PowerManager {
   forceLevel(level: PowerState["level"]): void {
     this.state.level = level;
     this.adaptEffectsToResourceState();
-    this.notifyObservers();
+    this.observerManager.notify(this.state);
   }
 
   enableEffect(
@@ -283,7 +278,7 @@ class PowerManager {
   ): void {
     if (this.state.level !== "critical") {
       this.state[effect] = true;
-      this.notifyObservers();
+      this.observerManager.notify(this.state);
     }
   }
 
@@ -294,17 +289,7 @@ class PowerManager {
     >,
   ): void {
     this.state[effect] = false;
-    this.notifyObservers();
-  }
-
-  private notifyObservers(): void {
-    this.observers.forEach((callback) => {
-      try {
-        callback(this.state);
-      } catch (error) {
-        console.error("Error in PowerManager observer:", error);
-      }
-    });
+    this.observerManager.notify(this.state);
   }
 
   destroy(): void {
@@ -316,7 +301,7 @@ class PowerManager {
       this.perfObserver.disconnect();
     }
 
-    this.observers.length = 0;
+    this.observerManager.destroy();
   }
 }
 

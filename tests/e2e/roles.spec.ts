@@ -10,7 +10,10 @@ test.describe("Rollen-Screen", () => {
 
     await helpers.navigateAndWait("/roles");
 
-    const grid = page.getByTestId("role-card-grid");
+    // Warten, bis die Seite vollständig geladen ist
+    await page.waitForTimeout(2000);
+
+    const grid = page.locator("[data-testid='role-card-grid']");
     await expect(grid).toBeVisible();
 
     const cards = grid.locator("[data-testid^='role-card-']");

@@ -10,12 +10,14 @@ import { useCallback, useMemo, useState } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
+import { useFilteredList } from "../../hooks/useFilteredList";
 import { cn } from "../../lib/utils";
 import type { EnhancedRole, FilterState } from "../../types/enhanced-interfaces";
 import { migrateRole } from "../../types/enhanced-interfaces";
 import { Badge, Button } from "../ui";
 import { Card } from "../ui/card";
 import { useToasts } from "../ui/toast/ToastsProvider";
+import { roleFilterFn, roleSortFn } from "./roles-filter";
 
 interface EnhancedRolesInterfaceProps {
   className?: string;
@@ -317,68 +319,14 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     return counts;
   }, [enhancedRoles]);
 
-  // Filtered and sorted roles
-  const filteredRoles = useMemo(() => {
-    let filtered = enhancedRoles;
-
-    // Search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      filtered = filtered.filter(
-        (role) =>
-          role.name.toLowerCase().includes(query) ||
-          role.description?.toLowerCase().includes(query) ||
-          role.tags?.some((tag) => tag.toLowerCase().includes(query)) ||
-          role.category?.toLowerCase().includes(query),
-      );
-    }
-
-    // Category filter
-    if (selectedCategory) {
-      filtered = filtered.filter((role) => role.category === selectedCategory);
-    }
-
-    // Favorites filter
-    if (filters.showFavoritesOnly) {
-      filtered = filtered.filter((role) => isRoleFavorite(role.id));
-    }
-
-    // Built-in only filter
-    if (filters.showBuiltInOnly) {
-      filtered = filtered.filter((role) => role.metadata?.isBuiltIn);
-    }
-
-    // Recently used filter
-    if (filters.showRecentlyUsed) {
-      filtered = filtered.filter((role) => (usage.roles[role.id]?.count || 0) > 0);
-    }
-
-    // Sort
-    filtered.sort((a, b) => {
-      const direction = filters.sortDirection === "asc" ? 1 : -1;
-
-      switch (filters.sortBy) {
-        case "name":
-          return direction * a.name.localeCompare(b.name);
-        case "usage": {
-          const aUsage = usage.roles[a.id]?.count || 0;
-          const bUsage = usage.roles[b.id]?.count || 0;
-          return direction * (bUsage - aUsage);
-        }
-        case "lastUsed": {
-          const aLastUsed = usage.roles[a.id]?.lastUsed?.getTime() || 0;
-          const bLastUsed = usage.roles[b.id]?.lastUsed?.getTime() || 0;
-          return direction * (bLastUsed - aLastUsed);
-        }
-        case "category":
-          return direction * (a.category || "").localeCompare(b.category || "");
-        default:
-          return 0;
-      }
-    });
-
-    return filtered;
-  }, [enhancedRoles, searchQuery, selectedCategory, filters, isRoleFavorite, usage]);
+  const filteredRoles = useFilteredList<EnhancedRole>(
+    enhancedRoles,
+    filters,
+    searchQuery,
+    (role, filters, searchQuery) =>
+      roleFilterFn(role, filters, searchQuery, isRoleFavorite, usage, selectedCategory),
+    (a, b, filters) => roleSortFn(a, b, filters, usage),
+  );
 
   // Get favorites for header section
   const favoriteRoles = getFavoriteRoles(enhancedRoles);
@@ -625,7 +573,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           </div>
 
           {/* Roles Grid */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3" data-testid="role-card-grid">
+          <div
+            className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+            data-testid="role-card-grid"
+          >
             {filteredRoles.map((role) => (
               <DenseRoleCard
                 key={role.id}

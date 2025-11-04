@@ -396,20 +396,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
       if (clickable && (event.key === "Enter" || event.key === " ")) {
         event.preventDefault();
-        // Create a synthetic mouse event for consistency
-        const syntheticEvent = new MouseEvent("click", {
-          bubbles: true,
-          cancelable: true,
-        });
-
-        // Trigger the click handler with the synthetic event
-        const target = event.currentTarget;
         if (onCardClick) {
-          onCardClick({
-            ...syntheticEvent,
-            currentTarget: target,
-            target: target,
-          } as unknown as React.MouseEvent<HTMLDivElement>);
+          onCardClick();
         }
       }
     };

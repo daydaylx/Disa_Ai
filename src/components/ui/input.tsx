@@ -9,12 +9,13 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   size?: "sm" | "md" | "lg";
 }
 
-const inputVariants = {
-  "neo-subtle": "neo-inset-subtle",
-  "neo-medium": "neo-inset-medium",
-  "neo-dramatic": "neo-inset-strong",
-  "neo-extreme": "neo-inset-extreme",
-};
+const inputVariants: Record<"neo-subtle" | "neo-medium" | "neo-dramatic" | "neo-extreme", string> =
+  {
+    "neo-subtle": "neo-inset-subtle",
+    "neo-medium": "neo-inset-medium",
+    "neo-dramatic": "neo-inset-strong",
+    "neo-extreme": "neo-inset-extreme",
+  };
 
 const inputSizes = {
   sm: "h-8 px-2 py-1 text-xs",
@@ -59,7 +60,7 @@ const inputBaseClasses = [
 ].join(" ");
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, variant = "default", size = "md", ...props }, ref) => {
+  ({ className, type, variant = "neo-subtle", size = "md", ...props }, ref) => {
     return (
       <input
         type={type}

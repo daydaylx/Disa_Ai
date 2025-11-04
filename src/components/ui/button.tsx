@@ -41,11 +41,6 @@ const buttonVariants = (
   ].join(" ");
 
   // Map deprecated variants to their new equivalents
-  const resolvedVariant =
-    variant === "default" || variant === "secondary" || variant === "neumorphic"
-      ? "neo-medium"
-      : variant;
-
   const coreVariantClasses = {
     "neo-subtle": [
       "bg-[var(--color-surface-muted)]",

@@ -11,7 +11,10 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   resizable?: boolean;
 }
 
-const textareaVariants = {
+const textareaVariants: Record<
+  "neo-subtle" | "neo-medium" | "neo-dramatic" | "neo-extreme",
+  string
+> = {
   "neo-subtle": "neo-inset-subtle",
   "neo-medium": "neo-inset-medium",
   "neo-dramatic": "neo-inset-strong",
@@ -70,7 +73,7 @@ const textareaBaseClasses = [
 ].join(" ");
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, variant = "default", size = "md", resizable = false, ...props }, ref) => {
+  ({ className, variant = "neo-subtle", size = "md", resizable = false, ...props }, ref) => {
     return (
       <textarea
         className={cn(

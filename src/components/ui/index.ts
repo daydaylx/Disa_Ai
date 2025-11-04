@@ -2,7 +2,7 @@ export * from "./avatar";
 export * from "./badge";
 export * from "./button";
 export * from "./chip";
-export * from "./dialog";
+export * from "./Dialog";
 export * from "./dropdown-menu";
 export * from "./input";
 export * from "./select";
@@ -21,11 +21,9 @@ export { ModelCard } from "./ModelCard";
 // Enhanced Card System
 export type {
   CardVariantProps,
-  // ConversationCardProps are exported from ./InteractiveCard
   // ModelCardProps are defined in ./ModelCard.tsx and exported above
 } from "./card-types";
 export * from "./DiscussionTopicCard";
-export * from "./InteractiveCard"; // exports ConversationCardProps
 export * from "./StatusCard";
 
 // Card System Utilities
