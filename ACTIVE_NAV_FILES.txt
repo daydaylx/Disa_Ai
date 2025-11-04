@@ -1,5 +1,0 @@
-src/main.tsx
-src/App.tsx
-src/app/router.tsx
-src/app/layouts/MobileAppShell.tsx
-src/components/layout/MobileNavigation.tsx
