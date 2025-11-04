@@ -109,7 +109,7 @@ export const TOAST_CONFIGS = {
     duration: 3000,
     position: "bottom" as const,
     style: {
-      background: "var(--success-color, #10b981)",
+      background: "var(--ok)",
       color: "white",
     },
   },
@@ -117,7 +117,7 @@ export const TOAST_CONFIGS = {
     duration: 5000,
     position: "bottom" as const,
     style: {
-      background: "var(--error-color, #ef4444)",
+      background: "var(--err)",
       color: "white",
     },
   },
@@ -125,7 +125,7 @@ export const TOAST_CONFIGS = {
     duration: 4000,
     position: "bottom" as const,
     style: {
-      background: "var(--warning-color, #f59e0b)",
+      background: "var(--warn)",
       color: "white",
     },
   },
@@ -133,7 +133,7 @@ export const TOAST_CONFIGS = {
     duration: 3000,
     position: "bottom" as const,
     style: {
-      background: "var(--info-color, #3b82f6)",
+      background: "var(--info)",
       color: "white",
     },
   },

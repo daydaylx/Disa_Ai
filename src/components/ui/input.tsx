@@ -40,7 +40,7 @@ const inputBaseClasses = [
 
   // Focus States (Dramatic Neomorphic)
   "focus-visible:outline-none",
-  "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
+  "focus-visible:shadow-[var(--focus-ring)]",
   "focus-visible:border-[var(--color-border-focus)]",
   "focus-visible:bg-[var(--surface-neumorphic-floating)]",
 

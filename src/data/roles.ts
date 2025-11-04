@@ -165,15 +165,15 @@ function getAccentColorForRole(role: { name: string; tags?: string[] }): string 
   const tags = role.tags || [];
 
   if (tags.includes("adult") || tags.includes("nsfw")) {
-    return "hsl(330, 80%, 60%)"; // Pink für Adult-Content
+    return "var(--acc2)"; // Pink für Adult-Content
   }
   if (tags.includes("sexuality")) {
-    return "hsl(300, 70%, 60%)"; // Magenta für Sexualität
+    return "var(--role-accent-kreativ-500)"; // Magenta für Sexualität
   }
   if (tags.includes("business")) {
-    return "hsl(240, 100%, 60%)"; // Blau für Business
+    return "var(--role-accent-business-500)"; // Blau für Business
   }
-  return "hsl(200, 100%, 50%)"; // Default Blau
+  return "var(--acc1)"; // Default Blau
 }
 
 export function getRoleById(id: string): Role | undefined {

@@ -28,7 +28,7 @@ export function NetworkBanner() {
   return (
     <div
       data-testid="offline-banner"
-      className="border-danger/30 bg-danger/20 text-danger fixed bottom-24 left-1/2 z-50 -translate-x-1/2 transform animate-pulse rounded-full border px-4 py-2 text-sm"
+      className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 transform animate-pulse rounded-full border border-[var(--warn)] bg-[var(--color-surface-warning)] px-4 py-2 text-sm text-[var(--warn)]"
       role="status"
       aria-live="polite"
       aria-label="Offline-Status"

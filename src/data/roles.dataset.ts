@@ -12,7 +12,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1,
       borderRadius: 0.5,
-      accentColor: "hsl(200, 100%, 50%)", // Blau
+      accentColor: "var(--role-accent-alltag-500)", // Blau
     },
   },
 
@@ -28,7 +28,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.25,
-      accentColor: "hsl(240, 100%, 60%)", // Dunkelblau
+      accentColor: "var(--role-accent-business-500)", // Dunkelblau
     },
   },
   {
@@ -46,7 +46,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.05,
       borderRadius: 0.3,
-      accentColor: "hsl(260, 80%, 50%)", // Lila
+      accentColor: "var(--role-accent-kreativ-500)", // Lila
     },
   },
   {
@@ -63,7 +63,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.4,
-      accentColor: "hsl(220, 90%, 50%)", // Business-Blau
+      accentColor: "var(--role-accent-business-500)", // Business-Blau
     },
   },
 
@@ -83,7 +83,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.1,
       borderRadius: 0.2,
-      accentColor: "hsl(0, 70%, 50%)", // Rot für Recht
+      accentColor: "var(--role-accent-familie-500)", // Rot für Recht
     },
   },
   {
@@ -97,7 +97,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.6,
-      accentColor: "hsl(150, 60%, 50%)", // Beruhigendes Grün
+      accentColor: "var(--role-accent-beratung-500)", // Beruhigendes Grün
     },
   },
   {
@@ -111,7 +111,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.05,
       borderRadius: 0.4,
-      accentColor: "hsl(120, 70%, 50%)", // Fitness-Grün
+      accentColor: "var(--role-accent-bildung-500)", // Fitness-Grün
     },
   },
 
@@ -127,7 +127,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.15,
       borderRadius: 0.8,
-      accentColor: "hsl(300, 70%, 60%)", // Magenta für Kreativität
+      accentColor: "var(--role-accent-kreativ-500)", // Magenta für Kreativität
     },
   },
   {
@@ -144,7 +144,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.1,
       borderRadius: 0.7,
-      accentColor: "hsl(280, 80%, 60%)", // Lila für Musik
+      accentColor: "var(--role-accent-kreativ-500)", // Lila für Musik
     },
   },
 
@@ -164,7 +164,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.3,
-      accentColor: "hsl(180, 60%, 50%)", // Türkis für Bildung
+      accentColor: "var(--role-accent-bildung-500)", // Türkis für Bildung
     },
   },
   {
@@ -178,7 +178,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.05,
       borderRadius: 0.3,
-      accentColor: "hsl(200, 70%, 50%)", // Blau für Wissen
+      accentColor: "var(--role-accent-bildung-500)", // Blau für Wissen
     },
   },
 
@@ -194,7 +194,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.2,
-      accentColor: "hsl(30, 80%, 50%)", // Orange für Sarkasmus
+      accentColor: "var(--role-accent-alltag-500)", // Orange für Sarkasmus
     },
   },
   {
@@ -208,7 +208,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.5,
-      accentColor: "hsl(270, 60%, 60%)", // Violett für Entwicklung
+      accentColor: "var(--role-accent-kreativ-500)", // Violett für Entwicklung
     },
   },
 
@@ -224,7 +224,7 @@ export const defaultRolesData: Role[] = [
     styleHints: {
       typographyScale: 1.0,
       borderRadius: 0.4,
-      accentColor: "hsl(60, 90%, 50%)", // Gelb für Verkauf
+      accentColor: "var(--role-accent-alltag-500)", // Gelb für Verkauf
     },
   },
 ];

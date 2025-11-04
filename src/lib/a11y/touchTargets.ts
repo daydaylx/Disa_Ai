@@ -335,8 +335,7 @@ export function initializeA11yEnforcement(): void {
     }
 
     .tap-target:focus-visible {
-      outline: 2px solid var(--accent-color, #3b82f6);
-      outline-offset: 2px;
+      box-shadow: var(--focus-ring);
     }
 
     /* High contrast mode support */

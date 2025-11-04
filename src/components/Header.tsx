@@ -113,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({
       .join(" "),
 
     "neo-dramatic": [
-      "bg-gradient-to-r from-[var(--surface-neumorphic-floating)] via-[var(--surface-neumorphic-raised)] to-[var(--surface-neumorphic-floating)]",
+      "bg-gradient-to-r from-[var(--acc1)] via-[color-mix(in_srgb,var(--acc1)_60%,var(--acc2)_40%)] to-[var(--acc2)]",
       "shadow-[var(--shadow-neumorphic-xl)]",
       "border-b-[var(--border-neumorphic-light)]",
       "backdrop-blur-xl",

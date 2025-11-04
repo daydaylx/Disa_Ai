@@ -137,10 +137,9 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       // === NEW DRAMATIC NEOMORPHIC VARIANTS ===
       "neo-dock": isActive
         ? [
-            "text-[var(--color-border-focus)] font-semibold",
-            "bg-[var(--surface-neumorphic-floating)]",
+            "text-[var(--fg-invert)] font-semibold",
+            "bg-[var(--acc2)]",
             "shadow-[var(--shadow-glow-accent-subtle)]",
-            "border-[var(--color-border-focus)]/60",
             "rounded-[var(--radius-lg)] p-2 m-1",
           ].join(" ")
         : [
