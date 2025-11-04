@@ -2,14 +2,14 @@ import { type ReactNode, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
+import { DesktopSidebar } from "../../components/layout/DesktopSidebar";
 import { GlobalNav, NAV_ITEMS } from "../../components/layout/GlobalNav";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { DrawerSheet } from "../../components/ui/drawer-sheet";
-import { cn } from "../../lib/utils";
 import { useIsMobile } from "../../hooks/useMediaQuery";
-import { DesktopSidebar } from "../../components/layout/DesktopSidebar";
+import { cn } from "../../lib/utils";
 
 interface AppShellProps {
   children: ReactNode;
@@ -38,23 +38,17 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       className="relative flex min-h-[100dvh] flex-col bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)]"
       style={{ minHeight: "calc(100dvh + var(--keyboard-offset, 0px))" }}
     >
-      {isMobile ? (
-        <GlobalNav onMenuClick={() => setIsOverflowOpen(true)} />
-      ) : (
-        <DesktopSidebar />
-      )}
+      {isMobile ? <GlobalNav onMenuClick={() => setIsOverflowOpen(true)} /> : <DesktopSidebar />}
 
       <main
         id="main"
         key={location.pathname}
         className={cn(
           "min-h-0 flex flex-1 flex-col overflow-y-auto px-4 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4",
-          !isMobile && "ml-64"
+          !isMobile && "ml-64",
         )}
       >
-        <div className="mx-auto flex w-full max-w-2xl lg:max-w-4xl flex-1 flex-col">
-          {children}
-        </div>
+        <div className="mx-auto flex w-full max-w-2xl lg:max-w-4xl flex-1 flex-col">{children}</div>
       </main>
 
       {isMobile && (
@@ -78,10 +72,16 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           <PWAInstallPrompt />
           {process.env.NODE_ENV === "development" && <PWADebugInfo />}
 
-          <DrawerSheet title="Mehr" isOpen={isOverflowOpen} onClose={() => setIsOverflowOpen(false)}>
+          <DrawerSheet
+            title="Mehr"
+            isOpen={isOverflowOpen}
+            onClose={() => setIsOverflowOpen(false)}
+          >
             <div className="space-y-4">
               <section>
-                <h3 className="text-sm font-semibold text-[var(--color-text-secondary)]">Navigation</h3>
+                <h3 className="text-sm font-semibold text-[var(--color-text-secondary)]">
+                  Navigation
+                </h3>
                 <ul className="mt-3 space-y-2">
                   {NAV_ITEMS.map((item) => (
                     <li key={`drawer-${item.path}`}>

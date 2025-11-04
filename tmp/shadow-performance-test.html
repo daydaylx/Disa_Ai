@@ -1,152 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shadow Performance Test</title>
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background: #e9ecf4;
-            font-family: system-ui, sans-serif;
-        }
+      body {
+        margin: 0;
+        padding: 20px;
+        background: #e9ecf4;
+        font-family: system-ui, sans-serif;
+      }
 
+      .test-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .test-card {
+        width: 300px;
+        height: 200px;
+        background: #fdfdff;
+        border-radius: 12px;
+        padding: 16px;
+        margin: 10px;
+        transition: all 0.3s ease;
+      }
+
+      /* Current Extreme Shadows (Performance Heavy) */
+      .shadow-extreme-current {
+        box-shadow:
+          60px 60px 120px rgba(9, 12, 20, 0.32),
+          -60px -60px 120px rgba(255, 255, 255, 0.22);
+      }
+
+      .shadow-extreme-current:hover {
+        box-shadow:
+          75px 75px 150px rgba(9, 12, 20, 0.35),
+          -75px -75px 150px rgba(255, 255, 255, 0.25);
+        transform: scale(1.08);
+      }
+
+      /* Proposed Mobile-Optimized Shadows */
+      .shadow-extreme-optimized {
+        box-shadow:
+          25px 25px 50px rgba(9, 12, 20, 0.28),
+          -25px -25px 50px rgba(255, 255, 255, 0.18);
+      }
+
+      .shadow-extreme-optimized:hover {
+        box-shadow:
+          30px 30px 60px rgba(9, 12, 20, 0.32),
+          -30px -30px 60px rgba(255, 255, 255, 0.22);
+        transform: scale(1.05);
+      }
+
+      .performance-info {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 4px solid #4b63ff;
+      }
+
+      .perf-warning {
+        color: #c13a32;
+        font-weight: bold;
+      }
+
+      .perf-optimized {
+        color: #0d8f62;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
         .test-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            max-width: 800px;
-            margin: 0 auto;
+          grid-template-columns: 1fr;
         }
 
         .test-card {
-            width: 300px;
-            height: 200px;
-            background: #fdfdff;
-            border-radius: 12px;
-            padding: 16px;
-            margin: 10px;
-            transition: all 0.3s ease;
+          width: 100%;
+          max-width: 350px;
         }
-
-        /* Current Extreme Shadows (Performance Heavy) */
-        .shadow-extreme-current {
-            box-shadow:
-                60px 60px 120px rgba(9, 12, 20, 0.32),
-                -60px -60px 120px rgba(255, 255, 255, 0.22);
-        }
-
-        .shadow-extreme-current:hover {
-            box-shadow:
-                75px 75px 150px rgba(9, 12, 20, 0.35),
-                -75px -75px 150px rgba(255, 255, 255, 0.25);
-            transform: scale(1.08);
-        }
-
-        /* Proposed Mobile-Optimized Shadows */
-        .shadow-extreme-optimized {
-            box-shadow:
-                25px 25px 50px rgba(9, 12, 20, 0.28),
-                -25px -25px 50px rgba(255, 255, 255, 0.18);
-        }
-
-        .shadow-extreme-optimized:hover {
-            box-shadow:
-                30px 30px 60px rgba(9, 12, 20, 0.32),
-                -30px -30px 60px rgba(255, 255, 255, 0.22);
-            transform: scale(1.05);
-        }
-
-        .performance-info {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #4b63ff;
-        }
-
-        .perf-warning {
-            color: #c13a32;
-            font-weight: bold;
-        }
-
-        .perf-optimized {
-            color: #0d8f62;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .test-container {
-                grid-template-columns: 1fr;
-            }
-
-            .test-card {
-                width: 100%;
-                max-width: 350px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Shadow Performance Test - Mobile vs Desktop</h1>
 
     <div class="performance-info">
-        <h3>Performance Test Setup</h3>
-        <p>Teste die Rendering-Performance der aktuellen vs. optimierten Shadow-Values:</p>
-        <ul>
-            <li><span class="perf-warning">Aktuelle Extreme:</span> 120px Blur → 150px Blur (Hover)</li>
-            <li><span class="perf-optimized">Mobile-Optimiert:</span> 50px Blur → 60px Blur (Hover)</li>
-        </ul>
-        <p><strong>Erwartung:</strong> Mobile-optimierte Shadows reduzieren GPU-Load um ~60-70%</p>
+      <h3>Performance Test Setup</h3>
+      <p>Teste die Rendering-Performance der aktuellen vs. optimierten Shadow-Values:</p>
+      <ul>
+        <li><span class="perf-warning">Aktuelle Extreme:</span> 120px Blur → 150px Blur (Hover)</li>
+        <li><span class="perf-optimized">Mobile-Optimiert:</span> 50px Blur → 60px Blur (Hover)</li>
+      </ul>
+      <p><strong>Erwartung:</strong> Mobile-optimierte Shadows reduzieren GPU-Load um ~60-70%</p>
     </div>
 
     <div class="test-container">
-        <div class="test-card shadow-extreme-current">
-            <h3 style="color: #c13a32; margin: 0;">Aktuelle Extreme Shadows</h3>
-            <p>120px Blur Radius</p>
-            <p>⚠️ Performance-kritisch auf Mobile</p>
-            <small>Hover für 150px Blur</small>
-        </div>
+      <div class="test-card shadow-extreme-current">
+        <h3 style="color: #c13a32; margin: 0">Aktuelle Extreme Shadows</h3>
+        <p>120px Blur Radius</p>
+        <p>⚠️ Performance-kritisch auf Mobile</p>
+        <small>Hover für 150px Blur</small>
+      </div>
 
-        <div class="test-card shadow-extreme-optimized">
-            <h3 style="color: #0d8f62; margin: 0;">Mobile-Optimierte Shadows</h3>
-            <p>50px Blur Radius</p>
-            <p>✅ Mobile-freundlich</p>
-            <small>Hover für 60px Blur</small>
-        </div>
+      <div class="test-card shadow-extreme-optimized">
+        <h3 style="color: #0d8f62; margin: 0">Mobile-Optimierte Shadows</h3>
+        <p>50px Blur Radius</p>
+        <p>✅ Mobile-freundlich</p>
+        <small>Hover für 60px Blur</small>
+      </div>
     </div>
 
     <div class="performance-info">
-        <h3>Manuelle Performance-Tests</h3>
-        <p><strong>Desktop:</strong> Öffne DevTools → Performance → Record → Hovere über Cards</p>
-        <p><strong>Mobile:</strong> Teste auf echten Android/iOS Geräten (nicht Emulator)</p>
-        <p><strong>Ziel:</strong> Rendering-Zeit < 16ms für 60fps</p>
+      <h3>Manuelle Performance-Tests</h3>
+      <p><strong>Desktop:</strong> Öffne DevTools → Performance → Record → Hovere über Cards</p>
+      <p><strong>Mobile:</strong> Teste auf echten Android/iOS Geräten (nicht Emulator)</p>
+      <p><strong>Ziel:</strong> Rendering-Zeit < 16ms für 60fps</p>
     </div>
 
     <script>
-        // Simple Performance Measurement
-        console.log('=== Shadow Performance Test ===');
+      // Simple Performance Measurement
+      console.log("=== Shadow Performance Test ===");
 
-        function measurePerformance(selector, testName) {
-            const element = document.querySelector(selector);
-            if (!element) return;
+      function measurePerformance(selector, testName) {
+        const element = document.querySelector(selector);
+        if (!element) return;
 
-            const startTime = performance.now();
+        const startTime = performance.now();
 
-            // Trigger reflow/repaint
-            element.style.transform = 'scale(1.1)';
-            element.offsetHeight; // Force reflow
-            element.style.transform = '';
+        // Trigger reflow/repaint
+        element.style.transform = "scale(1.1)";
+        element.offsetHeight; // Force reflow
+        element.style.transform = "";
 
-            const endTime = performance.now();
-            console.log(`${testName}: ${(endTime - startTime).toFixed(2)}ms`);
-        }
+        const endTime = performance.now();
+        console.log(`${testName}: ${(endTime - startTime).toFixed(2)}ms`);
+      }
 
-        setTimeout(() => {
-            measurePerformance('.shadow-extreme-current', 'Current Extreme Shadows');
-            measurePerformance('.shadow-extreme-optimized', 'Optimized Shadows');
-        }, 1000);
+      setTimeout(() => {
+        measurePerformance(".shadow-extreme-current", "Current Extreme Shadows");
+        measurePerformance(".shadow-extreme-optimized", "Optimized Shadows");
+      }, 1000);
     </script>
-</body>
+  </body>
 </html>
