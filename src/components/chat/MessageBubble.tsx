@@ -12,7 +12,7 @@ export function MessageBubble({ message }: { message: ChatMessageType }) {
   return (
     <div className={`chat-message flex ${alignmentClass} group`} data-testid="message-bubble">
       <div
-        className={`max-w-[85%] ${offsetClass} rounded-2xl px-4 py-3 shadow-[var(--shadow-depth-1)] ${bgColorClass} ${textColorClass} transition-all duration-200 hover:scale-[1.02]`}
+        className={`max-w-[85%] ${offsetClass} rounded-2xl px-4 py-3 shadow-[var(--shadow-depth-1)] ${bgColorClass} ${textColorClass} transition-all duration-200 hover:scale-[1.02] glass-panel`}
       >
         <div className="flex items-center gap-2 mb-1">
           <span className="text-xs font-medium opacity-80">{isUser ? "Du" : "Disa AI"}</span>

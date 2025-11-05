@@ -162,7 +162,7 @@ function DenseRoleCard({
       tone="neo-subtle"
       elevation="subtle"
       className={cn(
-        "rounded-2xl border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_84%,transparent)] p-4 shadow-[var(--shadow-depth-1)] transition-transform duration-150",
+        "rounded-2xl border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_84%,transparent)] p-4 shadow-[var(--shadow-depth-1)] transition-transform duration-150 glass-panel",
         isActive
           ? "border-[var(--color-brand-primary)] shadow-[var(--shadow-depth-2)]"
           : "hover:-translate-y-0.5 hover:shadow-[var(--shadow-depth-2)]",

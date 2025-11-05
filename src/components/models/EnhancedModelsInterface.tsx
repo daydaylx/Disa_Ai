@@ -23,7 +23,6 @@ import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext"
 import { useFilteredList } from "../../hooks/useFilteredList";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
-import { ModelComparisonTable } from "./ModelComparisonTable";
 import {
   Badge,
   Button,
@@ -37,6 +36,7 @@ import {
 import { Card } from "../ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/Dialog";
 import { useToasts } from "../ui/toast/ToastsProvider";
+import { ModelComparisonTable } from "./ModelComparisonTable";
 
 type SortOption = "name" | "performance" | "price";
 
@@ -297,7 +297,7 @@ function DenseModelCard({
       tone="neo-raised"
       elevation="medium"
       state={isSelected ? "selected" : "default"}
-      className="p-4 transition-all duration-200 min-h-[180px]"
+      className="p-4 transition-all duration-200 min-h-[180px] glass-panel"
       onCardClick={onSelect}
     >
       {/* Header Row */}
