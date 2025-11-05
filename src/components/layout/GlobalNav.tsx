@@ -1,7 +1,10 @@
 import { Menu } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
+import { useChat } from "../../hooks/useChat";
 import { Button } from "../ui/button";
+import { ModelSelect } from "../ui/ModelSelect";
+import { RoleSelect } from "../ui/RoleSelect";
 
 const ROUTE_TITLES: Record<string, string> = {
   "/chat": "Chat",
@@ -33,6 +36,7 @@ interface GlobalNavProps {
 
 export function GlobalNav({ onMenuClick }: GlobalNavProps) {
   const location = useLocation();
+  const { model, setModel, role, setRole } = useChat();
 
   const title = ROUTE_TITLES[location.pathname] ?? "Disa AI";
   const activePath =
@@ -70,6 +74,12 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
             <Menu className="h-5 w-5" aria-hidden="true" />
           </Button>
         </div>
+      </div>
+
+      {/* Model and Role Selection */}
+      <div className="px-4 pb-3 space-y-2">
+        <ModelSelect model={model} setModel={setModel} />
+        <RoleSelect role={role} setRole={setRole} />
       </div>
     </header>
   );

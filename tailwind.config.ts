@@ -3,7 +3,16 @@ import type { Config } from "tailwindcss";
 
 const tailwindColors = {
   // Simplified color system
-  primary: "#4b63ff",
+  primary: {
+    DEFAULT: "#4b63ff",
+    light: "#6f81ff",
+    dark: "#3a4dbf",
+  },
+  accent: {
+    DEFAULT: "#ff6b6b",
+    light: "#ff8f8f",
+    dark: "#bf5050",
+  },
   secondary: "#676d82",
   background: "#fdfdff",
   surface: "#f4f6fb",
@@ -47,6 +56,26 @@ const fixedFontSizes = {
 };
 
 const textStyles = {
+  headline: {
+    fontSize: "24px",
+    lineHeight: "32px",
+    fontWeight: 700,
+  },
+  subheadline: {
+    fontSize: "20px",
+    lineHeight: "28px",
+    fontWeight: 600,
+  },
+  body: {
+    fontSize: "16px",
+    lineHeight: "24px",
+    fontWeight: 400,
+  },
+  caption: {
+    fontSize: "12px",
+    lineHeight: "16px",
+    fontWeight: 400,
+  },
   "title-base": {
     fontSize: "20px",
     lineHeight: "28px",
@@ -123,6 +152,20 @@ export default {
         "screen-dynamic": "var(--vh, 100dvh)",
         "screen-small": "100svh",
         "screen-large": "100lvh",
+      },
+      keyframes: {
+        ripple: {
+          "0%": { transform: "scale(0)", opacity: 1 },
+          "100%": { transform: "scale(2)", opacity: 0 },
+        },
+        "fade-in": {
+          "0%": { opacity: 0, transform: "translateY(10px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        ripple: "ripple 0.85s linear",
+        "fade-in": "fade-in 0.5s ease-out",
       },
       padding: {
         "safe-top": "env(safe-area-inset-top)",
