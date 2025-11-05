@@ -4,10 +4,6 @@
   /* Leicht durchscheinender Hintergrund */
   background-color: rgba(255, 255, 255, 0.05); /* Sehr dunkel, fängt Licht ein */
 
-  /* Der "Frosted Glass"-Effekt */
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-
   /* Feiner Rand, um das Glas abzuheben */
   border: 1px solid rgba(255, 255, 255, 0.1);
 

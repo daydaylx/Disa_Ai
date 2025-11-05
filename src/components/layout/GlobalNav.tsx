@@ -39,7 +39,7 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
     NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
 
   const headerClass =
-    "sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_35%,transparent)] bg-gradient-to-r from-[var(--acc2)]/14 via-[var(--surface-neumorphic-floating)] 70% to-transparent backdrop-blur-lg supports-[backdrop-filter]:backdrop-blur-md shadow-[var(--shadow-neumorphic-sm)]";
+    "sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_35%,transparent)] bg-gradient-to-r from-[var(--acc2)]/14 via-[var(--surface-neumorphic-floating)] 70% to-transparent shadow-[var(--shadow-neumorphic-sm)]";
 
   return (
     <header

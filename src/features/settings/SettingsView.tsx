@@ -425,7 +425,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent px-4 py-3 backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
+      <header className="sticky top-0 z-10 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent px-4 py-3 shadow-[var(--shadow-neumorphic-sm)]">
         <div className="flex items-center justify-between text-sm">
           <div className="space-y-1">
             {section ? (

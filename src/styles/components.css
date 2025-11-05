@@ -1368,7 +1368,6 @@
     inset 0 0 0 1px color-mix(in srgb, var(--color-brand-primary) 30%, transparent);
   border: var(--border-neumorphic-light);
   background: color-mix(in srgb, var(--surface-neumorphic-floating) 95%, transparent);
-  backdrop-filter: blur(8px);
 }
 
 /* Sortable Item States */
@@ -1597,8 +1596,6 @@
   padding-top: var(--inset-t);
   background: var(--surface-neumorphic-floating);
   border-bottom: var(--border-neumorphic-subtle);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 
 /* Fixed bottom navigation - mobile first */
@@ -1616,8 +1613,6 @@
   padding-bottom: var(--inset-b);
   background: var(--surface-neumorphic-floating);
   border-top: var(--border-neumorphic-subtle);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 
 /* Navigation items - enhanced touch targets */

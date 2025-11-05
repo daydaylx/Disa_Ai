@@ -11,15 +11,7 @@ const navItems = [
 ];
 
 interface MobileNavigationProps {
-  variant?:
-    | "neo-dock"
-    | "neo-floating"
-    | "neo-dramatic"
-    | "neo-glass"
-    | "default"
-    | "neumorphic"
-    | "glass"
-    | "floating";
+  variant?: "neo-dock" | "neo-floating" | "neo-dramatic" | "neo-glass" | "default";
 }
 
 export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps) {
@@ -75,7 +67,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bg-[var(--surface-neumorphic-floating)]/80",
       "shadow-[var(--shadow-neumorphic-lg)]",
       "border-[var(--border-neumorphic-light)]",
-      "backdrop-blur-2xl backdrop-saturate-150",
       // Glass Effects
       "before:absolute before:inset-0 before:rounded-[var(--radius-xl)]",
       "before:bg-gradient-to-br before:from-white/15 before:via-white/5 before:to-transparent",
@@ -89,7 +80,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bg-[var(--surface-neumorphic-raised)]",
       "shadow-[var(--shadow-neumorphic-md)]",
       "border-t-[var(--border-neumorphic-subtle)]",
-      "backdrop-blur-xl",
     ].join(" "),
 
     /** @deprecated Use neo-floating instead */
@@ -98,7 +88,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bg-[var(--surface-neumorphic-raised)]",
       "shadow-[var(--shadow-neumorphic-lg)]",
       "border-t-[var(--border-neumorphic-light)]",
-      "backdrop-blur-xl",
       "transition-shadow duration-200",
       "hover:shadow-[var(--shadow-neumorphic-xl)]",
     ].join(" "),
@@ -109,7 +98,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bg-[var(--surface-neumorphic-floating)]/80",
       "shadow-[var(--shadow-neumorphic-md)]",
       "border-t-[var(--border-neumorphic-subtle)]/40",
-      "backdrop-blur-2xl",
     ].join(" "),
 
     /** @deprecated Use neo-floating instead */
@@ -118,7 +106,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bg-[var(--surface-neumorphic-floating)]",
       "shadow-[var(--shadow-neumorphic-lg)]",
       "border-t-[var(--border-neumorphic-light)]/30",
-      "backdrop-blur-xl",
       "transition-all duration-200",
       "hover:shadow-[var(--shadow-neumorphic-xl)]",
     ].join(" "),
@@ -230,8 +217,8 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
 
       /** @deprecated Use neo-glass instead */
       glass: isActive
-        ? "text-[var(--acc1)] bg-[var(--acc1)]/10 backdrop-blur-sm rounded-lg p-2"
-        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-neumorphic-floating)]/40 hover:backdrop-blur-sm hover:rounded-lg hover:p-2",
+        ? "text-[var(--acc1)] bg-[var(--acc1)]/10 rounded-lg p-2"
+        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-neumorphic-floating)]/40 hover:rounded-lg hover:p-2",
 
       /** @deprecated Use neo-floating instead */
       floating: isActive

@@ -109,7 +109,6 @@ export const Header: React.FC<HeaderProps> = ({
       "bg-[var(--surface-neumorphic-floating)]/90",
       "shadow-[var(--shadow-neumorphic-md)]",
       "border-b-[var(--border-neumorphic-light)]/50",
-      "backdrop-blur-2xl backdrop-saturate-150",
       condensed &&
         enhanced && [
           "shadow-[var(--shadow-neumorphic-lg)]",
