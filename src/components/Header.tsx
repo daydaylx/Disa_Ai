@@ -90,7 +90,6 @@ export const Header: React.FC<HeaderProps> = ({
       "bg-[var(--surface-neumorphic-floating)]",
       "shadow-[var(--shadow-neumorphic-lg)]",
       "border-b-[var(--border-neumorphic-light)]",
-      "backdrop-blur-xl",
       // Enhanced Condensed State
       condensed &&
         enhanced && [
@@ -123,7 +122,6 @@ export const Header: React.FC<HeaderProps> = ({
       "bg-gradient-to-r from-[var(--acc1)] via-[color-mix(in_srgb,var(--acc1)_60%,var(--acc2)_40%)] to-[var(--acc2)]",
       "shadow-[var(--shadow-neumorphic-xl)]",
       "border-b-[var(--border-neumorphic-light)]",
-      "backdrop-blur-xl",
       condensed &&
         enhanced && [
           "shadow-[var(--shadow-neumorphic-dramatic)]",

@@ -115,7 +115,6 @@ export const ComposerSkeleton: React.FC = () => {
         "bg-[var(--surface-neumorphic-floating)]",
         "shadow-[var(--shadow-neumorphic-lg)]",
         "border-t border-[var(--border-neumorphic-light)]",
-        "backdrop-blur-xl",
       )}
       aria-hidden="true"
     >

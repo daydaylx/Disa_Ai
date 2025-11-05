@@ -25,7 +25,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "shadow-[var(--shadow-neumorphic-dramatic)]",
       "border-[var(--border-neumorphic-light)]",
       // Enhanced Blur and Effects
-      "backdrop-blur-xl",
       "before:absolute before:inset-0 before:rounded-[var(--radius-2xl)]",
       "before:bg-gradient-to-r before:from-[var(--acc2)]/18 before:via-white/12 before:to-[var(--acc1)]/14",
       "before:pointer-events-none",
@@ -40,7 +39,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bg-[var(--surface-neumorphic-raised)]",
       "shadow-[var(--shadow-neumorphic-xl)]",
       "border-[var(--border-neumorphic-light)]",
-      "backdrop-blur-lg",
       // Floating Animation
       "transition-all duration-500 ease-out",
       "hover:shadow-[var(--shadow-neumorphic-dramatic)]",
@@ -54,7 +52,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "shadow-[var(--shadow-neumorphic-extreme)]",
       "border-t-[var(--border-neumorphic-light)]",
       // Multi-layer Effects
-      "backdrop-blur-2xl",
       "before:absolute before:inset-0",
       "before:bg-gradient-to-t before:from-transparent before:via-white/5 before:to-white/10",
       "before:pointer-events-none",
@@ -179,7 +176,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
             "text-[var(--color-border-focus)] font-semibold",
             "bg-[var(--surface-neumorphic-floating)]/90",
             "shadow-[var(--shadow-glow-accent-subtle)]",
-            "backdrop-blur-xl backdrop-saturate-150",
             "rounded-[var(--radius-lg)] p-2 m-1",
             "border-[var(--color-border-focus)]/60",
           ].join(" ")
@@ -188,7 +184,6 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
             "rounded-[var(--radius-md)] p-2 m-1",
             "hover:text-[var(--color-border-focus)]",
             "hover:bg-[var(--surface-neumorphic-floating)]/60",
-            "hover:backdrop-blur-lg",
             "hover:shadow-[var(--shadow-neumorphic-sm)]",
           ].join(" "),
 
