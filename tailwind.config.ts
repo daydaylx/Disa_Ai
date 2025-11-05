@@ -1,39 +1,59 @@
 /* eslint-disable */
 import type { Config } from "tailwindcss";
-import {
-  fixedFontSizes,
-  tailwindColors,
-  tailwindFontFamily,
-  tailwindMotion,
-  tailwindRadii,
-  tailwindShadows,
-  tailwindSpacing,
-  textStyles,
-} from "./src/theme/tokens";
 
-const fontSize = Object.entries(textStyles).reduce<
-  Record<string, string | [string, Record<string, string>]>
->((acc, [token, style]) => {
-  const key = token
-    .replace(/([A-Z])/g, "-$1")
-    .toLowerCase()
-    .replace(/^-/, "");
+const tailwindColors = {
+  // Simplified color system
+  primary: "#4b63ff",
+  secondary: "#676d82",
+  background: "#fdfdff",
+  surface: "#f4f6fb",
+  text: {
+    primary: "#0f1724",
+    secondary: "#4a5163",
+    muted: "#7d8398",
+  },
+};
 
-  acc[key] = [
-    style.fontSize,
-    {
-      lineHeight: style.lineHeight,
-      fontWeight: `${style.fontWeight}`,
-      ...(style.letterSpacing ? { letterSpacing: style.letterSpacing } : {}),
-      ...(style.textTransform ? { textTransform: style.textTransform } : {}),
-    },
-  ];
+const tailwindSpacing = {
+  "touch-compact": "44px",
+  "touch-comfortable": "48px",
+  "touch-relaxed": "56px",
+  "touch-spacious": "64px",
+};
 
-  return acc;
-}, {});
+const tailwindRadii = {
+  none: "0",
+  sm: "4px",
+  md: "8px",
+  lg: "12px",
+  xl: "16px",
+  "2xl": "24px",
+};
 
-fontSize.badge = fixedFontSizes.badge;
-fontSize.input = fixedFontSizes.input;
+const tailwindShadows = {
+  "neo-sm": "0 2px 8px rgba(0, 0, 0, 0.04)",
+  "neo-md": "0 4px 16px rgba(0, 0, 0, 0.08)",
+  "neo-lg": "0 8px 32px rgba(0, 0, 0, 0.12)",
+  "neo-xl": "0 16px 48px rgba(0, 0, 0, 0.16)",
+};
+
+const tailwindFontFamily = {
+  sans: ["Inter", "system-ui", "sans-serif"],
+};
+
+const fixedFontSizes = {
+  badge: "10px",
+  input: "14px",
+};
+
+const textStyles = {
+  "title-base": {
+    fontSize: "20px",
+    lineHeight: "28px",
+    fontWeight: 600,
+    letterSpacing: "-0.025em",
+  },
+};
 
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -53,9 +73,39 @@ export default {
       borderRadius: tailwindRadii,
       boxShadow: tailwindShadows,
       fontFamily: tailwindFontFamily,
-      fontSize,
-      transitionDuration: tailwindMotion.duration,
-      transitionTimingFunction: tailwindMotion.easing,
+      fontSize: {
+        ...fixedFontSizes,
+        ...Object.entries(textStyles).reduce<
+          Record<string, string | [string, Record<string, string>]>
+        >((acc, [token, style]) => {
+          const key = token
+            .replace(/([A-Z])/g, "-$1")
+            .toLowerCase()
+            .replace(/^-/, "");
+
+          acc[key] = [
+            style.fontSize,
+            {
+              lineHeight: style.lineHeight,
+              fontWeight: `${style.fontWeight}`,
+              letterSpacing: style.letterSpacing || undefined,
+            },
+          ];
+
+          return acc;
+        }, {}),
+      },
+      transitionDuration: {
+        small: "150ms",
+        medium: "200ms",
+        large: "300ms",
+      },
+      transitionTimingFunction: {
+        standard: "cubic-bezier(0.4, 0.0, 0.2, 1)",
+        emphasized: "cubic-bezier(0.05, 0.7, 0.1, 1.0)",
+        accelerate: "cubic-bezier(0.3, 0.0, 1, 1)",
+        decelerate: "cubic-bezier(0.0, 0.0, 0.2, 1)",
+      },
       minHeight: {
         "touch-compact": tailwindSpacing["touch-compact"],
         "touch-comfortable": tailwindSpacing["touch-comfortable"],
@@ -90,7 +140,7 @@ export default {
   },
   plugins: [
     // Dramatic Neomorphism Plugin
-    function ({ addUtilities, theme }: any) {
+    function ({ addUtilities }: any) {
       const newUtilities = {
         // Neo Surface Base Classes
         ".neo-surface-base": {
@@ -129,113 +179,30 @@ export default {
         ".neo-shadow-dramatic": { boxShadow: "var(--shadow-neumorphic-dramatic)" },
         ".neo-shadow-extreme": { boxShadow: "var(--shadow-neumorphic-extreme)" },
 
-        // Inset Shadow Levels
-        ".neo-inset-subtle": { boxShadow: "var(--shadow-inset-subtle)" },
-        ".neo-inset-medium": { boxShadow: "var(--shadow-inset-medium)" },
-        ".neo-inset-strong": { boxShadow: "var(--shadow-inset-strong)" },
-        ".neo-inset-extreme": { boxShadow: "var(--shadow-inset-extreme)" },
-
-        // Interactive States - Hover Lift
-        ".neo-hover-lift-sm:hover": {
-          transform: "translateY(-2px)",
-          boxShadow: "var(--shadow-neumorphic-md)",
-          transition: "all var(--motion-duration-medium) var(--motion-easing-standard)",
+        // Touch Target Utilities
+        ".touch-target": {
+          minHeight: "44px",
+          minWidth: "44px",
         },
-        ".neo-hover-lift-md:hover": {
-          transform: "translateY(-4px)",
-          boxShadow: "var(--shadow-neumorphic-lg)",
-          transition: "all var(--motion-duration-medium) var(--motion-easing-standard)",
-        },
-        ".neo-hover-lift-lg:hover": {
-          transform: "translateY(-6px)",
-          boxShadow: "var(--shadow-neumorphic-xl)",
-          transition: "all var(--motion-duration-medium) var(--motion-easing-standard)",
-        },
-        ".neo-hover-lift-dramatic:hover": {
-          transform: "translateY(-8px)",
-          boxShadow: "var(--shadow-neumorphic-dramatic)",
-          transition: "all 300ms var(--motion-easing-emphasized)",
+        ".touch-target-preferred": {
+          minHeight: "48px",
+          minWidth: "48px",
         },
 
-        // Interactive States - Press Depth
-        ".neo-press-subtle:active": {
-          transform: "translateY(1px)",
-          boxShadow: "var(--shadow-inset-subtle)",
-          transition: "all 150ms var(--motion-easing-accelerate)",
+        // Android Safe Areas
+        ".safe-y": {
+          paddingTop: "env(safe-area-inset-top)",
+          paddingBottom: "env(safe-area-inset-bottom)",
         },
-        ".neo-press-medium:active": {
-          transform: "translateY(2px)",
-          boxShadow: "var(--shadow-inset-medium)",
-          transition: "all 150ms var(--motion-easing-accelerate)",
-        },
-        ".neo-press-deep:active": {
-          transform: "translateY(3px)",
-          boxShadow: "var(--shadow-inset-strong)",
-          transition: "all 150ms var(--motion-easing-accelerate)",
+        ".safe-x": {
+          paddingLeft: "env(safe-area-inset-left)",
+          paddingRight: "env(safe-area-inset-right)",
         },
 
-        // Focus States
-        ".neo-focus:focus-visible": {
-          outline: "none",
-          boxShadow: "var(--shadow-focus-neumorphic)",
-          borderColor: "var(--acc1)",
-          transition: "all var(--motion-duration-medium) var(--motion-easing-standard)",
-        },
-
-        // Special Component Utilities
-        ".neo-button": {
-          backgroundColor: "var(--surface-neumorphic-raised)",
-          boxShadow: "var(--shadow-neumorphic-md)",
-          borderRadius: "var(--radius-lg)",
-          border: "var(--border-neumorphic-light)",
-          transition: "all var(--motion-duration-large) var(--motion-easing-standard)",
-          "&:hover": {
-            transform: "translateY(-3px)",
-            boxShadow: "var(--shadow-neumorphic-lg)",
-          },
-          "&:active": {
-            transform: "translateY(1px)",
-            boxShadow: "var(--shadow-inset-medium)",
-          },
-        },
-        ".neo-input": {
-          backgroundColor: "var(--surface-neumorphic-base)",
-          boxShadow: "var(--shadow-inset-subtle)",
-          borderRadius: "var(--radius-md)",
-          border: "var(--border-neumorphic-subtle)",
-          transition: "all var(--motion-duration-large) var(--motion-easing-standard)",
-          "&:focus": {
-            boxShadow: "var(--shadow-focus-neumorphic)",
-            borderColor: "var(--acc1)",
-          },
-        },
-        ".neo-card": {
-          backgroundColor: "var(--surface-neumorphic-floating)",
-          boxShadow: "var(--shadow-neumorphic-lg)",
-          borderRadius: "var(--radius-xl)",
-          border: "var(--border-neumorphic-light)",
-          transition: "all var(--motion-duration-large) var(--motion-easing-standard)",
-          "&:hover": {
-            transform: "translateY(-4px)",
-            boxShadow: "var(--shadow-neumorphic-xl)",
-          },
-        },
-
-        // Reduced Motion Support
-        "@media (prefers-reduced-motion: reduce)": {
-          ".neo-hover-lift-sm:hover, .neo-hover-lift-md:hover, .neo-hover-lift-lg:hover, .neo-hover-lift-dramatic:hover":
-            {
-              transform: "none",
-            },
-          ".neo-press-subtle:active, .neo-press-medium:active, .neo-press-deep:active": {
-            transform: "none",
-          },
-          ".neo-button:hover, .neo-button:active": {
-            transform: "none",
-          },
-          ".neo-card:hover": {
-            transform: "none",
-          },
+        // Android Scroll Optimizations
+        ".android-scroll": {
+          overscrollBehavior: "contain",
+          WebkitOverflowScrolling: "touch",
         },
       };
 

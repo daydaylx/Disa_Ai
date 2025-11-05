@@ -11,7 +11,6 @@ export * from "./navigation";
 export * from "./primitives";
 export * from "./pwa";
 export * from "./roles";
-export * from "./shell";
 export * from "./status";
 export * from "./templates";
 export * from "./ui";

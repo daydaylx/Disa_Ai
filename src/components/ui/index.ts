@@ -16,7 +16,7 @@ export * from "./Icon";
 export * from "./input";
 export * from "./LazyImage";
 export { LoadingCard as UILoadingCard } from "./loading";
-export * from "./MessageBubble";
+// MessageBubble is now in chat/MessageBubble.tsx
 export * from "./select";
 export * from "./separator";
 export * from "./Skeleton";
