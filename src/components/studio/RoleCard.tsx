@@ -87,7 +87,6 @@ export const RoleCard = forwardRef<HTMLDivElement, RoleCardProps>(
           "shadow-[var(--shadow-neumorphic-md)]",
           "border border-[var(--border-neumorphic-light)]",
           "rounded-[var(--radius-lg)]",
-          "backdrop-blur-xl",
           // Enhanced States
           "text-[var(--color-text-secondary)]",
           "hover:text-[var(--acc1)]",

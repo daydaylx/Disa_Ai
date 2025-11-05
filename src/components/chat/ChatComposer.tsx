@@ -136,7 +136,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] backdrop-blur-sm",
+            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] glass-panel",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >

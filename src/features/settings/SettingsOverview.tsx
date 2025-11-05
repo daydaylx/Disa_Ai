@@ -100,7 +100,7 @@ export function SettingsOverview() {
           tone="neo-floating"
           elevation="subtle"
           intent="accent"
-          className="rounded-[var(--radius-xl)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] px-5 py-4 text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)]"
+          className="rounded-[var(--radius-xl)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] px-5 py-4 text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)] glass-panel"
         >
           <h2 className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-text-on-accent)]/70">
             Schnellstart
@@ -141,7 +141,7 @@ export function SettingsOverview() {
                   tone="neo-glass"
                   interactive="glow-accent"
                   padding="none"
-                  className="h-full group"
+                  className="h-full group glass-panel"
                   clickable
                 >
                   <div className="flex h-full flex-col p-4">
@@ -185,7 +185,7 @@ export function SettingsOverview() {
           tone="neo-floating"
           elevation="subtle"
           intent="accent"
-          className="rounded-[var(--radius-xl)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] px-4 py-4 text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)]"
+          className="rounded-[var(--radius-xl)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] px-4 py-4 text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)] glass-panel"
         >
           <header className="flex items-center gap-2">
             <Waves className="h-5 w-5 text-[var(--color-text-on-accent)]" aria-hidden />

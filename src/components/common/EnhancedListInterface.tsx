@@ -285,7 +285,7 @@ export function EnhancedListInterface<T extends BaseItem>({
 
   // Default header
   const defaultHeader = (
-    <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
+    <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent shadow-[var(--shadow-neumorphic-sm)]">
       {/* Search & Quick Actions Row */}
       <div className="px-4 py-3">
         <div className="flex items-center gap-3">

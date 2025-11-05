@@ -161,10 +161,6 @@ const SelectContent = React.forwardRef<
         "border-[var(--border-neumorphic-subtle)]",
         "shadow-[var(--shadow-neumorphic-dramatic)]",
 
-        // Backdrop Effect
-        "backdrop-blur-sm",
-        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none",
-
         // Typography
         "text-[var(--color-text-primary)]",
 

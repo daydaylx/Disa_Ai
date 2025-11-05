@@ -23,7 +23,6 @@ import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext"
 import { useFilteredList } from "../../hooks/useFilteredList";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
-import { ModelComparisonTable } from "./ModelComparisonTable";
 import {
   Badge,
   Button,
@@ -37,6 +36,7 @@ import {
 import { Card } from "../ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/Dialog";
 import { useToasts } from "../ui/toast/ToastsProvider";
+import { ModelComparisonTable } from "./ModelComparisonTable";
 
 type SortOption = "name" | "performance" | "price";
 
@@ -297,7 +297,7 @@ function DenseModelCard({
       tone="neo-raised"
       elevation="medium"
       state={isSelected ? "selected" : "default"}
-      className="p-4 transition-all duration-200 min-h-[180px]"
+      className="p-4 transition-all duration-200 min-h-[180px] glass-panel"
       onCardClick={onSelect}
     >
       {/* Header Row */}
@@ -578,7 +578,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   return (
     <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
+      <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent shadow-[var(--shadow-neumorphic-sm)]">
         {/* Search & Quick Actions Row */}
         <div className="px-4 py-3">
           <div className="flex items-center gap-3">

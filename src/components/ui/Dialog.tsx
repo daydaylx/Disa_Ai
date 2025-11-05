@@ -14,17 +14,16 @@ const DialogPortal = DialogPrimitive.Portal;
 const DialogClose = DialogPrimitive.Close;
 
 const dialogOverlayVariants = cva(
-  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-50 transition-[backdrop-filter,background-color] duration-medium ease-standard",
+  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-50 transition-[background-color] duration-medium ease-standard",
   {
     variants: {
       variant: {
         default: "bg-overlay-scrim",
-        glass:
-          "bg-overlay-scrim/40 backdrop-blur-sm supports-[backdrop-filter]:bg-overlay-scrim/60",
+        glass: "bg-overlay-scrim/40 supports-[backdrop-filter]:bg-overlay-scrim/60",
         neumorphic:
-          "bg-[var(--surface-neumorphic-overlay)] backdrop-blur-md supports-[backdrop-filter]:bg-[var(--surface-neumorphic-overlay)]/80",
-        soft: "bg-overlay-scrim/30 backdrop-blur-lg supports-[backdrop-filter]:bg-overlay-scrim/50",
-        minimal: "bg-overlay-scrim/20 backdrop-blur-sm",
+          "bg-[var(--surface-neumorphic-overlay)] supports-[backdrop-filter]:bg-[var(--surface-neumorphic-overlay)]/80",
+        soft: "bg-overlay-scrim/30 supports-[backdrop-filter]:bg-overlay-scrim/50",
+        minimal: "bg-overlay-scrim/20",
       },
     },
     defaultVariants: {
@@ -57,12 +56,12 @@ const dialogContentVariants = cva(
         default:
           "rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] shadow-neo-md",
         glass:
-          "rounded-[var(--radius-xl)] border border-overlay-dialog-border/40 bg-overlay-dialog/80 backdrop-blur-xl shadow-neo-md supports-[backdrop-filter]:bg-overlay-dialog/60",
+          "rounded-[var(--radius-xl)] border border-overlay-dialog-border/40 bg-overlay-dialog/80 shadow-neo-md supports-[backdrop-filter]:bg-overlay-dialog/60",
         neumorphic:
           "rounded-[var(--radius-2xl)] border border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-floating)] shadow-neo-lg motion-safe:hover:shadow-neo-xl motion-safe:transition-shadow motion-safe:duration-300",
         floating:
           "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/30 bg-overlay-dialog shadow-neo-md motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-neo-lg motion-safe:transition-transform motion-safe:duration-200",
-        soft: "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/20 bg-overlay-dialog/95 shadow-neo-sm backdrop-blur-sm",
+        soft: "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/20 bg-overlay-dialog/95 shadow-neo-sm",
         elevated:
           "rounded-[var(--radius-xl)] border border-overlay-dialog-border bg-overlay-dialog shadow-neo-md",
       },

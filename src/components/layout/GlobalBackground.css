@@ -1,0 +1,41 @@
+.global-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.3;
+}
+
+.blob-1 {
+  width: 50vw;
+  height: 50vh;
+  top: -25vh;
+  left: -25vw;
+  background: radial-gradient(circle, #4a00e0, transparent);
+}
+
+.blob-2 {
+  width: 60vw;
+  height: 60vh;
+  bottom: -30vh;
+  right: -30vw;
+  background: radial-gradient(circle, #00d2ff, transparent);
+}
+
+.blob-3 {
+  width: 40vw;
+  height: 40vh;
+  top: 50%;
+  left: 50%;
+  background: radial-gradient(circle, #8e2de2, transparent);
+  transform: translate(-50%, -50%);
+}

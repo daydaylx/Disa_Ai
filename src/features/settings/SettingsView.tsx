@@ -276,7 +276,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             tone="neo-floating"
             elevation="subtle"
             intent="accent"
-            className="rounded-[var(--radius-card-inner)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)]/90 p-3 text-xs text-[var(--color-text-on-accent)]"
+            className="rounded-[var(--radius-card-inner)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)]/90 p-3 text-xs text-[var(--color-text-on-accent)] glass-panel"
           >
             <p>
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
@@ -318,7 +318,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
           <Card
             tone="neo-floating"
             elevation="subtle"
-            className="space-y-3 border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)]"
+            className="space-y-3 border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] glass-panel"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
@@ -425,7 +425,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent px-4 py-3 backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
+      <header className="sticky top-0 z-10 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent px-4 py-3 shadow-[var(--shadow-neumorphic-sm)]">
         <div className="flex items-center justify-between text-sm">
           <div className="space-y-1">
             {section ? (
@@ -487,7 +487,11 @@ function SettingsSection({
 }) {
   return (
     <section id={id}>
-      <Card tone="neo-floating" elevation="subtle" className="shadow-[var(--shadow-depth-1)]">
+      <Card
+        tone="neo-floating"
+        elevation="subtle"
+        className="shadow-[var(--shadow-depth-1)] glass-panel"
+      >
         <div className="flex items-start gap-3 border-b border-[var(--color-border-subtle)] px-4 py-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card-small)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)]">
             <Icon className="h-4 w-4" aria-hidden />
@@ -527,7 +531,7 @@ function ToggleRow({
     <Card
       tone="neo-subtle"
       padding="sm"
-      className="flex items-start justify-between gap-4 rounded-[var(--radius-card-inner)] p-3"
+      className="flex items-start justify-between gap-4 rounded-[var(--radius-card-inner)] p-3 glass-panel"
     >
       <div className="flex-1">
         <p className="text-sm font-medium text-[var(--color-text-primary)]">{label}</p>

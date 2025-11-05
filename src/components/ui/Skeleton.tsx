@@ -61,7 +61,6 @@ export const HeaderSkeleton: React.FC = () => {
         "bg-[var(--surface-neumorphic-floating)]",
         "shadow-[var(--shadow-neumorphic-md)]",
         "border-b border-[var(--border-neumorphic-light)]",
-        "backdrop-blur-xl",
       )}
       aria-hidden="true"
     >
@@ -116,7 +115,6 @@ export const ComposerSkeleton: React.FC = () => {
         "bg-[var(--surface-neumorphic-floating)]",
         "shadow-[var(--shadow-neumorphic-lg)]",
         "border-t border-[var(--border-neumorphic-light)]",
-        "backdrop-blur-xl",
       )}
       aria-hidden="true"
     >

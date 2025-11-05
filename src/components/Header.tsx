@@ -13,6 +13,8 @@ interface HeaderProps {
   variant?: "neo-floating" | "neo-glass" | "neo-dramatic" | "default";
   /** Enable condensed state enhancement */
   enhanced?: boolean;
+  /** Callback for menu button click */
+  onMenuClick?: () => void;
 }
 
 const STATUS_META: Record<
@@ -55,6 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
   tokensUsed = 0,
   variant = "neo-floating",
   enhanced = true,
+  onMenuClick,
 }) => {
   const [condensed, setCondensed] = React.useState(false);
 
@@ -70,10 +73,15 @@ export const Header: React.FC<HeaderProps> = ({
 
   const statusMeta = STATUS_META[status];
 
-  const toggleBottomSheet = () => {
-    window.dispatchEvent(
-      new CustomEvent("disa:bottom-sheet", { detail: { action: "toggle" as const } }),
-    );
+  const handleMenuClick = () => {
+    if (onMenuClick) {
+      onMenuClick();
+    } else {
+      // Fallback to bottom sheet if no handler provided
+      window.dispatchEvent(
+        new CustomEvent("disa:bottom-sheet", { detail: { action: "toggle" as const } }),
+      );
+    }
   };
 
   const headerVariantClasses = {
@@ -82,7 +90,6 @@ export const Header: React.FC<HeaderProps> = ({
       "bg-[var(--surface-neumorphic-floating)]",
       "shadow-[var(--shadow-neumorphic-lg)]",
       "border-b-[var(--border-neumorphic-light)]",
-      "backdrop-blur-xl",
       // Enhanced Condensed State
       condensed &&
         enhanced && [
@@ -101,7 +108,6 @@ export const Header: React.FC<HeaderProps> = ({
       "bg-[var(--surface-neumorphic-floating)]/90",
       "shadow-[var(--shadow-neumorphic-md)]",
       "border-b-[var(--border-neumorphic-light)]/50",
-      "backdrop-blur-2xl backdrop-saturate-150",
       condensed &&
         enhanced && [
           "shadow-[var(--shadow-neumorphic-lg)]",
@@ -116,7 +122,6 @@ export const Header: React.FC<HeaderProps> = ({
       "bg-gradient-to-r from-[var(--acc1)] via-[color-mix(in_srgb,var(--acc1)_60%,var(--acc2)_40%)] to-[var(--acc2)]",
       "shadow-[var(--shadow-neumorphic-xl)]",
       "border-b-[var(--border-neumorphic-light)]",
-      "backdrop-blur-xl",
       condensed &&
         enhanced && [
           "shadow-[var(--shadow-neumorphic-dramatic)]",
@@ -244,8 +249,8 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             variant="neo-subtle"
             size="icon"
-            aria-label="Schnellmenü öffnen"
-            onClick={toggleBottomSheet}
+            aria-label="Menü öffnen"
+            onClick={handleMenuClick}
             className="hover:shadow-[0_0_15px_rgba(75,99,255,0.2)]"
           >
             <Menu className="h-5 w-5" />
