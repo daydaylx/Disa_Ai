@@ -22,10 +22,10 @@ const textareaVariants: Record<
 };
 
 const textareaSizes = {
-  sm: "min-h-[4rem] px-2 py-1.5 text-xs",
-  md: "min-h-[6rem] px-3 py-2 text-sm",
-  lg: "min-h-[8rem] px-4 py-3 text-base",
-  xl: "min-h-[12rem] px-5 py-4 text-lg",
+  sm: "min-h-[4rem] px-3 py-2 text-sm touch-target",
+  md: "min-h-[6rem] px-4 py-3 text-base touch-target-preferred",
+  lg: "min-h-[8rem] px-5 py-4 text-base touch-target-preferred",
+  xl: "min-h-[12rem] px-6 py-5 text-lg touch-target-preferred",
 };
 
 const textareaBaseClasses = [

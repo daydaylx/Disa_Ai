@@ -23,14 +23,29 @@ export function MessageBubble({ message }: { message: ChatMessageType }) {
       </div>
       <div className="whitespace-pre-wrap">{message.content}</div>
       {!isUser && (
-        <div className="flex items-center gap-2 mt-2">
-          <Button variant="ghost" size="icon" className="h-6 w-6">
+        <div className="flex items-center gap-2 mt-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 min-h-[40px] min-w-[40px] touch-target" // Android-friendly size
+            aria-label="Nachricht positiv bewerten"
+          >
             <ThumbsUp className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-6 w-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 min-h-[40px] min-w-[40px] touch-target" // Android-friendly size
+            aria-label="Nachricht negativ bewerten"
+          >
             <ThumbsDown className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-6 w-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 min-h-[40px] min-w-[40px] touch-target" // Android-friendly size
+            aria-label="Nachricht kopieren"
+          >
             <Copy className="h-4 w-4" />
           </Button>
         </div>

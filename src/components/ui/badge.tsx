@@ -37,10 +37,10 @@ const badgeVariants = cva(
           "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-danger-fg shadow-none hover:shadow-[var(--shadow-glow-error-subtle)]",
       },
       size: {
-        xs: "text-[10px] px-1.5 py-0.5",
-        sm: "text-[11px] px-2 py-0.5",
-        md: "text-[12px] px-2.5 py-1",
-        lg: "text-[13px] px-3 py-1.5",
+        xs: "text-[10px] px-2 py-1 min-h-[20px] touch-target", // Android minimum touch target
+        sm: "text-[11px] px-3 py-1.5 min-h-[24px] touch-target",
+        md: "text-[12px] px-3.5 py-2 min-h-[28px] touch-target",
+        lg: "text-[13px] px-4 py-2.5 min-h-[32px] touch-target-preferred",
       },
       category: {
         none: "",

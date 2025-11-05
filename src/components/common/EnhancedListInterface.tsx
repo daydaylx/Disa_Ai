@@ -15,6 +15,8 @@ import { useToasts } from "../ui/toast/ToastsProvider";
 // Type definitions
 type SortDirection = "asc" | "desc";
 
+// Legacy interface for backwards compatibility - removed unused declaration
+
 interface BaseItem {
   id: string;
 }
@@ -74,6 +76,9 @@ interface EnhancedListProps<T extends BaseItem> {
     lg?: number;
     xl?: number;
   };
+
+  // Mobile optimization
+  isMobile?: boolean;
 }
 
 interface ItemRenderProps<T> {

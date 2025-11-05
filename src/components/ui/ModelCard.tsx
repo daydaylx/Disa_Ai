@@ -33,6 +33,7 @@ export interface ModelCardProps {
   onToggleDetails: () => void;
   providerTier?: "free" | "premium" | "enterprise";
   isMobile?: boolean;
+  isTouchOptimized?: boolean; // Android touch optimization flag
 }
 
 function formatContext(ctx?: number) {
@@ -106,12 +107,16 @@ export function ModelCard({
         className={cn(
           "category-border category-tint category-focus relative w-full overflow-hidden",
           "transition-all duration-200 ease-out",
-          "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
-          "hover-lift-glow tap-bounce focus-glow",
-          isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
-          isMobile && "mobile-model-card touch-target",
+          "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--surface-neumorphic-base)]",
+          "hover:shadow-[var(--shadow-neumorphic-md)] hover:-translate-y-1",
+          "active:shadow-[var(--shadow-inset-medium)] active:translate-y-1",
+          isSelected &&
+            "shadow-[var(--shadow-neumorphic-lg)] bg-[var(--color-brand-primary)]/5 border-[var(--color-brand-primary)]/30",
+          isMobile && "mobile-model-card touch-target-preferred min-h-[64px]", // Android minimum
           "border-l-[4px]",
           "pl-5",
+          // Android-optimized interactions
+          "android-scroll",
         )}
         onClick={onSelect}
         onKeyDown={handleKeyDown}
@@ -120,7 +125,13 @@ export function ModelCard({
       >
         <div className="flex items-start gap-3">
           <div className="relative flex-shrink-0">
-            <Avatar size="md" className={cn("shadow-neo-sm", isMobile && "touch-target")}>
+            <Avatar
+              size="md"
+              className={cn(
+                "shadow-[var(--shadow-neumorphic-sm)]",
+                isMobile && "touch-target-preferred min-h-[40px] min-w-[40px]",
+              )}
+            >
               {provider.slice(0, 1)}
             </Avatar>
             {providerTier === "premium" && (

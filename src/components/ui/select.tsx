@@ -27,9 +27,9 @@ const SelectTrigger = React.forwardRef<
   };
 
   const sizes = {
-    sm: "min-h-[2rem] px-2 py-1 text-xs",
-    md: "min-h-[2.5rem] px-3 py-2 text-sm",
-    lg: "min-h-[3rem] px-4 py-3 text-base",
+    sm: "min-h-[44px] px-3 py-2 text-sm touch-target", // Android minimum 44px
+    md: "min-h-[48px] px-4 py-3 text-base touch-target-preferred", // Standard Android
+    lg: "min-h-[56px] px-5 py-4 text-base touch-target-preferred", // Comfortable Android
   };
 
   return (

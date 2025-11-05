@@ -198,12 +198,13 @@ const buttonVariants = (
   };
 
   const sizeClasses = {
-    xs: "h-7 px-2 py-1 text-xs rounded-[var(--radius-md)]",
-    sm: "h-8 px-3 py-1.5 text-xs rounded-[var(--radius-md)]",
-    default: "h-10 px-4 py-2 text-sm rounded-[var(--radius-lg)]",
-    lg: "h-12 px-6 py-3 text-base rounded-[var(--radius-lg)]",
-    xl: "h-14 px-8 py-4 text-lg rounded-[var(--radius-xl)]",
-    icon: "h-10 w-10 rounded-[var(--radius-lg)]",
+    xs: "h-8 min-h-[32px] px-3 py-1.5 text-xs rounded-[var(--radius-md)] touch-target",
+    sm: "h-10 min-h-[40px] px-4 py-2 text-sm rounded-[var(--radius-md)] touch-target",
+    default:
+      "h-12 min-h-[48px] px-5 py-3 text-sm rounded-[var(--radius-lg)] touch-target-preferred",
+    lg: "h-14 min-h-[56px] px-6 py-4 text-base rounded-[var(--radius-lg)] touch-target-preferred",
+    xl: "h-16 min-h-[64px] px-8 py-5 text-lg rounded-[var(--radius-xl)] touch-target-preferred",
+    icon: "h-12 min-h-[48px] w-12 min-w-[48px] rounded-[var(--radius-lg)] touch-target",
   };
 
   return cn(baseClasses, variantClasses[variant], sizeClasses[size]);

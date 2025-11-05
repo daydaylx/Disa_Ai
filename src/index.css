@@ -58,6 +58,118 @@
     padding-left: calc(var(--page-padding-x, var(--space-lg)) + var(--mobile-safe-left));
     padding-right: calc(var(--page-padding-x, var(--space-lg)) + var(--mobile-safe-right));
   }
+
+  /* Android-specific utilities */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Android touch target optimization */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .touch-target-preferred {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Android scrolling optimization */
+  .android-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Reduce motion for performance on lower-end Android devices */
+  @media (prefers-reduced-motion: no-preference) and (max-width: 768px) {
+    .neo-hover-lift-sm:hover,
+    .neo-hover-lift-md:hover {
+      transform: none; /* Disable hover transforms on mobile for performance */
+    }
+  }
+
+  /* Android Performance Optimizations */
+  @media (max-width: 768px) {
+    /* Simplify complex animations for mobile */
+    .hover\:shadow-\[var\(--shadow-neumorphic-xl\)\]:hover {
+      box-shadow: var(--shadow-neumorphic-md); /* Reduce shadow blur on mobile */
+    }
+
+    /* Reduce gradient complexity for better performance */
+    .bg-gradient-to-br,
+    .bg-gradient-to-r,
+    .bg-gradient-to-l {
+      background: var(--surface-neumorphic-base); /* Fallback to solid color */
+    }
+
+    /* Optimize transform animations */
+    .hover\:-translate-y-1:hover,
+    .hover\:-translate-y-2:hover,
+    .hover\:-translate-y-3:hover {
+      transform: translateY(-2px); /* Cap at -2px for mobile */
+    }
+
+    .active\:translate-y-1:active,
+    .active\:translate-y-2:active {
+      transform: translateY(1px); /* Simplify press feedback */
+    }
+
+    /* Reduce backdrop blur intensity */
+    .backdrop-blur-md {
+      backdrop-filter: blur(8px); /* Reduce from 12px */
+    }
+
+    /* Optimize text rendering */
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeSpeed; /* Faster rendering on mobile */
+    }
+  }
+
+  /* Android Haptic Feedback Preparation */
+  @media (hover: none) and (pointer: coarse) {
+    /* Touch-specific feedback classes */
+    .touch-feedback-active:active {
+      /* Prepare for CSS-based vibration simulation */
+      filter: brightness(0.95);
+      transform: scale(0.98);
+    }
+
+    .touch-feedback-lift:hover {
+      /* Reduced hover for touch */
+      transform: translateY(-1px);
+    }
+  }
+
+  /* High DPI Android Display Optimizations */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Sharper borders for high-DPI displays */
+    .border-1 {
+      border-width: 0.5px;
+    }
+  }
+
+  /* Android Dark Mode Performance */
+  @media (prefers-color-scheme: dark) and (max-width: 768px) {
+    /* Optimize dark mode rendering */
+    .bg-\[var\(--surface-neumorphic-base\)\] {
+      background-color: #0a0f14; /* Fixed dark color for better performance */
+    }
+  }
 }
 
 @layer components {

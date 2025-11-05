@@ -10,11 +10,11 @@ interface AvatarProps extends React.ComponentPropsWithoutRef<typeof AvatarPrimit
 const Avatar = React.forwardRef<React.ElementRef<typeof AvatarPrimitive.Root>, AvatarProps>(
   ({ className, size = "md", ...props }, ref) => {
     const sizeClasses = {
-      xs: "h-6 w-6",
-      sm: "h-8 w-8",
-      md: "h-10 w-10",
-      lg: "h-12 w-12",
-      xl: "h-16 w-16",
+      xs: "h-8 w-8 min-h-[32px] min-w-[32px] touch-target", // Android minimum for touch
+      sm: "h-10 w-10 min-h-[40px] min-w-[40px] touch-target-preferred",
+      md: "h-12 w-12 min-h-[48px] min-w-[48px] touch-target-preferred", // Standard Android touch
+      lg: "h-14 w-14 min-h-[56px] min-w-[56px] touch-target-preferred",
+      xl: "h-16 w-16 min-h-[64px] min-w-[64px] touch-target-preferred",
     };
 
     return (

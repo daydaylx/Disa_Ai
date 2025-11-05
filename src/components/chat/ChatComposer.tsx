@@ -152,7 +152,9 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent p-2 text-[15px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent py-3 px-3 text-[16px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                // Android-specific: Larger touch-friendly text and padding
+                "android-scroll touch-target-preferred",
                 isQuickstartLoading && "text-text-secondary cursor-not-allowed",
               )}
               style={{ height: "48px" }}

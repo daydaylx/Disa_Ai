@@ -39,13 +39,13 @@ const cardVariants = cva(
 
         // === MOBILE-OPTIMIZED INTERACTIONS ===
         gentle: [
-          "cursor-pointer",
+          "cursor-pointer touch-target-preferred",
           "hover:shadow-[var(--shadow-neumorphic-md)]",
           "hover:bg-[var(--surface-neumorphic-floating)]",
-          "hover:-translate-y-0.5",
-          "active:shadow-[var(--shadow-inset-subtle)]",
+          "hover:-translate-y-1", // Larger lift for touch feedback
+          "active:shadow-[var(--shadow-inset-medium)]",
           "active:bg-[var(--surface-neumorphic-pressed)]",
-          "active:translate-y-0.5",
+          "active:translate-y-1", // Clearer press feedback
         ].join(" "),
 
         dramatic: [
@@ -96,11 +96,11 @@ const cardVariants = cva(
       },
       padding: {
         none: "",
-        xs: "p-[var(--space-sm)]", // 12px
-        sm: "p-[var(--space-md)]", // 16px
-        md: "p-[var(--space-lg)]", // 24px
-        lg: "p-[var(--space-xl)]", // 32px
-        xl: "p-[var(--space-2xl)]", // 40px
+        xs: "p-3", // 12px - Better for mobile
+        sm: "p-4", // 16px - Touch-friendly
+        md: "p-6", // 24px - Mobile optimized
+        lg: "p-8", // 32px - Generous for readability
+        xl: "p-10", // 40px - Premium spacing
       },
       size: {
         auto: "",
