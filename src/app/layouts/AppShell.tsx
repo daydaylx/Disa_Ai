@@ -1,9 +1,9 @@
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { DesktopSidebar } from "../../components/layout/DesktopSidebar";
-import { GlobalNav, NAV_ITEMS } from "../../components/layout/GlobalNav";
+import { GlobalNav } from "../../components/layout/GlobalNav";
 import SideDrawer from "../../components/navigation/SideDrawer";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
@@ -31,10 +31,6 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const [conversations, setConversations] = useState(() => getAllConversations());
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const isMobile = useIsMobile();
-
-  const activePath = useMemo(() => {
-    return NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
-  }, [location.pathname]);
 
   // Refresh conversations when side drawer opens
   const handleSideDrawerOpen = () => {

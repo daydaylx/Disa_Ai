@@ -10,9 +10,23 @@ interface BottomSheetProps {
   title: string;
   children: ReactNode;
   className?: string;
+  enableTabs?: boolean;
+  tabs?: { key: string; label: string }[];
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
 }
 
-export function BottomSheet({ isOpen, onClose, title, children, className }: BottomSheetProps) {
+export function BottomSheet({
+  isOpen,
+  onClose,
+  title,
+  children,
+  className,
+  enableTabs = false,
+  tabs = [],
+  activeTab,
+  onTabChange,
+}: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -110,6 +124,28 @@ export function BottomSheet({ isOpen, onClose, title, children, className }: Bot
             <X className="h-5 w-5" />
           </button>
         </div>
+
+        {/* Tabs Navigation */}
+        {enableTabs && tabs.length > 0 && (
+          <nav className="mb-4 flex gap-2 overflow-x-auto border-b border-border bg-surface-subtle/20 px-6 pb-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => onTabChange?.(tab.key)}
+                className={cn(
+                  "focus-visible:ring-brand touch-target-preferred whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 min-w-[88px] min-h-[40px]",
+                  activeTab === tab.key
+                    ? "border-brand/50 bg-brand/15 text-brand shadow-glow-brand"
+                    : "bg-card/60 hover:bg-hover-bg hover:text-text-strong border-transparent text-text-muted",
+                )}
+                aria-selected={activeTab === tab.key}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        )}
 
         <div className="overflow-hidden">{children}</div>
       </div>

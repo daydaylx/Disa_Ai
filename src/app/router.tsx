@@ -1,8 +1,7 @@
 import { lazy } from "react";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, Route, RouterProvider, Routes } from "react-router-dom";
 
 import { ErrorBoundary } from "../components/ErrorBoundary";
-import { RouteWrapper } from "./components/RouteWrapper";
 import { AppShell } from "./layouts/AppShell";
 
 // Lazy-loaded Routes für bessere Performance
@@ -23,81 +22,36 @@ const router = createBrowserRouter(
       element: <Navigate to="/chat" replace />,
     },
     {
-      path: "/roles",
-      element: (
-        <RouteWrapper>
-          <RolesPage />
-        </RouteWrapper>
-      ),
+      path: "/chat",
+      element: <ChatPage />,
     },
     {
-      path: "/chat",
-      element: (
-        <RouteWrapper>
-          <ChatPage />
-        </RouteWrapper>
-      ),
+      path: "/roles",
+      element: <RolesPage />,
     },
     {
       path: "/models",
-      element: (
-        <RouteWrapper>
-          <ModelsPage />
-        </RouteWrapper>
-      ),
+      element: <ModelsPage />,
     },
     {
-      path: "/settings",
+      path: "/settings/*",
       element: (
-        <RouteWrapper>
-          <SettingsOverviewPage />
-        </RouteWrapper>
-      ),
-    },
-    {
-      path: "/settings/api",
-      element: (
-        <RouteWrapper>
-          <SettingsApiPage />
-        </RouteWrapper>
-      ),
-    },
-    {
-      path: "/settings/memory",
-      element: (
-        <RouteWrapper>
-          <SettingsMemoryPage />
-        </RouteWrapper>
-      ),
-    },
-    {
-      path: "/settings/filters",
-      element: (
-        <RouteWrapper>
-          <SettingsFiltersPage />
-        </RouteWrapper>
-      ),
-    },
-    {
-      path: "/settings/appearance",
-      element: (
-        <RouteWrapper>
-          <SettingsAppearancePage />
-        </RouteWrapper>
-      ),
-    },
-    {
-      path: "/settings/data",
-      element: (
-        <RouteWrapper>
-          <SettingsDataPage />
-        </RouteWrapper>
+        <AppShell>
+          <Routes>
+            <Route path="/" element={<SettingsOverviewPage />} />
+            <Route path="api" element={<SettingsApiPage />} />
+            <Route path="memory" element={<SettingsMemoryPage />} />
+            <Route path="filters" element={<SettingsFiltersPage />} />
+            <Route path="appearance" element={<SettingsAppearancePage />} />
+            <Route path="data" element={<SettingsDataPage />} />
+          </Routes>
+        </AppShell>
       ),
     },
     {
       path: "/impressum",
       element: (
-        <RouteWrapper>
+        <AppShell>
           <div className="py-8">
             <h1 className="mb-6 text-2xl font-bold">Impressum</h1>
             <div className="prose max-w-none">
@@ -120,13 +74,13 @@ const router = createBrowserRouter(
               </p>
             </div>
           </div>
-        </RouteWrapper>
+        </AppShell>
       ),
     },
     {
       path: "/datenschutz",
       element: (
-        <RouteWrapper>
+        <AppShell>
           <div className="py-8">
             <h1 className="mb-6 text-2xl font-bold">Datenschutzerklärung</h1>
             <div className="prose max-w-none">
@@ -300,7 +254,7 @@ const router = createBrowserRouter(
               </section>
             </div>
           </div>
-        </RouteWrapper>
+        </AppShell>
       ),
     },
     {

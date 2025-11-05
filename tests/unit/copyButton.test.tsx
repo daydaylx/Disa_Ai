@@ -28,7 +28,9 @@ describe("CopyButton", () => {
     setClipboard({ writeText } as unknown as Clipboard);
     render(<CopyButton text="Hallo" />);
 
-    await user.click(screen.getAllByRole("button", { name: /kopieren/i })[0]);
+    const copyButtons = screen.getAllByRole("button", { name: /kopieren/i });
+    expect(copyButtons.length).toBeGreaterThan(0);
+    await user.click(copyButtons[0] as HTMLElement);
 
     expect(writeText).toHaveBeenCalledWith("Hallo");
   });
@@ -50,7 +52,9 @@ describe("CopyButton", () => {
     setClipboard(undefined);
     render(<CopyButton text="Fallback" />);
 
-    await user.click(screen.getAllByRole("button", { name: /kopieren/i })[0]);
+    const copyButtons = screen.getAllByRole("button", { name: /kopieren/i });
+    expect(copyButtons.length).toBeGreaterThan(0);
+    await user.click(copyButtons[0] as HTMLElement);
 
     expect(execCommand).toHaveBeenCalledWith("copy");
 

@@ -1,5 +1,5 @@
 import { Menu } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BottomSheet } from "./BottomSheet";
 import { Button } from "./ui/button";
@@ -11,7 +11,7 @@ type BottomSheetEvent = CustomEvent<{
   tab?: PanelTab;
 }>;
 
-export const BottomSheetButton: React.FC = () => {
+export function BottomSheetButton() {
   const [sheetState, setSheetState] = useState<"closed" | "open">("closed");
   const [activeTab, setActiveTab] = useState<PanelTab>("history");
 
@@ -84,4 +84,4 @@ export const BottomSheetButton: React.FC = () => {
       />
     </>
   );
-};
+}

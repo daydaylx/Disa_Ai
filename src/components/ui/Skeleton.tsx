@@ -7,7 +7,7 @@ interface SkeletonProps {
   children?: React.ReactNode;
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({ className, children }) => {
+export function Skeleton({ className, children }: SkeletonProps) {
   return (
     <div
       className={cn(
@@ -28,9 +28,9 @@ export const Skeleton: React.FC<SkeletonProps> = ({ className, children }) => {
       {children}
     </div>
   );
-};
+}
 
-export const MessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false }) => {
+export function MessageSkeleton({ isUser = false }: { isUser?: boolean }) {
   return (
     <div
       className={cn(
@@ -51,9 +51,9 @@ export const MessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false
       </div>
     </div>
   );
-};
+}
 
-export const HeaderSkeleton: React.FC = () => {
+export function HeaderSkeleton() {
   return (
     <div
       className={cn(
@@ -77,7 +77,7 @@ export const HeaderSkeleton: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export const ChatListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => {
   return (
