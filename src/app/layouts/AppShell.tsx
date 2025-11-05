@@ -69,13 +69,21 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         id="main"
         key={location.pathname}
         className={cn(
-          "min-h-0 flex flex-1 flex-col overflow-y-auto px-4 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4",
-          !isMobile && "ml-64",
+          "min-h-0 flex flex-1 flex-col overflow-y-auto",
+          isMobile ? "px-4 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4" : "px-6 py-6 pl-72",
         )}
       >
-        <div className="mx-auto flex w-full max-w-2xl lg:max-w-4xl flex-1 flex-col">{children}</div>
+        <div
+          className={cn(
+            "mx-auto flex w-full flex-1 flex-col",
+            isMobile ? "max-w-2xl lg:max-w-4xl" : "max-w-6xl",
+          )}
+        >
+          {children}
+        </div>
       </main>
 
+      {/* Mobile-only components */}
       {isMobile && (
         <>
           <footer className="border-t border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)] px-4 py-4 text-xs text-[var(--color-text-secondary)]">
@@ -107,6 +115,22 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             onDeleteConversation={handleDeleteConversation}
           />
         </>
+      )}
+
+      {/* Desktop footer */}
+      {!isMobile && (
+        <footer className="border-t border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-base)] px-6 py-4 text-xs text-[var(--color-text-secondary)]">
+          <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span>Desktop Version</span>
+              <span aria-hidden="true">·</span>
+              <a href="/datenschutz" className="text-[var(--color-text-link)] hover:underline">
+                Datenschutz
+              </a>
+            </div>
+            <BuildInfo className="text-[11px]" />
+          </div>
+        </footer>
       )}
     </div>
   );

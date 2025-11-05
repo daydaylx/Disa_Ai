@@ -65,7 +65,14 @@ describe("CopyButton", () => {
         value: originalExecCommand,
       });
     } else {
-      delete (document as Document & { execCommand?: unknown }).execCommand;
+      const doc = document as Document & { execCommand?: unknown };
+      if ("execCommand" in doc) {
+        Object.defineProperty(doc, "execCommand", {
+          configurable: true,
+          writable: true,
+          value: undefined,
+        });
+      }
     }
   });
 });

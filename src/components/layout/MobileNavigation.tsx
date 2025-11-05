@@ -234,8 +234,8 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
             className={({ isActive }) => getNavItemClasses(isActive)}
             aria-label={item.label}
           >
-            <item.icon className="nav-icon h-6 w-6" aria-hidden="true" />
-            <span className="nav-label text-[11px] mt-1">{item.label}</span>
+            <item.icon className="nav-icon h-5 w-5" aria-hidden="true" />
+            <span className="nav-label text-[10px] mt-1 font-medium">{item.label}</span>
           </NavLink>
         ))}
       </div>
