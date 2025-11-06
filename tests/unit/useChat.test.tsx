@@ -33,14 +33,14 @@ describe("useChat", () => {
   it("should add a user message when appending", async () => {
     const { result } = renderHook(() => useChat());
 
-    const testMessage = { role: "user" as const, content: "Hello, world!" };
+    const testMessage = { role: "user", content: "Hello, world!" };
     result.current.append(testMessage);
 
     // Check that the user message was added
     await waitFor(() => {
       expect(result.current.messages).toHaveLength(1);
-      expect(result.current.messages[0]?.role).toBe("user");
-      expect(result.current.messages[0]?.content).toBe(testMessage.content);
+      expect(result.current.messages[0].role).toBe("user");
+      expect(result.current.messages[0].content).toBe(testMessage.content);
     });
   });
 
@@ -65,7 +65,7 @@ describe("useChat", () => {
 
     const { result } = renderHook(() => useChat());
 
-    const testMessage = { role: "user" as const, content: "Hello" };
+    const testMessage = { role: "user", content: "Hello" };
 
     await act(async () => {
       await result.current.append(testMessage);
@@ -73,9 +73,9 @@ describe("useChat", () => {
 
     // Check that we have both user and assistant messages
     expect(result.current.messages).toHaveLength(2);
-    expect(result.current.messages[0]?.role).toBe("user");
-    expect(result.current.messages[1]?.role).toBe("assistant");
-    expect(result.current.messages[1]?.content).toBe("Hello world!");
+    expect(result.current.messages[0].role).toBe("user");
+    expect(result.current.messages[1].role).toBe("assistant");
+    expect(result.current.messages[1].content).toBe("Hello world!");
   });
 
   it("should handle errors during streaming", async () => {
@@ -85,7 +85,7 @@ describe("useChat", () => {
 
     const { result } = renderHook(() => useChat());
 
-    const testMessage = { role: "user" as const, content: "Hello" };
+    const testMessage = { role: "user", content: "Hello" };
     result.current.append(testMessage);
 
     // Wait for the error to be handled

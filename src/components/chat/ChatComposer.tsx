@@ -136,7 +136,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-[var(--surface-neumorphic-floating)]/80 backdrop-blur-sm p-2 shadow-[var(--shadow-inset-subtle)] glass-panel",
+            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] backdrop-blur-sm",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -152,9 +152,7 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent py-3 px-3 text-[16px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                // Android-specific: Larger touch-friendly text and padding
-                "android-scroll touch-target-preferred",
+                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent p-2 text-[15px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
                 isQuickstartLoading && "text-text-secondary cursor-not-allowed",
               )}
               style={{ height: "48px" }}

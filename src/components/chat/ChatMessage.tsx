@@ -100,7 +100,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
   return (
     <div
       className={cn(
-        "group relative flex gap-3 px-3 py-5 animate-fade-in",
+        "group relative flex gap-3 px-3 py-5",
         isUser && "flex-row-reverse",
         isSystem && "justify-center opacity-70",
       )}

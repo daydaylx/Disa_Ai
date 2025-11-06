@@ -1,8 +1,11 @@
 import { render } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import React from "react";
+import { describe, expect, it, vi } from "vitest";
 
-import { CopyButton } from "../../src/components/ui/CopyButton";
+import CodeBlock from "../../src/components/CodeBlock";
 import { Icon } from "../../src/components/ui/Icon";
+
+// Minimaler, aber echter UI-Schnitt – keine Platzhalter
 
 describe("UI Smoke", () => {
   it("renders Icon without crashing", () => {
@@ -10,8 +13,9 @@ describe("UI Smoke", () => {
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
-  it("renders CopyButton without crashing", () => {
-    const { getByRole } = render(<CopyButton text="test" />);
+  it("renders CodeBlock and copies", async () => {
+    const onCopied = vi.fn();
+    const { getByRole } = render(<CodeBlock code={"console.log(1)"} onCopied={onCopied} />);
     const btn = getByRole("button", { name: /kopieren/i });
     expect(btn).toBeInTheDocument();
   });

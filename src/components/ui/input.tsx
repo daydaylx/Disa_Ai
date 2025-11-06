@@ -18,9 +18,9 @@ const inputVariants: Record<"neo-subtle" | "neo-medium" | "neo-dramatic" | "neo-
   };
 
 const inputSizes = {
-  sm: "h-10 min-h-[40px] px-3 py-2 text-sm touch-target", // Android minimum
-  md: "h-12 min-h-[48px] px-4 py-3 text-base touch-target-preferred", // Standard Android
-  lg: "h-14 min-h-[56px] px-5 py-4 text-base touch-target-preferred", // Comfortable Android
+  sm: "h-8 px-2 py-1 text-xs",
+  md: "h-10 px-3 py-2 text-sm",
+  lg: "h-12 px-4 py-3 text-base",
 };
 
 const inputBaseClasses = [

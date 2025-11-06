@@ -7,7 +7,7 @@ interface SkeletonProps {
   children?: React.ReactNode;
 }
 
-export function Skeleton({ className, children }: SkeletonProps) {
+export const Skeleton: React.FC<SkeletonProps> = ({ className, children }) => {
   return (
     <div
       className={cn(
@@ -28,9 +28,9 @@ export function Skeleton({ className, children }: SkeletonProps) {
       {children}
     </div>
   );
-}
+};
 
-export function MessageSkeleton({ isUser = false }: { isUser?: boolean }) {
+export const MessageSkeleton: React.FC<{ isUser?: boolean }> = ({ isUser = false }) => {
   return (
     <div
       className={cn(
@@ -51,9 +51,9 @@ export function MessageSkeleton({ isUser = false }: { isUser?: boolean }) {
       </div>
     </div>
   );
-}
+};
 
-export function HeaderSkeleton() {
+export const HeaderSkeleton: React.FC = () => {
   return (
     <div
       className={cn(
@@ -61,6 +61,7 @@ export function HeaderSkeleton() {
         "bg-[var(--surface-neumorphic-floating)]",
         "shadow-[var(--shadow-neumorphic-md)]",
         "border-b border-[var(--border-neumorphic-light)]",
+        "backdrop-blur-xl",
       )}
       aria-hidden="true"
     >
@@ -77,7 +78,7 @@ export function HeaderSkeleton() {
       </div>
     </div>
   );
-}
+};
 
 export const ChatListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => {
   return (
@@ -115,6 +116,7 @@ export const ComposerSkeleton: React.FC = () => {
         "bg-[var(--surface-neumorphic-floating)]",
         "shadow-[var(--shadow-neumorphic-lg)]",
         "border-t border-[var(--border-neumorphic-light)]",
+        "backdrop-blur-xl",
       )}
       aria-hidden="true"
     >
