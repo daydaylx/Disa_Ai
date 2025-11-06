@@ -2,18 +2,22 @@ import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatList } from "../components/chat/ChatList";
-import { DiscussionStarter } from "../components/chat/DiscussionStarter";
 import { WelcomeScreen } from "../components/chat/WelcomeScreen";
-import { Button } from "../components/ui/button";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { DISCUSSION_CARD_HINT, discussionTopicConfig } from "../config/discussion-topics";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
 import { useDiscussion } from "../hooks/useDiscussion";
+import { useIsMobile } from "../hooks/useMediaQuery";
 import { saveConversation } from "../lib/conversation-manager";
 const ChatHistorySidebar = lazy(() =>
   import("../components/chat/ChatHistorySidebar").then((module) => ({
     default: module.ChatHistorySidebar,
+  })),
+);
+const MobileChatHistorySidebar = lazy(() =>
+  import("../components/chat/MobileChatHistorySidebar").then((module) => ({
+    default: module.MobileChatHistorySidebar,
   })),
 );
 
@@ -42,6 +46,7 @@ const DISCUSSION_SECTIONS = [
 
 export default function Chat() {
   const toasts = useToasts();
+  const isMobile = useIsMobile();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastSavedSignatureRef = useRef<string | null>(null);
 
@@ -187,7 +192,14 @@ export default function Chat() {
 
       <main className="relative z-10 mx-auto w-full max-w-4xl px-4">
         {messages.length === 0 ? (
-          <WelcomeScreen newConversation={newConversation} openHistory={openHistory} />
+          <WelcomeScreen
+            discussionPreset={discussionPreset}
+            handleDiscussionPresetChange={handleDiscussionPresetChange}
+            startDiscussion={startDiscussion}
+            discussionSections={DISCUSSION_SECTIONS}
+            newConversation={newConversation}
+            openHistory={openHistory}
+          />
         ) : (
           <ChatList
             messages={messages}
@@ -206,19 +218,6 @@ export default function Chat() {
         )}
       </main>
 
-      <div className="fixed bottom-20 right-4 z-20">
-        <DiscussionStarter
-          discussionPreset={discussionPreset}
-          handleDiscussionPresetChange={handleDiscussionPresetChange}
-          startDiscussion={startDiscussion}
-          discussionSections={DISCUSSION_SECTIONS}
-        >
-          <Button variant="brand" size="lg" dramatic>
-            Start Discussion
-          </Button>
-        </DiscussionStarter>
-      </div>
-
       {/* Unified Composer Input */}
       <ChatComposer
         value={input}
@@ -232,14 +231,25 @@ export default function Chat() {
 
       {/* Responsive History Sidebar */}
       <Suspense fallback={<div>Lade Verlauf...</div>}>
-        <ChatHistorySidebar
-          isOpen={isHistoryOpen}
-          onClose={closeHistory}
-          conversations={conversations}
-          activeId={activeConversationId}
-          onSelect={selectConversation}
-          onDelete={deleteConversation}
-        />
+        {isMobile ? (
+          <MobileChatHistorySidebar
+            isOpen={isHistoryOpen}
+            onClose={closeHistory}
+            conversations={conversations}
+            activeId={activeConversationId}
+            onSelect={selectConversation}
+            onDelete={deleteConversation}
+          />
+        ) : (
+          <ChatHistorySidebar
+            isOpen={isHistoryOpen}
+            onClose={closeHistory}
+            conversations={conversations}
+            activeId={activeConversationId}
+            onSelect={selectConversation}
+            onDelete={deleteConversation}
+          />
+        )}
       </Suspense>
     </div>
   );

@@ -3,7 +3,6 @@
  */
 
 import { useEffect, useState } from "react";
-
 import { createObserverManager } from "../observer";
 
 interface PowerState {
@@ -22,6 +21,8 @@ interface PerformanceMetrics {
   cpuUsage: number;
   thermalState: "nominal" | "elevated" | "serious" | "critical";
 }
+
+import { createObserverManager } from "../observer";
 
 class PowerManager {
   private state: PowerState = {

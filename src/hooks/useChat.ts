@@ -11,8 +11,6 @@ export interface UseChatOptions {
   api?: string;
   id?: string;
   initialMessages?: ChatMessageType[];
-  initialModel?: string;
-  initialRole?: string;
   onResponse?: (response: Response) => void | Promise<void>;
   onFinish?: (message: ChatMessageType) => void;
   onError?: (error: Error) => void;
@@ -31,8 +29,6 @@ interface ChatState {
   abortController: AbortController | null;
   currentSystemPrompt: string | undefined;
   requestOptions: ChatRequestOptions | null;
-  model: string;
-  role: string;
 }
 
 type ChatAction =
@@ -45,8 +41,6 @@ type ChatAction =
   | { type: "SET_ABORT_CONTROLLER"; controller: AbortController | null }
   | { type: "SET_CURRENT_SYSTEM_PROMPT"; prompt: string | undefined }
   | { type: "SET_REQUEST_OPTIONS"; options: ChatRequestOptions | null }
-  | { type: "SET_MODEL"; model: string }
-  | { type: "SET_ROLE"; role: string }
   | { type: "RESET" };
 
 function chatReducer(state: ChatState, action: ChatAction): ChatState {
@@ -74,10 +68,6 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return { ...state, currentSystemPrompt: action.prompt };
     case "SET_REQUEST_OPTIONS":
       return { ...state, requestOptions: action.options };
-    case "SET_MODEL":
-      return { ...state, model: action.model };
-    case "SET_ROLE":
-      return { ...state, role: action.role };
     case "RESET":
       return {
         ...state,
@@ -98,8 +88,6 @@ export function useChat({
   api: _api = "/api/chat",
   id: _id,
   initialMessages = [],
-  initialModel = "gpt-4",
-  initialRole = "default",
   onResponse,
   onFinish,
   onError,
@@ -126,8 +114,6 @@ export function useChat({
     abortController: null,
     currentSystemPrompt: _systemPrompt,
     requestOptions: null,
-    model: initialModel,
-    role: initialRole,
   });
 
   const systemPromptRef = useRef<string | undefined>(_systemPrompt);
@@ -254,7 +240,7 @@ export function useChat({
           },
           {
             signal: controller.signal,
-            model: stateRef.current.model ?? requestOptions?.model ?? (body as any)?.model,
+            model: requestOptions?.model ?? (body as any)?.model,
             params: {
               temperature: requestOptions?.temperature,
               top_p: requestOptions?.top_p,
@@ -399,14 +385,6 @@ export function useChat({
     dispatch({ type: "SET_REQUEST_OPTIONS", options });
   }, []);
 
-  const setModel = useCallback((model: string) => {
-    dispatch({ type: "SET_MODEL", model });
-  }, []);
-
-  const setRole = useCallback((role: string) => {
-    dispatch({ type: "SET_ROLE", role });
-  }, []);
-
   return {
     messages: state.messages,
     input: state.input,
@@ -419,9 +397,5 @@ export function useChat({
     error: state.error,
     setCurrentSystemPrompt,
     setRequestOptions,
-    model: state.model,
-    setModel,
-    role: state.role,
-    setRole,
   };
 }

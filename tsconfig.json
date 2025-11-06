@@ -1,18 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "types": ["node"]
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "vite-env.d.ts", "tests/**/*.ts", "tests/**/*.tsx"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "coverage",
-    "playwright-report",
-    "test-results",
-    "test-artifacts",
-    "e2e"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite-env.d.ts"],
+  "exclude": ["node_modules", "dist", "build", "coverage", "e2e", "tests"]
 }

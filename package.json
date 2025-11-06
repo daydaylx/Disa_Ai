@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "generate-tokens": "node scripts/generate-tokens.mjs",
+    "prebuild": "node scripts/build-info.js && npm run generate-tokens",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
     "preview": "node ./scripts/run-preview.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:css": "node ./tools/check-css-hex.mjs",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
@@ -17,7 +19,7 @@
     "test": "vitest",
     "test:unit": "vitest run",
     "test:watch": "vitest",
-    "test:ci": "vitest run --reporter=verbose",
+    "test:ci": "vitest run",
     "e2e": "playwright test",
     "changeset": "changeset",
     "changeset:add": "changeset add",
@@ -25,17 +27,15 @@
     "changeset:publish": "changeset publish",
     "changeset:status": "changeset status",
     "analyze": "npx vite-bundle-analyzer",
-    "release": "npm run build",
     "release:check": "npm run changeset:status",
-    "release:preview": "npm run build && npm run changeset:status",
+    "release:preview": "npm run changeset:status && npm run build",
     "release:prepare": "npm run verify && npm run changeset:version",
     "verify": "npm run typecheck && npm run lint && npm run test:unit && npm run e2e",
     "clean": "rm -rf dist .vite .cache .tmp coverage test-results",
+    "postbuild": "cp public/_redirects dist/_redirects && cp public/_headers dist/_headers && node scripts/generate-routes.js",
     "prepare": "node -e \"if (process.env.NODE_ENV !== 'production') process.exit(1)\" || husky install",
     "lh": "lhci autorun --config=./lighthouserc.cjs",
-    "lint-staged": "lint-staged",
-    "tokens": "node scripts/generate-tokens.mjs",
-    "build:info": "node scripts/build-info.js"
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -62,7 +62,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.3",
-    "react-useanimations": "^2.10.0",
     "tailwind-merge": "^3.3.1",
     "workbox-precaching": "^7.3.0",
     "zod": "^4.1.0"
