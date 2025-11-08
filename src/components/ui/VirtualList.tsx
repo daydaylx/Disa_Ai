@@ -5,7 +5,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { cn } from "../../lib/cn";
+import { cn } from "../../lib/utils";
 
 interface VirtualListProps<T> {
   /** Array of items to render */

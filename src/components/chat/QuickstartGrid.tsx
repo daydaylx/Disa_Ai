@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "../../lib/icons";
 import { useCallback, useMemo, useRef } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";

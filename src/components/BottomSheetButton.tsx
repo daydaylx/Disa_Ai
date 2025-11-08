@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react";
+import { Menu } from "../../lib/icons";
 import { useEffect, useState } from "react";
 
 import { BottomSheet } from "./ui/BottomSheet";

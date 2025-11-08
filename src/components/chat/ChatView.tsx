@@ -1,4 +1,4 @@
-import { History, Plus } from "lucide-react";
+import { History, Plus } from "../../lib/icons";
 import { type RefObject } from "react";
 
 import type { ChatMessageType } from "../../types/chatMessage";

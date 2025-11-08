@@ -1,4 +1,4 @@
-import { Clock, MessageSquare, Plus, Trash2 } from "lucide-react";
+import { Clock, MessageSquare, Plus, Trash2 } from "../../lib/icons";
 
 import { Card } from "@/components/ui/card";
 

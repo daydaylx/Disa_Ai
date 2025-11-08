@@ -1,4 +1,4 @@
-import { Pin, PinOff } from "lucide-react";
+import { Pin, PinOff } from "../../lib/icons";
 import { useCallback, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";

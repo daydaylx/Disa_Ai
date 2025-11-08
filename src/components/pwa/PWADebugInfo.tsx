@@ -1,4 +1,4 @@
-import { Info } from "lucide-react";
+import { Info } from "../../lib/icons";
 import { useState } from "react";
 
 import { Card } from "@/components/ui/card";

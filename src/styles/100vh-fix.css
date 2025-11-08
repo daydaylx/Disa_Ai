@@ -1,0 +1,35 @@
+/* 100vh-Problem Fix - Issue #11
+ * 
+ * Replaces static 100vh with dynamic 100dvh to prevent jumping
+ * when mobile keyboard opens/closes.
+ */
+
+/* Fix for mobile-landscape-fix class */
+.mobile-landscape-fix {
+  /* OLD: Static viewport height causes jumping */
+  /* height: 100vh; */
+  /* min-height: 100vh; */
+  
+  /* NEW: Dynamic viewport height, no jumping on keyboard open */
+  height: auto;
+  min-height: 100dvh; /* Dynamic viewport height */
+  min-height: 100vh;  /* Fallback for older browsers */
+}
+
+/* Fix for neo-main class */
+.neo-main {
+  /* OLD: Static viewport height */
+  /* min-height: 100vh; */
+  
+  /* NEW: Dynamic viewport height */
+  min-height: 100dvh; /* Dynamic viewport height */
+  min-height: 100vh;  /* Fallback for older browsers */
+}
+
+/* Safe fallback for browsers without 100dvh support */
+@supports not (min-height: 100dvh) {
+  .mobile-landscape-fix,
+  .neo-main {
+    min-height: 100vh; /* Fallback only */
+  }
+}

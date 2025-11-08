@@ -1,4 +1,4 @@
-import { Brain, ChevronDown, ChevronRight, Plus, X } from "lucide-react";
+import { Brain, ChevronDown, ChevronRight, Plus, X } from "../../lib/icons";
 import { useState } from "react";
 
 import { Badge } from "../ui/badge";

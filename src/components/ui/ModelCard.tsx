@@ -1,4 +1,4 @@
-import { Info } from "lucide-react";
+import { Info } from "../../lib/icons";
 import { type CSSProperties, useId } from "react";
 
 import { cn } from "../../lib/utils";

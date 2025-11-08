@@ -1,4 +1,4 @@
-import { Download, Smartphone, X } from "lucide-react";
+import { Download, Smartphone, X } from "../../lib/icons";
 import { useEffect, useState } from "react";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";

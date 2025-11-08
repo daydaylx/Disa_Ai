@@ -5,7 +5,7 @@
  * Features: Sticky Header, Category Pills, Usage Analytics, Quick Actions
  */
 
-import { Filter, Hash, Search, Settings, Star, TrendingUp, Users } from "lucide-react";
+import { Filter, Hash, Search, Settings, Star, TrendingUp, Users } from "../../lib/icons";
 import { useCallback, useMemo, useState } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";

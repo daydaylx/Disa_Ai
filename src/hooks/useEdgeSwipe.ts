@@ -1,97 +1,244 @@
-// src/hooks/useEdgeSwipe.ts
-import { useEffect, useRef } from "react";
+/**
+ * Edge Swipe Hook für globale Navigation
+ * 
+ * Implementiert rechten Rand-Swipe für Haupt-Drawer
+ * - Nur aktiv auf touch devices (pointer:coarse)
+ * - Verhindert Browser-Back-Gesture-Konflikt
+ * - Konfigurierbar via edgeWidth, minDX
+ */
 
-export type Edge = "left" | "right";
+import { useEffect, useState, useRef } from "react";
+import { TouchGestureHandler } from "../lib/touch/gestures";
 
-export interface UseEdgeSwipeOptions {
-  onOpen: () => void;
-  edge?: Edge; // "right" empfohlen wegen Browser-Back-Swipe links
-  edgeWidth?: number; // px Breite der Aktivzone am Rand
-  minDX?: number; // erforderliche horizontale Strecke
-  maxDY?: number; // maximal erlaubte vertikale Abweichung
-  active?: boolean; // Toggle für Tests/Desktops
+export interface EdgeSwipeOptions {
+  edgeWidth?: number;      // Rand-Breite für Aktivierung (default: 20px)
+  minDX?: number;          // Min. horizontale Bewegung (default: 50px)
+  maxDY?: number;          // Max. vertikale Bewegung (default: 100px)
+  delay?: number;          // Verzögerung vor Aktivierung (default: 0ms)
 }
 
-export function useEdgeSwipe({
-  onOpen,
-  edge = "right",
-  edgeWidth = 24,
-  minDX = 40,
-  maxDY = 30,
-  active = true,
-}: UseEdgeSwipeOptions) {
-  const tracking = useRef(false);
-  const startX = useRef<number | null>(null);
-  const startY = useRef<number | null>(null);
+export interface EdgeSwipeState {
+  isActive: boolean;
+  isSwiping: boolean;
+  swipeProgress: number;   // 0-1 für Animation
+  startX: number;
+  currentX: number;
+}
+
+const DEFAULT_OPTIONS: Required<EdgeSwipeOptions> = {
+  edgeWidth: 20,
+  minDX: 50,
+  maxDY: 100,
+  delay: 0,
+};
+
+export function useEdgeSwipe(
+  onSwipeStart: () => void,
+  onSwipeProgress: (progress: number) => void,
+  onSwipeComplete: () => void,
+  options: EdgeSwipeOptions = {},
+): EdgeSwipeState {
+  const [state, setState] = useState<EdgeSwipeState>({
+    isActive: false,
+    isSwiping: false,
+    swipeProgress: 0,
+    startX: 0,
+    currentX: 0,
+  });
+
+  const gestureHandlerRef = useRef<TouchGestureHandler | null>(null);
+  const optionsWithDefaults = { ...DEFAULT_OPTIONS, ...options };
+  const isTouchDeviceRef = useRef(false);
 
   useEffect(() => {
-    if (!active || typeof window === "undefined") {
-      return;
+    // Prüfe ob Touch-Device
+    const checkTouchDevice = () => {
+      isTouchDeviceRef.current = window.matchMedia(
+        "(pointer: coarse) and (hover: none)"
+      ).matches;
+    };
+
+    checkTouchDevice();
+
+    // Prüfe bei Resize/Media-Query-Änderungen
+    const mediaQuery = window.matchMedia("(pointer: coarse) and (hover: none)");
+    const handleMediaQueryChange = (e: MediaQueryListEvent) => {
+      isTouchDeviceRef.current = e.matches;
+      if (!e.matches) {
+        // Deaktiviere bei Desktop
+        setState({
+          isActive: false,
+          isSwiping: false,
+          swipeProgress: 0,
+          startX: 0,
+          currentX: 0,
+        });
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    if (!isTouchDeviceRef.current) {
+      return () => {
+        mediaQuery.removeEventListener("change", handleMediaQueryChange);
+      };
     }
 
-    const onTouchStart = (e: TouchEvent) => {
-      if (e.touches.length !== 1) return;
-      const t = e.touches.item(0);
-      if (!t) return;
-      const vw = window.innerWidth;
-
-      const fromRight = edge === "right" && t.clientX >= vw - edgeWidth;
-      const fromLeft = edge === "left" && t.clientX <= edgeWidth;
-      if (!fromRight && !fromLeft) return;
-
-      tracking.current = true;
-      startX.current = t.clientX;
-      startY.current = t.clientY;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (!tracking.current || startX.current == null || startY.current == null) return;
-
-      const t = e.touches.item(0);
-      if (!t) return;
-      const dx = t.clientX - startX.current;
-      const dy = Math.abs(t.clientY - startY.current);
-
-      // vertikal? raus.
-      if (dy > maxDY) {
-        tracking.current = false;
-        return;
+    // Setup global edge swipe detection
+    const setupEdgeSwipe = () => {
+      // Global container für edge-swipe
+      const globalContainer = document.body;
+      
+      if (gestureHandlerRef.current) {
+        gestureHandlerRef.current.destroy();
       }
 
-      const ok = (edge === "right" && dx <= -minDX) || (edge === "left" && dx >= minDX);
+      gestureHandlerRef.current = new TouchGestureHandler(globalContainer, {
+        swipeThreshold: optionsWithDefaults.minDX,
+        preventDefaultSwipe: false, // Erlaube Browser-Gesten als Fallback
+      });
 
-      if (ok) {
-        // wir übernehmen die Geste, damit kein Scroll/Browserkram dazwischen funkt
-        try {
-          e.preventDefault();
-        } catch {
-          // Ignore errors from preventDefault in passive listeners
+      // Edge-swipe detection
+      let isInEdgeZone = false;
+      let swipeStartX = 0;
+      let swipeStartY = 0;
+      let swipeTimeout: number | null = null;
+
+      gestureHandlerRef.current.onSwipeGesture((event) => {
+        if (!isInEdgeZone) return;
+
+        const { direction, deltaX, deltaY } = event;
+
+        // Nur nach rechts swipen vom rechten Rand
+        if (direction !== "right" || Math.abs(deltaY) > optionsWithDefaults.maxDY) {
+          // Reset state
+          setState(prev => ({ ...prev, isSwiping: false, swipeProgress: 0 }));
+          return;
         }
-        tracking.current = false;
-        startX.current = null;
-        startY.current = null;
-        onOpen();
-      }
+
+        // Progress berechnen (0-1)
+        const progress = Math.min(Math.max(deltaX / 300, 0), 1);
+        
+        setState({
+          isActive: true,
+          isSwiping: true,
+          swipeProgress: progress,
+          startX: swipeStartX,
+          currentX: swipeStartX + deltaX,
+        });
+
+        onSwipeProgress(progress);
+
+        // Swipe abgeschlossen?
+        if (deltaX >= optionsWithDefaults.minDX) {
+          onSwipeStart();
+          onSwipeComplete();
+          
+          setState({
+            isActive: false,
+            isSwiping: false,
+            swipeProgress: 0,
+            startX: 0,
+            currentX: 0,
+          });
+        }
+      });
+
+      // Touch start - prüfe ob am rechten Rand
+      globalContainer.addEventListener("touchstart", (e) => {
+        if (e.touches.length !== 1) return;
+        
+        const touch = e.touches[0]!;
+        const screenWidth = window.innerWidth;
+        
+        // Am rechten Rand? (mit edgeWidth tolerancia)
+        if (touch.clientX >= screenWidth - optionsWithDefaults.edgeWidth) {
+          isInEdgeZone = true;
+          swipeStartX = touch.clientX;
+          swipeStartY = touch.clientY;
+
+          // Verzögerung falls konfiguriert
+          if (optionsWithDefaults.delay > 0) {
+            swipeTimeout = window.setTimeout(() => {
+              if (isInEdgeZone) {
+                setState(prev => ({ ...prev, isActive: true }));
+              }
+            }, optionsWithDefaults.delay);
+          } else {
+            setState(prev => ({ ...prev, isActive: true }));
+          }
+        }
+      }, { passive: true });
+
+      // Touch move - tracking
+      globalContainer.addEventListener("touchmove", (e) => {
+        if (!isInEdgeZone || e.touches.length !== 1) return;
+
+        const touch = e.touches[0]!;
+        const deltaY = Math.abs(touch.clientY - swipeStartY);
+
+        // Zu viel vertikale Bewegung = kein Edge-Swipe
+        if (deltaY > optionsWithDefaults.maxDY) {
+          isInEdgeZone = false;
+          if (swipeTimeout) {
+            clearTimeout(swipeTimeout);
+            swipeTimeout = null;
+          }
+          setState(prev => ({ ...prev, isActive: false, isSwiping: false }));
+        }
+      }, { passive: true });
+
+      // Touch end - cleanup
+      const handleTouchEnd = () => {
+        isInEdgeZone = false;
+        if (swipeTimeout) {
+          clearTimeout(swipeTimeout);
+          swipeTimeout = null;
+        }
+        setState(prev => ({ ...prev, isActive: false, isSwiping: false, swipeProgress: 0 }));
+      };
+
+      globalContainer.addEventListener("touchend", handleTouchEnd, { passive: true });
+      globalContainer.addEventListener("touchcancel", handleTouchEnd, { passive: true });
     };
 
-    const onTouchEnd = () => {
-      tracking.current = false;
-      startX.current = null;
-      startY.current = null;
-    };
-
-    // Wichtig: touchmove nicht passiv, sonst greift preventDefault nicht.
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
-    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+    setupEdgeSwipe();
 
     return () => {
-      if (typeof window === "undefined") return;
-      window.removeEventListener("touchstart", onTouchStart as any);
-      window.removeEventListener("touchmove", onTouchMove as any);
-      window.removeEventListener("touchend", onTouchEnd as any);
-      window.removeEventListener("touchcancel", onTouchEnd as any);
+      if (gestureHandlerRef.current) {
+        gestureHandlerRef.current.destroy();
+        gestureHandlerRef.current = null;
+      }
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
     };
-  }, [active, edge, edgeWidth, maxDY, minDX, onOpen]);
+  }, [onSwipeStart, onSwipeProgress, onSwipeComplete, optionsWithDefaults]);
+
+  return state;
+}
+
+/**
+ * Convenience Hook für einfache Drawer-Integration
+ */
+export function useEdgeSwipeDrawer(
+  isDrawerOpen: boolean,
+  onOpenDrawer: () => void,
+  onCloseDrawer: () => void,
+  options: EdgeSwipeOptions = {},
+) {
+  const handleSwipeStart = () => {
+    if (!isDrawerOpen) {
+      onOpenDrawer();
+    }
+  };
+
+  const handleSwipeProgress = (progress: number) => {
+    // Drawer-Animation würde hier passieren
+    // Progress: 0 = geschlossen, 1 = offen
+  };
+
+  const handleSwipeComplete = () => {
+    // Swipe abgeschlossen - nothing to do, drawer ist bereits geöffnet
+  };
+
+  return useEdgeSwipe(handleSwipeStart, handleSwipeProgress, handleSwipeComplete, options);
 }

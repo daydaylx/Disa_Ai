@@ -448,7 +448,8 @@ a {
 
 @media screen and (orientation: landscape) and (max-height: 500px) {
   .mobile-landscape-fix {
-    height: 100vh;
-    min-height: 100vh;
+    height: auto;
+    min-height: 100dvh;
+  min-height: 100vh;  // Fallback for older browsers
   }
 }

@@ -1,4 +1,4 @@
-import { RotateCcw, Send, Square, Zap } from "lucide-react";
+import { RotateCcw, Send, Square, Zap } from "../../lib/icons";
 import { useEffect, useRef } from "react";
 
 import { useVisualViewport } from "../../hooks/useVisualViewport";

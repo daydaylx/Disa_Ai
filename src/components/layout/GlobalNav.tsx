@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react";
+import { Menu } from "../../lib/icons";
 import { useLocation } from "react-router-dom";
 
 import { useChat } from "../../hooks/useChat";

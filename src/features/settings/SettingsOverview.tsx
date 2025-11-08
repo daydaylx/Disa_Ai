@@ -1,4 +1,4 @@
-import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "lucide-react";
+import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "../../lib/icons";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -22,7 +22,7 @@ interface OverviewCard {
 }
 
 export function SettingsOverview() {
-  const { settings } = useSettings();
+  const { settingsIcon } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const location = useLocation();

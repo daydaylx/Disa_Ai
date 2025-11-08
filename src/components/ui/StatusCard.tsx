@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle, Info, Loader2, XCircle } from "lucide-react";
+import { AlertCircle, CheckCircle, Info, Loader2, XCircle } from "../../lib/icons";
 import React from "react";
 
 import { cn } from "../../lib/utils";

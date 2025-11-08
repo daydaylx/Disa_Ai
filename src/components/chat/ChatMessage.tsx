@@ -1,5 +1,5 @@
-import { Bot, Copy, RotateCcw, User } from "lucide-react";
-import { useState } from "react";
+import { Bot, Copy, RotateCcw, User } from "../../lib/icons";
+import { useState, Suspense, lazy } from "react";
 
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
@@ -15,6 +15,61 @@ interface ChatMessageProps {
   isLast?: boolean;
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
+}
+
+// Lazy-Load Markdown Components - loaded only when needed
+const ReactMarkdown = lazy(() => import('react-markdown'));
+const { InlineMath, BlockMath } = lazy(() => 
+  import('react-katex').then(module => ({
+    default: module.InlineMath,
+    BlockMath: module.BlockMath,
+    InlineMath: module.InlineMath
+  }))
+);
+
+// Lazy-Load KaTeX CSS - loaded only when needed
+const loadKaTeXCSS = () => import('katex/dist/katex.min.css');
+
+function MarkdownRenderer({ content }: { content: string }) {
+  const [KaTeXCSS, setKaTeXCSS] = useState(false);
+
+  useState(() => {
+    // Load KaTeX CSS only when math is detected
+    if (content.includes('$') || content.includes('\\(')) {
+      loadKaTeXCSS().then(() => setKaTeXCSS(true));
+    }
+  }, [content]);
+
+  return (
+    <Suspense fallback={<div className="animate-pulse">Loading content...</div>}>
+      <ReactMarkdown
+        components={{
+          code({ node, inline, className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className || '');
+            return !inline && match ? (
+              <CodeBlock language={match[1]}>{String(children).replace(/\n$/, '')}</CodeBlock>
+            ) : (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            );
+          },
+          math: ({ value }) => (
+            <Suspense fallback={<span>Loading math...</span>}>
+              <BlockMath>{value}</BlockMath>
+            </Suspense>
+          ),
+          inlineMath: ({ value }) => (
+            <Suspense fallback={<span>Loading math...</span>}>
+              <InlineMath>{value}</InlineMath>
+            </Suspense>
+          ),
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </Suspense>
+  );
 }
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
@@ -40,47 +95,12 @@ function CodeBlock({ children, language }: { children: string; language?: string
   );
 }
 
-function parseMessageContent(content: string) {
-  const parts: Array<{ type: "text" | "code"; content: string; language?: string }> = [];
-  const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
-  let lastIndex = 0;
-  let match;
-
-  while ((match = codeBlockRegex.exec(content)) !== null) {
-    if (match.index > lastIndex) {
-      const textContent = content.slice(lastIndex, match.index);
-      if (textContent.trim()) {
-        parts.push({ type: "text", content: textContent });
-      }
-    }
-
-    parts.push({
-      type: "code",
-      content: match[2] || "",
-      language: match[1] || "text",
-    });
-
-    lastIndex = match.index + match[0].length;
-  }
-
-  if (lastIndex < content.length) {
-    const textContent = content.slice(lastIndex);
-    if (textContent.trim()) {
-      parts.push({ type: "text", content: textContent });
-    }
-  }
-
-  return parts.length > 0 ? parts : [{ type: "text" as const, content }];
-}
-
 export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessageProps) {
   const [showActions, setShowActions] = useState(false);
 
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
-
-  const parsedContent = parseMessageContent(message.content);
 
   const bubbleClass = cn(
     "max-w-[85%] text-left",
@@ -149,22 +169,12 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           className={cn(bubbleClass, "w-full")}
         >
           <div className="space-y-3">
-            {parsedContent.map((part, index) => (
-              <div key={index}>
-                {part.type === "text" ? (
-                  <div
-                    className={cn(
-                      "whitespace-pre-wrap text-[15px] leading-relaxed",
-                      isUser ? "text-white" : "text-text-primary",
-                    )}
-                  >
-                    {part.content}
-                  </div>
-                ) : (
-                  <CodeBlock language={part.language}>{part.content}</CodeBlock>
-                )}
-              </div>
-            ))}
+            {contentContainsMarkdown(message.content) ? (
+              <MarkdownRenderer content={message.content} />
+            ) : (
+              // Fallback: Simple text rendering for non-markdown content
+              <div>{message.content}</div>
+            )}
           </div>
         </Card>
 
@@ -202,4 +212,16 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
       </div>
     </div>
   );
+}
+
+// Helper function to detect markdown content
+function contentContainsMarkdown(content: string): boolean {
+  // Simple detection: check for markdown syntax
+  return content.includes('**') || 
+         content.includes('*') || 
+         content.includes('`') || 
+         content.includes('#') || 
+         content.includes('[') || 
+         content.includes('$') ||
+         content.includes('\\(');
 }

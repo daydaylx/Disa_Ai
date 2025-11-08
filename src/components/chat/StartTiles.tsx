@@ -1,4 +1,4 @@
-import { Book, Code, MessageSquare } from "lucide-react";
+import { Book, Code, MessageSquare } from "../../lib/icons";
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 
 import { cn } from "../../lib/utils";

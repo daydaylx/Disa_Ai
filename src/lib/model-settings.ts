@@ -129,7 +129,7 @@ export const VALIDATION_RULES = {
 };
 
 /**
- * Validate model settings against rules
+ * Validate model settingsIcon against rules
  */
 export function validateModelSettings(settings: Partial<ModelSettings>): {
   isValid: boolean;
@@ -199,14 +199,14 @@ export function validateModelSettings(settings: Partial<ModelSettings>): {
 }
 
 /**
- * Get current model settings from storage
+ * Get current model settingsIcon from storage
  */
 export function getCurrentModelSettings(): ModelSettings {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return { ...DEFAULT_SETTINGS };
 
-    const settings = JSON.parse(stored) as ModelSettings;
+    const settingsIcon = JSON.parse(stored) as ModelSettings;
 
     // Validate and merge with defaults
     const validation = validateModelSettings(settings);
@@ -215,7 +215,7 @@ export function getCurrentModelSettings(): ModelSettings {
       return { ...DEFAULT_SETTINGS };
     }
 
-    return { ...DEFAULT_SETTINGS, ...settings };
+    return { ...DEFAULT_SETTINGS, ...settingsIcon };
   } catch (error) {
     console.error("Failed to load model settings:", error);
     return { ...DEFAULT_SETTINGS };
@@ -223,7 +223,7 @@ export function getCurrentModelSettings(): ModelSettings {
 }
 
 /**
- * Save model settings to storage
+ * Save model settingsIcon to storage
  */
 export function saveModelSettings(settings: ModelSettings): boolean {
   const validation = validateModelSettings(settings);
@@ -348,13 +348,13 @@ export function getPreset(presetId: string): ModelSettingsPreset | null {
 export function getDefaultPreset(): ModelSettingsPreset {
   const preset = BUILTIN_PRESETS.find((p) => p.isDefault) ?? BUILTIN_PRESETS[0];
   if (!preset) {
-    throw new Error("No default model settings preset configured");
+    throw new Error("No default model settingsIcon preset configured");
   }
   return preset;
 }
 
 /**
- * Export settings and presets for backup
+ * Export settingsIcon and presets for backup
  */
 export function exportSettings() {
   const currentSettings = getCurrentModelSettings();
@@ -369,7 +369,7 @@ export function exportSettings() {
 }
 
 /**
- * Import settings and presets from backup
+ * Import settingsIcon and presets from backup
  */
 export function importSettings(importData: any): {
   success: boolean;

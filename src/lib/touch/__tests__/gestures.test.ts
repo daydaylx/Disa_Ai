@@ -174,7 +174,7 @@ describe("TouchGestureHandler", () => {
       // Note: onPinchGesture not implemented yet, skip test
       // gestureHandler.onPinchGesture(onPinch);
 
-      // Start with two fingers close together
+      // Start with two fingers closeIcon together
       const touchStart = createMockTouchEvent("touchstart", [
         { clientX: 100, clientY: 100 },
         { clientX: 110, clientY: 100 },

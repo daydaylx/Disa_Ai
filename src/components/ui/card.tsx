@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
+import { ChevronRight, MoreHorizontal } from "../../lib/icons";
 import * as React from "react";
 
 import { cn } from "../../lib/utils";

@@ -176,7 +176,7 @@ class ProgressiveEnhancementManager {
 
   private getScreenSize(): "small" | "medium" | "large" {
     const width = window.screen.width * window.devicePixelRatio;
-    if (width < 768) return "small";
+    if (width < 768 && window.matchMedia("()?pointer: coarse)?").matches) return "small";
     if (width < 1024) return "medium";
     return "large";
   }

@@ -219,7 +219,8 @@
 .neo-main {
   @apply neo-container;
   /* Main content optimizations */
-  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: 100vh;  // Fallback for older browsers
   contain: layout style;
 }
 

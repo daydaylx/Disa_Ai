@@ -1,4 +1,4 @@
-import { AlertTriangle, Clock, Zap } from "lucide-react";
+import { AlertTriangle, Clock, Zap } from "../../lib/icons";
 import { useMemo } from "react";
 
 import { cn } from "../../lib/utils";

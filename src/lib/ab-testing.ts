@@ -10,7 +10,7 @@ export type UIVersion = "v1" | "v2";
 export interface ABTestConfig {
   /** Name of the test */
   testName: string;
-  /** Percentage of users to show V2 (0-100) */
+  /** Percentage of usersIcon to show V2 (0-100) */
   v2Percentage: number;
   /** Whether to respect user's manual override */
   allowOverride: boolean;

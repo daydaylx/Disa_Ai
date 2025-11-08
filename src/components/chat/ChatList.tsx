@@ -1,4 +1,4 @@
-import { Clock, MessageSquare, Trash2 } from "lucide-react";
+import { Clock, MessageSquare, Trash2 } from "../../lib/icons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";

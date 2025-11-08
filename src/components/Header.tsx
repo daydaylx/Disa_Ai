@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react";
+import { Menu } from "../../lib/icons";
 import React from "react";
 
 import { cn } from "../lib/utils";

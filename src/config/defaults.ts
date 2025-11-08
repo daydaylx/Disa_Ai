@@ -14,7 +14,7 @@ export const STORAGE_KEYS = {
   APP_DATA: {
     /** Current chat session data */
     SESSION: "disa_session_v1",
-    /** User settings and preferences */
+    /** User settingsIcon and preferences */
     SETTINGS: "disa_settings_v1",
     /** Selected model identifier */
     MODEL: "disa_model",
@@ -24,7 +24,7 @@ export const STORAGE_KEYS = {
     STYLE: "disa_style_id",
   } as const,
 
-  /** Legacy settings key for backward compatibility */
+  /** Legacy settingsIcon key for backward compatibility */
   LEGACY_SETTINGS: {
     key: "openrouter_key",
   } as const,

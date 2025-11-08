@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { cn } from "../../lib/cn";
+import { cn } from "../../lib/utils";
 import { hapticFeedback } from "../../lib/touch/haptics";
 
 export interface Command {
@@ -318,7 +318,7 @@ export function useCommandPalette() {
   }, []);
 
   const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
+  const closeIcon = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
   return { isOpen, open, close, toggle };

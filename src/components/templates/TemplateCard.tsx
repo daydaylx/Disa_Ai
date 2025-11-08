@@ -1,4 +1,4 @@
-import { ChevronRight, Clock, Tag } from "lucide-react";
+import { ChevronRight, Clock, Tag } from "../../lib/icons";
 
 import type { ConversationTemplate } from "../../data/conversationTemplates";
 import { cn } from "../../lib/utils";

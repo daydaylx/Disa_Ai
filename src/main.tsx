@@ -1,6 +1,7 @@
 import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
 
 import ReactDOM from "react-dom/client";
+import React from "react";
 
 import App from "./App";
 import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
@@ -9,6 +10,7 @@ import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 // PWA Installation Prompt
 import { registerSW } from "./lib/pwa/registerSW";
 import { themeController } from "./styles/theme";
+import { CustomRolesProvider } from "./contexts/CustomRolesContext";
 
 // Initialize environment configuration
 try {
@@ -26,15 +28,13 @@ function initializeApp() {
   if (!el) throw new Error("#app element not found");
 
   const root = ReactDOM.createRoot(el);
-  root.render(
-    <ErrorBoundary>
-      <StartupDiagnostics>
+  return root.render(
+    <React.StrictMode>
+      <CustomRolesProvider>
         <App />
-      </StartupDiagnostics>
-    </ErrorBoundary>,
+      </CustomRolesProvider>
+    </React.StrictMode>
   );
-
-  return root;
 }
 
 // Start the app

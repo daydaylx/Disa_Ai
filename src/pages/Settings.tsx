@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 
 export default function Settings() {
   const [theme, setTheme] = useState("system");
+  const [font, setFont] = useState("Inter");
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "system";
     setTheme(savedTheme);
+    const savedFont = localStorage.getItem("font") || "Inter";
+    setFont(savedFont);
   }, []);
 
   useEffect(() => {
@@ -19,6 +22,11 @@ export default function Settings() {
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--font-family", font);
+    localStorage.setItem("font", font);
+  }, [font]);
 
   return (
     <div>
@@ -39,6 +47,21 @@ export default function Settings() {
             <option value="light">Light</option>
             <option value="dark">Dark</option>
             <option value="system">System</option>
+          </select>
+        </div>
+        <div className="mt-4">
+          <label htmlFor="font-select" className="block text-sm font-medium text-gray-700">
+            Font
+          </label>
+          <select
+            id="font-select"
+            value={font}
+            onChange={(e) => setFont(e.target.value)}
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option value="Inter">Inter</option>
+            <option value="Roboto">Roboto</option>
+            <option value="Lato">Lato</option>
           </select>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { AlertTriangle, Smartphone } from "lucide-react";
+import { AlertTriangle, Smartphone } from "../../lib/icons";
 import { useEffect, useMemo, useState } from "react";
 
 import { Card } from "@/components/ui/card";

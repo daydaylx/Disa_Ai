@@ -1,4 +1,4 @@
-import { Bot, MessageCircle, Settings, Users } from "lucide-react";
+import { Bot, MessageCircle, Settings, Users } from "../../lib/icons";
 import { NavLink } from "react-router-dom";
 
 import { cn } from "../../lib/utils";

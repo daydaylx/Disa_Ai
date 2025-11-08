@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, MessageSquare, Plus, Search, Star, X } from "lucide-react";
+import { ArrowLeft, Clock, MessageSquare, Plus, Search, Star, X } from "../../lib/icons";
 import { useEffect, useState } from "react";
 
 import { useIsMobile } from "../../hooks/useMediaQuery";

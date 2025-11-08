@@ -1,4 +1,4 @@
-import { Bot, ChevronDown, Search, User } from "lucide-react";
+import { Bot, ChevronDown, Search, User } from "../../lib/icons";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Role } from "../../data/roles";

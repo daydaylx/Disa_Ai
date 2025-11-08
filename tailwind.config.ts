@@ -47,7 +47,7 @@ const tailwindShadows = {
 };
 
 const tailwindFontFamily = {
-  sans: ["Inter", "system-ui", "sans-serif"],
+  sans: ["var(--font-family)", "system-ui", "sans-serif"],
 };
 
 const fixedFontSizes = {

@@ -8,7 +8,7 @@ import {
   Shield,
   Sparkles,
   Upload,
-} from "lucide-react";
+} from "../../lib/icons";
 import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 

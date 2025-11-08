@@ -1,4 +1,4 @@
-import { Bot } from "lucide-react";
+import { Bot } from "../../lib/icons";
 import { useEffect, useState } from "react";
 
 interface Model {

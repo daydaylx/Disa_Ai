@@ -1,4 +1,4 @@
-import { History, Plus } from "lucide-react";
+import { History, Plus } from "../../lib/icons";
 
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";

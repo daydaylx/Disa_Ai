@@ -25,7 +25,7 @@ export interface UseSwipeablePanelReturn {
  * Features:
  * - Touch-based drag to expand/collapse
  * - Automatic height management
- * - Threshold-based close detection
+ * - Threshold-based closeIcon detection
  * - Smooth transitions with GPU acceleration
  *
  * @example
