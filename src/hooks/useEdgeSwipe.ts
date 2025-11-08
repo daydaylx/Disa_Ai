@@ -101,6 +101,7 @@ export function useEdgeSwipe(
     const setupEdgeSwipe = () => {
       // Global container für edge-swipe
       const globalContainer = document.body;
+      const cleanupFns: Array<() => void> = [];
 
       if (gestureHandlerRef.current) {
         gestureHandlerRef.current.destroy();
@@ -115,7 +116,7 @@ export function useEdgeSwipe(
       let isInEdgeZone = false;
       let swipeStartX = 0;
       let swipeStartY = 0;
-      let swipeTimeout: number | null = null;
+      let swipeTimeout: ReturnType<typeof setTimeout> | null = null;
 
       gestureHandlerRef.current.onSwipeGesture((event) => {
         if (!isInEdgeZone) return;
@@ -158,55 +159,57 @@ export function useEdgeSwipe(
       });
 
       // Touch start - prüfe ob am rechten Rand
-      globalContainer.addEventListener(
-        "touchstart",
-        (e) => {
-          if (e.touches.length !== 1) return;
+      const handleTouchStart = (e: TouchEvent) => {
+        if (e.touches.length !== 1) return;
 
-          const touch = e.touches[0]!;
-          const screenWidth = window.innerWidth;
+        const touch = e.touches[0]!;
+        const screenWidth = window.innerWidth;
 
-          // Am rechten Rand? (mit edgeWidth tolerancia)
-          if (touch.clientX >= screenWidth - optionsWithDefaults.edgeWidth) {
-            isInEdgeZone = true;
-            swipeStartX = touch.clientX;
-            swipeStartY = touch.clientY;
+        // Am rechten Rand? (mit edgeWidth tolerancia)
+        if (touch.clientX >= screenWidth - optionsWithDefaults.edgeWidth) {
+          isInEdgeZone = true;
+          swipeStartX = touch.clientX;
+          swipeStartY = touch.clientY;
 
-            // Verzögerung falls konfiguriert
-            if (optionsWithDefaults.delay > 0) {
-              swipeTimeout = window.setTimeout(() => {
-                if (isInEdgeZone) {
-                  setState((prev) => ({ ...prev, isActive: true }));
-                }
-              }, optionsWithDefaults.delay);
-            } else {
-              setState((prev) => ({ ...prev, isActive: true }));
-            }
+          // Verzögerung falls konfiguriert
+          if (optionsWithDefaults.delay > 0) {
+            swipeTimeout = window.setTimeout(() => {
+              if (isInEdgeZone) {
+                setState((prev) => ({ ...prev, isActive: true }));
+              }
+            }, optionsWithDefaults.delay);
+          } else {
+            setState((prev) => ({ ...prev, isActive: true }));
           }
-        },
-        { passive: true },
+        }
+      };
+
+      globalContainer.addEventListener("touchstart", handleTouchStart, { passive: true });
+      cleanupFns.push(() =>
+        globalContainer.removeEventListener("touchstart", handleTouchStart, { passive: true }),
       );
 
       // Touch move - tracking
-      globalContainer.addEventListener(
-        "touchmove",
-        (e) => {
-          if (!isInEdgeZone || e.touches.length !== 1) return;
+      const handleTouchMove = (e: TouchEvent) => {
+        if (!isInEdgeZone || e.touches.length !== 1) return;
 
-          const touch = e.touches[0]!;
-          const deltaY = Math.abs(touch.clientY - swipeStartY);
+        const touch = e.touches[0]!;
+        const deltaY = Math.abs(touch.clientY - swipeStartY);
 
-          // Zu viel vertikale Bewegung = kein Edge-Swipe
-          if (deltaY > optionsWithDefaults.maxDY) {
-            isInEdgeZone = false;
-            if (swipeTimeout) {
-              clearTimeout(swipeTimeout);
-              swipeTimeout = null;
-            }
-            setState((prev) => ({ ...prev, isActive: false, isSwiping: false }));
+        // Zu viel vertikale Bewegung = kein Edge-Swipe
+        if (deltaY > optionsWithDefaults.maxDY) {
+          isInEdgeZone = false;
+          if (swipeTimeout) {
+            clearTimeout(swipeTimeout);
+            swipeTimeout = null;
           }
-        },
-        { passive: true },
+          setState((prev) => ({ ...prev, isActive: false, isSwiping: false }));
+        }
+      };
+
+      globalContainer.addEventListener("touchmove", handleTouchMove, { passive: true });
+      cleanupFns.push(() =>
+        globalContainer.removeEventListener("touchmove", handleTouchMove, { passive: true }),
       );
 
       // Touch end - cleanup
@@ -221,9 +224,24 @@ export function useEdgeSwipe(
 
       globalContainer.addEventListener("touchend", handleTouchEnd, { passive: true });
       globalContainer.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+      cleanupFns.push(() =>
+        globalContainer.removeEventListener("touchend", handleTouchEnd, { passive: true }),
+      );
+      cleanupFns.push(() =>
+        globalContainer.removeEventListener("touchcancel", handleTouchEnd, { passive: true }),
+      );
+      return () => {
+        cleanupFns.forEach((cleanup) => {
+          try {
+            cleanup();
+          } catch {
+            // ignore cleanup errors
+          }
+        });
+      };
     };
 
-    setupEdgeSwipe();
+    const cleanupEdgeSwipe = setupEdgeSwipe();
 
     return () => {
       if (gestureHandlerRef.current) {
@@ -231,6 +249,7 @@ export function useEdgeSwipe(
         gestureHandlerRef.current = null;
       }
       mediaQuery.removeEventListener("change", handleMediaQueryChange);
+      cleanupEdgeSwipe?.();
     };
   }, [onSwipeStart, onSwipeProgress, onSwipeComplete, optionsWithDefaults]);
 
@@ -243,7 +262,6 @@ export function useEdgeSwipe(
 export function useEdgeSwipeDrawer(
   isDrawerOpen: boolean,
   onOpenDrawer: () => void,
-  onCloseDrawer: () => void,
   options: EdgeSwipeOptions = {},
 ) {
   const handleSwipeStart = () => {

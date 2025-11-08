@@ -1,54 +1,59 @@
 import { useEffect } from "react";
 
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import {
+  activateServiceWorkerUpdate,
+  registerSW,
+  subscribeToServiceWorker,
+} from "../lib/pwa/registerSW";
 
 export function useServiceWorker() {
-  const toasts = useToasts();
+  const { push } = useToasts();
 
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      const swUrl = `/sw.js?build=${import.meta.env.VITE_BUILD_ID}`;
-      void navigator.serviceWorker.register(swUrl).then((registration) => {
-        setInterval(
-          () => {
-            void registration.update();
-          },
-          1000 * 60 * 60,
-        ); // Check for updates every hour
+    registerSW();
 
-        registration.onupdatefound = () => {
-          const installingWorker = registration.installing;
-          if (installingWorker) {
-            installingWorker.onstatechange = () => {
-              if (installingWorker.state === "installed") {
-                if (navigator.serviceWorker.controller) {
-                  toasts.push({
-                    kind: "info",
-                    title: "Update verfügbar",
-                    message: "Eine neue Version der App ist verfügbar.",
-                    action: {
-                      label: "Neu laden",
-                      onClick: () => {
-                        void installingWorker.postMessage({ type: "SKIP_WAITING" });
+    let refreshToastShown = false;
+    let offlineToastShown = false;
 
-                        // Use centralized reload manager
-                        import("../lib/utils/reload-manager")
-                          .then(({ reloadHelpers }) => {
-                            reloadHelpers.serviceWorkerUpdate(100);
-                          })
-                          .catch(() => {
-                            // Fallback
-                            window.location.reload();
-                          });
-                      },
-                    },
+    const unsubscribe = subscribeToServiceWorker((state) => {
+      if (state.needRefresh && !refreshToastShown) {
+        refreshToastShown = true;
+        push({
+          kind: "info",
+          title: "Update verfügbar",
+          message: "Eine neue Version ist verfügbar. Jetzt aktualisieren?",
+          action: {
+            label: "Neu laden",
+            onClick: () => {
+              void activateServiceWorkerUpdate().then(() => {
+                import("../lib/utils/reload-manager")
+                  .then(({ reloadHelpers }) => {
+                    reloadHelpers.serviceWorkerUpdate(0);
+                  })
+                  .catch(() => {
+                    window.location.reload();
                   });
-                }
-              }
-            };
-          }
-        };
-      });
-    }
-  }, [toasts]);
+              });
+            },
+          },
+        });
+        return;
+      }
+
+      if (state.offlineReady && !offlineToastShown) {
+        offlineToastShown = true;
+        push({
+          kind: "success",
+          title: "Offline bereit",
+          message: "Disa AI ist jetzt auch ohne Verbindung nutzbar.",
+          duration: 4000,
+        });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [push]);
 }

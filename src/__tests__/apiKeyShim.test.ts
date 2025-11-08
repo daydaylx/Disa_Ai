@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { DEFAULT_API_KEY, readApiKey, writeApiKey } from "../lib/openrouter/key";
+import { readApiKey, writeApiKey } from "../lib/openrouter/key";
 
 function clearAll() {
   // Clear canonical key
@@ -16,14 +16,13 @@ function clearAll() {
   localStorage.removeItem("openrouter_key");
   localStorage.removeItem("OPENROUTER_API_KEY");
   localStorage.removeItem("disa:openrouter:key");
-  sessionStorage.removeItem("openrouter-key-override");
 }
 
 describe("API Key Shim", () => {
   beforeEach(clearAll);
 
-  it("liefert Standard-Key wenn keiner gesetzt wurde", () => {
-    expect(readApiKey()).toBe(DEFAULT_API_KEY);
+  it("liefert null wenn kein Schlüssel vorhanden ist", () => {
+    expect(readApiKey()).toBeNull();
   });
 
   it("liest kanonischen Schlüssel zuerst", () => {

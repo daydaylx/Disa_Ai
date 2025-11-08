@@ -22,18 +22,6 @@ export function setupPwaInstallCapture() {
     deferred = null;
     notify();
   });
-
-  // SW-Registration (nur falls noch keiner läuft)
-  if ("serviceWorker" in navigator) {
-    const has = navigator.serviceWorker.controller;
-    if (!has) {
-      const { BUILD_ID } = require("./registerSW");
-      navigator.serviceWorker.register(`/sw.js?build=${BUILD_ID}`).catch((error) => {
-        console.error("[PWA] Service worker registration failed:", error);
-        // still ok - app can function without SW
-      });
-    }
-  }
 }
 
 export function canInstall() {

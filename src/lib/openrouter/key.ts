@@ -1,13 +1,6 @@
 // Canonical key name for the application
 const CANONICAL_KEY = "openrouter-key";
 
-// Default OpenRouter key provided by the application
-export const DEFAULT_API_KEY =
-  "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";
-
-// Flag to determine whether the user has overridden the default key
-const OVERRIDE_FLAG = "openrouter-key-override";
-
 // Legacy keys for backward compatibility (read-only migration)
 const LEGACY_CANDIDATES = [
   "disa_api_key",
@@ -69,17 +62,6 @@ export function readApiKey(): string | null {
     }
   }
 
-  // If no key has been set and the user has not overridden the default,
-  // fall back to the bundled default key.
-  if (!hasOverrideFlag()) {
-    try {
-      sessionStorage.setItem(CANONICAL_KEY, DEFAULT_API_KEY);
-    } catch {
-      /* ignore */
-    }
-    return DEFAULT_API_KEY;
-  }
-
   return null;
 }
 
@@ -100,8 +82,6 @@ export function writeApiKey(v: string | null | undefined): void {
     /* Safe: storage operation failed */
   }
 
-  markOverrideFlag();
-
   // Clean up any legacy keys during write operations
   for (const legacyKey of LEGACY_CANDIDATES) {
     try {
@@ -114,7 +94,6 @@ export function writeApiKey(v: string | null | undefined): void {
 }
 
 export function clearAllApiKeys(): void {
-  markOverrideFlag();
   // Clear canonical key
   try {
     sessionStorage.removeItem(CANONICAL_KEY);
@@ -136,20 +115,4 @@ export function clearAllApiKeys(): void {
 
 export function hasApiKey(): boolean {
   return Boolean(readApiKey());
-}
-
-function hasOverrideFlag(): boolean {
-  try {
-    return sessionStorage.getItem(OVERRIDE_FLAG) === "true";
-  } catch {
-    return false;
-  }
-}
-
-function markOverrideFlag(): void {
-  try {
-    sessionStorage.setItem(OVERRIDE_FLAG, "true");
-  } catch {
-    /* ignore */
-  }
 }

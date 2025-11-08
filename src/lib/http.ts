@@ -21,13 +21,6 @@ export async function fetchJson<T = any>(url: string, opts: FetchJsonOptions = {
     signal,
   } = opts;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-  if (signal) {
-    signal.addEventListener("abort", () => controller.abort());
-  }
-
   const requestHeaders: Record<string, string> = { ...headers };
 
   if (body && typeof body === "object" && !requestHeaders["Content-Type"]) {
@@ -37,6 +30,18 @@ export async function fetchJson<T = any>(url: string, opts: FetchJsonOptions = {
   const requestBody = body && typeof body === "object" ? JSON.stringify(body) : body;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const abortForwarder = () => controller.abort();
+
+    if (signal) {
+      if (signal.aborted) {
+        clearTimeout(timeoutId);
+        throw mapError(new DOMException("Aborted", "AbortError"));
+      }
+      signal.addEventListener("abort", abortForwarder, { once: true });
+    }
+
     try {
       const response = await fetch(url, {
         method,
@@ -46,6 +51,9 @@ export async function fetchJson<T = any>(url: string, opts: FetchJsonOptions = {
       });
 
       clearTimeout(timeoutId);
+      if (signal) {
+        signal.removeEventListener("abort", abortForwarder);
+      }
 
       if (!response.ok) {
         if (attempt === retries || !retryOn.includes(response.status)) {
@@ -63,6 +71,9 @@ export async function fetchJson<T = any>(url: string, opts: FetchJsonOptions = {
       }
     } catch (error) {
       clearTimeout(timeoutId);
+      if (signal) {
+        signal.removeEventListener("abort", abortForwarder);
+      }
       if (attempt === retries) {
         throw mapError(error);
       }

@@ -1,4 +1,4 @@
-import { BUILD_ID } from "./pwa/registerSW";
+import { activateServiceWorkerUpdate, getServiceWorkerState, registerSW } from "./pwa/registerSW";
 
 /**
  * Deployment Optimization Utilities
@@ -38,26 +38,40 @@ export function getDeploymentConfig(): DeploymentConfig {
 /**
  * Resource preloading for critical assets
  */
+declare global {
+  interface Window {
+    __DISA_CRITICAL_ASSETS__?: string[];
+  }
+}
+
 export function preloadCriticalAssets(): void {
-  // Preload critical CSS
-  const criticalCSS = ["/css/index.css"];
+  if (typeof window === "undefined") {
+    return;
+  }
 
-  criticalCSS.forEach((href) => {
+  const assets = Array.isArray(window.__DISA_CRITICAL_ASSETS__)
+    ? window.__DISA_CRITICAL_ASSETS__
+    : [];
+
+  if (assets.length === 0) {
+    return;
+  }
+
+  assets.forEach((asset) => {
+    if (!asset || typeof asset !== "string") return;
+
     const link = document.createElement("link");
     link.rel = "preload";
-    link.as = "style";
-    link.href = href;
-    document.head.appendChild(link);
-  });
 
-  // Preload critical JavaScript
-  const criticalJS = ["/js/vendor-react.js"];
+    if (asset.endsWith(".css")) {
+      link.as = "style";
+    } else if (asset.endsWith(".js")) {
+      link.as = "script";
+    } else {
+      link.as = "fetch";
+    }
 
-  criticalJS.forEach((href) => {
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "script";
-    link.href = href;
+    link.href = asset;
     document.head.appendChild(link);
   });
 }
@@ -67,12 +81,11 @@ export function preloadCriticalAssets(): void {
  */
 export class ServiceWorkerManager {
   private registration: ServiceWorkerRegistration | null = null;
-  private updateAvailable = false;
-  private controllerListenerAttached = false;
-  private shouldReloadOnControllerChange = false;
   private updateCheckInterval: ReturnType<typeof setInterval> | null = null;
 
   async register(): Promise<boolean> {
+    registerSW();
+
     if (!("serviceWorker" in navigator)) {
       console.warn("Service Worker not supported");
       return false;
@@ -85,107 +98,49 @@ export class ServiceWorkerManager {
     }
 
     try {
-      const swUrl = `/sw.js?build=${BUILD_ID}`;
-      this.registration = await navigator.serviceWorker.register(swUrl, {
-        scope: "/",
-      });
+      this.registration = await navigator.serviceWorker.getRegistration("/");
 
-      this.registration.addEventListener("updatefound", () => {
-        this.handleUpdateFound();
-      });
+      if (!this.updateCheckInterval) {
+        this.updateCheckInterval = setInterval(
+          () => {
+            void this.checkForUpdates();
+          },
+          30 * 60 * 1000,
+        );
+      }
 
-      // Check for updates every 30 minutes
-      this.updateCheckInterval = setInterval(
-        () => {
-          void this.checkForUpdates();
-        },
-        30 * 60 * 1000,
-      );
-
-      // eslint-disable-next-line no-console
-      console.log("Service Worker registered successfully");
-      return true;
+      return Boolean(this.registration);
     } catch (error) {
-      console.error("Service Worker registration failed:", error);
+      console.error("Service Worker lookup failed:", error);
       return false;
     }
   }
 
   async checkForUpdates(): Promise<void> {
-    if (!this.registration) return;
+    if (!("serviceWorker" in navigator)) return;
+
+    if (!this.registration) {
+      try {
+        this.registration = await navigator.serviceWorker.getRegistration("/");
+      } catch (error) {
+        console.error("Failed to get Service Worker registration:", error);
+        return;
+      }
+    }
 
     try {
-      await this.registration.update();
+      await this.registration?.update();
     } catch (error) {
       console.error("Failed to check for Service Worker updates:", error);
     }
   }
 
-  private handleUpdateFound(): void {
-    if (!this.registration) return;
-
-    const newWorker = this.registration.installing;
-    if (!newWorker) return;
-
-    newWorker.addEventListener("statechange", () => {
-      if (newWorker.state === "installed") {
-        const hasActiveController = Boolean(navigator.serviceWorker.controller);
-        if (hasActiveController) {
-          this.updateAvailable = true;
-          this.registration?.waiting?.postMessage({ type: "SKIP_WAITING" });
-          this.shouldReloadOnControllerChange = true;
-          this.notifyUpdateAvailable();
-          this.attachControllerChangeListener();
-        }
-      }
-    });
-  }
-
-  private attachControllerChangeListener(): void {
-    if (this.controllerListenerAttached) return;
-    let reloading = false;
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      if (!this.shouldReloadOnControllerChange) {
-        return;
-      }
-      if (reloading) return;
-      reloading = true;
-
-      // Use centralized reload manager
-      import("./utils/reload-manager")
-        .then(({ reloadHelpers }) => {
-          reloadHelpers.serviceWorkerUpdate(0);
-        })
-        .catch(() => {
-          // Fallback
-          window.location.reload();
-        });
-    });
-    this.controllerListenerAttached = true;
-  }
-
-  private notifyUpdateAvailable(): void {
-    // Dispatch custom event for UI to handle
-    const event = new CustomEvent("sw-update-available");
-    window.dispatchEvent(event);
-  }
-
   activateUpdate(): void {
-    if (!this.registration || !this.updateAvailable) return;
-
-    const newWorker = this.registration.waiting;
-    if (!newWorker) return;
-
-    // Send message to waiting worker to skip waiting
-    newWorker.postMessage({ type: "SKIP_WAITING" });
-
-    // Reload page when new worker takes control
-    this.shouldReloadOnControllerChange = true;
-    this.attachControllerChangeListener();
+    void activateServiceWorkerUpdate();
   }
 
   isUpdateAvailable(): boolean {
-    return this.updateAvailable;
+    return getServiceWorkerState().needRefresh;
   }
 
   destroy(): void {
@@ -193,6 +148,7 @@ export class ServiceWorkerManager {
       clearInterval(this.updateCheckInterval);
       this.updateCheckInterval = null;
     }
+    this.registration = null;
   }
 }
 
