@@ -18,30 +18,28 @@ export async function setupApiKeyStorage(page: Page) {
  */
 export async function setupChatApiMock(page: Page | APIRequestContext) {
   // Mock the OpenRouter API endpoint
-  if ("route" in page && typeof page.route === "function") {
-    // Page context
-    await page.route("**/openrouter.ai/api/v1/chat/completions", async (route: any) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          id: "mock-id",
-          object: "chat.completion.chunk",
-          created: Date.now(),
-          model: "mock-model",
-          choices: [
-            {
-              index: 0,
-              delta: {
-                content: "Hallo das ist eine Test-Antwort",
-              },
-              finish_reason: "stop",
+  await page.route("**/openrouter.ai/api/v1/chat/completions", async (route) => {
+    // Send a mock response that matches what the test expects
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        id: "mock-id",
+        object: "chat.completion.chunk",
+        created: Date.now(),
+        model: "mock-model",
+        choices: [
+          {
+            index: 0,
+            delta: {
+              content: "Hallo das ist eine Test-Antwort",
             },
-          ],
-        }),
-      });
+            finish_reason: "stop",
+          },
+        ],
+      }),
     });
-  }
+  });
 }
 
 /**

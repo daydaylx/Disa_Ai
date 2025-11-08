@@ -10,23 +10,9 @@ interface BottomSheetProps {
   title: string;
   children: ReactNode;
   className?: string;
-  enableTabs?: boolean;
-  tabs?: { key: string; label: string }[];
-  activeTab?: string;
-  onTabChange?: (tab: string) => void;
 }
 
-export function BottomSheet({
-  isOpen,
-  onClose,
-  title,
-  children,
-  className,
-  enableTabs = false,
-  tabs = [],
-  activeTab,
-  onTabChange,
-}: BottomSheetProps) {
+export function BottomSheet({ isOpen, onClose, title, children, className }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -102,73 +88,28 @@ export function BottomSheet({
         ref={sheetRef}
         className={cn(
           "mobile-chat-history-sidebar animate-in slide-in-from-bottom fixed inset-x-0 bottom-0 max-h-[90vh] duration-300",
-          // Android-optimized: Better contrast and shadows
-          "bg-[var(--surface-neumorphic-floating)] rounded-t-[var(--radius-2xl)] border-t-[var(--border-neumorphic-light)]",
-          "shadow-[var(--shadow-neumorphic-xl)]",
-          // Safe areas
+          "border-border bg-surface-card rounded-t-lg border-t",
           "pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]",
-          "android-scroll touch-target-preferred",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-center pb-3 pt-4">
-          <div className="bg-[var(--color-border-subtle)] h-1.5 w-12 rounded-full" />
+        <div className="flex justify-center pb-2 pt-3">
+          <div className="bg-surface-subtle h-1 w-10 rounded-full" />
         </div>
 
-        <div className="flex items-center justify-between border-b border-[var(--border-neumorphic-subtle)] px-6 py-4">
-          <h2
-            id="bottom-sheet-title"
-            className="text-[var(--color-text-primary)] text-lg font-semibold"
-          >
+        <div className="border-border flex items-center justify-between border-b px-6 py-4">
+          <h2 id="bottom-sheet-title" className="text-text-primary text-xl font-semibold">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className={cn(
-              "flex items-center justify-center rounded-full transition-all duration-200",
-              "min-h-[44px] min-w-[44px]", // Android touch target
-              "bg-[var(--surface-neumorphic-raised)]",
-              "text-[var(--color-text-secondary)] hover:bg-[var(--surface-neumorphic-pressed)] hover:text-[var(--color-text-primary)]",
-              "shadow-[var(--shadow-neumorphic-sm)] hover:shadow-[var(--shadow-neumorphic-md)]",
-              "active:translate-y-px touch-target",
-            )}
+            className="tap-target bg-surface-subtle text-text-secondary hover:bg-surface-subtle hover:text-text-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors touch-target"
             aria-label="Schließen"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
-
-        {/* Tabs Navigation - Android optimized */}
-        {enableTabs && tabs.length > 0 && (
-          <nav className="mb-4 flex gap-3 overflow-x-auto border-b border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)]/50 px-6 pb-3">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => onTabChange?.(tab.key)}
-                className={cn(
-                  "whitespace-nowrap rounded-full border px-5 py-3 text-sm font-medium transition-all duration-200",
-                  "min-h-[44px] min-w-[88px] touch-target-preferred", // Android touch target
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2",
-                  activeTab === tab.key
-                    ? [
-                        "border-[var(--color-brand-primary)]/60 bg-[var(--color-brand-primary)]/15 text-[var(--color-brand-primary)]",
-                        "shadow-[var(--shadow-neumorphic-sm)]",
-                      ].join(" ")
-                    : [
-                        "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)]/80",
-                        "text-[var(--color-text-secondary)] hover:bg-[var(--surface-neumorphic-raised)] hover:text-[var(--color-text-primary)]",
-                        "hover:border-[var(--border-neumorphic-light)] active:translate-y-px",
-                      ].join(" "),
-                )}
-                aria-selected={activeTab === tab.key}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-        )}
 
         <div className="overflow-hidden">{children}</div>
       </div>

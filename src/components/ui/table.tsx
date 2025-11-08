@@ -11,6 +11,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
         "bg-[var(--surface-neumorphic-floating)]",
         "shadow-[var(--shadow-neumorphic-lg)]",
         "border border-[var(--border-neumorphic-light)]",
+        "backdrop-blur-sm",
       )}
     >
       <table

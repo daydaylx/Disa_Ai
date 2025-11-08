@@ -3,7 +3,6 @@
  */
 
 import { useEffect, useState } from "react";
-
 import { createObserverManager } from "../observer";
 
 interface StorageQuota {
@@ -19,6 +18,8 @@ interface StorageCleanupResult {
   itemsRemoved: number;
   strategy: string;
 }
+
+import { createObserverManager } from "../observer";
 
 class StorageQuotaManager {
   private warningThreshold = 0.8; // 80%

@@ -28,9 +28,7 @@ describe("CopyButton", () => {
     setClipboard({ writeText } as unknown as Clipboard);
     render(<CopyButton text="Hallo" />);
 
-    const copyButtons = screen.getAllByRole("button", { name: /kopieren/i });
-    expect(copyButtons.length).toBeGreaterThan(0);
-    await user.click(copyButtons[0] as HTMLElement);
+    await user.click(screen.getAllByRole("button", { name: /kopieren/i })[0]);
 
     expect(writeText).toHaveBeenCalledWith("Hallo");
   });
@@ -52,9 +50,7 @@ describe("CopyButton", () => {
     setClipboard(undefined);
     render(<CopyButton text="Fallback" />);
 
-    const copyButtons = screen.getAllByRole("button", { name: /kopieren/i });
-    expect(copyButtons.length).toBeGreaterThan(0);
-    await user.click(copyButtons[0] as HTMLElement);
+    await user.click(screen.getAllByRole("button", { name: /kopieren/i })[0]);
 
     expect(execCommand).toHaveBeenCalledWith("copy");
 
@@ -65,14 +61,7 @@ describe("CopyButton", () => {
         value: originalExecCommand,
       });
     } else {
-      const doc = document as Document & { execCommand?: unknown };
-      if ("execCommand" in doc) {
-        Object.defineProperty(doc, "execCommand", {
-          configurable: true,
-          writable: true,
-          value: undefined,
-        });
-      }
+      delete (document as Document & { execCommand?: unknown }).execCommand;
     }
   });
 });

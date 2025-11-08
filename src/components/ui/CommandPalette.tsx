@@ -165,7 +165,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   return (
     <>
       <div
-        className="fixed inset-0 z-50 bg-[var(--surface-neumorphic-overlay)]/75"
+        className="fixed inset-0 z-50 bg-[var(--surface-neumorphic-overlay)]/75 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />

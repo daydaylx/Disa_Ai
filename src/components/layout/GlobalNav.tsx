@@ -1,10 +1,7 @@
 import { Menu } from "../../lib/icons";
 import { useLocation } from "react-router-dom";
 
-import { useChat } from "../../hooks/useChat";
 import { Button } from "../ui/button";
-import { ModelSelect } from "../ui/ModelSelect";
-import { RoleSelect } from "../ui/RoleSelect";
 
 const ROUTE_TITLES: Record<string, string> = {
   "/chat": "Chat",
@@ -36,14 +33,13 @@ interface GlobalNavProps {
 
 export function GlobalNav({ onMenuClick }: GlobalNavProps) {
   const location = useLocation();
-  const { model, setModel, role, setRole } = useChat();
 
   const title = ROUTE_TITLES[location.pathname] ?? "Disa AI";
   const activePath =
     NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
 
   const headerClass =
-    "sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_35%,transparent)] bg-gradient-to-r from-[var(--acc2)]/14 via-[var(--surface-neumorphic-floating)] 70% to-transparent shadow-[var(--shadow-neumorphic-sm)]";
+    "sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_35%,transparent)] bg-gradient-to-r from-[var(--acc2)]/14 via-[var(--surface-neumorphic-floating)] 70% to-transparent backdrop-blur-lg supports-[backdrop-filter]:backdrop-blur-md shadow-[var(--shadow-neumorphic-sm)]";
 
   return (
     <header
@@ -74,12 +70,6 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
             <Menu className="h-5 w-5" aria-hidden="true" />
           </Button>
         </div>
-      </div>
-
-      {/* Model and Role Selection */}
-      <div className="px-4 pb-3 space-y-2">
-        <ModelSelect model={model} setModel={setModel} />
-        <RoleSelect role={role} setRole={setRole} />
       </div>
     </header>
   );

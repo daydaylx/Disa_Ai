@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-12 items-center justify-center gap-1 rounded-[var(--radius-lg)] p-1 transition-colors touch-target-preferred",
+      "inline-flex h-11 items-center justify-center gap-1 rounded-[var(--radius-lg)] p-1 transition-colors",
       "bg-[var(--surface-neumorphic-raised)]",
       "border border-[var(--border-neumorphic-subtle)]",
       "shadow-[var(--shadow-inset-subtle)]",
@@ -32,7 +32,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex min-h-[44px] items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] px-4 py-2.5 text-sm font-semibold transition-[color,background,box-shadow,transform] duration-200 ease-out touch-target",
+      "inline-flex min-h-[36px] items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] px-3.5 py-2 text-sm font-semibold transition-[color,background,box-shadow,transform] duration-200 ease-out",
       "text-[var(--color-text-secondary)]",
       "hover:text-[var(--color-text-primary)]",
       "hover:bg-[var(--surface-neumorphic-floating)]",

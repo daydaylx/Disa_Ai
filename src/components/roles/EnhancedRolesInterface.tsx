@@ -162,7 +162,7 @@ function DenseRoleCard({
       tone="neo-subtle"
       elevation="subtle"
       className={cn(
-        "rounded-2xl border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_84%,transparent)] p-4 shadow-[var(--shadow-depth-1)] transition-transform duration-150 glass-panel",
+        "rounded-2xl border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_84%,transparent)] p-4 shadow-[var(--shadow-depth-1)] transition-transform duration-150",
         isActive
           ? "border-[var(--color-brand-primary)] shadow-[var(--shadow-depth-2)]"
           : "hover:-translate-y-0.5 hover:shadow-[var(--shadow-depth-2)]",
@@ -378,7 +378,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent shadow-[var(--shadow-neumorphic-sm)]">
+      <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
         {/* Search & Quick Actions Row */}
         <div className="px-4 py-3">
           <div className="flex items-center gap-3">

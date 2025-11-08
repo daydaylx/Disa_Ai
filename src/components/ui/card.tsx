@@ -23,7 +23,7 @@ const cardVariants = cva(
         "neo-inset":
           "bg-[var(--surface-neumorphic-pressed)] border-[var(--border-neumorphic-dark)] shadow-[var(--shadow-inset-medium)]",
         "neo-glass":
-          "bg-[var(--surface-neumorphic-floating)]/80 border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)]",
+          "bg-[var(--surface-neumorphic-floating)]/80 border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)] backdrop-blur-md",
       },
       elevation: {
         // === PERFORMANCE-OPTIMIZED ELEVATION SYSTEM ===
@@ -39,13 +39,13 @@ const cardVariants = cva(
 
         // === MOBILE-OPTIMIZED INTERACTIONS ===
         gentle: [
-          "cursor-pointer touch-target-preferred",
+          "cursor-pointer",
           "hover:shadow-[var(--shadow-neumorphic-md)]",
           "hover:bg-[var(--surface-neumorphic-floating)]",
-          "hover:-translate-y-1", // Larger lift for touch feedback
-          "active:shadow-[var(--shadow-inset-medium)]",
+          "hover:-translate-y-0.5",
+          "active:shadow-[var(--shadow-inset-subtle)]",
           "active:bg-[var(--surface-neumorphic-pressed)]",
-          "active:translate-y-1", // Clearer press feedback
+          "active:translate-y-0.5",
         ].join(" "),
 
         dramatic: [
@@ -96,11 +96,11 @@ const cardVariants = cva(
       },
       padding: {
         none: "",
-        xs: "p-3", // 12px - Better for mobile
-        sm: "p-4", // 16px - Touch-friendly
-        md: "p-6", // 24px - Mobile optimized
-        lg: "p-8", // 32px - Generous for readability
-        xl: "p-10", // 40px - Premium spacing
+        xs: "p-[var(--space-sm)]", // 12px
+        sm: "p-[var(--space-md)]", // 16px
+        md: "p-[var(--space-lg)]", // 24px
+        lg: "p-[var(--space-xl)]", // 32px
+        xl: "p-[var(--space-2xl)]", // 40px
       },
       size: {
         auto: "",
@@ -171,7 +171,7 @@ const cardVariants = cva(
       {
         tone: "neo-glass",
         interactive: ["gentle", "dramatic"],
-        class: "hover:bg-[var(--surface-neumorphic-floating)]/90",
+        class: "hover:bg-[var(--surface-neumorphic-floating)]/90 hover:backdrop-blur-md",
       },
       {
         tone: "neo-dramatic",

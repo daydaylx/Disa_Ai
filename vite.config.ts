@@ -102,23 +102,33 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       analyzerPlugin,
+      // Progressive PWA re-enablement - start conservative
       VitePWA({
         strategies: "injectManifest",
         srcDir: "public",
         filename: "sw.js",
         registerType: "autoUpdate",
-        injectRegister: false,
+        injectRegister: false, // We control registration manually
         devOptions: {
-          enabled: false,
+          enabled: false, // Keep disabled in dev to avoid conflicts
           type: "module",
         },
         injectManifest: {
+          // Conservative glob patterns - only essential files
           globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2}"],
-          globIgnores: ["**/node_modules/**/*", "sw.js", "workbox-*.js", "**/*.map", "stats.html"],
+          globIgnores: [
+            "**/node_modules/**/*",
+            "sw.js",
+            "workbox-*.js",
+            "**/*.map", // Skip source maps
+            "stats.html", // Skip analyzer output
+          ],
           rollupFormat: "es",
-          maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
+          // Defensive caching - don't cache everything immediately
+          maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB limit
         },
-        manifest: false,
+        manifest: false, // We have our own manifest.webmanifest
+        // Workbox configuration for stability
         workbox: {
           cleanupOutdatedCaches: true,
           skipWaiting: true,

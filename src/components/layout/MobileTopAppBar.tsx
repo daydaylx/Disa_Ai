@@ -21,7 +21,7 @@ export function MobileTopAppBar({ onMenuToggle }: MobileTopAppBarProps) {
 
   return (
     <header
-      className="app-header fixed top-0 z-20 w-full border-b border-[color-mix(in_srgb,var(--color-border-focus)_35%,transparent)] bg-gradient-to-r from-[var(--acc2)]/16 via-[var(--surface-neumorphic-floating)] to-transparent shadow-[var(--shadow-neumorphic-sm)]"
+      className="app-header fixed top-0 z-20 w-full border-b border-[color-mix(in_srgb,var(--color-border-focus)_35%,transparent)] bg-gradient-to-r from-[var(--acc2)]/16 via-[var(--surface-neumorphic-floating)] to-transparent backdrop-blur-xl shadow-[var(--shadow-neumorphic-sm)]"
       role="banner"
     >
       <div className="mx-auto flex h-16 max-w-[var(--max-content-width)] items-center justify-between px-4 pt-[env(safe-area-inset-top,0px)]">
