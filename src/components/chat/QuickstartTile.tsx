@@ -1,7 +1,7 @@
-import { Pin, PinOff } from "../../lib/icons";
 import { useCallback, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
+import { Pin, PinOff } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Card, CardContent } from "../ui/card";
 

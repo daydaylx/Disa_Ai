@@ -1,6 +1,7 @@
-import { Users, Plus } from "../../lib/icons";
 import { useState } from "react";
+
 import { useCustomRoles } from "../../contexts/CustomRolesContext";
+import { Plus, Users } from "../../lib/icons";
 import { CustomRoleModal } from "./CustomRoleModal";
 
 interface RoleSelectProps {
@@ -28,7 +29,9 @@ export function RoleSelect({ role, setRole }: RoleSelectProps) {
     <div>
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-[var(--color-text-secondary)]">Role</h2>
-        <button onClick={() => handleEdit(role)} className="text-xs text-blue-500 hover:underline">Edit</button>
+        <button onClick={() => handleEdit(role)} className="text-xs text-blue-500 hover:underline">
+          Edit
+        </button>
       </div>
       <div className="mt-2 flex items-center gap-2">
         <Users className="h-5 w-5 text-[var(--color-text-secondary)]" />
@@ -50,7 +53,11 @@ export function RoleSelect({ role, setRole }: RoleSelectProps) {
           <Plus className="h-5 w-5" />
         </button>
       </div>
-      <CustomRoleModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} role={selectedRole} />
+      <CustomRoleModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        role={selectedRole}
+      />
     </div>
   );
 }

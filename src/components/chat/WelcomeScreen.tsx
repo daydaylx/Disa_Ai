@@ -1,5 +1,4 @@
 import { History, Plus } from "../../lib/icons";
-
 import type { DiscussionPresetKey } from "../../prompts/discussion/presets";
 import { discussionPresetOptions } from "../../prompts/discussion/presets";
 import Accordion from "../ui/Accordion";

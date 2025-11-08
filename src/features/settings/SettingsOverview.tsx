@@ -1,4 +1,3 @@
-import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "../../lib/icons";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -8,6 +7,7 @@ import { Card, CardDescription, CardTitle } from "../../components/ui/card";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import { getConversationStats } from "../../lib/conversation-manager";
+import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
 
 interface OverviewCard {
@@ -22,7 +22,7 @@ interface OverviewCard {
 }
 
 export function SettingsOverview() {
-  const { settingsIcon } = useSettings();
+  const { settingsIcon: _settingsIcon } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const location = useLocation();

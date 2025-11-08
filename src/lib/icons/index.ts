@@ -8,9 +8,9 @@
 // Vollständige Lucide-React-Sammlung: 1,500+ Icons
 // Disa AI nutzt: 55 Icons → 96% Reduktion!
 
-export { 
+export {
   AlertCircle,
-  AlertTriangle, 
+  AlertTriangle,
   ArrowLeft,
   Book,
   BookOpenCheck,
@@ -26,6 +26,8 @@ export {
   Code,
   Copy,
   Download,
+  Eye,
+  EyeOff,
   Filter,
   Hash,
   History,
@@ -61,5 +63,5 @@ export {
   Waves,
   X,
   XCircle,
-  Zap
-} from 'lucide-react';
+  Zap,
+} from "lucide-react";

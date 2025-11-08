@@ -1,6 +1,6 @@
-import { Menu } from "../../lib/icons";
 import { useEffect, useState } from "react";
 
+import { Menu } from "../lib/icons";
 import { BottomSheet } from "./ui/BottomSheet";
 import { Button } from "./ui/button";
 
@@ -30,7 +30,7 @@ export function BottomSheetButton() {
     setSheetState("closed");
   };
 
-  const changeTab = (tab: string) => {
+  const _changeTab = (tab: string) => {
     const tabKey = tab as PanelTab;
     setActiveTab(tabKey);
     // If the sheet is closed, opening it to the selected tab
@@ -86,15 +86,7 @@ export function BottomSheetButton() {
       </Button>
 
       {/* Bottom Sheet Component */}
-      <BottomSheet
-        isOpen={sheetState === "open"}
-        onClose={closeSheet}
-        title={currentTabLabel}
-        enableTabs={true}
-        tabs={TABS}
-        activeTab={activeTab}
-        onTabChange={changeTab}
-      >
+      <BottomSheet isOpen={sheetState === "open"} onClose={closeSheet} title={currentTabLabel}>
         <div className="flex-1 overflow-y-auto">
           <div className="p-2 text-sm text-[var(--color-text-muted)]">
             {currentTabLabel} Inhalt wird hier angezeigt

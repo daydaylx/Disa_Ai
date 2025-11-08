@@ -1,6 +1,6 @@
-import { Book, Code, MessageSquare } from "../../lib/icons";
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 
+import { Book, Code, MessageSquare } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";

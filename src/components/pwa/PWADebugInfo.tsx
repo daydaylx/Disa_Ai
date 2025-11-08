@@ -1,9 +1,9 @@
-import { Info } from "../../lib/icons";
 import { useState } from "react";
 
 import { Card } from "@/components/ui/card";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
+import { Info } from "../../lib/icons";
 import { Button } from "../ui/button";
 
 function isStandalone(): boolean {

@@ -1,16 +1,15 @@
 import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
 
-import ReactDOM from "react-dom/client";
 import React from "react";
+import ReactDOM from "react-dom/client";
 
 import App from "./App";
-import { ErrorBoundary, StartupDiagnostics } from "./components/ErrorBoundary";
 import { initEnvironment } from "./config/env";
+import { CustomRolesProvider } from "./contexts/CustomRolesContext";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 // PWA Installation Prompt
 import { registerSW } from "./lib/pwa/registerSW";
 import { themeController } from "./styles/theme";
-import { CustomRolesProvider } from "./contexts/CustomRolesContext";
 
 // Initialize environment configuration
 try {
@@ -33,7 +32,7 @@ function initializeApp() {
       <CustomRolesProvider>
         <App />
       </CustomRolesProvider>
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 }
 

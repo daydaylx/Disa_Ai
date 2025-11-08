@@ -1,6 +1,6 @@
-import { Brain, ChevronDown, ChevronRight, Plus, X } from "../../lib/icons";
 import { useState } from "react";
 
+import { Brain, ChevronDown, ChevronRight, Plus, X } from "../../lib/icons";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";

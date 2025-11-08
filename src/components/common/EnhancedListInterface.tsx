@@ -5,9 +5,9 @@
  * lists with search, filtering, favorites, and grid display.
  */
 
-import { Filter, Search, Settings, Star } from "../../lib/icons";
 import React, { useCallback, useMemo, useState } from "react";
 
+import { Filter, Search, Settings, Star } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import { useToasts } from "../ui/toast/ToastsProvider";

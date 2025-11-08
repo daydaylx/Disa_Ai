@@ -1,6 +1,5 @@
-import { ChevronRight, Clock, Tag } from "../../lib/icons";
-
 import type { ConversationTemplate } from "../../data/conversationTemplates";
+import { ChevronRight, Clock, Tag } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";

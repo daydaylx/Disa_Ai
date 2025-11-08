@@ -1,13 +1,13 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface CustomRole {
   id: string;
   name: string;
   systemPrompt: string;
   theme: {
-    '--color-brand-primary': string;
-    '--color-brand-light': string;
-    '--color-brand-dark': string;
+    "--color-brand-primary": string;
+    "--color-brand-light": string;
+    "--color-brand-dark": string;
   };
 }
 
@@ -24,7 +24,7 @@ export function CustomRolesProvider({ children }: { children: React.ReactNode })
   const [customRoles, setCustomRoles] = useState<CustomRole[]>([]);
 
   useEffect(() => {
-    const savedRoles = localStorage.getItem('customRoles');
+    const savedRoles = localStorage.getItem("customRoles");
     if (savedRoles) {
       setCustomRoles(JSON.parse(savedRoles));
     }
@@ -33,19 +33,19 @@ export function CustomRolesProvider({ children }: { children: React.ReactNode })
   const addCustomRole = (role: CustomRole) => {
     const newRoles = [...customRoles, role];
     setCustomRoles(newRoles);
-    localStorage.setItem('customRoles', JSON.stringify(newRoles));
+    localStorage.setItem("customRoles", JSON.stringify(newRoles));
   };
 
   const updateCustomRole = (role: CustomRole) => {
     const newRoles = customRoles.map((r) => (r.id === role.id ? role : r));
     setCustomRoles(newRoles);
-    localStorage.setItem('customRoles', JSON.stringify(newRoles));
+    localStorage.setItem("customRoles", JSON.stringify(newRoles));
   };
 
   const deleteCustomRole = (id: string) => {
     const newRoles = customRoles.filter((r) => r.id !== id);
     setCustomRoles(newRoles);
-    localStorage.setItem('customRoles', JSON.stringify(newRoles));
+    localStorage.setItem("customRoles", JSON.stringify(newRoles));
   };
 
   return (
@@ -65,7 +65,7 @@ export function CustomRolesProvider({ children }: { children: React.ReactNode })
 export function useCustomRoles() {
   const context = useContext(CustomRolesContext);
   if (!context) {
-    throw new Error('useCustomRoles must be used within a CustomRolesProvider');
+    throw new Error("useCustomRoles must be used within a CustomRolesProvider");
   }
   return context;
 }

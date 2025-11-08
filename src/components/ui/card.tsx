@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { ChevronRight, MoreHorizontal } from "../../lib/icons";
 import * as React from "react";
 
+import { ChevronRight, MoreHorizontal } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Button } from "./button";
 

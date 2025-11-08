@@ -1,5 +1,6 @@
-import { Bot } from "../../lib/icons";
 import { useEffect, useState } from "react";
+
+import { Bot } from "../../lib/icons";
 
 interface Model {
   id: string;

@@ -1,7 +1,8 @@
-import { Menu } from "../../lib/icons";
 import React from "react";
 
+import { Menu } from "../lib/icons";
 import { cn } from "../lib/utils";
+import { FeatureFlagIndicator } from "./dev/FeatureFlagPanel";
 import { ThemeToggle } from "./navigation/ThemeToggle";
 import { Button } from "./ui/button";
 
@@ -240,6 +241,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Enhanced Action Buttons */}
         <div className="flex shrink-0 items-center gap-2">
+          <FeatureFlagIndicator />
           <Button
             type="button"
             variant="neo-subtle"

@@ -5,12 +5,12 @@
  * Features: Sticky Header, Category Pills, Usage Analytics, Quick Actions
  */
 
-import { Filter, Hash, Search, Settings, Star, TrendingUp, Users } from "../../lib/icons";
 import { useCallback, useMemo, useState } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
+import { Filter, Hash, Search, Settings, Star, TrendingUp, Users } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import type { EnhancedRole, FilterState } from "../../types/enhanced-interfaces";
 import { migrateRole } from "../../types/enhanced-interfaces";

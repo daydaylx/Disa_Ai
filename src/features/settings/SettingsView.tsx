@@ -1,14 +1,3 @@
-import {
-  BookOpenCheck,
-  Download,
-  Eye,
-  EyeOff,
-  KeyRound,
-  RefreshCw,
-  Shield,
-  Sparkles,
-  Upload,
-} from "../../lib/icons";
 import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -27,6 +16,17 @@ import {
   getConversationStats,
   importConversations,
 } from "../../lib/conversation-manager";
+import {
+  BookOpenCheck,
+  Download,
+  Eye,
+  EyeOff,
+  KeyRound,
+  RefreshCw,
+  Shield,
+  Sparkles,
+  Upload,
+} from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
 
 export type SettingsSectionKey = "api" | "memory" | "filters" | "appearance" | "data";

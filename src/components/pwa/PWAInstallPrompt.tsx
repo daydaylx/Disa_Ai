@@ -1,7 +1,7 @@
-import { Download, Smartphone, X } from "../../lib/icons";
 import { useEffect, useState } from "react";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
+import { Download, Smartphone, X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import { useToasts } from "../ui/toast/ToastsProvider";

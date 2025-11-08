@@ -1,8 +1,8 @@
-import { Sparkles } from "../../lib/icons";
 import { useCallback, useMemo, useRef } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
 import { useQuickstartManager } from "../../hooks/useQuickstartManager";
+import { Sparkles } from "../../lib/icons";
 import { Button } from "../ui/button";
 import { ChatStatusBanner } from "./ChatStatusBanner";
 import { createRoleQuickstarts } from "./quickstartHelpers";

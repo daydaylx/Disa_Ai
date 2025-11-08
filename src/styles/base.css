@@ -450,6 +450,6 @@ a {
   .mobile-landscape-fix {
     height: auto;
     min-height: 100dvh;
-  min-height: 100vh;  // Fallback for older browsers
+    min-height: 100vh; /* Fallback for older browsers */
   }
 }

@@ -1,6 +1,6 @@
-import { AlertCircle, CheckCircle, Info, Loader2, XCircle } from "../../lib/icons";
 import React from "react";
 
+import { AlertCircle, CheckCircle, Info, Loader2, XCircle } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Card, CardContent, CardHeader, type CardProps, CardTitle } from "./card";
 

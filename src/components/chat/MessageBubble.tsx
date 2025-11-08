@@ -1,5 +1,4 @@
 import { Copy, ThumbsDown, ThumbsUp } from "../../lib/icons";
-
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types";
 import { Button } from "../ui/button";

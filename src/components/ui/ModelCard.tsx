@@ -1,6 +1,6 @@
-import { Info } from "../../lib/icons";
 import { type CSSProperties, useId } from "react";
 
+import { Info } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { getCategoryData, normalizeCategoryKey } from "../../utils/category-mapping";
 import { formatPricePerK } from "../../utils/pricing";

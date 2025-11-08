@@ -1,9 +1,9 @@
-import { Bot, ChevronDown, Search, User } from "../../lib/icons";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Role } from "../../data/roles";
 import { getRoles, loadRoles } from "../../data/roles";
 import { useSettings } from "../../hooks/useSettings";
+import { Bot, ChevronDown, Search, User } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";

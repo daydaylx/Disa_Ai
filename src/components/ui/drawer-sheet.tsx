@@ -1,8 +1,8 @@
-import { X } from "../../lib/icons";
 import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
+import { X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
 interface DrawerSheetProps {

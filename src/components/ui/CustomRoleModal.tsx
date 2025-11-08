@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useCustomRoles } from '../../contexts/CustomRolesContext';
+import { useState } from "react";
+
+import { useCustomRoles } from "../../contexts/CustomRolesContext";
 
 interface CustomRoleModalProps {
   isOpen: boolean;
@@ -9,9 +10,12 @@ interface CustomRoleModalProps {
 
 export function CustomRoleModal({ isOpen, onClose, role }: CustomRoleModalProps) {
   const { addCustomRole, updateCustomRole } = useCustomRoles();
-  const [name, setName] = useState(role ? role.name : '');
-  const [systemPrompt, setSystemPrompt] = useState(role ? role.systemPrompt : '');
-  const [primaryColor, setPrimaryColor] = useState(role ? role.theme['--color-brand-primary'] : '#4b63ff');
+  const [name, setName] = useState(role ? role.name : "");
+  const [systemPrompt, setSystemPrompt] = useState(role ? role.systemPrompt : "");
+  // eslint-disable-next-line no-restricted-syntax
+  const [primaryColor, setPrimaryColor] = useState(
+    role ? role.theme["--color-brand-primary"] : "#4b63ff",
+  );
 
   const handleSubmit = () => {
     const newRole = {
@@ -19,9 +23,9 @@ export function CustomRoleModal({ isOpen, onClose, role }: CustomRoleModalProps)
       name,
       systemPrompt,
       theme: {
-        '--color-brand-primary': primaryColor,
-        '--color-brand-light': `${primaryColor}80`,
-        '--color-brand-dark': `${primaryColor}bf`,
+        "--color-brand-primary": primaryColor,
+        "--color-brand-light": `${primaryColor}80`,
+        "--color-brand-dark": `${primaryColor}bf`,
       },
     };
 
@@ -39,7 +43,9 @@ export function CustomRoleModal({ isOpen, onClose, role }: CustomRoleModalProps)
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-8 rounded-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">{role ? 'Edit Custom Role' : 'Create Custom Role'}</h2>
+        <h2 className="text-2xl font-bold mb-4">
+          {role ? "Edit Custom Role" : "Create Custom Role"}
+        </h2>
         <div className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -82,8 +88,11 @@ export function CustomRoleModal({ isOpen, onClose, role }: CustomRoleModalProps)
           <button onClick={onClose} className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300">
             Cancel
           </button>
-          <button onClick={handleSubmit} className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600">
-            {role ? 'Save' : 'Create'}
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+          >
+            {role ? "Save" : "Create"}
           </button>
         </div>
       </div>

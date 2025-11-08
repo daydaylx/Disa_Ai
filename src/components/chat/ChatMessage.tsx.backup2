@@ -1,9 +1,6 @@
-import { lazy, Suspense, useEffect, useState } from "react";
-
-import { useFeatureFlag } from "../../hooks/useFeatureFlags";
-import { highlightCode } from "../../lib/highlighting/lazySyntaxHighlighter";
-import { loadPrismCSS } from "../../lib/highlighting/prismTheme";
 import { Bot, Copy, RotateCcw, User } from "../../lib/icons";
+import { useState, Suspense, lazy } from "react";
+
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -21,18 +18,18 @@ interface ChatMessageProps {
 }
 
 // Lazy-Load Markdown Components - loaded only when needed
-const ReactMarkdown = lazy(() => import("react-markdown"));
+const ReactMarkdown = lazy(() => import('react-markdown'));
 
 // Lazy-Load KaTeX CSS - loaded only when needed
-const loadKaTeXCSS = () => import("katex/dist/katex.min.css");
+const loadKaTeXCSS = () => import('katex/dist/katex.min.css');
 
 function MarkdownRenderer({ content }: { content: string }) {
-  const [, setKaTeXCSS] = useState(false);
+  const [KaTeXCSS, setKaTeXCSS] = useState(false);
 
-  useEffect(() => {
+  useState(() => {
     // Load KaTeX CSS only when math is detected
-    if (content.includes("$") || content.includes("\\(")) {
-      void loadKaTeXCSS().then(() => setKaTeXCSS(true));
+    if (content.includes('$') || content.includes('\\(')) {
+      loadKaTeXCSS().then(() => setKaTeXCSS(true));
     }
   }, [content]);
 
@@ -40,17 +37,26 @@ function MarkdownRenderer({ content }: { content: string }) {
     <Suspense fallback={<div className="animate-pulse">Loading content...</div>}>
       <ReactMarkdown
         components={{
-          // @ts-expect-error - ReactMarkdown component types sind komplex
-          code({ node: _node, inline, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || "");
+          code({ node, inline, className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className || '');
             return !inline && match ? (
-              <CodeBlock language={match[1]}>{String(children).replace(/\n$/, "")}</CodeBlock>
+              <CodeBlock language={match[1]}>{String(children).replace(/\n$/, '')}</CodeBlock>
             ) : (
               <code className={className} {...props}>
                 {children}
               </code>
             );
           },
+          math: ({ value }) => (
+            <Suspense fallback={<span>Loading math...</span>}>
+              <BlockMath>{value}</BlockMath>
+            </Suspense>
+          ),
+          inlineMath: ({ value }) => (
+            <Suspense fallback={<span>Loading math...</span>}>
+              <InlineMath>{value}</InlineMath>
+            </Suspense>
+          ),
         }}
       >
         {content}
@@ -60,67 +66,24 @@ function MarkdownRenderer({ content }: { content: string }) {
 }
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
-  const isLazyHighlighterEnabled = useFeatureFlag("lazyHighlighter");
-  const [highlightedCode, setHighlightedCode] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [highlightSuccess, setHighlightSuccess] = useState(false);
-
-  useEffect(() => {
-    if (!isLazyHighlighterEnabled || !language || language === "text") {
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Lazy load CSS first, then highlight
-    loadPrismCSS()
-      .then(() => highlightCode(children, language))
-      .then((result) => {
-        if (result.success) {
-          setHighlightedCode(result.highlighted);
-          setHighlightSuccess(true);
-        }
-      })
-      .catch((error) => {
-        console.warn("[CodeBlock] Highlighting failed:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [children, language, isLazyHighlighterEnabled]);
-
-  const handleCopy = () => {
-    void navigator.clipboard?.writeText(children);
-  };
-
   return (
-    <div className="code-block-container">
-      <div className="code-block-header">
-        <span className="code-block-language">
-          {language || "text"}
-          {isLazyHighlighterEnabled && highlightSuccess && (
-            <span className="ml-2 text-xs opacity-75">✨ highlighted</span>
-          )}
+    <div className="border-border bg-surface-subtle relative my-4 overflow-hidden rounded-lg border">
+      <div className="border-border flex items-center justify-between border-b px-4 py-2">
+        <span className="text-text-secondary text-xs font-medium uppercase tracking-wide">
+          {language || "Text"}
         </span>
-        <button className="code-block-copy" onClick={handleCopy} title="Copy code">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+          onClick={() => void navigator.clipboard?.writeText(children)}
+        >
           <Copy className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
-
-      {isLoading ? (
-        <div className="code-block-loading">Loading syntax highlighting</div>
-      ) : highlightedCode && highlightSuccess ? (
-        <pre className={`language-${language}`}>
-          <code
-            className={`language-${language}`}
-            dangerouslySetInnerHTML={{ __html: highlightedCode }}
-          />
-        </pre>
-      ) : (
-        <pre className="overflow-x-auto p-4">
-          <code className="text-sm leading-relaxed font-mono">{children}</code>
-        </pre>
-      )}
+      <pre className="overflow-x-auto p-4">
+        <code className="text-text-primary text-sm leading-relaxed">{children}</code>
+      </pre>
     </div>
   );
 }
@@ -247,13 +210,11 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
 // Helper function to detect markdown content
 function contentContainsMarkdown(content: string): boolean {
   // Simple detection: check for markdown syntax
-  return (
-    content.includes("**") ||
-    content.includes("*") ||
-    content.includes("`") ||
-    content.includes("#") ||
-    content.includes("[") ||
-    content.includes("$") ||
-    content.includes("\\(")
-  );
+  return content.includes('**') || 
+         content.includes('*') || 
+         content.includes('`') || 
+         content.includes('#') || 
+         content.includes('[') || 
+         content.includes('$') ||
+         content.includes('\\(');
 }

@@ -1,4 +1,3 @@
-import { Clock, MessageSquare, Trash2 } from "../../lib/icons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { QuickstartAction } from "../../config/quickstarts";
@@ -7,6 +6,7 @@ import { useQuickstartFlow } from "../../hooks/useQuickstartFlow";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import type { Conversation } from "../../lib/conversation-manager";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
+import { Clock, MessageSquare, Trash2 } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { RoleCard } from "../studio/RoleCard";

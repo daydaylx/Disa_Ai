@@ -1,7 +1,7 @@
-import { X } from "../../lib/icons";
 import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 
+import { X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
 interface BottomSheetProps {

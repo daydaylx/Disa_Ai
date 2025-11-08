@@ -1,16 +1,144 @@
 name: CI
 on: [push, pull_request]
+
 jobs:
-  e2e:
+  # Matrix für Node-Versionen (Workflow-Regel: Node 20 & 22)
+  test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15 # Maximum 15 minutes for entire job
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: [20, 22]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version-file: ".nvmrc"
+          node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm ci
-      - run: npx playwright install --with-deps
-      - name: Run E2E Tests
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript Check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit Tests
+        run: npm run test:ci
+
+  # Bundle-Größe & Performance Budget (Workflow-Regel #17)
+  build-and-budget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Check Bundle Size Budget
+        run: |
+          # Extrahiere Entry-Bundle-Größe und prüfe gegen 300 KB Limit
+          ENTRY_SIZE=$(ls -la dist/assets/js/index-*.js | awk '{print $5}')
+          ENTRY_SIZE_KB=$((ENTRY_SIZE / 1024))
+          echo "Entry Bundle Size: ${ENTRY_SIZE_KB} KB"
+
+          if [ $ENTRY_SIZE_KB -gt 300 ]; then
+            echo "❌ Entry bundle size ${ENTRY_SIZE_KB} KB exceeds 300 KB limit!"
+            exit 1
+          else
+            echo "✅ Entry bundle size ${ENTRY_SIZE_KB} KB is within 300 KB limit"
+          fi
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            .audit/
+          retention-days: 7
+
+  # Mobile E2E Tests (Workflow-Regel: Mobile-PWA Fokus)
+  e2e-mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build-and-budget
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright with dependencies
+        run: npx playwright install --with-deps
+
+      - name: Run Mobile E2E Tests
         run: npm run e2e
+
+      - name: Upload E2E Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  # Lighthouse Mobile Audit (Performance Budget)
+  lighthouse-mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build-and-budget
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Run Lighthouse Mobile CI
+        run: npm run lh
+
+      - name: Check Mobile Performance Budget
+        run: |
+          # LCP < 2.5s Check
+          LCP=$(jq -r '.audits."largest-contentful-paint".numericValue' .lighthouseci/lhr-*.json | head -1)
+          LCP_MS=$(echo "$LCP * 1000" | bc)
+          echo "Mobile LCP: ${LCP_MS} ms"
+
+          if (( $(echo "$LCP > 2500" | bc -l) )); then
+            echo "❌ Mobile LCP ${LCP_MS}ms exceeds 2500ms limit!"
+            exit 1
+          else
+            echo "✅ Mobile LCP ${LCP_MS}ms is within 2500ms limit"
+          fi
+
+      - name: Upload Lighthouse Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 30

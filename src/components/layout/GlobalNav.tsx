@@ -1,6 +1,6 @@
-import { Menu } from "../../lib/icons";
 import { useLocation } from "react-router-dom";
 
+import { Menu } from "../../lib/icons";
 import { Button } from "../ui/button";
 
 const ROUTE_TITLES: Record<string, string> = {

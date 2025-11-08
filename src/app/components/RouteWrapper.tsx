@@ -1,4 +1,4 @@
-import { Suspense, type ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { AppShell } from "../layouts/AppShell";

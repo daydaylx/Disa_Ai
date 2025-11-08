@@ -1,7 +1,7 @@
-import { RotateCcw, Send, Square, Zap } from "../../lib/icons";
 import { useEffect, useRef } from "react";
 
 import { useVisualViewport } from "../../hooks/useVisualViewport";
+import { RotateCcw, Send, Square, Zap } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";

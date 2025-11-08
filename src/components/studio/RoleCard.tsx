@@ -1,6 +1,6 @@
-import { Info } from "../../lib/icons";
 import { forwardRef, type HTMLAttributes, useState } from "react";
 
+import { Info } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { getCategoryData, normalizeCategoryKey } from "../../utils/category-mapping";
 import { Card } from "../ui/card";

@@ -1,7 +1,8 @@
-import { AlertTriangle, Smartphone } from "../../lib/icons";
 import { useEffect, useMemo, useState } from "react";
 
 import { Card } from "@/components/ui/card";
+
+import { AlertTriangle, Smartphone } from "../../lib/icons";
 
 interface MobileOnlyGateProps {
   children: React.ReactNode;
