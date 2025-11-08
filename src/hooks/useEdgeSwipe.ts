@@ -116,7 +116,7 @@ export function useEdgeSwipe(
       let isInEdgeZone = false;
       let swipeStartX = 0;
       let swipeStartY = 0;
-      let swipeTimeout: ReturnType<typeof setTimeout> | null = null;
+      let swipeTimeout: number | null = null;
 
       gestureHandlerRef.current.onSwipeGesture((event) => {
         if (!isInEdgeZone) return;
@@ -184,10 +184,8 @@ export function useEdgeSwipe(
         }
       };
 
-      globalContainer.addEventListener("touchstart", handleTouchStart, { passive: true });
-      cleanupFns.push(() =>
-        globalContainer.removeEventListener("touchstart", handleTouchStart, { passive: true }),
-      );
+      globalContainer.addEventListener("touchstart", handleTouchStart);
+      cleanupFns.push(() => globalContainer.removeEventListener("touchstart", handleTouchStart));
 
       // Touch move - tracking
       const handleTouchMove = (e: TouchEvent) => {
@@ -199,37 +197,31 @@ export function useEdgeSwipe(
         // Zu viel vertikale Bewegung = kein Edge-Swipe
         if (deltaY > optionsWithDefaults.maxDY) {
           isInEdgeZone = false;
-          if (swipeTimeout) {
-            clearTimeout(swipeTimeout);
+          if (swipeTimeout !== null) {
+            window.clearTimeout(swipeTimeout);
             swipeTimeout = null;
           }
           setState((prev) => ({ ...prev, isActive: false, isSwiping: false }));
         }
       };
 
-      globalContainer.addEventListener("touchmove", handleTouchMove, { passive: true });
-      cleanupFns.push(() =>
-        globalContainer.removeEventListener("touchmove", handleTouchMove, { passive: true }),
-      );
+      globalContainer.addEventListener("touchmove", handleTouchMove);
+      cleanupFns.push(() => globalContainer.removeEventListener("touchmove", handleTouchMove));
 
       // Touch end - cleanup
       const handleTouchEnd = () => {
         isInEdgeZone = false;
-        if (swipeTimeout) {
-          clearTimeout(swipeTimeout);
+        if (swipeTimeout !== null) {
+          window.clearTimeout(swipeTimeout);
           swipeTimeout = null;
         }
         setState((prev) => ({ ...prev, isActive: false, isSwiping: false, swipeProgress: 0 }));
       };
 
-      globalContainer.addEventListener("touchend", handleTouchEnd, { passive: true });
-      globalContainer.addEventListener("touchcancel", handleTouchEnd, { passive: true });
-      cleanupFns.push(() =>
-        globalContainer.removeEventListener("touchend", handleTouchEnd, { passive: true }),
-      );
-      cleanupFns.push(() =>
-        globalContainer.removeEventListener("touchcancel", handleTouchEnd, { passive: true }),
-      );
+      globalContainer.addEventListener("touchend", handleTouchEnd);
+      globalContainer.addEventListener("touchcancel", handleTouchEnd);
+      cleanupFns.push(() => globalContainer.removeEventListener("touchend", handleTouchEnd));
+      cleanupFns.push(() => globalContainer.removeEventListener("touchcancel", handleTouchEnd));
       return () => {
         cleanupFns.forEach((cleanup) => {
           try {

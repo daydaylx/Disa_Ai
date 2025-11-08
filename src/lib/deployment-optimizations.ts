@@ -98,7 +98,8 @@ export class ServiceWorkerManager {
     }
 
     try {
-      this.registration = await navigator.serviceWorker.getRegistration("/");
+      const registration = await navigator.serviceWorker.getRegistration("/");
+      this.registration = registration ?? null;
 
       if (!this.updateCheckInterval) {
         this.updateCheckInterval = setInterval(
@@ -121,7 +122,8 @@ export class ServiceWorkerManager {
 
     if (!this.registration) {
       try {
-        this.registration = await navigator.serviceWorker.getRegistration("/");
+        const registration = await navigator.serviceWorker.getRegistration("/");
+        this.registration = registration ?? null;
       } catch (error) {
         console.error("Failed to get Service Worker registration:", error);
         return;

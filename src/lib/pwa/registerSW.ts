@@ -58,7 +58,8 @@ async function ensureRegistration(): Promise<ServiceWorkerRegistration | null> {
     return null;
   }
   try {
-    lastRegistration = await navigator.serviceWorker.getRegistration(BASE_SCOPE);
+    const registration = await navigator.serviceWorker.getRegistration(BASE_SCOPE);
+    lastRegistration = registration ?? null;
     return lastRegistration;
   } catch (error) {
     console.error("[PWA] Failed to get service worker registration:", error);
