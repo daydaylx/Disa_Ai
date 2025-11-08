@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-
+import { useDeferredLoad } from "../../hooks/useDeferredFetch";
 import { Bot } from "../../lib/icons";
 
 interface Model {
@@ -13,13 +12,18 @@ interface ModelSelectProps {
 }
 
 export function ModelSelect({ model, setModel }: ModelSelectProps) {
-  const [models, setModels] = useState<Model[]>([]);
-
-  useEffect(() => {
-    void fetch("/models.json")
-      .then((res) => res.json())
-      .then(setModels);
-  }, []);
+  // Deferred loading of models - only loads when user interacts
+  const {
+    data: models,
+    loading: modelsLoading,
+    error: modelsError,
+  } = useDeferredLoad(async () => {
+    const response = await fetch("/models.json");
+    if (!response.ok) {
+      throw new Error(`Failed to load models: ${response.status}`);
+    }
+    return (await response.json()) as Model[];
+  });
 
   return (
     <div>
@@ -30,12 +34,21 @@ export function ModelSelect({ model, setModel }: ModelSelectProps) {
           className="w-full bg-transparent/50 backdrop-blur-sm text-sm border border-transparent hover:border-gray-300 focus:border-blue-500 focus:ring-0 rounded-md transition-colors duration-200 glass-panel p-2"
           value={model}
           onChange={(e) => setModel(e.target.value)}
+          disabled={modelsLoading}
         >
-          {models.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name}
-            </option>
-          ))}
+          {modelsLoading ? (
+            <option value="">Lade Modelle...</option>
+          ) : modelsError ? (
+            <option value="">Fehler beim Laden</option>
+          ) : !models || models.length === 0 ? (
+            <option value="">Keine Modelle verfügbar</option>
+          ) : (
+            models.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name}
+              </option>
+            ))
+          )}
         </select>
       </div>
     </div>

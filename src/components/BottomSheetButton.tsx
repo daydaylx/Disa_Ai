@@ -30,13 +30,6 @@ export function BottomSheetButton() {
     setSheetState("closed");
   };
 
-  const _changeTab = (tab: string) => {
-    const tabKey = tab as PanelTab;
-    setActiveTab(tabKey);
-    // If the sheet is closed, opening it to the selected tab
-    setSheetState("open");
-  };
-
   useEffect(() => {
     const handleExternalToggle = (event: Event) => {
       const customEvent = event as BottomSheetEvent;
