@@ -1,3 +1,5 @@
+import { isFeatureEnabled } from "../config/flags";
+
 export interface DiscussionAnalyticsRecord {
   timestamp: number;
   topic: string;
@@ -14,6 +16,11 @@ const STORAGE_KEY = "disa:analytics:discussion";
 const MAX_RECORDS = 100;
 
 export function logDiscussionAnalytics(record: DiscussionAnalyticsRecord): void {
+  // Only log if analytics opt-in is enabled
+  if (!isFeatureEnabled("analyticsOptIn")) {
+    return;
+  }
+
   try {
     const existing = getDiscussionAnalytics();
     existing.push(record);
