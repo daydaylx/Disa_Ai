@@ -2767,3 +2767,52 @@
   --role-accent-border: var(--role-accent-model-alltag-border);
   --role-accent-border-strong: var(--role-accent-model-alltag-border-strong);
 }
+
+/* ============================================================================
+   INPUT VARIANTS - Neo-Inset Styles
+   ============================================================================ */
+
+@layer components {
+  .neo-inset-subtle {
+    background-color: var(--color-control-field-bg);
+    box-shadow: var(--shadow-inset-subtle);
+    border: 1px solid var(--color-control-field-border);
+  }
+
+  .neo-inset-medium {
+    background-color: var(--color-control-field-bg);
+    box-shadow: var(--shadow-inset-medium);
+    border: 1px solid var(--color-control-field-border);
+  }
+
+  .neo-inset-strong {
+    background-color: var(--color-control-field-bg);
+    box-shadow: var(--shadow-inset-strong);
+    border: 1px solid var(--color-control-field-border);
+  }
+
+  .neo-inset-extreme {
+    background-color: var(--color-control-field-bg);
+    box-shadow: var(--shadow-inset-extreme);
+    border: 1px solid var(--color-control-field-border);
+  }
+
+  /* Hover states for input variants */
+  .neo-inset-subtle:hover,
+  .neo-inset-medium:hover,
+  .neo-inset-strong:hover,
+  .neo-inset-extreme:hover {
+    background-color: var(--color-control-field-hover);
+    border-color: var(--color-control-field-border-hover);
+  }
+
+  /* Focus states for input variants */
+  .neo-inset-subtle:focus,
+  .neo-inset-medium:focus,
+  .neo-inset-strong:focus,
+  .neo-inset-extreme:focus {
+    outline: none;
+    border-color: var(--color-control-field-border-active);
+    box-shadow: var(--shadow-focus-neumorphic);
+  }
+}

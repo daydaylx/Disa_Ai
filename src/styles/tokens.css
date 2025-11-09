@@ -270,6 +270,10 @@
   --focus-ring-color: var(--accent);
   --focus-ring: 0 0 0 3px color-mix(in srgb, var(--focus-ring-color) 35%, transparent);
 
+  /* Additional focus variables for component compatibility */
+  --color-focus-ring: var(--focus-ring-color);
+  --shadow-focus-neumorphic: var(--focus-ring), 0 0 0 1px var(--color-border-focus);
+
   /* Borders */
   --border-hairline: color-mix(
     in srgb,

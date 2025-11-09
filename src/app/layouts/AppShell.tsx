@@ -17,7 +17,7 @@ interface AppShellProps {
 const NAV_ITEMS = [
   { path: "/chat", label: "Chat" },
   { path: "/models", label: "Modelle" },
-  { path: "/studio", label: "Rollen" },
+  { path: "/roles", label: "Rollen" },
   { path: "/settings", label: "Einstellungen" },
 ];
 

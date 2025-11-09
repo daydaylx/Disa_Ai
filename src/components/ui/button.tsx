@@ -32,13 +32,13 @@ const buttonVariants = (
   size: ButtonProps["size"] = "default",
   dramatic: boolean = false,
 ) => {
-  const baseClasses = [
+  const baseClasses = cn(
     "inline-flex items-center justify-center gap-2",
     "font-medium tracking-[-0.01em]",
     "transition-[background,box-shadow,transform] duration-200 ease-out",
     "disabled:pointer-events-none disabled:opacity-50",
     "disabled:shadow-neo-sm disabled:translate-y-0",
-  ].join(" ");
+  );
 
   // Map deprecated variants to their new equivalents
   const coreVariantClasses = {

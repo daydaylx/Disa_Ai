@@ -212,7 +212,6 @@ export default defineConfig(({ mode }) => {
         reportCompressedSize: false, // Schnellere Builds
       }),
       // Additional performance optimizations for main thread
-      brotliSize: false, // Disable for faster builds
       modulePreload: {
         polyfill: true,
         // Preload critical chunks only

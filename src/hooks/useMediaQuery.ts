@@ -49,8 +49,9 @@ export function useMediaQuery(query: string): boolean {
 
 /**
  * A convenience hook for checking if the viewport is mobile-sized.
- * Uses a default max-width of 768px.
+ * Uses a default max-width of 640px (matches Tailwind `sm` breakpoint).
+ * This ensures tablets (768px+) are treated as desktop, not mobile.
  */
 export function useIsMobile(): boolean {
-  return useMediaQuery("(max-width: 768px)");
+  return useMediaQuery("(max-width: 640px)");
 }
