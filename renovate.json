@@ -51,10 +51,17 @@
       "groupName": "TypeScript ecosystem"
     },
     {
+      "description": "Keep Vitest core + plugins in sync",
+      "matchPackageNames": ["vitest", "@vitest/**"],
+      "labels": ["testing", "vitest", "dependencies"],
+      "groupName": "Vitest suite",
+      "groupSlug": "vitest-suite",
+      "separateMajorMinor": false,
+      "separateMultipleMajor": false
+    },
+    {
       "description": "Testing frameworks",
       "matchPackageNames": [
-        "vitest",
-        "@vitest/**",
         "playwright",
         "@playwright/**",
         "jsdom",
