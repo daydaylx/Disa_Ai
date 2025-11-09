@@ -9,6 +9,7 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { useEdgeSwipeDrawer } from "./hooks/useEdgeSwipe";
 import { useServiceWorker } from "./hooks/useServiceWorker";
+import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 
 const FeatureFlagPanel = lazy(() =>
   import("./components/dev/FeatureFlagPanel").then((module) => ({
@@ -49,7 +50,48 @@ function AppContent() {
 
   return (
     <>
-      <Router />
+      <SentryErrorBoundary
+        fallback={({ error, resetError }) => (
+          <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--surface-neumorphic-base)] p-8 text-center">
+            <div className="max-w-md">
+              <h1 className="mb-4 text-2xl font-bold text-[var(--color-text-primary)]">
+                Unerwarteter Fehler
+              </h1>
+              <p className="mb-6 text-[var(--color-text-secondary)]">
+                Entschuldigung, es ist ein unerwarteter Fehler aufgetreten. Das Problem wurde
+                automatisch gemeldet.
+              </p>
+              <div className="space-y-3">
+                <button
+                  onClick={resetError}
+                  className="w-full rounded-lg bg-[var(--color-brand-primary)] px-4 py-2 text-white font-medium hover:bg-[var(--color-brand-primary-hover)] transition-colors"
+                >
+                  Erneut versuchen
+                </button>
+                <button
+                  onClick={() => (window.location.href = "/")}
+                  className="w-full rounded-lg border border-[var(--color-border-subtle)] px-4 py-2 text-[var(--color-text-secondary)] hover:bg-[var(--surface-neumorphic-floating)] transition-colors"
+                >
+                  Zur Startseite
+                </button>
+              </div>
+              {import.meta.env.DEV && (
+                <details className="mt-6 text-left">
+                  <summary className="cursor-pointer text-sm text-[var(--color-text-tertiary)]">
+                    Fehlerdetails (nur in Entwicklung)
+                  </summary>
+                  <pre className="mt-2 overflow-auto rounded bg-red-100 p-2 text-xs text-red-800">
+                    {error.stack}
+                  </pre>
+                </details>
+              )}
+            </div>
+          </div>
+        )}
+        showDialog={false}
+      >
+        <Router />
+      </SentryErrorBoundary>
       <Suspense fallback={null}>
         <FeatureFlagPanel />
       </Suspense>

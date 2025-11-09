@@ -12,6 +12,12 @@ interface ImportMetaEnv {
   readonly VITE_UI_V2_PERCENTAGE?: string;
   readonly VITE_FORCE_UI_VERSION?: string;
   readonly VITE_OPENROUTER_BASE_URL?: string;
+  // Sentry error tracking
+  readonly VITE_SENTRY_DSN?: string;
+  readonly VITE_ENV?: string;
+  readonly SENTRY_ORG?: string;
+  readonly SENTRY_PROJECT?: string;
+  readonly SENTRY_AUTH_TOKEN?: string;
   // Vite builtin environment variables
   readonly DEV: boolean;
   readonly PROD: boolean;

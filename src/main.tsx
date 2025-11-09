@@ -8,6 +8,7 @@ import { initEnvironment } from "./config/env";
 import { CustomRolesProvider } from "./contexts/CustomRolesContext";
 import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
+import { initializeSentry } from "./lib/monitoring/sentry";
 // PWA Installation Prompt
 import { registerSW } from "./lib/pwa/registerSW";
 import { safeError, safeWarn } from "./lib/utils/production-logger";
@@ -38,6 +39,13 @@ try {
   }
 } catch (error) {
   safeError("Critical environment error:", error);
+}
+
+// Initialize error tracking (must be early in the process)
+try {
+  initializeSentry();
+} catch (error) {
+  safeError("Sentry initialization failed:", error);
 }
 
 // Singleton React Root to prevent memory leaks

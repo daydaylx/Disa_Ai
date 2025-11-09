@@ -38,6 +38,14 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       className="relative flex min-h-[100dvh] flex-col bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)]"
       style={{ minHeight: "calc(100dvh + var(--keyboard-offset, 0px))" }}
     >
+      {/* Skip-Link für bessere Accessibility */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[9999] focus:rounded focus:bg-[var(--color-brand-primary)] focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--color-brand-primary)]"
+      >
+        Zum Hauptinhalt springen
+      </a>
+
       {isMobile ? <GlobalNav onMenuClick={() => setIsOverflowOpen(true)} /> : <DesktopSidebar />}
 
       <main

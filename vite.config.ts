@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 import { analyzer } from "vite-bundle-analyzer";
 import { VitePWA } from "vite-plugin-pwa";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 const analyzerPlugin = analyzer({
   analyzerMode: process.env.BUNDLE_ANALYZE_MODE ?? "static",
@@ -84,6 +85,25 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       analyzerPlugin,
+      // Sentry plugin - only in production with proper configuration
+      ...(isProduction && env.SENTRY_AUTH_TOKEN && env.VITE_SENTRY_DSN
+        ? [
+            sentryVitePlugin({
+              org: env.SENTRY_ORG || "disa-ai",
+              project: env.SENTRY_PROJECT || "disa-ai-web",
+              authToken: env.SENTRY_AUTH_TOKEN,
+              sourceMaps: {
+                include: ["./dist/assets"],
+                ignore: ["node_modules"],
+              },
+              release: {
+                name: env.VITE_BUILD_ID || "development",
+                cleanArtifacts: true,
+              },
+              telemetry: false, // Disable telemetry for privacy
+            }),
+          ]
+        : []),
       // Progressive PWA re-enablement - start conservative
       VitePWA({
         strategies: "injectManifest",
@@ -149,6 +169,7 @@ export default defineConfig(({ mode }) => {
       }),
       // Additional performance optimizations for main thread
       brotliSize: true, // Report Brotli compressed size
+      modulePreload: true, // Enable module preloading for better performance
       rollupOptions: {
         treeshake: {
           preset: "recommended",
@@ -156,15 +177,52 @@ export default defineConfig(({ mode }) => {
           tryCatchDeoptimization: false,
           unknownGlobalSideEffects: false,
         },
-        // Robust solution: No externalization needed for bundled app
-        // Dependencies will be properly ordered through manualChunks priority
+        // Smart chunking strategy to optimize bundle size without circular dependencies
         output: {
-          // Removing aggressive manual chunking to avoid circular vendor bundles
-          // that caused React to load as undefined in production builds.
-          // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,
           entryFileNames: "assets/js/[name]-[hash].js",
           chunkFileNames: "assets/js/[name]-[hash].js",
+          // Smart manual chunks that avoid React dependency issues
+          manualChunks: (id) => {
+            // React ecosystem (keep together to avoid circular deps)
+            if (
+              id.includes("node_modules/react/") ||
+              id.includes("node_modules/react-dom/") ||
+              id.includes("node_modules/react-router")
+            ) {
+              return "react-vendor";
+            }
+
+            // Radix UI components (large but stable)
+            if (id.includes("node_modules/@radix-ui/")) {
+              return "radix-ui";
+            }
+
+            // Prism.js core and languages (for code highlighting)
+            if (id.includes("node_modules/prismjs/") || id.includes("prism-")) {
+              return "prism";
+            }
+
+            // KaTeX (math rendering - large)
+            if (id.includes("node_modules/katex/")) {
+              return "katex";
+            }
+
+            // Other vendor libraries
+            if (id.includes("node_modules/")) {
+              // Group small utilities together
+              if (
+                id.includes("clsx") ||
+                id.includes("class-variance-authority") ||
+                id.includes("tailwind-merge") ||
+                id.includes("nanoid") ||
+                id.includes("zod")
+              ) {
+                return "utils";
+              }
+              return "vendor";
+            }
+          },
           assetFileNames: (assetInfo) => {
             if (!assetInfo.name) return "assets/[name]-[hash][extname]";
 

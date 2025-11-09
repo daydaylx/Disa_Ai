@@ -1,0 +1,46 @@
+# Robots.txt für Disa AI
+# Generiert am: 2025-11-09
+
+User-agent: *
+Allow: /
+
+# Wichtige Seiten
+Allow: /chat
+Allow: /studio
+Allow: /models
+Allow: /settings
+
+# Assets erlauben
+Allow: /icons/
+Allow: /manifest.webmanifest
+
+# Private/interne Bereiche
+Disallow: /_*
+Disallow: /.well-known/
+Disallow: /src/
+Disallow: /node_modules/
+
+# Service Worker (für Bots nicht relevant)
+Disallow: /sw.js
+
+# Sitemap verweis
+Sitemap: https://disa-ai.pages.dev/sitemap.xml
+
+# Crawl-Delay (höflich zu Servern)
+Crawl-delay: 1
+
+# Spezielle Bot-Regeln
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
