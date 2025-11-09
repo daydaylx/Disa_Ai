@@ -103,7 +103,8 @@
 
 /* Pulse animation for loading states */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -126,7 +127,12 @@
 }
 
 .skeleton-loading {
-  background: linear-gradient(90deg, var(--color-surface-base) 25%, var(--color-surface-elevated) 50%, var(--color-surface-base) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-base) 25%,
+    var(--color-surface-elevated) 50%,
+    var(--color-surface-base) 75%
+  );
   background-size: 200px 100%;
   animation: skeleton-loading 1.5s infinite;
 }
@@ -180,19 +186,19 @@
   .card-hover {
     transition: none;
   }
-  
+
   .interactive-hover:hover,
   .button-hover:hover,
   .card-hover:hover {
     transform: none;
   }
-  
+
   .loading-pulse,
   .skeleton-loading,
   .loading-spin {
     animation: none;
   }
-  
+
   .fade-in,
   .fade-out {
     animation: none;

@@ -1,5 +1,5 @@
 // Modern storage layer using IndexedDB via Dexie
-import Dexie from 'dexie';
+import Dexie from "dexie";
 
 export interface Conversation {
   id: string;
@@ -52,17 +52,17 @@ interface DisaDB extends Dexie {
   metadata: Dexie.Table<ConversationMetadata, string>;
 }
 
-const db = new Dexie('DisaAI') as DisaDB;
+const db = new Dexie("DisaAI") as DisaDB;
 
 // Define schema
 db.version(1).stores({
-  conversations: 'id, title, createdAt, updatedAt, lastActivity, model, messageCount, isFavorite',
-  metadata: 'id, title, createdAt, updatedAt, model, messageCount'
+  conversations: "id, title, createdAt, updatedAt, lastActivity, model, messageCount, isFavorite",
+  metadata: "id, title, createdAt, updatedAt, model, messageCount",
 });
 
 // Initialize database
-db.open().catch(err => {
-  console.error('Failed to open IndexedDB:', err);
+db.open().catch((err) => {
+  console.error("Failed to open IndexedDB:", err);
 });
 
 export class ModernStorageLayer {
@@ -76,66 +76,63 @@ export class ModernStorageLayer {
     try {
       const conversations = await this.db.conversations.toArray();
       const totalConversations = conversations.length;
-      
+
       let totalMessages = 0;
       const modelsUsed: string[] = [];
-      
+
       for (const conversation of conversations) {
         if (conversation.messages) {
           totalMessages += conversation.messages.length;
         }
-        
+
         if (!modelsUsed.includes(conversation.model)) {
           modelsUsed.push(conversation.model);
         }
       }
-      
-      const averageMessagesPerConversation = 
+
+      const averageMessagesPerConversation =
         totalConversations > 0 ? totalMessages / totalConversations : 0;
-      
+
       // Estimate storage size
       let storageSize = 0;
       try {
         const data = JSON.stringify(conversations);
         storageSize = new Blob([data]).size;
       } catch (error) {
-        console.error('Failed to calculate storage size:', error);
+        console.error("Failed to calculate storage size:", error);
       }
-      
+
       return {
         totalConversations,
         totalMessages,
         averageMessagesPerConversation,
         modelsUsed,
-        storageSize
+        storageSize,
       };
     } catch (error) {
-      console.error('Failed to get conversation stats:', error);
+      console.error("Failed to get conversation stats:", error);
       return {
         totalConversations: 0,
         totalMessages: 0,
         averageMessagesPerConversation: 0,
         modelsUsed: [],
-        storageSize: 0
+        storageSize: 0,
       };
     }
   }
 
   async getAllConversations(): Promise<ConversationMetadata[]> {
     try {
-      return await this.db.metadata
-        .orderBy('updatedAt')
-        .reverse()
-        .toArray();
+      return await this.db.metadata.orderBy("updatedAt").reverse().toArray();
     } catch (error) {
-      console.error('Failed to get all conversations:', error);
+      console.error("Failed to get all conversations:", error);
       return [];
     }
   }
 
   async getConversation(id: string): Promise<Conversation | null> {
     try {
-      return await this.db.conversations.get(id) || null;
+      return (await this.db.conversations.get(id)) || null;
     } catch (error) {
       console.error(`Failed to get conversation ${id}:`, error);
       return null;
@@ -144,10 +141,10 @@ export class ModernStorageLayer {
 
   async saveConversation(conversation: Conversation): Promise<void> {
     try {
-      await this.db.transaction('rw', this.db.conversations, this.db.metadata, async () => {
+      await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
         // Save full conversation
         await this.db.conversations.put(conversation);
-        
+
         // Save metadata
         await this.db.metadata.put({
           id: conversation.id,
@@ -155,7 +152,7 @@ export class ModernStorageLayer {
           createdAt: conversation.createdAt,
           updatedAt: conversation.updatedAt,
           model: conversation.model,
-          messageCount: conversation.messageCount
+          messageCount: conversation.messageCount,
         });
       });
     } catch (error) {
@@ -166,7 +163,7 @@ export class ModernStorageLayer {
 
   async deleteConversation(id: string): Promise<void> {
     try {
-      await this.db.transaction('rw', this.db.conversations, this.db.metadata, async () => {
+      await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
         await this.db.conversations.delete(id);
         await this.db.metadata.delete(id);
       });
@@ -180,26 +177,26 @@ export class ModernStorageLayer {
     try {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - days);
-      
+
       const oldConversations = await this.db.conversations
-        .filter(conv => {
+        .filter((conv) => {
           const lastActivity = conv.lastActivity || conv.updatedAt;
           return new Date(lastActivity) < cutoffDate;
         })
         .toArray();
-      
-      const idsToDelete = oldConversations.map(conv => conv.id);
-      
+
+      const idsToDelete = oldConversations.map((conv) => conv.id);
+
       if (idsToDelete.length > 0) {
-        await this.db.transaction('rw', this.db.conversations, this.db.metadata, async () => {
+        await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
           await this.db.conversations.bulkDelete(idsToDelete);
           await this.db.metadata.bulkDelete(idsToDelete);
         });
       }
-      
+
       return idsToDelete.length;
     } catch (error) {
-      console.error('Failed to cleanup old conversations:', error);
+      console.error("Failed to cleanup old conversations:", error);
       return 0;
     }
   }
@@ -207,50 +204,50 @@ export class ModernStorageLayer {
   async exportConversations(): Promise<ExportData> {
     try {
       const conversations = await this.db.conversations.toArray();
-      
+
       return {
-        version: '2.0',
+        version: "2.0",
         metadata: {
           exportedAt: new Date().toISOString(),
           totalConversations: conversations.length,
-          appVersion: '2.0.0'
+          appVersion: "2.0.0",
         },
-        conversations
+        conversations,
       };
     } catch (error) {
-      console.error('Failed to export conversations:', error);
+      console.error("Failed to export conversations:", error);
       return {
-        version: '2.0',
+        version: "2.0",
         metadata: {
           exportedAt: new Date().toISOString(),
           totalConversations: 0,
-          appVersion: '2.0.0'
+          appVersion: "2.0.0",
         },
-        conversations: []
+        conversations: [],
       };
     }
   }
 
   async importConversations(
     data: ExportData,
-    options: { overwrite?: boolean; merge?: boolean }
+    options: { overwrite?: boolean; merge?: boolean },
   ): Promise<ImportResult> {
     try {
       let importedCount = 0;
       const errors: string[] = [];
-      
-      await this.db.transaction('rw', this.db.conversations, this.db.metadata, async () => {
+
+      await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
         for (const conversation of data.conversations) {
           try {
             const exists = await this.db.conversations.get(conversation.id);
-            
+
             if (exists && !options.overwrite && !options.merge) {
               continue; // Skip existing conversations
             }
-            
+
             // Save conversation
             await this.db.conversations.put(conversation);
-            
+
             // Save metadata
             await this.db.metadata.put({
               id: conversation.id,
@@ -258,56 +255,56 @@ export class ModernStorageLayer {
               createdAt: conversation.createdAt,
               updatedAt: conversation.updatedAt,
               model: conversation.model,
-              messageCount: conversation.messageCount
+              messageCount: conversation.messageCount,
             });
-            
+
             importedCount++;
           } catch (error) {
             errors.push(`Failed to import conversation ${conversation.id}: ${error}`);
           }
         }
       });
-      
+
       return {
         success: errors.length === 0,
         importedCount,
-        errors
+        errors,
       };
     } catch (error) {
-      console.error('Failed to import conversations:', error);
+      console.error("Failed to import conversations:", error);
       return {
         success: false,
         importedCount: 0,
-        errors: [`Failed to import conversations: ${error}`]
+        errors: [`Failed to import conversations: ${error}`],
       };
     }
   }
 
   async clearAllData(): Promise<void> {
     try {
-      await this.db.transaction('rw', this.db.conversations, this.db.metadata, async () => {
+      await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
         await this.db.conversations.clear();
         await this.db.metadata.clear();
       });
     } catch (error) {
-      console.error('Failed to clear all data:', error);
+      console.error("Failed to clear all data:", error);
       throw error;
     }
   }
 
   async getStorageUsage(): Promise<{ used: number; quota: number }> {
-    if ('storage' in navigator && 'estimate' in navigator.storage) {
+    if ("storage" in navigator && "estimate" in navigator.storage) {
       try {
         const estimate = await navigator.storage.estimate();
         return {
           used: estimate.usage || 0,
-          quota: estimate.quota || 0
+          quota: estimate.quota || 0,
         };
       } catch (error) {
-        console.error('Failed to get storage usage:', error);
+        console.error("Failed to get storage usage:", error);
       }
     }
-    
+
     return { used: 0, quota: 0 };
   }
 }

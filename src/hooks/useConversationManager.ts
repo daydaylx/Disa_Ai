@@ -32,7 +32,7 @@ export function useConversationManager({
       const conversations = await getAllConversations();
       setConversations(conversations);
     } catch (error) {
-      console.error('Failed to refresh conversations:', error);
+      console.error("Failed to refresh conversations:", error);
       toasts.push({
         kind: "error",
         title: "Fehler",
@@ -94,7 +94,7 @@ export function useConversationManager({
           message: `${conversation.title} wurde geladen`,
         });
       } catch (error) {
-        console.error('Failed to load conversation:', error);
+        console.error("Failed to load conversation:", error);
         toasts.push({
           kind: "error",
           title: "Fehler",
@@ -106,7 +106,7 @@ export function useConversationManager({
   );
 
   const handleDeleteConversation = useCallback(
-    (id: string) => {
+    async (id: string) => {
       if (
         !confirm(
           "Möchtest du diese Konversation wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -115,8 +115,8 @@ export function useConversationManager({
         return;
       }
 
-      deleteFromDb(id);
-      refreshConversations();
+      await deleteFromDb(id);
+      await refreshConversations();
       if (activeConversationId === id) {
         setActiveConversationId(null);
         setCurrentSystemPrompt(undefined);
@@ -156,7 +156,7 @@ export function useConversationManager({
     const state = location.state as { conversationId?: string } | null;
     const conversationId = state?.conversationId;
     if (conversationId) {
-      handleSelectConversation(conversationId);
+      void handleSelectConversation(conversationId);
       // Clean up state from location
       const { conversationId: _omit, ...rest } = state;
       void navigate(location.pathname, { replace: true, state: rest });

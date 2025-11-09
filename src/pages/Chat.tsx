@@ -32,15 +32,13 @@ export default function Chat() {
     },
   });
 
-  const {
-    newConversation,
-    setActiveConversationId,
-    refreshConversations,
-  } = useConversationManager({
-    setMessages,
-    setCurrentSystemPrompt,
-    onNewConversation: () => {}, // Reset discussion on new chat
-  });
+  const { newConversation, setActiveConversationId, refreshConversations } = useConversationManager(
+    {
+      setMessages,
+      setCurrentSystemPrompt,
+      onNewConversation: () => {}, // Reset discussion on new chat
+    },
+  );
 
   // --- Effects ---
 
@@ -103,13 +101,7 @@ export default function Chat() {
     };
 
     void saveConversationIfNeeded();
-  }, [
-    isLoading,
-    messages,
-    setActiveConversationId,
-    refreshConversations,
-    toasts,
-  ]); // Reruns when loading is finished
+  }, [isLoading, messages, setActiveConversationId, refreshConversations, toasts]); // Reruns when loading is finished
 
   // --- Handlers ---
   const handleSend = useCallback(() => {

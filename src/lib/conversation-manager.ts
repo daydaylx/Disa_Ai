@@ -1,8 +1,12 @@
 // Conversation manager with dual storage support (localStorage + IndexedDB)
 // This file provides backward compatibility while allowing migration to modern storage
-import { modernStorage } from './storage-layer';
-import type { Conversation, ConversationMetadata, ExportData } from './storage-layer';
-import { getConversationStats as getModernStats, getAllConversations as getAllModern, getConversation as getModernConversation } from './conversation-manager-modern';
+import {
+  getAllConversations as getAllModern,
+  getConversation as getConversationFromModern,
+  getConversationStats as getModernStats,
+} from "./conversation-manager-modern";
+import type { Conversation, ConversationMetadata, ExportData } from "./storage-layer";
+import { modernStorage } from "./storage-layer";
 
 // Legacy localStorage implementation for fallback
 const CONVERSATIONS_KEY = "disa:conversations";
@@ -52,17 +56,17 @@ async function initializeStorageLayer(): Promise<boolean> {
     // Try to use modern storage (IndexedDB)
     await modernStorage.getConversationStats();
     useModernStorage = true;
-    console.log('Using modern IndexedDB storage layer');
+    console.warn("Using modern IndexedDB storage layer");
     return true;
   } catch (error) {
-    console.warn('Modern storage layer unavailable, falling back to localStorage:', error);
+    console.warn("Modern storage layer unavailable, falling back to localStorage:", error);
     useModernStorage = false;
     return false;
   }
 }
 
 // Initialize on module load
-initializeStorageLayer();
+void initializeStorageLayer();
 
 // Modern storage layer functions (async)
 async function getModernConversationStats() {
@@ -74,7 +78,7 @@ async function getAllModernConversations() {
 }
 
 async function getModernConversation(id: string) {
-  return await getModernConversation(id);
+  return await getConversationFromModern(id);
 }
 
 async function saveModernConversation(conversation: Conversation) {
@@ -93,7 +97,10 @@ async function exportModernConversations() {
   return await modernStorage.exportConversations();
 }
 
-async function importModernConversations(data: ExportData, options: { overwrite?: boolean; merge?: boolean }) {
+async function importModernConversations(
+  data: ExportData,
+  options: { overwrite?: boolean; merge?: boolean },
+) {
   return await modernStorage.importConversations(data, options);
 }
 
@@ -379,7 +386,7 @@ export async function forceModernStorage(): Promise<boolean> {
   return useModernStorage;
 }
 
-export async function forceLegacyStorage(): Promise<void> {
+export function forceLegacyStorage(): void {
   useModernStorage = false;
 }
 

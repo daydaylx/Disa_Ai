@@ -1,6 +1,6 @@
 // Migration utility for transitioning from localStorage to IndexedDB
-import { modernStorage } from './storage-layer';
-import type { Conversation } from './storage-layer';
+import type { Conversation } from "./storage-layer";
+import { modernStorage } from "./storage-layer";
 
 export interface MigrationResult {
   success: boolean;
@@ -35,8 +35,8 @@ export class StorageMigration {
   }> {
     try {
       // Check localStorage
-      const localConversations = localStorage.getItem('disa:conversations');
-      const localMetadata = localStorage.getItem('disa:conversations:metadata');
+      const localConversations = localStorage.getItem("disa:conversations");
+      const localMetadata = localStorage.getItem("disa:conversations:metadata");
       const hasLocalStorageData = !!(localConversations && localMetadata);
 
       // Check IndexedDB
@@ -46,28 +46,28 @@ export class StorageMigration {
       return {
         hasLocalStorageData,
         hasIndexedDBData,
-        needsMigration: hasLocalStorageData && !hasIndexedDBData
+        needsMigration: hasLocalStorageData && !hasIndexedDBData,
       };
     } catch (error) {
-      console.error('Failed to check migration status:', error);
+      console.error("Failed to check migration status:", error);
       return {
         hasLocalStorageData: false,
         hasIndexedDBData: false,
-        needsMigration: false
+        needsMigration: false,
       };
     }
   }
 
   async migrateFromLocalStorage(options: MigrationOptions = {}): Promise<MigrationResult> {
     if (this.migrationInProgress) {
-      throw new Error('Migration is already in progress');
+      throw new Error("Migration is already in progress");
     }
 
     const {
       clearLocalStorageAfterSuccess = true,
       validateData = true,
       batchSize = 50,
-      skipOnError = false
+      skipOnError = false,
     } = options;
 
     const startTime = Date.now();
@@ -79,15 +79,15 @@ export class StorageMigration {
         migratedCount: 0,
         errors: [],
         warnings: [],
-        duration: 0
+        duration: 0,
       };
 
       // Check if there's data to migrate
-      const localConversations = localStorage.getItem('disa:conversations');
-      const localMetadata = localStorage.getItem('disa:conversations:metadata');
+      const localConversations = localStorage.getItem("disa:conversations");
+      const localMetadata = localStorage.getItem("disa:conversations:metadata");
 
       if (!localConversations || !localMetadata) {
-        result.warnings.push('No localStorage data found to migrate');
+        result.warnings.push("No localStorage data found to migrate");
         result.success = true;
         return result;
       }
@@ -103,7 +103,7 @@ export class StorageMigration {
       }
 
       if (conversations.length === 0) {
-        result.warnings.push('No conversations found in localStorage');
+        result.warnings.push("No conversations found in localStorage");
         result.success = true;
         return result;
       }
@@ -118,17 +118,17 @@ export class StorageMigration {
 
       // Migrate in batches
       const totalBatches = Math.ceil(conversations.length / batchSize);
-      
+
       for (let i = 0; i < totalBatches; i++) {
         const batch = conversations.slice(i * batchSize, (i + 1) * batchSize);
-        
+
         try {
           await this.migrateBatch(batch);
           result.migratedCount += batch.length;
         } catch (error) {
           const errorMsg = `Failed to migrate batch ${i + 1}/${totalBatches}: ${error}`;
           result.errors.push(errorMsg);
-          
+
           if (!skipOnError) {
             throw new Error(errorMsg);
           }
@@ -138,8 +138,8 @@ export class StorageMigration {
       // Clear localStorage if migration was successful
       if (result.migratedCount > 0 && clearLocalStorageAfterSuccess) {
         try {
-          localStorage.removeItem('disa:conversations');
-          localStorage.removeItem('disa:conversations:metadata');
+          localStorage.removeItem("disa:conversations");
+          localStorage.removeItem("disa:conversations:metadata");
         } catch (error) {
           result.warnings.push(`Failed to clear localStorage: ${error}`);
         }
@@ -194,7 +194,7 @@ export class StorageMigration {
       try {
         new Date(conversation.createdAt);
         new Date(conversation.updatedAt);
-      } catch (error) {
+      } catch {
         warnings.push(`Conversation ${conversation.id} has invalid dates`);
       }
 
@@ -202,7 +202,7 @@ export class StorageMigration {
       if (conversation.messages && conversation.messageCount !== conversation.messages.length) {
         warnings.push(
           `Conversation ${conversation.id} has inconsistent message count: ` +
-          `stored ${conversation.messageCount}, actual ${conversation.messages.length}`
+            `stored ${conversation.messageCount}, actual ${conversation.messages.length}`,
         );
       }
     }
@@ -216,65 +216,65 @@ export class StorageMigration {
     estimatedSize: number;
   }> {
     try {
-      const localConversations = localStorage.getItem('disa:conversations');
+      const localConversations = localStorage.getItem("disa:conversations");
       if (!localConversations) {
-        return {
+        return Promise.resolve({
           estimatedDuration: 0,
           conversationCount: 0,
-          estimatedSize: 0
-        };
+          estimatedSize: 0,
+        });
       }
 
       const conversations = Object.values(JSON.parse(localConversations));
       const conversationCount = conversations.length;
-      
+
       // Estimate size in bytes
       const estimatedSize = new Blob([localConversations]).size;
-      
-      // Estimate duration (rough calculation: ~10ms per conversation + size factor)
-      const estimatedDuration = (conversationCount * 10) + (estimatedSize / 1000);
 
-      return {
+      // Estimate duration (rough calculation: ~10ms per conversation + size factor)
+      const estimatedDuration = conversationCount * 10 + estimatedSize / 1000;
+
+      return Promise.resolve({
         estimatedDuration,
         conversationCount,
-        estimatedSize
-      };
+        estimatedSize,
+      });
     } catch (error) {
-      console.error('Failed to estimate migration time:', error);
-      return {
+      console.error("Failed to estimate migration time:", error);
+      return Promise.resolve({
         estimatedDuration: 0,
         conversationCount: 0,
-        estimatedSize: 0
-      };
+        estimatedSize: 0,
+      });
     }
   }
 
   async createBackup(): Promise<string | null> {
     try {
-      const localConversations = localStorage.getItem('disa:conversations');
-      const localMetadata = localStorage.getItem('disa:conversations:metadata');
+      const localConversations = localStorage.getItem("disa:conversations");
+      const localMetadata = localStorage.getItem("disa:conversations:metadata");
 
       if (!localConversations || !localMetadata) {
-        return null;
+        return Promise.resolve(null);
       }
 
       const backup = {
-        version: '1.0',
+        version: "1.0",
         timestamp: new Date().toISOString(),
         conversations: JSON.parse(localConversations),
-        metadata: JSON.parse(localMetadata)
+        metadata: JSON.parse(localMetadata),
       };
 
-      return JSON.stringify(backup, null, 2);
+      return Promise.resolve(JSON.stringify(backup, null, 2));
     } catch (error) {
-      console.error('Failed to create backup:', error);
-      return null;
+      console.error("Failed to create backup:", error);
+      return Promise.resolve(null);
     }
   }
 
   async restoreFromBackup(backupData: string): Promise<MigrationResult> {
     const startTime = Date.now();
-    
+
     try {
       const backup = JSON.parse(backupData);
       const result: MigrationResult = {
@@ -282,16 +282,16 @@ export class StorageMigration {
         migratedCount: 0,
         errors: [],
         warnings: [],
-        duration: 0
+        duration: 0,
       };
 
       if (!backup.conversations || !backup.metadata) {
-        result.errors.push('Invalid backup format');
+        result.errors.push("Invalid backup format");
         return result;
       }
 
       const conversations: Conversation[] = Object.values(backup.conversations);
-      
+
       // Validate backup data
       const validationErrors = this.validateConversations(conversations);
       if (validationErrors.length > 0) {
@@ -318,7 +318,7 @@ export class StorageMigration {
         migratedCount: 0,
         errors: [`Failed to parse backup: ${error}`],
         warnings: [],
-        duration: Date.now() - startTime
+        duration: Date.now() - startTime,
       };
     }
   }

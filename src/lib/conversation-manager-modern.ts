@@ -1,5 +1,14 @@
 // Modern conversation manager using IndexedDB via Dexie
-import { modernStorage, type Conversation, type ConversationMetadata, type ExportData, type ImportResult } from './storage-layer';
+import {
+  type Conversation,
+  type ConversationMetadata,
+  type ExportData,
+  type ImportResult,
+  modernStorage,
+} from "./storage-layer";
+
+// Re-export types for use by other modules
+export type { Conversation, ConversationMetadata, ExportData, ImportResult };
 
 export interface ConversationStats {
   totalConversations: number;
@@ -39,7 +48,7 @@ export function exportConversations(): Promise<ExportData> {
 
 export function importConversations(
   data: ExportData,
-  options: { overwrite?: boolean; merge?: boolean }
+  options: { overwrite?: boolean; merge?: boolean },
 ): Promise<ImportResult> {
   return modernStorage.importConversations(data, options);
 }
@@ -50,14 +59,14 @@ export async function getConversationById(id: string): Promise<Conversation | nu
 }
 
 export async function updateConversation(
-  id: string, 
-  updates: Partial<Conversation>
+  id: string,
+  updates: Partial<Conversation>,
 ): Promise<void> {
   const existing = await getConversation(id);
   if (!existing) {
     throw new Error(`Conversation ${id} not found`);
   }
-  
+
   const updated = { ...existing, ...updates, updatedAt: new Date().toISOString() };
   await saveConversation(updated);
 }
@@ -67,11 +76,11 @@ export async function toggleFavorite(id: string): Promise<void> {
   if (!existing) {
     throw new Error(`Conversation ${id} not found`);
   }
-  
-  const updated = { 
-    ...existing, 
+
+  const updated = {
+    ...existing,
     isFavorite: !existing.isFavorite,
-    updatedAt: new Date().toISOString() 
+    updatedAt: new Date().toISOString(),
   };
   await saveConversation(updated);
 }
@@ -82,7 +91,7 @@ export async function isStorageReady(): Promise<boolean> {
     await modernStorage.getConversationStats();
     return true;
   } catch (error) {
-    console.error('Storage not ready:', error);
+    console.error("Storage not ready:", error);
     return false;
   }
 }
@@ -91,7 +100,7 @@ export async function isStorageReady(): Promise<boolean> {
 export async function migrateFromLocalStorage(): Promise<{ migrated: number; errors: string[] }> {
   try {
     // Check if localStorage has data
-    const localConversations = localStorage.getItem('disa:conversations');
+    const localConversations = localStorage.getItem("disa:conversations");
     if (!localConversations) {
       return { migrated: 0, errors: [] };
     }
@@ -112,8 +121,8 @@ export async function migrateFromLocalStorage(): Promise<{ migrated: number; err
 
     // Optionally clear localStorage after successful migration
     if (migrated > 0) {
-      localStorage.removeItem('disa:conversations');
-      localStorage.removeItem('disa:conversations:metadata');
+      localStorage.removeItem("disa:conversations");
+      localStorage.removeItem("disa:conversations:metadata");
     }
 
     return { migrated, errors };
@@ -134,11 +143,11 @@ export async function getStoragePerformance(): Promise<{
 
   const testConversation: Conversation = {
     id: `perf-test-${Date.now()}`,
-    title: 'Performance Test',
+    title: "Performance Test",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    model: 'test',
-    messageCount: 0
+    model: "test",
+    messageCount: 0,
   };
 
   const writeStart = performance.now();
@@ -151,7 +160,7 @@ export async function getStoragePerformance(): Promise<{
   return {
     readTime,
     writeTime,
-    totalOperations: 2
+    totalOperations: 2,
   };
 }
 
@@ -160,14 +169,17 @@ export async function searchConversations(query: string): Promise<ConversationMe
   const allConversations = await getAllConversations();
   const lowercaseQuery = query.toLowerCase();
 
-  return allConversations.filter(conv =>
-    conv.title.toLowerCase().includes(lowercaseQuery) ||
-    conv.model.toLowerCase().includes(lowercaseQuery)
+  return allConversations.filter(
+    (conv) =>
+      conv.title.toLowerCase().includes(lowercaseQuery) ||
+      conv.model.toLowerCase().includes(lowercaseQuery),
   );
 }
 
 // Bulk operations
-export async function bulkDeleteConversations(ids: string[]): Promise<{ deleted: number; errors: string[] }> {
+export async function bulkDeleteConversations(
+  ids: string[],
+): Promise<{ deleted: number; errors: string[] }> {
   const errors: string[] = [];
   let deleted = 0;
 
@@ -184,7 +196,7 @@ export async function bulkDeleteConversations(ids: string[]): Promise<{ deleted:
 }
 
 export async function bulkUpdateConversations(
-  updates: Array<{ id: string; updates: Partial<Conversation> }>
+  updates: Array<{ id: string; updates: Partial<Conversation> }>,
 ): Promise<{ updated: number; errors: string[] }> {
   const errors: string[] = [];
   let updated = 0;

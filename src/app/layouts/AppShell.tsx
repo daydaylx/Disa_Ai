@@ -36,7 +36,11 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const isMobile = useIsMobile();
 
   const activePath = useMemo(() => {
-    return NAV_ITEMS.find((item: { path: string; label: string }) => location.pathname.startsWith(item.path))?.path ?? "/chat";
+    return (
+      NAV_ITEMS.find((item: { path: string; label: string }) =>
+        location.pathname.startsWith(item.path),
+      )?.path ?? "/chat"
+    );
   }, [location.pathname]);
 
   return (
@@ -54,7 +58,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
       {isMobile ? (
         <div className="border-b border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)] px-4 py-3">
-          <button 
+          <button
             onClick={() => setIsOverflowOpen(true)}
             className="flex items-center gap-2 text-[var(--color-text-primary)]"
           >

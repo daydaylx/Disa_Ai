@@ -1,22 +1,22 @@
 // React hooks for modern storage layer
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { 
-  getAllConversations, 
-  getConversation, 
-  saveConversation, 
-  deleteConversation,
-  getConversationStats,
-  searchConversations,
+import { useCallback, useEffect, useState } from "react";
+
+import {
   bulkDeleteConversations,
-  updateConversation,
-  toggleFavorite,
-  isStorageReady,
-  migrateFromLocalStorage,
   type Conversation,
   type ConversationMetadata,
-  type ConversationStats
-} from '../lib/conversation-manager-modern';
-import { storageMigration } from '../lib/storage-migration';
+  type ConversationStats,
+  deleteConversation,
+  getAllConversations,
+  getConversation,
+  getConversationStats,
+  isStorageReady,
+  saveConversation,
+  searchConversations,
+  toggleFavorite,
+  updateConversation,
+} from "../lib/conversation-manager-modern";
+import { storageMigration } from "../lib/storage-migration";
 
 export interface UseConversationsOptions {
   autoRefresh?: boolean;
@@ -33,8 +33,8 @@ export interface UseConversationsReturn {
 }
 
 export function useConversations(options: UseConversationsOptions = {}) {
-  const { autoRefresh = true, searchQuery = '' } = options;
-  
+  const { autoRefresh = true, searchQuery = "" } = options;
+
   const [conversations, setConversations] = useState<ConversationMetadata[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,17 +44,17 @@ export function useConversations(options: UseConversationsOptions = {}) {
     try {
       setLoading(true);
       setError(null);
-      
+
       let result: ConversationMetadata[];
       if (currentSearch) {
         result = await searchConversations(currentSearch);
       } else {
         result = await getAllConversations();
       }
-      
+
       setConversations(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load conversations');
+      setError(err instanceof Error ? err.message : "Failed to load conversations");
     } finally {
       setLoading(false);
     }
@@ -64,17 +64,17 @@ export function useConversations(options: UseConversationsOptions = {}) {
     await loadConversations();
   }, [loadConversations]);
 
-  const search = useCallback(async (query: string) => {
+  const search = useCallback((query: string) => {
     setCurrentSearch(query);
   }, []);
 
   const clearSearch = useCallback(() => {
-    setCurrentSearch('');
+    setCurrentSearch("");
   }, []);
 
   useEffect(() => {
     if (autoRefresh) {
-      loadConversations();
+      void loadConversations();
     }
   }, [autoRefresh, loadConversations]);
 
@@ -84,7 +84,7 @@ export function useConversations(options: UseConversationsOptions = {}) {
     error,
     refresh,
     search,
-    clearSearch
+    clearSearch,
   };
 }
 
@@ -113,11 +113,11 @@ export function useConversation(id: string | null) {
     try {
       setLoading(true);
       setError(null);
-      
+
       const result = await getConversation(id);
       setConversation(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load conversation');
+      setError(err instanceof Error ? err.message : "Failed to load conversation");
       setConversation(null);
     } finally {
       setLoading(false);
@@ -130,48 +130,51 @@ export function useConversation(id: string | null) {
       await saveConversation(conv);
       setConversation(conv);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save conversation');
+      setError(err instanceof Error ? err.message : "Failed to save conversation");
       throw err;
     }
   }, []);
 
   const remove = useCallback(async () => {
     if (!id) return;
-    
+
     try {
       setError(null);
       await deleteConversation(id);
       setConversation(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete conversation');
+      setError(err instanceof Error ? err.message : "Failed to delete conversation");
       throw err;
     }
   }, [id]);
 
-  const update = useCallback(async (updates: Partial<Conversation>) => {
-    if (!conversation) return;
-    
-    try {
-      setError(null);
-      await updateConversation(conversation.id, updates);
-      const updated = { ...conversation, ...updates };
-      setConversation(updated);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update conversation');
-      throw err;
-    }
-  }, [conversation]);
+  const update = useCallback(
+    async (updates: Partial<Conversation>) => {
+      if (!conversation) return;
+
+      try {
+        setError(null);
+        await updateConversation(conversation.id, updates);
+        const updated = { ...conversation, ...updates };
+        setConversation(updated);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to update conversation");
+        throw err;
+      }
+    },
+    [conversation],
+  );
 
   const toggleFavoriteStatus = useCallback(async () => {
     if (!conversation) return;
-    
+
     try {
       setError(null);
       await toggleFavorite(conversation.id);
       const updated = { ...conversation, isFavorite: !conversation.isFavorite };
       setConversation(updated);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to toggle favorite status');
+      setError(err instanceof Error ? err.message : "Failed to toggle favorite status");
       throw err;
     }
   }, [conversation]);
@@ -181,7 +184,7 @@ export function useConversation(id: string | null) {
   }, [loadConversation]);
 
   useEffect(() => {
-    loadConversation();
+    void loadConversation();
   }, [loadConversation]);
 
   return {
@@ -192,7 +195,7 @@ export function useConversation(id: string | null) {
     remove,
     update,
     toggleFavoriteStatus,
-    refresh
+    refresh,
   };
 }
 
@@ -212,11 +215,11 @@ export function useConversationStats() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const result = await getConversationStats();
       setStats(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load stats');
+      setError(err instanceof Error ? err.message : "Failed to load stats");
     } finally {
       setLoading(false);
     }
@@ -227,14 +230,14 @@ export function useConversationStats() {
   }, [loadStats]);
 
   useEffect(() => {
-    loadStats();
+    void loadStats();
   }, [loadStats]);
 
   return {
     stats,
     loading,
     error,
-    refresh
+    refresh,
   };
 }
 
@@ -268,39 +271,42 @@ export function useStorageMigration() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const status = await storageMigration.checkMigrationStatus();
       setMigrationStatus(status);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to check migration status');
+      setError(err instanceof Error ? err.message : "Failed to check migration status");
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const migrate = useCallback(async (options?: any) => {
-    try {
-      setMigrationInProgress(true);
-      setError(null);
-      
-      const result = await storageMigration.migrateFromLocalStorage(options);
-      await checkMigrationStatus(); // Refresh status after migration
-      
-      return result;
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Migration failed';
-      setError(errorMsg);
-      throw new Error(errorMsg);
-    } finally {
-      setMigrationInProgress(false);
-    }
-  }, [checkMigrationStatus]);
+  const migrate = useCallback(
+    async (options?: any) => {
+      try {
+        setMigrationInProgress(true);
+        setError(null);
+
+        const result = await storageMigration.migrateFromLocalStorage(options);
+        await checkMigrationStatus(); // Refresh status after migration
+
+        return result;
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : "Migration failed";
+        setError(errorMsg);
+        throw new Error(errorMsg);
+      } finally {
+        setMigrationInProgress(false);
+      }
+    },
+    [checkMigrationStatus],
+  );
 
   const estimateMigrationTime = useCallback(async () => {
     try {
       return await storageMigration.estimateMigrationTime();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to estimate migration time');
+      setError(err instanceof Error ? err.message : "Failed to estimate migration time");
       return null;
     }
   }, []);
@@ -309,31 +315,34 @@ export function useStorageMigration() {
     try {
       return await storageMigration.createBackup();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create backup');
+      setError(err instanceof Error ? err.message : "Failed to create backup");
       return null;
     }
   }, []);
 
-  const restoreFromBackup = useCallback(async (backupData: string) => {
-    try {
-      setMigrationInProgress(true);
-      setError(null);
-      
-      const result = await storageMigration.restoreFromBackup(backupData);
-      await checkMigrationStatus(); // Refresh status after restore
-      
-      return result;
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Restore failed';
-      setError(errorMsg);
-      throw new Error(errorMsg);
-    } finally {
-      setMigrationInProgress(false);
-    }
-  }, [checkMigrationStatus]);
+  const restoreFromBackup = useCallback(
+    async (backupData: string) => {
+      try {
+        setMigrationInProgress(true);
+        setError(null);
+
+        const result = await storageMigration.restoreFromBackup(backupData);
+        await checkMigrationStatus(); // Refresh status after restore
+
+        return result;
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : "Restore failed";
+        setError(errorMsg);
+        throw new Error(errorMsg);
+      } finally {
+        setMigrationInProgress(false);
+      }
+    },
+    [checkMigrationStatus],
+  );
 
   useEffect(() => {
-    checkMigrationStatus();
+    void checkMigrationStatus();
   }, [checkMigrationStatus]);
 
   return {
@@ -345,7 +354,7 @@ export function useStorageMigration() {
     migrate,
     estimateMigrationTime,
     createBackup,
-    restoreFromBackup
+    restoreFromBackup,
   };
 }
 
@@ -365,11 +374,11 @@ export function useStorageHealth() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const ready = await isStorageReady();
       setIsReady(ready);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Storage health check failed');
+      setError(err instanceof Error ? err.message : "Storage health check failed");
       setIsReady(false);
     } finally {
       setLoading(false);
@@ -377,14 +386,14 @@ export function useStorageHealth() {
   }, []);
 
   useEffect(() => {
-    checkHealth();
+    void checkHealth();
   }, [checkHealth]);
 
   return {
     isReady,
     loading,
     error,
-    checkHealth
+    checkHealth,
   };
 }
 
@@ -397,15 +406,15 @@ export function useBulkOperations() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const result = await bulkDeleteConversations(ids);
       if (result.errors.length > 0) {
-        setError(result.errors.join(', '));
+        setError(result.errors.join(", "));
       }
-      
+
       return result;
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Bulk delete failed';
+      const errorMsg = err instanceof Error ? err.message : "Bulk delete failed";
       setError(errorMsg);
       throw new Error(errorMsg);
     } finally {
@@ -416,6 +425,6 @@ export function useBulkOperations() {
   return {
     bulkDelete,
     loading,
-    error
+    error,
   };
 }

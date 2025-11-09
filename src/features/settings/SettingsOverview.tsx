@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Card, CardDescription, CardTitle } from "../../components/ui/card";
+import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
-import { getConversationStats } from "../../lib/conversation-manager-modern";
 import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
 
@@ -26,7 +26,7 @@ export function SettingsOverview() {
   const { isEnabled: memoryEnabled } = useMemory();
   const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const location = useLocation();
-  const stats = useMemo(() => getConversationStats(), []);
+  const { stats } = useConversationStats();
 
   useEffect(() => {
     setHasApiKey(hasStoredApiKey());
@@ -59,7 +59,7 @@ export function SettingsOverview() {
       icon: BookOpenCheck,
       statusLabel: memoryEnabled ? "Gedächtnis aktiv" : "Neutral",
       statusVariant: memoryEnabled ? "success" : "muted",
-      meta: `${stats.totalConversations} Verläufe`,
+      meta: `${stats?.totalConversations ?? 0} Verläufe`,
     },
     {
       id: "filters",
@@ -86,10 +86,10 @@ export function SettingsOverview() {
       to: "/settings/data",
       icon: Upload,
       statusLabel:
-        stats.totalConversations > 0
-          ? `${stats.totalConversations} Verläufe`
+        (stats?.totalConversations ?? 0) > 0
+          ? `${stats?.totalConversations ?? 0} Verläufe`
           : "Noch keine lokalen Daten",
-      statusVariant: stats.totalConversations > 0 ? "muted" : "info",
+      statusVariant: (stats?.totalConversations ?? 0) > 0 ? "muted" : "info",
     },
   ];
 

@@ -12,10 +12,10 @@ import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import {
   cleanupOldConversations,
+  type ConversationStats,
   exportConversations,
   getConversationStats,
   importConversations,
-  type ConversationStats,
 } from "../../lib/conversation-manager-modern";
 import {
   BookOpenCheck,
@@ -59,7 +59,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     totalMessages: 0,
     averageMessagesPerConversation: 0,
     modelsUsed: [],
-    storageSize: 0
+    storageSize: 0,
   });
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       const newStats = await getConversationStats();
       setStats(newStats);
     } catch (error) {
-      console.error('Failed to refresh stats:', error);
+      console.error("Failed to refresh stats:", error);
     }
   };
 
@@ -178,7 +178,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
           deleted > 0 ? `${deleted} Konversationen entfernt.` : "Keine alten Verläufe gefunden.",
       });
     } catch (error) {
-      console.error('Cleanup failed:', error);
+      console.error("Cleanup failed:", error);
       toasts.push({
         kind: "error",
         title: "Bereinigung fehlgeschlagen",
