@@ -1,4 +1,3 @@
-
 import type { ChatRequestOptions } from "../types";
 import type { ChatMessageType } from "../types/chatMessage";
 

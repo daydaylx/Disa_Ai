@@ -538,7 +538,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               <select
                 value={filters.sortBy}
                 onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, sortBy: e.target.value as FilterState["sortBy"] }))
+                  setFilters((prev) => ({
+                    ...prev,
+                    sortBy: e.target.value as FilterState["sortBy"],
+                  }))
                 }
                 className="px-3 py-1.5 bg-surface-card border border-border-subtle rounded text-sm"
               >
