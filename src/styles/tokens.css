@@ -1,983 +1,290 @@
-/**
- * Design Tokens - Consolidated
- *
- * All design tokens consolidated from:
- * - design-tokens.css
- * - theme/tokens.css
- * - mobile-design-tokens.css
- * - category-tonal-scales.css
- *
- * Provides a single source of truth for all design values.
- */
+/** file: src/styles/tokens.css */
+
+/* ============================================================================
+   Core Scales (spacing, radius, typography, shadows)
+   ========================================================================== */
 
 :root {
-  /* ========================================================================
-     COLOR SYSTEM - Base Colors
-     ======================================================================== */
-
-  /* Core colors (light theme default) */
-  --fg0: #0a0f1a;
-  --fg1: #4a5163;
-  --fg2: #676d82;
-  --fg-invert: #f6f7ff;
-  --fg-muted: color-mix(in srgb, var(--fg1) 65%, var(--bg1));
-
-  --bg0: #e9ecf4;
-  --bg1: #ffffff;
-  --bg2: #dfe3f0;
-
-  /* Brand (kühles Blau) für primäre Aktionen/Links */
-  --acc1: #5a72f8;
-  --acc1-strong: #4a62e8;
-  /* Warme Akzentfarbe für sekundäre Highlights */
-  --acc2: #ff7a85;
-  --acc2-strong: #f46a75;
-
-  --ok: #10a372;
-  --warn: #d97706;
-  --err: #e11d48;
-  --info: #0d73d6;
-
-  --color-accent-surface: color-mix(in srgb, var(--acc2) 14%, white 86%);
-  --color-accent-surface-strong: color-mix(in srgb, var(--acc2) 24%, white 76%);
-  --color-accent-border: color-mix(in srgb, var(--acc2) 48%, transparent);
-
-  /* Semantic color tokens */
-  --color-surface-canvas: var(--bg0);
-  --color-surface-base: var(--bg1);
-  --color-surface-subtle: color-mix(in srgb, var(--bg1) 80%, var(--bg2));
-  --color-surface-muted: var(--bg2);
-  --color-surface-raised: color-mix(in srgb, var(--bg1) 95%, rgba(255, 255, 255, 0.85));
-  --color-surface-card: var(--bg1);
-  --color-surface-popover: color-mix(in srgb, var(--bg1) 98%, rgba(255, 255, 255, 0.9));
-  --color-surface-overlay: color-mix(in srgb, var(--bg1) 92%, rgba(15, 18, 32, 0.65));
-
-  --color-text-primary: var(--fg0);
-  --color-text-secondary: var(--fg1);
-  --color-text-tertiary: var(--fg2);
-  --color-text-muted: var(--fg-muted);
-  --color-text-inverse: var(--fg-invert);
-  --color-text-on-brand: var(--fg-invert);
-  --color-text-on-accent: var(--fg-invert);
-  --color-text-link: var(--acc1);
-  --color-text-link-hover: var(--acc1-strong);
-
-  --color-brand-primary: var(--acc1);
-  --color-brand-primary-hover: var(--acc1-strong);
-  --color-brand-primary-active: color-mix(in srgb, var(--acc1) 80%, #0b1020);
-  --color-brand-subtle: color-mix(in srgb, var(--acc1) 10%, var(--bg1));
-  --color-brand-strong: var(--acc1-strong);
-  --color-brand-on-primary: var(--fg-invert);
-  --brand-rgb: 75, 99, 255;
-  --ok-rgb: 13, 143, 98;
-  --warn-rgb: 178, 106, 0;
-  --err-rgb: 193, 58, 50;
-  --info-rgb: 13, 115, 214;
-
-  --color-border-hairline: color-mix(in srgb, var(--fg0) 8%, transparent);
-  --color-border-subtle: color-mix(in srgb, var(--fg0) 15%, transparent);
-  --color-border-strong: color-mix(in srgb, var(--fg0) 30%, transparent);
-  --color-border-focus: color-mix(in srgb, var(--acc1) 60%, var(--acc2) 40%);
-  --color-border-divider: color-mix(in srgb, var(--fg0) 12%, transparent);
-
-  /* NEU: Konsistenter Fokus-Ring */
-  --focus-ring-color: var(--acc2);
-  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--focus-ring-color) 40%, transparent);
-  --focus-ring-inset: inset 0 0 0 2px var(--focus-ring-color);
-
-  /* Status colors */
-  --color-status-success-fg: var(--ok);
-  --color-status-success-bg: color-mix(in srgb, var(--ok) 14%, var(--bg1));
-  --color-status-success-border: color-mix(in srgb, var(--ok) 45%, var(--bg2));
-  --color-status-warning-fg: var(--warn);
-  --color-status-warning-bg: color-mix(in srgb, var(--warn) 20%, var(--bg1));
-  --color-status-warning-border: color-mix(in srgb, var(--warn) 55%, var(--bg2));
-  --color-status-danger-fg: var(--err);
-  --color-status-danger-bg: color-mix(in srgb, var(--err) 16%, var(--bg1));
-  --color-status-danger-border: color-mix(in srgb, var(--err) 50%, var(--bg2));
-  --color-status-info-fg: var(--info);
-  --color-status-info-bg: color-mix(in srgb, var(--info) 14%, var(--bg1));
-  --color-status-info-border: color-mix(in srgb, var(--info) 48%, var(--bg2));
-
-  --color-surface-success: var(--color-status-success-bg);
-  --color-surface-warning: var(--color-status-warning-bg);
-  --color-surface-danger: var(--color-status-danger-bg);
-  --color-surface-info: var(--color-status-info-bg);
-
-  /* Action colors */
-  --color-action-primary-bg: var(--acc1);
-  --color-action-primary-hover: var(--acc1-strong);
-  --color-action-primary-active: color-mix(in srgb, var(--acc1) 75%, #05070f);
-  --color-action-primary-fg: var(--fg-invert);
-  --color-action-primary-focus-ring: color-mix(in srgb, var(--acc1) 35%, transparent);
-
-  --color-action-secondary-bg: color-mix(in srgb, var(--bg1) 90%, var(--bg2));
-  --color-action-secondary-hover: color-mix(in srgb, var(--bg1) 70%, var(--bg2));
-  --color-action-secondary-active: color-mix(in srgb, var(--bg1) 50%, var(--bg2));
-  --color-action-secondary-fg: var(--fg0);
-  --color-action-secondary-border: color-mix(in srgb, var(--fg0) 18%, transparent);
-  --color-action-secondary-border-hover: color-mix(in srgb, var(--fg0) 30%, transparent);
-  --color-action-secondary-focus-ring: color-mix(in srgb, var(--acc1) 25%, transparent);
-
-  --color-action-ghost-fg: var(--fg0);
-  --color-action-ghost-hover: color-mix(in srgb, var(--fg0) 6%, transparent);
-  --color-action-ghost-active: color-mix(in srgb, var(--fg0) 12%, transparent);
-  --color-action-ghost-focus-ring: color-mix(in srgb, var(--acc1) 25%, transparent);
-
-  --color-action-destructive-bg: var(--err);
-  --color-action-destructive-hover: color-mix(in srgb, var(--err) 90%, #6a0f0a);
-  --color-action-destructive-active: color-mix(in srgb, var(--err) 80%, #280402);
-  --color-action-destructive-fg: var(--fg-invert);
-  --color-action-destructive-focus-ring: color-mix(in srgb, var(--err) 35%, transparent);
-
-  /* Control colors */
-  --color-control-field-bg: color-mix(in srgb, var(--bg1) 92%, rgba(255, 255, 255, 0.9));
-  --color-control-field-hover: color-mix(in srgb, var(--bg1) 96%, rgba(255, 255, 255, 0.9));
-  --color-control-field-disabled: color-mix(in srgb, var(--bg2) 80%, rgba(255, 255, 255, 0.85));
-  --color-control-field-fg: var(--fg0);
-  --color-control-field-placeholder: var(--fg2);
-  --color-control-field-border: color-mix(in srgb, var(--fg0) 12%, transparent);
-  --color-control-field-border-hover: color-mix(in srgb, var(--fg0) 22%, transparent);
-  --color-control-field-border-active: color-mix(in srgb, var(--acc1) 55%, var(--acc2) 45%);
-  --color-control-field-focus-ring: color-mix(in srgb, var(--acc2) 32%, transparent);
-
-  --color-control-chip-bg: color-mix(in srgb, var(--bg1) 70%, var(--acc1) 10%);
-  --color-control-chip-hover: color-mix(in srgb, var(--bg1) 60%, var(--acc1) 15%);
-  --color-control-chip-fg: var(--fg0);
-  --color-control-chip-border: color-mix(in srgb, var(--fg0) 18%, transparent);
-
-  --color-surface-user-bubble: color-mix(in srgb, var(--acc2) 8%, var(--color-surface-base));
-  --color-surface-ai-bubble: var(--color-surface-raised);
-
-  /* ========================================================================
-     SHADOW & GLOW EFFECTS
-     ======================================================================== */
-
-  --shadow-focus: 0 0 0 2px color-mix(in srgb, var(--acc1) 22%, transparent);
-
-  /* Accent glows (use sparingly) */
-  --shadow-glow-brand-subtle:
-    0 0 12px rgba(var(--brand-rgb), 0.18), 0 0 0 1px rgba(var(--brand-rgb), 0.28);
-  --shadow-glow-brand:
-    0 0 16px rgba(var(--brand-rgb), 0.32), 0 0 0 2px rgba(var(--brand-rgb), 0.35);
-  --shadow-glow-brand-strong:
-    0 0 24px rgba(var(--brand-rgb), 0.42), 0 0 0 3px rgba(var(--brand-rgb), 0.45);
-  --shadow-glow-accent-subtle:
-    0 0 14px rgba(244, 93, 105, 0.22), 0 0 0 1px rgba(244, 93, 105, 0.26);
-  --shadow-glow-accent: 0 0 20px rgba(244, 93, 105, 0.32), 0 0 0 2px rgba(244, 93, 105, 0.34);
-
-  --shadow-glow-success-subtle: 0 0 12px rgba(13, 143, 98, 0.2), 0 0 0 1px rgba(13, 143, 98, 0.22);
-  --shadow-glow-success: var(--shadow-glow-success-subtle);
-  --shadow-glow-warning-subtle: 0 0 12px rgba(178, 106, 0, 0.22), 0 0 0 1px rgba(178, 106, 0, 0.25);
-  --shadow-glow-warning: var(--shadow-glow-warning-subtle);
-  --shadow-glow-error-subtle: 0 0 12px rgba(193, 58, 50, 0.25), 0 0 0 1px rgba(193, 58, 50, 0.28);
-  --shadow-glow-error: var(--shadow-glow-error-subtle);
-
-  --shadow-glow-neutral-subtle: 0 0 10px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(15, 23, 42, 0.12);
-  --shadow-neumorphic-icon:
-    2px 2px 4px rgba(9, 12, 20, 0.2), -2px -2px 4px rgba(255, 255, 255, 0.08);
-
-  /* ========================================================================
-     NEOMORPHISM (SOFT UI) SYSTEM
-     ======================================================================== */
-
-  /* Ambient Light Direction for consistent shadow patterns */
-  --light-direction-x: -1; /* -1 = left, 1 = right */
-  --light-direction-y: -1; /* -1 = top, 1 = bottom */
-  --light-angle: 315deg; /* Light source angle for gradients */
-
-  /* Neomorphic Inset Shadows (for pressed/input states) - DRAMATIC */
-  --shadow-inset-subtle:
-    inset 3px 3px 7px rgba(9, 12, 20, 0.1), inset -3px -3px 7px rgba(255, 255, 255, 0.05);
-  --shadow-inset-medium:
-    inset 6px 6px 14px rgba(9, 12, 20, 0.14), inset -6px -6px 14px rgba(255, 255, 255, 0.08);
-  --shadow-inset-strong:
-    inset 10px 10px 22px rgba(9, 12, 20, 0.18), inset -10px -10px 22px rgba(255, 255, 255, 0.1);
-  --shadow-inset-extreme:
-    inset 14px 14px 30px rgba(9, 12, 20, 0.22), inset -14px -14px 30px rgba(255, 255, 255, 0.12);
-
-  /* Neomorphic Raised Shadows (dual-directional for dramatic depth) */
-  --shadow-neumorphic-sm:
-    3px 3px 8px rgba(9, 12, 20, 0.08), -2px -2px 6px rgba(255, 255, 255, 0.05);
-  --shadow-neumorphic-md:
-    6px 6px 14px rgba(9, 12, 20, 0.08), -4px -4px 12px rgba(255, 255, 255, 0.05);
-  --shadow-neumorphic-lg:
-    10px 10px 22px rgba(9, 12, 20, 0.08), -6px -6px 16px rgba(255, 255, 255, 0.05);
-  --shadow-neumorphic-xl:
-    14px 14px 30px rgba(9, 12, 20, 0.08), -8px -8px 20px rgba(255, 255, 255, 0.05);
-  --shadow-neumorphic-dramatic:
-    20px 20px 40px rgba(9, 12, 20, 0.08), -12px -12px 30px rgba(255, 255, 255, 0.05);
-  --shadow-neumorphic-extreme:
-    28px 28px 56px rgba(9, 12, 20, 0.08), -16px -16px 40px rgba(255, 255, 255, 0.05);
-
-  /* Neomorphic Surfaces (enhanced base colors for depth) */
-  --surface-neumorphic-base: var(--bg1);
-  --surface-neumorphic-raised: color-mix(in srgb, var(--bg1) 95%, white 5%);
-  --surface-neumorphic-pressed: color-mix(in srgb, var(--bg1) 92%, black 8%);
-  --surface-neumorphic-floating: color-mix(in srgb, var(--bg1) 98%, white 2%);
-  --surface-neumorphic-overlay: color-mix(in srgb, var(--bg0) 35%, rgba(9, 12, 20, 0.4));
-  --surface-neumorphic-hero: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--bg1) 96%, white 4%) 0%,
-    color-mix(in srgb, var(--bg1) 88%, rgba(var(--brand-rgb), 0.12)) 100%
-  );
-  --surface-neumorphic-contrast: color-mix(in srgb, var(--bg1) 75%, var(--fg0) 5%);
-
-  /* Neomorphic Borders (subtle highlights/lowlights) */
-  --border-neumorphic-light: 1px solid rgba(255, 255, 255, 0.1);
-  --border-neumorphic-dark: 1px solid rgba(9, 12, 20, 0.05);
-  --border-neumorphic-subtle: 1px solid color-mix(in srgb, var(--bg1) 85%, white 15%);
-
-  /* Depth Shadow System (referenced by components) - DRAMATIC SCALE */
-  --shadow-depth-1: var(--shadow-neumorphic-sm);
-  --shadow-depth-2: var(--shadow-neumorphic-md);
-  --shadow-depth-3: var(--shadow-neumorphic-lg);
-  --shadow-depth-4: var(--shadow-neumorphic-xl);
-  --shadow-depth-5: var(--shadow-neumorphic-dramatic);
-  --shadow-depth-6: var(--shadow-neumorphic-extreme);
-  --shadow-depth-7:
-    75px 75px 150px rgba(9, 12, 20, 0.35), -75px -75px 150px rgba(255, 255, 255, 0.25);
-  --shadow-depth-8:
-    100px 100px 200px rgba(9, 12, 20, 0.4), -100px -100px 200px rgba(255, 255, 255, 0.28);
-
-  /* Neomorphic Focus States (soft glow + inset) */
-  --shadow-focus-neumorphic:
-    inset 0 0 0 1px var(--acc1), 0 0 0 3px color-mix(in srgb, var(--acc1) 25%, transparent),
-    var(--shadow-inset-subtle);
-
-  /* ========================================================================
-     MOBILE VIEWPORT OPTIMIZATIONS
-     ======================================================================== */
-
-  --mobile-safe-inline: max(env(safe-area-inset-left), env(safe-area-inset-right));
-  --mobile-safe-block: max(env(safe-area-inset-bottom), env(safe-area-inset-top));
-  --mobile-gutter: clamp(16px, 4vw, 24px);
-  --mobile-touch-gap: 12px;
-  --mobile-card-padding: clamp(16px, 5vw, 24px);
-  --mobile-header-height: 64px;
-
-  /* ========================================================================
-     MOTION & TRANSITIONS
-     ======================================================================== */
-
-  --motion-duration-micro: 110ms;
-  --motion-duration-small: 200ms;
-  --motion-duration-medium: 250ms;
-  --motion-duration-large: 300ms;
-  --motion-easing-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --motion-easing-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
-  --motion-easing-accelerate: cubic-bezier(0.8, 0, 1, 1);
-  --motion-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
-
-  --transition-fast: var(--motion-duration-micro);
-  --transition-normal: var(--motion-duration-large);
-  --transition-slow: 320ms;
-  --transition-smooth: var(--motion-easing-standard);
-  --transition-spring: var(--motion-easing-emphasized);
-
-  /* ========================================================================
-     NEOMORPHIC ANIMATION TOKENS - Universal State System
-     ======================================================================== */
-
-  /* Neomorphic-specific transition durations */
-  --neo-transition-fast: var(--motion-duration-micro);
-  --neo-transition-normal: var(--motion-duration-small);
-  --neo-transition-slow: var(--motion-duration-medium);
-  --neo-transition-depth: var(--motion-duration-large);
-
-  /* Neomorphic easing functions */
-  --neo-easing-gentle: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --neo-easing-press: cubic-bezier(0.4, 0, 0.6, 1);
-  --neo-easing-lift: cubic-bezier(0.2, 0, 0.38, 0.9);
-  --neo-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --neo-easing-smooth: var(--motion-easing-standard);
-
-  /* Universal state animation tokens */
-  --ui-state-transition-all: all var(--neo-transition-normal) var(--neo-easing-gentle);
-  --ui-state-transition-shadow: box-shadow var(--neo-transition-normal) var(--neo-easing-gentle);
-  --ui-state-transition-transform: transform var(--neo-transition-normal) var(--neo-easing-gentle);
-  --ui-state-transition-colors:
-    background-color var(--neo-transition-fast) var(--neo-easing-gentle),
-    color var(--neo-transition-fast) var(--neo-easing-gentle),
-    border-color var(--neo-transition-fast) var(--neo-easing-gentle);
-
-  /* Focus animation tokens */
-  --ui-focus-ring-transition:
-    opacity var(--neo-transition-fast) var(--neo-easing-gentle),
-    transform var(--neo-transition-fast) var(--neo-easing-gentle);
-  --ui-focus-scale: scale(1.02);
-  --ui-focus-glow:
-    0 0 0 4px var(--color-action-primary-focus-ring), 0 2px 8px rgba(var(--brand-rgb), 0.25);
-
-  /* Hover animation tokens */
-  --ui-hover-lift: translateY(-2px);
-  --ui-hover-scale: scale(1.005);
-  --ui-hover-glow-subtle: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-  /* Active/pressed animation tokens */
-  --ui-active-press: translateY(1px) scale(0.99);
-  --ui-active-transition: transform var(--neo-transition-fast) var(--neo-easing-press);
-
-  /* Loading animation tokens */
-  --ui-loading-opacity: 0.7;
-  --ui-loading-pulse: pulse 1.5s ease-in-out infinite;
-  --ui-loading-shimmer: shimmer 2s ease-in-out infinite;
-
-  /* Success/Error state animations */
-  --ui-success-glow: 0 0 8px rgba(13, 143, 98, 0.3);
-  --ui-error-glow: 0 0 8px rgba(193, 58, 50, 0.3);
-  --ui-state-notification-bounce: bounce-in 0.3s var(--neo-easing-bounce);
-
-  /* ========================================================================
-     TYPOGRAPHY
-     ======================================================================== */
-
   --font-family-sans:
-    "Inter Variable", "Inter", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
+    "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-family-mono:
-    "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
-  --font-family-numeric: "Inter Variable", "Segoe UI", system-ui, sans-serif;
+    "JetBrains Mono", "SFMono-Regular", Menlo, Monaco, Consolas, ui-monospace, monospace;
 
-  /* Font sizes */
-  --type-12: 0.75rem;
-  --type-14: 0.875rem;
-  --type-16: 1rem;
-  --type-18: 1.125rem;
-  --type-20: 1.25rem;
-  --type-24: 1.5rem;
-  --type-28: 1.75rem;
-  --type-32: 2rem;
+  /* 4pt spacing scale */
+  --space-3xs: 4px;
+  --space-2xs: 8px;
+  --space-xs: 12px;
+  --space-sm: 16px;
+  --space-md: 20px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 40px;
+  --space-3xl: 48px;
+  --space-4xl: 64px;
 
-  /* Line heights */
-  --line-tight: 1.2;
-  --line-snug: 1.35;
-  --line-relaxed: 1.6;
+  /* Stack/Inline aliases */
+  --space-inline-3xs: var(--space-3xs);
+  --space-inline-2xs: var(--space-2xs);
+  --space-inline-xs: var(--space-xs);
+  --space-inline-sm: var(--space-sm);
+  --space-inline-md: var(--space-md);
+  --space-inline-lg: var(--space-lg);
+  --space-inline-xl: var(--space-xl);
+  --space-inline-2xl: var(--space-2xl);
+  --space-inline-3xl: var(--space-3xl);
+  --space-stack-3xs: var(--space-3xs);
+  --space-stack-2xs: var(--space-2xs);
+  --space-stack-xs: var(--space-xs);
+  --space-stack-sm: var(--space-sm);
+  --space-stack-md: var(--space-md);
+  --space-stack-lg: var(--space-lg);
+  --space-stack-xl: var(--space-xl);
+  --space-stack-2xl: var(--space-2xl);
+  --space-stack-3xl: var(--space-3xl);
+  --page-padding-x: var(--space-lg);
+  --page-padding-y: var(--space-lg);
 
-  /* Display */
-  --font-size-display: var(--type-32);
-  --line-height-display: calc(var(--type-32) * 1.25);
-  --font-weight-display: 600;
-  --letter-spacing-display: -0.01em;
-
-  /* Headline */
-  --font-size-headline: var(--type-28);
-  --line-height-headline: calc(var(--type-28) * 1.25);
-  --font-weight-headline: 600;
-  --letter-spacing-headline: -0.008em;
-
-  /* Title */
-  --font-size-title: var(--type-24);
-  --line-height-title: calc(var(--type-24) * 1.25);
-  --font-weight-title: 600;
-  --letter-spacing-title: -0.006em;
-
-  /* Subtitle */
-  --font-size-subtitle: var(--type-20);
-  --line-height-subtitle: calc(var(--type-20) * var(--line-snug));
-  --font-weight-subtitle: 500;
-  --letter-spacing-subtitle: -0.002em;
-
-  /* Body */
-  --font-size-body: var(--type-18);
-  --line-height-body: calc(var(--type-18) * var(--line-relaxed));
-  --font-weight-body: 400;
-
-  --font-size-body-strong: var(--type-18);
-  --line-height-body-strong: calc(var(--type-18) * var(--line-relaxed));
-  --font-weight-body-strong: 600;
-
-  --font-size-body-small: var(--type-16);
-  --line-height-body-small: calc(var(--type-16) * var(--line-relaxed));
-  --font-weight-body-small: 400;
-
-  /* Caption & Labels */
-  --font-size-caption: var(--type-12);
-  --line-height-caption: calc(var(--type-12) * var(--line-snug));
-  --font-weight-caption: 500;
-
-  --font-size-label: var(--type-14);
-  --line-height-label: calc(var(--type-14) * var(--line-snug));
-  --font-weight-label: 600;
-  --letter-spacing-label: 0.04em;
-  --text-transform-label: uppercase;
-
-  --font-size-mono: var(--type-14);
-  --line-height-mono: calc(var(--type-14) * var(--line-relaxed));
-  --font-weight-mono: 500;
-
-  /* Card typography */
-  --font-size-title-hero: var(--type-24);
-  --line-height-title-hero: calc(var(--type-24) * var(--line-snug));
-  --font-weight-title-hero: 600;
-
-  --font-size-title-lg: var(--type-20);
-  --line-height-title-lg: calc(var(--type-20) * var(--line-snug));
-  --font-weight-title-lg: 600;
-
-  --font-size-title-base: var(--type-18);
-  --line-height-title-base: calc(var(--type-18) * var(--line-snug));
-  --font-weight-title-base: 600;
-
-  --font-size-title-sm: var(--type-16);
-  --line-height-title-sm: calc(var(--type-16) * var(--line-relaxed));
-  --font-weight-title-sm: 600;
-
-  --font-size-description-lg: var(--type-16);
-  --line-height-description-lg: calc(var(--type-16) * var(--line-relaxed));
-  --font-weight-description-lg: 400;
-
-  --font-size-description-base: var(--type-14);
-  --line-height-description-base: calc(var(--type-14) * var(--line-relaxed));
-  --font-weight-description-base: 400;
-
-  --font-size-description-sm: var(--type-12);
-  --line-height-description-sm: calc(var(--type-12) * var(--line-relaxed));
-  --font-weight-description-sm: 400;
-
-  --font-size-metadata: var(--type-12);
-  --line-height-metadata: calc(var(--type-12) * var(--line-snug));
-  --font-weight-metadata: 600;
-  --letter-spacing-metadata: 0.08em;
-  --text-transform-metadata: uppercase;
-
-  --font-size-card-label: var(--type-12);
-  --line-height-card-label: calc(var(--type-12) * var(--line-snug));
-  --font-weight-card-label: 600;
-
-  --font-size-badge: var(--type-12);
-  --font-size-input: var(--type-16);
-
-  /* ========================================================================
-     SPACING
-     ======================================================================== */
-
-  --space-none: 0px;
-  --space-3xs: 0.125rem;
-  --space-2xs: 0.25rem;
-  --space-xs: 0.5rem;
-  --space-sm: 0.75rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-  --space-3xl: 4rem;
-  --space-4xl: 4rem;
-
-  --space-stack-xs: 0.5rem;
-  --space-stack-sm: 0.75rem;
-  --space-stack-md: 1rem;
-  --space-stack-lg: 1.5rem;
-  --space-inline-sm: 0.5rem;
-  --space-inline-md: 0.75rem;
-  --space-inline-lg: 1rem;
-  --space-section: 3rem;
-  --space-container-x: 1rem;
-  --space-container-y: 1.5rem;
-
-  /* ========================================================================
-     SIZES
-     ======================================================================== */
-
-  --size-touch-compact: 2.75rem;
-  --size-touch-comfortable: 3rem;
-  --size-touch-relaxed: 3.5rem;
-  --size-touch-spacious: 4rem;
-
-  --size-scrollbar: 0.5rem;
-  --size-ripple-max: 12.5rem;
-  --size-bottomsheet-handle: 0.3125rem;
-  --size-bottomsheet-handle-width: 2.5rem;
-  --size-bottomsheet-border: 0.125rem;
-
-  /* ========================================================================
-     RADII
-     ======================================================================== */
-
-  --radius-none: 0px;
-  --radius-2: 2px;
-  --radius-4: 4px;
-  --radius-8: 8px;
-  --radius-12: 12px;
-  --radius-16: 16px;
-
-  --radius-xs: 4px;
+  /* Radius scale */
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-xl: 20px;
-  --radius-pill: var(--radius-16);
-  --radius-full: 50%;
-  --radius-scrollbar: var(--radius-16);
-  --radius-focus: var(--radius-4);
-  --radius-toast: var(--radius-12);
-  --radius-install-prompt: var(--radius-12);
-  --radius-button: var(--radius-12);
-  --radius-badge: var(--radius-8);
-  --radius-card: var(--radius-12);
-  --radius-card-inner: var(--radius-8);
-  --radius-card-small: var(--radius-4);
-  --radius-avatar: 50%;
+  --radius-2xl: 24px;
+  --radius-pill: 999px;
 
-  /* ========================================================================
-     LAYOUT (Mobile-first)
-     ======================================================================== */
+  /* Shadows */
+  --shadow-card: 0 12px 32px rgba(15, 23, 42, 0.08);
+  --shadow-overlay: 0 24px 60px rgba(2, 6, 23, 0.48);
+  --shadow-ring: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+  --shadow-neo-sm: 0 4px 10px rgba(15, 23, 42, 0.08);
+  --shadow-neo-md: 0 8px 22px rgba(15, 23, 42, 0.12);
+  --shadow-neo-lg: 0 16px 30px rgba(15, 23, 42, 0.16);
+  --shadow-neo-xl: 0 24px 42px rgba(15, 23, 42, 0.2);
+  --shadow-inset-subtle: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-inset-medium: inset 0 2px 4px rgba(15, 23, 42, 0.12);
+  --shadow-inset-strong: inset 0 3px 6px rgba(15, 23, 42, 0.16);
+  --shadow-inset-extreme: inset 0 4px 8px rgba(15, 23, 42, 0.22);
+  --shadow-depth-1: var(--shadow-neo-sm);
+  --shadow-depth-2: var(--shadow-neo-md);
+  --shadow-depth-3: var(--shadow-neo-lg);
+  --shadow-depth-4: var(--shadow-neo-xl);
+  --shadow-depth-5: 0 32px 64px rgba(15, 23, 42, 0.22);
+  --shadow-depth-6: 0 48px 96px rgba(15, 23, 42, 0.28);
+  --shadow-neumorphic-sm: var(--shadow-neo-sm);
+  --shadow-neumorphic-md: var(--shadow-neo-md);
+  --shadow-neumorphic-lg: var(--shadow-neo-lg);
+  --shadow-neumorphic-xl: var(--shadow-neo-xl);
 
-  --layout-sidebar-width: 0px;
-  --layout-header-height: 4rem;
-  --layout-footer-height: 5rem;
-  --layout-bottom-nav-height: 4rem;
-  --layout-content-padding-x: 1rem;
-  --layout-content-padding-y: 1rem;
-  --layout-main-pt: calc(var(--layout-header-height) + var(--layout-content-padding-y));
-  --layout-main-pb: calc(
-    var(--layout-bottom-nav-height) + var(--layout-content-padding-y) +
-      env(safe-area-inset-bottom, 0px)
-  );
+  /* Motion */
+  --motion-duration-quick: 120ms;
+  --motion-duration-base: 180ms;
+  --motion-duration-slow: 320ms;
+  --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
 
-  /* ========================================================================
-     SAFE AREA & VIEWPORT
-     ======================================================================== */
+  /* Touch targets */
+  --size-touch-compact: 44px;
+  --size-touch-comfortable: 48px;
+  --size-touch-relaxed: 56px;
+  --size-touch-spacious: 64px;
 
-  --vh: 1vh;
+  /* Misc */
+  --font-size-input: 16px;
+  --mobile-gutter: var(--space-md);
   --mobile-safe-top: env(safe-area-inset-top, 0px);
   --mobile-safe-right: env(safe-area-inset-right, 0px);
   --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
   --mobile-safe-left: env(safe-area-inset-left, 0px);
-
-  /* ========================================================================
-     CATEGORY ACCENT COLORS
-     ======================================================================== */
-
-  /* Alltag - Warm amber tones */
-  --role-accent-alltag-50: hsl(30 8% 96%);
-  --role-accent-alltag-100: hsl(30 10% 92%);
-  --role-accent-alltag-200: hsl(30 12% 85%);
-  --role-accent-alltag-300: hsl(30 14% 75%);
-  --role-accent-alltag-400: hsl(30 16% 65%);
-  --role-accent-alltag-500: hsl(30 12% 55%);
-  --role-accent-alltag-600: hsl(30 14% 45%);
-  --role-accent-alltag-700: hsl(30 16% 38%);
-  --role-accent-alltag-800: hsl(30 18% 30%);
-  --role-accent-alltag-900: hsl(30 20% 22%);
-  --role-accent-alltag-text: var(--role-accent-alltag-900);
-  --role-accent-alltag-text-on: var(--role-accent-alltag-50);
-  --role-accent-alltag-bg: var(--role-accent-alltag-100);
-  --role-accent-alltag-bg-hover: var(--role-accent-alltag-200);
-  --role-accent-alltag-bg-subtle: var(--role-accent-alltag-50);
-  --role-accent-alltag-border: var(--role-accent-alltag-300);
-  --role-accent-alltag-border-strong: var(--role-accent-alltag-400);
-  --role-accent-alltag-chip-bg: var(--role-accent-alltag-100);
-  --role-accent-alltag-chip-text: var(--role-accent-alltag-800);
-  --role-accent-alltag-chip-border: var(--role-accent-alltag-200);
-
-  /* Business - Steel blue */
-  --role-accent-business-50: hsl(210 8% 96%);
-  --role-accent-business-100: hsl(210 10% 92%);
-  --role-accent-business-200: hsl(210 12% 85%);
-  --role-accent-business-300: hsl(210 14% 75%);
-  --role-accent-business-400: hsl(210 16% 65%);
-  --role-accent-business-500: hsl(210 12% 56%);
-  --role-accent-business-600: hsl(210 14% 46%);
-  --role-accent-business-700: hsl(210 16% 38%);
-  --role-accent-business-800: hsl(210 18% 30%);
-  --role-accent-business-900: hsl(210 20% 22%);
-  --role-accent-business-text: var(--role-accent-business-900);
-  --role-accent-business-text-on: var(--role-accent-business-50);
-  --role-accent-business-bg: var(--role-accent-business-100);
-  --role-accent-business-bg-hover: var(--role-accent-business-200);
-  --role-accent-business-bg-subtle: var(--role-accent-business-50);
-  --role-accent-business-border: var(--role-accent-business-300);
-  --role-accent-business-border-strong: var(--role-accent-business-400);
-  --role-accent-business-chip-bg: var(--role-accent-business-100);
-  --role-accent-business-chip-text: var(--role-accent-business-800);
-  --role-accent-business-chip-border: var(--role-accent-business-200);
-
-  /* Kreativ - Violet */
-  --role-accent-kreativ-50: hsl(275 8% 96%);
-  --role-accent-kreativ-100: hsl(275 10% 92%);
-  --role-accent-kreativ-200: hsl(275 12% 85%);
-  --role-accent-kreativ-300: hsl(275 14% 75%);
-  --role-accent-kreativ-400: hsl(275 16% 65%);
-  --role-accent-kreativ-500: hsl(275 14% 55%);
-  --role-accent-kreativ-600: hsl(275 16% 45%);
-  --role-accent-kreativ-700: hsl(275 18% 38%);
-  --role-accent-kreativ-800: hsl(275 20% 30%);
-  --role-accent-kreativ-900: hsl(275 22% 22%);
-  --role-accent-kreativ-text: var(--role-accent-kreativ-900);
-  --role-accent-kreativ-text-on: var(--role-accent-kreativ-50);
-  --role-accent-kreativ-bg: var(--role-accent-kreativ-100);
-  --role-accent-kreativ-bg-hover: var(--role-accent-kreativ-200);
-  --role-accent-kreativ-bg-subtle: var(--role-accent-kreativ-50);
-  --role-accent-kreativ-border: var(--role-accent-kreativ-300);
-  --role-accent-kreativ-border-strong: var(--role-accent-kreativ-400);
-  --role-accent-kreativ-chip-bg: var(--role-accent-kreativ-100);
-  --role-accent-kreativ-chip-text: var(--role-accent-kreativ-800);
-  --role-accent-kreativ-chip-border: var(--role-accent-kreativ-200);
-
-  /* Bildung - Cyan-blue */
-  --role-accent-bildung-50: hsl(195 8% 96%);
-  --role-accent-bildung-100: hsl(195 10% 92%);
-  --role-accent-bildung-200: hsl(195 12% 85%);
-  --role-accent-bildung-300: hsl(195 14% 75%);
-  --role-accent-bildung-400: hsl(195 16% 65%);
-  --role-accent-bildung-500: hsl(195 12% 56%);
-  --role-accent-bildung-600: hsl(195 14% 46%);
-  --role-accent-bildung-700: hsl(195 16% 38%);
-  --role-accent-bildung-800: hsl(195 18% 30%);
-  --role-accent-bildung-900: hsl(195 20% 22%);
-  --role-accent-bildung-text: var(--role-accent-bildung-900);
-  --role-accent-bildung-text-on: var(--role-accent-bildung-50);
-  --role-accent-bildung-bg: var(--role-accent-bildung-100);
-  --role-accent-bildung-bg-hover: var(--role-accent-bildung-200);
-  --role-accent-bildung-bg-subtle: var(--role-accent-bildung-50);
-  --role-accent-bildung-border: var(--role-accent-bildung-300);
-  --role-accent-bildung-border-strong: var(--role-accent-bildung-400);
-  --role-accent-bildung-chip-bg: var(--role-accent-bildung-100);
-  --role-accent-bildung-chip-text: var(--role-accent-bildung-800);
-  --role-accent-bildung-chip-border: var(--role-accent-bildung-200);
-
-  /* Familie - Warm coral */
-  --role-accent-familie-50: hsl(5 8% 96%);
-  --role-accent-familie-100: hsl(5 10% 92%);
-  --role-accent-familie-200: hsl(5 12% 85%);
-  --role-accent-familie-300: hsl(5 14% 75%);
-  --role-accent-familie-400: hsl(5 16% 65%);
-  --role-accent-familie-500: hsl(5 12% 56%);
-  --role-accent-familie-600: hsl(5 14% 46%);
-  --role-accent-familie-700: hsl(5 16% 38%);
-  --role-accent-familie-800: hsl(5 18% 30%);
-  --role-accent-familie-900: hsl(5 20% 22%);
-  --role-accent-familie-text: var(--role-accent-familie-900);
-  --role-accent-familie-text-on: var(--role-accent-familie-50);
-  --role-accent-familie-bg: var(--role-accent-familie-100);
-  --role-accent-familie-bg-hover: var(--role-accent-familie-200);
-  --role-accent-familie-bg-subtle: var(--role-accent-familie-50);
-  --role-accent-familie-border: var(--role-accent-familie-300);
-  --role-accent-familie-border-strong: var(--role-accent-familie-400);
-  --role-accent-familie-chip-bg: var(--role-accent-familie-100);
-  --role-accent-familie-chip-text: var(--role-accent-familie-800);
-  --role-accent-familie-chip-border: var(--role-accent-familie-200);
-
-  /* Beratung - Soft green */
-  --role-accent-beratung-50: hsl(145 8% 96%);
-  --role-accent-beratung-100: hsl(145 10% 92%);
-  --role-accent-beratung-200: hsl(145 12% 85%);
-  --role-accent-beratung-300: hsl(145 14% 75%);
-  --role-accent-beratung-400: hsl(145 16% 65%);
-  --role-accent-beratung-500: hsl(145 12% 55%);
-  --role-accent-beratung-600: hsl(145 14% 45%);
-  --role-accent-beratung-700: hsl(145 16% 38%);
-  --role-accent-beratung-800: hsl(145 18% 30%);
-  --role-accent-beratung-900: hsl(145 20% 22%);
-  --role-accent-beratung-text: var(--role-accent-beratung-900);
-  --role-accent-beratung-text-on: var(--role-accent-beratung-50);
-  --role-accent-beratung-bg: var(--role-accent-beratung-100);
-  --role-accent-beratung-bg-hover: var(--role-accent-beratung-200);
-  --role-accent-beratung-bg-subtle: var(--role-accent-beratung-50);
-  --role-accent-beratung-border: var(--role-accent-beratung-300);
-  --role-accent-beratung-border-strong: var(--role-accent-beratung-400);
-  --role-accent-beratung-chip-bg: var(--role-accent-beratung-100);
-  --role-accent-beratung-chip-text: var(--role-accent-beratung-800);
-  --role-accent-beratung-chip-border: var(--role-accent-beratung-200);
+  --mobile-safe-inline: max(env(safe-area-inset-left), env(safe-area-inset-right));
+  --mobile-safe-block: max(env(safe-area-inset-bottom), env(safe-area-inset-top));
 }
 
 /* ============================================================================
-   DARK THEME
-   ============================================================================ */
+   Theme tokens (light & dark via data-theme)
+   ========================================================================== */
+
+:root,
+:root[data-theme="light"] {
+  --bg0: #f5f6fb;
+  --bg1: #ffffff;
+  --bg2: #e3e7f4;
+  --line: rgba(13, 18, 33, 0.08);
+
+  --fg: #0f1426;
+  --fg-muted: #454f65;
+  --fg-subtle: #6d768f;
+
+  --accent: #616dff;
+  --accent-weak: #e7e9ff;
+  --accent-contrast: #ffffff;
+
+  --info: #2563eb;
+  --info-soft: #e4edff;
+  --success: #16a34a;
+  --success-soft: #d1fae5;
+  --warning: #f97316;
+  --warning-soft: #fef3c7;
+  --danger: #e11d48;
+  --danger-soft: #fee2e2;
+}
 
 :root[data-theme="dark"] {
-  color-scheme: dark;
+  --bg0: #05070f;
+  --bg1: #0f1626;
+  --bg2: #1c2435;
+  --line: rgba(148, 163, 184, 0.24);
 
-  /* Core colors */
-  --fg0: #f4f7ff;
-  --fg1: #c7cee1;
-  --fg2: #95a0bb;
-  --fg-invert: #070a12;
-  --fg-muted: color-mix(in srgb, var(--fg2) 60%, rgba(9, 14, 24, 0.6));
+  --fg: #f5f7fb;
+  --fg-muted: #c4cada;
+  --fg-subtle: #8f98af;
 
-  --bg0: #070d18;
-  --bg1: #0d1626;
-  --bg2: #182132;
+  --accent: #8da2ff;
+  --accent-weak: rgba(141, 162, 255, 0.18);
+  --accent-contrast: #05070f;
 
-  --acc1: #8ea6ff;
-  --acc1-strong: #b8c5ff;
-  --acc2: #ff8f9a;
-  --acc2-strong: #ff6775;
-
-  --ok: #31d193;
-  --warn: #ffb74d;
-  --err: #ff6b6b;
-  --info: #6cb6ff;
-
-  --color-accent-surface: color-mix(in srgb, var(--acc2) 28%, var(--bg1) 72%);
-  --color-accent-surface-strong: color-mix(in srgb, var(--acc2) 42%, var(--bg1) 58%);
-  --color-accent-border: color-mix(in srgb, var(--acc2) 55%, transparent);
-
-  /* NEOMORPHISM DARK MODE OVERRIDES */
-
-  /* Dark mode neomorphic inset shadows (subtler, more highlights) */
-  --shadow-inset-subtle:
-    inset 2px 2px 5px rgba(0, 0, 0, 0.32), inset -2px -2px 5px rgba(255, 255, 255, 0.02);
-  --shadow-inset-medium:
-    inset 4px 4px 9px rgba(0, 0, 0, 0.42), inset -4px -4px 9px rgba(255, 255, 255, 0.04);
-  --shadow-inset-strong:
-    inset 6px 6px 14px rgba(0, 0, 0, 0.52), inset -6px -6px 14px rgba(255, 255, 255, 0.06);
-
-  /* Dark mode neomorphic raised shadows (stronger darks, subtle lights) */
-  --shadow-neumorphic-sm: 3px 3px 8px rgba(0, 0, 0, 0.38), -3px -3px 8px rgba(255, 255, 255, 0.04);
-  --shadow-neumorphic-icon:
-    2px 2px 4px rgba(0, 0, 0, 0.28), -2px -2px 4px rgba(255, 255, 255, 0.06);
-  --shadow-neumorphic-md:
-    5px 5px 12px rgba(0, 0, 0, 0.46), -5px -5px 12px rgba(255, 255, 255, 0.05);
-  --shadow-neumorphic-lg:
-    9px 9px 20px rgba(0, 0, 0, 0.52), -9px -9px 20px rgba(255, 255, 255, 0.07);
-  --shadow-neumorphic-xl:
-    14px 14px 30px rgba(0, 0, 0, 0.58), -14px -14px 30px rgba(255, 255, 255, 0.08);
-
-  /* Dark mode neomorphic surfaces */
-  --surface-neumorphic-base: var(--bg1);
-  --surface-neumorphic-raised: color-mix(in srgb, var(--bg1) 78%, rgba(255, 255, 255, 0.22));
-  --surface-neumorphic-pressed: color-mix(in srgb, var(--bg1) 88%, black 12%);
-  --surface-neumorphic-floating: color-mix(in srgb, var(--bg1) 70%, rgba(255, 255, 255, 0.3));
-  --surface-neumorphic-overlay: color-mix(in srgb, var(--bg0) 22%, rgba(8, 12, 20, 0.55));
-
-  /* Dark mode neomorphic borders */
-  --border-neumorphic-light: 1px solid rgba(255, 255, 255, 0.08);
-  --border-neumorphic-dark: 1px solid rgba(0, 0, 0, 0.28);
-  --border-neumorphic-subtle: 1px solid color-mix(in srgb, var(--bg1) 72%, white 28%);
-
-  /* Dark mode depth shadows (updated for dramatic neomorphic system) */
-  --shadow-depth-1: var(--shadow-neumorphic-sm);
-  --shadow-depth-2: var(--shadow-neumorphic-md);
-  --shadow-depth-3: var(--shadow-neumorphic-lg);
-  --shadow-depth-4: var(--shadow-neumorphic-xl);
-  --shadow-depth-5: 16px 16px 34px rgba(0, 0, 0, 0.64), -16px -16px 34px rgba(255, 255, 255, 0.1);
-  --shadow-depth-6: 24px 24px 48px rgba(0, 0, 0, 0.7), -24px -24px 48px rgba(255, 255, 255, 0.12);
-  --shadow-depth-7: 32px 32px 70px rgba(0, 0, 0, 0.76), -32px -32px 70px rgba(255, 255, 255, 0.14);
-  --shadow-depth-8: 40px 40px 90px rgba(0, 0, 0, 0.8), -40px -40px 90px rgba(255, 255, 255, 0.16);
-
-  /* Dark mode dramatic neomorphic shadows */
-  --shadow-neumorphic-dramatic:
-    30px 30px 64px rgba(0, 0, 0, 0.74), -30px -30px 64px rgba(255, 255, 255, 0.14);
-  --shadow-neumorphic-extreme:
-    42px 42px 88px rgba(0, 0, 0, 0.78), -42px -42px 88px rgba(255, 255, 255, 0.15);
-
-  /* Dark mode neomorphic focus */
-  --shadow-focus-neumorphic:
-    inset 0 0 0 1px color-mix(in srgb, var(--acc1) 70%, var(--acc2) 30%),
-    0 0 0 3px color-mix(in srgb, var(--acc2) 20%, transparent), var(--shadow-inset-subtle);
-
-  /* Category colors - dark mode adaptations */
-  --role-accent-alltag-text: var(--role-accent-alltag-200);
-  --role-accent-alltag-text-on: var(--role-accent-alltag-900);
-  --role-accent-alltag-bg: var(--role-accent-alltag-900);
-  --role-accent-alltag-bg-hover: var(--role-accent-alltag-800);
-  --role-accent-alltag-bg-subtle: var(--role-accent-alltag-900);
-  --role-accent-alltag-border: var(--role-accent-alltag-700);
-  --role-accent-alltag-border-strong: var(--role-accent-alltag-600);
-  --role-accent-alltag-chip-bg: var(--role-accent-alltag-800);
-  --role-accent-alltag-chip-text: var(--role-accent-alltag-200);
-  --role-accent-alltag-chip-border: var(--role-accent-alltag-700);
-
-  --role-accent-business-text: var(--role-accent-business-200);
-  --role-accent-business-text-on: var(--role-accent-business-900);
-  --role-accent-business-bg: var(--role-accent-business-900);
-  --role-accent-business-bg-hover: var(--role-accent-business-800);
-  --role-accent-business-bg-subtle: var(--role-accent-business-900);
-  --role-accent-business-border: var(--role-accent-business-700);
-  --role-accent-business-border-strong: var(--role-accent-business-600);
-  --role-accent-business-chip-bg: var(--role-accent-business-800);
-  --role-accent-business-chip-text: var(--role-accent-business-200);
-  --role-accent-business-chip-border: var(--role-accent-business-700);
-
-  --role-accent-kreativ-text: var(--role-accent-kreativ-200);
-  --role-accent-kreativ-text-on: var(--role-accent-kreativ-900);
-  --role-accent-kreativ-bg: var(--role-accent-kreativ-900);
-  --role-accent-kreativ-bg-hover: var(--role-accent-kreativ-800);
-  --role-accent-kreativ-bg-subtle: var(--role-accent-kreativ-900);
-  --role-accent-kreativ-border: var(--role-accent-kreativ-700);
-  --role-accent-kreativ-border-strong: var(--role-accent-kreativ-600);
-  --role-accent-kreativ-chip-bg: var(--role-accent-kreativ-800);
-  --role-accent-kreativ-chip-text: var(--role-accent-kreativ-200);
-  --role-accent-kreativ-chip-border: var(--role-accent-kreativ-700);
-
-  --role-accent-bildung-text: var(--role-accent-bildung-200);
-  --role-accent-bildung-text-on: var(--role-accent-bildung-900);
-  --role-accent-bildung-bg: var(--role-accent-bildung-900);
-  --role-accent-bildung-bg-hover: var(--role-accent-bildung-800);
-  --role-accent-bildung-bg-subtle: var(--role-accent-bildung-900);
-  --role-accent-bildung-border: var(--role-accent-bildung-700);
-  --role-accent-bildung-border-strong: var(--role-accent-bildung-600);
-  --role-accent-bildung-chip-bg: var(--role-accent-bildung-800);
-  --role-accent-bildung-chip-text: var(--role-accent-bildung-200);
-  --role-accent-bildung-chip-border: var(--role-accent-bildung-700);
-
-  --role-accent-familie-text: var(--role-accent-familie-200);
-  --role-accent-familie-text-on: var(--role-accent-familie-900);
-  --role-accent-familie-bg: var(--role-accent-familie-900);
-  --role-accent-familie-bg-hover: var(--role-accent-familie-800);
-  --role-accent-familie-bg-subtle: var(--role-accent-familie-900);
-  --role-accent-familie-border: var(--role-accent-familie-700);
-  --role-accent-familie-border-strong: var(--role-accent-familie-600);
-  --role-accent-familie-chip-bg: var(--role-accent-familie-800);
-  --role-accent-familie-chip-text: var(--role-accent-familie-200);
-  --role-accent-familie-chip-border: var(--role-accent-familie-700);
-
-  --role-accent-beratung-text: var(--role-accent-beratung-200);
-  --role-accent-beratung-text-on: var(--role-accent-beratung-900);
-  --role-accent-beratung-bg: var(--role-accent-beratung-900);
-  --role-accent-beratung-bg-hover: var(--role-accent-beratung-800);
-  --role-accent-beratung-bg-subtle: var(--role-accent-beratung-900);
-  --role-accent-beratung-border: var(--role-accent-beratung-700);
-  --role-accent-beratung-border-strong: var(--role-accent-beratung-600);
-  --role-accent-beratung-chip-bg: var(--role-accent-beratung-800);
-  --role-accent-beratung-chip-text: var(--role-accent-beratung-200);
-  --role-accent-beratung-chip-border: var(--role-accent-beratung-700);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    /* Core colors */
-    --fg0: #f5f6ff;
-    --fg1: #c2c7da;
-    --fg2: #8d94ad;
-    --fg-invert: #06080f;
-    --fg-muted: color-mix(in srgb, var(--fg2) 70%, rgba(8, 10, 18, 0.6));
-
-    --bg0: #06080f;
-    --bg1: #0f1424;
-    --bg2: #1b2235;
-
-    --acc1: #7f96ff;
-    --acc1-strong: #a8b5ff;
-    --acc2: #ff8591;
-    --acc2-strong: #ff5c6c;
-
-    --ok: #31d193;
-    --warn: #ffb74d;
-    --err: #ff6b6b;
-    --info: #5aa8ff;
-
-    /* Category colors - dark mode adaptations */
-    --role-accent-alltag-text: var(--role-accent-alltag-200);
-    --role-accent-alltag-text-on: var(--role-accent-alltag-900);
-    --role-accent-alltag-bg: var(--role-accent-alltag-900);
-    --role-accent-alltag-bg-hover: var(--role-accent-alltag-800);
-    --role-accent-alltag-bg-subtle: var(--role-accent-alltag-900);
-    --role-accent-alltag-border: var(--role-accent-alltag-700);
-    --role-accent-alltag-border-strong: var(--role-accent-alltag-600);
-    --role-accent-alltag-chip-bg: var(--role-accent-alltag-800);
-    --role-accent-alltag-chip-text: var(--role-accent-alltag-200);
-    --role-accent-alltag-chip-border: var(--role-accent-alltag-700);
-
-    --role-accent-business-text: var(--role-accent-business-200);
-    --role-accent-business-text-on: var(--role-accent-business-900);
-    --role-accent-business-bg: var(--role-accent-business-900);
-    --role-accent-business-bg-hover: var(--role-accent-business-800);
-    --role-accent-business-bg-subtle: var(--role-accent-business-900);
-    --role-accent-business-border: var(--role-accent-business-700);
-    --role-accent-business-border-strong: var(--role-accent-business-600);
-    --role-accent-business-chip-bg: var(--role-accent-business-800);
-    --role-accent-business-chip-text: var(--role-accent-business-200);
-    --role-accent-business-chip-border: var(--role-accent-business-700);
-
-    --role-accent-kreativ-text: var(--role-accent-kreativ-200);
-    --role-accent-kreativ-text-on: var(--role-accent-kreativ-900);
-    --role-accent-kreativ-bg: var(--role-accent-kreativ-900);
-    --role-accent-kreativ-bg-hover: var(--role-accent-kreativ-800);
-    --role-accent-kreativ-bg-subtle: var(--role-accent-kreativ-900);
-    --role-accent-kreativ-border: var(--role-accent-kreativ-700);
-    --role-accent-kreativ-border-strong: var(--role-accent-kreativ-600);
-    --role-accent-kreativ-chip-bg: var(--role-accent-kreativ-800);
-    --role-accent-kreativ-chip-text: var(--role-accent-kreativ-200);
-    --role-accent-kreativ-chip-border: var(--role-accent-kreativ-700);
-
-    --role-accent-bildung-text: var(--role-accent-bildung-200);
-    --role-accent-bildung-text-on: var(--role-accent-bildung-900);
-    --role-accent-bildung-bg: var(--role-accent-bildung-900);
-    --role-accent-bildung-bg-hover: var(--role-accent-bildung-800);
-    --role-accent-bildung-bg-subtle: var(--role-accent-bildung-900);
-    --role-accent-bildung-border: var(--role-accent-bildung-700);
-    --role-accent-bildung-border-strong: var(--role-accent-bildung-600);
-    --role-accent-bildung-chip-bg: var(--role-accent-bildung-800);
-    --role-accent-bildung-chip-text: var(--role-accent-bildung-200);
-    --role-accent-bildung-chip-border: var(--role-accent-bildung-700);
-
-    --role-accent-familie-text: var(--role-accent-familie-200);
-    --role-accent-familie-text-on: var(--role-accent-familie-900);
-    --role-accent-familie-bg: var(--role-accent-familie-900);
-    --role-accent-familie-bg-hover: var(--role-accent-familie-800);
-    --role-accent-familie-bg-subtle: var(--role-accent-familie-900);
-    --role-accent-familie-border: var(--role-accent-familie-700);
-    --role-accent-familie-border-strong: var(--role-accent-familie-600);
-    --role-accent-familie-chip-bg: var(--role-accent-familie-800);
-    --role-accent-familie-chip-text: var(--role-accent-familie-200);
-    --role-accent-familie-chip-border: var(--role-accent-familie-700);
-
-    --role-accent-beratung-text: var(--role-accent-beratung-200);
-    --role-accent-beratung-text-on: var(--role-accent-beratung-900);
-    --role-accent-beratung-bg: var(--role-accent-beratung-900);
-    --role-accent-beratung-bg-hover: var(--role-accent-beratung-800);
-    --role-accent-beratung-bg-subtle: var(--role-accent-beratung-900);
-    --role-accent-beratung-border: var(--role-accent-beratung-700);
-    --role-accent-beratung-border-strong: var(--role-accent-beratung-600);
-    --role-accent-beratung-chip-bg: var(--role-accent-beratung-800);
-    --role-accent-beratung-chip-text: var(--role-accent-beratung-200);
-    --role-accent-beratung-chip-border: var(--role-accent-beratung-700);
-
-    /* Dark mode dramatic neomorphic shadows */
-    --shadow-neumorphic-dramatic:
-      45px 45px 90px rgba(0, 0, 0, 0.95), -45px -45px 90px rgba(255, 255, 255, 0.18);
-    --shadow-neumorphic-extreme:
-      60px 60px 120px rgba(0, 0, 0, 1), -60px -60px 120px rgba(255, 255, 255, 0.2);
-
-    /* Dark mode dramatic depth system shadows */
-    --shadow-depth-5: var(--shadow-neumorphic-dramatic);
-    --shadow-depth-6: var(--shadow-neumorphic-extreme);
-    --shadow-depth-7: 75px 75px 150px rgba(0, 0, 0, 1), -75px -75px 150px rgba(255, 255, 255, 0.22);
-    --shadow-depth-8:
-      100px 100px 200px rgba(0, 0, 0, 1), -100px -100px 200px rgba(255, 255, 255, 0.25);
-  }
+  --info: #7ab5ff;
+  --info-soft: rgba(122, 181, 255, 0.18);
+  --success: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.15);
+  --warning: #fb923c;
+  --warning-soft: rgba(251, 146, 60, 0.18);
+  --danger: #fb7185;
+  --danger-soft: rgba(251, 113, 133, 0.2);
 }
 
 /* ============================================================================
-   RESPONSIVE ADJUSTMENTS
-   ============================================================================ */
+   Derived semantic tokens + legacy aliases
+   ========================================================================== */
 
-/* Tablet (768px+) */
-@media (min-width: 768px) {
-  :root {
-    --layout-sidebar-width: 4rem;
-    --layout-content-padding-x: 1.5rem;
-    --layout-content-padding-y: 1.5rem;
-  }
+:root {
+  /* Surfaces & text */
+  --surface-bg: var(--bg0);
+  --surface-base: var(--bg1);
+  --surface-muted: color-mix(in srgb, var(--bg1) 85%, var(--bg2));
+  --surface-raised: color-mix(in srgb, var(--bg1) 95%, rgba(255, 255, 255, 0.85));
+  --surface-card: var(--surface-raised);
+  --surface-overlay: color-mix(in srgb, var(--bg1) 80%, rgba(5, 7, 15, 0.65));
+  --surface-ghost: color-mix(in srgb, var(--bg0) 90%, transparent);
+  --surface-user-bubble: color-mix(in srgb, var(--accent) 9%, var(--surface-base));
+  --surface-ai-bubble: var(--surface-raised);
+
+  --fg0: var(--fg);
+  --fg1: var(--fg-muted);
+  --fg2: var(--fg-subtle);
+  --fg-invert: #ffffff;
+
+  --focus-ring-color: var(--accent);
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--focus-ring-color) 35%, transparent);
+
+  /* Borders */
+  --border-hairline: color-mix(in srgb, var(--line) 60%, transparent);
+  --border-subtle: var(--line);
+  --border-strong: color-mix(in srgb, var(--fg) 24%, transparent);
+
+  /* Legacy aliases */
+  --color-text-primary: var(--fg);
+  --color-text-secondary: var(--fg-muted);
+  --color-text-tertiary: var(--fg-subtle);
+  --color-text-muted: var(--fg-subtle);
+  --color-text-link: var(--accent);
+  --color-text-link-hover: color-mix(in srgb, var(--accent) 80%, black);
+
+  --color-brand-primary: var(--accent);
+  --color-brand-primary-hover: color-mix(in srgb, var(--accent) 90%, black);
+  --color-brand-primary-active: color-mix(in srgb, var(--accent) 80%, black);
+  --color-brand-on-primary: var(--accent-contrast);
+  --color-brand-subtle: var(--accent-weak);
+
+  --color-accent-surface: color-mix(in srgb, var(--accent) 12%, var(--surface-base));
+  --color-accent-surface-strong: color-mix(in srgb, var(--accent) 20%, var(--surface-base));
+  --color-accent-border: color-mix(in srgb, var(--accent) 45%, transparent);
+  --color-text-on-accent: var(--accent-contrast);
+
+  --color-border-hairline: var(--border-hairline);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-border-focus: color-mix(in srgb, var(--accent) 60%, var(--danger) 10%);
+  --color-border-divider: var(--border-subtle);
+
+  --color-surface-canvas: var(--surface-bg);
+  --color-surface-base: var(--surface-base);
+  --color-surface-subtle: var(--surface-muted);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-card: var(--surface-card);
+  --color-surface-popover: var(--surface-card);
+  --color-surface-overlay: var(--surface-overlay);
+
+  --surface-neumorphic-base: var(--surface-bg);
+  --surface-neumorphic-floating: var(--surface-card);
+  --surface-neumorphic-raised: var(--surface-raised);
+  --surface-neumorphic-pressed: color-mix(in srgb, var(--surface-card) 70%, rgba(0, 0, 0, 0.08));
+
+  --color-status-success-fg: var(--success);
+  --color-status-success-bg: var(--success-soft);
+  --color-status-success-border: color-mix(in srgb, var(--success) 40%, transparent);
+  --color-status-warning-fg: var(--warning);
+  --color-status-warning-bg: var(--warning-soft);
+  --color-status-warning-border: color-mix(in srgb, var(--warning) 40%, transparent);
+  --color-status-danger-fg: var(--danger);
+  --color-status-danger-bg: var(--danger-soft);
+  --color-status-danger-border: color-mix(in srgb, var(--danger) 40%, transparent);
+  --color-status-info-fg: var(--info);
+  --color-status-info-bg: var(--info-soft);
+  --color-status-info-border: color-mix(in srgb, var(--info) 40%, transparent);
+
+  --color-surface-success: var(--success-soft);
+  --color-surface-warning: var(--warning-soft);
+  --color-surface-danger: var(--danger-soft);
+  --color-surface-info: var(--info-soft);
+
+  --color-action-primary-bg: var(--accent);
+  --color-action-primary-hover: color-mix(in srgb, var(--accent) 90%, black);
+  --color-action-primary-active: color-mix(in srgb, var(--accent) 70%, black);
+  --color-action-primary-fg: var(--accent-contrast);
+
+  --color-action-secondary-bg: var(--surface-muted);
+  --color-action-secondary-hover: color-mix(in srgb, var(--surface-muted) 90%, var(--surface-bg));
+  --color-action-secondary-active: color-mix(in srgb, var(--surface-muted) 80%, var(--surface-bg));
+  --color-action-secondary-fg: var(--fg);
+  --color-action-secondary-border: var(--border-subtle);
+
+  --color-action-ghost-fg: var(--fg);
+  --color-action-ghost-hover: color-mix(in srgb, var(--fg) 6%, transparent);
+  --color-action-ghost-active: color-mix(in srgb, var(--fg) 12%, transparent);
+
+  --color-action-destructive-bg: var(--danger);
+  --color-action-destructive-hover: color-mix(in srgb, var(--danger) 90%, black);
+  --color-action-destructive-active: color-mix(in srgb, var(--danger) 75%, black);
+  --color-action-destructive-fg: #ffffff;
+
+  --color-control-field-bg: color-mix(in srgb, var(--surface-base) 96%, rgba(255, 255, 255, 0.92));
+  --color-control-field-hover: color-mix(
+    in srgb,
+    var(--surface-base) 98%,
+    rgba(255, 255, 255, 0.94)
+  );
+  --color-control-field-disabled: color-mix(
+    in srgb,
+    var(--surface-muted) 85%,
+    rgba(255, 255, 255, 0.9)
+  );
+  --color-control-field-fg: var(--fg);
+  --color-control-field-placeholder: var(--fg-subtle);
+  --color-control-field-border: var(--border-subtle);
+  --color-control-field-border-hover: color-mix(in srgb, var(--border-subtle) 70%, var(--fg) 15%);
+  --color-control-field-border-active: var(--color-border-focus);
+
+  --bg-overlay-tooltip: color-mix(in srgb, var(--surface-overlay) 92%, rgba(5, 7, 15, 0.65));
+  --overlay-tooltip-fg: var(--fg);
+  --overlay-dialog: var(--surface-overlay);
+  --overlay-dialog-border: var(--border-subtle);
+
+  --mobile-safe-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-right: env(safe-area-inset-right, 0px);
+  --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-safe-left: env(safe-area-inset-left, 0px);
 }
 
-/* Desktop (1024px+) */
-@media (min-width: 1024px) {
-  :root {
-    --layout-content-padding-x: 2rem;
-    --layout-content-padding-y: 2rem;
-  }
-}
-
-/* Large desktop (1280px+) */
-@media (min-width: 1280px) {
-  :root {
-    --layout-sidebar-width: 5rem;
-    --layout-content-padding-x: 2.5rem;
-  }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --motion-duration-micro: 0ms;
-    --motion-duration-small: 0ms;
-    --motion-duration-medium: 0ms;
-    --motion-duration-large: 0ms;
-  }
-}
+/* Notes: Consolidated tokens provide new light/dark palettes plus aliases so legacy components keep working while the new system rolls out. */

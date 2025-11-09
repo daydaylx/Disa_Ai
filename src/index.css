@@ -27,8 +27,18 @@
    ============================================================================ */
 
 @layer base {
-  html {
+  :root {
+    color-scheme: light;
+    background-color: var(--surface-bg);
+  }
+
+  :root[data-theme="dark"] {
     color-scheme: dark;
+  }
+
+  body {
+    background: var(--surface-bg);
+    color: var(--color-text-primary, var(--fg));
   }
 
   body::after {

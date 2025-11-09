@@ -1,87 +1,113 @@
 /* eslint-disable */
 import type { Config } from "tailwindcss";
 
-const tailwindColors = {
-  // Simplified color system
-  primary: {
-    DEFAULT: "#4b63ff",
-    light: "#6f81ff",
-    dark: "#3a4dbf",
+const colorTokens = {
+  bg: {
+    0: "var(--bg0)",
+    1: "var(--bg1)",
+    2: "var(--bg2)",
+  },
+  surface: {
+    canvas: "var(--surface-bg)",
+    base: "var(--surface-base)",
+    muted: "var(--surface-muted)",
+    card: "var(--surface-card)",
+    overlay: "var(--surface-overlay)",
+    ghost: "var(--surface-ghost)",
+  },
+  text: {
+    DEFAULT: "var(--fg)",
+    muted: "var(--fg-muted)",
+    subtle: "var(--fg-subtle)",
+    inverse: "var(--accent-contrast)",
+    accent: "var(--color-text-on-accent)",
   },
   accent: {
-    DEFAULT: "#ff6b6b",
-    light: "#ff8f8f",
-    dark: "#bf5050",
+    DEFAULT: "var(--accent)",
+    weak: "var(--accent-weak)",
+    contrast: "var(--accent-contrast)",
   },
-  secondary: "#676d82",
-  background: "#fdfdff",
-  surface: "#f4f6fb",
-  text: {
-    primary: "#0f1724",
-    secondary: "#4a5163",
-    muted: "#7d8398",
+  line: {
+    DEFAULT: "var(--line)",
+    subtle: "var(--border-hairline)",
+    strong: "var(--border-strong)",
+  },
+  status: {
+    info: "var(--info)",
+    "info-soft": "var(--info-soft)",
+    success: "var(--success)",
+    "success-soft": "var(--success-soft)",
+    warning: "var(--warning)",
+    "warning-soft": "var(--warning-soft)",
+    danger: "var(--danger)",
+    "danger-soft": "var(--danger-soft)",
   },
 };
 
-const tailwindSpacing = {
-  "touch-compact": "44px",
-  "touch-comfortable": "48px",
-  "touch-relaxed": "56px",
-  "touch-spacious": "64px",
+const spacingScale = {
+  "3xs": "var(--space-3xs)",
+  "2xs": "var(--space-2xs)",
+  xs: "var(--space-xs)",
+  sm: "var(--space-sm)",
+  md: "var(--space-md)",
+  lg: "var(--space-lg)",
+  xl: "var(--space-xl)",
+  "2xl": "var(--space-2xl)",
+  "3xl": "var(--space-3xl)",
+  "4xl": "var(--space-4xl)",
+  gutter: "var(--page-padding-x)",
+  "touch-compact": "var(--size-touch-compact)",
+  "touch-comfortable": "var(--size-touch-comfortable)",
+  "touch-relaxed": "var(--size-touch-relaxed)",
+  "touch-spacious": "var(--size-touch-spacious)",
 };
 
-const tailwindRadii = {
-  none: "0",
-  sm: "4px",
-  md: "8px",
-  lg: "12px",
-  xl: "16px",
-  "2xl": "24px",
+const radii = {
+  none: "0px",
+  sm: "var(--radius-sm)",
+  md: "var(--radius-md)",
+  lg: "var(--radius-lg)",
+  xl: "var(--radius-xl)",
+  "2xl": "var(--radius-2xl)",
+  pill: "var(--radius-pill)",
+  full: "999px",
 };
 
-const tailwindShadows = {
-  "neo-sm": "0 2px 8px rgba(0, 0, 0, 0.04)",
-  "neo-md": "0 4px 16px rgba(0, 0, 0, 0.08)",
-  "neo-lg": "0 8px 32px rgba(0, 0, 0, 0.12)",
-  "neo-xl": "0 16px 48px rgba(0, 0, 0, 0.16)",
+const boxShadows = {
+  card: "var(--shadow-card)",
+  overlay: "var(--shadow-overlay)",
+  ring: "var(--shadow-ring)",
+  "neo-sm": "var(--shadow-neo-sm)",
+  "neo-md": "var(--shadow-neo-md)",
+  "neo-lg": "var(--shadow-neo-lg)",
+  "neo-xl": "var(--shadow-neo-xl)",
+  "inset-subtle": "var(--shadow-inset-subtle)",
+  "inset-medium": "var(--shadow-inset-medium)",
+  "inset-strong": "var(--shadow-inset-strong)",
+  "inset-extreme": "var(--shadow-inset-extreme)",
 };
 
-const tailwindFontFamily = {
-  sans: ["var(--font-family)", "system-ui", "sans-serif"],
+const fontSizes = {
+  xs: ["12px", { lineHeight: "16px", fontWeight: "500" }],
+  sm: ["14px", { lineHeight: "20px", fontWeight: "500" }],
+  base: ["16px", { lineHeight: "24px", fontWeight: "500" }],
+  md: ["18px", { lineHeight: "26px", fontWeight: "500" }],
+  lg: ["20px", { lineHeight: "28px", fontWeight: "600" }],
+  xl: ["24px", { lineHeight: "32px", fontWeight: "600" }],
+  "2xl": ["32px", { lineHeight: "40px", fontWeight: "600" }],
 };
 
-const fixedFontSizes = {
-  badge: "10px",
-  input: "14px",
+const motionDurations = {
+  quick: "var(--motion-duration-quick)",
+  base: "var(--motion-duration-base)",
+  slow: "var(--motion-duration-slow)",
 };
 
-const textStyles = {
-  headline: {
-    fontSize: "24px",
-    lineHeight: "32px",
-    fontWeight: 700,
-  },
-  subheadline: {
-    fontSize: "20px",
-    lineHeight: "28px",
-    fontWeight: 600,
-  },
-  body: {
-    fontSize: "16px",
-    lineHeight: "24px",
-    fontWeight: 400,
-  },
-  caption: {
-    fontSize: "12px",
-    lineHeight: "16px",
-    fontWeight: 400,
-  },
-  "title-base": {
-    fontSize: "20px",
-    lineHeight: "28px",
-    fontWeight: 600,
-    letterSpacing: "-0.025em",
-  },
+const motionEasings = {
+  standard: "var(--motion-ease-standard)",
+  emphasized: "var(--motion-ease-emphasized)",
+  accelerate: "var(--motion-ease-accelerate)",
+  decelerate: "var(--motion-ease-decelerate)",
 };
 
 export default {
@@ -97,76 +123,29 @@ export default {
       "2xl": "1536px",
     },
     extend: {
-      colors: tailwindColors,
-      spacing: tailwindSpacing,
-      borderRadius: tailwindRadii,
-      boxShadow: tailwindShadows,
-      fontFamily: tailwindFontFamily,
-      fontSize: {
-        ...fixedFontSizes,
-        ...Object.entries(textStyles).reduce<
-          Record<string, string | [string, Record<string, string>]>
-        >((acc, [token, style]) => {
-          const key = token
-            .replace(/([A-Z])/g, "-$1")
-            .toLowerCase()
-            .replace(/^-/, "");
-
-          acc[key] = [
-            style.fontSize,
-            {
-              lineHeight: style.lineHeight,
-              fontWeight: `${style.fontWeight}`,
-              letterSpacing: style.letterSpacing || undefined,
-            },
-          ];
-
-          return acc;
-        }, {}),
+      colors: colorTokens,
+      spacing: spacingScale,
+      borderRadius: radii,
+      boxShadow: boxShadows,
+      fontFamily: {
+        sans: ["var(--font-family-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-family-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
-      transitionDuration: {
-        small: "150ms",
-        medium: "200ms",
-        large: "300ms",
-      },
-      transitionTimingFunction: {
-        standard: "cubic-bezier(0.4, 0.0, 0.2, 1)",
-        emphasized: "cubic-bezier(0.05, 0.7, 0.1, 1.0)",
-        accelerate: "cubic-bezier(0.3, 0.0, 1, 1)",
-        decelerate: "cubic-bezier(0.0, 0.0, 0.2, 1)",
-      },
+      fontSize: fontSizes,
       minHeight: {
-        "touch-compact": tailwindSpacing["touch-compact"],
-        "touch-comfortable": tailwindSpacing["touch-comfortable"],
-        "touch-relaxed": tailwindSpacing["touch-relaxed"],
-        "touch-spacious": tailwindSpacing["touch-spacious"],
+        ...spacingScale,
         "screen-dynamic": "var(--vh, 100dvh)",
         "screen-small": "100svh",
         "screen-large": "100lvh",
       },
       height: {
-        "touch-compact": tailwindSpacing["touch-compact"],
-        "touch-comfortable": tailwindSpacing["touch-comfortable"],
-        "touch-relaxed": tailwindSpacing["touch-relaxed"],
-        "touch-spacious": tailwindSpacing["touch-spacious"],
+        ...spacingScale,
         "screen-dynamic": "var(--vh, 100dvh)",
         "screen-small": "100svh",
         "screen-large": "100lvh",
       },
-      keyframes: {
-        ripple: {
-          "0%": { transform: "scale(0)", opacity: 1 },
-          "100%": { transform: "scale(2)", opacity: 0 },
-        },
-        "fade-in": {
-          "0%": { opacity: 0, transform: "translateY(10px)" },
-          "100%": { opacity: 1, transform: "translateY(0)" },
-        },
-      },
-      animation: {
-        ripple: "ripple 0.85s linear",
-        "fade-in": "fade-in 0.5s ease-out",
-      },
+      transitionDuration: motionDurations,
+      transitionTimingFunction: motionEasings,
       padding: {
         "safe-top": "env(safe-area-inset-top)",
         "safe-bottom": "env(safe-area-inset-bottom)",
@@ -181,75 +160,7 @@ export default {
       },
     },
   },
-  plugins: [
-    // Dramatic Neomorphism Plugin
-    function ({ addUtilities }: any) {
-      const newUtilities = {
-        // Neo Surface Base Classes
-        ".neo-surface-base": {
-          backgroundColor: "var(--surface-neumorphic-base)",
-          borderRadius: "var(--radius-xl)",
-          border: "var(--border-neumorphic-subtle)",
-          transition: "all var(--motion-duration-large) var(--motion-easing-standard)",
-        },
-        ".neo-surface-raised": {
-          backgroundColor: "var(--surface-neumorphic-raised)",
-          boxShadow: "var(--shadow-neumorphic-md)",
-          borderRadius: "var(--radius-xl)",
-          border: "var(--border-neumorphic-light)",
-          transition: "all var(--motion-duration-large) var(--motion-easing-standard)",
-        },
-        ".neo-surface-floating": {
-          backgroundColor: "var(--surface-neumorphic-floating)",
-          boxShadow: "var(--shadow-neumorphic-lg)",
-          borderRadius: "var(--radius-xl)",
-          border: "var(--border-neumorphic-light)",
-          transition: "all var(--motion-duration-large) var(--motion-easing-standard)",
-        },
-        ".neo-surface-pressed": {
-          backgroundColor: "var(--surface-neumorphic-pressed)",
-          boxShadow: "var(--shadow-inset-medium)",
-          borderRadius: "var(--radius-xl)",
-          border: "var(--border-neumorphic-dark)",
-          transition: "all var(--motion-duration-large) var(--motion-easing-standard)",
-        },
-
-        // Dramatic Shadow Levels
-        ".neo-shadow-sm": { boxShadow: "var(--shadow-neumorphic-sm)" },
-        ".neo-shadow-md": { boxShadow: "var(--shadow-neumorphic-md)" },
-        ".neo-shadow-lg": { boxShadow: "var(--shadow-neumorphic-lg)" },
-        ".neo-shadow-xl": { boxShadow: "var(--shadow-neumorphic-xl)" },
-        ".neo-shadow-dramatic": { boxShadow: "var(--shadow-neumorphic-dramatic)" },
-        ".neo-shadow-extreme": { boxShadow: "var(--shadow-neumorphic-extreme)" },
-
-        // Touch Target Utilities
-        ".touch-target": {
-          minHeight: "44px",
-          minWidth: "44px",
-        },
-        ".touch-target-preferred": {
-          minHeight: "48px",
-          minWidth: "48px",
-        },
-
-        // Android Safe Areas
-        ".safe-y": {
-          paddingTop: "env(safe-area-inset-top)",
-          paddingBottom: "env(safe-area-inset-bottom)",
-        },
-        ".safe-x": {
-          paddingLeft: "env(safe-area-inset-left)",
-          paddingRight: "env(safe-area-inset-right)",
-        },
-
-        // Android Scroll Optimizations
-        ".android-scroll": {
-          overscrollBehavior: "contain",
-          WebkitOverflowScrolling: "touch",
-        },
-      };
-
-      addUtilities(newUtilities);
-    },
-  ],
+  plugins: [],
 } satisfies Config;
+
+/* Notes: Tailwind now maps directly to the new CSS variables (colors, spacing, radii, shadows, motion) so components consume the design tokens consistently. */
