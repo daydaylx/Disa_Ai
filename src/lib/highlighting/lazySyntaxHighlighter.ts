@@ -79,33 +79,20 @@ async function loadPrism(): Promise<PrismStatic> {
       // Dynamic import von Prism.js Core
       const Prism = await import("prismjs");
 
-      // Wichtige Sprachen nachladen (TypeScript-Suppressions für fehlende Definitionen)
+      // Wichtige Sprachen nachladen (Typdeklarationen in vite-env.d.ts)
       await Promise.all([
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-javascript"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-typescript"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-python"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-java"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-cpp"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-rust"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-go"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-json"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-bash"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-css"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-sql"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-yaml"),
-        // @ts-expect-error - Prism components haben keine TypeScript-Definitionen
         import("prismjs/components/prism-markdown"),
       ]);
 

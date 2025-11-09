@@ -27,3 +27,19 @@ interface ImportMeta {
     dispose(cb: () => void): void;
   };
 }
+
+// Prism.js component type definitions
+// These components are side-effect only imports that register language grammars
+declare module "prismjs/components/prism-javascript" {}
+declare module "prismjs/components/prism-typescript" {}
+declare module "prismjs/components/prism-python" {}
+declare module "prismjs/components/prism-java" {}
+declare module "prismjs/components/prism-cpp" {}
+declare module "prismjs/components/prism-rust" {}
+declare module "prismjs/components/prism-go" {}
+declare module "prismjs/components/prism-json" {}
+declare module "prismjs/components/prism-bash" {}
+declare module "prismjs/components/prism-css" {}
+declare module "prismjs/components/prism-sql" {}
+declare module "prismjs/components/prism-yaml" {}
+declare module "prismjs/components/prism-markdown" {}
