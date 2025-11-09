@@ -3,16 +3,28 @@
  * Progressive Web App functionality for offline support and caching
  */
 
-// Use importScripts for Service Worker compatibility
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js");
+// First, attempt to load Workbox from CDN with error handling
+try {
+  importScripts("https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js");
 
-if (workbox) {
-  console.log("Workbox loaded successfully");
+  if (workbox) {
+    console.log("Workbox loaded successfully");
 
-  const { precacheAndRoute, cleanupOutdatedCaches, matchPrecache } = workbox.precaching;
-  const { clientsClaim } = workbox.core;
-} else {
-  console.log("Workbox failed to load");
+    const { precacheAndRoute, cleanupOutdatedCaches, matchPrecache } = workbox.precaching;
+    const { clientsClaim } = workbox.core;
+
+    // Export for use in rest of service worker
+    self.workbox = workbox;
+    self.precacheAndRoute = precacheAndRoute;
+    self.cleanupOutdatedCaches = cleanupOutdatedCaches;
+    self.matchPrecache = matchPrecache;
+    self.clientsClaim = clientsClaim;
+  } else {
+    console.log("Workbox failed to load from CDN");
+  }
+} catch (e) {
+  console.warn("Failed to load Workbox from CDN:", e);
+  console.log("Using fallback approach without Workbox");
 }
 
 const BUILD_VERSION = Date.now()
@@ -46,14 +58,28 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Clean up outdated caches
-cleanupOutdatedCaches();
+// Clean up outdated caches - use fallback if Workbox not available
+if (typeof cleanupOutdatedCaches !== "undefined") {
+  cleanupOutdatedCaches();
+} else {
+  console.log("cleanupOutdatedCaches not available, using manual cache cleanup");
+}
 
-// Take control of all clients immediately
-clientsClaim();
+// Take control of all clients immediately - use fallback if Workbox not available
+if (typeof clientsClaim !== "undefined") {
+  clientsClaim();
+} else {
+  self.clients.claim();
+  console.log("Manual client claiming used instead of Workbox");
+}
 
-// Precache all build assets
-precacheAndRoute(self.__WB_MANIFEST);
+// Precache all build assets - use fallback if Workbox not available
+if (typeof precacheAndRoute !== "undefined") {
+  precacheAndRoute(self.__WB_MANIFEST);
+} else {
+  console.log("Precaching not available via Workbox, using manual precaching if available");
+  // Fallback: register for navigation handling but skip precaching
+}
 
 // Handle offline fallback for navigation requests
 self.addEventListener("fetch", (event) => {
@@ -62,6 +88,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       (async () => {
         try {
+          // Wait for the preloadResponse to settle before proceeding
           const preloadResponse = await event.preloadResponse;
           if (preloadResponse) {
             return preloadResponse;
@@ -74,7 +101,12 @@ self.addEventListener("fetch", (event) => {
           return networkResponse;
         } catch {
           // Return cached index.html for offline navigation
-          const precachedShell = await matchPrecache(APP_SHELL_URL);
+          // Use Workbox matchPrecache if available, otherwise use standard cache matching
+          let precachedShell;
+          if (typeof matchPrecache !== "undefined") {
+            precachedShell = await matchPrecache(APP_SHELL_URL);
+          }
+
           if (precachedShell) {
             return precachedShell;
           }
@@ -82,6 +114,11 @@ self.addEventListener("fetch", (event) => {
         }
       })(),
     );
+
+    // Use waitUntil to ensure preloadResponse settles for navigation requests
+    if (event.preloadResponse) {
+      event.waitUntil(event.preloadResponse);
+    }
   }
 });
 

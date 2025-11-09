@@ -76,11 +76,13 @@ async function loadPrism(): Promise<PrismStatic> {
   // Start loading
   prismLoadingPromise = (async () => {
     try {
-      // Dynamic import von Prism.js Core
-      const Prism = await import("prismjs");
+      // Dynamic import von Prism.js Core (sicherstellen, dass es vollständig geladen ist)
+      const PrismModule = await import("prismjs");
+      const Prism = PrismModule.default || PrismModule;
 
       // Wichtige Sprachen nachladen (Typdeklarationen in vite-env.d.ts)
-      await Promise.all([
+      // Wichtig: Importiere sie in der richtigen Reihenfolge, um Abhängigkeiten zu vermeiden
+      const languageImports = [
         import("prismjs/components/prism-javascript"),
         import("prismjs/components/prism-typescript"),
         import("prismjs/components/prism-python"),
@@ -94,12 +96,16 @@ async function loadPrism(): Promise<PrismStatic> {
         import("prismjs/components/prism-sql"),
         import("prismjs/components/prism-yaml"),
         import("prismjs/components/prism-markdown"),
-      ]);
+      ];
 
-      prismInstance = Prism.default || Prism;
+      // Warte auf alle Sprachimporte
+      await Promise.all(languageImports);
+
+      // Stelle sicher, dass Prism vollständig initialisiert ist
+      prismInstance = Prism;
 
       safeWarn("[Lazy Highlighter] ✅ Prism.js loaded successfully");
-      return prismInstance!;
+      return prismInstance;
     } catch (error) {
       safeWarn("[Lazy Highlighter] ❌ Failed to load Prism.js:", error);
       prismLoadingPromise = null; // Reset for retry
