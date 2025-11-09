@@ -4,9 +4,9 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import { chatStream } from "../api/openrouter";
 import { mapError } from "../lib/errors";
 import { RateLimitError } from "../lib/errors/types";
+import { chatReducer } from "../state/chatReducer";
 import type { ChatRequestOptions } from "../types";
 import type { ChatMessageType } from "../types/chatMessage";
-import { chatReducer, type ChatAction, type ChatState } from "../state/chatReducer";
 
 const MS_IN_SECOND = 1000;
 const DEFAULT_RATE_LIMIT_RETRY_AFTER_SECONDS = 8;
@@ -262,16 +262,7 @@ export function useChat({
       }
     },
 
-    [
-      onResponse,
-      onFinish,
-      onError,
-      body,
-      prepareMessages,
-      stateRef,
-      getRequestOptions,
-      state.messages,
-    ],
+    [onResponse, onFinish, onError, body, prepareMessages, stateRef, getRequestOptions], // Remove state.messages from dependencies to prevent stale closures
   );
 
   const stop = useCallback(() => {
