@@ -71,9 +71,9 @@
 
 .typo-code {
   font-family: var(--font-family-mono);
-  font-size: 0.875em;
-  line-height: 1.5;
-  font-weight: 400;
+  font-size: var(--font-size-code);
+  line-height: var(--line-height-code);
+  font-weight: var(--font-weight-code);
 }
 
 /* Typography Excellence - OpenType Features */
@@ -1359,7 +1359,7 @@
     inset 0 0 0 1px color-mix(in srgb, var(--color-brand-primary) 30%, transparent);
   border: var(--border-neumorphic-light);
   background: color-mix(in srgb, var(--surface-neumorphic-floating) 95%, transparent);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(calc(var(--glass-blur-strength) / 2.5));
 }
 
 /* Sortable Item States */
@@ -1588,8 +1588,8 @@
   padding-top: var(--inset-t);
   background: var(--surface-neumorphic-floating);
   border-bottom: var(--border-neumorphic-subtle);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(var(--glass-blur-strength));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strength));
 }
 
 /* Fixed bottom navigation - mobile first */
@@ -1607,8 +1607,8 @@
   padding-bottom: var(--inset-b);
   background: var(--surface-neumorphic-floating);
   border-top: var(--border-neumorphic-subtle);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(var(--glass-blur-strength));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strength));
 }
 
 /* Navigation items - enhanced touch targets */
@@ -1993,43 +1993,43 @@
   width: 0;
   height: 0;
   opacity: 0;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, var(--ripple-opacity));
   transform: translate(-50%, -50%);
   transition:
-    width var(--motion-duration-medium, 180ms) var(--motion-easing-standard, ease),
-    height var(--motion-duration-medium, 180ms) var(--motion-easing-standard, ease),
-    opacity var(--motion-duration-small, 150ms) ease;
+    width var(--motion-duration-medium) var(--motion-easing-standard),
+    height var(--motion-duration-medium) var(--motion-easing-standard),
+    opacity var(--motion-duration-small) ease;
 }
 
 .touch-ripple:active::after {
-  width: var(--size-ripple-max, 20rem);
-  height: var(--size-ripple-max, 20rem);
+  width: var(--size-ripple-max);
+  height: var(--size-ripple-max);
   opacity: 1;
 }
 
 /* Animations */
 .animate-fade-in {
-  animation: mobile-fade-in var(--motion-duration-medium, 180ms) ease forwards;
+  animation: mobile-fade-in var(--motion-duration-medium) ease forwards;
 }
 
 .animate-fade-in-up {
-  animation: mobile-fade-in-up var(--motion-duration-medium, 180ms) ease forwards;
+  animation: mobile-fade-in-up var(--motion-duration-medium) ease forwards;
 }
 
 .animate-fade-in-down {
-  animation: mobile-fade-in-down var(--motion-duration-medium, 180ms) ease forwards;
+  animation: mobile-fade-in-down var(--motion-duration-medium) ease forwards;
 }
 
 .animate-slide-in-left {
-  animation: mobile-slide-in-left var(--motion-duration-medium, 180ms) ease forwards;
+  animation: mobile-slide-in-left var(--motion-duration-medium) ease forwards;
 }
 
 .animate-slide-in-right {
-  animation: mobile-slide-in-right var(--motion-duration-medium, 180ms) ease forwards;
+  animation: mobile-slide-in-right var(--motion-duration-medium) ease forwards;
 }
 
 .animate-scale-in {
-  animation: mobile-scale-in var(--motion-duration-medium, 180ms) ease forwards;
+  animation: mobile-scale-in var(--motion-duration-medium) ease forwards;
 }
 
 .animate-bounce {
@@ -2062,106 +2062,106 @@
 
 /* Heading styles with consistent scale */
 .typo-h1 {
-  font-size: 2rem; /* 32px */
-  line-height: 1.25; /* 40px */
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  font-weight: var(--font-weight-h1);
+  letter-spacing: var(--letter-spacing-h1);
 }
 
 .typo-h2 {
-  font-size: 1.5rem; /* 24px */
-  line-height: 1.33; /* 32px */
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-h2);
+  letter-spacing: var(--letter-spacing-h2);
 }
 
 .typo-h3 {
-  font-size: 1.25rem; /* 20px */
-  line-height: 1.4; /* 28px */
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-h3);
+  letter-spacing: var(--letter-spacing-h3);
 }
 
 .typo-h4 {
-  font-size: 1.125rem; /* 18px */
-  line-height: 1.44; /* 26px */
-  font-weight: 600;
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
+  font-weight: var(--font-weight-h4);
 }
 
 .typo-h5 {
-  font-size: 1rem; /* 16px */
-  line-height: 1.5; /* 24px */
-  font-weight: 600;
+  font-size: var(--font-size-h5);
+  line-height: var(--line-height-h5);
+  font-weight: var(--font-weight-h5);
 }
 
 .typo-h6 {
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.57; /* 22px */
-  font-weight: 600;
+  font-size: var(--font-size-h6);
+  line-height: var(--line-height-h6);
+  font-weight: var(--font-weight-h6);
+  letter-spacing: var(--letter-spacing-h6);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 /* Body text variants */
 .typo-body {
-  font-size: 1rem; /* 16px */
-  line-height: 1.6; /* 25.6px ≈ 26px */
-  font-weight: 400;
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
 }
 
 .typo-body-sm {
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.57; /* 22px */
-  font-weight: 400;
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+  font-weight: var(--font-weight-body-sm);
 }
 
 .typo-body-lg {
-  font-size: 1.125rem; /* 18px */
-  line-height: 1.67; /* 30px */
-  font-weight: 400;
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-body-lg);
+  font-weight: var(--font-weight-body-lg);
 }
 
 /* Caption and small text */
 .typo-caption {
-  font-size: 0.75rem; /* 12px */
-  line-height: 1.5; /* 18px */
-  font-weight: 400;
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
 }
 
 .typo-caption-strong {
-  font-size: 0.75rem; /* 12px */
-  line-height: 1.5; /* 18px */
-  font-weight: 600;
+  font-size: var(--font-size-caption-strong);
+  line-height: var(--line-height-caption-strong);
+  font-weight: var(--font-weight-caption-strong);
 }
 
 /* Label styles */
 .typo-label {
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.43; /* 20px */
-  font-weight: 500;
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-label);
 }
 
 .typo-label-sm {
-  font-size: 0.75rem; /* 12px */
-  line-height: 1.33; /* 16px */
-  font-weight: 500;
+  font-size: var(--font-size-label-sm);
+  line-height: var(--line-height-label-sm);
+  font-weight: var(--font-weight-label-sm);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--letter-spacing-label-sm);
 }
 
 /* Display text for heroes/landing */
 .typo-display {
-  font-size: 2.5rem; /* 40px */
-  line-height: 1.2; /* 48px */
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+  font-weight: var(--font-weight-display);
+  letter-spacing: var(--letter-spacing-display);
 }
 
 .typo-display-sm {
-  font-size: 2rem; /* 32px */
-  line-height: 1.25; /* 40px */
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: var(--font-size-display-sm);
+  line-height: var(--line-height-display-sm);
+  font-weight: var(--font-weight-display-sm);
+  letter-spacing: var(--letter-spacing-display-sm);
 }
 
 /* Code/Monospace text */
@@ -2175,18 +2175,18 @@
 /* Responsive typography adjustments */
 @media (min-width: 640px) {
   .typo-h1 {
-    font-size: 2.5rem; /* 40px */
-    line-height: 1.2; /* 48px */
+    font-size: var(--font-size-h1-fluid);
+    line-height: var(--line-height-h1);
   }
 
   .typo-h2 {
-    font-size: 1.875rem; /* 30px */
-    line-height: 1.27; /* 38px */
+    font-size: var(--font-size-h2-fluid);
+    line-height: var(--line-height-h2);
   }
 
   .typo-display {
-    font-size: 3rem; /* 48px */
-    line-height: 1.17; /* 56px */
+    font-size: var(--font-size-display-fluid);
+    line-height: var(--line-height-display);
   }
 }
 

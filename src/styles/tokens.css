@@ -53,23 +53,23 @@
   --radius-pill: 999px;
 
   /* Shadows */
-  --shadow-card: 0 12px 32px rgba(15, 23, 42, 0.08);
-  --shadow-overlay: 0 24px 60px rgba(2, 6, 23, 0.48);
+  --shadow-card: 0 12px 32px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 0.66));
+  --shadow-overlay: 0 24px 60px rgba(2, 6, 23, calc(var(--glass-shadow-opacity) * 4));
   --shadow-ring: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
-  --shadow-neo-sm: 0 4px 10px rgba(15, 23, 42, 0.08);
-  --shadow-neo-md: 0 8px 22px rgba(15, 23, 42, 0.12);
-  --shadow-neo-lg: 0 16px 30px rgba(15, 23, 42, 0.16);
-  --shadow-neo-xl: 0 24px 42px rgba(15, 23, 42, 0.2);
-  --shadow-inset-subtle: inset 0 1px 2px rgba(15, 23, 42, 0.08);
-  --shadow-inset-medium: inset 0 2px 4px rgba(15, 23, 42, 0.12);
-  --shadow-inset-strong: inset 0 3px 6px rgba(15, 23, 42, 0.16);
-  --shadow-inset-extreme: inset 0 4px 8px rgba(15, 23, 42, 0.22);
+  --shadow-neo-sm: 0 4px 10px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 0.66));
+  --shadow-neo-md: 0 8px 22px rgba(15, 23, 42, var(--glass-shadow-opacity));
+  --shadow-neo-lg: 0 16px 30px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 1.33));
+  --shadow-neo-xl: 0 24px 42px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 1.66));
+  --shadow-inset-subtle: inset 0 1px 2px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 0.66));
+  --shadow-inset-medium: inset 0 2px 4px rgba(15, 23, 42, var(--glass-shadow-opacity));
+  --shadow-inset-strong: inset 0 3px 6px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 1.33));
+  --shadow-inset-extreme: inset 0 4px 8px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 1.83));
   --shadow-depth-1: var(--shadow-neo-sm);
   --shadow-depth-2: var(--shadow-neo-md);
   --shadow-depth-3: var(--shadow-neo-lg);
   --shadow-depth-4: var(--shadow-neo-xl);
-  --shadow-depth-5: 0 32px 64px rgba(15, 23, 42, 0.22);
-  --shadow-depth-6: 0 48px 96px rgba(15, 23, 42, 0.28);
+  --shadow-depth-5: 0 32px 64px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 1.83));
+  --shadow-depth-6: 0 48px 96px rgba(15, 23, 42, calc(var(--glass-shadow-opacity) * 2.33));
   --shadow-neumorphic-sm: var(--shadow-neo-sm);
   --shadow-neumorphic-md: var(--shadow-neo-md);
   --shadow-neumorphic-lg: var(--shadow-neo-lg);
@@ -77,12 +77,100 @@
 
   /* Motion */
   --motion-duration-quick: 120ms;
+  --motion-duration-small: 150ms;
   --motion-duration-base: 180ms;
+  --motion-duration-medium: 180ms;
   --motion-duration-slow: 320ms;
   --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --motion-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
   --motion-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
   --motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+
+  /* Glassmorphism */
+  --glass-blur-strength: 20px;
+  --glass-surface-opacity: 0.8;
+  --glass-shadow-opacity: 0.12;
+  --glass-border-opacity: 0.6;
+  --accent-mix-percentage: 90%;
+
+  /* Ripple Effect */
+  --size-ripple-max: 20rem;
+  --ripple-opacity: 0.18;
+
+  /* Typography */
+  --font-size-h1: 2rem; /* 32px */
+  --line-height-h1: 1.25; /* 40px */
+  --font-weight-h1: 700;
+  --letter-spacing-h1: -0.02em;
+  --font-size-h1-fluid: clamp(2rem, 5vw, 2.5rem); /* 32px to 40px */
+
+  --font-size-h2: 1.5rem; /* 24px */
+  --line-height-h2: 1.33; /* 32px */
+  --font-weight-h2: 600;
+  --letter-spacing-h2: -0.01em;
+  --font-size-h2-fluid: clamp(1.5rem, 4vw, 1.875rem); /* 24px to 30px */
+
+  --font-size-h3: 1.25rem; /* 20px */
+  --line-height-h3: 1.4; /* 28px */
+  --font-weight-h3: 600;
+  --letter-spacing-h3: -0.01em;
+
+  --font-size-h4: 1.125rem; /* 18px */
+  --line-height-h4: 1.44; /* 26px */
+  --font-weight-h4: 600;
+
+  --font-size-h5: 1rem; /* 16px */
+  --line-height-h5: 1.5; /* 24px */
+  --font-weight-h5: 600;
+
+  --font-size-h6: 0.875rem; /* 14px */
+  --line-height-h6: 1.57; /* 22px */
+  --font-weight-h6: 600;
+  --letter-spacing-h6: 0.05em;
+
+  --font-size-body: 1rem; /* 16px */
+  --line-height-body: 1.6; /* 26px */
+  --font-weight-body: 400;
+
+  --font-size-body-sm: 0.875rem; /* 14px */
+  --line-height-body-sm: 1.57; /* 22px */
+  --font-weight-body-sm: 400;
+
+  --font-size-body-lg: 1.125rem; /* 18px */
+  --line-height-body-lg: 1.67; /* 30px */
+  --font-weight-body-lg: 400;
+
+  --font-size-caption: 0.75rem; /* 12px */
+  --line-height-caption: 1.5; /* 18px */
+  --font-weight-caption: 400;
+
+  --font-size-caption-strong: 0.75rem; /* 12px */
+  --line-height-caption-strong: 1.5; /* 18px */
+  --font-weight-caption-strong: 600;
+
+  --font-size-label: 0.875rem; /* 14px */
+  --line-height-label: 1.43; /* 20px */
+  --font-weight-label: 500;
+
+  --font-size-label-sm: 0.75rem; /* 12px */
+  --line-height-label-sm: 1.33; /* 16px */
+  --font-weight-label-sm: 500;
+  --letter-spacing-label-sm: 0.08em;
+
+  --font-size-display: 2.5rem; /* 40px */
+  --line-height-display: 1.2; /* 48px */
+  --font-weight-display: 700;
+  --letter-spacing-display: -0.03em;
+  --font-size-display-fluid: clamp(2.5rem, 6vw, 3rem); /* 40px to 48px */
+
+  --font-size-display-sm: 2rem; /* 32px */
+  --line-height-display-sm: 1.25; /* 40px */
+  --font-weight-display-sm: 700;
+  --letter-spacing-display-sm: -0.02em;
+
+  --font-size-code: 0.875em;
+  --line-height-code: 1.5;
+  --font-weight-code: 400;
 
   /* Touch targets */
   --size-touch-compact: 44px;
@@ -165,7 +253,11 @@
   --surface-muted: color-mix(in srgb, var(--bg1) 85%, var(--bg2));
   --surface-raised: color-mix(in srgb, var(--bg1) 95%, rgba(255, 255, 255, 0.85));
   --surface-card: var(--surface-raised);
-  --surface-overlay: color-mix(in srgb, var(--bg1) 80%, rgba(5, 7, 15, 0.65));
+  --surface-overlay: color-mix(
+    in srgb,
+    var(--bg1) calc(var(--glass-surface-opacity) * 100%),
+    rgba(5, 7, 15, 0.65)
+  );
   --surface-ghost: color-mix(in srgb, var(--bg0) 90%, transparent);
   --surface-user-bubble: color-mix(in srgb, var(--accent) 9%, var(--surface-base));
   --surface-ai-bubble: var(--surface-raised);
@@ -179,9 +271,17 @@
   --focus-ring: 0 0 0 3px color-mix(in srgb, var(--focus-ring-color) 35%, transparent);
 
   /* Borders */
-  --border-hairline: color-mix(in srgb, var(--line) 60%, transparent);
+  --border-hairline: color-mix(
+    in srgb,
+    var(--line) calc(var(--glass-border-opacity) * 100%),
+    transparent
+  );
   --border-subtle: var(--line);
-  --border-strong: color-mix(in srgb, var(--fg) 24%, transparent);
+  --border-strong: color-mix(
+    in srgb,
+    var(--fg) calc(var(--glass-border-opacity) * 40%),
+    transparent
+  );
 
   /* Legacy aliases */
   --color-text-primary: var(--fg);
@@ -192,8 +292,16 @@
   --color-text-link-hover: color-mix(in srgb, var(--accent) 80%, black);
 
   --color-brand-primary: var(--accent);
-  --color-brand-primary-hover: color-mix(in srgb, var(--accent) 90%, black);
-  --color-brand-primary-active: color-mix(in srgb, var(--accent) 80%, black);
+  --color-brand-primary-hover: color-mix(
+    in srgb,
+    var(--accent) var(--accent-mix-percentage),
+    black
+  );
+  --color-brand-primary-active: color-mix(
+    in srgb,
+    var(--accent) calc(var(--accent-mix-percentage) - 10%),
+    black
+  );
   --color-brand-on-primary: var(--accent-contrast);
   --color-brand-subtle: var(--accent-weak);
 
