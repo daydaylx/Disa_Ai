@@ -3,6 +3,7 @@ import { getEnvConfigSafe } from "../config/env";
 import { mapError } from "../lib/errors";
 import { fetchJson } from "../lib/http";
 import { readApiKey, writeApiKey } from "../lib/openrouter/key";
+import { safeWarn } from "../lib/utils/production-logger";
 
 interface ToastItem {
   kind: "error" | "success" | "warning" | "info";
@@ -97,7 +98,7 @@ export async function getRawModels(
     return list;
   } catch (error) {
     // Log but don't throw - return empty array for graceful degradation
-    console.warn("Failed to fetch models:", mapError(error));
+    safeWarn("Failed to fetch models:", mapError(error));
     if (toasts) {
       toasts.push({
         kind: "error",

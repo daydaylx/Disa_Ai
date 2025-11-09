@@ -10,6 +10,7 @@ import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 // PWA Installation Prompt
 import { registerSW } from "./lib/pwa/registerSW";
+import { safeError, safeWarn } from "./lib/utils/production-logger";
 import { themeController } from "./styles/theme";
 
 // Global type declarations
@@ -33,10 +34,10 @@ if (typeof window !== "undefined" && import.meta.env.PROD) {
 try {
   const envResult = initEnvironment();
   if (!envResult.success) {
-    console.error("Environment initialization failed:", envResult.errors);
+    safeError("Environment initialization failed:", envResult.errors);
   }
 } catch (error) {
-  console.error("Critical environment error:", error);
+  safeError("Critical environment error:", error);
 }
 
 // Singleton React Root to prevent memory leaks
@@ -66,9 +67,9 @@ function safeInitialize() {
   // Always initialize React first (critical for app to load)
   try {
     initializeApp();
-    console.warn("[INIT] React app mounted successfully");
+    safeWarn("[INIT] React app mounted successfully");
   } catch (error) {
-    console.error("[INIT] React mounting failed:", error);
+    safeError("[INIT] React mounting failed:", error);
     // Fallback: try basic mounting without context using same root
     const el = document.getElementById("app");
     if (el) {
@@ -77,32 +78,32 @@ function safeInitialize() {
         _appRoot = ReactDOM.createRoot(el);
       }
       _appRoot.render(<App />);
-      console.warn("[INIT] Fallback React mount attempted");
+      safeWarn("[INIT] Fallback React mount attempted");
     }
   }
 
   // Theme controller (non-critical)
   try {
     themeController.init();
-    console.warn("[INIT] Theme controller initialized");
+    safeWarn("[INIT] Theme controller initialized");
   } catch (error) {
-    console.warn("[INIT] Theme controller failed:", error);
+    safeWarn("[INIT] Theme controller failed:", error);
   }
 
   // PWA Service Worker (non-critical)
   try {
     registerSW();
-    console.warn("[INIT] Service Worker registered");
+    safeWarn("[INIT] Service Worker registered");
   } catch (error) {
-    console.warn("[INIT] Service Worker failed:", error);
+    safeWarn("[INIT] Service Worker failed:", error);
   }
 
   // Accessibility enforcement (non-critical)
   try {
     initializeA11yEnforcement();
-    console.warn("[INIT] A11y enforcement initialized");
+    safeWarn("[INIT] A11y enforcement initialized");
   } catch (error) {
-    console.warn("[INIT] A11y enforcement failed:", error);
+    safeWarn("[INIT] A11y enforcement failed:", error);
   }
 }
 

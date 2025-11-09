@@ -5,6 +5,7 @@ import { highlightCode } from "../../lib/highlighting/lazySyntaxHighlighter";
 import { loadPrismCSS } from "../../lib/highlighting/prismTheme";
 import { Bot, Copy, RotateCcw, User } from "../../lib/icons";
 import { cn } from "../../lib/utils";
+import { safeWarn } from "../../lib/utils/production-logger";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
@@ -82,7 +83,7 @@ function CodeBlock({ children, language }: { children: string; language?: string
         }
       })
       .catch((error) => {
-        console.warn("[CodeBlock] Highlighting failed:", error);
+        safeWarn("[CodeBlock] Highlighting failed:", error);
       })
       .finally(() => {
         setIsLoading(false);
