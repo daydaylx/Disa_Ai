@@ -17,6 +17,7 @@
   - [Konfiguration & Feature Flags](#konfiguration--feature-flags)
   - [PWA und Offline-Fähigkeit](#pwa-und-offline-fähigkeit)
 - [📱 Mobile Navigation & Swipe Gestures](#-mobile-navigation--swipe-gestures)
+- [🧪 Spezifikationstests](#-spezifikationstests)
 - [🛠️ Tech Stack](#-tech-stack)
 - [🚀 Erste Schritte](#-erste-schritte)
   - [Voraussetzungen](#voraussetzungen)
@@ -73,6 +74,19 @@ Die Anwendung verfügt über eine eigene, wiederverwendbare Komponenten-Biblioth
 
 Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtsseitigen Sidepanel, das durch intuitive Gesten gesteuert werden kann:
 
+## 🧪 Spezifikationstests
+
+Neben den Unit- und E2E-Tests existieren zusätzliche Spezifikationstests, die verschiedene Aspekte der Anwendung dokumentieren und überprüfen:
+
+- **Edge-Swipe-Tests (`test_edge_swipe.md`)**: Dokumentation und Tests für die Swipe-Gesten-Implementierung
+- **Deferred Loading-Tests (`test_deferred_loading.md`)**: Spezifikationen für verzögertes Laden von Inhalten
+- **Lazy Highlighter-Tests (`test_lazy_highlighter.md`)**: Tests für verzögerte Syntax-Hervorhebung
+- **Network Timeline-Tests (`test_network_timeline.md`)**: Dokumentation der Netzwerk-Performance-Optimierungen
+
+## 📱 Mobile Navigation & Swipe Gestures
+
+Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtsseitigen Sidepanel, das durch intuitive Gesten gesteuert werden kann:
+
 ### Öffnen des Panels
 
 - **Edge-Swipe (Mobil)**: Wische vom rechten Bildschirmrand (innerhalb von 20px) nach links, um das Navigations-Panel zu öffnen. Die Geste benötigt mindestens 40px horizontale Bewegung und respektiert eine vertikale Toleranz von 30px, um nicht mit Scroll-Gesten zu kollidieren.
@@ -96,6 +110,29 @@ Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtss
 
 Für detaillierte Informationen siehe [docs/MOBILE_NAVIGATION.md](docs/MOBILE_NAVIGATION.md).
 
+## 🧪 Spezifikationstests
+
+Neben den Unit- und E2E-Tests existieren zusätzliche Spezifikationstests, die verschiedene Aspekte der Anwendung dokumentieren und überprüfen:
+
+- **Edge-Swipe-Tests (`test_edge_swipe.md`)**: Dokumentation und Tests für die Swipe-Gesten-Implementierung
+- **Deferred Loading-Tests (`test_deferred_loading.md`)**: Spezifikationen für verzögertes Laden von Inhalten
+- **Lazy Highlighter-Tests (`test_lazy_highlighter.md`)**: Tests für verzögerte Syntax-Hervorhebung
+- **Network Timeline-Tests (`test_network_timeline.md`)**: Dokumentation der Netzwerk-Performance-Optimierungen
+
+## 🛠️ Tech Stack
+
+| Kategorie           | Technologien & Begründung                                                                                                                                      |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Framework**       | **React 19, TypeScript 5, Vite 7**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                                         |
+| **Styling**         | **Tailwind CSS, Radix UI, Lucide Icons**: Utility-First-CSS für schnelles Prototyping; ungestylte, barrierefreie Primitives von Radix; leichtgewichtige Icons. |
+| **State & Routing** | **React Hooks, React Router v7, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.        |
+| **PWA / Offline**   | **Vite PWA Plugin (Workbox)**: Industriestandard zur Erstellung robuster Service Worker und Offline-Fähigkeiten.                                               |
+| **Performance**     | **Virtualized Rendering**: Nachrichten-Virtualisierung für skalierbare Chat-Performance; Lazy Loading für optimierte Ladezeiten.                               |
+| **Unit-Testing**    | **Vitest, Happy DOM, MSW**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung; Mocking von Netzwerk-Anfragen für stabile Tests.                 |
+| **E2E-Testing**     | **Playwright, @axe-core/playwright**: Zuverlässiges Browser-Testing über mehrere Engines; integrierte Accessibility-Prüfungen.                                 |
+| **Code-Qualität**   | **ESLint, Prettier, Husky, lint-staged**: Strikte Regeln für Code-Konsistenz, die automatisch vor jedem Commit erzwungen werden.                               |
+| **Deployment**      | **Cloudflare Pages, Netlify**: Konfigurationen für beide Plattformen vorhanden, Fokus auf statisches Hosting mit CI/CD.                                        |
+
 ## 🏛️ Architektur-Überblick
 
 - [🏛️ Architektur-Überblick](#️-architektur-überblick)
@@ -110,22 +147,34 @@ Die Anwendung ist als moderne Single-Page-Application (SPA) aufgebaut und folgt 
   - Einrichtung von Providern für Kontexte (z.B. `StudioProvider`, `ToastsProvider`).
   - Implementierung eines Mobile-Gates (`MobileOnlyGate`), um die Nutzung auf Desktops einzuschränken.
   - Dynamische Anpassung der Viewport-Höhe (`--vh`) zur Behebung von Layout-Problemen auf mobilen Geräten mit virtuellen Tastaturen.
-- **Routing (`src/app/router.tsx`)**: Verwendet `react-router-dom` v6, um die verschiedenen Seiten der Anwendung zu verwalten. Alle Seiten werden mittels `React.lazy()` dynamisch geladen (Code-Splitting), um die initiale Ladezeit zu minimieren. Ein `Suspense`-Fallback sorgt für eine Ladeanzeige.
+- **Routing (`src/app/router.tsx`)**: Verwendet `react-router-dom` v7, um die verschiedenen Seiten der Anwendung zu verwalten. Alle Seiten werden mittels `React.lazy()` dynamisch geladen (Code-Splitting), um die initiale Ladezeit zu minimieren. Ein `Suspense`-Fallback sorgt für eine Ladeanzeige.
 - **Business-Logik**: Die Kernlogik ist in wiederverwendbare React-Hooks ausgelagert (z.B. `src/hooks/useChat.ts`), die den Zustand und die Interaktionen verwalten.
 - **UI-Komponenten**: Ein System aus atomaren und zusammengesetzten Komponenten in `src/components/`, das auf `Radix UI` für Barrierefreiheit und `Tailwind CSS` für das Styling setzt.
 
 ```
 src/
+├── analytics/      # Analytics und Tracking Funktionalitäten
 ├── api/          # Externe API-Aufrufe (z.B. OpenRouter)
 ├── app/          # App-Setup: Router, Layouts, globale Kontexte
+├── bootstrap/    # Initialisierungs- und Bootstrapping-Logik
 ├── components/   # Wiederverwendbare UI-Komponenten (atomar & zusammengesetzt)
 ├── config/       # Statische Konfiguration: Modelle, Prompts, Feature-Flags
+├── contexts/     # React Kontexte für State-Management
+├── data/         # Datenmodelle und Datenbank-Interaktionen
+├── docs/         # Dokumentationsdateien und -ressourcen
+├── features/     # Feature-spezifische Implementierungen
 ├── hooks/        # Zentrale Business-Logik (z.B. useChat, useMemory)
 ├── lib/          # Allgemeine, framework-unabhängige Hilfsfunktionen
 ├── pages/        # Ansichten für einzelne Routen (z.B. Chat, Settings)
+├── prompts/      # System-Prompts und Prompt-Management
+├── scripts/      # Build- und Entwicklungsskripte
 ├── services/     # Hintergrunddienste und Kapselung von Browser-APIs
 ├── state/        # Globales Zustandsmanagement (falls über Hooks hinausgehend)
-└── types/        # Globale TypeScript-Typdefinitionen
+├── test/         # Test-Utilities und Test-Setup
+├── theme/        # Theme- und Design-System Konfigurationen
+├── types/        # Globale TypeScript-Typdefinitionen
+├── ui/           # UI-Komponenten-Bibliothek (alternative Komponentenstruktur)
+└── utils/        # Allgemeine Hilfsfunktionen und Dienstprogramme
 ```
 
 ## ⚙️ Detaillierte Funktionsweise
@@ -203,7 +252,7 @@ Die Anwendung ist als Progressive Web App konzipiert, um eine native-ähnliche E
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Framework**       | **React 19, TypeScript 5, Vite 7**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                                         |
 | **Styling**         | **Tailwind CSS, Radix UI, Lucide Icons**: Utility-First-CSS für schnelles Prototyping; ungestylte, barrierefreie Primitives von Radix; leichtgewichtige Icons. |
-| **State & Routing** | **React Hooks, React Router v6, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.        |
+| **State & Routing** | **React Hooks, React Router v7, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.        |
 | **PWA / Offline**   | **Vite PWA Plugin (Workbox)**: Industriestandard zur Erstellung robuster Service Worker und Offline-Fähigkeiten.                                               |
 | **Performance**     | **Virtualized Rendering**: Nachrichten-Virtualisierung für skalierbare Chat-Performance; Lazy Loading für optimierte Ladezeiten.                               |
 | **Unit-Testing**    | **Vitest, Happy DOM, MSW**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung; Mocking von Netzwerk-Anfragen für stabile Tests.                 |
@@ -258,7 +307,8 @@ Die wichtigsten Skripte aus `package.json`:
 
 - **Unit-Tests (`src/__tests__`)**: Fokussieren sich auf die Business-Logik in Hooks (z.B. Race-Conditions in `useChat`) und kritische Utility-Funktionen.
 - **End-to-End-Tests (`tests/e2e`)**: Simulieren vollständige Nutzer-Flows wie das Senden einer Nachricht, das Ändern von Einstellungen und das Filtern von Modellen. Sie laufen auf einem emulierten "Pixel 7"-Gerät und mocken alle Netzwerk-Anfragen, um unabhängig und deterministisch zu sein.
-- **Barrierefreiheit**: `axe-core` ist in die Playwright-Tests integriert, um bei jedem Testlauf automatische Accessibility-Prüfungen durchzuführen.
+- **Barrierefreiheit**: `@axe-core/playwright` ist in die Playwright-Tests integriert, um bei jedem Testlauf automatische Accessibility-Prüfungen durchzuführen.
+- **Changesets**: Das Projekt nutzt `@changesets/cli` für eine systematische Verwaltung von Versionsänderungen und Änderungsprotokollen.
 
 ## ☁️ Build & Deployment
 
@@ -270,11 +320,13 @@ Der Build-Prozess wird durch `vite.config.ts` gesteuert.
 - **CI/CD**: Das Repository enthält Konfigurationsdateien für Cloudflare Pages (`cloudflare-pages.json`) und Netlify (`netlify.toml`), die automatische Deployments bei Pushes auf den `main`-Branch ermöglichen. Sicherheitsheader aus `public/_headers` werden dabei automatisch übernommen.
 - **GitHub Pages (Production)**: Stelle unter `Settings → Pages → Build and deployment` sicher, dass die **Source auf “GitHub Actions”** steht. Der Workflow `.github/workflows/pages.yml` baut ausschließlich `dist/`, kopiert `CNAME` sowie den SPA-Fallback (`dist/404.html`) und veröffentlicht dann via `actions/deploy-pages`. Ein regulärer Push auf `main` oder ein manueller `workflow_dispatch` triggert den Deploy.
 - **Dist Smoke-Test**: Vor jedem Deployment `npm run build` lokal ausführen und `dist/index.html` per `npx serve dist` öffnen. Die HTML darf keine direkten `src/*.tsx`-Referenzen mehr enthalten – nur hashed Bundles aus `assets/`.
+- **Build-Info-Generierung**: Vor jedem Build wird ein Skript ausgeführt, das Build-Informationen (Build-ID, Zeitstempel, Git-SHA) generiert und in der App verfügbar macht.
 
 ## 🤝 Contributing
 
 - **Commit-Konvention**: Das Projekt folgt der **Conventional Commits** Spezifikation.
 - **Entwicklungsmodell**: Es wird ein **Trunk-Based Development**-Modell mit kurzlebigen Feature-Branches verfolgt.
+- **Versionsverwaltung**: Das Projekt nutzt Changesets für eine systematische Verwaltung von Versionsänderungen. Verwende `npm run changeset:add`, um neue Changeset-Dateien hinzuzufügen.
 - **Vorlagen**: Im `.github`-Verzeichnis befinden sich Vorlagen für Issues und Pull Requests.
 
 ## 📜 Lizenz
