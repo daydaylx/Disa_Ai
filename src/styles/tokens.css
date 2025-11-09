@@ -274,6 +274,18 @@
   --color-focus-ring: var(--focus-ring-color);
   --shadow-focus-neumorphic: var(--focus-ring), 0 0 0 1px var(--color-border-focus);
 
+  /* CRITICAL: Missing accent colors and neumorphic borders - 53 references found */
+  --acc1: var(--accent); /* Primary accent color */
+  --acc2: #f45d69; /* Secondary accent color - pink/red */
+  --acc2-rgb: 244, 93, 105; /* RGB values for acc2 */
+  --acc2-strong: color-mix(in srgb, var(--acc2) 85%, black); /* Darker acc2 */
+
+  /* Neumorphic border system */
+  --border-neumorphic-light: color-mix(in srgb, var(--line) 60%, rgba(255, 255, 255, 0.15));
+
+  /* Missing glow shadows */
+  --shadow-glow-accent-subtle: 0 0 12px color-mix(in srgb, var(--accent) 35%, transparent);
+
   /* Borders */
   --border-hairline: color-mix(
     in srgb,
