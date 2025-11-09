@@ -14,7 +14,8 @@
 @import "./styles/tokens.css";
 @import "./styles/base.css";
 @import "./styles/components.css";
-@import "./styles/ui-state-animations.css"; /* Modern state animations - legacy neomorphic removed */
+@import "./styles/ui-state-animations.css";
+@import "./styles/mobile-enhancements.css"; /* Modern state animations - legacy neomorphic removed */
 
 /* Tailwind CSS */
 @tailwind base;

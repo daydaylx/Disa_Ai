@@ -104,7 +104,83 @@ export default defineConfig(({ mode }) => {
             }),
           ]
         : []),
-      // Progressive PWA - temporarily disabled due to Service Worker ES6 import issues
+      // Progressive PWA with Service Worker
+      VitePWA({
+        registerType: "autoUpdate",
+        workbox: {
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,webmanifest}"],
+          // Skip large KaTeX font files from precache - they're lazy loaded
+          globIgnores: ["**/assets/fonts/KaTeX*.ttf", "**/assets/fonts/KaTeX*Regular*.woff"],
+          maximumFileSizeToCacheInBytes: 3000000, // 3MB - reduced since we skip large fonts
+          skipWaiting: true,
+          clientsClaim: true,
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "google-fonts-cache",
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 365, // 365 days
+                },
+              },
+            },
+            // Cache KaTeX fonts dynamically when needed
+            {
+              urlPattern: /.*\/assets\/fonts\/KaTeX.*\.(woff2|woff)$/,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "katex-fonts-cache",
+                expiration: {
+                  maxEntries: 30,
+                  maxAgeSeconds: 60 * 60 * 24 * 180, // 180 days
+                },
+              },
+            },
+            // Cache API responses for better offline experience
+            {
+              urlPattern: /^https:\/\/openrouter\.ai\/api\/.*/i,
+              handler: "NetworkFirst",
+              options: {
+                cacheName: "api-cache",
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60, // 1 hour
+                },
+                networkTimeoutSeconds: 10,
+              },
+            },
+          ],
+        },
+        includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
+        manifest: {
+          name: "Disa AI",
+          short_name: "Disa",
+          description: "AI-powered chat assistant with offline-first architecture",
+          theme_color: "#007AFF",
+          background_color: "#0b0f14",
+          display: "standalone",
+          scope: "/",
+          start_url: "/",
+          icons: [
+            {
+              src: "icons/icon-192.png",
+              sizes: "192x192",
+              type: "image/png",
+            },
+            {
+              src: "icons/icon-512.png",
+              sizes: "512x512",
+              type: "image/png",
+            },
+          ],
+        },
+        devOptions: {
+          enabled: true,
+          type: "module",
+        },
+      }),
     ],
     define: {
       "process.env.NODE_ENV": JSON.stringify("production"),
@@ -136,8 +212,17 @@ export default defineConfig(({ mode }) => {
         reportCompressedSize: false, // Schnellere Builds
       }),
       // Additional performance optimizations for main thread
-      brotliSize: true, // Report Brotli compressed size
-      modulePreload: true, // Enable module preloading for better performance
+      brotliSize: false, // Disable for faster builds
+      modulePreload: {
+        polyfill: true,
+        // Preload critical chunks only
+        resolveDependencies: (filename, deps) => {
+          return deps.filter(
+            (dep) =>
+              dep.includes("react-vendor") || dep.includes("utils") || !dep.includes("katex"), // Don't preload KaTeX - it's lazy loaded
+          );
+        },
+      },
       rollupOptions: {
         treeshake: {
           preset: "recommended",
