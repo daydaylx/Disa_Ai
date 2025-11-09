@@ -169,61 +169,65 @@ function DenseRoleCard({
       )}
     >
       <div className="flex items-start gap-3">
-        <button
-          type="button"
-          data-testid={`role-card-${role.id}`}
-          aria-pressed={isActive}
-          className="flex-1 text-left focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)] focus-visible:ring-0"
-          onClick={onSelect}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              onSelect();
-            }
-          }}
-        >
-          <div className="mb-2 flex items-center gap-2">
-            <h3 className="truncate text-base font-semibold text-[var(--color-text-primary)]">
-              {role.name}
-            </h3>
-            {isActive && (
-              <div className="rounded-full border border-[var(--color-brand-primary)] bg-[color-mix(in_srgb,var(--color-brand-subtle)_70%,var(--surface-neumorphic-floating))] px-2 py-0.5 text-[11px] font-medium text-[var(--color-brand-primary)]">
-                Aktiv
-              </div>
-            )}
-          </div>
-
-          <div className="mb-2 flex flex-wrap items-center gap-1.5">
-            <span
-              className={cn(
-                "inline-flex items-center rounded-full border px-2 py-1 text-xs transition-colors",
-                categoryPalette.border,
-                categoryPalette.text,
+        {/* Main content area - clickable for selection */}
+        <div className="flex-1">
+          <button
+            type="button"
+            data-testid={`role-card-${role.id}`}
+            aria-pressed={isActive}
+            className="w-full text-left focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)] focus-visible:ring-0 rounded-lg"
+            onClick={onSelect}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onSelect();
+              }
+            }}
+          >
+            <div className="mb-2 flex items-center gap-2">
+              <h3 className="truncate text-base font-semibold text-[var(--color-text-primary)]">
+                {role.name}
+              </h3>
+              {isActive && (
+                <div className="rounded-full border border-[var(--color-brand-primary)] bg-[color-mix(in_srgb,var(--color-brand-subtle)_70%,var(--surface-neumorphic-floating))] px-2 py-0.5 text-[11px] font-medium text-[var(--color-brand-primary)]">
+                  Aktiv
+                </div>
               )}
-              style={{
-                background:
-                  "color-mix(in srgb, var(--surface-neumorphic-floating) 75%, transparent)",
-              }}
-            >
-              {role.category}
-            </span>
-            {role.tags?.slice(0, 2).map((tag) => (
-              <Badge
-                key={tag}
-                variant="neumorphic"
-                size="sm"
-                className="normal-case rounded-full border border-[var(--color-border-hairline)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_70%,transparent)] px-2 py-[2px] text-[11px] font-medium tracking-[0.02em] text-[var(--color-text-secondary)]"
+            </div>
+
+            <div className="mb-2 flex flex-wrap items-center gap-1.5">
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-full border px-2 py-1 text-xs transition-colors",
+                  categoryPalette.border,
+                  categoryPalette.text,
+                )}
+                style={{
+                  background:
+                    "color-mix(in srgb, var(--surface-neumorphic-floating) 75%, transparent)",
+                }}
               >
-                #{tag}
-              </Badge>
-            ))}
-          </div>
+                {role.category}
+              </span>
+              {role.tags?.slice(0, 2).map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="neumorphic"
+                  size="sm"
+                  className="normal-case rounded-full border border-[var(--color-border-hairline)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_70%,transparent)] px-2 py-[2px] text-[11px] font-medium tracking-[0.02em] text-[var(--color-text-secondary)]"
+                >
+                  #{tag}
+                </Badge>
+              ))}
+            </div>
 
-          <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
-            {role.description || "Spezialisierte KI-Rolle für verschiedene Anwendungsfälle"}
-          </p>
-        </button>
+            <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
+              {role.description || "Spezialisierte KI-Rolle für verschiedene Anwendungsfälle"}
+            </p>
+          </button>
+        </div>
 
+        {/* Action buttons - outside of main button to avoid nested interactive controls */}
         <div className="flex flex-col items-center gap-1">
           <Button
             variant="ghost"
@@ -234,7 +238,10 @@ function DenseRoleCard({
                 ? `${role.name} aus Favoriten entfernen`
                 : `${role.name} zu Favoriten hinzufügen`
             }
-            onClick={onToggleFavorite}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite();
+            }}
           >
             <Star
               className={cn(
@@ -251,7 +258,10 @@ function DenseRoleCard({
               variant="ghost"
               size="sm"
               className="rounded-full px-3 py-1 text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-              onClick={onActivate}
+              onClick={(e) => {
+                e.stopPropagation();
+                onActivate();
+              }}
             >
               Aktivieren
             </Button>
