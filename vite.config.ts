@@ -105,38 +105,6 @@ export default defineConfig(({ mode }) => {
           ]
         : []),
       // Progressive PWA - temporarily disabled due to Service Worker ES6 import issues
-      // VitePWA({
-      //   strategies: "injectManifest",
-      //   srcDir: "public",
-      //   filename: "sw.js",
-      //   registerType: "autoUpdate",
-      //   injectRegister: false, // We control registration manually
-      //   devOptions: {
-      //     enabled: false, // Keep disabled in dev to avoid conflicts
-      //     type: "module",
-      //   },
-      //   injectManifest: {
-      //     // Conservative glob patterns - only essential files
-      //     globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2}"],
-      //     globIgnores: [
-      //       "**/node_modules/**/*",
-      //       "sw.js",
-      //       "workbox-*.js",
-      //       "**/*.map", // Skip source maps
-      //       "stats.html", // Skip analyzer output
-      //     ],
-      //     rollupFormat: "es",
-      //     // Defensive caching - don't cache everything immediately
-      //     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB limit
-      //   },
-      //   manifest: false, // We have our own manifest.webmanifest
-      //   // Workbox configuration for stability
-      //   workbox: {
-      //     cleanupOutdatedCaches: true,
-      //     skipWaiting: true,
-      //     clientsClaim: true,
-      //   },
-      // }),
     ],
     define: {
       "process.env.NODE_ENV": JSON.stringify("production"),
