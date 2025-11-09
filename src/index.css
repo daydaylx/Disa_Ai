@@ -14,8 +14,7 @@
 @import "./styles/tokens.css";
 @import "./styles/base.css";
 @import "./styles/components.css";
-@import "./styles/ui-state-animations.css"; /* Universal State System animations */
-@import "./styles/neomorphic-utilities.css"; /* Dramatic neomorphic utility classes */
+@import "./styles/ui-state-animations.css"; /* Modern state animations - legacy neomorphic removed */
 
 /* Tailwind CSS */
 @tailwind base;
@@ -72,20 +71,8 @@
 
 @layer components {
   /* ========================================================================
-     DRAMATIC NEOMORPHISM SYSTEM
+     PROJECT-SPECIFIC COMPONENT STYLES
      ======================================================================== */
-
-  /* REMOVED: Legacy Fluent 2 Soft-Depth Surfaces
-     All .soft-surface* classes have been replaced by the dramatic neomorphism
-     system defined in tokens.css and implemented via Tailwind utilities.
-
-     Migration Guide:
-     - .soft-surface → .neo-surface-base with appropriate shadow depth
-     - .soft-surface-card → .neo-card-floating
-     - .soft-surface-panel → .neo-panel-raised
-     - Hover states → .neo-hover-lift-* classes
-     - Focus states → .neo-focus-* classes
-  */
 
   .stroke-1 {
     box-shadow: inset 0 0 0 1px var(--color-border-subtle);

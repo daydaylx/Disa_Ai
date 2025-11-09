@@ -81,7 +81,7 @@ function AppContent() {
                     Fehlerdetails (nur in Entwicklung)
                   </summary>
                   <pre className="mt-2 overflow-auto rounded bg-red-100 p-2 text-xs text-red-800">
-                    {error.stack}
+                    {error instanceof Error ? error.stack : String(error)}
                   </pre>
                 </details>
               )}

@@ -6,7 +6,7 @@ import { Button } from "../../components/ui/button";
 import { Card, CardDescription, CardTitle } from "../../components/ui/card";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
-import { getConversationStats } from "../../lib/conversation-manager";
+import { getConversationStats } from "../../lib/conversation-manager-modern";
 import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
 

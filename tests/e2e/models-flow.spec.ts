@@ -101,7 +101,6 @@ test.describe("Models Management Flow Integration Tests", () => {
         if (paramCount > 0) {
           // Test adjusting temperature or other parameters
           const firstParam = parameterInputs.first();
-          const currentValue = await firstParam.inputValue();
 
           if ((await firstParam.getAttribute("type")) === "range") {
             await firstParam.fill("0.7");

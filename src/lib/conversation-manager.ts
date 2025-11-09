@@ -1,36 +1,10 @@
-// Real implementation of conversation manager functions using localStorage
+// Conversation manager with dual storage support (localStorage + IndexedDB)
+// This file provides backward compatibility while allowing migration to modern storage
+import { modernStorage } from './storage-layer';
+import type { Conversation, ConversationMetadata, ExportData } from './storage-layer';
+import { getConversationStats as getModernStats, getAllConversations as getAllModern, getConversation as getModernConversation } from './conversation-manager-modern';
 
-export interface Conversation {
-  id: string;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  lastActivity?: string;
-  model: string;
-  messageCount: number;
-  messages?: any[];
-  isFavorite?: boolean;
-}
-
-interface ConversationMetadata {
-  id: string;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  model: string;
-  messageCount: number;
-}
-
-interface ExportData {
-  version: string;
-  metadata: {
-    exportedAt: string;
-    totalConversations: number;
-    appVersion: string;
-  };
-  conversations: any[];
-}
-
+// Legacy localStorage implementation for fallback
 const CONVERSATIONS_KEY = "disa:conversations";
 const CONVERSATIONS_METADATA_KEY = "disa:conversations:metadata";
 
@@ -70,7 +44,61 @@ function saveStoredMetadata(metadata: Record<string, ConversationMetadata>): voi
   }
 }
 
-export function getConversationStats() {
+// Storage layer detection and migration
+let useModernStorage = false;
+
+async function initializeStorageLayer(): Promise<boolean> {
+  try {
+    // Try to use modern storage (IndexedDB)
+    await modernStorage.getConversationStats();
+    useModernStorage = true;
+    console.log('Using modern IndexedDB storage layer');
+    return true;
+  } catch (error) {
+    console.warn('Modern storage layer unavailable, falling back to localStorage:', error);
+    useModernStorage = false;
+    return false;
+  }
+}
+
+// Initialize on module load
+initializeStorageLayer();
+
+// Modern storage layer functions (async)
+async function getModernConversationStats() {
+  return await getModernStats();
+}
+
+async function getAllModernConversations() {
+  return await getAllModern();
+}
+
+async function getModernConversation(id: string) {
+  return await getModernConversation(id);
+}
+
+async function saveModernConversation(conversation: Conversation) {
+  return await modernStorage.saveConversation(conversation);
+}
+
+async function deleteModernConversation(id: string) {
+  return await modernStorage.deleteConversation(id);
+}
+
+async function cleanupOldModernConversations(days: number) {
+  return await modernStorage.cleanupOldConversations(days);
+}
+
+async function exportModernConversations() {
+  return await modernStorage.exportConversations();
+}
+
+async function importModernConversations(data: ExportData, options: { overwrite?: boolean; merge?: boolean }) {
+  return await modernStorage.importConversations(data, options);
+}
+
+// Legacy localStorage functions (sync)
+function getLegacyConversationStats() {
   const conversations = getStoredConversations();
 
   const conversationIds = Object.keys(conversations);
@@ -109,19 +137,19 @@ export function getConversationStats() {
   };
 }
 
-export function getAllConversations(): ConversationMetadata[] {
+function getAllLegacyConversations(): ConversationMetadata[] {
   const metadata = getStoredMetadata();
   return Object.values(metadata).sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
   );
 }
 
-export function getConversation(id: string): Conversation | null {
+function getLegacyConversation(id: string): Conversation | null {
   const conversations = getStoredConversations();
   return conversations[id] || null;
 }
 
-export function saveConversation(conversation: Conversation): void {
+function saveLegacyConversation(conversation: Conversation): void {
   try {
     const conversations = getStoredConversations();
     const metadata = getStoredMetadata();
@@ -146,7 +174,7 @@ export function saveConversation(conversation: Conversation): void {
   }
 }
 
-export function deleteConversation(id: string): void {
+function deleteLegacyConversation(id: string): void {
   try {
     const conversations = getStoredConversations();
     const metadata = getStoredMetadata();
@@ -161,7 +189,7 @@ export function deleteConversation(id: string): void {
   }
 }
 
-export function cleanupOldConversations(days: number): number {
+function cleanupOldLegacyConversations(days: number): number {
   try {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
@@ -193,7 +221,7 @@ export function cleanupOldConversations(days: number): number {
   }
 }
 
-export function exportConversations(): ExportData {
+function exportLegacyConversations(): ExportData {
   try {
     const conversations = getStoredConversations();
     const conversationList = Object.values(conversations);
@@ -221,7 +249,7 @@ export function exportConversations(): ExportData {
   }
 }
 
-export function importConversations(
+function importLegacyConversations(
   data: ExportData,
   options: { overwrite?: boolean; merge?: boolean },
 ) {
@@ -274,5 +302,117 @@ export function importConversations(
       importedCount: 0,
       errors: [`Failed to import conversations: ${error}`],
     };
+  }
+}
+
+// Unified API that automatically uses the best available storage layer
+export async function getConversationStats() {
+  if (useModernStorage) {
+    return await getModernConversationStats();
+  } else {
+    return getLegacyConversationStats();
+  }
+}
+
+export async function getAllConversations(): Promise<ConversationMetadata[]> {
+  if (useModernStorage) {
+    return await getAllModernConversations();
+  } else {
+    return getAllLegacyConversations();
+  }
+}
+
+export async function getConversation(id: string): Promise<Conversation | null> {
+  if (useModernStorage) {
+    return await getModernConversation(id);
+  } else {
+    return getLegacyConversation(id);
+  }
+}
+
+export async function saveConversation(conversation: Conversation): Promise<void> {
+  if (useModernStorage) {
+    return await saveModernConversation(conversation);
+  } else {
+    return saveLegacyConversation(conversation);
+  }
+}
+
+export async function deleteConversation(id: string): Promise<void> {
+  if (useModernStorage) {
+    return await deleteModernConversation(id);
+  } else {
+    return deleteLegacyConversation(id);
+  }
+}
+
+export async function cleanupOldConversations(days: number): Promise<number> {
+  if (useModernStorage) {
+    return await cleanupOldModernConversations(days);
+  } else {
+    return cleanupOldLegacyConversations(days);
+  }
+}
+
+export async function exportConversations(): Promise<ExportData> {
+  if (useModernStorage) {
+    return await exportModernConversations();
+  } else {
+    return exportLegacyConversations();
+  }
+}
+
+export async function importConversations(
+  data: ExportData,
+  options: { overwrite?: boolean; merge?: boolean },
+) {
+  if (useModernStorage) {
+    return await importModernConversations(data, options);
+  } else {
+    return importLegacyConversations(data, options);
+  }
+}
+
+// Utility functions for storage layer management
+export async function forceModernStorage(): Promise<boolean> {
+  useModernStorage = await initializeStorageLayer();
+  return useModernStorage;
+}
+
+export async function forceLegacyStorage(): Promise<void> {
+  useModernStorage = false;
+}
+
+export function isUsingModernStorage(): boolean {
+  return useModernStorage;
+}
+
+export async function migrateToModernStorage(): Promise<{ migrated: number; errors: string[] }> {
+  if (useModernStorage) {
+    return { migrated: 0, errors: [] };
+  }
+
+  try {
+    const legacyConversations = getStoredConversations();
+    const conversations = Object.values(legacyConversations);
+    const errors: string[] = [];
+    let migrated = 0;
+
+    for (const conversation of conversations) {
+      try {
+        await saveModernConversation(conversation);
+        migrated++;
+      } catch (error) {
+        errors.push(`Failed to migrate conversation ${conversation.id}: ${error}`);
+      }
+    }
+
+    if (migrated > 0) {
+      useModernStorage = true;
+    }
+
+    return { migrated, errors };
+  } catch (error) {
+    return { migrated: 0, errors: [`Migration failed: ${error}`] };
   }
 }

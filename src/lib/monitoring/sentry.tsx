@@ -39,14 +39,7 @@ export function initializeSentry() {
 
       // Performance monitoring
       integrations: [
-        Sentry.browserTracingIntegration({
-          // Set tracing origins to include your domain
-          tracePropagationTargets: [
-            "localhost",
-            /^https:\/\/.*\.pages\.dev$/,
-            /^https:\/\/disaai\.de$/,
-          ],
-        }),
+        Sentry.browserTracingIntegration(),
         Sentry.reactRouterV6BrowserTracingIntegration({
           useEffect: React.useEffect,
           useLocation,
@@ -92,12 +85,6 @@ export function initializeSentry() {
       // Don't capture personal data
       sendDefaultPii: false,
 
-      // Release health monitoring
-      autoSessionTracking: true,
-
-      // Capture unhandled promise rejections
-      captureUnhandledRejections: true,
-
       // Debug mode (only in staging)
       debug: import.meta.env.VITE_ENV === "staging",
 
@@ -114,7 +101,7 @@ export function initializeSentry() {
       },
     });
 
-    console.info("[Sentry] ✅ Error tracking initialized");
+    console.warn("[Sentry] ✅ Error tracking initialized");
   } catch (error) {
     console.error("[Sentry] ❌ Initialization failed:", error);
   }
@@ -160,7 +147,7 @@ export function addBreadcrumb(
   data?: Record<string, any>,
 ) {
   if (import.meta.env.DEV) {
-    console.debug(`[Breadcrumb] ${category}: ${message}`, data);
+    console.warn(`[Breadcrumb] ${category}: ${message}`, data);
     return;
   }
 

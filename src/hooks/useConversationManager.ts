@@ -6,7 +6,7 @@ import {
   deleteConversation as deleteFromDb,
   getAllConversations,
   getConversation as getFromDb,
-} from "../lib/conversation-manager";
+} from "../lib/conversation-manager-modern";
 import type { ChatMessageType, Conversation } from "../types";
 
 interface ConversationManagerProps {
@@ -27,61 +27,80 @@ export function useConversationManager({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const refreshConversations = useCallback(() => {
-    setConversations(getAllConversations());
-  }, []);
+  const refreshConversations = useCallback(async () => {
+    try {
+      const conversations = await getAllConversations();
+      setConversations(conversations);
+    } catch (error) {
+      console.error('Failed to refresh conversations:', error);
+      toasts.push({
+        kind: "error",
+        title: "Fehler",
+        message: "Konversationen konnten nicht geladen werden",
+      });
+    }
+  }, [toasts]);
 
   useEffect(() => {
     if (isHistoryOpen) {
-      refreshConversations();
+      void refreshConversations();
     }
   }, [isHistoryOpen, refreshConversations]);
 
   const handleSelectConversation = useCallback(
-    (id: string) => {
-      const conversation = getFromDb(id);
+    async (id: string) => {
+      try {
+        const conversation = await getFromDb(id);
 
-      if (!conversation?.messages || !Array.isArray(conversation.messages)) {
+        if (!conversation?.messages || !Array.isArray(conversation.messages)) {
+          toasts.push({
+            kind: "error",
+            title: "Fehler",
+            message: "Konversation ist beschädigt oder konnte nicht geladen werden",
+          });
+          return;
+        }
+
+        const chatMessages: ChatMessageType[] = conversation.messages
+          .filter((msg) => ["user", "assistant", "system"].includes(msg.role))
+          .map((msg) => ({
+            id: msg.id,
+            role: msg.role as "user" | "assistant" | "system",
+            content: msg.content,
+            timestamp: msg.timestamp,
+            model: msg.model,
+          }));
+
+        if (chatMessages.length === 0) {
+          toasts.push({
+            kind: "warning",
+            title: "Konversation leer",
+            message: "Diese Konversation enthält keine gültigen Nachrichten",
+          });
+          return;
+        }
+
+        setMessages(chatMessages);
+        setActiveConversationId(id);
+        onNewConversation(); // Resets discussion context etc.
+
+        const systemMessage = chatMessages.find((msg) => msg.role === "system");
+        setCurrentSystemPrompt(systemMessage?.content);
+        setIsHistoryOpen(false);
+
+        toasts.push({
+          kind: "success",
+          title: "Konversation geladen",
+          message: `${conversation.title} wurde geladen`,
+        });
+      } catch (error) {
+        console.error('Failed to load conversation:', error);
         toasts.push({
           kind: "error",
           title: "Fehler",
-          message: "Konversation ist beschädigt oder konnte nicht geladen werden",
+          message: "Konversation konnte nicht geladen werden",
         });
-        return;
       }
-
-      const chatMessages: ChatMessageType[] = conversation.messages
-        .filter((msg) => ["user", "assistant", "system"].includes(msg.role))
-        .map((msg) => ({
-          id: msg.id,
-          role: msg.role as "user" | "assistant" | "system",
-          content: msg.content,
-          timestamp: msg.timestamp,
-          model: msg.model,
-        }));
-
-      if (chatMessages.length === 0) {
-        toasts.push({
-          kind: "warning",
-          title: "Konversation leer",
-          message: "Diese Konversation enthält keine gültigen Nachrichten",
-        });
-        return;
-      }
-
-      setMessages(chatMessages);
-      setActiveConversationId(id);
-      onNewConversation(); // Resets discussion context etc.
-
-      const systemMessage = chatMessages.find((msg) => msg.role === "system");
-      setCurrentSystemPrompt(systemMessage?.content);
-      setIsHistoryOpen(false);
-
-      toasts.push({
-        kind: "success",
-        title: "Konversation geladen",
-        message: `${conversation.title} wurde geladen`,
-      });
     },
     [setMessages, setCurrentSystemPrompt, onNewConversation, toasts],
   );

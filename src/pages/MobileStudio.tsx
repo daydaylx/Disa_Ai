@@ -1,7 +1,5 @@
 import { lazy, Suspense } from "react";
 
-import { MobilePageShell } from "../components/layout/MobilePageShell";
-
 const EnhancedRolesInterface = lazy(() =>
   import("../components/roles/EnhancedRolesInterface").then((module) => ({
     default: module.EnhancedRolesInterface,
@@ -16,7 +14,7 @@ const EnhancedRolesInterface = lazy(() =>
  */
 export default function MobileStudio() {
   return (
-    <MobilePageShell contentClassName="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       <Suspense
         fallback={
           <div className="flex flex-1 items-center justify-center p-6 text-sm text-text-muted">
@@ -26,6 +24,6 @@ export default function MobileStudio() {
       >
         <EnhancedRolesInterface />
       </Suspense>
-    </MobilePageShell>
+    </div>
   );
 }

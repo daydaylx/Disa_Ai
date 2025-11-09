@@ -1,4 +1,4 @@
-import type { Conversation } from "./conversation-manager";
+import type { Conversation } from "./conversation-manager-modern";
 
 /**
  * Groups conversations by date categories

@@ -5,8 +5,8 @@
 
 export type CssVariableMap = Record<string, string>;
 
-export const preCalculatedTokens: Record<"light" | "dark", CssVariableMap> = {
-  light: {
+export const preCalculatedTokens: Record<'light' | 'dark', CssVariableMap> = {
+  "light": {
     "--color-surface-canvas": "#e9ecf4",
     "--color-surface-base": "#fdfdff",
     "--color-surface-subtle": "#f4f6fb",
@@ -123,9 +123,9 @@ export const preCalculatedTokens: Record<"light" | "dark", CssVariableMap> = {
     "--size-ripple-max": "20rem",
     "--size-bottomsheet-handle": "0.25rem",
     "--size-bottomsheet-handle-width": "2rem",
-    "--size-bottomsheet-border": "0.0625rem",
+    "--size-bottomsheet-border": "0.0625rem"
   },
-  dark: {
+  "dark": {
     "--color-surface-canvas": "#06080f",
     "--color-surface-base": "#0f1424",
     "--color-surface-subtle": "#141a2b",
@@ -242,10 +242,10 @@ export const preCalculatedTokens: Record<"light" | "dark", CssVariableMap> = {
     "--size-ripple-max": "20rem",
     "--size-bottomsheet-handle": "0.25rem",
     "--size-bottomsheet-handle-width": "2rem",
-    "--size-bottomsheet-border": "0.0625rem",
-  },
+    "--size-bottomsheet-border": "0.0625rem"
+  }
 } as const;
 
 // Performance: Pre-calculated tokens eliminate ~4ms runtime calculation per theme switch
-// Generated: 2025-11-09T08:06:04.895Z
+// Generated: 2025-11-09T11:55:42.172Z
 // Tokens: 117 variables per theme

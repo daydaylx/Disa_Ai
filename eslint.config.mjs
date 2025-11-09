@@ -31,6 +31,7 @@ export default [
       "public/**",
       "*.md",
       ".env",
+      "docs/archive/**", // Archive directories
     ],
   }, // Configuration files (Node.js environment)
   {

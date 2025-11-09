@@ -15,7 +15,8 @@ import {
   exportConversations,
   getConversationStats,
   importConversations,
-} from "../../lib/conversation-manager";
+  type ConversationStats,
+} from "../../lib/conversation-manager-modern";
 import {
   BookOpenCheck,
   Download,
@@ -53,14 +54,27 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     }
   });
   const [showKey, setShowKey] = useState(false);
-  const [stats, setStats] = useState(() => getConversationStats());
+  const [stats, setStats] = useState<ConversationStats>({
+    totalConversations: 0,
+    totalMessages: 0,
+    averageMessagesPerConversation: 0,
+    modelsUsed: [],
+    storageSize: 0
+  });
 
   useEffect(() => {
     setHasApiKey(hasStoredApiKey());
+    // Load stats asynchronously
+    getConversationStats().then(setStats).catch(console.error);
   }, []);
 
-  const refreshStats = () => {
-    setStats(getConversationStats());
+  const refreshStats = async () => {
+    try {
+      const newStats = await getConversationStats();
+      setStats(newStats);
+    } catch (error) {
+      console.error('Failed to refresh stats:', error);
+    }
   };
 
   const handleSaveKey = () => {
@@ -101,9 +115,9 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     }
   };
 
-  const handleExport = () => {
+  const handleExport = async () => {
     try {
-      exportConversations();
+      await exportConversations();
       toasts.push({
         kind: "success",
         title: "Export gestartet",
@@ -127,9 +141,9 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     try {
       const text = await file.text();
       const payload = JSON.parse(text);
-      const result = importConversations(payload, { merge: true, overwrite: false });
+      const result = await importConversations(payload, { merge: true, overwrite: false });
       if (result.success) {
-        refreshStats();
+        await refreshStats();
         toasts.push({
           kind: "success",
           title: "Import abgeschlossen",
@@ -152,16 +166,25 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     }
   };
 
-  const handleCleanup = () => {
+  const handleCleanup = async () => {
     if (!window.confirm("Alle Konversationen älter als 30 Tage löschen?")) return;
-    const deleted = cleanupOldConversations(30);
-    refreshStats();
-    toasts.push({
-      kind: "info",
-      title: "Verlauf reduziert",
-      message:
-        deleted > 0 ? `${deleted} Konversationen entfernt.` : "Keine alten Verläufe gefunden.",
-    });
+    try {
+      const deleted = await cleanupOldConversations(30);
+      await refreshStats();
+      toasts.push({
+        kind: "info",
+        title: "Verlauf reduziert",
+        message:
+          deleted > 0 ? `${deleted} Konversationen entfernt.` : "Keine alten Verläufe gefunden.",
+      });
+    } catch (error) {
+      console.error('Cleanup failed:', error);
+      toasts.push({
+        kind: "error",
+        title: "Bereinigung fehlgeschlagen",
+        message: "Alte Konversationen konnten nicht entfernt werden.",
+      });
+    }
   };
 
   const sectionConfigs: SettingsSectionConfig[] = [
@@ -259,8 +282,8 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               variant="ghost"
               className="justify-between text-[var(--color-status-danger-fg)]"
               onClick={() => {
-                clearAllMemory();
-                refreshStats();
+                void clearAllMemory();
+                void refreshStats();
                 toasts.push({
                   kind: "success",
                   title: "Gedächtnis geleert",

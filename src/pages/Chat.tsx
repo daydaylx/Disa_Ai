@@ -1,52 +1,14 @@
-import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
-import { ChatList } from "../components/chat/ChatList";
-import { WelcomeScreen } from "../components/chat/WelcomeScreen";
+import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
-import { DISCUSSION_CARD_HINT, discussionTopicConfig } from "../config/discussion-topics";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
-import { useDiscussion } from "../hooks/useDiscussion";
-import { useIsMobile } from "../hooks/useMediaQuery";
-import { saveConversation } from "../lib/conversation-manager";
-const ChatHistorySidebar = lazy(() =>
-  import("../components/chat/ChatHistorySidebar").then((module) => ({
-    default: module.ChatHistorySidebar,
-  })),
-);
-const MobileChatHistorySidebar = lazy(() =>
-  import("../components/chat/MobileChatHistorySidebar").then((module) => ({
-    default: module.MobileChatHistorySidebar,
-  })),
-);
-
-const DISCUSSION_SECTIONS = [
-  {
-    id: "curiosity",
-    title: "Neugier & Sinnfragen",
-    description: "Philosophische Warm-ups und lockere Brainstormings.",
-  },
-  {
-    id: "future",
-    title: "Zukunft & Technologie",
-    description: "Blick nach vorn auf Innovation, Automatisierung und KI.",
-  },
-  {
-    id: "society",
-    title: "Gesellschaft & Alltag",
-    description: "Diskussionen rund um Klima, Wirtschaft und soziale Dynamiken.",
-  },
-].map((section) => ({
-  ...section,
-  topics: discussionTopicConfig
-    .filter((topic) => topic.category === section.id)
-    .map((topic) => ({ ...topic, hint: DISCUSSION_CARD_HINT })),
-}));
+import { saveConversation } from "../lib/conversation-manager-modern";
 
 export default function Chat() {
   const toasts = useToasts();
-  const isMobile = useIsMobile();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastSavedSignatureRef = useRef<string | null>(null);
 
@@ -60,7 +22,6 @@ export default function Chat() {
     setInput,
     stop,
     setCurrentSystemPrompt,
-    setRequestOptions,
   } = useChat({
     onError: (error) => {
       toasts.push({
@@ -72,34 +33,13 @@ export default function Chat() {
   });
 
   const {
-    isHistoryOpen,
-    openHistory,
-    closeHistory,
-    conversations,
-    activeConversationId,
-    selectConversation,
-    deleteConversation,
     newConversation,
     setActiveConversationId,
     refreshConversations,
   } = useConversationManager({
     setMessages,
     setCurrentSystemPrompt,
-    onNewConversation: () => resetDiscussion(), // Reset discussion on new chat
-  });
-
-  const {
-    discussionPreset,
-    handleDiscussionPresetChange,
-    startDiscussion,
-    onDiscussionFinish,
-    resetDiscussion,
-    isDiscussionActive,
-  } = useDiscussion({
-    append,
-    setMessages,
-    setSystemPrompt: setCurrentSystemPrompt,
-    setRequestOptions,
+    onNewConversation: () => {}, // Reset discussion on new chat
   });
 
   // --- Effects ---
@@ -117,59 +57,55 @@ export default function Chat() {
 
   // Auto-save conversation on finish
   useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
+    const saveConversationIfNeeded = async () => {
+      const lastMessage = messages[messages.length - 1];
 
-    if (!isLoading && messages.length > 0 && lastMessage?.role === "assistant") {
-      let finalMessages = messages;
-      if (isDiscussionActive()) {
-        finalMessages = onDiscussionFinish(lastMessage, messages);
-      }
+      if (!isLoading && messages.length > 0 && lastMessage?.role === "assistant") {
+        const finalMessages = messages;
 
-      const storageMessages = finalMessages.map((msg) => ({
-        id: msg.id,
-        role: msg.role,
-        content: msg.content,
-        timestamp: msg.timestamp,
-        model: msg.model,
-      }));
+        const storageMessages = finalMessages.map((msg) => ({
+          id: msg.id,
+          role: msg.role,
+          content: msg.content,
+          timestamp: msg.timestamp,
+          model: msg.model,
+        }));
 
-      try {
-        const signature = `${storageMessages.length}:${lastMessage.id}:${lastMessage.content}`;
-        if (lastSavedSignatureRef.current === signature) {
-          return;
-        }
+        try {
+          const signature = `${storageMessages.length}:${lastMessage.id}:${lastMessage.content}`;
+          if (lastSavedSignatureRef.current === signature) {
+            return;
+          }
 
-        const conversation = {
-          id: activeConversationId || crypto.randomUUID(),
-          title: `Conversation ${new Date().toLocaleDateString()}`,
-          messages: storageMessages,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          model: "default",
-          messageCount: storageMessages.length,
-        };
-        // saveConversation is synchronous, no await needed.
-        saveConversation(conversation);
-        lastSavedSignatureRef.current = signature;
-        if (!activeConversationId) {
+          const conversation = {
+            id: crypto.randomUUID(),
+            title: `Conversation ${new Date().toLocaleDateString()}`,
+            messages: storageMessages,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            model: "default",
+            messageCount: storageMessages.length,
+          };
+          // saveConversation is now async, await it
+          await saveConversation(conversation);
+          lastSavedSignatureRef.current = signature;
           setActiveConversationId(conversation.id);
+          await refreshConversations();
+        } catch (error) {
+          console.error("Failed to auto-save:", error);
+          toasts.push({
+            kind: "warning",
+            title: "Speichern fehlgeschlagen",
+            message: "Die Konversation konnte nicht automatisch gespeichert werden",
+          });
         }
-        refreshConversations();
-      } catch (error) {
-        console.error("Failed to auto-save:", error);
-        toasts.push({
-          kind: "warning",
-          title: "Speichern fehlgeschlagen",
-          message: "Die Konversation konnte nicht automatisch gespeichert werden",
-        });
       }
-    }
+    };
+
+    void saveConversationIfNeeded();
   }, [
     isLoading,
     messages,
-    isDiscussionActive,
-    onDiscussionFinish,
-    activeConversationId,
     setActiveConversationId,
     refreshConversations,
     toasts,
@@ -192,27 +128,31 @@ export default function Chat() {
 
       <main className="relative z-10 mx-auto w-full max-w-4xl px-4">
         {messages.length === 0 ? (
-          <WelcomeScreen
-            discussionPreset={discussionPreset}
-            handleDiscussionPresetChange={handleDiscussionPresetChange}
-            startDiscussion={startDiscussion}
-            discussionSections={DISCUSSION_SECTIONS}
-            newConversation={newConversation}
-            openHistory={openHistory}
-          />
+          <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
+            <h1 className="mb-4 text-3xl font-bold text-[var(--color-text-primary)]">
+              Willkommen bei Disa AI
+            </h1>
+            <p className="mb-8 text-[var(--color-text-secondary)]">
+              Beginnen Sie eine neue Konversation oder wählen Sie aus den verfügbaren Modellen.
+            </p>
+            <button
+              onClick={newConversation}
+              className="rounded-lg bg-[var(--color-brand-primary)] px-6 py-3 text-white hover:bg-[var(--color-brand-primary-hover)]"
+            >
+              Neue Konversation starten
+            </button>
+          </div>
         ) : (
-          <ChatList
+          <VirtualizedMessageList
             messages={messages}
             isLoading={isLoading}
-            onShowHistory={openHistory}
-            onRetry={(messageId) => {
-              // Implement retry logic if needed
-              console.warn("Retry functionality not implemented for messageId:", messageId);
-            }}
             onCopy={(content) => {
               navigator.clipboard.writeText(content).catch((err) => {
                 console.error("Failed to copy content:", err);
               });
+            }}
+            onRetry={(messageId) => {
+              console.warn("Retry functionality not implemented for messageId:", messageId);
             }}
           />
         )}
@@ -229,28 +169,7 @@ export default function Chat() {
         placeholder="Nachricht an Disa AI schreiben..."
       />
 
-      {/* Responsive History Sidebar */}
-      <Suspense fallback={<div>Lade Verlauf...</div>}>
-        {isMobile ? (
-          <MobileChatHistorySidebar
-            isOpen={isHistoryOpen}
-            onClose={closeHistory}
-            conversations={conversations}
-            activeId={activeConversationId}
-            onSelect={selectConversation}
-            onDelete={deleteConversation}
-          />
-        ) : (
-          <ChatHistorySidebar
-            isOpen={isHistoryOpen}
-            onClose={closeHistory}
-            conversations={conversations}
-            activeId={activeConversationId}
-            onSelect={selectConversation}
-            onDelete={deleteConversation}
-          />
-        )}
-      </Suspense>
+      <div ref={messagesEndRef} />
     </div>
   );
 }

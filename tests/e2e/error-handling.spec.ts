@@ -119,8 +119,6 @@ test.describe("Error Handling and Recovery Flow Tests", () => {
   });
 
   test("Route error handling and 404 pages", async ({ page }) => {
-    const helpers = new AppHelpers(page);
-
     // Test 404 page
     await page.goto("/nonexistent-page");
     await page.waitForTimeout(1000);

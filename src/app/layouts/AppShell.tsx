@@ -2,8 +2,6 @@ import { type ReactNode, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import { DesktopSidebar } from "../../components/layout/DesktopSidebar";
-import { GlobalNav, NAV_ITEMS } from "../../components/layout/GlobalNav";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
@@ -15,14 +13,22 @@ interface AppShellProps {
   children: ReactNode;
 }
 
-export function AppShell({ children }: AppShellProps) {
-  const location = useLocation();
-  return <AppShellLayout location={location}>{children}</AppShellLayout>;
-}
+// Temporäre Navigation Items bis neue Struktur implementiert ist
+const NAV_ITEMS = [
+  { path: "/chat", label: "Chat" },
+  { path: "/models", label: "Modelle" },
+  { path: "/studio", label: "Rollen" },
+  { path: "/settings", label: "Einstellungen" },
+];
 
 interface AppShellLayoutProps {
   children: ReactNode;
   location: ReturnType<typeof useLocation>;
+}
+
+export function AppShell({ children }: AppShellProps) {
+  const location = useLocation();
+  return <AppShellLayout location={location}>{children}</AppShellLayout>;
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
@@ -30,7 +36,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const isMobile = useIsMobile();
 
   const activePath = useMemo(() => {
-    return NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
+    return NAV_ITEMS.find((item: { path: string; label: string }) => location.pathname.startsWith(item.path))?.path ?? "/chat";
   }, [location.pathname]);
 
   return (
@@ -46,7 +52,21 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         Zum Hauptinhalt springen
       </a>
 
-      {isMobile ? <GlobalNav onMenuClick={() => setIsOverflowOpen(true)} /> : <DesktopSidebar />}
+      {isMobile ? (
+        <div className="border-b border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)] px-4 py-3">
+          <button 
+            onClick={() => setIsOverflowOpen(true)}
+            className="flex items-center gap-2 text-[var(--color-text-primary)]"
+          >
+            <span className="text-xl">☰</span>
+            <span>Menü</span>
+          </button>
+        </div>
+      ) : (
+        <div className="fixed left-0 top-0 h-full w-64 border-r border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-base)] p-4">
+          <div className="text-[var(--color-text-primary)] font-medium">Disa AI</div>
+        </div>
+      )}
 
       <main
         id="main"
@@ -91,7 +111,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                   Navigation
                 </h3>
                 <ul className="mt-3 space-y-2">
-                  {NAV_ITEMS.map((item) => (
+                  {NAV_ITEMS.map((item: { path: string; label: string }) => (
                     <li key={`drawer-${item.path}`}>
                       <Link
                         to={item.path}
