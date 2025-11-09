@@ -6,6 +6,7 @@
  * and development-friendly error handling.
  */
 
+import type { ErrorBoundaryProps } from "@sentry/react";
 import * as Sentry from "@sentry/react";
 // React Router v6 integration imports
 import React from "react";
@@ -121,8 +122,17 @@ export function initializeSentry() {
 
 /**
  * Enhanced error boundary for React components
+ * Wrapper around Sentry.ErrorBoundary so it can be used as a regular component
  */
-export const SentryErrorBoundary = Sentry.withErrorBoundary;
+const SentryReactErrorBoundary = Sentry.ErrorBoundary;
+
+export function SentryErrorBoundary(props: ErrorBoundaryProps) {
+  const { showDialog = false, ...rest } = props;
+  return React.createElement(SentryReactErrorBoundary, {
+    showDialog,
+    ...rest,
+  });
+}
 
 /**
  * Capture custom errors with context

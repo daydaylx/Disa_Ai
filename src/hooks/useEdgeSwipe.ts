@@ -8,7 +8,7 @@
  * - Feature-Flag: edgeSwipeNavigation
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { isFeatureEnabled } from "../config/flags";
 import { TouchGestureHandler } from "../lib/touch/gestures";
@@ -256,20 +256,20 @@ export function useEdgeSwipeDrawer(
   onOpenDrawer: () => void,
   options: EdgeSwipeOptions = {},
 ) {
-  const handleSwipeStart = () => {
+  const handleSwipeStart = useCallback(() => {
     if (!isDrawerOpen) {
       onOpenDrawer();
     }
-  };
+  }, [isDrawerOpen, onOpenDrawer]);
 
-  const handleSwipeProgress = (_progress: number) => {
+  const handleSwipeProgress = useCallback((_progress: number) => {
     // Drawer-Animation würde hier passieren
     // Progress: 0 = geschlossen, 1 = offen
-  };
+  }, []);
 
-  const handleSwipeComplete = () => {
+  const handleSwipeComplete = useCallback(() => {
     // Swipe abgeschlossen - nothing to do, drawer ist bereits geöffnet
-  };
+  }, []);
 
   return useEdgeSwipe(handleSwipeStart, handleSwipeProgress, handleSwipeComplete, options);
 }
