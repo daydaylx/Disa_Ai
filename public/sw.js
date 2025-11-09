@@ -3,13 +3,21 @@
  * Progressive Web App functionality for offline support and caching
  */
 
-import { precacheAndRoute, cleanupOutdatedCaches, matchPrecache } from "workbox-precaching";
-import { clientsClaim } from "workbox-core";
+// Use importScripts for Service Worker compatibility
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js");
 
-const BUILD_VERSION = (import.meta.env?.VITE_BUILD_TIMESTAMP ?? Date.now().toString()).replace(
-  /[^0-9A-Za-z]/g,
-  "",
-);
+if (workbox) {
+  console.log("Workbox loaded successfully");
+
+  const { precacheAndRoute, cleanupOutdatedCaches, matchPrecache } = workbox.precaching;
+  const { clientsClaim } = workbox.core;
+} else {
+  console.log("Workbox failed to load");
+}
+
+const BUILD_VERSION = Date.now()
+  .toString()
+  .replace(/[^0-9A-Za-z]/g, "");
 const RUNTIME_CACHE_PREFIX = "disa-runtime";
 const RUNTIME_CACHE_NAME = `${RUNTIME_CACHE_PREFIX}-${BUILD_VERSION}`;
 const APP_SHELL_URL = "/index.html";

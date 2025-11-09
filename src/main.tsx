@@ -10,7 +10,6 @@ import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 import { initializeSentry } from "./lib/monitoring/sentry";
 // PWA Installation Prompt
-import { registerSW } from "./lib/pwa/registerSW";
 import { safeError, safeWarn } from "./lib/utils/production-logger";
 import { themeController } from "./styles/theme";
 
@@ -98,13 +97,13 @@ function safeInitialize() {
     safeWarn("[INIT] Theme controller failed:", error);
   }
 
-  // PWA Service Worker (non-critical)
-  try {
-    registerSW();
-    safeWarn("[INIT] Service Worker registered");
-  } catch (error) {
-    safeWarn("[INIT] Service Worker failed:", error);
-  }
+  // PWA Service Worker (disabled temporarily due to ES6 import issues)
+  // try {
+  //   registerSW();
+  //   safeWarn("[INIT] Service Worker registered");
+  // } catch (error) {
+  //   safeWarn("[INIT] Service Worker failed:", error);
+  // }
 
   // Accessibility enforcement (non-critical)
   try {
