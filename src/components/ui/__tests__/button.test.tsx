@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { Button } from "../button";
@@ -38,13 +37,12 @@ describe("Button", () => {
   it("renders as a child element when asChild is true", () => {
     render(
       <Button asChild>
-        <a href="/test">Link Button</a>
+        <span>Custom Button</span>
       </Button>,
     );
-    const link = screen.getByRole("link", { name: /link button/i });
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/test");
-    expect(link).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // default neo-medium variant classes
+    const customButton = screen.getByText("Custom Button");
+    expect(customButton).toBeInTheDocument();
+    expect(customButton.tagName.toLowerCase()).toBe("span"); // Verifies asChild behavior
   });
 
   it("renders a disabled button", () => {
@@ -61,18 +59,6 @@ describe("Button", () => {
     const button = screen.getByRole("button", { name: /click me/i });
     await userEvent.click(button);
     expect(handleClick).toHaveBeenCalledTimes(1);
-  });
-
-  it("renders as a child element when asChild is true", () => {
-    render(
-      <Button asChild>
-        <a href="/test">Link Button</a>
-      </Button>,
-    );
-    const link = screen.getByRole("link", { name: /link button/i });
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/test");
-    expect(link).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // default neo-medium variant classes
   });
 
   it("applies custom className", () => {

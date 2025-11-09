@@ -59,12 +59,12 @@ export default defineConfig(({ mode }) => {
   }
 
   // Debug-Ausgaben für Base-Pfad-Erkennung
-  console.log(`[BUILD] Mode: ${mode}`);
-  console.log(`[BUILD] Environment variables:`, {
-    CF_PAGES: env.CF_PAGES,
-    CF_PAGES_URL: env.CF_PAGES_URL,
-    VITE_BASE_URL: env.VITE_BASE_URL,
-  });
+  // console.log(`[BUILD] Mode: ${mode}`);
+  // console.log(`[BUILD] Environment variables:`, {
+  //   CF_PAGES: env.CF_PAGES,
+  //   CF_PAGES_URL: env.CF_PAGES_URL,
+  //   VITE_BASE_URL: env.VITE_BASE_URL,
+  // });
 
   // Robuste Base-Pfad-Bestimmung mit Validierung
   try {
@@ -73,30 +73,30 @@ export default defineConfig(({ mode }) => {
       const validatedBase = validateBasePath(env.VITE_BASE_URL);
       if (validatedBase !== "/") {
         base = validatedBase;
-        console.log(`[BUILD] Using validated VITE_BASE_URL: ${base}`);
+        // console.log(`[BUILD] Using validated VITE_BASE_URL: ${base}`);
       } else {
-        console.warn(
-          `[BUILD] VITE_BASE_URL validation failed, using default: ${env.VITE_BASE_URL} -> ${base}`,
-        );
+        // console.warn(
+        //   `[BUILD] VITE_BASE_URL validation failed, using default: ${env.VITE_BASE_URL} -> ${base}`,
+        // );
       }
     }
     // 2. Cloudflare Pages Detection
     else if (env.CF_PAGES && env.CF_PAGES_URL) {
       base = "/";
-      console.log(`[BUILD] Detected Cloudflare Pages, using base: ${base}`);
+      // console.log(`[BUILD] Detected Cloudflare Pages, using base: ${base}`);
     }
     // 3. Development/Local Default
     else {
       base = "/";
-      console.log(`[BUILD] Using default base: ${base}`);
+      // console.log(`[BUILD] Using default base: ${base}`);
     }
   } catch (error) {
     console.error(`[BUILD] Base path determination failed:`, error);
     base = "/";
-    console.log(`[BUILD] Fallback to safe default: ${base}`);
+    // console.log(`[BUILD] Fallback to safe default: ${base}`);
   }
 
-  console.log(`[BUILD] Final base path: ${base}`);
+  // console.log(`[BUILD] Final base path: ${base}`);
 
   return {
     plugins: [

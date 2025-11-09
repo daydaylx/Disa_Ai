@@ -53,12 +53,10 @@ describe("ErrorBoundary", () => {
       </ErrorBoundary>,
     );
 
-    // Zuerst prüfen, ob Stack Trace-Elemente sichtbar sind (vor dem Klick)
-    const initialStackTraceElements = screen.queryAllByText("Stack Trace:");
-    const initialCount = initialStackTraceElements.length;
-
     // Klicke auf das erste "Technische Details anzeigen" Element
-    fireEvent.click(screen.getAllByText("Technische Details anzeigen")[0]);
+    const showDetailsButtons = screen.getAllByText("Technische Details anzeigen");
+    expect(showDetailsButtons.length).toBeGreaterThan(0);
+    fireEvent.click(showDetailsButtons[0]!);
 
     // Nach dem Klick die Anzahl der Stack Trace-Elemente prüfen
     const expandedStackTraceElements = screen.getAllByText("Stack Trace:");
@@ -95,8 +93,9 @@ describe("ErrorBoundary", () => {
       </ErrorBoundary>,
     );
 
-    const reportButton = screen.getAllByText("Fehler melden")[0];
-    fireEvent.click(reportButton);
+    const reportButtons = screen.getAllByText("Fehler melden");
+    expect(reportButtons.length).toBeGreaterThan(0);
+    fireEvent.click(reportButtons[0]!);
 
     expect(mockWriteText).toHaveBeenCalledWith(expect.stringContaining("errorId"));
   });

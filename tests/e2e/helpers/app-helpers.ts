@@ -68,7 +68,9 @@ export class AppHelpers {
       }
 
       // If none of the checks passed, the app failed to load
-      throw new Error(`Chat interface verification failed: ${primaryError.message}`);
+      const errorMessage =
+        primaryError instanceof Error ? primaryError.message : String(primaryError);
+      throw new Error(`Chat interface verification failed: ${errorMessage}`);
     }
   }
 

@@ -115,3 +115,6 @@ autopilot.log
 *.sqlite
 *.sqlite3
 *.backup
+
+# Environment variables
+.env

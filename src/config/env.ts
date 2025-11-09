@@ -1,9 +1,7 @@
+/// <reference types="vite/client" />
 import { z } from "zod";
 
-/**
- * Environment Configuration Schema
- * Validates and provides fallbacks for all environment variables
- */
+// Define the schema for environment variables
 const envSchema = z.object({
   // OpenRouter API Configuration
   VITE_OPENROUTER_BASE_URL: z

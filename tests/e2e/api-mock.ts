@@ -1,4 +1,4 @@
-import { type APIRequestContext, type Page } from "@playwright/test";
+import { type Page, type Route } from "@playwright/test";
 
 /**
  * Sets up API key storage in sessionStorage to prevent "NO_API_KEY_IN_TESTS" error
@@ -16,9 +16,9 @@ export async function setupApiKeyStorage(page: Page) {
  * Sets up API response mocking for the chat endpoint
  * This intercepts requests to the chat API and returns a mock response
  */
-export async function setupChatApiMock(page: Page | APIRequestContext) {
+export async function setupChatApiMock(page: Page) {
   // Mock the OpenRouter API endpoint
-  await page.route("**/openrouter.ai/api/v1/chat/completions", async (route) => {
+  await page.route("**/openrouter.ai/api/v1/chat/completions", async (route: Route) => {
     // Send a mock response that matches what the test expects
     await route.fulfill({
       status: 200,
