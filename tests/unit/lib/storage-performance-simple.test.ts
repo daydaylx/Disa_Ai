@@ -184,14 +184,7 @@ describe("Storage Performance Tests", () => {
         const deserialized = JSON.parse(serialized);
 
         // Simulate search operation
-        const filtered = deserialized.messages.filter((msg) => msg.role === "user");
-
-        // Simulate stats calculation
-        const stats = {
-          totalMessages: deserialized.messages.length,
-          userMessages: filtered.length,
-          assistantMessages: deserialized.messages.length - filtered.length,
-        };
+        deserialized.messages.filter((msg: any) => msg.role === "user");
       }
 
       const endTime = performance.now();
@@ -244,9 +237,6 @@ describe("Storage Performance Tests", () => {
       // Simulate concurrent access patterns
       const recent = manyConversations.slice(-100); // Last 100
       const byModel = manyConversations.filter((c) => c.model === "gpt-3.5");
-      const sortedByDate = [...manyConversations].sort(
-        (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-      );
 
       const endTime = performance.now();
 

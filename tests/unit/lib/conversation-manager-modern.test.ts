@@ -1,4 +1,5 @@
 // Unit tests for conversation manager
+import type { MockedFunction } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -40,6 +41,32 @@ vi.mock("@/lib/storage-layer", () => ({
 
 import { modernStorage } from "@/lib/storage-layer";
 
+// Type the mocked functions - this makes TypeScript recognize the mock methods
+const mockGetConversationStats = modernStorage.getConversationStats as MockedFunction<
+  typeof modernStorage.getConversationStats
+>;
+const mockGetAllConversations = modernStorage.getAllConversations as MockedFunction<
+  typeof modernStorage.getAllConversations
+>;
+const mockGetConversation = modernStorage.getConversation as MockedFunction<
+  typeof modernStorage.getConversation
+>;
+const mockSaveConversation = modernStorage.saveConversation as MockedFunction<
+  typeof modernStorage.saveConversation
+>;
+const mockDeleteConversation = modernStorage.deleteConversation as MockedFunction<
+  typeof modernStorage.deleteConversation
+>;
+const mockCleanupOldConversations = modernStorage.cleanupOldConversations as MockedFunction<
+  typeof modernStorage.cleanupOldConversations
+>;
+const mockExportConversations = modernStorage.exportConversations as MockedFunction<
+  typeof modernStorage.exportConversations
+>;
+const mockImportConversations = modernStorage.importConversations as MockedFunction<
+  typeof modernStorage.importConversations
+>;
+
 describe("Conversation Manager", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -55,12 +82,12 @@ describe("Conversation Manager", () => {
         storageSize: 1024000,
       };
 
-      modernStorage.getConversationStats.mockResolvedValue(mockStats);
+      mockGetConversationStats.mockResolvedValue(mockStats);
 
       const result = await getConversationStats();
 
       expect(result).toEqual(mockStats);
-      expect(modernStorage.getConversationStats).toHaveBeenCalled();
+      expect(mockGetConversationStats).toHaveBeenCalled();
     });
   });
 
@@ -77,12 +104,12 @@ describe("Conversation Manager", () => {
         },
       ];
 
-      modernStorage.getAllConversations.mockResolvedValue(mockConversations);
+      mockGetAllConversations.mockResolvedValue(mockConversations);
 
       const result = await getAllConversations();
 
       expect(result).toEqual(mockConversations);
-      expect(modernStorage.getAllConversations).toHaveBeenCalled();
+      expect(mockGetAllConversations).toHaveBeenCalled();
     });
   });
 
@@ -98,12 +125,12 @@ describe("Conversation Manager", () => {
         messages: [{ role: "user", content: "Hello" }],
       };
 
-      modernStorage.getConversation.mockResolvedValue(mockConversation);
+      mockGetConversation.mockResolvedValue(mockConversation);
 
       const result = await getConversation("1");
 
       expect(result).toEqual(mockConversation);
-      expect(modernStorage.getConversation).toHaveBeenCalledWith("1");
+      expect(mockGetConversation).toHaveBeenCalledWith("1");
     });
   });
 
@@ -121,7 +148,7 @@ describe("Conversation Manager", () => {
 
       await saveConversation(conversation);
 
-      expect(modernStorage.saveConversation).toHaveBeenCalledWith(conversation);
+      expect(mockSaveConversation).toHaveBeenCalledWith(conversation);
     });
   });
 
@@ -129,18 +156,18 @@ describe("Conversation Manager", () => {
     it("should delete conversation via storage layer", async () => {
       await deleteConversation("1");
 
-      expect(modernStorage.deleteConversation).toHaveBeenCalledWith("1");
+      expect(mockDeleteConversation).toHaveBeenCalledWith("1");
     });
   });
 
   describe("cleanupOldConversations", () => {
     it("should cleanup old conversations via storage layer", async () => {
-      modernStorage.cleanupOldConversations.mockResolvedValue(3);
+      mockCleanupOldConversations.mockResolvedValue(3);
 
       const result = await cleanupOldConversations(30);
 
       expect(result).toBe(3);
-      expect(modernStorage.cleanupOldConversations).toHaveBeenCalledWith(30);
+      expect(mockCleanupOldConversations).toHaveBeenCalledWith(30);
     });
   });
 
@@ -156,12 +183,12 @@ describe("Conversation Manager", () => {
         conversations: [],
       };
 
-      modernStorage.exportConversations.mockResolvedValue(mockExportData);
+      mockExportConversations.mockResolvedValue(mockExportData);
 
       const result = await exportConversations();
 
       expect(result).toEqual(mockExportData);
-      expect(modernStorage.exportConversations).toHaveBeenCalled();
+      expect(mockExportConversations).toHaveBeenCalled();
     });
   });
 
@@ -183,12 +210,12 @@ describe("Conversation Manager", () => {
         errors: [],
       };
 
-      modernStorage.importConversations.mockResolvedValue(mockResult);
+      mockImportConversations.mockResolvedValue(mockResult);
 
       const result = await importConversations(importData, { overwrite: false });
 
       expect(result).toEqual(mockResult);
-      expect(modernStorage.importConversations).toHaveBeenCalledWith(importData, {
+      expect(mockImportConversations).toHaveBeenCalledWith(importData, {
         overwrite: false,
       });
     });
@@ -206,12 +233,12 @@ describe("Conversation Manager", () => {
         messages: [{ role: "user", content: "Hello" }],
       };
 
-      modernStorage.getConversation.mockResolvedValue(mockConversation);
+      mockGetConversation.mockResolvedValue(mockConversation);
 
       const result = await getConversationById("1");
 
       expect(result).toEqual(mockConversation);
-      expect(modernStorage.getConversation).toHaveBeenCalledWith("1");
+      expect(mockGetConversation).toHaveBeenCalledWith("1");
     });
   });
 
@@ -229,13 +256,13 @@ describe("Conversation Manager", () => {
 
       const updates = { title: "Updated Title" };
 
-      modernStorage.getConversation.mockResolvedValue(existingConversation);
-      modernStorage.saveConversation.mockResolvedValue(undefined);
+      mockGetConversation.mockResolvedValue(existingConversation);
+      mockSaveConversation.mockResolvedValue(undefined);
 
       await updateConversation("1", updates);
 
-      expect(modernStorage.getConversation).toHaveBeenCalledWith("1");
-      expect(modernStorage.saveConversation).toHaveBeenCalledWith({
+      expect(mockGetConversation).toHaveBeenCalledWith("1");
+      expect(mockSaveConversation).toHaveBeenCalledWith({
         ...existingConversation,
         ...updates,
         updatedAt: expect.any(String),
@@ -243,7 +270,7 @@ describe("Conversation Manager", () => {
     });
 
     it("should throw error when conversation not found", async () => {
-      modernStorage.getConversation.mockResolvedValue(null);
+      mockGetConversation.mockResolvedValue(null);
 
       await expect(updateConversation("nonexistent", { title: "New Title" })).rejects.toThrow(
         "Conversation nonexistent not found",
@@ -264,13 +291,13 @@ describe("Conversation Manager", () => {
         isFavorite: false,
       };
 
-      modernStorage.getConversation.mockResolvedValue(existingConversation);
-      modernStorage.saveConversation.mockResolvedValue(undefined);
+      mockGetConversation.mockResolvedValue(existingConversation);
+      mockSaveConversation.mockResolvedValue(undefined);
 
       await toggleFavorite("1");
 
-      expect(modernStorage.getConversation).toHaveBeenCalledWith("1");
-      expect(modernStorage.saveConversation).toHaveBeenCalledWith({
+      expect(mockGetConversation).toHaveBeenCalledWith("1");
+      expect(mockSaveConversation).toHaveBeenCalledWith({
         ...existingConversation,
         isFavorite: true,
         updatedAt: expect.any(String),
@@ -278,7 +305,7 @@ describe("Conversation Manager", () => {
     });
 
     it("should throw error when conversation not found", async () => {
-      modernStorage.getConversation.mockResolvedValue(null);
+      mockGetConversation.mockResolvedValue(null);
 
       await expect(toggleFavorite("nonexistent")).rejects.toThrow(
         "Conversation nonexistent not found",
@@ -288,7 +315,7 @@ describe("Conversation Manager", () => {
 
   describe("isStorageReady", () => {
     it("should return true when storage is ready", async () => {
-      modernStorage.getConversationStats.mockResolvedValue({
+      mockGetConversationStats.mockResolvedValue({
         totalConversations: 0,
         totalMessages: 0,
         averageMessagesPerConversation: 0,
@@ -299,11 +326,11 @@ describe("Conversation Manager", () => {
       const result = await isStorageReady();
 
       expect(result).toBe(true);
-      expect(modernStorage.getConversationStats).toHaveBeenCalled();
+      expect(mockGetConversationStats).toHaveBeenCalled();
     });
 
     it("should return false when storage is not ready", async () => {
-      modernStorage.getConversationStats.mockRejectedValue(new Error("Storage not ready"));
+      mockGetConversationStats.mockRejectedValue(new Error("Storage not ready"));
 
       const result = await isStorageReady();
 
@@ -336,7 +363,7 @@ describe("Conversation Manager", () => {
         removeItem: vi.fn(),
       });
 
-      modernStorage.saveConversation.mockResolvedValue(undefined);
+      mockSaveConversation.mockResolvedValue(undefined);
 
       const result = await migrateFromLocalStorage();
 
@@ -344,7 +371,7 @@ describe("Conversation Manager", () => {
         migrated: 1,
         errors: [],
       });
-      expect(modernStorage.saveConversation).toHaveBeenCalledWith(mockConversations[0]);
+      expect(mockSaveConversation).toHaveBeenCalledWith(mockConversations[0]);
     });
 
     it("should return zero migrated when no localStorage data", async () => {
@@ -375,9 +402,9 @@ describe("Conversation Manager", () => {
         },
       ];
 
-      modernStorage.getAllConversations.mockResolvedValue(mockConversations);
-      modernStorage.saveConversation.mockResolvedValue(undefined);
-      modernStorage.deleteConversation.mockResolvedValue(undefined);
+      mockGetAllConversations.mockResolvedValue(mockConversations);
+      mockSaveConversation.mockResolvedValue(undefined);
+      mockDeleteConversation.mockResolvedValue(undefined);
 
       const result = await getStoragePerformance();
 
@@ -387,9 +414,9 @@ describe("Conversation Manager", () => {
         totalOperations: 2,
       });
 
-      expect(modernStorage.getAllConversations).toHaveBeenCalled();
-      expect(modernStorage.saveConversation).toHaveBeenCalled();
-      expect(modernStorage.deleteConversation).toHaveBeenCalled();
+      expect(mockGetAllConversations).toHaveBeenCalled();
+      expect(mockSaveConversation).toHaveBeenCalled();
+      expect(mockDeleteConversation).toHaveBeenCalled();
     });
   });
 
@@ -414,7 +441,7 @@ describe("Conversation Manager", () => {
         },
       ];
 
-      modernStorage.getAllConversations.mockResolvedValue(mockConversations);
+      mockGetAllConversations.mockResolvedValue(mockConversations);
 
       const result = await searchConversations("GPT-4");
 
@@ -433,7 +460,7 @@ describe("Conversation Manager", () => {
         },
       ];
 
-      modernStorage.getAllConversations.mockResolvedValue(mockConversations);
+      mockGetAllConversations.mockResolvedValue(mockConversations);
 
       const result = await searchConversations("nonexistent");
 
@@ -443,7 +470,7 @@ describe("Conversation Manager", () => {
 
   describe("bulkDeleteConversations", () => {
     it("should delete multiple conversations successfully", async () => {
-      modernStorage.deleteConversation.mockResolvedValue(undefined);
+      mockDeleteConversation.mockResolvedValue(undefined);
 
       const result = await bulkDeleteConversations(["1", "2", "3"]);
 
@@ -451,14 +478,14 @@ describe("Conversation Manager", () => {
         deleted: 3,
         errors: [],
       });
-      expect(modernStorage.deleteConversation).toHaveBeenCalledTimes(3);
-      expect(modernStorage.deleteConversation).toHaveBeenCalledWith("1");
-      expect(modernStorage.deleteConversation).toHaveBeenCalledWith("2");
-      expect(modernStorage.deleteConversation).toHaveBeenCalledWith("3");
+      expect(mockDeleteConversation).toHaveBeenCalledTimes(3);
+      expect(mockDeleteConversation).toHaveBeenCalledWith("1");
+      expect(mockDeleteConversation).toHaveBeenCalledWith("2");
+      expect(mockDeleteConversation).toHaveBeenCalledWith("3");
     });
 
     it("should handle partial failures", async () => {
-      modernStorage.deleteConversation
+      mockDeleteConversation
         .mockResolvedValueOnce(undefined)
         .mockRejectedValueOnce(new Error("Delete failed"))
         .mockResolvedValueOnce(undefined);
@@ -489,10 +516,10 @@ describe("Conversation Manager", () => {
         { id: "2", updates: { title: "Another Title" } },
       ];
 
-      modernStorage.getConversation
+      mockGetConversation
         .mockResolvedValueOnce(existingConversation)
         .mockResolvedValueOnce(existingConversation);
-      modernStorage.saveConversation.mockResolvedValue(undefined);
+      mockSaveConversation.mockResolvedValue(undefined);
 
       const result = await bulkUpdateConversations(updates);
 
@@ -500,7 +527,7 @@ describe("Conversation Manager", () => {
         updated: 2,
         errors: [],
       });
-      expect(modernStorage.saveConversation).toHaveBeenCalledTimes(2);
+      expect(mockSaveConversation).toHaveBeenCalledTimes(2);
     });
 
     it("should handle partial failures", async () => {
@@ -519,9 +546,7 @@ describe("Conversation Manager", () => {
         { id: "nonexistent", updates: { title: "Another Title" } },
       ];
 
-      modernStorage.getConversation
-        .mockResolvedValueOnce(existingConversation)
-        .mockResolvedValueOnce(null);
+      mockGetConversation.mockResolvedValueOnce(existingConversation).mockResolvedValueOnce(null);
 
       const result = await bulkUpdateConversations(updates);
 

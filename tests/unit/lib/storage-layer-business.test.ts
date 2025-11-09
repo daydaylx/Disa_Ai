@@ -21,7 +21,7 @@ vi.mock("dexie", () => {
         bulkDelete: vi.fn(),
         clear: vi.fn(),
       },
-      transaction: vi.fn().mockImplementation((mode, tables, callback) => {
+      transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
         return Promise.resolve(callback());
       }),
       open: vi.fn().mockResolvedValue(undefined),
@@ -60,7 +60,7 @@ describe("ModernStorageLayer Business Logic", () => {
         bulkDelete: vi.fn(),
         clear: vi.fn(),
       },
-      transaction: vi.fn().mockImplementation((mode, tables, callback) => {
+      transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
         return Promise.resolve(callback());
       }),
       open: vi.fn().mockResolvedValue(undefined),

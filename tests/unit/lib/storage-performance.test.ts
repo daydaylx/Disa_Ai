@@ -24,7 +24,7 @@ vi.mock("dexie", () => {
       bulkDelete: vi.fn(),
       clear: vi.fn(),
     },
-    transaction: vi.fn().mockImplementation((mode, tables, callback) => {
+    transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
       return Promise.resolve(callback());
     }),
     open: vi.fn().mockResolvedValue(undefined),
@@ -62,7 +62,7 @@ describe("Storage Performance Tests", () => {
         bulkDelete: vi.fn(),
         clear: vi.fn(),
       },
-      transaction: vi.fn().mockImplementation((mode, tables, callback) => {
+      transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
         return Promise.resolve(callback());
       }),
       open: vi.fn().mockResolvedValue(undefined),
@@ -160,7 +160,7 @@ describe("Storage Performance Tests", () => {
 
       const startTime = performance.now();
       const { searchConversations } = await import("@/lib/conversation-manager-modern");
-      const results = await searchConversations("test", { model: "gpt-3.5" });
+      await searchConversations("test");
       const endTime = performance.now();
 
       // Should complete search within reasonable time

@@ -34,9 +34,6 @@ describe("Storage Migration Integration", () => {
   });
 
   it("should validate conversation format correctly", async () => {
-    const { StorageMigration } = await import("@/lib/storage-migration");
-    const migration = StorageMigration.getInstance();
-
     const validConversation = {
       id: "1",
       title: "Test",
@@ -72,18 +69,12 @@ describe("Storage Migration Integration", () => {
 
     vi.stubGlobal("localStorage", mockLocalStorage);
 
-    const { StorageMigration } = await import("@/lib/storage-migration");
-    const migration = StorageMigration.getInstance();
-
     // The migration should be able to read localStorage
     const hasLocalStorage = localStorage.getItem("disa:conversations") !== null;
     expect(hasLocalStorage).toBe(true);
   });
 
   it("should handle backup creation", async () => {
-    const { StorageMigration } = await import("@/lib/storage-migration");
-    const migration = StorageMigration.getInstance();
-
     // Mock localStorage
     vi.stubGlobal("localStorage", {
       getItem: vi.fn((key: string) => {

@@ -1,6 +1,8 @@
 // Basic integration test for storage layer
 import { describe, expect, it } from "vitest";
 
+import type { Conversation, ConversationMetadata } from "@/lib/storage-layer";
+
 // Simple test to verify the storage layer can be imported and instantiated
 describe("Storage Layer Integration", () => {
   it("should be able to import and instantiate ModernStorageLayer", async () => {
@@ -36,8 +38,6 @@ describe("Storage Layer Integration", () => {
   });
 
   it("should have valid TypeScript interfaces", async () => {
-    const { Conversation, ConversationMetadata } = await import("@/lib/storage-layer");
-
     // Test that interfaces are properly defined
     const mockConversation: Conversation = {
       id: "test-id",
@@ -84,8 +84,6 @@ describe("Conversation Manager Integration", () => {
     expect(storageMigration).toBeDefined();
     expect(typeof storageMigration).toBe("object");
 
-    // Check that interfaces can be imported
-    const { MigrationResult, MigrationOptions } = { ...(await import("@/lib/storage-migration")) };
     // TypeScript interfaces aren't runtime values, so we can't test them directly
     // But we can verify the module can be imported
   });
