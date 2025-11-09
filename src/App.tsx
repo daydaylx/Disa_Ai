@@ -16,31 +16,9 @@ const FeatureFlagPanel = lazy(() =>
   })),
 );
 
-export default function App() {
-  useServiceWorker();
-
-  // Initialize viewport height with optimized throttling for scroll performance
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const applyViewportHeight = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-
-    const handleOrientationChange = () => {
-      setTimeout(applyViewportHeight, 100);
-    };
-
-    applyViewportHeight();
-    window.addEventListener("resize", applyViewportHeight, { passive: true });
-    window.addEventListener("orientationchange", handleOrientationChange);
-
-    return () => {
-      window.removeEventListener("resize", applyViewportHeight);
-      window.removeEventListener("orientationchange", handleOrientationChange);
-    };
-  }, []);
+// AppContent component that runs inside the providers
+function AppContent() {
+  useServiceWorker(); // Now safely inside ToastsProvider
 
   // Edge-Swipe Navigation für BottomSheet
   const handleOpenDrawer = React.useCallback(() => {
@@ -70,14 +48,45 @@ export default function App() {
   );
 
   return (
+    <>
+      <Router />
+      <Suspense fallback={null}>
+        <FeatureFlagPanel />
+      </Suspense>
+    </>
+  );
+}
+
+export default function App() {
+  // Initialize viewport height with optimized throttling for scroll performance
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const applyViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    const handleOrientationChange = () => {
+      setTimeout(applyViewportHeight, 100);
+    };
+
+    applyViewportHeight();
+    window.addEventListener("resize", applyViewportHeight, { passive: true });
+    window.addEventListener("orientationchange", handleOrientationChange);
+
+    return () => {
+      window.removeEventListener("resize", applyViewportHeight);
+      window.removeEventListener("orientationchange", handleOrientationChange);
+    };
+  }, []);
+
+  return (
     <TooltipProvider>
       <StudioProvider>
         <FavoritesProvider>
           <ToastsProvider>
-            <Router />
-            <Suspense fallback={null}>
-              <FeatureFlagPanel />
-            </Suspense>
+            <AppContent />
           </ToastsProvider>
         </FavoritesProvider>
       </StudioProvider>

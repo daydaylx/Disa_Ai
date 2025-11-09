@@ -76,10 +76,7 @@ function validateEnvironment(): EnvValidationResult {
     });
   }
 
-  // Fallback for missing critical variables
-  if (!envVars.VITE_OPENROUTER_BASE_URL) {
-    warnings.push("VITE_OPENROUTER_BASE_URL not set, using default");
-  }
+  // Note: VITE_OPENROUTER_BASE_URL warning removed - defaults are acceptable
 
   try {
     const config = envSchema.parse(envVars);
