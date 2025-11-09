@@ -1,24 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import {
   activateServiceWorkerUpdate,
+  getServiceWorkerState,
   registerSW,
+  type ServiceWorkerState,
   subscribeToServiceWorker,
 } from "../lib/pwa/registerSW";
 
 export function useServiceWorker() {
   const { push } = useToasts();
+  const refreshToastShown = useRef(false);
+  const offlineToastShown = useRef(false);
 
   useEffect(() => {
-    registerSW();
+    if (!import.meta.env.PROD) {
+      return;
+    }
 
-    let refreshToastShown = false;
-    let offlineToastShown = false;
-
-    const unsubscribe = subscribeToServiceWorker((state) => {
-      if (state.needRefresh && !refreshToastShown) {
-        refreshToastShown = true;
+    const handleStateChange = (state: ServiceWorkerState) => {
+      if (state.needRefresh && !refreshToastShown.current) {
+        refreshToastShown.current = true;
         push({
           kind: "info",
           title: "Update verfügbar",
@@ -41,8 +44,8 @@ export function useServiceWorker() {
         return;
       }
 
-      if (state.offlineReady && !offlineToastShown) {
-        offlineToastShown = true;
+      if (state.offlineReady && !offlineToastShown.current) {
+        offlineToastShown.current = true;
         push({
           kind: "success",
           title: "Offline bereit",
@@ -50,7 +53,16 @@ export function useServiceWorker() {
           duration: 4000,
         });
       }
-    });
+    };
+
+    registerSW();
+
+    // Handle initial state
+    const initialState = getServiceWorkerState();
+    handleStateChange(initialState);
+
+    // Subscribe to subsequent changes
+    const unsubscribe = subscribeToServiceWorker(handleStateChange);
 
     return () => {
       unsubscribe();

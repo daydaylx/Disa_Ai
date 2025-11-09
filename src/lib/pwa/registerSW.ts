@@ -69,7 +69,6 @@ async function ensureRegistration(): Promise<ServiceWorkerRegistration | null> {
 
 export function subscribeToServiceWorker(listener: Listener) {
   listeners.add(listener);
-  listener({ ...serviceWorkerState });
   return () => listeners.delete(listener);
 }
 

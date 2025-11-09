@@ -319,13 +319,23 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     return counts;
   }, [enhancedRoles]);
 
+  const filterFnCallback = useCallback(
+    (role: EnhancedRole, filters: FilterState, searchQuery: string) =>
+      roleFilterFn(role, filters, searchQuery, isRoleFavorite, usage, selectedCategory),
+    [isRoleFavorite, usage, selectedCategory],
+  );
+
+  const sortFnCallback = useCallback(
+    (a: EnhancedRole, b: EnhancedRole, filters: FilterState) => roleSortFn(a, b, filters, usage),
+    [usage],
+  );
+
   const filteredRoles = useFilteredList<EnhancedRole>(
     enhancedRoles,
     filters,
     searchQuery,
-    (role, filters, searchQuery) =>
-      roleFilterFn(role, filters, searchQuery, isRoleFavorite, usage, selectedCategory),
-    (a, b, filters) => roleSortFn(a, b, filters, usage),
+    filterFnCallback,
+    sortFnCallback,
   );
 
   // Get favorites for header section

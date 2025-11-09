@@ -99,12 +99,18 @@ export class AppHelpers {
   /**
    * Check for console errors and filter known warnings
    */
-  setupConsoleMonitoring(): { getErrors: () => string[]; getWarnings: () => string[] } {
+  setupConsoleMonitoring(): {
+    getErrors: () => string[];
+    getWarnings: () => string[];
+    getLogs: () => string[];
+  } {
     const errors: string[] = [];
     const warnings: string[] = [];
+    const logs: string[] = []; // New array for all logs
 
     this.page.on("console", (msg) => {
       const text = msg.text();
+      logs.push(`[${msg.type()}] ${text}`); // Log all messages
 
       if (msg.type() === "error") {
         // Filter out known non-critical errors
@@ -121,6 +127,7 @@ export class AppHelpers {
     return {
       getErrors: () => [...errors],
       getWarnings: () => [...warnings],
+      getLogs: () => [...logs], // Return all logs
     };
   }
 
