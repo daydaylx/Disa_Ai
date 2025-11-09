@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-interface CustomRole {
+export interface CustomRole {
   id: string;
   name: string;
   systemPrompt: string;

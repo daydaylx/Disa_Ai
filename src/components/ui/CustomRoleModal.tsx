@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useCustomRoles } from "../../contexts/CustomRolesContext";
+import { type CustomRole, useCustomRoles } from "../../contexts/CustomRolesContext";
 import { designTokens } from "../../styles/design-tokens";
 
 const DEFAULT_PRIMARY_COLOR = designTokens.color.light.brand.primary;
@@ -8,7 +8,7 @@ const DEFAULT_PRIMARY_COLOR = designTokens.color.light.brand.primary;
 interface CustomRoleModalProps {
   isOpen: boolean;
   onClose: () => void;
-  role?: any;
+  role?: CustomRole;
 }
 
 export function CustomRoleModal({ isOpen, onClose, role }: CustomRoleModalProps) {

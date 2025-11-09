@@ -60,7 +60,7 @@ function getEnvFlags(): Partial<FeatureFlags> {
     const envValue = import.meta.env[envKey];
 
     if (envValue === "true" || envValue === "1") {
-      (envFlags as any)[key] = true;
+      envFlags[key as keyof FeatureFlags] = true;
     }
   });
 
@@ -83,7 +83,7 @@ function getQueryFlags(): Partial<FeatureFlags> {
 
     flagNames.forEach((flagName) => {
       if (flagName in defaultFeatureFlags) {
-        (queryFlags as any)[flagName] = true;
+        queryFlags[flagName as keyof FeatureFlags] = true;
       } else {
         console.warn(`[Feature Flags] Unknown flag: ${flagName}`);
       }
