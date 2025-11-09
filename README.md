@@ -268,6 +268,7 @@ Der Build-Prozess wird durch `vite.config.ts` gesteuert.
 - **Output**: Das `dist`-Verzeichnis, bereit für statisches Hosting.
 - **Asset-Struktur**: Vite generiert JS, CSS und andere Assets mit Hashes in den Dateinamen für effektives Caching. Die Konfiguration sortiert sie in untergeordnete Verzeichnisse (`assets/js`, `assets/css`, etc.).
 - **CI/CD**: Das Repository enthält Konfigurationsdateien für Cloudflare Pages (`cloudflare-pages.json`) und Netlify (`netlify.toml`), die automatische Deployments bei Pushes auf den `main`-Branch ermöglichen. Sicherheitsheader aus `public/_headers` werden dabei automatisch übernommen.
+- **GitHub Pages**: Für `disaai.de` sorgt `.github/workflows/pages.yml` dafür, dass auf `main` jede Änderung gebaut, samt `CNAME` und SPA-Fallback (`404.html`) in das `dist`-Artefakt kopiert und anschließend via `actions/deploy-pages` veröffentlicht wird.
 
 ## 🤝 Contributing
 
