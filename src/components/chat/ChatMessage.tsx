@@ -125,7 +125,7 @@ function CodeBlock({ children, language }: { children: string; language?: string
   );
 }
 
-export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessageProps) {
+const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageProps) => {
   const [showActions, setShowActions] = useState(false);
 
   const isUser = message.role === "user";
@@ -257,3 +257,6 @@ function contentContainsMarkdown(content: string): boolean {
     content.includes("\\(")
   );
 }
+
+const MemoizedChatMessage = React.memo(ChatMessageComponent);
+export { MemoizedChatMessage as ChatMessage };

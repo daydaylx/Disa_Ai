@@ -4,7 +4,7 @@
  * Workflow-konforme React-Integration für Feature-Flags
  */
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 
 import {
   areAllFeaturesEnabled,
@@ -177,5 +177,30 @@ function getQueryActiveFlags(): string[] {
 
 /**
  * HOC für Feature-Flag-basierte Komponenten-Rendering
- * TODO: Implementierung vervollständigen nach TypeScript-Konfiguration
  */
+export function withFeatureFlag<P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+  flag: keyof FeatureFlags,
+  options: { fallback?: React.ComponentType<P> } = {}
+) {
+  const WithFeatureFlagComponent: React.FC<P> = (props) => {
+    const flagEnabled = useFeatureFlag(flag);
+
+    if (flagEnabled) {
+      return <WrappedComponent {...props as any} />;
+    }
+
+    if (options.fallback) {
+      const FallbackComponent = options.fallback;
+      return <FallbackComponent {...props as any} />;
+    }
+
+    return null;
+  };
+
+  WithFeatureFlagComponent.displayName = `withFeatureFlag(${
+    WrappedComponent.displayName || WrappedComponent.name || 'Component'
+  })`;
+
+  return WithFeatureFlagComponent;
+}
