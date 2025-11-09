@@ -101,53 +101,6 @@
     <div id="app"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      // Loading indicator nur wenn React nicht innerhalb 1 Sekunde lädt
-      let loadingTimeout = setTimeout(() => {
-        const app = document.getElementById("app");
-        if (app && app.innerHTML.trim() === "") {
-          app.innerHTML = `
-            <div id="loading-indicator" style="
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 100vh;
-              background: linear-gradient(135deg, #1e1e2e 0%, #262637 100%);
-              color: white;
-              font-family: system-ui, -apple-system, sans-serif;
-              flex-direction: column;
-              gap: 1rem;
-            ">
-              <div style="font-size: 2rem; font-weight: bold;">Disa AI</div>
-              <div style="
-                width: 32px;
-                height: 32px;
-                border: 3px solid rgba(255,255,255,0.3);
-                border-top: 3px solid #fff;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-              "></div>
-              <style>
-                @keyframes spin {
-                  0% { transform: rotate(0deg); }
-                  100% { transform: rotate(360deg); }
-                }
-              </style>
-            </div>
-          `;
-
-        }
-      }, 1000);
-
-      // React App Mount Detection - clear loading wenn React lädt
-      const observer = new MutationObserver(() => {
-        const app = document.getElementById("app");
-        if (app && app.children.length > 0 && !app.querySelector("#loading-indicator")) {
-          clearTimeout(loadingTimeout);
-          observer.disconnect();
-        }
-      });
-      observer.observe(document.getElementById("app"), { childList: true, subtree: true });
-
       // Mobile viewport height fix
       function setViewportHeight() {
         const vh = window.innerHeight * 0.01;
