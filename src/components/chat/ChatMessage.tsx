@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 
 import { useFeatureFlag } from "../../hooks/useFeatureFlags";
 import { highlightCode } from "../../lib/highlighting/lazySyntaxHighlighter";
@@ -242,7 +242,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
       </div>
     </div>
   );
-}
+};
 
 // Helper function to detect markdown content
 function contentContainsMarkdown(content: string): boolean {
