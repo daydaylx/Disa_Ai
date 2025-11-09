@@ -2,8 +2,13 @@ import { hapticFeedback } from "../touch/haptics";
 
 const BASE_SCOPE = import.meta.env.BASE_URL ?? "/";
 const RAW_BUILD_ID = (import.meta.env?.VITE_BUILD_ID ?? "").trim();
+const RAW_BUILD_TIMESTAMP = (import.meta.env?.VITE_BUILD_TIMESTAMP ?? "").toString().trim();
 
 export const BUILD_ID = RAW_BUILD_ID.length > 0 ? RAW_BUILD_ID : "dev-local";
+export const BUILD_TOKEN =
+  RAW_BUILD_TIMESTAMP.length > 0
+    ? `${BUILD_ID}-${RAW_BUILD_TIMESTAMP}`
+    : `${BUILD_ID}-${Date.now().toString(36)}`;
 
 export interface ServiceWorkerState {
   offlineReady: boolean;
@@ -114,7 +119,7 @@ export function registerSW(): RegisterResult {
   }
 
   if (!registrationPromise) {
-    const swUrl = `${BASE_SCOPE}sw.js?build=${BUILD_ID}`;
+    const swUrl = `${BASE_SCOPE}sw.js?build=${encodeURIComponent(BUILD_TOKEN)}`;
 
     registrationPromise = navigator.serviceWorker
       .register(swUrl, { scope: BASE_SCOPE })

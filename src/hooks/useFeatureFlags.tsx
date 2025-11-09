@@ -181,25 +181,25 @@ function getQueryActiveFlags(): string[] {
 export function withFeatureFlag<P extends object>(
   WrappedComponent: React.ComponentType<P>,
   flag: keyof FeatureFlags,
-  options: { fallback?: React.ComponentType<P> } = {}
+  options: { fallback?: React.ComponentType<P> } = {},
 ) {
   const WithFeatureFlagComponent: React.FC<P> = (props) => {
     const flagEnabled = useFeatureFlag(flag);
 
     if (flagEnabled) {
-      return <WrappedComponent {...props as any} />;
+      return <WrappedComponent {...(props as any)} />;
     }
 
     if (options.fallback) {
       const FallbackComponent = options.fallback;
-      return <FallbackComponent {...props as any} />;
+      return <FallbackComponent {...(props as any)} />;
     }
 
     return null;
   };
 
   WithFeatureFlagComponent.displayName = `withFeatureFlag(${
-    WrappedComponent.displayName || WrappedComponent.name || 'Component'
+    WrappedComponent.displayName || WrappedComponent.name || "Component"
   })`;
 
   return WithFeatureFlagComponent;
