@@ -1,6 +1,9 @@
 import { useState } from "react";
 
 import { useCustomRoles } from "../../contexts/CustomRolesContext";
+import { designTokens } from "../../styles/design-tokens";
+
+const DEFAULT_PRIMARY_COLOR = designTokens.color.light.brand.primary;
 
 interface CustomRoleModalProps {
   isOpen: boolean;
@@ -12,9 +15,8 @@ export function CustomRoleModal({ isOpen, onClose, role }: CustomRoleModalProps)
   const { addCustomRole, updateCustomRole } = useCustomRoles();
   const [name, setName] = useState(role ? role.name : "");
   const [systemPrompt, setSystemPrompt] = useState(role ? role.systemPrompt : "");
-  // eslint-disable-next-line no-restricted-syntax
   const [primaryColor, setPrimaryColor] = useState(
-    role ? role.theme["--color-brand-primary"] : "#4b63ff",
+    role ? role.theme["--color-brand-primary"] : DEFAULT_PRIMARY_COLOR,
   );
 
   const handleSubmit = () => {

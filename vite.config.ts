@@ -179,8 +179,43 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: (id) => {
             if (id.includes("node_modules")) {
-              // Avoid circular dependency pitfalls by keeping third-party deps together.
-              return "vendor";
+              if (
+                id.includes("node_modules/react/") ||
+                id.includes("node_modules/react-dom/") ||
+                id.includes("node_modules/react-dom.")
+              ) {
+                return "vendor-react";
+              }
+              if (id.includes("node_modules/@radix-ui")) {
+                return "vendor-radix";
+              }
+              if (id.includes("node_modules/lucide-react")) {
+                return "vendor-icons";
+              }
+              if (
+                id.includes("node_modules/react-markdown") ||
+                id.includes("node_modules/remark") ||
+                id.includes("node_modules/rehype")
+              ) {
+                return "vendor-markdown";
+              }
+              if (id.includes("node_modules/prismjs")) {
+                return "vendor-syntax";
+              }
+              if (
+                id.includes("node_modules/react-router-dom") ||
+                id.includes("node_modules/react-router") ||
+                id.includes("node_modules/@remix-run/router")
+              ) {
+                return "vendor-router";
+              }
+              if (id.includes("node_modules/zod")) {
+                return "vendor-validation";
+              }
+              if (id.includes("node_modules/katex") || id.includes("node_modules/react-katex")) {
+                return "vendor-math";
+              }
+              return "vendor-core";
             }
             // Split application code by feature areas for better caching
             if (id.includes("src/components/ui")) {

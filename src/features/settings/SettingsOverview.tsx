@@ -22,7 +22,7 @@ interface OverviewCard {
 }
 
 export function SettingsOverview() {
-  const { settingsIcon: _settingsIcon } = useSettings();
+  const { settings } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const location = useLocation();

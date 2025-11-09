@@ -36,6 +36,23 @@ interface DeferredFetchState<T> {
   triggered: boolean;
 }
 
+type IdleCallbackHandle = number;
+
+function depsAreEqual(
+  prev: React.DependencyList | undefined,
+  next: React.DependencyList | undefined,
+): boolean {
+  if (prev === next) return true;
+  if (!prev || !next) return !prev && !next;
+  if (prev.length !== next.length) return false;
+  for (let i = 0; i < prev.length; i += 1) {
+    if (!Object.is(prev[i], next[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /**
  * Deferred Fetch Hook mit requestIdleCallback
  */
@@ -50,7 +67,7 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
     immediate = true,
     maxDelay = 5000,
     triggerEvents = ["focus", "click"],
-    deps = [],
+    deps,
   } = options;
 
   const [state, setState] = useState<DeferredFetchState<T>>({
@@ -59,49 +76,60 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
     error: null,
     triggered: false,
   });
+  const fetchFnRef = useRef(fetchFn);
+  useEffect(() => {
+    fetchFnRef.current = fetchFn;
+  }, [fetchFn]);
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const idleCallbackRef = useRef<ReturnType<typeof requestIdleCallback>>();
-  const abortControllerRef = useRef<AbortController>();
+  const depsRef = useRef<React.DependencyList | undefined>(deps ? [...deps] : undefined);
+  const depsVersionRef = useRef(0);
+
+  if (!depsAreEqual(depsRef.current, deps)) {
+    depsVersionRef.current += 1;
+    depsRef.current = deps ? [...deps] : undefined;
+  }
+
+  const depsToken = depsVersionRef.current;
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const idleCallbackRef = useRef<IdleCallbackHandle | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const hasTriggeredRef = useRef(false);
 
   // Feature-Flag Check
   const isDeferredEnabled = isFeatureEnabled("deferredDataFetch");
 
-  const executeFetch = useCallback(
-    async (source: "immediate" | "idle" | "trigger" | "event") => {
-      if (hasTriggeredRef.current) return;
-      hasTriggeredRef.current = true;
+  const executeFetch = useCallback(async (source: "immediate" | "idle" | "trigger" | "event") => {
+    if (hasTriggeredRef.current) return;
+    hasTriggeredRef.current = true;
 
-      // Abort previous fetch
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
+    // Abort previous fetch
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
 
-      setState((prev) => ({ ...prev, loading: true, error: null, triggered: true }));
-      abortControllerRef.current = new AbortController();
+    setState((prev) => ({ ...prev, loading: true, error: null, triggered: true }));
+    abortControllerRef.current = new AbortController();
 
-      try {
-        const result = await fetchFn();
+    try {
+      const result = await fetchFnRef.current();
 
-        if (!abortControllerRef.current.signal.aborted) {
-          setState((prev) => ({ ...prev, data: result, loading: false }));
+      if (!abortControllerRef.current.signal.aborted) {
+        setState((prev) => ({ ...prev, data: result, loading: false }));
 
-          if (import.meta.env.DEV) {
-            console.warn(`[Deferred Fetch] ✅ Data loaded via ${source}`);
-          }
-        }
-      } catch (error: any) {
-        if (!abortControllerRef.current.signal.aborted) {
-          const errorMessage = error?.message || "Unknown fetch error";
-          setState((prev) => ({ ...prev, error: errorMessage, loading: false }));
-
-          console.warn(`[Deferred Fetch] ❌ Fetch failed via ${source}:`, error);
+        if (import.meta.env.DEV) {
+          console.warn(`[Deferred Fetch] ✅ Data loaded via ${source}`);
         }
       }
-    },
-    [fetchFn],
-  );
+    } catch (error: any) {
+      if (!abortControllerRef.current.signal.aborted) {
+        const errorMessage = error?.message || "Unknown fetch error";
+        setState((prev) => ({ ...prev, error: errorMessage, loading: false }));
+
+        console.warn(`[Deferred Fetch] ❌ Fetch failed via ${source}:`, error);
+      }
+    }
+  }, []);
 
   const trigger = useCallback(() => {
     void executeFetch("trigger");
@@ -111,12 +139,15 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
     // Clear all timers/callbacks
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
     if (idleCallbackRef.current) {
       cancelIdleCallback(idleCallbackRef.current);
+      idleCallbackRef.current = null;
     }
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
 
     hasTriggeredRef.current = false;
@@ -129,7 +160,6 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
   }, []);
 
   const triggerEventsString = triggerEvents.join(",");
-
   useEffect(() => {
     // Reset wenn deps ändern
     reset();
@@ -149,7 +179,12 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
     // Event-Listener für Trigger-Events
     const eventHandlers: Array<{ event: string; handler: () => void }> = [];
 
-    triggerEvents.forEach((eventType) => {
+    const eventList = triggerEventsString
+      .split(",")
+      .map((event) => event.trim())
+      .filter((event): event is "focus" | "click" | "scroll" | "visibility" => event.length > 0);
+
+    eventList.forEach((eventType) => {
       let handler: () => void;
       let element: EventTarget;
 
@@ -208,9 +243,11 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
       // Clear timers
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
       if (idleCallbackRef.current) {
         cancelIdleCallback(idleCallbackRef.current);
+        idleCallbackRef.current = null;
       }
 
       // Remove event listeners
@@ -227,18 +264,10 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
       // Abort fetch if still running
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
+        abortControllerRef.current = null;
       }
     };
-  }, [
-    isDeferredEnabled,
-    immediate,
-    maxDelay,
-    triggerEventsString,
-    triggerEvents,
-    executeFetch,
-    reset,
-    deps,
-  ]);
+  }, [isDeferredEnabled, immediate, maxDelay, triggerEventsString, executeFetch, reset, depsToken]);
 
   return {
     ...state,
@@ -250,7 +279,7 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
 /**
  * Hook für einfaches deferred loading mit häufigen Defaults
  */
-export function useDeferredLoad<T>(fetchFn: () => Promise<T>, deps: React.DependencyList = []) {
+export function useDeferredLoad<T>(fetchFn: () => Promise<T>, deps?: React.DependencyList) {
   return useDeferredFetch({
     fetchFn,
     immediate: false,
@@ -266,7 +295,7 @@ export function useDeferredLoad<T>(fetchFn: () => Promise<T>, deps: React.Depend
 export function useDeferredCachedFetch<T>(
   fetchFn: () => Promise<T>,
   checkCacheFn?: () => T | null,
-  deps: React.DependencyList = [],
+  deps?: React.DependencyList,
 ) {
   const hasCachedData = checkCacheFn ? !!checkCacheFn() : false;
 

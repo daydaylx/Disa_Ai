@@ -1,6 +1,6 @@
 /**
  * Reliable Mobile Detection Hook
- * 
+ *
  * Replaces fragile UA detection and hardcoded breakpoints with:
  * - matchMedia('pointer:coarse') for touch devices
  * - Proper viewport-based detection
@@ -16,24 +16,23 @@ export function useIsMobile(): boolean {
     // Reliable mobile detection based on actual device capabilities
     const checkIsMobile = () => {
       // Primary detection: touch-capable coarse pointer (most reliable)
-      const hasCoarsePointer = window.matchMedia(
-        "(pointer: coarse) and (hover: none)"
-      ).matches;
+      const hasCoarsePointer = window.matchMedia("(pointer: coarse) and (hover: none)").matches;
 
       // Fallback 1: Small viewport AND touch capability
       const isSmallViewport = window.innerWidth <= 768;
-      const hasTouch = "ontouchstart" in window || 
+      const hasTouch =
+        "ontouchstart" in window ||
         navigator.maxTouchPoints > 0 ||
         (navigator as any).msMaxTouchPoints > 0;
 
       // Fallback 2: Modern viewport queries
       const isMobileViewport = window.matchMedia(
-        "(max-width: 768px) and (orientation: portrait)"
+        "(max-width: 768px) and (orientation: portrait)",
       ).matches;
 
       // Consider as mobile if:
       // 1. Has coarse pointer (most reliable), OR
-      // 2. Small viewport with touch (laptops with touch), OR  
+      // 2. Small viewport with touch (laptops with touch), OR
       // 3. Mobile viewport (portrait mobile/tablet)
       setIsMobile(hasCoarsePointer || (isSmallViewport && hasTouch) || isMobileViewport);
     };
@@ -45,15 +44,15 @@ export function useIsMobile(): boolean {
     const mqls = [
       window.matchMedia("(pointer: coarse) and (hover: none)"),
       window.matchMedia("(max-width: 768px) and (orientation: portrait)"),
-      window.matchMedia("(max-width: 768px)")
+      window.matchMedia("(max-width: 768px)"),
     ];
 
-    mqls.forEach(mql => {
+    mqls.forEach((mql) => {
       mql.addEventListener("change", checkIsMobile);
     });
 
     return () => {
-      mqls.forEach(mql => {
+      mqls.forEach((mql) => {
         mql.removeEventListener("change", checkIsMobile);
       });
     };
@@ -71,12 +70,10 @@ export function useIsTablet(): boolean {
 
   useEffect(() => {
     const checkIsTablet = () => {
-      const hasCoarsePointer = window.matchMedia(
-        "(pointer: coarse) and (hover: none)"
-      ).matches;
-      
+      const hasCoarsePointer = window.matchMedia("(pointer: coarse) and (hover: none)").matches;
+
       const viewportWidth = window.innerWidth;
-      
+
       // Tablets typically have:
       // - Touch capability
       // - Medium viewport (typically 768px-1024px)
@@ -87,19 +84,19 @@ export function useIsTablet(): boolean {
       setIsTablet(isTabletLike);
     };
 
-    checkIsMobile();
+    checkIsTablet();
 
     const mqls = [
       window.matchMedia("(pointer: coarse) and (hover: none)"),
-      window.matchMedia("(min-width: 768px) and (max-width: 1024px)")
+      window.matchMedia("(min-width: 768px) and (max-width: 1024px)"),
     ];
 
-    mqls.forEach(mql => {
+    mqls.forEach((mql) => {
       mql.addEventListener("change", checkIsTablet);
     });
 
     return () => {
-      mqls.forEach(mql => {
+      mqls.forEach((mql) => {
         mql.removeEventListener("change", checkIsTablet);
       });
     };
@@ -123,12 +120,10 @@ export function useViewport() {
   useEffect(() => {
     const checkViewport = () => {
       const width = window.innerWidth;
-      
+
       // Use our enhanced detection
-      const hasCoarsePointer = window.matchMedia(
-        "(pointer: coarse) and (hover: none)"
-      ).matches;
-      
+      const hasCoarsePointer = window.matchMedia("(pointer: coarse) and (hover: none)").matches;
+
       const isMobileViewport = width < 768;
       const isTabletViewport = width >= 768 && width <= 1024;
       const isDesktopViewport = width > 1024;
@@ -137,7 +132,7 @@ export function useViewport() {
         isMobile: isMobileViewport && hasCoarsePointer,
         isTablet: isTabletViewport && hasCoarsePointer,
         isDesktop: isDesktopViewport || (!hasCoarsePointer && isMobileViewport),
-        width
+        width,
       });
     };
 
@@ -147,15 +142,15 @@ export function useViewport() {
       window.matchMedia("(pointer: coarse) and (hover: none)"),
       window.matchMedia("(max-width: 767px)"),
       window.matchMedia("(min-width: 768px) and (max-width: 1024px)"),
-      window.matchMedia("(min-width: 1025px)")
+      window.matchMedia("(min-width: 1025px)"),
     ];
 
-    mqls.forEach(mql => {
+    mqls.forEach((mql) => {
       mql.addEventListener("change", checkViewport);
     });
 
     return () => {
-      mqls.forEach(mql => {
+      mqls.forEach((mql) => {
         mql.removeEventListener("change", checkViewport);
       });
     };

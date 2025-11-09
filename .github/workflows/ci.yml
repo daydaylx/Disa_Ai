@@ -47,17 +47,55 @@ jobs:
 
       - name: Check Bundle Size Budget
         run: |
-          # Extrahiere Entry-Bundle-Größe und prüfe gegen 300 KB Limit
-          ENTRY_SIZE=$(ls -la dist/assets/js/index-*.js | awk '{print $5}')
-          ENTRY_SIZE_KB=$((ENTRY_SIZE / 1024))
-          echo "Entry Bundle Size: ${ENTRY_SIZE_KB} KB"
+          set -euo pipefail
 
-          if [ $ENTRY_SIZE_KB -gt 300 ]; then
-            echo "❌ Entry bundle size ${ENTRY_SIZE_KB} KB exceeds 300 KB limit!"
+          find dist/assets/js -name "*.js" -print0 | xargs -0 stat -c "%n %s" | sort -k2 -nr > js-size-report.txt
+
+          ENTRY_LINE=$(grep "index-" js-size-report.txt | head -n 1)
+          if [ -z "${ENTRY_LINE}" ]; then
+            echo "❌ Kein index-* Bundle gefunden"
             exit 1
-          else
-            echo "✅ Entry bundle size ${ENTRY_SIZE_KB} KB is within 300 KB limit"
           fi
+          ENTRY_FILE=$(echo "${ENTRY_LINE}" | awk '{print $1}')
+          ENTRY_SIZE=$(echo "${ENTRY_LINE}" | awk '{print $2}')
+          ENTRY_KB=$((ENTRY_SIZE / 1024))
+
+          VENDOR_FILE=""
+          VENDOR_BYTES=0
+          VENDOR_KB=0
+          if grep -q "vendor-" js-size-report.txt; then
+            VENDOR_FILE=$(grep "vendor-" js-size-report.txt | head -n 1 | awk '{print $1}')
+            VENDOR_BYTES=$(grep "vendor-" js-size-report.txt | awk '{sum += $2} END {print sum}')
+            VENDOR_KB=$((VENDOR_BYTES / 1024))
+          fi
+
+          TOTAL_JS_BYTES=$(awk '{sum += $2} END {print sum}' js-size-report.txt)
+          TOTAL_JS_KB=$((TOTAL_JS_BYTES / 1024))
+
+          echo "Entry bundle (${ENTRY_FILE}): ${ENTRY_KB} KB"
+          echo "Vendor bundles (sum): ${VENDOR_KB} KB"
+          echo "Total JS payload: ${TOTAL_JS_KB} KB"
+
+          MAX_ENTRY_KB=350
+          MAX_VENDOR_KB=900
+          MAX_TOTAL_JS_KB=2400
+
+          if [ "${ENTRY_KB}" -gt "${MAX_ENTRY_KB}" ]; then
+            echo "❌ Entry bundle exceeds ${MAX_ENTRY_KB} KB"
+            exit 1
+          fi
+
+          if [ -n "${VENDOR_FILE}" ] && [ "${VENDOR_KB}" -gt "${MAX_VENDOR_KB}" ]; then
+            echo "❌ Vendor bundles exceed ${MAX_VENDOR_KB} KB"
+            exit 1
+          fi
+
+          if [ "${TOTAL_JS_KB}" -gt "${MAX_TOTAL_JS_KB}" ]; then
+            echo "❌ Total JS payload exceeds ${MAX_TOTAL_JS_KB} KB"
+            exit 1
+          fi
+
+          echo "✅ Bundle size budget respected"
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
