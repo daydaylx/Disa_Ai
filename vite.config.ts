@@ -177,85 +177,8 @@ export default defineConfig(({ mode }) => {
         // Robust solution: No externalization needed for bundled app
         // Dependencies will be properly ordered through manualChunks priority
         output: {
-          manualChunks: (id) => {
-            if (id.includes("node_modules")) {
-              if (
-                id.includes("node_modules/react/") ||
-                id.includes("node_modules/react-dom/") ||
-                id.includes("node_modules/react-dom.")
-              ) {
-                return "vendor-react";
-              }
-              if (id.includes("node_modules/@radix-ui")) {
-                return "vendor-radix";
-              }
-              if (id.includes("node_modules/lucide-react")) {
-                return "vendor-icons";
-              }
-              if (
-                id.includes("node_modules/react-markdown") ||
-                id.includes("node_modules/remark") ||
-                id.includes("node_modules/rehype")
-              ) {
-                return "vendor-markdown";
-              }
-              if (id.includes("node_modules/prismjs")) {
-                return "vendor-syntax";
-              }
-              if (
-                id.includes("node_modules/react-router-dom") ||
-                id.includes("node_modules/react-router") ||
-                id.includes("node_modules/@remix-run/router")
-              ) {
-                return "vendor-router";
-              }
-              if (id.includes("node_modules/zod")) {
-                return "vendor-validation";
-              }
-              if (id.includes("node_modules/katex") || id.includes("node_modules/react-katex")) {
-                return "vendor-math";
-              }
-              return "vendor-core";
-            }
-            // Split application code by feature areas for better caching
-            if (id.includes("src/components/ui")) {
-              return "ui-components";
-            }
-            if (id.includes("src/components/models")) {
-              return "models-components";
-            }
-            if (id.includes("src/components/roles")) {
-              return "roles-components";
-            }
-            if (id.includes("src/features")) {
-              return "feature-components";
-            }
-            if (id.includes("src/pages")) {
-              const parts = id.split("src/pages/")[1];
-              if (parts) {
-                const normalized = parts
-                  .replace(/\\+/g, "/")
-                  .split("/")[0]
-                  .replace(/\.(tsx|ts|jsx|js)$/, "")
-                  .replace(/[^a-zA-Z0-9]+/g, "-")
-                  .toLowerCase();
-                return normalized ? `page-${normalized}` : "page-shared";
-              }
-              return "page-shared";
-            }
-            if (id.includes("src/hooks")) {
-              return "hooks";
-            }
-            if (id.includes("src/utils")) {
-              return "utils";
-            }
-            if (id.includes("src/lib")) {
-              return "lib";
-            }
-            if (id.includes("src/services") || id.includes("src/api")) {
-              return "services";
-            }
-          },
+          // Removing aggressive manual chunking to avoid circular vendor bundles
+          // that caused React to load as undefined in production builds.
           // Issue #60: Optimierte Asset-Organisation für korrekte MIME-Types
           compact: true,
           entryFileNames: "assets/js/[name]-[hash].js",
