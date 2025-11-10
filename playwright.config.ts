@@ -8,7 +8,7 @@ export default defineConfig({
   timeout: 45000,
   expect: { timeout: process.env.CI ? 10_000 : 15_000 }, // Kürzere Timeouts in CI
   fullyParallel: true,
-  retries: process.env.CI ? 1 : 1, // Reduzierte Retries für CI
+  retries: process.env.CI ? 1 : 0, // CI darf einmal wiederholen, lokal nicht
   workers: process.env.CI ? 1 : undefined, // Reduziert für Stabilität in CI
   use: {
     baseURL: BASE_URL,

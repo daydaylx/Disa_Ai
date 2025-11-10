@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
@@ -43,6 +43,38 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     );
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const handler = (event: Event) => {
+      const { action } =
+        (event as CustomEvent<{ action?: "open" | "close" | "toggle" }>).detail ?? {};
+
+      setIsOverflowOpen((prev) => {
+        switch (action) {
+          case "open":
+            return true;
+          case "close":
+            return false;
+          case "toggle":
+            return !prev;
+          default:
+            return prev;
+        }
+      });
+    };
+
+    window.addEventListener("disa:bottom-sheet", handler as EventListener);
+    return () => window.removeEventListener("disa:bottom-sheet", handler as EventListener);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(
+      new CustomEvent("disa:bottom-sheet-state", { detail: { open: isOverflowOpen } }),
+    );
+  }, [isOverflowOpen]);
+
   return (
     <div
       className="relative flex min-h-[100dvh] flex-col bg-surface-bg text-text-primary"
@@ -68,7 +100,32 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         </div>
       ) : (
         <div className="fixed left-0 top-0 h-full w-64 border-r border-line-subtle bg-surface-base p-4">
-          <div className="text-text-primary font-medium">Disa AI</div>
+          <div className="text-text-primary font-bold text-lg mb-6">Disa AI</div>
+          <nav className="space-y-2">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={`desktop-${item.path}`}
+                to={item.path}
+                className={cn(
+                  "group relative flex w-full items-center gap-3 rounded-2xl border border-transparent px-5 py-3 text-sm font-medium transition-all duration-150",
+                  activePath === item.path
+                    ? "border-line bg-surface-muted/80 backdrop-blur-sm text-text-primary shadow-sm"
+                    : "text-text-secondary hover:border-line hover:bg-surface-muted/70 backdrop-blur-sm",
+                )}
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "h-6 w-1 rounded-full transition-colors",
+                    activePath === item.path
+                      ? "bg-accent"
+                      : "bg-transparent group-hover:bg-accent/40",
+                  )}
+                />
+                <span className="flex-1">{item.label}</span>
+              </Link>
+            ))}
+          </nav>
         </div>
       )}
 

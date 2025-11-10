@@ -3,6 +3,5 @@
   "compilerOptions": {
     "types": ["node", "vitest/globals", "vitest/import-meta", "@testing-library/jest-dom"]
   },
-  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/__tests__", "tests", "e2e"],
-  "exclude": ["src"]
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/__tests__", "tests", "e2e"]
 }

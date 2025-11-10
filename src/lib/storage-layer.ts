@@ -134,8 +134,13 @@ export class ModernStorageLayer {
   private dbInitialized: boolean = false;
   private dbInitializationPromise: Promise<DisaDB | null> | null = null;
 
-  constructor() {
-    // DB initialization is now lazy and asynchronous
+  constructor(initialDb?: DisaDB | null) {
+    if (initialDb) {
+      this.db = initialDb;
+      this.dbInitialized = true;
+      return;
+    }
+    void this.initializeDB();
   }
 
   private async initializeDB(): Promise<DisaDB | null> {
@@ -168,11 +173,14 @@ export class ModernStorageLayer {
         metadata: "id, title, createdAt, updatedAt, model, messageCount",
       });
 
+      this.db = database;
+
       // Asynchronously open with proper error handling
       await database.open();
-      console.log("[Storage] IndexedDB initialized successfully");
+      console.warn("[Storage] IndexedDB initialized successfully");
       return database;
     } catch (error) {
+      this.db = null;
       console.warn("[Storage] Failed to initialize IndexedDB, falling back to memory:", error);
       return null;
     }

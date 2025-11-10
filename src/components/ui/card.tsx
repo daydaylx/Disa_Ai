@@ -5,58 +5,93 @@ import { ChevronRight, MoreHorizontal } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Button } from "./button"; // Assuming Button component is updated
 
-const cardVariants = cva("relative rounded-xl border transition-all duration-200 ease-in-out", {
-  variants: {
-    variant: {
-      default: "bg-surface-card/80 backdrop-blur-lg border-line shadow-card",
-      outline: "bg-surface-base border-line shadow-sm",
-      flat: "bg-surface-base border-transparent shadow-none",
+const cardVariants = cva(
+  "relative rounded-[var(--radius-xl)] border transition-all duration-300 ease-out",
+  {
+    variants: {
+      variant: {
+        default: "",
+        outline: "border-line bg-surface-base",
+        flat: "border-transparent bg-transparent shadow-none",
+      },
+      tone: {
+        "neo-raised":
+          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)]",
+        "neo-subtle":
+          "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)]",
+        "neo-inset":
+          "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)] shadow-[var(--shadow-inset-subtle)]",
+        "neo-floating":
+          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] text-[var(--color-text-primary)] backdrop-blur-lg",
+        "neo-glass":
+          "bg-[var(--surface-ghost)]/70 border-[var(--border-ghost,rgba(255,255,255,0.3))] text-[var(--color-text-primary)] backdrop-blur-xl",
+      },
+      intent: {
+        default: "",
+        accent: "border-accent",
+        primary: "border-[var(--color-border-focus)]",
+        success: "border-success/70",
+        warning: "border-warning/70",
+        danger: "border-danger/70",
+        error: "border-danger/70",
+        info: "border-info/70",
+      },
+      padding: {
+        none: "p-0",
+        sm: "p-space-sm",
+        md: "p-space-md",
+        lg: "p-space-lg",
+      },
+      size: {
+        auto: "w-auto",
+        full: "w-full",
+        sm: "max-w-sm",
+        md: "max-w-md",
+        lg: "max-w-lg",
+      },
+      state: {
+        default: "",
+        loading: "animate-pulse opacity-70 pointer-events-none",
+        disabled: "opacity-50 pointer-events-none",
+        selected: "border-accent ring-2 ring-accent/30 ring-offset-2 ring-offset-surface-bg",
+        focus: "ring-2 ring-[var(--color-border-focus)] ring-offset-2 ring-offset-surface-bg",
+      },
+      elevation: {
+        flat: "shadow-none",
+        subtle: "shadow-neo-sm",
+        surface: "shadow-[var(--shadow-surface,0_2px_10px_rgba(15,23,42,0.08))]",
+        medium: "shadow-neo-md",
+        dramatic: "shadow-neo-xl",
+        raised: "shadow-neo-md",
+      },
+      interactive: {
+        none: "",
+        basic: "cursor-pointer hover:-translate-y-0.5 hover:shadow-neo-sm",
+        gentle: "cursor-pointer hover:-translate-y-1 hover:shadow-neo-md",
+        glow: "cursor-pointer hover:shadow-[var(--shadow-glow-soft)]",
+        "glow-accent":
+          "cursor-pointer hover:border-accent hover:shadow-[var(--shadow-glow-accent)]",
+      },
     },
-    intent: {
-      default: "border-line",
-      primary: "border-accent",
-      success: "border-success",
-      warning: "border-warning",
-      danger: "border-danger",
-      info: "border-info",
-    },
-    padding: {
-      none: "p-0",
-      sm: "p-space-sm",
-      md: "p-space-md",
-      lg: "p-space-lg",
-    },
-    size: {
-      auto: "w-auto",
-      full: "w-full",
-      sm: "max-w-sm",
-      md: "max-w-md",
-      lg: "max-w-lg",
-    },
-    state: {
-      default: "",
-      loading: "animate-pulse opacity-70 pointer-events-none",
-      disabled: "opacity-50 pointer-events-none",
-      selected: "border-accent ring-2 ring-accent/30 ring-offset-2 ring-offset-surface-bg",
-    },
-    interactive: {
-      true: "cursor-pointer hover:border-accent hover:shadow-overlay",
-      false: "",
+    defaultVariants: {
+      variant: "default",
+      tone: "neo-raised",
+      intent: "default",
+      padding: "md",
+      size: "full",
+      state: "default",
+      elevation: "surface",
+      interactive: "none",
     },
   },
-  defaultVariants: {
-    variant: "default",
-    intent: "default",
-    padding: "md",
-    size: "full",
-    state: "default",
-    interactive: false,
-  },
-});
+);
+
+type CardVariantProps = VariantProps<typeof cardVariants>;
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {
+    Omit<CardVariantProps, "interactive"> {
+  interactive?: CardVariantProps["interactive"] | boolean;
   title?: string;
   subtitle?: string;
   leading?: React.ReactNode;
@@ -85,6 +120,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     {
       className,
       variant,
+      tone,
+      elevation,
       intent,
       padding,
       size,
@@ -149,19 +186,28 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     const isClickable = !disabled && !isLoading && (!!onCardClick || selectable || clickable);
 
+    const resolvedInteractive: CardVariantProps["interactive"] =
+      typeof interactive === "boolean" ? (interactive ? "basic" : "none") : interactive;
+
     return (
       <div
         ref={ref}
         className={cn(
           cardVariants({
             variant,
+            tone,
             intent,
             padding,
             size,
             state: isLoading ? "loading" : disabled ? "disabled" : selected ? "selected" : state,
-            interactive: isClickable || interactive,
-            className,
+            elevation,
+            interactive: isClickable
+              ? resolvedInteractive === "none"
+                ? "basic"
+                : resolvedInteractive
+              : resolvedInteractive,
           }),
+          className,
         )}
         onClick={isClickable ? handleCardClick : onClick}
         onKeyDown={isClickable ? handleKeyDown : undefined}

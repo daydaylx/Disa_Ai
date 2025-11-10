@@ -22,9 +22,27 @@ const FeatureFlagPanel = lazy(() =>
 function AppContent() {
   useServiceWorker(); // Now safely inside ToastsProvider
 
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleStateChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{ open?: boolean }>;
+      if (typeof customEvent.detail?.open === "boolean") {
+        setIsDrawerOpen(customEvent.detail.open);
+      }
+    };
+
+    window.addEventListener("disa:bottom-sheet-state", handleStateChange as EventListener);
+
+    return () => {
+      window.removeEventListener("disa:bottom-sheet-state", handleStateChange as EventListener);
+    };
+  }, []);
+
   // Edge-Swipe Navigation für BottomSheet
   const handleOpenDrawer = React.useCallback(() => {
-    // Dispatch das gleiche Event wie Header-Button
     window.dispatchEvent(
       new CustomEvent("disa:bottom-sheet", {
         detail: { action: "open" as const },
@@ -43,11 +61,7 @@ function AppContent() {
   );
 
   // Edge-Swipe Integration - funktioniert nur auf Touch-Geräten mit Feature-Flag
-  useEdgeSwipeDrawer(
-    false, // isDrawerOpen - wird vom BottomSheetButton verwaltet
-    handleOpenDrawer,
-    edgeSwipeOptions,
-  );
+  useEdgeSwipeDrawer(isDrawerOpen, handleOpenDrawer, edgeSwipeOptions);
 
   return (
     <>

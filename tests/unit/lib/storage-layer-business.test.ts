@@ -1,49 +1,15 @@
 // Simple unit tests for storage layer business logic
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock the Dexie dependency
-vi.mock("dexie", () => {
-  return {
-    default: vi.fn().mockImplementation(() => ({
-      conversations: {
-        put: vi.fn(),
-        get: vi.fn(),
-        delete: vi.fn(),
-        toArray: vi.fn(),
-        bulkDelete: vi.fn(),
-        clear: vi.fn(),
-        filter: vi.fn().mockReturnThis(),
-        orderBy: vi.fn().mockReturnThis(),
-        reverse: vi.fn().mockReturnThis(),
-      },
-      metadata: {
-        put: vi.fn(),
-        bulkDelete: vi.fn(),
-        clear: vi.fn(),
-      },
-      transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
-        return Promise.resolve(callback());
-      }),
-      open: vi.fn().mockResolvedValue(undefined),
-      close: vi.fn(),
-      version: vi.fn().mockReturnThis(),
-      stores: vi.fn().mockReturnThis(),
-    })),
-  };
-});
-
 // Import after mocking
 import { ModernStorageLayer } from "@/lib/storage-layer";
 
 describe("ModernStorageLayer Business Logic", () => {
   let storage: ModernStorageLayer;
-  let mockDb: any;
+  let mockDb: ReturnType<typeof createMockDatabase>;
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-
-    // Create a fresh mock database instance
-    mockDb = {
+  function createMockDatabase() {
+    return {
       conversations: {
         put: vi.fn(),
         get: vi.fn(),
@@ -57,21 +23,31 @@ describe("ModernStorageLayer Business Logic", () => {
       },
       metadata: {
         put: vi.fn(),
+        delete: vi.fn(),
         bulkDelete: vi.fn(),
         clear: vi.fn(),
+        orderBy: vi.fn().mockReturnThis(),
+        reverse: vi.fn().mockReturnThis(),
+        toArray: vi.fn().mockResolvedValue([]),
       },
-      transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
-        return Promise.resolve(callback());
+      transaction: vi.fn().mockImplementation((...args) => {
+        const callback = args[args.length - 1];
+        if (typeof callback === "function") {
+          return Promise.resolve(callback());
+        }
+        return Promise.resolve();
       }),
       open: vi.fn().mockResolvedValue(undefined),
       close: vi.fn(),
     };
+  }
 
-    // Replace the module's database instance
-    const Dexie = vi.mocked(require("dexie").default);
-    Dexie.mockImplementation(() => mockDb);
+  beforeEach(() => {
+    vi.clearAllMocks();
 
-    storage = new ModernStorageLayer();
+    // Create a fresh mock database instance
+    mockDb = createMockDatabase();
+    storage = new ModernStorageLayer(mockDb as any);
   });
 
   describe("getConversationStats", () => {

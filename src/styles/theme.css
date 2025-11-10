@@ -58,11 +58,28 @@
     --accent: var(--color-brand-primary);
     --accent-weak: var(--color-brand-secondary);
     --accent-contrast: var(--color-text-on-accent);
+    --accent-strong: #6366f1; /* Indigo 400 */
+    --acc2: #6366f1; /* Indigo 400 - for backward compatibility */
 
     /* --- Borders --- */
     --line: var(--color-border-subtle);
     --border-hairline: var(--color-border-hairline);
     --border-strong: var(--color-border-strong);
+    --border-neumorphic-subtle: color-mix(
+      in srgb,
+      var(--surface-base) 80%,
+      var(--color-text-primary) 20%
+    );
+    --color-border-focus: var(--accent);
+    --color-accent-border: color-mix(in srgb, var(--accent) 40%, transparent 60%);
+    --color-accent-surface: color-mix(in srgb, var(--accent) 15%, transparent 85%);
+    --border-ghost: rgba(255, 255, 255, 0.3);
+
+    /* --- Surfaces (for neumorphism/glassmorphism) --- */
+    --surface-neumorphic-base: var(--surface-base);
+    --surface-neumorphic-raised: color-mix(in srgb, var(--surface-base) 95%, white 5%);
+    --surface-neumorphic-floating: color-mix(in srgb, var(--surface-base) 80%, var(--accent) 20%);
+    --color-surface-muted: var(--surface-muted);
 
     /* --- Status --- */
     --info: var(--color-status-info);
@@ -121,6 +138,25 @@
     --shadow-inset-strong: inset 0 4px 8px 0 rgba(0, 0, 0, 0.3);
     --shadow-inset-extreme: inset 0 8px 16px 0 rgba(0, 0, 0, 0.4);
 
+    /* --- Neumorphic Shadows --- */
+    --shadow-neo-sm: 3px 3px 6px var(--shadow-color-low), -3px -3px 6px var(--shadow-color-high);
+    --shadow-neo-md: 5px 5px 10px var(--shadow-color-low), -5px -5px 10px var(--shadow-color-high);
+    --shadow-neo-lg: 8px 8px 16px var(--shadow-color-low), -8px -8px 16px var(--shadow-color-high);
+    --shadow-neo-xl:
+      12px 12px 24px var(--shadow-color-low), -12px -12px 24px var(--shadow-color-high);
+
+    /* --- Glow Shadows --- */
+    --shadow-glow-soft: 0 0 15px rgba(79, 70, 229, 0.2);
+    --shadow-glow-accent: 0 0 20px rgba(79, 70, 229, 0.4);
+    --shadow-glow-accent-subtle: 0 0 10px rgba(79, 70, 229, 0.2);
+
+    /* --- Surface and depth --- */
+    --shadow-surface: 0 2px 10px rgba(15, 23, 42, 0.08);
+
+    /* --- Shadow color variables (for neumorphism) --- */
+    --shadow-color-low: color-mix(in srgb, var(--surface-base) 90%, #000000 10%);
+    --shadow-color-high: color-mix(in srgb, var(--surface-base) 90%, #ffffff 10%);
+
     /* ------------------------------ */
     /*           Typography           */
     /* ------------------------------ */
@@ -144,12 +180,68 @@
     --motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
   }
 
-  /* Add a subtle background pattern for visual interest */
+  /* Add a subtle geometric background pattern for visual interest */
   body {
     background-color: var(--surface-bg);
     background-image:
+      radial-gradient(circle at 15% 30%, rgba(79, 70, 229, 0.05) 1.5px, transparent 2px),
+      radial-gradient(circle at 85% 70%, rgba(129, 140, 248, 0.05) 1.5px, transparent 2px),
       linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-size:
+      40px 40px,
+      40px 40px,
+      20px 20px,
+      20px 20px;
+    background-position:
+      0 0,
+      0 0,
+      0 0,
+      0 0;
+    font-family: var(--font-family-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Enhanced scrollbars for better UX */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--surface-base);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+  }
+
+  /* Focus styles for better accessibility */
+  *:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Selection color */
+  ::selection {
+    background-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--color-text-primary);
+  }
+
+  /* Smooth transitions for better UX */
+  * {
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
   }
 }

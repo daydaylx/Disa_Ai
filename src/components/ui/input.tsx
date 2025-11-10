@@ -1,70 +1,44 @@
-import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "../../lib/utils";
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
-  /** Neomorphic variant for different depth levels */
-  variant?: "neo-subtle" | "neo-medium" | "neo-dramatic" | "neo-extreme";
-  /** Size variant for different touch targets */
-  size?: "sm" | "md" | "lg";
-}
-
-const inputVariants: Record<"neo-subtle" | "neo-medium" | "neo-dramatic" | "neo-extreme", string> =
+const inputVariants = cva(
+  "flex w-full rounded-[var(--radius-md)] border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 placeholder:text-text-secondary file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50",
   {
-    "neo-subtle": "neo-inset-subtle",
-    "neo-medium": "neo-inset-medium",
-    "neo-dramatic": "neo-inset-strong",
-    "neo-extreme": "neo-inset-extreme",
-  };
+    variants: {
+      size: {
+        sm: "h-9 px-3 py-2 text-sm",
+        md: "h-10 px-4 py-2 text-sm",
+        lg: "h-12 px-5 py-3 text-base",
+      },
+      variant: {
+        default: "border-line bg-surface-base text-text-primary",
+        "neo-subtle":
+          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] text-text-primary shadow-[var(--shadow-inset-subtle)] focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
+        "neo-inset":
+          "border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-text-primary shadow-[var(--shadow-inset-medium)] focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
+        ghost:
+          "border-transparent bg-transparent text-text-primary focus-visible:border-[var(--color-border-focus)] focus-visible:bg-surface-base/60",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+      variant: "default",
+    },
+  },
+);
 
-const inputSizes = {
-  sm: "h-8 px-2 py-1 text-xs",
-  md: "h-10 px-3 py-2 text-sm",
-  lg: "h-12 px-4 py-3 text-base",
-};
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
+    VariantProps<typeof inputVariants> {}
 
-const inputBaseClasses = [
-  // Layout & Structure
-  "flex w-full rounded-[var(--radius-md)]",
-
-  // Neomorphic Foundation
-  "bg-[var(--surface-neumorphic-base)]",
-  "border-[var(--border-neumorphic-subtle)]",
-
-  // Typography
-  "text-[var(--color-text-primary)]",
-  "placeholder:text-[var(--color-text-muted)]",
-  "font-medium tracking-[-0.01em]",
-
-  // Transitions
-  "transition-all duration-200 ease-out",
-
-  // Focus States (Dramatic Neomorphic)
-  "focus-visible:outline-none",
-  "focus-visible:shadow-[var(--focus-ring)]",
-  "focus-visible:border-[var(--color-border-focus)]",
-  "focus-visible:bg-[var(--surface-neumorphic-floating)]",
-
-  // States
-  "disabled:cursor-not-allowed",
-  "disabled:opacity-50",
-  "disabled:shadow-[var(--shadow-inset-subtle)]",
-
-  // Hover Enhancement
-  "hover:bg-[var(--surface-neumorphic-raised)]",
-  "hover:shadow-[var(--shadow-inset-medium)]",
-
-  // Dark Mode Optimization
-  "dark:bg-[var(--surface-neumorphic-base)]",
-  "dark:border-[var(--border-neumorphic-dark)]",
-].join(" ");
-
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, variant = "neo-subtle", size = "md", ...props }, ref) => {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type = "text", size, variant, ...props }, ref) => {
     return (
       <input
         type={type}
-        className={cn(inputBaseClasses, inputVariants[variant], inputSizes[size], className)}
+        className={cn(inputVariants({ size, variant }), className)}
         ref={ref}
         {...props}
       />
@@ -72,3 +46,5 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   },
 );
 Input.displayName = "Input";
+
+export { Input, inputVariants };

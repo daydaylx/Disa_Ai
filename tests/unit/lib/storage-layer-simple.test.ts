@@ -7,79 +7,51 @@ import {
   ModernStorageLayer,
 } from "@/lib/storage-layer";
 
-// Mock Dexie with proper mock detection
-vi.mock("dexie", () => {
-  const createMockDatabase = () => ({
-    conversations: {
-      put: vi.fn().mockResolvedValue(undefined),
-      get: vi.fn().mockResolvedValue(null),
-      delete: vi.fn().mockResolvedValue(undefined),
-      bulkDelete: vi.fn().mockResolvedValue(undefined),
-      clear: vi.fn().mockResolvedValue(undefined),
-      filter: vi.fn().mockReturnThis(),
-      orderBy: vi.fn().mockReturnThis(),
-      reverse: vi.fn().mockReturnThis(),
-      toArray: vi.fn().mockResolvedValue([]),
-    },
-    metadata: {
-      put: vi.fn().mockResolvedValue(undefined),
-      delete: vi.fn().mockResolvedValue(undefined),
-      bulkDelete: vi.fn().mockResolvedValue(undefined),
-      clear: vi.fn().mockResolvedValue(undefined),
-      orderBy: vi.fn().mockReturnThis(),
-      reverse: vi.fn().mockReturnThis(),
-      toArray: vi.fn().mockResolvedValue([]),
-    },
-    transaction: vi.fn().mockImplementation((...args) => {
-      // Dexie transaction takes (mode, table1, table2, ..., callback)
-      const callback = args[args.length - 1];
-      if (typeof callback === "function") {
-        return Promise.resolve(callback());
-      }
-      return Promise.resolve();
-    }),
-    open: vi.fn().mockResolvedValue(undefined),
-    close: vi.fn().mockResolvedValue(undefined),
-    version: vi.fn().mockReturnThis(),
-    stores: vi.fn().mockReturnThis(),
-  });
-
-  const MockDexieClass = vi.fn().mockImplementation(createMockDatabase);
-  // Mark as mock so isDexieMock detection works
-  MockDexieClass._isMockFunction = true;
-
-  return {
-    default: MockDexieClass,
-    Table: vi.fn(),
-  };
-});
-
 describe("ModernStorageLayer (Simplified)", () => {
   let storage: ModernStorageLayer;
-  let mockDb: any;
+  let mockDb: ReturnType<typeof createMockDatabase>;
+
+  function createMockDatabase() {
+    return {
+      conversations: {
+        put: vi.fn().mockResolvedValue(undefined),
+        get: vi.fn().mockResolvedValue(null),
+        delete: vi.fn().mockResolvedValue(undefined),
+        bulkDelete: vi.fn().mockResolvedValue(undefined),
+        clear: vi.fn().mockResolvedValue(undefined),
+        filter: vi.fn().mockReturnThis(),
+        orderBy: vi.fn().mockReturnThis(),
+        reverse: vi.fn().mockReturnThis(),
+        toArray: vi.fn().mockResolvedValue([]),
+      },
+      metadata: {
+        put: vi.fn().mockResolvedValue(undefined),
+        delete: vi.fn().mockResolvedValue(undefined),
+        bulkDelete: vi.fn().mockResolvedValue(undefined),
+        clear: vi.fn().mockResolvedValue(undefined),
+        orderBy: vi.fn().mockReturnThis(),
+        reverse: vi.fn().mockReturnThis(),
+        toArray: vi.fn().mockResolvedValue([]),
+      },
+      transaction: vi.fn().mockImplementation((...args) => {
+        const callback = args[args.length - 1];
+        if (typeof callback === "function") {
+          return Promise.resolve(callback());
+        }
+        return Promise.resolve();
+      }),
+      open: vi.fn().mockResolvedValue(undefined),
+      close: vi.fn().mockResolvedValue(undefined),
+      version: vi.fn().mockReturnThis(),
+      stores: vi.fn().mockReturnThis(),
+    };
+  }
 
   beforeEach(() => {
     vi.clearAllMocks();
     vi.unstubAllGlobals();
-    storage = new ModernStorageLayer();
-    // Access the mock database through the private property
-    mockDb = (storage as any).db;
-
-    // If db is null (fallback mode), skip mock setup
-    if (mockDb) {
-      // Reset all mock implementations to their default resolved state
-      mockDb.conversations.put.mockResolvedValue(undefined);
-      mockDb.conversations.get.mockResolvedValue(null);
-      mockDb.conversations.delete.mockResolvedValue(undefined);
-      mockDb.conversations.clear.mockResolvedValue(undefined);
-      mockDb.conversations.bulkDelete.mockResolvedValue(undefined);
-      mockDb.conversations.toArray.mockResolvedValue([]);
-
-      mockDb.metadata.put.mockResolvedValue(undefined);
-      mockDb.metadata.delete.mockResolvedValue(undefined);
-      mockDb.metadata.clear.mockResolvedValue(undefined);
-      mockDb.metadata.bulkDelete.mockResolvedValue(undefined);
-    }
+    mockDb = createMockDatabase();
+    storage = new ModernStorageLayer(mockDb as any);
   });
 
   describe("getConversationStats", () => {

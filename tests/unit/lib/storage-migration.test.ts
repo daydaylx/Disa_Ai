@@ -40,7 +40,7 @@ vi.mock("dexie", () => {
 
   const MockDexieClass = vi.fn().mockImplementation(createMockDatabase);
   // Mark as mock so isDexieMock detection works
-  MockDexieClass._isMockFunction = true;
+  (MockDexieClass as unknown as { _isMockFunction?: boolean })._isMockFunction = true;
 
   return {
     default: MockDexieClass,

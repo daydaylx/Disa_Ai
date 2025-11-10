@@ -185,8 +185,8 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     define: {
-      "process.env.NODE_ENV": JSON.stringify("production"),
-      __DEV__: "false",
+      "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
+      __DEV__: JSON.stringify(!isProduction),
     },
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
