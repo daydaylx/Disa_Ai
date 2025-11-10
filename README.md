@@ -322,6 +322,7 @@ Der Build-Prozess wird durch `vite.config.ts` gesteuert.
 - **Dist Smoke-Test**: Vor jedem Deployment `npm run build` lokal ausführen und `dist/index.html` per `npx serve dist` öffnen. Die HTML darf keine direkten `src/*.tsx`-Referenzen mehr enthalten – nur hashed Bundles aus `assets/`.
 - **Dist-Verifikation**: `npm run verify:dist` prüft nach dem Build automatisch, ob `dist/index.html` korrekt auf gebundelte Dateien unter `assets/js` verweist und keine TypeScript-Quellen (`*.tsx`) mehr ausliefert.
 - **Build-Info-Generierung**: Vor jedem Build wird ein Skript ausgeführt, das Build-Informationen (Build-ID, Zeitstempel, Git-SHA) generiert und in der App verfügbar macht.
+- **Environment Variables**: Dokumentation aller benötigten Variablen inklusive Deployment-Defaults befindet sich in [docs/environment-variables.md](docs/environment-variables.md).
 
 ## 🤝 Contributing
 

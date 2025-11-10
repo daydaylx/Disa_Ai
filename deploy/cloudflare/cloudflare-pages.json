@@ -6,7 +6,11 @@
     "root_dir": ".",
     "environment_variables": {
       "NODE_VERSION": "20.19",
-      "CF_PAGES": "true"
+      "CF_PAGES": "true",
+      "VITE_OPENROUTER_BASE_URL": "https://openrouter.ai/api/v1",
+      "VITE_ENV": "production",
+      "VITE_ENABLE_ANALYTICS": "false",
+      "VITE_ENABLE_PWA": "true"
     }
   },
   "preview": {

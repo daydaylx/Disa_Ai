@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "generate-tokens": "node scripts/generate-tokens.mjs",
-    "prebuild": "node scripts/build-info.js && npm run generate-tokens",
+    "prebuild": "node scripts/validate-env.mjs && node scripts/build-info.js && npm run generate-tokens",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
     "preview": "node ./scripts/run-preview.mjs",

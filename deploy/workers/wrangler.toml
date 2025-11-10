@@ -7,11 +7,11 @@ pages_build_output_dir = "dist"
 
 [env.production]
   # Main branch als Produktionsumgebung
-  vars = { NODE_ENV = "production" }
+  vars = { NODE_ENV = "production", VITE_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1", VITE_ENV = "production", VITE_ENABLE_ANALYTICS = "false", VITE_ENABLE_PWA = "true" }
 
 [env.preview]
   # Alle anderen Branches als Preview
-  vars = { NODE_ENV = "development" }
+  vars = { NODE_ENV = "development", VITE_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1", VITE_ENV = "staging", VITE_ENABLE_ANALYTICS = "false", VITE_ENABLE_PWA = "true" }
 
 # Note: Build configuration is handled by Cloudflare Pages dashboard
 # Cache purging and deploy hooks are managed through Pages dashboard

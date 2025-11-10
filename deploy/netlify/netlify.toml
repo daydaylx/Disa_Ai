@@ -5,6 +5,10 @@
 [build.environment]
   NODE_VERSION = "20"
   NPM_VERSION = "10"
+  VITE_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+  VITE_ENV = "production"
+  VITE_ENABLE_ANALYTICS = "false"
+  VITE_ENABLE_PWA = "true"
 
 # SPA routing - redirect all requests to index.html
 [[redirects]]
