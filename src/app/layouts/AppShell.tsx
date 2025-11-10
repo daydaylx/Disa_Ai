@@ -45,30 +45,30 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
   return (
     <div
-      className="relative flex min-h-[100dvh] flex-col bg-[var(--surface-neumorphic-base)] text-[var(--color-text-primary)]"
+      className="relative flex min-h-[100dvh] flex-col bg-surface-bg text-text-primary"
       style={{ minHeight: "calc(100dvh + var(--keyboard-offset, 0px))" }}
     >
       {/* Skip-Link für bessere Accessibility */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[9999] focus:rounded focus:bg-[var(--color-brand-primary)] focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--color-brand-primary)]"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[9999] focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent"
       >
         Zum Hauptinhalt springen
       </a>
 
       {isMobile ? (
-        <div className="border-b border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)] px-4 py-3">
+        <div className="border-b border-line-subtle bg-surface-base px-4 py-3">
           <button
             onClick={() => setIsOverflowOpen(true)}
-            className="flex items-center gap-2 text-[var(--color-text-primary)]"
+            className="flex items-center gap-2 text-text-primary"
           >
             <span className="text-xl">☰</span>
             <span>Menü</span>
           </button>
         </div>
       ) : (
-        <div className="fixed left-0 top-0 h-full w-64 border-r border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-base)] p-4">
-          <div className="text-[var(--color-text-primary)] font-medium">Disa AI</div>
+        <div className="fixed left-0 top-0 h-full w-64 border-r border-line-subtle bg-surface-base p-4">
+          <div className="text-text-primary font-medium">Disa AI</div>
         </div>
       )}
 
@@ -76,7 +76,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         id="main"
         key={location.pathname}
         className={cn(
-          "min-h-0 flex flex-1 flex-col overflow-y-auto px-4 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4",
+          "min-h-0 flex flex-1 flex-col overflow-y-auto p-page-padding-y px-page-padding-x",
           !isMobile && "ml-64",
         )}
       >
@@ -85,14 +85,14 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
       {isMobile && (
         <>
-          <footer className="border-t border-[var(--color-border-hairline)] bg-[var(--surface-neumorphic-floating)] px-4 py-4 text-xs text-[var(--color-text-secondary)]">
+          <footer className="border-t border-line-subtle bg-surface-base px-4 py-4 text-xs text-text-secondary">
             <div className="mx-auto flex w-full max-w-2xl lg:max-w-4xl flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                 <span>Mobile Studio Preview</span>
                 <span className="hidden sm:inline" aria-hidden="true">
                   ·
                 </span>
-                <a href="/datenschutz" className="text-[var(--color-text-link)] hover:underline">
+                <a href="/datenschutz" className="text-accent hover:underline">
                   Datenschutz
                 </a>
               </div>
@@ -111,9 +111,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           >
             <div className="space-y-4">
               <section>
-                <h3 className="text-sm font-semibold text-[var(--color-text-secondary)]">
-                  Navigation
-                </h3>
+                <h3 className="text-sm font-semibold text-text-secondary">Navigation</h3>
                 <ul className="mt-3 space-y-2">
                   {NAV_ITEMS.map((item: { path: string; label: string }) => (
                     <li key={`drawer-${item.path}`}>
@@ -122,8 +120,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                         className={cn(
                           "group relative flex w-full items-center gap-3 rounded-2xl border border-transparent px-5 py-3 text-sm font-medium transition-all duration-150",
                           activePath === item.path
-                            ? "border-[var(--color-border-subtle)] bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_85%,transparent)] text-[var(--color-text-primary)] shadow-[var(--shadow-depth-1)]"
-                            : "text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] hover:bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_70%,transparent)]",
+                            ? "border-line bg-surface-muted/80 backdrop-blur-sm text-text-primary shadow-sm"
+                            : "text-text-secondary hover:border-line hover:bg-surface-muted/70 backdrop-blur-sm",
                         )}
                         onClick={() => setIsOverflowOpen(false)}
                       >
@@ -132,8 +130,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                           className={cn(
                             "h-6 w-1 rounded-full transition-colors",
                             activePath === item.path
-                              ? "bg-[var(--color-brand-primary)]"
-                              : "bg-transparent group-hover:bg-[color-mix(in_srgb,var(--color-brand-primary)_45%,transparent)]",
+                              ? "bg-accent"
+                              : "bg-transparent group-hover:bg-accent/40",
                           )}
                         />
                         <span className="flex-1">{item.label}</span>
@@ -144,9 +142,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               </section>
 
               <section>
-                <h3 className="text-sm font-semibold text-[var(--color-text-secondary)]">
-                  Sekundäre Seiten
-                </h3>
+                <h3 className="text-sm font-semibold text-text-secondary">Sekundäre Seiten</h3>
                 <div className="mt-3 grid gap-2">
                   {[
                     { label: "Impressum", path: "/impressum" },
@@ -155,7 +151,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                     <Link
                       key={link.path}
                       to={link.path}
-                      className="block w-full rounded-2xl border border-[var(--color-border-hairline)] px-5 py-2.5 text-left text-sm text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-subtle)] hover:bg-[color-mix(in_srgb,var(--surface-neumorphic-floating)_65%,transparent)]"
+                      className="block w-full rounded-2xl border border-line-subtle px-5 py-2.5 text-left text-sm text-text-secondary transition-colors hover:border-line hover:bg-surface-muted/60 backdrop-blur-sm"
                       onClick={() => setIsOverflowOpen(false)}
                     >
                       {link.label}

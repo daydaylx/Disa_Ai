@@ -4,6 +4,7 @@ import React, { lazy, Suspense } from "react";
 
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
+import { Button } from "./components/ui/button";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
@@ -52,35 +53,33 @@ function AppContent() {
     <>
       <SentryErrorBoundary
         fallback={({ error, resetError }) => (
-          <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--surface-neumorphic-base)] p-8 text-center">
-            <div className="max-w-md">
-              <h1 className="mb-4 text-2xl font-bold text-[var(--color-text-primary)]">
-                Unerwarteter Fehler
-              </h1>
-              <p className="mb-6 text-[var(--color-text-secondary)]">
-                Entschuldigung, es ist ein unerwarteter Fehler aufgetreten. Das Problem wurde
-                automatisch gemeldet.
-              </p>
-              <div className="space-y-3">
-                <button
-                  onClick={resetError}
-                  className="w-full rounded-lg bg-[var(--color-brand-primary)] px-4 py-2 text-white font-medium hover:bg-[var(--color-brand-primary-hover)] transition-colors"
-                >
+          <div className="flex min-h-screen flex-col items-center justify-center p-4">
+            <div className="w-full max-w-md rounded-2xl border border-line bg-surface-card/80 p-8 shadow-overlay backdrop-blur-lg">
+              <div className="text-center">
+                <h1 className="text-2xl font-bold text-text-primary">Unerwarteter Fehler</h1>
+                <p className="mt-2 text-text-secondary">
+                  Entschuldigung, es ist ein unerwarteter Fehler aufgetreten. Das Problem wurde
+                  automatisch gemeldet.
+                </p>
+              </div>
+              <div className="mt-6 flex flex-col gap-3">
+                <Button onClick={resetError} variant="default" className="w-full">
                   Erneut versuchen
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => (window.location.href = "/")}
-                  className="w-full rounded-lg border border-[var(--color-border-subtle)] px-4 py-2 text-[var(--color-text-secondary)] hover:bg-[var(--surface-neumorphic-floating)] transition-colors"
+                  variant="outline"
+                  className="w-full"
                 >
                   Zur Startseite
-                </button>
+                </Button>
               </div>
               {import.meta.env.DEV && (
                 <details className="mt-6 text-left">
-                  <summary className="cursor-pointer text-sm text-[var(--color-text-tertiary)]">
+                  <summary className="cursor-pointer text-sm text-text-tertiary">
                     Fehlerdetails (nur in Entwicklung)
                   </summary>
-                  <pre className="mt-2 overflow-auto rounded bg-red-100 p-2 text-xs text-red-800">
+                  <pre className="mt-2 overflow-auto rounded-md bg-surface-muted p-3 text-xs text-text-subtle">
                     {error instanceof Error ? error.stack : String(error)}
                   </pre>
                 </details>
