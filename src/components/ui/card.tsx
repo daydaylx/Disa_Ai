@@ -219,18 +219,18 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       >
         {(title || leading || trailing || selectable || showMenu || showChevron) && (
           <CardHeader className="flex flex-row items-center gap-space-md p-space-md">
-            {/* Selection indicator */}
+            {/* Selection indicator - Enlarged for accessibility */}
             {selectable && (
               <div className="flex-shrink-0">
                 <div
                   className={cn(
-                    "h-4 w-4 rounded border-2 transition-colors",
+                    "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors",
                     selected ? "bg-accent border-accent" : "border-line hover:border-accent",
                   )}
                 >
                   {selected && (
                     <svg
-                      className="h-3 w-3 text-accent-contrast"
+                      className="h-4 w-4 text-accent-contrast"
                       fill="currentColor"
                       viewBox="0 0 12 12"
                     >
@@ -303,12 +303,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
               )}
 
               {showChevron && (
-                <ChevronRight
-                  className={cn(
-                    "h-4 w-4 text-text-secondary transition-transform",
-                    selected && "rotate-90",
-                  )}
-                />
+                <div className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-surface-muted/60">
+                  <ChevronRight
+                    className={cn(
+                      "h-5 w-5 text-text-secondary transition-transform",
+                      selected && "rotate-90",
+                    )}
+                  />
+                </div>
               )}
             </div>
           </CardHeader>

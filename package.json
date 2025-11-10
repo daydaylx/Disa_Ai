@@ -12,8 +12,9 @@
     "preview": "node ./scripts/run-preview.mjs",
     "typecheck": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
-    "lint:css": "node ./tools/check-css-hex.mjs",
+    "lint:css": "stylelint \"**/*.css\" && node ./tools/check-css-hex.mjs",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "lint:css:fix": "stylelint \"**/*.css\" --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "test": "vitest",
@@ -43,7 +44,11 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{json,md,css,scss}": [
+    "*.css": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,scss}": [
       "prettier --write"
     ]
   },
@@ -105,6 +110,10 @@
     "lint-staged": "^16.2.3",
     "playwright": "^1.55.1",
     "prettier": "^3.6.2",
+    "stylelint": "^16.25.0",
+    "stylelint-config-recess-order": "^7.4.0",
+    "stylelint-config-standard": "^39.0.1",
+    "stylelint-config-standard-scss": "^16.0.0",
     "tailwindcss": "^3.4.17",
     "ts-unused-exports": "^11.0.1",
     "typescript": "^5.9.2",
