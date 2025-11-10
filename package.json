@@ -111,7 +111,7 @@
     "vite": "^7.1.6",
     "vite-bundle-analyzer": "^1.2.3",
     "vite-plugin-pwa": "^1.0.3",
-    "vitest": "^3.2.4",
+    "vitest": "^4.0.8",
     "workbox-build": "^7.3.0",
     "workbox-core": "^7.3.0",
     "workbox-precaching": "^7.3.0",
