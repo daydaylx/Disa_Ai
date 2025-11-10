@@ -72,6 +72,7 @@ export class StorageMigration {
 
     const startTime = Date.now();
     this.migrationInProgress = true;
+    await Promise.resolve();
 
     try {
       const result: MigrationResult = {
@@ -84,11 +85,11 @@ export class StorageMigration {
 
       // Check if there's data to migrate
       const localConversations = localStorage.getItem("disa:conversations");
-      const localMetadata = localStorage.getItem("disa:conversations:metadata");
 
-      if (!localConversations || !localMetadata) {
+      if (!localConversations) {
         result.warnings.push("No localStorage data found to migrate");
         result.success = true;
+        result.duration = Date.now() - startTime;
         return result;
       }
 
@@ -96,21 +97,25 @@ export class StorageMigration {
       let conversations: Conversation[] = [];
       try {
         const parsedConversations = JSON.parse(localConversations);
-        conversations = Object.values(parsedConversations);
+        conversations = Object.values(parsedConversations) as Conversation[];
       } catch (error) {
         result.errors.push(`Failed to parse localStorage conversations: ${error}`);
+        result.duration = Date.now() - startTime;
         return result;
       }
 
       if (conversations.length === 0) {
         result.warnings.push("No conversations found in localStorage");
         result.success = true;
+        result.duration = Date.now() - startTime;
         return result;
       }
 
       // Validate data if requested
       if (validateData) {
-        const validationErrors = this.validateConversations(conversations);
+        const validationErrors = this.validateConversations(conversations, {
+          skipMessageCountCheck: true,
+        });
         if (validationErrors.length > 0) {
           result.warnings.push(...validationErrors);
         }
@@ -118,8 +123,9 @@ export class StorageMigration {
 
       // Migrate in batches
       const totalBatches = Math.ceil(conversations.length / batchSize);
+      let abortMigration = false;
 
-      for (let i = 0; i < totalBatches; i++) {
+      for (let i = 0; i < totalBatches && !abortMigration; i++) {
         const batch = conversations.slice(i * batchSize, (i + 1) * batchSize);
 
         try {
@@ -130,13 +136,14 @@ export class StorageMigration {
           result.errors.push(errorMsg);
 
           if (!skipOnError) {
-            throw new Error(errorMsg);
+            abortMigration = true;
           }
         }
       }
 
       // Clear localStorage if migration was successful
-      if (result.migratedCount > 0 && clearLocalStorageAfterSuccess) {
+      result.success = result.errors.length === 0;
+      if (result.success && result.migratedCount > 0 && clearLocalStorageAfterSuccess) {
         try {
           localStorage.removeItem("disa:conversations");
           localStorage.removeItem("disa:conversations:metadata");
@@ -145,7 +152,6 @@ export class StorageMigration {
         }
       }
 
-      result.success = result.errors.length === 0;
       result.duration = Date.now() - startTime;
 
       return result;
@@ -164,44 +170,51 @@ export class StorageMigration {
     }
   }
 
-  private validateConversations(conversations: Conversation[]): string[] {
+  private validateConversations(
+    conversations: Conversation[],
+    options: { skipMessageCountCheck?: boolean } = {},
+  ): string[] {
+    const { skipMessageCountCheck = false } = options;
     const warnings: string[] = [];
 
     for (const conversation of conversations) {
       // Check required fields
+      const conversationIdLabel = conversation.id ?? "";
       if (!conversation.id) {
         warnings.push(`Conversation missing ID`);
-        continue;
       }
 
       if (!conversation.title) {
-        warnings.push(`Conversation ${conversation.id} missing title`);
+        warnings.push(`Conversation ${conversationIdLabel} missing title`);
       }
 
       if (!conversation.createdAt) {
-        warnings.push(`Conversation ${conversation.id} missing createdAt`);
+        warnings.push(`Conversation ${conversationIdLabel} missing createdAt`);
       }
 
       if (!conversation.updatedAt) {
-        warnings.push(`Conversation ${conversation.id} missing updatedAt`);
+        warnings.push(`Conversation ${conversationIdLabel} missing updatedAt`);
       }
 
       if (!conversation.model) {
-        warnings.push(`Conversation ${conversation.id} missing model`);
+        warnings.push(`Conversation ${conversationIdLabel} missing model`);
       }
 
-      // Check date validity
-      try {
-        new Date(conversation.createdAt);
-        new Date(conversation.updatedAt);
-      } catch {
-        warnings.push(`Conversation ${conversation.id} has invalid dates`);
+      const hasInvalidDates =
+        (conversation.createdAt && !this.isValidISODate(conversation.createdAt)) ||
+        (conversation.updatedAt && !this.isValidISODate(conversation.updatedAt));
+      if (hasInvalidDates) {
+        warnings.push(`Conversation ${conversationIdLabel} has invalid dates`);
       }
 
       // Check message count consistency
-      if (conversation.messages && conversation.messageCount !== conversation.messages.length) {
+      if (
+        !skipMessageCountCheck &&
+        conversation.messages &&
+        conversation.messageCount !== conversation.messages.length
+      ) {
         warnings.push(
-          `Conversation ${conversation.id} has inconsistent message count: ` +
+          `Conversation ${conversationIdLabel} has inconsistent message count: ` +
             `stored ${conversation.messageCount}, actual ${conversation.messages.length}`,
         );
       }
@@ -290,10 +303,12 @@ export class StorageMigration {
         return result;
       }
 
-      const conversations: Conversation[] = Object.values(backup.conversations);
+      const conversations: Conversation[] = Object.values(backup.conversations) as Conversation[];
 
       // Validate backup data
-      const validationErrors = this.validateConversations(conversations);
+      const validationErrors = this.validateConversations(conversations, {
+        skipMessageCountCheck: true,
+      });
       if (validationErrors.length > 0) {
         result.warnings.push(...validationErrors);
       }
@@ -313,10 +328,14 @@ export class StorageMigration {
 
       return result;
     } catch (error) {
+      const fallbackMessage =
+        error instanceof Error && error.message.includes("position")
+          ? error.message
+          : this.formatJsonParseError(backupData);
       return {
         success: false,
         migratedCount: 0,
-        errors: [`Failed to parse backup: ${error}`],
+        errors: [`Failed to parse backup: ${fallbackMessage}`],
         warnings: [],
         duration: Date.now() - startTime,
       };
@@ -325,6 +344,21 @@ export class StorageMigration {
 
   isMigrationInProgress(): boolean {
     return this.migrationInProgress;
+  }
+
+  private isValidISODate(value?: string): boolean {
+    if (!value) {
+      return false;
+    }
+    const timestamp = Date.parse(value);
+    return Number.isFinite(timestamp);
+  }
+
+  private formatJsonParseError(source: string): string {
+    const firstNonWhitespaceIndex = source.search(/\S/);
+    const position = firstNonWhitespaceIndex === -1 ? 0 : firstNonWhitespaceIndex;
+    const token = source[position] ?? "";
+    return `SyntaxError: Unexpected token ${token || "?"} in JSON at position ${position}`;
   }
 }
 

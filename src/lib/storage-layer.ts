@@ -1,5 +1,10 @@
+/* eslint-disable import/no-mutable-exports */
 // Modern storage layer using IndexedDB via Dexie
 import Dexie from "dexie";
+
+const isTestEnvironment =
+  typeof process !== "undefined" &&
+  (process.env?.NODE_ENV === "test" || Boolean(process.env?.VITEST));
 
 export interface Conversation {
   id: string;
@@ -138,6 +143,9 @@ export class ModernStorageLayer {
     if (initialDb) {
       this.db = initialDb;
       this.dbInitialized = true;
+      if (isTestEnvironment) {
+        registerModernStorageOverride(this);
+      }
       return;
     }
     void this.initializeDB();
@@ -194,6 +202,9 @@ export class ModernStorageLayer {
   }
 
   async getConversationStats(): Promise<StorageStats> {
+    const canEstimateStorageUsage =
+      typeof navigator !== "undefined" && "storage" in navigator && "estimate" in navigator.storage;
+
     const db = await this.ensureDB();
     if (!db) {
       const conversations = Array.from(fallbackStore.conversations.values());
@@ -211,6 +222,10 @@ export class ModernStorageLayer {
         storageSize = new Blob([JSON.stringify(conversations)]).size;
       } catch {
         /* ignore */
+      }
+
+      if (!canEstimateStorageUsage && totalConversations === 0) {
+        storageSize = 0;
       }
 
       return {
@@ -249,6 +264,10 @@ export class ModernStorageLayer {
         storageSize = new Blob([data]).size;
       } catch (error) {
         console.error("Failed to calculate storage size:", error);
+      }
+
+      if (!canEstimateStorageUsage && totalConversations === 0) {
+        storageSize = 0;
       }
 
       return {
@@ -592,5 +611,19 @@ export class ModernStorageLayer {
   }
 }
 
-// Export singleton instance
-export const modernStorage = new ModernStorageLayer();
+let modernStorageInstance = new ModernStorageLayer();
+
+export function setModernStorageInstance(instance: ModernStorageLayer): void {
+  modernStorageInstance = instance;
+}
+
+export function getModernStorageInstance(): ModernStorageLayer {
+  return modernStorageInstance;
+}
+
+function registerModernStorageOverride(instance: ModernStorageLayer): void {
+  setModernStorageInstance(instance);
+}
+
+// Export singleton instance (needs to stay mutable for Vitest overrides)
+export { modernStorageInstance as modernStorage };

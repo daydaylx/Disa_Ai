@@ -33,10 +33,10 @@ const buttonVariants = cva(
           "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-primary)] shadow-neo-sm hover:shadow-neo-md",
       },
       size: {
-        sm: "h-11 px-3 py-2 text-sm", // 44px height
-        default: "h-11 px-4 py-2.5 text-sm", // 44px height
-        lg: "h-14 px-6 py-3.5 text-base", // 56px height
-        icon: "h-11 w-11", // 44px square
+        sm: "h-9 px-3 py-1.5 text-sm", // 36px height for compact controls
+        default: "h-10 px-4 py-2 text-sm", // 40px height default
+        lg: "h-12 px-6 py-3 text-base", // 48px height for prominent CTAs
+        icon: "h-10 w-10", // 40px square to match default height
       },
       dramatic: {
         false: "",
