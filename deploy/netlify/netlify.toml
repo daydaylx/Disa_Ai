@@ -5,6 +5,22 @@
 [build.environment]
   NODE_VERSION = "20"
   NPM_VERSION = "10"
+  VITE_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+  VITE_BASE_URL = "/"
+  VITE_ENABLE_ANALYTICS = "false"
+  VITE_ENABLE_DEBUG = "false"
+  VITE_ENABLE_PWA = "true"
+  VITE_ENV = "production"
+  VITE_SENTRY_DSN = ""
+  VITE_BUILD_ID = ""
+  VITE_BUILD_TIME = ""
+  VITE_BUILD_TIMESTAMP = ""
+  VITE_GIT_SHA = ""
+  VITE_GIT_BRANCH = ""
+  VITE_VERSION = ""
+  SENTRY_ORG = "disa-ai"
+  SENTRY_PROJECT = "disa-ai-web"
+  SENTRY_AUTH_TOKEN = ""
 
 # SPA routing - redirect all requests to index.html
 [[redirects]]
