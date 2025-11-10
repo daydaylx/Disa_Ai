@@ -6,7 +6,23 @@
     "root_dir": ".",
     "environment_variables": {
       "NODE_VERSION": "20.19",
-      "CF_PAGES": "true"
+      "CF_PAGES": "true",
+      "VITE_OPENROUTER_BASE_URL": "https://openrouter.ai/api/v1",
+      "VITE_BASE_URL": "/",
+      "VITE_ENABLE_ANALYTICS": "false",
+      "VITE_ENABLE_DEBUG": "false",
+      "VITE_ENABLE_PWA": "true",
+      "VITE_ENV": "production",
+      "VITE_SENTRY_DSN": "",
+      "VITE_BUILD_ID": "",
+      "VITE_BUILD_TIME": "",
+      "VITE_BUILD_TIMESTAMP": "",
+      "VITE_GIT_SHA": "",
+      "VITE_GIT_BRANCH": "",
+      "VITE_VERSION": "",
+      "SENTRY_ORG": "disa-ai",
+      "SENTRY_PROJECT": "disa-ai-web",
+      "SENTRY_AUTH_TOKEN": ""
     }
   },
   "preview": {

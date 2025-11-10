@@ -218,6 +218,7 @@ Die Anwendung ist hochgradig konfigurierbar, um Flexibilität und einfache Wartu
   - **Validierung mit Zod**: Ein `zod`-Schema definiert, welche Variablen erwartet werden, welchen Typ sie haben und was ihre Standardwerte sind.
   - **Typensicherheit**: Nach der Validierung steht ein stark typisiertes `EnvConfig`-Objekt zur Verfügung.
   - **Beispiele**: `VITE_OPENROUTER_BASE_URL`, `VITE_ENABLE_ANALYTICS` (wird von einem String zu einem Boolean transformiert), `VITE_BUILD_ID`.
+  - **Vollständige Übersicht**: Alle aktuell ausgewerteten Variablen (inkl. Build- und Tooling-Flags) sind in [`docs/ENVIRONMENT_VARIABLES.md`](docs/ENVIRONMENT_VARIABLES.md) dokumentiert.
 
 - **Feature Flags (`src/config/featureFlags.ts`)**
   Ermöglicht das Umschalten von Funktionen zur Laufzeit, ohne einen neuen Build zu benötigen. Die Zustände werden im `localStorage` gespeichert und können von Entwicklern manuell geändert werden.
