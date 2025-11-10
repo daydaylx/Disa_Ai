@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
+import { Header } from "../../components/layout/Header";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
@@ -87,6 +88,9 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       >
         Zum Hauptinhalt springen
       </a>
+
+      {/* Aurora Header */}
+      <Header />
 
       {isMobile ? (
         <div className="border-b border-line-subtle bg-surface-base px-4 py-3">

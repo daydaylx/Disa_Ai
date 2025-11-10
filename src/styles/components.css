@@ -28,4 +28,91 @@
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
   }
+
+  /* Aurora Animations */
+  @keyframes aurora-flow {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+      transform: translate(5%, -2%) rotate(1deg) scale(1.02);
+    }
+    50% {
+      transform: translate(-3%, 3%) rotate(-0.5deg) scale(0.98);
+    }
+    75% {
+      transform: translate(-2%, -1%) rotate(0.8deg) scale(1.01);
+    }
+  }
+
+  @keyframes aurora-glow {
+    0%,
+    100% {
+      opacity: 0.6;
+      filter: brightness(1) contrast(1);
+    }
+    50% {
+      opacity: 0.8;
+      filter: brightness(1.1) contrast(1.05);
+    }
+  }
+
+  @keyframes aurora-shimmer {
+    0% {
+      transform: translateX(-100%) skewX(-15deg);
+    }
+    100% {
+      transform: translateX(200%) skewX(-15deg);
+    }
+  }
+
+  /* Aurora Animation Classes */
+  .aurora-animated .brand-aurora::before {
+    animation:
+      aurora-flow 20s ease-in-out infinite,
+      aurora-glow 8s ease-in-out infinite;
+  }
+
+  .aurora-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .aurora-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsla(var(--brand-4), 0.3) 50%,
+      transparent 100%
+    );
+    animation: aurora-shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .aurora-pulse {
+    animation: aurora-glow 4s ease-in-out infinite;
+  }
+
+  /* Hover Effects */
+  .brand-aurora:hover::before {
+    opacity: 0.75;
+    transition: opacity 0.3s ease-out;
+  }
+
+  .aurora-button-glow {
+    position: relative;
+    transition: all 0.3s ease-out;
+  }
+
+  .aurora-button-glow:hover {
+    box-shadow:
+      0 0 20px hsl(var(--brand-2) / 0.4),
+      0 0 40px hsl(var(--brand-1) / 0.2),
+      var(--shadow-md);
+    transform: translateY(-1px);
+  }
 }

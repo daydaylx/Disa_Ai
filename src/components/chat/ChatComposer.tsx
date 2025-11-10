@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { useVisualViewport } from "../../hooks/useVisualViewport";
 import { RotateCcw, Send, Square, Zap } from "../../lib/icons";
 import { cn } from "../../lib/utils";
-import { Button } from "../ui/button";
+import { AuroraButton } from "../ui/aurora-button";
 import { Textarea } from "../ui/textarea";
 
 interface ChatComposerProps {
@@ -161,7 +161,7 @@ export function ChatComposer({
 
           <div className="flex items-center gap-2">
             {shouldShowRetry && (
-              <Button
+              <AuroraButton
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
@@ -170,11 +170,11 @@ export function ChatComposer({
                 aria-label="Letzte Antwort erneut anfordern"
               >
                 <RotateCcw className="h-5 w-5" />
-              </Button>
+              </AuroraButton>
             )}
 
             {shouldShowStop && (
-              <Button
+              <AuroraButton
                 onClick={handleStop}
                 size="icon"
                 variant="destructive"
@@ -184,11 +184,11 @@ export function ChatComposer({
                 data-testid="composer-stop"
               >
                 <Square className="h-5 w-5" />
-              </Button>
+              </AuroraButton>
             )}
 
             {shouldShowSend && (
-              <Button
+              <AuroraButton
                 onClick={handleSend}
                 size="icon"
                 variant="accent"
@@ -199,7 +199,7 @@ export function ChatComposer({
                 data-testid="composer-send"
               >
                 <Send className="h-5 w-5" />
-              </Button>
+              </AuroraButton>
             )}
 
             {!shouldShowRetry && !shouldShowStop && !shouldShowSend && (
