@@ -1,5 +1,3 @@
-import React from "react";
-
 export function Header() {
   return (
     <header className="sticky top-0 z-[var(--z-header)] brand-aurora">
