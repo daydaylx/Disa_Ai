@@ -1,4 +1,7 @@
 import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
+import "./styles/tokens.css";
+import "./styles/base.css";
+import "./styles/components.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
