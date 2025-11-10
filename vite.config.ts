@@ -106,6 +106,8 @@ export default defineConfig(({ mode }) => {
         : []),
       // Progressive PWA with Service Worker
       VitePWA({
+        // Disable auto-injected register script, we register manually in the app
+        injectRegister: null,
         registerType: "autoUpdate",
         workbox: {
           globPatterns: ["**/*.{js,css,html,ico,png,svg,webmanifest}"],

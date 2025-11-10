@@ -87,18 +87,3 @@ export function BuildInfo({ className = "", showFullInfo = false }: BuildInfoPro
     </div>
   );
 }
-
-// Hook für programmatische Build-Info
-export function useBuildInfo() {
-  return {
-    buildId: BUILD_ID,
-    gitSha: GIT_SHA,
-    gitBranch: GIT_BRANCH,
-    buildTime: BUILD_TIME,
-    formatted: {
-      buildId: formatBuildId(BUILD_ID),
-      sha: formatCommitSha(GIT_SHA),
-      time: formatBuildTime(BUILD_TIME),
-    },
-  };
-}

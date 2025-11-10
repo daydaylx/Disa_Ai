@@ -24,16 +24,26 @@ vi.mock("dexie", () => {
       bulkDelete: vi.fn(),
       clear: vi.fn(),
     },
-    transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
-      return Promise.resolve(callback());
+    transaction: vi.fn().mockImplementation((...args) => {
+      // Dexie transaction takes (mode, table1, table2, ..., callback)
+      const callback = args[args.length - 1];
+      if (typeof callback === "function") {
+        return Promise.resolve(callback());
+      }
+      return Promise.resolve();
     }),
     open: vi.fn().mockResolvedValue(undefined),
     close: vi.fn(),
     version: vi.fn().mockReturnValue(mockVersion),
   };
 
+  const MockDexieClass = vi.fn().mockImplementation(() => mockDb);
+  // Mark as mock so isDexieMock detection works
+  MockDexieClass._isMockFunction = true;
+
   return {
-    default: vi.fn().mockImplementation(() => mockDb),
+    default: MockDexieClass,
+    Table: vi.fn(),
   };
 });
 
@@ -45,34 +55,60 @@ describe("Storage Performance Tests", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockDb = {
-      conversations: {
-        put: vi.fn(),
-        get: vi.fn(),
-        delete: vi.fn(),
-        toArray: vi.fn(),
-        bulkDelete: vi.fn(),
-        clear: vi.fn(),
-        filter: vi.fn().mockReturnThis(),
-        orderBy: vi.fn().mockReturnThis(),
-        reverse: vi.fn().mockReturnThis(),
-      },
-      metadata: {
-        put: vi.fn(),
-        bulkDelete: vi.fn(),
-        clear: vi.fn(),
-      },
-      transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
-        return Promise.resolve(callback());
-      }),
-      open: vi.fn().mockResolvedValue(undefined),
-      close: vi.fn(),
-    };
-
-    const Dexie = vi.mocked(require("dexie").default);
-    Dexie.mockImplementation(() => mockDb);
-
+    vi.unstubAllGlobals();
     storage = new ModernStorageLayer();
+    // Access the mock database through the private property
+    mockDb = (storage as any).db;
+
+    // If db is null (fallback mode), create a mock database for tests
+    if (!mockDb) {
+      mockDb = {
+        conversations: {
+          put: vi.fn().mockResolvedValue(undefined),
+          get: vi.fn().mockResolvedValue(null),
+          delete: vi.fn().mockResolvedValue(undefined),
+          clear: vi.fn().mockResolvedValue(undefined),
+          bulkDelete: vi.fn().mockResolvedValue(undefined),
+          toArray: vi.fn().mockResolvedValue([]),
+          filter: vi.fn().mockReturnThis(),
+          orderBy: vi.fn().mockReturnThis(),
+          reverse: vi.fn().mockReturnThis(),
+        },
+        metadata: {
+          put: vi.fn().mockResolvedValue(undefined),
+          delete: vi.fn().mockResolvedValue(undefined),
+          clear: vi.fn().mockResolvedValue(undefined),
+          bulkDelete: vi.fn().mockResolvedValue(undefined),
+          orderBy: vi.fn().mockReturnThis(),
+          reverse: vi.fn().mockReturnThis(),
+          toArray: vi.fn().mockResolvedValue([]),
+        },
+        transaction: vi.fn().mockImplementation((...args) => {
+          const callback = args[args.length - 1];
+          if (typeof callback === "function") {
+            return Promise.resolve(callback());
+          }
+          return Promise.resolve();
+        }),
+      };
+      // Force set the mock db
+      (storage as any).db = mockDb;
+    } else {
+      // Reset all mock implementations to their default resolved state
+      mockDb.conversations.put.mockResolvedValue(undefined);
+      mockDb.conversations.get.mockResolvedValue(null);
+      mockDb.conversations.delete.mockResolvedValue(undefined);
+      mockDb.conversations.clear.mockResolvedValue(undefined);
+      mockDb.conversations.bulkDelete.mockResolvedValue(undefined);
+      mockDb.conversations.toArray.mockResolvedValue([]);
+
+      if (mockDb.metadata.delete) {
+        mockDb.metadata.put.mockResolvedValue(undefined);
+        mockDb.metadata.delete.mockResolvedValue(undefined);
+        mockDb.metadata.clear.mockResolvedValue(undefined);
+        mockDb.metadata.bulkDelete.mockResolvedValue(undefined);
+      }
+    }
   });
 
   describe("Large Conversation Performance", () => {

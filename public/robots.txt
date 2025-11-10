@@ -24,7 +24,7 @@ Disallow: /node_modules/
 Disallow: /sw.js
 
 # Sitemap verweis
-Sitemap: https://disa-ai.pages.dev/sitemap.xml
+Sitemap: https://disaai.de/sitemap.xml
 
 # Crawl-Delay (höflich zu Servern)
 Crawl-delay: 1

@@ -52,29 +52,170 @@ interface DisaDB extends Dexie {
   metadata: Dexie.Table<ConversationMetadata, string>;
 }
 
-const db = new Dexie("DisaAI") as DisaDB;
+const supportsIndexedDB = (() => {
+  try {
+    const globalRef = globalThis as any;
+    return Boolean(globalRef?.indexedDB || globalRef?.window?.indexedDB);
+  } catch {
+    return false;
+  }
+})();
 
-// Define schema
-db.version(1).stores({
-  conversations: "id, title, createdAt, updatedAt, lastActivity, model, messageCount, isFavorite",
-  metadata: "id, title, createdAt, updatedAt, model, messageCount",
-});
+const isDexieMock = (() => {
+  const candidate = Dexie as unknown as { _isMockFunction?: boolean; mock?: unknown };
+  return Boolean(candidate && (candidate._isMockFunction || candidate.mock));
+})();
 
-// Initialize database
-db.open().catch((err) => {
-  console.error("Failed to open IndexedDB:", err);
-});
+const persistentStorage = (() => {
+  try {
+    const globalRef = globalThis as any;
+    const storage: Storage | undefined = globalRef?.localStorage ?? globalRef?.sessionStorage;
+    if (!storage) return null;
+    const testKey = "__disa_storage_probe__";
+    storage.setItem(testKey, "ok");
+    storage.removeItem(testKey);
+    return storage;
+  } catch {
+    return null;
+  }
+})();
+
+const FALLBACK_CONVERSATIONS_KEY = "disa:fallback:conversations";
+const FALLBACK_METADATA_KEY = "disa:fallback:metadata";
+
+const fallbackStore = {
+  conversations: new Map<string, Conversation>(),
+  metadata: new Map<string, ConversationMetadata>(),
+};
+
+function loadFallbackStore() {
+  if (!persistentStorage) return;
+  try {
+    const convRaw = persistentStorage.getItem(FALLBACK_CONVERSATIONS_KEY);
+    if (convRaw) {
+      const parsed = JSON.parse(convRaw) as Record<string, Conversation>;
+      Object.entries(parsed).forEach(([id, conv]) => fallbackStore.conversations.set(id, conv));
+    }
+    const metaRaw = persistentStorage.getItem(FALLBACK_METADATA_KEY);
+    if (metaRaw) {
+      const parsedMeta = JSON.parse(metaRaw) as Record<string, ConversationMetadata>;
+      Object.entries(parsedMeta).forEach(([id, meta]) => fallbackStore.metadata.set(id, meta));
+    }
+  } catch (error) {
+    console.warn("Failed to read fallback conversation storage:", error);
+  }
+}
+
+function persistFallbackStore() {
+  if (!persistentStorage) return;
+  try {
+    const convObj: Record<string, Conversation> = {};
+    fallbackStore.conversations.forEach((value, key) => {
+      convObj[key] = value;
+    });
+    persistentStorage.setItem(FALLBACK_CONVERSATIONS_KEY, JSON.stringify(convObj));
+
+    const metaObj: Record<string, ConversationMetadata> = {};
+    fallbackStore.metadata.forEach((value, key) => {
+      metaObj[key] = value;
+    });
+    persistentStorage.setItem(FALLBACK_METADATA_KEY, JSON.stringify(metaObj));
+  } catch (error) {
+    console.warn("Failed to persist fallback conversation storage:", error);
+  }
+}
+
+if (persistentStorage) {
+  loadFallbackStore();
+}
 
 export class ModernStorageLayer {
-  private db: DisaDB;
+  private db: DisaDB | null = null;
+  private dbInitialized: boolean = false;
+  private dbInitializationPromise: Promise<DisaDB | null> | null = null;
 
   constructor() {
-    this.db = db;
+    // DB initialization is now lazy and asynchronous
+  }
+
+  private async initializeDB(): Promise<DisaDB | null> {
+    if (this.dbInitialized) {
+      return this.db;
+    }
+
+    if (this.dbInitializationPromise) {
+      return this.dbInitializationPromise;
+    }
+
+    this.dbInitializationPromise = this.performDBInitialization();
+    const result = await this.dbInitializationPromise;
+    this.db = result;
+    this.dbInitialized = true;
+    return result;
+  }
+
+  private async performDBInitialization(): Promise<DisaDB | null> {
+    if (!supportsIndexedDB && !isDexieMock) {
+      console.warn("[Storage] IndexedDB not available, falling back to memory/localStorage.");
+      return null;
+    }
+
+    try {
+      const database = new Dexie("DisaAI") as DisaDB;
+      database.version(1).stores({
+        conversations:
+          "id, title, createdAt, updatedAt, lastActivity, model, messageCount, isFavorite",
+        metadata: "id, title, createdAt, updatedAt, model, messageCount",
+      });
+
+      // Asynchronously open with proper error handling
+      await database.open();
+      console.log("[Storage] IndexedDB initialized successfully");
+      return database;
+    } catch (error) {
+      console.warn("[Storage] Failed to initialize IndexedDB, falling back to memory:", error);
+      return null;
+    }
+  }
+
+  private async ensureDB(): Promise<DisaDB | null> {
+    if (!this.dbInitialized) {
+      await this.initializeDB();
+    }
+    return this.db;
   }
 
   async getConversationStats(): Promise<StorageStats> {
+    const db = await this.ensureDB();
+    if (!db) {
+      const conversations = Array.from(fallbackStore.conversations.values());
+      const totalConversations = conversations.length;
+      const totalMessages = conversations.reduce(
+        (count, conv) => count + (conv.messages?.length ?? 0),
+        0,
+      );
+      const modelsUsed = Array.from(new Set(conversations.map((conv) => conv.model)));
+      const averageMessagesPerConversation =
+        totalConversations > 0 ? totalMessages / totalConversations : 0;
+
+      let storageSize = 0;
+      try {
+        storageSize = new Blob([JSON.stringify(conversations)]).size;
+      } catch {
+        /* ignore */
+      }
+
+      return {
+        totalConversations,
+        totalMessages,
+        averageMessagesPerConversation,
+        modelsUsed,
+        storageSize,
+      };
+    }
+
     try {
-      const conversations = await this.db.conversations.toArray();
+      const conversations = await db.conversations.toArray();
       const totalConversations = conversations.length;
 
       let totalMessages = 0;
@@ -122,8 +263,15 @@ export class ModernStorageLayer {
   }
 
   async getAllConversations(): Promise<ConversationMetadata[]> {
+    const db = await this.ensureDB();
+    if (!db) {
+      return Array.from(fallbackStore.metadata.values()).sort(
+        (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      );
+    }
+
     try {
-      return await this.db.metadata.orderBy("updatedAt").reverse().toArray();
+      return await db.metadata.orderBy("updatedAt").reverse().toArray();
     } catch (error) {
       console.error("Failed to get all conversations:", error);
       return [];
@@ -131,8 +279,13 @@ export class ModernStorageLayer {
   }
 
   async getConversation(id: string): Promise<Conversation | null> {
+    const db = await this.ensureDB();
+    if (!db) {
+      return fallbackStore.conversations.get(id) ?? null;
+    }
+
     try {
-      return (await this.db.conversations.get(id)) || null;
+      return (await db.conversations.get(id)) || null;
     } catch (error) {
       console.error(`Failed to get conversation ${id}:`, error);
       return null;
@@ -140,13 +293,28 @@ export class ModernStorageLayer {
   }
 
   async saveConversation(conversation: Conversation): Promise<void> {
+    const db = await this.ensureDB();
+    if (!db) {
+      fallbackStore.conversations.set(conversation.id, conversation);
+      fallbackStore.metadata.set(conversation.id, {
+        id: conversation.id,
+        title: conversation.title,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt,
+        model: conversation.model,
+        messageCount: conversation.messageCount,
+      });
+      persistFallbackStore();
+      return;
+    }
+
     try {
-      await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
+      await db.transaction("rw", db.conversations, db.metadata, async () => {
         // Save full conversation
-        await this.db.conversations.put(conversation);
+        await db.conversations.put(conversation);
 
         // Save metadata
-        await this.db.metadata.put({
+        await db.metadata.put({
           id: conversation.id,
           title: conversation.title,
           createdAt: conversation.createdAt,
@@ -162,10 +330,18 @@ export class ModernStorageLayer {
   }
 
   async deleteConversation(id: string): Promise<void> {
+    const db = await this.ensureDB();
+    if (!db) {
+      fallbackStore.conversations.delete(id);
+      fallbackStore.metadata.delete(id);
+      persistFallbackStore();
+      return;
+    }
+
     try {
-      await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
-        await this.db.conversations.delete(id);
-        await this.db.metadata.delete(id);
+      await db.transaction("rw", db.conversations, db.metadata, async () => {
+        await db.conversations.delete(id);
+        await db.metadata.delete(id);
       });
     } catch (error) {
       console.error(`Failed to delete conversation ${id}:`, error);
@@ -174,11 +350,34 @@ export class ModernStorageLayer {
   }
 
   async cleanupOldConversations(days: number): Promise<number> {
+    const db = await this.ensureDB();
+    if (!db) {
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - days);
+
+      const idsToDelete: string[] = [];
+      fallbackStore.conversations.forEach((conv, id) => {
+        const lastActivity = conv.lastActivity || conv.updatedAt;
+        if (new Date(lastActivity) < cutoffDate) {
+          idsToDelete.push(id);
+        }
+      });
+
+      idsToDelete.forEach((id) => {
+        fallbackStore.conversations.delete(id);
+        fallbackStore.metadata.delete(id);
+      });
+      if (idsToDelete.length > 0) {
+        persistFallbackStore();
+      }
+      return idsToDelete.length;
+    }
+
     try {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - days);
 
-      const oldConversations = await this.db.conversations
+      const oldConversations = await db.conversations
         .filter((conv) => {
           const lastActivity = conv.lastActivity || conv.updatedAt;
           return new Date(lastActivity) < cutoffDate;
@@ -188,9 +387,9 @@ export class ModernStorageLayer {
       const idsToDelete = oldConversations.map((conv) => conv.id);
 
       if (idsToDelete.length > 0) {
-        await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
-          await this.db.conversations.bulkDelete(idsToDelete);
-          await this.db.metadata.bulkDelete(idsToDelete);
+        await db.transaction("rw", db.conversations, db.metadata, async () => {
+          await db.conversations.bulkDelete(idsToDelete);
+          await db.metadata.bulkDelete(idsToDelete);
         });
       }
 
@@ -202,8 +401,22 @@ export class ModernStorageLayer {
   }
 
   async exportConversations(): Promise<ExportData> {
+    const db = await this.ensureDB();
+    if (!db) {
+      const conversations = Array.from(fallbackStore.conversations.values());
+      return {
+        version: "2.0",
+        metadata: {
+          exportedAt: new Date().toISOString(),
+          totalConversations: conversations.length,
+          appVersion: "2.0.0",
+        },
+        conversations,
+      };
+    }
+
     try {
-      const conversations = await this.db.conversations.toArray();
+      const conversations = await db.conversations.toArray();
 
       return {
         version: "2.0",
@@ -232,24 +445,61 @@ export class ModernStorageLayer {
     data: ExportData,
     options: { overwrite?: boolean; merge?: boolean },
   ): Promise<ImportResult> {
+    const db = await this.ensureDB();
+    if (!db) {
+      let importedCount = 0;
+      const errors: string[] = [];
+
+      for (const conversation of data.conversations) {
+        try {
+          const exists = fallbackStore.conversations.get(conversation.id);
+          if (exists && !options.overwrite && !options.merge) {
+            continue;
+          }
+          fallbackStore.conversations.set(conversation.id, conversation);
+          fallbackStore.metadata.set(conversation.id, {
+            id: conversation.id,
+            title: conversation.title,
+            createdAt: conversation.createdAt,
+            updatedAt: conversation.updatedAt,
+            model: conversation.model,
+            messageCount: conversation.messageCount,
+          });
+          importedCount++;
+        } catch (error) {
+          errors.push(`Failed to import conversation ${conversation.id}: ${error}`);
+        }
+      }
+
+      if (importedCount > 0) {
+        persistFallbackStore();
+      }
+
+      return {
+        success: errors.length === 0,
+        importedCount,
+        errors,
+      };
+    }
+
     try {
       let importedCount = 0;
       const errors: string[] = [];
 
-      await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
+      await db.transaction("rw", db.conversations, db.metadata, async () => {
         for (const conversation of data.conversations) {
           try {
-            const exists = await this.db.conversations.get(conversation.id);
+            const exists = await db.conversations.get(conversation.id);
 
             if (exists && !options.overwrite && !options.merge) {
               continue; // Skip existing conversations
             }
 
             // Save conversation
-            await this.db.conversations.put(conversation);
+            await db.conversations.put(conversation);
 
             // Save metadata
-            await this.db.metadata.put({
+            await db.metadata.put({
               id: conversation.id,
               title: conversation.title,
               createdAt: conversation.createdAt,
@@ -281,10 +531,18 @@ export class ModernStorageLayer {
   }
 
   async clearAllData(): Promise<void> {
+    const db = await this.ensureDB();
+    if (!db) {
+      fallbackStore.conversations.clear();
+      fallbackStore.metadata.clear();
+      persistFallbackStore();
+      return;
+    }
+
     try {
-      await this.db.transaction("rw", this.db.conversations, this.db.metadata, async () => {
-        await this.db.conversations.clear();
-        await this.db.metadata.clear();
+      await db.transaction("rw", db.conversations, db.metadata, async () => {
+        await db.conversations.clear();
+        await db.metadata.clear();
       });
     } catch (error) {
       console.error("Failed to clear all data:", error);
@@ -293,7 +551,24 @@ export class ModernStorageLayer {
   }
 
   async getStorageUsage(): Promise<{ used: number; quota: number }> {
-    if ("storage" in navigator && "estimate" in navigator.storage) {
+    const db = await this.ensureDB();
+    if (!db) {
+      try {
+        const data = JSON.stringify(Array.from(fallbackStore.conversations.values()));
+        return {
+          used: new Blob([data]).size,
+          quota: persistentStorage ? 5 * 1024 * 1024 : 0, // assume 5MB if localStorage exists
+        };
+      } catch {
+        return { used: 0, quota: persistentStorage ? 5 * 1024 * 1024 : 0 };
+      }
+    }
+
+    if (
+      typeof navigator !== "undefined" &&
+      "storage" in navigator &&
+      "estimate" in navigator.storage
+    ) {
       try {
         const estimate = await navigator.storage.estimate();
         return {

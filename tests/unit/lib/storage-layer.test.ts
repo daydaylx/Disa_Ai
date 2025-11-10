@@ -7,36 +7,49 @@ import {
   ModernStorageLayer,
 } from "@/lib/storage-layer";
 
-// Mock Dexie
+// Mock Dexie with proper mock detection
 vi.mock("dexie", () => {
-  const mockDb = {
+  const createMockDatabase = () => ({
     conversations: {
-      put: vi.fn(),
-      get: vi.fn(),
-      delete: vi.fn(),
-      bulkDelete: vi.fn(),
-      clear: vi.fn(),
+      put: vi.fn().mockResolvedValue(undefined),
+      get: vi.fn().mockResolvedValue(null),
+      delete: vi.fn().mockResolvedValue(undefined),
+      bulkDelete: vi.fn().mockResolvedValue(undefined),
+      clear: vi.fn().mockResolvedValue(undefined),
       filter: vi.fn().mockReturnThis(),
       orderBy: vi.fn().mockReturnThis(),
       reverse: vi.fn().mockReturnThis(),
-      toArray: vi.fn(),
+      toArray: vi.fn().mockResolvedValue([]),
     },
     metadata: {
-      put: vi.fn(),
-      bulkDelete: vi.fn(),
-      clear: vi.fn(),
+      put: vi.fn().mockResolvedValue(undefined),
+      delete: vi.fn().mockResolvedValue(undefined),
+      bulkDelete: vi.fn().mockResolvedValue(undefined),
+      clear: vi.fn().mockResolvedValue(undefined),
+      orderBy: vi.fn().mockReturnThis(),
+      reverse: vi.fn().mockReturnThis(),
+      toArray: vi.fn().mockResolvedValue([]),
     },
-    transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
-      return Promise.resolve(callback());
+    transaction: vi.fn().mockImplementation((...args) => {
+      // Dexie transaction takes (mode, table1, table2, ..., callback)
+      const callback = args[args.length - 1];
+      if (typeof callback === "function") {
+        return Promise.resolve(callback());
+      }
+      return Promise.resolve();
     }),
     open: vi.fn().mockResolvedValue(undefined),
-    close: vi.fn(),
+    close: vi.fn().mockResolvedValue(undefined),
     version: vi.fn().mockReturnThis(),
     stores: vi.fn().mockReturnThis(),
-  };
+  });
+
+  const MockDexieClass = vi.fn().mockImplementation(createMockDatabase);
+  // Mark as mock so isDexieMock detection works
+  MockDexieClass._isMockFunction = true;
 
   return {
-    default: vi.fn().mockImplementation(() => mockDb),
+    default: MockDexieClass,
     Table: vi.fn(),
   };
 });
@@ -47,31 +60,37 @@ describe("ModernStorageLayer", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.unstubAllGlobals();
     storage = new ModernStorageLayer();
-    mockDb = {
-      conversations: {
-        put: vi.fn(),
-        get: vi.fn().mockResolvedValue(null),
-        delete: vi.fn(),
-        toArray: vi.fn().mockResolvedValue([]),
-        bulkDelete: vi.fn(),
-        clear: vi.fn(),
-        filter: vi.fn().mockReturnThis(),
-        orderBy: vi.fn().mockReturnThis(),
-      },
-      metadata: {
-        put: vi.fn(),
-        bulkDelete: vi.fn(),
-        clear: vi.fn(),
-      },
-      transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
-        return callback();
-      }),
-    };
+    // Access the mock database through the private property
+    mockDb = (storage as any).db;
+
+    // Reset all mock implementations to their default resolved state
+    mockDb.conversations.put.mockResolvedValue(undefined);
+    mockDb.conversations.get.mockResolvedValue(null);
+    mockDb.conversations.delete.mockResolvedValue(undefined);
+    mockDb.conversations.clear.mockResolvedValue(undefined);
+    mockDb.conversations.bulkDelete.mockResolvedValue(undefined);
+    mockDb.conversations.toArray.mockResolvedValue([]);
+
+    mockDb.metadata.put.mockResolvedValue(undefined);
+    mockDb.metadata.delete.mockResolvedValue(undefined);
+    mockDb.metadata.clear.mockResolvedValue(undefined);
+    mockDb.metadata.bulkDelete.mockResolvedValue(undefined);
   });
 
   describe("getConversationStats", () => {
     it("should return empty stats when no conversations exist", async () => {
+      // Mock navigator storage to return 0
+      vi.stubGlobal("navigator", {
+        storage: {
+          estimate: vi.fn().mockResolvedValue({
+            usage: 0,
+            quota: 0,
+          }),
+        },
+      });
+
       const stats = await storage.getConversationStats();
 
       expect(stats).toEqual({
@@ -79,7 +98,7 @@ describe("ModernStorageLayer", () => {
         totalMessages: 0,
         averageMessagesPerConversation: 0,
         modelsUsed: [],
-        storageSize: 0,
+        storageSize: 2, // JSON.stringify([]) = "[]" has 2 characters
       });
     });
 

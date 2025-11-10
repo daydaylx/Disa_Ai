@@ -35,7 +35,7 @@ git push
 
 ```bash
 # 1. Funktionalität testen
-curl -I https://disa-ai.pages.dev/
+curl -I https://disaai.de/
 # HTTP/1.1 200 OK
 
 # 2. Core Feature testen
@@ -218,11 +218,11 @@ echo "Entry Bundle: $((ENTRY_SIZE / 1024)) KB"  # Sollte <300KB
 ### Health Check Endpoints
 ```bash
 # 1. Basic Health Check
-curl https://disa-ai.pages.dev/
+curl https://disaai.de/
 # Expected: HTTP 200
 
 # 2. Feature Flag Status
-curl https://disa-ai.pages.dev/?ff=debugMode
+curl https://disaai.de/?ff=debugMode
 # Expected: Debug Panel sichtbar
 
 # 3. API Connectivity

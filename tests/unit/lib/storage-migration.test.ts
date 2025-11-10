@@ -1,6 +1,53 @@
 // Unit tests for storage migration
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+// Mock Dexie first to prevent issues with storage-layer imports
+vi.mock("dexie", () => {
+  const createMockDatabase = () => ({
+    conversations: {
+      put: vi.fn().mockResolvedValue(undefined),
+      get: vi.fn().mockResolvedValue(null),
+      delete: vi.fn().mockResolvedValue(undefined),
+      bulkDelete: vi.fn().mockResolvedValue(undefined),
+      clear: vi.fn().mockResolvedValue(undefined),
+      filter: vi.fn().mockReturnThis(),
+      orderBy: vi.fn().mockReturnThis(),
+      reverse: vi.fn().mockReturnThis(),
+      toArray: vi.fn().mockResolvedValue([]),
+    },
+    metadata: {
+      put: vi.fn().mockResolvedValue(undefined),
+      delete: vi.fn().mockResolvedValue(undefined),
+      bulkDelete: vi.fn().mockResolvedValue(undefined),
+      clear: vi.fn().mockResolvedValue(undefined),
+      orderBy: vi.fn().mockReturnThis(),
+      reverse: vi.fn().mockReturnThis(),
+      toArray: vi.fn().mockResolvedValue([]),
+    },
+    transaction: vi.fn().mockImplementation((...args) => {
+      // Dexie transaction takes (mode, table1, table2, ..., callback)
+      const callback = args[args.length - 1];
+      if (typeof callback === "function") {
+        return Promise.resolve(callback());
+      }
+      return Promise.resolve();
+    }),
+    open: vi.fn().mockResolvedValue(undefined),
+    close: vi.fn().mockResolvedValue(undefined),
+    version: vi.fn().mockReturnThis(),
+    stores: vi.fn().mockReturnThis(),
+  });
+
+  const MockDexieClass = vi.fn().mockImplementation(createMockDatabase);
+  // Mark as mock so isDexieMock detection works
+  MockDexieClass._isMockFunction = true;
+
+  return {
+    default: MockDexieClass,
+    Table: vi.fn(),
+  };
+});
+
 import { modernStorage } from "../../../src/lib/storage-layer";
 import { StorageMigration } from "../../../src/lib/storage-migration";
 

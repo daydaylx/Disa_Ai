@@ -112,25 +112,3 @@ export function handleChatRequest(request: ChatRequest, signal?: AbortSignal): R
     },
   });
 }
-
-// Mock API endpoint for development (since we don't have a real backend)
-export function createChatAPI(): {
-  post: (url: string, init?: RequestInit) => Response;
-} {
-  return {
-    post: (url: string, init?: RequestInit) => {
-      if (url !== "/api/chat") {
-        throw new Error(`Unsupported endpoint: ${url}`);
-      }
-
-      if (!init || init.method !== "POST") {
-        throw new Error("Only POST method supported");
-      }
-
-      const body = init.body as string;
-      const request: ChatRequest = JSON.parse(body);
-
-      return handleChatRequest(request, init.signal || undefined);
-    },
-  };
-}

@@ -1,4 +1,4 @@
-// Simplified unit tests for modern storage layer (without Dexie dependency)
+// Simplified unit tests for modern storage layer (ESM-compatible mock)
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -7,45 +7,50 @@ import {
   ModernStorageLayer,
 } from "@/lib/storage-layer";
 
-// Mock the entire Dexie module
+// Mock Dexie with proper mock detection
 vi.mock("dexie", () => {
-  const mockDb = {
+  const createMockDatabase = () => ({
     conversations: {
-      put: vi.fn(),
-      get: vi.fn(),
-      delete: vi.fn(),
-      toArray: vi.fn(),
-      bulkDelete: vi.fn(),
-      clear: vi.fn(),
+      put: vi.fn().mockResolvedValue(undefined),
+      get: vi.fn().mockResolvedValue(null),
+      delete: vi.fn().mockResolvedValue(undefined),
+      bulkDelete: vi.fn().mockResolvedValue(undefined),
+      clear: vi.fn().mockResolvedValue(undefined),
       filter: vi.fn().mockReturnThis(),
       orderBy: vi.fn().mockReturnThis(),
       reverse: vi.fn().mockReturnThis(),
+      toArray: vi.fn().mockResolvedValue([]),
     },
     metadata: {
-      put: vi.fn(),
-      bulkDelete: vi.fn(),
-      clear: vi.fn(),
+      put: vi.fn().mockResolvedValue(undefined),
+      delete: vi.fn().mockResolvedValue(undefined),
+      bulkDelete: vi.fn().mockResolvedValue(undefined),
+      clear: vi.fn().mockResolvedValue(undefined),
+      orderBy: vi.fn().mockReturnThis(),
+      reverse: vi.fn().mockReturnThis(),
+      toArray: vi.fn().mockResolvedValue([]),
     },
-    transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
-      return Promise.resolve(callback());
+    transaction: vi.fn().mockImplementation((...args) => {
+      // Dexie transaction takes (mode, table1, table2, ..., callback)
+      const callback = args[args.length - 1];
+      if (typeof callback === "function") {
+        return Promise.resolve(callback());
+      }
+      return Promise.resolve();
     }),
     open: vi.fn().mockResolvedValue(undefined),
-    close: vi.fn(),
-  };
-
-  const mockVersion = {
+    close: vi.fn().mockResolvedValue(undefined),
+    version: vi.fn().mockReturnThis(),
     stores: vi.fn().mockReturnThis(),
-  };
-
-  const DexieConstructor = vi.fn().mockImplementation(() => {
-    return {
-      ...mockDb,
-      version: vi.fn().mockReturnValue(mockVersion),
-    };
   });
 
+  const MockDexieClass = vi.fn().mockImplementation(createMockDatabase);
+  // Mark as mock so isDexieMock detection works
+  MockDexieClass._isMockFunction = true;
+
   return {
-    default: DexieConstructor,
+    default: MockDexieClass,
+    Table: vi.fn(),
   };
 });
 
@@ -55,37 +60,26 @@ describe("ModernStorageLayer (Simplified)", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-
-    // Create a fresh mock database instance for each test
-    mockDb = {
-      conversations: {
-        put: vi.fn(),
-        get: vi.fn(),
-        delete: vi.fn(),
-        toArray: vi.fn(),
-        bulkDelete: vi.fn(),
-        clear: vi.fn(),
-        filter: vi.fn().mockReturnThis(),
-        orderBy: vi.fn().mockReturnThis(),
-        reverse: vi.fn().mockReturnThis(),
-      },
-      metadata: {
-        put: vi.fn(),
-        bulkDelete: vi.fn(),
-        clear: vi.fn(),
-      },
-      transaction: vi.fn().mockImplementation((_mode, _tables, callback) => {
-        return Promise.resolve(callback());
-      }),
-      open: vi.fn().mockResolvedValue(undefined),
-      close: vi.fn(),
-    };
-
-    // Mock the module to return our mock database
-    const Dexie = vi.mocked(require("dexie").default);
-    Dexie.mockImplementation(() => mockDb);
-
+    vi.unstubAllGlobals();
     storage = new ModernStorageLayer();
+    // Access the mock database through the private property
+    mockDb = (storage as any).db;
+
+    // If db is null (fallback mode), skip mock setup
+    if (mockDb) {
+      // Reset all mock implementations to their default resolved state
+      mockDb.conversations.put.mockResolvedValue(undefined);
+      mockDb.conversations.get.mockResolvedValue(null);
+      mockDb.conversations.delete.mockResolvedValue(undefined);
+      mockDb.conversations.clear.mockResolvedValue(undefined);
+      mockDb.conversations.bulkDelete.mockResolvedValue(undefined);
+      mockDb.conversations.toArray.mockResolvedValue([]);
+
+      mockDb.metadata.put.mockResolvedValue(undefined);
+      mockDb.metadata.delete.mockResolvedValue(undefined);
+      mockDb.metadata.clear.mockResolvedValue(undefined);
+      mockDb.metadata.bulkDelete.mockResolvedValue(undefined);
+    }
   });
 
   describe("getConversationStats", () => {
@@ -99,7 +93,7 @@ describe("ModernStorageLayer (Simplified)", () => {
         totalMessages: 0,
         averageMessagesPerConversation: 0,
         modelsUsed: [],
-        storageSize: 0,
+        storageSize: expect.any(Number), // Blob size of "[]"
       });
     });
 
@@ -111,7 +105,7 @@ describe("ModernStorageLayer (Simplified)", () => {
           createdAt: "2024-01-01T00:00:00Z",
           updatedAt: "2024-01-01T00:00:00Z",
           model: "gpt-3.5",
-          messageCount: 5,
+          messageCount: 2, // This is metadata, messages array length is the source of truth
           messages: [
             { role: "user", content: "Hello" },
             { role: "assistant", content: "Hi!" },
@@ -123,7 +117,7 @@ describe("ModernStorageLayer (Simplified)", () => {
           createdAt: "2024-01-02T00:00:00Z",
           updatedAt: "2024-01-02T00:00:00Z",
           model: "gpt-4",
-          messageCount: 3,
+          messageCount: 1,
           messages: [{ role: "user", content: "Test" }],
         },
       ];
@@ -134,7 +128,7 @@ describe("ModernStorageLayer (Simplified)", () => {
 
       expect(stats).toEqual({
         totalConversations: 2,
-        totalMessages: 3,
+        totalMessages: 3, // 2 + 1
         averageMessagesPerConversation: 1.5,
         modelsUsed: ["gpt-3.5", "gpt-4"],
         storageSize: expect.any(Number),
@@ -146,14 +140,6 @@ describe("ModernStorageLayer (Simplified)", () => {
     it("should return conversations sorted by updatedAt descending", async () => {
       const mockMetadata: ConversationMetadata[] = [
         {
-          id: "1",
-          title: "Old Conversation",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
-          model: "gpt-3.5",
-          messageCount: 5,
-        },
-        {
           id: "2",
           title: "New Conversation",
           createdAt: "2024-01-02T00:00:00Z",
@@ -161,23 +147,26 @@ describe("ModernStorageLayer (Simplified)", () => {
           model: "gpt-4",
           messageCount: 3,
         },
+        {
+          id: "1",
+          title: "Old Conversation",
+          createdAt: "2024-01-01T00:00:00Z",
+          updatedAt: "2024-01-01T00:00:00Z",
+          model: "gpt-3.5",
+          messageCount: 5,
+        },
       ];
 
-      const reverseMock = {
-        toArray: vi.fn().mockResolvedValue(mockMetadata),
-      };
-
-      const orderByMock = {
-        reverse: vi.fn().mockReturnValue(reverseMock),
-      };
-
-      mockDb.metadata.orderBy.mockReturnValue(orderByMock);
+      // Simulate the chained calls: db.metadata.orderBy().reverse().toArray()
+      mockDb.metadata.orderBy.mockReturnThis();
+      mockDb.metadata.reverse.mockReturnThis();
+      mockDb.metadata.toArray.mockResolvedValue(mockMetadata);
 
       const conversations = await storage.getAllConversations();
 
       expect(conversations).toEqual(mockMetadata);
       expect(mockDb.metadata.orderBy).toHaveBeenCalledWith("updatedAt");
-      expect(orderByMock.reverse).toHaveBeenCalled();
+      expect(mockDb.metadata.reverse).toHaveBeenCalled();
     });
   });
 
@@ -224,6 +213,7 @@ describe("ModernStorageLayer (Simplified)", () => {
 
       await storage.saveConversation(conversation);
 
+      expect(mockDb.transaction).toHaveBeenCalled();
       expect(mockDb.conversations.put).toHaveBeenCalledWith(conversation);
       expect(mockDb.metadata.put).toHaveBeenCalledWith({
         id: "1",
@@ -233,7 +223,6 @@ describe("ModernStorageLayer (Simplified)", () => {
         model: "gpt-3.5",
         messageCount: 2,
       });
-      expect(mockDb.transaction).toHaveBeenCalled();
     });
 
     it("should throw error when save fails", async () => {
@@ -247,7 +236,8 @@ describe("ModernStorageLayer (Simplified)", () => {
         messages: [{ role: "user", content: "Hello" }],
       };
 
-      mockDb.conversations.put.mockRejectedValue(new Error("Save failed"));
+      const saveError = new Error("Save failed");
+      mockDb.conversations.put.mockRejectedValue(saveError);
 
       await expect(storage.saveConversation(conversation)).rejects.toThrow("Save failed");
     });
@@ -257,13 +247,14 @@ describe("ModernStorageLayer (Simplified)", () => {
     it("should delete conversation and metadata", async () => {
       await storage.deleteConversation("1");
 
+      expect(mockDb.transaction).toHaveBeenCalled();
       expect(mockDb.conversations.delete).toHaveBeenCalledWith("1");
       expect(mockDb.metadata.delete).toHaveBeenCalledWith("1");
-      expect(mockDb.transaction).toHaveBeenCalled();
     });
 
     it("should throw error when delete fails", async () => {
-      mockDb.conversations.delete.mockRejectedValue(new Error("Delete failed"));
+      const deleteError = new Error("Delete failed");
+      mockDb.conversations.delete.mockRejectedValue(deleteError);
 
       await expect(storage.deleteConversation("1")).rejects.toThrow("Delete failed");
     });
@@ -288,9 +279,9 @@ describe("ModernStorageLayer (Simplified)", () => {
       const deletedCount = await storage.cleanupOldConversations(7);
 
       expect(deletedCount).toBe(1);
+      expect(mockDb.transaction).toHaveBeenCalled();
       expect(mockDb.conversations.bulkDelete).toHaveBeenCalledWith(["old1"]);
       expect(mockDb.metadata.bulkDelete).toHaveBeenCalledWith(["old1"]);
-      expect(mockDb.transaction).toHaveBeenCalled();
     });
 
     it("should return 0 when no conversations to delete", async () => {
@@ -410,13 +401,14 @@ describe("ModernStorageLayer (Simplified)", () => {
     it("should clear all conversations and metadata", async () => {
       await storage.clearAllData();
 
+      expect(mockDb.transaction).toHaveBeenCalled();
       expect(mockDb.conversations.clear).toHaveBeenCalled();
       expect(mockDb.metadata.clear).toHaveBeenCalled();
-      expect(mockDb.transaction).toHaveBeenCalled();
     });
 
     it("should throw error when clear fails", async () => {
-      mockDb.conversations.clear.mockRejectedValue(new Error("Clear failed"));
+      const clearError = new Error("Clear failed");
+      mockDb.conversations.clear.mockRejectedValue(clearError);
 
       await expect(storage.clearAllData()).rejects.toThrow("Clear failed");
     });
