@@ -320,6 +320,7 @@ Der Build-Prozess wird durch `vite.config.ts` gesteuert.
 - **CI/CD**: Das Repository enthält Konfigurationsdateien für Cloudflare Pages (`cloudflare-pages.json`) und Netlify (`netlify.toml`), die automatische Deployments bei Pushes auf den `main`-Branch ermöglichen. Sicherheitsheader aus `public/_headers` werden dabei automatisch übernommen.
 - **GitHub Pages (Production)**: Stelle unter `Settings → Pages → Build and deployment` sicher, dass die **Source auf “GitHub Actions”** steht. Der Workflow `.github/workflows/pages.yml` baut ausschließlich `dist/`, kopiert `CNAME` sowie den SPA-Fallback (`dist/404.html`) und veröffentlicht dann via `actions/deploy-pages`. Ein regulärer Push auf `main` oder ein manueller `workflow_dispatch` triggert den Deploy.
 - **Dist Smoke-Test**: Vor jedem Deployment `npm run build` lokal ausführen und `dist/index.html` per `npx serve dist` öffnen. Die HTML darf keine direkten `src/*.tsx`-Referenzen mehr enthalten – nur hashed Bundles aus `assets/`.
+- **Dist-Verifikation**: `npm run verify:dist` prüft nach dem Build automatisch, ob `dist/index.html` korrekt auf gebundelte Dateien unter `assets/js` verweist und keine TypeScript-Quellen (`*.tsx`) mehr ausliefert.
 - **Build-Info-Generierung**: Vor jedem Build wird ein Skript ausgeführt, das Build-Informationen (Build-ID, Zeitstempel, Git-SHA) generiert und in der App verfügbar macht.
 
 ## 🤝 Contributing
