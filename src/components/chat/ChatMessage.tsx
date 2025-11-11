@@ -219,7 +219,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
             <Button
               variant="ghost"
               size="icon"
-              className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+              className="text-text-secondary hover:bg-card hover:text-text-primary"
               onClick={handleCopy}
               title="Nachricht kopieren"
               data-testid="message.copy"
@@ -230,7 +230,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+                className="text-text-secondary hover:bg-card hover:text-text-primary"
                 onClick={handleRetry}
                 title="Antwort erneut anfordern"
                 data-testid="message.retry"

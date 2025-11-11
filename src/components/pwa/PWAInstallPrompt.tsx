@@ -61,7 +61,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
   return (
     <div
       className={cn(
-        "fixed bottom-4 left-4 right-4 z-[var(--z-toast)] md:left-auto md:right-4 md:max-w-sm lg:max-w-md",
+        "fixed bottom-4 left-4 right-4 z-notification md:left-auto md:right-4 md:max-w-sm lg:max-w-md",
         className,
       )}
     >

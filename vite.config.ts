@@ -261,7 +261,8 @@ export default defineConfig(({ mode }) => {
             }
 
             // Prism.js core and languages (for code highlighting)
-            if (id.includes("node_modules/prismjs/") || id.includes("prism-")) {
+            // Chunk nur für Prism selbst; vermeidet Kollisions-Matches auf generische "prism-" Dateinamen.
+            if (id.includes("node_modules/prismjs/")) {
               return "prism";
             }
 

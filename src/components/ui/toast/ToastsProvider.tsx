@@ -34,7 +34,6 @@ export function ToastsProvider({ children }: { children: React.ReactNode }) {
 
       setToasts((prev) => [...prev, newToast]);
 
-      // Auto remove after duration
       const duration = toast.duration ?? 5000;
       if (duration > 0) {
         setTimeout(() => {
@@ -106,7 +105,7 @@ function ToastViewport({
 
   return createPortal(
     <div
-      className="pointer-events-none fixed inset-x-4 bottom-4 z-[var(--z-toast)] flex flex-col gap-3 sm:inset-auto sm:right-4 sm:top-4 sm:max-w-sm"
+      className="pointer-events-none fixed inset-x-4 bottom-4 z-toast flex flex-col gap-3 sm:inset-auto sm:right-4 sm:top-4 sm:max-w-sm"
       role="status"
       aria-live="polite"
     >
@@ -118,7 +117,9 @@ function ToastViewport({
           <div className="flex items-start gap-3">
             <div className="flex-1">
               {toast.title && (
-                <p className="font-semibold text-[var(--color-overlay-toast-fg)]">{toast.title}</p>
+                <p className="font-semibold text-[var(--color-overlay-toast-fg]">
+                  {toast.title}
+                </p>
               )}
               {toast.message && (
                 <p className="mt-1 text-xs text-[color-mix(in_srgb,var(--color-overlay-toast-fg)_80%,transparent)]">

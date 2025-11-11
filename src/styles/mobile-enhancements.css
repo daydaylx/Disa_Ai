@@ -72,7 +72,7 @@
 
 /* Full viewport height with safe areas */
 .vh-full-safe {
-  height: calc(100vh - var(--safe-area-top) - var(--safe-area-bottom));
+  height: calc(100dvh - var(--safe-area-top) - var(--safe-area-bottom));
   height: calc(100 * var(--vh) - var(--safe-area-top) - var(--safe-area-bottom));
 }
 
@@ -293,7 +293,7 @@ select {
 
 /* App-like full-screen experience */
 .app-fullscreen {
-  height: 100vh;
+  height: 100dvh;
   height: calc(100 * var(--vh));
   overflow: hidden;
   position: fixed;

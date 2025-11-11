@@ -102,14 +102,16 @@ export function ChatComposer({
   return (
     <div
       className={cn(
-        "px-2 pt-4 transition-all duration-200",
+        "px-2 pt-3 sm:pt-4 transition-all duration-200",
         viewport.isKeyboardOpen
-          ? "pb-[calc(1rem+var(--inset-b))]"
-          : "pb-[calc(1.5rem+var(--inset-b))]",
+          ? "pb-[calc(0.75rem+max(env(safe-area-inset-bottom),0px))]"
+          : "pb-[calc(1rem+max(env(safe-area-inset-bottom),0px))]",
         className,
       )}
       style={{
         transform: viewport.isKeyboardOpen ? `translateY(-${viewport.offsetTop}px)` : undefined,
+        paddingLeft: "max(env(safe-area-inset-left), 0.5rem)",
+        paddingRight: "max(env(safe-area-inset-right), 0.5rem)",
       }}
     >
       <div className="mx-auto max-w-md space-y-3 text-text-secondary">
@@ -136,7 +138,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] backdrop-blur-sm",
+            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] backdrop-blur-sm touch-target",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -152,10 +154,10 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent p-2 text-[15px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[44px] resize-none border-0 bg-transparent p-2 text-[15px] sm:text-base leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
                 isQuickstartLoading && "text-text-secondary cursor-not-allowed",
               )}
-              style={{ height: "48px" }}
+              style={{ height: "44px" }}
             />
           </div>
 
@@ -165,7 +167,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="h-12 w-12 text-text-secondary hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] text-text-secondary hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary touch-target"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
@@ -178,7 +180,7 @@ export function ChatComposer({
                 onClick={handleStop}
                 size="icon"
                 variant="destructive"
-                className="h-12 w-12"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] touch-target"
                 title="Ausgabe stoppen"
                 aria-label="Ausgabe stoppen"
                 data-testid="composer-stop"
@@ -192,7 +194,7 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="accent"
-                className="h-12 w-12 shadow-neo-sm"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] shadow-neo-sm touch-target"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 aria-label="Nachricht senden"
@@ -203,12 +205,12 @@ export function ChatComposer({
             )}
 
             {!shouldShowRetry && !shouldShowStop && !shouldShowSend && (
-              <span className="block h-12 w-12" aria-hidden="true" />
+              <span className="block h-11 w-11 min-h-[44px] min-w-[44px]" aria-hidden="true" />
             )}
           </div>
         </div>
 
-        <div className="text-text-secondary mt-1 text-center text-xs">
+        <div className="text-text-secondary mt-1 text-center text-xs sm:text-sm px-2">
           <span className="inline-flex items-center justify-center gap-2">
             {(isLoading || isComposerDisabled) && (
               <span className="relative flex h-2 w-2">
@@ -219,7 +221,7 @@ export function ChatComposer({
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-border-focus)]" />
               </span>
             )}
-            <span>
+            <span className="leading-tight">
               {isLoading
                 ? "Antwort wird erstellt …"
                 : isComposerDisabled

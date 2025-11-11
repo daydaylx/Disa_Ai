@@ -25,6 +25,7 @@ const buttonVariants = cva(
           "border border-transparent bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--surface-neumorphic-base)]/60",
         outline:
           "border border-[var(--border-neumorphic-subtle)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--surface-neumorphic-base)]/60",
+        // Legacy aliases
         secondary:
           "border border-[var(--border-neumorphic-subtle)] bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]",
         default:

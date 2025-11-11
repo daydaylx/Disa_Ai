@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { Header } from "../../components/layout/Header";
+import { MobileBottomNav } from "../../components/layout/MobileBottomNav";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
@@ -14,7 +15,6 @@ interface AppShellProps {
   children: ReactNode;
 }
 
-// Temporäre Navigation Items bis neue Struktur implementiert ist
 const NAV_ITEMS = [
   { path: "/chat", label: "Chat" },
   { path: "/models", label: "Modelle" },
@@ -36,13 +36,10 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const [isOverflowOpen, setIsOverflowOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  const activePath = useMemo(() => {
-    return (
-      NAV_ITEMS.find((item: { path: string; label: string }) =>
-        location.pathname.startsWith(item.path),
-      )?.path ?? "/chat"
-    );
-  }, [location.pathname]);
+  const activePath = useMemo(
+    () => NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat",
+    [location.pathname],
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -81,15 +78,13 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       className="relative flex min-h-[100dvh] flex-col bg-surface-bg text-text-primary"
       style={{ minHeight: "calc(100dvh + var(--keyboard-offset, 0px))" }}
     >
-      {/* Skip-Link für bessere Accessibility */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[var(--z-toast)] focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent"
       >
         Zum Hauptinhalt springen
       </a>
 
-      {/* Aurora Header */}
       <Header />
 
       {isMobile ? (
@@ -98,13 +93,13 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             onClick={() => setIsOverflowOpen(true)}
             className="flex items-center gap-2 text-text-primary"
           >
-            <span className="text-xl">☰</span>
+            <span className="text-xl"></span>
             <span>Menü</span>
           </button>
         </div>
       ) : (
         <div className="fixed left-0 top-0 h-full w-64 border-r border-line-subtle bg-surface-base p-4">
-          <div className="text-text-primary font-bold text-lg mb-6">Disa AI</div>
+          <div className="mb-6 text-lg font-bold text-text-primary">Disa AI</div>
           <nav className="space-y-2">
             {NAV_ITEMS.map((item) => (
               <Link
@@ -113,7 +108,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                 className={cn(
                   "group relative flex w-full items-center gap-3 rounded-2xl border border-transparent px-5 py-3 text-sm font-medium transition-all duration-150",
                   activePath === item.path
-                    ? "border-line bg-surface-muted/80 backdrop-blur-sm text-text-primary shadow-sm"
+                    ? "border-line bg-surface-muted/80 text-text-primary shadow-sm backdrop-blur-sm"
                     : "text-text-secondary hover:border-line hover:bg-surface-muted/70 backdrop-blur-sm",
                 )}
               >
@@ -141,13 +136,15 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           !isMobile && "ml-64",
         )}
       >
-        <div className="mx-auto flex w-full max-w-2xl lg:max-w-4xl flex-1 flex-col">{children}</div>
+        <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col lg:max-w-4xl">
+          {children}
+        </div>
       </main>
 
       {isMobile && (
         <>
           <footer className="border-t border-line-subtle bg-surface-base px-4 py-4 text-xs text-text-secondary">
-            <div className="mx-auto flex w-full max-w-2xl lg:max-w-4xl flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+            <div className="mx-auto flex w-full max-w-2xl flex-col gap-2 text-center lg:max-w-4xl sm:flex-row sm:items-center sm:justify-between sm:text-left">
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                 <span>Mobile Studio Preview</span>
                 <span className="hidden sm:inline" aria-hidden="true">
@@ -160,6 +157,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               <BuildInfo className="text-[11px] sm:text-xs" />
             </div>
           </footer>
+
+          <MobileBottomNav />
 
           <NetworkBanner />
           <PWAInstallPrompt />
@@ -174,14 +173,14 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               <section>
                 <h3 className="text-sm font-semibold text-text-secondary">Navigation</h3>
                 <ul className="mt-3 space-y-2">
-                  {NAV_ITEMS.map((item: { path: string; label: string }) => (
+                  {NAV_ITEMS.map((item) => (
                     <li key={`drawer-${item.path}`}>
                       <Link
                         to={item.path}
                         className={cn(
                           "group relative flex w-full items-center gap-3 rounded-2xl border border-transparent px-5 py-3 text-sm font-medium transition-all duration-150",
                           activePath === item.path
-                            ? "border-line bg-surface-muted/80 backdrop-blur-sm text-text-primary shadow-sm"
+                            ? "border-line bg-surface-muted/80 text-text-primary shadow-sm backdrop-blur-sm"
                             : "text-text-secondary hover:border-line hover:bg-surface-muted/70 backdrop-blur-sm",
                         )}
                         onClick={() => setIsOverflowOpen(false)}
