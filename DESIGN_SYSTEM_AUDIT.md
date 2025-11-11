@@ -36,6 +36,7 @@ Das Projekt hat 3 gleichzeitig aktive Design-Systeme:
 - **Nutzung in**: card.tsx, badge.tsx, chip.tsx, Dialog.tsx
 - **Problem**: Inline Tailwind-Klassen mit direkten var() Referenzen
 - **Beispiel aus card.tsx**:
+
   ```typescript
   "neo-subtle": "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)]"
   ```

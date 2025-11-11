@@ -22,7 +22,7 @@ async function main() {
 
   if (/\/src\/main\.tsx/.test(indexHtml)) {
     throw new Error(
-      "🚫 dist/index.html verweist noch auf /src/main.tsx. Der Produktions-Build wurde nicht gebundled. Bitte `npm run build` ausführen und den dist-Ordner deployen."
+      "🚫 dist/index.html verweist noch auf /src/main.tsx. Der Produktions-Build wurde nicht gebundled. Bitte `npm run build` ausführen und den dist-Ordner deployen.",
     );
   }
 
@@ -32,14 +32,14 @@ async function main() {
 
   if (scriptMatches.length === 0) {
     throw new Error(
-      "🚫 Keine JS-Bundles in dist/index.html gefunden. Erwartet werden Dateien unter /assets/js/*."
+      "🚫 Keine JS-Bundles in dist/index.html gefunden. Erwartet werden Dateien unter /assets/js/*.",
     );
   }
 
   const assetScripts = scriptMatches.filter((src) => src.startsWith("/assets/js/"));
   if (assetScripts.length === 0) {
     throw new Error(
-      "🚫 dist/index.html enthält keine Hashed-Bundles unter /assets/js/. Bitte sicherstellen, dass Vite den Build erzeugt hat."
+      "🚫 dist/index.html enthält keine Hashed-Bundles unter /assets/js/. Bitte sicherstellen, dass Vite den Build erzeugt hat.",
     );
   }
 
@@ -47,12 +47,12 @@ async function main() {
     assetScripts.map(async (src) => {
       const path = join(DIST_DIR, src.replace(/^[\/]/, ""));
       await ensureFile(path, "JavaScript-Bundle");
-    })
+    }),
   );
 
   if (/\.tsx\b/.test(indexHtml)) {
     throw new Error(
-      "🚫 dist/index.html enthält noch .tsx-Referenzen. Der Build muss transpilierte JavaScript-Dateien ausliefern."
+      "🚫 dist/index.html enthält noch .tsx-Referenzen. Der Build muss transpilierte JavaScript-Dateien ausliefern.",
     );
   }
 
