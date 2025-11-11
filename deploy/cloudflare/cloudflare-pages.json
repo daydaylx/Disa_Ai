@@ -1,7 +1,7 @@
 {
   "name": "disaai",
   "build": {
-    "command": "npm run build",
+    "command": "npm ci && npm run build",
     "destination": "dist",
     "root_dir": ".",
     "environment_variables": {
