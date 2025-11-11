@@ -80,11 +80,33 @@ async function loadPrism(): Promise<PrismStatic> {
       const PrismModule = await import("prismjs");
       const Prism = PrismModule.default || PrismModule;
 
-      // Wichtige Sprachen nachladen (Typdeklarationen in vite-env.d.ts)
-      // Wichtig: Importiere sie in der richtigen Reihenfolge, um Abhängigkeiten zu vermeiden
-      const languageImports = [
-        import("prismjs/components/prism-javascript"),
-        import("prismjs/components/prism-typescript"),
+      // Sicherstellen, dass Prism korrekt initialisiert ist
+      if (!Prism || typeof Prism !== "object") {
+        throw new Error("Prism core not properly loaded");
+      }
+
+      // Sicherstellen, dass Prism.languages existiert, bevor wir Sprachen laden
+      if (!Prism.languages) {
+        throw new Error("Prism.languages not initialized");
+      }
+
+      // Verhindere doppelte Initialisierung
+      if (Prism.languages.javascript && Prism.languages.typescript) {
+        safeWarn("[Lazy Highlighter] ⚠️ Languages already loaded, skipping re-initialization");
+        prismInstance = Prism;
+        return prismInstance;
+      }
+
+      // Wichtige Sprachen nachladen in der richtigen Reihenfolge
+      // WICHTIG: Sequenziell laden, um Race Conditions zu vermeiden
+      // JavaScript zuerst (Basis für TypeScript)
+      await import("prismjs/components/prism-javascript");
+
+      // Sprachen, die von JavaScript abhängen
+      await import("prismjs/components/prism-typescript");
+
+      // Unabhängige Sprachen können parallel geladen werden
+      await Promise.all([
         import("prismjs/components/prism-python"),
         import("prismjs/components/prism-java"),
         import("prismjs/components/prism-cpp"),
@@ -96,10 +118,7 @@ async function loadPrism(): Promise<PrismStatic> {
         import("prismjs/components/prism-sql"),
         import("prismjs/components/prism-yaml"),
         import("prismjs/components/prism-markdown"),
-      ];
-
-      // Warte auf alle Sprachimporte
-      await Promise.all(languageImports);
+      ]);
 
       // Stelle sicher, dass Prism vollständig initialisiert ist
       prismInstance = Prism;
