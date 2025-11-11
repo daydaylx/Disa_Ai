@@ -26,6 +26,9 @@ export default defineConfig(({ mode }) => {
   // Umweltspezifische Konfiguration für robuste Asset-Pfade (Issue #60)
   const isProduction = mode === "production";
 
+  // PWA can be disabled via VITE_PWA_DISABLED flag for clean deployments
+  const isPWADisabled = env.VITE_PWA_DISABLED === "true";
+
   // Fix für Issue #60: Robuste Base-Pfad-Logik mit Validierung und Fallbacks
   let base = "/";
 
@@ -104,8 +107,10 @@ export default defineConfig(({ mode }) => {
             }),
           ]
         : []),
-      // Progressive PWA with Service Worker
-      VitePWA({
+      // Progressive PWA with Service Worker - can be disabled via VITE_PWA_DISABLED=true
+      ...(!isPWADisabled
+        ? [
+            VitePWA({
         // Disable auto-injected register script, we register manually in the app
         injectRegister: null,
         registerType: "autoUpdate",
@@ -183,10 +188,13 @@ export default defineConfig(({ mode }) => {
           type: "module",
         },
       }),
+          ]
+        : []),
     ],
     define: {
       "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
       __DEV__: JSON.stringify(!isProduction),
+      __VITE_PWA_DISABLED__: JSON.stringify(isPWADisabled),
     },
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing

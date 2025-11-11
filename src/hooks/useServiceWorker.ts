@@ -9,13 +9,20 @@ import {
   subscribeToServiceWorker,
 } from "../lib/pwa/registerSW";
 
+// Global type for PWA disabled flag
+declare global {
+  // eslint-disable-next-line no-var
+  var __VITE_PWA_DISABLED__: boolean;
+}
+
 export function useServiceWorker() {
   const { push } = useToasts();
   const refreshToastShown = useRef(false);
   const offlineToastShown = useRef(false);
 
   useEffect(() => {
-    if (!import.meta.env.PROD) {
+    // Skip if not in production or if PWA is disabled
+    if (!import.meta.env.PROD || (typeof __VITE_PWA_DISABLED__ !== "undefined" && __VITE_PWA_DISABLED__)) {
       return;
     }
 

@@ -1,0 +1,145 @@
+name: Verify Build Integrity
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'claude/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  verify-dist:
+    name: Verify dist integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set build environment
+        run: |
+          echo "VITE_BUILD_ID=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "VITE_BUILD_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_BASE_URL: /
+          VITE_PWA_DISABLED: false
+          NODE_ENV: production
+
+      - name: Verify dist integrity
+        id: verify
+        run: node scripts/check-dist-integrity.mjs
+
+      - name: Upload dist listing on failure
+        if: failure() && steps.verify.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-listing-${{ github.sha }}
+          path: dist/
+          retention-days: 7
+
+      - name: Comment on PR (failure)
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // List all files in dist
+            function listFiles(dir, prefix = '') {
+              const files = [];
+              const items = fs.readdirSync(dir);
+              for (const item of items) {
+                const fullPath = path.join(dir, item);
+                const relativePath = prefix + item;
+                if (fs.statSync(fullPath).isDirectory()) {
+                  files.push(...listFiles(fullPath, relativePath + '/'));
+                } else {
+                  files.push(relativePath);
+                }
+              }
+              return files;
+            }
+
+            const distFiles = listFiles('dist');
+            const comment = `## ❌ Build Integrity Check Failed
+
+            The build produced an \`index.html\` file that references assets that don't exist in the \`dist/\` directory.
+
+            ### Files in dist/:
+            \`\`\`
+            ${distFiles.join('\n')}
+            \`\`\`
+
+            ### Possible causes:
+            - Asset path configuration issue in \`vite.config.ts\`
+            - Missing files in the build output
+            - Incorrect \`base\` path configuration
+
+            ### How to fix:
+            1. Check the console output from the \`check-dist-integrity.mjs\` script
+            2. Verify your \`vite.config.ts\` configuration
+            3. Ensure all referenced assets are being built correctly
+
+            See the [dist listing artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Comment on PR (success)
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## ✅ Build Integrity Check Passed
+
+            All assets referenced in \`index.html\` exist in the \`dist/\` directory.
+
+            Build details:
+            - Commit: \`${{ github.sha }}\`
+            - Build ID: \`${{ env.VITE_BUILD_ID }}\`
+            - Timestamp: \`${{ env.VITE_BUILD_TIMESTAMP }}\`
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ "${{ steps.verify.outcome }}" == "success" ]; then
+            echo "✅ Build integrity verified successfully" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "All assets referenced in index.html exist in the dist/ directory." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Build integrity check failed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Some assets referenced in index.html are missing from the dist/ directory." >> $GITHUB_STEP_SUMMARY
+            echo "Check the logs above for details." >> $GITHUB_STEP_SUMMARY
+          fi
