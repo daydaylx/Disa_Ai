@@ -17,6 +17,15 @@
     --surface-base: hsl(var(--bg0) / 1);
     --surface-1: hsl(var(--bg1) / 1);
     --surface-card: hsl(var(--bg2) / 1);
+    --surface-overlay: hsl(var(--bg1) / 0.95);
+    --surface-neumorphic-overlay: hsl(var(--bg1) / 0.95);
+
+    /* Borders */
+    --border-subtle: hsl(var(--bg2) / 0.5);
+    --border-strong: hsl(var(--fg1) / 0.2);
+    --border-neumorphic-subtle: hsl(var(--bg2) / 0.3);
+    --border-neumorphic-light: hsl(var(--bg2) / 0.5);
+    --border-neumorphic-dark: hsl(var(--fg1) / 0.2);
 
     /* Text */
     --text-primary: hsl(var(--fg0) / 1);
@@ -39,12 +48,31 @@
     --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.22);
     --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.28);
 
+    /* Glow Shadow Effects (for interactive elements) */
+    --shadow-glow-brand: 0 0 16px rgba(97, 109, 255, 0.25);
+    --shadow-glow-brand-subtle: 0 0 8px rgba(97, 109, 255, 0.12);
+    --shadow-glow-brand-strong: 0 0 24px rgba(97, 109, 255, 0.42);
+    --shadow-glow-accent-subtle: 0 0 8px rgba(97, 109, 255, 0.15);
+    --shadow-glow-success: 0 0 16px rgba(22, 163, 74, 0.25);
+    --shadow-glow-success-subtle: 0 0 8px rgba(22, 163, 74, 0.12);
+    --shadow-glow-warning: 0 0 16px rgba(249, 115, 22, 0.25);
+    --shadow-glow-warning-subtle: 0 0 8px rgba(249, 115, 22, 0.12);
+    --shadow-glow-error: 0 0 16px rgba(225, 29, 72, 0.25);
+    --shadow-glow-error-subtle: 0 0 8px rgba(225, 29, 72, 0.12);
+    --shadow-glow-neutral-subtle: 0 0 8px rgba(15, 23, 42, 0.08);
+    --shadow-elevated-glow: 0 0 24px rgba(97, 109, 255, 0.18);
+
     /* Focus ring */
     --ring-outline: 0 0 0 3px hsl(var(--brand-4) / 0.35);
 
-    /* Z-index */
+    /* Z-index System (fixed hierarchy) */
+    --z-content: 10;
+    --z-sidebar: 90;
+    --z-navigation: 100;
+    --z-bottom-nav: 105;
+    --z-composer: 300;
     --z-header: 200;
-    --z-drawer: 300;
+    --z-drawer: 200;
     --z-modal-backdrop: 400;
     --z-modal: 500;
     --z-popover: 600;
@@ -55,6 +83,12 @@
     --safe-right: env(safe-area-inset-right, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-left: env(safe-area-inset-left, 0px);
+
+    /* Safe Area Aliases (for compatibility) */
+    --safe-area-top: var(--safe-top);
+    --safe-area-right: var(--safe-right);
+    --safe-area-bottom: var(--safe-bottom);
+    --safe-area-left: var(--safe-left);
 
     /* Touch sizes */
     --touch-compact: 44px;

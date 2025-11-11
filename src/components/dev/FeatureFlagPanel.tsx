@@ -50,7 +50,7 @@ export function FeatureFlagPanel() {
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 max-w-sm">
+    <div className="fixed bottom-4 left-4 z-[var(--z-popover)] max-w-sm">
       <Card className="bg-yellow-50 border-yellow-200 shadow-lg">
         <div className="p-3">
           <div className="flex items-center justify-between mb-2">

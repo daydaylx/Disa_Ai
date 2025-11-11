@@ -154,7 +154,7 @@ const SelectContent = React.forwardRef<
         "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
 
         // Layout
-        "relative z-50 min-w-[8rem] overflow-hidden rounded-[var(--radius-lg)]",
+        "relative z-[var(--z-popover)] min-w-[8rem] overflow-hidden rounded-[var(--radius-lg)]",
 
         // Dramatic Neomorphic Floating Panel
         "bg-[var(--surface-neumorphic-floating)]",
