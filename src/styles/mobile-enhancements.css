@@ -33,17 +33,17 @@
   tap-highlight-color: var(--tap-highlight-color);
 }
 
-/* Modern touch target sizing */
+/* Modern touch target sizing - using semantic variables */
 .touch-target {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: var(--size-touch-comfortable, 48px);
+  min-width: var(--size-touch-comfortable, 48px);
   touch-action: manipulation;
   cursor: pointer;
 }
 
 .touch-target-large {
-  min-height: 56px;
-  min-width: 56px;
+  min-height: var(--size-touch-relaxed, 56px);
+  min-width: var(--size-touch-relaxed, 56px);
 }
 
 /* Safe area padding utilities */

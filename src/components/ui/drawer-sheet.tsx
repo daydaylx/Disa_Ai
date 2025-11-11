@@ -138,7 +138,7 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex bg-[var(--color-overlay-scrim)]/70">
+    <div className="fixed inset-0 z-[var(--z-drawer)] flex bg-[var(--color-overlay-scrim)]/70">
       <button
         aria-label="Overlay schließen"
         className="absolute inset-0 h-full w-full cursor-pointer"

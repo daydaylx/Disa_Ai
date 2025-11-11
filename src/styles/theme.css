@@ -119,11 +119,11 @@
     --page-padding-x: var(--space-md);
     --page-padding-y: var(--space-xl);
 
-    /* --- Touch Target Sizes --- */
-    --size-touch-compact: 2.25rem; /* 36px */
-    --size-touch-comfortable: 2.75rem; /* 44px */
-    --size-touch-relaxed: 3.25rem; /* 52px */
-    --size-touch-spacious: 3.75rem; /* 60px */
+    /* --- Touch Target Sizes (WCAG 2.5.5 compliant: minimum 44x44px) --- */
+    --size-touch-compact: 2.75rem; /* 44px - WCAG minimum */
+    --size-touch-comfortable: 3rem; /* 48px */
+    --size-touch-relaxed: 3.5rem; /* 56px */
+    --size-touch-spacious: 4rem; /* 64px */
 
     /* ------------------------------ */
     /*         Border Radius          */

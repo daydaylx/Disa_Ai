@@ -106,7 +106,7 @@ function ToastViewport({
 
   return createPortal(
     <div
-      className="pointer-events-none fixed inset-x-4 bottom-4 z-[9999] flex flex-col gap-3 sm:inset-auto sm:right-4 sm:top-4 sm:max-w-sm"
+      className="pointer-events-none fixed inset-x-4 bottom-4 z-[var(--z-toast)] flex flex-col gap-3 sm:inset-auto sm:right-4 sm:top-4 sm:max-w-sm"
       role="status"
       aria-live="polite"
     >

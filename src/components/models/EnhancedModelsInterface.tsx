@@ -745,7 +745,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
       {/* Floating Action Button */}
       {selectedModels.size > 0 && (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-6 right-6 z-[var(--z-popover)]">
           <Button
             variant="accent"
             className="rounded-full w-14 h-14 shadow-lg"
