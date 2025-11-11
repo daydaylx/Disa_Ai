@@ -16,6 +16,7 @@ interface AppShellProps {
 }
 
 const NAV_ITEMS = [
+  { path: "/", label: "Studio" },
   { path: "/chat", label: "Chat" },
   { path: "/models", label: "Modelle" },
   { path: "/roles", label: "Rollen" },
@@ -33,45 +34,25 @@ export function AppShell({ children }: AppShellProps) {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
-  const [isOverflowOpen, setIsOverflowOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
 
   const activePath = useMemo(
-    () => NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat",
+    () =>
+      NAV_ITEMS.find((item) =>
+        item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path),
+      )?.path ?? "/",
     [location.pathname],
   );
 
   useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-
-    const handler = (event: Event) => {
-      const { action } =
-        (event as CustomEvent<{ action?: "open" | "close" | "toggle" }>).detail ?? {};
-
-      setIsOverflowOpen((prev) => {
-        switch (action) {
-          case "open":
-            return true;
-          case "close":
-            return false;
-          case "toggle":
-            return !prev;
-          default:
-            return prev;
-        }
-      });
+    if (!isMenuOpen) return;
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMenuOpen(false);
     };
-
-    window.addEventListener("disa:bottom-sheet", handler as EventListener);
-    return () => window.removeEventListener("disa:bottom-sheet", handler as EventListener);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(
-      new CustomEvent("disa:bottom-sheet-state", { detail: { open: isOverflowOpen } }),
-    );
-  }, [isOverflowOpen]);
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isMenuOpen]);
 
   return (
     <div
@@ -85,80 +66,60 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         Zum Hauptinhalt springen
       </a>
 
-      <Header />
+      <Header onMenuClick={() => setIsMenuOpen(true)} />
 
-      {isMobile ? (
-        <div className="border-b border-line-subtle bg-surface-base px-4 py-3">
-          <button
-            onClick={() => setIsOverflowOpen(true)}
-            className="flex items-center gap-2 text-text-primary"
-          >
-            <span className="text-xl" aria-hidden="true">
-              
-            </span>
-            <span>Menü</span>
-          </button>
-        </div>
-      ) : (
-        <div className="fixed left-0 top-0 h-full w-64 border-r border-line-subtle bg-surface-base p-4">
-          <div className="mb-6 text-lg font-bold text-text-primary">Disa AI</div>
-          <nav className="space-y-2">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={`desktop-${item.path}`}
-                to={item.path}
-                className={cn(
-                  "group relative flex w-full items-center gap-3 rounded-2xl border border-transparent px-5 py-3 text-sm font-medium transition-all duration-150",
-                  activePath === item.path
-                    ? "border-line bg-surface-muted/80 text-text-primary shadow-sm backdrop-blur-sm"
-                    : "text-text-secondary hover:border-line hover:bg-surface-muted/70 backdrop-blur-sm",
-                )}
-              >
-                <span
-                  aria-hidden="true"
+      <div className="flex flex-1">
+        {!isMobile && (
+          <aside className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] w-56 flex-shrink-0 flex-col border-r border-line-subtle bg-surface-base/98 px-3 py-4 lg:flex">
+            <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-text-secondary">
+              Navigation
+            </div>
+            <nav className="space-y-1 text-sm">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
                   className={cn(
-                    "h-6 w-1 rounded-full transition-colors",
+                    "group flex items-center gap-2 rounded-2xl px-3 py-2.5 transition-colors",
                     activePath === item.path
-                      ? "bg-accent"
-                      : "bg-transparent group-hover:bg-accent/40",
+                      ? "bg-surface-muted/90 text-text-primary shadow-neo-xs"
+                      : "text-text-secondary hover:bg-surface-muted/70 hover:text-text-primary",
                   )}
-                />
-                <span className="flex-1">{item.label}</span>
-              </Link>
-            ))}
-          </nav>
-        </div>
-      )}
-
-      <main
-        id="main"
-        role="main"
-        key={location.pathname}
-        className={cn(
-          "min-h-0 flex flex-1 flex-col overflow-y-auto p-page-padding-y px-page-padding-x",
-          !isMobile && "ml-64",
+                >
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "h-6 w-1 rounded-full transition-colors",
+                      activePath === item.path
+                        ? "bg-accent"
+                        : "bg-transparent group-hover:bg-accent/40",
+                    )}
+                  />
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </nav>
+            <div className="mt-auto pt-4 text-[10px] text-text-tertiary">
+              <BuildInfo />
+            </div>
+          </aside>
         )}
-      >
-        <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col lg:max-w-4xl">{children}</div>
-      </main>
+
+        <main
+          id="main"
+          role="main"
+          key={location.pathname}
+          className={cn(
+            "min-h-0 flex flex-1 flex-col overflow-y-auto p-page-padding-y px-page-padding-x",
+            !isMobile && "ml-0",
+          )}
+        >
+          <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col">{children}</div>
+        </main>
+      </div>
 
       {isMobile && (
         <>
-          <footer className="border-t border-line-subtle bg-surface-base px-4 py-4 text-xs text-text-secondary">
-            <div className="mx-auto flex w-full max-w-2xl flex-col gap-2 text-center lg:max-w-4xl sm:flex-row sm:items-center sm:justify-between sm:text-left">
-              <div className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                <span>Mobile Studio Preview</span>
-                <span className="hidden sm:inline" aria-hidden="true">
-                  ·
-                </span>
-                <a href="/datenschutz" className="text-accent hover:underline">
-                  Datenschutz
-                </a>
-              </div>
-              <BuildInfo className="text-[11px] sm:text-xs" />
-            </div>
-          </footer>
-
           <MobileBottomNav />
 
           <NetworkBanner />
@@ -166,60 +127,46 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           {process.env.NODE_ENV === "development" && <PWADebugInfo />}
 
           <DrawerSheet
-            title="Mehr"
-            isOpen={isOverflowOpen}
-            onClose={() => setIsOverflowOpen(false)}
+            title="Disa AI Studio"
+            isOpen={isMenuOpen}
+            onClose={() => setIsMenuOpen(false)}
           >
-            <div className="space-y-4">
-              <section>
-                <h3 className="text-sm font-semibold text-text-secondary">Navigation</h3>
-                <ul className="mt-3 space-y-2">
-                  {NAV_ITEMS.map((item) => (
-                    <li key={`drawer-${item.path}`}>
-                      <Link
-                        to={item.path}
-                        className={cn(
-                          "group relative flex w-full items-center gap-3 rounded-2xl border border-transparent px-5 py-3 text-sm font-medium transition-all duration-150",
-                          activePath === item.path
-                            ? "border-line bg-surface-muted/80 text-text-primary shadow-sm backdrop-blur-sm"
-                            : "text-text-secondary hover:border-line hover:bg-surface-muted/70 backdrop-blur-sm",
-                        )}
-                        onClick={() => setIsOverflowOpen(false)}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            "h-6 w-1 rounded-full transition-colors",
-                            activePath === item.path
-                              ? "bg-accent"
-                              : "bg-transparent group-hover:bg-accent/40",
-                          )}
-                        />
-                        <span className="flex-1">{item.label}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </section>
+            <nav className="space-y-2">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={`drawer-${item.path}`}
+                  to={item.path}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={cn(
+                    "flex items-center justify-between rounded-2xl px-4 py-3 text-sm transition-colors",
+                    activePath === item.path
+                      ? "bg-surface-muted/90 text-text-primary shadow-neo-xs"
+                      : "text-text-secondary hover:bg-surface-muted/70 hover:text-text-primary",
+                  )}
+                >
+                  <span>{item.label}</span>
+                  {activePath === item.path && (
+                    <span className="text-[10px] text-accent">aktiv</span>
+                  )}
+                </Link>
+              ))}
+            </nav>
 
-              <section>
-                <h3 className="text-sm font-semibold text-text-secondary">Sekundäre Seiten</h3>
-                <div className="mt-3 grid gap-2">
-                  {[
-                    { label: "Impressum", path: "/impressum" },
-                    { label: "Datenschutz", path: "/datenschutz" },
-                  ].map((link) => (
-                    <Link
-                      key={link.path}
-                      to={link.path}
-                      className="block w-full rounded-2xl border border-line-subtle px-5 py-2.5 text-left text-sm text-text-secondary transition-colors hover:border-line hover:bg-surface-muted/60 backdrop-blur-sm"
-                      onClick={() => setIsOverflowOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              </section>
+            <div className="mt-6 space-y-2 text-[11px] text-text-secondary">
+              <Link
+                to="/impressum"
+                onClick={() => setIsMenuOpen(false)}
+                className="block rounded-xl px-3 py-2 hover:bg-surface-muted/70"
+              >
+                Impressum
+              </Link>
+              <Link
+                to="/datenschutz"
+                onClick={() => setIsMenuOpen(false)}
+                className="block rounded-xl px-3 py-2 hover:bg-surface-muted/70"
+              >
+                Datenschutz
+              </Link>
             </div>
           </DrawerSheet>
         </>

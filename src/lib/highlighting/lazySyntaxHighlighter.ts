@@ -42,7 +42,6 @@ const SUPPORTED_LANGUAGES = {
   shell: "bash",
   bash: "bash",
   json: "json",
-  xml: "xml",
   html: "html",
   css: "css",
   scss: "scss",
@@ -58,57 +57,60 @@ const SUPPORTED_LANGUAGES = {
  * Nur wenn Feature-Flag aktiv ist
  */
 async function loadPrism(): Promise<PrismStatic> {
-  // Feature-Flag Check
   if (!isFeatureEnabled("lazyHighlighter")) {
     throw new Error("Lazy highlighting disabled via feature flag");
   }
 
-  // Return cached instance
   if (prismInstance) {
     return prismInstance;
   }
 
-  // Return existing loading promise
   if (prismLoadingPromise) {
     return prismLoadingPromise;
   }
 
-  // Start loading
   prismLoadingPromise = (async () => {
     try {
-      // Dynamic import von Prism.js Core (sicherstellen, dass es vollständig geladen ist)
       const PrismModule = await import("prismjs");
-      const Prism = PrismModule.default || PrismModule;
+      const Prism = (PrismModule as any).default || (PrismModule as any);
 
-      // Wichtige Sprachen nachladen (Typdeklarationen in vite-env.d.ts)
-      // Wichtig: Importiere sie in der richtigen Reihenfolge, um Abhängigkeiten zu vermeiden
-      const languageImports = [
+      // Basis-Abhängigkeiten zuerst laden, um class-name und ähnliche Tokens zu registrieren
+      await import("prismjs/components/prism-clike");
+      await import("prismjs/components/prism-markup");
+      await import("prismjs/components/prism-markup-templating");
+
+      // Anschließend häufig genutzte Sprachen laden (nur Module importieren, die im Projekt vorhanden sind)
+      await Promise.all([
         import("prismjs/components/prism-javascript"),
         import("prismjs/components/prism-typescript"),
         import("prismjs/components/prism-python"),
         import("prismjs/components/prism-java"),
+        import("prismjs/components/prism-c"),
         import("prismjs/components/prism-cpp"),
         import("prismjs/components/prism-rust"),
         import("prismjs/components/prism-go"),
-        import("prismjs/components/prism-json"),
+        import("prismjs/components/prism-php"),
+        import("prismjs/components/prism-ruby"),
+        import("prismjs/components/prism-swift"),
+        import("prismjs/components/prism-kotlin"),
+        import("prismjs/components/prism-scala"),
         import("prismjs/components/prism-bash"),
+        import("prismjs/components/prism-json"),
         import("prismjs/components/prism-css"),
+        import("prismjs/components/prism-scss"),
         import("prismjs/components/prism-sql"),
         import("prismjs/components/prism-yaml"),
         import("prismjs/components/prism-markdown"),
-      ];
+        import("prismjs/components/prism-docker"),
+        import("prismjs/components/prism-nginx"),
+      ]);
 
-      // Warte auf alle Sprachimporte
-      await Promise.all(languageImports);
-
-      // Stelle sicher, dass Prism vollständig initialisiert ist
-      prismInstance = Prism;
-
+      prismInstance = Prism as PrismStatic;
       logWarn("[Lazy Highlighter] Prism.js loaded successfully");
       return prismInstance;
     } catch (error) {
       logWarn("[Lazy Highlighter] Failed to load Prism.js", error as Error);
-      prismLoadingPromise = null; // Reset for retry
+      prismLoadingPromise = null;
       throw error;
     }
   })();
@@ -122,7 +124,6 @@ async function loadPrism(): Promise<PrismStatic> {
 function normalizeLanguage(language: string): string {
   const normalized = language.toLowerCase();
 
-  // Bekannte Aliase
   const aliases: Record<string, string> = {
     js: "javascript",
     ts: "typescript",
@@ -147,10 +148,6 @@ function isLanguageSupported(language: string): boolean {
 
 /**
  * Highlight-Code mit Lazy Loading
- *
- * @param code - Code-String zum Highlighten
- * @param language - Programmiersprache
- * @returns Promise mit gehighlightetem HTML oder original code bei Fehlern
  */
 export async function highlightCode(
   code: string,
@@ -161,7 +158,6 @@ export async function highlightCode(
   success: boolean;
   fallback: boolean;
 }> {
-  // Feature-Flag Check
   if (!isFeatureEnabled("lazyHighlighter")) {
     return {
       highlighted: code,
@@ -173,7 +169,6 @@ export async function highlightCode(
 
   const normalizedLanguage = normalizeLanguage(language);
 
-  // Unsupported language → Fallback
   if (!isLanguageSupported(normalizedLanguage)) {
     return {
       highlighted: code,
@@ -186,7 +181,6 @@ export async function highlightCode(
   try {
     const prism = await loadPrism();
 
-    // Language grammar check
     const grammar = prism.languages[normalizedLanguage];
     if (!grammar) {
       logWarn(`[Lazy Highlighter] Grammar for "${normalizedLanguage}" not found`);
@@ -198,7 +192,6 @@ export async function highlightCode(
       };
     }
 
-    // Perform highlighting
     const highlighted = prism.highlight(code, grammar, normalizedLanguage);
 
     return {
@@ -209,7 +202,6 @@ export async function highlightCode(
     };
   } catch (error) {
     logWarn("[Lazy Highlighter] Highlighting failed", error as Error);
-
     return {
       highlighted: code,
       language: "text",
@@ -221,7 +213,6 @@ export async function highlightCode(
 
 /**
  * Preload Prism.js (optional, für bessere UX)
- * Kann aufgerufen werden wenn Code-Blöcke wahrscheinlich sind
  */
 export async function preloadHighlighter(): Promise<boolean> {
   if (!isFeatureEnabled("lazyHighlighter")) {

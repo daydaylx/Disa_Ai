@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
@@ -12,7 +15,6 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastSavedSignatureRef = useRef<string | null>(null);
 
-  // --- Core Hooks ---
   const {
     messages,
     append,
@@ -32,16 +34,13 @@ export default function Chat() {
     },
   });
 
-  const { newConversation, activeConversationId, setActiveConversationId, refreshConversations } =
+  const { activeConversationId, setActiveConversationId, refreshConversations } =
     useConversationManager({
       setMessages,
       setCurrentSystemPrompt,
-      onNewConversation: () => {}, // Reset discussion on new chat
+      onNewConversation: () => {},
     });
 
-  // --- Effects ---
-
-  // Auto-scroll to the latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
@@ -52,15 +51,12 @@ export default function Chat() {
     }
   }, [messages.length]);
 
-  // Auto-save conversation on finish
   useEffect(() => {
     const saveConversationIfNeeded = async () => {
       const lastMessage = messages[messages.length - 1];
 
       if (!isLoading && messages.length > 0 && lastMessage?.role === "assistant") {
-        const finalMessages = messages;
-
-        const storageMessages = finalMessages.map((msg) => ({
+        const storageMessages = messages.map((msg) => ({
           id: msg.id,
           role: msg.role,
           content: msg.content,
@@ -70,9 +66,7 @@ export default function Chat() {
 
         try {
           const signature = `${storageMessages.length}:${lastMessage.id}:${lastMessage.content}`;
-          if (lastSavedSignatureRef.current === signature) {
-            return;
-          }
+          if (lastSavedSignatureRef.current === signature) return;
 
           const now = new Date().toISOString();
 
@@ -118,100 +112,153 @@ export default function Chat() {
     setActiveConversationId,
     refreshConversations,
     toasts,
-  ]); // Reruns when loading is finished
+  ]);
 
-  // --- Handlers ---
   const handleSend = useCallback(() => {
     if (!input.trim()) return;
     void append({ role: "user", content: input.trim() });
     setInput("");
   }, [input, append, setInput]);
 
+  const startWithPreset = (system: string, user?: string) => {
+    void append({ role: "system", content: system });
+    if (user) {
+      void append({ role: "user", content: user });
+    }
+  };
+
+  const isEmpty = messages.length === 0;
+
   return (
-    <div className="chat-page flex min-h-[100dvh] flex-col bg-surface-bg text-text-primary">
+    <div className="chat-page relative flex min-h-[100dvh] flex-col bg-surface-bg text-text-primary">
       <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
         <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(120%_100%_at_50%_0%,hsl(var(--brand-1)/0.06)_0%,transparent_70%)]" />
       </div>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col px-4">
-        {messages.length === 0 ? (
-          <div className="aurora-hero-mobile">
-            <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6">
-              <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6 aurora-text-glow">
-                Willkommen bei Disa AI
-              </h1>
-              <p className="text-base sm:text-xl md:text-2xl mb-6 sm:mb-8 text-[color:var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
-                Erleben Sie die Zukunft der KI-Kommunikation. Beginnen Sie Ihre erste Konversation
-                und entdecken Sie grenzenlose Möglichkeiten.
+      <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 py-4">
+        {isEmpty ? (
+          <>
+            <section className="space-y-2">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-accent/80">
+                Neuer Chat
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 items-center justify-center mb-6 sm:mb-8">
-                <button
-                  onClick={newConversation}
-                  className="w-full sm:w-auto rounded-2xl bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-neo-sm transition-all duration-200 hover:bg-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-base touch-target"
-                >
-                  <span className="flex items-center justify-center gap-2.5">
-                    <span className="text-lg">✨</span>
-                    <span>Neue Konversation starten</span>
-                    <svg
-                      className="w-4 h-4 transform group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  </span>
-                </button>
-                <div className="text-sm text-[color:var(--text-secondary)] flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                  KI-System bereit
-                </div>
-              </div>
+              <h1 className="text-2xl font-semibold text-text-primary sm:text-3xl">
+                Was möchtest du heute mit Disa AI erledigen?
+              </h1>
+              <p className="max-w-2xl text-sm text-text-secondary">
+                Wähle einen Einstieg oder starte direkt eine Nachricht. Alle Aktionen sind für
+                mobile Nutzung optimiert.
+              </p>
+            </section>
 
-              <div className="mobile-feature-grid">
-                <div className="aurora-card-elevated rounded-xl p-4 text-center group mobile-feature-card">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-[color:var(--brand-1)] to-[color:var(--brand-2)] flex items-center justify-center text-xl">
-                    🧠
-                  </div>
-                  <h3 className="font-semibold text-sm mb-1 text-[color:var(--text-primary)]">
-                    Intelligente Antworten
-                  </h3>
-                  <p className="text-xs text-[color:var(--text-secondary)] leading-snug">
-                    Fortschrittliche KI für natürliche Konversationen
-                  </p>
-                </div>
+            <section className="grid gap-3 md:grid-cols-3">
+              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+                <CardHeader className="pb-1">
+                  <CardTitle className="flex items-center gap-2 text-xs font-semibold">
+                    🧠 Research
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-[10px] text-text-secondary">
+                  <p>Tiefe Recherchen, Quellencheck, Pro/Contra-Analysen.</p>
+                  <Button
+                    size="xs"
+                    onClick={() =>
+                      startWithPreset(
+                        "Du bist ein strukturierter Research-Assistent. Fasse Quellen, Argumente und Risiken sachlich zusammen.",
+                        "Hilf mir bei einer tiefen Recherche zu einem Thema meiner Wahl.",
+                      )
+                    }
+                  >
+                    Starten
+                  </Button>
+                </CardContent>
+              </Card>
 
-                <div className="aurora-card-elevated rounded-xl p-4 text-center group mobile-feature-card">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-[color:var(--brand-2)] to-[color:var(--brand-3)] flex items-center justify-center text-xl">
-                    ⚡
-                  </div>
-                  <h3 className="font-semibold text-sm mb-1 text-[color:var(--text-primary)]">
-                    Schnelle Antworten
-                  </h3>
-                  <p className="text-xs text-[color:var(--text-secondary)] leading-snug">
-                    Blitzschnelle Reaktionszeiten
-                  </p>
-                </div>
+              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+                <CardHeader className="pb-1">
+                  <CardTitle className="flex items-center gap-2 text-xs font-semibold">
+                    ✍️ Schreiben
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-[10px] text-text-secondary">
+                  <p>Klare Mails, Support-Texte, Social Posts auf Knopfdruck.</p>
+                  <Button
+                    size="xs"
+                    onClick={() =>
+                      startWithPreset(
+                        "Du unterstützt beim Schreiben klarer, freundlicher Nachrichten und E-Mails.",
+                      )
+                    }
+                  >
+                    Starten
+                  </Button>
+                </CardContent>
+              </Card>
 
-                <div className="aurora-card-elevated rounded-xl p-4 text-center group mobile-feature-card">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-br from-[color:var(--brand-3)] to-[color:var(--brand-4)] flex items-center justify-center text-xl">
-                    🔒
-                  </div>
-                  <h3 className="font-semibold text-sm mb-1 text-[color:var(--text-primary)]">
-                    Datenschutz
-                  </h3>
-                  <p className="text-xs text-[color:var(--text-secondary)] leading-snug">
-                    Ihre Gespräche bleiben sicher
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+                <CardHeader className="pb-1">
+                  <CardTitle className="flex items-center gap-2 text-xs font-semibold">
+                    💻 Code & Reviews
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-[10px] text-text-secondary">
+                  <p>Erklärungen, Refactors und sichere Vorschläge für deinen Code.</p>
+                  <Button
+                    size="xs"
+                    onClick={() =>
+                      startWithPreset(
+                        "Du bist ein gewissenhafter Coding-Partner. Erkläre Code knapp und schlage sichere Verbesserungen vor.",
+                      )
+                    }
+                  >
+                    Starten
+                  </Button>
+                </CardContent>
+              </Card>
+            </section>
+
+            <section className="grid gap-3 md:grid-cols-2">
+              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+                <CardHeader className="pb-1">
+                  <CardTitle className="text-xs font-semibold">Studio-Shortcuts</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-1.5 text-[10px] text-text-secondary">
+                  <Link
+                    to="/models"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.5 hover:bg-surface-muted/80"
+                  >
+                    <span>Modelle vergleichen & wählen</span>
+                    <span className="text-[9px] text-accent">→</span>
+                  </Link>
+                  <Link
+                    to="/roles"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.5 hover:bg-surface-muted/80"
+                  >
+                    <span>Rollenbibliothek öffnen</span>
+                    <span className="text-[9px] text-accent">→</span>
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.5 hover:bg-surface-muted/80"
+                  >
+                    <span>Einstellungen & API-Key prüfen</span>
+                    <span className="text-[9px] text-accent">→</span>
+                  </Link>
+                </CardContent>
+              </Card>
+
+              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+                <CardHeader className="pb-1">
+                  <CardTitle className="text-xs font-semibold">Hinweise</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-1.5 text-[10px] text-text-secondary">
+                  <p>• Teile keine sensiblen Daten oder API-Keys im Prompt.</p>
+                  <p>• Modelle, Limits & Verhalten steuerst du zentral im Studio.</p>
+                  <p>• PWA-ready, mobile-first, lokal überprüfbar.</p>
+                </CardContent>
+              </Card>
+            </section>
+          </>
         ) : (
           <VirtualizedMessageList
             messages={messages}
@@ -228,7 +275,6 @@ export default function Chat() {
         )}
       </main>
 
-      {/* Unified Composer Input */}
       <ChatComposer
         value={input}
         onChange={setInput}

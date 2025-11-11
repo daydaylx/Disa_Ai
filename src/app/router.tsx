@@ -16,6 +16,7 @@ import { AppShell } from "./layouts/AppShell";
 
 // Lazy-loaded Routes für bessere Performance
 const ChatPage = lazy(() => import("../pages/Chat"));
+const StudioHomePage = lazy(() => import("../pages/StudioHome"));
 const ModelsPage = lazy(() => import("../pages/MobileModels"));
 const RolesPage = lazy(() => import("../pages/MobileStudio"));
 const SettingsOverviewPage = lazy(() => import("../pages/SettingsOverviewPage"));
@@ -29,7 +30,11 @@ const router = createBrowserRouter(
   [
     {
       path: "/",
-      element: <Navigate to="/chat" replace />,
+      element: (
+        <RouteWrapper>
+          <StudioHomePage />
+        </RouteWrapper>
+      ),
     },
     {
       path: "/roles",
