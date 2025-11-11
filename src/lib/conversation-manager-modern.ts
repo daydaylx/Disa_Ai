@@ -38,6 +38,53 @@ export function deleteConversation(id: string): Promise<void> {
   return modernStorage.deleteConversation(id);
 }
 
+export async function searchConversations(query: string): Promise<ConversationMetadata[]> {
+  const allConversations = await getAllConversations();
+  const lowercaseQuery = query.toLowerCase();
+
+  return allConversations.filter(
+    (conv) =>
+      conv.title.toLowerCase().includes(lowercaseQuery) ||
+      conv.model.toLowerCase().includes(lowercaseQuery),
+  );
+}
+
+export async function bulkDeleteConversations(
+  ids: string[],
+): Promise<{ deleted: number; errors: string[] }> {
+  const errors: string[] = [];
+  let deleted = 0;
+
+  for (const id of ids) {
+    try {
+      await deleteConversation(id);
+      deleted++;
+    } catch (error) {
+      errors.push(`Failed to delete conversation ${id}: ${error}`);
+    }
+  }
+
+  return { deleted, errors };
+}
+
+export async function bulkUpdateConversations(
+  updates: Array<{ id: string; updates: Partial<Conversation> }>,
+): Promise<{ updated: number; errors: string[] }> {
+  const errors: string[] = [];
+  let updated = 0;
+
+  for (const { id, updates: convUpdates } of updates) {
+    try {
+      await updateConversation(id, convUpdates);
+      updated++;
+    } catch (error) {
+      errors.push(`Failed to update conversation ${id}: ${error}`);
+    }
+  }
+
+  return { updated, errors };
+}
+
 export function cleanupOldConversations(days: number): Promise<number> {
   return modernStorage.cleanupOldConversations(days);
 }
@@ -162,53 +209,4 @@ export async function getStoragePerformance(): Promise<{
     writeTime,
     totalOperations: 2,
   };
-}
-
-// Search functionality
-export async function searchConversations(query: string): Promise<ConversationMetadata[]> {
-  const allConversations = await getAllConversations();
-  const lowercaseQuery = query.toLowerCase();
-
-  return allConversations.filter(
-    (conv) =>
-      conv.title.toLowerCase().includes(lowercaseQuery) ||
-      conv.model.toLowerCase().includes(lowercaseQuery),
-  );
-}
-
-// Bulk operations
-export async function bulkDeleteConversations(
-  ids: string[],
-): Promise<{ deleted: number; errors: string[] }> {
-  const errors: string[] = [];
-  let deleted = 0;
-
-  for (const id of ids) {
-    try {
-      await deleteConversation(id);
-      deleted++;
-    } catch (error) {
-      errors.push(`Failed to delete conversation ${id}: ${error}`);
-    }
-  }
-
-  return { deleted, errors };
-}
-
-export async function bulkUpdateConversations(
-  updates: Array<{ id: string; updates: Partial<Conversation> }>,
-): Promise<{ updated: number; errors: string[] }> {
-  const errors: string[] = [];
-  let updated = 0;
-
-  for (const { id, updates: convUpdates } of updates) {
-    try {
-      await updateConversation(id, convUpdates);
-      updated++;
-    } catch (error) {
-      errors.push(`Failed to update conversation ${id}: ${error}`);
-    }
-  }
-
-  return { updated, errors };
 }

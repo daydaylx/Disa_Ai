@@ -22,6 +22,10 @@ export function usePWAInstall() {
   const [installed, setInstalled] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
     const handler = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setInstallPromptEvent(e);
@@ -29,7 +33,6 @@ export function usePWAInstall() {
 
     window.addEventListener("beforeinstallprompt", handler as any);
 
-    // Check if already installed
     if (
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as any).standalone
@@ -44,7 +47,7 @@ export function usePWAInstall() {
 
   const requestInstall = useCallback(async () => {
     if (!installPromptEvent) {
-      throw new Error("Install prompt not available");
+      return "dismissed";
     }
 
     try {
@@ -59,7 +62,7 @@ export function usePWAInstall() {
       return outcome;
     } catch (error) {
       console.error("[PWA] Installation prompt failed:", error);
-      throw error;
+      return "dismissed";
     }
   }, [installPromptEvent]);
 

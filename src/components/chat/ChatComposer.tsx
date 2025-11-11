@@ -153,6 +153,8 @@ export function ChatComposer({
               disabled={isComposerDisabled}
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
+              aria-label="Nachricht an Disa AI eingeben"
+              aria-describedby="chat-composer-hint"
               className={cn(
                 "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[44px] resize-none border-0 bg-transparent p-2 text-[15px] sm:text-base leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
                 isQuickstartLoading && "text-text-secondary cursor-not-allowed",
@@ -210,7 +212,10 @@ export function ChatComposer({
           </div>
         </div>
 
-        <div className="text-text-secondary mt-1 text-center text-xs sm:text-sm px-2">
+        <div
+          id="chat-composer-hint"
+          className="text-text-secondary mt-1 text-center text-xs sm:text-sm px-2"
+        >
           <span className="inline-flex items-center justify-center gap-2">
             {(isLoading || isComposerDisabled) && (
               <span className="relative flex h-2 w-2">

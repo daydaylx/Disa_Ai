@@ -33,33 +33,37 @@ export function useMemory() {
   }, [isEnabled]);
 
   const toggleMemory = useCallback(() => {
-    const newEnabled = !isEnabled;
-    setIsEnabled(newEnabled);
-
-    try {
-      if (newEnabled) {
-        localStorage.setItem("disa-ai-memory-enabled", "true");
-      } else {
-        localStorage.removeItem("disa-ai-memory-enabled");
+    setIsEnabled((prev) => {
+      const newEnabled = !prev;
+      try {
+        if (newEnabled) {
+          localStorage.setItem("disa-ai-memory-enabled", "true");
+        } else {
+          localStorage.removeItem("disa-ai-memory-enabled");
+        }
+      } catch (error) {
+        console.error("Failed to save memory preference:", error);
       }
-    } catch (error) {
-      console.error("Failed to save memory preference:", error);
-    }
-  }, [isEnabled]);
+      return newEnabled;
+    });
+  }, []);
 
   const updateGlobalMemory = useCallback(
     (updates: Partial<GlobalMemory>) => {
       if (!isEnabled) return;
 
       try {
-        const updated = { ...(globalMemory || {}), ...updates };
-        MemoryStore.saveGlobalMemory(updated);
-        setGlobalMemory(updated);
+        setGlobalMemory((prev) => {
+          const base = prev || {};
+          const updated = { ...base, ...updates };
+          MemoryStore.saveGlobalMemory(updated);
+          return updated;
+        });
       } catch (error) {
         console.error("Failed to update global memory:", error);
       }
     },
-    [globalMemory, isEnabled],
+    [isEnabled],
   );
 
   const clearAllMemory = useCallback(() => {

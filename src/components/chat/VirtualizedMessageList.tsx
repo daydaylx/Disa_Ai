@@ -115,7 +115,7 @@ export function VirtualizedMessageList({
         </div>
       )}
 
-      <div className="space-y-0">
+      <div className="space-y-2">
         {visibleMessages.map((message, index) => (
           <ChatMessage
             key={message.id}

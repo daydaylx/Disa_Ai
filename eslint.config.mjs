@@ -162,13 +162,25 @@ export default [
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "no-debugger": "warn",
 
-      // Design token enforcement - prevent inline hex colors
+      // Design token enforcement - prevent inline hex colors, raw 100vh, and z-[9999]
       "no-restricted-syntax": [
         "error",
         {
           selector: "Literal[value=/^#[0-9a-fA-F]{3,6}$/]",
           message:
-            "Direct hex colors are not allowed. Use design tokens from src/styles/design-tokens.ts or CSS custom properties instead.",
+            "Direct hex colors are not allowed. Use semantic tokens or CSS custom properties instead.",
+        },
+        {
+          selector:
+            "Literal[value=/^100vh$/], TemplateElement[value.raw=/100vh/], TemplateElement[value.cooked=/100vh/]",
+          message:
+            "Avoid raw 100vh due to mobile viewport issues. Use 100dvh, safe-area aware utilities, or existing layout helpers.",
+        },
+        {
+          selector:
+            "Literal[value=/z-\\[9999\\]/], TemplateElement[value.raw=/z-\\[9999\\]/], TemplateElement[value.cooked=/z-\\[9999\\]/]",
+          message:
+            "Use semantic z-index utilities (e.g. z-toast, z-notification, z-bottom-nav) instead of arbitrary z-[9999].",
         },
       ],
     },

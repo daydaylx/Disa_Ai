@@ -5,7 +5,7 @@ import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageLis
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
-import { saveConversation } from "../lib/conversation-manager-modern";
+import { saveConversation, updateConversation } from "../lib/conversation-manager-modern";
 
 export default function Chat() {
   const toasts = useToasts();
@@ -32,13 +32,12 @@ export default function Chat() {
     },
   });
 
-  const { newConversation, setActiveConversationId, refreshConversations } = useConversationManager(
-    {
+  const { newConversation, activeConversationId, setActiveConversationId, refreshConversations } =
+    useConversationManager({
       setMessages,
       setCurrentSystemPrompt,
       onNewConversation: () => {}, // Reset discussion on new chat
-    },
-  );
+    });
 
   // --- Effects ---
 
@@ -75,19 +74,30 @@ export default function Chat() {
             return;
           }
 
-          const conversation = {
-            id: crypto.randomUUID(),
-            title: `Conversation ${new Date().toLocaleDateString()}`,
-            messages: storageMessages,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            model: "default",
-            messageCount: storageMessages.length,
-          };
-          // saveConversation is now async, await it
-          await saveConversation(conversation);
+          const now = new Date().toISOString();
+
+          if (activeConversationId) {
+            await updateConversation(activeConversationId, {
+              messages: storageMessages,
+              updatedAt: now,
+              messageCount: storageMessages.length,
+            });
+          } else {
+            const conversationId = crypto.randomUUID();
+            const conversation = {
+              id: conversationId,
+              title: `Conversation ${new Date().toLocaleDateString()}`,
+              messages: storageMessages,
+              createdAt: now,
+              updatedAt: now,
+              model: "default",
+              messageCount: storageMessages.length,
+            };
+            await saveConversation(conversation);
+            setActiveConversationId(conversationId);
+          }
+
           lastSavedSignatureRef.current = signature;
-          setActiveConversationId(conversation.id);
           await refreshConversations();
         } catch (error) {
           console.error("Failed to auto-save:", error);
@@ -101,7 +111,14 @@ export default function Chat() {
     };
 
     void saveConversationIfNeeded();
-  }, [isLoading, messages, setActiveConversationId, refreshConversations, toasts]); // Reruns when loading is finished
+  }, [
+    isLoading,
+    messages,
+    activeConversationId,
+    setActiveConversationId,
+    refreshConversations,
+    toasts,
+  ]); // Reruns when loading is finished
 
   // --- Handlers ---
   const handleSend = useCallback(() => {
@@ -111,19 +128,12 @@ export default function Chat() {
   }, [input, append, setInput]);
 
   return (
-    <div className="mobile-chat-container text-text-primary relative min-h-dvh overflow-hidden bg-[color:var(--surface-base)]">
-      {/* Enhanced Aurora Background */}
-      <div className="pointer-events-none fixed inset-0" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(100%_80%_at_20%_10%,hsl(var(--brand-1)/0.08)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_80%_20%,hsl(var(--brand-2)/0.12)_0%,transparent_45%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(110%_70%_at_50%_90%,hsl(var(--brand-3)/0.06)_0%,transparent_60%)]" />
-        <div
-          className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,hsl(var(--brand-1)/0.03)_0deg,hsl(var(--brand-2)/0.05)_120deg,hsl(var(--brand-3)/0.04)_240deg,hsl(var(--brand-1)/0.03)_360deg)] animate-spin"
-          style={{ animationDuration: "30s" }}
-        />
+    <div className="chat-page flex min-h-[100dvh] flex-col bg-surface-bg text-text-primary">
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(120%_100%_at_50%_0%,hsl(var(--brand-1)/0.06)_0%,transparent_70%)]" />
       </div>
 
-      <main className="relative z-10 mx-auto w-full max-w-4xl px-4">
+      <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col px-4">
         {messages.length === 0 ? (
           <div className="aurora-hero-mobile">
             <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6">
@@ -137,7 +147,7 @@ export default function Chat() {
               <div className="flex flex-col sm:flex-row gap-3 items-center justify-center mb-6 sm:mb-8">
                 <button
                   onClick={newConversation}
-                  className="w-full sm:w-auto aurora-card-elevated aurora-glow-strong rounded-2xl px-6 py-3.5 min-h-[44px] text-base font-semibold text-[color:var(--text-primary)] hover:text-white transition-all duration-300 group touch-target"
+                  className="w-full sm:w-auto rounded-2xl bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-neo-sm transition-all duration-200 hover:bg-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-base touch-target"
                 >
                   <span className="flex items-center justify-center gap-2.5">
                     <span className="text-lg">✨</span>

@@ -8,7 +8,7 @@
  */
 
 import { isFeatureEnabled } from "../../config/flags";
-import { safeWarn } from "../utils/production-logger";
+import { logWarn } from "../logging";
 
 // Typed Prism interface für bessere TypeScript-Unterstützung
 interface PrismStatic {
@@ -104,10 +104,10 @@ async function loadPrism(): Promise<PrismStatic> {
       // Stelle sicher, dass Prism vollständig initialisiert ist
       prismInstance = Prism;
 
-      safeWarn("[Lazy Highlighter] ✅ Prism.js loaded successfully");
+      logWarn("[Lazy Highlighter] Prism.js loaded successfully");
       return prismInstance;
     } catch (error) {
-      safeWarn("[Lazy Highlighter] ❌ Failed to load Prism.js:", error);
+      logWarn("[Lazy Highlighter] Failed to load Prism.js", error as Error);
       prismLoadingPromise = null; // Reset for retry
       throw error;
     }
@@ -189,7 +189,7 @@ export async function highlightCode(
     // Language grammar check
     const grammar = prism.languages[normalizedLanguage];
     if (!grammar) {
-      safeWarn(`[Lazy Highlighter] Grammar for "${normalizedLanguage}" not found`);
+      logWarn(`[Lazy Highlighter] Grammar for "${normalizedLanguage}" not found`);
       return {
         highlighted: code,
         language: "text",
@@ -208,7 +208,7 @@ export async function highlightCode(
       fallback: false,
     };
   } catch (error) {
-    safeWarn("[Lazy Highlighter] Highlighting failed:", error);
+    logWarn("[Lazy Highlighter] Highlighting failed", error as Error);
 
     return {
       highlighted: code,

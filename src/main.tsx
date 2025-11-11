@@ -1,7 +1,7 @@
 import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
-import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/components.css";
+import "./styles/tokens.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -12,9 +12,8 @@ import { CustomRolesProvider } from "./contexts/CustomRolesContext";
 import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 import { initializeSentry } from "./lib/monitoring/sentry";
-// PWA Installation Prompt
-import { safeError, safeWarn } from "./lib/utils/production-logger";
 import { reloadApp, resetApp } from "./lib/recovery/resetApp";
+import { safeError, safeWarn } from "./lib/utils/production-logger";
 import { themeController } from "./styles/theme";
 
 // Global type declarations
@@ -74,7 +73,7 @@ function initializeApp() {
 }
 
 // Initialize app with error recovery
-function safeInitialize() {
+function safeInitialize(): void {
   // Always initialize React first (critical for app to load)
   try {
     initializeApp();
@@ -138,7 +137,7 @@ function renderPreloadErrorOverlay(error: Event): void {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--color-surface-elevated) 0%, var(--color-surface-elevated-strong) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -148,7 +147,7 @@ function renderPreloadErrorOverlay(error: Event): void {
 
   const container = document.createElement("div");
   container.style.cssText = `
-    background: white;
+    background: var(--color-surface);
     border-radius: 16px;
     padding: 48px;
     max-width: 500px;
@@ -169,7 +168,7 @@ function renderPreloadErrorOverlay(error: Event): void {
   title.style.cssText = `
     font-size: 28px;
     font-weight: 700;
-    color: #1a202c;
+    color: var(--color-text-primary);
     margin: 0 0 16px 0;
   `;
   title.textContent = "Ladefehler";
@@ -178,7 +177,7 @@ function renderPreloadErrorOverlay(error: Event): void {
   const description = document.createElement("p");
   description.style.cssText = `
     font-size: 16px;
-    color: #4a5568;
+    color: var(--color-text-secondary);
     line-height: 1.6;
     margin: 0 0 32px 0;
   `;
@@ -196,7 +195,7 @@ function renderPreloadErrorOverlay(error: Event): void {
   // Reload button
   const reloadBtn = document.createElement("button");
   reloadBtn.style.cssText = `
-    background: #667eea;
+    background: var(--color-accent-primary);
     color: white;
     border: none;
     padding: 12px 24px;
@@ -208,21 +207,21 @@ function renderPreloadErrorOverlay(error: Event): void {
   `;
   reloadBtn.textContent = "Neu laden";
   reloadBtn.onmouseover = () => {
-    reloadBtn.style.background = "#5a67d8";
+    reloadBtn.style.opacity = "0.96";
     reloadBtn.style.transform = "translateY(-2px)";
   };
   reloadBtn.onmouseout = () => {
-    reloadBtn.style.background = "#667eea";
+    reloadBtn.style.opacity = "1";
     reloadBtn.style.transform = "translateY(0)";
   };
   reloadBtn.onclick = () => {
-    reloadApp();
+    void reloadApp();
   };
 
   // Reset button
   const resetBtn = document.createElement("button");
   resetBtn.style.cssText = `
-    background: #f56565;
+    background: var(--color-accent-danger);
     color: white;
     border: none;
     padding: 12px 24px;
@@ -234,15 +233,15 @@ function renderPreloadErrorOverlay(error: Event): void {
   `;
   resetBtn.textContent = "App zurücksetzen";
   resetBtn.onmouseover = () => {
-    resetBtn.style.background = "#e53e3e";
+    resetBtn.style.opacity = "0.96";
     resetBtn.style.transform = "translateY(-2px)";
   };
   resetBtn.onmouseout = () => {
-    resetBtn.style.background = "#f56565";
+    resetBtn.style.opacity = "1";
     resetBtn.style.transform = "translateY(0)";
   };
   resetBtn.onclick = () => {
-    resetApp();
+    void resetApp();
   };
 
   // Assemble the overlay
@@ -287,4 +286,5 @@ function installPreloadErrorHandler(): void {
 installPreloadErrorHandler();
 
 // Start the app safely
-safeInitialize();
+
+void safeInitialize();

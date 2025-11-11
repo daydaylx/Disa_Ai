@@ -46,18 +46,18 @@ export async function deleteOldCaches(): Promise<void> {
 
   const cacheNames = await caches.keys();
   const oldCaches = cacheNames.filter(
-    (name) => name.startsWith(CACHE_PREFIX) && !isCurrentVersionCache(name)
+    (name) => name.startsWith(CACHE_PREFIX) && !isCurrentVersionCache(name),
   );
 
   await Promise.all(
     oldCaches.map(async (cacheName) => {
-      console.log(`[SW] Deleting old cache: ${cacheName}`);
+      console.warn(`[SW] Deleting old cache: ${cacheName}`);
       await caches.delete(cacheName);
-    })
+    }),
   );
 
   if (oldCaches.length > 0) {
-    console.log(`[SW] Deleted ${oldCaches.length} old cache(s)`);
+    console.warn(`[SW] Deleted ${oldCaches.length} old cache(s)`);
   }
 }
 
@@ -103,7 +103,7 @@ export function broadcastSWUpdate(type: ServiceWorkerUpdateMessage["type"]): voi
  * @returns Cleanup function to stop listening
  */
 export function listenForSWUpdates(
-  callback: (message: ServiceWorkerUpdateMessage) => void
+  callback: (message: ServiceWorkerUpdateMessage) => void,
 ): () => void {
   if (typeof BroadcastChannel === "undefined") {
     return () => {}; // No-op cleanup

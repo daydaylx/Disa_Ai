@@ -1,3 +1,5 @@
+import { logWarn } from "../logging";
+
 /**
  * Lazy-loaded Prism.js CSS Theme
  *
@@ -10,20 +12,22 @@ let prismCSSLoaded = false;
  * Lädt Prism.js CSS Theme lazy
  * Nur einmal ausgeführt
  */
+
 export async function loadPrismCSS(): Promise<void> {
   if (prismCSSLoaded) return;
 
   try {
-    // Dynamic import von Prism CSS (Vite wird das als separaten Chunk bundeln)
+    if (typeof document === "undefined") {
+      prismCSSLoaded = true;
+      return;
+    }
+
     await import("prismjs/themes/prism-tomorrow.css");
-
-    // Custom CSS für Design-System-Integration
     injectCustomPrismCSS();
-
     prismCSSLoaded = true;
-    console.warn("[Lazy Highlighter] ✅ Prism CSS loaded");
   } catch (error) {
-    console.warn("[Lazy Highlighter] ❌ Failed to load Prism CSS:", error);
+    prismCSSLoaded = true;
+    logWarn("[Lazy Highlighter] Failed to load Prism CSS", error as Error);
   }
 }
 

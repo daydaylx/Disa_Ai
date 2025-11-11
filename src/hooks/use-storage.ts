@@ -155,8 +155,7 @@ export function useConversation(id: string | null) {
       try {
         setError(null);
         await updateConversation(conversation.id, updates);
-        const updated = { ...conversation, ...updates };
-        setConversation(updated);
+        setConversation((prev) => (prev ? { ...prev, ...updates } : prev));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to update conversation");
         throw err;
@@ -171,8 +170,7 @@ export function useConversation(id: string | null) {
     try {
       setError(null);
       await toggleFavorite(conversation.id);
-      const updated = { ...conversation, isFavorite: !conversation.isFavorite };
-      setConversation(updated);
+      setConversation((prev) => (prev ? { ...prev, isFavorite: !prev.isFavorite } : prev));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to toggle favorite status");
       throw err;

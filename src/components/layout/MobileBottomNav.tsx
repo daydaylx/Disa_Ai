@@ -17,7 +17,7 @@ export function MobileBottomNav() {
       className="z-bottom-nav fixed inset-x-0 bottom-0 border-t border-line-subtle bg-surface-base/95 backdrop-blur-sm"
       aria-label="Hauptnavigation"
     >
-      <div className="mx-auto flex max-w-2xl items-center justify-between gap-1 px-4 py-2">
+      <div className="mx-auto flex max-w-2xl items-center justify-between gap-1 px-4 py-2 pb-[max(env(safe-area-inset-bottom),0.35rem)]">
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname.startsWith(item.path);
           return (

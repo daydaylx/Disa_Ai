@@ -337,10 +337,7 @@ export class ModernStorageLayer {
 
     try {
       await db.transaction("rw", db.conversations, db.metadata, async () => {
-        // Save full conversation
         await db.conversations.put(conversation);
-
-        // Save metadata
         await db.metadata.put({
           id: conversation.id,
           title: conversation.title,
@@ -353,6 +350,228 @@ export class ModernStorageLayer {
     } catch (error) {
       console.error(`Failed to save conversation ${conversation.id}:`, error);
       throw error;
+    }
+  }
+
+  // Exposed for conversation-manager-modern: atomic update by id
+  async updateConversation(id: string, updates: Partial<Conversation>): Promise<void> {
+    const db = await this.ensureDB();
+    const patch: Partial<Conversation> = {
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (!db) {
+      const existing = fallbackStore.conversations.get(id);
+      if (!existing) {
+        throw new Error(`Conversation ${id} not found`);
+      }
+      const merged = { ...existing, ...patch };
+      fallbackStore.conversations.set(id, merged);
+      fallbackStore.metadata.set(id, {
+        id: merged.id,
+        title: merged.title,
+        createdAt: merged.createdAt,
+        updatedAt: merged.updatedAt,
+        model: merged.model,
+        messageCount: merged.messageCount,
+      });
+      persistFallbackStore();
+      return;
+    }
+
+    try {
+      await db.transaction("rw", db.conversations, db.metadata, async () => {
+        const existing = await db.conversations.get(id);
+        if (!existing) {
+          throw new Error(`Conversation ${id} not found`);
+        }
+        const merged: Conversation = { ...existing, ...patch };
+        await db.conversations.put(merged);
+        await db.metadata.put({
+          id: merged.id,
+          title: merged.title,
+          createdAt: merged.createdAt,
+          updatedAt: merged.updatedAt,
+          model: merged.model,
+          messageCount: merged.messageCount,
+        });
+      });
+    } catch (error) {
+      console.error(`Failed to update conversation ${id}:`, error);
+      throw error;
+    }
+  }
+
+  // Exposed for conversation-manager-modern: atomic favorite toggle
+  async toggleFavorite(id: string): Promise<void> {
+    const db = await this.ensureDB();
+
+    if (!db) {
+      const existing = fallbackStore.conversations.get(id);
+      if (!existing) {
+        throw new Error(`Conversation ${id} not found`);
+      }
+      const updated: Conversation = {
+        ...existing,
+        isFavorite: !existing.isFavorite,
+        updatedAt: new Date().toISOString(),
+      };
+      fallbackStore.conversations.set(id, updated);
+      const meta = fallbackStore.metadata.get(id);
+      if (meta) {
+        fallbackStore.metadata.set(id, {
+          ...meta,
+          updatedAt: updated.updatedAt,
+        });
+      }
+      persistFallbackStore();
+      return;
+    }
+
+    try {
+      await db.transaction("rw", db.conversations, db.metadata, async () => {
+        const existing = await db.conversations.get(id);
+        if (!existing) {
+          throw new Error(`Conversation ${id} not found`);
+        }
+        const updated: Conversation = {
+          ...existing,
+          isFavorite: !existing.isFavorite,
+          updatedAt: new Date().toISOString(),
+        };
+        await db.conversations.put(updated);
+        await db.metadata.update(id, { updatedAt: updated.updatedAt });
+      });
+    } catch (error) {
+      console.error(`Failed to toggle favorite for conversation ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async searchConversations(query: string): Promise<ConversationMetadata[]> {
+    const lowercaseQuery = query.toLowerCase();
+    const db = await this.ensureDB();
+
+    if (!db) {
+      const all = Array.from(fallbackStore.metadata.values());
+      return all.filter(
+        (conv) =>
+          conv.title.toLowerCase().includes(lowercaseQuery) ||
+          conv.model.toLowerCase().includes(lowercaseQuery),
+      );
+    }
+
+    try {
+      const all = await db.metadata.orderBy("updatedAt").reverse().toArray();
+      return all.filter(
+        (conv) =>
+          conv.title.toLowerCase().includes(lowercaseQuery) ||
+          conv.model.toLowerCase().includes(lowercaseQuery),
+      );
+    } catch (error) {
+      console.error("Failed to search conversations:", error);
+      return [];
+    }
+  }
+
+  async bulkDeleteConversations(ids: string[]): Promise<{ deleted: number; errors: string[] }> {
+    const db = await this.ensureDB();
+    const errors: string[] = [];
+
+    if (!db) {
+      let deleted = 0;
+      for (const id of ids) {
+        if (fallbackStore.conversations.delete(id)) {
+          fallbackStore.metadata.delete(id);
+          deleted++;
+        }
+      }
+      if (deleted > 0) {
+        persistFallbackStore();
+      }
+      return { deleted, errors };
+    }
+
+    try {
+      await db.transaction("rw", db.conversations, db.metadata, async () => {
+        await db.conversations.bulkDelete(ids);
+        await db.metadata.bulkDelete(ids);
+      });
+      return { deleted: ids.length, errors };
+    } catch (error) {
+      errors.push(String(error));
+      console.error("Failed bulk delete conversations:", error);
+      return { deleted: 0, errors };
+    }
+  }
+
+  async bulkUpdateConversations(
+    updates: Array<{ id: string; updates: Partial<Conversation> }>,
+  ): Promise<{ updated: number; errors: string[] }> {
+    const db = await this.ensureDB();
+    const errors: string[] = [];
+
+    if (!db) {
+      let updated = 0;
+      for (const { id, updates: convUpdates } of updates) {
+        const existing = fallbackStore.conversations.get(id);
+        if (!existing) {
+          errors.push(`Conversation ${id} not found`);
+          continue;
+        }
+        const merged: Conversation = {
+          ...existing,
+          ...convUpdates,
+          updatedAt: new Date().toISOString(),
+        };
+        fallbackStore.conversations.set(id, merged);
+        fallbackStore.metadata.set(id, {
+          id: merged.id,
+          title: merged.title,
+          createdAt: merged.createdAt,
+          updatedAt: merged.updatedAt,
+          model: merged.model,
+          messageCount: merged.messageCount,
+        });
+        updated++;
+      }
+      if (updated > 0) {
+        persistFallbackStore();
+      }
+      return { updated, errors };
+    }
+
+    try {
+      await db.transaction("rw", db.conversations, db.metadata, async () => {
+        for (const { id, updates: convUpdates } of updates) {
+          const existing = await db.conversations.get(id);
+          if (!existing) {
+            errors.push(`Conversation ${id} not found`);
+            continue;
+          }
+          const merged: Conversation = {
+            ...existing,
+            ...convUpdates,
+            updatedAt: new Date().toISOString(),
+          };
+          await db.conversations.put(merged);
+          await db.metadata.put({
+            id: merged.id,
+            title: merged.title,
+            createdAt: merged.createdAt,
+            updatedAt: merged.updatedAt,
+            model: merged.model,
+            messageCount: merged.messageCount,
+          });
+        }
+      });
+      const successful = updates.length - errors.length;
+      return { updated: successful, errors };
+    } catch (error) {
+      errors.push(String(error));
+      console.error("Failed bulk update conversations:", error);
+      return { updated: 0, errors };
     }
   }
 

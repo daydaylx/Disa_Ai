@@ -93,7 +93,9 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             onClick={() => setIsOverflowOpen(true)}
             className="flex items-center gap-2 text-text-primary"
           >
-            <span className="text-xl"></span>
+            <span className="text-xl" aria-hidden="true">
+              
+            </span>
             <span>Menü</span>
           </button>
         </div>
@@ -130,15 +132,14 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
       <main
         id="main"
+        role="main"
         key={location.pathname}
         className={cn(
           "min-h-0 flex flex-1 flex-col overflow-y-auto p-page-padding-y px-page-padding-x",
           !isMobile && "ml-64",
         )}
       >
-        <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col lg:max-w-4xl">
-          {children}
-        </div>
+        <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col lg:max-w-4xl">{children}</div>
       </main>
 
       {isMobile && (

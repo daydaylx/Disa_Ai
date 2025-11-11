@@ -304,6 +304,40 @@ Die wichtigsten Skripte aus `package.json`:
 | `npm run test:e2e`  | Führt alle End-to-End-Tests mit Playwright aus.                                |
 | `npm run verify`    | Führt `typecheck`, `lint`, `test:unit` und `e2e` nacheinander aus (CI-Skript). |
 
+## 🔐 Architektur- und Qualitätsregeln
+
+Diese Richtlinien sind verbindlich für neue Änderungen.
+
+1. Qualitäts-Gates
+
+- Lokal und in CI:
+  - `npm run verify` ist das zentrale Gate (typecheck + lint + Tests).
+
+2. Modul-Grenzen
+
+- `src/lib/**`: Nur Utilities (Logging, Highlighting, Storage, Errors), keine React-Imports.
+- `src/hooks/**`: Business-Logik & Orchestrierung, kein direktes Rendering.
+- `src/components/**`: UI & Interaktion, keine direkten Netzwerk-/Storage-Zugriffe.
+- `src/config/**`: Konfiguration & Env/Flags, ohne unnötige Seiteneffekte.
+- `src/app/**`: Shell, Router, Layouts, globale Provider.
+
+3. Design-System
+
+- Keine rohen Hexfarben in App-Code; nur Tokens/CSS-Variablen.
+- Kein rohes `100vh`; nutze `100dvh`, `--vh` oder bereitgestellte Utilities.
+- Keine `z-[9999]`; nur semantische z-Utilities (`z-skip-link`, `z-toast`, ...).
+- `prefers-reduced-motion` respektieren, keine erzwungenen Dauer-Animationen.
+
+4. Resilienz & Progressive Enhancement
+
+- Syntax-Highlighting nur über Lazy-Highlighter + Feature-Flags; Fehler → Plaintext.
+- Storage nur über sichere Helper (z.B. `safeStorage`).
+- PWA/Service Worker dürfen nie zu einem Blank Screen führen.
+
+5. Logging
+
+- Neue Pfade nutzen zentrale Logger (`src/lib/logging.ts` bzw. Produktions-Logger), kein wildes `console.log`.
+
 ## 🧪 Qualitätssicherung & Testing
 
 - **Unit-Tests (`src/__tests__`)**: Fokussieren sich auf die Business-Logik in Hooks (z.B. Race-Conditions in `useChat`) und kritische Utility-Funktionen.

@@ -26,18 +26,17 @@ export function useSettings() {
     }
   });
 
-  const saveSettings = useCallback(
-    (newSettings: Partial<Settings>) => {
-      try {
-        const updated = { ...settings, ...newSettings };
-        setSettings(updated);
+  const saveSettings = useCallback((newSettings: Partial<Settings>) => {
+    try {
+      setSettings((prev) => {
+        const updated = { ...prev, ...newSettings };
         localStorage.setItem("disa-ai-settings", JSON.stringify(updated));
-      } catch (error) {
-        console.error("Failed to save settings:", error);
-      }
-    },
-    [settings],
-  );
+        return updated;
+      });
+    } catch (error) {
+      console.error("Failed to save settings:", error);
+    }
+  }, []);
 
   const toggleNSFWContent = useCallback(() => {
     saveSettings({ showNSFWContent: !settings.showNSFWContent });

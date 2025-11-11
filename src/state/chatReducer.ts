@@ -29,13 +29,28 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return { ...state, messages: action.messages };
     case "ADD_MESSAGE":
       return { ...state, messages: [...state.messages, action.message] };
-    case "UPDATE_MESSAGE":
+    case "UPDATE_MESSAGE": {
+      const index = [...state.messages].reverse().findIndex((msg) => msg.id === action.id);
+
+      if (index === -1) {
+        return state;
+      }
+
+      const targetIndex = state.messages.length - 1 - index;
+      const target = state.messages[targetIndex];
+
+      if (!target || target.content === action.content) {
+        return state;
+      }
+
+      const messages = state.messages.slice();
+      messages[targetIndex] = { ...target, content: action.content };
+
       return {
         ...state,
-        messages: state.messages.map((msg) =>
-          msg.id === action.id ? { ...msg, content: action.content } : msg,
-        ),
+        messages,
       };
+    }
     case "SET_INPUT":
       return { ...state, input: action.input };
     case "SET_LOADING":
