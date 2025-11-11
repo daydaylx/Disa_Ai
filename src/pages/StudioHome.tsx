@@ -16,11 +16,11 @@ export default function StudioHome() {
             Disa AI Studio
           </p>
           <h1 className="text-2xl font-semibold text-text-primary sm:text-3xl">
-            Dein ruhiges KI-Studio fr klare, produktive Konversationen.
+            Dein ruhiges KI-Studio für klare, produktive Konversationen.
           </h1>
           <p className="max-w-2xl text-sm text-text-secondary">
-            Starte einen Chat, whle ein Modell oder eine Rolle und verwalte alles zentral  optimiert
-            fr mobile Android-Gerte und PWA.
+            Starte einen Chat, wähle ein Modell oder eine Rolle und verwalte alles zentral –
+            optimiert für mobile Android-Geräte und PWA.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button size="sm" asChild>
@@ -43,9 +43,9 @@ export default function StudioHome() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-xs text-text-secondary">
-              <p>Fhre fokussierte Konversationen mit stabiler Streaming-Engine und Auto-Save.</p>
-              <Button size="xs" asChild>
-                <Link to="/chat">Chat fnen</Link>
+              <p>Führe fokussierte Konversationen mit stabiler Streaming-Engine und Auto-Save.</p>
+              <Button size="sm" asChild>
+                <Link to="/chat">Chat öffnen</Link>
               </Button>
             </CardContent>
           </Card>
@@ -61,9 +61,9 @@ export default function StudioHome() {
             </CardHeader>
             <CardContent className="space-y-2 text-xs text-text-secondary">
               <p>
-                Vergleiche Modelle, Kosten und Kontextlngen. Whle, was zu deinem Use-Case passt.
+                Vergleiche Modelle, Kosten und Kontextlängen. Wähle, was zu deinem Use-Case passt.
               </p>
-              <Button size="xs" variant="ghost" asChild>
+              <Button size="sm" variant="ghost" asChild>
                 <Link to="/models">Modelle entdecken</Link>
               </Button>
             </CardContent>
@@ -79,9 +79,9 @@ export default function StudioHome() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-xs text-text-secondary">
-              <p>Nutze kuratierte Rollenprofile fr Research, Schreiben, Coding und Support.</p>
-              <Button size="xs" variant="ghost" asChild>
-                <Link to="/roles">Rollen auswhlen</Link>
+              <p>Nutze kuratierte Rollenprofile für Research, Schreiben, Coding und Support.</p>
+              <Button size="sm" variant="ghost" asChild>
+                <Link to="/roles">Rollen auswählen</Link>
               </Button>
             </CardContent>
           </Card>
@@ -97,10 +97,10 @@ export default function StudioHome() {
             </CardHeader>
             <CardContent className="space-y-2 text-xs text-text-secondary">
               <p>
-                Verwalte API-Keys, Speicher, Filter und Exporte  transparent und lokal
+                Verwalte API-Keys, Speicher, Filter und Exporte – transparent und lokal
                 kontrollierbar.
               </p>
-              <Button size="xs" variant="ghost" asChild>
+              <Button size="sm" variant="ghost" asChild>
                 <Link to="/settings">Studio konfigurieren</Link>
               </Button>
             </CardContent>

@@ -161,7 +161,7 @@ export default function Chat() {
                 <CardContent className="space-y-2 text-[10px] text-text-secondary">
                   <p>Tiefe Recherchen, Quellencheck, Pro/Contra-Analysen.</p>
                   <Button
-                    size="xs"
+                    size="sm"
                     onClick={() =>
                       startWithPreset(
                         "Du bist ein strukturierter Research-Assistent. Fasse Quellen, Argumente und Risiken sachlich zusammen.",
@@ -183,7 +183,7 @@ export default function Chat() {
                 <CardContent className="space-y-2 text-[10px] text-text-secondary">
                   <p>Klare Mails, Support-Texte, Social Posts auf Knopfdruck.</p>
                   <Button
-                    size="xs"
+                    size="sm"
                     onClick={() =>
                       startWithPreset(
                         "Du unterstützt beim Schreiben klarer, freundlicher Nachrichten und E-Mails.",
@@ -204,7 +204,7 @@ export default function Chat() {
                 <CardContent className="space-y-2 text-[10px] text-text-secondary">
                   <p>Erklärungen, Refactors und sichere Vorschläge für deinen Code.</p>
                   <Button
-                    size="xs"
+                    size="sm"
                     onClick={() =>
                       startWithPreset(
                         "Du bist ein gewissenhafter Coding-Partner. Erkläre Code knapp und schlage sichere Verbesserungen vor.",
