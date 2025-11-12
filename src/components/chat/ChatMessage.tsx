@@ -134,9 +134,9 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
   const isSystem = message.role === "system";
 
   const bubbleClass = cn(
-    "max-w-[85%] text-left",
-    isUser && "ml-auto text-right",
-    isSystem && "mx-auto max-w-[70%] text-center",
+    "max-w-[70%]",
+    isUser && "ml-auto",
+    isSystem && "mx-auto max-w-[60%]",
   );
 
   const handleCopy = () => {
@@ -151,7 +151,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
   return (
     <div
       className={cn(
-        "group relative flex gap-3 px-3 py-5",
+        "group relative flex gap-3 px-3 py-4",
         isUser && "flex-row-reverse",
         isSystem && "justify-center opacity-70",
       )}
@@ -159,7 +159,8 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
-      <div className={cn("relative", isSystem && "hidden")}>
+      {/* Avatar */}
+      <div className={cn("relative flex-shrink-0", isSystem && "hidden")}>
         <Avatar className="border-border h-9 w-9 border">
           <AvatarFallback className={cn("bg-[var(--surface-glass-panel)] text-text-primary")}>
             {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
@@ -167,59 +168,69 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
         </Avatar>
       </div>
 
-      <div className={cn("flex-1 space-y-2", isUser && "text-right", isSystem && "text-center")}>
-        {!isSystem && (
-          <div
-            className={cn(
-              "text-text-secondary flex items-center gap-2 text-[13px]",
-              isUser && "justify-end",
-            )}
-          >
-            <span className="text-text-primary font-medium">{isUser ? "Ich" : "Assistent"}</span>
-            {message.model && (
-              <Badge
-                variant="secondary"
-                className="border-border bg-card text-text-secondary text-xs"
-              >
-                {message.model}
-              </Badge>
-            )}
-            {message.tokens && (
-              <Badge variant="outline" className="border-border text-text-secondary text-xs">
-                {message.tokens} Token
-              </Badge>
-            )}
-            <span className="text-xs">{new Date(message.timestamp).toLocaleTimeString()}</span>
-          </div>
+      <div
+        className={cn(
+          "flex min-w-0 flex-1 flex-col gap-1.5",
+          isUser && "items-end",
+          isSystem && "items-center",
         )}
-
+      >
+        {/* Chat Bubble */}
         <Card
-          intent={isUser ? "accent" : "primary"}
+          intent={isUser ? "accent" : "default"}
           tone={isUser ? "glass-primary" : "glass-subtle"}
-          padding="sm"
-          className={cn(bubbleClass, "w-full")}
+          padding="md"
+          className={cn(bubbleClass)}
         >
-          <div className="space-y-3">
+          <div className="space-y-3 text-left">
             {contentContainsMarkdown(message.content) ? (
               <MarkdownRenderer content={message.content} />
             ) : (
-              // Fallback: Simple text rendering for non-markdown content
-              <div>{message.content}</div>
+              <div className="whitespace-pre-wrap break-words">{message.content}</div>
             )}
           </div>
         </Card>
 
+        {/* Timestamp und Meta unter der Bubble */}
+        {!isSystem && (
+          <div
+            className={cn(
+              "flex items-center gap-2 text-xs text-text-muted px-2",
+              isUser && "flex-row-reverse",
+            )}
+          >
+            <span className="font-medium text-text-secondary">{isUser ? "Ich" : "Assistent"}</span>
+            {message.model && (
+              <Badge variant="secondary" className="border-border bg-card text-text-muted text-xs">
+                {message.model}
+              </Badge>
+            )}
+            {message.tokens && (
+              <Badge variant="outline" className="border-border text-text-muted text-xs">
+                {message.tokens}t
+              </Badge>
+            )}
+            <span className="text-text-muted">
+              {new Date(message.timestamp).toLocaleTimeString("de-DE", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          </div>
+        )}
+
+        {/* Actions neben Timestamp */}
         {!isSystem && showActions && (
           <div
             className={cn(
-              "flex items-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-              isUser && "justify-end",
+              "flex items-center gap-1 px-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+              isUser && "flex-row-reverse",
             )}
           >
             <Button
               variant="ghost"
-              size="icon"
-              className="text-text-secondary hover:bg-card hover:text-text-primary"
+              size="sm"
+              className="h-7 px-2 text-text-muted hover:bg-surface-glass-panel hover:text-text-primary"
               onClick={handleCopy}
               title="Nachricht kopieren"
               data-testid="message.copy"
@@ -229,8 +240,8 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
             {isAssistant && isLast && onRetry && (
               <Button
                 variant="ghost"
-                size="icon"
-                className="text-text-secondary hover:bg-card hover:text-text-primary"
+                size="sm"
+                className="h-7 px-2 text-text-muted hover:bg-surface-glass-panel hover:text-text-primary"
                 onClick={handleRetry}
                 title="Antwort erneut anfordern"
                 data-testid="message.retry"

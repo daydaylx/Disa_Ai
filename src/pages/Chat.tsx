@@ -151,120 +151,107 @@ export default function Chat() {
               </p>
             </section>
 
-            <section className="grid gap-3 md:grid-cols-3">
-              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs transition-colors hover:bg-surface-muted/90">
-                <CardHeader className="pb-1">
-                  <CardTitle className="flex items-center gap-2 text-xs font-semibold">
-                    🧠 Research
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 text-[10px] text-text-secondary">
-                  <p>Tiefe Recherchen, Quellencheck, Pro/Contra-Analysen.</p>
-                  <Button
-                    size="sm"
-                    className="w-full justify-center"
-                    onClick={() =>
-                      startWithPreset(
-                        "Du bist ein strukturierter Research-Assistent. Fasse Quellen, Argumente und Risiken sachlich zusammen.",
-                        "Hilf mir bei einer tiefen Recherche zu einem Thema meiner Wahl.",
-                      )
-                    }
-                  >
-                    Research-Chat starten
-                  </Button>
-                </CardContent>
+            <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+              <Card
+                tone="glass-primary"
+                elevation="surface"
+                padding="md"
+                interactive="gentle"
+                clickable
+                onClick={() =>
+                  startWithPreset(
+                    "Du bist ein strukturierter Research-Assistent. Fasse Quellen, Argumente und Risiken sachlich zusammen.",
+                    "Hilf mir bei einer tiefen Recherche zu einem Thema meiner Wahl.",
+                  )
+                }
+                className="flex flex-col gap-3"
+              >
+                <div className="flex items-center gap-2 text-lg">
+                  <span>🧠</span>
+                  <CardTitle className="text-base font-semibold">Research</CardTitle>
+                </div>
+                <p className="text-sm text-text-secondary flex-1">
+                  Tiefe Recherchen, Quellencheck, Pro/Contra-Analysen.
+                </p>
               </Card>
 
-              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs transition-colors hover:bg-surface-muted/90">
-                <CardHeader className="pb-1">
-                  <CardTitle className="flex items-center gap-2 text-xs font-semibold">
-                    ✍️ Schreiben
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 text-[10px] text-text-secondary">
-                  <p>Klare Mails, Support-Texte, Social Posts auf Knopfdruck.</p>
-                  <Button
-                    size="sm"
-                    className="w-full justify-center"
-                    onClick={() =>
-                      startWithPreset(
-                        "Du unterstützt beim Schreiben klarer, freundlicher Nachrichten und E-Mails.",
-                      )
-                    }
-                  >
-                    Schreib-Assistent starten
-                  </Button>
-                </CardContent>
+              <Card
+                tone="glass-primary"
+                elevation="surface"
+                padding="md"
+                interactive="gentle"
+                clickable
+                onClick={() =>
+                  startWithPreset(
+                    "Du unterstützt beim Schreiben klarer, freundlicher Nachrichten und E-Mails.",
+                  )
+                }
+                className="flex flex-col gap-3"
+              >
+                <div className="flex items-center gap-2 text-lg">
+                  <span>✍️</span>
+                  <CardTitle className="text-base font-semibold">Schreiben</CardTitle>
+                </div>
+                <p className="text-sm text-text-secondary flex-1">
+                  Klare Mails, Support-Texte, Social Posts auf Knopfdruck.
+                </p>
               </Card>
 
-              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs transition-colors hover:bg-surface-muted/90">
-                <CardHeader className="pb-1">
-                  <CardTitle className="flex items-center gap-2 text-xs font-semibold">
-                    💻 Code & Reviews
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 text-[10px] text-text-secondary">
-                  <p>Erklärungen, Refactors und sichere Vorschläge für deinen Code.</p>
-                  <Button
-                    size="sm"
-                    className="w-full justify-center"
-                    onClick={() =>
-                      startWithPreset(
-                        "Du bist ein gewissenhafter Coding-Partner. Erkläre Code knapp und schlage sichere Verbesserungen vor.",
-                      )
-                    }
-                  >
-                    Code-Review starten
-                  </Button>
-                </CardContent>
+              <Card
+                tone="glass-primary"
+                elevation="surface"
+                padding="md"
+                interactive="gentle"
+                clickable
+                onClick={() =>
+                  startWithPreset(
+                    "Du bist ein gewissenhafter Coding-Partner. Erkläre Code knapp und schlage sichere Verbesserungen vor.",
+                  )
+                }
+                className="flex flex-col gap-3"
+              >
+                <div className="flex items-center gap-2 text-lg">
+                  <span>💻</span>
+                  <CardTitle className="text-base font-semibold">Code & Reviews</CardTitle>
+                </div>
+                <p className="text-sm text-text-secondary flex-1">
+                  Erklärungen, Refactors und sichere Vorschläge für deinen Code.
+                </p>
               </Card>
             </section>
 
-            <section className="grid gap-3 md:grid-cols-2">
-              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
-                <CardHeader className="pb-1">
-                  <CardTitle className="text-xs font-semibold">Studio-Verknüpfungen</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-1.5 text-[10px] text-text-secondary">
+            <section className="grid gap-4 grid-cols-1 md:grid-cols-2">
+              <Card tone="glass-primary" elevation="surface" padding="md">
+                <CardTitle className="text-base font-semibold mb-3">Studio-Verknüpfungen</CardTitle>
+                <div className="space-y-2">
                   <Link
                     to="/models"
-                    className="flex items-center justify-between rounded-xl px-2 py-1.75 hover:bg-surface-muted/80"
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-surface-muted/80 transition-colors min-h-[44px]"
                   >
-                    <span>Modelle vergleichen & wählen</span>
-                    <Button size="sm" variant="ghost" className="h-6 px-2 text-[9px]">
-                      Öffnen
-                    </Button>
+                    <span className="text-sm text-text-secondary">Modelle vergleichen & wählen</span>
                   </Link>
                   <Link
                     to="/roles"
-                    className="flex items-center justify-between rounded-xl px-2 py-1.75 hover:bg-surface-muted/80"
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-surface-muted/80 transition-colors min-h-[44px]"
                   >
-                    <span>Rollenbibliothek erkunden</span>
-                    <Button size="sm" variant="ghost" className="h-6 px-2 text-[9px]">
-                      Öffnen
-                    </Button>
+                    <span className="text-sm text-text-secondary">Rollenbibliothek erkunden</span>
                   </Link>
                   <Link
                     to="/settings"
-                    className="flex items-center justify-between rounded-xl px-2 py-1.75 hover:bg-surface-muted/80"
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-surface-muted/80 transition-colors min-h-[44px]"
                   >
-                    <span>Einstellungen & API-Key prüfen</span>
-                    <Button size="sm" variant="ghost" className="h-6 px-2 text-[9px]">
-                      Öffnen
-                    </Button>
+                    <span className="text-sm text-text-secondary">Einstellungen & API-Key prüfen</span>
                   </Link>
-                </CardContent>
+                </div>
               </Card>
 
-              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
-                <CardHeader className="pb-1">
-                  <CardTitle className="text-xs font-semibold">Hinweise</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-1.5 text-[10px] text-text-secondary">
+              <Card tone="glass-primary" elevation="surface" padding="md">
+                <CardTitle className="text-base font-semibold mb-3">Hinweise</CardTitle>
+                <div className="space-y-2 text-sm text-text-secondary">
                   <p>• Keine sensiblen Daten oder API-Keys direkt im Prompt teilen.</p>
                   <p>• Modelle, Limits & Verhalten steuerst du zentral im Studio.</p>
                   <p>• PWA-ready, mobile-first, designed für ruhige Sessions.</p>
-                </CardContent>
+                </div>
               </Card>
             </section>
           </>

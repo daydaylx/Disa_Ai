@@ -1,12 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 
+import { Brain, MessageSquare, Settings, Users } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
 const NAV_ITEMS = [
-  { path: "/chat", label: "Chat" },
-  { path: "/models", label: "Modelle" },
-  { path: "/roles", label: "Rollen" },
-  { path: "/settings", label: "Einstellungen" },
+  { path: "/chat", label: "Chat", icon: MessageSquare },
+  { path: "/models", label: "Modelle", icon: Brain },
+  { path: "/roles", label: "Rollen", icon: Users },
+  { path: "/settings", label: "Einstellungen", icon: Settings },
 ];
 
 export function MobileBottomNav() {
@@ -14,31 +15,45 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="z-bottom-nav fixed inset-x-0 bottom-0 border-t border-line-subtle bg-surface-base/95 backdrop-blur-sm"
+      className="z-bottom-nav fixed inset-x-0 bottom-0 border-t border-glass bg-surface-glass-floating/95 backdrop-blur-medium shadow-elevated"
       aria-label="Hauptnavigation"
     >
-      <div className="mx-auto flex max-w-2xl items-center justify-between gap-1 px-4 py-2 pb-[max(env(safe-area-inset-bottom),0.35rem)]">
+      <div className="mx-auto flex max-w-2xl items-center justify-around gap-1 px-2 py-2 pb-[max(env(safe-area-inset-bottom),0.5rem)]">
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname.startsWith(item.path);
+          const Icon = item.icon;
+
           return (
             <Link
               key={item.path}
               to={item.path}
               className={cn(
-                "touch-target flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-2 text-[10px] font-medium transition-all",
+                "flex min-h-[56px] min-w-[64px] flex-1 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200",
                 isActive
-                  ? "bg-surface-muted text-text-primary shadow-sm"
-                  : "text-text-secondary hover:bg-surface-muted/70 hover:text-text-primary",
+                  ? "text-accent shadow-glow-brand-subtle"
+                  : "text-text-muted hover:bg-surface-glass-panel/50 hover:text-text-primary",
               )}
+              aria-current={isActive ? "page" : undefined}
             >
-              <span
-                aria-hidden="true"
+              {/* Icon mit optionalem Glow */}
+              <Icon
                 className={cn(
-                  "mb-0.5 h-1 w-6 rounded-full",
-                  isActive ? "bg-accent" : "bg-transparent",
+                  "h-6 w-6 transition-transform duration-200",
+                  isActive && "scale-110",
                 )}
+                strokeWidth={isActive ? 2.5 : 2}
               />
-              <span>{item.label}</span>
+
+              {/* Label */}
+              <span className="text-[11px] leading-tight">{item.label}</span>
+
+              {/* Active Indicator (kleiner Punkt unter Icon) */}
+              {isActive && (
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent"
+                />
+              )}
             </Link>
           );
         })}
