@@ -64,6 +64,7 @@ const spacingScale = {
 
 const radii = {
   none: "0px",
+  xs: "var(--radius-xs)",
   sm: "var(--radius-sm)",
   md: "var(--radius-md)",
   lg: "var(--radius-lg)",
@@ -74,17 +75,25 @@ const radii = {
 };
 
 const boxShadows = {
+  // Primary shadow hierarchy (2 levels)
+  surface: "var(--shadow-surface)",
+  elevated: "var(--shadow-elevated)",
+
+  // Legacy/compatibility
   card: "var(--shadow-card)",
   overlay: "var(--shadow-overlay)",
   ring: "var(--shadow-ring)",
-  "neo-sm": "var(--shadow-neo-sm)",
-  "neo-md": "var(--shadow-neo-md)",
-  "neo-lg": "var(--shadow-neo-lg)",
-  "neo-xl": "var(--shadow-neo-xl)",
+
+  // Inset shadows
   "inset-subtle": "var(--shadow-inset-subtle)",
   "inset-medium": "var(--shadow-inset-medium)",
-  "inset-strong": "var(--shadow-inset-strong)",
-  "inset-extreme": "var(--shadow-inset-extreme)",
+
+  // Glow effects
+  "glow-brand": "var(--shadow-glow-brand)",
+  "glow-brand-subtle": "var(--shadow-glow-brand-subtle)",
+  "glow-success": "var(--shadow-glow-success)",
+  "glow-warning": "var(--shadow-glow-warning)",
+  "glow-error": "var(--shadow-glow-error)",
 };
 
 const fontSizes = {
