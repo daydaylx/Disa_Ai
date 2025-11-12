@@ -120,7 +120,7 @@ export function ModelCard({
       >
         <div className="flex items-start gap-3">
           <div className="relative flex-shrink-0">
-            <Avatar size="md" className={cn("shadow-neo-sm", isMobile && "touch-target")}>
+            <Avatar size="md" className={cn("shadow-surface", isMobile && "touch-target")}>
               {provider.slice(0, 1)}
             </Avatar>
             {providerTier === "premium" && (
@@ -264,7 +264,7 @@ export function ModelCard({
             isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
           )}
         >
-          <Info className="h-4 w-4" aria-hidden="true" />
+          <Info className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" aria-hidden="true" />
         </button>
       </Card>
     </div>

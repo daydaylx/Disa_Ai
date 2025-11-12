@@ -85,7 +85,9 @@
     --border-glass-accent: var(--glass-border-accent);
 
     --color-border-focus: var(--accent);
+    --color-accent-border: rgba(79, 70, 229, 0.4);
     --color-accent-border: color-mix(in srgb, var(--accent) 40%, transparent 60%);
+    --color-accent-surface: rgba(79, 70, 229, 0.15);
     --color-accent-surface: color-mix(in srgb, var(--accent) 15%, transparent 85%);
     --border-ghost: rgba(255, 255, 255, 0.3);
 
@@ -159,6 +161,9 @@
 
     /* Elevated: Stärker, diffus - für schwebende/hervorgehobene Elemente */
     --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    --shadow-neumorphic-icon:
+      1px 1px 2px rgba(0, 0, 0, 0.2), -1px -1px 2px rgba(255, 255, 255, 0.1);
 
     /* Legacy/Compatibility mappings */
     --shadow-card: var(--shadow-surface);
@@ -432,7 +437,9 @@
   --border-glass-accent: rgba(79, 70, 229, 0.3);
 
   --color-border-focus: var(--accent);
+  --color-accent-border: rgba(79, 70, 229, 0.4);
   --color-accent-border: color-mix(in srgb, var(--accent) 40%, transparent 60%);
+  --color-accent-surface: rgba(79, 70, 229, 0.15);
   --color-accent-surface: color-mix(in srgb, var(--accent) 15%, transparent 85%);
   --border-ghost: rgba(0, 0, 0, 0.2);
 
@@ -473,6 +480,8 @@
   /* ------------------------------ */
   /*           Shadows              */
   /* ------------------------------ */
+
+  --shadow-neumorphic-icon: 1px 1px 2px rgba(0, 0, 0, 0.1), -1px -1px 2px rgba(255, 255, 255, 0.5);
 
   /* Glassmorphism Shadows - Light Mode */
   --shadow-glass-subtle: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);

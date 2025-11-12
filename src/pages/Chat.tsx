@@ -7,12 +7,10 @@ import { Card, CardTitle } from "../components/ui/card";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
-import { saveConversation, updateConversation } from "../lib/conversation-manager-modern";
 
 export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const lastSavedSignatureRef = useRef<string | null>(null);
 
   const {
     messages,
@@ -35,6 +33,8 @@ export default function Chat() {
 
   const { activeConversationId, setActiveConversationId, refreshConversations } =
     useConversationManager({
+      messages,
+      isLoading,
       setMessages,
       setCurrentSystemPrompt,
       onNewConversation: () => {},
@@ -43,75 +43,6 @@ export default function Chat() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
-
-  useEffect(() => {
-    if (messages.length === 0) {
-      lastSavedSignatureRef.current = null;
-    }
-  }, [messages.length]);
-
-  useEffect(() => {
-    const saveConversationIfNeeded = async () => {
-      const lastMessage = messages[messages.length - 1];
-
-      if (!isLoading && messages.length > 0 && lastMessage?.role === "assistant") {
-        const storageMessages = messages.map((msg) => ({
-          id: msg.id,
-          role: msg.role,
-          content: msg.content,
-          timestamp: msg.timestamp,
-          model: msg.model,
-        }));
-
-        try {
-          const signature = `${storageMessages.length}:${lastMessage.id}:${lastMessage.content}`;
-          if (lastSavedSignatureRef.current === signature) return;
-
-          const now = new Date().toISOString();
-
-          if (activeConversationId) {
-            await updateConversation(activeConversationId, {
-              messages: storageMessages,
-              updatedAt: now,
-              messageCount: storageMessages.length,
-            });
-          } else {
-            const conversationId = crypto.randomUUID();
-            const conversation = {
-              id: conversationId,
-              title: `Conversation ${new Date().toLocaleDateString()}`,
-              messages: storageMessages,
-              createdAt: now,
-              updatedAt: now,
-              model: "default",
-              messageCount: storageMessages.length,
-            };
-            await saveConversation(conversation);
-            setActiveConversationId(conversationId);
-          }
-
-          lastSavedSignatureRef.current = signature;
-          await refreshConversations();
-        } catch (error) {
-          console.error("Failed to auto-save:", error);
-          toasts.push({
-            kind: "warning",
-            title: "Speichern fehlgeschlagen",
-            message: "Die Konversation konnte nicht automatisch gespeichert werden",
-          });
-        }
-      }
-    };
-
-    void saveConversationIfNeeded();
-  }, [
-    isLoading,
-    messages,
-    activeConversationId,
-    setActiveConversationId,
-    refreshConversations,
-    toasts,
-  ]);
 
   const handleSend = useCallback(() => {
     if (!input.trim()) return;

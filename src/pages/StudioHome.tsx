@@ -33,7 +33,7 @@ export default function StudioHome() {
         </section>
 
         <section className="grid gap-4 md:grid-cols-2">
-          <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+          <Card className="border-line-subtle bg-surface-base/95 shadow-surface">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-sm">
                 <span className="inline-flex h-6 w-6 items-center justify-center rounded-xl bg-accent/10 text-accent">
@@ -50,7 +50,7 @@ export default function StudioHome() {
             </CardContent>
           </Card>
 
-          <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+          <Card className="border-line-subtle bg-surface-base/95 shadow-surface">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-sm">
                 <span className="inline-flex h-6 w-6 items-center justify-center rounded-xl bg-accent/10 text-accent">
@@ -69,7 +69,7 @@ export default function StudioHome() {
             </CardContent>
           </Card>
 
-          <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+          <Card className="border-line-subtle bg-surface-base/95 shadow-surface">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-sm">
                 <span className="inline-flex h-6 w-6 items-center justify-center rounded-xl bg-accent/10 text-accent">
@@ -86,7 +86,7 @@ export default function StudioHome() {
             </CardContent>
           </Card>
 
-          <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+          <Card className="border-line-subtle bg-surface-base/95 shadow-surface">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-sm">
                 <span className="inline-flex h-6 w-6 items-center justify-center rounded-xl bg-accent/10 text-accent">

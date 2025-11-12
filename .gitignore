@@ -120,3 +120,4 @@ autopilot.log
 
 # Environment variables
 .env
+.aider*

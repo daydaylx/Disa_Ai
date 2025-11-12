@@ -55,14 +55,14 @@ const dialogContentVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] shadow-neo-md",
+          "rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] shadow-surface",
         glass:
-          "rounded-[var(--radius-xl)] border border-overlay-dialog-border/40 bg-overlay-dialog/80 backdrop-blur-xl shadow-neo-md supports-[backdrop-filter]:bg-overlay-dialog/60",
+          "rounded-[var(--radius-xl)] border border-overlay-dialog-border/40 bg-overlay-dialog/80 backdrop-blur-xl shadow-surface supports-[backdrop-filter]:bg-overlay-dialog/60",
         neumorphic:
-          "rounded-[var(--radius-2xl)] border border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-floating)] shadow-neo-lg motion-safe:hover:shadow-neo-xl motion-safe:transition-shadow motion-safe:duration-300",
+          "rounded-[var(--radius-2xl)] border border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-floating)] shadow-elevated motion-safe:hover:shadow-elevated motion-safe:transition-shadow motion-safe:duration-300",
         floating:
-          "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/30 bg-overlay-dialog shadow-neo-md motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-neo-lg motion-safe:transition-transform motion-safe:duration-200",
-        soft: "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/20 bg-overlay-dialog/95 shadow-neo-sm backdrop-blur-sm",
+          "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/30 bg-overlay-dialog shadow-surface motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-elevated motion-safe:transition-transform motion-safe:duration-200",
+        soft: "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/20 bg-overlay-dialog/95 shadow-surface backdrop-blur-sm",
         elevated:
           "rounded-[var(--radius-xl)] border border-overlay-dialog-border bg-overlay-dialog shadow-neo-md",
       },
@@ -109,7 +109,7 @@ const DialogContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close className="absolute right-[var(--space-md)] top-[var(--space-md)] inline-flex size-[var(--size-touch-compact)] items-center justify-center rounded-[var(--radius-md)] text-text-tertiary transition-[background,color,box-shadow] duration-150 ease-out hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary focus-visible:outline-none focus-visible:shadow-focus-neo disabled:pointer-events-none">
-        <X className="h-4 w-4" />
+        <X className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
         <span className="sr-only">Schließen</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>

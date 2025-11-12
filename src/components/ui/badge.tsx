@@ -9,7 +9,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-primary)] shadow-none hover:shadow-neo-sm",
+          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-primary)] shadow-none hover:shadow-surface",
         secondary: "border-border bg-surface-card text-text-secondary",
         outline: "border-border bg-transparent text-text-secondary",
         muted: "border-transparent bg-surface-subtle text-text-secondary",
@@ -24,7 +24,7 @@ const badgeVariants = cva(
         accent:
           "border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)] hover:bg-[var(--color-accent-surface-strong)]",
         neumorphic:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-text-primary shadow-none hover:shadow-neo-sm",
+          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-text-primary shadow-none hover:shadow-surface",
         "neumorphic-pressed":
           "border border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-pressed)] text-text-primary shadow-inset-subtle",
         "neumorphic-brand":

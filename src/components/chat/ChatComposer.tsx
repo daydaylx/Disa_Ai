@@ -120,7 +120,7 @@ export function ChatComposer({
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
                 <span className="border-[var(--border-glass)] inline-flex items-center gap-1 rounded-full border bg-[var(--surface-glass-floating)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-text-secondary shadow-[var(--shadow-glass-subtle)]">
-                  <Zap className="h-3 w-3" />
+                  <Zap className="h-3 w-3 shadow-[var(--shadow-neumorphic-icon)]" />
                   {tokenCount} Token
                 </span>
               )}
@@ -173,7 +173,7 @@ export function ChatComposer({
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
-                <RotateCcw className="h-5 w-5" />
+                <RotateCcw className="h-5 w-5 shadow-[var(--shadow-neumorphic-icon)]" />
               </AuroraButton>
             )}
 
@@ -187,7 +187,7 @@ export function ChatComposer({
                 aria-label="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
-                <Square className="h-5 w-5" />
+                <Square className="h-5 w-5 shadow-[var(--shadow-neumorphic-icon)]" />
               </AuroraButton>
             )}
 
@@ -202,7 +202,7 @@ export function ChatComposer({
                 aria-label="Nachricht senden"
                 data-testid="composer-send"
               >
-                <Send className="h-5 w-5" />
+                <Send className="h-5 w-5 shadow-[var(--shadow-neumorphic-icon)]" />
               </AuroraButton>
             )}
 

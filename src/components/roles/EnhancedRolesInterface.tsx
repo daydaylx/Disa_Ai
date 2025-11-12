@@ -245,7 +245,7 @@ function DenseRoleCard({
           >
             <Star
               className={cn(
-                "h-4 w-4 transition-colors",
+                "h-4 w-4 transition-colors shadow-[var(--shadow-neumorphic-icon)]",
                 isFavorite
                   ? "fill-[var(--color-brand-primary)] text-[var(--color-brand-primary)]"
                   : "text-[var(--color-text-muted)]",
@@ -423,7 +423,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
               }
             >
-              <Star className="w-4 h-4" />
+              <Star className="w-4 h-4 shadow-[var(--shadow-neumorphic-icon)]" />
               <span className="sr-only">Favoriten</span>
             </Button>
 
@@ -433,12 +433,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               className="p-2.5"
               onClick={() => setShowFilters(!showFilters)}
             >
-              <Filter className="w-4 h-4" />
+              <Filter className="w-4 h-4 shadow-[var(--shadow-neumorphic-icon)]" />
               <span className="sr-only">Filter</span>
             </Button>
 
             <Button variant="brand-soft" size="sm" className="p-2.5">
-              <Settings className="w-4 h-4" />
+              <Settings className="w-4 h-4 shadow-[var(--shadow-neumorphic-icon)]" />
               <span className="sr-only">Einstellungen</span>
             </Button>
           </div>

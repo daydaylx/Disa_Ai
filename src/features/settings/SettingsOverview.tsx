@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Card, CardDescription, CardTitle } from "../../components/ui/card";
+import { SectionCard } from "../../components/ui/SectionCard";
 import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
@@ -95,42 +96,24 @@ export function SettingsOverview() {
 
   return (
     <div className="space-y-6 pb-12">
-      <section>
-        <Card
-          tone="neo-floating"
-          elevation="subtle"
-          intent="accent"
-          className="rounded-[var(--radius-xl)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] px-5 py-4 text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)]"
-        >
-          <h2 className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-text-on-accent)]/70">
-            Schnellstart
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--color-text-on-accent)]/90">
-            Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis. Das dunkle
-            Design ist bereits aktiv – passe Details jederzeit später an.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button asChild size="sm" variant="accent">
-              <Link to="/settings/api">API-Key speichern</Link>
-            </Button>
-            <Button asChild size="sm" variant="outline">
-              <Link to="/settings/memory">Gedächtnis konfigurieren</Link>
-            </Button>
-          </div>
-        </Card>
-      </section>
+      <SectionCard
+        title="Schnellstart"
+        subtitle="Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis. Das dunkle Design ist bereits aktiv – passe Details jederzeit später an."
+      >
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Button asChild size="sm" variant="accent">
+            <Link to="/settings/api">API-Key speichern</Link>
+          </Button>
+          <Button asChild size="sm" variant="outline">
+            <Link to="/settings/memory">Gedächtnis konfigurieren</Link>
+          </Button>
+        </div>
+      </SectionCard>
 
-      <section className="space-y-3">
-        <header>
-          <h2 className="text-xs font-semibold uppercase tracking-[0.3em] text-text-tertiary">
-            Einstellungen
-          </h2>
-          <p className="mt-1 text-sm text-text-secondary leading-6">
-            Eine klare Übersicht über die wichtigsten Bereiche. Tippe auf eine Karte, um direkt zum
-            Detail zu springen.
-          </p>
-        </header>
-
+      <SectionCard
+        title="Einstellungen"
+        subtitle="Eine klare Übersicht über die wichtigsten Bereiche. Tippe auf eine Karte, um direkt zum Detail zu springen."
+      >
         <div className="grid gap-3 sm:grid-cols-2">
           {cards.map((card) => {
             const Icon = card.icon;
@@ -146,7 +129,7 @@ export function SettingsOverview() {
                 >
                   <div className="flex h-full flex-col p-4">
                     <div className="flex flex-row items-start gap-3">
-                      <span className="grid h-10 w-10 place-content-center rounded-full border border-[var(--color-accent-border)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-border-focus)] shadow-neo-sm">
+                      <span className="grid h-10 w-10 place-content-center rounded-full border border-[var(--color-accent-border)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-border-focus)] shadow-surface">
                         <Icon className="h-5 w-5" aria-hidden />
                       </span>
                       <div className="flex flex-1 flex-col gap-2">
@@ -178,43 +161,30 @@ export function SettingsOverview() {
             );
           })}
         </div>
-      </section>
+      </SectionCard>
 
-      <section id="settings-shortcuts" tabIndex={-1}>
-        <Card
-          tone="neo-floating"
-          elevation="subtle"
-          intent="accent"
-          className="rounded-[var(--radius-xl)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] px-4 py-4 text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)]"
-        >
-          <header className="flex items-center gap-2">
-            <Waves className="h-5 w-5 text-[var(--color-text-on-accent)]" aria-hidden />
-            <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--color-text-on-accent)]/70">
-              Gesten & Shortcuts
-            </h2>
-          </header>
-          <ul className="mt-3 space-y-2 text-sm text-[var(--color-text-on-accent)]/85">
-            <li>
-              <strong className="text-[var(--color-text-on-accent)]">
-                Langes Drücken mit drei Fingern
-              </strong>{" "}
-              öffnet die Einstellungen – jederzeit erreichbar.
-            </li>
-            <li>
-              <strong className="text-[var(--color-text-on-accent)]">
-                Doppeltippen am oberen Rand
-              </strong>{" "}
-              scrollt zurück zum Anfang der aktuellen Ansicht.
-            </li>
-            <li>
-              <strong className="text-[var(--color-text-on-accent)]">
-                Swipe nach oben mit drei Fingern
-              </strong>{" "}
-              wechselt das Theme – perfekt zum schnellen Check.
-            </li>
-          </ul>
-        </Card>
-      </section>
+      <SectionCard title="Gesten & Shortcuts" headerActions={<Waves className="h-5 w-5" />}>
+        <ul className="mt-3 space-y-2 text-sm text-[var(--color-text-on-accent)]/85">
+          <li>
+            <strong className="text-[var(--color-text-on-accent)]">
+              Langes Drücken mit drei Fingern
+            </strong>{" "}
+            öffnet die Einstellungen – jederzeit erreichbar.
+          </li>
+          <li>
+            <strong className="text-[var(--color-text-on-accent)]">
+              Doppeltippen am oberen Rand
+            </strong>{" "}
+            scrollt zurück zum Anfang der aktuellen Ansicht.
+          </li>
+          <li>
+            <strong className="text-[var(--color-text-on-accent)]">
+              Swipe nach oben mit drei Fingern
+            </strong>{" "}
+            wechselt das Theme – perfekt zum schnellen Check.
+          </li>
+        </ul>
+      </SectionCard>
     </div>
   );
 }

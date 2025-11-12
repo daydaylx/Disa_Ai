@@ -112,7 +112,7 @@ function ToastViewport({
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto rounded-2xl border bg-surface-base/98 px-4 py-3 text-sm shadow-neo-lg backdrop-blur-md ${kindClasses[toast.kind]}`}
+          className={`pointer-events-auto rounded-2xl border bg-surface-base/98 px-4 py-3 text-sm shadow-elevated backdrop-blur-md ${kindClasses[toast.kind]}`}
         >
           <div className="flex items-start gap-3">
             <div className="flex-1">

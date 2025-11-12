@@ -82,7 +82,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                   className={cn(
                     "group flex items-center gap-2 rounded-2xl px-3 py-2.5 transition-colors",
                     activePath === item.path
-                      ? "bg-surface-muted/90 text-text-primary shadow-neo-xs"
+                      ? "bg-surface-muted/90 text-text-primary shadow-surface"
                       : "text-text-secondary hover:bg-surface-muted/70 hover:text-text-primary",
                   )}
                 >
@@ -140,7 +140,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                   className={cn(
                     "flex items-center justify-between rounded-2xl px-4 py-3 text-sm transition-colors",
                     activePath === item.path
-                      ? "bg-surface-muted/90 text-text-primary shadow-neo-xs"
+                      ? "bg-surface-muted/90 text-text-primary shadow-surface"
                       : "text-text-secondary hover:bg-surface-muted/70 hover:text-text-primary",
                   )}
                 >

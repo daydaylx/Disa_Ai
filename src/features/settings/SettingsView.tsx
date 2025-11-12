@@ -6,6 +6,7 @@ import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import { SectionCard } from "../../components/ui/SectionCard";
 import { Switch } from "../../components/ui/Switch";
 import { useToasts } from "../../components/ui/toast/ToastsProvider";
 import { useMemory } from "../../hooks/useMemory";
@@ -216,7 +217,11 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               aria-label={showKey ? "Key verbergen" : "Key anzeigen"}
               onClick={() => setShowKey((prev) => !prev)}
             >
-              {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showKey ? (
+                <EyeOff className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+              ) : (
+                <Eye className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+              )}
             </Button>
           </div>
           <div className="flex flex-wrap gap-2 text-sm">
@@ -276,7 +281,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
           <div className="grid gap-2 sm:grid-cols-2">
             <Button variant="accent" className="justify-between" onClick={handleCleanup}>
               Verlauf komprimieren
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
             <Button
               variant="ghost"
@@ -292,7 +297,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               }}
             >
               Gedächtnis leeren
-              <Sparkles className="h-4 w-4" />
+              <Sparkles className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
           </div>
           <Card
@@ -384,11 +389,11 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
           <div className="grid gap-3 sm:grid-cols-2">
             <Button variant="accent" className="justify-between" onClick={handleExport}>
               Export als JSON
-              <Download className="h-4 w-4" />
+              <Download className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
             <Button variant="neo-subtle" className="justify-between" onClick={handleImportClick}>
               Importieren
-              <Upload className="h-4 w-4" />
+              <Upload className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
           </div>
           <input
@@ -476,60 +481,25 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       </header>
 
       <div className="space-y-6 px-4 py-4 pb-10">
-        {sectionsToRender.map((config) => (
-          <SettingsSection
-            key={config.id}
-            id={config.id}
-            icon={config.icon}
-            title={config.title}
-            description={config.description}
-            status={sectionStatuses[config.id]}
-          >
-            {config.content}
-          </SettingsSection>
-        ))}
+        {sectionsToRender.map((config) => {
+          const Icon = config.icon;
+          return (
+            <SectionCard
+              key={config.id}
+              title={config.title}
+              subtitle={config.description}
+              headerActions={
+                <Badge variant={sectionStatuses[config.id].variant} size="sm">
+                  {sectionStatuses[config.id].label}
+                </Badge>
+              }
+            >
+              {config.content}
+            </SectionCard>
+          );
+        })}
       </div>
     </div>
-  );
-}
-
-function SettingsSection({
-  id,
-  icon: Icon,
-  title,
-  description,
-  children,
-  status,
-}: {
-  id: string;
-  icon: ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  children: ReactNode;
-  status?: { label: string; variant: BadgeProps["variant"] };
-}) {
-  return (
-    <section id={id}>
-      <Card tone="neo-floating" elevation="subtle" className="shadow-[var(--shadow-depth-1)]">
-        <div className="flex items-start gap-3 border-b border-[var(--color-border-subtle)] px-4 py-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card-small)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)]">
-            <Icon className="h-4 w-4" aria-hidden />
-          </span>
-          <div className="flex flex-1 flex-col gap-1">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h2>
-              {status ? (
-                <Badge variant={status.variant} size="sm">
-                  {status.label}
-                </Badge>
-              ) : null}
-            </div>
-            <p className="text-sm text-[var(--color-text-secondary)]">{description}</p>
-          </div>
-        </div>
-        <div className="space-y-4 px-4 py-4 text-[var(--color-text-primary)]">{children}</div>
-      </Card>
-    </section>
   );
 }
 

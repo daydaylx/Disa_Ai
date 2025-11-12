@@ -65,7 +65,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
         className,
       )}
     >
-      <div className="max-h-[40vh] overflow-y-auto rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-4 shadow-neo-md sm:max-h-none sm:p-5">
+      <div className="max-h-[40vh] overflow-y-auto rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-4 shadow-surface sm:max-h-none sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="mb-2 flex items-center gap-2">
@@ -78,7 +78,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
 
             <div className="flex flex-col gap-2 sm:flex-row">
               <Button onClick={handleInstall} size="sm" className="order-1 flex-1">
-                <Download className="mr-2 h-4 w-4" />
+                <Download className="mr-2 h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
                 Jetzt installieren
               </Button>
               <Button
@@ -99,7 +99,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
             className="h-8 w-8"
             aria-label="Installations-Prompt schließen"
           >
-            <X className="h-4 w-4" />
+            <X className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
           </Button>
         </div>
       </div>

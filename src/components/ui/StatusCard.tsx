@@ -114,7 +114,7 @@ export const StatusCard = React.forwardRef<HTMLDivElement, StatusCardProps>(
             className="absolute right-2 top-2 rounded-full p-1 transition-colors hover:bg-surface-subtle"
             aria-label="Dismiss"
           >
-            <XCircle className="h-4 w-4 text-text-muted" />
+            <XCircle className="h-4 w-4 text-text-muted shadow-[var(--shadow-neumorphic-icon)]" />
           </button>
         )}
 
@@ -122,7 +122,13 @@ export const StatusCard = React.forwardRef<HTMLDivElement, StatusCardProps>(
           {(showIcon || customIcon) && (
             <div className="mt-0.5 flex-shrink-0">
               {customIcon || (
-                <IconComponent className={cn("h-5 w-5", config.iconClassName)} aria-hidden="true" />
+                <IconComponent
+                  className={cn(
+                    "h-5 w-5 shadow-[var(--shadow-neumorphic-icon)]",
+                    config.iconClassName,
+                  )}
+                  aria-hidden="true"
+                />
               )}
             </div>
           )}

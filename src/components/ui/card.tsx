@@ -288,7 +288,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                     disabled={disabled || isLoading}
                     aria-label="More options"
                   >
-                    <MoreHorizontal className="h-4 w-4" />
+                    <MoreHorizontal className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
                   </Button>
 
                   {/* Simple dropdown menu */}
@@ -318,7 +318,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                 <div className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-surface-muted/60">
                   <ChevronRight
                     className={cn(
-                      "h-5 w-5 text-text-secondary transition-transform",
+                      "h-5 w-5 text-text-secondary transition-transform shadow-[var(--shadow-neumorphic-icon)]",
                       selected && "rotate-90",
                     )}
                   />

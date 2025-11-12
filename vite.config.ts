@@ -218,7 +218,7 @@ export default defineConfig(({ mode }) => {
       cssCodeSplit: true, // CSS-Chunks für besseres Caching
       // Production-spezifische Optimierungen
       ...(isProduction && {
-        sourcemap: false, // Kleinere Builds in Production
+        sourcemap: true, // Kleinere Builds in Production
         reportCompressedSize: false, // Schnellere Builds
       }),
       // Additional performance optimizations for main thread
