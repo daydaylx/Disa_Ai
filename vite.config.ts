@@ -111,83 +111,83 @@ export default defineConfig(({ mode }) => {
       ...(!isPWADisabled
         ? [
             VitePWA({
-        // Disable auto-injected register script, we register manually in the app
-        injectRegister: null,
-        registerType: "autoUpdate",
-        workbox: {
-          globPatterns: ["**/*.{js,css,html,ico,png,svg,webmanifest}"],
-          // Skip large KaTeX font files from precache - they're lazy loaded
-          globIgnores: ["**/assets/fonts/KaTeX*.ttf", "**/assets/fonts/KaTeX*Regular*.woff"],
-          maximumFileSizeToCacheInBytes: 3000000, // 3MB - reduced since we skip large fonts
-          skipWaiting: true,
-          clientsClaim: true,
-          runtimeCaching: [
-            {
-              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-              handler: "CacheFirst",
-              options: {
-                cacheName: "google-fonts-cache",
-                expiration: {
-                  maxEntries: 10,
-                  maxAgeSeconds: 60 * 60 * 24 * 365, // 365 days
-                },
+              // Disable auto-injected register script, we register manually in the app
+              injectRegister: null,
+              registerType: "autoUpdate",
+              workbox: {
+                globPatterns: ["**/*.{js,css,html,ico,png,svg,webmanifest}"],
+                // Skip large KaTeX font files from precache - they're lazy loaded
+                globIgnores: ["**/assets/fonts/KaTeX*.ttf", "**/assets/fonts/KaTeX*Regular*.woff"],
+                maximumFileSizeToCacheInBytes: 3000000, // 3MB - reduced since we skip large fonts
+                skipWaiting: true,
+                clientsClaim: true,
+                runtimeCaching: [
+                  {
+                    urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+                    handler: "CacheFirst",
+                    options: {
+                      cacheName: "google-fonts-cache",
+                      expiration: {
+                        maxEntries: 10,
+                        maxAgeSeconds: 60 * 60 * 24 * 365, // 365 days
+                      },
+                    },
+                  },
+                  // Cache KaTeX fonts dynamically when needed
+                  {
+                    urlPattern: /.*\/assets\/fonts\/KaTeX.*\.(woff2|woff)$/,
+                    handler: "CacheFirst",
+                    options: {
+                      cacheName: "katex-fonts-cache",
+                      expiration: {
+                        maxEntries: 30,
+                        maxAgeSeconds: 60 * 60 * 24 * 180, // 180 days
+                      },
+                    },
+                  },
+                  // Cache API responses for better offline experience
+                  {
+                    urlPattern: /^https:\/\/openrouter\.ai\/api\/.*/i,
+                    handler: "NetworkFirst",
+                    options: {
+                      cacheName: "api-cache",
+                      expiration: {
+                        maxEntries: 50,
+                        maxAgeSeconds: 60 * 60, // 1 hour
+                      },
+                      networkTimeoutSeconds: 10,
+                    },
+                  },
+                ],
               },
-            },
-            // Cache KaTeX fonts dynamically when needed
-            {
-              urlPattern: /.*\/assets\/fonts\/KaTeX.*\.(woff2|woff)$/,
-              handler: "CacheFirst",
-              options: {
-                cacheName: "katex-fonts-cache",
-                expiration: {
-                  maxEntries: 30,
-                  maxAgeSeconds: 60 * 60 * 24 * 180, // 180 days
-                },
+              includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
+              manifest: {
+                name: "Disa AI",
+                short_name: "Disa",
+                description: "AI-powered chat assistant with offline-first architecture",
+                theme_color: "#007AFF",
+                background_color: "#0b0f14",
+                display: "standalone",
+                scope: "/",
+                start_url: "/",
+                icons: [
+                  {
+                    src: "icons/icon-192.png",
+                    sizes: "192x192",
+                    type: "image/png",
+                  },
+                  {
+                    src: "icons/icon-512.png",
+                    sizes: "512x512",
+                    type: "image/png",
+                  },
+                ],
               },
-            },
-            // Cache API responses for better offline experience
-            {
-              urlPattern: /^https:\/\/openrouter\.ai\/api\/.*/i,
-              handler: "NetworkFirst",
-              options: {
-                cacheName: "api-cache",
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60, // 1 hour
-                },
-                networkTimeoutSeconds: 10,
+              devOptions: {
+                enabled: true,
+                type: "module",
               },
-            },
-          ],
-        },
-        includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
-        manifest: {
-          name: "Disa AI",
-          short_name: "Disa",
-          description: "AI-powered chat assistant with offline-first architecture",
-          theme_color: "#007AFF",
-          background_color: "#0b0f14",
-          display: "standalone",
-          scope: "/",
-          start_url: "/",
-          icons: [
-            {
-              src: "icons/icon-192.png",
-              sizes: "192x192",
-              type: "image/png",
-            },
-            {
-              src: "icons/icon-512.png",
-              sizes: "512x512",
-              type: "image/png",
-            },
-          ],
-        },
-        devOptions: {
-          enabled: true,
-          type: "module",
-        },
-      }),
+            }),
           ]
         : []),
     ],
@@ -244,17 +244,8 @@ export default defineConfig(({ mode }) => {
           compact: true,
           entryFileNames: "assets/js/[name]-[hash].js",
           chunkFileNames: "assets/js/[name]-[hash].js",
-          // Smart manual chunks that avoid React dependency issues
+          // Smart manual chunks - let React dependencies be handled automatically
           manualChunks: (id) => {
-            // React ecosystem (keep together to avoid circular deps)
-            if (
-              id.includes("node_modules/react/") ||
-              id.includes("node_modules/react-dom/") ||
-              id.includes("node_modules/react-router")
-            ) {
-              return "react-vendor";
-            }
-
             // Radix UI components (large but stable)
             if (id.includes("node_modules/@radix-ui/")) {
               return "radix-ui";
