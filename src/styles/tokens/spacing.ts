@@ -62,9 +62,9 @@ export const spacingTokens: SpacingTokens = {
     md: "1.5rem", // 24px
     lg: "2rem", // 32px
     xl: "3rem", // 48px
-    "2xl": "4rem", // 64px
-    "3xl": "4rem",
-    "4xl": "4rem",
+    "2xl": "3rem", // 48px - Deprecated: Use xl instead
+    "3xl": "3rem", // 48px - Deprecated: Use xl instead
+    "4xl": "3rem", // 48px - Deprecated: Use xl instead
   },
   semantic: {
     stackXs: "0.5rem",

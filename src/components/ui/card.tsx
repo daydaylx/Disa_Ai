@@ -6,7 +6,7 @@ import { cn } from "../../lib/utils";
 import { Button } from "./button"; // Assuming Button component is updated
 
 const cardVariants = cva(
-  "relative rounded-[var(--radius-xl)] border transition-all duration-300 ease-out backdrop-blur-[var(--backdrop-blur-medium)]",
+  "relative rounded-[var(--radius-xl)] border transition-all duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)] backdrop-blur-[var(--backdrop-blur-medium)]",
   {
     variants: {
       variant: {

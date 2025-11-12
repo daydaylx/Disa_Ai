@@ -138,7 +138,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[var(--border-glass-accent)] bg-[var(--surface-glass-floating)] p-2 shadow-[var(--shadow-glass-medium)] backdrop-blur-[var(--backdrop-blur-medium)] touch-target",
+            "flex items-end gap-2 rounded-[var(--radius-md)] border border-[var(--border-glass-accent)] bg-[var(--surface-glass-floating)] p-2 shadow-[var(--shadow-glass-medium)] backdrop-blur-[var(--backdrop-blur-medium)] touch-target",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -156,10 +156,9 @@ export function ChatComposer({
               aria-label="Nachricht an Disa AI eingeben"
               aria-describedby="chat-composer-hint"
               className={cn(
-                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[44px] resize-none border-0 bg-transparent p-2 text-[15px] sm:text-base leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[56px] resize-none border-0 bg-transparent px-3 py-2 text-[15px] sm:text-base leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
                 isQuickstartLoading && "text-text-secondary cursor-not-allowed",
               )}
-              style={{ height: "44px" }}
             />
           </div>
 
@@ -214,7 +213,7 @@ export function ChatComposer({
 
         <div
           id="chat-composer-hint"
-          className="text-text-secondary mt-1 text-center text-xs sm:text-sm px-2"
+          className="mt-2 px-2 text-center text-[10px] text-text-muted/80"
         >
           <span className="inline-flex items-center justify-center gap-2">
             {(isLoading || isComposerDisabled) && (

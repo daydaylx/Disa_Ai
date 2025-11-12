@@ -32,7 +32,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex min-h-[36px] items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] px-3.5 py-2 text-sm font-semibold transition-[color,background,box-shadow,transform] duration-200 ease-out",
+      "inline-flex min-h-[36px] items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] px-3.5 py-2 text-sm font-semibold transition-[color,background,box-shadow,transform] duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)]",
       "text-[var(--color-text-secondary)]",
       "hover:text-[var(--color-text-primary)]",
       "hover:bg-[var(--surface-neumorphic-floating)]",
@@ -58,12 +58,12 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-4 rounded-[var(--radius-lg)] p-5 transition-opacity duration-300",
+      "mt-4 rounded-[var(--radius-lg)] p-5 transition-opacity duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
       "bg-[var(--surface-neumorphic-floating)]",
       "shadow-surface",
       "border border-[var(--border-neumorphic-subtle)]",
       "focus-visible:outline-none focus-visible:shadow-focus-neo",
-      "animate-in fade-in-0 duration-300",
+      "animate-in fade-in-0 duration-[180ms]",
       className,
     )}
     {...props}

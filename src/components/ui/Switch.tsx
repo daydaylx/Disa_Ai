@@ -84,7 +84,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
           "focus-visible:border-[var(--color-border-focus)]",
 
           // Interactive States
-          "transition-all duration-300 ease-out",
+          "transition-all duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
 
           // Dark Mode
@@ -96,7 +96,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
         <span
           className={cn(
             // Base Thumb Structure
-            "inline-block rounded-full transform transition-all duration-300 ease-out",
+            "inline-block rounded-full transform transition-all duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
             sizeConfig.thumb,
 
             // Position Animation
@@ -146,7 +146,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
             className={cn(
               "absolute inset-1 rounded-full",
               "bg-gradient-to-br from-white/40 to-transparent",
-              "transition-opacity duration-300",
+              "transition-opacity duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
               checked ? "opacity-60" : "opacity-30",
             )}
           />
@@ -158,7 +158,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
             "absolute inset-1 rounded-full",
             "bg-gradient-to-br from-white/10 to-transparent",
             "pointer-events-none",
-            "transition-opacity duration-300",
+            "transition-opacity duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
             checked ? "opacity-40" : "opacity-0",
           )}
         />

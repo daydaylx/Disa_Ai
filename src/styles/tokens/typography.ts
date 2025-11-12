@@ -50,22 +50,22 @@ export type TypographyTokens = {
 
 export const typographyTokens: TypographyTokens = {
   fontStacks: {
-    sans: '"Inter Variable", "Inter", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif',
+    sans: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif',
     mono: '"JetBrains Mono", "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace',
-    numeric: '"Inter Variable", "Segoe UI", system-ui, sans-serif',
+    numeric: '"Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif',
   },
   textStyles: {
     display: {
       fontSize: "2rem",
       lineHeight: "2.5rem",
-      fontWeight: 600,
+      fontWeight: 700,
       letterSpacing: "-0.01em",
       textTransform: "none",
     },
     headline: {
       fontSize: "1.75rem",
       lineHeight: "2.1875rem",
-      fontWeight: 600,
+      fontWeight: 700,
       letterSpacing: "-0.008em",
       textTransform: "none",
     },
@@ -79,7 +79,7 @@ export const typographyTokens: TypographyTokens = {
     subtitle: {
       fontSize: "1.25rem",
       lineHeight: "1.5rem",
-      fontWeight: 500,
+      fontWeight: 600,
       letterSpacing: "-0.002em",
       textTransform: "none",
     },
@@ -107,7 +107,7 @@ export const typographyTokens: TypographyTokens = {
     caption: {
       fontSize: "0.75rem",
       lineHeight: "1.125rem",
-      fontWeight: 500,
+      fontWeight: 600,
       letterSpacing: "0.02em",
       textTransform: "none",
     },
@@ -121,7 +121,7 @@ export const typographyTokens: TypographyTokens = {
     mono: {
       fontSize: "0.875rem",
       lineHeight: "1.3rem",
-      fontWeight: 500,
+      fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
     },
@@ -179,7 +179,7 @@ export const typographyTokens: TypographyTokens = {
     metadata: {
       fontSize: "0.75rem",
       lineHeight: "1.125rem",
-      fontWeight: 500,
+      fontWeight: 600,
       letterSpacing: "0.08em",
       textTransform: "uppercase",
     },

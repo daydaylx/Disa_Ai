@@ -1,5 +1,6 @@
 /**
- * Corner radius tokens tuned for Fluent 2 Soft-Depth.
+ * Corner radius tokens for Glassmorphism 2.0.
+ * Simplified to 3 main values: 12px, 16px, 20px for visual consistency.
  */
 
 export type RadiusTokens = {
@@ -29,26 +30,26 @@ export type RadiusTokens = {
 
 export const radiusTokens: RadiusTokens = {
   none: "0px",
-  xs: "2px",
-  sm: "4px",
-  md: "8px",
-  lg: "12px",
-  xl: "16px",
-  pill: "16px",
+  xs: "12px", // Deprecated: Use sm instead
+  sm: "12px", // Small elements: buttons, chips, badges
+  md: "16px", // Medium elements: cards, inputs, dialogs
+  lg: "20px", // Large elements: panels, large cards
+  xl: "16px", // Deprecated: Use md instead
+  pill: "9999px", // Fully rounded (pills, avatars)
   full: "50%",
 
   /* Additional radii for specific components */
   scrollbar: "16px",
-  focus: "4px",
+  focus: "12px",
   toast: "12px",
-  installPrompt: "12px",
+  installPrompt: "16px",
   button: "12px",
-  badge: "8px",
+  badge: "12px",
 
-  /* Neo-Depth Card System - Consistent Geometry */
-  card: "12px",
-  cardInner: "8px",
-  cardSmall: "4px",
+  /* Glassmorphism Card System - 3 consistent radii */
+  card: "16px", // Standard cards
+  cardInner: "12px", // Inner elements
+  cardSmall: "12px", // Small elements
   avatar: "50%",
 };
 

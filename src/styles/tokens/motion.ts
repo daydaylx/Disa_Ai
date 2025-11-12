@@ -1,20 +1,22 @@
 /**
- * Motion tokens mirroring Fluent 2 dynamics.
+ * Motion tokens for Glassmorphism 2.0.
+ * Simplified to 3 durations: 120ms (quick), 180ms (base), 240ms (slow)
+ * Single primary easing: cubic-bezier(.23, 1, .32, 1) for smooth, natural motion
  */
 
 export type DurationTokens = {
-  micro: string;
-  small: string;
-  medium: string;
-  large: string;
+  micro: string; // Deprecated: Use quick instead
+  small: string; // Deprecated: Use quick instead
+  medium: string; // Deprecated: Use base instead
+  large: string; // Deprecated: Use slow instead
 };
 
 export type EasingTokens = {
-  standard: string;
-  emphasized: string;
-  exit: string;
-  accelerate: string;
-  decelerate: string;
+  standard: string; // Primary easing for all transitions
+  emphasized: string; // Deprecated: Use standard instead
+  exit: string; // Deprecated: Use standard instead
+  accelerate: string; // Deprecated: Use standard instead
+  decelerate: string; // Deprecated: Use standard instead
 };
 
 export type MotionTokens = {
@@ -24,17 +26,17 @@ export type MotionTokens = {
 
 export const motionTokens: MotionTokens = {
   duration: {
-    micro: "120ms",
-    small: "150ms",
-    medium: "180ms",
-    large: "200ms",
+    micro: "120ms", // Quick: Hover, Press, Chip Select
+    small: "120ms", // Deprecated: Use micro instead
+    medium: "180ms", // Base: Modal, Sheet Enter/Exit
+    large: "240ms", // Slow: Page Transitions
   },
   easing: {
-    standard: "cubic-bezier(0.2, 0, 0, 1)",
-    emphasized: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-    exit: "cubic-bezier(0.4, 0, 1, 1)",
-    accelerate: "cubic-bezier(0.8, 0, 1, 1)",
-    decelerate: "cubic-bezier(0, 0, 0.2, 1)",
+    standard: "cubic-bezier(.23, 1, .32, 1)", // Smooth, natural motion for all
+    emphasized: "cubic-bezier(.23, 1, .32, 1)", // Deprecated: Same as standard
+    exit: "cubic-bezier(.23, 1, .32, 1)", // Deprecated: Same as standard
+    accelerate: "cubic-bezier(.23, 1, .32, 1)", // Deprecated: Same as standard
+    decelerate: "cubic-bezier(.23, 1, .32, 1)", // Deprecated: Same as standard
   },
 };
 

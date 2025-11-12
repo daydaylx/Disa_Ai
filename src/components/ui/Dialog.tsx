@@ -14,7 +14,7 @@ const DialogPortal = DialogPrimitive.Portal;
 const DialogClose = DialogPrimitive.Close;
 
 const dialogOverlayVariants = cva(
-  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-[var(--z-modal-backdrop)] transition-[backdrop-filter,background-color] duration-medium ease-standard",
+  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-[var(--z-modal-backdrop)] transition-[backdrop-filter,background-color] duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
   {
     variants: {
       variant: {
@@ -50,7 +50,7 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const dialogContentVariants = cva(
-  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] data-[state=open]:zoom-in-95 fixed left-1/2 top-1/2 z-[var(--z-modal)] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-[var(--space-stack-md)] p-[var(--space-lg)] text-text-primary transition duration-medium ease-emphasized",
+  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] data-[state=open]:zoom-in-95 fixed left-1/2 top-1/2 z-[var(--z-modal)] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-[var(--space-stack-md)] p-[var(--space-lg)] text-text-primary transition duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
   {
     variants: {
       variant: {
@@ -59,9 +59,9 @@ const dialogContentVariants = cva(
         glass:
           "rounded-[var(--radius-xl)] border border-overlay-dialog-border/40 bg-overlay-dialog/80 backdrop-blur-xl shadow-surface supports-[backdrop-filter]:bg-overlay-dialog/60",
         neumorphic:
-          "rounded-[var(--radius-2xl)] border border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-floating)] shadow-elevated motion-safe:hover:shadow-elevated motion-safe:transition-shadow motion-safe:duration-300",
+          "rounded-[var(--radius-2xl)] border border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-floating)] shadow-elevated motion-safe:hover:shadow-elevated motion-safe:transition-shadow motion-safe:duration-[180ms] motion-safe:ease-[cubic-bezier(.23,1,.32,1)]",
         floating:
-          "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/30 bg-overlay-dialog shadow-surface motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-elevated motion-safe:transition-transform motion-safe:duration-200",
+          "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/30 bg-overlay-dialog shadow-surface motion-safe:hover:-translate-y-[1px] motion-safe:hover:shadow-elevated motion-safe:transition-transform motion-safe:duration-[120ms] motion-safe:ease-[cubic-bezier(.23,1,.32,1)]",
         soft: "rounded-[var(--radius-2xl)] border border-overlay-dialog-border/20 bg-overlay-dialog/95 shadow-surface backdrop-blur-sm",
         elevated:
           "rounded-[var(--radius-xl)] border border-overlay-dialog-border bg-overlay-dialog shadow-neo-md",
@@ -108,8 +108,8 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-[var(--space-md)] top-[var(--space-md)] inline-flex size-[var(--size-touch-compact)] items-center justify-center rounded-[var(--radius-md)] text-text-tertiary transition-[background,color,box-shadow] duration-150 ease-out hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary focus-visible:outline-none focus-visible:shadow-focus-neo disabled:pointer-events-none">
-        <X className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+      <DialogPrimitive.Close className="absolute right-[var(--space-md)] top-[var(--space-md)] inline-flex size-[var(--size-touch-compact)] items-center justify-center rounded-[var(--radius-md)] text-text-tertiary transition-[background,color,box-shadow] duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary focus-visible:outline-none focus-visible:shadow-focus-neo disabled:pointer-events-none">
+        <X className="h-4 w-4" />
         <span className="sr-only">Schließen</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>

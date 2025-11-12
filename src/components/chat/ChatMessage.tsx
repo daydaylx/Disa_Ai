@@ -133,11 +133,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
-  const bubbleClass = cn(
-    "max-w-[70%]",
-    isUser && "ml-auto",
-    isSystem && "mx-auto max-w-[60%]",
-  );
+  const bubbleClass = cn("max-w-[88vw]", isUser && "ml-auto", isSystem && "mx-auto max-w-[60%]");
 
   const handleCopy = () => {
     onCopy?.(message.content);
@@ -180,7 +176,13 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
           intent={isUser ? "accent" : "default"}
           tone={isUser ? "glass-primary" : "glass-subtle"}
           padding="md"
-          className={cn(bubbleClass)}
+          className={cn(
+            bubbleClass,
+            "rounded-[var(--radius-md)]",
+            isUser
+              ? "border border-[var(--border-glass-accent)] hover:shadow-[var(--shadow-glow-brand-subtle)]"
+              : "border border-[var(--border-hairline)] hover:border-[var(--border-strong)]",
+          )}
         >
           <div className="space-y-3 text-left">
             {contentContainsMarkdown(message.content) ? (
@@ -195,7 +197,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
         {!isSystem && (
           <div
             className={cn(
-              "flex items-center gap-2 text-xs text-text-muted px-2",
+              "flex items-center gap-2 px-2 text-[12px] text-text-muted/60",
               isUser && "flex-row-reverse",
             )}
           >

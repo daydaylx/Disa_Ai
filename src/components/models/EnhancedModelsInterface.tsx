@@ -625,27 +625,40 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
         {/* Favorites Section */}
         {favoriteModels.length > 0 && !filters.showFavoritesOnly && (
           <div className="px-4 pb-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Star className="w-4 h-4 text-[var(--color-border-focus)]" />
+            <div className="mb-2 flex items-center gap-2">
+              <Star className="h-4 w-4 text-[var(--color-border-focus)]" />
               <span className="text-sm font-medium text-text-strong">
-                Favoriten ({favoriteCount.models})
+                Schnellwahl ({favoriteCount.models})
               </span>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1">
-              {favoriteModels.slice(0, 6).map((model: EnhancedModel) => (
-                <Button
-                  key={model.id}
-                  variant={selectedModels.has(model.id) ? "accent" : "ghost"}
-                  size="sm"
-                  className="flex-shrink-0 px-3 py-1.5 text-sm"
-                  onClick={() => handleSelectModel(model)}
-                >
-                  <span className="font-medium">{model.label}</span>
-                  {model.pricing.isFree && (
-                    <span className="ml-1 text-xs text-emerald-600">FREE</span>
-                  )}
-                </Button>
-              ))}
+            <div
+              className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1"
+              aria-label="Bevorzugte Modelle"
+            >
+              {favoriteModels.slice(0, 8).map((model: EnhancedModel) => {
+                const isActive = selectedModels.has(model.id);
+                return (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => handleSelectModel(model)}
+                    className={cn(
+                      "snap-start inline-flex h-8 min-w-[72px] items-center gap-1.5 rounded-[16px] px-3 text-xs font-medium outline-none transition-all duration-150",
+                      "border border-[var(--border-glass)] bg-[var(--surface-glass-floating)] text-text-secondary shadow-[var(--shadow-glass-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+                      isActive &&
+                        "border-[var(--border-glass-accent)] text-[var(--color-accent-strong)] shadow-[var(--shadow-glow-brand-subtle)] bg-[color-mix(in_srgb,var(--surface-glass-floating)_88%,var(--color-accent-soft)_12%)]",
+                      "focus-visible:ring-2 focus-visible:ring-[var(--color-accent-strong)] focus-visible:ring-offset-0",
+                    )}
+                  >
+                    <span className="truncate" aria-hidden={false}>
+                      {model.label}
+                    </span>
+                    {model.pricing.isFree && (
+                      <span className="text-[9px] text-emerald-400/90">free</span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}

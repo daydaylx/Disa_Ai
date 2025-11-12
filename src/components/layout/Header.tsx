@@ -30,8 +30,8 @@ export function Header({ onMenuClick }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-header border-b border-[var(--border-glass)] bg-[var(--surface-glass-overlay)] backdrop-blur-[var(--backdrop-blur-medium)] shadow-[var(--shadow-glass-subtle)]">
-      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4 lg:h-16">
+    <header className="sticky top-0 z-[50] border-b border-[var(--border-glass)] bg-[var(--surface-glass-overlay)] backdrop-blur-[var(--backdrop-blur-medium)] shadow-[var(--shadow-glass-subtle)]">
+      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
         <div className="flex items-baseline gap-2">
           <span className="text-[10px] font-semibold uppercase tracking-[0.32em] text-accent">
             Disa AI Studio
@@ -63,7 +63,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--surface-glass-panel)] border border-[var(--border-glass)] text-text-primary shadow-[var(--shadow-glass-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] transition-all hover:bg-[var(--surface-glass-card)] hover:shadow-[var(--shadow-glass-medium)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="flex h-8 w-8 items-center justify-center rounded-[12px] bg-[var(--surface-glass-panel)] border border-[var(--border-glass)] text-text-primary shadow-[var(--shadow-glass-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] hover:bg-[var(--surface-glass-card)] hover:shadow-[var(--shadow-glass-medium)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label={`Zum ${theme === "dark" ? "hellen" : "dunklen"} Modus wechseln`}
             title={`Zum ${theme === "dark" ? "hellen" : "dunklen"} Modus wechseln`}
           >
@@ -73,7 +73,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           <button
             type="button"
             onClick={onMenuClick}
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--surface-glass-panel)] border border-[var(--border-glass)] text-text-primary shadow-[var(--shadow-glass-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] transition-all hover:bg-[var(--surface-glass-card)] hover:shadow-[var(--shadow-glass-medium)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-[var(--surface-glass-panel)] border border-[var(--border-glass)] text-text-primary shadow-[var(--shadow-glass-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] hover:bg-[var(--surface-glass-card)] hover:shadow-[var(--shadow-glass-medium)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:hidden"
             aria-label="Hauptmenü öffnen"
           >
             <span className="block h-0.5 w-4 rounded bg-current" />

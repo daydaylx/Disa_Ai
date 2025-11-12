@@ -1,13 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 
-import { Brain, MessageSquare, Settings, Users } from "../../lib/icons";
+import { Brain, MessageSquare, Settings } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
 const NAV_ITEMS = [
   { path: "/chat", label: "Chat", icon: MessageSquare },
-  { path: "/models", label: "Modelle", icon: Brain },
-  { path: "/roles", label: "Rollen", icon: Users },
-  { path: "/settings", label: "Einstellungen", icon: Settings },
+  { path: "/models", label: "Library", icon: Brain },
+  { path: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function MobileBottomNav() {
@@ -15,7 +14,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="z-bottom-nav fixed inset-x-0 bottom-0 border-t border-glass bg-surface-glass-floating/95 backdrop-blur-medium shadow-elevated"
+      className="fixed inset-x-0 bottom-0 z-[40] border-t border-glass bg-surface-glass-floating/95 backdrop-blur-medium shadow-elevated"
       aria-label="Hauptnavigation"
     >
       <div className="mx-auto flex max-w-2xl items-center justify-around gap-1 px-2 py-2 pb-[max(env(safe-area-inset-bottom),0.5rem)]">
@@ -28,7 +27,7 @@ export function MobileBottomNav() {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex min-h-[56px] min-w-[64px] flex-1 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition-all duration-200",
+                "flex min-h-[56px] min-w-[64px] flex-1 flex-col items-center justify-center gap-1 rounded-[12px] px-3 py-2 text-xs font-medium transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)]",
                 isActive
                   ? "text-accent shadow-glow-brand-subtle"
                   : "text-text-muted hover:bg-surface-glass-panel/50 hover:text-text-primary",
@@ -38,7 +37,7 @@ export function MobileBottomNav() {
               {/* Icon mit optionalem Glow */}
               <Icon
                 className={cn(
-                  "h-6 w-6 transition-transform duration-200 shadow-[var(--shadow-neumorphic-icon)]",
+                  "h-6 w-6 transition-transform duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)]",
                   isActive && "scale-110",
                 )}
                 strokeWidth={isActive ? 2.5 : 2}

@@ -55,10 +55,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   }, [isMenuOpen]);
 
   return (
-    <div
-      className="relative flex min-h-[100dvh] flex-col bg-surface-bg text-text-primary"
-      style={{ minHeight: "calc(100dvh + var(--keyboard-offset, 0px))" }}
-    >
+    <div className="relative flex min-h-screen-dynamic flex-col bg-surface-bg text-text-primary">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent"
@@ -80,7 +77,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    "group flex items-center gap-2 rounded-2xl px-3 py-2.5 transition-colors",
+                    "group flex items-center gap-2 rounded-[20px] px-3 py-2.5 transition-colors duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)]",
                     activePath === item.path
                       ? "bg-surface-muted/90 text-text-primary shadow-surface"
                       : "text-text-secondary hover:bg-surface-muted/70 hover:text-text-primary",

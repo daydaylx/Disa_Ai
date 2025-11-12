@@ -105,7 +105,7 @@ export function ModelCard({
         data-cat={categoryKey}
         className={cn(
           "category-border category-tint category-focus relative w-full overflow-hidden",
-          "transition-all duration-200 ease-out",
+          "transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)]",
           "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
           "hover-lift-glow tap-bounce focus-glow",
           isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
@@ -264,7 +264,7 @@ export function ModelCard({
             isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
           )}
         >
-          <Info className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" aria-hidden="true" />
+          <Info className="h-4 w-4" aria-hidden="true" />
         </button>
       </Card>
     </div>

@@ -25,14 +25,14 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "rounded-lg border border-transparent bg-transparent text-sm text-text-secondary outline-none transition-all duration-200 ease-out hover:bg-surface-subtle hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-popover data-[state=open]:bg-surface-subtle data-[state=open]:text-text-primary flex cursor-default select-none items-center px-3 py-2 motion-reduce:transition-none touch-target-preferred",
+      "rounded-lg border border-transparent bg-transparent text-sm text-text-secondary outline-none transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] hover:bg-surface-subtle hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-popover data-[state=open]:bg-surface-subtle data-[state=open]:text-text-primary flex cursor-default select-none items-center px-3 py-2 motion-reduce:transition-none touch-target-preferred",
       inset && "pl-8",
       className,
     )}
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+    <ChevronRight className="ml-auto h-4 w-4" />
   </DropdownMenuPrimitive.SubTrigger>
 ));
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
@@ -79,7 +79,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-lg px-3 py-2 text-sm text-text-secondary outline-none transition-all duration-200 ease-out hover:bg-surface-subtle hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-popover data-[disabled]:pointer-events-none data-[disabled]:opacity-40 touch-target-preferred motion-reduce:transition-none",
+      "relative flex cursor-default select-none items-center rounded-lg px-3 py-2 text-sm text-text-secondary outline-none transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] hover:bg-surface-subtle hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-popover data-[disabled]:pointer-events-none data-[disabled]:opacity-40 touch-target-preferred motion-reduce:transition-none",
       inset && "pl-8",
       className,
     )}
@@ -95,7 +95,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-lg py-2 pl-9 pr-3 text-sm text-text-secondary outline-none transition-all duration-200 ease-out hover:bg-surface-subtle hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-popover data-[disabled]:pointer-events-none data-[disabled]:opacity-40 touch-target-preferred motion-reduce:transition-none",
+      "relative flex cursor-default select-none items-center rounded-lg py-2 pl-9 pr-3 text-sm text-text-secondary outline-none transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] hover:bg-surface-subtle hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-popover data-[disabled]:pointer-events-none data-[disabled]:opacity-40 touch-target-preferred motion-reduce:transition-none",
       className,
     )}
     checked={checked}
@@ -103,7 +103,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Check className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+        <Check className="h-4 w-4" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -118,14 +118,14 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-lg py-2 pl-9 pr-3 text-sm text-text-secondary outline-none transition-all duration-200 ease-out hover:bg-surface-subtle hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-popover data-[disabled]:pointer-events-none data-[disabled]:opacity-40 touch-target-preferred motion-reduce:transition-none",
+      "relative flex cursor-default select-none items-center rounded-lg py-2 pl-9 pr-3 text-sm text-text-secondary outline-none transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] hover:bg-surface-subtle hover:text-text-primary focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-popover data-[disabled]:pointer-events-none data-[disabled]:opacity-40 touch-target-preferred motion-reduce:transition-none",
       className,
     )}
     {...props}
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Circle className="h-2 w-2 fill-current shadow-[var(--shadow-neumorphic-icon)]" />
+        <Circle className="h-2 w-2 fill-current" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}

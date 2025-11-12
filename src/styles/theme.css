@@ -16,17 +16,17 @@
     /* ------------------------------ */
     /*         Color Palette          */
     /* ------------------------------ */
-    --color-brand-primary: #4f46e5; /* Indigo 500 */
-    --color-brand-primary-hover: #4338ca; /* Indigo 600 */
-    --color-brand-secondary: #818cf8; /* Indigo 300 */
+    --color-brand-primary: #8b5cf6; /* Violet 500 - Glassmorphism 2.0 Accent */
+    --color-brand-primary-hover: #7c3aed; /* Violet 600 */
+    --color-brand-secondary: #a78bfa; /* Violet 400 */
 
     --color-text-primary: #f8fafc; /* Slate 50 */
     --color-text-secondary: #cbd5e1; /* Slate 300 */
     --color-text-tertiary: #94a3b8; /* Slate 400 */
     --color-text-on-accent: #ffffff;
 
-    --color-background-dark: #0f172a; /* Slate 900 */
-    --color-background-light: #1e293b; /* Slate 800 */
+    --color-background-dark: #0b0f14; /* bg0 - Deep dark */
+    --color-background-light: #0f1420; /* bg1 - Base surface */
 
     --color-border-strong: #475569; /* Slate 600 */
     --color-border-subtle: #334155; /* Slate 700 */
@@ -71,8 +71,8 @@
     --accent: var(--color-brand-primary);
     --accent-weak: var(--color-brand-secondary);
     --accent-contrast: var(--color-text-on-accent);
-    --accent-strong: #6366f1; /* Indigo 400 */
-    --acc2: #6366f1; /* Indigo 400 - for backward compatibility */
+    --accent-strong: #a78bfa; /* Violet 400 */
+    --acc2: #a78bfa; /* Violet 400 - for backward compatibility */
 
     /* --- Borders --- */
     --line: var(--color-border-subtle);
@@ -119,11 +119,11 @@
     /*         Spacing Scale          */
     /* ------------------------------ */
     --space-3xs: 0.25rem; /* 4px */
-    --space-2xs: 0.375rem; /* 6px */
+    --space-2xs: 0.5rem; /* 8px - Simplified from 6px */
     --space-xs: 0.5rem; /* 8px */
     --space-sm: 0.75rem; /* 12px */
     --space-md: 1rem; /* 16px */
-    --space-lg: 1.25rem; /* 20px */
+    --space-lg: 2rem; /* 32px - Corrected to match scale */
     --space-xl: 1.5rem; /* 24px */
     --space-2xl: 2rem; /* 32px */
     --space-3xl: 2.5rem; /* 40px */
@@ -142,12 +142,12 @@
     /* ------------------------------ */
     /*         Border Radius          */
     /* ------------------------------ */
-    /* Updated radii for soft-depth glassmorphism (matching reference specs) */
-    --radius-xs: 0.375rem; /* 6px - for small elements */
-    --radius-sm: 0.625rem; /* 10px - for buttons, badges */
-    --radius-md: 0.875rem; /* 14px - for cards, inputs */
-    --radius-lg: 1.125rem; /* 18px - for larger cards */
-    --radius-xl: 1.5rem; /* 24px - for panels, modals */
+    /* Glassmorphism 2.0: Simplified to 3 main radii (12/16/20px) */
+    --radius-xs: 0.75rem; /* 12px - Deprecated */
+    --radius-sm: 0.75rem; /* 12px - Small elements */
+    --radius-md: 1rem; /* 16px - Standard elements */
+    --radius-lg: 1.25rem; /* 20px - Large elements */
+    --radius-xl: 1rem; /* 16px - Deprecated */
     --radius-2xl: 2rem; /* 32px - for hero elements */
     --radius-pill: 9999px;
 
@@ -195,11 +195,11 @@
     /* --- Surface and depth --- */
     --shadow-surface: 0 2px 10px rgba(15, 23, 42, 0.08);
 
-    /* --- Glassmorphism Variables --- */
-    --backdrop-blur-subtle: blur(8px);
-    --backdrop-blur-medium: blur(12px);
-    --backdrop-blur-strong: blur(16px);
-    --backdrop-blur-intense: blur(24px);
+    /* --- Glassmorphism 2.0 Variables --- */
+    --backdrop-blur-subtle: blur(12px) saturate(120%);
+    --backdrop-blur-medium: blur(14px) saturate(120%);
+    --backdrop-blur-strong: blur(18px) saturate(120%);
+    --backdrop-blur-intense: blur(24px) saturate(120%);
 
     /* Glassmorphism Surface Opacity Levels - optimized for mobile readability */
     --glass-opacity-light: 0.85; /* Standard cards - high opacity for readability */
@@ -211,14 +211,14 @@
     --glass-border-light: rgba(255, 255, 255, 0.1);
     --glass-border-medium: rgba(255, 255, 255, 0.15);
     --glass-border-strong: rgba(255, 255, 255, 0.2);
-    --glass-border-accent: rgba(79, 70, 229, 0.3);
+    --glass-border-accent: rgba(139, 92, 246, 0.3);
 
     /* ------------------------------ */
     /*           Typography           */
     /* ------------------------------ */
     --font-family-sans:
-      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-      "Noto Sans", sans-serif;
+      "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+      Arial, "Noto Sans", sans-serif;
     --font-family-mono:
       "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
@@ -229,11 +229,11 @@
     --font-weight-display: 700;
     --letter-spacing-display: -0.03em;
     --font-size-display-fluid: clamp(2.5rem, 6vw, 3rem); /* 40px to 48px */
-    --font-feature-display: "ss01" 1, "ss02" 1;
+    --font-feature-display: normal;
 
     --font-size-headline: 2rem; /* 32px */
     --line-height-headline: 1.25; /* 40px */
-    --font-weight-headline: 600;
+    --font-weight-headline: 700;
     --letter-spacing-headline: -0.02em;
     --font-size-headline-fluid: clamp(2rem, 5vw, 2.5rem); /* 32px to 40px */
     --font-feature-headline: "ss01" 1;
@@ -245,7 +245,7 @@
 
     --font-size-subtitle: 1.25rem; /* 20px */
     --line-height-subtitle: 1.4; /* 28px */
-    --font-weight-subtitle: 500;
+    --font-weight-subtitle: 600;
     --letter-spacing-subtitle: -0.01em;
 
     --font-size-body: 1rem; /* 16px */
@@ -262,7 +262,7 @@
 
     --font-size-label: 0.875rem; /* 14px */
     --line-height-label: 1.43; /* 20px */
-    --font-weight-label: 500;
+    --font-weight-label: 600;
     --letter-spacing-label: -0.01em;
     --text-transform-label: none;
 
@@ -273,22 +273,22 @@
     /* ------------------------------ */
     /*            Motion              */
     /* ------------------------------ */
-    --motion-duration-quick: 150ms;
-    --motion-duration-base: 250ms;
-    --motion-duration-slow: 400ms;
+    --motion-duration-quick: 120ms;
+    --motion-duration-base: 180ms;
+    --motion-duration-slow: 240ms;
 
-    --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-    --motion-ease-emphasized: cubic-bezier(0.65, 0, 0.35, 1);
-    --motion-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
-    --motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+    --motion-ease-standard: cubic-bezier(0.23, 1, 0.32, 1);
+    --motion-ease-emphasized: cubic-bezier(0.23, 1, 0.32, 1);
+    --motion-ease-accelerate: cubic-bezier(0.23, 1, 0.32, 1);
+    --motion-ease-decelerate: cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   /* Add a subtle geometric background pattern for visual interest */
   body {
     background-color: var(--surface-bg);
     background-image:
-      radial-gradient(circle at 15% 30%, rgba(79, 70, 229, 0.05) 1.5px, transparent 2px),
-      radial-gradient(circle at 85% 70%, rgba(129, 140, 248, 0.05) 1.5px, transparent 2px),
+      radial-gradient(circle at 15% 30%, rgba(139, 92, 246, 0.05) 1.5px, transparent 2px),
+      radial-gradient(circle at 85% 70%, rgba(167, 139, 250, 0.05) 1.5px, transparent 2px),
       linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size:
@@ -357,9 +357,9 @@
   /* ------------------------------ */
   /*         Color Palette          */
   /* ------------------------------ */
-  --color-brand-primary: #4f46e5; /* Indigo 500 - same for consistency */
-  --color-brand-primary-hover: #4338ca; /* Indigo 600 */
-  --color-brand-secondary: #6366f1; /* Indigo 400 */
+  --color-brand-primary: #8b5cf6; /* Violet 500 - Glassmorphism 2.0 */
+  --color-brand-primary-hover: #7c3aed; /* Violet 600 */
+  --color-brand-secondary: #a78bfa; /* Violet 400 */
 
   --color-text-primary: #0f172a; /* Dark text on light background */
   --color-text-secondary: #475569; /* Slate 600 */
@@ -520,8 +520,8 @@
 [data-theme="light"] body {
   background-color: var(--surface-bg);
   background-image:
-    radial-gradient(circle at 15% 30%, rgba(79, 70, 229, 0.03) 1.5px, transparent 2px),
-    radial-gradient(circle at 85% 70%, rgba(129, 140, 248, 0.03) 1.5px, transparent 2px),
+    radial-gradient(circle at 15% 30%, rgba(139, 92, 246, 0.03) 1.5px, transparent 2px),
+    radial-gradient(circle at 85% 70%, rgba(167, 139, 250, 0.03) 1.5px, transparent 2px),
     linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
   background-size:
