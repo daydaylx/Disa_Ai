@@ -161,7 +161,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
     >
       <div className={cn("relative", isSystem && "hidden")}>
         <Avatar className="border-border h-9 w-9 border">
-          <AvatarFallback className={cn("bg-surface-subtle text-text-primary")}>
+          <AvatarFallback className={cn("bg-[var(--surface-glass-panel)] text-text-primary")}>
             {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
           </AvatarFallback>
         </Avatar>
@@ -195,7 +195,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
 
         <Card
           intent={isUser ? "accent" : "primary"}
-          tone={isUser ? "neo-raised" : "neo-inset"}
+          tone={isUser ? "glass-primary" : "glass-subtle"}
           padding="sm"
           className={cn(bubbleClass, "w-full")}
         >

@@ -6,7 +6,7 @@ import { cn } from "../../lib/utils";
 import { Button } from "./button"; // Assuming Button component is updated
 
 const cardVariants = cva(
-  "relative rounded-[var(--radius-xl)] border transition-all duration-300 ease-out",
+  "relative rounded-[var(--radius-xl)] border transition-all duration-300 ease-out backdrop-blur-[var(--backdrop-blur-medium)]",
   {
     variants: {
       variant: {
@@ -15,16 +15,27 @@ const cardVariants = cva(
         flat: "border-transparent bg-transparent shadow-none",
       },
       tone: {
+        // Modern Glassmorphism variants
+        "glass-primary":
+          "bg-[var(--surface-glass-card)] border-[var(--border-glass)] text-[var(--color-text-primary)]",
+        "glass-subtle":
+          "bg-[var(--surface-glass-panel)] border-[var(--border-glass)] text-[var(--color-text-secondary)]",
+        "glass-floating":
+          "bg-[var(--surface-glass-floating)] border-[var(--border-glass-strong)] text-[var(--color-text-primary)] backdrop-blur-[var(--backdrop-blur-strong)]",
+        "glass-overlay":
+          "bg-[var(--surface-glass-overlay)] border-[var(--border-glass-medium)] text-[var(--color-text-primary)] backdrop-blur-[var(--backdrop-blur-intense)]",
+
+        // Legacy aliases (using new glassmorphism styles)
         "neo-raised":
-          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)]",
+          "bg-[var(--surface-glass-card)] border-[var(--border-glass)] text-[var(--color-text-primary)]",
         "neo-subtle":
-          "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)]",
+          "bg-[var(--surface-glass-panel)] border-[var(--border-glass)] text-[var(--color-text-primary)]",
         "neo-inset":
-          "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)] shadow-[var(--shadow-inset-subtle)]",
+          "bg-[var(--surface-glass-panel)] border-[var(--border-glass)] text-[var(--color-text-primary)] shadow-[var(--shadow-inset-subtle)]",
         "neo-floating":
-          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] text-[var(--color-text-primary)] backdrop-blur-lg",
+          "bg-[var(--surface-glass-floating)] border-[var(--border-glass-strong)] text-[var(--color-text-primary)] backdrop-blur-[var(--backdrop-blur-strong)]",
         "neo-glass":
-          "bg-[var(--surface-ghost)]/70 border-[var(--border-ghost,rgba(255,255,255,0.3))] text-[var(--color-text-primary)] backdrop-blur-xl",
+          "bg-[var(--surface-glass-overlay)] border-[var(--border-glass-medium)] text-[var(--color-text-primary)] backdrop-blur-[var(--backdrop-blur-intense)]",
       },
       intent: {
         default: "",
@@ -58,29 +69,30 @@ const cardVariants = cva(
       },
       elevation: {
         flat: "shadow-none",
-        subtle: "shadow-neo-sm",
-        surface: "shadow-[var(--shadow-surface,0_2px_10px_rgba(15,23,42,0.08))]",
-        medium: "shadow-neo-md",
-        dramatic: "shadow-neo-xl",
-        raised: "shadow-neo-md",
+        subtle: "shadow-[var(--shadow-glass-subtle)]",
+        surface: "shadow-[var(--shadow-surface)]",
+        medium: "shadow-[var(--shadow-glass-medium)]",
+        dramatic: "shadow-[var(--shadow-glass-floating)]",
+        raised: "shadow-[var(--shadow-glass-strong)]",
       },
       interactive: {
         none: "",
-        basic: "cursor-pointer hover:-translate-y-0.5 hover:shadow-neo-sm",
-        gentle: "cursor-pointer hover:-translate-y-1 hover:shadow-neo-md",
-        glow: "cursor-pointer hover:shadow-[var(--shadow-glow-soft)]",
-        "glow-accent":
-          "cursor-pointer hover:border-accent hover:shadow-[var(--shadow-glow-accent)]",
+        basic:
+          "cursor-pointer hover:-translate-y-0.5 hover:shadow-[var(--shadow-glass-subtle)] hover:border-[var(--border-glass-strong)]",
+        gentle:
+          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-glass-medium)] hover:border-[var(--border-glass-strong)]",
+        glow: "cursor-pointer hover:shadow-[var(--shadow-glow-neutral-subtle)]",
+        "glow-accent": "cursor-pointer hover:border-accent hover:shadow-[var(--shadow-glow-brand)]",
       },
     },
     defaultVariants: {
       variant: "default",
-      tone: "neo-raised",
+      tone: "glass-primary",
       intent: "default",
       padding: "md",
       size: "full",
       state: "default",
-      elevation: "surface",
+      elevation: "medium",
       interactive: "none",
     },
   },
@@ -281,7 +293,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
                   {/* Simple dropdown menu */}
                   {isMenuOpen && menuItems.length > 0 && (
-                    <div className="absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-line bg-surface-card shadow-overlay">
+                    <div className="absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-[var(--border-glass)] bg-[var(--surface-glass-overlay)] shadow-[var(--shadow-glass-floating)] backdrop-blur-[var(--backdrop-blur-strong)]">
                       {menuItems.map((item, index) => (
                         <button
                           key={index}
@@ -291,7 +303,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                             setIsMenuOpen(false);
                           }}
                           disabled={item.disabled}
-                          className="flex w-full items-center gap-space-sm px-space-md py-space-sm text-left text-sm text-text-primary first:rounded-t-lg last:rounded-b-lg hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex w-full items-center gap-space-sm px-space-md py-space-sm text-left text-sm text-text-primary first:rounded-t-lg last:rounded-b-lg hover:bg-[var(--surface-glass-panel)] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {item.icon}
                           {item.label}

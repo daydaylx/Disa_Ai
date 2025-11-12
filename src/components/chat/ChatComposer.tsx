@@ -119,13 +119,13 @@ export function ChatComposer({
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="border-border-hairline inline-flex items-center gap-1 rounded-full border bg-[var(--surface-neumorphic-floating)] px-3 py-1 text-text-secondary">
+                <span className="border-[var(--border-glass)] inline-flex items-center gap-1 rounded-full border bg-[var(--surface-glass-floating)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-text-secondary shadow-[var(--shadow-glass-subtle)]">
                   <Zap className="h-3 w-3" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="border-border-hairline inline-flex items-center gap-2 rounded-full border bg-[var(--surface-neumorphic-floating)] px-3 py-1 text-text-secondary">
+                <span className="border-[var(--border-glass)] inline-flex items-center gap-2 rounded-full border bg-[var(--surface-glass-floating)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-text-secondary shadow-[var(--shadow-glass-subtle)]">
                   Maximal: {maxTokens}
                 </span>
               )}
@@ -138,7 +138,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] backdrop-blur-sm touch-target",
+            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[var(--border-glass-accent)] bg-[var(--surface-glass-floating)] p-2 shadow-[var(--shadow-glass-medium)] backdrop-blur-[var(--backdrop-blur-medium)] touch-target",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -169,7 +169,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] text-text-secondary hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary touch-target"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] text-text-secondary hover:bg-[var(--surface-glass-card)] hover:text-text-primary hover:shadow-[var(--shadow-glass-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] touch-target"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
@@ -196,7 +196,7 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="accent"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] shadow-neo-sm touch-target"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)] backdrop-blur-[var(--backdrop-blur-subtle)] touch-target"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 aria-label="Nachricht senden"

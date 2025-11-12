@@ -45,19 +45,22 @@
     --surface-bg: var(--color-background-dark); /* Page background */
     --surface-base: var(--color-background-light); /* Base component background */
     --surface-muted: #283447; /* Slightly lighter for secondary content */
-    --surface-card: rgba(
+
+    /* Glassmorphism Surfaces */
+    --surface-glass-card: rgba(
       48,
       58,
       84,
-      0.85
-    ); /* Improved opacity for better contrast in glassmorphism */
-    --surface-overlay: rgba(
-      15,
-      23,
-      42,
-      0.9
-    ); /* For dialogs, modals - better opacity for contrast */
+      var(--glass-opacity-light)
+    ); /* Card backgrounds with glassmorphism */
+    --surface-glass-panel: rgba(30, 41, 59, var(--glass-opacity-medium)); /* Panel backgrounds */
+    --surface-glass-overlay: rgba(15, 23, 42, var(--glass-opacity-overlay)); /* Modals, dialogs */
+    --surface-glass-floating: rgba(40, 52, 71, var(--glass-opacity-heavy)); /* Floating elements */
     --surface-ghost: transparent;
+
+    /* Legacy compatibility (will be phased out) */
+    --surface-card: var(--surface-glass-card);
+    --surface-overlay: var(--surface-glass-overlay);
 
     /* --- Text --- */
     --fg: var(--color-text-primary); /* High contrast primary text */
@@ -75,21 +78,30 @@
     --line: var(--color-border-subtle);
     --border-hairline: var(--color-border-hairline);
     --border-strong: var(--color-border-strong);
-    --border-neumorphic-subtle: color-mix(
-      in srgb,
-      var(--surface-base) 80%,
-      var(--color-text-primary) 20%
-    );
+
+    /* Glassmorphism Borders */
+    --border-glass: var(--glass-border-light);
+    --border-glass-strong: var(--glass-border-medium);
+    --border-glass-accent: var(--glass-border-accent);
+
     --color-border-focus: var(--accent);
     --color-accent-border: color-mix(in srgb, var(--accent) 40%, transparent 60%);
     --color-accent-surface: color-mix(in srgb, var(--accent) 15%, transparent 85%);
     --border-ghost: rgba(255, 255, 255, 0.3);
 
-    /* --- Surfaces (for neumorphism/glassmorphism) --- */
-    --surface-neumorphic-base: var(--surface-base);
-    --surface-neumorphic-raised: color-mix(in srgb, var(--surface-base) 95%, white 5%);
-    --surface-neumorphic-floating: color-mix(in srgb, var(--surface-base) 80%, var(--accent) 20%);
+    /* Legacy compatibility (will be phased out) */
+    --border-neumorphic-subtle: var(--border-glass);
+
+    /* --- Glassmorphism Surface Hierarchy --- */
+    --surface-glass-base: var(--surface-base); /* For solid elements */
+    --surface-glass-raised: var(--surface-glass-card); /* Standard glassmorphism cards */
+    --surface-glass-elevated: var(--surface-glass-floating); /* Elevated/floating glassmorphism */
     --color-surface-muted: var(--surface-muted);
+
+    /* Legacy compatibility (will be phased out) */
+    --surface-neumorphic-base: var(--surface-glass-base);
+    --surface-neumorphic-raised: var(--surface-glass-raised);
+    --surface-neumorphic-floating: var(--surface-glass-elevated);
 
     /* --- Status --- */
     --info: #60a5fa; /* Lighter blue for better contrast on dark backgrounds */
@@ -148,12 +160,11 @@
     --shadow-inset-strong: inset 0 4px 8px 0 rgba(0, 0, 0, 0.3);
     --shadow-inset-extreme: inset 0 8px 16px 0 rgba(0, 0, 0, 0.4);
 
-    /* --- Neumorphic Shadows --- */
-    --shadow-neo-sm: 3px 3px 6px var(--shadow-color-low), -3px -3px 6px var(--shadow-color-high);
-    --shadow-neo-md: 5px 5px 10px var(--shadow-color-low), -5px -5px 10px var(--shadow-color-high);
-    --shadow-neo-lg: 8px 8px 16px var(--shadow-color-low), -8px -8px 16px var(--shadow-color-high);
-    --shadow-neo-xl:
-      12px 12px 24px var(--shadow-color-low), -12px -12px 24px var(--shadow-color-high);
+    /* --- Glassmorphism Shadows (replacing neumorphic) --- */
+    --shadow-glass-subtle: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-glass-medium: 0 8px 12px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
+    --shadow-glass-strong: 0 16px 24px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-glass-floating: 0 24px 38px rgba(0, 0, 0, 0.14), 0 9px 46px rgba(0, 0, 0, 0.12);
 
     /* --- Glow Shadows (semantic set aligned with shadowTokens) --- */
     --shadow-glow-brand: 0 0 16px rgba(97, 109, 255, 0.25);
@@ -170,9 +181,23 @@
     /* --- Surface and depth --- */
     --shadow-surface: 0 2px 10px rgba(15, 23, 42, 0.08);
 
-    /* --- Shadow color variables (for neumorphism) --- */
-    --shadow-color-low: color-mix(in srgb, var(--surface-base) 90%, #000000 10%);
-    --shadow-color-high: color-mix(in srgb, var(--surface-base) 90%, #ffffff 10%);
+    /* --- Glassmorphism Variables --- */
+    --backdrop-blur-subtle: blur(8px);
+    --backdrop-blur-medium: blur(12px);
+    --backdrop-blur-strong: blur(16px);
+    --backdrop-blur-intense: blur(24px);
+
+    /* Glassmorphism Surface Opacity Levels */
+    --glass-opacity-light: 0.85;
+    --glass-opacity-medium: 0.7;
+    --glass-opacity-heavy: 0.6;
+    --glass-opacity-overlay: 0.95;
+
+    /* Glassmorphism Border Colors */
+    --glass-border-light: rgba(255, 255, 255, 0.1);
+    --glass-border-medium: rgba(255, 255, 255, 0.15);
+    --glass-border-strong: rgba(255, 255, 255, 0.2);
+    --glass-border-accent: rgba(79, 70, 229, 0.3);
 
     /* ------------------------------ */
     /*           Typography           */
@@ -308,4 +333,195 @@
       border-color 0.2s ease,
       color 0.2s ease;
   }
+}
+
+/* =========================== */
+/*      Light Mode Theme       */
+/* =========================== */
+
+[data-theme="light"] {
+  /* ------------------------------ */
+  /*         Color Palette          */
+  /* ------------------------------ */
+  --color-brand-primary: #4f46e5; /* Indigo 500 - same for consistency */
+  --color-brand-primary-hover: #4338ca; /* Indigo 600 */
+  --color-brand-secondary: #6366f1; /* Indigo 400 */
+
+  --color-text-primary: #0f172a; /* Dark text on light background */
+  --color-text-secondary: #475569; /* Slate 600 */
+  --color-text-tertiary: #64748b; /* Slate 500 */
+  --color-text-on-accent: #ffffff;
+
+  --color-background-dark: #ffffff; /* Light page background */
+  --color-background-light: #f8fafc; /* Slate 50 */
+
+  --color-border-strong: #cbd5e1; /* Slate 300 */
+  --color-border-subtle: #e2e8f0; /* Slate 200 */
+  --color-border-hairline: #f1f5f9; /* Slate 100 */
+
+  /* Status colors remain same for consistency */
+  --color-status-success: #22c55e;
+  --color-status-warning: #f59e0b;
+  --color-status-danger: #ef4444;
+  --color-status-info: #3b82f6;
+
+  /* ------------------------------ */
+  /*      Semantic Color Tokens     */
+  /* ------------------------------ */
+
+  /* --- Backgrounds --- */
+  --surface-bg: var(--color-background-dark); /* White page background */
+  --surface-base: var(--color-background-light); /* Light gray component background */
+  --surface-muted: #e2e8f0; /* Slate 200 for secondary content */
+
+  /* Glassmorphism Surfaces - Light Mode */
+  --surface-glass-card: rgba(
+    255,
+    255,
+    255,
+    var(--glass-opacity-light)
+  ); /* White with transparency */
+  --surface-glass-panel: rgba(
+    248,
+    250,
+    252,
+    var(--glass-opacity-medium)
+  ); /* Light gray with transparency */
+  --surface-glass-overlay: rgba(
+    255,
+    255,
+    255,
+    var(--glass-opacity-overlay)
+  ); /* Modal/dialog background */
+  --surface-glass-floating: rgba(241, 245, 249, var(--glass-opacity-heavy)); /* Floating elements */
+  --surface-ghost: transparent;
+
+  /* Legacy compatibility */
+  --surface-card: var(--surface-glass-card);
+  --surface-overlay: var(--surface-glass-overlay);
+
+  /* --- Text --- */
+  --fg: var(--color-text-primary);
+  --fg-muted: #64748b; /* Slate 500 */
+  --fg-subtle: #94a3b8; /* Slate 400 */
+
+  /* --- Accents --- */
+  --accent: var(--color-brand-primary);
+  --accent-weak: var(--color-brand-secondary);
+  --accent-contrast: var(--color-text-on-accent);
+  --accent-strong: #3730a3; /* Indigo 700 - darker for light mode */
+  --acc2: #4338ca; /* Indigo 600 */
+
+  /* --- Borders --- */
+  --line: var(--color-border-subtle);
+  --border-hairline: var(--color-border-hairline);
+  --border-strong: var(--color-border-strong);
+
+  /* Glassmorphism Borders - Light Mode */
+  --border-glass: rgba(0, 0, 0, 0.1); /* Dark border with transparency */
+  --border-glass-strong: rgba(0, 0, 0, 0.15);
+  --border-glass-accent: rgba(79, 70, 229, 0.3);
+
+  --color-border-focus: var(--accent);
+  --color-accent-border: color-mix(in srgb, var(--accent) 40%, transparent 60%);
+  --color-accent-surface: color-mix(in srgb, var(--accent) 15%, transparent 85%);
+  --border-ghost: rgba(0, 0, 0, 0.2);
+
+  /* Legacy compatibility */
+  --border-neumorphic-subtle: var(--border-glass);
+
+  /* --- Glassmorphism Surface Hierarchy --- */
+  --surface-glass-base: var(--surface-base);
+  --surface-glass-raised: var(--surface-glass-card);
+  --surface-glass-elevated: var(--surface-glass-floating);
+  --color-surface-muted: var(--surface-muted);
+
+  /* Legacy compatibility */
+  --surface-neumorphic-base: var(--surface-glass-base);
+  --surface-neumorphic-raised: var(--surface-glass-raised);
+  --surface-neumorphic-floating: var(--surface-glass-elevated);
+
+  /* --- Status --- */
+  --info: #2563eb; /* Darker blue for light background */
+  --info-soft: rgba(37, 99, 235, 0.15);
+  --success: #16a34a; /* Darker green for better contrast */
+  --success-soft: rgba(22, 163, 74, 0.15);
+  --warning: #d97706; /* Darker amber for better contrast */
+  --warning-soft: rgba(217, 119, 6, 0.15);
+  --danger: #dc2626; /* Darker red for better contrast */
+  --danger-soft: rgba(220, 38, 38, 0.15);
+
+  /* ------------------------------ */
+  /*      Glassmorphism Variables   */
+  /* ------------------------------ */
+
+  /* Glassmorphism Border Colors - Light Mode */
+  --glass-border-light: rgba(0, 0, 0, 0.08);
+  --glass-border-medium: rgba(0, 0, 0, 0.12);
+  --glass-border-strong: rgba(0, 0, 0, 0.16);
+  --glass-border-accent: rgba(79, 70, 229, 0.25);
+
+  /* ------------------------------ */
+  /*           Shadows              */
+  /* ------------------------------ */
+
+  /* Glassmorphism Shadows - Light Mode */
+  --shadow-glass-subtle: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-glass-medium: 0 8px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-glass-strong: 0 16px 24px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-glass-floating: 0 24px 38px rgba(0, 0, 0, 0.12), 0 9px 46px rgba(0, 0, 0, 0.1);
+
+  /* Card and overlay shadows */
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  --shadow-overlay: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-ring: 0 0 0 2px var(--surface-bg), 0 0 0 4px var(--color-brand-primary);
+
+  /* Inset shadows for light mode */
+  --shadow-inset-subtle: inset 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+  --shadow-inset-medium: inset 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+  --shadow-inset-strong: inset 0 4px 8px 0 rgba(0, 0, 0, 0.18);
+  --shadow-inset-extreme: inset 0 8px 16px 0 rgba(0, 0, 0, 0.25);
+
+  /* Glow shadows remain similar but with adjusted opacity */
+  --shadow-glow-brand: 0 0 16px rgba(79, 70, 229, 0.2);
+  --shadow-glow-brand-subtle: 0 0 8px rgba(79, 70, 229, 0.1);
+  --shadow-glow-brand-strong: 0 0 24px rgba(79, 70, 229, 0.3);
+  --shadow-glow-success: 0 0 16px rgba(22, 163, 74, 0.2);
+  --shadow-glow-success-subtle: 0 0 8px rgba(22, 163, 74, 0.12);
+  --shadow-glow-warning: 0 0 16px rgba(217, 119, 6, 0.2);
+  --shadow-glow-warning-subtle: 0 0 8px rgba(217, 119, 6, 0.15);
+  --shadow-glow-error: 0 0 16px rgba(220, 38, 38, 0.25);
+  --shadow-glow-error-subtle: 0 0 8px rgba(220, 38, 38, 0.18);
+  --shadow-glow-neutral-subtle: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  /* Surface shadow */
+  --shadow-surface: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* Light mode body background */
+[data-theme="light"] body {
+  background-color: var(--surface-bg);
+  background-image:
+    radial-gradient(circle at 15% 30%, rgba(79, 70, 229, 0.03) 1.5px, transparent 2px),
+    radial-gradient(circle at 85% 70%, rgba(129, 140, 248, 0.03) 1.5px, transparent 2px),
+    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+  background-size:
+    40px 40px,
+    40px 40px,
+    20px 20px,
+    20px 20px;
+}
+
+/* Light mode scrollbars */
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: var(--surface-base);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: var(--line);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }

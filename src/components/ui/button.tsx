@@ -5,33 +5,39 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-md)] font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-md)] font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 backdrop-blur-[var(--backdrop-blur-medium)]",
   {
     variants: {
       variant: {
-        "neo-medium":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-primary)] shadow-neo-sm hover:shadow-neo-md",
-        "neo-subtle":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] shadow-none hover:shadow-neo-sm",
+        // Primary Glassmorphism variants
+        "glass-primary":
+          "border border-[var(--border-glass)] bg-[var(--surface-glass-card)] text-[var(--color-text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)] hover:border-[var(--border-glass-strong)]",
+        "glass-subtle":
+          "border border-[var(--border-glass)] bg-[var(--surface-glass-panel)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-card)]",
         destructive:
-          "border border-transparent bg-[var(--danger)] text-[var(--accent-contrast)] shadow-neo-md hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)]",
+          "border border-transparent bg-[var(--danger)] text-[var(--accent-contrast)] shadow-[var(--shadow-glass-medium)] hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)] hover:shadow-[var(--shadow-glass-strong)]",
         accent:
-          "border border-transparent bg-[var(--accent)] text-[var(--accent-contrast)] shadow-[var(--shadow-glow-accent-subtle)] hover:bg-[var(--accent-strong, var(--accent))]/90",
+          "border border-transparent bg-[var(--accent)] text-[var(--accent-contrast)] shadow-[var(--shadow-glow-brand-subtle)] hover:bg-[var(--accent-strong)] hover:shadow-[var(--shadow-glow-brand)]",
         brand:
-          "border border-transparent bg-[var(--acc2)] text-white shadow-neo-md hover:shadow-neo-lg",
+          "border border-[var(--border-glass-accent)] bg-[var(--acc2)] text-white shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)] hover:bg-[var(--accent-strong)]",
         "brand-soft":
-          "border border-[var(--acc2)]/30 bg-[var(--acc2)]/10 text-[var(--acc2)] shadow-none hover:bg-[var(--acc2)]/20",
+          "border border-[var(--acc2)]/30 bg-[var(--acc2)]/10 text-[var(--acc2)] backdrop-blur-[var(--backdrop-blur-subtle)] hover:bg-[var(--acc2)]/20 hover:shadow-[var(--shadow-glow-brand-subtle)]",
         ghost:
-          "border border-transparent bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--surface-neumorphic-base)]/60",
+          "border border-transparent bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-panel)] backdrop-blur-[var(--backdrop-blur-subtle)]",
         outline:
-          "border border-[var(--border-neumorphic-subtle)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--surface-neumorphic-base)]/60",
-        // Legacy aliases
+          "border border-[var(--border-glass)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-panel)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+
+        // Legacy aliases (using new glassmorphism styles)
+        "neo-medium":
+          "border border-[var(--border-glass)] bg-[var(--surface-glass-card)] text-[var(--color-text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
+        "neo-subtle":
+          "border border-[var(--border-glass)] bg-[var(--surface-glass-panel)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-card)]",
         secondary:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]",
+          "border border-[var(--border-glass)] bg-[var(--surface-glass-panel)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-card)]",
         default:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-primary)] shadow-neo-sm hover:shadow-neo-md",
+          "border border-[var(--border-glass)] bg-[var(--surface-glass-card)] text-[var(--color-text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
         neumorphic:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-primary)] shadow-neo-sm hover:shadow-neo-md",
+          "border border-[var(--border-glass)] bg-[var(--surface-glass-card)] text-[var(--color-text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
       },
       size: {
         sm: "h-9 px-3 py-1.5 text-sm", // 36px height for compact controls
@@ -41,22 +47,22 @@ const buttonVariants = cva(
       },
       dramatic: {
         false: "",
-        true: "will-change-transform hover:-translate-y-[3px] hover:shadow-neo-lg active:translate-y-0",
+        true: "will-change-transform hover:-translate-y-[3px] hover:shadow-[var(--shadow-glass-floating)] active:translate-y-0",
       },
     },
     compoundVariants: [
       {
         variant: "brand-soft",
-        class: "hover:shadow-[var(--shadow-glow-accent-subtle)]",
+        class: "hover:shadow-[var(--shadow-glow-brand-subtle)]",
       },
       {
         variant: "ghost",
         dramatic: true,
-        class: "hover:-translate-y-[2px]",
+        class: "hover:-translate-y-[2px] hover:shadow-[var(--shadow-glass-subtle)]",
       },
     ],
     defaultVariants: {
-      variant: "neo-medium",
+      variant: "glass-primary",
       size: "default",
       dramatic: false,
     },
