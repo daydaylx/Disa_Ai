@@ -15,6 +15,7 @@ disa-ai-v{BUILD_ID}-{cache-name}
 ```
 
 Example:
+
 - `disa-ai-vae3c450-assets` (current version)
 - `disa-ai-v142da1e-assets` (old version - will be deleted)
 
@@ -39,15 +40,15 @@ The `vite-plugin-pwa` automatically generates a service worker. To integrate ver
 Create `public/sw.js` with custom logic:
 
 ```javascript
-import { deleteOldCaches, broadcastSWUpdate } from './src/lib/pwa/sw-versioning';
+import { deleteOldCaches, broadcastSWUpdate } from "./src/lib/pwa/sw-versioning";
 
 // On activation, clean up old caches
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     deleteOldCaches().then(() => {
-      broadcastSWUpdate('SW_ACTIVATED');
+      broadcastSWUpdate("SW_ACTIVATED");
       return self.clients.claim();
-    })
+    }),
   );
 });
 ```
@@ -55,6 +56,7 @@ self.addEventListener('activate', (event) => {
 ### Option 2: Workbox Configuration (Current Setup)
 
 The current `vite.config.ts` uses Workbox with:
+
 - `skipWaiting: true` - New SW activates immediately
 - `clientsClaim: true` - Takes control of all clients
 - Dynamic cache names via `cacheName` in runtime caching rules
@@ -66,10 +68,10 @@ The current `vite.config.ts` uses Workbox with:
 ### Listen for SW Updates
 
 ```typescript
-import { listenForSWUpdates } from '@/lib/pwa/sw-versioning';
+import { listenForSWUpdates } from "@/lib/pwa/sw-versioning";
 
 const cleanup = listenForSWUpdates((message) => {
-  if (message.type === 'SW_ACTIVATED') {
+  if (message.type === "SW_ACTIVATED") {
     console.log(`New version activated: ${message.buildId}`);
     // Optional: Show update notification to user
   }
@@ -82,7 +84,7 @@ cleanup();
 ### Get Cache Statistics (Debug)
 
 ```typescript
-import { getCacheStats } from '@/lib/pwa/sw-versioning';
+import { getCacheStats } from "@/lib/pwa/sw-versioning";
 
 const stats = await getCacheStats();
 console.log(`Total caches: ${stats.count}`);
@@ -104,6 +106,7 @@ npm run build
 ### 2. Service Worker Generation
 
 VitePWA generates:
+
 - `dist/sw.js` - Service worker with precache manifest
 - Cache names include Workbox version hash
 - Automatic cache cleanup on activation
@@ -155,6 +158,7 @@ VITE_PWA_DISABLED=true npm run build
 Open DevTools → Application → Cache Storage
 
 You should see:
+
 - `workbox-precache-v2-...` (Workbox managed)
 - `disa-ai-v{BUILD_ID}-*` (Custom versioned caches, if using custom SW)
 
@@ -162,7 +166,7 @@ You should see:
 
 ```javascript
 // In browser console
-import { deleteOldCaches, getCacheStats } from './src/lib/pwa/sw-versioning';
+import { deleteOldCaches, getCacheStats } from "./src/lib/pwa/sw-versioning";
 
 // Check current state
 await getCacheStats();
@@ -186,6 +190,7 @@ npm run cf:purge
 ```
 
 This ensures:
+
 1. Service Worker cache is updated (via SW versioning)
 2. Cloudflare edge cache is cleared (via API)
 3. Users always get the latest version

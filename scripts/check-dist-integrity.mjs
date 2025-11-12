@@ -1,8 +1,8 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "node:fs";
+import path from "node:path";
 
-const DIST_DIR = path.resolve('dist');
-const INDEX_PATH = path.join(DIST_DIR, 'index.html');
+const DIST_DIR = path.resolve("dist");
+const INDEX_PATH = path.join(DIST_DIR, "index.html");
 
 function extractAssetReferences(html) {
   const assetPattern = /(href|src)\s*=\s*"([^"]+\.(?:css|js))"/g;
@@ -12,7 +12,7 @@ function extractAssetReferences(html) {
   while ((match = assetPattern.exec(html)) !== null) {
     const url = match[2];
     // Only consider assets served from the build output
-    if (url.includes('/assets/') || url.startsWith('assets/')) {
+    if (url.includes("/assets/") || url.startsWith("assets/")) {
       references.add(url);
     }
   }
@@ -21,7 +21,7 @@ function extractAssetReferences(html) {
 }
 
 function resolveAssetPath(reference) {
-  const normalized = reference.replace(/^\/+/, '');
+  const normalized = reference.replace(/^\/+/, "");
   return path.join(DIST_DIR, normalized);
 }
 
@@ -44,22 +44,22 @@ function main() {
     process.exit(1);
   }
 
-  const html = fs.readFileSync(INDEX_PATH, 'utf8');
+  const html = fs.readFileSync(INDEX_PATH, "utf8");
   const references = extractAssetReferences(html);
 
   if (references.length === 0) {
-    console.log('ℹ️  Keine CSS/JS-Referenzen im dist/index.html gefunden.');
+    console.log("ℹ️  Keine CSS/JS-Referenzen im dist/index.html gefunden.");
     process.exit(0);
   }
 
   const missing = checkAssetsExist(references);
 
   if (missing.length === 0) {
-    console.log('✅ Alle referenzierten Assets sind im dist/assets-Ordner vorhanden.');
+    console.log("✅ Alle referenzierten Assets sind im dist/assets-Ordner vorhanden.");
     process.exit(0);
   }
 
-  console.error('❌ Die folgenden Asset-Referenzen fehlen im dist/assets-Ordner:');
+  console.error("❌ Die folgenden Asset-Referenzen fehlen im dist/assets-Ordner:");
   for (const item of missing) {
     console.error(` - ${item.reference} (erwartet: ${item.assetPath})`);
   }

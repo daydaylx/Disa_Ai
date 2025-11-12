@@ -28,20 +28,23 @@
  *   2 : Invalid arguments
  */
 
-const https = require('https');
+const https = require("https");
 
 // Parse command line arguments
 const args = process.argv.slice(2);
-const isDryRun = args.includes('--dry-run');
-const showHelp = args.includes('--help') || args.includes('-h');
-const purgeEverything = args.includes('--everything');
+const isDryRun = args.includes("--dry-run");
+const showHelp = args.includes("--help") || args.includes("-h");
+const purgeEverything = args.includes("--everything");
 
 // Extract file paths if provided
 let filesToPurge = null;
-const filesArg = args.find((arg) => arg.startsWith('--files='));
+const filesArg = args.find((arg) => arg.startsWith("--files="));
 if (filesArg) {
-  const paths = filesArg.split('=')[1];
-  filesToPurge = paths.split(',').map((p) => p.trim()).filter(Boolean);
+  const paths = filesArg.split("=")[1];
+  filesToPurge = paths
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
 }
 
 // Get credentials from environment
@@ -50,16 +53,16 @@ const ZONE_ID = process.env.CF_ZONE_ID;
 
 // Colors for terminal output
 const colors = {
-  reset: '\x1b[0m',
-  bold: '\x1b[1m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  cyan: '\x1b[36m',
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  cyan: "\x1b[36m",
 };
 
-function log(message, color = 'reset') {
+function log(message, color = "reset") {
   console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
@@ -103,18 +106,18 @@ ${colors.cyan}Exit Codes:${colors.reset}
 
 function validateCredentials() {
   if (!API_TOKEN || !ZONE_ID) {
-    log('❌ Error: Missing Cloudflare credentials', 'red');
-    log('', 'reset');
-    log('Please set the following environment variables:', 'yellow');
-    log('  CF_API_TOKEN : Your Cloudflare API token', 'yellow');
-    log('  CF_ZONE_ID   : Your Cloudflare Zone ID', 'yellow');
-    log('', 'reset');
-    log('You can find these in your Cloudflare dashboard:', 'cyan');
-    log('  1. Go to https://dash.cloudflare.com', 'cyan');
-    log('  2. Select your domain', 'cyan');
-    log('  3. Zone ID is in the right sidebar', 'cyan');
-    log('  4. API Token: My Profile → API Tokens → Create Token', 'cyan');
-    log('', 'reset');
+    log("❌ Error: Missing Cloudflare credentials", "red");
+    log("", "reset");
+    log("Please set the following environment variables:", "yellow");
+    log("  CF_API_TOKEN : Your Cloudflare API token", "yellow");
+    log("  CF_ZONE_ID   : Your Cloudflare Zone ID", "yellow");
+    log("", "reset");
+    log("You can find these in your Cloudflare dashboard:", "cyan");
+    log("  1. Go to https://dash.cloudflare.com", "cyan");
+    log("  2. Select your domain", "cyan");
+    log("  3. Zone ID is in the right sidebar", "cyan");
+    log("  4. API Token: My Profile → API Tokens → Create Token", "cyan");
+    log("", "reset");
     return false;
   }
   return true;
@@ -125,25 +128,25 @@ function makeCloudflareRequest(payload) {
     const data = JSON.stringify(payload);
 
     const options = {
-      hostname: 'api.cloudflare.com',
+      hostname: "api.cloudflare.com",
       port: 443,
       path: `/client/v4/zones/${ZONE_ID}/purge_cache`,
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': data.length,
-        'Authorization': `Bearer ${API_TOKEN}`,
+        "Content-Type": "application/json",
+        "Content-Length": data.length,
+        Authorization: `Bearer ${API_TOKEN}`,
       },
     };
 
     const req = https.request(options, (res) => {
-      let body = '';
+      let body = "";
 
-      res.on('data', (chunk) => {
+      res.on("data", (chunk) => {
         body += chunk;
       });
 
-      res.on('end', () => {
+      res.on("end", () => {
         try {
           const response = JSON.parse(body);
           if (response.success) {
@@ -157,7 +160,7 @@ function makeCloudflareRequest(payload) {
       });
     });
 
-    req.on('error', (error) => {
+    req.on("error", (error) => {
       reject(error);
     });
 
@@ -167,65 +170,65 @@ function makeCloudflareRequest(payload) {
 }
 
 async function purgeCache() {
-  log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
-  log('  Cloudflare Cache Purge', 'bold');
-  log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
-  log('');
+  log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "cyan");
+  log("  Cloudflare Cache Purge", "bold");
+  log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "cyan");
+  log("");
 
   // Build purge payload
   let payload = {};
-  let purgeDescription = '';
+  let purgeDescription = "";
 
   if (filesToPurge && filesToPurge.length > 0) {
     payload = { files: filesToPurge };
-    purgeDescription = `Specific files: ${filesToPurge.join(', ')}`;
+    purgeDescription = `Specific files: ${filesToPurge.join(", ")}`;
   } else {
     payload = { purge_everything: true };
-    purgeDescription = 'Everything (full zone purge)';
+    purgeDescription = "Everything (full zone purge)";
   }
 
   // Show configuration
-  log(`Zone ID:          ${ZONE_ID}`, 'blue');
-  log(`Purge Type:       ${purgeDescription}`, 'blue');
-  log(`Dry Run:          ${isDryRun ? 'Yes' : 'No'}`, 'blue');
-  log('');
+  log(`Zone ID:          ${ZONE_ID}`, "blue");
+  log(`Purge Type:       ${purgeDescription}`, "blue");
+  log(`Dry Run:          ${isDryRun ? "Yes" : "No"}`, "blue");
+  log("");
 
   if (isDryRun) {
-    log('🔍 Dry Run Mode - No actual purge will be performed', 'yellow');
-    log('');
-    log('Would send the following payload:', 'yellow');
-    log(JSON.stringify(payload, null, 2), 'cyan');
-    log('');
-    log('✅ Dry run completed successfully', 'green');
+    log("🔍 Dry Run Mode - No actual purge will be performed", "yellow");
+    log("");
+    log("Would send the following payload:", "yellow");
+    log(JSON.stringify(payload, null, 2), "cyan");
+    log("");
+    log("✅ Dry run completed successfully", "green");
     return;
   }
 
   // Confirm before purging everything
   if (purgeEverything && !isDryRun) {
-    log('⚠️  Warning: You are about to purge the ENTIRE cache', 'yellow');
-    log('   This will affect all cached content on your domain.', 'yellow');
-    log('');
+    log("⚠️  Warning: You are about to purge the ENTIRE cache", "yellow");
+    log("   This will affect all cached content on your domain.", "yellow");
+    log("");
   }
 
   try {
-    log('🚀 Sending purge request to Cloudflare...', 'cyan');
+    log("🚀 Sending purge request to Cloudflare...", "cyan");
     const response = await makeCloudflareRequest(payload);
 
-    log('');
-    log('✅ Cache purge successful!', 'green');
-    log('');
-    log('Response:', 'cyan');
-    log(JSON.stringify(response, null, 2), 'cyan');
-    log('');
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
+    log("");
+    log("✅ Cache purge successful!", "green");
+    log("");
+    log("Response:", "cyan");
+    log(JSON.stringify(response, null, 2), "cyan");
+    log("");
+    log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "cyan");
   } catch (error) {
-    log('');
-    log('❌ Cache purge failed', 'red');
-    log('');
-    log('Error details:', 'red');
-    log(error.message, 'red');
-    log('');
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'cyan');
+    log("");
+    log("❌ Cache purge failed", "red");
+    log("");
+    log("Error details:", "red");
+    log(error.message, "red");
+    log("");
+    log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "cyan");
     process.exit(1);
   }
 }
@@ -245,7 +248,7 @@ async function main() {
     await purgeCache();
     process.exit(0);
   } catch (error) {
-    log(`\n❌ Fatal error: ${error.message}`, 'red');
+    log(`\n❌ Fatal error: ${error.message}`, "red");
     process.exit(1);
   }
 }

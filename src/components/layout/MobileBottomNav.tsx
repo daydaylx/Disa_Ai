@@ -37,10 +37,7 @@ export function MobileBottomNav() {
             >
               {/* Icon mit optionalem Glow */}
               <Icon
-                className={cn(
-                  "h-6 w-6 transition-transform duration-200",
-                  isActive && "scale-110",
-                )}
+                className={cn("h-6 w-6 transition-transform duration-200", isActive && "scale-110")}
                 strokeWidth={isActive ? 2.5 : 2}
               />
 

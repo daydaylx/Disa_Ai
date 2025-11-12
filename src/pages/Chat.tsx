@@ -228,7 +228,9 @@ export default function Chat() {
                     to="/models"
                     className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-surface-muted/80 transition-colors min-h-[44px]"
                   >
-                    <span className="text-sm text-text-secondary">Modelle vergleichen & wählen</span>
+                    <span className="text-sm text-text-secondary">
+                      Modelle vergleichen & wählen
+                    </span>
                   </Link>
                   <Link
                     to="/roles"
@@ -240,7 +242,9 @@ export default function Chat() {
                     to="/settings"
                     className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-surface-muted/80 transition-colors min-h-[44px]"
                   >
-                    <span className="text-sm text-text-secondary">Einstellungen & API-Key prüfen</span>
+                    <span className="text-sm text-text-secondary">
+                      Einstellungen & API-Key prüfen
+                    </span>
                   </Link>
                 </div>
               </Card>
