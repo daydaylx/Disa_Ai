@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Card, CardTitle } from "../components/ui/card";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
