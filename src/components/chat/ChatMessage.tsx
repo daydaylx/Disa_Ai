@@ -158,7 +158,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
       {/* Avatar */}
       <div className={cn("relative flex-shrink-0", isSystem && "hidden")}>
         <Avatar className="border-border h-9 w-9 border">
-          <AvatarFallback className={cn("bg-[var(--surface-glass-panel)] text-text-primary")}>
+          <AvatarFallback className={cn("bg-surface-glass text-fg")}>
             {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
           </AvatarFallback>
         </Avatar>
@@ -173,15 +173,13 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
       >
         {/* Chat Bubble */}
         <Card
-          intent={isUser ? "accent" : "default"}
-          tone={isUser ? "glass-primary" : "glass-subtle"}
+          tone="default"
           padding="md"
           className={cn(
             bubbleClass,
-            "rounded-[var(--radius-md)]",
             isUser
-              ? "border border-[var(--border-glass-accent)] hover:shadow-[var(--shadow-glow-brand-subtle)]"
-              : "border border-[var(--border-hairline)] hover:border-[var(--border-strong)]",
+              ? "rounded-lg border border-accent bg-glass hover:shadow-glow-accent"
+              : "rounded-md border border-line bg-surface text-fg hover:border-line",
           )}
         >
           <div className="space-y-3 text-left">
@@ -197,22 +195,25 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
         {!isSystem && (
           <div
             className={cn(
-              "flex items-center gap-2 px-2 text-[12px] text-text-muted/60",
+              "flex items-center gap-2 px-2 text-xs text-fg-muted/60",
               isUser && "flex-row-reverse",
             )}
           >
-            <span className="font-medium text-text-secondary">{isUser ? "Ich" : "Assistent"}</span>
+            <span className="font-medium text-fg-muted">{isUser ? "Ich" : "Assistent"}</span>
             {message.model && (
-              <Badge variant="secondary" className="border-border bg-card text-text-muted text-xs">
+              <Badge
+                variant="secondary"
+                className="border-line bg-surface-card text-fg-muted text-xs"
+              >
                 {message.model}
               </Badge>
             )}
             {message.tokens && (
-              <Badge variant="outline" className="border-border text-text-muted text-xs">
+              <Badge variant="outline" className="border-line text-fg-muted text-xs">
                 {message.tokens}t
               </Badge>
             )}
-            <span className="text-text-muted">
+            <span className="text-fg-muted">
               {new Date(message.timestamp).toLocaleTimeString("de-DE", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -225,14 +226,14 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
         {!isSystem && showActions && (
           <div
             className={cn(
-              "flex items-center gap-1 px-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+              "flex items-center gap-1 px-2 opacity-0 transition-opacity duration-2 group-hover:opacity-100",
               isUser && "flex-row-reverse",
             )}
           >
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-text-muted hover:bg-surface-glass-panel hover:text-text-primary"
+              className="h-7 px-2 text-fg-muted hover:bg-surface-glass hover:text-fg"
               onClick={handleCopy}
               title="Nachricht kopieren"
               data-testid="message.copy"
@@ -243,7 +244,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 px-2 text-text-muted hover:bg-surface-glass-panel hover:text-text-primary"
+                className="h-7 px-2 text-fg-muted hover:bg-surface-glass hover:text-fg"
                 onClick={handleRetry}
                 title="Antwort erneut anfordern"
                 data-testid="message.retry"

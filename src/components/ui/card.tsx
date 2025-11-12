@@ -6,7 +6,7 @@ import { cn } from "../../lib/utils";
 import { Button } from "./button"; // Assuming Button component is updated
 
 const cardVariants = cva(
-  "relative rounded-[var(--radius-xl)] border transition-all duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)] backdrop-blur-[var(--backdrop-blur-medium)]",
+  "relative rounded-lg border transition-all duration-2 ease-1 backdrop-blur-md",
   {
     variants: {
       variant: {
@@ -16,42 +16,33 @@ const cardVariants = cva(
       },
       tone: {
         // Modern Glassmorphism variants
-        "glass-primary":
-          "bg-[var(--surface-glass-card)] border-[var(--border-glass)] text-[var(--color-text-primary)]",
-        "glass-subtle":
-          "bg-[var(--surface-glass-panel)] border-[var(--border-glass)] text-[var(--color-text-secondary)]",
-        "glass-floating":
-          "bg-[var(--surface-glass-floating)] border-[var(--border-glass-strong)] text-[var(--color-text-primary)] backdrop-blur-[var(--backdrop-blur-strong)]",
-        "glass-overlay":
-          "bg-[var(--surface-glass-overlay)] border-[var(--border-glass-medium)] text-[var(--color-text-primary)] backdrop-blur-[var(--backdrop-blur-intense)]",
+        "glass-primary": "bg-surface-glass border-line text-fg",
+        "glass-subtle": "bg-surface-glass border-line text-fg-muted",
+        "glass-floating": "bg-surface-glass border-line text-fg backdrop-blur-lg",
+        "glass-overlay": "bg-surface-glass border-line text-fg backdrop-blur-lg",
 
         // Legacy aliases (using new glassmorphism styles)
-        "neo-raised":
-          "bg-[var(--surface-glass-card)] border-[var(--border-glass)] text-[var(--color-text-primary)]",
-        "neo-subtle":
-          "bg-[var(--surface-glass-panel)] border-[var(--border-glass)] text-[var(--color-text-primary)]",
-        "neo-inset":
-          "bg-[var(--surface-glass-panel)] border-[var(--border-glass)] text-[var(--color-text-primary)] shadow-[var(--shadow-inset-subtle)]",
-        "neo-floating":
-          "bg-[var(--surface-glass-floating)] border-[var(--border-glass-strong)] text-[var(--color-text-primary)] backdrop-blur-[var(--backdrop-blur-strong)]",
-        "neo-glass":
-          "bg-[var(--surface-glass-overlay)] border-[var(--border-glass-medium)] text-[var(--color-text-primary)] backdrop-blur-[var(--backdrop-blur-intense)]",
+        "neo-raised": "bg-surface-glass border-line text-fg",
+        "neo-subtle": "bg-surface-glass border-line text-fg",
+        "neo-inset": "bg-surface-glass border-line text-fg shadow-1",
+        "neo-floating": "bg-surface-glass border-line text-fg backdrop-blur-lg",
+        "neo-glass": "bg-surface-glass border-line text-fg backdrop-blur-lg",
       },
       intent: {
         default: "",
         accent: "border-accent",
-        primary: "border-[var(--color-border-focus)]",
-        success: "border-success/70",
-        warning: "border-warning/70",
-        danger: "border-danger/70",
-        error: "border-danger/70",
-        info: "border-info/70",
+        primary: "border-accent",
+        success: "border-status-success/70",
+        warning: "border-status-warning/70",
+        danger: "border-status-danger/70",
+        error: "border-status-danger/70",
+        info: "border-status-info/70",
       },
       padding: {
         none: "p-0",
-        sm: "p-space-sm",
-        md: "p-space-md",
-        lg: "p-space-lg",
+        sm: "p-2",
+        md: "p-4",
+        lg: "p-6",
       },
       size: {
         auto: "w-auto",
@@ -64,25 +55,23 @@ const cardVariants = cva(
         default: "",
         loading: "animate-pulse opacity-70 pointer-events-none",
         disabled: "opacity-50 pointer-events-none",
-        selected: "border-accent ring-2 ring-accent/30 ring-offset-2 ring-offset-surface-bg",
-        focus: "ring-2 ring-[var(--color-border-focus)] ring-offset-2 ring-offset-surface-bg",
+        selected: "border-accent ring-2 ring-accent/30 ring-offset-2 ring-offset-bg-1",
+        focus: "ring-2 ring-accent ring-offset-2 ring-offset-bg-1",
       },
       elevation: {
         flat: "shadow-none",
-        subtle: "shadow-[var(--shadow-glass-subtle)]",
-        surface: "shadow-[var(--shadow-surface)]",
-        medium: "shadow-[var(--shadow-glass-medium)]",
-        dramatic: "shadow-[var(--shadow-glass-floating)]",
-        raised: "shadow-[var(--shadow-glass-strong)]",
+        subtle: "shadow-1",
+        surface: "shadow-1",
+        medium: "shadow-1",
+        dramatic: "shadow-2",
+        raised: "shadow-2",
       },
       interactive: {
         none: "",
-        basic:
-          "cursor-pointer hover:-translate-y-0.5 hover:shadow-[var(--shadow-glass-subtle)] hover:border-[var(--border-glass-strong)]",
-        gentle:
-          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-glass-medium)] hover:border-[var(--border-glass-strong)]",
-        glow: "cursor-pointer hover:shadow-[var(--shadow-glow-neutral-subtle)]",
-        "glow-accent": "cursor-pointer hover:border-accent hover:shadow-[var(--shadow-glow-brand)]",
+        basic: "cursor-pointer hover:-translate-y-0.5 hover:shadow-1 hover:border-line",
+        gentle: "cursor-pointer hover:-translate-y-1 hover:shadow-1 hover:border-line",
+        glow: "cursor-pointer hover:shadow-glow-accent",
+        "glow-accent": "cursor-pointer hover:border-accent hover:shadow-glow-accent",
       },
     },
     defaultVariants: {
@@ -230,7 +219,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         {(title || leading || trailing || selectable || showMenu || showChevron) && (
-          <CardHeader className="flex flex-row items-center gap-space-md p-space-md">
+          <CardHeader className="flex flex-row items-center gap-4 p-4">
             {/* Selection indicator - Enlarged for accessibility */}
             {selectable && (
               <div className="flex-shrink-0">
@@ -265,18 +254,16 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             {(title || subtitle) && (
               <div className="min-w-0 flex-1">
                 {title && (
-                  <CardTitle className="truncate text-base font-semibold leading-snug text-text-primary">
+                  <CardTitle className="truncate text-base font-semibold leading-snug text-fg">
                     {title}
                   </CardTitle>
                 )}
-                {subtitle && (
-                  <p className="mt-1 truncate text-sm text-text-secondary">{subtitle}</p>
-                )}
+                {subtitle && <p className="mt-1 truncate text-sm text-fg-muted">{subtitle}</p>}
               </div>
             )}
 
             {/* Trailing content */}
-            <div className="flex flex-shrink-0 items-center gap-space-sm">
+            <div className="flex flex-shrink-0 items-center gap-2">
               {trailing}
 
               {showMenu && (
@@ -288,12 +275,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                     disabled={disabled || isLoading}
                     aria-label="More options"
                   >
-                    <MoreHorizontal className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+                    <MoreHorizontal className="h-4 w-4 shadow-1" />
                   </Button>
 
                   {/* Simple dropdown menu */}
                   {isMenuOpen && menuItems.length > 0 && (
-                    <div className="absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-[var(--border-glass)] bg-[var(--surface-glass-overlay)] shadow-[var(--shadow-glass-floating)] backdrop-blur-[var(--backdrop-blur-strong)]">
+                    <div className="absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-line bg-surface-glass shadow-2 backdrop-blur-lg">
                       {menuItems.map((item, index) => (
                         <button
                           key={index}
@@ -303,7 +290,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                             setIsMenuOpen(false);
                           }}
                           disabled={item.disabled}
-                          className="flex w-full items-center gap-space-sm px-space-md py-space-sm text-left text-sm text-text-primary first:rounded-t-lg last:rounded-b-lg hover:bg-[var(--surface-glass-panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-fg first:rounded-t-lg last:rounded-b-lg hover:bg-surface-glass disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {item.icon}
                           {item.label}
@@ -315,10 +302,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
               )}
 
               {showChevron && (
-                <div className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-surface-muted/60">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-surface/60">
                   <ChevronRight
                     className={cn(
-                      "h-5 w-5 text-text-secondary transition-transform shadow-[var(--shadow-neumorphic-icon)]",
+                      "h-5 w-5 text-fg-muted transition-transform shadow-1",
                       selected && "rotate-90",
                     )}
                   />
@@ -329,12 +316,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         )}
 
         {/* Main content */}
-        {children && <CardContent className="px-space-md pb-space-md pt-0">{children}</CardContent>}
+        {children && <CardContent className="px-4 pb-4 pt-0">{children}</CardContent>}
 
         {/* Footer actions */}
         {actions && (
-          <CardFooter className="border-t border-line px-space-md py-space-md">
-            <div className="flex w-full items-center justify-between gap-space-md">{actions}</div>
+          <CardFooter className="border-t border-line px-4 py-4">
+            <div className="flex w-full items-center justify-between gap-4">{actions}</div>
           </CardFooter>
         )}
 
@@ -350,11 +337,7 @@ Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn("flex flex-col gap-space-sm", "text-text-primary", className)}
-      {...props}
-    />
+    <div ref={ref} className={cn("flex flex-col gap-2", "text-fg", className)} {...props} />
   ),
 );
 CardHeader.displayName = "CardHeader";
@@ -363,10 +346,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn(
-        "text-lg font-semibold leading-tight tracking-tight text-text-primary",
-        className,
-      )}
+      className={cn("text-lg font-semibold leading-tight tracking-tight text-fg", className)}
       {...props}
     />
   ),
@@ -377,21 +357,13 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-sm leading-relaxed text-text-secondary", className)}
-    {...props}
-  />
+  <p ref={ref} className={cn("text-sm leading-relaxed text-fg-muted", className)} {...props} />
 ));
 CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn("flex flex-col gap-space-md", "text-text-primary", className)}
-      {...props}
-    />
+    <div ref={ref} className={cn("flex flex-col gap-4", "text-fg", className)} {...props} />
   ),
 );
 CardContent.displayName = "CardContent";
@@ -401,8 +373,8 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
     <div
       ref={ref}
       className={cn(
-        "flex items-center justify-between gap-space-md border-t border-line",
-        "text-text-primary",
+        "flex items-center justify-between gap-4 border-t border-line",
+        "text-fg",
         className,
       )}
       {...props}

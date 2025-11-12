@@ -116,38 +116,6 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Skeleton loading */
-@keyframes skeleton-loading {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-.skeleton-loading {
-  background: linear-gradient(
-    90deg,
-    var(--color-surface-base) 25%,
-    var(--color-surface-elevated) 50%,
-    var(--color-surface-base) 75%
-  );
-  background-size: 200px 100%;
-  animation: skeleton-loading 1.5s infinite;
-}
-
-/* Progress indicators */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-spin {
-  animation: spin 1s linear infinite;
-}
-
 /* Fade in/out */
 @keyframes fade-in {
   from {
@@ -158,6 +126,23 @@
   }
 }
 
+.fade-in {
+  animation: fade-in var(--motion-duration-1) var(--motion-ease-1);
+}
+
+@keyframes fade-in-1 {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-1 {
+  animation: fade-in-1 var(--motion-duration-1) var(--motion-ease-1) forwards;
+}
+
 @keyframes fade-out {
   from {
     opacity: 1;
@@ -165,10 +150,6 @@
   to {
     opacity: 0;
   }
-}
-
-.fade-in {
-  animation: fade-in var(--duration-performance-optimized) var(--ease-standard);
 }
 
 .fade-out {

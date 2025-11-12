@@ -5,118 +5,73 @@ const colorTokens = {
   bg: {
     0: "var(--bg0)",
     1: "var(--bg1)",
-    2: "var(--bg2)",
   },
   surface: {
-    canvas: "var(--surface-bg)",
-    base: "var(--surface-base)",
-    muted: "var(--surface-muted)",
-    card: "var(--surface-card)",
-    overlay: "var(--surface-overlay)",
-    ghost: "var(--surface-ghost)",
+    DEFAULT: "var(--surface)",
+    glass: "var(--surface-glass)",
   },
   text: {
     DEFAULT: "var(--fg)",
     muted: "var(--fg-muted)",
     subtle: "var(--fg-subtle)",
-    inverse: "var(--accent-contrast)",
-    accent: "var(--color-text-on-accent)",
   },
   accent: {
     DEFAULT: "var(--accent)",
-    weak: "var(--accent-weak)",
-    contrast: "var(--accent-contrast)",
   },
   line: {
     DEFAULT: "var(--line)",
-    subtle: "var(--border-hairline)",
-    strong: "var(--border-strong)",
   },
   status: {
-    info: "var(--info)",
-    "info-soft": "var(--info-soft)",
     success: "var(--success)",
-    "success-soft": "var(--success-soft)",
     warning: "var(--warning)",
-    "warning-soft": "var(--warning-soft)",
     danger: "var(--danger)",
-    "danger-soft": "var(--danger-soft)",
+    info: "var(--info)",
   },
 };
 
 const spacingScale = {
-  "3xs": "var(--space-3xs)",
-  "2xs": "var(--space-2xs)",
-  xs: "var(--space-xs)",
-  sm: "var(--space-sm)",
-  md: "var(--space-md)",
-  lg: "var(--space-lg)",
-  xl: "var(--space-xl)",
-  "2xl": "var(--space-2xl)",
-  "3xl": "var(--space-3xl)",
-  "4xl": "var(--space-4xl)",
-  gutter: "var(--page-padding-x)",
-  "touch-compact": "var(--size-touch-compact)",
-  "touch-comfortable": "var(--size-touch-comfortable)",
-  "touch-relaxed": "var(--size-touch-relaxed)",
-  "touch-spacious": "var(--size-touch-spacious)",
+  1: "var(--space-1)",
+  2: "var(--space-2)",
+  3: "var(--space-3)",
+  4: "var(--space-4)",
+  6: "var(--space-6)",
+  8: "var(--space-8)",
+  12: "var(--space-12)",
 };
 
 const radii = {
   none: "0px",
-  xs: "var(--radius-xs)",
   sm: "var(--radius-sm)",
   md: "var(--radius-md)",
   lg: "var(--radius-lg)",
-  xl: "var(--radius-xl)",
-  "2xl": "var(--radius-2xl)",
-  pill: "var(--radius-pill)",
-  full: "999px",
+  full: "9999px",
 };
 
 const boxShadows = {
-  // Primary shadow hierarchy (2 levels)
-  surface: "var(--shadow-surface)",
-  elevated: "var(--shadow-elevated)",
-
-  // Legacy/compatibility
-  card: "var(--shadow-card)",
-  overlay: "var(--shadow-overlay)",
-  ring: "var(--shadow-ring)",
-
-  // Inset shadows
-  "inset-subtle": "var(--shadow-inset-subtle)",
-  "inset-medium": "var(--shadow-inset-medium)",
-
-  // Glow effects
-  "glow-brand": "var(--shadow-glow-brand)",
-  "glow-brand-subtle": "var(--shadow-glow-brand-subtle)",
-  "glow-success": "var(--shadow-glow-success)",
-  "glow-warning": "var(--shadow-glow-warning)",
-  "glow-error": "var(--shadow-glow-error)",
+  1: "var(--shadow-1)",
+  2: "var(--shadow-2)",
+  "glow-accent": "var(--shadow-glow-accent)",
 };
 
 const fontSizes = {
-  xs: ["12px", { lineHeight: "16px", fontWeight: "500" }],
-  sm: ["14px", { lineHeight: "20px", fontWeight: "500" }],
-  base: ["16px", { lineHeight: "24px", fontWeight: "500" }],
-  md: ["18px", { lineHeight: "26px", fontWeight: "500" }],
-  lg: ["20px", { lineHeight: "28px", fontWeight: "600" }],
-  xl: ["24px", { lineHeight: "32px", fontWeight: "600" }],
-  "2xl": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+  xs: ["12px", { lineHeight: "1.4" }],
+  sm: ["14px", { lineHeight: "1.4" }],
+  base: ["16px", { lineHeight: "1.5" }],
+  lg: ["18px", { lineHeight: "1.5" }],
+  xl: ["20px", { lineHeight: "1.5" }],
+  "2xl": ["24px", { lineHeight: "1.4" }],
+  "3xl": ["28px", { lineHeight: "1.4" }],
+  "4xl": ["32px", { lineHeight: "1.4" }],
 };
 
 const motionDurations = {
-  quick: "var(--motion-duration-quick)",
-  base: "var(--motion-duration-base)",
-  slow: "var(--motion-duration-slow)",
+  1: "var(--motion-duration-1)",
+  2: "var(--motion-duration-2)",
+  3: "var(--motion-duration-3)",
 };
 
 const motionEasings = {
-  standard: "var(--motion-ease-standard)",
-  emphasized: "var(--motion-ease-emphasized)",
-  accelerate: "var(--motion-ease-accelerate)",
-  decelerate: "var(--motion-ease-decelerate)",
+  1: "var(--motion-ease-1)",
 };
 
 export default {
@@ -155,6 +110,11 @@ export default {
       },
       transitionDuration: motionDurations,
       transitionTimingFunction: motionEasings,
+      backdropBlur: {
+        sm: "8px",
+        md: "12px",
+        lg: "18px",
+      },
       padding: {
         "safe-top": "env(safe-area-inset-top)",
         "safe-bottom": "env(safe-area-inset-bottom)",

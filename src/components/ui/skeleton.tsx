@@ -5,15 +5,14 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const base =
-  "relative overflow-hidden bg-[color-mix(in_srgb,var(--color-skeleton-base)_85%,transparent)]" +
+  "relative overflow-hidden bg-[color-mix(in_srgb,var(--surface-base)_85%,transparent)]" +
   " before:absolute before:inset-0 before:-translate-x-full before:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent)]" +
   " before:animate-[skeleton-shimmer_1200ms_ease-in-out_infinite]";
 
 export function Skeleton({ variant = "card", className, ...props }: SkeletonProps) {
-  const radius =
-    variant === "bubble" ? "rounded-[8px]" : variant === "list" ? "rounded-[6px]" : "rounded-[8px]";
+  const radius = "rounded-[8px]"; // All variants use 8px radius
 
-  return <div className={cn(base, radius, "animate-fade-in-120", className)} {...props} />;
+  return <div className={cn(base, radius, "animate-fade-in-1", className)} {...props} />;
 }
 
 export function ListSkeleton({ rows = 4 }: { rows?: number }) {

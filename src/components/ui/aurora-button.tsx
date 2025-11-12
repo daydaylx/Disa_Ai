@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Button, type ButtonProps } from "./button";
 
 // Aurora Button is now a wrapper around the unified Button component

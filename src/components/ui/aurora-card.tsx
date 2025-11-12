@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Card, type CardProps } from "./card";
 
 // Aurora Card is now a wrapper around the unified Card component

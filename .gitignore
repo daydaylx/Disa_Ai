@@ -121,3 +121,6 @@ autopilot.log
 # Environment variables
 .env
 .aider*
+
+.gemini/
+gha-creds-*.json

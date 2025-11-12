@@ -482,7 +482,6 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
 
       <div className="space-y-6 px-4 py-4 pb-10">
         {sectionsToRender.map((config) => {
-          const Icon = config.icon;
           return (
             <SectionCard
               key={config.id}

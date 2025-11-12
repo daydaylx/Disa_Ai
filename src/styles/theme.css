@@ -1,217 +1,62 @@
-/* === Disa AI Design System V2 === */
-/*
-  Dieses Theme wurde für eine moderne, saubere und mobile-first Ästhetik entworfen.
-  Es nutzt ein Glassmorphism-System auf einem dunklen, dezent texturierten Hintergrund,
-  um Tiefe und visuelle Hierarchie zu schaffen.
-
-  - Farben: Eine beruhigende, aber kontrastreiche Palette mit einem primären Akzent (Brand).
-  - Typografie: Klar definierte Skala für Lesbarkeit.
-  - Abstände & Radien: Konsistentes Rastersystem für ein harmonisches Layout.
-  - Schatten: Eine Mischung aus subtilen Tiefen-Schatten und Neumorphismus-Akzenten.
-*/
-
+/* === Gemini Design System === */
 @layer base {
   :root,
   [data-theme="dark"] {
     /* ------------------------------ */
     /*         Color Palette          */
     /* ------------------------------ */
-    --color-brand-primary: #8b5cf6; /* Violet 500 - Glassmorphism 2.0 Accent */
-    --color-brand-primary-hover: #7c3aed; /* Violet 600 */
-    --color-brand-secondary: #a78bfa; /* Violet 400 */
+    --bg0: #0b0f14;
+    --bg1: #0f1420;
+    --surface: rgba(255, 255, 255, 0.04);
+    --glass: rgba(255, 255, 255, 0.06);
+    --stroke: rgba(255, 255, 255, 0.16);
+    --accent: #8b5cf6;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
 
-    --color-text-primary: #f8fafc; /* Slate 50 */
-    --color-text-secondary: #cbd5e1; /* Slate 300 */
-    --color-text-tertiary: #94a3b8; /* Slate 400 */
-    --color-text-on-accent: #ffffff;
-
-    --color-background-dark: #0b0f14; /* bg0 - Deep dark */
-    --color-background-light: #0f1420; /* bg1 - Base surface */
-
-    --color-border-strong: #475569; /* Slate 600 */
-    --color-border-subtle: #334155; /* Slate 700 */
-    --color-border-hairline: #293548;
-
-    --color-status-success: #22c55e; /* Green 500 */
-    --color-status-warning: #f59e0b; /* Amber 500 */
-    --color-status-danger: #ef4444; /* Red 500 */
-    --color-status-info: #3b82f6; /* Blue 500 */
+    /* Status Colors */
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
 
     /* ------------------------------ */
     /*      Semantic Color Tokens     */
     /* ------------------------------ */
-
-    /* --- Backgrounds --- */
-    --surface-bg: var(--color-background-dark); /* Page background */
-    --surface-base: var(--color-background-light); /* Base component background */
-    --surface-muted: #283447; /* Slightly lighter for secondary content */
-
-    /* Glassmorphism Surfaces */
-    --surface-glass-card: rgba(
-      48,
-      58,
-      84,
-      var(--glass-opacity-light)
-    ); /* Card backgrounds with glassmorphism */
-    --surface-glass-panel: rgba(30, 41, 59, var(--glass-opacity-medium)); /* Panel backgrounds */
-    --surface-glass-overlay: rgba(15, 23, 42, var(--glass-opacity-overlay)); /* Modals, dialogs */
-    --surface-glass-floating: rgba(40, 52, 71, var(--glass-opacity-heavy)); /* Floating elements */
-    --surface-ghost: transparent;
-
-    /* Legacy compatibility (will be phased out) */
-    --surface-card: var(--surface-glass-card);
-    --surface-overlay: var(--surface-glass-overlay);
-
-    /* --- Text --- */
-    --fg: var(--color-text-primary); /* High contrast primary text */
-    --fg-muted: #94a3b8; /* Slate 400 - Improved for better contrast */
-    --fg-subtle: #64748b; /* Slate 500 - Improved for better contrast on dark backgrounds */
-
-    /* --- Accents --- */
-    --accent: var(--color-brand-primary);
-    --accent-weak: var(--color-brand-secondary);
-    --accent-contrast: var(--color-text-on-accent);
-    --accent-strong: #a78bfa; /* Violet 400 */
-    --acc2: #a78bfa; /* Violet 400 - for backward compatibility */
-
-    /* --- Borders --- */
-    --line: var(--color-border-subtle);
-    --border-hairline: var(--color-border-hairline);
-    --border-strong: var(--color-border-strong);
-
-    /* Glassmorphism Borders */
-    --border-glass: var(--glass-border-light);
-    --border-glass-strong: var(--glass-border-medium);
-    --border-glass-accent: var(--glass-border-accent);
-
-    --color-border-focus: var(--accent);
-    --color-accent-border: rgba(79, 70, 229, 0.4);
-    --color-accent-border: color-mix(in srgb, var(--accent) 40%, transparent 60%);
-    --color-accent-surface: rgba(79, 70, 229, 0.15);
-    --color-accent-surface: color-mix(in srgb, var(--accent) 15%, transparent 85%);
-    --border-ghost: rgba(255, 255, 255, 0.3);
-
-    /* Legacy compatibility (will be phased out) */
-    --border-neumorphic-subtle: var(--border-glass);
-
-    /* --- Glassmorphism Surface Hierarchy --- */
-    --surface-glass-base: var(--surface-base); /* For solid elements */
-    --surface-glass-raised: var(--surface-glass-card); /* Standard glassmorphism cards */
-    --surface-glass-elevated: var(--surface-glass-floating); /* Elevated/floating glassmorphism */
-    --color-surface-muted: var(--surface-muted);
-
-    /* Legacy compatibility (will be phased out) */
-    --surface-neumorphic-base: var(--surface-glass-base);
-    --surface-neumorphic-raised: var(--surface-glass-raised);
-    --surface-neumorphic-floating: var(--surface-glass-elevated);
-
-    /* --- Status --- */
-    --info: #60a5fa; /* Lighter blue for better contrast on dark backgrounds */
-    --info-soft: rgba(96, 165, 250, 0.15); /* Improved opacity */
-    --success: #4ade80; /* Lighter green for better contrast */
-    --success-soft: rgba(74, 222, 128, 0.15); /* Improved opacity */
-    --warning: #fbbf24; /* Lighter amber for better contrast */
-    --warning-soft: rgba(251, 191, 36, 0.15); /* Improved opacity */
-    --danger: #f87171; /* Lighter red for better contrast */
-    --danger-soft: rgba(248, 113, 113, 0.15); /* Improved opacity */
+    --surface-bg: var(--bg0);
+    --surface-base: var(--bg1);
+    --surface-card: var(--surface);
+    --surface-glass: var(--glass);
+    --line: var(--stroke);
+    --fg: var(--text-primary);
+    --fg-muted: var(--text-secondary);
+    --fg-subtle: var(--text-tertiary);
 
     /* ------------------------------ */
     /*         Spacing Scale          */
     /* ------------------------------ */
-    --space-3xs: 0.25rem; /* 4px */
-    --space-2xs: 0.5rem; /* 8px - Simplified from 6px */
-    --space-xs: 0.5rem; /* 8px */
-    --space-sm: 0.75rem; /* 12px */
-    --space-md: 1rem; /* 16px */
-    --space-lg: 2rem; /* 32px - Corrected to match scale */
-    --space-xl: 1.5rem; /* 24px */
-    --space-2xl: 2rem; /* 32px */
-    --space-3xl: 2.5rem; /* 40px */
-    --space-4xl: 3rem; /* 48px */
-
-    /* --- Layout Spacing --- */
-    --page-padding-x: var(--space-md);
-    --page-padding-y: var(--space-xl);
-
-    /* --- Touch Target Sizes (WCAG 2.5.5 compliant: minimum 44x44px) --- */
-    --size-touch-compact: 2.75rem; /* 44px - WCAG minimum */
-    --size-touch-comfortable: 3rem; /* 48px */
-    --size-touch-relaxed: 3.5rem; /* 56px */
-    --size-touch-spacious: 4rem; /* 64px */
+    --space-1: 0.25rem; /* 4px */
+    --space-2: 0.5rem; /* 8px */
+    --space-3: 0.75rem; /* 12px */
+    --space-4: 1rem; /* 16px */
+    --space-6: 1.5rem; /* 24px */
+    --space-8: 2rem; /* 32px */
+    --space-12: 3rem; /* 48px */
 
     /* ------------------------------ */
     /*         Border Radius          */
     /* ------------------------------ */
-    /* Glassmorphism 2.0: Simplified to 3 main radii (12/16/20px) */
-    --radius-xs: 0.75rem; /* 12px - Deprecated */
-    --radius-sm: 0.75rem; /* 12px - Small elements */
-    --radius-md: 1rem; /* 16px - Standard elements */
-    --radius-lg: 1.25rem; /* 20px - Large elements */
-    --radius-xl: 1rem; /* 16px - Deprecated */
-    --radius-2xl: 2rem; /* 32px - for hero elements */
-    --radius-pill: 9999px;
+    --radius-sm: 0.75rem; /* 12px */
+    --radius-md: 1rem; /* 16px */
+    --radius-lg: 1.25rem; /* 20px */
 
     /* ------------------------------ */
     /*           Shadows              */
     /* ------------------------------ */
-    /* Simplified 2-level shadow hierarchy for glassmorphism */
-
-    /* Surface: Weich, geringer Offset, größerer Blur - für Standard-Karten */
-    --shadow-surface: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
-
-    /* Elevated: Stärker, diffus - für schwebende/hervorgehobene Elemente */
-    --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
-
-    --shadow-neumorphic-icon:
-      1px 1px 2px rgba(0, 0, 0, 0.2), -1px -1px 2px rgba(255, 255, 255, 0.1);
-
-    /* Legacy/Compatibility mappings */
-    --shadow-card: var(--shadow-surface);
-    --shadow-overlay: var(--shadow-elevated);
-    --shadow-ring: 0 0 0 2px var(--surface-bg), 0 0 0 4px var(--color-brand-primary);
-
-    /* --- Inset Shadows (für spezielle States) --- */
-    --shadow-inset-subtle: inset 0 1px 2px 0 rgba(0, 0, 0, 0.15);
-    --shadow-inset-medium: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-
-    /* Glassmorphism aliases for backward compatibility */
-    --shadow-glass-subtle: var(--shadow-surface);
-    --shadow-glass-medium: var(--shadow-surface);
-    --shadow-glass-strong: var(--shadow-elevated);
-    --shadow-glass-floating: var(--shadow-elevated);
-
-    /* --- Glow Shadows (semantic set aligned with shadowTokens) --- */
-    --shadow-glow-brand: 0 0 16px rgba(97, 109, 255, 0.25);
-    --shadow-glow-brand-subtle: 0 0 8px rgba(97, 109, 255, 0.12);
-    --shadow-glow-brand-strong: 0 0 24px rgba(97, 109, 255, 0.42);
-    --shadow-glow-success: 0 0 16px rgba(13, 143, 98, 0.25);
-    --shadow-glow-success-subtle: 0 0 8px rgba(13, 143, 98, 0.18);
-    --shadow-glow-warning: 0 0 16px rgba(178, 106, 0, 0.25);
-    --shadow-glow-warning-subtle: 0 0 8px rgba(178, 106, 0, 0.2);
-    --shadow-glow-error: 0 0 16px rgba(193, 58, 50, 0.3);
-    --shadow-glow-error-subtle: 0 0 8px rgba(193, 58, 50, 0.24);
-    --shadow-glow-neutral-subtle: 0 0 10px rgba(15, 23, 42, 0.16);
-
-    /* --- Surface and depth --- */
-    --shadow-surface: 0 2px 10px rgba(15, 23, 42, 0.08);
-
-    /* --- Glassmorphism 2.0 Variables --- */
-    --backdrop-blur-subtle: blur(12px) saturate(120%);
-    --backdrop-blur-medium: blur(14px) saturate(120%);
-    --backdrop-blur-strong: blur(18px) saturate(120%);
-    --backdrop-blur-intense: blur(24px) saturate(120%);
-
-    /* Glassmorphism Surface Opacity Levels - optimized for mobile readability */
-    --glass-opacity-light: 0.85; /* Standard cards - high opacity for readability */
-    --glass-opacity-medium: 0.75; /* Panels - balanced */
-    --glass-opacity-heavy: 0.65; /* Floating elements - subtle transparency */
-    --glass-opacity-overlay: 0.95; /* Modals/dialogs - minimal transparency */
-
-    /* Glassmorphism Border Colors */
-    --glass-border-light: rgba(255, 255, 255, 0.1);
-    --glass-border-medium: rgba(255, 255, 255, 0.15);
-    --glass-border-strong: rgba(255, 255, 255, 0.2);
-    --glass-border-accent: rgba(139, 92, 246, 0.3);
+    --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.35);
+    --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.45);
+    --shadow-glow-accent: 0 0 24px var(--accent, 0.35);
 
     /* ------------------------------ */
     /*           Typography           */
@@ -223,84 +68,17 @@
       "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
 
-    /* Typography variables for component compatibility */
-    --font-size-display: 2.5rem; /* 40px */
-    --line-height-display: 1.2; /* 48px */
-    --font-weight-display: 700;
-    --letter-spacing-display: -0.03em;
-    --font-size-display-fluid: clamp(2.5rem, 6vw, 3rem); /* 40px to 48px */
-    --font-feature-display: normal;
-
-    --font-size-headline: 2rem; /* 32px */
-    --line-height-headline: 1.25; /* 40px */
-    --font-weight-headline: 700;
-    --letter-spacing-headline: -0.02em;
-    --font-size-headline-fluid: clamp(2rem, 5vw, 2.5rem); /* 32px to 40px */
-    --font-feature-headline: "ss01" 1;
-
-    --font-size-title: 1.5rem; /* 24px */
-    --line-height-title: 1.33; /* 32px */
-    --font-weight-title: 600;
-    --letter-spacing-title: -0.01em;
-
-    --font-size-subtitle: 1.25rem; /* 20px */
-    --line-height-subtitle: 1.4; /* 28px */
-    --font-weight-subtitle: 600;
-    --letter-spacing-subtitle: -0.01em;
-
-    --font-size-body: 1rem; /* 16px */
-    --line-height-body: 1.6; /* 26px */
-    --font-weight-body: 400;
-
-    --font-size-body-small: 0.875rem; /* 14px */
-    --line-height-body-small: 1.57; /* 22px */
-    --font-weight-body-small: 400;
-
-    --font-size-caption: 0.75rem; /* 12px */
-    --line-height-caption: 1.5; /* 18px */
-    --font-weight-caption: 400;
-
-    --font-size-label: 0.875rem; /* 14px */
-    --line-height-label: 1.43; /* 20px */
-    --font-weight-label: 600;
-    --letter-spacing-label: -0.01em;
-    --text-transform-label: none;
-
-    --font-size-badge-fluid: clamp(0.6rem, 3vw, 0.75rem);
-    --font-size-tooltip: 0.75rem;
-    --font-size-micro: 0.625rem;
-
     /* ------------------------------ */
     /*            Motion              */
     /* ------------------------------ */
-    --motion-duration-quick: 120ms;
-    --motion-duration-base: 180ms;
-    --motion-duration-slow: 240ms;
-
-    --motion-ease-standard: cubic-bezier(0.23, 1, 0.32, 1);
-    --motion-ease-emphasized: cubic-bezier(0.23, 1, 0.32, 1);
-    --motion-ease-accelerate: cubic-bezier(0.23, 1, 0.32, 1);
-    --motion-ease-decelerate: cubic-bezier(0.23, 1, 0.32, 1);
+    --motion-duration-1: 120ms;
+    --motion-duration-2: 180ms;
+    --motion-duration-3: 240ms;
+    --motion-ease-1: cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Add a subtle geometric background pattern for visual interest */
   body {
     background-color: var(--surface-bg);
-    background-image:
-      radial-gradient(circle at 15% 30%, rgba(139, 92, 246, 0.05) 1.5px, transparent 2px),
-      radial-gradient(circle at 85% 70%, rgba(167, 139, 250, 0.05) 1.5px, transparent 2px),
-      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size:
-      40px 40px,
-      40px 40px,
-      20px 20px,
-      20px 20px;
-    background-position:
-      0 0,
-      0 0,
-      0 0,
-      0 0;
     font-family: var(--font-family-sans);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -337,209 +115,6 @@
   /* Selection color */
   ::selection {
     background-color: color-mix(in srgb, var(--accent) 30%, transparent);
-    color: var(--color-text-primary);
+    color: var(--fg);
   }
-
-  /* Smooth transitions for better UX */
-  * {
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
-  }
-}
-
-/* =========================== */
-/*      Light Mode Theme       */
-/* =========================== */
-
-[data-theme="light"] {
-  /* ------------------------------ */
-  /*         Color Palette          */
-  /* ------------------------------ */
-  --color-brand-primary: #8b5cf6; /* Violet 500 - Glassmorphism 2.0 */
-  --color-brand-primary-hover: #7c3aed; /* Violet 600 */
-  --color-brand-secondary: #a78bfa; /* Violet 400 */
-
-  --color-text-primary: #0f172a; /* Dark text on light background */
-  --color-text-secondary: #475569; /* Slate 600 */
-  --color-text-tertiary: #64748b; /* Slate 500 */
-  --color-text-on-accent: #ffffff;
-
-  --color-background-dark: #ffffff; /* Light page background */
-  --color-background-light: #f8fafc; /* Slate 50 */
-
-  --color-border-strong: #cbd5e1; /* Slate 300 */
-  --color-border-subtle: #e2e8f0; /* Slate 200 */
-  --color-border-hairline: #f1f5f9; /* Slate 100 */
-
-  /* Status colors remain same for consistency */
-  --color-status-success: #22c55e;
-  --color-status-warning: #f59e0b;
-  --color-status-danger: #ef4444;
-  --color-status-info: #3b82f6;
-
-  /* ------------------------------ */
-  /*      Semantic Color Tokens     */
-  /* ------------------------------ */
-
-  /* --- Backgrounds --- */
-  --surface-bg: var(--color-background-dark); /* White page background */
-  --surface-base: var(--color-background-light); /* Light gray component background */
-  --surface-muted: #e2e8f0; /* Slate 200 for secondary content */
-
-  /* Glassmorphism Surfaces - Light Mode */
-  --surface-glass-card: rgba(
-    255,
-    255,
-    255,
-    var(--glass-opacity-light)
-  ); /* White with transparency */
-  --surface-glass-panel: rgba(
-    248,
-    250,
-    252,
-    var(--glass-opacity-medium)
-  ); /* Light gray with transparency */
-  --surface-glass-overlay: rgba(
-    255,
-    255,
-    255,
-    var(--glass-opacity-overlay)
-  ); /* Modal/dialog background */
-  --surface-glass-floating: rgba(241, 245, 249, var(--glass-opacity-heavy)); /* Floating elements */
-  --surface-ghost: transparent;
-
-  /* Legacy compatibility */
-  --surface-card: var(--surface-glass-card);
-  --surface-overlay: var(--surface-glass-overlay);
-
-  /* --- Text --- */
-  --fg: var(--color-text-primary);
-  --fg-muted: #64748b; /* Slate 500 */
-  --fg-subtle: #94a3b8; /* Slate 400 */
-
-  /* --- Accents --- */
-  --accent: var(--color-brand-primary);
-  --accent-weak: var(--color-brand-secondary);
-  --accent-contrast: var(--color-text-on-accent);
-  --accent-strong: #3730a3; /* Indigo 700 - darker for light mode */
-  --acc2: #4338ca; /* Indigo 600 */
-
-  /* --- Borders --- */
-  --line: var(--color-border-subtle);
-  --border-hairline: var(--color-border-hairline);
-  --border-strong: var(--color-border-strong);
-
-  /* Glassmorphism Borders - Light Mode */
-  --border-glass: rgba(0, 0, 0, 0.1); /* Dark border with transparency */
-  --border-glass-strong: rgba(0, 0, 0, 0.15);
-  --border-glass-accent: rgba(79, 70, 229, 0.3);
-
-  --color-border-focus: var(--accent);
-  --color-accent-border: rgba(79, 70, 229, 0.4);
-  --color-accent-border: color-mix(in srgb, var(--accent) 40%, transparent 60%);
-  --color-accent-surface: rgba(79, 70, 229, 0.15);
-  --color-accent-surface: color-mix(in srgb, var(--accent) 15%, transparent 85%);
-  --border-ghost: rgba(0, 0, 0, 0.2);
-
-  /* Legacy compatibility */
-  --border-neumorphic-subtle: var(--border-glass);
-
-  /* --- Glassmorphism Surface Hierarchy --- */
-  --surface-glass-base: var(--surface-base);
-  --surface-glass-raised: var(--surface-glass-card);
-  --surface-glass-elevated: var(--surface-glass-floating);
-  --color-surface-muted: var(--surface-muted);
-
-  /* Legacy compatibility */
-  --surface-neumorphic-base: var(--surface-glass-base);
-  --surface-neumorphic-raised: var(--surface-glass-raised);
-  --surface-neumorphic-floating: var(--surface-glass-elevated);
-
-  /* --- Status --- */
-  --info: #2563eb; /* Darker blue for light background */
-  --info-soft: rgba(37, 99, 235, 0.15);
-  --success: #16a34a; /* Darker green for better contrast */
-  --success-soft: rgba(22, 163, 74, 0.15);
-  --warning: #d97706; /* Darker amber for better contrast */
-  --warning-soft: rgba(217, 119, 6, 0.15);
-  --danger: #dc2626; /* Darker red for better contrast */
-  --danger-soft: rgba(220, 38, 38, 0.15);
-
-  /* ------------------------------ */
-  /*      Glassmorphism Variables   */
-  /* ------------------------------ */
-
-  /* Glassmorphism Border Colors - Light Mode */
-  --glass-border-light: rgba(0, 0, 0, 0.08);
-  --glass-border-medium: rgba(0, 0, 0, 0.12);
-  --glass-border-strong: rgba(0, 0, 0, 0.16);
-  --glass-border-accent: rgba(79, 70, 229, 0.25);
-
-  /* ------------------------------ */
-  /*           Shadows              */
-  /* ------------------------------ */
-
-  --shadow-neumorphic-icon: 1px 1px 2px rgba(0, 0, 0, 0.1), -1px -1px 2px rgba(255, 255, 255, 0.5);
-
-  /* Glassmorphism Shadows - Light Mode */
-  --shadow-glass-subtle: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-glass-medium: 0 8px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
-  --shadow-glass-strong: 0 16px 24px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-glass-floating: 0 24px 38px rgba(0, 0, 0, 0.12), 0 9px 46px rgba(0, 0, 0, 0.1);
-
-  /* Card and overlay shadows */
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-  --shadow-overlay: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-ring: 0 0 0 2px var(--surface-bg), 0 0 0 4px var(--color-brand-primary);
-
-  /* Inset shadows for light mode */
-  --shadow-inset-subtle: inset 0 1px 2px 0 rgba(0, 0, 0, 0.08);
-  --shadow-inset-medium: inset 0 2px 4px 0 rgba(0, 0, 0, 0.12);
-  --shadow-inset-strong: inset 0 4px 8px 0 rgba(0, 0, 0, 0.18);
-  --shadow-inset-extreme: inset 0 8px 16px 0 rgba(0, 0, 0, 0.25);
-
-  /* Glow shadows remain similar but with adjusted opacity */
-  --shadow-glow-brand: 0 0 16px rgba(79, 70, 229, 0.2);
-  --shadow-glow-brand-subtle: 0 0 8px rgba(79, 70, 229, 0.1);
-  --shadow-glow-brand-strong: 0 0 24px rgba(79, 70, 229, 0.3);
-  --shadow-glow-success: 0 0 16px rgba(22, 163, 74, 0.2);
-  --shadow-glow-success-subtle: 0 0 8px rgba(22, 163, 74, 0.12);
-  --shadow-glow-warning: 0 0 16px rgba(217, 119, 6, 0.2);
-  --shadow-glow-warning-subtle: 0 0 8px rgba(217, 119, 6, 0.15);
-  --shadow-glow-error: 0 0 16px rgba(220, 38, 38, 0.25);
-  --shadow-glow-error-subtle: 0 0 8px rgba(220, 38, 38, 0.18);
-  --shadow-glow-neutral-subtle: 0 0 10px rgba(0, 0, 0, 0.1);
-
-  /* Surface shadow */
-  --shadow-surface: 0 2px 10px rgba(0, 0, 0, 0.06);
-}
-
-/* Light mode body background */
-[data-theme="light"] body {
-  background-color: var(--surface-bg);
-  background-image:
-    radial-gradient(circle at 15% 30%, rgba(139, 92, 246, 0.03) 1.5px, transparent 2px),
-    radial-gradient(circle at 85% 70%, rgba(167, 139, 250, 0.03) 1.5px, transparent 2px),
-    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
-  background-size:
-    40px 40px,
-    40px 40px,
-    20px 20px,
-    20px 20px;
-}
-
-/* Light mode scrollbars */
-[data-theme="light"] ::-webkit-scrollbar-track {
-  background: var(--surface-base);
-}
-
-[data-theme="light"] ::-webkit-scrollbar-thumb {
-  background: var(--line);
-}
-
-[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
 }

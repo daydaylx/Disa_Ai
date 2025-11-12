@@ -121,35 +121,35 @@ export function SettingsOverview() {
               <Link to={card.to} className="focus-visible:outline-none">
                 <Card
                   key={card.id}
-                  tone="neo-glass"
+                  tone="glass-primary"
                   interactive="glow-accent"
-                  padding="none"
+                  padding="md"
                   className="h-full group"
                   clickable
                 >
-                  <div className="flex h-full flex-col p-4">
-                    <div className="flex flex-row items-start gap-3">
-                      <span className="grid h-10 w-10 place-content-center rounded-full border border-[var(--color-accent-border)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-border-focus)] shadow-surface">
+                  <div className="flex h-full flex-col p-0">
+                    {" "}
+                    {/* Padding moved to Card */}
+                    <div className="flex flex-row items-start gap-4 p-4">
+                      <span className="grid h-10 w-10 place-content-center rounded-full border border-accent/30 bg-surface-glass text-accent shadow-1">
                         <Icon className="h-5 w-5" aria-hidden />
                       </span>
                       <div className="flex flex-1 flex-col gap-2">
                         <div className="flex items-center justify-between gap-2">
-                          <CardTitle className="text-base font-semibold text-text-primary">
+                          <CardTitle className="text-base font-semibold text-fg">
                             {card.title}
                           </CardTitle>
                           <Badge variant={card.statusVariant} size="sm">
                             {card.statusLabel}
                           </Badge>
                         </div>
-                        <CardDescription className="text-sm text-text-secondary">
+                        <CardDescription className="text-sm text-fg-muted">
                           {card.description}
                         </CardDescription>
-                        {card.meta ? (
-                          <p className="text-xs text-text-tertiary">{card.meta}</p>
-                        ) : null}
+                        {card.meta ? <p className="text-xs text-fg-subtle">{card.meta}</p> : null}
                       </div>
                     </div>
-                    <div className="mt-4 flex grow items-end justify-between border-t border-[var(--color-border-subtle)] pt-3 text-sm text-[var(--color-border-focus)]">
+                    <div className="mt-4 flex grow items-end justify-between border-t border-line pt-3 text-sm text-accent">
                       <span className="font-medium">Details anzeigen</span>
                       <span aria-hidden className="transition-transform group-hover:translate-x-1">
                         →
@@ -164,24 +164,18 @@ export function SettingsOverview() {
       </SectionCard>
 
       <SectionCard title="Gesten & Shortcuts" headerActions={<Waves className="h-5 w-5" />}>
-        <ul className="mt-3 space-y-2 text-sm text-[var(--color-text-on-accent)]/85">
+        <ul className="mt-3 space-y-2 text-sm text-fg/85">
           <li>
-            <strong className="text-[var(--color-text-on-accent)]">
-              Langes Drücken mit drei Fingern
-            </strong>{" "}
-            öffnet die Einstellungen – jederzeit erreichbar.
+            <strong className="text-fg">Langes Drücken mit drei Fingern</strong> öffnet die
+            Einstellungen – jederzeit erreichbar.
           </li>
           <li>
-            <strong className="text-[var(--color-text-on-accent)]">
-              Doppeltippen am oberen Rand
-            </strong>{" "}
-            scrollt zurück zum Anfang der aktuellen Ansicht.
+            <strong className="text-fg">Doppeltippen am oberen Rand</strong> scrollt zurück zum
+            Anfang der aktuellen Ansicht.
           </li>
           <li>
-            <strong className="text-[var(--color-text-on-accent)]">
-              Swipe nach oben mit drei Fingern
-            </strong>{" "}
-            wechselt das Theme – perfekt zum schnellen Check.
+            <strong className="text-fg">Swipe nach oben mit drei Fingern</strong> wechselt das Theme
+            – perfekt zum schnellen Check.
           </li>
         </ul>
       </SectionCard>

@@ -44,8 +44,8 @@ export function ChatComposer({
   const supportsColorMix =
     typeof CSS !== "undefined" && CSS.supports("color", "color-mix(in srgb, white 50%, black)");
   const pingBackground = supportsColorMix
-    ? "color-mix(in srgb, var(--color-border-focus) 55%, transparent)"
-    : "rgba(244, 93, 105, 0.45)";
+    ? "color-mix(in srgb, var(--accent) 55%, transparent)"
+    : "rgba(139, 92, 246, 0.55)"; // Fallback for accent color
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -102,7 +102,7 @@ export function ChatComposer({
   return (
     <div
       className={cn(
-        "px-2 pt-3 sm:pt-4 transition-all duration-200",
+        "px-3 py-2 sm:py-3 transition-all duration-200 border-t border-line", // Added border-t and updated padding
         viewport.isKeyboardOpen
           ? "pb-[calc(0.75rem+max(env(safe-area-inset-bottom),0px))]"
           : "pb-[calc(1rem+max(env(safe-area-inset-bottom),0px))]",
@@ -114,18 +114,18 @@ export function ChatComposer({
         paddingRight: "max(env(safe-area-inset-right), 0.5rem)",
       }}
     >
-      <div className="mx-auto max-w-md space-y-3 text-text-secondary">
+      <div className="mx-auto max-w-md space-y-3 text-fg-muted">
         {(tokenCount !== undefined || maxTokens !== undefined) && (
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="border-[var(--border-glass)] inline-flex items-center gap-1 rounded-full border bg-[var(--surface-glass-floating)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-text-secondary shadow-[var(--shadow-glass-subtle)]">
-                  <Zap className="h-3 w-3 shadow-[var(--shadow-neumorphic-icon)]" />
+                <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface-glass backdrop-blur-sm px-3 py-1 text-fg-muted shadow-1">
+                  <Zap className="h-4 w-4 shadow-1" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="border-[var(--border-glass)] inline-flex items-center gap-2 rounded-full border bg-[var(--surface-glass-floating)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-text-secondary shadow-[var(--shadow-glass-subtle)]">
+                <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-glass backdrop-blur-sm px-3 py-1 text-fg-muted shadow-1">
                   Maximal: {maxTokens}
                 </span>
               )}
@@ -138,7 +138,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-[var(--radius-md)] border border-[var(--border-glass-accent)] bg-[var(--surface-glass-floating)] p-2 shadow-[var(--shadow-glass-medium)] backdrop-blur-[var(--backdrop-blur-medium)] touch-target",
+            "flex items-end gap-2 rounded-md border border-accent bg-surface-glass p-2 shadow-1 backdrop-blur-md touch-target",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -156,8 +156,8 @@ export function ChatComposer({
               aria-label="Nachricht an Disa AI eingeben"
               aria-describedby="chat-composer-hint"
               className={cn(
-                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[56px] resize-none border-0 bg-transparent px-3 py-2 text-[15px] sm:text-base leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                isQuickstartLoading && "text-text-secondary cursor-not-allowed",
+                "text-fg placeholder:text-fg-subtle max-h-[200px] min-h-[56px] resize-none border-0 bg-transparent px-3 py-2 text-[15px] sm:text-base leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                isQuickstartLoading && "text-fg-muted cursor-not-allowed",
               )}
             />
           </div>
@@ -168,11 +168,11 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] text-text-secondary hover:bg-[var(--surface-glass-card)] hover:text-text-primary hover:shadow-[var(--shadow-glass-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] touch-target"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] text-fg-muted hover:bg-surface-glass hover:text-fg hover:shadow-1 backdrop-blur-sm touch-target"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
-                <RotateCcw className="h-5 w-5 shadow-[var(--shadow-neumorphic-icon)]" />
+                <RotateCcw className="h-6 w-6 shadow-1" />
               </AuroraButton>
             )}
 
@@ -186,7 +186,7 @@ export function ChatComposer({
                 aria-label="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
-                <Square className="h-5 w-5 shadow-[var(--shadow-neumorphic-icon)]" />
+                <Square className="h-6 w-6 shadow-1" />
               </AuroraButton>
             )}
 
@@ -195,13 +195,13 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="accent"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)] backdrop-blur-[var(--backdrop-blur-subtle)] touch-target"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] shadow-1 hover:shadow-2 backdrop-blur-sm touch-target"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 aria-label="Nachricht senden"
                 data-testid="composer-send"
               >
-                <Send className="h-5 w-5 shadow-[var(--shadow-neumorphic-icon)]" />
+                <Send className="h-6 w-6 shadow-1" />
               </AuroraButton>
             )}
 
@@ -211,10 +211,7 @@ export function ChatComposer({
           </div>
         </div>
 
-        <div
-          id="chat-composer-hint"
-          className="mt-2 px-2 text-center text-[10px] text-text-muted/80"
-        >
+        <div id="chat-composer-hint" className="mt-2 px-2 text-center text-[10px] text-fg-muted/80">
           <span className="inline-flex items-center justify-center gap-2">
             {(isLoading || isComposerDisabled) && (
               <span className="relative flex h-2 w-2">
@@ -222,7 +219,7 @@ export function ChatComposer({
                   className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
                   style={{ background: pingBackground }}
                 />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-border-focus)]" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
               </span>
             )}
             <span className="leading-tight">

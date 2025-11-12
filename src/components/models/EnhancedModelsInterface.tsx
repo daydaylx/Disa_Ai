@@ -251,23 +251,23 @@ function PerformanceBar({
   const percentage = Math.min((value / maxValue) * 100, 100);
 
   const colorClasses = {
-    primary: "bg-[var(--acc1)]",
-    success: "bg-[var(--ok)]",
-    warning: "bg-[var(--warn)]",
-    error: "bg-[var(--err)]",
+    primary: "bg-accent",
+    success: "bg-status-success",
+    warning: "bg-status-warning",
+    error: "bg-status-danger",
   };
 
   // Using the design system for the bar - could use a progress bar component if available
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-text-secondary min-w-[60px]">{label}</span>
-      <div className="flex-1 h-2 bg-[var(--surface-neumorphic-base)] rounded-full overflow-hidden border border-[var(--border-neumorphic-subtle)] shadow-[var(--shadow-inset-subtle)]">
+      <span className="text-xs text-fg-muted min-w-[60px]">{label}</span>
+      <div className="flex-1 h-2 bg-surface-base rounded-full overflow-hidden border border-line shadow-1">
         <div
           className={`h-full ${colorClasses[color]} transition-all duration-300 shadow-[inset_0_0_4px_rgba(0,0,0,0.2)]`}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <span className="text-xs font-medium min-w-[30px] text-right text-text-primary">
+      <span className="text-xs font-medium min-w-[30px] text-right text-fg">
         {Math.round(value)}
       </span>
     </div>
@@ -303,7 +303,7 @@ function DenseModelCard({
       {/* Header Row */}
       <div className="flex flex-col gap-2 mb-3">
         <div className="flex items-center justify-between">
-          <h3 className="font-medium text-text-strong flex-1 min-w-0 pr-2">
+          <h3 className="font-medium text-fg flex-1 min-w-0 pr-2">
             <span className="truncate inline-block max-w-full" title={model.label}>
               {model.label}
             </span>
@@ -318,7 +318,7 @@ function DenseModelCard({
           </div>
         </div>
 
-        <p className="text-sm text-text-muted" title={model.provider}>
+        <p className="text-sm text-fg-muted" title={model.provider}>
           {model.provider}
         </p>
       </div>
@@ -383,7 +383,7 @@ function DenseModelCard({
           }}
         >
           <Star
-            className={`w-4 h-4 ${isFavorite ? "fill-yellow-400 text-yellow-400" : "text-text-muted"}`}
+            className={`w-4 h-4 ${isFavorite ? "fill-yellow-400 text-yellow-400" : "text-fg-muted"}`}
           />
         </Button>
         <Button
@@ -564,11 +564,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   // Show loading state while models are being loaded
   if (isLoadingModels) {
     return (
-      <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
+      <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-3"></div>
-            <p className="text-text-muted">Lade Modelle...</p>
+            <p className="text-fg-muted">Lade Modelle...</p>
           </div>
         </div>
       </div>
@@ -576,15 +576,15 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   }
 
   return (
-    <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
+    <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
+      <div className="sticky top-0 z-40 border-b border-accent/30 bg-gradient-to-r from-accent/12 via-surface-glass to-transparent backdrop-blur-lg shadow-1">
         {/* Search & Quick Actions Row */}
         <div className="px-4 py-3">
           <div className="flex items-center gap-3">
             {/* Search Input */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-muted" />
               <Input
                 placeholder="Modelle durchsuchen..."
                 value={searchQuery}
@@ -626,8 +626,8 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
         {favoriteModels.length > 0 && !filters.showFavoritesOnly && (
           <div className="px-4 pb-3">
             <div className="mb-2 flex items-center gap-2">
-              <Star className="h-4 w-4 text-[var(--color-border-focus)]" />
-              <span className="text-sm font-medium text-text-strong">
+              <Star className="h-4 w-4 text-accent" />
+              <span className="text-sm font-medium text-fg">
                 Schnellwahl ({favoriteCount.models})
               </span>
             </div>
@@ -642,13 +642,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     key={model.id}
                     type="button"
                     onClick={() => handleSelectModel(model)}
-                    className={cn(
-                      "snap-start inline-flex h-8 min-w-[72px] items-center gap-1.5 rounded-[16px] px-3 text-xs font-medium outline-none transition-all duration-150",
-                      "border border-[var(--border-glass)] bg-[var(--surface-glass-floating)] text-text-secondary shadow-[var(--shadow-glass-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)]",
-                      isActive &&
-                        "border-[var(--border-glass-accent)] text-[var(--color-accent-strong)] shadow-[var(--shadow-glow-brand-subtle)] bg-[color-mix(in_srgb,var(--surface-glass-floating)_88%,var(--color-accent-soft)_12%)]",
-                      "focus-visible:ring-2 focus-visible:ring-[var(--color-accent-strong)] focus-visible:ring-offset-0",
-                    )}
+                    className={`snap-start inline-flex h-8 min-w-[72px] items-center gap-1.5 rounded-lg px-3 text-xs font-medium outline-none transition-all duration-150 border border-line bg-surface-glass text-fg-muted shadow-1 backdrop-blur-sm ${
+                      isActive ? "border-accent text-accent shadow-glow-accent bg-accent/10" : ""
+                    } focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-0`}
                   >
                     <span className="truncate" aria-hidden={false}>
                       {model.label}
@@ -665,7 +661,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
         {/* Filter Controls */}
         {showFilters && (
-          <div className="px-4 pb-3 border-t border-border-hairline">
+          <div className="px-4 pb-3 border-t border-line">
             <div className="flex items-center gap-4 pt-3">
               <label className="flex items-center gap-2">
                 <input
@@ -674,9 +670,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                   onChange={(e) =>
                     dispatchFilters({ type: "setShowFreeOnly", value: e.target.checked })
                   }
-                  className="h-4 w-4 rounded border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] shadow-[var(--shadow-inset-subtle)] accent-[var(--acc1)] focus:outline-none focus:ring-0 focus:ring-offset-0"
+                  className="h-4 w-4 rounded border border-line bg-surface-base shadow-1 accent-accent focus:outline-none focus:ring-0 focus:ring-offset-0"
                 />
-                <span className="text-sm text-text-primary">Nur kostenlose</span>
+                <span className="text-sm text-fg">Nur kostenlose</span>
               </label>
 
               <label className="flex items-center gap-2">
@@ -686,9 +682,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                   onChange={(e) =>
                     dispatchFilters({ type: "setShowPremiumOnly", value: e.target.checked })
                   }
-                  className="h-4 w-4 rounded border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-base)] shadow-[var(--shadow-inset-subtle)] accent-[var(--acc1)] focus:outline-none focus:ring-0 focus:ring-offset-0"
+                  className="h-4 w-4 rounded border border-line bg-surface-base shadow-1 accent-accent focus:outline-none focus:ring-0 focus:ring-offset-0"
                 />
-                <span className="text-sm text-text-primary">Nur Premium</span>
+                <span className="text-sm text-fg">Nur Premium</span>
               </label>
 
               <Select
@@ -716,12 +712,12 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
         <div className="p-4">
           {/* Results Header */}
           <div className="flex items-center justify-between mb-4">
-            <div className="text-sm text-text-muted">
+            <div className="text-sm text-fg-muted">
               {filteredModels.length} Modelle gefunden
               {searchQuery && ` für "${searchQuery}"`}
             </div>
             {selectedModels.size > 0 && (
-              <div className="text-sm text-text-muted">{selectedModels.size} ausgewählt</div>
+              <div className="text-sm text-fg-muted">{selectedModels.size} ausgewählt</div>
             )}
           </div>
 
@@ -742,11 +738,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
           {filteredModels.length === 0 && (
             <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface-subtle flex items-center justify-center">
-                <Search className="w-8 h-8 text-text-muted" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface flex items-center justify-center">
+                <Search className="w-8 h-8 text-fg-muted" />
               </div>
-              <h3 className="text-lg font-medium text-text-strong mb-2">Keine Modelle gefunden</h3>
-              <p className="text-text-muted">
+              <h3 className="text-lg font-medium text-fg mb-2">Keine Modelle gefunden</h3>
+              <p className="text-fg-muted">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
                   : "Versuche es mit anderen Filtereinstellungen"}
@@ -758,7 +754,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
       {/* Floating Action Button */}
       {selectedModels.size > 0 && (
-        <div className="fixed bottom-6 right-6 z-[var(--z-popover)]">
+        <div className="fixed bottom-6 right-6 z-popover">
           <Button
             variant="accent"
             className="rounded-full w-14 h-14 shadow-lg"
@@ -800,7 +796,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             </DialogHeader>
             <div className="grid grid-cols-2 gap-4 py-4">
               <div>
-                <h4 className="font-medium mb-2 text-sm text-text-secondary">Performance</h4>
+                <h4 className="font-medium mb-2 text-sm text-fg-muted">Performance</h4>
                 <div className="space-y-2">
                   <PerformanceBar label="Speed" value={detailsModel.performance.speed} />
                   <PerformanceBar label="Quality" value={detailsModel.performance.quality} />
@@ -812,8 +808,8 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                 </div>
               </div>
               <div>
-                <h4 className="font-medium mb-2 text-sm text-text-secondary">Details</h4>
-                <div className="space-y-1 text-sm text-text-primary">
+                <h4 className="font-medium mb-2 text-sm text-fg-muted">Details</h4>
+                <div className="space-y-1 text-sm text-fg">
                   <div>Provider: {detailsModel.provider}</div>
                   <div>Context: {formatContext(detailsModel.context.maxTokens)}</div>
                   <div>Tier: {detailsModel.tier}</div>
