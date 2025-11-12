@@ -112,25 +112,17 @@ function ToastViewport({
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto rounded-2xl border bg-[var(--color-overlay-toast-bg)] px-4 py-3 text-sm shadow-neo-lg backdrop-blur-md ${kindClasses[toast.kind]}`}
+          className={`pointer-events-auto rounded-2xl border bg-surface-base/98 px-4 py-3 text-sm shadow-neo-lg backdrop-blur-md ${kindClasses[toast.kind]}`}
         >
           <div className="flex items-start gap-3">
             <div className="flex-1">
-              {toast.title && (
-                <p className="font-semibold text-[var(--color-overlay-toast-fg]">
-                  {toast.title}
-                </p>
-              )}
-              {toast.message && (
-                <p className="mt-1 text-xs text-[color-mix(in_srgb,var(--color-overlay-toast-fg)_80%,transparent)]">
-                  {toast.message}
-                </p>
-              )}
+              {toast.title && <p className="font-semibold text-text-primary">{toast.title}</p>}
+              {toast.message && <p className="mt-1 text-xs text-text-secondary">{toast.message}</p>}
             </div>
             <button
               type="button"
               aria-label="Benachrichtigung schließen"
-              className="text-[inherit] transition-opacity hover:opacity-70"
+              className="ml-1 rounded-full px-2 text-[inherit] transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
               onClick={() => onDismiss(toast.id)}
             >
               ×

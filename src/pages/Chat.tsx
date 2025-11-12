@@ -140,19 +140,19 @@ export default function Chat() {
           <>
             <section className="space-y-2">
               <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-accent/80">
-                Neuer Chat
+                Schnellstart
               </p>
               <h1 className="text-2xl font-semibold text-text-primary sm:text-3xl">
                 Was möchtest du heute mit Disa AI erledigen?
               </h1>
               <p className="max-w-2xl text-sm text-text-secondary">
-                Wähle einen Einstieg oder starte direkt eine Nachricht. Alle Aktionen sind für
-                mobile Nutzung optimiert.
+                Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA
+                und ruhiges, fokussiertes Arbeiten.
               </p>
             </section>
 
             <section className="grid gap-3 md:grid-cols-3">
-              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs transition-colors hover:bg-surface-muted/90">
                 <CardHeader className="pb-1">
                   <CardTitle className="flex items-center gap-2 text-xs font-semibold">
                     🧠 Research
@@ -162,6 +162,7 @@ export default function Chat() {
                   <p>Tiefe Recherchen, Quellencheck, Pro/Contra-Analysen.</p>
                   <Button
                     size="sm"
+                    className="w-full justify-center"
                     onClick={() =>
                       startWithPreset(
                         "Du bist ein strukturierter Research-Assistent. Fasse Quellen, Argumente und Risiken sachlich zusammen.",
@@ -169,12 +170,12 @@ export default function Chat() {
                       )
                     }
                   >
-                    Starten
+                    Research-Chat starten
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs transition-colors hover:bg-surface-muted/90">
                 <CardHeader className="pb-1">
                   <CardTitle className="flex items-center gap-2 text-xs font-semibold">
                     ✍️ Schreiben
@@ -184,18 +185,19 @@ export default function Chat() {
                   <p>Klare Mails, Support-Texte, Social Posts auf Knopfdruck.</p>
                   <Button
                     size="sm"
+                    className="w-full justify-center"
                     onClick={() =>
                       startWithPreset(
                         "Du unterstützt beim Schreiben klarer, freundlicher Nachrichten und E-Mails.",
                       )
                     }
                   >
-                    Starten
+                    Schreib-Assistent starten
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
+              <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs transition-colors hover:bg-surface-muted/90">
                 <CardHeader className="pb-1">
                   <CardTitle className="flex items-center gap-2 text-xs font-semibold">
                     💻 Code & Reviews
@@ -205,13 +207,14 @@ export default function Chat() {
                   <p>Erklärungen, Refactors und sichere Vorschläge für deinen Code.</p>
                   <Button
                     size="sm"
+                    className="w-full justify-center"
                     onClick={() =>
                       startWithPreset(
                         "Du bist ein gewissenhafter Coding-Partner. Erkläre Code knapp und schlage sichere Verbesserungen vor.",
                       )
                     }
                   >
-                    Starten
+                    Code-Review starten
                   </Button>
                 </CardContent>
               </Card>
@@ -220,29 +223,35 @@ export default function Chat() {
             <section className="grid gap-3 md:grid-cols-2">
               <Card className="border-line-subtle bg-surface-base/95 shadow-neo-xs">
                 <CardHeader className="pb-1">
-                  <CardTitle className="text-xs font-semibold">Studio-Shortcuts</CardTitle>
+                  <CardTitle className="text-xs font-semibold">Studio-Verknüpfungen</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-1.5 text-[10px] text-text-secondary">
                   <Link
                     to="/models"
-                    className="flex items-center justify-between rounded-xl px-2 py-1.5 hover:bg-surface-muted/80"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.75 hover:bg-surface-muted/80"
                   >
                     <span>Modelle vergleichen & wählen</span>
-                    <span className="text-[9px] text-accent">→</span>
+                    <Button size="sm" variant="ghost" className="h-6 px-2 text-[9px]">
+                      Öffnen
+                    </Button>
                   </Link>
                   <Link
                     to="/roles"
-                    className="flex items-center justify-between rounded-xl px-2 py-1.5 hover:bg-surface-muted/80"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.75 hover:bg-surface-muted/80"
                   >
-                    <span>Rollenbibliothek öffnen</span>
-                    <span className="text-[9px] text-accent">→</span>
+                    <span>Rollenbibliothek erkunden</span>
+                    <Button size="sm" variant="ghost" className="h-6 px-2 text-[9px]">
+                      Öffnen
+                    </Button>
                   </Link>
                   <Link
                     to="/settings"
-                    className="flex items-center justify-between rounded-xl px-2 py-1.5 hover:bg-surface-muted/80"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.75 hover:bg-surface-muted/80"
                   >
                     <span>Einstellungen & API-Key prüfen</span>
-                    <span className="text-[9px] text-accent">→</span>
+                    <Button size="sm" variant="ghost" className="h-6 px-2 text-[9px]">
+                      Öffnen
+                    </Button>
                   </Link>
                 </CardContent>
               </Card>
@@ -252,9 +261,9 @@ export default function Chat() {
                   <CardTitle className="text-xs font-semibold">Hinweise</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-1.5 text-[10px] text-text-secondary">
-                  <p>• Teile keine sensiblen Daten oder API-Keys im Prompt.</p>
+                  <p>• Keine sensiblen Daten oder API-Keys direkt im Prompt teilen.</p>
                   <p>• Modelle, Limits & Verhalten steuerst du zentral im Studio.</p>
-                  <p>• PWA-ready, mobile-first, lokal überprüfbar.</p>
+                  <p>• PWA-ready, mobile-first, designed für ruhige Sessions.</p>
                 </CardContent>
               </Card>
             </section>
