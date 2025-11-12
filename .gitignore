@@ -51,6 +51,8 @@ screenshots-diff/
 # Bundle analysis
 stats.html
 bundle-analyzer-report/
+report/
+jscpd-report/
 
 # IDE
 .vscode/
