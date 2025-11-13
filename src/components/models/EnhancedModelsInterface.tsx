@@ -10,13 +10,14 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { MODEL_POLICY } from "../../config/modelPolicy";
 import { loadModelCatalog, type ModelEntry } from "../../config/models";
-import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext";
+import { useFavorites } from "../../contexts/FavoritesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
 import { Badge, Button, Input } from "../ui";
 import { Card } from "../ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/Dialog";
+import { FilterChip } from "../ui/FilterChip";
 import { useToasts } from "../ui/toast/ToastsProvider";
 import { ModelComparisonTable } from "./ModelComparisonTable";
 
@@ -389,9 +390,9 @@ function DenseModelCard({
 export function EnhancedModelsInterface({ className }: EnhancedModelsInterfaceProps) {
   const { push } = useToasts();
   const { toggleModelFavorite, isModelFavorite, trackModelUsage } = useFavorites();
-  const { getFavoriteModels, favoriteCount } = useFavoriteLists();
 
   // Local state
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
   const [detailsModel, setDetailsModel] = useState<EnhancedModel | null>(null);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
@@ -552,12 +553,6 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     );
   }
 
-  import { FilterChip } from "../ui/FilterChip";
-
-  // ... (keep existing imports)
-
-  // ... (keep existing component logic)
-
   return (
     <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
       {/* Sticky Header */}
@@ -610,7 +605,6 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
       {/* Models List */}
       <div className="flex-1 overflow-auto">
-        // ... (keep existing code)
         <div className="p-4">
           {/* Results Header */}
           <div className="flex items-center justify-between mb-4">

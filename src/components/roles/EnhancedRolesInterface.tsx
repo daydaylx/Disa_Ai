@@ -31,7 +31,7 @@ const CATEGORY_ORDER = [
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
   const { roles, activeRole, setActiveRole } = useStudio();
-  const { toggleRoleFavorite, isRoleFavorite, trackRoleUsage, usage } = useFavorites();
+  const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
 
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
