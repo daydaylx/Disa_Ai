@@ -7,6 +7,7 @@ import { Card, CardTitle } from "../components/ui/card";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
+import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 
 export default function Chat() {
   const toasts = useToasts();
@@ -48,10 +49,44 @@ export default function Chat() {
   }, [messages, isLoading]);
 
   const handleSend = useCallback(() => {
-    if (!input.trim()) return;
-    void append({ role: "user", content: input.trim() });
+    if (isLoading) {
+      toasts.push({
+        kind: "warning",
+        title: "Verarbeitung läuft",
+        message: "Bitte warte einen Moment, bis die aktuelle Antwort fertig ist.",
+      });
+      return;
+    }
+
+    const validation = validatePrompt(input);
+
+    if (!validation.valid) {
+      if (validation.reason === "too_long") {
+        toasts.push({
+          kind: "error",
+          title: "Nachricht zu lang",
+          message: `Die Eingabe darf maximal ${MAX_PROMPT_LENGTH.toLocaleString("de-DE")} Zeichen enthalten. Wir haben sie entsprechend gekürzt.`,
+        });
+        setInput(validation.sanitized);
+      } else {
+        toasts.push({
+          kind: "warning",
+          title: "Leere Nachricht",
+          message: "Bitte gib eine Nachricht ein, bevor du sendest.",
+        });
+      }
+      return;
+    }
+
+    void append({ role: "user", content: validation.sanitized }).catch((error: Error) => {
+      toasts.push({
+        kind: "error",
+        title: "Senden fehlgeschlagen",
+        message: error.message || "Die Nachricht konnte nicht gesendet werden.",
+      });
+    });
     setInput("");
-  }, [input, append, setInput]);
+  }, [append, input, isLoading, setInput, toasts]);
 
   const startWithPreset = (system: string, user?: string) => {
     void append({ role: "system", content: system });

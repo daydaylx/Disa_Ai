@@ -60,7 +60,7 @@ export default [
     },
   }, // Main source files
   {
-    files: ["functions/**/*.{ts,tsx}"],
+    files: ["functions/**/*.{ts,tsx}", "shared/**/*.ts"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {

@@ -99,7 +99,39 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <noscript>
+      <style>
+        .no-js-message {
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          color: #f8fafc;
+          background: #0f172a;
+          padding: 1.5rem;
+          text-align: center;
+        }
+      </style>
+      <div class="no-js-message">
+        Disa&nbsp;AI benötigt JavaScript. Bitte aktivieren Sie JavaScript, um die Anwendung zu verwenden.
+      </div>
+    </noscript>
+    <script type="module">
+      import("/src/main.tsx").catch((error) => {
+        console.error("Failed to bootstrap Disa AI:", error);
+        const container = document.getElementById("app");
+        if (!container) return;
+
+        const warning = document.createElement("div");
+        warning.setAttribute("role", "alert");
+        warning.style.cssText =
+          "font-family: system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;" +
+          "color:#f8fafc;background:#0f172a;padding:1.5rem;border-radius:1rem;" +
+          "max-width:32rem;margin:3rem auto;text-align:center;box-shadow:0 20px 45px rgba(15,23,42,0.45);";
+        warning.innerHTML = `
+          <strong>Build fehlgeschlagen.</strong><br />
+          Bitte führen Sie <code>npm run build</code> aus und stellen Sie sicher, dass die generierten Dateien aus dem <code>dist</code>-Ordner bereitgestellt werden.
+        `;
+        container.appendChild(warning);
+      });
+    </script>
     <script>
       // Mobile viewport height fix
       function setViewportHeight() {

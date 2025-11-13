@@ -284,10 +284,35 @@ Die Anwendung ist als Progressive Web App konzipiert, um eine native-ähnliche E
     ```
 
 3.  **Entwicklungsserver starten:**
+
     ```bash
     npm run dev
     ```
+
     Die Anwendung ist anschließend unter `http://localhost:5173` erreichbar.
+
+4.  **Qualitätssicherung lokal ausführen (empfohlen):**
+
+    ```bash
+    npm run verify
+    ```
+
+    Der kombinierte Task führt Type-Checks, Linting sowie Unit- und E2E-Tests aus und entspricht exakt der GitHub-Actions-Pipeline.
+
+5.  **Produktionsbuild generieren:**
+
+    ```bash
+    npm run build
+    npm run preview
+    ```
+
+    Damit wird die im Deployment verwendete `dist/`-Ausgabe erzeugt und direkt geprüft, dass keine unverarbeiteten TypeScript/TSX-Dateien mehr ausliefert werden.
+
+### API-Key & Sicherheit
+
+- Öffne in der laufenden App den Bereich **Einstellungen → API-Key & Verbindung**.
+- Der Schlüssel wird ausschließlich in `sessionStorage` gespeichert und beim Entfernen vollständig gelöscht.
+- Es existiert kein hartcodierter oder persistenter API-Key im Repository; produktive Deployments setzen auf individuelle Nutzer-Schlüssel.
 
 ## 📜 Verfügbare Skripte
 

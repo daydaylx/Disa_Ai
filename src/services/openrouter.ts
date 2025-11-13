@@ -1,4 +1,5 @@
 /* eslint-disable no-empty */
+import { buildOpenRouterUrl, OPENROUTER_MODELS_PATH } from "../../shared/openrouter";
 import { getEnvConfigSafe } from "../config/env";
 import { mapError } from "../lib/errors";
 import { fetchJson } from "../lib/http";
@@ -20,6 +21,10 @@ interface ToastsArray {
 function getApiBase(): string {
   const config = getEnvConfigSafe();
   return config.VITE_OPENROUTER_BASE_URL;
+}
+
+function getModelsEndpoint(): string {
+  return buildOpenRouterUrl(getApiBase(), OPENROUTER_MODELS_PATH);
 }
 
 export type ORModel = {
@@ -83,7 +88,7 @@ export async function getRawModels(
   } catch {}
 
   try {
-    const data = await fetchJson(`${getApiBase()}/models`, {
+    const data = await fetchJson(getModelsEndpoint(), {
       headers: buildHeaders(explicitKey),
       timeoutMs: 15000,
       retries: 2,

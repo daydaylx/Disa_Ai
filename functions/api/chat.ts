@@ -1,5 +1,11 @@
 import type { PagesFunction } from "@cloudflare/workers-types";
 
+import {
+  buildOpenRouterUrl,
+  DEFAULT_OPENROUTER_BASE_URL,
+  OPENROUTER_CHAT_PATH,
+} from "../shared/openrouter";
+
 const ALLOWED_ORIGIN = "https://disaai.de";
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
@@ -7,6 +13,7 @@ const rateLimitState = new Map<string, number[]>();
 
 interface Env {
   OPENROUTER_API_KEY: string;
+  OPENROUTER_BASE_URL?: string;
 }
 
 const createCorsHeaders = (origin: string | null) => {
@@ -87,6 +94,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   let upstreamResponse: Response;
   try {
     const acceptHeader = request.headers.get("Accept");
+    const upstreamUrl = buildOpenRouterUrl(
+      env.OPENROUTER_BASE_URL ?? DEFAULT_OPENROUTER_BASE_URL,
+      OPENROUTER_CHAT_PATH,
+    );
     const upstreamHeaders: Record<string, string> = {
       Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
       "Content-Type": "application/json",
@@ -96,8 +107,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     if (acceptHeader) {
       upstreamHeaders["Accept"] = acceptHeader;
     }
-
-    upstreamResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    upstreamResponse = await fetch(upstreamUrl, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: upstreamHeaders,
