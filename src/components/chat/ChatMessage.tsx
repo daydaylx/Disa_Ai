@@ -133,11 +133,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
-  const bubbleClass = cn(
-    "max-w-[70%]",
-    isUser && "ml-auto",
-    isSystem && "mx-auto max-w-[60%]",
-  );
+  const bubbleClass = cn("max-w-[70%]", isUser && "ml-auto", isSystem && "mx-auto max-w-[60%]");
 
   const handleCopy = () => {
     onCopy?.(message.content);
