@@ -173,7 +173,7 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
       >
         {/* Chat Bubble */}
         <Card
-          tone="default"
+          tone="glass-primary"
           padding="md"
           className={cn(
             bubbleClass,

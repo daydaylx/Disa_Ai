@@ -40,6 +40,20 @@ export function useConversationManager({
     }
   }, [messages.length]);
 
+  const refreshConversations = useCallback(async () => {
+    try {
+      const conversations = await getAllConversations();
+      setConversations(conversations);
+    } catch (error) {
+      console.error("Failed to refresh conversations:", error);
+      toasts.push({
+        kind: "error",
+        title: "Fehler",
+        message: "Konversationen konnten nicht geladen werden",
+      });
+    }
+  }, [toasts]);
+
   useEffect(() => {
     const saveConversationIfNeeded = async () => {
       const lastMessage = messages[messages.length - 1];
@@ -102,20 +116,6 @@ export function useConversationManager({
     refreshConversations,
     toasts,
   ]);
-
-  const refreshConversations = useCallback(async () => {
-    try {
-      const conversations = await getAllConversations();
-      setConversations(conversations);
-    } catch (error) {
-      console.error("Failed to refresh conversations:", error);
-      toasts.push({
-        kind: "error",
-        title: "Fehler",
-        message: "Konversationen konnten nicht geladen werden",
-      });
-    }
-  }, [toasts]);
 
   useEffect(() => {
     if (isHistoryOpen) {
