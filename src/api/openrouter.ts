@@ -1,3 +1,10 @@
+import {
+  buildOpenRouterUrl,
+  DEFAULT_OPENROUTER_BASE_URL,
+  OPENROUTER_CHAT_PATH,
+  OPENROUTER_MODELS_PATH,
+} from "../../shared/openrouter";
+import { getEnvConfigSafe } from "../config/env";
 import { mapError } from "../lib/errors";
 import { fetchJson } from "../lib/http";
 import { chatConcurrency } from "../lib/net/concurrency";
@@ -5,8 +12,15 @@ import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
 
-const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const MODEL_KEY = "disa_model";
+
+const { chatEndpoint: ENDPOINT, modelsEndpoint: MODELS_ENDPOINT } = (() => {
+  const base = getEnvConfigSafe().VITE_OPENROUTER_BASE_URL || DEFAULT_OPENROUTER_BASE_URL;
+  return {
+    chatEndpoint: buildOpenRouterUrl(base, OPENROUTER_CHAT_PATH),
+    modelsEndpoint: buildOpenRouterUrl(base, OPENROUTER_MODELS_PATH),
+  } as const;
+})();
 
 function isTestEnv(): boolean {
   const viaImportMeta = (() => {
@@ -217,7 +231,6 @@ export async function checkApiHealth(opts?: {
   timeoutMs?: number;
   signal?: AbortSignal;
 }): Promise<void> {
-  const MODELS_ENDPOINT = "https://openrouter.ai/api/v1/models";
   const timeoutMs = opts?.timeoutMs ?? 3000;
 
   try {
