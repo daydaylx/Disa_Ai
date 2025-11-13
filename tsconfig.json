@@ -3,6 +3,6 @@
   "compilerOptions": {
     "types": ["node", "vite/client"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "vite-env.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "shared/**/*.ts", "vite-env.d.ts"],
   "exclude": ["node_modules", "dist", "build", "coverage", "e2e", "tests"]
 }
