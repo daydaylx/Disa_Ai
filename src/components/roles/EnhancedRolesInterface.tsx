@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavorites } from "../../contexts/FavoritesContext";
@@ -9,6 +9,7 @@ import { migrateRole } from "../../types/enhanced-interfaces";
 import { Button, Input } from "../ui";
 import { FilterChip } from "../ui/FilterChip";
 import { RoleCard } from "../ui/RoleCard";
+import { Skeleton } from "../ui/skeleton";
 import { useToasts } from "../ui/toast/ToastsProvider";
 import { roleFilterFn, roleSortFn } from "./roles-filter";
 
@@ -26,10 +27,6 @@ const CATEGORY_ORDER = [
   "Erwachsene",
   "Spezial",
 ];
-
-import { Skeleton } from "../ui/skeleton";
-
-// ... (keep existing imports)
 
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
@@ -59,13 +56,17 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     sortDirection: "asc",
   });
 
-  const [isLoadingRoles, setIsLoadingRoles] = useState(true); // New state
+  const [isLoadingRoles, setIsLoadingRoles] = useState(true);
 
   // Convert legacy roles to enhanced roles
   const enhancedRoles = useMemo(() => {
-    // Simulate loading
-    setTimeout(() => setIsLoadingRoles(false), 500); // Set loading to false after a delay
     return roles.map(migrateRole);
+  }, [roles]);
+
+  useEffect(() => {
+    if (roles.length > 0) {
+      setIsLoadingRoles(false);
+    }
   }, [roles]);
 
   // Get category counts
@@ -151,6 +152,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       </div>
     );
   }
+
+  return (
+    <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 border-b border-line bg-surface-glass/80 backdrop-blur-md">
         <div className="p-4 space-y-3">
