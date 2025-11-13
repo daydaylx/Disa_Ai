@@ -16,6 +16,8 @@ const DEFAULT_SETTINGS: Settings = {
   language: "de",
 };
 
+type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
+
 export function useSettings() {
   const [settings, setSettings] = useState<Settings>(() => {
     try {
@@ -26,10 +28,11 @@ export function useSettings() {
     }
   });
 
-  const saveSettings = useCallback((newSettings: Partial<Settings>) => {
+  const saveSettings = useCallback((updater: SettingsUpdater) => {
     try {
       setSettings((prev) => {
-        const updated = { ...prev, ...newSettings };
+        const patch = typeof updater === "function" ? updater(prev) : updater;
+        const updated = { ...prev, ...patch };
         localStorage.setItem("disa-ai-settings", JSON.stringify(updated));
         return updated;
       });
@@ -39,16 +42,16 @@ export function useSettings() {
   }, []);
 
   const toggleNSFWContent = useCallback(() => {
-    saveSettings({ showNSFWContent: !settings.showNSFWContent });
-  }, [saveSettings, settings.showNSFWContent]);
+    saveSettings((prev) => ({ showNSFWContent: !prev.showNSFWContent }));
+  }, [saveSettings]);
 
   const toggleAnalytics = useCallback(() => {
-    saveSettings({ enableAnalytics: !settings.enableAnalytics });
-  }, [saveSettings, settings.enableAnalytics]);
+    saveSettings((prev) => ({ enableAnalytics: !prev.enableAnalytics }));
+  }, [saveSettings]);
 
   const toggleNotifications = useCallback(() => {
-    saveSettings({ enableNotifications: !settings.enableNotifications });
-  }, [saveSettings, settings.enableNotifications]);
+    saveSettings((prev) => ({ enableNotifications: !prev.enableNotifications }));
+  }, [saveSettings]);
 
   const setTheme = useCallback(
     (theme: Settings["theme"]) => {
