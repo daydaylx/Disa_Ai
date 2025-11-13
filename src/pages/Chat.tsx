@@ -31,14 +31,17 @@ export default function Chat() {
     },
   });
 
-  const { activeConversationId, setActiveConversationId, refreshConversations } =
-    useConversationManager({
-      messages,
-      isLoading,
-      setMessages,
-      setCurrentSystemPrompt,
-      onNewConversation: () => {},
-    });
+  const {
+    activeConversationId: _activeConversationId,
+    setActiveConversationId: _setActiveConversationId,
+    refreshConversations: _refreshConversations,
+  } = useConversationManager({
+    messages,
+    isLoading,
+    setMessages,
+    setCurrentSystemPrompt,
+    onNewConversation: () => {},
+  });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
