@@ -5,16 +5,7 @@
  * Features: Sticky Header, Quick Actions, FAB, Bottom Sheet Details
  */
 
-import {
-  ChevronDown,
-  DollarSign,
-  Filter,
-  GitCompare,
-  Search,
-  Settings,
-  Star,
-  Zap,
-} from "lucide-react";
+import { ChevronDown, DollarSign, GitCompare, Search, Star, Zap } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { MODEL_POLICY } from "../../config/modelPolicy";
@@ -23,16 +14,7 @@ import { useFavoriteLists, useFavorites } from "../../contexts/FavoritesContext"
 import { useFilteredList } from "../../hooks/useFilteredList";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
-import {
-  Badge,
-  Button,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui";
+import { Badge, Button, Input } from "../ui";
 import { Card } from "../ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/Dialog";
 import { useToasts } from "../ui/toast/ToastsProvider";
@@ -410,9 +392,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   const { getFavoriteModels, favoriteCount } = useFavoriteLists();
 
   // Local state
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
-  const [showFilters, setShowFilters] = useState(false);
   const [detailsModel, setDetailsModel] = useState<EnhancedModel | null>(null);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [compareModels, setCompareModels] = useState<EnhancedModel[]>([]);
@@ -506,9 +486,6 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     modelSortFn,
   );
 
-  // Get favorites for header section
-  const favoriteModels = getFavoriteModels(enhancedModels);
-
   // Handlers
   const handleSelectModel = useCallback(
     (model: EnhancedModel) => {
@@ -575,140 +552,65 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     );
   }
 
+  import { FilterChip } from "../ui/FilterChip";
+
+  // ... (keep existing imports)
+
+  // ... (keep existing component logic)
+
   return (
     <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 border-b border-accent/30 bg-gradient-to-r from-accent/12 via-surface-glass to-transparent backdrop-blur-lg shadow-1">
-        {/* Search & Quick Actions Row */}
-        <div className="px-4 py-3">
-          <div className="flex items-center gap-3">
-            {/* Search Input */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-muted" />
-              <Input
-                placeholder="Modelle durchsuchen..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2.5"
-                variant="neo-subtle"
-              />
-            </div>
+      <div className="sticky top-0 z-40 border-b border-line bg-surface-glass/80 backdrop-blur-md">
+        <div className="p-4 space-y-3">
+          {/* Search Input */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
+            <Input
+              placeholder="Modelle durchsuchen..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-full border-transparent bg-surface-muted/70 pl-11 pr-4 py-2.5 text-base focus:bg-surface-base focus:border-accent"
+            />
+          </div>
 
-            {/* Quick Action Buttons */}
-            <Button
-              variant={filters.showFavoritesOnly ? "accent" : "ghost"}
-              size="sm"
-              className="p-2.5"
+          {/* Filter Chips */}
+          <div className="flex gap-2">
+            <FilterChip
+              selected={filters.showFavoritesOnly}
               onClick={() => dispatchFilters({ type: "toggleFavorites" })}
+              leading={<Star className="w-4 h-4" />}
             >
-              <Star className="w-4 h-4" />
-              <span className="sr-only">Favoriten</span>
-            </Button>
-
-            <Button
-              variant={showFilters ? "accent" : "ghost"}
-              size="sm"
-              className="p-2.5"
-              onClick={() => setShowFilters(!showFilters)}
+              Favoriten
+            </FilterChip>
+            <FilterChip
+              selected={filters.showFreeOnly}
+              onClick={() =>
+                dispatchFilters({ type: "setShowFreeOnly", value: !filters.showFreeOnly })
+              }
+              leading={<Zap className="w-4 h-4" />}
             >
-              <Filter className="w-4 h-4" />
-              <span className="sr-only">Filter</span>
-            </Button>
-
-            <Button variant="brand-soft" size="sm" className="p-2.5">
-              <Settings className="w-4 h-4" />
-              <span className="sr-only">Einstellungen</span>
-            </Button>
+              Kostenlos
+            </FilterChip>
+            <FilterChip
+              selected={filters.showPremiumOnly}
+              onClick={() =>
+                dispatchFilters({
+                  type: "setShowPremiumOnly",
+                  value: !filters.showPremiumOnly,
+                })
+              }
+              leading={<DollarSign className="w-4 h-4" />}
+            >
+              Premium
+            </FilterChip>
           </div>
         </div>
-
-        {/* Favorites Section */}
-        {favoriteModels.length > 0 && !filters.showFavoritesOnly && (
-          <div className="px-4 pb-3">
-            <div className="mb-2 flex items-center gap-2">
-              <Star className="h-4 w-4 text-accent" />
-              <span className="text-sm font-medium text-fg">
-                Schnellwahl ({favoriteCount.models})
-              </span>
-            </div>
-            <div
-              className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1"
-              aria-label="Bevorzugte Modelle"
-            >
-              {favoriteModels.slice(0, 8).map((model: EnhancedModel) => {
-                const isActive = selectedModels.has(model.id);
-                return (
-                  <button
-                    key={model.id}
-                    type="button"
-                    onClick={() => handleSelectModel(model)}
-                    className={`snap-start inline-flex h-8 min-w-[72px] items-center gap-1.5 rounded-lg px-3 text-xs font-medium outline-none transition-all duration-150 border border-line bg-surface-glass text-fg-muted shadow-1 backdrop-blur-sm ${
-                      isActive ? "border-accent text-accent shadow-glow-accent bg-accent/10" : ""
-                    } focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-0`}
-                  >
-                    <span className="truncate" aria-hidden={false}>
-                      {model.label}
-                    </span>
-                    {model.pricing.isFree && (
-                      <span className="text-[9px] text-emerald-400/90">free</span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Filter Controls */}
-        {showFilters && (
-          <div className="px-4 pb-3 border-t border-line">
-            <div className="flex items-center gap-4 pt-3">
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={filters.showFreeOnly}
-                  onChange={(e) =>
-                    dispatchFilters({ type: "setShowFreeOnly", value: e.target.checked })
-                  }
-                  className="h-4 w-4 rounded border border-line bg-surface-base shadow-1 accent-accent focus:outline-none focus:ring-0 focus:ring-offset-0"
-                />
-                <span className="text-sm text-fg">Nur kostenlose</span>
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={filters.showPremiumOnly}
-                  onChange={(e) =>
-                    dispatchFilters({ type: "setShowPremiumOnly", value: e.target.checked })
-                  }
-                  className="h-4 w-4 rounded border border-line bg-surface-base shadow-1 accent-accent focus:outline-none focus:ring-0 focus:ring-offset-0"
-                />
-                <span className="text-sm text-fg">Nur Premium</span>
-              </label>
-
-              <Select
-                value={filters.sortBy}
-                onValueChange={(value) =>
-                  dispatchFilters({ type: "setSortBy", value: value as SortOption })
-                }
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Sortieren nach" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="name">Name</SelectItem>
-                  <SelectItem value="performance">Performance</SelectItem>
-                  <SelectItem value="price">Preis</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Models List */}
       <div className="flex-1 overflow-auto">
+        // ... (keep existing code)
         <div className="p-4">
           {/* Results Header */}
           <div className="flex items-center justify-between mb-4">

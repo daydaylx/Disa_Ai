@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import { Card, CardDescription, CardTitle } from "../../components/ui/card";
 import { SectionCard } from "../../components/ui/SectionCard";
+import { SettingsLink } from "../../components/ui/SettingsLink";
 import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
@@ -112,54 +111,19 @@ export function SettingsOverview() {
 
       <SectionCard
         title="Einstellungen"
-        subtitle="Eine klare Übersicht über die wichtigsten Bereiche. Tippe auf eine Karte, um direkt zum Detail zu springen."
+        subtitle="Eine klare Übersicht über die wichtigsten Bereiche."
+        padding="sm"
       >
-        <div className="grid gap-3 sm:grid-cols-2">
-          {cards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <Link to={card.to} className="focus-visible:outline-none">
-                <Card
-                  key={card.id}
-                  tone="glass-primary"
-                  interactive="glow-accent"
-                  padding="md"
-                  className="h-full group"
-                  clickable
-                >
-                  <div className="flex h-full flex-col p-0">
-                    {" "}
-                    {/* Padding moved to Card */}
-                    <div className="flex flex-row items-start gap-4 p-4">
-                      <span className="grid h-10 w-10 place-content-center rounded-full border border-accent/30 bg-surface-glass text-accent shadow-1">
-                        <Icon className="h-5 w-5" aria-hidden />
-                      </span>
-                      <div className="flex flex-1 flex-col gap-2">
-                        <div className="flex items-center justify-between gap-2">
-                          <CardTitle className="text-base font-semibold text-fg">
-                            {card.title}
-                          </CardTitle>
-                          <Badge variant={card.statusVariant} size="sm">
-                            {card.statusLabel}
-                          </Badge>
-                        </div>
-                        <CardDescription className="text-sm text-fg-muted">
-                          {card.description}
-                        </CardDescription>
-                        {card.meta ? <p className="text-xs text-fg-subtle">{card.meta}</p> : null}
-                      </div>
-                    </div>
-                    <div className="mt-4 flex grow items-end justify-between border-t border-line pt-3 text-sm text-accent">
-                      <span className="font-medium">Details anzeigen</span>
-                      <span aria-hidden className="transition-transform group-hover:translate-x-1">
-                        →
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              </Link>
-            );
-          })}
+        <div className="flex flex-col">
+          {cards.map((card) => (
+            <SettingsLink
+              key={card.id}
+              to={card.to}
+              icon={<card.icon className="h-5 w-5" />}
+              title={card.title}
+              description={card.description}
+            />
+          ))}
         </div>
       </SectionCard>
 

@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 
 interface HeaderProps {
   onMenuClick?: () => void;
+  title: string;
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header({ onMenuClick, title }: HeaderProps) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
@@ -32,34 +33,19 @@ export function Header({ onMenuClick }: HeaderProps) {
   return (
     <header className="sticky top-0 z-[50] border-b border-line bg-surface-glass/80 backdrop-blur-md shadow-1 pt-safe-top">
       <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-        <div className="flex items-baseline gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.32em] text-accent">
-            Disa AI Studio
-          </span>
-          <span className="hidden text-[11px] text-fg-muted sm:inline">
-            Sicheres AI-Studio für produktive Chats
-          </span>
+        <div className="flex flex-1 items-center gap-2">
+          {/* Placeholder for Logo */}
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-white font-bold">
+            D
+          </div>
+          <span className="text-base font-semibold text-text-primary">Disa AI Studio</span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <nav className="hidden items-center gap-3 text-[10px] text-fg-muted sm:flex">
-            <a href="/" className="hover:text-accent">
-              Studio
-            </a>
-            <a href="/chat" className="hover:text-accent">
-              Chat
-            </a>
-            <a href="/models" className="hover:text-accent">
-              Modelle
-            </a>
-            <a href="/roles" className="hover:text-accent">
-              Rollen
-            </a>
-            <a href="/settings" className="hover:text-accent">
-              Einstellungen
-            </a>
-          </nav>
+        <div className="flex flex-1 justify-center">
+          <h1 className="hidden text-base font-medium text-text-primary sm:block">{title}</h1>
+        </div>
 
+        <div className="flex flex-1 items-center justify-end gap-2">
           <button
             type="button"
             onClick={toggleTheme}
@@ -76,9 +62,21 @@ export function Header({ onMenuClick }: HeaderProps) {
             className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface text-fg shadow-1 transition-all duration-1 hover:bg-surface-glass hover:shadow-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:hidden"
             aria-label="Hauptmenü öffnen"
           >
-            <span className="block h-0.5 w-4 rounded bg-current" />
-            <span className="mt-0.5 block h-0.5 w-4 rounded bg-current" />
-            <span className="mt-0.5 block h-0.5 w-4 rounded bg-current" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
           </button>
         </div>
       </div>

@@ -1,12 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 
-import { Brain, MessageSquare, Settings } from "../../lib/icons";
+import { Brain, MessageSquare, Settings, Sparkles } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
 const NAV_ITEMS = [
+  { path: "/", label: "Studio", icon: Sparkles },
   { path: "/chat", label: "Chat", icon: MessageSquare },
-  { path: "/prompts", label: "Prompts", icon: Brain },
-  { path: "/settings", label: "Settings", icon: Settings },
+  { path: "/models", label: "Modelle", icon: Brain },
+  { path: "/settings", label: "Einstellungen", icon: Settings },
 ];
 
 export function MobileBottomNav() {
@@ -19,7 +20,8 @@ export function MobileBottomNav() {
     >
       <div className="mx-auto flex max-w-2xl items-center justify-around gap-1 px-2 py-2 pb-safe-bottom">
         {NAV_ITEMS.map((item) => {
-          const isActive = location.pathname.startsWith(item.path);
+          const isActive =
+            item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path);
           const Icon = item.icon;
 
           return (

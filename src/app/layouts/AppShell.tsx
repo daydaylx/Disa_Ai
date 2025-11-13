@@ -37,13 +37,15 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  const activePath = useMemo(
-    () =>
-      NAV_ITEMS.find((item) =>
-        item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path),
-      )?.path ?? "/",
-    [location.pathname],
-  );
+  const { activePath, pageTitle } = useMemo(() => {
+    const activeItem = NAV_ITEMS.find((item) =>
+      item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path),
+    );
+    return {
+      activePath: activeItem?.path ?? "/",
+      pageTitle: activeItem?.label ?? "",
+    };
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -63,7 +65,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         Zum Hauptinhalt springen
       </a>
 
-      <Header onMenuClick={() => setIsMenuOpen(true)} />
+      <Header onMenuClick={() => setIsMenuOpen(true)} title={pageTitle} />
 
       <div className="flex flex-1">
         {!isMobile && (
