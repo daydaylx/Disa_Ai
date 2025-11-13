@@ -15,7 +15,7 @@ test.describe("Chat Flow Integration Tests", () => {
 
     // Test welcome screen is visible initially
     const welcomeText = page.getByText(
-      "Starte eine Unterhaltung oder nutze die Schnellstarts für wiederkehrende Aufgaben.",
+      "Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und ruhiges, fokussiertes Arbeiten.",
     );
     await expect(welcomeText).toBeVisible();
 

@@ -2,6 +2,7 @@ import { Button, type ButtonProps } from "./button";
 
 // Aurora Button is now a wrapper around the unified Button component
 // Provides legacy compatibility while using the new glassmorphism design system
+// Includes performance optimizations for visual effects
 
 type AuroraVariant = "solid" | "ghost" | "subtle" | "danger" | "destructive" | "accent";
 type AuroraSize = "sm" | "md" | "lg" | "icon";
@@ -29,6 +30,21 @@ export type AuroraButtonProps = Omit<ButtonProps, "variant" | "size"> & {
   size?: AuroraSize;
 };
 
-export function AuroraButton({ variant = "solid", size = "md", ...props }: AuroraButtonProps) {
-  return <Button variant={variantMap[variant]} size={sizeMap[size]} {...props} />;
+export function AuroraButton({
+  variant = "solid",
+  size = "md",
+  className,
+  ...props
+}: AuroraButtonProps) {
+  // Add performance-optimized classes by default
+  const enhancedClassName = `aurora-button-glow ${className || ""}`;
+
+  return (
+    <Button
+      variant={variantMap[variant]}
+      size={sizeMap[size]}
+      className={enhancedClassName}
+      {...props}
+    />
+  );
 }

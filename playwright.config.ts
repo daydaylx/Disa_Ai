@@ -22,12 +22,11 @@ export default defineConfig({
   webServer: {
     command: `npm run dev -- --port=${PORT}`,
     url: BASE_URL,
-    reuseExistingServer: true,
+    reuseExistingServer: false,
     timeout: 120_000, // Mehr Zeit für Server-Start
     stdout: "pipe", // Reduziert Noise
     stderr: "pipe",
   },
-
   projects: [
     {
       name: "android-chrome",

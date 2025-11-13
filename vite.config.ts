@@ -186,6 +186,7 @@ export default defineConfig(({ mode }) => {
               devOptions: {
                 enabled: true,
                 type: "module",
+                sw: "public/sw.js",
               },
             }),
           ]

@@ -1,22 +1,25 @@
 /**
- * Main CSS Entry Point - V2 Design System
+ * Main CSS Entry Point - Unified Design System
  *
  * This file establishes the foundational styles for the application.
  * 1. z-index-system.css: Manages the stacking order of all elements.
- * 2. theme.css: Defines all design tokens (colors, spacing, typography) as CSS variables.
- * 3. Tailwind CSS: Utility-first framework that consumes the tokens from theme.css.
+ * 2. unified-tokens.css: Defines all design tokens (colors, spacing, typography) as CSS variables.
+ * 3. Tailwind CSS: Utility-first framework that consumes the tokens from unified-tokens.css.
  */
 
 /* 1. Establish z-index hierarchy */
 @import "./styles/z-index-system.css";
 
-/* 2. Import the new design system tokens */
-@import "./styles/theme.css";
+/* 2. Import the unified design system tokens */
+@import "./styles/unified-tokens.css";
 
 /* 3. Inject Tailwind's base, components, and utility styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 4. Aurora-optimized styles for better performance */
+@import "./styles/aurora-optimized.css";
 
 /*
  * Base layer customizations.

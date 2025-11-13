@@ -119,7 +119,8 @@ test.describe("Models Management Flow Integration Tests", () => {
     const searchInput = page
       .locator("input[type='search']")
       .or(page.locator("input[placeholder*='search']"))
-      .or(page.locator("input[placeholder*='suchen']"));
+      .or(page.locator("input[placeholder*='suchen']"))
+      .first();
 
     if (await searchInput.isVisible()) {
       await expect(searchInput).toBeVisible();

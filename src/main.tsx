@@ -1,7 +1,8 @@
-import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
+import "./index.css"; // Consolidated CSS: unified-tokens, base, components, Tailwind
 import "./styles/base.css";
 import "./styles/components.css";
-import "./styles/tokens.css";
+import "./lib/css-feature-detection";
+import "./lib/accessibility";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -100,13 +101,22 @@ function safeInitialize(): void {
     safeWarn("[INIT] Theme controller failed:", error);
   }
 
-  // PWA Service Worker (disabled temporarily due to ES6 import issues)
-  // try {
-  //   registerSW();
-  //   safeWarn("[INIT] Service Worker registered");
-  // } catch (error) {
-  //   safeWarn("[INIT] Service Worker failed:", error);
-  // }
+  // Initialize service worker
+  if (!import.meta.env.VITE_PWA_DISABLED) {
+    // Register service worker if available
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").then(
+          (registration) => {
+            console.warn("SW registered: ", registration);
+          },
+          (registrationError) => {
+            console.warn("SW registration failed: ", registrationError);
+          },
+        );
+      });
+    }
+  }
 
   // Accessibility enforcement (non-critical)
   try {

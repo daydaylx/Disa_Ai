@@ -11,18 +11,20 @@ test.describe("Smoke Tests", () => {
 
     await expect(page).toHaveTitle(/disa ai/i);
 
-    const hasMain = await page.locator("#main").count();
-    const target = hasMain ? page.locator("#main") : page.locator("#app");
-    await expect(target).toBeVisible();
+    // Wait for the composer to be visible, which indicates the chat page is ready
+    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+    await expect(composer).toBeVisible({ timeout: 15000 });
 
-    // Wait a bit more to ensure app has fully loaded
-    await page.waitForTimeout(2000);
+    // Look for the new hero text
+    const heroHeading = page.getByRole("heading", {
+      name: "Was möchtest du heute mit Disa AI erledigen?",
+    });
+    await expect(heroHeading).toBeVisible({ timeout: 10000 });
 
-    // Look for the actual text shown when there are no messages
-    const heroTextLocator = page.getByText(
-      "Starte eine Unterhaltung oder nutze die Schnellstarts für wiederkehrende Aufgaben.",
+    const heroParagraph = page.getByText(
+      "Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und ruhiges, fokussiertes Arbeiten.",
     );
-    await expect(heroTextLocator).toBeVisible({ timeout: 10000 });
+    await expect(heroParagraph).toBeVisible({ timeout: 10000 });
 
     const discussionsHeading = page.getByRole("heading", { name: "Diskussionen" });
     await expect(discussionsHeading).toBeVisible({ timeout: 10000 });

@@ -6,7 +6,7 @@ This document describes the unified design system for the Disa AI application.
 
 The design system follows a single-source-of-truth approach:
 
-- `theme.css` - Main design tokens (colors, spacing, typography, shadows, motion)
+- `unified-tokens.css` - Main design tokens (colors, spacing, typography, shadows, motion)
 - `z-index-system.css` - Z-index hierarchy (already consolidated)
 - `index.css` - Main entry point that imports all necessary styles
 - Component-specific styles use Tailwind and CSS variables from the theme
@@ -44,14 +44,14 @@ The design system follows a single-source-of-truth approach:
 
 Gradually migrate components to use the unified design system:
 
-1. Ensure all components use variables from `theme.css`
+1. Ensure all components use variables from `unified-tokens.css`
 2. Remove references to old or duplicate tokens
 3. Consolidate component styles into Tailwind classes where possible
 4. Use CVA (Class Variance Authority) for component variants
 
 ## Best Practices
 
-- Use CSS variables from `theme.css` rather than hardcoded values
+- Use CSS variables from `unified-tokens.css` rather than hardcoded values
 - Prefer Tailwind utility classes with theme references (e.g., `bg-[var(--surface-bg)]`)
 - Use CVA for complex component variants
 - Follow consistent naming conventions

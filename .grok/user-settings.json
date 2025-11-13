@@ -1,6 +1,0 @@
-{
-  "apiKey": "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",
-  "baseURL": "https://openrouter.ai/api/v1",
-  "defaultModel": "minimax/minimax-m2",
-  "models": ["minimax/minimax-m2"]
-}

@@ -34,12 +34,6 @@ export function useConversationManager({
   const location = useLocation();
   const lastSavedSignatureRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    if (messages.length === 0) {
-      lastSavedSignatureRef.current = null;
-    }
-  }, [messages.length]);
-
   const refreshConversations = useCallback(async () => {
     try {
       const conversations = await getAllConversations();
@@ -53,6 +47,12 @@ export function useConversationManager({
       });
     }
   }, [toasts]);
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      lastSavedSignatureRef.current = null;
+    }
+  }, [messages.length]);
 
   useEffect(() => {
     const saveConversationIfNeeded = async () => {

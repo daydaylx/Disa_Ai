@@ -80,7 +80,7 @@ All components follow these principles:
 
 ### Theming
 
-All components use CSS variables defined in `src/styles/theme.css` for consistent styling.
+All components use CSS variables defined in `src/styles/unified-tokens.css` for consistent styling.
 
 - Use semantic color tokens: `--accent`, `--success`, `--warning`, etc.
 - Use spacing tokens: `--space-sm`, `--space-md`, etc.

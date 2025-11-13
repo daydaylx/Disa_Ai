@@ -110,25 +110,16 @@ Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtss
 
 Für detaillierte Informationen siehe [docs/MOBILE_NAVIGATION.md](docs/MOBILE_NAVIGATION.md).
 
-## 🧪 Spezifikationstests
-
-Neben den Unit- und E2E-Tests existieren zusätzliche Spezifikationstests, die verschiedene Aspekte der Anwendung dokumentieren und überprüfen:
-
-- **Edge-Swipe-Tests (`test_edge_swipe.md`)**: Dokumentation und Tests für die Swipe-Gesten-Implementierung
-- **Deferred Loading-Tests (`test_deferred_loading.md`)**: Spezifikationen für verzögertes Laden von Inhalten
-- **Lazy Highlighter-Tests (`test_lazy_highlighter.md`)**: Tests für verzögerte Syntax-Hervorhebung
-- **Network Timeline-Tests (`test_network_timeline.md`)**: Dokumentation der Netzwerk-Performance-Optimierungen
-
 ## 🛠️ Tech Stack
 
 | Kategorie           | Technologien & Begründung                                                                                                                                      |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Framework**       | **React 19, TypeScript 5, Vite 7**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                                         |
+| **Framework**       | **React 19.2.0, TypeScript 5.9.2, Vite 7.1.6**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                             |
 | **Styling**         | **Tailwind CSS, Radix UI, Lucide Icons**: Utility-First-CSS für schnelles Prototyping; ungestylte, barrierefreie Primitives von Radix; leichtgewichtige Icons. |
-| **State & Routing** | **React Hooks, React Router v7, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.        |
+| **State & Routing** | **React Hooks, React Router v7.9.3, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.    |
 | **PWA / Offline**   | **Vite PWA Plugin (Workbox)**: Industriestandard zur Erstellung robuster Service Worker und Offline-Fähigkeiten.                                               |
 | **Performance**     | **Virtualized Rendering**: Nachrichten-Virtualisierung für skalierbare Chat-Performance; Lazy Loading für optimierte Ladezeiten.                               |
-| **Unit-Testing**    | **Vitest, Happy DOM, MSW**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung; Mocking von Netzwerk-Anfragen für stabile Tests.                 |
+| **Unit-Testing**    | **Vitest, Happy DOM**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung; Mocking von Netzwerk-Anfragen für stabile Tests.                      |
 | **E2E-Testing**     | **Playwright, @axe-core/playwright**: Zuverlässiges Browser-Testing über mehrere Engines; integrierte Accessibility-Prüfungen.                                 |
 | **Code-Qualität**   | **ESLint, Prettier, Husky, lint-staged**: Strikte Regeln für Code-Konsistenz, die automatisch vor jedem Commit erzwungen werden.                               |
 | **Deployment**      | **Cloudflare Pages, Netlify**: Konfigurationen für beide Plattformen vorhanden, Fokus auf statisches Hosting mit CI/CD.                                        |
@@ -153,7 +144,7 @@ Die Anwendung ist als moderne Single-Page-Application (SPA) aufgebaut und folgt 
 
 ```
 src/
-├── analytics/      # Analytics und Tracking Funktionalitäten
+├── __tests__/    # Unit and integration tests
 ├── api/          # Externe API-Aufrufe (z.B. OpenRouter)
 ├── app/          # App-Setup: Router, Layouts, globale Kontexte
 ├── bootstrap/    # Initialisierungs- und Bootstrapping-Logik
@@ -170,6 +161,7 @@ src/
 ├── scripts/      # Build- und Entwicklungsskripte
 ├── services/     # Hintergrunddienste und Kapselung von Browser-APIs
 ├── state/        # Globales Zustandsmanagement (falls über Hooks hinausgehend)
+├── styles/       # Globale Styles, CSS-Variablen und Design-Tokens
 ├── test/         # Test-Utilities und Test-Setup
 ├── theme/        # Theme- und Design-System Konfigurationen
 ├── types/        # Globale TypeScript-Typdefinitionen
@@ -251,12 +243,12 @@ Die Anwendung ist als Progressive Web App konzipiert, um eine native-ähnliche E
 
 | Kategorie           | Technologien & Begründung                                                                                                                                      |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Framework**       | **React 19, TypeScript 5, Vite 7**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                                         |
+| **Framework**       | **React 19.2.0, TypeScript 5.9.2, Vite 7.1.6**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                             |
 | **Styling**         | **Tailwind CSS, Radix UI, Lucide Icons**: Utility-First-CSS für schnelles Prototyping; ungestylte, barrierefreie Primitives von Radix; leichtgewichtige Icons. |
-| **State & Routing** | **React Hooks, React Router v7, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.        |
+| **State & Routing** | **React Hooks, React Router v7.9.3, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.    |
 | **PWA / Offline**   | **Vite PWA Plugin (Workbox)**: Industriestandard zur Erstellung robuster Service Worker und Offline-Fähigkeiten.                                               |
 | **Performance**     | **Virtualized Rendering**: Nachrichten-Virtualisierung für skalierbare Chat-Performance; Lazy Loading für optimierte Ladezeiten.                               |
-| **Unit-Testing**    | **Vitest, Happy DOM, MSW**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung; Mocking von Netzwerk-Anfragen für stabile Tests.                 |
+| **Unit-Testing**    | **Vitest, Happy DOM**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung.                                                                       |
 | **E2E-Testing**     | **Playwright, @axe-core/playwright**: Zuverlässiges Browser-Testing über mehrere Engines; integrierte Accessibility-Prüfungen.                                 |
 | **Code-Qualität**   | **ESLint, Prettier, Husky, lint-staged**: Strikte Regeln für Code-Konsistenz, die automatisch vor jedem Commit erzwungen werden.                               |
 | **Deployment**      | **Cloudflare Pages, Netlify**: Konfigurationen für beide Plattformen vorhanden, Fokus auf statisches Hosting mit CI/CD.                                        |
@@ -265,7 +257,7 @@ Die Anwendung ist als Progressive Web App konzipiert, um eine native-ähnliche E
 
 ### Voraussetzungen
 
-- **Node.js**: Version `^20.14.0` (siehe `.nvmrc` und `package.json`).
+- **Node.js**: Version `22.19.0` (siehe `.nvmrc` und `package.json`).
 - **npm**: Node Package Manager (wird mit Node.js installiert).
 
 ### Installation & Start
@@ -318,16 +310,16 @@ Die Anwendung ist als Progressive Web App konzipiert, um eine native-ähnliche E
 
 Die wichtigsten Skripte aus `package.json`:
 
-| Befehl              | Beschreibung                                                                   |
-| ------------------- | ------------------------------------------------------------------------------ |
-| `npm run dev`       | Startet den Vite-Entwicklungsserver mit Hot-Reloading.                         |
-| `npm run build`     | Erstellt einen optimierten Produktions-Build im `dist`-Ordner.                 |
-| `npm run preview`   | Startet einen lokalen Server, um den Produktions-Build zu testen.              |
-| `npm run typecheck` | Überprüft das gesamte Projekt auf TypeScript-Fehler.                           |
-| `npm run lint`      | Führt ESLint aus, um Code-Stil-Probleme zu finden.                             |
-| `npm run test:unit` | Führt alle Unit-Tests mit Vitest aus.                                          |
-| `npm run test:e2e`  | Führt alle End-to-End-Tests mit Playwright aus.                                |
-| `npm run verify`    | Führt `typecheck`, `lint`, `test:unit` und `e2e` nacheinander aus (CI-Skript). |
+| Befehl              | Beschreibung                                                            |
+| ------------------- | ----------------------------------------------------------------------- |
+| `npm run dev`       | Startet den Vite-Entwicklungsserver mit Hot-Reloading.                  |
+| `npm run build`     | Erstellt einen optimierten Produktions-Build im `dist`-Ordner.          |
+| `npm run preview`   | Startet einen lokalen Server, um den Produktions-Build zu testen.       |
+| `npm run typecheck` | Überprüft das gesamte Projekt auf TypeScript-Fehler.                    |
+| `npm run lint`      | Führt ESLint aus, um Code-Stil-Probleme zu finden.                      |
+| `npm run test:unit` | Führt alle Unit-Tests mit Vitest aus.                                   |
+| `npm run test:e2e`  | Führt alle End-to-End-Tests mit Playwright aus.                         |
+| `npm run verify`    | Führt `typecheck`, `lint` und `test:unit` nacheinander aus (CI-Skript). |
 
 ## 🔐 Architektur- und Qualitätsregeln
 

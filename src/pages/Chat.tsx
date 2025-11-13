@@ -32,11 +32,7 @@ export default function Chat() {
     },
   });
 
-  const {
-    activeConversationId: _activeConversationId,
-    setActiveConversationId: _setActiveConversationId,
-    refreshConversations: _refreshConversations,
-  } = useConversationManager({
+  useConversationManager({
     messages,
     isLoading,
     setMessages,

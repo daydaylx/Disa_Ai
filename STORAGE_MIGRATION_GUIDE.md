@@ -38,7 +38,6 @@ The application maintains backward compatibility with a dual-storage approach:
 src/lib/
 ├── storage-layer.ts              # Modern IndexedDB implementation
 ├── conversation-manager-modern.ts # Modern API wrapper
-├── conversation-manager.ts       # Legacy + dual storage
 └── storage-migration.ts          # Migration utilities
 
 src/hooks/
