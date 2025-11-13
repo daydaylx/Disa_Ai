@@ -539,14 +539,27 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     setIsCompareOpen(true);
   }, [selectedModels, enhancedModels, push]);
 
+import { Skeleton } from "../ui/skeleton";
+
+// ... (keep existing imports)
+
+// ... (keep existing component logic)
+
   // Show loading state while models are being loaded
   if (isLoadingModels) {
     return (
       <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-3"></div>
-            <p className="text-fg-muted">Lade Modelle...</p>
+        <div className="p-4 space-y-4">
+          <Skeleton className="h-10 w-full rounded-full" /> {/* Search bar skeleton */}
+          <div className="flex gap-2">
+            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-[180px] w-full" /> // Model card skeleton
+            ))}
           </div>
         </div>
       </div>

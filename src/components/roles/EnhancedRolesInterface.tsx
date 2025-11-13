@@ -27,6 +27,10 @@ const CATEGORY_ORDER = [
   "Spezial",
 ];
 
+import { Skeleton } from "../ui/skeleton";
+
+// ... (keep existing imports)
+
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
@@ -55,8 +59,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     sortDirection: "asc",
   });
 
+  const [isLoadingRoles, setIsLoadingRoles] = useState(true); // New state
+
   // Convert legacy roles to enhanced roles
   const enhancedRoles = useMemo(() => {
+    // Simulate loading
+    setTimeout(() => setIsLoadingRoles(false), 500); // Set loading to false after a delay
     return roles.map(migrateRole);
   }, [roles]);
 
@@ -119,8 +127,30 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     setSelectedCategory((prev) => (prev === category ? null : category));
   }, []);
 
-  return (
-    <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
+  if (isLoadingRoles) {
+    return (
+      <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
+        <div className="p-4 space-y-4">
+          <Skeleton className="h-10 w-full rounded-full" /> {/* Search bar skeleton */}
+          <div className="flex gap-2">
+            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
+          </div>
+          <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-10 w-32 rounded-full" /> // Category pill skeleton
+            ))}
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-[180px] w-full" /> // Role card skeleton
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 border-b border-line bg-surface-glass/80 backdrop-blur-md">
         <div className="p-4 space-y-3">

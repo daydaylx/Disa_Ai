@@ -196,12 +196,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       icon: KeyRound,
       content: (
         <div className="space-y-3">
-          <Label
-            htmlFor="openrouter-key"
-            className="text-xs font-semibold uppercase tracking-[0.3em]"
-          >
-            OpenRouter Key
-          </Label>
+          <Label htmlFor="openrouter-key">OpenRouter Key</Label>
           <div className="flex items-center gap-2">
             <Input
               id="openrouter-key"
@@ -301,10 +296,9 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             </Button>
           </div>
           <Card
-            tone="neo-floating"
-            elevation="subtle"
-            intent="accent"
-            className="rounded-[var(--radius-card-inner)] border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)]/90 p-3 text-xs text-[var(--color-text-on-accent)]"
+            tone="glass-subtle"
+            padding="sm"
+            className="text-xs text-text-secondary"
           >
             <p>
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
@@ -337,40 +331,40 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       content: (
         <div className="space-y-3">
           <div className="space-y-2">
-            <Label className="text-xs font-semibold uppercase tracking-[0.3em]">Farbschema</Label>
+            <Label>Farbschema</Label>
             <p className="text-xs text-[var(--color-text-secondary)]">
               Der Dunkelmodus ist standardmäßig aktiv und kann nicht deaktiviert werden. Alle
               Oberflächen, Tokens und Kontraste sind auf die dunkle Darstellung optimiert.
             </p>
           </div>
           <Card
-            tone="neo-floating"
-            elevation="subtle"
-            className="space-y-3 border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)]"
+            tone="glass-subtle"
+            padding="md"
+            className="space-y-3"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
-                <span className="brand-chip inline-flex w-fit text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-brand-strong)]">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent">
                   Designsystem
                 </span>
-                <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                <h3 className="text-sm font-semibold text-text-primary">
                   Fluent-2 Soft-Depth · Dark
                 </h3>
-                <p className="text-xs text-[var(--color-text-secondary)]">
+                <p className="text-xs text-text-secondary">
                   Sanfte Layer, klare Typografie und performante Schatten – optimiert für geringe
                   Umgebungshelligkeit und OLED/AMOLED-Displays.
                 </p>
               </div>
-              <div className="hidden h-14 w-24 rounded-[var(--radius-card-inner)] border border-[var(--color-border-subtle)] bg-[linear-gradient(160deg,color-mix(in_srgb,var(--bg1) 95%,transparent) 0%,color-mix(in_srgb,var(--bg1) 75%,var(--bg2)) 40%,color-mix(in_srgb,var(--bg2) 80%,transparent) 100%)] sm:block" />
+              <div className="hidden h-14 w-24 rounded-lg border border-line bg-gradient-to-br from-surface-base to-surface-card sm:block" />
             </div>
-            <div className="flex flex-wrap gap-2 text-xs text-[var(--color-text-secondary)]">
+            <div className="flex flex-wrap gap-2 text-xs text-text-secondary">
               <span>Lesbarkeit 5.6 : 1</span>
               <span>Blur-frei</span>
               <span>OLED-optimiert</span>
             </div>
-            <p className="text-xs text-[var(--color-text-secondary)]">
+            <p className="text-xs text-text-secondary">
               Farb- und Tiefeneffekte respektieren automatisch deine Geräteeinstellungen wie
-              <code className="mx-1 rounded bg-[var(--surface-neumorphic-pressed)] px-1 text-[10px]">
+              <code className="mx-1 rounded bg-surface-muted px-1 text-[10px]">
                 prefers-reduced-motion
               </code>
               oder Kontrastverbesserungen.
@@ -453,30 +447,16 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 border-b border-[color-mix(in_srgb,var(--color-border-focus)_30%,transparent)] bg-gradient-to-r from-[var(--acc2)]/12 via-[var(--surface-neumorphic-floating)] to-transparent px-4 py-3 backdrop-blur-lg shadow-[var(--shadow-neumorphic-sm)]">
-        <div className="flex items-center justify-between text-sm">
-          <div className="space-y-1">
-            {section ? (
-              <Button asChild variant="ghost" size="sm" className="px-0 text-xs font-medium">
-                <Link
-                  to="/settings"
-                  className="inline-flex items-center gap-1 text-xs text-[var(--color-border-focus)]"
-                >
-                  ← Übersicht
-                </Link>
-              </Button>
-            ) : null}
-            <span className="brand-chip inline-flex w-fit items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-border-focus)]/70">
-              Kontrolle
-            </span>
-            <h1 className="text-token-h1 text-[var(--color-text-primary)] font-semibold">
-              {headerTitle}
-            </h1>
-          </div>
-          <div className="text-right text-xs text-text-muted leading-5">
-            <p>{stats.totalMessages} Nachrichten</p>
-            <p>{stats.totalConversations} Verläufe</p>
-          </div>
+      <header className="sticky top-0 z-10 border-b border-line bg-surface-glass/80 backdrop-blur-md shadow-1">
+        <div className="flex items-center gap-4 px-4 py-3">
+          {section ? (
+            <Button asChild variant="ghost" size="sm" className="px-0 text-sm">
+              <Link to="/settings" className="inline-flex items-center gap-1 text-text-secondary">
+                ← Übersicht
+              </Link>
+            </Button>
+          ) : null}
+          <h1 className="text-lg font-semibold text-text-primary">{headerTitle}</h1>
         </div>
       </header>
 
