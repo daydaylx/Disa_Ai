@@ -3,15 +3,11 @@ import React, { lazy, Suspense, useEffect, useState } from "react";
 import { useFeatureFlag } from "../../hooks/useFeatureFlags";
 import { highlightCode } from "../../lib/highlighting/lazySyntaxHighlighter";
 import { loadPrismCSS } from "../../lib/highlighting/prismTheme";
-import { Bot, Copy, RotateCcw, User } from "../../lib/icons";
+import { Copy, RotateCcw } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { loadStylesheet } from "../../lib/utils/loadStylesheet";
 import { safeWarn } from "../../lib/utils/production-logger";
 import type { ChatMessageType } from "../../types/chatMessage";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
 
 export type { ChatMessageType } from "../../types/chatMessage";
 
@@ -176,18 +172,41 @@ function CodeBlock({ children, language }: { children: string; language?: string
 }
 
 const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageProps) => {
-  const [showActions, setShowActions] = useState(false);
-
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
-  const bubbleClass = cn("max-w-[88vw]", isUser && "ml-auto", isSystem && "mx-auto max-w-[60%]");
-  const bubbleRoleClass = isSystem
-    ? "chat-bubble-system"
-    : isUser
-      ? "chat-bubble-user"
-      : "chat-bubble-assistant";
+  const widthClass = isSystem ? "max-w-[70%]" : "max-w-[88%]";
+  const bubbleAlignment = cn(
+    "flex w-full flex-col gap-2",
+    widthClass,
+    isSystem && "self-center items-center text-center",
+    isUser && "self-end items-end",
+    isAssistant && "self-start items-start",
+  );
+
+  const bubbleClass = cn(
+    "w-full rounded-3xl border border-[var(--glass-border-soft)] px-4 py-3 text-sm leading-relaxed shadow-[0_25px_45px_rgba(0,0,0,0.45)] backdrop-blur-2xl bubble-in",
+    isUser &&
+      "bg-[var(--accent)] text-[var(--text-inverted)] border-transparent shadow-[0_25px_45px_rgba(97,231,255,0.35)]",
+    isAssistant && "bg-[var(--surface-chat)] text-text-primary",
+    isSystem &&
+      "bg-[var(--surface-inline)] text-text-muted border-dashed border-[var(--glass-border-soft)]",
+  );
+
+  const timestamp = new Date(message.timestamp).toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const formattedModel = message.model?.split("/").pop();
+  const metaClass = cn(
+    "flex w-full flex-wrap items-center gap-2 text-[11px] text-text-muted",
+    isUser && "justify-end text-white/70",
+  );
+  const actionButtonClass = cn(
+    "inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--glass-border-soft)] bg-surface-inline/70 text-text-muted transition-colors hover:border-[var(--glass-border-strong)] hover:text-text-primary",
+    isUser && "border-white/30 bg-white/15 text-white/80 hover:text-white",
+  );
 
   const handleCopy = () => {
     onCopy?.(message.content);
@@ -199,117 +218,45 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
   };
 
   return (
-    <div
-      className={cn(
-        "group relative flex gap-3 px-3 py-4",
-        isUser && "flex-row-reverse",
-        isSystem && "justify-center opacity-70",
-      )}
-      data-testid="message.item"
-      onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => setShowActions(false)}
-    >
-      {/* Avatar */}
-      <div className={cn("relative flex-shrink-0", isSystem && "hidden")}>
-        <Avatar className="border-border h-9 w-9 border">
-          <AvatarFallback className={cn("bg-surface-glass text-fg")}>
-            {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-          </AvatarFallback>
-        </Avatar>
-      </div>
-
-      <div
-        className={cn(
-          "flex min-w-0 flex-1 flex-col gap-1.5",
-          isUser && "items-end",
-          isSystem && "items-center",
-        )}
-      >
-        {/* Chat Bubble */}
-        <Card
-          tone="glass-primary"
-          padding="md"
-          className={cn(
-            bubbleClass,
-            "chat-bubble",
-            bubbleRoleClass,
-            isUser
-              ? "rounded-lg border border-accent bg-glass hover:shadow-glow-accent"
-              : isAssistant
-                ? "rounded-md border border-line bg-surface text-fg hover:border-line"
-                : "rounded-md border border-dashed border-line/60 bg-transparent",
+    <div className="flex px-3 py-4" data-testid="message.item">
+      <div className={bubbleAlignment}>
+        <div className={bubbleClass}>
+          {contentContainsMarkdown(message.content) ? (
+            <MarkdownRenderer content={message.content} />
+          ) : (
+            <div className="whitespace-pre-wrap break-words leading-relaxed">{message.content}</div>
           )}
-        >
-          <div className="space-y-3 text-left">
-            {contentContainsMarkdown(message.content) ? (
-              <MarkdownRenderer content={message.content} />
-            ) : (
-              <div className="whitespace-pre-wrap break-words">{message.content}</div>
-            )}
-          </div>
-        </Card>
+        </div>
 
-        {/* Timestamp und Meta unter der Bubble */}
         {!isSystem && (
-          <div
-            className={cn(
-              "flex items-center gap-2 px-2 text-xs text-fg-muted/60",
-              isUser && "flex-row-reverse",
+          <div className={metaClass}>
+            <span>{timestamp}</span>
+            {formattedModel && (
+              <span className="uppercase tracking-[0.2em] text-[10px]">{formattedModel}</span>
             )}
-          >
-            <span className="font-medium text-fg-muted">{isUser ? "Ich" : "Assistent"}</span>
-            {message.model && (
-              <Badge
-                variant="secondary"
-                className="border-line bg-surface-card text-fg-muted text-xs"
+            {typeof message.tokens === "number" && (
+              <span>{message.tokens.toLocaleString("de-DE")} Token</span>
+            )}
+            <div className="ml-auto flex items-center gap-1">
+              <button
+                className={actionButtonClass}
+                onClick={handleCopy}
+                title="Nachricht kopieren"
+                data-testid="message.copy"
               >
-                {message.model}
-              </Badge>
-            )}
-            {message.tokens && (
-              <Badge variant="outline" className="border-line text-fg-muted text-xs">
-                {message.tokens}t
-              </Badge>
-            )}
-            <span className="text-fg-muted">
-              {new Date(message.timestamp).toLocaleTimeString("de-DE", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
-          </div>
-        )}
-
-        {/* Actions neben Timestamp */}
-        {!isSystem && showActions && (
-          <div
-            className={cn(
-              "flex items-center gap-1 px-2 opacity-0 transition-opacity duration-2 group-hover:opacity-100",
-              isUser && "flex-row-reverse",
-            )}
-          >
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-fg-muted hover:bg-surface-glass hover:text-fg"
-              onClick={handleCopy}
-              title="Nachricht kopieren"
-              data-testid="message.copy"
-            >
-              <Copy className="h-3 w-3" />
-            </Button>
-            {isAssistant && isLast && onRetry && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-fg-muted hover:bg-surface-glass hover:text-fg"
-                onClick={handleRetry}
-                title="Antwort erneut anfordern"
-                data-testid="message.retry"
-              >
-                <RotateCcw className="h-3 w-3" />
-              </Button>
-            )}
+                <Copy className="h-4 w-4" />
+              </button>
+              {isAssistant && isLast && onRetry && (
+                <button
+                  className={actionButtonClass}
+                  onClick={handleRetry}
+                  title="Antwort erneut anfordern"
+                  data-testid="message.retry"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>

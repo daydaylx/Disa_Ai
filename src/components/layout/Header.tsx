@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 
+import { Moon, Settings, Sparkles, SunMedium } from "../../lib/icons";
+import { cn } from "../../lib/utils";
+import { IconButton } from "../ui/IconButton";
+
 interface HeaderProps {
-  onMenuClick?: () => void;
   title: string;
+  subtitle?: string;
+  modelLabel?: string;
+  onOpenDrawer?: () => void;
 }
 
-export function Header({ onMenuClick, title }: HeaderProps) {
+export function Header({ title, subtitle = "Studio", modelLabel, onOpenDrawer }: HeaderProps) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
@@ -16,68 +22,58 @@ export function Header({ onMenuClick, title }: HeaderProps) {
     const initialTheme = savedTheme || systemTheme;
 
     setTheme(initialTheme);
-    updateTheme(initialTheme);
+    applyTheme(initialTheme);
   }, []);
 
-  const updateTheme = (newTheme: "dark" | "light") => {
-    document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("aurora-theme", newTheme);
+  const applyTheme = (nextTheme: "dark" | "light") => {
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    localStorage.setItem("aurora-theme", nextTheme);
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    updateTheme(newTheme);
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    applyTheme(nextTheme);
   };
 
   return (
-    <header className="sticky top-0 z-[50] border-b border-line bg-surface-glass/80 backdrop-blur-md shadow-1 pt-safe-top">
-      <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-        <div className="flex flex-1 items-center gap-2">
-          {/* Placeholder for Logo */}
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-white font-bold">
-            D
+    <header className="sticky top-0 z-[var(--z-header)] bg-[color-mix(in_srgb,var(--bg0)_92%,transparent)]/95 backdrop-blur-2xl border-b border-[var(--glass-border-soft)] pt-safe-top">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-page-padding-x py-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent)]/18 text-[var(--accent)] shadow-[0_25px_50px_rgba(97,231,255,0.35)]">
+            <Sparkles className="h-5 w-5" />
           </div>
-          <span className="text-base font-semibold text-text-primary">Disa AI Studio</span>
+          <div className="min-w-0">
+            <p className="truncate text-base font-semibold leading-tight tracking-tight">{title}</p>
+            <p className="text-[11px] uppercase tracking-[0.32em] text-text-muted">{subtitle}</p>
+          </div>
         </div>
 
-        <div className="flex flex-1 justify-center">
-          <h1 className="hidden text-base font-medium text-text-primary sm:block">{title}</h1>
-        </div>
+        {modelLabel && (
+          <div className="hidden md:flex">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--glass-border-soft)] bg-surface-inline/80 px-4 py-1 text-xs font-medium text-text-primary shadow-[0_10px_25px_rgba(0,0,0,0.45)]">
+              <span className="h-2 w-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
+              Modell · {modelLabel}
+            </span>
+          </div>
+        )}
 
-        <div className="flex flex-1 items-center justify-end gap-2">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface text-fg shadow-1 transition-all duration-1 hover:bg-surface-glass hover:shadow-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        <div className="flex flex-shrink-0 items-center gap-2">
+          <IconButton
+            variant="secondary"
+            size="md"
             aria-label={`Zum ${theme === "dark" ? "hellen" : "dunklen"} Modus wechseln`}
-            title={`Zum ${theme === "dark" ? "hellen" : "dunklen"} Modus wechseln`}
+            onClick={toggleTheme}
           >
-            {theme === "dark" ? "☀️" : "🌙"}
-          </button>
-
-          <button
-            type="button"
-            onClick={onMenuClick}
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface text-fg shadow-1 transition-all duration-1 hover:bg-surface-glass hover:shadow-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:hidden"
-            aria-label="Hauptmenü öffnen"
+            {theme === "dark" ? <SunMedium className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </IconButton>
+          <IconButton
+            aria-label="Modelle & Einstellungen öffnen"
+            onClick={onOpenDrawer}
+            className={cn("shadow-[0_25px_55px_rgba(97,231,255,0.45)]")}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </button>
+            <Settings className="h-5 w-5" />
+          </IconButton>
         </div>
       </div>
     </header>

@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { useVisualViewport } from "../../hooks/useVisualViewport";
 import { RotateCcw, Send, Square, Zap } from "../../lib/icons";
 import { cn } from "../../lib/utils";
-import { AuroraButton } from "../ui/aurora-button";
+import { IconButton } from "../ui/IconButton";
 import { Textarea } from "../ui/textarea";
 
 interface ChatComposerProps {
@@ -102,7 +102,7 @@ export function ChatComposer({
   return (
     <div
       className={cn(
-        "px-3 py-2 sm:py-3 transition-all duration-200 border-t border-line", // Added border-t and updated padding
+        "pointer-events-none sticky bottom-0 z-[var(--z-composer)] px-3 py-2 sm:py-3 transition-all duration-200",
         viewport.isKeyboardOpen
           ? "pb-[calc(0.75rem+max(env(safe-area-inset-bottom),0px))]"
           : "pb-[calc(1rem+max(env(safe-area-inset-bottom),0px))]",
@@ -114,7 +114,7 @@ export function ChatComposer({
         paddingRight: "max(env(safe-area-inset-right), 0.5rem)",
       }}
     >
-      <div className="mx-auto max-w-md space-y-3 text-fg-muted">
+      <div className="pointer-events-auto mx-auto w-full max-w-3xl space-y-3 text-fg-muted">
         {(tokenCount !== undefined || maxTokens !== undefined) && (
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
@@ -138,7 +138,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-md border border-accent bg-surface-glass p-2 shadow-1 backdrop-blur-md touch-target",
+            "flex items-end gap-3 rounded-[1.75rem] border border-[var(--glass-border-soft)] bg-[color-mix(in_srgb,#0e182a_85%,transparent)] p-3 shadow-[0_35px_65px_rgba(0,0,0,0.55)] backdrop-blur-2xl",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -156,7 +156,7 @@ export function ChatComposer({
               aria-label="Nachricht an Disa AI eingeben"
               aria-describedby="chat-composer-hint"
               className={cn(
-                "text-fg placeholder:text-fg-subtle max-h-[200px] min-h-[56px] resize-none border-0 bg-transparent px-3 py-2 text-[15px] sm:text-base leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                "text-style-body text-fg placeholder:text-fg-subtle max-h-[200px] min-h-[56px] resize-none border-0 bg-transparent px-3 py-2 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
                 isQuickstartLoading && "text-fg-muted cursor-not-allowed",
               )}
             />
@@ -164,49 +164,44 @@ export function ChatComposer({
 
           <div className="flex items-center gap-2">
             {shouldShowRetry && (
-              <AuroraButton
+              <IconButton
                 onClick={handleRetry}
-                size="icon"
-                variant="ghost"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] text-fg-muted hover:bg-surface-glass hover:text-fg hover:shadow-1 backdrop-blur-sm touch-target"
+                variant="secondary"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
-                <RotateCcw className="h-6 w-6 shadow-1" />
-              </AuroraButton>
+                <RotateCcw className="icon-std" />
+              </IconButton>
             )}
 
             {shouldShowStop && (
-              <AuroraButton
+              <IconButton
                 onClick={handleStop}
-                size="icon"
-                variant="destructive"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] touch-target"
+                variant="danger"
+                size="lg"
                 title="Ausgabe stoppen"
                 aria-label="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
-                <Square className="h-6 w-6 shadow-1" />
-              </AuroraButton>
+                <Square className="icon-std" />
+              </IconButton>
             )}
 
             {shouldShowSend && (
-              <AuroraButton
+              <IconButton
                 onClick={handleSend}
-                size="icon"
-                variant="accent"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] shadow-1 hover:shadow-2 backdrop-blur-sm touch-target"
+                size="lg"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 aria-label="Nachricht senden"
                 data-testid="composer-send"
               >
-                <Send className="h-6 w-6 shadow-1" />
-              </AuroraButton>
+                <Send className="icon-std" />
+              </IconButton>
             )}
 
             {!shouldShowRetry && !shouldShowStop && !shouldShowSend && (
-              <span className="block h-11 w-11 min-h-[44px] min-w-[44px]" aria-hidden="true" />
+              <span className="block h-12 w-12 min-h-[48px] min-w-[48px]" aria-hidden="true" />
             )}
           </div>
         </div>

@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 
 import { Badge, type BadgeProps } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import { Card } from "../../components/ui/card";
+import { GlassPanel } from "../../components/ui/GlassPanel";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { SectionCard } from "../../components/ui/SectionCard";
 import { Switch } from "../../components/ui/Switch";
 import { useToasts } from "../../components/ui/toast/ToastsProvider";
 import { useMemory } from "../../hooks/useMemory";
@@ -295,12 +294,12 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               <Sparkles className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
           </div>
-          <Card tone="glass-subtle" padding="sm" className="text-xs text-text-secondary">
+          <GlassPanel className="text-xs text-text-muted">
             <p>
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
               {stats.modelsUsed.length} Modelle
             </p>
-          </Card>
+          </GlassPanel>
         </div>
       ),
     },
@@ -333,7 +332,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               Oberflächen, Tokens und Kontraste sind auf die dunkle Darstellung optimiert.
             </p>
           </div>
-          <Card tone="glass-subtle" padding="md" className="space-y-3">
+          <GlassPanel className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent">
@@ -361,7 +360,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               </code>
               oder Kontrastverbesserungen.
             </p>
-          </Card>
+          </GlassPanel>
         </div>
       ),
     },
@@ -439,7 +438,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 border-b border-line bg-surface-glass/80 backdrop-blur-md shadow-1">
+      <header className="sticky top-0 z-10 border-b border-[var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--bg0)_92%,transparent)]/95 backdrop-blur-xl">
         <div className="flex items-center gap-4 px-4 py-3">
           {section ? (
             <Button asChild variant="ghost" size="sm" className="px-0 text-sm">
@@ -455,18 +454,18 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       <div className="space-y-6 px-4 py-4 pb-10">
         {sectionsToRender.map((config) => {
           return (
-            <SectionCard
-              key={config.id}
-              title={config.title}
-              subtitle={config.description}
-              headerActions={
+            <GlassPanel key={config.id}>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-base font-semibold text-text-primary">{config.title}</p>
+                  <p className="text-sm text-text-muted">{config.description}</p>
+                </div>
                 <Badge variant={sectionStatuses[config.id].variant} size="sm">
                   {sectionStatuses[config.id].label}
                 </Badge>
-              }
-            >
-              {config.content}
-            </SectionCard>
+              </div>
+              <div className="mt-4 space-y-4">{config.content}</div>
+            </GlassPanel>
           );
         })}
       </div>
@@ -488,16 +487,12 @@ function ToggleRow({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <Card
-      tone="neo-subtle"
-      padding="sm"
-      className="flex items-start justify-between gap-4 rounded-[var(--radius-card-inner)] p-3"
-    >
+    <GlassPanel padded={false} className="flex items-start justify-between gap-4 px-4 py-3">
       <div className="flex-1">
-        <p className="text-sm font-medium text-[var(--color-text-primary)]">{label}</p>
-        <p className="text-xs text-[var(--color-text-secondary)]">{description}</p>
+        <p className="text-sm font-medium text-text-primary">{label}</p>
+        <p className="text-xs text-text-muted">{description}</p>
       </div>
       <Switch id={id} checked={checked} onChange={onChange} aria-label={label} />
-    </Card>
+    </GlassPanel>
   );
 }

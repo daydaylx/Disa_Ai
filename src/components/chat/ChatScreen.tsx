@@ -23,13 +23,17 @@ export function ChatScreen({ messages, onSend, onRetry, onCopy, isLoading }: Cha
   }, [messages]);
 
   return (
-    <div className="flex h-full flex-col">
-      <VirtualizedMessageList
-        messages={messages}
-        onRetry={onRetry}
-        onCopy={onCopy}
-        isLoading={isLoading}
-      />
+    <div className="flex h-full flex-1 flex-col gap-4">
+      <div className="relative flex-1 overflow-hidden rounded-[2rem] border border-[var(--glass-border-soft)] bg-[color-mix(in_srgb,#060c16_88%,transparent)] shadow-[0_45px_85px_rgba(0,0,0,0.65)] backdrop-blur-2xl">
+        <VirtualizedMessageList
+          messages={messages}
+          onRetry={onRetry}
+          onCopy={onCopy}
+          isLoading={isLoading}
+          className="px-2 py-4 sm:px-4"
+        />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--bg0)] via-transparent to-transparent" />
+      </div>
 
       <ChatComposer
         value={input}

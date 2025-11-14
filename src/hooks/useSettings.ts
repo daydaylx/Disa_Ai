@@ -6,6 +6,7 @@ interface Settings {
   enableNotifications: boolean;
   theme: "light" | "dark" | "auto";
   language: string;
+  preferredModelId: string;
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -14,6 +15,7 @@ const DEFAULT_SETTINGS: Settings = {
   enableNotifications: true,
   theme: "auto",
   language: "de",
+  preferredModelId: "openai/gpt-4o-mini",
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
@@ -67,6 +69,13 @@ export function useSettings() {
     [saveSettings],
   );
 
+  const setPreferredModel = useCallback(
+    (preferredModelId: string) => {
+      saveSettings({ preferredModelId });
+    },
+    [saveSettings],
+  );
+
   return {
     settings,
     toggleNSFWContent,
@@ -75,5 +84,6 @@ export function useSettings() {
     setTheme,
     setLanguage,
     saveSettings,
+    setPreferredModel,
   };
 }

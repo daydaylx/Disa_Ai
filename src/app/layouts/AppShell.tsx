@@ -3,12 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { Header } from "../../components/layout/Header";
-import { MobileBottomNav } from "../../components/layout/MobileBottomNav";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
-import { DrawerSheet } from "../../components/ui/drawer-sheet";
-import { useIsMobile } from "../../hooks/useMediaQuery";
+import { SettingsDrawer } from "../../components/shell/SettingsDrawer";
+import { useSettings } from "../../hooks/useSettings";
 import { cn } from "../../lib/utils";
 
 interface AppShellProps {
@@ -23,6 +22,12 @@ const NAV_ITEMS = [
   { path: "/settings", label: "Einstellungen" },
 ];
 
+const MODEL_LABELS: Record<string, string> = {
+  "openai/gpt-4o-mini": "GPT‑4o mini",
+  "anthropic/claude-3.5-sonnet": "Claude 3.5 Sonnet",
+  "meta-llama/llama-3.1-405b": "Llama 3.1 405B",
+};
+
 interface AppShellLayoutProps {
   children: ReactNode;
   location: ReturnType<typeof useLocation>;
@@ -34,8 +39,9 @@ export function AppShell({ children }: AppShellProps) {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { settings, toggleAnalytics, toggleNSFWContent, toggleNotifications, setPreferredModel } =
+    useSettings();
 
   const { activePath, pageTitle } = useMemo(() => {
     const activeItem = NAV_ITEMS.find((item) =>
@@ -43,21 +49,27 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     );
     return {
       activePath: activeItem?.path ?? "/",
-      pageTitle: activeItem?.label ?? "",
+      pageTitle: activeItem?.label ?? "Studio",
     };
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!isMenuOpen) return;
+    if (!isDrawerOpen) return undefined;
     const handleKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsMenuOpen(false);
+      if (event.key === "Escape") setIsDrawerOpen(false);
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [isMenuOpen]);
+  }, [isDrawerOpen]);
+
+  const modelLabel =
+    MODEL_LABELS[settings.preferredModelId] ?? settings.preferredModelId ?? "Automatisch";
 
   return (
-    <div className="relative flex min-h-screen-dynamic flex-col bg-surface-bg text-text-primary">
+    <div
+      className="relative flex min-h-screen flex-col bg-[var(--bg0)] text-text-primary"
+      style={{ backgroundImage: "var(--bg-gradient)" }}
+    >
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent"
@@ -65,111 +77,71 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         Zum Hauptinhalt springen
       </a>
 
-      <Header onMenuClick={() => setIsMenuOpen(true)} title={pageTitle} />
+      <Header
+        onOpenDrawer={() => setIsDrawerOpen(true)}
+        title="Disa AI"
+        subtitle={pageTitle}
+        modelLabel={modelLabel}
+      />
 
-      <div className="flex flex-1">
-        {!isMobile && (
-          <aside className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] w-56 flex-shrink-0 flex-col border-r border-line-subtle bg-surface-base/98 px-3 py-4 lg:flex">
-            <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-text-secondary">
-              Navigation
-            </div>
-            <nav className="space-y-1 text-sm">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={cn(
-                    "group flex items-center gap-2 rounded-[20px] px-3 py-2.5 transition-colors duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)]",
-                    activePath === item.path
-                      ? "bg-surface-muted/90 text-text-primary shadow-surface"
-                      : "text-text-secondary hover:bg-surface-muted/70 hover:text-text-primary",
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "h-6 w-1 rounded-full transition-colors",
-                      activePath === item.path
-                        ? "bg-accent"
-                        : "bg-transparent group-hover:bg-accent/40",
-                    )}
-                  />
-                  <span>{item.label}</span>
-                </Link>
-              ))}
-            </nav>
-            <div className="mt-auto pt-4 text-[10px] text-text-tertiary">
-              <BuildInfo />
-            </div>
-          </aside>
-        )}
-
-        <main
-          id="main"
-          role="main"
-          key={location.pathname}
-          className={cn(
-            "min-h-0 flex flex-1 flex-col overflow-y-auto p-page-padding-y px-page-padding-x",
-            !isMobile && "ml-0",
-          )}
+      <div className="border-b border-[var(--glass-border-soft)] bg-surface-base/40 backdrop-blur-xl">
+        <nav
+          aria-label="Primäre Navigation"
+          className="mx-auto flex w-full max-w-5xl gap-2 overflow-x-auto px-page-padding-x py-2"
         >
-          <div className="page-stack mx-auto flex w-full max-w-4xl flex-1 flex-col">{children}</div>
-        </main>
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={`chip-${item.path}`}
+              to={item.path}
+              className={cn(
+                "shrink-0 rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors",
+                activePath === item.path
+                  ? "border-[var(--accent-border)] bg-[var(--accent-soft)] text-text-primary shadow-[0_12px_30px_rgba(97,231,255,0.3)]"
+                  : "border-[var(--glass-border-soft)] text-text-muted hover:border-[var(--glass-border-strong)] hover:text-text-primary",
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
 
-      {isMobile && (
-        <>
-          <MobileBottomNav />
+      <main
+        id="main"
+        role="main"
+        key={location.pathname}
+        className="relative flex flex-1 flex-col overflow-hidden"
+      >
+        <div className="mx-auto flex h-full w-full max-w-5xl flex-1 flex-col overflow-y-auto px-page-padding-x py-page-padding-y">
+          <div className="page-stack flex flex-1 flex-col">{children}</div>
 
-          <NetworkBanner />
-          <PWAInstallPrompt />
-          {process.env.NODE_ENV === "development" && <PWADebugInfo />}
+          <footer className="mt-8 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--glass-border-soft)] pt-4 text-[11px] text-text-muted">
+            <span>Disa AI · Build</span>
+            <BuildInfo />
+          </footer>
+        </div>
+      </main>
 
-          <DrawerSheet
-            title="Disa AI Studio"
-            isOpen={isMenuOpen}
-            onClose={() => setIsMenuOpen(false)}
-          >
-            <nav className="space-y-2">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={`drawer-${item.path}`}
-                  to={item.path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={cn(
-                    "flex items-center justify-between rounded-2xl px-4 py-3 text-sm transition-colors",
-                    activePath === item.path
-                      ? "bg-surface-muted/90 text-text-primary shadow-surface"
-                      : "text-text-secondary hover:bg-surface-muted/70 hover:text-text-primary",
-                  )}
-                >
-                  <span>{item.label}</span>
-                  {activePath === item.path && (
-                    <span className="text-[10px] text-accent">aktiv</span>
-                  )}
-                </Link>
-              ))}
-            </nav>
+      <NetworkBanner />
+      <PWAInstallPrompt />
+      {process.env.NODE_ENV === "development" && <PWADebugInfo />}
 
-            <div className="mt-6 space-y-2 text-[11px] text-text-secondary">
-              <Link
-                to="/impressum"
-                onClick={() => setIsMenuOpen(false)}
-                className="block rounded-xl px-3 py-2 hover:bg-surface-muted/70"
-              >
-                Impressum
-              </Link>
-              <Link
-                to="/datenschutz"
-                onClick={() => setIsMenuOpen(false)}
-                className="block rounded-xl px-3 py-2 hover:bg-surface-muted/70"
-              >
-                Datenschutz
-              </Link>
-            </div>
-          </DrawerSheet>
-        </>
-      )}
+      <SettingsDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        navItems={NAV_ITEMS}
+        activePath={activePath}
+        selectedModelId={settings.preferredModelId}
+        onSelectModel={(modelId) => {
+          setPreferredModel(modelId);
+          setIsDrawerOpen(false);
+        }}
+        toggles={{
+          nsfw: { value: settings.showNSFWContent, onToggle: toggleNSFWContent },
+          analytics: { value: settings.enableAnalytics, onToggle: toggleAnalytics },
+          notifications: { value: settings.enableNotifications, onToggle: toggleNotifications },
+        }}
+      />
     </div>
   );
 }

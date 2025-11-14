@@ -4,6 +4,8 @@ export * from "./button";
 export * from "./chip";
 export * from "./Dialog";
 export * from "./dropdown-menu";
+export * from "./GlassPanel";
+export * from "./IconButton";
 export * from "./input";
 export * from "./select";
 export * from "./StaticSurfaceSection";
