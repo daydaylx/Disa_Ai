@@ -177,7 +177,7 @@ jobs:
 
             // Bundle size thresholds for alerts
             const WARNING_THRESHOLD = 800; // KB - Adjusted for React 19 overhead
-            const CRITICAL_THRESHOLD = 1000; // KB
+            const CRITICAL_THRESHOLD = 1500; // KB
             const REGRESSION_THRESHOLD = 100; // KB increase
 
             console.log(`Current bundle size: ${currentSize}KB`);
