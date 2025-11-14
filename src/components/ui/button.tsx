@@ -5,39 +5,36 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[12px] font-semibold transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 backdrop-blur-[var(--backdrop-blur-medium)]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[12px] font-semibold transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--layer-bg-1)] disabled:pointer-events-none disabled:opacity-50 backdrop-blur-[var(--backdrop-blur-medium)]",
   {
     variants: {
       variant: {
-        // Primary Glassmorphism variants
         "glass-primary":
-          "border border-[var(--border-glass)] bg-[var(--surface-glass-card)] text-[var(--color-text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)] hover:border-[var(--border-glass-strong)]",
+          "border border-[color:var(--button-secondary-border)] bg-[var(--button-secondary-bg)] text-[var(--button-secondary-fg)] shadow-[var(--shadow-glass-subtle)] hover:bg-[var(--button-secondary-bg-hover)] hover:shadow-[var(--shadow-glass-medium)]",
         "glass-subtle":
-          "border border-[var(--border-glass)] bg-[var(--surface-glass-panel)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-card)]",
-        destructive:
-          "border border-transparent bg-[var(--danger)] text-[var(--accent-contrast)] shadow-[var(--shadow-glass-medium)] hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)] hover:shadow-[var(--shadow-glass-strong)]",
+          "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-inline)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--layer-glass-panel)]",
         accent:
-          "border border-transparent bg-[var(--accent)] text-[var(--accent-contrast)] shadow-[var(--shadow-glow-brand-subtle)] hover:bg-[var(--accent-strong)] hover:shadow-[var(--shadow-glow-brand)]",
+          "border border-[color:var(--button-primary-border)] bg-[var(--button-primary-bg)] text-[var(--button-primary-fg)] shadow-[var(--shadow-glow-brand-subtle)] hover:bg-[var(--button-primary-bg-hover)] hover:shadow-[var(--shadow-glow-brand)]",
+        destructive:
+          "border border-transparent bg-[var(--button-destructive-bg)] text-[var(--button-destructive-fg)] shadow-[var(--shadow-glass-medium)] hover:bg-[var(--button-destructive-hover)] hover:shadow-[var(--shadow-glass-strong)]",
         brand:
-          "border border-[var(--border-glass-accent)] bg-[var(--acc2)] text-white shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)] hover:bg-[var(--accent-strong)]",
+          "border border-[color:var(--button-primary-border)] bg-[var(--accent-surface)] text-[var(--accent)] shadow-[var(--shadow-glass-medium)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent-strong)]",
         "brand-soft":
-          "border border-[var(--acc2)]/30 bg-[var(--acc2)]/10 text-[var(--acc2)] backdrop-blur-[var(--backdrop-blur-subtle)] hover:bg-[var(--acc2)]/20 hover:shadow-[var(--shadow-glow-brand-subtle)]",
+          "border border-[color:var(--accent-border)] bg-[var(--accent-soft)] text-[var(--accent)] backdrop-blur-[var(--backdrop-blur-subtle)] hover:bg-[var(--accent-surface)] hover:shadow-[var(--shadow-glow-brand-subtle)]",
         ghost:
-          "border border-transparent bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-panel)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+          "border border-transparent bg-transparent text-[var(--button-ghost-fg)] hover:bg-[var(--button-ghost-hover)] backdrop-blur-[var(--backdrop-blur-subtle)]",
         outline:
-          "border border-[var(--border-glass)] bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-panel)] backdrop-blur-[var(--backdrop-blur-subtle)]",
-
-        // Legacy aliases (using new glassmorphism styles)
-        "neo-medium":
-          "border border-[var(--border-glass)] bg-[var(--surface-glass-card)] text-[var(--color-text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
-        "neo-subtle":
-          "border border-[var(--border-glass)] bg-[var(--surface-glass-panel)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-card)]",
+          "border border-[color:var(--glass-border-strong)] bg-transparent text-[var(--button-secondary-fg)] hover:bg-[var(--layer-glass-inline)] backdrop-blur-[var(--backdrop-blur-subtle)]",
         secondary:
-          "border border-[var(--border-glass)] bg-[var(--surface-glass-panel)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--surface-glass-card)]",
+          "border border-[color:var(--button-secondary-border)] bg-[var(--button-secondary-bg)] text-[var(--button-secondary-fg)] hover:bg-[var(--button-secondary-bg-hover)]",
         default:
-          "border border-[var(--border-glass)] bg-[var(--surface-glass-card)] text-[var(--color-text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
+          "border border-[color:var(--button-secondary-border)] bg-[var(--button-secondary-bg)] text-[var(--button-secondary-fg)] shadow-[var(--shadow-glass-subtle)] hover:bg-[var(--button-secondary-bg-hover)] hover:shadow-[var(--shadow-glass-medium)]",
         neumorphic:
-          "border border-[var(--border-glass)] bg-[var(--surface-glass-card)] text-[var(--color-text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
+          "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[var(--shadow-glass-subtle)] hover:shadow-[var(--shadow-glass-medium)]",
+        "neo-medium":
+          "border border-[color:var(--glass-border-strong)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
+        "neo-subtle":
+          "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-inline)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--layer-glass-panel)]",
       },
       size: {
         sm: "h-9 px-3 py-1.5 text-sm", // 36px height for compact controls

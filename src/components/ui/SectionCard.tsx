@@ -75,10 +75,8 @@ export function SectionCard({
           )}
         >
           <div className="flex-1 space-y-1">
-            {title && (
-              <CardTitle className="text-lg font-semibold text-text-primary">{title}</CardTitle>
-            )}
-            {subtitle && <p className="text-sm text-text-secondary">{subtitle}</p>}
+            {title && <CardTitle className="text-style-heading-sm">{title}</CardTitle>}
+            {subtitle && <p className="text-style-body text-text-secondary">{subtitle}</p>}
           </div>
 
           {headerActions && <div className="flex-shrink-0">{headerActions}</div>}
@@ -88,7 +86,7 @@ export function SectionCard({
       {/* Content */}
       <CardContent
         className={cn(
-          "space-y-4",
+          "space-y-4 text-style-body",
           padding === "sm" && "p-space-sm",
           padding === "md" && "p-space-md",
           padding === "lg" && "p-space-lg",
@@ -101,7 +99,7 @@ export function SectionCard({
       {footer && (
         <div
           className={cn(
-            "border-t border-line bg-surface-muted/30",
+            "border-t border-line bg-surface-muted/30 text-style-body",
             padding === "sm" && "p-space-sm",
             padding === "md" && "p-space-md",
             padding === "lg" && "p-space-lg",

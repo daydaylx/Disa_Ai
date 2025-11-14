@@ -5,6 +5,7 @@ import { highlightCode } from "../../lib/highlighting/lazySyntaxHighlighter";
 import { loadPrismCSS } from "../../lib/highlighting/prismTheme";
 import { Bot, Copy, RotateCcw, User } from "../../lib/icons";
 import { cn } from "../../lib/utils";
+import { loadStylesheet } from "../../lib/utils/loadStylesheet";
 import { safeWarn } from "../../lib/utils/production-logger";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -21,11 +22,59 @@ interface ChatMessageProps {
   onCopy?: (content: string) => void;
 }
 
-// Lazy-Load Markdown Components - loaded only when needed
-const ReactMarkdown = lazy(() => import("react-markdown"));
+type ReactMarkdownModule = typeof import("react-markdown");
 
-// Lazy-Load KaTeX CSS - loaded only when needed
-const loadKaTeXCSS = () => import("katex/dist/katex.min.css");
+const REACT_MARKDOWN_URL =
+  "https://esm.sh/react-markdown@10.1.0?bundle&target=es2020&deps=react@19.0.0,react-dom@19.0.0";
+
+const loadReactMarkdown = (() => {
+  let promise: Promise<ReactMarkdownModule> | null = null;
+  return () => {
+    if (!promise) {
+      promise = import(
+        /* @vite-ignore */
+        REACT_MARKDOWN_URL
+      ) as Promise<ReactMarkdownModule>;
+    }
+    return promise;
+  };
+})();
+
+// Lazy-Load Markdown Component from CDN - shipped outside main bundle
+const ReactMarkdown = lazy(async () => {
+  const module = await loadReactMarkdown();
+  return { default: module.default };
+});
+
+const KATEX_STYLESHEET_ID = "katex-stylesheet";
+const KATEX_CDN_URL = "https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css";
+const KATEX_INTEGRITY = "sha384-WcoG4HRXMzYzfCgiyfrySxx90XSl2rxY5mnVY5TwtWE6KLrArNKn0T/mOgNL0Mmi";
+
+// Lazy-load KaTeX CSS from CDN to avoid bundling heavy font assets
+const loadKaTeXCSS = (() => {
+  let cachedPromise: Promise<void> | null = null;
+
+  return () => {
+    if (cachedPromise) {
+      return cachedPromise;
+    }
+
+    cachedPromise = loadStylesheet({
+      href: KATEX_CDN_URL,
+      id: KATEX_STYLESHEET_ID,
+      crossOrigin: "anonymous",
+      integrity: KATEX_INTEGRITY,
+      referrerPolicy: "no-referrer",
+      importance: "low",
+    }).catch((error) => {
+      cachedPromise = null;
+      safeWarn("[ChatMessage] Failed to load KaTeX stylesheet", error);
+      throw error;
+    });
+
+    return cachedPromise;
+  };
+})();
 
 function MarkdownRenderer({ content }: { content: string }) {
   const [, setKaTeXCSS] = useState(false);
@@ -134,6 +183,11 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
   const isSystem = message.role === "system";
 
   const bubbleClass = cn("max-w-[88vw]", isUser && "ml-auto", isSystem && "mx-auto max-w-[60%]");
+  const bubbleRoleClass = isSystem
+    ? "chat-bubble-system"
+    : isUser
+      ? "chat-bubble-user"
+      : "chat-bubble-assistant";
 
   const handleCopy = () => {
     onCopy?.(message.content);
@@ -177,9 +231,13 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
           padding="md"
           className={cn(
             bubbleClass,
+            "chat-bubble",
+            bubbleRoleClass,
             isUser
               ? "rounded-lg border border-accent bg-glass hover:shadow-glow-accent"
-              : "rounded-md border border-line bg-surface text-fg hover:border-line",
+              : isAssistant
+                ? "rounded-md border border-line bg-surface text-fg hover:border-line"
+                : "rounded-md border border-dashed border-line/60 bg-transparent",
           )}
         >
           <div className="space-y-3 text-left">

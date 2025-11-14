@@ -94,7 +94,14 @@ export function SettingsOverview() {
   ];
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 text-style-body">
+      <div className="space-y-1">
+        <h1 className="text-style-heading-lg">Einstellungen</h1>
+        <p className="text-style-body text-text-secondary">
+          Verwalte API-Zugang, Gedächtnis, Filter und Daten zentral an einem Ort.
+        </p>
+      </div>
+
       <SectionCard
         title="Schnellstart"
         subtitle="Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis. Das dunkle Design ist bereits aktiv – passe Details jederzeit später an."
@@ -128,18 +135,24 @@ export function SettingsOverview() {
       </SectionCard>
 
       <SectionCard title="Gesten & Shortcuts" headerActions={<Waves className="h-5 w-5" />}>
-        <ul className="mt-3 space-y-2 text-sm text-fg/85">
-          <li>
-            <strong className="text-fg">Langes Drücken mit drei Fingern</strong> öffnet die
-            Einstellungen – jederzeit erreichbar.
+        <ul className="mt-3 space-y-2 text-style-body text-text-primary/85">
+          <li className="leading-[var(--line-height-body)]">
+            <span className="text-style-body-strong text-text-primary">
+              Langes Drücken mit drei Fingern
+            </span>{" "}
+            öffnet die Einstellungen – jederzeit erreichbar.
           </li>
-          <li>
-            <strong className="text-fg">Doppeltippen am oberen Rand</strong> scrollt zurück zum
-            Anfang der aktuellen Ansicht.
+          <li className="leading-[var(--line-height-body)]">
+            <span className="text-style-body-strong text-text-primary">
+              Doppeltippen am oberen Rand
+            </span>{" "}
+            scrollt zurück zum Anfang der aktuellen Ansicht.
           </li>
-          <li>
-            <strong className="text-fg">Swipe nach oben mit drei Fingern</strong> wechselt das Theme
-            – perfekt zum schnellen Check.
+          <li className="leading-[var(--line-height-body)]">
+            <span className="text-style-body-strong text-text-primary">
+              Swipe nach oben mit drei Fingern
+            </span>{" "}
+            wechselt das Theme – perfekt zum schnellen Check.
           </li>
         </ul>
       </SectionCard>

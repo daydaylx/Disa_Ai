@@ -15,15 +15,15 @@ export function SettingsLink({ icon, title, description, className, ...props }: 
   return (
     <NavLink
       className={cn(
-        "flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-surface-muted/70",
+        "flex items-center gap-4 rounded-lg p-3 text-style-body transition-colors hover:bg-surface-muted/70",
         className,
       )}
       {...props}
     >
       <div className="flex-shrink-0 text-accent">{icon}</div>
       <div className="flex-1">
-        <div className="font-medium text-text-primary">{title}</div>
-        <p className="text-sm text-text-secondary">{description}</p>
+        <div className="text-style-body-strong text-text-primary">{title}</div>
+        <p className="text-style-caption text-text-secondary">{description}</p>
       </div>
       <ChevronRight className="h-5 w-5 flex-shrink-0 text-text-tertiary" />
     </NavLink>

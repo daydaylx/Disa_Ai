@@ -113,7 +113,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             !isMobile && "ml-0",
           )}
         >
-          <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col">{children}</div>
+          <div className="page-stack mx-auto flex w-full max-w-4xl flex-1 flex-col">{children}</div>
         </main>
       </div>
 
