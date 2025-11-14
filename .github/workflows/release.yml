@@ -191,7 +191,7 @@ jobs:
     name: "Deploy to Cloudflare Pages"
     runs-on: ubuntu-latest
     needs: [release]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.CLOUDFLARE_API_TOKEN != ''
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v5
@@ -216,3 +216,13 @@ jobs:
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
           directory: "dist"
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-cloudflare-skip:
+    name: "Skip Cloudflare Pages Deployment"
+    runs-on: ubuntu-latest
+    needs: [release]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.CLOUDFLARE_API_TOKEN == ''
+    steps:
+      - name: "Cloudflare Production Deployment Skipped"
+        run: |
+          echo "Cloudflare Pages production deployment skipped because CLOUDFLARE_API_TOKEN is not configured." | tee -a $GITHUB_STEP_SUMMARY

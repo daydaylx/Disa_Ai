@@ -200,7 +200,7 @@ jobs:
     name: "Preview Deploy to Cloudflare Pages"
     runs-on: ubuntu-latest
     needs: [build-and-budget]
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && secrets.CLOUDFLARE_API_TOKEN != ''
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v5
@@ -225,3 +225,13 @@ jobs:
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
           directory: "dist"
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  preview-cloudflare-skip:
+    name: "Skip Cloudflare Pages Preview"
+    runs-on: ubuntu-latest
+    needs: [build-and-budget]
+    if: github.event_name == 'pull_request' && secrets.CLOUDFLARE_API_TOKEN == ''
+    steps:
+      - name: "Cloudflare Preview Skipped"
+        run: |
+          echo "Cloudflare Pages preview deployment skipped because CLOUDFLARE_API_TOKEN is not configured." | tee -a $GITHUB_STEP_SUMMARY
