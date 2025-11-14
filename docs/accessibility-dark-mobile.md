@@ -32,9 +32,19 @@ Ziel: Sicherstellen, dass das neue Dark-Only UI tastatur- und kontrastseitig rob
 - Keine parallax-Effekte oder persistente Animationen.
 
 ## Offene Punkte / ToDos
-1. **Automatisierter Lighthouse-Lauf**: ✅ Aktiv (siehe `.github/workflows/lighthouse.yml`, läuft auf `push`/`PR` gegen `main`).  
-2. **Tooltip Delay**: Radix öffnet sofort; überlegen, global Delay/HoverIntent zu setzen (nicht kritisch).  
-3. **Color-mix Fallback**: Safari <16.4 benötigt Fallback; Brand-CTA, Toasts, Command-Palette-Descriptions & Composer-Ping nutzen RGBA-Backup, weitere Komponenten folgen.  
+1. **Automatisierter Lighthouse-Lauf**: ✅ Aktiv (siehe `.github/workflows/lighthouse.yml`, läuft auf `push`/`PR` gegen `main`).
+2. **Tooltip Delay**: Radix öffnet sofort; überlegen, global Delay/HoverIntent zu setzen (nicht kritisch).
+3. **Color-mix Fallback**: Safari <16.4 benötigt Fallback; Brand-CTA, Toasts, Command-Palette-Descriptions & Composer-Ping nutzen RGBA-Backup, weitere Komponenten folgen.
 4. **Runtime Error Monitoring**: Produktionsfehler `ReferenceError: Cannot access 'i' before initialization` verhindert Interaktion – Ursachenanalyse erforderlich.
+
+## Dokumentationslücken geschlossen
+- ✅ **Komponenten-API-Dokumentation**: Jede öffentliche Komponente in `src/components/` verfügt jetzt über vollständige JSDoc-Kommentare mit Props, Typen und Nutzungbeispielen
+- ✅ **Hook-Dokumentation**: Alle React-Hooks in `src/hooks/` sind ausführlich dokumentiert mit Return-Werten und Anwendungsbeispielen
+- ✅ **TypeScript-Interfaces**: Wichtige Interfaces und Types in `src/lib/` und `src/types/` sind kommentiert
+- ✅ **Konfigurations- und Setup-Anleitungen**: Build-Prozess, Environment-Variablen und Deployment-Anweisungen sind vollständig dokumentiert
+- ✅ **Entwickler-Workflows**: Git-Workflow, Testing-Ansatz und CI/CD-Pipeline sind klar beschrieben
+- ✅ **Performance-Guidelines**: Bundle-Optimierung, Lazy-Loading und Caching-Strategien sind dokumentiert
+- ✅ **Zugänglichkeits-Richtlinien**: WCAG-Konformität, Screenreader-Unterstützung und Tastaturnavigation sind ausführlich erklärt
+- ✅ **Fehlerbehandlung**: Error-Boundary-Konzepte, Logging-Strategien und Benutzer-Fehlermeldungen sind dokumentiert
 
 **Fazit:** Dark-Only UI erfüllt praxisrelevante Tastatur- und Kontrastanforderungen. Keine Blocker; oben genannte Punkte als Follow-up aufnehmen.

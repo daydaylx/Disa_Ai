@@ -1,3 +1,18 @@
+/**
+ * Model Fallback Strategy Tests
+ *
+ * Diese Test-Suite überprüft die Resilienz des Modell-Katalog-Systems
+ * bei verschiedenen Fehlerszenarien wie Netzwerkausfällen, leeren
+ * API-Antworten oder fehlenden Konfigurationsdateien.
+ *
+ * Test-Szenarien:
+ * - Styles.json erfolgreich geladen
+ * - Styles.json fehlgeschlagen, Fallback auf API
+ * - Leere API-Antwort, Notfall-Fallback aktiviert
+ * - Netzwerk-Timeouts werden gracefully behandelt
+ * - Fehlformatierte Styles.json wird robust verarbeitet
+ */
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { loadModelCatalog } from "../config/models";
@@ -12,13 +27,34 @@ vi.mock("../services/openrouter", () => ({
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
+/**
+ * Haupt-Test-Suite für das Modell-Fallback-System
+ *
+ * Testet die mehrschichtige Fallback-Strategie des Modell-Katalogs,
+ * die sicherstellt, dass das System immer brauchbare Modelle bereitstellt,
+ * selbst wenn externe Ressourcen ausfallen.
+ */
 describe("Model Fallback Strategy", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockFetch.mockClear();
   });
 
+  /**
+   * Testet die mehrschichtige Fallback-Logik
+   *
+   * Prioritäten:
+   * 1. Styles.json (lokal oder remote)
+   * 2. API-Antwort von OpenRouter
+   * 3. Emergency-Fallback (harte Kodierung)
+   */
   describe("Multi-layer fallback scenarios", () => {
+    /**
+     * Test: Styles.json erfolgreich laden
+     *
+     * Erwartet: Das System nutzt die in styles.json definierten Modelle
+     * und gibt sie korrekt zurück
+     */
     it("should use styles.json when available", async () => {
       // Mock successful styles.json fetch
       mockFetch.mockResolvedValueOnce({
@@ -62,6 +98,12 @@ describe("Model Fallback Strategy", () => {
       expect(models.map((m) => m.id)).toContain("qwen/qwen-2.5-72b-instruct:free");
     });
 
+    /**
+     * Test: Intelligenter Fallback bei styles.json-Fehlschlag
+     *
+     * Wenn styles.json nicht verfügbar ist, sollte das System intelligente
+     * Fallback-Logik verwenden, um passende Modelle aus der API-Antwort auszuwählen
+     */
     it("should use intelligent fallback when styles.json fails", async () => {
       // Mock failed styles.json fetch
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
@@ -105,6 +147,13 @@ describe("Model Fallback Strategy", () => {
       expect(hasLlama || hasMistral).toBe(true);
     });
 
+    /**
+     * Test: Statischer Notfall-Fallback bei komplettem Ausfall
+     *
+     * Wenn sowohl styles.json als auch die API fehlschlagen,
+     * sollte das System auf harte-kodierte Emergency-Fallback-Modelle
+     * zurückgreifen
+     */
     it("should use static fallback when both styles.json and API fail", async () => {
       // Mock failed styles.json fetch
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
@@ -162,6 +211,12 @@ describe("Model Fallback Strategy", () => {
       expect(hasLlamaMatch).toBe(true);
     });
 
+    /**
+     * Test: Notfall-Fallback bei leerer API-Antwort
+     *
+     * Sicherstellt, dass das System immer brauchbare Modelle bereitstellt,
+     * selbst wenn die API eine leere Antwort liefert
+     */
     it("should provide meaningful fallback even with empty API response", async () => {
       // Mock failed styles.json
       mockFetch.mockRejectedValueOnce(new Error("styles.json not found"));
@@ -185,7 +240,19 @@ describe("Model Fallback Strategy", () => {
     });
   });
 
+  /**
+   * Testet Randfälle und Resilienz-Szenarien
+   *
+   * Diese Tests überprüfen, ob das System robust mit unerwarteten
+   * oder fehlerhaften Eingaben umgeht
+   */
   describe("Resilience edge cases", () => {
+    /**
+     * Test: Fehlformatierte styles.json robust verarbeiten
+     *
+     * Stellt sicher, dass fehlerhafte JSON-Daten nicht zum Absturz
+     * des Systems führen, sondern ein Fallback ausgelöst wird
+     */
     it("should handle malformed styles.json gracefully", async () => {
       // Mock malformed styles.json
       mockFetch.mockResolvedValueOnce({
@@ -211,6 +278,12 @@ describe("Model Fallback Strategy", () => {
       expect(models.length).toBeGreaterThan(0);
     });
 
+    /**
+     * Test: Netzwerk-Timeouts robust behandeln
+     *
+     * Überprüft, ob das System mit Netzwerk-Timeouts umgehen kann,
+     * ohne dass die Anwendung hängt oder abstürzt
+     */
     it("should handle network timeouts gracefully", async () => {
       // Mock timeout for styles.json
       mockFetch.mockImplementationOnce(

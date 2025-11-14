@@ -221,6 +221,52 @@ export default defineConfig(({ mode }) => {
       ...(isProduction && {
         sourcemap: true, // Kleinere Builds in Production
         reportCompressedSize: false, // Schnellere Builds
+        // Aggressive optimization settings
+        rollupOptions: {
+          output: {
+            // Optimize chunk loading
+            manualChunks: (id) => {
+              // Separate critical path from non-critical
+              if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+                return "react-vendor";
+              }
+              if (id.includes("node_modules/@radix-ui/")) {
+                return "radix-ui";
+              }
+              if (id.includes("node_modules/prismjs/")) {
+                return "prism";
+              }
+              if (id.includes("node_modules/katex/")) {
+                return "katex";
+              }
+              // Group analytics and monitoring separately
+              if (id.includes("node_modules/@sentry/") || id.includes("node_modules/posthog")) {
+                return "analytics-vendor";
+              }
+              // Group form libraries
+              if (
+                id.includes("node_modules/react-hook-form") ||
+                id.includes("node_modules/@hookform/")
+              ) {
+                return "forms-vendor";
+              }
+              // Group small utilities
+              if (
+                id.includes("node_modules/clsx") ||
+                id.includes("node_modules/class-variance-authority") ||
+                id.includes("node_modules/tailwind-merge") ||
+                id.includes("node_modules/zod") ||
+                id.includes("node_modules/nanoid")
+              ) {
+                return "utils-vendor";
+              }
+              // Main vendor chunk for everything else
+              if (id.includes("node_modules/")) {
+                return "main-vendor";
+              }
+            },
+          },
+        },
       }),
       // Additional performance optimizations for main thread
       modulePreload: {
@@ -275,6 +321,27 @@ export default defineConfig(({ mode }) => {
               ) {
                 return "utils";
               }
+
+              // Split large vendor bundles for better caching
+              if (id.includes("@sentry/")) {
+                return "sentry-vendor";
+              }
+              if (id.includes("@radix-ui/primitives")) {
+                return "radix-primitives";
+              }
+              if (id.includes("@hookform/")) {
+                return "hookform-vendor";
+              }
+              if (id.includes("@tanstack/")) {
+                return "tanstack-vendor";
+              }
+              if (id.includes("@openrouter/")) {
+                return "openrouter-vendor";
+              }
+              if (id.includes("@sentry/") || id.includes("@rollbar/")) {
+                return "monitoring-vendor";
+              }
+
               return "vendor";
             }
           },
