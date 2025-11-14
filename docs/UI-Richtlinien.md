@@ -362,6 +362,7 @@ xl: 1280px  /* Große Desktops */
 
 ### 5.2 Safe-Area-Insets
 
+{% raw %}
 ```tsx
 // Bottom-Nav
 <nav className="pb-[max(env(safe-area-inset-bottom),0.35rem)]">
@@ -379,9 +380,11 @@ xl: 1280px  /* Große Desktops */
   ...
 </div>
 ```
+{% endraw %}
 
 ### 5.3 Viewport-Handling
 
+{% raw %}
 ```tsx
 // Für iOS Keyboard
 const viewport = useVisualViewport();
@@ -396,6 +399,7 @@ const viewport = useVisualViewport();
   ...
 </div>
 ```
+{% endraw %}
 
 ## 6. Accessibility (A11y)
 
