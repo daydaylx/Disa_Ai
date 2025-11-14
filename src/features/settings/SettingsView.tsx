@@ -295,11 +295,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               <Sparkles className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
           </div>
-          <Card
-            tone="glass-subtle"
-            padding="sm"
-            className="text-xs text-text-secondary"
-          >
+          <Card tone="glass-subtle" padding="sm" className="text-xs text-text-secondary">
             <p>
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
               {stats.modelsUsed.length} Modelle
@@ -337,11 +333,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               Oberflächen, Tokens und Kontraste sind auf die dunkle Darstellung optimiert.
             </p>
           </div>
-          <Card
-            tone="glass-subtle"
-            padding="md"
-            className="space-y-3"
-          >
+          <Card tone="glass-subtle" padding="md" className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent">
