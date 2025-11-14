@@ -539,11 +539,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     setIsCompareOpen(true);
   }, [selectedModels, enhancedModels, push]);
 
-import { Skeleton } from "../ui/skeleton";
+  import { Skeleton } from "../ui/skeleton";
 
-// ... (keep existing imports)
+  // ... (keep existing imports)
 
-// ... (keep existing component logic)
+  // ... (keep existing component logic)
 
   // Show loading state while models are being loaded
   if (isLoadingModels) {

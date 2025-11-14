@@ -76,9 +76,7 @@ export function SectionCard({
         >
           <div className="flex-1 space-y-1">
             {title && (
-              <CardTitle className="text-lg font-semibold text-text-primary">
-                {title}
-              </CardTitle>
+              <CardTitle className="text-lg font-semibold text-text-primary">{title}</CardTitle>
             )}
             {subtitle && <p className="text-sm text-text-secondary">{subtitle}</p>}
           </div>
