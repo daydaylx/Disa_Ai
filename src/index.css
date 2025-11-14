@@ -41,6 +41,7 @@
   }
 
   /* Ensure the root element takes up at least the full viewport height */
+  /* stylelint-disable-next-line selector-max-id */
   #root {
     min-height: 100dvh;
     position: relative;
