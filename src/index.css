@@ -13,13 +13,13 @@
 /* 2. Import the unified design system tokens */
 @import "./styles/unified-tokens.css";
 
-/* 3. Inject Tailwind's base, components, and utility styles */
+/* 3. Aurora-optimized styles for better performance */
+@import "./styles/aurora-optimized.css";
+
+/* 4. Inject Tailwind's base, components, and utility styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* 4. Aurora-optimized styles for better performance */
-@import "./styles/aurora-optimized.css";
 
 /*
  * Base layer customizations.
