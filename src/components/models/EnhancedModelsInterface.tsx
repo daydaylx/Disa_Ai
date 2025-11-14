@@ -18,6 +18,7 @@ import { Badge, Button, Input } from "../ui";
 import { Card } from "../ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/Dialog";
 import { FilterChip } from "../ui/FilterChip";
+import { Skeleton } from "../ui/skeleton";
 import { useToasts } from "../ui/toast/ToastsProvider";
 import { ModelComparisonTable } from "./ModelComparisonTable";
 
@@ -539,12 +540,6 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     setIsCompareOpen(true);
   }, [selectedModels, enhancedModels, push]);
 
-import { Skeleton } from "../ui/skeleton";
-
-// ... (keep existing imports)
-
-// ... (keep existing component logic)
-
   // Show loading state while models are being loaded
   if (isLoadingModels) {
     return (
@@ -558,7 +553,7 @@ import { Skeleton } from "../ui/skeleton";
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-[180px] w-full" /> // Model card skeleton
+              <Skeleton key={i} className="h-[180px] w-full" />
             ))}
           </div>
         </div>
