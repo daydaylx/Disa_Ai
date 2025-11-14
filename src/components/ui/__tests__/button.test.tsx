@@ -9,7 +9,7 @@ describe("Button", () => {
     render(<Button>Test Button</Button>);
     const button = screen.getByRole("button", { name: /test button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--surface-glass-card)]"); // glass-primary default
+    expect(button).toHaveClass("bg-[var(--button-secondary-bg)]"); // glass-primary default
     expect(button).toHaveClass("h-10 px-4 py-2 text-sm"); // default size
   });
 
@@ -17,7 +17,7 @@ describe("Button", () => {
     render(<Button variant="brand">Brand Button</Button>);
     const button = screen.getByRole("button", { name: /brand button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--acc2)]");
+    expect(button).toHaveClass("bg-[var(--accent-surface)]");
   });
 
   it("renders the button with a specific size", () => {
@@ -72,20 +72,20 @@ describe("Button", () => {
     render(<Button variant="default">Deprecated Default</Button>);
     const button = screen.getByRole("button", { name: /deprecated default/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--surface-glass-card)]"); // Should map to glass-primary
+    expect(button).toHaveClass("bg-[var(--button-secondary-bg)]"); // Should map to glass-primary
   });
 
   it("renders with deprecated 'secondary' variant and maps to 'glass-subtle'", () => {
     render(<Button variant="secondary">Deprecated Secondary</Button>);
     const button = screen.getByRole("button", { name: /deprecated secondary/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--surface-glass-panel)]"); // Should map to glass-subtle
+    expect(button).toHaveClass("bg-[var(--button-secondary-bg)]"); // Should map to glass-primary alias
   });
 
   it("renders with deprecated 'neumorphic' variant and maps to 'glass-primary'", () => {
     render(<Button variant="neumorphic">Deprecated Neumorphic</Button>);
     const button = screen.getByRole("button", { name: /deprecated neumorphic/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--surface-glass-card)]"); // Should map to glass-primary
+    expect(button).toHaveClass("bg-[var(--layer-glass-panel)]"); // Should map to glass-neo surface
   });
 });

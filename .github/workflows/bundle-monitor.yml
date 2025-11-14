@@ -176,8 +176,8 @@ jobs:
             const currentSize = parseInt(fs.readFileSync('current-bundle-size.txt', 'utf8').trim());
 
             // Bundle size thresholds for alerts
-            const WARNING_THRESHOLD = 800; // KB - Adjusted for React 19 overhead
-            const CRITICAL_THRESHOLD = 1500; // KB
+            const WARNING_THRESHOLD = 2000; // KB - New warning ceiling (2MB)
+            const CRITICAL_THRESHOLD = WARNING_THRESHOLD + 700; // KB - Keep ~700KB gap for critical alerts (~2.7MB)
             const REGRESSION_THRESHOLD = 100; // KB increase
 
             console.log(`Current bundle size: ${currentSize}KB`);

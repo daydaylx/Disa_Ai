@@ -62,7 +62,7 @@ const loadKaTeXCSS = (() => {
       integrity: KATEX_INTEGRITY,
       referrerPolicy: "no-referrer",
       importance: "low",
-    }).catch((error) => {
+    }).catch((error: unknown) => {
       cachedPromise = null;
       safeWarn("[ChatMessage] Failed to load KaTeX stylesheet", error);
       throw error;
