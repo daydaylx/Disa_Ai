@@ -160,11 +160,7 @@
     --touch-relaxed: 56px;
 
     /* Aurora Signature Gradient (overlay layer) - Maintaining original */
-    --grad-aurora:
-      radial-gradient(1200px 600px at 8% -10%, hsl(var(--brand-1) / 0.9) 0%, transparent 35%),
-      radial-gradient(900px 500px at 100% 0%, hsl(var(--brand-2) / 0.85) 0%, transparent 42%),
-      radial-gradient(900px 600px at 70% 100%, hsl(var(--brand-3) / 0.75) 0%, transparent 50%),
-      radial-gradient(700px 400px at 10% 100%, hsl(var(--brand-4) / 0.7) 0%, transparent 55%);
+    --grad-aurora: radial-gradient(1200px 600px at 8% -10%, hsl(var(--brand-1) / 0.9) 0%, transparent 35%), radial-gradient(900px 500px at 100% 0%, hsl(var(--brand-2) / 0.85) 0%, transparent 42%), radial-gradient(900px 600px at 70% 100%, hsl(var(--brand-3) / 0.75) 0%, transparent 50%), radial-gradient(700px 400px at 10% 100%, hsl(var(--brand-4) / 0.7) 0%, transparent 55%);
 
     /* Fallbacks for modern CSS features */
     --fallback-accent-glow: rgba(139, 92, 246, 0.35); /* Fallback for accent glow */
@@ -173,12 +169,8 @@
     --fallback-error-glow: rgba(239, 68, 68, 0.25); /* Fallback for error glow */
 
     /* Typography - Adding from theme */
-    --font-family-sans:
-      "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-      Arial, "Noto Sans", sans-serif;
-    --font-family-mono:
-      "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-      "Courier New", monospace;
+    --font-family-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    --font-family-mono: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     /* Motion - Adding from theme */
     --motion-duration-1: 120ms;
@@ -257,10 +249,7 @@
   /* Selection color - from theme */
   ::selection {
     background-color: color-mix(in srgb, var(--accent) 30%, transparent);
-    background-color: var(
-      --fallback-accent-selection,
-      color-mix(in srgb, var(--accent) 30%, transparent)
-    ); /* Fallback variable */
+    background-color: var(--fallback-accent-selection, color-mix(in srgb, var(--accent) 30%, transparent)); /* Fallback variable */
     color: var(--fg);
   }
 }
@@ -281,10 +270,7 @@
 
 /* Additional fallback styles for specific components */
 .supports-no-backdrop-filter .backdrop-blur-lg {
-  background-color: var(
-    --surface-overlay,
-    rgba(255, 255, 255, 0.1)
-  ); /* More opaque background when blur isn't available */
+  background-color: var(--surface-overlay, rgba(255, 255, 255, 0.1)); /* More opaque background when blur isn't available */
 }
 
 /* Wave animation for skeleton screens */
@@ -298,12 +284,7 @@
 }
 
 .animate-wave {
-  background: linear-gradient(
-    90deg,
-    var(--surface-base) 0,
-    var(--surface-card) 40px,
-    var(--surface-base) 80px
-  );
+  background: linear-gradient(90deg, var(--surface-base) 0, var(--surface-card) 40px, var(--surface-base) 80px);
   background-size: 200px 100%;
   animation: wave 1.6s linear infinite;
 }

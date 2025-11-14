@@ -6,12 +6,7 @@
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--brand-1) / 0.1) 0%,
-      hsl(var(--brand-2) / 0.08) 30%,
-      hsl(var(--bg0) / 0.8) 70%
-    );
+    background: linear-gradient(135deg, hsl(var(--brand-1) / 0.1) 0%, hsl(var(--brand-2) / 0.08) 30%, hsl(var(--bg0) / 0.8) 70%);
   }
 
   /* Only include the Aurora::before pseudo-element for devices that support it */
@@ -21,11 +16,7 @@
       position: absolute;
       inset: 0;
       /* Simplified gradient - much less performance intensive */
-      background: radial-gradient(
-        1200px 600px at 8% -10%,
-        hsl(var(--brand-1) / 0.6) 0%,
-        transparent 40%
-      );
+      background: radial-gradient(1200px 600px at 8% -10%, hsl(var(--brand-1) / 0.6) 0%, transparent 40%);
       opacity: 0.65;
       z-index: -1;
       pointer-events: none;
@@ -58,9 +49,7 @@
   /* Apply optimizations only on supported devices */
   @supports (animation: aurora-flow-optimized 10s ease infinite) {
     .aurora-animated .brand-aurora::before {
-      animation:
-        aurora-flow-optimized 25s ease-in-out infinite,
-        aurora-glow-optimized 12s ease-in-out infinite;
+      animation: aurora-flow-optimized 25s ease-in-out infinite, aurora-glow-optimized 12s ease-in-out infinite;
     }
   }
 
@@ -68,12 +57,7 @@
   .aurora-shimmer {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(
-      90deg,
-      var(--surface-base) 0%,
-      var(--surface-card) 50%,
-      var(--surface-base) 100%
-    );
+    background: linear-gradient(90deg, var(--surface-base) 0%, var(--surface-card) 50%, var(--surface-base) 100%);
     background-size: 200% 100%;
     animation: shimmer-sweep 2s ease-in-out infinite;
   }
@@ -108,28 +92,19 @@
   /* Optimized button glow - using box-shadow instead of complex gradients */
   .aurora-button-glow {
     position: relative;
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     will-change: transform, box-shadow;
   }
 
   .aurora-button-glow:hover {
     transform: translateY(-1px);
-    box-shadow:
-      0 4px 12px hsl(var(--brand-2) / 0.25),
-      0 0 16px hsl(var(--brand-1) / 0.2);
+    box-shadow: 0 4px 12px hsl(var(--brand-2) / 0.25), 0 0 16px hsl(var(--brand-1) / 0.2);
   }
 
   /* Mobile-optimized Aurora Hero - simplified version */
   .aurora-hero-optimized {
     position: relative;
-    background: radial-gradient(
-      ellipse at center top,
-      hsl(var(--brand-1) / 0.12) 0%,
-      hsl(var(--brand-2) / 0.08) 40%,
-      hsl(var(--bg0)) 70%
-    );
+    background: radial-gradient(ellipse at center top, hsl(var(--brand-1) / 0.12) 0%, hsl(var(--brand-2) / 0.08) 40%, hsl(var(--bg0)) 70%);
     min-height: 60vh;
     display: flex;
     align-items: center;
@@ -164,19 +139,13 @@
     border: 1px solid hsl(var(--brand-4) / 0.12);
     backdrop-filter: blur(12px);
     /* Use simpler shadows and transitions */
-    box-shadow:
-      0 10px 30px hsl(var(--bg0) / 0.25),
-      0 4px 12px hsl(var(--brand-2) / 0.08);
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px hsl(var(--bg0) / 0.25), 0 4px 12px hsl(var(--brand-2) / 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .aurora-card-optimized:hover {
     transform: translateY(-3px);
-    box-shadow:
-      0 16px 40px hsl(var(--bg0) / 0.3),
-      0 8px 20px hsl(var(--brand-2) / 0.12);
+    box-shadow: 0 16px 40px hsl(var(--bg0) / 0.3), 0 8px 20px hsl(var(--brand-2) / 0.12);
   }
 
   /* Reduced motion support for animations */
