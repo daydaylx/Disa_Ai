@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 export interface QuickstartAction {
   id: string;
   title: string;
@@ -16,24 +14,19 @@ export interface QuickstartAction {
   tags?: string[];
 }
 
-// Validation schema
-const quickstartSchema = z.object({
-  id: z.string().min(1),
-  title: z.string().min(1),
-  subtitle: z.string().min(1),
-  gradient: z.string().min(1),
-  glow: z.string().optional(),
-  icon: z.string().optional(),
-  tone: z.enum(["warm", "cool", "fresh", "sunset", "violet", "default"] as const).optional(),
-  flowId: z.string().min(1),
-  autosend: z.boolean(),
-  persona: z.string().optional(),
-  model: z.string().optional(),
-  prompt: z.string().min(1),
-  tags: z.array(z.string()).optional(),
-});
+const QUICKSTART_TONES = new Set(["warm", "cool", "fresh", "sunset", "violet", "default"] as const);
 
-const quickstartsSchema = z.array(quickstartSchema);
+function isNonEmptyString(value: unknown, maxLength = Infinity): value is string {
+  return typeof value === "string" && value.trim().length > 0 && value.trim().length <= maxLength;
+}
+
+function normalizeTags(tags: unknown): string[] | undefined {
+  if (!Array.isArray(tags)) return undefined;
+  const normalized = tags
+    .filter((tag): tag is string => typeof tag === "string" && tag.trim().length > 0)
+    .map((tag) => tag.trim());
+  return normalized.length > 0 ? normalized : undefined;
+}
 
 // Default quickstart configurations
 export const defaultQuickstarts: QuickstartAction[] = [
@@ -96,15 +89,20 @@ export async function loadQuickstarts(): Promise<QuickstartAction[]> {
     }
 
     const data = await response.json();
-    const parsed = quickstartsSchema.safeParse(data);
-
-    if (!parsed.success) {
-      const validationError = new Error("Invalid quickstarts config");
-      (validationError as Error & { issues?: unknown }).issues = parsed.error;
-      throw validationError;
+    if (!Array.isArray(data)) {
+      throw new Error("Quickstarts payload is not an array");
     }
 
-    return parsed.data;
+    const parsed: QuickstartAction[] = [];
+    for (const entry of data) {
+      const validated = validateQuickstart(entry);
+      if (!validated) {
+        throw new Error("Invalid quickstarts config");
+      }
+      parsed.push(validated);
+    }
+
+    return parsed;
   } catch (error) {
     console.warn("Failed to load external quickstarts, using defaults:", error);
     throw error instanceof Error ? error : new Error(String(error));
@@ -139,6 +137,60 @@ export async function getQuickstartsWithFallback(options?: {
 }
 
 export function validateQuickstart(data: unknown): QuickstartAction | null {
-  const result = quickstartSchema.safeParse(data);
-  return result.success ? result.data : null;
+  if (!data || typeof data !== "object") {
+    return null;
+  }
+
+  const candidate = data as Record<string, unknown>;
+
+  if (
+    !isNonEmptyString(candidate.id, 64) ||
+    !isNonEmptyString(candidate.title, 128) ||
+    !isNonEmptyString(candidate.subtitle, 256) ||
+    !isNonEmptyString(candidate.gradient, 256) ||
+    !isNonEmptyString(candidate.flowId, 128) ||
+    typeof candidate.autosend !== "boolean" ||
+    !isNonEmptyString(candidate.prompt, 8000)
+  ) {
+    return null;
+  }
+
+  if (
+    candidate.tone !== undefined &&
+    (typeof candidate.tone !== "string" || !QUICKSTART_TONES.has(candidate.tone as any))
+  ) {
+    return null;
+  }
+
+  const quickstart: QuickstartAction = {
+    id: candidate.id.trim(),
+    title: candidate.title.trim(),
+    subtitle: candidate.subtitle.trim(),
+    gradient: candidate.gradient.trim(),
+    flowId: candidate.flowId.trim(),
+    autosend: candidate.autosend,
+    prompt: candidate.prompt.trim(),
+  };
+
+  if (isNonEmptyString(candidate.glow, 512)) {
+    quickstart.glow = candidate.glow.trim();
+  }
+  if (isNonEmptyString(candidate.icon, 64)) {
+    quickstart.icon = candidate.icon.trim();
+  }
+  if (candidate.tone) {
+    quickstart.tone = candidate.tone as QuickstartAction["tone"];
+  }
+  if (isNonEmptyString(candidate.persona, 128)) {
+    quickstart.persona = candidate.persona.trim();
+  }
+  if (isNonEmptyString(candidate.model, 128)) {
+    quickstart.model = candidate.model.trim();
+  }
+  const tags = normalizeTags(candidate.tags);
+  if (tags) {
+    quickstart.tags = tags;
+  }
+
+  return quickstart;
 }

@@ -6,11 +6,18 @@
 
 import { isFeatureEnabled } from "../../config/flags";
 import { logWarn } from "../logging";
+import { loadScript } from "../utils/loadScript";
 
 interface PrismStatic {
   highlight: (text: string, grammar: any, language: string) => string;
   languages: Record<string, any>;
   plugins?: any;
+}
+
+declare global {
+  interface Window {
+    Prism?: PrismStatic;
+  }
 }
 
 let prismInstance: PrismStatic | null = null;
@@ -33,6 +40,26 @@ const SUPPORTED_LANGUAGES = {
   markdown: "md",
 } as const;
 
+const PRISM_BASE_URL = "https://cdn.jsdelivr.net/npm/prismjs@1.30.0";
+const PRISM_CORE_ID = "prism-core";
+const PRISM_LANGUAGE_COMPONENTS = [
+  "clike",
+  "markup",
+  "bash",
+  "c",
+  "cpp",
+  "go",
+  "java",
+  "javascript",
+  "json",
+  "markdown",
+  "python",
+  "rust",
+  "typescript",
+  "yaml",
+  "css",
+] as const;
+
 async function loadPrism(): Promise<PrismStatic> {
   if (!isFeatureEnabled("lazyHighlighter")) {
     throw new Error("Lazy highlighting disabled via feature flag");
@@ -43,29 +70,32 @@ async function loadPrism(): Promise<PrismStatic> {
 
   prismLoadingPromise = (async () => {
     try {
-      const PrismModule: any = await import("prismjs");
-      const Prism: PrismStatic = PrismModule.default || PrismModule;
+      if (typeof window === "undefined") {
+        throw new Error("Prism requires a browser environment");
+      }
 
-      // Basis-Grammatiken zuerst laden (über side-effect Imports, TS-agnostisch)
-      await import("prismjs/components/prism-clike.js");
-      await import("prismjs/components/prism-markup.js");
+      await loadScript({
+        id: PRISM_CORE_ID,
+        src: `${PRISM_BASE_URL}/prism.min.js`,
+        crossOrigin: "anonymous",
+        referrerPolicy: "no-referrer",
+      });
 
-      // Wichtige Sprachen nachladen (ebenfalls nur side-effects)
-      await Promise.all([
-        import("prismjs/components/prism-javascript.js"),
-        import("prismjs/components/prism-typescript.js"),
-        import("prismjs/components/prism-python.js"),
-        import("prismjs/components/prism-java.js"),
-        import("prismjs/components/prism-c.js"),
-        import("prismjs/components/prism-cpp.js"),
-        import("prismjs/components/prism-rust.js"),
-        import("prismjs/components/prism-go.js"),
-        import("prismjs/components/prism-json.js"),
-        import("prismjs/components/prism-css.js"),
-        import("prismjs/components/prism-bash.js"),
-        import("prismjs/components/prism-yaml.js"),
-        import("prismjs/components/prism-markdown.js"),
-      ]);
+      await Promise.all(
+        PRISM_LANGUAGE_COMPONENTS.map((language) =>
+          loadScript({
+            id: `prism-language-${language}`,
+            src: `${PRISM_BASE_URL}/components/prism-${language}.min.js`,
+            crossOrigin: "anonymous",
+            referrerPolicy: "no-referrer",
+          }),
+        ),
+      );
+
+      const Prism = window.Prism;
+      if (!Prism) {
+        throw new Error("Prism global not found after loading scripts");
+      }
 
       prismInstance = Prism;
       logWarn("[Lazy Highlighter] Prism.js loaded successfully");

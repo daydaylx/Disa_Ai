@@ -145,6 +145,31 @@ export default defineConfig(({ mode }) => {
                       },
                     },
                   },
+                  // Cache CDN-hosted CSS/JS for Prism + KaTeX
+                  {
+                    urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/npm\/(prismjs|katex)@.*$/i,
+                    handler: "CacheFirst",
+                    options: {
+                      cacheName: "cdn-styles-cache",
+                      expiration: {
+                        maxEntries: 20,
+                        maxAgeSeconds: 60 * 60 * 24 * 120,
+                      },
+                    },
+                  },
+                  // Cache ESM modules fetched at runtime (react-markdown, etc.)
+                  {
+                    urlPattern: /^https:\/\/esm\.sh\/.*/i,
+                    handler: "NetworkFirst",
+                    options: {
+                      cacheName: "esm-runtime-cache",
+                      expiration: {
+                        maxEntries: 30,
+                        maxAgeSeconds: 60 * 60 * 24 * 7,
+                      },
+                      networkTimeoutSeconds: 5,
+                    },
+                  },
                   // Cache API responses for better offline experience
                   {
                     urlPattern: /^https:\/\/openrouter\.ai\/api\/.*/i,
@@ -211,8 +236,18 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       target: "es2020",
-      minify: "esbuild",
+      minify: "terser",
       cssMinify: "esbuild",
+      terserOptions: {
+        ecma: 2020,
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
+        format: {
+          comments: false,
+        },
+      },
       chunkSizeWarningLimit: 1500, // Erhöht für moderne React PWA
       // Robuste Asset-Generation für Cloudflare Pages
       assetsInlineLimit: 4096, // Inline small assets to reduce requests

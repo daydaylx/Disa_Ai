@@ -37,8 +37,10 @@ export function MobileBottomNav() {
               aria-current={isActive ? "page" : undefined}
             >
               <Icon
-                className={cn("h-6 w-6 transition-transform duration-1", isActive && "scale-110")}
-                strokeWidth={isActive ? 2.5 : 2}
+                className={cn(
+                  "icon-std transition-transform duration-1",
+                  isActive && "scale-110 text-accent",
+                )}
               />
               <span className="text-[11px] leading-tight">{item.label}</span>
               {isActive && (

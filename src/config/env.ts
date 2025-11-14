@@ -1,51 +1,17 @@
 /// <reference types="vite/client" />
-import { z } from "zod";
 
-// Define the schema for environment variables
-const envSchema = z.object({
-  // OpenRouter API Configuration
-  VITE_OPENROUTER_BASE_URL: z
-    .string()
-    .url()
-    .default("https://openrouter.ai/api/v1")
-    .describe("OpenRouter API base URL"),
-
-  // Analytics & Tracking
-  VITE_ENABLE_ANALYTICS: z
-    .string()
-    .default("false")
-    .transform((val) => val.toLowerCase() === "true")
-    .describe("Enable analytics tracking"),
-
-  // Build Information (auto-generated)
-  VITE_BUILD_ID: z.string().optional().describe("Build identifier"),
-
-  VITE_BUILD_TIME: z.string().optional().describe("Build timestamp"),
-
-  VITE_GIT_SHA: z.string().optional().describe("Git commit SHA"),
-
-  VITE_GIT_BRANCH: z.string().optional().describe("Git branch name"),
-
-  VITE_VERSION: z.string().optional().describe("Application version"),
-
-  // Deployment Configuration
-  VITE_BASE_URL: z.string().default("/").describe("Application base URL"),
-
-  // Feature Flags
-  VITE_ENABLE_DEBUG: z
-    .string()
-    .default("false")
-    .transform((val) => val.toLowerCase() === "true")
-    .describe("Enable debug mode"),
-
-  VITE_ENABLE_PWA: z
-    .string()
-    .default("true")
-    .transform((val) => val.toLowerCase() === "true")
-    .describe("Enable PWA features"),
-});
-
-export type EnvConfig = z.infer<typeof envSchema>;
+export interface EnvConfig {
+  VITE_OPENROUTER_BASE_URL: string;
+  VITE_ENABLE_ANALYTICS: boolean;
+  VITE_BUILD_ID?: string;
+  VITE_BUILD_TIME?: string;
+  VITE_GIT_SHA?: string;
+  VITE_GIT_BRANCH?: string;
+  VITE_VERSION?: string;
+  VITE_BASE_URL: string;
+  VITE_ENABLE_DEBUG: boolean;
+  VITE_ENABLE_PWA: boolean;
+}
 
 /**
  * Environment validation result
@@ -60,6 +26,33 @@ interface EnvValidationResult {
 /**
  * Validates environment variables and returns configuration
  */
+const BOOLEAN_TRUE = new Set(["true", "1", "yes", "on"]);
+const BOOLEAN_FALSE = new Set(["false", "0", "no", "off"]);
+
+function toBoolean(value: string | undefined, fallback: boolean): boolean {
+  if (typeof value !== "string") return fallback;
+  const normalized = value.trim().toLowerCase();
+  if (BOOLEAN_TRUE.has(normalized)) return true;
+  if (BOOLEAN_FALSE.has(normalized)) return false;
+  return fallback;
+}
+
+function validateUrl(
+  value: string | undefined,
+  fallback: string,
+  field: string,
+  errors: string[],
+): string {
+  if (!value) return fallback;
+  try {
+    const parsed = new URL(value);
+    return parsed.toString();
+  } catch {
+    errors.push(`${field}: Invalid URL`);
+    return fallback;
+  }
+}
+
 function validateEnvironment(): EnvValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -78,27 +71,30 @@ function validateEnvironment(): EnvValidationResult {
 
   // Note: VITE_OPENROUTER_BASE_URL warning removed - defaults are acceptable
 
-  try {
-    const config = envSchema.parse(envVars);
-
-    return {
-      success: true,
-      config,
-      warnings: warnings.length > 0 ? warnings : undefined,
-    };
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      errors.push(...error.issues.map((err: any) => `${err.path.join(".")}: ${err.message}`));
-    } else {
-      errors.push("Unknown validation error");
-    }
-
-    return {
-      success: false,
+  const config: EnvConfig = {
+    VITE_OPENROUTER_BASE_URL: validateUrl(
+      envVars.VITE_OPENROUTER_BASE_URL,
+      "https://openrouter.ai/api/v1",
+      "VITE_OPENROUTER_BASE_URL",
       errors,
-      warnings: warnings.length > 0 ? warnings : undefined,
-    };
-  }
+    ),
+    VITE_ENABLE_ANALYTICS: toBoolean(envVars.VITE_ENABLE_ANALYTICS, false),
+    VITE_BUILD_ID: envVars.VITE_BUILD_ID || undefined,
+    VITE_BUILD_TIME: envVars.VITE_BUILD_TIME || undefined,
+    VITE_GIT_SHA: envVars.VITE_GIT_SHA || undefined,
+    VITE_GIT_BRANCH: envVars.VITE_GIT_BRANCH || undefined,
+    VITE_VERSION: envVars.VITE_VERSION || undefined,
+    VITE_BASE_URL: envVars.VITE_BASE_URL?.trim() || "/",
+    VITE_ENABLE_DEBUG: toBoolean(envVars.VITE_ENABLE_DEBUG, false),
+    VITE_ENABLE_PWA: toBoolean(envVars.VITE_ENABLE_PWA, true),
+  };
+
+  return {
+    success: errors.length === 0,
+    config,
+    errors: errors.length > 0 ? errors : undefined,
+    warnings: warnings.length > 0 ? warnings : undefined,
+  };
 }
 
 /**

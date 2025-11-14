@@ -1,6 +1,6 @@
 import { mapError } from "../lib/errors";
 import type { Role } from "../lib/validators/roles";
-import { RoleListSchema } from "../lib/validators/roles";
+import { parseRoles } from "../lib/validators/roles";
 import type { Safety } from "./models";
 
 /** Öffentliche Typen – exakt-optional-freundlich: Property weglassen statt `undefined` setzen */
@@ -45,8 +45,8 @@ function loadCache(): RoleTemplate[] | null {
     const raw = localStorage.getItem(SS_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as unknown;
-    const ok = RoleListSchema.safeParse(parsed);
-    return ok.success ? sanitize(ok.data) : null;
+    const ok = parseRoles(parsed);
+    return ok && ok.length > 0 ? sanitize(ok) : null;
   } catch {
     return null;
   }
@@ -85,8 +85,8 @@ async function tryLoadRoles(signal?: AbortSignal): Promise<RoleTemplate[] | null
           ? ((data as Record<string, unknown>)["styles"] as unknown[])
           : null;
       if (!arr) continue;
-      const parsed = RoleListSchema.safeParse(arr);
-      if (parsed.success) return sanitize(parsed.data);
+      const parsed = parseRoles(arr);
+      if (parsed && parsed.length > 0) return sanitize(parsed);
     } catch {
       // next candidate
     }

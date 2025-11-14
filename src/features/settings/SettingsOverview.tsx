@@ -126,7 +126,7 @@ export function SettingsOverview() {
             <SettingsLink
               key={card.id}
               to={card.to}
-              icon={<card.icon className="h-5 w-5" />}
+              icon={<card.icon className="icon-std text-text-secondary" />}
               title={card.title}
               description={card.description}
             />

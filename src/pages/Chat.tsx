@@ -94,12 +94,12 @@ export default function Chat() {
   const isEmpty = messages.length === 0;
 
   return (
-    <div className="chat-page relative flex min-h-[100dvh] flex-col bg-surface-bg text-text-primary">
+    <div className="chat-page-background relative flex min-h-[100dvh] flex-col text-text-primary">
       <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-        <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(120%_100%_at_50%_0%,hsl(var(--brand-1)/0.06)_0%,transparent_70%)]" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(120%_100%_at_50%_0%,hsl(var(--brand-1)/0.18)_0%,transparent_70%)]" />
       </div>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 py-4">
+      <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-page-padding-x py-space-md pb-32">
         {isEmpty ? (
           <>
             <section className="space-y-2">
@@ -227,6 +227,7 @@ export default function Chat() {
           <VirtualizedMessageList
             messages={messages}
             isLoading={isLoading}
+            className="rounded-[32px] border border-[color:var(--glass-border-soft)] bg-[color-mix(in srgb,var(--layer-glass-panel) 94%,transparent)] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
             onCopy={(content) => {
               navigator.clipboard.writeText(content).catch((err) => {
                 console.error("Failed to copy content:", err);

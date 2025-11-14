@@ -1,4 +1,5 @@
 import { logWarn } from "../logging";
+import { loadStylesheet } from "../utils/loadStylesheet";
 
 /**
  * Lazy-loaded Prism.js CSS Theme
@@ -13,6 +14,10 @@ let prismCSSLoaded = false;
  * Nur einmal ausgeführt
  */
 
+const PRISM_THEME_URL = "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-tomorrow.min.css";
+const PRISM_THEME_INTEGRITY =
+  "sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A";
+
 export async function loadPrismCSS(): Promise<void> {
   if (prismCSSLoaded) return;
 
@@ -22,7 +27,14 @@ export async function loadPrismCSS(): Promise<void> {
       return;
     }
 
-    await import("prismjs/themes/prism-tomorrow.css");
+    await loadStylesheet({
+      href: PRISM_THEME_URL,
+      id: "prism-theme",
+      crossOrigin: "anonymous",
+      integrity: PRISM_THEME_INTEGRITY,
+      referrerPolicy: "no-referrer",
+      importance: "low",
+    });
     injectCustomPrismCSS();
     prismCSSLoaded = true;
   } catch (error) {

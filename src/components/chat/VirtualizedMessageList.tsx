@@ -98,7 +98,7 @@ export function VirtualizedMessageList({
   return (
     <div
       ref={setRefs}
-      className={cn("flex-1 overflow-y-auto scroll-smooth", className)}
+      className={cn("chat-scroll-area flex-1 overflow-y-auto scroll-smooth", className)}
       role="log"
       aria-label="Chat messages"
       data-testid="virtualized-chat-log"
@@ -115,7 +115,7 @@ export function VirtualizedMessageList({
         </div>
       )}
 
-      <div className="space-y-2">
+      <div className="chat-stack">
         {visibleMessages.map((message, index) => (
           <ChatMessage
             key={message.id}
