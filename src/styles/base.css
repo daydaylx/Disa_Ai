@@ -12,7 +12,9 @@
     margin: 0;
     background: var(--surface-base);
     color: var(--text-primary);
-    font-family: ui-sans-serif, system-ui, Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
+    /* stylelint-disable-next-line @stylistic/declaration-colon-space-after */
+    font-family:
+      ui-sans-serif, system-ui, Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
     min-height: 100dvh;
     padding: var(--safe-top) var(--safe-right) calc(var(--safe-bottom) + 12px) var(--safe-left);
   }
