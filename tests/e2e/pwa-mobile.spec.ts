@@ -73,7 +73,11 @@ test.describe("PWA and Mobile Features Integration Tests", () => {
     await helpers.navigateAndWait("/chat");
 
     // Wait for service worker to register and become active (custom retry logic)
-    let swState: { registered: boolean; active: boolean; scope: string | null | undefined } = { registered: false, active: false, scope: null };
+    let swState: { registered: boolean; active: boolean; scope: string | null | undefined } = {
+      registered: false,
+      active: false,
+      scope: null,
+    };
     for (let i = 0; i < 10; i++) {
       // Retry up to 10 times (10 * 1000ms = 10 seconds)
       swState = await page.evaluate(async () => {

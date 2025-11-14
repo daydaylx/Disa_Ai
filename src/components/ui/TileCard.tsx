@@ -93,10 +93,7 @@ export function TileCard({
       {/* Icon */}
       {icon && (
         <div
-          className={cn(
-            "flex-shrink-0 text-accent",
-            iconPosition === "top" ? "mb-3" : "mb-0",
-          )}
+          className={cn("flex-shrink-0 text-accent", iconPosition === "top" ? "mb-3" : "mb-0")}
           data-testid="tile-card-icon"
         >
           {icon}
