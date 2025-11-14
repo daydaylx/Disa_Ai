@@ -8,15 +8,15 @@
     --fg1-hsl: 220 12% 80%; /* Secondary text */
 
     /* Fallback RGB values for older browsers */
-    --bg0-rgb: 11 15 20; /* #0b0f14 equivalent */
-    --bg1-rgb: 15 20 32; /* #0f1420 equivalent */
+    --bg0-rgb: 11 15 20; /* Dark background equivalent */
+    --bg1-rgb: 15 20 32; /* Dark surface equivalent */
     --surface-rgb: 255 255 255 / 0.04; /* rgba(255, 255, 255, 0.04) */
     --glass-rgb: 255 255 255 / 0.06; /* rgba(255, 255, 255, 0.06) */
     --stroke-rgb: 255 255 255 / 0.16; /* rgba(255, 255, 255, 0.16) */
-    --accent-rgb: 139 92 246; /* #8b5cf6 */
-    --text-primary-rgb: 248 250 252; /* #f8fafc */
-    --text-secondary-rgb: 203 213 225; /* #cbd5e1 */
-    --text-tertiary-rgb: 148 163 184; /* #94a3b8 */
+    --accent-rgb: 139 92 246; /* Brand accent equivalent */
+    --text-primary-rgb: 248 250 252; /* Light text equivalent */
+    --text-secondary-rgb: 203 213 225; /* Secondary text equivalent */
+    --text-tertiary-rgb: 148 163 184; /* Tertiary text equivalent */
 
     /* Semantic Color Tokens - Using HSL for consistency */
     --surface-bg: hsl(var(--bg0-hsl));
@@ -35,10 +35,10 @@
     --brand-4: 196 86% 58%;
 
     /* Status Colors */
-    --success: 142 72% 45%; /* #22c55e equivalent in HSL */
-    --warning: 40 94% 50%; /* #f59e0b equivalent in HSL */
-    --danger: 350 84% 56%; /* #ef4444 equivalent in HSL */
-    --info: 210 92% 62%; /* #3b82f6 equivalent in HSL */
+    --success: 142 72% 45%; /* Green success equivalent */
+    --warning: 40 94% 50%; /* Orange warning equivalent */
+    --danger: 350 84% 56%; /* Red danger equivalent */
+    --info: 210 92% 62%; /* Blue info equivalent */
 
     /* Surfaces */
     --surface-overlay: hsl(var(--bg1-hsl) / 0.95);

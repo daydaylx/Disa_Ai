@@ -4,7 +4,7 @@ import {
   buildOpenRouterUrl,
   DEFAULT_OPENROUTER_BASE_URL,
   OPENROUTER_CHAT_PATH,
-} from "../shared/openrouter";
+} from "../../shared/openrouter";
 
 const ALLOWED_ORIGIN = "https://disaai.de";
 const RATE_LIMIT_WINDOW_MS = 60_000;
