@@ -92,6 +92,27 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
+    // Optimized dependency bundling - less aggressive for faster builds
+    optimizeDeps: {
+      include: [
+        // Core React - diese werden immer gebraucht
+        "react",
+        "react-dom",
+        "react-router-dom",
+      ],
+      exclude: [
+        "react-markdown", // CDN
+        "katex", // CDN
+        "prismjs", // Lazy
+        "@radix-ui/react-avatar", // Lass Vite auto-discovery
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-dropdown-menu",
+      ],
+      esbuildOptions: {
+        target: "es2020",
+        splitting: true, // Enable code splitting in dev
+      },
+    },
     plugins: [
       react(),
       analyzerPlugin,
@@ -235,6 +256,17 @@ export default defineConfig(({ mode }) => {
       // Vite handles SPA routing automatically, no need for historyApiFallback
       port: parseInt(env.VITE_PORT || "5173"),
       strictPort: false,
+      // Development warmup for faster initial loads
+      warmup: {
+        clientFiles: [
+          "./src/App.tsx",
+          "./src/pages/Chat.tsx",
+          "./src/components/chat/ChatScreen.tsx",
+          "./src/components/layout/AppShell.tsx",
+          "./src/components/ui/button.tsx",
+          "./src/hooks/useSettings.ts",
+        ],
+      },
     },
     resolve: {
       alias: {
@@ -243,18 +275,9 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       target: "es2020",
-      minify: "terser",
+      minify: "esbuild", // Much faster than terser
       cssMinify: "esbuild",
-      terserOptions: {
-        ecma: 2020,
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-        },
-        format: {
-          comments: false,
-        },
-      },
+      minifyIdentifiers: true,
       chunkSizeWarningLimit: 1500, // Erhöht für moderne React PWA
       // Robuste Asset-Generation für Cloudflare Pages
       assetsInlineLimit: 4096, // Inline small assets to reduce requests
@@ -322,69 +345,84 @@ export default defineConfig(({ mode }) => {
         },
       },
       rollupOptions: {
+        // External non-critical dependencies
+        external: isProduction
+          ? [
+              // Don't bundle these in production - load from CDN if needed
+            ]
+          : [],
         treeshake: {
-          preset: "recommended",
+          preset: "smallest",
           propertyReadSideEffects: false,
           tryCatchDeoptimization: false,
           unknownGlobalSideEffects: false,
+          moduleSideEffects: (id) => {
+            // Only essential side effects
+            if (id.includes("react") || id.includes("@radix-ui")) return true;
+            if (id.includes("lucide-react") || id.includes("clsx")) return true;
+            // Exclude dev-only packages
+            if (id.includes("@sentry") && !isProduction) return false;
+            return !id.includes("node_modules");
+          },
+          // Aggressive tree shaking
+          pureExternalModules: true,
         },
         // Smart chunking strategy to optimize bundle size without circular dependencies
         output: {
           compact: true,
           entryFileNames: "assets/js/[name]-[hash].js",
           chunkFileNames: "assets/js/[name]-[hash].js",
-          // Smart manual chunks - let React dependencies be handled automatically
+          // Aggressive code splitting for smaller chunks
           manualChunks: (id) => {
-            // Radix UI components (large but stable)
-            if (id.includes("node_modules/@radix-ui/")) {
-              return "radix-ui";
+            // React core (always needed)
+            if (id.includes("react") || id.includes("react-dom")) {
+              return "react-vendor";
             }
 
-            // Prism.js core and languages (for code highlighting)
-            // Chunk nur für Prism selbst; vermeidet Kollisions-Matches auf generische "prism-" Dateinamen.
-            if (id.includes("node_modules/prismjs/")) {
-              return "prism";
+            // Router (needed for navigation)
+            if (id.includes("react-router")) {
+              return "router-vendor";
             }
 
-            // KaTeX (math rendering - large)
-            if (id.includes("node_modules/katex/")) {
-              return "katex";
+            // Radix UI (UI components - can be split further)
+            if (id.includes("@radix-ui/")) {
+              return "radix-vendor";
             }
 
-            // Other vendor libraries
+            // Form handling (only loaded when needed)
+            if (id.includes("@hookform/") || id.includes("react-hook-form")) {
+              return "forms-vendor";
+            }
+
+            // State management
+            if (id.includes("zustand") || id.includes("jotai")) {
+              return "state-vendor";
+            }
+
+            // Utilities (small, can be grouped)
+            if (
+              id.includes("clsx") ||
+              id.includes("class-variance-authority") ||
+              id.includes("tailwind-merge") ||
+              id.includes("nanoid") ||
+              id.includes("zod")
+            ) {
+              return "utils-vendor";
+            }
+
+            // Monitoring (lazy loaded)
+            if (id.includes("@sentry/")) {
+              return "monitoring-vendor";
+            }
+
+            // Math/Code rendering (lazy loaded)
+            if (id.includes("katex") || id.includes("prismjs")) {
+              return "syntax-vendor";
+            }
+
+            // Everything else
             if (id.includes("node_modules/")) {
-              // Group small utilities together
-              if (
-                id.includes("clsx") ||
-                id.includes("class-variance-authority") ||
-                id.includes("tailwind-merge") ||
-                id.includes("nanoid") ||
-                id.includes("zod")
-              ) {
-                return "utils";
-              }
-
-              // Split large vendor bundles for better caching
-              if (id.includes("@sentry/")) {
-                return "sentry-vendor";
-              }
-              if (id.includes("@radix-ui/primitives")) {
-                return "radix-primitives";
-              }
-              if (id.includes("@hookform/")) {
-                return "hookform-vendor";
-              }
-              if (id.includes("@tanstack/")) {
-                return "tanstack-vendor";
-              }
-              if (id.includes("@openrouter/")) {
-                return "openrouter-vendor";
-              }
-              if (id.includes("@sentry/") || id.includes("@rollbar/")) {
-                return "monitoring-vendor";
-              }
-
-              return "vendor";
+              return "misc-vendor";
             }
           },
           assetFileNames: (assetInfo) => {

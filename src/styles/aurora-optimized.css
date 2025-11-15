@@ -130,7 +130,7 @@
       hsl(var(--brand-2) / 0.08) 40%,
       hsl(var(--bg0)) 70%
     );
-    min-height: 60vh;
+    min-height: 60dvh;
     display: flex;
     align-items: center;
     justify-content: center;

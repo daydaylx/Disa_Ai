@@ -57,16 +57,16 @@ const buttonVariants = cva(
           "border border-[color:var(--button-secondary-border)] bg-[var(--button-secondary-bg)] text-[var(--button-secondary-fg)] shadow-[var(--shadow-glass-subtle)] hover:bg-[var(--button-secondary-bg-hover)] hover:shadow-[var(--shadow-glass-medium)]",
       },
       size: {
-        xs: "h-8 px-3 py-1.5 text-xs font-medium", // 32px height - very compact
-        sm: "h-9 px-4 py-2 text-sm font-medium", // 36px height - compact
-        default: "h-10 px-6 py-2.5 text-sm font-medium", // 40px height - standard
+        xs: "h-11 px-3 py-1.5 text-xs font-medium", // 44px height - touch-safe minimum (was 32px)
+        sm: "h-11 px-4 py-2 text-sm font-medium", // 44px height - touch-safe (was 36px)
+        default: "h-11 px-6 py-2.5 text-sm font-medium", // 44px height - touch-safe (was 40px)
         md: "h-11 px-7 py-2.5 text-sm font-medium", // 44px height - medium
         lg: "h-12 px-8 py-3 text-base font-semibold", // 48px height - large
         xl: "h-14 px-10 py-3.5 text-base font-semibold", // 56px height - extra large
         "2xl": "h-16 px-12 py-4 text-lg font-semibold", // 64px height - massive
-        icon: "h-10 w-10", // 40px square to match default height
-        "icon-xs": "h-8 w-8", // 32px square for compact icons
-        "icon-sm": "h-9 w-9", // 36px square for small icons
+        icon: "h-11 w-11", // 44px square - touch-safe (was 40px)
+        "icon-xs": "h-11 w-11", // 44px square - touch-safe (was 32px)
+        "icon-sm": "h-11 w-11", // 44px square - touch-safe (was 36px)
         "icon-md": "h-11 w-11", // 44px square for medium icons
         "icon-lg": "h-12 w-12", // 48px square for large icons
         "icon-xl": "h-14 w-14", // 56px square for extra large icons

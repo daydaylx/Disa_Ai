@@ -1,8 +1,10 @@
 /**
- * DESIGN TOKENS - ZENTRALES DESIGNSYSTEM
+ * DESIGN TOKENS - STRENGER MODERNER DARK MODE
  *
- * Konforme Umsetzung der verbindlichen Vorgaben:
- * ● Radii: 6 / 10 / 14 / 18 / 24 px (keine Zwischenwerte)
+ * Spezifikationen:
+ * ● Hintergrund: sehr dunkles Blau/Grau (#050814–#070b12-Ecke)
+ * ● Oberflächen: etwas heller (#111827 / #141b2b) mit weichem Verlauf
+ * ● Radii: 6 / 10 / 14 / 18 / 24 px (verbindliche Vorgabe)
  * ● Shadows: nur 2 Ebenen (Light + Heavy), konsistente Tokens
  * ● Glass-Opacity für Mobile: 0.18–0.28 bei dunklen Themes
  * ● Pixelgenaue Konsistenz für alle UI-Elemente
@@ -13,19 +15,19 @@
 
 :root {
   /* ========================================
-   * SPACING TOKENS (8-Pixel-Raster)
+   * SPACING TOKENS (Spezifizierte Abstände)
    * ======================================== */
   --spacing-0: 0;
-  --spacing-1: 8px;
-  --spacing-2: 16px;
-  --spacing-3: 24px;
-  --spacing-4: 32px;
-  --spacing-5: 40px;
-  --spacing-6: 48px;
-  --spacing-7: 56px;
-  --spacing-8: 64px;
-  --spacing-9: 72px;
-  --spacing-10: 80px;
+  --spacing-1: 4px;   /* Kleinste Abstände */
+  --spacing-2: 8px;   /* Tight spacing */
+  --spacing-3: 12px;  /* Zwischen Cards: ~12–16 px */
+  --spacing-4: 16px;  /* Karten-Innen: 16–20 px */
+  --spacing-5: 20px;  /* Karten-Innen: 16–20 px */
+  --spacing-6: 24px;  /* Oben: ~24 px padding */
+  --spacing-7: 32px;  /* Section spacing */
+  --spacing-8: 40px;  /* Large spacing */
+  --spacing-9: 48px;  /* Extra large */
+  --spacing-10: 64px; /* Maximum spacing */
 
   /* ========================================
    * RADIUS TOKENS (verbindliche Vorgabe)
@@ -50,16 +52,18 @@
   --shadow-floating: 0 16px 40px rgba(0, 0, 0, 0.3);
 
   /* ========================================
-   * GLASS TOKENS (kalibrierte Opazität)
+   * GLASS TOKENS (Strenger Dark Mode)
    * ======================================== */
-  /* Mobile Glas-Opacity: 0.18–0.28 bei dunklen Themes */
+  /* Glass Surface mit backdrop-filter für Overlays */
+  --surface-soft: rgba(17, 24, 39, 0.9); /* Für Menü-Drawer, Footer */
+  --surface-overlay: rgba(17, 24, 39, 0.85); /* Für Dialoge, Modals */
   --glass-border-soft: rgba(255, 255, 255, 0.18);
   --glass-border-strong: rgba(255, 255, 255, 0.28);
 
-  /* Glas-Layer mit korrigierter Opazität für dunkle Themes */
-  --layer-glass-panel: color-mix(in srgb, var(--surface-card) 78%, transparent);
-  --layer-glass-inline: color-mix(in srgb, var(--surface-base) 82%, transparent);
-  --layer-glass-muted: color-mix(in srgb, var(--surface-base) 72%, transparent);
+  /* Backdrop Blur für Glassmorphism */
+  --backdrop-blur-soft: 12px;
+  --backdrop-blur-medium: 16px;
+  --backdrop-blur-strong: 18px;
 
   /* ========================================
    * BACKDROP BLUR TOKENS
@@ -69,20 +73,36 @@
   --backdrop-blur-strong: 16px;
 
   /* ========================================
-   * ERWEITERTE FARBPALETTE (Modernes Design System)
+   * STRENGER DARK MODE FARBPALETTE
    * ======================================== */
-  /* Primary Colors - Moderne Blau-Töne */
+  /* Background Colors - Sehr dunkles Blau/Grau */
+  --bg-0: #050814; /* Haupt-Hintergrund */
+  --bg-1: #0b1020; /* Page-Container */
+  --bg-2: #070b12; /* Alternative Ecke */
+
+  /* Surface Colors - Etwas heller mit weichem Verlauf */
+  --surface: #111827; /* Haupt-Surface */
+  --surface-soft: #141b2b; /* Weichere Surface */
+  --surface-card: #1a2332; /* Card-Surface */
+
+  /* Primary Colors - Header, CTAs */
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
   --color-primary-200: #bfdbfe;
   --color-primary-300: #93c5fd;
   --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
+  --color-primary-500: #3b82f6; /* Primary CTA */
   --color-primary-600: #2563eb;
   --color-primary-700: #1d4ed8;
   --color-primary-800: #1e40af;
   --color-primary-900: #1e3a8a;
   --color-primary-950: #172554;
+
+  /* Accent Green - Für Speed/Quality Bars */
+  --accent-green: #22c55e; /* Grüner Füllbar für Bars */
+
+  /* Accent Yellow - Für Value Bars */
+  --accent-yellow: #facc15; /* Gelber Füllbar für Bars */
 
   /* Success Colors - Grüntöne */
   --color-success-50: #f0fdf4;
@@ -120,6 +140,12 @@
   --color-error-800: #991b1b;
   --color-error-900: #7f1d1d;
 
+  /* Text Colors - Dark Mode */
+  --text-primary: #f9fafb; /* Haupttext */
+  --text-secondary: #9ca3af; /* Sekundärtext */
+  --text-muted: #6b7280; /* Gedämpfter Text */
+  --text-disabled: #4b5563; /* Deaktivierter Text */
+
   /* Neutral Colors - Grautöne */
   --color-neutral-50: #fafafa;
   --color-neutral-100: #f5f5f5;
@@ -146,21 +172,21 @@
   --z-toast: 1080;
 
   /* ========================================
-   * TYPOGRAPHY TOKENS
+   * TYPOGRAPHY TOKENS (Strenger Dark Mode)
    * ======================================== */
   /* Font Families */
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
 
-  /* Font Sizes */
-  --text-xs: 0.75rem;    /* 12px */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.125rem;   /* 18px */
-  --text-xl: 1.25rem;    /* 20px */
-  --text-2xl: 1.5rem;    /* 24px */
-  --text-3xl: 1.875rem;  /* 30px */
-  --text-4xl: 2.25rem;   /* 36px */
+  /* Font Sizes - Klare Hierarchie */
+  --text-xs: 0.75rem;    /* 12px - Caption, Meta */
+  --text-sm: 0.875rem;   /* 14px - Body, Standard */
+  --text-base: 1rem;     /* 16px - Larger Body */
+  --text-lg: 1.125rem;   /* 18px - Subtitle */
+  --text-xl: 1.25rem;    /* 20px - Section Titles */
+  --text-2xl: 1.5rem;    /* 24px - Page Titles (Seitentitel groß & bold) */
+  --text-3xl: 1.875rem;  /* 30px - Hero Titles */
+  --text-4xl: 2.25rem;   /* 36px - Display Titles */
 
   /* Line Heights */
   --leading-tight: 1.25;

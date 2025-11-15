@@ -1,7 +1,0 @@
-/* === DEPRECATED: Tokens Design System === */
-/* This file is deprecated. Please use unified-tokens.css instead. */
-/* This file now imports the unified tokens to maintain compatibility during migration. */
-
-@import "./unified-tokens.css";
-
-/* All new development should use unified-tokens.css */

@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import React, { lazy, Suspense, useEffect, useState } from "react";
 
 import { useFeatureFlag } from "../../hooks/useFeatureFlags";
@@ -159,7 +160,13 @@ function CodeBlock({ children, language }: { children: string; language?: string
         <pre className={`language-${language}`}>
           <code
             className={`language-${language}`}
-            dangerouslySetInnerHTML={{ __html: highlightedCode }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(highlightedCode, {
+                ALLOWED_TAGS: ["span", "div"],
+                ALLOWED_ATTR: ["class"],
+                KEEP_CONTENT: true,
+              }),
+            }}
           />
         </pre>
       ) : (

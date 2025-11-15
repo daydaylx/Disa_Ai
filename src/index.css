@@ -3,18 +3,14 @@
  *
  * This file establishes the foundational styles for the application.
  * 1. z-index-system.css: Manages the stacking order of all elements.
- * 2. theme/tokens.css: Defines all design tokens (radii, shadows, spacing, glass) as CSS variables.
- * 3. unified-tokens.css: Defines all design tokens (colors, typography) as CSS variables.
- * 4. Tailwind CSS: Utility-first framework that consumes the tokens from unified-tokens.css.
+ * 2. design-tokens.css: Single source of truth for all design tokens
+ * 3. Tailwind CSS: Utility-first framework that consumes the tokens from design-tokens.css.
  */
 
 /* 1. Establish z-index hierarchy */
 @import "./styles/z-index-system.css";
 
-/* 2. Import the new centralized design system tokens */
-@import "./theme/tokens.css";
-
-/* 3. Import the existing design system tokens */
+/* 2. Import the centralized design system tokens - SINGLE SOURCE OF TRUTH */
 @import "./styles/design-tokens.css";
 
 /* 4. Aurora-optimized styles for better performance */
@@ -71,8 +67,8 @@
   #app {
     width: 100%;
     min-width: 100%;
-    min-height: 100vh;
-    min-height: calc(var(--vh, 1vh) * 100);
+    min-height: 100vh; /* Fallback for old browsers */
+    min-height: 100dvh; /* Modern dynamic viewport height */
     position: relative;
     z-index: 1;
   }

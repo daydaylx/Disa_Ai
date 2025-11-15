@@ -18,8 +18,6 @@ export * from "./tooltip";
 // Card System - explicit exports to avoid conflicts
 export type { CardProps } from "./card";
 export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
-export type { ModelCardProps } from "./ModelCard";
-export { ModelCard } from "./ModelCard";
 
 // Enhanced Card System
 export type {

@@ -139,7 +139,7 @@
       hsl(var(--brand-2) / 0.12) 30%,
       hsl(var(--bg0)) 70%
     );
-    min-height: 60vh;
+    min-height: 60dvh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -166,7 +166,7 @@
 
   @media (min-width: 768px) {
     .aurora-hero-mobile {
-      min-height: 60vh;
+      min-height: 60dvh;
     }
   }
 

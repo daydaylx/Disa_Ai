@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
-import { RoleCard } from "../components/ui/RoleCard";
+import { RoleCard } from "../components/ui/modern-cards";
 import { useRoles } from "../hooks/useRoles";
 import { Brain, MessageSquare, Settings, Users } from "../lib/icons";
 import type { EnhancedRole } from "../types/enhanced-interfaces";

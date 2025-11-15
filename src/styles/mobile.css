@@ -138,7 +138,7 @@
 .mobile-modal-content {
   position: relative;
   width: 100%;
-  max-height: 85vh;
+  max-height: 85dvh;
   background: var(--surface-card);
   border-radius: 1.5rem 1.5rem 0 0;
   box-shadow: var(--shadow-heavy);
@@ -224,7 +224,7 @@
 /* Mobile Chat Styles */
 @media (max-width: 640px) {
   .mobile-chat-container {
-    height: calc(100vh - 64px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: calc(100dvh - 64px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
 
@@ -447,11 +447,11 @@
   }
 
   .mobile-chat-container {
-    height: calc(100vh - 56px - env(safe-area-inset-top));
+    height: calc(100dvh - 56px - env(safe-area-inset-top));
   }
 
   .mobile-modal-content {
-    max-height: 90vh;
+    max-height: 90dvh;
   }
 }
 

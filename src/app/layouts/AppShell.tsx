@@ -1,25 +1,22 @@
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import { Header } from "../../components/layout/Header";
+import {
+  AppMenuDrawer,
+  defaultMenuSections,
+  MenuIcon,
+  useMenuDrawer,
+} from "../../components/layout/AppMenuDrawer";
 import { NavPills } from "../../components/navigation/NavPills";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
-import { SettingsDrawer } from "../../components/shell/SettingsDrawer";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
-import { useSettings } from "../../hooks/useSettings";
 
 interface AppShellProps {
   children: ReactNode;
 }
-
-const MODEL_LABELS: Record<string, string> = {
-  "openai/gpt-4o-mini": "GPT‑4o mini",
-  "anthropic/claude-3.5-sonnet": "Claude 3.5 Sonnet",
-  "meta-llama/llama-3.1-405b": "Llama 3.1 405B",
-};
 
 interface AppShellLayoutProps {
   children: ReactNode;
@@ -32,29 +29,14 @@ export function AppShell({ children }: AppShellProps) {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { settings, toggleAnalytics, toggleNSFWContent, toggleNotifications, setPreferredModel } =
-    useSettings();
+  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
 
-  const { activePath, pageTitle } = useMemo(() => {
+  const { pageTitle } = useMemo(() => {
     const activeItem = PRIMARY_NAV_ITEMS.find((item) => isNavItemActive(item, location.pathname));
     return {
-      activePath: activeItem?.path ?? "/",
       pageTitle: activeItem?.label ?? "Studio",
     };
   }, [location.pathname]);
-
-  useEffect(() => {
-    if (!isDrawerOpen) return undefined;
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsDrawerOpen(false);
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [isDrawerOpen]);
-
-  const modelLabel =
-    MODEL_LABELS[settings.preferredModelId] ?? settings.preferredModelId ?? "Automatisch";
 
   return (
     <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
@@ -81,12 +63,20 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        <Header
-          onOpenDrawer={() => setIsDrawerOpen(true)}
-          title="Disa AI"
-          subtitle={pageTitle}
-          modelLabel={modelLabel}
-        />
+        {/* Modern Header with PageShell pattern */}
+        <header className="sticky top-0 z-20 border-b border-[var(--glass-border-soft)] bg-[var(--surface)]/80 backdrop-blur-xl safe-area-top">
+          <div className="max-w-4xl mx-auto px-[var(--spacing-4)] py-[var(--spacing-3)] flex items-center justify-between">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[var(--text-xs)] text-[var(--text-muted)] uppercase tracking-[0.16em]">
+                Disa AI
+              </span>
+              <h1 className="text-[var(--text-2xl)] font-semibold text-[var(--text-primary)]">
+                {pageTitle}
+              </h1>
+            </div>
+            <MenuIcon onClick={openMenu} />
+          </div>
+        </header>
 
         <div className="border-b border-[var(--glass-border-soft)] bg-surface-base/40 backdrop-blur-xl">
           <NavPills items={PRIMARY_NAV_ITEMS} pathname={location.pathname} />
@@ -112,22 +102,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         {location.pathname === "/" && <PWAInstallPrompt />}
         {process.env.NODE_ENV === "development" && <PWADebugInfo />}
 
-        <SettingsDrawer
-          isOpen={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
-          navItems={PRIMARY_NAV_ITEMS}
-          activePath={activePath}
-          selectedModelId={settings.preferredModelId}
-          onSelectModel={(modelId) => {
-            setPreferredModel(modelId);
-            setIsDrawerOpen(false);
-          }}
-          toggles={{
-            nsfw: { value: settings.showNSFWContent, onToggle: toggleNSFWContent },
-            analytics: { value: settings.enableAnalytics, onToggle: toggleAnalytics },
-            notifications: { value: settings.enableNotifications, onToggle: toggleNotifications },
-          }}
-        />
+        <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
       </div>
     </div>
   );

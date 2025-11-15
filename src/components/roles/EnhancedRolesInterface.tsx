@@ -8,7 +8,7 @@ import type { EnhancedRole, FilterState } from "../../types/enhanced-interfaces"
 import { migrateRole } from "../../types/enhanced-interfaces";
 import { Button, Input } from "../ui";
 import { FilterChip } from "../ui/FilterChip";
-import { RoleCard } from "../ui/RoleCard";
+import { RoleCard } from "../ui/modern-cards";
 import { Skeleton } from "../ui/skeleton";
 import { useToasts } from "../ui/toast/ToastsProvider";
 import { roleFilterFn, roleSortFn } from "./roles-filter";

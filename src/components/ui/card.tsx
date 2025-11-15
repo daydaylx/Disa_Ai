@@ -5,129 +5,128 @@ import { ChevronRight, MoreHorizontal } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { Button } from "./button"; // Assuming Button component is updated
 
-const cardVariants = cva(
-  "relative rounded-[var(--radius-md)] border transition-all duration-200 ease-out backdrop-blur-[var(--glass-backdrop-blur-sm)]",
-  {
-    variants: {
-      variant: {
-        default: "",
-        outline: "border-[var(--border-muted)] bg-[var(--surface-card)]",
-        flat: "border-transparent bg-transparent shadow-none",
-        filled: "border-[var(--border-subtle)] bg-[var(--surface-base)]",
-        bordered: "border-2 border-[var(--border-default)] bg-[var(--surface-card)]",
-      },
-      tone: {
-        // Modern Card Variants
-        "modern-default":
-          "bg-[var(--surface-card)] border-[var(--border-muted)] text-[var(--text-primary)]",
-        "modern-surface":
-          "bg-[var(--surface-base)] border-[var(--border-subtle)] text-[var(--text-primary)]",
-        "modern-elevated":
-          "bg-[var(--surface-card)] border-[var(--border-muted)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
-        "modern-floating":
-          "bg-[var(--surface-card)] border-[var(--border-muted)] text-[var(--text-primary)] shadow-[var(--shadow-heavy)]",
-
-        // Glassmorphism variants
-        "glass-primary":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
-        "glass-subtle":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-secondary)]",
-        "glass-floating":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
-        "glass-overlay":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
-        "glass-raised":
-          "bg-[color-mix(in srgb,var(--surface-card)_90%,white_10%)] border-[color-mix(in srgb,var(--glass-border-soft)_70%,transparent_30%)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
-        "glass-elevated":
-          "bg-[color-mix(in srgb,var(--surface-card)_85%,white_5%)] border-[color-mix(in srgb,var(--glass-border-soft)_60%,transparent_40%)] text-[var(--text-primary)] shadow-[var(--shadow-heavy)] backdrop-blur-[var(--backdrop-blur-subtle)]",
-        "glass-inset":
-          "bg-[color-mix(in srgb,var(--surface-base)_95%,black_5%)] border-[color-mix(in srgb,var(--glass-border-soft)_50%,transparent_50%)] text-[var(--text-primary)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]",
-
-        // Legacy aliases (using new glassmorphism styles)
-        "neo-raised":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
-        "neo-subtle":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
-        "neo-inset":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
-        "neo-floating":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
-        "neo-glass":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
-      },
-      intent: {
-        default: "",
-        accent: "border-accent",
-        primary: "border-accent",
-        success: "border-status-success/70",
-        warning: "border-status-warning/70",
-        danger: "border-status-danger/70",
-        error: "border-status-danger/70",
-        info: "border-status-info/70",
-      },
-      padding: {
-        none: "p-0",
-        xs: "p-[var(--space-2xs)]", // 8px
-        sm: "p-[var(--space-xs)]", // 12px
-        md: "p-[var(--space-sm)]", // 16px
-        lg: "p-[var(--space-md)]", // 24px
-        xl: "p-[calc(var(--space-md) * 1.33)]", // ~32px
-      },
-      size: {
-        auto: "w-auto",
-        full: "w-full",
-        xs: "max-w-xs",
-        sm: "max-w-sm",
-        md: "max-w-md",
-        lg: "max-w-lg",
-        xl: "max-w-xl",
-        "2xl": "max-w-2xl",
-      },
-      state: {
-        default: "",
-        loading: "animate-pulse opacity-70 pointer-events-none",
-        disabled: "opacity-50 pointer-events-none",
-        selected:
-          "border-accent ring-2 ring-[color-mix(in_srgb, var(--accent) 30%, transparent)] ring-offset-2 ring-offset-bg-1",
-        focus: "ring-2 ring-accent ring-offset-2 ring-offset-bg-1",
-      },
-      elevation: {
-        flat: "shadow-none",
-        subtle: "shadow-[var(--shadow-sm)]",
-        surface: "shadow-[var(--shadow-sm)]",
-        medium: "shadow-[var(--shadow-sm)]",
-        dramatic: "shadow-[var(--shadow-lg)]",
-        raised: "shadow-[var(--shadow-lg)]",
-        floating: "shadow-[var(--shadow-lg)]",
-      },
-      interactive: {
-        none: "",
-        basic:
-          "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-shadow duration-200",
-        gentle:
-          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-all duration-200",
-        glow: "cursor-pointer hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
-        "glow-accent":
-          "cursor-pointer hover:border-accent hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
-        // Neue interaktive Varianten mit Glas-Effekten
-        "glass-lift":
-          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] transition-all duration-300",
-        "glass-glow":
-          "cursor-pointer hover:shadow-[0_0_0_4px_rgba(139,92,246,0.3),0_8px_20px_rgba(139,92,246,0.3)] transition-all duration-300",
-      },
+const cardVariants = cva("relative rounded-2xl border transition-all duration-200 ease-out", {
+  variants: {
+    variant: {
+      default: "",
+      outline: "border-[var(--glass-border-soft)] bg-[var(--surface)]",
+      flat: "border-transparent bg-transparent shadow-none",
+      filled: "border-[var(--glass-border-soft)] bg-[var(--surface)]",
+      bordered: "border-2 border-[var(--glass-border-strong)] bg-[var(--surface)]",
+      surface: "bg-[var(--surface)] border-[var(--glass-border-soft)]", // Neue Surface-Variante
     },
-    defaultVariants: {
-      variant: "default",
-      tone: "glass-primary",
-      intent: "default",
-      padding: "md",
-      size: "full",
-      state: "default",
-      elevation: "medium",
-      interactive: "none",
+    tone: {
+      // Modern Card Variants für strengen Dark Mode
+      "modern-default":
+        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
+      "modern-surface":
+        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
+      "modern-elevated":
+        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
+      "modern-floating":
+        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-heavy)]",
+
+      // Surface Variants für strengen Dark Mode
+      "surface-card":
+        "bg-[var(--surface-card)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
+      surface: "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
+      "surface-soft":
+        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
+
+      // Glassmorphism variants
+      "glass-primary":
+        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-soft)]",
+      "glass-subtle":
+        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-secondary)] backdrop-blur-[var(--backdrop-blur-soft)]",
+      "glass-floating":
+        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)] shadow-[var(--shadow-light)]",
+      "glass-overlay":
+        "bg-[var(--surface-overlay)] border-[var(--glass-border-strong)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-strong)] shadow-[var(--shadow-heavy)]",
+
+      // Legacy aliases (aktualisiert für strengen Dark Mode)
+      "neo-raised":
+        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
+      "neo-subtle":
+        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
+      "neo-inset":
+        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
+      "neo-floating":
+        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-heavy)]",
+      "neo-glass":
+        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
+    },
+    intent: {
+      default: "",
+      accent: "border-accent",
+      primary: "border-accent",
+      success: "border-status-success/70",
+      warning: "border-status-warning/70",
+      danger: "border-status-danger/70",
+      error: "border-status-danger/70",
+      info: "border-status-info/70",
+    },
+    padding: {
+      none: "p-0",
+      xs: "p-[var(--space-2xs)]", // 8px
+      sm: "p-[var(--space-xs)]", // 12px
+      md: "p-[var(--space-sm)]", // 16px
+      lg: "p-[var(--space-md)]", // 24px
+      xl: "p-[calc(var(--space-md) * 1.33)]", // ~32px
+    },
+    size: {
+      auto: "w-auto",
+      full: "w-full",
+      xs: "max-w-xs",
+      sm: "max-w-sm",
+      md: "max-w-md",
+      lg: "max-w-lg",
+      xl: "max-w-xl",
+      "2xl": "max-w-2xl",
+    },
+    state: {
+      default: "",
+      loading: "animate-pulse opacity-70 pointer-events-none",
+      disabled: "opacity-50 pointer-events-none",
+      selected:
+        "border-accent ring-2 ring-[color-mix(in_srgb, var(--accent) 30%, transparent)] ring-offset-2 ring-offset-bg-1",
+      focus: "ring-2 ring-accent ring-offset-2 ring-offset-bg-1",
+    },
+    elevation: {
+      flat: "shadow-none",
+      subtle: "shadow-[var(--shadow-sm)]",
+      surface: "shadow-[var(--shadow-sm)]",
+      medium: "shadow-[var(--shadow-sm)]",
+      dramatic: "shadow-[var(--shadow-lg)]",
+      raised: "shadow-[var(--shadow-lg)]",
+      floating: "shadow-[var(--shadow-lg)]",
+    },
+    interactive: {
+      none: "",
+      basic:
+        "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-shadow duration-200",
+      gentle:
+        "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-all duration-200",
+      glow: "cursor-pointer hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
+      "glow-accent":
+        "cursor-pointer hover:border-accent hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
+      // Neue interaktive Varianten mit Glas-Effekten
+      "glass-lift":
+        "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] transition-all duration-300",
+      "glass-glow":
+        "cursor-pointer hover:shadow-[0_0_0_4px_rgba(139,92,246,0.3),0_8px_20px_rgba(139,92,246,0.3)] transition-all duration-300",
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+    tone: "glass-primary",
+    intent: "default",
+    padding: "md",
+    size: "full",
+    state: "default",
+    elevation: "medium",
+    interactive: "none",
+  },
+});
 
 type CardVariantProps = VariantProps<typeof cardVariants>;
 
