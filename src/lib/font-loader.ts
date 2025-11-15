@@ -18,57 +18,6 @@ export interface FontConfig {
 
 export class FontLoader {
   private static readonly FONT_LOAD_TIMEOUT = 5000; // 5 seconds
-  private static readonly FONT_CSS_URLS = [
-    "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap",
-    "https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap",
-  ];
-
-  /**
-   * Preload critical fonts before they are needed
-   */
-  static preloadCriticalFonts(): void {
-    // Create link elements for preloading
-    this.FONT_CSS_URLS.forEach((url) => {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "style";
-      link.href = url;
-      link.onload = () => {
-        // After preload, set the actual font stylesheet
-        const fontLink = document.createElement("link");
-        fontLink.rel = "stylesheet";
-        fontLink.href = url;
-        document.head.appendChild(fontLink);
-      };
-      document.head.appendChild(link);
-    });
-
-    // Add font-display swap to prevent invisible text
-    this.injectFontFaceRule();
-  }
-
-  /**
-   * Inject custom font-face rule with swap display strategy
-   */
-  private static injectFontFaceRule(): void {
-    const style = document.createElement("style");
-    style.textContent = `
-      @font-face {
-        font-family: 'Plus Jakarta Sans';
-        font-display: swap;
-        src: url('https://fonts.gstatic.com/s/plusjakartasans/v8/tuw4NstQCU5Hn3b8_v8DHKCZ3fiqHwjx.woff2') format('woff2');
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-      }
-      
-      @font-face {
-        font-family: 'Fira Code';
-        font-display: swap;
-        src: url('https://fonts.gstatic.com/s/firacode/v22/uU9NCBsR6Z2vfE9aq3bh0NSDulI.woff2') format('woff2');
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-      }
-    `;
-    document.head.appendChild(style);
-  }
 
   /**
    * Dynamically load a font with a timeout
@@ -164,48 +113,4 @@ export class FontLoader {
     // For now we'll simulate it
     return config.variant || "";
   }
-
-  /**
-   * Apply font loading strategy to document
-   */
-  static applyFontStrategy(): void {
-    // Add preload links for critical fonts
-    try {
-      this.preloadCriticalFonts();
-    } catch (error) {
-      console.warn("Font preloading failed:", error);
-      // Fallback: just load the fonts normally
-      this.loadFontsNormally();
-    }
-  }
-
-  /**
-   * Fallback method to load fonts normally if preloading fails
-   */
-  private static loadFontsNormally(): void {
-    // Create link elements for the Google Fonts
-    this.FONT_CSS_URLS.forEach((url) => {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = url;
-      link.crossOrigin = "anonymous";
-      document.head.appendChild(link);
-    });
-  }
-
-  /**
-   * Initialize font strategy on document ready
-   */
-  static initialize(): void {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => this.applyFontStrategy());
-    } else {
-      this.applyFontStrategy();
-    }
-  }
-}
-
-// Initialize font loading when DOM is ready
-if (typeof document !== "undefined") {
-  FontLoader.initialize();
 }

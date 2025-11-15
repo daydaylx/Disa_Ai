@@ -14,7 +14,7 @@
     color: var(--text-primary);
     /* stylelint-disable-next-line @stylistic/declaration-colon-space-after */
     font-family:
-      ui-sans-serif, system-ui, Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
+      ui-sans-serif, system-ui, "Plus Jakarta Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
     min-height: 100dvh;
     padding: var(--safe-top) var(--safe-right) calc(var(--safe-bottom) + 12px) var(--safe-left);
   }
