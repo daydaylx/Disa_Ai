@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
+import { PageContainer } from "../components/layout/PageContainer";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
@@ -223,9 +224,9 @@ export default function Chat() {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-page-padding-x py-space-md pb-32 safe-area-horizontal">
+      <main className="relative flex-1">
         {isEmpty ? (
-          <div className="space-y-8">
+          <PageContainer width="max" className="relative z-10 flex flex-col gap-8">
             <section className="overflow-hidden rounded-[2.5rem] border border-[var(--glass-border-strong)] bg-[radial-gradient(circle_at_top,hsl(var(--accent-hue)_80%_50%)_0%,rgba(12,19,36,0.85)_45%)] p-6 text-white shadow-[0_45px_120px_rgba(5,6,18,0.65)] sm:p-10">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
                 <div className="space-y-5 lg:flex-1">
@@ -392,23 +393,25 @@ export default function Chat() {
                 </div>
               </Card>
             </section>
-          </div>
+          </PageContainer>
         ) : (
-          <div className="flex-1 overflow-y-auto">
-            <VirtualizedMessageList
-              messages={messages}
-              isLoading={isLoading}
-              className="rounded-[var(--radius-xl)] border border-[color:var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--layer-glass-panel) 94%,transparent)] shadow-[var(--shadow-lg)] p-4"
-              onCopy={(content) => {
-                navigator.clipboard.writeText(content).catch((err) => {
-                  console.error("Failed to copy content:", err);
-                });
-              }}
-              onRetry={(messageId) => {
-                console.warn("Retry functionality not implemented for messageId:", messageId);
-              }}
-            />
-          </div>
+          <PageContainer width="max" className="relative z-10 flex h-full flex-col">
+            <div className="flex-1 overflow-y-auto rounded-[var(--radius-xl)] border border-[color:var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--layer-glass-panel)_94%,transparent)] p-4 shadow-[var(--shadow-lg)]">
+              <VirtualizedMessageList
+                messages={messages}
+                isLoading={isLoading}
+                onCopy={(content) => {
+                  navigator.clipboard.writeText(content).catch((err) => {
+                    console.error("Failed to copy content:", err);
+                  });
+                }}
+                onRetry={(messageId) => {
+                  console.warn("Retry functionality not implemented for messageId:", messageId);
+                }}
+                className="h-full"
+              />
+            </div>
+          </PageContainer>
         )}
       </main>
 
