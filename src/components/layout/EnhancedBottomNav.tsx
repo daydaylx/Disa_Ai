@@ -1,8 +1,8 @@
 import { Home, MessageSquare, Settings, Sparkles, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 
+import { appRouter } from "../../app/router";
 import { cn } from "../../lib/utils";
 
 // Typdefinition für die Navigationselemente
@@ -15,9 +15,18 @@ type NavItem = {
 };
 
 export function EnhancedBottomNav() {
-  const [activePath, setActivePath] = useState("");
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [activePath, setActivePath] = useState(() => appRouter.state.location.pathname);
+
+  useEffect(() => {
+    setActivePath(appRouter.state.location.pathname);
+    const unsubscribe = appRouter.subscribe((state) => {
+      setActivePath(state.location.pathname);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   // Navigationselemente mit Icons und Pfaden
   const navItems: NavItem[] = [
@@ -56,14 +65,9 @@ export function EnhancedBottomNav() {
     },
   ];
 
-  // Aktiven Pfad setzen
-  useEffect(() => {
-    setActivePath(location.pathname);
-  }, [location.pathname]);
-
   // Navigation durchführen
   const handleNavigation = (path: string) => {
-    void navigate(path);
+    void appRouter.navigate(path);
   };
 
   // Prüfen, ob ein Navigationspunkt aktiv ist

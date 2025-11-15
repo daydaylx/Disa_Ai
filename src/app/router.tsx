@@ -26,7 +26,7 @@ const SettingsFiltersPage = lazy(() => import("../pages/SettingsFilters"));
 const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
 const SettingsDataPage = lazy(() => import("../pages/SettingsData"));
 
-const router = createBrowserRouter(
+export const appRouter = createBrowserRouter(
   [
     {
       path: "/",
@@ -387,5 +387,5 @@ const router = createBrowserRouter(
 );
 
 export function Router() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={appRouter} />;
 }

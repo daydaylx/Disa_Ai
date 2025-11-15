@@ -1,8 +1,8 @@
 import { ChevronDown, ChevronUp, Cpu, Home, MessageSquare, Settings, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 
+import { appRouter } from "../../app/router";
 import { useFeatureFlag } from "../../hooks/useFeatureFlags";
 import { cn } from "../../lib/utils";
 
@@ -17,10 +17,19 @@ type NavItem = {
 
 const MobileBottomNav = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activePath, setActivePath] = useState("");
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [activePath, setActivePath] = useState(() => appRouter.state.location.pathname);
   const isNewNavEnabled = useFeatureFlag("enhancedNavigation");
+
+  useEffect(() => {
+    setActivePath(appRouter.state.location.pathname);
+    const unsubscribe = appRouter.subscribe((state) => {
+      setActivePath(state.location.pathname);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   // Navigationselemente mit Icons und Pfaden
   const navItems: NavItem[] = [
@@ -62,11 +71,6 @@ const MobileBottomNav = () => {
   const secondaryItems = navItems.slice(5);
   const hasSecondaryItems = secondaryItems.length > 0;
 
-  // Aktiven Pfad setzen
-  useEffect(() => {
-    setActivePath(location.pathname);
-  }, [location.pathname]);
-
   // Prüfen, ob ein Navigationspunkt aktiv ist
   const isItemActive = (item: NavItem) => {
     if (item.activePattern) {
@@ -77,7 +81,7 @@ const MobileBottomNav = () => {
 
   // Navigation durchführen
   const handleNavigation = (path: string) => {
-    void navigate(path);
+    void appRouter.navigate(path);
     setIsExpanded(false);
   };
 

@@ -19,6 +19,14 @@ export interface A11yViolation {
   suggestion: string;
 }
 
+declare global {
+  interface Window {
+    __DISA_A11Y_LAST_VIOLATIONS__?: A11yViolation[];
+  }
+}
+
+const reportedElements = new WeakSet<Element>();
+
 /**
  * Check if an element meets minimum touch target requirements
  */
@@ -29,7 +37,11 @@ export function validateTouchTarget(element: Element): A11yViolation[] {
     return violations;
   }
 
-  const rect = element.getBoundingClientRect();
+  const rect = getVisibleRect(element);
+  if (!rect) {
+    return violations;
+  }
+
   const minSize = TOUCH_TARGET_SIZES.minimum;
 
   if (rect.width < minSize || rect.height < minSize) {
@@ -51,6 +63,9 @@ export function validateTouchTarget(element: Element): A11yViolation[] {
 export function validateAriaAttributes(element: Element): A11yViolation[] {
   const violations: A11yViolation[] = [];
   const tagName = element.tagName.toLowerCase();
+  if (!isElementVisible(element)) {
+    return violations;
+  }
 
   // Check for missing aria-label on buttons without text content
   if (tagName === "button" && !hasAccessibleName(element)) {
@@ -96,8 +111,11 @@ export function autoFixA11yViolations(element: Element): boolean {
 
   // Add tap-target class for small interactive elements
   if (isInteractive(element)) {
-    const rect = element.getBoundingClientRect();
-    if (rect.width < TOUCH_TARGET_SIZES.minimum || rect.height < TOUCH_TARGET_SIZES.minimum) {
+    const rect = getVisibleRect(element);
+    if (
+      rect &&
+      (rect.width < TOUCH_TARGET_SIZES.minimum || rect.height < TOUCH_TARGET_SIZES.minimum)
+    ) {
       element.classList.add("tap-target");
       fixed = true;
     }
@@ -310,13 +328,8 @@ export class FocusManager {
     ].join(", ");
 
     return Array.from(container.querySelectorAll(selector)).filter((element) =>
-      this.isVisible(element),
+      isElementVisible(element),
     );
-  }
-
-  private isVisible(element: Element): boolean {
-    const style = window.getComputedStyle(element);
-    return style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0";
   }
 }
 
@@ -357,12 +370,9 @@ export function initializeA11yEnforcement(): void {
   // Initial enforcement on page load
   document.addEventListener("DOMContentLoaded", () => {
     const result = enforceA11yStandards();
-    if (result.violations.length > 0) {
-      console.warn("🔍 Accessibility Violations Detected");
-      result.violations.forEach((violation) => {
-        console.warn(violation.message, violation.element);
-        console.warn("💡 Suggestion:", violation.suggestion);
-      });
+    const uniqueViolations = filterNewViolations(result.violations);
+    if (uniqueViolations.length > 0) {
+      logViolations("Accessibility violations detected at startup", uniqueViolations);
     }
 
     if (result.fixedCount > 0) {
@@ -372,8 +382,63 @@ export function initializeA11yEnforcement(): void {
 
   // Monitor for new violations
   createA11yObserver((violations) => {
-    if (violations.length > 0) {
-      console.warn("🔍 New accessibility violations detected:", violations);
+    const uniqueViolations = filterNewViolations(violations);
+    if (uniqueViolations.length > 0) {
+      logViolations("New accessibility violations detected", uniqueViolations);
     }
   });
+}
+
+function filterNewViolations(violations: A11yViolation[]): A11yViolation[] {
+  return violations.filter((violation) => {
+    if (reportedElements.has(violation.element)) {
+      return false;
+    }
+    reportedElements.add(violation.element);
+    return true;
+  });
+}
+
+function logViolations(message: string, violations: A11yViolation[]) {
+  console.warn(`🔍 ${message} (${violations.length})`);
+  violations.forEach((violation) => {
+    console.warn(`• [${violation.type}] ${violation.message}`, violation.element);
+    console.warn("  💡 Suggestion:", violation.suggestion);
+  });
+  if (typeof window !== "undefined") {
+    window.__DISA_A11Y_LAST_VIOLATIONS__ = violations;
+  }
+}
+
+function isElementVisible(element: Element): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+  if (!(element instanceof HTMLElement)) {
+    return false;
+  }
+
+  if (element.getAttribute("aria-hidden") === "true") {
+    return false;
+  }
+
+  const style = window.getComputedStyle(element);
+  if (style.display === "none" || style.visibility === "hidden" || style.opacity === "0") {
+    return false;
+  }
+
+  return true;
+}
+
+function getVisibleRect(element: Element): DOMRect | null {
+  if (!isElementVisible(element)) {
+    return null;
+  }
+
+  const rect = element.getBoundingClientRect();
+  if (rect.width === 0 && rect.height === 0) {
+    return null;
+  }
+
+  return rect;
 }
