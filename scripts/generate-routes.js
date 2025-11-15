@@ -10,8 +10,9 @@ import { join } from "path";
 
 const routes = {
   version: 1,
-  include: ["/*"],
-  exclude: ["/api/*"], // Only exclude API routes, let Cloudflare serve all static assets
+  // Run Pages Functions nur für /api-Routen, alle anderen Requests bleiben statisch.
+  include: ["/api/*"],
+  exclude: [],
 };
 
 // Ensure dist directory exists
