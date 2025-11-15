@@ -19,6 +19,20 @@ const buttonVariants = cva(
           "border border-[color:var(--glass-border-strong)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.25)]",
         "glass-ghost":
           "border border-transparent bg-transparent text-[var(--text-primary)] hover:bg-[color-mix(in_srgb,var(--surface-base)_90%,var(--accent)_10%)]",
+        "modern-primary":
+          "border border-[var(--color-primary-500)] bg-[var(--color-primary-500)] text-white shadow-[var(--shadow-light)] hover:bg-[var(--color-primary-600)] hover:shadow-[var(--shadow-heavy)] hover:-translate-y-0.5",
+        "modern-secondary":
+          "border border-[var(--color-neutral-300)] bg-white text-[var(--color-neutral-700)] shadow-[var(--shadow-light)] hover:bg-[var(--color-neutral-50)] hover:border-[var(--color-neutral-400)] hover:shadow-[var(--shadow-heavy)]",
+        "modern-outline":
+          "border-2 border-[var(--color-primary-500)] bg-transparent text-[var(--color-primary-600)] hover:bg-[var(--color-primary-500)] hover:text-white",
+        "modern-ghost":
+          "border border-transparent bg-transparent text-[var(--color-neutral-600)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-900)]",
+        "modern-success":
+          "border border-[var(--color-success-500)] bg-[var(--color-success-500)] text-white shadow-[var(--shadow-light)] hover:bg-[var(--color-success-600)] hover:shadow-[var(--shadow-heavy)]",
+        "modern-warning":
+          "border border-[var(--color-warning-500)] bg-[var(--color-warning-500)] text-white shadow-[var(--shadow-light)] hover:bg-[var(--color-warning-600)] hover:shadow-[var(--shadow-heavy)]",
+        "modern-destructive":
+          "border border-[var(--color-error-500)] bg-[var(--color-error-500)] text-white shadow-[var(--shadow-light)] hover:bg-[var(--color-error-600)] hover:shadow-[var(--shadow-heavy)]",
         neumorphic:
           "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[var(--shadow-glass-subtle)] hover:shadow-[var(--shadow-glass-medium)]",
         "neo-medium":
@@ -43,14 +57,20 @@ const buttonVariants = cva(
           "border border-[color:var(--button-secondary-border)] bg-[var(--button-secondary-bg)] text-[var(--button-secondary-fg)] shadow-[var(--shadow-glass-subtle)] hover:bg-[var(--button-secondary-bg-hover)] hover:shadow-[var(--shadow-glass-medium)]",
       },
       size: {
-        xs: "h-8 px-2.5 py-1 text-xs", // 32px height for very compact controls
-        sm: "h-9 px-3 py-1.5 text-sm", // 36px height for compact controls
-        default: "h-10 px-4 py-2 text-sm", // 40px height default
-        lg: "h-12 px-6 py-3 text-base", // 48px height for prominent CTAs
-        xl: "h-14 px-8 py-3.5 text-base", // 56px height for major actions
+        xs: "h-8 px-3 py-1.5 text-xs font-medium", // 32px height - very compact
+        sm: "h-9 px-4 py-2 text-sm font-medium", // 36px height - compact
+        default: "h-10 px-6 py-2.5 text-sm font-medium", // 40px height - standard
+        md: "h-11 px-7 py-2.5 text-sm font-medium", // 44px height - medium
+        lg: "h-12 px-8 py-3 text-base font-semibold", // 48px height - large
+        xl: "h-14 px-10 py-3.5 text-base font-semibold", // 56px height - extra large
+        "2xl": "h-16 px-12 py-4 text-lg font-semibold", // 64px height - massive
         icon: "h-10 w-10", // 40px square to match default height
-        "icon-sm": "h-9 w-9", // 36px square for compact icons
+        "icon-xs": "h-8 w-8", // 32px square for compact icons
+        "icon-sm": "h-9 w-9", // 36px square for small icons
+        "icon-md": "h-11 w-11", // 44px square for medium icons
         "icon-lg": "h-12 w-12", // 48px square for large icons
+        "icon-xl": "h-14 w-14", // 56px square for extra large icons
+        "icon-2xl": "h-16 w-16", // 64px square for massive icons
       },
       dramatic: {
         false: "",

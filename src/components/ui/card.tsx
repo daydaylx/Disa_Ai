@@ -11,37 +11,49 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: "",
-        outline: "border-[var(--glass-border-soft)] bg-surface-base",
+        outline: "border-[var(--border-muted)] bg-[var(--surface-card)]",
         flat: "border-transparent bg-transparent shadow-none",
+        filled: "border-[var(--border-subtle)] bg-[var(--surface-base)]",
+        bordered: "border-2 border-[var(--border-default)] bg-[var(--surface-card)]",
       },
       tone: {
-        // Modern Glassmorphism variants
+        // Modern Card Variants
+        "modern-default":
+          "bg-[var(--surface-card)] border-[var(--border-muted)] text-[var(--text-primary)]",
+        "modern-surface":
+          "bg-[var(--surface-base)] border-[var(--border-subtle)] text-[var(--text-primary)]",
+        "modern-elevated":
+          "bg-[var(--surface-card)] border-[var(--border-muted)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
+        "modern-floating":
+          "bg-[var(--surface-card)] border-[var(--border-muted)] text-[var(--text-primary)] shadow-[var(--shadow-heavy)]",
+
+        // Glassmorphism variants
         "glass-primary":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
         "glass-subtle":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-secondary",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-secondary)]",
         "glass-floating":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
         "glass-overlay":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
         "glass-raised":
-          "bg-[color-mix(in_srgb,var(--surface-card)_90%,white_10%)] border-[color-mix(in_srgb,var(--glass-border-soft)_70%,transparent_30%)] text-text-primary shadow-[var(--shadow-sm)]",
+          "bg-[color-mix(in srgb,var(--surface-card)_90%,white_10%)] border-[color-mix(in srgb,var(--glass-border-soft)_70%,transparent_30%)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
         "glass-elevated":
-          "bg-[color-mix(in_srgb,var(--surface-card)_85%,white_5%)] border-[color-mix(in_srgb,var(--glass-border-soft)_60%,transparent_40%)] text-text-primary shadow-[var(--shadow-lg)] backdrop-blur-[var(--glass-backdrop-blur-sm)]",
+          "bg-[color-mix(in srgb,var(--surface-card)_85%,white_5%)] border-[color-mix(in srgb,var(--glass-border-soft)_60%,transparent_40%)] text-[var(--text-primary)] shadow-[var(--shadow-heavy)] backdrop-blur-[var(--backdrop-blur-subtle)]",
         "glass-inset":
-          "bg-[color-mix(in_srgb,var(--surface-base)_95%,black_5%)] border-[color-mix(in_srgb,var(--glass-border-soft)_50%,transparent_50%)] text-text-primary shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]",
+          "bg-[color-mix(in srgb,var(--surface-base)_95%,black_5%)] border-[color-mix(in srgb,var(--glass-border-soft)_50%,transparent_50%)] text-[var(--text-primary)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]",
 
         // Legacy aliases (using new glassmorphism styles)
         "neo-raised":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
         "neo-subtle":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
         "neo-inset":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary shadow-[var(--shadow-sm)]",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
         "neo-floating":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
         "neo-glass":
-          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
       },
       intent: {
         default: "",
