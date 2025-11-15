@@ -35,6 +35,7 @@ export function useServiceWorker() {
           kind: "info",
           title: "Update verfügbar",
           message: "Eine neue Version ist verfügbar. Jetzt aktualisieren?",
+          duration: 0,
           action: {
             label: "Neu laden",
             onClick: () => {
@@ -59,7 +60,7 @@ export function useServiceWorker() {
           kind: "success",
           title: "Offline bereit",
           message: "Disa AI ist jetzt auch ohne Verbindung nutzbar.",
-          duration: 4000,
+          duration: 4500,
         });
       }
     };

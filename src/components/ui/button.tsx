@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-sm)] font-semibold transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 backdrop-blur-[var(--glass-backdrop-blur-sm)]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-sm)] font-semibold transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 backdrop-blur-[var(--glass-backdrop-blur-sm)] motion-reduce:transition-none motion-reduce:transform-none",
   {
     variants: {
       variant: {
@@ -97,16 +97,19 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, dramatic, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, dramatic, asChild = false, type, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     const resolvedDramatic: ButtonVariantProps["dramatic"] = Boolean(dramatic);
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, dramatic: resolvedDramatic }), className)}
-        ref={ref}
-        {...props}
-      />
+    const baseClasses = cn(
+      buttonVariants({ variant, size, dramatic: resolvedDramatic }),
+      className,
     );
+
+    if (asChild) {
+      return <Comp className={baseClasses} ref={ref} {...props} />;
+    }
+
+    return <Comp className={baseClasses} ref={ref} type={type ?? "button"} {...props} />;
   },
 );
 Button.displayName = "Button";

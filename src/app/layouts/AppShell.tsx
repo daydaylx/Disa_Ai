@@ -1,26 +1,19 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { Header } from "../../components/layout/Header";
+import { NavPills } from "../../components/navigation/NavPills";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { SettingsDrawer } from "../../components/shell/SettingsDrawer";
+import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
 import { useSettings } from "../../hooks/useSettings";
-import { cn } from "../../lib/utils";
 
 interface AppShellProps {
   children: ReactNode;
 }
-
-const NAV_ITEMS = [
-  { path: "/", label: "Studio" },
-  { path: "/chat", label: "Chat" },
-  { path: "/models", label: "Modelle" },
-  { path: "/roles", label: "Rollen" },
-  { path: "/settings", label: "Einstellungen" },
-];
 
 const MODEL_LABELS: Record<string, string> = {
   "openai/gpt-4o-mini": "GPT‑4o mini",
@@ -44,9 +37,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     useSettings();
 
   const { activePath, pageTitle } = useMemo(() => {
-    const activeItem = NAV_ITEMS.find((item) =>
-      item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path),
-    );
+    const activeItem = PRIMARY_NAV_ITEMS.find((item) => isNavItemActive(item, location.pathname));
     return {
       activePath: activeItem?.path ?? "/",
       pageTitle: activeItem?.label ?? "Studio",
@@ -66,88 +57,78 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     MODEL_LABELS[settings.preferredModelId] ?? settings.preferredModelId ?? "Automatisch";
 
   return (
-    <div
-      className="relative flex min-h-screen flex-col bg-[var(--bg0)] text-text-primary"
-      style={{
-        backgroundImage: "var(--bg-gradient)",
-        paddingTop: "env(safe-area-inset-top, 0px)",
-        paddingBottom: "env(safe-area-inset-bottom, 0px)",
-        paddingLeft: "env(safe-area-inset-left, 0px)",
-        paddingRight: "env(safe-area-inset-right, 0px)",
-      }}
-    >
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent"
-      >
-        Zum Hauptinhalt springen
-      </a>
-
-      <Header
-        onOpenDrawer={() => setIsDrawerOpen(true)}
-        title="Disa AI"
-        subtitle={pageTitle}
-        modelLabel={modelLabel}
-      />
-
-      <div className="border-b border-[var(--glass-border-soft)] bg-surface-base/40 backdrop-blur-xl">
-        <nav
-          aria-label="Primäre Navigation"
-          className="mx-auto flex w-full max-w-5xl gap-3 overflow-x-auto px-page-padding-x py-3"
-        >
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={`chip-${item.path}`}
-              to={item.path}
-              className={cn(
-                "shrink-0 rounded-full border px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.2em] transition-colors",
-                activePath === item.path
-                  ? "border-[var(--accent-border)] bg-[var(--accent-soft)] text-text-primary shadow-[0_12px_30px_rgba(97,231,255,0.3)]"
-                  : "border-[var(--glass-border-soft)] text-text-secondary hover:border-[var(--glass-border-strong)] hover:text-text-primary",
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+    <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-[var(--bg0)]" />
+        <div
+          className="absolute inset-0 opacity-90"
+          style={{ backgroundImage: "var(--bg-gradient)" }}
+        />
       </div>
-
-      <main
-        id="main"
-        role="main"
-        key={location.pathname}
-        className="relative flex flex-1 flex-col overflow-hidden"
+      <div
+        className="relative flex min-h-screen flex-col"
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          paddingLeft: "env(safe-area-inset-left, 0px)",
+          paddingRight: "env(safe-area-inset-right, 0px)",
+        }}
       >
-        <div className="mx-auto flex h-full w-full max-w-5xl flex-1 flex-col overflow-y-auto px-page-padding-x py-page-padding-y">
-          <div className="page-stack flex flex-1 flex-col">{children}</div>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent"
+        >
+          Zum Hauptinhalt springen
+        </a>
 
-          <footer className="mt-8 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--glass-border-soft)] pt-4 text-[11px] text-text-muted">
-            <span>Disa AI · Build</span>
-            <BuildInfo />
-          </footer>
+        <Header
+          onOpenDrawer={() => setIsDrawerOpen(true)}
+          title="Disa AI"
+          subtitle={pageTitle}
+          modelLabel={modelLabel}
+        />
+
+        <div className="border-b border-[var(--glass-border-soft)] bg-surface-base/40 backdrop-blur-xl">
+          <NavPills items={PRIMARY_NAV_ITEMS} pathname={location.pathname} />
         </div>
-      </main>
 
-      <NetworkBanner />
-      {location.pathname === "/" && <PWAInstallPrompt />}
-      {process.env.NODE_ENV === "development" && <PWADebugInfo />}
+        <main
+          id="main"
+          role="main"
+          key={location.pathname}
+          className="relative flex flex-1 flex-col overflow-hidden"
+        >
+          <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col overflow-y-auto px-6 py-8 sm:px-10 sm:py-12">
+            <div className="page-stack flex flex-1 flex-col gap-6">{children}</div>
 
-      <SettingsDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        navItems={NAV_ITEMS}
-        activePath={activePath}
-        selectedModelId={settings.preferredModelId}
-        onSelectModel={(modelId) => {
-          setPreferredModel(modelId);
-          setIsDrawerOpen(false);
-        }}
-        toggles={{
-          nsfw: { value: settings.showNSFWContent, onToggle: toggleNSFWContent },
-          analytics: { value: settings.enableAnalytics, onToggle: toggleAnalytics },
-          notifications: { value: settings.enableNotifications, onToggle: toggleNotifications },
-        }}
-      />
+            <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[var(--glass-border-soft)] bg-surface-panel/80 px-4 py-3 text-[11px] text-text-muted shadow-[var(--shadow-sm)]">
+              <span>Disa AI · Build</span>
+              <BuildInfo />
+            </footer>
+          </div>
+        </main>
+
+        <NetworkBanner />
+        {location.pathname === "/" && <PWAInstallPrompt />}
+        {process.env.NODE_ENV === "development" && <PWADebugInfo />}
+
+        <SettingsDrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          navItems={PRIMARY_NAV_ITEMS}
+          activePath={activePath}
+          selectedModelId={settings.preferredModelId}
+          onSelectModel={(modelId) => {
+            setPreferredModel(modelId);
+            setIsDrawerOpen(false);
+          }}
+          toggles={{
+            nsfw: { value: settings.showNSFWContent, onToggle: toggleNSFWContent },
+            analytics: { value: settings.enableAnalytics, onToggle: toggleAnalytics },
+            notifications: { value: settings.enableNotifications, onToggle: toggleNotifications },
+          }}
+        />
+      </div>
     </div>
   );
 }

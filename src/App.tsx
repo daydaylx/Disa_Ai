@@ -1,6 +1,6 @@
 import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
 
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useRef } from "react";
 
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
@@ -14,6 +14,12 @@ import { useEdgeSwipeDrawer } from "./hooks/useEdgeSwipe";
 import { useFeatureFlag } from "./hooks/useFeatureFlags";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
+
+declare global {
+  interface Window {
+    __disaSetViewportHeight?: () => void;
+  }
+}
 
 const FeatureFlagPanel = lazy(() =>
   import("./components/dev/FeatureFlagPanel").then((module) => ({
@@ -121,6 +127,9 @@ function AppContent() {
 
 export default function App() {
   // Initialize viewport height with optimized throttling for scroll performance and fix overflow
+  const prevBodyOverflowRef = useRef<string>("");
+  const prevDocOverflowRef = useRef<string>("");
+
   React.useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -134,9 +143,12 @@ export default function App() {
     };
 
     // Apply initial styles to prevent horizontal scrolling
+    prevBodyOverflowRef.current = document.body.style.overflowX;
+    prevDocOverflowRef.current = document.documentElement.style.overflowX;
     document.body.style.overflowX = "hidden";
     document.documentElement.style.overflowX = "hidden";
 
+    window.__disaSetViewportHeight = applyViewportHeight;
     applyViewportHeight();
     window.addEventListener("resize", applyViewportHeight, { passive: true });
     window.addEventListener("orientationchange", handleOrientationChange);
@@ -144,6 +156,11 @@ export default function App() {
     return () => {
       window.removeEventListener("resize", applyViewportHeight);
       window.removeEventListener("orientationchange", handleOrientationChange);
+      if (window.__disaSetViewportHeight === applyViewportHeight) {
+        delete window.__disaSetViewportHeight;
+      }
+      document.body.style.overflowX = prevBodyOverflowRef.current;
+      document.documentElement.style.overflowX = prevDocOverflowRef.current;
     };
   }, []);
 

@@ -7,7 +7,17 @@ import { SettingsLink } from "../../components/ui/SettingsLink";
 import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
-import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "../../lib/icons";
+import {
+  BookOpenCheck,
+  ChevronUp,
+  KeyRound,
+  Moon,
+  Palette,
+  Settings,
+  Shield,
+  Upload,
+  Waves,
+} from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
 
 interface OverviewCard {
@@ -93,6 +103,27 @@ export function SettingsOverview() {
     },
   ];
 
+  const gestureTips = [
+    {
+      id: "gesture-settings",
+      title: "Einstellungen öffnen",
+      description: "Langes Drücken mit drei Fingern öffnet jederzeit das Studio.",
+      icon: Settings,
+    },
+    {
+      id: "gesture-scroll",
+      title: "Zurück zum Anfang",
+      description: "Doppeltippen am oberen Rand scrollt an den Seitenanfang.",
+      icon: ChevronUp,
+    },
+    {
+      id: "gesture-theme",
+      title: "Theme wechseln",
+      description: "Swipe nach oben mit drei Fingern toggelt Hell/Dunkel.",
+      icon: Moon,
+    },
+  ];
+
   return (
     <div className="space-y-6 pb-12 text-style-body">
       <div className="space-y-1">
@@ -121,40 +152,38 @@ export function SettingsOverview() {
         subtitle="Eine klare Übersicht über die wichtigsten Bereiche."
         padding="sm"
       >
-        <div className="flex flex-col">
+        <div className="grid gap-4 sm:grid-cols-2">
           {cards.map((card) => (
             <SettingsLink
               key={card.id}
               to={card.to}
-              icon={<card.icon className="icon-std text-text-secondary" />}
+              icon={<card.icon className="h-4 w-4" />}
               title={card.title}
               description={card.description}
+              statusLabel={card.statusLabel}
+              statusVariant={card.statusVariant}
+              meta={card.meta}
             />
           ))}
         </div>
       </SectionCard>
 
       <SectionCard title="Gesten & Shortcuts" headerActions={<Waves className="h-5 w-5" />}>
-        <ul className="mt-3 space-y-2 text-style-body text-text-primary/85">
-          <li className="leading-[var(--line-height-body)]">
-            <span className="text-style-body-strong text-text-primary">
-              Langes Drücken mit drei Fingern
-            </span>{" "}
-            öffnet die Einstellungen – jederzeit erreichbar.
-          </li>
-          <li className="leading-[var(--line-height-body)]">
-            <span className="text-style-body-strong text-text-primary">
-              Doppeltippen am oberen Rand
-            </span>{" "}
-            scrollt zurück zum Anfang der aktuellen Ansicht.
-          </li>
-          <li className="leading-[var(--line-height-body)]">
-            <span className="text-style-body-strong text-text-primary">
-              Swipe nach oben mit drei Fingern
-            </span>{" "}
-            wechselt das Theme – perfekt zum schnellen Check.
-          </li>
-        </ul>
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          {gestureTips.map((gesture) => {
+            const Icon = gesture.icon;
+            return (
+              <div
+                key={gesture.id}
+                className="rounded-xl border border-[var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--layer-glass-panel)_96%,transparent)] p-4 shadow-[var(--shadow-sm)]"
+              >
+                <Icon className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" />
+                <p className="text-sm font-semibold text-text-primary">{gesture.title}</p>
+                <p className="text-sm text-text-secondary">{gesture.description}</p>
+              </div>
+            );
+          })}
+        </div>
       </SectionCard>
     </div>
   );

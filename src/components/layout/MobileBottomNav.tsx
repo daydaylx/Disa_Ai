@@ -1,19 +1,10 @@
-import { ChevronDown, ChevronUp, Cpu, Home, MessageSquare, Settings, Users } from "lucide-react";
-import type { ReactNode } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { appRouter } from "../../app/router";
+import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
 import { useFeatureFlag } from "../../hooks/useFeatureFlags";
 import { cn } from "../../lib/utils";
-
-// Typdefinition für die Navigationselemente
-type NavItem = {
-  id: string;
-  label: string;
-  icon: ReactNode;
-  path: string;
-  activePattern?: RegExp;
-};
 
 const MobileBottomNav = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -31,53 +22,10 @@ const MobileBottomNav = () => {
     };
   }, []);
 
-  // Navigationselemente mit Icons und Pfaden
-  const navItems: NavItem[] = [
-    {
-      id: "studio",
-      label: "Studio",
-      icon: <Home className="w-5 h-5" />,
-      path: "/studio",
-    },
-    {
-      id: "chat",
-      label: "Chat",
-      icon: <MessageSquare className="w-5 h-5" />,
-      path: "/chat",
-      activePattern: /^\/chat/,
-    },
-    {
-      id: "models",
-      label: "Modelle",
-      icon: <Cpu className="w-5 h-5" />,
-      path: "/models",
-    },
-    {
-      id: "roles",
-      label: "Rollen",
-      icon: <Users className="w-5 h-5" />,
-      path: "/roles",
-    },
-    {
-      id: "settings",
-      label: "Einstellungen",
-      icon: <Settings className="w-5 h-5" />,
-      path: "/settings",
-      activePattern: /^\/settings/,
-    },
-  ];
-
+  const navItems = PRIMARY_NAV_ITEMS;
   const primaryItems = navItems.slice(0, 5);
   const secondaryItems = navItems.slice(5);
   const hasSecondaryItems = secondaryItems.length > 0;
-
-  // Prüfen, ob ein Navigationspunkt aktiv ist
-  const isItemActive = (item: NavItem) => {
-    if (item.activePattern) {
-      return item.activePattern.test(activePath);
-    }
-    return activePath === item.path;
-  };
 
   // Navigation durchführen
   const handleNavigation = (path: string) => {
@@ -96,7 +44,8 @@ const MobileBottomNav = () => {
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-surface-glass border-t border-line backdrop-blur-xl">
         <div className="flex justify-around items-center py-2 px-2">
           {primaryItems.map((item) => {
-            const isActive = isItemActive(item);
+            const isActive = isNavItemActive(item, activePath);
+            const Icon = item.Icon;
 
             return (
               <button
@@ -115,7 +64,7 @@ const MobileBottomNav = () => {
                   <div className="absolute inset-x-2 top-0 h-1 rounded-b-full bg-accent transform scale-x-100 transition-transform duration-200" />
                 )}
 
-                <div className="mb-1">{item.icon}</div>
+                <Icon className="mb-1 w-5 h-5" />
 
                 <span className="text-xs font-medium">{item.label}</span>
               </button>
@@ -131,7 +80,8 @@ const MobileBottomNav = () => {
       {/* Haupt-Navigation */}
       <div className="flex justify-around items-center py-3 px-2">
         {primaryItems.map((item) => {
-          const isActive = isItemActive(item);
+          const isActive = isNavItemActive(item, activePath);
+          const Icon = item.Icon;
 
           return (
             <button
@@ -150,7 +100,7 @@ const MobileBottomNav = () => {
                 <div className="absolute inset-x-2 top-0 h-1 rounded-b-full bg-accent" />
               )}
 
-              <div className="mb-1 w-6 h-6">{item.icon}</div>
+              <Icon className="mb-1 h-6 w-6" />
               <span className="text-xs font-medium">{item.label}</span>
             </button>
           );
@@ -162,7 +112,8 @@ const MobileBottomNav = () => {
         <div className="border-t border-line py-3 px-2">
           <div className="flex justify-around items-center">
             {secondaryItems.map((item) => {
-              const isActive = isItemActive(item);
+              const isActive = isNavItemActive(item, activePath);
+              const Icon = item.Icon;
 
               return (
                 <button
@@ -181,7 +132,7 @@ const MobileBottomNav = () => {
                     <div className="absolute inset-x-2 top-0 h-1 rounded-b-full bg-accent" />
                   )}
 
-                  <div className="mb-1 w-6 h-6">{item.icon}</div>
+                  <Icon className="mb-1 w-5 h-5" />
                   <span className="text-xs font-medium">{item.label}</span>
                 </button>
               );

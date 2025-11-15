@@ -1,18 +1,8 @@
-import { Home, MessageSquare, Settings, Sparkles, Users } from "lucide-react";
-import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
 import { appRouter } from "../../app/router";
+import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
 import { cn } from "../../lib/utils";
-
-// Typdefinition für die Navigationselemente
-type NavItem = {
-  id: string;
-  label: string;
-  icon: ReactNode;
-  path: string;
-  activePattern?: RegExp;
-};
 
 export function EnhancedBottomNav() {
   const [activePath, setActivePath] = useState(() => appRouter.state.location.pathname);
@@ -28,61 +18,18 @@ export function EnhancedBottomNav() {
     };
   }, []);
 
-  // Navigationselemente mit Icons und Pfaden
-  const navItems: NavItem[] = [
-    {
-      id: "studio",
-      label: "Studio",
-      icon: <Home className="w-6 h-6" />,
-      path: "/studio",
-    },
-    {
-      id: "chat",
-      label: "Chat",
-      icon: <MessageSquare className="w-6 h-6" />,
-      path: "/chat",
-      activePattern: /^\/chat/,
-    },
-    {
-      id: "discover",
-      label: "Entdecken",
-      icon: <Sparkles className="w-6 h-6" />,
-      path: "/models",
-    },
-    {
-      id: "roles",
-      label: "Rollen",
-      icon: <Users className="w-6 h-6" />,
-      path: "/roles",
-      activePattern: /^\/roles/,
-    },
-    {
-      id: "settings",
-      label: "Einstellungen",
-      icon: <Settings className="w-6 h-6" />,
-      path: "/settings",
-      activePattern: /^\/settings/,
-    },
-  ];
-
   // Navigation durchführen
   const handleNavigation = (path: string) => {
     void appRouter.navigate(path);
   };
 
   // Prüfen, ob ein Navigationspunkt aktiv ist
-  const isItemActive = (item: NavItem) => {
-    if (item.activePattern) {
-      return item.activePattern.test(activePath);
-    }
-    return activePath === item.path;
-  };
-
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-surface-glass border-t border-line backdrop-blur-xl">
       <div className="flex justify-around items-center py-2 px-2">
-        {navItems.map((item) => {
-          const isActive = isItemActive(item);
+        {PRIMARY_NAV_ITEMS.map((item) => {
+          const isActive = isNavItemActive(item, activePath);
+          const Icon = item.Icon;
 
           return (
             <button
@@ -105,7 +52,7 @@ export function EnhancedBottomNav() {
                   isActive ? "scale-110" : "scale-100",
                 )}
               >
-                {item.icon}
+                <Icon className="w-6 h-6" />
               </div>
 
               <span

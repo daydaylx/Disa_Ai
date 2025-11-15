@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
+import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
@@ -136,117 +137,9 @@ export default function Chat() {
       <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-page-padding-x py-space-md pb-32 safe-area-horizontal">
         {isEmpty ? (
           <>
-            <section className="space-y-2">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-accent/80">
-                Schnellstart
-              </p>
-              <h1 className="text-2xl font-semibold text-text-primary sm:text-3xl">
-                Was möchtest du heute mit Disa AI erledigen?
-              </h1>
-              <p className="max-w-2xl text-sm text-text-secondary">
-                Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA
-                und ruhiges, fokussiertes Arbeiten.
-              </p>
-            </section>
-
-            <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              <Card
-                tone="glass-primary"
-                elevation="surface"
-                padding="md"
-                interactive="gentle"
-                clickable
-                onClick={() =>
-                  startWithPreset(
-                    "Du bist ein strukturierter Research-Assistent. Fasse Quellen, Argumente und Risiken sachlich zusammen.",
-                    "Hilf mir bei einer tiefen Recherche zu einem Thema meiner Wahl.",
-                  )
-                }
-                className="flex flex-col gap-3"
-              >
-                <div className="flex items-center gap-2 text-lg">
-                  <span>🧠</span>
-                  <CardTitle className="text-base font-semibold">Research</CardTitle>
-                </div>
-                <p className="text-sm text-text-secondary flex-1">
-                  Tiefe Recherchen, Quellencheck, Pro/Contra-Analysen.
-                </p>
-              </Card>
-
-              <Card
-                tone="glass-primary"
-                elevation="surface"
-                padding="md"
-                interactive="gentle"
-                clickable
-                onClick={() =>
-                  startWithPreset(
-                    "Du unterstützt beim Schreiben klarer, freundlicher Nachrichten und E-Mails.",
-                  )
-                }
-                className="flex flex-col gap-3"
-              >
-                <div className="flex items-center gap-2 text-lg">
-                  <span>✍️</span>
-                  <CardTitle className="text-base font-semibold">Schreiben</CardTitle>
-                </div>
-                <p className="text-sm text-text-secondary flex-1">
-                  Klare Mails, Support-Texte, Social Posts auf Knopfdruck.
-                </p>
-              </Card>
-
-              <Card
-                tone="glass-primary"
-                elevation="surface"
-                padding="md"
-                interactive="gentle"
-                clickable
-                onClick={() =>
-                  startWithPreset(
-                    "Du bist ein gewissenhafter Coding-Partner. Erkläre Code knapp und schlage sichere Verbesserungen vor.",
-                  )
-                }
-                className="flex flex-col gap-3"
-              >
-                <div className="flex items-center gap-2 text-lg">
-                  <span>💻</span>
-                  <CardTitle className="text-base font-semibold">Code & Reviews</CardTitle>
-                </div>
-                <p className="text-sm text-text-secondary flex-1">
-                  Erklärungen, Refactors und sichere Vorschläge für deinen Code.
-                </p>
-              </Card>
-            </section>
+            <QuickstartGrid onStart={startWithPreset} />
 
             <section className="grid gap-4 grid-cols-1 md:grid-cols-2">
-              <Card tone="glass-primary" elevation="surface" padding="md">
-                <CardTitle className="text-base font-semibold mb-3">Studio-Verknüpfungen</CardTitle>
-                <div className="space-y-2">
-                  <Link
-                    to="/models"
-                    className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-surface-muted/80 transition-colors min-h-[44px]"
-                  >
-                    <span className="text-sm text-text-secondary">
-                      Modelle vergleichen & wählen
-                    </span>
-                  </Link>
-                  <Link
-                    to="/roles"
-                    className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-surface-muted/80 transition-colors min-h-[44px]"
-                  >
-                    <span className="text-sm text-text-secondary">Rollenbibliothek erkunden</span>
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-surface-muted/80 transition-colors min-h-[44px]"
-                  >
-                    <span className="text-sm text-text-secondary">
-                      Einstellungen & API-Key prüfen
-                    </span>
-                  </Link>
-                </div>
-              </Card>
-
               <Card tone="glass-primary" elevation="surface" padding="md">
                 <CardTitle className="text-base font-semibold mb-3">Hinweise</CardTitle>
                 <div className="space-y-2 text-sm text-text-secondary">
