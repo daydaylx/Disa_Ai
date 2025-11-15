@@ -3,20 +3,24 @@
  *
  * This file establishes the foundational styles for the application.
  * 1. z-index-system.css: Manages the stacking order of all elements.
- * 2. unified-tokens.css: Defines all design tokens (colors, spacing, typography) as CSS variables.
- * 3. Tailwind CSS: Utility-first framework that consumes the tokens from unified-tokens.css.
+ * 2. theme/tokens.css: Defines all design tokens (radii, shadows, spacing, glass) as CSS variables.
+ * 3. unified-tokens.css: Defines all design tokens (colors, typography) as CSS variables.
+ * 4. Tailwind CSS: Utility-first framework that consumes the tokens from unified-tokens.css.
  */
 
 /* 1. Establish z-index hierarchy */
 @import "./styles/z-index-system.css";
 
-/* 2. Import the centralized design system tokens */
+/* 2. Import the new centralized design system tokens */
+@import "./theme/tokens.css";
+
+/* 3. Import the existing design system tokens */
 @import "./styles/design-tokens.css";
 
-/* 3. Aurora-optimized styles for better performance */
+/* 4. Aurora-optimized styles for better performance */
 @import "./styles/aurora-optimized.css";
 
-/* 4. Inject Tailwind's base, components, and utility styles */
+/* 5. Inject Tailwind's base, components, and utility styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,9 +33,24 @@
   /* Set the default color scheme to dark */
   :root {
     color-scheme: dark;
+    /* Safe area insets for mobile devices */
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
   }
 
   /* Apply base background and text color */
+  html,
+  body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     background-color: var(--surface-bg);
     color: var(--fg);
@@ -41,12 +60,17 @@
   }
 
   /* Ensure the root element takes up at least the full viewport height */
-  /* stylelint-disable-next-line selector-max-id */
-  #root {
-    min-height: 100dvh;
+  /* stylelint-disable selector-max-id */
+  #root,
+  #app {
+    width: 100%;
+    min-width: 100%;
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
     position: relative;
     z-index: 1;
   }
+  /* stylelint-enable selector-max-id */
 }
 
 @layer components {
@@ -57,14 +81,117 @@
     width: 100%;
   }
 
+  .safe-area-container {
+    padding-top: var(--safe-area-top, 0px);
+    padding-right: var(--safe-area-right, 0px);
+    padding-bottom: var(--safe-area-bottom, 0px);
+    padding-left: var(--safe-area-left, 0px);
+  }
+
+  .safe-area-top {
+    padding-top: var(--safe-area-top, 0px);
+  }
+
+  .safe-area-right {
+    padding-right: var(--safe-area-right, 0px);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: var(--safe-area-bottom, 0px);
+  }
+
+  .safe-area-left {
+    padding-left: var(--safe-area-left, 0px);
+  }
+
+  .safe-area-horizontal {
+    padding-left: var(--safe-area-left, 0px);
+    padding-right: var(--safe-area-right, 0px);
+  }
+
+  .safe-area-vertical {
+    padding-top: var(--safe-area-top, 0px);
+    padding-bottom: var(--safe-area-bottom, 0px);
+  }
+
+  /* Accessibility Focus Styles */
+  .focus-style {
+    outline: 2px solid var(--color-border-focus) !important;
+    outline-offset: 2px !important;
+    border-radius: calc(var(--radius-sm) * 0.8) !important;
+  }
+
+  .focus-glow {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent) !important;
+  }
+
+  .focus-outline {
+    outline: 2px solid var(--color-border-focus) !important;
+    outline-offset: 2px !important;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-border-focus) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :where(*) {
+      border-color: CanvasText !important;
+    }
+
+    .glass-panel,
+    .glass-inline,
+    .glass-chip,
+    .glass-field {
+      border-width: 2px !important;
+      box-shadow: none !important;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    :where(*),
+    :where(*)::before,
+    :where(*)::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Interactive element states */
+  .interactive-default {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .interactive-hover {
+    transition: all var(--motion-duration-1) var(--motion-ease-1);
+  }
+
+  .interactive-active {
+    transform: scale(0.98);
+  }
+
+  .interactive-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .interactive-pressed {
+    background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+
   .glass-panel {
     border-radius: var(--radius-xl);
     border: 1px solid var(--glass-border-soft);
     background: var(--layer-glass-panel);
-    box-shadow: var(--shadow-light);
+    box-shadow: var(--shadow-sm);
     padding: var(--space-md);
-    backdrop-filter: blur(var(--backdrop-blur-medium));
-    -webkit-backdrop-filter: blur(var(--backdrop-blur-medium));
+    backdrop-filter: blur(var(--glass-backdrop-blur-md));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur-md));
     transition:
       background-color var(--motion-duration-1) var(--motion-ease-1),
       border-color var(--motion-duration-1) var(--motion-ease-1),
@@ -80,9 +207,9 @@
     border: 1px solid var(--glass-border-soft);
     background: var(--layer-glass-inline);
     padding: var(--space-sm);
-    backdrop-filter: blur(var(--backdrop-blur-subtle));
-    -webkit-backdrop-filter: blur(var(--backdrop-blur-subtle));
-    box-shadow: var(--shadow-light);
+    backdrop-filter: blur(var(--glass-backdrop-blur-sm));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur-sm));
+    box-shadow: var(--shadow-sm);
   }
 
   .glass-panel--flat {
@@ -92,22 +219,22 @@
   .glass-chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--space-3xs);
     border-radius: var(--radius-lg);
     border: 1px solid var(--glass-border-soft);
     background: var(--layer-glass-inline);
-    padding: 0.125rem 0.5rem;
+    padding: calc(var(--space-3xs)/2) var(--space-2xs);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text-tertiary);
-    backdrop-filter: blur(var(--backdrop-blur-subtle));
-    -webkit-backdrop-filter: blur(var(--backdrop-blur-subtle));
+    backdrop-filter: blur(var(--glass-backdrop-blur-xs));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur-xs));
   }
 
   .glass-chip--compact {
-    padding: 0.125rem 0.4rem;
+    padding: calc(var(--space-3xs)/2) calc(var(--space-2xs) * 0.8);
     font-size: 0.58rem;
   }
 
@@ -155,8 +282,8 @@
     font-family: inherit;
     font-size: 0.95rem;
     color: var(--text-primary);
-    backdrop-filter: blur(var(--backdrop-blur-subtle));
-    -webkit-backdrop-filter: blur(var(--backdrop-blur-subtle));
+    backdrop-filter: blur(var(--glass-backdrop-blur-xs));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur-xs));
     transition:
       border-color var(--motion-duration-1) var(--motion-ease-1),
       box-shadow var(--motion-duration-1) var(--motion-ease-1);

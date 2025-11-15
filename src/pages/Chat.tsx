@@ -1,17 +1,24 @@
 import { useCallback, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
+import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
+import { useRoles } from "../hooks/useRoles";
+import { useSettings } from "../hooks/useSettings";
+import { Settings } from "../lib/icons";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 
 export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { activeRole } = useRoles();
+  const { settings } = useSettings();
 
   const {
     messages,
@@ -99,7 +106,32 @@ export default function Chat() {
         <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(120%_100%_at_50%_0%,hsl(var(--brand-1)/0.18)_0%,transparent_70%)]" />
       </div>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-page-padding-x py-space-md pb-32">
+      {/* Header with model, role, and settings */}
+      <header className="sticky top-0 z-20 border-b border-[var(--glass-border-soft)] bg-surface-base/60 backdrop-blur-xl px-page-padding-x py-3 safe-area-top">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0"> {/* Added min-w-0 to prevent overflow */}
+            {activeRole && (
+              <div className="flex items-center gap-2">
+                <span className="text-lg flex-shrink-0">{activeRole.emoji || "🤖"}</span>
+                <span className="font-medium text-text-primary truncate">{activeRole.name}</span>
+              </div>
+            )}
+            <span className="hidden sm:block text-xs text-text-secondary truncate">
+              Modell: {settings.preferredModelId?.split('/')[1]?.replace('-', ' ') || 'Standard'}
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/settings")}
+            aria-label="Einstellungen"
+          >
+            <Settings className="h-5 w-5" />
+          </Button>
+        </div>
+      </header>
+
+      <main className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-page-padding-x py-space-md pb-32 safe-area-horizontal">
         {isEmpty ? (
           <>
             <section className="space-y-2">
@@ -224,31 +256,37 @@ export default function Chat() {
             </section>
           </>
         ) : (
-          <VirtualizedMessageList
-            messages={messages}
-            isLoading={isLoading}
-            className="rounded-[32px] border border-[color:var(--glass-border-soft)] bg-[color-mix(in srgb,var(--layer-glass-panel) 94%,transparent)] shadow-[0_30px_80px_rgba(0,0,0,0.35)]"
-            onCopy={(content) => {
-              navigator.clipboard.writeText(content).catch((err) => {
-                console.error("Failed to copy content:", err);
-              });
-            }}
-            onRetry={(messageId) => {
-              console.warn("Retry functionality not implemented for messageId:", messageId);
-            }}
-          />
+          <div className="flex-1 overflow-y-auto">
+            <VirtualizedMessageList
+              messages={messages}
+              isLoading={isLoading}
+              className="rounded-[var(--radius-xl)] border border-[color:var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--layer-glass-panel) 94%,transparent)] shadow-[var(--shadow-lg)] p-4"
+              onCopy={(content) => {
+                navigator.clipboard.writeText(content).catch((err) => {
+                  console.error("Failed to copy content:", err);
+                });
+              }}
+              onRetry={(messageId) => {
+                console.warn("Retry functionality not implemented for messageId:", messageId);
+              }}
+            />
+          </div>
         )}
       </main>
 
-      <ChatComposer
-        value={input}
-        onChange={setInput}
-        onSend={handleSend}
-        onStop={stop}
-        isLoading={isLoading}
-        canSend={!isLoading}
-        placeholder="Nachricht an Disa AI schreiben..."
-      />
+      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base to-transparent pt-4 z-10 safe-area-bottom">
+        <div className="px-page-padding-x safe-area-horizontal">
+          <ChatComposer
+            value={input}
+            onChange={setInput}
+            onSend={handleSend}
+            onStop={stop}
+            isLoading={isLoading}
+            canSend={!isLoading}
+            placeholder="Nachricht an Disa AI schreiben..."
+          />
+        </div>
+      </div>
 
       <div ref={messagesEndRef} />
     </div>

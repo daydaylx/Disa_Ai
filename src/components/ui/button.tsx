@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[12px] font-semibold transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--layer-bg-1)] disabled:pointer-events-none disabled:opacity-50 backdrop-blur-[var(--backdrop-blur-medium)]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-sm)] font-semibold transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 backdrop-blur-[var(--glass-backdrop-blur-sm)]",
   {
     variants: {
       variant: {
@@ -71,12 +71,12 @@ const buttonVariants = cva(
       {
         variant: "glass-accent",
         size: "xl",
-        class: "rounded-[18px] font-bold",
+        class: "rounded-[var(--radius-lg)] font-bold",
       },
       {
         variant: "glass-secondary",
         size: "lg",
-        class: "rounded-[16px]",
+        class: "rounded-[var(--radius-md)]",
       },
     ],
     defaultVariants: {

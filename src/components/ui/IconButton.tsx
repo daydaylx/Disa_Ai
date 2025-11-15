@@ -10,7 +10,7 @@ export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 }
 
 const baseStyles =
-  "inline-flex items-center justify-center rounded-2xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
+  "inline-flex items-center justify-center rounded-2xl transition focus-visible:outline focus-visible:outline-[var(--focus-ring-width)] focus-visible:outline-[var(--color-border-focus)] focus-visible:outline-offset-[var(--focus-ring-offset)]";
 
 const sizeMap: Record<NonNullable<IconButtonProps["size"]>, string> = {
   md: "h-11 w-11 min-h-[44px] min-w-[44px]",

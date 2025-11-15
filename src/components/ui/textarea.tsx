@@ -12,14 +12,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       return (
         <textarea
           className={cn(
-            "flex min-h-[80px] w-full rounded-[12px] border border-[color-mix(in_srgb,var(--line)_70%,transparent)]",
+            "flex min-h-[80px] w-full rounded-[var(--radius-sm)] border border-[color-mix(in_srgb,var(--glass-border-soft)_70%,transparent)]",
             "bg-[color-mix(in_srgb,var(--surface-card)_85%,transparent)]",
-            "px-3 py-2 text-sm placeholder:text-[color-mix(in_srgb,var(--text-secondary)_70%,transparent)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+            "px-[var(--space-xs)] py-[var(--space-2xs)] text-sm placeholder:text-[color-mix(in_srgb,var(--text-secondary)_70%,transparent)]",
+            "focus-visible:outline focus-visible:outline-[var(--focus-ring-width)] focus-visible:outline-[var(--color-border-focus)] focus-visible:outline-offset-[var(--focus-ring-offset)]",
             "disabled:cursor-not-allowed disabled:opacity-50",
-            "shadow-[0_2px_8px_rgba(0,0,0,0.05)] backdrop-blur-sm",
+            "shadow-[var(--shadow-sm)] backdrop-blur-[var(--glass-backdrop-blur-xs)]",
             "transition-all duration-200 ease-[cubic-bezier(.23,1,.32,1)]",
-            "hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]",
+            "hover:shadow-[var(--shadow-lg)]",
             className,
           )}
           ref={ref}

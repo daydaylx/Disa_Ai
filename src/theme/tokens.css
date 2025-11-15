@@ -1,0 +1,168 @@
+/**
+ * Design System Tokens CSS
+ * Verbindliche Definitionen für Radii, Shadows, Spacing & Glass-Opacity
+ */
+
+:root {
+  /* ========================================
+   * RADIUS TOKENS (verbindliche Vorgabe)
+   * ======================================== */
+  --radius-xs: 6px;  /* Kleinste Elemente */
+  --radius-sm: 10px; /* Standard Buttons, Inputs */
+  --radius-md: 14px; /* Karten, Panels, größere Elemente */
+  --radius-lg: 18px; /* Hauptcontainer, Dialoge */
+  --radius-xl: 24px; /* Maximaler Radius für spezielle Fälle */
+
+  /* ========================================
+   * SHADOW TOKENS (exakt 2 Ebenen)
+   * ======================================== */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.16);   /* Standard-Card */
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.32);  /* Floating / Modal */
+
+  /* ========================================
+   * SPACING TOKENS (konsistente Skala)
+   * ======================================== */
+  --space-3xs: 4px;  /* 4px */
+  --space-2xs: 8px;  /* 8px */
+  --space-xs: 12px;  /* 12px */
+  --space-sm: 16px;  /* 16px */
+  --space-md: 24px;  /* 24px */
+
+  /* ========================================
+   * GLASS TOKENS (feste Opacity & Blur-Werte)
+   * ======================================== */
+  /* Glass Opacity Values */
+  --glass-opacity-light: 0.12;
+  --glass-opacity-medium: 0.18;
+  --glass-opacity-dark: 0.24;
+
+  /* Backdrop Blur Values */
+  --glass-backdrop-blur-xs: 8px;
+  --glass-backdrop-blur-sm: 12px;
+  --glass-backdrop-blur-md: 16px;
+  --glass-backdrop-blur-lg: 24px;
+
+  /* Glass Border Colors with fixed opacity */
+  --glass-border-soft: rgba(255, 255, 255, var(--glass-opacity-medium));
+  --glass-border-strong: rgba(255, 255, 255, var(--glass-opacity-dark));
+
+  /* Glass Layer with fixed opacity */
+  --layer-glass-panel: rgba(255, 255, 255, var(--glass-opacity-light));
+  --layer-glass-inline: rgba(255, 255, 255, var(--glass-opacity-light));
+  
+  /* Mapping für einfache Verwendung */
+  --radius-card: var(--radius-md);
+  --radius-button: var(--radius-sm);
+  --radius-input: var(--radius-sm);
+  --radius-badge: var(--radius-xs);
+
+  --shadow-card: var(--shadow-sm);
+  --shadow-floating: var(--shadow-lg);
+  --shadow-button: var(--shadow-sm);
+
+  --space-gap-sm: var(--space-2xs);
+  --space-gap-md: var(--space-xs);
+  --space-gap-lg: var(--space-sm);
+  --space-padding-xs: var(--space-2xs);
+  --space-padding-sm: var(--space-xs);
+  --space-padding-md: var(--space-sm);
+  --space-padding-lg: var(--space-md);
+
+  /* Accessibility and contrast enhancements */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --high-contrast-border-width: 2px;
+  --reduced-motion-duration: 0.01ms;
+  --min-contrast-ratio: 4.5;
+  --enhanced-contrast-ratio: 7;
+
+  /* Color palette - consistent primary, accent, and danger colors */
+  --color-primary: #8B5CF6;
+  --color-primary-hover: #7C3AED;
+  --color-primary-active: #6D28D9;
+  --color-primary-contrast: #0B0F14;
+  --color-primary-border: color-mix(in srgb, #8B5CF6 60%, transparent);
+
+  --color-accent: #8B5CF6;
+  --color-accent-soft: #EDE9FE;
+  --color-accent-strong: #7C3AED;
+  --color-accent-contrast: #0B0F14;
+  --color-accent-border: color-mix(in srgb, #8B5CF6 60%, transparent);
+
+  --color-danger: #EF4444;
+  --color-danger-soft: #FEE2E2;
+  --color-danger-strong: #DC2626;
+  --color-danger-contrast: #FFFFFF;
+  --color-danger-border: color-mix(in srgb, #EF4444 60%, transparent);
+
+  --color-success: #10B981;
+  --color-success-soft: #D1FAE5;
+  --color-success-strong: #059669;
+  --color-success-contrast: #FFFFFF;
+  --color-success-border: color-mix(in srgb, #10B981 60%, transparent);
+
+  --color-warning: #F59E0B;
+  --color-warning-soft: #FFFBEB;
+  --color-warning-strong: #D97706;
+  --color-warning-contrast: #FFFFFF;
+  --color-warning-border: color-mix(in srgb, #F59E0B 60%, transparent);
+
+  --color-neutral-bg: #0F1420;
+  --color-neutral-surface: #151D31;
+  --color-neutral-border: color-mix(in srgb, white 18%, transparent);
+  --color-text-primary: #F5F6FF;
+  --color-text-secondary: #C2C7DA;
+  --color-text-tertiary: #8D94AD;
+  --color-text-muted: #6F738B;
+  --color-text-inverse: #0B0F14;
+
+  /* Typography system */
+  --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem;  /* 36px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+}
+
+/* Dark Theme Anpassungen */
+[data-theme="dark"],
+.dark {
+  --glass-border-soft: rgba(255, 255, 255, var(--glass-opacity-medium));
+  --glass-border-strong: rgba(255, 255, 255, var(--glass-opacity-dark));
+  --layer-glass-panel: rgba(255, 255, 255, var(--glass-opacity-light));
+  --layer-glass-inline: rgba(255, 255, 255, var(--glass-opacity-light));
+}
+
+/* Mobile Theme Anpassungen */
+@media (max-width: 640px) {
+  :root {
+    --glass-opacity-medium: 0.22;
+    --glass-opacity-dark: 0.28;
+    --glass-border-soft: rgba(255, 255, 255, var(--glass-opacity-medium));
+    --glass-border-strong: rgba(255, 255, 255, var(--glass-opacity-dark));
+  }
+
+  [data-theme="dark"],
+  .dark {
+    --glass-opacity-medium: 0.24;
+    --glass-opacity-dark: 0.30;
+    --glass-border-soft: rgba(255, 255, 255, var(--glass-opacity-medium));
+    --glass-border-strong: rgba(255, 255, 255, var(--glass-opacity-dark));
+  }
+}

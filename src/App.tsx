@@ -120,7 +120,7 @@ function AppContent() {
 }
 
 export default function App() {
-  // Initialize viewport height with optimized throttling for scroll performance
+  // Initialize viewport height with optimized throttling for scroll performance and fix overflow
   React.useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -132,6 +132,10 @@ export default function App() {
     const handleOrientationChange = () => {
       setTimeout(applyViewportHeight, 100);
     };
+
+    // Apply initial styles to prevent horizontal scrolling
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
 
     applyViewportHeight();
     window.addEventListener("resize", applyViewportHeight, { passive: true });

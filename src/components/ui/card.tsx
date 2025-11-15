@@ -6,33 +6,33 @@ import { cn } from "../../lib/utils";
 import { Button } from "./button"; // Assuming Button component is updated
 
 const cardVariants = cva(
-  "relative rounded-lg border transition-all duration-2 ease-1 backdrop-blur-md",
+  "relative rounded-[var(--radius-md)] border transition-all duration-200 ease-out backdrop-blur-[var(--glass-backdrop-blur-sm)]",
   {
     variants: {
       variant: {
         default: "",
-        outline: "border-line bg-surface-base",
+        outline: "border-[var(--glass-border-soft)] bg-surface-base",
         flat: "border-transparent bg-transparent shadow-none",
       },
       tone: {
         // Modern Glassmorphism variants
-        "glass-primary": "bg-surface-glass border-line text-fg",
-        "glass-subtle": "bg-surface-glass border-line text-fg-muted",
-        "glass-floating": "bg-surface-glass border-line text-fg backdrop-blur-lg",
-        "glass-overlay": "bg-surface-glass border-line text-fg backdrop-blur-lg",
+        "glass-primary": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+        "glass-subtle": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-secondary",
+        "glass-floating": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+        "glass-overlay": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
         "glass-raised":
-          "bg-[color-mix(in_srgb,var(--surface-card)_90%,white_10%)] border-[color-mix(in_srgb,var(--line)_70%,transparent_30%)] text-fg shadow-[0_4px_12px_rgba(0,0,0,0.15)]",
+          "bg-[color-mix(in_srgb,var(--surface-card)_90%,white_10%)] border-[color-mix(in_srgb,var(--glass-border-soft)_70%,transparent_30%)] text-text-primary shadow-[var(--shadow-sm)]",
         "glass-elevated":
-          "bg-[color-mix(in_srgb,var(--surface-card)_85%,white_5%)] border-[color-mix(in_srgb,var(--line)_60%,transparent_40%)] text-fg shadow-[0_8px_24px_rgba(0,0,0,0.2)] backdrop-blur-md",
+          "bg-[color-mix(in_srgb,var(--surface-card)_85%,white_5%)] border-[color-mix(in_srgb,var(--glass-border-soft)_60%,transparent_40%)] text-text-primary shadow-[var(--shadow-lg)] backdrop-blur-[var(--glass-backdrop-blur-sm)]",
         "glass-inset":
-          "bg-[color-mix(in_srgb,var(--surface-base)_95%,black_5%)] border-[color-mix(in_srgb,var(--line)_50%,transparent_50%)] text-fg shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]",
+          "bg-[color-mix(in_srgb,var(--surface-base)_95%,black_5%)] border-[color-mix(in_srgb,var(--glass-border-soft)_50%,transparent_50%)] text-text-primary shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]",
 
         // Legacy aliases (using new glassmorphism styles)
-        "neo-raised": "bg-surface-glass border-line text-fg",
-        "neo-subtle": "bg-surface-glass border-line text-fg",
-        "neo-inset": "bg-surface-glass border-line text-fg shadow-1",
-        "neo-floating": "bg-surface-glass border-line text-fg backdrop-blur-lg",
-        "neo-glass": "bg-surface-glass border-line text-fg backdrop-blur-lg",
+        "neo-raised": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+        "neo-subtle": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+        "neo-inset": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary shadow-[var(--shadow-sm)]",
+        "neo-floating": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+        "neo-glass": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
       },
       intent: {
         default: "",
@@ -46,11 +46,11 @@ const cardVariants = cva(
       },
       padding: {
         none: "p-0",
-        xs: "p-1.5",
-        sm: "p-2",
-        md: "p-4",
-        lg: "p-6",
-        xl: "p-8",
+        xs: "p-[var(--space-2xs)]",        // 8px
+        sm: "p-[var(--space-xs)]",         // 12px
+        md: "p-[var(--space-sm)]",         // 16px
+        lg: "p-[var(--space-md)]",         // 24px
+        xl: "p-[calc(var(--space-md) * 1.33)]", // ~32px
       },
       size: {
         auto: "w-auto",
@@ -66,29 +66,29 @@ const cardVariants = cva(
         default: "",
         loading: "animate-pulse opacity-70 pointer-events-none",
         disabled: "opacity-50 pointer-events-none",
-        selected: "border-accent ring-2 ring-accent/30 ring-offset-2 ring-offset-bg-1",
+        selected: "border-accent ring-2 ring-[color-mix(in_srgb, var(--accent) 30%, transparent)] ring-offset-2 ring-offset-bg-1",
         focus: "ring-2 ring-accent ring-offset-2 ring-offset-bg-1",
       },
       elevation: {
         flat: "shadow-none",
-        subtle: "shadow-1",
-        surface: "shadow-1",
-        medium: "shadow-1",
-        dramatic: "shadow-2",
-        raised: "shadow-2",
-        floating: "shadow-[0_12px_32px_rgba(0,0,0,0.25)]",
+        subtle: "shadow-[var(--shadow-sm)]",
+        surface: "shadow-[var(--shadow-sm)]",
+        medium: "shadow-[var(--shadow-sm)]",
+        dramatic: "shadow-[var(--shadow-lg)]",
+        raised: "shadow-[var(--shadow-lg)]",
+        floating: "shadow-[var(--shadow-lg)]",
       },
       interactive: {
         none: "",
-        basic: "cursor-pointer hover:-translate-y-0.5 hover:shadow-1 hover:border-line",
-        gentle: "cursor-pointer hover:-translate-y-1 hover:shadow-1 hover:border-line",
-        glow: "cursor-pointer hover:shadow-glow-accent",
-        "glow-accent": "cursor-pointer hover:border-accent hover:shadow-glow-accent",
+        basic: "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-shadow duration-200",
+        gentle: "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-all duration-200",
+        glow: "cursor-pointer hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
+        "glow-accent": "cursor-pointer hover:border-accent hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
         // Neue interaktive Varianten mit Glas-Effekten
         "glass-lift":
-          "cursor-pointer hover:-translate-y-1 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)] transition-all duration-300",
+          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] transition-all duration-300",
         "glass-glow":
-          "cursor-pointer hover:shadow-[0_0_0_4px_var(--accent-soft),0_8px_20px_rgba(139,92,246,0.3)] transition-all duration-300",
+          "cursor-pointer hover:shadow-[0_0_0_4px_rgba(139,92,246,0.3),0_8px_20px_rgba(139,92,246,0.3)] transition-all duration-300",
       },
     },
     defaultVariants: {
@@ -225,6 +225,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                 : resolvedInteractive
               : resolvedInteractive,
           }),
+          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] focus-visible:outline-offset-2",
           className,
         )}
         onClick={isClickable ? handleCardClick : onClick}

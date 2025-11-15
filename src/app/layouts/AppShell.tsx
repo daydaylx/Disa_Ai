@@ -68,7 +68,13 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   return (
     <div
       className="relative flex min-h-screen flex-col bg-[var(--bg0)] text-text-primary"
-      style={{ backgroundImage: "var(--bg-gradient)" }}
+      style={{
+        backgroundImage: "var(--bg-gradient)",
+        paddingTop: "env(safe-area-inset-top, 0px)",
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        paddingLeft: "env(safe-area-inset-left, 0px)",
+        paddingRight: "env(safe-area-inset-right, 0px)",
+      }}
     >
       <a
         href="#main"
