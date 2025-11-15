@@ -85,7 +85,7 @@ describe("Entry-Point Smoke Tests", () => {
     renderWithRouter("/chat", <Chat />);
 
     await screen.findByRole("heading", {
-      name: /Was möchtest du heute mit Disa AI erledigen\?/i,
+      name: /Konzentrierte KI-Arbeit/i,
     });
     expect(screen.getByTestId("composer-input")).toBeVisible();
   });

@@ -38,23 +38,26 @@ const LINK_ACTIONS = [
 
 interface QuickstartGridProps {
   onStart: (system: string, user?: string) => void;
+  title?: string;
+  description?: string;
 }
 
-export function QuickstartGrid({ onStart }: QuickstartGridProps) {
+export function QuickstartGrid({
+  onStart,
+  title = "Schnellstart-Flows",
+  description = "Vorgefertigte Prompts für typische Aufgaben – tippe und starte direkt fokussiert.",
+}: QuickstartGridProps) {
   return (
-    <div className="space-y-8">
-      <section className="space-y-3">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-accent/80">
-          Schnellstart
-        </p>
-        <h1 className="text-3xl font-semibold leading-tight text-text-primary sm:text-4xl">
-          Was möchtest du heute mit Disa AI erledigen?
-        </h1>
-        <p className="max-w-2xl text-base text-text-secondary">
-          Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und
-          fokussierte Sessions.
-        </p>
-      </section>
+    <div className="space-y-6">
+      {(title || description) && (
+        <section className="space-y-1">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-accent/80">
+            Workflows
+          </p>
+          {title && <h2 className="text-2xl font-semibold text-text-primary">{title}</h2>}
+          {description && <p className="max-w-2xl text-sm text-text-secondary">{description}</p>}
+        </section>
+      )}
 
       <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {QUICKSTARTS.map((quickstart) => {
