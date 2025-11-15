@@ -19,6 +19,13 @@ export default defineConfig(({ mode }) => {
   try {
     const buildEnv = loadEnv("build", process.cwd(), "");
     Object.assign(env, buildEnv);
+
+    // Make sure .env.build values are visible to Vite's import.meta.env replacement
+    for (const [key, value] of Object.entries(buildEnv)) {
+      if (typeof value === "string" && value.length > 0) {
+        process.env[key] = value;
+      }
+    }
   } catch {
     // .env.build doesn't exist, that's fine
   }
