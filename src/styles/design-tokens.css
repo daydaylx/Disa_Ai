@@ -1,0 +1,92 @@
+/**
+ * DESIGN TOKENS - ZENTRALES DESIGNSYSTEM
+ *
+ * Konforme Umsetzung der verbindlichen Vorgaben:
+ * ● Radii: 6 / 10 / 14 / 18 / 24 px (keine Zwischenwerte)
+ * ● Shadows: nur 2 Ebenen (Light + Heavy), konsistente Tokens
+ * ● Glass-Opacity für Mobile: 0.18–0.28 bei dunklen Themes
+ * ● Pixelgenaue Konsistenz für alle UI-Elemente
+ *
+ * Dies ist die einzige Quelle für Design-Tokens im Projekt.
+ */
+
+:root {
+  /* ========================================
+   * RADIUS TOKENS (verbindliche Vorgabe)
+   * ======================================== */
+  --radius-xs: 6px; /* Kleinste Elemente, Icons */
+  --radius-sm: 10px; /* Standard Buttons, Inputs */
+  --radius-md: 14px; /* Karten, Panels, größere Elemente */
+  --radius-lg: 18px; /* Hauptcontainer, Dialoge */
+  --radius-xl: 24px; /* Maximaler Radius für spezielle Fälle */
+
+  /* ========================================
+   * SHADOW TOKENS (nur 2 Ebenen)
+   * ======================================== */
+  /* Light Shadow - für subtile Hebung */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.16);
+
+  /* Heavy Shadow - für starke Hebung und Fokus */
+  --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.32);
+
+  /* ========================================
+   * GLASS TOKENS (kalibrierte Opazität)
+   * ======================================== */
+  /* Mobile Glas-Opacity: 0.18–0.28 bei dunklen Themes */
+  --glass-border-soft: rgba(255, 255, 255, 0.18);
+
+  /* Glas-Layer mit korrigierter Opazität für dunkle Themes */
+  --layer-glass-panel: color-mix(in srgb, var(--surface-card) 78%, transparent);
+  --layer-glass-inline: color-mix(in srgb, var(--surface-base) 82%, transparent);
+  --layer-glass-muted: color-mix(in srgb, var(--surface-base) 72%, transparent);
+
+  /* ========================================
+   * BACKDROP BLUR TOKENS
+   * ======================================== */
+  --backdrop-blur-subtle: 8px;
+  --backdrop-blur-medium: 12px;
+
+  /* ========================================
+   * ALTE TOKENS (für Abwärtskompatibilität)
+   * ======================================== */
+  /* Legacy Radius Mapping */
+  --radius-card-inner: var(--radius-sm); /* 10px statt 12px */
+
+  /* Legacy Shadow Mapping */
+  --shadow-sm: var(--shadow-light);
+  --shadow-md: var(--shadow-heavy);
+  --shadow-lg: var(--shadow-heavy);
+  --shadow-1: var(--shadow-light);
+  --shadow-2: var(--shadow-heavy);
+
+  /* Legacy Glass Mapping */
+  --border-glass: var(--glass-border-soft);
+  --button-secondary-bg: var(--layer-glass-panel);
+  --button-secondary-bg-hover: color-mix(in srgb, var(--layer-glass-panel) 92%, transparent);
+  --button-secondary-border: var(--glass-border-soft);
+  --button-ghost-hover: color-mix(in srgb, var(--layer-glass-panel) 40%, transparent);
+}
+
+/* Dark Theme Anpassungen */
+[data-theme="dark"],
+.dark {
+  --glass-border-soft: rgba(255, 255, 255, 0.22);
+  --layer-glass-panel: color-mix(in srgb, var(--surface-card) 76%, transparent);
+  --layer-glass-inline: color-mix(in srgb, var(--surface-base) 80%, transparent);
+}
+
+/* Mobile Theme Anpassungen (speziell für Glas-Opacity) */
+@media (max-width: 640px) {
+  :root {
+    --glass-border-soft: rgba(255, 255, 255, 0.24);
+    --layer-glass-panel: color-mix(in srgb, var(--surface-card) 74%, transparent);
+    --layer-glass-inline: color-mix(in srgb, var(--surface-base) 78%, transparent);
+  }
+
+  [data-theme="dark"],
+  .dark {
+    --glass-border-soft: rgba(255, 255, 255, 0.26);
+    --layer-glass-panel: color-mix(in srgb, var(--surface-card) 72%, transparent);
+    --layer-glass-inline: color-mix(in srgb, var(--surface-base) 76%, transparent);
+  }
+}

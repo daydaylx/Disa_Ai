@@ -54,15 +54,17 @@ const spacingScale = {
 
 const radii = {
   none: "0px",
+  xs: "var(--radius-xs)",
   sm: "var(--radius-sm)",
   md: "var(--radius-md)",
   lg: "var(--radius-lg)",
+  xl: "var(--radius-xl)",
   full: "9999px",
 };
 
 const boxShadows = {
-  1: "var(--shadow-1)",
-  2: "var(--shadow-2)",
+  light: "var(--shadow-light)",
+  heavy: "var(--shadow-heavy)",
   "glow-accent": "var(--shadow-glow-accent)",
 };
 
@@ -124,9 +126,8 @@ export default {
       transitionDuration: motionDurations,
       transitionTimingFunction: motionEasings,
       backdropBlur: {
-        sm: "8px",
-        md: "12px",
-        lg: "18px",
+        subtle: "var(--backdrop-blur-subtle)",
+        medium: "var(--backdrop-blur-medium)",
       },
       padding: {
         "safe-top": "env(safe-area-inset-top)",
@@ -145,4 +146,4 @@ export default {
   plugins: [],
 } satisfies Config;
 
-/* Notes: Tailwind now maps directly to the new CSS variables (colors, spacing, radii, shadows, motion) so components consume the design tokens consistently. */
+/* Notes: Tailwind now maps directly to the new centralized CSS variables (colors, spacing, radii, shadows, motion) so components consume the design tokens consistently. All new components must use the centralized design system from design-tokens.css. */

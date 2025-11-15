@@ -1,3 +1,16 @@
+/**
+ * UNIFIED TOKENS - VERALTETES SYSTEM
+ *
+ * Dieses File wird nur temporär beibehalten für Komponenten,
+ * die noch nicht auf das neue zentrale Designsystem migriert wurden.
+ *
+ * ALLE NEUEN KOMPONENTEN MÜSSEN DAS ZENTRALE DESIGNSYSTEM VERWENDEN:
+ * @import "./design-tokens.css";
+ *
+ * Migration ist verpflichtend - siehe MIGRATION_GUIDE.md
+ */
+
+/* DEPRECIATED - DO NOT USE FOR NEW COMPONENTS */
 @layer base {
   :root {
     /* Basis-Farbsystem: Soft-Depth-Dark */
@@ -62,7 +75,7 @@
     /* Ränder */
     --line: rgba(255, 255, 255, 0.12);
     --line-subtle: rgba(255, 255, 255, 0.06);
-    --glass-border-soft: rgba(255, 255, 255, 0.08);
+    --glass-border-soft: rgba(255, 255, 255, 0.18);
     --glass-border-strong: rgba(255, 255, 255, 0.16);
     --border-glass: var(--glass-border-soft);
     --border-glass-strong: var(--glass-border-strong);
@@ -75,12 +88,12 @@
     --glass-rgb: 255 255 255 / 0.06;
     --stroke-rgb: 255 255 255 / 0.16;
 
-    /* Radius - Maintaining rem units from both systems */
+    /* Radius - DEPRECIATED - Use design-tokens.css */
     --radius-sm: 0.375rem; /* 6px - from tokens */
     --radius-md: 0.625rem; /* 10px - from tokens */
     --radius-lg: 0.875rem; /* 14px - from tokens */
     --radius-xl: 1.125rem; /* 18px - from tokens */
-    --radius-card-inner: 0.75rem; /* 12px - from theme */
+    --radius-card-inner: 0.625rem; /* 10px - MIGRIERT zu --radius-sm */
 
     /* Spacing Scale - Adding comprehensive spacing from theme */
     --space-1: 0.5rem; /* 8px */
@@ -129,23 +142,23 @@
     --page-section-gap: var(--space-stack-lg);
 
     /* Touch sizes mapped to new naming */
-    --size-touch-compact: var(--touch-compact);
-    --size-touch-comfortable: var(--touch-comfort);
-    --size-touch-relaxed: var(--touch-relaxed);
-    --size-touch-spacious: var(--touch-relaxed);
+    --size-touch-compact: var(--touch-compact); /* DEPRECIATED - Use 44px directly */
+    --size-touch-comfortable: var(--touch-comfort); /* DEPRECIATED */
+    --size-touch-relaxed: var(--touch-relaxed); /* DEPRECIATED */
+    --size-touch-spacious: var(--touch-relaxed); /* DEPRECIATED */
     --size-scrollbar: 0.5rem;
-    --size-ripple-max: 12.5rem;
-    --size-bottomsheet-handle: 5px;
-    --size-bottomsheet-handle-width: 40px;
-    --size-bottomsheet-border: 2px;
+    --size-ripple-max: 12.5rem; /* DEPRECIATED */
+    --size-bottomsheet-handle: 5px; /* DEPRECIATED */
+    --size-bottomsheet-handle-width: 40px; /* DEPRECIATED */
+    --size-bottomsheet-border: 2px; /* DEPRECIATED */
 
     /* Layered surfaces */
     --layer-bg-1: var(--surface-bg);
     --layer-bg-2: var(--surface-base);
     --layer-bg-3: var(--surface-card);
     --layer-overlay: var(--surface-overlay);
-    --layer-glass-panel: color-mix(in srgb, var(--surface-card) 82%, transparent);
-    --layer-glass-inline: color-mix(in srgb, var(--surface-base) 78%, transparent);
+    --layer-glass-panel: color-mix(in srgb, var(--surface-card) 78%, transparent);
+    --layer-glass-inline: color-mix(in srgb, var(--surface-base) 82%, transparent);
     --layer-glass-muted: color-mix(in srgb, var(--surface-base) 60%, transparent);
 
     /* Interaction + button tokens */
@@ -163,25 +176,25 @@
     --button-destructive-hover: color-mix(in srgb, var(--danger) 85%, black 15%);
     --button-destructive-fg: var(--text-on-accent);
 
-    /* Shadows - Combining both systems */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.16);
-    --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.22);
-    --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.28);
-    --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.35); /* From theme */
-    --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.45); /* From theme */
+    /* Shadows - DEPRECIATED - Use design-tokens.css */
+    --shadow-sm: var(--shadow-light);
+    --shadow-md: var(--shadow-heavy);
+    --shadow-lg: var(--shadow-heavy);
+    --shadow-1: var(--shadow-light);
+    --shadow-2: var(--shadow-heavy);
 
-    /* Glassmorphism specific shadows */
-    --shadow-glass-subtle: 0 2px 8px rgba(0, 0, 0, 0.16);
-    --shadow-glass-medium: 0 4px 16px rgba(0, 0, 0, 0.22);
-    --shadow-glass-strong: 0 8px 24px rgba(0, 0, 0, 0.32);
-    --shadow-glass-floating: 0 12px 32px rgba(0, 0, 0, 0.4);
+    /* Glassmorphism specific shadows - DEPRECIATED */
+    --shadow-glass-subtle: var(--shadow-light);
+    --shadow-glass-medium: var(--shadow-heavy);
+    --shadow-glass-strong: var(--shadow-heavy);
+    --shadow-glass-floating: var(--shadow-heavy);
 
-    /* Glow Shadow Effects (for interactive elements) */
+    /* Glow Shadow Effects - DEPRECIATED */
     --shadow-glow-brand: 0 0 16px rgba(97, 109, 255, 0.25);
     --shadow-glow-brand-subtle: 0 0 8px rgba(97, 109, 255, 0.12);
     --shadow-glow-brand-strong: 0 0 24px rgba(97, 109, 255, 0.42);
     --shadow-glow-accent-subtle: 0 0 8px rgba(97, 109, 255, 0.15);
-    --shadow-glow-accent: 0 0 24px hsla(var(--brand-2) / 0.35); /* From theme */
+    --shadow-glow-accent: 0 0 24px hsla(var(--brand-2) / 0.35);
     --shadow-glow-success: 0 0 16px hsla(var(--success) / 0.25);
     --shadow-glow-success-subtle: 0 0 8px hsla(var(--success) / 0.12);
     --shadow-glow-warning: 0 0 16px hsla(var(--warning) / 0.25);
@@ -229,7 +242,7 @@
     --safe-area-bottom: var(--safe-bottom);
     --safe-area-left: var(--safe-left);
 
-    /* Touch sizes */
+    /* Touch sizes - DEPRECIATED - Use design-tokens.css */
     --touch-compact: 44px;
     --touch-comfort: 48px;
     --touch-relaxed: 56px;
@@ -254,10 +267,10 @@
     --font-family-mono:
       "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --font-size-caption: 0.875rem; /* 14px */
+    --font-size-caption: 0.875rem; /* 14px - DEPRECIATED */
     --font-size-body: 1rem; /* 16px */
-    --font-size-title-sm: 1.125rem; /* 18px */
-    --font-size-title-lg: 1.5rem; /* 24px */
+    --font-size-title-sm: 1.125rem; /* 18px - DEPRECIATED */
+    --font-size-title-lg: 1.5rem; /* 24px - DEPRECIATED */
     --line-height-caption: 1.4;
     --line-height-body: 1.55;
     --line-height-title-sm: 1.4;
@@ -279,7 +292,7 @@
     /* Backdrop blur values */
     --backdrop-blur-subtle: 8px;
     --backdrop-blur-medium: 12px;
-    --backdrop-blur-strong: 20px;
+    --backdrop-blur-strong: 20px; /* DEPRECIATED - Use --backdrop-blur-medium */
 
     /* Surface-specific values */
     --surface-neumorphic-base: hsl(var(--bg1-hsl));
@@ -322,12 +335,12 @@
 
   ::-webkit-scrollbar-track {
     background: var(--surface-base);
-    border-radius: 4px;
+    border-radius: var(--radius-xs);
   }
 
   ::-webkit-scrollbar-thumb {
     background: var(--line);
-    border-radius: 4px;
+    border-radius: var(--radius-xs);
   }
 
   ::-webkit-scrollbar-thumb:hover {
