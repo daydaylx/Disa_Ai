@@ -223,7 +223,7 @@
     border-radius: var(--radius-lg);
     border: 1px solid var(--glass-border-soft);
     background: var(--layer-glass-inline);
-    padding: calc(var(--space-3xs)/2) var(--space-2xs);
+    padding: calc(var(--space-3xs) / 2) var(--space-2xs);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -234,7 +234,7 @@
   }
 
   .glass-chip--compact {
-    padding: calc(var(--space-3xs)/2) calc(var(--space-2xs) * 0.8);
+    padding: calc(var(--space-3xs) / 2) calc(var(--space-2xs) * 0.8);
     font-size: 0.58rem;
   }
 

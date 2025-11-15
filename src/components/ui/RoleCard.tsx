@@ -16,7 +16,8 @@ export function RoleCard({ role, isActive, onActivate }: RoleCardProps) {
       padding="none"
       className={cn(
         "flex flex-col justify-between p-[var(--space-padding-md)] h-full",
-        isActive && "border-accent ring-2 ring-[color-mix(in_srgb, var(--accent) 30%, transparent)]",
+        isActive &&
+          "border-accent ring-2 ring-[color-mix(in_srgb, var(--accent) 30%, transparent)]",
       )}
     >
       <div className="flex-grow flex flex-col">
@@ -25,7 +26,9 @@ export function RoleCard({ role, isActive, onActivate }: RoleCardProps) {
             {role.category}
           </Badge>
         )}
-        <h3 className="text-base font-semibold text-text-primary mb-[var(--space-2xs)]">{role.name}</h3>
+        <h3 className="text-base font-semibold text-text-primary mb-[var(--space-2xs)]">
+          {role.name}
+        </h3>
         <p className="text-sm text-text-secondary line-clamp-3 mb-[var(--space-xs)] flex-grow">
           {role.description}
         </p>

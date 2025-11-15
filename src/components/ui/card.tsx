@@ -16,10 +16,14 @@ const cardVariants = cva(
       },
       tone: {
         // Modern Glassmorphism variants
-        "glass-primary": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
-        "glass-subtle": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-secondary",
-        "glass-floating": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
-        "glass-overlay": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+        "glass-primary":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+        "glass-subtle":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-secondary",
+        "glass-floating":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+        "glass-overlay":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
         "glass-raised":
           "bg-[color-mix(in_srgb,var(--surface-card)_90%,white_10%)] border-[color-mix(in_srgb,var(--glass-border-soft)_70%,transparent_30%)] text-text-primary shadow-[var(--shadow-sm)]",
         "glass-elevated":
@@ -28,11 +32,16 @@ const cardVariants = cva(
           "bg-[color-mix(in_srgb,var(--surface-base)_95%,black_5%)] border-[color-mix(in_srgb,var(--glass-border-soft)_50%,transparent_50%)] text-text-primary shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]",
 
         // Legacy aliases (using new glassmorphism styles)
-        "neo-raised": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
-        "neo-subtle": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
-        "neo-inset": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary shadow-[var(--shadow-sm)]",
-        "neo-floating": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
-        "neo-glass": "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+        "neo-raised":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+        "neo-subtle":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary",
+        "neo-inset":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary shadow-[var(--shadow-sm)]",
+        "neo-floating":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
+        "neo-glass":
+          "bg-[var(--layer-glass-panel)] border-[var(--glass-border-soft)] text-text-primary backdrop-blur-[var(--glass-backdrop-blur-md)]",
       },
       intent: {
         default: "",
@@ -46,10 +55,10 @@ const cardVariants = cva(
       },
       padding: {
         none: "p-0",
-        xs: "p-[var(--space-2xs)]",        // 8px
-        sm: "p-[var(--space-xs)]",         // 12px
-        md: "p-[var(--space-sm)]",         // 16px
-        lg: "p-[var(--space-md)]",         // 24px
+        xs: "p-[var(--space-2xs)]", // 8px
+        sm: "p-[var(--space-xs)]", // 12px
+        md: "p-[var(--space-sm)]", // 16px
+        lg: "p-[var(--space-md)]", // 24px
         xl: "p-[calc(var(--space-md) * 1.33)]", // ~32px
       },
       size: {
@@ -66,7 +75,8 @@ const cardVariants = cva(
         default: "",
         loading: "animate-pulse opacity-70 pointer-events-none",
         disabled: "opacity-50 pointer-events-none",
-        selected: "border-accent ring-2 ring-[color-mix(in_srgb, var(--accent) 30%, transparent)] ring-offset-2 ring-offset-bg-1",
+        selected:
+          "border-accent ring-2 ring-[color-mix(in_srgb, var(--accent) 30%, transparent)] ring-offset-2 ring-offset-bg-1",
         focus: "ring-2 ring-accent ring-offset-2 ring-offset-bg-1",
       },
       elevation: {
@@ -80,10 +90,13 @@ const cardVariants = cva(
       },
       interactive: {
         none: "",
-        basic: "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-shadow duration-200",
-        gentle: "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-all duration-200",
+        basic:
+          "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-shadow duration-200",
+        gentle:
+          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-all duration-200",
         glow: "cursor-pointer hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
-        "glow-accent": "cursor-pointer hover:border-accent hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
+        "glow-accent":
+          "cursor-pointer hover:border-accent hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
         // Neue interaktive Varianten mit Glas-Effekten
         "glass-lift":
           "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] transition-all duration-300",

@@ -7,7 +7,7 @@
   /* ========================================
    * RADIUS TOKENS (verbindliche Vorgabe)
    * ======================================== */
-  --radius-xs: 6px;  /* Kleinste Elemente */
+  --radius-xs: 6px; /* Kleinste Elemente */
   --radius-sm: 10px; /* Standard Buttons, Inputs */
   --radius-md: 14px; /* Karten, Panels, größere Elemente */
   --radius-lg: 18px; /* Hauptcontainer, Dialoge */
@@ -16,17 +16,17 @@
   /* ========================================
    * SHADOW TOKENS (exakt 2 Ebenen)
    * ======================================== */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.16);   /* Standard-Card */
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.32);  /* Floating / Modal */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.16); /* Standard-Card */
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.32); /* Floating / Modal */
 
   /* ========================================
    * SPACING TOKENS (konsistente Skala)
    * ======================================== */
-  --space-3xs: 4px;  /* 4px */
-  --space-2xs: 8px;  /* 8px */
-  --space-xs: 12px;  /* 12px */
-  --space-sm: 16px;  /* 16px */
-  --space-md: 24px;  /* 24px */
+  --space-3xs: 4px; /* 4px */
+  --space-2xs: 8px; /* 8px */
+  --space-xs: 12px; /* 12px */
+  --space-sm: 16px; /* 16px */
+  --space-md: 24px; /* 24px */
 
   /* ========================================
    * GLASS TOKENS (feste Opacity & Blur-Werte)
@@ -77,57 +77,57 @@
   --enhanced-contrast-ratio: 7;
 
   /* Color palette - consistent primary, accent, and danger colors */
-  --color-primary: #8B5CF6;
-  --color-primary-hover: #7C3AED;
-  --color-primary-active: #6D28D9;
-  --color-primary-contrast: #0B0F14;
-  --color-primary-border: color-mix(in srgb, #8B5CF6 60%, transparent);
+  --color-primary: #8b5cf6;
+  --color-primary-hover: #7c3aed;
+  --color-primary-active: #6d28d9;
+  --color-primary-contrast: #0b0f14;
+  --color-primary-border: color-mix(in srgb, #8b5cf6 60%, transparent);
 
-  --color-accent: #8B5CF6;
-  --color-accent-soft: #EDE9FE;
-  --color-accent-strong: #7C3AED;
-  --color-accent-contrast: #0B0F14;
-  --color-accent-border: color-mix(in srgb, #8B5CF6 60%, transparent);
+  --color-accent: #8b5cf6;
+  --color-accent-soft: #ede9fe;
+  --color-accent-strong: #7c3aed;
+  --color-accent-contrast: #0b0f14;
+  --color-accent-border: color-mix(in srgb, #8b5cf6 60%, transparent);
 
-  --color-danger: #EF4444;
-  --color-danger-soft: #FEE2E2;
-  --color-danger-strong: #DC2626;
-  --color-danger-contrast: #FFFFFF;
-  --color-danger-border: color-mix(in srgb, #EF4444 60%, transparent);
+  --color-danger: #ef4444;
+  --color-danger-soft: #fee2e2;
+  --color-danger-strong: #dc2626;
+  --color-danger-contrast: #ffffff;
+  --color-danger-border: color-mix(in srgb, #ef4444 60%, transparent);
 
-  --color-success: #10B981;
-  --color-success-soft: #D1FAE5;
+  --color-success: #10b981;
+  --color-success-soft: #d1fae5;
   --color-success-strong: #059669;
-  --color-success-contrast: #FFFFFF;
-  --color-success-border: color-mix(in srgb, #10B981 60%, transparent);
+  --color-success-contrast: #ffffff;
+  --color-success-border: color-mix(in srgb, #10b981 60%, transparent);
 
-  --color-warning: #F59E0B;
-  --color-warning-soft: #FFFBEB;
-  --color-warning-strong: #D97706;
-  --color-warning-contrast: #FFFFFF;
-  --color-warning-border: color-mix(in srgb, #F59E0B 60%, transparent);
+  --color-warning: #f59e0b;
+  --color-warning-soft: #fffbeb;
+  --color-warning-strong: #d97706;
+  --color-warning-contrast: #ffffff;
+  --color-warning-border: color-mix(in srgb, #f59e0b 60%, transparent);
 
-  --color-neutral-bg: #0F1420;
-  --color-neutral-surface: #151D31;
+  --color-neutral-bg: #0f1420;
+  --color-neutral-surface: #151d31;
   --color-neutral-border: color-mix(in srgb, white 18%, transparent);
-  --color-text-primary: #F5F6FF;
-  --color-text-secondary: #C2C7DA;
-  --color-text-tertiary: #8D94AD;
-  --color-text-muted: #6F738B;
-  --color-text-inverse: #0B0F14;
+  --color-text-primary: #f5f6ff;
+  --color-text-secondary: #c2c7da;
+  --color-text-tertiary: #8d94ad;
+  --color-text-muted: #6f738b;
+  --color-text-inverse: #0b0f14;
 
   /* Typography system */
   --font-family-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-family-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", "Courier New", monospace;
 
-  --font-size-xs: 0.75rem;   /* 12px */
-  --font-size-sm: 0.875rem;  /* 14px */
-  --font-size-base: 1rem;    /* 16px */
-  --font-size-lg: 1.125rem;  /* 18px */
-  --font-size-xl: 1.25rem;   /* 20px */
-  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
   --font-size-3xl: 1.875rem; /* 30px */
-  --font-size-4xl: 2.25rem;  /* 36px */
+  --font-size-4xl: 2.25rem; /* 36px */
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
