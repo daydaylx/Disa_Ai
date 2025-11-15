@@ -26,52 +26,10 @@ export class AppHelpers {
    * Verify chat interface is loaded and interactive
    */
   async verifyChatInterface(): Promise<void> {
-    // Based on actual DOM structure, verify that the app has loaded properly
-    // Check for the main application elements that should always be present
-
-    try {
-      // 1. Wait for React app to be fully mounted
-      await this.page.waitForFunction('document.readyState === "complete"', { timeout: 5000 });
-
-      // 2. Verify header is present with branding - updated for new AppShell structure
-      await this.page.locator('[data-testid="app-title"]').waitFor({ timeout: 8000 });
-
-      // 3. Verify main content area exists (either main element or role)
-      await this.page.locator("main, [role='main']").waitFor({ timeout: 3000 });
-
-      // 4. Verify navigation is present
-      await this.page.locator("nav").waitFor({ timeout: 3000 });
-
-      // If we reach here, the app has loaded successfully
-      return;
-    } catch (primaryError) {
-      // Fallback: check for any substantial content indicating the app loaded
-      try {
-        // Look for the text content that indicates the app is working
-        const hasAppContent = await this.page.locator('text="Disa AI"').isVisible();
-        const hasNavigation = await this.page.locator("navigation, nav").first().isVisible();
-        const hasInputArea = await this.page
-          .locator('textarea, input[type="text"], textbox')
-          .first()
-          .isVisible();
-
-        if (hasAppContent || hasNavigation || hasInputArea) {
-          return; // App is working, just different structure than expected
-        }
-      } catch (fallbackError) {
-        // Final fallback: check that page has any meaningful content at all
-        const bodyText = await this.page.textContent("body");
-        if (bodyText && bodyText.trim().length > 100) {
-          console.warn("App structure differs from expected, but content is present");
-          return;
-        }
-      }
-
-      // If none of the checks passed, the app failed to load
-      const errorMessage =
-        primaryError instanceof Error ? primaryError.message : String(primaryError);
-      throw new Error(`Chat interface verification failed: ${errorMessage}`);
-    }
+    await this.page.waitForFunction('document.readyState === "complete"', { timeout: 5000 });
+    await expect(this.page.locator("header").first()).toBeVisible({ timeout: 5000 });
+    await expect(this.page.locator("main, [role='main']").first()).toBeVisible({ timeout: 5000 });
+    await expect(this.page.getByTestId("composer-input")).toBeVisible({ timeout: 5000 });
   }
 
   /**
@@ -159,14 +117,12 @@ export class AppHelpers {
     const url = this.page.url();
 
     if (url.includes("/models")) {
-      // Models page exists, check for models title
-      await expect(this.page.locator('[data-testid="models-title"]')).toBeVisible({
-        timeout: 10000,
-      });
-    } else {
-      // Redirected to chat, verify chat interface
-      await this.verifyChatInterface();
+      const modelCards = this.page.locator("[data-testid*='model-card']");
+      await expect(modelCards.first()).toBeVisible({ timeout: 10000 });
+      return;
     }
+
+    await this.verifyChatInterface();
   }
 
   /**

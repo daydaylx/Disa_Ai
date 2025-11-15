@@ -30,7 +30,6 @@ export interface MigrationOptions {
 export class StorageMigration {
   private static instance: StorageMigration;
   private migrationInProgress = false;
-  private migrationPromise: Promise<MigrationResult> | null = null;
 
   static getInstance(): StorageMigration {
     if (!StorageMigration.instance) {
@@ -70,10 +69,8 @@ export class StorageMigration {
   }
 
   async migrateFromLocalStorage(options: MigrationOptions = {}): Promise<MigrationResult> {
-    // If migration is already in progress, return the existing promise
-    if (this.migrationInProgress && this.migrationPromise) {
-      console.warn("Migration is already in progress, returning existing promise");
-      return this.migrationPromise;
+    if (this.migrationInProgress) {
+      return Promise.reject(new Error("Migration is already in progress"));
     }
 
     const migrationPromise = (async () => {
@@ -199,11 +196,9 @@ export class StorageMigration {
         return result;
       } finally {
         this.migrationInProgress = false;
-        this.migrationPromise = null;
       }
     })();
 
-    this.migrationPromise = migrationPromise;
     return migrationPromise;
   }
 
