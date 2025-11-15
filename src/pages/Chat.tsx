@@ -10,8 +10,8 @@ import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
 import { useRoles } from "../hooks/useRoles";
 import { useSettings } from "../hooks/useSettings";
-import { Settings } from "../lib/icons";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
+import { Settings } from "../lib/icons";
 
 export default function Chat() {
   const toasts = useToasts();
@@ -109,15 +109,17 @@ export default function Chat() {
       {/* Header with model, role, and settings */}
       <header className="sticky top-0 z-20 border-b border-[var(--glass-border-soft)] bg-surface-base/60 backdrop-blur-xl px-page-padding-x py-3 safe-area-top">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 min-w-0"> {/* Added min-w-0 to prevent overflow */}
+          <div className="flex items-center gap-3 min-w-0">
+            {" "}
+            {/* Added min-w-0 to prevent overflow */}
             {activeRole && (
               <div className="flex items-center gap-2">
-                <span className="text-lg flex-shrink-0">{activeRole.emoji || "🤖"}</span>
+                <span className="text-lg flex-shrink-0">🤖</span>
                 <span className="font-medium text-text-primary truncate">{activeRole.name}</span>
               </div>
             )}
             <span className="hidden sm:block text-xs text-text-secondary truncate">
-              Modell: {settings.preferredModelId?.split('/')[1]?.replace('-', ' ') || 'Standard'}
+              Modell: {settings.preferredModelId?.split("/")[1]?.replace("-", " ") || "Standard"}
             </span>
           </div>
           <Button
