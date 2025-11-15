@@ -243,15 +243,15 @@ function PerformanceBar({
 
   // Using the design system for the bar - could use a progress bar component if available
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-xs text-fg-muted min-w-[60px]">{label}</span>
-      <div className="flex-1 h-2 bg-surface-base rounded-full overflow-hidden border border-line shadow-1">
+    <div className="flex items-center gap-3">
+      <span className="text-xs text-fg-muted min-w-[70px]">{label}</span>
+      <div className="flex-1 h-2.5 bg-surface-base rounded-full overflow-hidden border border-line shadow-1">
         <div
           className={`h-full ${colorClasses[color]} transition-all duration-300 shadow-[inset_0_0_4px_rgba(0,0,0,0.2)]`}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <span className="text-xs font-medium min-w-[30px] text-right text-fg">
+      <span className="text-xs font-medium min-w-[35px] text-right text-fg">
         {Math.round(value)}
       </span>
     </div>
@@ -285,16 +285,16 @@ function DenseModelCard({
       onCardClick={onSelect}
     >
       {/* Header Row */}
-      <div className="flex flex-col gap-2 mb-3">
+      <div className="flex flex-col gap-2 mb-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-medium text-fg flex-1 min-w-0 pr-2">
+          <h3 className="font-semibold text-text-primary text-base flex-1 min-w-0 pr-2">
             <span className="truncate inline-block max-w-full" title={model.label}>
               {model.label}
             </span>
           </h3>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             {model.pricing.isFree && (
-              <Badge variant="success" size="sm" className="whitespace-nowrap">
+              <Badge variant="success" size="sm" className="whitespace-nowrap text-xs">
                 <Zap className="w-3 h-3 mr-1" />
                 FREE
               </Badge>
@@ -302,30 +302,30 @@ function DenseModelCard({
           </div>
         </div>
 
-        <p className="text-sm text-fg-muted" title={model.provider}>
+        <p className="text-sm text-text-secondary" title={model.provider}>
           {model.provider}
         </p>
       </div>
 
       {/* Performance Bars */}
-      <div className="space-y-1.5 mb-3">
+      <div className="space-y-2 mb-4">
         <PerformanceBar label="Speed" value={model.performance.speed} color="primary" />
         <PerformanceBar label="Quality" value={model.performance.quality} color="success" />
         <PerformanceBar label="Value" value={model.performance.efficiency} color="warning" />
       </div>
 
       {/* Badges Row */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mb-4">
         {/* Price Info */}
         {!model.pricing.isFree && (
-          <Badge variant="secondary" size="sm">
+          <Badge variant="secondary" size="sm" className="text-xs">
             <DollarSign className="w-3 h-3 mr-1" />
             {formatPricePerK(model.pricing.inputPrice)}
           </Badge>
         )}
 
         {/* Context */}
-        <Badge variant="secondary" size="sm">
+        <Badge variant="secondary" size="sm" className="text-xs">
           {formatContext(model.context.maxTokens)} context
         </Badge>
 
@@ -334,7 +334,7 @@ function DenseModelCard({
           <Badge
             variant="accent"
             size="sm"
-            className="max-w-[100px] truncate"
+            className="max-w-[100px] truncate text-xs"
             title={model.tags[0]}
           >
             {model.tags[0]}
@@ -343,23 +343,23 @@ function DenseModelCard({
 
         {/* Capabilities */}
         {model.capabilities.multimodal && (
-          <Badge variant="secondary" size="sm" title="Multimodal">
+          <Badge variant="secondary" size="sm" className="text-xs" title="Multimodal">
             🖼️
           </Badge>
         )}
         {model.capabilities.codeGeneration && (
-          <Badge variant="secondary" size="sm" title="Code Generation">
+          <Badge variant="secondary" size="sm" className="text-xs" title="Code Generation">
             💻
           </Badge>
         )}
       </div>
 
       {/* Action buttons row at bottom */}
-      <div className="flex justify-end gap-1 mt-3">
+      <div className="flex justify-end gap-2 mt-2">
         <Button
           variant="ghost"
           size="sm"
-          className="p-1.5 h-auto"
+          className="p-2 h-auto"
           aria-label={isFavorite ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
           onClick={(e) => {
             e.stopPropagation();
@@ -367,13 +367,13 @@ function DenseModelCard({
           }}
         >
           <Star
-            className={`w-4 h-4 ${isFavorite ? "fill-yellow-400 text-yellow-400" : "text-fg-muted"}`}
+            className={`w-4 h-4 ${isFavorite ? "fill-yellow-400 text-yellow-400" : "text-text-secondary"}`}
           />
         </Button>
         <Button
           variant="ghost"
           size="sm"
-          className="p-1.5 h-auto"
+          className="p-2 h-auto"
           aria-label="Modelldetails anzeigen"
           onClick={(e) => {
             e.stopPropagation();
@@ -565,7 +565,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 border-b border-line bg-surface-glass/80 backdrop-blur-md">
-        <div className="p-4 space-y-3">
+        <div className="p-4 space-y-4">
           {/* Search Input */}
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
@@ -573,12 +573,12 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               placeholder="Modelle durchsuchen..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full border-transparent bg-surface-muted/70 pl-11 pr-4 py-2.5 text-base focus:bg-surface-base focus:border-accent"
+              className="w-full rounded-full border-transparent bg-surface-muted/70 pl-11 pr-4 py-3 text-base focus:bg-surface-base focus:border-accent"
             />
           </div>
 
           {/* Filter Chips */}
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <FilterChip
               selected={filters.showFavoritesOnly}
               onClick={() => dispatchFilters({ type: "toggleFavorites" })}
@@ -615,7 +615,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       <div className="flex-1 overflow-auto">
         <div className="p-4">
           {/* Results Header */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div className="text-sm text-fg-muted">
               {filteredModels.length} Modelle gefunden
               {searchQuery && ` für "${searchQuery}"`}
@@ -626,7 +626,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           </div>
 
           {/* Models Grid */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {filteredModels.map((model) => (
               <DenseModelCard
                 key={model.id}
@@ -641,11 +641,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           </div>
 
           {filteredModels.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface flex items-center justify-center">
+            <div className="text-center py-16">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface flex items-center justify-center">
                 <Search className="w-8 h-8 text-fg-muted" />
               </div>
-              <h3 className="text-lg font-medium text-fg mb-2">Keine Modelle gefunden</h3>
+              <h3 className="text-lg font-medium text-fg mb-3">Keine Modelle gefunden</h3>
               <p className="text-fg-muted">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`

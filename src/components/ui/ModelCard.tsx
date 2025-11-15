@@ -261,7 +261,9 @@ export function ModelCard({
           aria-expanded={isOpen}
           className={cn(
             "absolute top-3 right-3 flex items-center justify-center rounded-full border border-border-subtle bg-surface-subtle text-text-primary transition hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-neumorphic-base)]",
-            isMobile ? "h-10 w-10 touch-target" : "h-8 w-8",
+            isMobile
+              ? "h-12 w-12 min-h-[48px] min-w-[48px] touch-target"
+              : "h-10 w-10 min-h-[40px] min-w-[40px]",
           )}
         >
           <Info className="h-4 w-4" aria-hidden="true" />

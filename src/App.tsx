@@ -4,6 +4,7 @@ import React, { lazy, Suspense } from "react";
 
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
+import MobileBottomNav from "./components/layout/MobileBottomNav";
 import { Button } from "./components/ui/button";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -103,7 +104,10 @@ function AppContent() {
         )}
         showDialog={false}
       >
-        <Router />
+        <div className="pb-16">
+          <Router />
+        </div>
+        <MobileBottomNav />
       </SentryErrorBoundary>
       <Suspense fallback={null}>
         <FeatureFlagPanel />

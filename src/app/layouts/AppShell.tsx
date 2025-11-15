@@ -87,17 +87,17 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       <div className="border-b border-[var(--glass-border-soft)] bg-surface-base/40 backdrop-blur-xl">
         <nav
           aria-label="Primäre Navigation"
-          className="mx-auto flex w-full max-w-5xl gap-2 overflow-x-auto px-page-padding-x py-2"
+          className="mx-auto flex w-full max-w-5xl gap-3 overflow-x-auto px-page-padding-x py-3"
         >
           {NAV_ITEMS.map((item) => (
             <Link
               key={`chip-${item.path}`}
               to={item.path}
               className={cn(
-                "shrink-0 rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors",
+                "shrink-0 rounded-full border px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.2em] transition-colors",
                 activePath === item.path
                   ? "border-[var(--accent-border)] bg-[var(--accent-soft)] text-text-primary shadow-[0_12px_30px_rgba(97,231,255,0.3)]"
-                  : "border-[var(--glass-border-soft)] text-text-muted hover:border-[var(--glass-border-strong)] hover:text-text-primary",
+                  : "border-[var(--glass-border-soft)] text-text-secondary hover:border-[var(--glass-border-strong)] hover:text-text-primary",
               )}
             >
               {item.label}
@@ -123,7 +123,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       </main>
 
       <NetworkBanner />
-      <PWAInstallPrompt />
+      {location.pathname === "/" && <PWAInstallPrompt />}
       {process.env.NODE_ENV === "development" && <PWADebugInfo />}
 
       <SettingsDrawer

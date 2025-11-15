@@ -8,7 +8,7 @@ export default function StudioHome() {
 
   return (
     <div className="space-y-6 py-4">
-      <header className="space-y-2 pb-4">
+      <header className="space-y-4 pb-6">
         <h1 className="text-2xl font-semibold text-text-primary">Willkommen im Disa AI Studio</h1>
         <p className="max-w-2xl text-sm text-text-secondary">
           Dein ruhiges KI-Studio für klare, produktive Konversationen. Wähle eine Aktion, um zu

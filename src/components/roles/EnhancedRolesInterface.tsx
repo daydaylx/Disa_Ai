@@ -157,7 +157,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 border-b border-line bg-surface-glass/80 backdrop-blur-md">
-        <div className="p-4 space-y-3">
+        <div className="p-4 space-y-4">
           {/* Search Input */}
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
@@ -165,12 +165,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               placeholder="Rollen durchsuchen..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full border-transparent bg-surface-muted/70 pl-11 pr-4 py-2.5 text-base focus:bg-surface-base focus:border-accent"
+              className="w-full rounded-full border-transparent bg-surface-muted/70 pl-11 pr-4 py-3 text-base focus:bg-surface-base focus:border-accent"
             />
           </div>
 
           {/* Filter Chips */}
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <FilterChip
               selected={filters.showFavoritesOnly}
               onClick={() =>
@@ -193,8 +193,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         </div>
 
         {/* Category Pills */}
-        <div className="px-4 pb-3">
-          <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="px-4 pb-4 pt-2">
+          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {CATEGORY_ORDER.filter((cat) => (categoryCounts[cat] || 0) > 0).map((category) => (
               <FilterChip
                 key={category}
@@ -212,7 +212,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       <div className="flex-1 overflow-auto">
         <div className="p-4">
           {/* Results Header */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div className="text-sm text-text-secondary">
               {filteredRoles.length} Rollen gefunden
               {searchQuery && ` für "${searchQuery}"`}
@@ -232,7 +232,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
           {/* Roles Grid */}
           <div
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"
             data-testid="role-card-grid"
           >
             {filteredRoles.map((role) => (
@@ -246,11 +246,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           </div>
 
           {filteredRoles.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface-muted flex items-center justify-center">
+            <div className="text-center py-16">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface-muted flex items-center justify-center">
                 <Users className="w-8 h-8 text-text-secondary" />
               </div>
-              <h3 className="text-lg font-medium text-text-primary mb-2">Keine Rollen gefunden</h3>
+              <h3 className="text-lg font-medium text-text-primary mb-3">Keine Rollen gefunden</h3>
               <p className="text-text-secondary">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
