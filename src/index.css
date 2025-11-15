@@ -20,7 +20,13 @@
 /* 4. Aurora-optimized styles for better performance */
 @import "./styles/aurora-optimized.css";
 
-/* 5. Inject Tailwind's base, components, and utility styles */
+/* 5. Mobile Responsivity Styles */
+@import "./styles/mobile.css";
+
+/* 6. Animation & Interaction Styles */
+@import "./styles/animations.css";
+
+/* 7. Inject Tailwind's base, components, and utility styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

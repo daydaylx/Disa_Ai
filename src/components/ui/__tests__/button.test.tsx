@@ -10,7 +10,7 @@ describe("Button", () => {
     const button = screen.getByRole("button", { name: /test button/i });
     expect(button).toBeInTheDocument();
     expect(button).toHaveClass("bg-[var(--button-secondary-bg)]"); // glass-primary default
-    expect(button).toHaveClass("h-10 px-4 py-2 text-sm"); // default size
+    expect(button).toHaveClass("h-10 px-6 py-2.5 text-sm"); // default size
   });
 
   it("renders the button with a specific variant", () => {
@@ -24,7 +24,7 @@ describe("Button", () => {
     render(<Button size="lg">Large Button</Button>);
     const button = screen.getByRole("button", { name: /large button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("h-12 px-6 py-3 text-base");
+    expect(button).toHaveClass("h-12 px-8 py-3 text-base");
   });
 
   it("renders the button with dramatic effect", () => {
