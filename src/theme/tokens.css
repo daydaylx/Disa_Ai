@@ -49,7 +49,7 @@
   /* Glass Layer with fixed opacity */
   --layer-glass-panel: rgba(255, 255, 255, var(--glass-opacity-light));
   --layer-glass-inline: rgba(255, 255, 255, var(--glass-opacity-light));
-  
+
   /* Mapping für einfache Verwendung */
   --radius-card: var(--radius-md);
   --radius-button: var(--radius-sm);
@@ -117,8 +117,8 @@
   --color-text-inverse: #0B0F14;
 
   /* Typography system */
-  --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-family-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", "Courier New", monospace;
 
   --font-size-xs: 0.75rem;   /* 12px */
   --font-size-sm: 0.875rem;  /* 14px */
@@ -161,7 +161,7 @@
   [data-theme="dark"],
   .dark {
     --glass-opacity-medium: 0.24;
-    --glass-opacity-dark: 0.30;
+    --glass-opacity-dark: 0.3;
     --glass-border-soft: rgba(255, 255, 255, var(--glass-opacity-medium));
     --glass-border-strong: rgba(255, 255, 255, var(--glass-opacity-dark));
   }

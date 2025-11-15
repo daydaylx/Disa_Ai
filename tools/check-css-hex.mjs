@@ -11,6 +11,8 @@ const IGNORED_FILES = [
   "src/styles/design-tokens.generated.ts",
   "src/styles/design-tokens.ts",
   "src/styles/tokens.css",
+  "src/styles/unified-tokens.css",
+  "src/theme/tokens.css",
 ];
 
 const HEX_COLOR_REGEX = /#[0-9a-fA-F]{3,8}\b/g;
