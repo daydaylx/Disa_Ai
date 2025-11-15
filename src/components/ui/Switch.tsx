@@ -62,34 +62,27 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
           "relative inline-flex items-center rounded-full",
           sizeConfig.track,
 
-          // Neomorphic Track Foundation (Inset/Groove Effect)
-          "bg-[var(--surface-neumorphic-base)]",
-          "shadow-[var(--shadow-inset-strong)]",
-          "border-[var(--border-neumorphic-dark)]",
+          // Glassmorphic Track Foundation
+          "bg-[color-mix(in_srgb,var(--surface-card)_85%,transparent)]",
+          "border border-[color-mix(in_srgb,var(--line)_70%,transparent)]",
+          "shadow-[0_2px_8px_rgba(0,0,0,0.1)]",
+          "backdrop-blur-sm",
 
-          // Checked State Track (Illuminated Groove)
+          // Checked State Track (Illuminated)
           checked &&
             [
-              "bg-gradient-to-r from-[var(--acc1)] to-[var(--acc2)]",
-              "shadow-[var(--shadow-inset-medium)]",
-              "border-[var(--border-neumorphic-light)]",
+              "bg-[color-mix(in_srgb,var(--accent)_20%,transparent)]",
+              "border-[color-mix(in_srgb,var(--accent)_50%,transparent)]",
+              "shadow-[0_2px_12px_rgba(139,92,246,0.2)]",
             ].join(" "),
 
-          // Hover State
-          "hover:shadow-[var(--shadow-inset-extreme)]",
-
-          // Focus State (Dramatic Neomorphic)
+          // Focus State (Glassmorphic)
           "focus-visible:outline-none",
-          "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-          "focus-visible:border-[var(--color-border-focus)]",
+          "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
 
           // Interactive States
           "transition-all duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
-
-          // Dark Mode
-          "dark:bg-[var(--surface-neumorphic-base)]",
-          "dark:border-[var(--border-neumorphic-dark)]",
         )}
       >
         {/* Dramatic Neomorphic Thumb */}
@@ -102,64 +95,59 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
             // Position Animation
             checked ? sizeConfig.checkedTranslate : sizeConfig.uncheckedTranslate,
 
-            // Neomorphic Thumb Foundation (Highly Raised)
-            "bg-[var(--surface-neumorphic-floating)]",
-            "shadow-[var(--shadow-neumorphic-lg)]",
-            "border-[var(--border-neumorphic-light)]",
-
-            // Gradient Overlay for Enhanced Depth
-            "bg-gradient-to-br from-white to-[var(--surface-neumorphic-raised)]",
+            // Glassmorphic Thumb Foundation
+            "bg-[color-mix(in_srgb,var(--surface-card)_95%,white_5%)]",
+            "border border-[color-mix(in_srgb,var(--line)_80%,transparent)]",
+            "shadow-[0_2px_6px_rgba(0,0,0,0.15)]",
 
             // Checked State Thumb (Enhanced Illumination)
             checked &&
               [
-                "shadow-[var(--shadow-neumorphic-xl)]",
-                "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--acc1)]",
-                "border-[var(--color-border-focus)]",
+                "bg-[color-mix(in_srgb,var(--accent)_90%,white_10%)]",
+                "border-[color-mix(in_srgb,var(--accent)_70%,transparent)]",
+                "shadow-[0_2px_12px_rgba(139,92,246,0.3)]",
               ].join(" "),
 
             // Interactive States
             !disabled &&
               [
                 // Hover: Subtle lift effect
-                "hover:shadow-[var(--shadow-neumorphic-xl)]",
+                "hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)]",
                 "hover:scale-105",
 
                 // Active: Press effect
-                "active:shadow-[var(--shadow-neumorphic-md)]",
+                "active:shadow-[0_1px_4px_rgba(0,0,0,0.1)]",
                 "active:scale-95",
               ].join(" "),
 
             // Disabled State
             disabled &&
-              ["shadow-[var(--shadow-neumorphic-sm)]", "bg-[var(--surface-neumorphic-base)]"].join(
-                " ",
-              ),
-
-            // Dark Mode Optimization
-            "dark:bg-gradient-to-br dark:from-[var(--surface-neumorphic-floating)] dark:to-[var(--surface-neumorphic-base)]",
-            "dark:border-[var(--border-neumorphic-light)]",
+              [
+                "bg-[color-mix(in_srgb,var(--surface-card)_70%,transparent)]",
+                "border-[color-mix(in_srgb,var(--line)_50%,transparent)]",
+                "shadow-none",
+              ].join(" "),
           )}
         >
-          {/* Inner highlight for extreme depth perception */}
+          {/* Inner highlight for depth perception */}
           <span
             className={cn(
               "absolute inset-1 rounded-full",
-              "bg-gradient-to-br from-white/40 to-transparent",
+              "bg-gradient-to-br from-white/30 to-transparent",
               "transition-opacity duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
-              checked ? "opacity-60" : "opacity-30",
+              checked ? "opacity-70" : "opacity-40",
             )}
           />
         </span>
 
-        {/* Track Inner Light Effect */}
+        {/* Track glow effect when checked */}
         <span
           className={cn(
-            "absolute inset-1 rounded-full",
-            "bg-gradient-to-br from-white/10 to-transparent",
+            "absolute inset-0 rounded-full",
             "pointer-events-none",
             "transition-opacity duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
-            checked ? "opacity-40" : "opacity-0",
+            checked ? "opacity-30" : "opacity-0",
+            "shadow-[0_0_8px_rgba(139,92,246,0.4)]",
           )}
         />
       </button>

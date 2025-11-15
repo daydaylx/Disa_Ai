@@ -87,9 +87,9 @@ export function ModelCard({
 
   // Determine badge variant based on pricing
   const getBadgeVariant = () => {
-    if (priceIn === 0 && priceOut === 0) return "success";
-    if (priceIn < 0.5 && priceOut < 0.5) return "default";
-    return "outline";
+    if (priceIn === 0 && priceOut === 0) return "glass-success" as const;
+    if (priceIn < 0.5 && priceOut < 0.5) return "glass" as const;
+    return "outline" as const;
   };
 
   return (
@@ -98,20 +98,17 @@ export function ModelCard({
         role="button"
         tabIndex={0}
         aria-pressed={isSelected}
-        elevation={isSelected ? "dramatic" : "raised"}
-        interactive="gentle"
-        padding="md"
-        state={isSelected ? "selected" : "default"}
-        data-cat={categoryKey}
+        elevation={isSelected ? "dramatic" : "medium"}
+        interactive={isSelected ? "glass-glow" : "glass-lift"}
+        padding="none"
+        tone={isSelected ? "glass-elevated" : "glass-primary"}
         className={cn(
           "category-border category-tint category-focus relative w-full overflow-hidden",
           "transition-all duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)]",
           "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-base",
           "hover-lift-glow tap-bounce focus-glow",
-          isSelected && "shadow-glow-brand bg-brand/5 border-brand/30",
+          isSelected && "ring-2 ring-accent/50",
           isMobile && "mobile-model-card touch-target",
-          "border-l-[4px]",
-          "pl-5",
         )}
         onClick={onSelect}
         onKeyDown={handleKeyDown}
@@ -126,7 +123,7 @@ export function ModelCard({
             {providerTier === "premium" && (
               <Badge
                 size="xs"
-                variant="brand"
+                variant="glass-brand"
                 className={cn("absolute -right-1 -top-1", isMobile && "touch-target")}
               >
                 ★
@@ -141,7 +138,6 @@ export function ModelCard({
                 <div className="flex items-center gap-2 mt-1">
                   <p className="truncate text-sm text-text-muted">{provider}</p>
                   <Badge
-                    variant="accent"
                     category={badgeCategory}
                     size="xs"
                     className={cn(
@@ -241,7 +237,7 @@ export function ModelCard({
               </div>
 
               <Badge
-                variant={isSelected ? "brand" : "outline"}
+                variant={isSelected ? "glass-brand" : "outline"}
                 size="sm"
                 className={cn("px-3 py-1", isMobile && "touch-target")}
               >

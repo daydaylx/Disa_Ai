@@ -1,6 +1,7 @@
 // Migration utility for transitioning from localStorage to IndexedDB
 import type { Conversation } from "./storage-layer";
 import { modernStorage } from "./storage-layer";
+import { safeError, safeInfo } from "./utils/production-logger";
 
 export interface MigrationResult {
   success: boolean;
@@ -10,16 +11,26 @@ export interface MigrationResult {
   duration: number;
 }
 
+export interface MigrationProgress {
+  current: number;
+  total: number;
+  percentage: number;
+  batch: number;
+  totalBatches: number;
+}
+
 export interface MigrationOptions {
   clearLocalStorageAfterSuccess?: boolean;
   validateData?: boolean;
   batchSize?: number;
   skipOnError?: boolean;
+  onProgress?: (progress: MigrationProgress) => void;
 }
 
 export class StorageMigration {
   private static instance: StorageMigration;
   private migrationInProgress = false;
+  private migrationPromise: Promise<MigrationResult> | null = null;
 
   static getInstance(): StorageMigration {
     if (!StorageMigration.instance) {
@@ -59,111 +70,149 @@ export class StorageMigration {
   }
 
   async migrateFromLocalStorage(options: MigrationOptions = {}): Promise<MigrationResult> {
-    if (this.migrationInProgress) {
-      throw new Error("Migration is already in progress");
+    // If migration is already in progress, return the existing promise
+    if (this.migrationInProgress && this.migrationPromise) {
+      console.warn("Migration is already in progress, returning existing promise");
+      return this.migrationPromise;
     }
 
-    const {
-      clearLocalStorageAfterSuccess = true,
-      validateData = true,
-      batchSize = 50,
-      skipOnError = false,
-    } = options;
+    const migrationPromise = (async () => {
+      const {
+        clearLocalStorageAfterSuccess = true,
+        validateData = true,
+        batchSize = 50,
+        skipOnError = false,
+        onProgress,
+      } = options;
 
-    const startTime = Date.now();
-    this.migrationInProgress = true;
-    await Promise.resolve();
+      const startTime = Date.now();
+      this.migrationInProgress = true;
+      await Promise.resolve();
 
-    try {
-      const result: MigrationResult = {
-        success: false,
-        migratedCount: 0,
-        errors: [],
-        warnings: [],
-        duration: 0,
-      };
-
-      // Check if there's data to migrate
-      const localConversations = localStorage.getItem("disa:conversations");
-
-      if (!localConversations) {
-        result.warnings.push("No localStorage data found to migrate");
-        result.success = true;
-        result.duration = Date.now() - startTime;
-        return result;
-      }
-
-      // Parse localStorage data
-      let conversations: Conversation[] = [];
       try {
-        const parsedConversations = JSON.parse(localConversations);
-        conversations = Object.values(parsedConversations) as Conversation[];
-      } catch (error) {
-        result.errors.push(`Failed to parse localStorage conversations: ${error}`);
-        result.duration = Date.now() - startTime;
-        return result;
-      }
+        const result: MigrationResult = {
+          success: false,
+          migratedCount: 0,
+          errors: [],
+          warnings: [],
+          duration: 0,
+        };
 
-      if (conversations.length === 0) {
-        result.warnings.push("No conversations found in localStorage");
-        result.success = true;
-        result.duration = Date.now() - startTime;
-        return result;
-      }
+        // Check if there's data to migrate
+        const localConversations = localStorage.getItem("disa:conversations");
 
-      // Validate data if requested
-      if (validateData) {
-        const validationErrors = this.validateConversations(conversations, {
-          skipMessageCountCheck: true,
-        });
-        if (validationErrors.length > 0) {
-          result.warnings.push(...validationErrors);
+        if (!localConversations) {
+          result.warnings.push("No localStorage data found to migrate");
+          result.success = true;
+          result.duration = Date.now() - startTime;
+          return result;
         }
-      }
 
-      // Migrate in batches
-      const totalBatches = Math.ceil(conversations.length / batchSize);
-      let abortMigration = false;
-
-      for (let i = 0; i < totalBatches && !abortMigration; i++) {
-        const batch = conversations.slice(i * batchSize, (i + 1) * batchSize);
-
+        // Parse localStorage data
+        let conversations: Conversation[] = [];
         try {
-          await this.migrateBatch(batch);
-          result.migratedCount += batch.length;
+          const parsedConversations = JSON.parse(localConversations);
+          conversations = Object.values(parsedConversations) as Conversation[];
         } catch (error) {
-          const errorMsg = `Failed to migrate batch ${i + 1}/${totalBatches}: ${error}`;
-          result.errors.push(errorMsg);
+          safeError("Failed to parse localStorage conversations:", error);
+          result.errors.push(`Failed to parse localStorage conversations: ${error}`);
+          result.duration = Date.now() - startTime;
+          return result;
+        }
 
-          if (!skipOnError) {
-            abortMigration = true;
+        if (conversations.length === 0) {
+          result.warnings.push("No conversations found in localStorage");
+          result.success = true;
+          result.duration = Date.now() - startTime;
+          return result;
+        }
+
+        // Validate data if requested
+        if (validateData) {
+          const validationErrors = this.validateConversations(conversations, {
+            skipMessageCountCheck: true,
+          });
+          if (validationErrors.length > 0) {
+            result.warnings.push(...validationErrors);
           }
         }
-      }
 
-      // Clear localStorage if migration was successful
-      result.success = result.errors.length === 0;
-      if (result.success && result.migratedCount > 0 && clearLocalStorageAfterSuccess) {
-        try {
-          localStorage.removeItem("disa:conversations");
-          localStorage.removeItem("disa:conversations:metadata");
-        } catch (error) {
-          result.warnings.push(`Failed to clear localStorage: ${error}`);
+        // Migrate in batches
+        const totalBatches = Math.ceil(conversations.length / batchSize);
+        let abortMigration = false;
+
+        for (let i = 0; i < totalBatches && !abortMigration; i++) {
+          const batch = conversations.slice(i * batchSize, (i + 1) * batchSize);
+
+          try {
+            await this.migrateBatch(batch);
+            result.migratedCount += batch.length;
+
+            // Report progress
+            if (onProgress) {
+              const progress: MigrationProgress = {
+                current: result.migratedCount,
+                total: conversations.length,
+                percentage: Math.round((result.migratedCount / conversations.length) * 100),
+                batch: i + 1,
+                totalBatches,
+              };
+              onProgress(progress);
+            }
+          } catch (error) {
+            safeError(`Failed to migrate batch ${i + 1}/${totalBatches}:`, error);
+            const errorMsg = `Failed to migrate batch ${i + 1}/${totalBatches}: ${error}`;
+            result.errors.push(errorMsg);
+
+            if (!skipOnError) {
+              abortMigration = true;
+            }
+          }
         }
+
+        // Clear localStorage if migration was successful
+        result.success = result.errors.length === 0;
+        if (result.success && result.migratedCount > 0 && clearLocalStorageAfterSuccess) {
+          try {
+            localStorage.removeItem("disa:conversations");
+            localStorage.removeItem("disa:conversations:metadata");
+          } catch (error) {
+            safeError("Failed to clear localStorage:", error);
+            result.warnings.push(`Failed to clear localStorage: ${error}`);
+          }
+        }
+
+        result.duration = Date.now() - startTime;
+
+        // Log migration result
+        if (result.success) {
+          safeInfo(
+            `Successfully migrated ${result.migratedCount} conversations in ${result.duration}ms`,
+          );
+          if (result.warnings.length > 0) {
+            console.warn("Migration completed with warnings:", result.warnings);
+          }
+        } else {
+          console.error("Migration failed with errors:", result.errors);
+        }
+
+        return result;
+      } finally {
+        this.migrationInProgress = false;
+        this.migrationPromise = null;
       }
+    })();
 
-      result.duration = Date.now() - startTime;
-
-      return result;
-    } finally {
-      this.migrationInProgress = false;
-    }
+    this.migrationPromise = migrationPromise;
+    return migrationPromise;
   }
 
   private async migrateBatch(conversations: Conversation[]): Promise<void> {
     for (const conversation of conversations) {
       try {
-        await modernStorage.saveConversation(conversation);
+        // Sanitize conversation before saving
+        const sanitizedConversation = this.sanitizeConversation(conversation);
+        await modernStorage.saveConversation(sanitizedConversation);
       } catch (error) {
         throw new Error(`Failed to save conversation ${conversation.id}: ${error}`);
       }
@@ -218,9 +267,58 @@ export class StorageMigration {
             `stored ${conversation.messageCount}, actual ${conversation.messages.length}`,
         );
       }
+
+      // Additional validation for data integrity
+      if (conversation.createdAt && conversation.updatedAt) {
+        const createdTime = new Date(conversation.createdAt).getTime();
+        const updatedTime = new Date(conversation.updatedAt).getTime();
+        if (createdTime > updatedTime) {
+          warnings.push(
+            `Conversation ${conversationIdLabel} has createdAt timestamp newer than updatedAt`,
+          );
+        }
+      }
     }
 
     return warnings;
+  }
+
+  /**
+   * Sanitize conversation data by fixing common issues
+   */
+  private sanitizeConversation(conversation: Conversation): Conversation {
+    const sanitized = { ...conversation };
+
+    // Ensure required fields have default values
+    if (!sanitized.id) {
+      sanitized.id = Math.random().toString(36).substring(2, 15);
+    }
+
+    if (!sanitized.title) {
+      sanitized.title = "Unbenanntes Gespräch";
+    }
+
+    if (!sanitized.model) {
+      sanitized.model = "gpt-3.5-turbo";
+    }
+
+    // Fix date issues
+    if (!sanitized.createdAt || !this.isValidISODate(sanitized.createdAt)) {
+      sanitized.createdAt = new Date().toISOString();
+    }
+
+    if (!sanitized.updatedAt || !this.isValidISODate(sanitized.updatedAt)) {
+      sanitized.updatedAt = sanitized.createdAt;
+    }
+
+    // Ensure message count consistency
+    if (sanitized.messages) {
+      sanitized.messageCount = sanitized.messages.length;
+    } else {
+      sanitized.messageCount = sanitized.messageCount || 0;
+    }
+
+    return sanitized;
   }
 
   async estimateMigrationTime(): Promise<{

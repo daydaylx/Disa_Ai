@@ -13,6 +13,7 @@ export interface FeatureFlags {
   // UI Features
   newDrawer: boolean;
   edgeSwipeNavigation: boolean;
+  enhancedNavigation: boolean;
 
   // Performance Features
   lazyHighlighter: boolean;
@@ -38,6 +39,7 @@ export const defaultFeatureFlags: FeatureFlags = {
   // UI Features
   newDrawer: false,
   edgeSwipeNavigation: false,
+  enhancedNavigation: false,
 
   // Performance Features
   lazyHighlighter: false,
@@ -175,6 +177,13 @@ export const featureFlagMetadata: FeatureFlagMeta[] = [
     name: "Neues Drawer-Design",
     description: "Überarbeitetes Bottom-Sheet/Drawer Interface",
     sprint: 2,
+    riskLevel: "medium",
+  },
+  {
+    key: "enhancedNavigation",
+    name: "Erweiterte Navigation",
+    description: "Aktiviert das neue Mobile-Bottom-Navigationserlebnis",
+    sprint: 5,
     riskLevel: "medium",
   },
   {

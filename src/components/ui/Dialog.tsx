@@ -14,13 +14,13 @@ const DialogPortal = DialogPrimitive.Portal;
 const DialogClose = DialogPrimitive.Close;
 
 const dialogOverlayVariants = cva(
-  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-[var(--z-modal-backdrop)] transition-[backdrop-filter,background-color] duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
+  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-[var(--z-modal-backdrop)] duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
   {
     variants: {
       variant: {
         default: "bg-overlay-scrim",
         glass:
-          "bg-overlay-scrim/40 backdrop-blur-sm supports-[backdrop-filter]:bg-overlay-scrim/60",
+          "bg-black/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         neumorphic:
           "bg-[var(--surface-neumorphic-overlay)] backdrop-blur-md supports-[backdrop-filter]:bg-[var(--surface-neumorphic-overlay)]/80",
         soft: "bg-overlay-scrim/30 backdrop-blur-lg supports-[backdrop-filter]:bg-overlay-scrim/50",
@@ -50,14 +50,14 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const dialogContentVariants = cva(
-  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] data-[state=open]:zoom-in-95 fixed left-1/2 top-1/2 z-[var(--z-modal)] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-[var(--space-stack-md)] p-[var(--space-lg)] text-text-primary transition duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
+  "fixed left-[50%] top-[50%] z-[var(--z-modal)] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
   {
     variants: {
       variant: {
         default:
           "rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] shadow-surface",
         glass:
-          "rounded-[var(--radius-xl)] border border-overlay-dialog-border/40 bg-overlay-dialog/80 backdrop-blur-xl shadow-surface supports-[backdrop-filter]:bg-overlay-dialog/60",
+          "rounded-[18px] border border-[color-mix(in_srgb,var(--line)_70%,transparent)] bg-[color-mix(in_srgb,var(--surface-card)_90%,white_10%)] shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-xl",
         neumorphic:
           "rounded-[var(--radius-2xl)] border border-[var(--border-neumorphic-light)] bg-[var(--surface-neumorphic-floating)] shadow-elevated motion-safe:hover:shadow-elevated motion-safe:transition-shadow motion-safe:duration-[180ms] motion-safe:ease-[cubic-bezier(.23,1,.32,1)]",
         floating:
@@ -77,13 +77,13 @@ const dialogContentVariants = cva(
       padding: {
         none: "p-0",
         sm: "p-[var(--space-md)]",
-        md: "p-[var(--space-lg)]",
+        md: "p-6",
         lg: "p-[var(--space-xl)]",
         xl: "p-[var(--space-2xl)]",
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "glass",
       size: "lg",
       padding: "md",
     },

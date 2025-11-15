@@ -7,11 +7,11 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
     <div
       className={cn(
         "relative w-full overflow-x-auto rounded-[var(--radius-lg)]",
-        // Dramatic Container with Neomorphic Design
-        "bg-[var(--surface-neumorphic-floating)]",
-        "shadow-[var(--shadow-neumorphic-lg)]",
-        "border border-[var(--border-neumorphic-light)]",
-        "backdrop-blur-sm",
+        // Glassmorphism container design
+        "bg-[color-mix(in_srgb,var(--surface-card)_90%,white_5%)]",
+        "border border-[color-mix(in_srgb,var(--line)_70%,transparent)]",
+        "shadow-[0_8px_24px_rgba(0,0,0,0.2)]",
+        "backdrop-blur-md",
       )}
     >
       <table
@@ -36,14 +36,12 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      // Dramatic Header with Gradient and Neomorphic Design
-      "bg-gradient-to-r from-[var(--surface-neumorphic-raised)] to-[var(--surface-neumorphic-floating)]",
+      // Glassmorphism header design
+      "bg-[color-mix(in_srgb,var(--surface-card)_85%,transparent)]",
       "text-[var(--color-text-primary)]",
       "relative",
       // Header border
-      "border-b-2 border-[var(--border-neumorphic-light)]",
-      // Inner shadow for depth
-      "shadow-[inset_0_-2px_6px_rgba(9,12,20,0.1)]",
+      "border-b border-[color-mix(in_srgb,var(--line)_70%,transparent)]",
       className,
     )}
     {...props}
@@ -58,7 +56,7 @@ const TableBody = React.forwardRef<
   <tbody
     ref={ref}
     className={cn(
-      "bg-[var(--surface-neumorphic-base)]",
+      "bg-[color-mix(in_srgb,var(--surface-card)_80%,transparent)]",
       // Enhanced body styling
       "relative z-10",
       className,
@@ -75,11 +73,10 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      // Dramatic Footer with Neomorphic Design
-      "bg-gradient-to-r from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
+      // Glassmorphism footer design
+      "bg-[color-mix(in_srgb,var(--surface-card)_85%,transparent)]",
       "font-semibold text-[var(--color-text-secondary)]",
-      "border-t-2 border-[var(--border-neumorphic-light)]",
-      "shadow-[inset_0_2px_6px_rgba(9,12,20,0.1)]",
+      "border-t border-[color-mix(in_srgb,var(--line)_70%,transparent)]",
       className,
     )}
     {...props}
@@ -92,15 +89,12 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        // Dramatic Row with Enhanced Hover
-        "border-b border-[var(--border-neumorphic-subtle)]",
+        // Glassmorphism row design
+        "border-b border-[color-mix(in_srgb,var(--line)_50%,transparent)]",
         "transition-all duration-300 ease-out",
         "last:border-0",
         // Enhanced Hover State
-        "hover:bg-gradient-to-r hover:from-[var(--surface-neumorphic-raised)]/50 hover:to-transparent",
-        "hover:shadow-[inset_0_1px_3px_rgba(9,12,20,0.05)]",
-        "hover:transform hover:scale-[1.01]",
-        "hover:-translate-y-0.5",
+        "hover:bg-[color-mix(in_srgb,var(--surface-card)_95%,white_5%)]",
         className,
       )}
       {...props}
@@ -116,7 +110,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      // Dramatic Header Cell
+      // Glassmorphism header cell
       "py-4 px-6 text-xs font-bold uppercase tracking-wider",
       "text-[var(--color-text-primary)]",
       "text-left align-middle",
@@ -138,7 +132,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      // Dramatic Cell with Enhanced Typography
+      // Glassmorphism cell
       "py-4 px-6 align-middle text-sm",
       "text-[var(--color-text-secondary)]",
       "transition-colors duration-200",
@@ -158,7 +152,7 @@ const TableCaption = React.forwardRef<
   <caption
     ref={ref}
     className={cn(
-      // Dramatic Caption
+      // Glassmorphism caption
       "mt-4 text-sm text-[var(--color-text-tertiary)]",
       "font-medium",
       "px-2",

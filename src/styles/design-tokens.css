@@ -45,11 +45,16 @@
   /* Heavy Shadow - für starke Hebung und Fokus */
   --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.32);
 
+  /* Neue erweiterte Shadow-Tokens für bessere Tiefenwirkung */
+  --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.25);
+  --shadow-floating: 0 16px 40px rgba(0, 0, 0, 0.3);
+
   /* ========================================
    * GLASS TOKENS (kalibrierte Opazität)
    * ======================================== */
   /* Mobile Glas-Opacity: 0.18–0.28 bei dunklen Themes */
   --glass-border-soft: rgba(255, 255, 255, 0.18);
+  --glass-border-strong: rgba(255, 255, 255, 0.28);
 
   /* Glas-Layer mit korrigierter Opazität für dunkle Themes */
   --layer-glass-panel: color-mix(in srgb, var(--surface-card) 78%, transparent);
@@ -61,6 +66,7 @@
    * ======================================== */
   --backdrop-blur-subtle: 8px;
   --backdrop-blur-medium: 12px;
+  --backdrop-blur-strong: 16px;
 
   /* ========================================
    * ALTE TOKENS (für Abwärtskompatibilität)
@@ -87,6 +93,7 @@
 [data-theme="dark"],
 .dark {
   --glass-border-soft: rgba(255, 255, 255, 0.22);
+  --glass-border-strong: rgba(255, 255, 255, 0.32);
   --layer-glass-panel: color-mix(in srgb, var(--surface-card) 76%, transparent);
   --layer-glass-inline: color-mix(in srgb, var(--surface-base) 80%, transparent);
 }
@@ -95,6 +102,7 @@
 @media (max-width: 640px) {
   :root {
     --glass-border-soft: rgba(255, 255, 255, 0.24);
+    --glass-border-strong: rgba(255, 255, 255, 0.36);
     --layer-glass-panel: color-mix(in srgb, var(--surface-card) 74%, transparent);
     --layer-glass-inline: color-mix(in srgb, var(--surface-base) 78%, transparent);
   }
@@ -102,6 +110,7 @@
   [data-theme="dark"],
   .dark {
     --glass-border-soft: rgba(255, 255, 255, 0.26);
+    --glass-border-strong: rgba(255, 255, 255, 0.38);
     --layer-glass-panel: color-mix(in srgb, var(--surface-card) 72%, transparent);
     --layer-glass-inline: color-mix(in srgb, var(--surface-base) 76%, transparent);
   }

@@ -4,12 +4,14 @@ import React, { lazy, Suspense } from "react";
 
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
+import { EnhancedBottomNav } from "./components/layout/EnhancedBottomNav";
 import MobileBottomNav from "./components/layout/MobileBottomNav";
 import { Button } from "./components/ui/button";
 import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { useEdgeSwipeDrawer } from "./hooks/useEdgeSwipe";
+import { useFeatureFlag } from "./hooks/useFeatureFlags";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 
@@ -24,6 +26,7 @@ function AppContent() {
   useServiceWorker(); // Now safely inside ToastsProvider
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const isNewNavEnabled = useFeatureFlag("enhancedNavigation");
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -107,7 +110,7 @@ function AppContent() {
         <div className="pb-16">
           <Router />
         </div>
-        <MobileBottomNav />
+        {isNewNavEnabled ? <EnhancedBottomNav /> : <MobileBottomNav />}
       </SentryErrorBoundary>
       <Suspense fallback={null}>
         <FeatureFlagPanel />

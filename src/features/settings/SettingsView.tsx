@@ -19,6 +19,7 @@ import {
 } from "../../lib/conversation-manager-modern";
 import {
   BookOpenCheck,
+  ChevronRight,
   Download,
   Eye,
   EyeOff,
@@ -376,9 +377,21 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               Export als JSON
               <Download className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
-            <Button variant="neo-subtle" className="justify-between" onClick={handleImportClick}>
-              Importieren
-              <Upload className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+            <Button
+              variant="glass-secondary"
+              className="justify-between"
+              onClick={handleImportClick}
+            >
+              <div className="flex items-center gap-3">
+                <Upload className="h-5 w-5 text-text-secondary" />
+                <div className="text-left">
+                  <p className="font-medium text-text-primary">Einstellungen importieren</p>
+                  <p className="text-sm text-text-secondary">
+                    Vorhandene Einstellungen aus einer Datei laden
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-text-secondary" />
             </Button>
           </div>
           <input

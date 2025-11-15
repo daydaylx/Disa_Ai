@@ -20,6 +20,12 @@ const cardVariants = cva(
         "glass-subtle": "bg-surface-glass border-line text-fg-muted",
         "glass-floating": "bg-surface-glass border-line text-fg backdrop-blur-lg",
         "glass-overlay": "bg-surface-glass border-line text-fg backdrop-blur-lg",
+        "glass-raised":
+          "bg-[color-mix(in_srgb,var(--surface-card)_90%,white_10%)] border-[color-mix(in_srgb,var(--line)_70%,transparent_30%)] text-fg shadow-[0_4px_12px_rgba(0,0,0,0.15)]",
+        "glass-elevated":
+          "bg-[color-mix(in_srgb,var(--surface-card)_85%,white_5%)] border-[color-mix(in_srgb,var(--line)_60%,transparent_40%)] text-fg shadow-[0_8px_24px_rgba(0,0,0,0.2)] backdrop-blur-md",
+        "glass-inset":
+          "bg-[color-mix(in_srgb,var(--surface-base)_95%,black_5%)] border-[color-mix(in_srgb,var(--line)_50%,transparent_50%)] text-fg shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]",
 
         // Legacy aliases (using new glassmorphism styles)
         "neo-raised": "bg-surface-glass border-line text-fg",
@@ -40,16 +46,21 @@ const cardVariants = cva(
       },
       padding: {
         none: "p-0",
+        xs: "p-1.5",
         sm: "p-2",
         md: "p-4",
         lg: "p-6",
+        xl: "p-8",
       },
       size: {
         auto: "w-auto",
         full: "w-full",
+        xs: "max-w-xs",
         sm: "max-w-sm",
         md: "max-w-md",
         lg: "max-w-lg",
+        xl: "max-w-xl",
+        "2xl": "max-w-2xl",
       },
       state: {
         default: "",
@@ -65,6 +76,7 @@ const cardVariants = cva(
         medium: "shadow-1",
         dramatic: "shadow-2",
         raised: "shadow-2",
+        floating: "shadow-[0_12px_32px_rgba(0,0,0,0.25)]",
       },
       interactive: {
         none: "",
@@ -72,6 +84,11 @@ const cardVariants = cva(
         gentle: "cursor-pointer hover:-translate-y-1 hover:shadow-1 hover:border-line",
         glow: "cursor-pointer hover:shadow-glow-accent",
         "glow-accent": "cursor-pointer hover:border-accent hover:shadow-glow-accent",
+        // Neue interaktive Varianten mit Glas-Effekten
+        "glass-lift":
+          "cursor-pointer hover:-translate-y-1 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)] transition-all duration-300",
+        "glass-glow":
+          "cursor-pointer hover:shadow-[0_0_0_4px_var(--accent-soft),0_8px_20px_rgba(139,92,246,0.3)] transition-all duration-300",
       },
     },
     defaultVariants: {

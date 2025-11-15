@@ -9,7 +9,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-primary)] shadow-none hover:shadow-surface",
+          "border border-[color-mix(in_srgb,var(--line)_70%,transparent)] bg-[color-mix(in_srgb,var(--surface-card)_85%,transparent)] text-[var(--color-text-primary)] shadow-none hover:shadow-surface backdrop-blur-sm",
         secondary: "border-border bg-surface-card text-text-secondary",
         outline: "border-border bg-transparent text-text-secondary",
         muted: "border-transparent bg-surface-subtle text-text-secondary",
@@ -23,18 +23,18 @@ const badgeVariants = cva(
         info: "border-transparent bg-status-info-fg/12 text-status-info-fg",
         accent:
           "border border-[var(--color-accent-border)] bg-[var(--color-accent-surface)] text-[var(--color-text-on-accent)] shadow-[var(--shadow-glow-accent-subtle)] hover:bg-[var(--color-accent-surface-strong)]",
-        neumorphic:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-text-primary shadow-none hover:shadow-surface",
-        "neumorphic-pressed":
-          "border border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-pressed)] text-text-primary shadow-inset-subtle",
-        "neumorphic-brand":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-brand shadow-none hover:shadow-[var(--shadow-glow-brand-subtle)]",
-        "neumorphic-success":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-success-fg shadow-none hover:shadow-[var(--shadow-glow-success-subtle)]",
-        "neumorphic-warning":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-warning-fg shadow-none hover:shadow-[var(--shadow-glow-warning-subtle)]",
-        "neumorphic-error":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-danger-fg shadow-none hover:shadow-[var(--shadow-glow-error-subtle)]",
+        glass:
+          "border border-[color-mix(in_srgb,var(--line)_70%,transparent)] bg-[color-mix(in_srgb,var(--surface-card)_85%,transparent)] text-text-primary shadow-none hover:shadow-surface backdrop-blur-sm",
+        "glass-pressed":
+          "border border-[color-mix(in_srgb,var(--line)_80%,transparent)] bg-[color-mix(in_srgb,var(--surface-card)_75%,transparent)] text-text-primary shadow-inset-subtle backdrop-blur-sm",
+        "glass-brand":
+          "border border-[color-mix(in_srgb,var(--accent)_50%,transparent)] bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-accent shadow-none hover:shadow-[var(--shadow-glow-brand-subtle)] backdrop-blur-sm",
+        "glass-success":
+          "border border-[color-mix(in_srgb,var(--status-success)_50%,transparent)] bg-[color-mix(in_srgb,var(--status-success)_20%,transparent)] text-status-success-fg shadow-none hover:shadow-[var(--shadow-glow-success-subtle)] backdrop-blur-sm",
+        "glass-warning":
+          "border border-[color-mix(in_srgb,var(--status-warning)_50%,transparent)] bg-[color-mix(in_srgb,var(--status-warning)_20%,transparent)] text-status-warning-fg shadow-none hover:shadow-[var(--shadow-glow-warning-subtle)] backdrop-blur-sm",
+        "glass-error":
+          "border border-[color-mix(in_srgb,var(--status-danger)_50%,transparent)] bg-[color-mix(in_srgb,var(--status-danger)_20%,transparent)] text-status-danger-fg shadow-none hover:shadow-[var(--shadow-glow-error-subtle)] backdrop-blur-sm",
       },
       size: {
         xs: "text-[10px] px-1.5 py-0.5",
@@ -59,9 +59,8 @@ const badgeVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "glass",
       size: "md",
-      category: "none",
     },
   },
 );

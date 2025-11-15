@@ -13,6 +13,18 @@ const buttonVariants = cva(
           "border border-[color:var(--button-secondary-border)] bg-[var(--button-secondary-bg)] text-[var(--button-secondary-fg)] shadow-[var(--shadow-glass-subtle)] hover:bg-[var(--button-secondary-bg-hover)] hover:shadow-[var(--shadow-glass-medium)]",
         "glass-subtle":
           "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-inline)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--layer-glass-panel)]",
+        "glass-accent":
+          "border border-[color:var(--accent)] bg-[color-mix(in_srgb,var(--accent)_85%,black_15%)] text-[var(--accent-contrast)] shadow-[0_4px_12px_rgba(139,92,246,0.25)] hover:shadow-[0_6px_16px_rgba(139,92,246,0.35)] hover:bg-[color-mix(in_srgb,var(--accent)_90%,white_10%)]",
+        "glass-secondary":
+          "border border-[color:var(--glass-border-strong)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.25)]",
+        "glass-ghost":
+          "border border-transparent bg-transparent text-[var(--text-primary)] hover:bg-[color-mix(in_srgb,var(--surface-base)_90%,var(--accent)_10%)]",
+        neumorphic:
+          "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[var(--shadow-glass-subtle)] hover:shadow-[var(--shadow-glass-medium)]",
+        "neo-medium":
+          "border border-[color:var(--glass-border-strong)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
+        "neo-subtle":
+          "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-inline)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--layer-glass-panel)]",
         accent:
           "border border-[color:var(--button-primary-border)] bg-[var(--button-primary-bg)] text-[var(--button-primary-fg)] shadow-[var(--shadow-glow-brand-subtle)] hover:bg-[var(--button-primary-bg-hover)] hover:shadow-[var(--shadow-glow-brand)]",
         destructive:
@@ -29,18 +41,16 @@ const buttonVariants = cva(
           "border border-[color:var(--button-secondary-border)] bg-[var(--button-secondary-bg)] text-[var(--button-secondary-fg)] hover:bg-[var(--button-secondary-bg-hover)]",
         default:
           "border border-[color:var(--button-secondary-border)] bg-[var(--button-secondary-bg)] text-[var(--button-secondary-fg)] shadow-[var(--shadow-glass-subtle)] hover:bg-[var(--button-secondary-bg-hover)] hover:shadow-[var(--shadow-glass-medium)]",
-        neumorphic:
-          "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[var(--shadow-glass-subtle)] hover:shadow-[var(--shadow-glass-medium)]",
-        "neo-medium":
-          "border border-[color:var(--glass-border-strong)] bg-[var(--layer-glass-panel)] text-[var(--text-primary)] shadow-[var(--shadow-glass-medium)] hover:shadow-[var(--shadow-glass-strong)]",
-        "neo-subtle":
-          "border border-[color:var(--glass-border-soft)] bg-[var(--layer-glass-inline)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--layer-glass-panel)]",
       },
       size: {
+        xs: "h-8 px-2.5 py-1 text-xs", // 32px height for very compact controls
         sm: "h-9 px-3 py-1.5 text-sm", // 36px height for compact controls
         default: "h-10 px-4 py-2 text-sm", // 40px height default
         lg: "h-12 px-6 py-3 text-base", // 48px height for prominent CTAs
+        xl: "h-14 px-8 py-3.5 text-base", // 56px height for major actions
         icon: "h-10 w-10", // 40px square to match default height
+        "icon-sm": "h-9 w-9", // 36px square for compact icons
+        "icon-lg": "h-12 w-12", // 48px square for large icons
       },
       dramatic: {
         false: "",
@@ -56,6 +66,17 @@ const buttonVariants = cva(
         variant: "ghost",
         dramatic: true,
         class: "hover:-translate-y-[2px] hover:shadow-[var(--shadow-glass-subtle)]",
+      },
+      // Neue Compound-Varianten
+      {
+        variant: "glass-accent",
+        size: "xl",
+        class: "rounded-[18px] font-bold",
+      },
+      {
+        variant: "glass-secondary",
+        size: "lg",
+        class: "rounded-[16px]",
       },
     ],
     defaultVariants: {

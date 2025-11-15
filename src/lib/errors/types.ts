@@ -64,15 +64,21 @@ export class HttpError extends ApiError {
  */
 export class RateLimitError extends HttpError {
   public readonly retryAfterSeconds?: number;
+  public readonly backoffDelay?: number;
 
   constructor(
     message: string,
     status: number,
     statusText: string,
-    options?: (ErrorOptions & { headers?: Headers }) | undefined,
+    options?:
+      | (ErrorOptions & { headers?: Headers; backoffDelay?: number; retryAfter?: number })
+      | undefined,
   ) {
-    super(message, status, statusText, options);
-    this.retryAfterSeconds = parseRetryAfterSeconds(this.headers);
+    const rateLimitOptions = options ?? {};
+    const { retryAfter, backoffDelay, ...httpOptions } = rateLimitOptions;
+    super(message, status, statusText, httpOptions);
+    this.retryAfterSeconds = retryAfter ?? parseRetryAfterSeconds(this.headers);
+    this.backoffDelay = backoffDelay;
   }
 }
 

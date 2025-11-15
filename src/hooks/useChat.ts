@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 import { chatStream } from "../api/openrouter";
 import { mapError } from "../lib/errors";
@@ -11,6 +11,14 @@ import type { ChatMessageType } from "../types/chatMessage";
 const MS_IN_SECOND = 1000;
 const DEFAULT_RATE_LIMIT_RETRY_AFTER_SECONDS = 8;
 const MIN_RATE_LIMIT_COOLDOWN_SECONDS = 3;
+
+function calculateExponentialBackoff(attempt: number): number {
+  const baseDelay = 1000; // 1s base delay
+  const jitter = Math.random() * 500; // add jitter to avoid thundering herd
+  const delay = baseDelay * 2 ** attempt + jitter;
+  const maxDelay = 30 * MS_IN_SECOND;
+  return Math.min(delay, maxDelay);
+}
 
 export interface UseChatOptions {
   api?: string;
@@ -39,6 +47,11 @@ export function useChat({
   systemPrompt: _systemPrompt,
   getRequestOptions,
 }: UseChatOptions = {}) {
+  const [rateLimitInfo, setRateLimitInfo] = useState({
+    isLimited: false,
+    retryAfter: 0,
+  });
+  const retryAttemptsRef = useRef(0);
   const prepareMessages = useCallback(
     (history: ChatMessageType[]): ChatMessageType[] => {
       if (prepareMessagesOpt) {
@@ -78,7 +91,12 @@ export function useChat({
       message: Omit<ChatMessageType, "id" | "timestamp">,
       customMessages?: ChatMessageType[],
     ) => {
+      // Handle rate limiting with exponential backoff
       const now = Date.now();
+
+      if (rateLimitUntilRef.current <= now) {
+        setRateLimitInfo((info) => (info.isLimited ? { isLimited: false, retryAfter: 0 } : info));
+      }
       if (rateLimitUntilRef.current > now) {
         const remainingSeconds = Math.ceil((rateLimitUntilRef.current - now) / MS_IN_SECOND);
         const cooldownError = new RateLimitError(
@@ -88,6 +106,7 @@ export function useChat({
           429,
           "Too Many Requests",
         );
+        setRateLimitInfo({ isLimited: true, retryAfter: remainingSeconds });
         dispatch({ type: "SET_ERROR", error: cooldownError });
         if (onError) {
           onError(cooldownError);
@@ -117,6 +136,8 @@ export function useChat({
 
       // Assistant message will be created with server-provided ID
       let assistantMessage: ChatMessageType | null = null;
+
+      let rateLimitedThisCall = false;
 
       try {
         let accumulatedContent = "";
@@ -218,25 +239,42 @@ export function useChat({
             },
           },
         );
+        retryAttemptsRef.current = 0;
+        setRateLimitInfo((info) => (info.isLimited ? { isLimited: false, retryAfter: 0 } : info));
       } catch (error) {
         const mappedError = mapError(error);
 
         if (mappedError instanceof RateLimitError) {
+          // Get retry-after header value if available
+          const retryAfterHeader = mappedError.headers?.get("retry-after");
+          const parsedHeader = retryAfterHeader ? Number.parseInt(retryAfterHeader, 10) : undefined;
           const retryAfterSeconds = Math.max(
-            mappedError.retryAfterSeconds ?? DEFAULT_RATE_LIMIT_RETRY_AFTER_SECONDS,
+            parsedHeader ?? mappedError.retryAfterSeconds ?? DEFAULT_RATE_LIMIT_RETRY_AFTER_SECONDS,
             MIN_RATE_LIMIT_COOLDOWN_SECONDS,
           );
-          const cooldownMs = retryAfterSeconds * MS_IN_SECOND;
-          rateLimitUntilRef.current = Date.now() + cooldownMs;
+
+          // Calculate backoff time with exponential strategy
+          const backoffTime = calculateExponentialBackoff(retryAttemptsRef.current);
+          const retryAfterWithBackoff = Math.max(retryAfterSeconds, Math.ceil(backoffTime / 1000));
 
           const friendlyError = new RateLimitError(
-            retryAfterSeconds > 1
-              ? `Rate-Limit aktiv. Bitte warte ${retryAfterSeconds} Sekunden.`
+            retryAfterWithBackoff > 1
+              ? `Rate-Limit aktiv. Bitte warte ${retryAfterWithBackoff} Sekunden.`
               : "Rate-Limit aktiv. Einen Moment bitte …",
             mappedError.status,
             mappedError.statusText,
-            { headers: mappedError.headers },
+            {
+              headers: mappedError.headers,
+              retryAfter: retryAfterWithBackoff,
+              backoffDelay: backoffTime,
+            },
           );
+
+          // Update rate limit timestamp
+          rateLimitUntilRef.current = Date.now() + retryAfterWithBackoff * MS_IN_SECOND;
+          retryAttemptsRef.current++;
+          rateLimitedThisCall = true;
+          setRateLimitInfo({ isLimited: true, retryAfter: retryAfterWithBackoff });
 
           dispatch({ type: "SET_ERROR", error: friendlyError });
           if (onError) {
@@ -259,6 +297,10 @@ export function useChat({
         dispatch({ type: "SET_LOADING", isLoading: false });
         dispatch({ type: "SET_ABORT_CONTROLLER", controller: null });
         abortControllerRef.current = null;
+        if (!rateLimitedThisCall) {
+          retryAttemptsRef.current = 0;
+          setRateLimitInfo((info) => (info.isLimited ? { isLimited: false, retryAfter: 0 } : info));
+        }
       }
     },
 
@@ -342,5 +384,6 @@ export function useChat({
     error: state.error,
     setCurrentSystemPrompt,
     setRequestOptions,
+    rateLimitInfo, // Füge die Rate-Limit-Info dem Return-Wert hinzu
   };
 }
