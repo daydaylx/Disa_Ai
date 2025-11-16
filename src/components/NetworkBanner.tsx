@@ -28,12 +28,12 @@ export function NetworkBanner() {
   return (
     <div
       data-testid="offline-banner"
-      className="fixed bottom-24 left-1/2 z-[var(--z-toast)] -translate-x-1/2 transform animate-pulse rounded-full border border-[var(--warn)] bg-[var(--color-surface-warning)] px-4 py-2 text-sm text-[var(--warn)]"
+      className="fixed top-4 left-1/2 z-[var(--z-toast)] -translate-x-1/2 glass-panel--glow-lila rounded-3xl px-6 py-3 text-sm font-medium shadow-glow-lila animate-pulse-glow hover:glass-panel--glow hover:shadow-glow-primary hover:scale-[1.02] transition-all duration-300 ease-[var(--motion-ease-elastic)] border-glass-strong"
       role="status"
       aria-live="polite"
       aria-label="Offline-Status"
     >
-      📶 Offline – Eingaben werden gepuffert
+      📶 Offline – Eingaben werden lokal gepuffert
     </div>
   );
 }

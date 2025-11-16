@@ -169,10 +169,8 @@ export default function RolesPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className={cn(
-            "w-full rounded-xl bg-[var(--surface)] border-[var(--glass-border-soft)]",
-            "px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-muted)]",
-            "focus:border-[var(--color-primary-500)] focus:ring-[var(--color-primary-500)]/20",
-            "focus:outline-none transition-colors duration-200",
+            "w-full rounded-3xl glass-panel bg-gradient-to-r from-surface-card to-surface-soft px-5 py-4 text-primary placeholder-text-muted",
+            "focus:glass-panel--glow focus:shadow-glow-primary focus:border-primary/50 focus:ring-primary/30 transition-all duration-300 ease-[var(--motion-ease-elastic)] focus:outline-none",
           )}
         />
       </div>
@@ -228,8 +226,11 @@ export default function RolesPage() {
         )}
       </div>
 
-      {/* Rollen-Karten */}
-      <div className="space-y-4">
+      {/* Glow Card Grid */}
+      <div
+        className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 glow-card-grid"
+        data-testid="roles-grid"
+      >
         {filteredRoles.map((role) => (
           <RoleCard
             key={role.id}
@@ -274,7 +275,11 @@ export default function RolesPage() {
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[var(--surface)] flex items-center justify-center">
             <span className="text-2xl">👥</span>
           </div>
-          <Typography variant="body-lg" className="text-[var(--text-primary)] font-medium mb-2">
+          <Typography
+            variant="body-lg"
+            className="text-[var(--text-primary)] font-medium mb-2"
+            aria-label="Roles page empty state heading"
+          >
             Keine Rollen gefunden
           </Typography>
           <Typography variant="body-sm" className="text-[var(--text-secondary)]">

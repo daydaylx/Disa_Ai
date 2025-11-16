@@ -208,8 +208,12 @@ export default function Chat() {
 
         <main className="relative flex-1">
           {isEmpty ? (
-            <PageContainer width="max" className="relative z-10 flex flex-col gap-8">
-              <section className="overflow-hidden rounded-[2.5rem] border border-[var(--glass-border-strong)] bg-[radial-gradient(circle_at_top,hsl(var(--accent-hue)_80%_50%)_0%,rgba(12,19,36,0.85)_45%)] p-6 text-white shadow-[0_45px_120px_rgba(5,6,18,0.65)] sm:p-10">
+            <PageContainer
+              width="max"
+              className="relative z-10 flex flex-col gap-8"
+              data-testid="chat-hero"
+            >
+              <section className="overflow-hidden rounded-[2.5rem] glass-panel--glow-green p-6 text-text-primary shadow-glow-green aurora-bg sm:p-10">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
                   <div className="space-y-5 lg:flex-1">
                     <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-white/80">
@@ -382,7 +386,10 @@ export default function Chat() {
             </PageContainer>
           ) : (
             <PageContainer width="max" className="relative z-10 flex h-full flex-col">
-              <div className="flex-1 overflow-y-auto rounded-[var(--radius-xl)] border border-[color:var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--layer-glass-panel)_94%,transparent)] p-4 shadow-[var(--shadow-lg)]">
+              <div
+                className="flex-1 overflow-y-auto rounded-[var(--radius-xl)] border border-[color:var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--layer-glass-panel)_94%,transparent)] p-4 shadow-[var(--shadow-lg)]"
+                data-testid="chat-message-list"
+              >
                 <VirtualizedMessageList
                   messages={messages}
                   isLoading={isLoading}

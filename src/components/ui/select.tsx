@@ -1,7 +1,7 @@
 import * as SelectPrimitive from "@radix-ui/react-select";
+import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import * as React from "react";
 
-import { Check, ChevronDown, ChevronUp } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
 const Select = SelectPrimitive.Root;
@@ -58,12 +58,12 @@ const SelectTrigger = React.forwardRef<
         // Focus State (Dramatic Neomorphic)
         "focus-visible:outline-none",
         "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-        "focus-visible:border-[var(--color-border-focus)]",
+        "focus-visible:border-[var(--acc1)]",
         "focus-visible:bg-[var(--surface-neumorphic-floating)]",
 
         // Open State
         "data-[state=open]:shadow-[var(--shadow-focus-neumorphic)]",
-        "data-[state=open]:border-[var(--color-border-focus)]",
+        "data-[state=open]:border-[var(--acc1)]",
         "data-[state=open]:bg-[var(--surface-neumorphic-floating)]",
 
         // Disabled State
@@ -154,7 +154,7 @@ const SelectContent = React.forwardRef<
         "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
 
         // Layout
-        "relative z-[var(--z-popover)] min-w-[8rem] overflow-hidden rounded-[var(--radius-lg)]",
+        "relative z-50 min-w-[8rem] overflow-hidden rounded-[var(--radius-lg)]",
 
         // Dramatic Neomorphic Floating Panel
         "bg-[var(--surface-neumorphic-floating)]",
@@ -169,13 +169,12 @@ const SelectContent = React.forwardRef<
         "text-[var(--color-text-primary)]",
 
         // Positioning
-        position === "popper" &&
-          [
-            "data-[side=bottom]:translate-y-2",
-            "data-[side=left]:-translate-x-2",
-            "data-[side=right]:translate-x-2",
-            "data-[side=top]:-translate-y-2",
-          ].join(" "),
+        position === "popper" && [
+          "data-[side=bottom]:translate-y-2",
+          "data-[side=left]:-translate-x-2",
+          "data-[side=right]:translate-x-2",
+          "data-[side=top]:-translate-y-2",
+        ],
 
         // Enhanced Transitions
         "transition-all duration-300 ease-out",

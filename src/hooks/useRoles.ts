@@ -1,8 +1,20 @@
 import { useEffect, useState } from "react";
 
 import { useFavorites } from "../contexts/FavoritesContext";
-import { getRoles, type Role } from "../data/roles";
 import type { EnhancedRole } from "../types/enhanced-interfaces";
+type Role = {
+  id: string;
+  name: string;
+  systemPrompt: string;
+  allowedModels: string[];
+  tags: string[];
+  category: string;
+  styleHints: {
+    typographyScale: number;
+    borderRadius: number;
+    accentColor: string;
+  };
+};
 
 // Convert a Role to EnhancedRole
 function enhanceRole(role: Role): EnhancedRole {
@@ -37,14 +49,25 @@ export function useRoles() {
   const { isRoleFavorite, trackRoleUsage } = useFavorites();
 
   useEffect(() => {
-    function loadRoles() {
+    async function loadRoles() {
       try {
         setLoading(true);
-        // Get base roles from the data layer
-        const baseRoles = getRoles();
+        // Fetch roles from public JSON
+        void (await fetch('/data/roles.json'));
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        const baseRoles: Role[] = await response.json();
         // Convert to EnhancedRole format
         const enhancedRoles = baseRoles.map(enhanceRole);
-        setRoles(enhancedRoles);
+
+        // Update favorite status immediately after loading
+        const rolesWithFavoriteStatus = enhancedRoles.map((role) => ({
+          ...role,
+          isFavorite: isRoleFavorite(role.id),
+        }));
+
+        setRoles(rolesWithFavoriteStatus);
         setError(null);
       } catch (err) {
         console.error("Failed to load roles:", err);
@@ -55,25 +78,14 @@ export function useRoles() {
     }
 
     loadRoles();
-  }, []);
-
-  // Update favorite status based on favorites context
-  useEffect(() => {
-    if (roles.length > 0) {
-      const updatedRoles = roles.map((role) => ({
-        ...role,
-        isFavorite: isRoleFavorite(role.id),
-      }));
-      setRoles(updatedRoles);
-    }
-  }, [isRoleFavorite, roles]);
+  }, [isRoleFavorite]); // Add isRoleFavorite to dependency array so favorites are updated when they change
 
   const activeRole = roles.find((role) => role.isFavorite); // Assuming one favorite role is active
 
   const activateRole = (roleId: string) => {
     // In a full implementation, this would call favorites context to set the role as favorite
     // and track usage, but for now we just track the usage
-    trackRoleUsage(roleId);
+    void trackRoleUsage(roleId);
   };
 
   return {

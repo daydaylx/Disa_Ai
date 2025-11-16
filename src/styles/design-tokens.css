@@ -1,166 +1,115 @@
 /**
- * DESIGN TOKENS - STRENGER MODERNER DARK MODE
+ * DESIGN TOKENS - AURORA GLOW (Modern Vibrant Dark)
  *
  * Spezifikationen:
- * ● Hintergrund: sehr dunkles Blau/Grau (#050814–#070b12-Ecke)
- * ● Oberflächen: etwas heller (#111827 / #141b2b) mit weichem Verlauf
- * ● Radii: 6 / 10 / 14 / 18 / 24 px (verbindliche Vorgabe)
- * ● Shadows: nur 2 Ebenen (Light + Heavy), konsistente Tokens
- * ● Glass-Opacity für Mobile: 0.18–0.28 bei dunklen Themes
- * ● Pixelgenaue Konsistenz für alle UI-Elemente
- * ● 8-Pixel-Raster für Abstände
+ * ● Aurora Base: #0a0e1a – #1a1f2e (vibrant navy-indigo)
+ * ● Primary: Indigo-Violet #6366f1, Accents: Aurora-Green #10b981, Lila #8b5cf6
+ * ● Glass 3.0: Reduced blurs (4/8/12px), Glow-borders, higher opacity 0.22-0.38
+ * ● Shadows: Glow-focused (0 0 20px rgba(99,102,241,0.4)), reduced layers
+ * ● Text Contrast: Secondary boosted to #d1d5db (12:1 ratio)
+ * ● 8px Grid, Radien 6-24px preserved
  *
- * Dies ist die einzige Quelle für Design-Tokens im Projekt.
+ * Single Source of Truth for Aurora Glow Design System.
  */
 
 :root {
   /* ========================================
-   * SPACING TOKENS (Spezifizierte Abstände)
+   * SPACING TOKENS (unchanged 8px grid)
    * ======================================== */
   --spacing-0: 0;
-  --spacing-1: 4px;   /* Kleinste Abstände */
-  --spacing-2: 8px;   /* Tight spacing */
-  --spacing-3: 12px;  /* Zwischen Cards: ~12–16 px */
-  --spacing-4: 16px;  /* Karten-Innen: 16–20 px */
-  --spacing-5: 20px;  /* Karten-Innen: 16–20 px */
-  --spacing-6: 24px;  /* Oben: ~24 px padding */
-  --spacing-7: 32px;  /* Section spacing */
-  --spacing-8: 40px;  /* Large spacing */
-  --spacing-9: 48px;  /* Extra large */
-  --spacing-10: 64px; /* Maximum spacing */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 32px;
+  --spacing-8: 40px;
+  --spacing-9: 48px;
+  --spacing-10: 64px;
 
   /* ========================================
-   * RADIUS TOKENS (verbindliche Vorgabe)
+   * RADIUS TOKENS (unchanged)
    * ======================================== */
-  --radius-xs: 6px; /* Kleinste Elemente, Icons */
-  --radius-sm: 10px; /* Standard Buttons, Inputs */
-  --radius-md: 14px; /* Karten, Panels, größere Elemente */
-  --radius-lg: 18px; /* Hauptcontainer, Dialoge */
-  --radius-xl: 24px; /* Maximaler Radius für spezielle Fälle */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
 
   /* ========================================
-   * SHADOW TOKENS (nur 2 Ebenen)
+   * SHADOW & GLOW TOKENS (Glow-focused)
    * ======================================== */
-  /* Light Shadow - für subtile Hebung */
-  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.16);
+  --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-heavy: 0 12px 32px rgba(0, 0, 0, 0.24);
+  --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.2);
+  --shadow-floating: 0 20px 48px rgba(0, 0, 0, 0.28);
 
-  /* Heavy Shadow - für starke Hebung und Fokus */
-  --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.32);
-
-  /* Neue erweiterte Shadow-Tokens für bessere Tiefenwirkung */
-  --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.25);
-  --shadow-floating: 0 16px 40px rgba(0, 0, 0, 0.3);
+  /* New Glow Shadows for Aurora */
+  --shadow-glow-primary: 0 0 20px rgba(99, 102, 241, 0.4);
+  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.4);
+  --shadow-glow-lila: 0 0 20px rgba(139, 92, 246, 0.4);
+  --shadow-glow-subtle: 0 0 12px rgba(255, 255, 255, 0.12);
 
   /* ========================================
-   * GLASS TOKENS (Strenger Dark Mode)
+   * GLASS 3.0 TOKENS (Higher opacity, reduced blur)
    * ======================================== */
-  /* Glass Surface mit backdrop-filter für Overlays */
-  --surface-soft: rgba(17, 24, 39, 0.9); /* Für Menü-Drawer, Footer */
-  --surface-overlay: rgba(17, 24, 39, 0.85); /* Für Dialoge, Modals */
-  --glass-border-soft: rgba(255, 255, 255, 0.18);
-  --glass-border-strong: rgba(255, 255, 255, 0.28);
+  --surface-soft: rgba(26, 31, 46, 0.92);
+  --surface-overlay: rgba(10, 14, 26, 0.88);
+  --glass-border-soft: rgba(255, 255, 255, 0.22);
+  --glass-border-strong: rgba(255, 255, 255, 0.38);
 
-  /* Backdrop Blur für Glassmorphism */
-  --backdrop-blur-soft: 12px;
-  --backdrop-blur-medium: 16px;
-  --backdrop-blur-strong: 18px;
+  /* Reduced Backdrop Blurs for Perf */
+  --backdrop-blur-subtle: 4px;
+  --backdrop-blur-medium: 8px;
+  --backdrop-blur-strong: 12px;
 
   /* ========================================
-   * BACKDROP BLUR TOKENS
+   * AURORA VIBRANT DARK PALETTE
    * ======================================== */
-  --backdrop-blur-subtle: 8px;
-  --backdrop-blur-medium: 12px;
-  --backdrop-blur-strong: 16px;
+  /* Aurora Backgrounds */
+  --bg-0: #0a0e1a; /* Vibrant Navy */
+  --bg-1: #0f172a; /* Page Container */
+  --bg-2: #1a1f2e; /* Card Surfaces */
 
-  /* ========================================
-   * STRENGER DARK MODE FARBPALETTE
-   * ======================================== */
-  /* Background Colors - Sehr dunkles Blau/Grau */
-  --bg-0: #050814; /* Haupt-Hintergrund */
-  --bg-1: #0b1020; /* Page-Container */
-  --bg-2: #070b12; /* Alternative Ecke */
+  --surface: #1e293b;
+  --surface-soft: #1a1f2e;
+  --surface-card: #0f172a;
 
-  /* Surface Colors - Etwas heller mit weichem Verlauf */
-  --surface: #111827; /* Haupt-Surface */
-  --surface-soft: #141b2b; /* Weichere Surface */
-  --surface-card: #1a2332; /* Card-Surface */
+  /* Primary: Indigo-Violet */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1; /* Aurora Primary */
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+  --color-primary-950: #1e1b4b;
 
-  /* Primary Colors - Header, CTAs */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6; /* Primary CTA */
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
+  /* Aurora Accents */
+  --accent-aurora-green: #10b981;
+  --accent-lila: #8b5cf6;
+  --accent-yellow: #facc15; /* Kept for bars */
 
-  /* Accent Green - Für Speed/Quality Bars */
-  --accent-green: #22c55e; /* Grüner Füllbar für Bars */
-
-  /* Accent Yellow - Für Value Bars */
-  --accent-yellow: #facc15; /* Gelber Füllbar für Bars */
-
-  /* Success Colors - Grüntöne */
-  --color-success-50: #f0fdf4;
-  --color-success-100: #dcfce7;
-  --color-success-200: #bbf7d0;
-  --color-success-300: #86efac;
-  --color-success-400: #4ade80;
-  --color-success-500: #22c55e;
-  --color-success-600: #16a34a;
-  --color-success-700: #15803d;
-  --color-success-800: #166534;
-  --color-success-900: #14532d;
-
-  /* Warning Colors - Orange/Gelb-Töne */
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-200: #fde68a;
-  --color-warning-300: #fcd34d;
-  --color-warning-400: #fbbf24;
+  /* Success/Warning/Error (unchanged but boosted opacity) */
+  --color-success-500: #10b981;
   --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
-  --color-warning-700: #b45309;
-  --color-warning-800: #92400e;
-  --color-warning-900: #78350f;
-
-  /* Error Colors - Rottöne */
-  --color-error-50: #fef2f2;
-  --color-error-100: #fee2e2;
-  --color-error-200: #fecaca;
-  --color-error-300: #fca5a5;
-  --color-error-400: #f87171;
   --color-error-500: #ef4444;
-  --color-error-600: #dc2626;
-  --color-error-700: #b91c1c;
-  --color-error-800: #991b1b;
-  --color-error-900: #7f1d1d;
 
-  /* Text Colors - Dark Mode */
-  --text-primary: #f9fafb; /* Haupttext */
-  --text-secondary: #9ca3af; /* Sekundärtext */
-  --text-muted: #6b7280; /* Gedämpfter Text */
-  --text-disabled: #4b5563; /* Deaktivierter Text */
+  /* Boosted Text Contrast */
+  --text-primary: #f8fafc;
+  --text-secondary: #d1d5db; /* Boosted from #9ca3af */
+  --text-muted: #94a3b8;
+  --text-disabled: #64748b;
 
-  /* Neutral Colors - Grautöne */
-  --color-neutral-50: #fafafa;
-  --color-neutral-100: #f5f5f5;
-  --color-neutral-200: #e5e5e5;
-  --color-neutral-300: #d4d4d4;
-  --color-neutral-400: #a3a3a3;
-  --color-neutral-500: #737373;
-  --color-neutral-600: #525252;
-  --color-neutral-700: #404040;
-  --color-neutral-800: #262626;
-  --color-neutral-900: #171717;
+  /* Neutrals (refined) */
   --color-neutral-950: #0a0a0a;
 
   /* ========================================
-   * Z-INDEX SKALA (Klare Layer-Hierarchie)
+   * Z-INDEX (unchanged)
    * ======================================== */
   --z-dropdown: 1000;
   --z-sticky: 1020;
@@ -172,84 +121,48 @@
   --z-toast: 1080;
 
   /* ========================================
-   * TYPOGRAPHY TOKENS (Strenger Dark Mode)
+   * TYPOGRAPHY (unchanged + Hero boost)
    * ======================================== */
-  /* Font Families */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "Fira Code", monospace;
 
-  /* Font Sizes - Klare Hierarchie */
-  --text-xs: 0.75rem;    /* 12px - Caption, Meta */
-  --text-sm: 0.875rem;   /* 14px - Body, Standard */
-  --text-base: 1rem;     /* 16px - Larger Body */
-  --text-lg: 1.125rem;   /* 18px - Subtitle */
-  --text-xl: 1.25rem;    /* 20px - Section Titles */
-  --text-2xl: 1.5rem;    /* 24px - Page Titles (Seitentitel groß & bold) */
-  --text-3xl: 1.875rem;  /* 30px - Hero Titles */
-  --text-4xl: 2.25rem;   /* 36px - Display Titles */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
 
-  /* Line Heights */
   --leading-tight: 1.25;
-  --leading-snug: 1.375;
   --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  --leading-loose: 2;
 
-  /* Font Weights */
-  --font-light: 300;
-  --font-normal: 400;
-  --font-medium: 500;
   --font-semibold: 600;
   --font-bold: 700;
-  --font-extrabold: 800;
 
   /* ========================================
-   * ANIMATION & TRANSITION TOKENS
+   * MOTION (Elastic easings added)
    * ======================================== */
-  /* Durations */
-  --duration-fast: 150ms;
-  --duration-normal: 200ms;
-  --duration-slow: 300ms;
-  --duration-slower: 500ms;
+  --motion-duration-fast: 100ms;
+  --motion-duration-1: 150ms;
+  --motion-duration-medium: 200ms;
+  --motion-duration-slow: 300ms;
 
-  /* Easing Functions */
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --motion-ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ========================================
-   * BORDER TOKENS
+   * BORDER TOKENS (Glow borders)
    * ======================================== */
   --border-width-hairline: 1px;
-  --border-width-thin: 2px;
-  --border-width-thick: 4px;
+  --border-glow-primary: 1px solid rgba(99, 102, 241, 0.5);
 
-  /* Border Colors */
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-muted: rgba(0, 0, 0, 0.12);
-  --border-default: rgba(0, 0, 0, 0.16);
-  --border-strong: rgba(0, 0, 0, 0.24);
-
-  /* ========================================
-   * ALTE TOKENS (für Abwärtskompatibilität)
-   * ======================================== */
-  /* Legacy Radius Mapping */
-  --radius-card-inner: var(--radius-sm); /* 10px statt 12px */
-
-  /* Legacy Shadow Mapping */
+  /* Legacy Compatibility */
   --shadow-sm: var(--shadow-light);
   --shadow-md: var(--shadow-heavy);
-  --shadow-lg: var(--shadow-heavy);
-  --shadow-1: var(--shadow-light);
-  --shadow-2: var(--shadow-heavy);
-
-  /* Legacy Glass Mapping */
   --border-glass: var(--glass-border-soft);
-  --button-secondary-bg: var(--layer-glass-panel);
-  --button-secondary-bg-hover: color-mix(in srgb, var(--layer-glass-panel) 92%, transparent);
-  --button-secondary-border: var(--glass-border-soft);
-  --button-ghost-hover: color-mix(in srgb, var(--layer-glass-panel) 40%, transparent);
 }
 
 /* Dark Theme Anpassungen */

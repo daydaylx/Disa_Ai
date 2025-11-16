@@ -58,7 +58,7 @@ export function PWADebugInfo() {
         onClick={() => setIsVisible(true)}
         variant="ghost"
         size="icon"
-        className="fixed right-4 top-20 z-40 h-8 w-8"
+        className="fixed right-4 top-20 z-40 tap-target h-11 w-11"
         aria-label="PWA Debug-Informationen anzeigen"
         title="PWA Debug-Informationen anzeigen"
       >
@@ -77,7 +77,7 @@ export function PWADebugInfo() {
               onClick={() => setIsVisible(false)}
               variant="ghost"
               size="icon"
-              className="h-6 w-6"
+              className="tap-target h-11 w-11"
               aria-label="PWA Debug-Informationen schließen"
               title="Schließen"
             >

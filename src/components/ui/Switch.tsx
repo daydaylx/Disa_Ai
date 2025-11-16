@@ -3,6 +3,7 @@ import React from "react";
 import { cn } from "../../lib/utils";
 
 interface SwitchProps {
+  className?: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
   id?: string;
@@ -37,7 +38,7 @@ const switchSizes = {
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
   (
-    { checked, onChange, id, disabled = false, "aria-describedby": describedBy, size = "md" },
+    { checked, onChange, id, disabled = false, "aria-describedby": describedBy, size = "md", className },
     ref,
   ) => {
     const handleClick = () => {
@@ -58,7 +59,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
         onClick={handleClick}
         disabled={disabled}
         className={cn(
-          // Base Layout
+          "relative inline-flex items-center rounded-full",
+          className,
           "relative inline-flex items-center rounded-full",
           sizeConfig.track,
 
@@ -71,9 +73,9 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
           // Checked State Track (Illuminated)
           checked &&
             [
-              "bg-[color-mix(in_srgb,var(--accent)_20%,transparent)]",
-              "border-[color-mix(in_srgb,var(--accent)_50%,transparent)]",
-              "shadow-[0_2px_12px_rgba(139,92,246,0.2)]",
+              "bg-[color-mix(in_srgb,var(--primary)_20%,transparent)]",
+              "border-[color-mix(in_srgb,var(--primary)_50%,transparent)]",
+              "shadow-glow-primary",
             ].join(" "),
 
           // Focus State (Glassmorphic)
@@ -103,9 +105,9 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
             // Checked State Thumb (Enhanced Illumination)
             checked &&
               [
-                "bg-[color-mix(in_srgb,var(--accent)_90%,white_10%)]",
-                "border-[color-mix(in_srgb,var(--accent)_70%,transparent)]",
-                "shadow-[0_2px_12px_rgba(139,92,246,0.3)]",
+                "bg-[color-mix(in_srgb,var(--primary)_90%,white_10%)]",
+                "border-[color-mix(in_srgb,var(--primary)_70%,transparent)]",
+                "shadow-glow-primary",
               ].join(" "),
 
             // Interactive States
@@ -147,7 +149,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
             "pointer-events-none",
             "transition-opacity duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
             checked ? "opacity-30" : "opacity-0",
-            "shadow-[0_0_8px_rgba(139,92,246,0.4)]",
+            "shadow-glow-primary",
           )}
         />
       </button>

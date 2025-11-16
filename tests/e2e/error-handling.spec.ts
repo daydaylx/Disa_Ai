@@ -99,9 +99,7 @@ test.describe("Error Handling and Recovery Flow Tests", () => {
           await page.waitForTimeout(500);
 
           // Try to send a message with invalid key
-          const composer = page.locator(
-            'textarea[placeholder="Nachricht an Disa AI schreiben..."]',
-          );
+          const composer = page.getByTestId("composer-input");
           if (await composer.isVisible()) {
             await composer.fill("Test message");
             await composer.press("Enter");

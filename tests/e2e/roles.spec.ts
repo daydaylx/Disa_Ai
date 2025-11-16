@@ -13,18 +13,20 @@ test.describe("Rollen-Screen", () => {
     // Warten, bis die Seite vollständig geladen ist
     await page.waitForTimeout(2000);
 
-    const grid = page.locator("[data-testid='role-card-grid']");
+    const grid = page.locator("[data-testid='roles-grid']");
     await expect(grid).toBeVisible();
 
-    const cards = grid.locator("[data-testid^='role-card-']");
+    const cards = grid.locator("div:has(button)");
     const cardCount = await cards.count();
     expect(cardCount).toBeGreaterThan(4);
 
     const firstCard = cards.first();
     await expect(firstCard).toBeVisible();
 
-    await firstCard.tap();
-    await expect(firstCard).toHaveAttribute("aria-pressed", "true");
+    // Tap the activate button inside the first card
+    await firstCard.locator("button").first().tap();
+    // Check if button text changed to "Deaktivieren"
+    await expect(firstCard.locator("button").first()).toHaveText("Deaktivieren");
 
     const boundingBox = await firstCard.boundingBox();
     expect(boundingBox?.height ?? 0).toBeGreaterThanOrEqual(48);
@@ -35,7 +37,7 @@ test.describe("Rollen-Screen", () => {
     expect(borderColor).not.toBe("rgba(0, 0, 0, 0)");
 
     const axe = new AxeBuilder({ page })
-      .include("[data-testid='role-card-grid']")
+      .include("[data-testid='roles-grid']")
       .withTags(["wcag2a", "wcag2aa"]);
     const results = await axe.analyze();
 

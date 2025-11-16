@@ -49,13 +49,13 @@ export function AppMenuDrawer({ isOpen, onClose, sections, className }: AppMenuD
       {/* Rechte Panel */}
       <div
         className={cn(
-          "fixed right-0 top-0 bottom-0 w-[80%] max-w-sm",
-          "bg-[var(--surface-soft)] backdrop-blur-[18px]",
-          "rounded-l-3xl p-4 space-y-3 overflow-y-auto",
-          "border-l border-[var(--glass-border-strong)]",
-          "shadow-[var(--shadow-heavy)]",
+          "fixed right-0 top-0 bottom-0 w-[80%] max-w-sm transform-gpu",
+          "bg-gradient-to-b from-surface-card via-surface-soft to-surface aurora-bg backdrop-blur-[var(--backdrop-blur-strong)]",
+          "rounded-l-[3rem] p-6 space-y-4 overflow-y-auto shadow-glow-lila shadow-floating",
+          "border-l border-glass-strong transition-all duration-500 ease-[var(--motion-ease-elastic)]",
           className,
         )}
+        style={{ transform: isOpen ? "translateX(0) scale(1)" : "translateX(100%) scale(0.95)" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -93,12 +93,11 @@ export function AppMenuDrawer({ isOpen, onClose, sections, className }: AppMenuD
                     key={itemIndex}
                     onClick={() => handleItemClick(item)}
                     className={cn(
-                      "w-full h-11 rounded-xl px-3 flex items-center justify-between",
-                      "text-left transition-colors duration-200",
-                      "hover:bg-white/5 focus:bg-white/5 focus:outline-none",
+                      "w-full h-12 rounded-2xl px-4 flex items-center justify-between glass-panel group transition-all duration-300 ease-[var(--motion-ease-elastic)] text-left",
+                      "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-[1.02] focus:glass-panel--glow focus:shadow-glow-primary focus:scale-[1.02] focus:outline-none",
                       item.isActive
-                        ? "text-[var(--color-primary-500)] bg-[var(--color-primary-500)]/10"
-                        : "text-[var(--text-primary)] hover:text-[var(--color-primary-500)]",
+                        ? "glass-panel--glow-active text-primary shadow-glow-primary animate-pulse-glow scale-[1.02] bg-primary/10"
+                        : "text-text-primary hover:text-primary",
                     )}
                   >
                     <span className="font-medium">{item.label}</span>
@@ -169,10 +168,9 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
     <button
       onClick={onClick}
       className={cn(
-        "relative p-2 rounded-lg text-[var(--text-secondary)]",
-        "hover:text-[var(--text-primary)] hover:bg-[var(--glass-border-soft)]/20",
-        "transition-colors duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-500)] focus:ring-offset-2 focus:ring-offset-[var(--bg-0)]",
+        "relative p-3 rounded-xl glass-panel text-text-secondary min-h-[44px] min-w-[44px] flex items-center justify-center group",
+        "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-110 hover:text-primary transition-all duration-300 ease-[var(--motion-ease-elastic)]",
+        "focus:glass-panel--glow focus:shadow-glow-primary focus:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50",
         className,
       )}
       aria-label="Menü öffnen"

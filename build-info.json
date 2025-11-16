@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-0a9ffb9",
-  "buildTime": "2025-11-15T22:42:04.543Z",
-  "gitSha": "0a9ffb9210729caf7977b3e37a4f3422ba610314",
-  "gitBranch": "main",
+  "buildId": "v1.0.0-04d8de6",
+  "buildTime": "2025-11-16T01:53:46.880Z",
+  "gitSha": "04d8de6e2ed46b778e5094f56f439e442b31f94a",
+  "gitBranch": "ui-hybrid-restore",
   "version": "1.0.0"
 }

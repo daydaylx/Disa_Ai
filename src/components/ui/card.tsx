@@ -1,377 +1,482 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
-import { ChevronRight, MoreHorizontal } from "../../lib/icons";
 import { cn } from "../../lib/utils";
-import { Button } from "./button"; // Assuming Button component is updated
 
-const cardVariants = cva("relative rounded-2xl border transition-all duration-200 ease-out", {
-  variants: {
-    variant: {
-      default: "",
-      outline: "border-[var(--glass-border-soft)] bg-[var(--surface)]",
-      flat: "border-transparent bg-transparent shadow-none",
-      filled: "border-[var(--glass-border-soft)] bg-[var(--surface)]",
-      bordered: "border-2 border-[var(--glass-border-strong)] bg-[var(--surface)]",
-      surface: "bg-[var(--surface)] border-[var(--glass-border-soft)]", // Neue Surface-Variante
-    },
-    tone: {
-      // Modern Card Variants für strengen Dark Mode
-      "modern-default":
-        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
-      "modern-surface":
-        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
-      "modern-elevated":
-        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
-      "modern-floating":
-        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-heavy)]",
+const cardVariants = cva(
+  // Dramatic Neomorphic Foundation
+  "relative isolate overflow-hidden rounded-[var(--radius-xl)] border text-[var(--color-text-primary)] transition-all duration-300 ease-out focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus-neumorphic)] focus-visible:border-[var(--acc1)]",
+  {
+    variants: {
+      tone: {
+        // === PRIMARY NEOMORPHIC TONES ===
+        "neo-raised":
+          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-md)]",
+        "neo-floating":
+          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)]",
+        "neo-dramatic":
+          "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-xl)]",
+        "neo-extreme":
+          "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-dramatic)] before:absolute before:inset-0 before:rounded-[var(--radius-xl)] before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none",
+        "neo-inset":
+          "bg-[var(--surface-neumorphic-pressed)] border-[var(--border-neumorphic-dark)] shadow-[var(--shadow-inset-medium)]",
+        "neo-glass":
+          "bg-[var(--surface-neumorphic-floating)]/80 border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)] backdrop-blur-sm",
 
-      // Surface Variants für strengen Dark Mode
-      "surface-card":
-        "bg-[var(--surface-card)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
-      surface: "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
-      "surface-soft":
-        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
+        // === LEGACY TONES (Converted to Neomorphic) ===
+        /** @deprecated Use neo-raised instead */
+        default:
+          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-subtle)] shadow-[var(--shadow-neumorphic-sm)]",
+        /** @deprecated Use neo-floating instead */
+        muted:
+          "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)] shadow-[var(--shadow-inset-subtle)] text-[var(--color-text-secondary)]",
+        /** @deprecated Use neo-dramatic instead */
+        contrast:
+          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-xl)] text-[var(--color-text-primary)]",
+        /** @deprecated Use neo-glass instead */
+        translucent:
+          "bg-[var(--surface-neumorphic-floating)]/90 border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)] backdrop-blur-sm",
+        /** @deprecated Use neo-raised instead */
+        solid:
+          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-md)]",
+        /** @deprecated Use neo-inset instead */
+        outlined:
+          "bg-transparent border-2 border-[var(--border-neumorphic-subtle)] shadow-[var(--shadow-inset-subtle)]",
+        /** @deprecated Use neo-floating instead */
+        neumorphic:
+          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] shadow-[var(--shadow-neumorphic-lg)]",
+      },
+      elevation: {
+        // === DRAMATIC NEOMORPHIC ELEVATION SYSTEM ===
+        none: "shadow-none",
+        subtle: "shadow-[var(--shadow-neumorphic-sm)]", // 8px shadows
+        medium: "shadow-[var(--shadow-neumorphic-md)]", // 15px shadows
+        strong: "shadow-[var(--shadow-neumorphic-lg)]", // 25px shadows
+        dramatic: "shadow-[var(--shadow-neumorphic-xl)]", // 35px shadows
+        extreme: "shadow-[var(--shadow-neumorphic-dramatic)]", // 45px shadows
+        maximum: "shadow-[var(--shadow-neumorphic-extreme)]", // 60px shadows!
 
-      // Glassmorphism variants
-      "glass-primary":
-        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-soft)]",
-      "glass-subtle":
-        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-secondary)] backdrop-blur-[var(--backdrop-blur-soft)]",
-      "glass-floating":
-        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)] shadow-[var(--shadow-light)]",
-      "glass-overlay":
-        "bg-[var(--surface-overlay)] border-[var(--glass-border-strong)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-strong)] shadow-[var(--shadow-heavy)]",
+        // === DEPTH SYSTEM (1-8 Levels) ===
+        "depth-1": "shadow-[var(--shadow-depth-1)]", // 8px
+        "depth-2": "shadow-[var(--shadow-depth-2)]", // 15px
+        "depth-3": "shadow-[var(--shadow-depth-3)]", // 25px
+        "depth-4": "shadow-[var(--shadow-depth-4)]", // 35px
+        "depth-5": "shadow-[var(--shadow-depth-5)]", // 45px
+        "depth-6": "shadow-[var(--shadow-depth-6)]", // 60px
+        "depth-7": "shadow-[var(--shadow-depth-7)]", // 75px
+        "depth-8": "shadow-[var(--shadow-depth-8)]", // 100px!!!
 
-      // Legacy aliases (aktualisiert für strengen Dark Mode)
-      "neo-raised":
-        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
-      "neo-subtle":
-        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)]",
-      "neo-inset":
-        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-light)]",
-      "neo-floating":
-        "bg-[var(--surface)] border-[var(--glass-border-soft)] text-[var(--text-primary)] shadow-[var(--shadow-heavy)]",
-      "neo-glass":
-        "bg-[var(--surface-soft)] border-[var(--glass-border-soft)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-medium)]",
+        // === LEGACY ELEVATIONS (Mapped to Neomorphic) ===
+        /** @deprecated Use subtle instead */
+        surface: "shadow-[var(--shadow-neumorphic-sm)]",
+        /** @deprecated Use medium instead */
+        raised: "shadow-[var(--shadow-neumorphic-md)]",
+        /** @deprecated Use strong instead */
+        overlay: "shadow-[var(--shadow-neumorphic-lg)]",
+        /** @deprecated Use dramatic instead */
+        popover: "shadow-[var(--shadow-neumorphic-xl)]",
+        /** @deprecated Use extreme instead */
+        floating: "shadow-[var(--shadow-neumorphic-dramatic)]",
+        /** @deprecated Use maximum instead */
+        elevated: "shadow-[var(--shadow-neumorphic-extreme)]",
+
+        // === LEGACY NEO-DEPTH (Deprecated) ===
+        /** @deprecated Use depth-1 instead */
+        "surface-subtle": "shadow-[var(--shadow-depth-1)]",
+        /** @deprecated Use depth-3 instead */
+        "surface-prominent": "shadow-[var(--shadow-depth-3)]",
+        /** @deprecated Use depth-2 instead */
+        "surface-hover": "shadow-[var(--shadow-depth-2)]",
+        /** @deprecated Use depth-1 instead */
+        "surface-active": "shadow-[var(--shadow-depth-1)]",
+      },
+      interactive: {
+        false: "",
+
+        // === PRIMARY NEOMORPHIC INTERACTIONS ===
+        "neo-gentle": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-neumorphic-lg)]",
+          "hover:bg-[var(--surface-neumorphic-floating)]",
+          "hover:-translate-y-1",
+          "active:shadow-[var(--shadow-inset-subtle)]",
+          "active:bg-[var(--surface-neumorphic-pressed)]",
+          "active:translate-y-0.5",
+        ].join(" "),
+
+        "neo-dramatic": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-neumorphic-xl)]",
+          "hover:bg-gradient-to-br hover:from-[var(--surface-neumorphic-floating)] hover:to-white",
+          "hover:-translate-y-2 hover:scale-[1.02]",
+          "active:shadow-[var(--shadow-inset-medium)]",
+          "active:bg-[var(--surface-neumorphic-pressed)]",
+          "active:translate-y-1 active:scale-[0.98]",
+        ].join(" "),
+
+        "neo-extreme": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-neumorphic-dramatic)]",
+          "hover:bg-gradient-to-br hover:from-white hover:via-[var(--surface-neumorphic-floating)] hover:to-[var(--acc1)]/10",
+          "hover:-translate-y-3 hover:scale-[1.05]",
+          "active:shadow-[var(--shadow-inset-strong)]",
+          "active:bg-[var(--surface-neumorphic-pressed)]",
+          "active:translate-y-1.5 active:scale-[0.95]",
+        ].join(" "),
+
+        "neo-press": [
+          "cursor-pointer",
+          "active:shadow-[var(--shadow-inset-extreme)]",
+          "active:bg-[var(--surface-neumorphic-pressed)]",
+          "active:translate-y-2 active:scale-[0.96]",
+        ].join(" "),
+
+        "neo-lift": [
+          "cursor-pointer",
+          "hover:shadow-[var(--shadow-neumorphic-extreme)]",
+          "hover:-translate-y-4",
+          "focus-visible:-translate-y-0",
+        ].join(" "),
+
+        // === SEMANTIC GLOW EFFECTS ===
+        "glow-brand": [
+          "cursor-pointer",
+          "hover:shadow-[0_0_40px_rgba(75,99,255,0.4)]",
+          "hover:border-[var(--acc1)]",
+        ].join(" "),
+
+        "glow-success": [
+          "cursor-pointer",
+          "hover:shadow-[0_0_30px_rgba(34,197,94,0.4)]",
+          "hover:border-[var(--succ)]",
+        ].join(" "),
+
+        "glow-warning": [
+          "cursor-pointer",
+          "hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]",
+          "hover:border-[var(--warn)]",
+        ].join(" "),
+
+        "glow-error": [
+          "cursor-pointer",
+          "hover:shadow-[0_0_30px_rgba(239,68,68,0.4)]",
+          "hover:border-[var(--err)]",
+        ].join(" "),
+
+        // === LEGACY INTERACTIONS (Converted to Neomorphic) ===
+        /** @deprecated Use neo-gentle instead */
+        gentle: [
+          "cursor-pointer",
+          "hover:-translate-y-1 hover:shadow-[var(--shadow-neumorphic-md)]",
+          "hover:bg-[var(--surface-neumorphic-raised)]",
+        ].join(" "),
+
+        /** @deprecated Use neo-dramatic instead */
+        dramatic: [
+          "cursor-pointer",
+          "hover:-translate-y-2 hover:scale-[1.01] hover:shadow-[var(--shadow-neumorphic-lg)]",
+        ].join(" "),
+
+        /** @deprecated Use neo-gentle instead */
+        subtle: [
+          "cursor-pointer",
+          "hover:bg-[var(--surface-neumorphic-raised)]",
+          "hover:border-[var(--border-neumorphic-light)]",
+        ].join(" "),
+
+        /** @deprecated Use neo-press instead */
+        press: [
+          "cursor-pointer",
+          "active:translate-y-0.5 active:scale-[0.99]",
+          "active:shadow-[var(--shadow-inset-subtle)]",
+        ].join(" "),
+
+        /** @deprecated Use neo-lift instead */
+        lift: [
+          "cursor-pointer",
+          "hover:-translate-y-1 hover:shadow-[var(--shadow-neumorphic-md)]",
+        ].join(" "),
+
+        /** @deprecated Use glow-brand instead */
+        glow: "cursor-pointer hover:shadow-[var(--shadow-glow-brand)]",
+
+        // === REMOVED LEGACY VARIANTS ===
+        /** @deprecated Use neo-gentle instead */
+        "depth-hover":
+          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-neumorphic-md)]",
+        /** @deprecated Use neo-press instead */
+        "depth-press":
+          "cursor-pointer active:translate-y-0.5 active:scale-[0.98] active:shadow-[var(--shadow-inset-subtle)]",
+        /** @deprecated Use neo-lift instead */
+        "floating-hover":
+          "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-neumorphic-lg)]",
+        /** @deprecated Removed - use glow-* variants */
+        "ambient-subtle": "cursor-pointer",
+        /** @deprecated Removed - use glow-* variants */
+        "ambient-medium": "cursor-pointer",
+        /** @deprecated Removed - use glow-* variants */
+        "ambient-strong": "cursor-pointer",
+      },
+      padding: {
+        none: "",
+        xs: "p-3", // 12px
+        sm: "p-4", // 16px
+        md: "p-6", // 24px
+        lg: "p-8", // 32px
+        xl: "p-10", // 40px
+        "2xl": "p-12", // 48px
+      },
+      size: {
+        auto: "",
+        xs: "max-w-xs", // 320px
+        sm: "max-w-sm", // 384px
+        md: "max-w-md", // 448px
+        lg: "max-w-lg", // 512px
+        xl: "max-w-xl", // 576px
+        "2xl": "max-w-2xl", // 672px
+        "3xl": "max-w-3xl", // 768px
+        full: "w-full",
+      },
+      intent: {
+        default: "",
+        // Neomorphic Semantic Colors with Gradients
+        primary:
+          "border-[var(--acc1)] bg-gradient-to-br from-[var(--acc1)]/5 to-[var(--acc2)]/5 text-[var(--color-text-primary)]",
+        secondary:
+          "border-[var(--color-border-subtle)] bg-gradient-to-br from-[var(--surface-neumorphic-base)] to-[var(--surface-neumorphic-raised)]",
+        warning:
+          "border-[var(--warn)] bg-gradient-to-br from-[var(--warn)]/5 to-[var(--warn)]/10 text-[var(--color-text-primary)]",
+        error:
+          "border-[var(--err)] bg-gradient-to-br from-[var(--err)]/5 to-[var(--err)]/10 text-[var(--color-text-primary)]",
+        success:
+          "border-[var(--succ)] bg-gradient-to-br from-[var(--succ)]/5 to-[var(--succ)]/10 text-[var(--color-text-primary)]",
+        info: "border-[var(--info)] bg-gradient-to-br from-[var(--info)]/5 to-[var(--info)]/10 text-[var(--color-text-primary)]",
+      },
+      state: {
+        default: "",
+        loading: "animate-pulse bg-[var(--surface-neumorphic-base)] pointer-events-none opacity-75",
+        disabled:
+          "opacity-40 pointer-events-none cursor-not-allowed shadow-[var(--shadow-inset-subtle)]",
+        selected:
+          "border-[var(--acc1)] bg-gradient-to-br from-[var(--acc1)]/10 to-[var(--acc2)]/10 shadow-[0_0_0_2px_var(--acc1)]/20",
+        focus: "border-[var(--acc1)] shadow-[var(--shadow-focus-neumorphic)]",
+        hover: "shadow-[var(--shadow-neumorphic-lg)] -translate-y-1",
+        active: "shadow-[var(--shadow-inset-medium)] translate-y-0.5",
+      },
     },
-    intent: {
-      default: "",
-      accent: "border-accent",
-      primary: "border-accent",
-      success: "border-status-success/70",
-      warning: "border-status-warning/70",
-      danger: "border-status-danger/70",
-      error: "border-status-danger/70",
-      info: "border-status-info/70",
-    },
-    padding: {
-      none: "p-0",
-      xs: "p-[var(--space-2xs)]", // 8px
-      sm: "p-[var(--space-xs)]", // 12px
-      md: "p-[var(--space-sm)]", // 16px
-      lg: "p-[var(--space-md)]", // 24px
-      xl: "p-[calc(var(--space-md) * 1.33)]", // ~32px
-    },
-    size: {
-      auto: "w-auto",
-      full: "w-full",
-      xs: "max-w-xs",
-      sm: "max-w-sm",
-      md: "max-w-md",
-      lg: "max-w-lg",
-      xl: "max-w-xl",
-      "2xl": "max-w-2xl",
-    },
-    state: {
-      default: "",
-      loading: "animate-pulse opacity-70 pointer-events-none",
-      disabled: "opacity-50 pointer-events-none",
-      selected:
-        "border-accent ring-2 ring-[color-mix(in_srgb, var(--accent) 30%, transparent)] ring-offset-2 ring-offset-bg-1",
-      focus: "ring-2 ring-accent ring-offset-2 ring-offset-bg-1",
-    },
-    elevation: {
-      flat: "shadow-none",
-      subtle: "shadow-[var(--shadow-sm)]",
-      surface: "shadow-[var(--shadow-sm)]",
-      medium: "shadow-[var(--shadow-sm)]",
-      dramatic: "shadow-[var(--shadow-lg)]",
-      raised: "shadow-[var(--shadow-lg)]",
-      floating: "shadow-[var(--shadow-lg)]",
-    },
-    interactive: {
-      none: "",
-      basic:
-        "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-shadow duration-200",
-      gentle:
-        "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] hover:border-[var(--glass-border-strong)] transition-all duration-200",
-      glow: "cursor-pointer hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
-      "glow-accent":
-        "cursor-pointer hover:border-accent hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-shadow duration-200",
-      // Neue interaktive Varianten mit Glas-Effekten
-      "glass-lift":
-        "cursor-pointer hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] transition-all duration-300",
-      "glass-glow":
-        "cursor-pointer hover:shadow-[0_0_0_4px_rgba(139,92,246,0.3),0_8px_20px_rgba(139,92,246,0.3)] transition-all duration-300",
+    compoundVariants: [
+      // === NEOMORPHIC TONE + INTERACTIVE COMBINATIONS ===
+      {
+        tone: ["neo-raised", "neo-floating", "neo-dramatic", "neo-extreme"],
+        interactive: ["neo-gentle", "neo-dramatic", "neo-extreme"],
+        class: "min-h-[44px]", // Touch target
+      },
+      {
+        tone: "neo-glass",
+        interactive: ["neo-gentle", "neo-dramatic"],
+        class: "hover:bg-[var(--surface-neumorphic-floating)]/95 hover:backdrop-blur-md",
+      },
+      {
+        tone: "neo-extreme",
+        interactive: "neo-extreme",
+        class: "hover:shadow-[var(--shadow-neumorphic-extreme)] hover:scale-[1.08]",
+      },
+
+      // === INTENT + INTERACTIVE COMBINATIONS ===
+      {
+        intent: "primary",
+        interactive: ["glow-brand", "neo-gentle", "neo-dramatic"],
+        class: "hover:from-[var(--acc1)]/10 hover:to-[var(--acc2)]/15",
+      },
+      {
+        intent: "error",
+        interactive: ["glow-error", "neo-gentle"],
+        class: "hover:from-[var(--err)]/10 hover:to-[var(--err)]/15",
+      },
+      {
+        intent: "success",
+        interactive: ["glow-success", "neo-gentle"],
+        class: "hover:from-[var(--succ)]/10 hover:to-[var(--succ)]/15",
+      },
+      {
+        intent: "warning",
+        interactive: ["glow-warning", "neo-gentle"],
+        class: "hover:from-[var(--warn)]/10 hover:to-[var(--warn)]/15",
+      },
+
+      // === STATE COMBINATIONS ===
+      {
+        state: "loading",
+        class: "animate-pulse cursor-wait pointer-events-none",
+      },
+      {
+        state: "selected",
+        interactive: false,
+        class: "cursor-default",
+      },
+      {
+        state: "disabled",
+        interactive: false,
+        class: "cursor-not-allowed",
+      },
+      {
+        state: "selected",
+        interactive: ["neo-gentle", "gentle"],
+        class:
+          "hover:from-[var(--acc1)]/15 hover:to-[var(--acc2)]/20 hover:border-[var(--acc1)]/60",
+      },
+
+      // === ELEVATION + TONE COMBINATIONS ===
+      {
+        tone: ["neo-dramatic", "neo-extreme"],
+        elevation: ["dramatic", "extreme", "maximum"],
+        class: "border-[var(--border-neumorphic-light)]",
+      },
+      {
+        tone: "neo-inset",
+        elevation: ["none", "subtle"],
+        class: "border-[var(--border-neumorphic-dark)]",
+      },
+
+      // === ACCESSIBILITY COMBINATIONS ===
+      {
+        interactive: [
+          "neo-gentle",
+          "neo-dramatic",
+          "neo-extreme",
+          "glow-brand",
+          "glow-success",
+          "glow-warning",
+          "glow-error",
+        ],
+        class: "min-h-[44px] touch-target",
+      },
+
+      // === LEGACY SUPPORT (Simplified) ===
+      {
+        tone: "neumorphic",
+        interactive: ["gentle", "dramatic"],
+        class:
+          "hover:shadow-[var(--shadow-neumorphic-lg)] hover:bg-[var(--surface-neumorphic-floating)]",
+      },
+      {
+        tone: "translucent",
+        interactive: ["gentle", "dramatic"],
+        class: "hover:bg-[var(--surface-neumorphic-floating)]/95 hover:backdrop-blur-md",
+      },
+    ],
+    defaultVariants: {
+      tone: "neo-raised", // Changed from "default" to neomorphic
+      elevation: "medium", // Changed from "surface" to medium dramatic
+      interactive: false,
+      padding: "none",
+      size: "auto",
+      intent: "default",
+      state: "default",
     },
   },
-  defaultVariants: {
-    variant: "default",
-    tone: "glass-primary",
-    intent: "default",
-    padding: "md",
-    size: "full",
-    state: "default",
-    elevation: "medium",
-    interactive: "none",
-  },
-});
-
-type CardVariantProps = VariantProps<typeof cardVariants>;
+);
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    Omit<CardVariantProps, "interactive"> {
-  interactive?: CardVariantProps["interactive"] | boolean;
-  title?: string;
-  subtitle?: string;
-  leading?: React.ReactNode;
-  trailing?: React.ReactNode;
-  actions?: React.ReactNode;
-  selectable?: boolean;
-  selected?: boolean;
-  showChevron?: boolean;
-  showMenu?: boolean;
-  menuItems?: Array<{
-    label: string;
-    onClick: () => void;
-    icon?: React.ReactNode;
-    disabled?: boolean;
-  }>;
-  onCardClick?: () => void;
-  onSelectionChange?: (selected: boolean) => void;
-  isLoading?: boolean;
-  disabled?: boolean;
+    VariantProps<typeof cardVariants> {
+  /**
+   * Whether the card should be rendered as a clickable element
+   * @default false
+   */
   clickable?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  /**
+   * Callback fired when the card is clicked (only if clickable=true)
+   */
+  onCardClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  /**
+   * ARIA label for accessibility when clickable
+   */
+  "aria-label"?: string;
 }
+
+// Export variant props for external use
+export type CardVariantProps = VariantProps<typeof cardVariants>;
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
     {
       className,
-      variant,
       tone,
       elevation,
-      intent,
+      interactive,
       padding,
       size,
+      intent,
       state,
-      interactive,
       clickable = false,
       onCardClick,
       onClick,
-      title,
-      subtitle,
-      leading,
-      trailing,
-      actions,
-      selectable = false,
-      selected = false,
-      showChevron = false,
-      showMenu = false,
-      menuItems = [],
-      onSelectionChange,
-      isLoading = false,
-      disabled = false,
-      children,
       ...props
     },
     ref,
   ) => {
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-    const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
-      if (disabled || isLoading) {
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      if (state === "disabled" || state === "loading") {
         event.preventDefault();
         return;
       }
 
-      if (selectable) {
-        const newSelected = !selected;
-        onSelectionChange?.(newSelected);
+      if (clickable && onCardClick) {
+        onCardClick(event);
       }
-
-      onCardClick?.();
       onClick?.(event);
     };
 
-    const handleMenuClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setIsMenuOpen(!isMenuOpen);
-    };
-
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (disabled || isLoading) {
+      if (state === "disabled" || state === "loading") {
         event.preventDefault();
         return;
       }
 
       if (clickable && (event.key === "Enter" || event.key === " ")) {
         event.preventDefault();
+        // Create a synthetic mouse event for consistency
+        const syntheticEvent = new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+        });
+
+        // Trigger the click handler with the synthetic event
+        const target = event.currentTarget;
         if (onCardClick) {
-          onCardClick();
+          onCardClick({
+            ...syntheticEvent,
+            currentTarget: target,
+            target: target,
+          } as unknown as React.MouseEvent<HTMLDivElement>);
         }
       }
     };
-
-    const isClickable = !disabled && !isLoading && (!!onCardClick || selectable || clickable);
-
-    const resolvedInteractive: CardVariantProps["interactive"] =
-      typeof interactive === "boolean" ? (interactive ? "basic" : "none") : interactive;
 
     return (
       <div
         ref={ref}
         className={cn(
           cardVariants({
-            variant,
             tone,
-            intent,
+            elevation,
+            interactive: clickable ? interactive || "gentle" : interactive,
             padding,
             size,
-            state: isLoading ? "loading" : disabled ? "disabled" : selected ? "selected" : state,
-            elevation,
-            interactive: isClickable
-              ? resolvedInteractive === "none"
-                ? "basic"
-                : resolvedInteractive
-              : resolvedInteractive,
+            intent,
+            state,
+            className,
           }),
-          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] focus-visible:outline-offset-2",
-          className,
         )}
-        onClick={isClickable ? handleCardClick : onClick}
-        onKeyDown={isClickable ? handleKeyDown : undefined}
-        role={isClickable ? "button" : undefined}
-        tabIndex={isClickable && !disabled && !isLoading ? 0 : undefined}
-        aria-disabled={disabled || isLoading ? true : undefined}
-        aria-pressed={selected ? true : undefined}
+        onClick={clickable ? handleClick : onClick}
+        onKeyDown={clickable ? handleKeyDown : undefined}
+        role={clickable ? "button" : undefined}
+        tabIndex={clickable && state !== "disabled" && state !== "loading" ? 0 : undefined}
+        aria-disabled={state === "disabled" || state === "loading" ? true : undefined}
+        aria-pressed={state === "selected" ? true : undefined}
         {...props}
-      >
-        {(title || leading || trailing || selectable || showMenu || showChevron) && (
-          <CardHeader className="flex flex-row items-center gap-4 p-4">
-            {/* Selection indicator - Enlarged for accessibility */}
-            {selectable && (
-              <div className="flex-shrink-0">
-                <div
-                  className={cn(
-                    "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors",
-                    selected ? "bg-accent border-accent" : "border-line hover:border-accent",
-                  )}
-                >
-                  {selected && (
-                    <svg
-                      className="h-4 w-4 text-accent-contrast"
-                      fill="currentColor"
-                      viewBox="0 0 12 12"
-                    >
-                      <path
-                        d="M10 3L4.5 8.5L2 6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        fill="none"
-                      />
-                    </svg>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Leading content */}
-            {leading && <div className="flex-shrink-0">{leading}</div>}
-
-            {/* Title and subtitle */}
-            {(title || subtitle) && (
-              <div className="min-w-0 flex-1">
-                {title && (
-                  <CardTitle className="truncate text-base font-semibold leading-snug text-fg">
-                    {title}
-                  </CardTitle>
-                )}
-                {subtitle && <p className="mt-1 truncate text-sm text-fg-muted">{subtitle}</p>}
-              </div>
-            )}
-
-            {/* Trailing content */}
-            <div className="flex flex-shrink-0 items-center gap-2">
-              {trailing}
-
-              {showMenu && (
-                <div className="relative">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleMenuClick}
-                    disabled={disabled || isLoading}
-                    aria-label="More options"
-                  >
-                    <MoreHorizontal className="h-4 w-4 shadow-1" />
-                  </Button>
-
-                  {/* Simple dropdown menu */}
-                  {isMenuOpen && menuItems.length > 0 && (
-                    <div className="absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-line bg-surface-glass shadow-2 backdrop-blur-lg">
-                      {menuItems.map((item, index) => (
-                        <button
-                          key={index}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            item.onClick();
-                            setIsMenuOpen(false);
-                          }}
-                          disabled={item.disabled}
-                          className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-fg first:rounded-t-lg last:rounded-b-lg hover:bg-surface-glass disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          {item.icon}
-                          {item.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {showChevron && (
-                <div className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-surface/60">
-                  <ChevronRight
-                    className={cn(
-                      "h-5 w-5 text-fg-muted transition-transform shadow-1",
-                      selected && "rotate-90",
-                    )}
-                  />
-                </div>
-              )}
-            </div>
-          </CardHeader>
-        )}
-
-        {/* Main content */}
-        {children && <CardContent className="px-4 pb-4 pt-0">{children}</CardContent>}
-
-        {/* Footer actions */}
-        {actions && (
-          <CardFooter className="border-t border-line px-4 py-4">
-            <div className="flex w-full items-center justify-between gap-4">{actions}</div>
-          </CardFooter>
-        )}
-
-        {/* Click overlay for better accessibility when disabled */}
-        {(disabled || isLoading) && isClickable && (
-          <div className="absolute inset-0 cursor-not-allowed bg-transparent" />
-        )}
-      </div>
+      />
     );
   },
 );
@@ -379,7 +484,14 @@ Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col gap-2", "text-fg", className)} {...props} />
+    <div
+      ref={ref}
+      className={cn(
+        "flex flex-col gap-[var(--space-stack-sm)] px-[var(--space-lg)] pb-[var(--space-md)] pt-[var(--space-lg)]",
+        className,
+      )}
+      {...props}
+    />
   ),
 );
 CardHeader.displayName = "CardHeader";
@@ -388,7 +500,10 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn("text-lg font-semibold leading-tight tracking-tight text-fg", className)}
+      className={cn(
+        "text-title font-semibold leading-tight tracking-tight text-text-primary",
+        className,
+      )}
       {...props}
     />
   ),
@@ -399,13 +514,24 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn("text-sm leading-relaxed text-fg-muted", className)} {...props} />
+  <p
+    ref={ref}
+    className={cn("text-body leading-relaxed text-text-secondary", className)}
+    {...props}
+  />
 ));
 CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col gap-4", "text-fg", className)} {...props} />
+    <div
+      ref={ref}
+      className={cn(
+        "flex flex-col gap-[var(--space-stack-md)] px-[var(--space-lg)] pb-[var(--space-lg)]",
+        className,
+      )}
+      {...props}
+    />
   ),
 );
 CardContent.displayName = "CardContent";
@@ -415,8 +541,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
     <div
       ref={ref}
       className={cn(
-        "flex items-center justify-between gap-4 border-t border-line",
-        "text-fg",
+        "flex items-center justify-between gap-[var(--space-inline-lg)] border-t border-border-divider px-[var(--space-lg)] pb-[var(--space-lg)] pt-[var(--space-md)]",
         className,
       )}
       {...props}

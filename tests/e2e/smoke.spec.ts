@@ -12,7 +12,7 @@ test.describe("Smoke Tests", () => {
     await expect(page).toHaveTitle(/disa ai/i);
 
     // Wait for the composer to be visible, which indicates the chat page is ready
-    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+    const composer = page.getByTestId("composer-input");
     await expect(composer).toBeVisible({ timeout: 15000 });
 
     // Look for the new hero text
@@ -44,7 +44,7 @@ test.describe("Smoke Tests", () => {
     await page.waitForTimeout(2000);
 
     // Check if composer is visible - find the textarea with the placeholder
-    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+    const composer = page.getByTestId("composer-input");
     await expect(composer).toBeVisible({ timeout: 10000 });
 
     // Type a message and send it

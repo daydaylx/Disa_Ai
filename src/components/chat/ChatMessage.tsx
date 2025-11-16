@@ -1,14 +1,11 @@
-import DOMPurify from "dompurify";
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import { Bot, Copy, RotateCcw, User } from "lucide-react";
+import { useState } from "react";
 
-import { useFeatureFlag } from "../../hooks/useFeatureFlags";
-import { highlightCode } from "../../lib/highlighting/lazySyntaxHighlighter";
-import { loadPrismCSS } from "../../lib/highlighting/prismTheme";
-import { Copy, RotateCcw } from "../../lib/icons";
 import { cn } from "../../lib/utils";
-import { loadStylesheet } from "../../lib/utils/loadStylesheet";
-import { safeWarn } from "../../lib/utils/production-logger";
 import type { ChatMessageType } from "../../types/chatMessage";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 export type { ChatMessageType } from "../../types/chatMessage";
 
@@ -19,200 +16,75 @@ interface ChatMessageProps {
   onCopy?: (content: string) => void;
 }
 
-type ReactMarkdownModule = typeof import("react-markdown");
-
-const REACT_MARKDOWN_URL =
-  "https://esm.sh/react-markdown@10.1.0?bundle&target=es2020&deps=react@19.0.0,react-dom@19.0.0";
-
-const loadReactMarkdown = (() => {
-  let promise: Promise<ReactMarkdownModule> | null = null;
-  return () => {
-    if (!promise) {
-      promise = import(
-        /* @vite-ignore */
-        REACT_MARKDOWN_URL
-      ) as Promise<ReactMarkdownModule>;
-    }
-    return promise;
-  };
-})();
-
-// Lazy-Load Markdown Component from CDN - shipped outside main bundle
-const ReactMarkdown = lazy(async () => {
-  const module = await loadReactMarkdown();
-  return { default: module.default };
-});
-
-const KATEX_STYLESHEET_ID = "katex-stylesheet";
-const KATEX_CDN_URL = "https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css";
-const KATEX_INTEGRITY = "sha384-WcoG4HRXMzYzfCgiyfrySxx90XSl2rxY5mnVY5TwtWE6KLrArNKn0T/mOgNL0Mmi";
-
-// Lazy-load KaTeX CSS from CDN to avoid bundling heavy font assets
-const loadKaTeXCSS = (() => {
-  let cachedPromise: Promise<void> | null = null;
-
-  return () => {
-    if (cachedPromise) {
-      return cachedPromise;
-    }
-
-    cachedPromise = loadStylesheet({
-      href: KATEX_CDN_URL,
-      id: KATEX_STYLESHEET_ID,
-      crossOrigin: "anonymous",
-      integrity: KATEX_INTEGRITY,
-      referrerPolicy: "no-referrer",
-      importance: "low",
-    }).catch((error: unknown) => {
-      cachedPromise = null;
-      safeWarn("[ChatMessage] Failed to load KaTeX stylesheet", error);
-      throw error;
-    });
-
-    return cachedPromise;
-  };
-})();
-
-function MarkdownRenderer({ content }: { content: string }) {
-  const [, setKaTeXCSS] = useState(false);
-
-  useEffect(() => {
-    // Load KaTeX CSS only when math is detected
-    if (content.includes("$") || content.includes("\\(")) {
-      void loadKaTeXCSS().then(() => setKaTeXCSS(true));
-    }
-  }, [content]);
-
-  return (
-    <Suspense fallback={<div className="animate-pulse">Loading content...</div>}>
-      <ReactMarkdown
-        components={{
-          // @ts-expect-error - ReactMarkdown component types sind komplex
-          code({ node: _node, inline, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || "");
-            return !inline && match ? (
-              <CodeBlock language={match[1]}>{String(children).replace(/\n$/, "")}</CodeBlock>
-            ) : (
-              <code className={className} {...props}>
-                {children}
-              </code>
-            );
-          },
-        }}
-      >
-        {content}
-      </ReactMarkdown>
-    </Suspense>
-  );
-}
-
 function CodeBlock({ children, language }: { children: string; language?: string }) {
-  const isLazyHighlighterEnabled = useFeatureFlag("lazyHighlighter");
-  const [highlightedCode, setHighlightedCode] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [highlightSuccess, setHighlightSuccess] = useState(false);
-
-  useEffect(() => {
-    if (!isLazyHighlighterEnabled || !language || language === "text") {
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Lazy load CSS first, then highlight
-    loadPrismCSS()
-      .then(() => highlightCode(children, language))
-      .then((result) => {
-        if (result.success) {
-          setHighlightedCode(result.highlighted);
-          setHighlightSuccess(true);
-        }
-      })
-      .catch((error) => {
-        safeWarn("[CodeBlock] Highlighting failed:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [children, language, isLazyHighlighterEnabled]);
-
-  const handleCopy = () => {
-    void navigator.clipboard?.writeText(children);
-  };
-
   return (
-    <div className="code-block-container">
-      <div className="code-block-header">
-        <span className="code-block-language">
-          {language || "text"}
-          {isLazyHighlighterEnabled && highlightSuccess && (
-            <span className="ml-2 text-xs opacity-75">✨ highlighted</span>
-          )}
+    <div className="border-border bg-surface-subtle relative my-4 overflow-hidden rounded-lg border">
+      <div className="border-border flex items-center justify-between border-b px-4 py-2">
+        <span className="text-text-secondary text-xs font-medium uppercase tracking-wide">
+          {language || "Text"}
         </span>
-        <button className="code-block-copy" onClick={handleCopy} title="Copy code">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+          onClick={() => void navigator.clipboard?.writeText(children)}
+        >
           <Copy className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
-
-      {isLoading ? (
-        <div className="code-block-loading">Loading syntax highlighting</div>
-      ) : highlightedCode && highlightSuccess ? (
-        <pre className={`language-${language}`}>
-          <code
-            className={`language-${language}`}
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(highlightedCode, {
-                ALLOWED_TAGS: ["span", "div"],
-                ALLOWED_ATTR: ["class"],
-                KEEP_CONTENT: true,
-              }),
-            }}
-          />
-        </pre>
-      ) : (
-        <pre className="overflow-x-auto p-4">
-          <code className="text-sm leading-relaxed font-mono">{children}</code>
-        </pre>
-      )}
+      <pre className="overflow-x-auto p-4">
+        <code className="text-text-primary text-sm leading-relaxed">{children}</code>
+      </pre>
     </div>
   );
 }
 
-const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageProps) => {
+function parseMessageContent(content: string) {
+  const parts: Array<{ type: "text" | "code"; content: string; language?: string }> = [];
+  const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = codeBlockRegex.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      const textContent = content.slice(lastIndex, match.index);
+      if (textContent.trim()) {
+        parts.push({ type: "text", content: textContent });
+      }
+    }
+
+    parts.push({
+      type: "code",
+      content: match[2] || "",
+      language: match[1] || "text",
+    });
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < content.length) {
+    const textContent = content.slice(lastIndex);
+    if (textContent.trim()) {
+      parts.push({ type: "text", content: textContent });
+    }
+  }
+
+  return parts.length > 0 ? parts : [{ type: "text" as const, content }];
+}
+
+export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessageProps) {
+  const [showActions, setShowActions] = useState(false);
+
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
-  const widthClass = isSystem ? "max-w-[70%]" : "max-w-[88%]";
-  const bubbleAlignment = cn(
-    "flex w-full flex-col gap-2",
-    widthClass,
-    isSystem && "self-center items-center text-center",
-    isUser && "self-end items-end",
-    isAssistant && "self-start items-start",
-  );
+  const parsedContent = parseMessageContent(message.content);
 
   const bubbleClass = cn(
-    "w-full rounded-3xl border border-[var(--glass-border-soft)] px-4 py-3 text-sm leading-relaxed shadow-[0_25px_45px_rgba(0,0,0,0.45)] backdrop-blur-2xl bubble-in",
-    isUser &&
-      "bg-[var(--accent)] text-[var(--text-inverted)] border-transparent shadow-[0_25px_45px_rgba(97,231,255,0.35)]",
-    isAssistant && "bg-[var(--surface-chat)] text-text-primary",
-    isSystem &&
-      "bg-[var(--surface-inline)] text-text-muted border-dashed border-[var(--glass-border-soft)]",
-  );
-
-  const timestamp = new Date(message.timestamp).toLocaleTimeString("de-DE", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const formattedModel = message.model?.split("/").pop();
-  const metaClass = cn(
-    "flex w-full flex-wrap items-center gap-2 text-[11px] text-text-muted",
-    isUser && "justify-end text-white/70",
-  );
-  const actionButtonClass = cn(
-    "inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--glass-border-soft)] bg-surface-inline/70 text-text-muted transition-colors hover:border-[var(--glass-border-strong)] hover:text-text-primary",
-    isUser && "border-white/30 bg-white/15 text-white/80 hover:text-white",
+    "max-w-[85%] text-left",
+    isUser && "ml-auto text-right",
+    isSystem && "mx-auto max-w-[70%] text-center",
   );
 
   const handleCopy = () => {
@@ -225,65 +97,98 @@ const ChatMessageComponent = ({ message, isLast, onRetry, onCopy }: ChatMessageP
   };
 
   return (
-    <div className="flex px-3 py-4" data-testid="message.item">
-      <div className={bubbleAlignment}>
-        <div className={bubbleClass}>
-          {contentContainsMarkdown(message.content) ? (
-            <MarkdownRenderer content={message.content} />
-          ) : (
-            <div className="whitespace-pre-wrap break-words leading-relaxed">{message.content}</div>
-          )}
+    <div
+      className={cn(
+        "group relative flex gap-3 px-3 py-5",
+        isUser && "flex-row-reverse",
+        isSystem && "justify-center opacity-70",
+      )}
+      data-testid="message.item"
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
+    >
+      <div className={cn("relative", isSystem && "hidden")}>
+        <Avatar className="border-border h-9 w-9 border">
+          <AvatarFallback className={cn("bg-surface-subtle text-text-primary")}>
+            {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+          </AvatarFallback>
+        </Avatar>
+      </div>
+
+      <div className={cn("flex-1 space-y-2", isUser && "text-right", isSystem && "text-center")}>
+        {!isSystem && (
+          <div
+            className={cn(
+              "text-text-secondary flex items-center gap-2 text-[13px]",
+              isUser && "justify-end",
+            )}
+          >
+            <span className="text-text-primary font-medium">{isUser ? "Ich" : "Assistent"}</span>
+            {message.model && (
+              <Badge
+                variant="secondary"
+                className="border-border bg-card text-text-secondary text-xs"
+              >
+                {message.model}
+              </Badge>
+            )}
+            {message.tokens && (
+              <Badge variant="outline" className="border-border text-text-secondary text-xs">
+                {message.tokens} Token
+              </Badge>
+            )}
+            <span className="text-xs">{new Date(message.timestamp).toLocaleTimeString()}</span>
+          </div>
+        )}
+
+        <div className={cn("border-border bg-card rounded-lg border", bubbleClass, "p-4")}>
+          <div className="space-y-3">
+            {parsedContent.map((part, index) => (
+              <div key={index}>
+                {part.type === "text" ? (
+                  <div className="whitespace-pre-wrap text-[15px] leading-relaxed">
+                    {part.content}
+                  </div>
+                ) : (
+                  <CodeBlock language={part.language}>{part.content}</CodeBlock>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
-        {!isSystem && (
-          <div className={metaClass}>
-            <span>{timestamp}</span>
-            {formattedModel && (
-              <span className="uppercase tracking-[0.2em] text-[10px]">{formattedModel}</span>
+        {!isSystem && showActions && (
+          <div
+            className={cn(
+              "flex items-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+              isUser && "justify-end",
             )}
-            {typeof message.tokens === "number" && (
-              <span>{message.tokens.toLocaleString("de-DE")} Token</span>
-            )}
-            <div className="ml-auto flex items-center gap-1">
-              <button
-                className={actionButtonClass}
-                onClick={handleCopy}
-                title="Nachricht kopieren"
-                data-testid="message.copy"
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+              onClick={handleCopy}
+              title="Nachricht kopieren"
+              data-testid="message.copy"
+            >
+              <Copy className="h-3 w-3" />
+            </Button>
+            {isAssistant && isLast && onRetry && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+                onClick={handleRetry}
+                title="Antwort erneut anfordern"
+                data-testid="message.retry"
               >
-                <Copy className="h-4 w-4" />
-              </button>
-              {isAssistant && isLast && onRetry && (
-                <button
-                  className={actionButtonClass}
-                  onClick={handleRetry}
-                  title="Antwort erneut anfordern"
-                  data-testid="message.retry"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                </button>
-              )}
-            </div>
+                <RotateCcw className="h-3 w-3" />
+              </Button>
+            )}
           </div>
         )}
       </div>
     </div>
   );
-};
-
-// Helper function to detect markdown content
-function contentContainsMarkdown(content: string): boolean {
-  // Simple detection: check for markdown syntax
-  return (
-    content.includes("**") ||
-    content.includes("*") ||
-    content.includes("`") ||
-    content.includes("#") ||
-    content.includes("[") ||
-    content.includes("$") ||
-    content.includes("\\(")
-  );
 }
-
-const MemoizedChatMessage = React.memo(ChatMessageComponent);
-export { MemoizedChatMessage as ChatMessage };

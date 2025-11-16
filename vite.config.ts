@@ -99,6 +99,7 @@ export default defineConfig(({ mode }) => {
         "react",
         "react-dom",
         "react-router-dom",
+        "src/app/layouts/AppShell.tsx",
       ],
       exclude: [
         "react-markdown", // CDN
@@ -262,7 +263,7 @@ export default defineConfig(({ mode }) => {
           "./src/App.tsx",
           "./src/pages/Chat.tsx",
           "./src/components/chat/ChatScreen.tsx",
-          "./src/components/layout/AppShell.tsx",
+          "../src/app/layouts/AppShell.tsx",
           "./src/components/ui/button.tsx",
           "./src/hooks/useSettings.ts",
         ],

@@ -1,9 +1,9 @@
+import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 import { useVisualViewport } from "../../hooks/useVisualViewport";
-import { RotateCcw, Send, Square, Zap } from "../../lib/icons";
 import { cn } from "../../lib/utils";
-import { IconButton } from "../ui/IconButton";
+import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 
 interface ChatComposerProps {
@@ -44,8 +44,8 @@ export function ChatComposer({
   const supportsColorMix =
     typeof CSS !== "undefined" && CSS.supports("color", "color-mix(in srgb, white 50%, black)");
   const pingBackground = supportsColorMix
-    ? "color-mix(in srgb, var(--accent) 55%, transparent)"
-    : "rgba(139, 92, 246, 0.55)"; // Fallback for accent color
+    ? "color-mix(in srgb, var(--color-brand-primary) 45%, transparent)"
+    : "rgba(var(--brand-rgb), 0.45)";
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -102,30 +102,28 @@ export function ChatComposer({
   return (
     <div
       className={cn(
-        "pointer-events-none sticky bottom-0 z-[var(--z-composer)] px-3 py-2 sm:py-3 transition-all duration-200",
+        "px-2 pt-4 transition-all duration-200",
         viewport.isKeyboardOpen
-          ? "pb-[calc(0.75rem+max(env(safe-area-inset-bottom),0px))]"
-          : "pb-[calc(1rem+max(env(safe-area-inset-bottom),0px))]",
+          ? "pb-[calc(1rem+var(--inset-b))]"
+          : "pb-[calc(1.5rem+var(--inset-b))]",
         className,
       )}
       style={{
         transform: viewport.isKeyboardOpen ? `translateY(-${viewport.offsetTop}px)` : undefined,
-        paddingLeft: "max(env(safe-area-inset-left), 0.5rem)",
-        paddingRight: "max(env(safe-area-inset-right), 0.5rem)",
       }}
     >
-      <div className="pointer-events-auto mx-auto w-full max-w-3xl space-y-3 text-fg-muted">
+      <div className="mx-auto max-w-md space-y-3 text-text-secondary">
         {(tokenCount !== undefined || maxTokens !== undefined) && (
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface-glass backdrop-blur-sm px-3 py-1 text-fg-muted shadow-1">
-                  <Zap className="h-4 w-4 shadow-1" />
+                <span className="border-border-hairline inline-flex items-center gap-1 rounded-full border bg-[var(--surface-neumorphic-floating)] px-3 py-1 text-text-secondary">
+                  <Zap className="h-3 w-3" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-glass backdrop-blur-sm px-3 py-1 text-fg-muted shadow-1">
+                <span className="border-border-hairline inline-flex items-center gap-2 rounded-full border bg-[var(--surface-neumorphic-floating)] px-3 py-1 text-text-secondary">
                   Maximal: {maxTokens}
                 </span>
               )}
@@ -138,7 +136,7 @@ export function ChatComposer({
 
         <div
           className={cn(
-            "flex items-end gap-3 rounded-[1.75rem] border border-[var(--glass-border-soft)] bg-[color-mix(in_srgb,#0e182a_85%,transparent)] p-3 shadow-[0_35px_65px_rgba(0,0,0,0.55)] backdrop-blur-2xl",
+            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] backdrop-blur-sm",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -153,60 +151,64 @@ export function ChatComposer({
               disabled={isComposerDisabled}
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
-              aria-label="Nachricht an Disa AI eingeben"
-              aria-describedby="chat-composer-hint"
               className={cn(
-                "text-style-body text-fg placeholder:text-fg-subtle max-h-[200px] min-h-[56px] resize-none border-0 bg-transparent px-3 py-2 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                isQuickstartLoading && "text-fg-muted cursor-not-allowed",
+                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent p-2 text-[15px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                isQuickstartLoading && "text-text-secondary cursor-not-allowed",
               )}
+              style={{ height: "48px" }}
             />
           </div>
 
           <div className="flex items-center gap-2">
             {shouldShowRetry && (
-              <IconButton
+              <Button
                 onClick={handleRetry}
-                variant="secondary"
+                size="icon"
+                variant="ghost"
+                className="h-12 w-12 text-text-secondary hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
-                <RotateCcw className="icon-std" />
-              </IconButton>
+                <RotateCcw className="h-5 w-5" />
+              </Button>
             )}
 
             {shouldShowStop && (
-              <IconButton
+              <Button
                 onClick={handleStop}
-                variant="danger"
-                size="lg"
+                size="icon"
+                variant="destructive"
+                className="h-12 w-12"
                 title="Ausgabe stoppen"
                 aria-label="Ausgabe stoppen"
                 data-testid="composer-stop"
               >
-                <Square className="icon-std" />
-              </IconButton>
+                <Square className="h-5 w-5" />
+              </Button>
             )}
 
             {shouldShowSend && (
-              <IconButton
+              <Button
                 onClick={handleSend}
-                size="lg"
+                size="icon"
+                variant="brand"
+                className="h-12 w-12 shadow-neo-sm"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 aria-label="Nachricht senden"
                 data-testid="composer-send"
               >
-                <Send className="icon-std" />
-              </IconButton>
+                <Send className="h-5 w-5" />
+              </Button>
             )}
 
             {!shouldShowRetry && !shouldShowStop && !shouldShowSend && (
-              <span className="block h-12 w-12 min-h-[48px] min-w-[48px]" aria-hidden="true" />
+              <span className="block h-12 w-12" aria-hidden="true" />
             )}
           </div>
         </div>
 
-        <div id="chat-composer-hint" className="mt-2 px-2 text-center text-[10px] text-fg-muted/80">
+        <div className="text-text-secondary mt-1 text-center text-xs">
           <span className="inline-flex items-center justify-center gap-2">
             {(isLoading || isComposerDisabled) && (
               <span className="relative flex h-2 w-2">
@@ -214,10 +216,10 @@ export function ChatComposer({
                   className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
                   style={{ background: pingBackground }}
                 />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-brand-primary)]" />
               </span>
             )}
-            <span className="leading-tight">
+            <span>
               {isLoading
                 ? "Antwort wird erstellt …"
                 : isComposerDisabled

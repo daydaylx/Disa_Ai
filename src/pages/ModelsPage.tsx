@@ -147,9 +147,8 @@ export default function ModelsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn(
-                "rounded-full bg-[var(--surface)] border-[var(--glass-border-soft)]",
-                "text-[var(--text-primary)] placeholder-[var(--text-muted)]",
-                "focus:border-[var(--color-primary-500)] focus:ring-[var(--color-primary-500)]/20",
+                "rounded-3xl glass-panel bg-gradient-to-r from-surface-card to-surface-soft text-primary placeholder-text-muted",
+                "focus:glass-panel--glow focus:shadow-glow-primary focus:border-primary/50 focus:ring-primary/30 transition-all duration-300 ease-[var(--motion-ease-elastic)]",
               )}
             />
           </div>
@@ -159,10 +158,10 @@ export default function ModelsPage() {
             <button
               onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
               className={cn(
-                "p-3 rounded-full transition-colors duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center",
+                "p-3 rounded-2xl glass-panel group min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-300 ease-[var(--motion-ease-elastic)]",
                 showFavoritesOnly
-                  ? "bg-[var(--color-primary-500)] text-white"
-                  : "bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--color-neutral-700)]",
+                  ? "glass-panel--glow-green text-primary shadow-glow-green animate-pulse-glow scale-105"
+                  : "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-105 text-text-secondary hover:text-primary",
               )}
               aria-label="Favoriten anzeigen"
             >
@@ -172,10 +171,10 @@ export default function ModelsPage() {
             <button
               onClick={() => setShowFreeOnly(!showFreeOnly)}
               className={cn(
-                "p-3 rounded-full transition-colors duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center",
+                "p-3 rounded-2xl glass-panel group min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-300 ease-[var(--motion-ease-elastic)]",
                 showFreeOnly
-                  ? "bg-[var(--color-primary-500)] text-white"
-                  : "bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--color-neutral-700)]",
+                  ? "glass-panel--glow-lila text-primary shadow-glow-lila animate-pulse-glow scale-105"
+                  : "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-105 text-text-secondary hover:text-primary",
               )}
               aria-label="Kostenlose Modelle"
             >
@@ -214,8 +213,11 @@ export default function ModelsPage() {
         </div>
       </div>
 
-      {/* Modelle-Karten */}
-      <div className="space-y-4">
+      {/* Glow Card Grid */}
+      <div
+        className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 glow-card-grid"
+        data-testid="models-grid"
+      >
         {filteredModels.map((model) => (
           <ModelCard
             key={model.id}
@@ -239,7 +241,11 @@ export default function ModelsPage() {
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[var(--surface)] flex items-center justify-center">
             <Search className="w-8 h-8 text-[var(--text-muted)]" />
           </div>
-          <Typography variant="body-lg" className="text-[var(--text-primary)] font-medium mb-2">
+          <Typography
+            variant="body-lg"
+            className="text-[var(--text-primary)] font-medium mb-2"
+            aria-label="Models page empty state heading"
+          >
             Keine Modelle gefunden
           </Typography>
           <Typography variant="body-sm" className="text-[var(--text-secondary)]">

@@ -36,8 +36,10 @@ export function EnhancedBottomNav() {
               key={item.id}
               onClick={() => handleNavigation(item.path)}
               className={cn(
-                "flex flex-col items-center justify-center py-2 px-3 rounded-xl transition-all duration-200 min-w-[70px] relative",
-                isActive ? "text-accent" : "text-text-secondary hover:text-text-primary",
+                "flex flex-col items-center justify-center py-2 px-3 rounded-xl glass-panel relative group transition-all duration-300 ease-[var(--motion-ease-elastic)] min-w-[70px]",
+                isActive
+                  ? "glass-panel--glow text-primary shadow-glow-primary animate-pulse-glow scale-105"
+                  : "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-105 text-text-secondary hover:text-primary",
               )}
               aria-label={item.label}
             >
