@@ -8,8 +8,8 @@ pages_build_output_dir = "dist"
 # Rate Limiting KV Namespace - WICHTIG: IDs müssen in Cloudflare Dashboard erstellt werden
 [[kv_namespaces]]
 binding = "RATE_LIMIT_KV"
-id = "RATE_LIMIT_KV_NAMESPACE_ID"  # TODO: Echte KV-Namespace-ID aus Cloudflare Dashboard
-preview_id = "RATE_LIMIT_KV_PREVIEW_ID"  # TODO: Preview-KV-Namespace-ID aus Dashboard
+id = "0d65c85d47bf490f961707338ad47993"  # Production KV-Namespace ID
+preview_id = "eca29f3a0056484785f3b0f6637c8f58"  # Preview KV-Namespace ID
 
 [env.production]
   # Main branch als Produktionsumgebung
@@ -43,7 +43,7 @@ preview_id = "RATE_LIMIT_KV_PREVIEW_ID"  # TODO: Preview-KV-Namespace-ID aus Das
 
   [[env.production.kv_namespaces]]
   binding = "RATE_LIMIT_KV"
-  id = "YOUR_PRODUCTION_RATE_LIMIT_KV_NAMESPACE_ID"  # TODO: Produktions-KV-Namespace-ID
+  id = "0d65c85d47bf490f961707338ad47993"  # Production KV-Namespace ID
 
 [env.preview]
   # Alle anderen Branches als Preview-Umgebung
@@ -72,7 +72,7 @@ preview_id = "RATE_LIMIT_KV_PREVIEW_ID"  # TODO: Preview-KV-Namespace-ID aus Das
 
   [[env.preview.kv_namespaces]]
   binding = "RATE_LIMIT_KV"
-  id = "YOUR_PREVIEW_RATE_LIMIT_KV_NAMESPACE_ID"  # TODO: Preview-KV-Namespace-ID
+  id = "eca29f3a0056484785f3b0f6637c8f58"  # Preview KV-Namespace ID
 
 # DEPLOYMENT-INSTRUKTIONEN:
 # 1. Cloudflare Pages Dashboard → Settings → Environment variables
