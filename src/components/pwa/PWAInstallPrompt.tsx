@@ -65,27 +65,35 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
         className,
       )}
     >
-      <div className="max-h-[40vh] overflow-y-auto rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-4 shadow-surface sm:max-h-none sm:p-5">
-        <div className="flex items-start justify-between gap-3">
+      <div className="max-h-[40vh] overflow-y-auto rounded-3xl glass-panel--glow-green border-glass-strong p-6 shadow-glow-green backdrop-blur-[var(--backdrop-blur-strong)] sm:max-h-none sm:p-8 animate-in slide-in-from-bottom-8 duration-500 ease-[var(--motion-ease-elastic)]">
+        <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <div className="mb-2 flex items-center gap-2">
-              <Smartphone className="text-text-primary h-5 w-5" />
-              <h3 className="text-text-primary font-semibold">Disa AI installieren</h3>
+            <div className="mb-3 flex items-center gap-3">
+              <div className="p-3 rounded-2xl glass-panel--glow text-primary shadow-glow-primary">
+                <Smartphone className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-primary">Disa AI als App installieren</h3>
+                <p className="text-sm text-text-secondary">
+                  Schnellerer Zugriff, volle Offline-Fähigkeiten & Push-Notifications
+                </p>
+              </div>
             </div>
-            <p className="text-text-secondary mb-3 text-xs leading-relaxed sm:mb-4 sm:text-sm">
-              Installiere Disa AI als App für schnelleren Zugriff und bessere Performance.
-            </p>
 
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Button onClick={handleInstall} size="sm" className="order-1 flex-1">
-                <Download className="mr-2 h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                onClick={handleInstall}
+                size="lg"
+                className="order-1 flex-1 glass-panel--glow group hover:shadow-glow-green hover:scale-[1.02]"
+              >
+                <Download className="mr-2 h-5 w-5" />
                 Jetzt installieren
               </Button>
               <Button
                 onClick={handleDismiss}
-                size="sm"
-                variant="outline"
-                className="order-2 sm:order-2"
+                size="lg"
+                variant="ghost"
+                className="order-2 sm:order-2 group hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-[1.02]"
               >
                 Später
               </Button>
@@ -96,10 +104,10 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
             onClick={handleDismiss}
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-10 w-10 p-2 rounded-2xl glass-panel hover:glass-panel--glow hover:shadow-glow-subtle hover:rotate-90 transition-all duration-300 ease-[var(--motion-ease-elastic)]"
             aria-label="Installations-Prompt schließen"
           >
-            <X className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+            <X className="h-5 w-5" />
           </Button>
         </div>
       </div>

@@ -94,11 +94,14 @@ export default defineConfig(({ mode }) => {
   return {
     // Optimized dependency bundling - less aggressive for faster builds
     optimizeDeps: {
+      force: true,
       include: [
         // Core React - diese werden immer gebraucht
         "react",
         "react-dom",
         "react-router-dom",
+        "use-sync-external-store/shim",
+        "src/app/layouts/AppShell.tsx",
       ],
       exclude: [
         "react-markdown", // CDN
@@ -110,7 +113,6 @@ export default defineConfig(({ mode }) => {
       ],
       esbuildOptions: {
         target: "es2020",
-        splitting: true, // Enable code splitting in dev
       },
     },
     plugins: [
@@ -253,6 +255,7 @@ export default defineConfig(({ mode }) => {
     base, // Umweltspezifische Basis für Cloudflare Pages
     // Fix für Issue #75: Erweiterte Server-Konfiguration für SPA-Routing
     server: {
+      force: true,
       // Vite handles SPA routing automatically, no need for historyApiFallback
       port: parseInt(env.VITE_PORT || "5173"),
       strictPort: false,
@@ -262,7 +265,7 @@ export default defineConfig(({ mode }) => {
           "./src/App.tsx",
           "./src/pages/Chat.tsx",
           "./src/components/chat/ChatScreen.tsx",
-          "./src/components/layout/AppShell.tsx",
+          "../src/app/layouts/AppShell.tsx",
           "./src/components/ui/button.tsx",
           "./src/hooks/useSettings.ts",
         ],

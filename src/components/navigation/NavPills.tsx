@@ -28,10 +28,10 @@ export function NavPills({ items, pathname }: NavPillsProps) {
               to={item.path}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-soft)]",
+                "flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold glass-panel group transition-all duration-300 ease-[var(--motion-ease-elastic)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50",
                 isActive
-                  ? "bg-[color-mix(in_srgb,var(--accent)_20%,var(--surface-base))] text-text-primary shadow-[0_12px_30px_rgba(97,231,255,0.3)]"
-                  : "text-text-secondary hover:text-text-primary",
+                  ? "glass-panel--glow text-primary shadow-glow-primary animate-pulse-glow scale-[1.02]"
+                  : "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-[1.02] text-text-secondary hover:text-primary",
               )}
             >
               <span

@@ -2,107 +2,65 @@
 import type { Config } from "tailwindcss";
 
 const colorTokens = {
-  // Background colors from design-tokens.css
+  // Aurora Backgrounds
   bg: {
-    0: "var(--bg-0)", // #050814 - Haupt-Hintergrund
-    1: "var(--bg-1)", // #0b1020 - Page-Container
-    2: "var(--bg-2)", // #070b12 - Alternative Ecke
+    0: "var(--bg-0)", // #0a0e1a
+    1: "var(--bg-1)", // #0f172a
+    2: "var(--bg-2)", // #1a1f2e
   },
 
-  // Surface colors from design-tokens.css
+  // Aurora Surfaces
   surface: {
-    DEFAULT: "var(--surface)", // #111827 - Haupt-Surface
-    soft: "var(--surface-soft)", // #141b2b - Weichere Surface
-    card: "var(--surface-card)", // #1a2332 - Card-Surface
-    overlay: "var(--surface-overlay)", // rgba(17, 24, 39, 0.85) - Dialoge, Modals
+    DEFAULT: "var(--surface)", // #1e293b
+    soft: "var(--surface-soft)", // #1a1f2e
+    card: "var(--surface-card)", // #0f172a
+    overlay: "var(--surface-overlay)", // rgba(10,14,26,0.88)
   },
 
-  // Text colors from design-tokens.css
+  // Boosted Text
   text: {
     DEFAULT: "var(--text-primary)",
-    primary: "var(--text-primary)", // #f9fafb - Haupttext
-    secondary: "var(--text-secondary)", // #9ca3af - Sekundärtext
-    muted: "var(--text-muted)", // #6b7280 - Gedämpfter Text
-    disabled: "var(--text-disabled)", // #4b5563 - Deaktivierter Text
+    primary: "var(--text-primary)", // #f8fafc
+    secondary: "var(--text-secondary)", // #d1d5db boosted
+    muted: "var(--text-muted)", // #94a3b8
+    disabled: "var(--text-disabled)", // #64748b
   },
 
-  // Primary color scale from design-tokens.css
+  // Primary: Indigo-Violet
   primary: {
-    50: "var(--color-primary-50)", // #eff6ff
-    100: "var(--color-primary-100)", // #dbeafe
-    200: "var(--color-primary-200)", // #bfdbfe
-    300: "var(--color-primary-300)", // #93c5fd
-    400: "var(--color-primary-400)", // #60a5fa
-    500: "var(--color-primary-500)", // #3b82f6 - Primary CTA
-    600: "var(--color-primary-600)", // #2563eb
-    700: "var(--color-primary-700)", // #1d4ed8
-    800: "var(--color-primary-800)", // #1e40af
-    900: "var(--color-primary-900)", // #1e3a8a
-    950: "var(--color-primary-950)", // #172554
+    50: "var(--color-primary-50)",
+    100: "var(--color-primary-100)",
+    200: "var(--color-primary-200)",
+    300: "var(--color-primary-300)",
+    400: "var(--color-primary-400)",
+    500: "var(--color-primary-500)", // #6366f1
+    600: "var(--color-primary-600)",
+    700: "var(--color-primary-700)",
+    800: "var(--color-primary-800)",
+    900: "var(--color-primary-900)",
+    950: "var(--color-primary-950)",
     DEFAULT: "var(--color-primary-500)",
   },
 
-  // Accent colors from design-tokens.css
-  green: {
-    DEFAULT: "var(--accent-green)", // #22c55e - für Speed/Quality Bars
+  // Aurora Accents
+  auroraGreen: {
+    DEFAULT: "var(--accent-aurora-green)", // #10b981
+  },
+  lila: {
+    DEFAULT: "var(--accent-lila)", // #8b5cf6
   },
   yellow: {
-    DEFAULT: "var(--accent-yellow)", // #facc15 - für Value Bars
+    DEFAULT: "var(--accent-yellow)", // #facc15 kept
   },
 
-  // Status colors from design-tokens.css
+  // Status (updated success to aurora-green)
   success: {
-    50: "var(--color-success-50)",
-    100: "var(--color-success-100)",
-    200: "var(--color-success-200)",
-    300: "var(--color-success-300)",
-    400: "var(--color-success-400)",
-    500: "var(--color-success-500)",
-    600: "var(--color-success-600)",
-    700: "var(--color-success-700)",
-    800: "var(--color-success-800)",
-    900: "var(--color-success-900)",
-    DEFAULT: "var(--color-success-500)",
+    DEFAULT: "var(--color-success-500)", // #10b981
   },
-  warning: {
-    50: "var(--color-warning-50)",
-    100: "var(--color-warning-100)",
-    200: "var(--color-warning-200)",
-    300: "var(--color-warning-300)",
-    400: "var(--color-warning-400)",
-    500: "var(--color-warning-500)",
-    600: "var(--color-warning-600)",
-    700: "var(--color-warning-700)",
-    800: "var(--color-warning-800)",
-    900: "var(--color-warning-900)",
-    DEFAULT: "var(--color-warning-500)",
-  },
-  error: {
-    50: "var(--color-error-50)",
-    100: "var(--color-error-100)",
-    200: "var(--color-error-200)",
-    300: "var(--color-error-300)",
-    400: "var(--color-error-400)",
-    500: "var(--color-error-500)",
-    600: "var(--color-error-600)",
-    700: "var(--color-error-700)",
-    800: "var(--color-error-800)",
-    900: "var(--color-error-900)",
-    DEFAULT: "var(--color-error-500)",
-  },
+  warning: { DEFAULT: "var(--color-warning-500)" },
+  error: { DEFAULT: "var(--color-error-500)" },
 
-  // Neutral colors from design-tokens.css
   neutral: {
-    50: "var(--color-neutral-50)",
-    100: "var(--color-neutral-100)",
-    200: "var(--color-neutral-200)",
-    300: "var(--color-neutral-300)",
-    400: "var(--color-neutral-400)",
-    500: "var(--color-neutral-500)",
-    600: "var(--color-neutral-600)",
-    700: "var(--color-neutral-700)",
-    800: "var(--color-neutral-800)",
-    900: "var(--color-neutral-900)",
     950: "var(--color-neutral-950)",
   },
 };
@@ -133,12 +91,16 @@ const radii = {
   full: "9999px",
 };
 
-// Box shadows from design-tokens.css
+// Aurora Glow Shadows
 const boxShadows = {
-  light: "var(--shadow-light)", // 0 2px 8px rgba(0,0,0,0.16)
-  heavy: "var(--shadow-heavy)", // 0 8px 24px rgba(0,0,0,0.32)
-  elevated: "var(--shadow-elevated)", // 0 12px 32px rgba(0,0,0,0.25)
-  floating: "var(--shadow-floating)", // 0 16px 40px rgba(0,0,0,0.3)
+  light: "var(--shadow-light)",
+  heavy: "var(--shadow-heavy)",
+  elevated: "var(--shadow-elevated)",
+  floating: "var(--shadow-floating)",
+  glowPrimary: "var(--shadow-glow-primary)",
+  glowGreen: "var(--shadow-glow-green)",
+  glowLila: "var(--shadow-glow-lila)",
+  glowSubtle: "var(--shadow-glow-subtle)",
 };
 
 // Font sizes from design-tokens.css typography tokens
@@ -153,18 +115,17 @@ const fontSizes = {
   "4xl": ["var(--text-4xl)", { lineHeight: "var(--leading-tight)" }], // 36px
 };
 
-// Motion tokens from design-tokens.css
+// Aurora Motion (elastic added)
 const motionDurations = {
-  1: "var(--motion-duration-1)", // 120ms
-  2: "var(--motion-duration-2)", // 180ms
-  3: "var(--motion-duration-3)", // 240ms
-  fast: "var(--motion-duration-fast)", // 120ms
-  medium: "var(--motion-duration-medium)", // 180ms
-  slow: "var(--motion-duration-slow)", // 240ms
+  fast: "var(--motion-duration-fast)", // 100ms
+  1: "var(--motion-duration-1)", // 150ms
+  medium: "var(--motion-duration-medium)", // 200ms
+  slow: "var(--motion-duration-slow)", // 300ms
 };
 
 const motionEasings = {
-  1: "var(--motion-ease-1)", // cubic-bezier(0.23, 1, 0.32, 1)
+  elastic: "var(--motion-ease-elastic)",
+  out: "var(--motion-ease-out)",
   standard: "var(--motion-ease-standard)",
 };
 
@@ -186,8 +147,8 @@ export default {
       borderRadius: radii,
       boxShadow: boxShadows,
       fontFamily: {
-        sans: ["var(--font-family-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-family-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontSize: fontSizes,
       minHeight: {
@@ -205,9 +166,15 @@ export default {
       transitionDuration: motionDurations,
       transitionTimingFunction: motionEasings,
       backdropBlur: {
-        subtle: "var(--backdrop-blur-subtle)", // 8px
-        medium: "var(--backdrop-blur-medium)", // 12px
-        strong: "var(--backdrop-blur-strong)", // 16px
+        subtle: "var(--backdrop-blur-subtle)", // 4px
+        medium: "var(--backdrop-blur-medium)", // 8px
+        strong: "var(--backdrop-blur-strong)", // 12px
+      },
+      boxShadow: {
+        glowPrimary: "var(--shadow-glow-primary)",
+        glowGreen: "var(--shadow-glow-green)",
+        glowLila: "var(--shadow-glow-lila)",
+        glowSubtle: "var(--shadow-glow-subtle)",
       },
       padding: {
         "safe-top": "env(safe-area-inset-top)",

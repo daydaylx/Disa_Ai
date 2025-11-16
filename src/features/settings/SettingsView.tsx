@@ -500,12 +500,12 @@ function ToggleRow({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <GlassPanel padded={false} className="flex items-start justify-between gap-4 px-4 py-3">
+    <div className="glass-panel--glow flex items-start justify-between gap-6 px-6 py-4 rounded-3xl shadow-glow-subtle hover:shadow-glow-primary transition-all duration-300 ease-[var(--motion-ease-elastic)]">
       <div className="flex-1">
-        <p className="text-sm font-medium text-text-primary">{label}</p>
-        <p className="text-xs text-text-muted">{description}</p>
+        <p className="text-base font-semibold text-primary">{label}</p>
+        <p className="text-sm text-text-secondary">{description}</p>
       </div>
       <Switch id={id} checked={checked} onChange={onChange} aria-label={label} />
-    </GlassPanel>
+    </div>
   );
 }

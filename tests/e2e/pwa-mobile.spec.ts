@@ -265,7 +265,7 @@ test.describe("PWA and Mobile Features Integration Tests", () => {
     await helpers.navigateAndWait("/chat");
 
     // Test virtual keyboard handling
-    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+    const composer = page.getByTestId("composer-input");
     if (await composer.isVisible()) {
       await composer.tap();
       await expect(composer).toBeFocused();

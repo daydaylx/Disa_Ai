@@ -3,14 +3,6 @@ import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { Button } from "../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
 import { RouteWrapper } from "./components/RouteWrapper";
 import { AppShell } from "./layouts/AppShell";
 
@@ -132,24 +124,29 @@ export const appRouter = createBrowserRouter(
         <AppShell>
           <ErrorBoundary>
             <div className="flex min-h-screen flex-col items-center justify-center p-space-md">
-              <Card className="w-full max-w-md text-center">
-                <CardHeader>
-                  <CardTitle className="text-5xl font-bold text-text-primary">404</CardTitle>
-                  <CardDescription className="mt-2 text-lg text-text-secondary">
+              <div
+                className="glass-panel--glow-lila w-full max-w-md text-center rounded-3xl p-8 shadow-glow-lila aurora-bg animate-pulse-glow glow-grid"
+                data-testid="not-found-page"
+              >
+                <div className="mb-8">
+                  <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-destructive/20 to-destructive/10 shadow-glow-destructive">
+                    <span className="text-5xl font-bold text-destructive drop-shadow-glow-destructive">
+                      404
+                    </span>
+                  </div>
+                  <h1 className="text-3xl font-bold text-text-primary mb-2">
                     Seite nicht gefunden
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-text-secondary">
+                  </h1>
+                  <p className="text-text-secondary text-lg">
                     Die gesuchte Seite existiert nicht oder wurde verschoben.
                   </p>
-                </CardContent>
-                <CardFooter className="justify-center">
-                  <Button asChild variant="default">
+                </div>
+                <div className="flex justify-center mt-8">
+                  <Button asChild variant="glass-primary" size="lg" className="shadow-glow-primary">
                     <a href="/chat">Zurück zum Chat</a>
                   </Button>
-                </CardFooter>
-              </Card>
+                </div>
+              </div>
             </div>
           </ErrorBoundary>
         </AppShell>

@@ -58,7 +58,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       >
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-6 focus:py-4 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent tap-target min-h-[44px] min-w-[44px] flex items-center justify-center"
         >
           Zum Hauptinhalt springen
         </a>
@@ -85,6 +85,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         <main
           id="main"
           role="main"
+          data-testid="app-main"
           key={location.pathname}
           className="relative flex flex-1 flex-col overflow-hidden"
         >

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 
 import { cn } from "../../lib/utils";
 import type { EnhancedRole } from "../../types/enhanced-interfaces";
@@ -110,7 +110,7 @@ interface ModelCardProps {
   className?: string;
 }
 
-export function ModelCard({
+const ModelCardComponent = React.memo(({
   name,
   vendor,
   speed,
@@ -122,13 +122,14 @@ export function ModelCard({
   isFavorite = false,
   onToggleFavorite,
   className,
-}: ModelCardProps) {
+}: ModelCardProps) => {
   return (
     <Card
-      variant="surface"
+      tone="modern-elevated"
+      interactive="gentle"
       className={cn(
-        "rounded-2xl bg-[var(--surface)] shadow-[var(--shadow-light)] px-4 py-3 space-y-3",
-        "hover:shadow-[var(--shadow-heavy)] transition-shadow duration-200",
+        "rounded-2xl glass-panel--glow-green shadow-glow-green hover:shadow-glow-lila group",
+        "hover:-translate-y-1 transition-all duration-300 ease-[var(--motion-ease-elastic)]",
         className,
       )}
     >
@@ -186,7 +187,11 @@ export function ModelCard({
       </div>
     </Card>
   );
-}
+});
+
+ModelCardComponent.displayName = 'ModelCard';
+
+export const ModelCard = ModelCardComponent;
 
 // RoleCard Component
 interface RoleCardProps {
@@ -197,13 +202,13 @@ interface RoleCardProps {
   className?: string;
 }
 
-export function RoleCard({
+const RoleCardComponent = React.memo(({
   role,
   isActive = false,
   onActivate,
   onDeactivate,
   className,
-}: RoleCardProps) {
+}: RoleCardProps) => {
   // Destructure properties from role object
   const { name: title, description, tags = [], usage, allowedModels = [], metadata } = role;
 
@@ -228,11 +233,11 @@ export function RoleCard({
   return (
     <Card
       variant="surface"
+      interactive="glass-lift"
       className={cn(
-        "rounded-2xl bg-[var(--surface)] shadow-[var(--shadow-light)] px-4 py-3 space-y-2",
-        "hover:shadow-[var(--shadow-heavy)] transition-all duration-200",
-        isActive &&
-          "ring-2 ring-[var(--color-primary-500)] ring-offset-2 ring-offset-[var(--bg-0)]",
+        "rounded-2xl glass-panel shadow-glow-subtle group hover:shadow-glow-primary",
+        "hover:-translate-y-[2px] hover:border-primary/50 transition-all duration-300 [box-shadow:inset_0_2px_4px_rgba(0,0,0,0.1)]",
+        isActive && "ring-2 ring-primary/50 ring-offset-2 shadow-glow-lila !translate-y-[-1px]",
         className,
       )}
     >
@@ -246,7 +251,7 @@ export function RoleCard({
           variant={isActive ? "outline" : "default"}
           size="sm"
           onClick={isActive ? onDeactivate : onActivate}
-          className="flex-shrink-0"
+          className="flex-shrink-0 tap-target min-h-[44px] min-w-[44px] px-4 py-3"
         >
           {isActive ? "Deaktivieren" : "Aktivieren"}
         </Button>
@@ -276,7 +281,11 @@ export function RoleCard({
       )}
     </Card>
   );
-}
+});
+
+RoleCardComponent.displayName = 'RoleCard';
+
+export const RoleCard = RoleCardComponent;
 
 // Filter Chips für Rollen-Screen
 interface FilterChipProps {

@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { getEnvConfig, getEnvironmentErrors, isEnvironmentValid } from "../config/env";
 import { logger } from "../lib/utils/production-logger";
 import { AuroraCard } from "./ui/aurora-card";
+import { Button } from "./ui/button";
 
 interface Props {
   children: ReactNode;
@@ -123,9 +124,9 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="bg-surface-base flex min-h-dvh items-center justify-center p-4">
           <AuroraCard className="shadow-depth-4 w-full max-w-2xl rounded-lg" padding="lg">
             <div className="mb-8 text-center">
-              <div className="bg-danger/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+              <div className="glass-panel--glow-destructive mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-glow-destructive animate-pulse-glow">
                 <svg
-                  className="text-danger h-8 w-8"
+                  className="text-destructive h-10 w-10 drop-shadow-glow-destructive"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -144,8 +145,10 @@ export class ErrorBoundary extends Component<Props, State> {
               </p>
             </div>
 
-            <div className="bg-surface-subtle mb-6 rounded-lg p-4">
-              <h2 className="text-text-primary mb-2 font-semibold">Fehlerdetails</h2>
+            <div className="glass-panel--glow-subtle mb-6 rounded-2xl p-6 backdrop-blur">
+              <h2 className="text-text-primary mb-2 font-semibold flex items-center gap-2">
+                <span className="text-destructive text-xl">⚠️</span>Fehlerdetails
+              </h2>
               <div className="text-text-secondary space-y-1 text-sm">
                 <div>
                   <strong>Fehler-ID:</strong> {errorId}
@@ -177,24 +180,30 @@ export class ErrorBoundary extends Component<Props, State> {
             )}
 
             <div className="flex flex-col gap-4 sm:flex-row">
-              <button
+              <Button
                 onClick={this.handleReload}
-                className="bg-brand hover:bg-brand/90 flex-1 rounded-lg px-4 py-2 text-white transition-colors"
+                variant="glass-accent"
+                size="lg"
+                className="flex-1 shadow-glow-primary hover:shadow-glow-lila"
               >
                 Seite neu laden
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={this.handleReset}
-                className="bg-surface-subtle text-text-primary hover:bg-card flex-1 rounded-lg px-4 py-2 transition-colors"
+                variant="glass-secondary"
+                size="lg"
+                className="flex-1"
               >
                 App zurücksetzen
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={this.handleReportError}
-                className="bg-success hover:bg-success/90 flex-1 rounded-lg px-4 py-2 text-white transition-colors"
+                variant="glass-primary"
+                size="lg"
+                className="flex-1 shadow-glow-green hover:shadow-glow-green"
               >
                 Fehler melden
-              </button>
+              </Button>
             </div>
 
             <div className="border-border mt-6 border-t pt-6">

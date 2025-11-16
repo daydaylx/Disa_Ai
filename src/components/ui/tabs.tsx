@@ -12,12 +12,8 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-11 items-center justify-center gap-1 rounded-[var(--radius-lg)] p-1 transition-colors",
-      "bg-[var(--surface-neumorphic-raised)]",
-      "border border-[var(--border-neumorphic-subtle)]",
-      "shadow-[var(--shadow-inset-subtle)]",
-      "text-[var(--color-text-secondary)]",
-      "focus-within:shadow-[var(--shadow-inset-medium)]",
+      "inline-flex h-12 items-center justify-center gap-2 rounded-3xl p-2 glass-panel transition-all duration-300 ease-[var(--motion-ease-elastic)]",
+      "focus-within:glass-panel--glow focus-within:shadow-glow-primary",
       className,
     )}
     {...props}
@@ -32,17 +28,11 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex min-h-[36px] items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] px-3.5 py-2 text-sm font-semibold transition-[color,background,box-shadow,transform] duration-[120ms] ease-[cubic-bezier(.23,1,.32,1)]",
-      "text-[var(--color-text-secondary)]",
-      "hover:text-[var(--color-text-primary)]",
-      "hover:bg-[var(--surface-neumorphic-floating)]",
-      "hover:shadow-surface",
-      "data-[state=active]:bg-[var(--surface-neumorphic-floating)]",
-      "data-[state=active]:text-[var(--acc1)]",
-      "data-[state=active]:shadow-surface",
-      "data-[state=active]:border data-[state=active]:border-[var(--border-neumorphic-light)]",
-      "data-[state=active]:hover:shadow-elevated",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo",
+      "inline-flex min-h-[42px] items-center justify-center whitespace-nowrap rounded-2xl px-4 py-2.5 text-sm font-semibold glass-panel group transition-all duration-300 ease-[var(--motion-ease-elastic)]",
+      "text-text-secondary hover:text-primary",
+      "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-[1.02]",
+      "data-[state=active]:glass-panel--glow-active data-[state=active]:text-primary data-[state=active]:shadow-glow-primary data-[state=active]:scale-[1.02] data-[state=active]:animate-pulse-glow",
+      "focus-visible:glass-panel--glow focus-visible:shadow-glow-primary focus-visible:scale-[1.02] focus-visible:outline-none",
       "disabled:pointer-events-none disabled:opacity-40 disabled:shadow-none",
       className,
     )}
@@ -58,12 +48,10 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-4 rounded-[var(--radius-lg)] p-5 transition-opacity duration-[180ms] ease-[cubic-bezier(.23,1,.32,1)]",
-      "bg-[var(--surface-neumorphic-floating)]",
-      "shadow-surface",
-      "border border-[var(--border-neumorphic-subtle)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo",
-      "animate-in fade-in-0 duration-[180ms]",
+      "mt-6 rounded-3xl p-8 glass-panel--glow transition-all duration-500 ease-[var(--motion-ease-elastic)]",
+      "shadow-glow-primary border-glass-strong",
+      "focus-visible:outline-none",
+      "animate-in fade-in-0 duration-500",
       className,
     )}
     {...props}
