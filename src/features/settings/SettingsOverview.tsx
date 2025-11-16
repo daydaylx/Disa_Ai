@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { Button } from "../../components/ui/button";
-import { SectionCard } from "../../components/ui/SectionCard";
-import { SettingsLink } from "../../components/ui/SettingsLink";
 import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
@@ -19,6 +16,8 @@ import {
   Waves,
 } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey } from "../../lib/openrouter/key";
+import { Button } from "../../ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/Card";
 
 interface OverviewCard {
   id: string;
@@ -133,58 +132,86 @@ export function SettingsOverview() {
         </p>
       </div>
 
-      <SectionCard
-        title="Schnellstart"
-        subtitle="Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis. Das dunkle Design ist bereits aktiv – passe Details jederzeit später an."
-      >
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Button asChild size="sm" variant="aurora-primary">
-            <Link to="/settings/api">API-Key speichern</Link>
-          </Button>
-          <Button asChild size="sm" variant="outline">
-            <Link to="/settings/memory">Gedächtnis konfigurieren</Link>
-          </Button>
-        </div>
-      </SectionCard>
+      <Card>
+        <CardHeader>
+          <CardTitle>Schnellstart</CardTitle>
+          <CardDescription>
+            Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis. Das dunkle
+            Design ist bereits aktiv – passe Details jederzeit später an.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            <Link to="/settings/api">
+              <Button size="sm" variant="primary">
+                API-Key speichern
+              </Button>
+            </Link>
+            <Link to="/settings/memory">
+              <Button size="sm" variant="secondary">
+                Gedächtnis konfigurieren
+              </Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
 
-      <SectionCard
-        title="Einstellungen"
-        subtitle="Eine klare Übersicht über die wichtigsten Bereiche."
-        padding="sm"
-      >
-        <div className="grid gap-4 sm:grid-cols-2">
-          {cards.map((card) => (
-            <SettingsLink
-              key={card.id}
-              to={card.to}
-              icon={<card.icon className="h-4 w-4" />}
-              title={card.title}
-              description={card.description}
-              statusLabel={card.statusLabel}
-              statusVariant={card.statusVariant}
-              meta={card.meta}
-            />
-          ))}
-        </div>
-      </SectionCard>
+      <Card>
+        <CardHeader>
+          <CardTitle>Einstellungen</CardTitle>
+          <CardDescription>Eine klare Übersicht über die wichtigsten Bereiche.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {cards.map((cardData) => (
+              <Link to={cardData.to} key={cardData.id} className="hover:no-underline">
+                <Card
+                  variant="outline"
+                  className="h-full transition-colors hover:border-primary/50 hover:bg-surface-soft"
+                >
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-sm">
+                        <cardData.icon className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="text-base">{cardData.title}</CardTitle>
+                        <CardDescription>{cardData.description}</CardDescription>
+                      </div>
+                      <ChevronRight className="h-4 w-4 flex-shrink-0 text-text-muted" />
+                    </div>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-      <SectionCard title="Gesten & Shortcuts" headerActions={<Waves className="h-5 w-5" />}>
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          {gestureTips.map((gesture) => {
-            const Icon = gesture.icon;
-            return (
-              <div
-                key={gesture.id}
-                className="rounded-xl border border-[var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--layer-glass-panel)_96%,transparent)] p-4 shadow-[var(--shadow-sm)]"
-              >
-                <Icon className="mb-3 h-5 w-5 text-[var(--accent)]" aria-hidden="true" />
-                <p className="text-sm font-semibold text-text-primary">{gesture.title}</p>
-                <p className="text-sm text-text-secondary">{gesture.description}</p>
-              </div>
-            );
-          })}
-        </div>
-      </SectionCard>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Gesten & Shortcuts
+            <Waves className="h-5 w-5" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {gestureTips.map((gesture) => {
+              const Icon = gesture.icon;
+              return (
+                <Card key={gesture.id} padding="sm">
+                  <CardContent>
+                    <Icon className="mb-3 h-5 w-5 text-accent" aria-hidden="true" />
+                    <p className="text-sm font-semibold text-text-primary">{gesture.title}</p>
+                    <p className="text-sm text-text-secondary">{gesture.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
