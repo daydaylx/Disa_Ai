@@ -251,7 +251,13 @@ const buttonVariants = (
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, touchFeedback = false, asChild = false, ...props }, ref) => {
-    const buttonClasses = buttonVariants(variant, size, touchFeedback);
+    const effectiveVariant =
+      variant === "default" || variant === "neumorphic"
+        ? "glass-primary"
+        : variant === "secondary"
+          ? "glass-soft"
+          : variant;
+    const buttonClasses = buttonVariants(effectiveVariant, size, touchFeedback);
 
     if (asChild && React.isValidElement(props.children)) {
       return React.cloneElement(

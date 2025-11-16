@@ -9,29 +9,29 @@ describe("Button", () => {
     render(<Button>Test Button</Button>);
     const button = screen.getByRole("button", { name: /test button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // hybrid neumorphic default
-    expect(button).toHaveClass("h-10 px-4 py-2 text-sm"); // hybrid default size
+    expect(button).toHaveClass("bg-[var(--surface-card)]");
+    expect(button).toHaveClass("px-6 py-3 text-base");
   });
 
   it("renders the button with a specific variant", () => {
     render(<Button variant="brand">Brand Button</Button>);
     const button = screen.getByRole("button", { name: /brand button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--color-brand-primary)]");
+    expect(button).toHaveClass("bg-[var(--color-primary)]");
   });
 
   it("renders the button with a specific size", () => {
     render(<Button size="lg">Large Button</Button>);
     const button = screen.getByRole("button", { name: /large button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("h-12 px-6 py-3 text-base");
+    expect(button).toHaveClass("px-8 py-4 text-lg");
   });
 
   it("renders the button with dramatic effect", () => {
     render(<Button dramatic>Dramatic Button</Button>);
     const button = screen.getByRole("button", { name: /dramatic button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("hover:-translate-y-[3px]"); // glass-primary default with dramatic
+    expect(button).toHaveClass("hover:translate-y-[-1px]");
   });
 
   it("renders as a child element when asChild is true", () => {
@@ -72,20 +72,20 @@ describe("Button", () => {
     render(<Button variant="default">Deprecated Default</Button>);
     const button = screen.getByRole("button", { name: /deprecated default/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // hybrid neumorphic
+    expect(button).toHaveClass("bg-[var(--glass-surface-medium)]"); // glass-primary
   });
 
   it("renders with deprecated 'secondary' variant and maps to 'glass-subtle'", () => {
     render(<Button variant="secondary">Deprecated Secondary</Button>);
     const button = screen.getByRole("button", { name: /deprecated secondary/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // hybrid neumorphic alias
+    expect(button).toHaveClass("bg-[var(--glass-surface-subtle)]"); // glass-soft
   });
 
   it("renders with deprecated 'neumorphic' variant and maps to 'glass-primary'", () => {
     render(<Button variant="neumorphic">Deprecated Neumorphic</Button>);
     const button = screen.getByRole("button", { name: /deprecated neumorphic/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // hybrid neumorphic
+    expect(button).toHaveClass("bg-[var(--glass-surface-medium)]"); // glass-primary
   });
 });
