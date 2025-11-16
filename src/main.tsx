@@ -101,17 +101,23 @@ function safeInitialize(): void {
     safeWarn("[INIT] Theme controller failed:", error);
   }
 
-  // Initialize service worker
+  // Initialize service worker + persistent storage
   if (!import.meta.env.VITE_PWA_DISABLED) {
     // Register service worker if available
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
+      window.addEventListener("load", async () => {
+        // Request persistent storage (fixes StorageType.persistent deprecation)
+        if ("storage" in navigator && "persist" in navigator.storage) {
+          const isPersistent = await navigator.storage.persist();
+          console.log("Storage persistent:", isPersistent);
+        }
+
         navigator.serviceWorker.register("/sw.js").then(
           (registration) => {
-            console.warn("SW registered: ", registration);
+            console.log("SW registered:", registration);
           },
           (registrationError) => {
-            console.warn("SW registration failed: ", registrationError);
+            console.warn("SW registration failed:", registrationError);
           },
         );
       });
