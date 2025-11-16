@@ -15,6 +15,7 @@ import { ChatPageShell } from "../components/layout/PageShell";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { Typography } from "../components/ui/typography";
 import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
@@ -216,9 +217,13 @@ export default function Chat() {
               <section className="overflow-hidden rounded-[2.5rem] bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-6 text-text-primary aurora-bg sm:p-10">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
                   <div className="space-y-5 lg:flex-1">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-white/80">
+                    <Typography
+                      variant="caption"
+                      as="span"
+                      className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 font-semibold uppercase tracking-[0.35em] text-white/80"
+                    >
                       Studio
-                    </span>
+                    </Typography>
                     <div>
                       <h1 className="text-[var(--text-4xl)] font-[var(--font-semibold)] leading-[var(--leading-tight)] text-white sm:text-[var(--text-4xl)]">
                         Konzentrierte KI-Arbeit in einer ruhigen Oberfläche.
@@ -250,7 +255,9 @@ export default function Chat() {
                         <p className="text-[11px] uppercase tracking-[0.3em] text-white/70">
                           {status.label}
                         </p>
-                        <p className="mt-2 text-lg font-semibold text-white">{status.value}</p>
+                        <Typography variant="h5" as="p" className="mt-2 text-white">
+                          {status.value}
+                        </Typography>
                       </div>
                     ))}
                   </div>
@@ -273,13 +280,20 @@ export default function Chat() {
                           <Icon className="h-4 w-4" />
                         </span>
                         <div>
-                          <p className="text-xs uppercase tracking-[0.35em] text-text-muted">
+                          <Typography
+                            variant="caption"
+                            className="uppercase tracking-[0.35em] text-text-muted"
+                          >
                             {card.label}
-                          </p>
-                          <p className="text-lg font-semibold text-text-primary">{card.value}</p>
+                          </Typography>
+                          <Typography variant="h5" className="text-text-primary">
+                            {card.value}
+                          </Typography>
                         </div>
                       </div>
-                      <p className="text-sm text-text-secondary">{card.caption}</p>
+                      <Typography variant="body" className="text-text-secondary">
+                        {card.caption}
+                      </Typography>
                     </Card>
                   );
                 })}
@@ -294,12 +308,16 @@ export default function Chat() {
               <section className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.32em] text-text-muted">
+                    <Typography
+                      variant="caption"
+                      className="uppercase tracking-[0.32em] text-text-muted"
+                      style={{ fontSize: "10px" }}
+                    >
                       Studio
-                    </p>
-                    <h2 className="text-xl font-semibold text-text-primary">
+                    </Typography>
+                    <Typography variant="h4" as="h2" className="text-text-primary">
                       Bereiche & Einstellungen
-                    </h2>
+                    </Typography>
                   </div>
                   <Button variant="ghost" size="sm" asChild>
                     <Link to="/settings">Alle Einstellungen</Link>
@@ -332,10 +350,12 @@ export default function Chat() {
                             <Icon className="h-5 w-5" />
                           </span>
                           <div>
-                            <p className="text-base font-semibold text-text-primary">
+                            <Typography variant="h6" className="text-text-primary">
                               {card.title}
-                            </p>
-                            <p className="text-sm text-text-secondary">{card.description}</p>
+                            </Typography>
+                            <Typography variant="body" className="text-text-secondary">
+                              {card.description}
+                            </Typography>
                           </div>
                         </div>
                         <Button
@@ -357,29 +377,41 @@ export default function Chat() {
 
               <section className="grid gap-4 md:grid-cols-2">
                 <Card tone="glass-primary" elevation="medium" padding="lg">
-                  <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                    <Waves className="h-4 w-4 text-[var(--accent)]" />
-                    Gesten & Shortcuts
+                  <CardTitle>
+                    <Typography variant="h6" className="flex items-center gap-2">
+                      <Waves className="h-4 w-4 text-[var(--accent)]" />
+                      Gesten & Shortcuts
+                    </Typography>
                   </CardTitle>
-                  <ul className="mt-4 space-y-3 text-sm text-text-secondary">
+                  <ul className="mt-4 space-y-3">
                     {helperShortcuts.map((shortcut) => (
                       <li key={shortcut} className="flex items-start gap-3">
                         <span className="mt-1 h-2 w-2 rounded-full bg-[var(--accent)]" />
-                        <span>{shortcut}</span>
+                        <Typography variant="body" as="span" className="text-text-secondary">
+                          {shortcut}
+                        </Typography>
                       </li>
                     ))}
                   </ul>
                 </Card>
 
                 <Card tone="glass-primary" elevation="medium" padding="lg">
-                  <CardTitle className="flex items-center gap-2 text-base font-semibold">
-                    <Shield className="h-4 w-4 text-[var(--accent)]" />
-                    Hinweise
+                  <CardTitle>
+                    <Typography variant="h6" className="flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-[var(--accent)]" />
+                      Hinweise
+                    </Typography>
                   </CardTitle>
-                  <div className="mt-4 space-y-2 text-sm text-text-secondary">
-                    <p>• Teile keine sensiblen Daten oder API-Keys im Prompt.</p>
-                    <p>• Speichere längere Recherchen regelmäßig im Studio.</p>
-                    <p>• Installiere die PWA für stabile mobile Sessions.</p>
+                  <div className="mt-4 space-y-2">
+                    <Typography variant="body" as="p" className="text-text-secondary">
+                      • Teile keine sensiblen Daten oder API-Keys im Prompt.
+                    </Typography>
+                    <Typography variant="body" as="p" className="text-text-secondary">
+                      • Speichere längere Recherchen regelmäßig im Studio.
+                    </Typography>
+                    <Typography variant="body" as="p" className="text-text-secondary">
+                      • Installiere die PWA für stabile mobile Sessions.
+                    </Typography>
                   </div>
                 </Card>
               </section>
