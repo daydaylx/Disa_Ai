@@ -7,6 +7,7 @@ import { cn } from "../../lib/utils";
 import { DrawerSheet } from "../ui/drawer-sheet";
 import { GlassPanel } from "../ui/GlassPanel";
 import { Switch } from "../ui/Switch";
+import { Typography } from "../ui/typography";
 
 const MODEL_PRESETS = [
   { id: "openai/gpt-4o-mini", label: "GPT‑4o mini", hint: "Schnell & günstig" },
@@ -120,7 +121,9 @@ export function SettingsDrawer({
           >
             <div className="flex items-center gap-2 text-text-muted" id="drawer-nav">
               <Sparkles className="h-4 w-4 text-[var(--accent)]" />
-              <span className="text-xs uppercase tracking-[0.25em]">Navigation</span>
+              <Typography variant="caption" className="uppercase tracking-[0.25em]">
+                Navigation
+              </Typography>
             </div>
             <div className="mt-3 space-y-2 text-sm">
               {navItems.map((item) => {
@@ -152,11 +155,13 @@ export function SettingsDrawer({
                         <Icon className="h-4 w-4" />
                       </span>
                       <span>
-                        <span className="block text-base font-medium text-text-primary">
+                        <Typography variant="h6" className="block text-text-primary">
                           {item.label}
-                        </span>
+                        </Typography>
                         {item.description && (
-                          <span className="text-xs text-text-muted">{item.description}</span>
+                          <Typography variant="caption" className="text-text-muted">
+                            {item.description}
+                          </Typography>
                         )}
                       </span>
                     </span>
@@ -172,12 +177,21 @@ export function SettingsDrawer({
           <GlassPanel padded>
             <header className="flex items-center justify-between" id="drawer-models">
               <div>
-                <p className="text-sm font-semibold tracking-tight">Modellwahl</p>
-                <p className="text-xs text-text-muted">Kuratierte Empfehlungen</p>
+                <Typography variant="body" className="font-semibold tracking-tight">
+                  Modellwahl
+                </Typography>
+                <Typography variant="caption" className="text-text-muted">
+                  Kuratierte Empfehlungen
+                </Typography>
               </div>
-              <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 text-[11px] font-medium text-[var(--accent)]">
+              <Typography
+                variant="caption"
+                as="span"
+                className="rounded-full bg-[var(--accent-soft)] px-3 py-1 font-medium text-[var(--accent)]"
+                style={{ fontSize: "11px" }}
+              >
                 Beta
-              </span>
+              </Typography>
             </header>
             <div className="mt-3 space-y-2">
               {MODEL_PRESETS.map((model) => {
@@ -197,13 +211,22 @@ export function SettingsDrawer({
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div>
-                        <p className="text-sm font-semibold">{model.label}</p>
-                        <p className="text-xs text-text-muted">{model.hint}</p>
+                        <Typography variant="body" className="font-semibold">
+                          {model.label}
+                        </Typography>
+                        <Typography variant="caption" className="text-text-muted">
+                          {model.hint}
+                        </Typography>
                       </div>
                       {isActive && (
-                        <span className="rounded-full bg-[var(--accent)]/20 px-3 py-1 text-[11px] font-semibold text-[var(--accent)]">
+                        <Typography
+                          variant="caption"
+                          as="span"
+                          className="rounded-full bg-[var(--accent)]/20 px-3 py-1 font-semibold text-[var(--accent)]"
+                          style={{ fontSize: "11px" }}
+                        >
                           aktiv
-                        </span>
+                        </Typography>
                       )}
                     </div>
                   </button>
@@ -216,8 +239,16 @@ export function SettingsDrawer({
         <section aria-labelledby="drawer-roles">
           <GlassPanel padded>
             <header className="flex items-center justify-between" id="drawer-roles">
-              <p className="text-sm font-semibold tracking-tight">Rollen & Presets</p>
-              <span className="text-xs uppercase tracking-[0.32em] text-text-muted">In Arbeit</span>
+              <Typography variant="body" className="font-semibold tracking-tight">
+                Rollen & Presets
+              </Typography>
+              <Typography
+                variant="caption"
+                as="span"
+                className="uppercase tracking-[0.32em] text-text-muted"
+              >
+                In Arbeit
+              </Typography>
             </header>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               {ROLE_PRESETS.map((role) => {
@@ -233,8 +264,12 @@ export function SettingsDrawer({
                         <Icon className="h-4 w-4" />
                       </span>
                       <div className="space-y-1">
-                        <p className="text-sm font-semibold">{role.label}</p>
-                        <p className="text-xs text-text-muted">{role.description}</p>
+                        <Typography variant="body" className="font-semibold">
+                          {role.label}
+                        </Typography>
+                        <Typography variant="caption" className="text-text-muted">
+                          {role.description}
+                        </Typography>
                       </div>
                     </div>
                   </button>
@@ -252,10 +287,16 @@ export function SettingsDrawer({
                 <div key={section.title} className="space-y-3" aria-labelledby={sectionId}>
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="text-sm font-semibold tracking-tight" id={sectionId}>
+                      <Typography
+                        variant="body"
+                        className="font-semibold tracking-tight"
+                        id={sectionId}
+                      >
                         {section.title}
-                      </p>
-                      <p className="text-xs text-text-muted">{section.description}</p>
+                      </Typography>
+                      <Typography variant="caption" className="text-text-muted">
+                        {section.description}
+                      </Typography>
                     </div>
                   </div>
                   <div className="space-y-3 rounded-2xl border border-[var(--glass-border-soft)] bg-surface-inline/40 p-3">
@@ -265,8 +306,12 @@ export function SettingsDrawer({
                         className="flex items-center justify-between gap-3 rounded-xl border border-transparent px-2 py-2 transition hover:border-[var(--glass-border-strong)]"
                       >
                         <div>
-                          <p className="text-sm font-medium">{toggle.label}</p>
-                          <p className="text-xs text-text-muted">{toggle.description}</p>
+                          <Typography variant="body" className="font-medium">
+                            {toggle.label}
+                          </Typography>
+                          <Typography variant="caption" className="text-text-muted">
+                            {toggle.description}
+                          </Typography>
                         </div>
                         <Switch
                           checked={toggle.value}
