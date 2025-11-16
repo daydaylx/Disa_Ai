@@ -8,18 +8,27 @@
 import { ChevronDown, DollarSign, GitCompare, Search, Star, Zap } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
+import {
+  Badge,
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  FilterChip,
+  Input,
+  Skeleton,
+  useToasts,
+} from "@/ui";
+
 import { MODEL_POLICY } from "../../config/modelPolicy";
 import { loadModelCatalog, type ModelEntry } from "../../config/models";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
-import { Badge, Button, Input } from "../ui";
-import { Card } from "../ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/Dialog";
-import { FilterChip } from "../ui/FilterChip";
-import { Skeleton } from "../ui/skeleton";
-import { useToasts } from "../ui/toast/ToastsProvider";
 import { ModelComparisonTable } from "./ModelComparisonTable";
 
 type SortOption = "name" | "performance" | "price";
@@ -275,15 +284,7 @@ function DenseModelCard({
   onShowDetails: () => void;
 }) {
   return (
-    <Card
-      clickable
-      interactive="glow-accent"
-      tone="neo-raised"
-      elevation="medium"
-      state={isSelected ? "selected" : "default"}
-      className="p-4 transition-all duration-200 min-h-[180px]"
-      onCardClick={onSelect}
-    >
+    <Card className="p-4 transition-all duration-200 min-h-[180px]" onClick={onSelect}>
       {/* Header Row */}
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex items-center justify-between">
@@ -294,7 +295,7 @@ function DenseModelCard({
           </h3>
           <div className="flex items-center gap-2">
             {model.pricing.isFree && (
-              <Badge variant="success" size="sm" className="whitespace-nowrap text-xs">
+              <Badge variant="secondary" className="text-xs">
                 <Zap className="w-3 h-3 mr-1" />
                 FREE
               </Badge>
@@ -318,22 +319,20 @@ function DenseModelCard({
       <div className="flex flex-wrap gap-2 mb-4">
         {/* Price Info */}
         {!model.pricing.isFree && (
-          <Badge variant="secondary" size="sm" className="text-xs">
+          <Badge variant="secondary" className="text-xs">
             <DollarSign className="w-3 h-3 mr-1" />
             {formatPricePerK(model.pricing.inputPrice)}
           </Badge>
         )}
 
-        {/* Context */}
-        <Badge variant="secondary" size="sm" className="text-xs">
+        <Badge variant="secondary" className="text-xs">
           {formatContext(model.context.maxTokens)} context
         </Badge>
 
         {/* Primary Tag */}
         {model.tags[0] && (
           <Badge
-            variant="accent"
-            size="sm"
+            variant="secondary"
             className="max-w-[100px] truncate text-xs"
             title={model.tags[0]}
           >
@@ -343,12 +342,12 @@ function DenseModelCard({
 
         {/* Capabilities */}
         {model.capabilities.multimodal && (
-          <Badge variant="secondary" size="sm" className="text-xs" title="Multimodal">
+          <Badge variant="secondary" className="text-xs" title="Multimodal">
             🖼️
           </Badge>
         )}
         {model.capabilities.codeGeneration && (
-          <Badge variant="secondary" size="sm" className="text-xs" title="Code Generation">
+          <Badge variant="secondary" className="text-xs" title="Code Generation">
             💻
           </Badge>
         )}
@@ -660,7 +659,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       {selectedModels.size > 0 && (
         <div className="fixed bottom-6 right-6 z-popover">
           <Button
-            variant="accent"
+            variant="primary"
             className="rounded-full w-14 h-14 shadow-lg"
             onClick={handleCompareModels}
           >

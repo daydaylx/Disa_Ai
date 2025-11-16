@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-import { Button } from "../components/ui/button";
-import { Card } from "../components/ui/card";
-import { RoleCard } from "../components/ui/modern-cards";
+import { Button, Card, RoleCard } from "@/ui";
+
 import { useRoles } from "../hooks/useRoles";
 import { Brain, MessageSquare, Settings, Users } from "../lib/icons";
 import type { EnhancedRole } from "../types/enhanced-interfaces";
@@ -24,7 +23,7 @@ export default function StudioHome() {
 
         <div className="pt-4">
           <Button
-            variant="glass-accent"
+            variant="primary"
             size="lg"
             className="w-full max-w-xs mx-auto text-base font-semibold h-14"
             onClick={() => navigate("/chat")}
@@ -59,8 +58,6 @@ export default function StudioHome() {
         <h2 className="text-lg font-medium text-text-primary mb-4">Studio-Funktionen</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Card
-            interactive="basic"
-            clickable
             onClick={() => navigate("/models")}
             className="flex items-center gap-4 p-4 cursor-pointer"
           >
@@ -74,8 +71,6 @@ export default function StudioHome() {
           </Card>
 
           <Card
-            interactive="basic"
-            clickable
             onClick={() => navigate("/roles")}
             className="flex items-center gap-4 p-4 cursor-pointer"
           >
@@ -89,8 +84,6 @@ export default function StudioHome() {
           </Card>
 
           <Card
-            interactive="basic"
-            clickable
             onClick={() => navigate("/settings")}
             className="flex items-center gap-4 p-4 cursor-pointer"
           >

@@ -1,11 +1,12 @@
 import { Bot, Copy, RotateCcw, User } from "lucide-react";
 import { useState } from "react";
 
+import { Avatar, AvatarFallback } from "@/ui/Avatar";
+import { Badge } from "@/ui/Badge";
+import { Button } from "@/ui/Button";
+
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 
 export type { ChatMessageType } from "../../types/chatMessage";
 
@@ -126,7 +127,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
             <span className="text-text-primary font-medium">{isUser ? "Ich" : "Assistent"}</span>
             {message.model && (
               <Badge
-                variant="aurora-soft"
+                variant="secondary"
                 className="border-border bg-card text-text-secondary text-xs"
               >
                 {message.model}

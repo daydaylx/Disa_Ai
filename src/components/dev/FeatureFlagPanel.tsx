@@ -7,9 +7,10 @@
 
 import { useState } from "react";
 
+import { Button } from "@/ui/Button";
+
 import { useFeatureFlagDebug } from "../../hooks/useFeatureFlags";
 import { cn } from "../../lib/utils";
-import { Button } from "../ui/button";
 
 const RISK_CHIP_VARIANTS: Record<string, string> = {
   high: "glass-chip--danger",

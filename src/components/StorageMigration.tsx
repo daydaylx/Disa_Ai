@@ -13,9 +13,10 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { Button } from "@/ui/Button";
+import { Typography } from "@/ui/Typography";
+
 import { useConversationStats, useStorageHealth, useStorageMigration } from "../hooks/use-storage";
-import { Button } from "./ui/button";
-import { Typography } from "./ui/typography";
 
 interface StorageMigrationProps {
   onMigrationComplete?: () => void;
@@ -359,7 +360,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
             </div>
           </div>
           <Button
-            variant="aurora-primary"
+            variant="primary"
             size="lg"
             onClick={handleStartMigration}
             disabled={migrationInProgress}
@@ -394,7 +395,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
                 Exportiere deine Daten als JSON-Datei.
               </Typography>
             </div>
-            <Button variant="aurora-primary" size="sm" onClick={handleCreateBackup}>
+            <Button variant="primary" size="sm" onClick={handleCreateBackup}>
               <Download className="h-4 w-4" />
               Backup
             </Button>
@@ -408,7 +409,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
                 Stelle eine gesicherte Datei wieder her.
               </Typography>
             </div>
-            <Button variant="glass-primary" size="sm" onClick={() => setShowRestore(!showRestore)}>
+            <Button variant="primary" size="sm" onClick={() => setShowRestore(!showRestore)}>
               <Upload className="h-4 w-4" />
               Restore
             </Button>
@@ -425,7 +426,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
             />
             <div className="flex flex-wrap gap-2">
               <Button
-                variant="aurora-primary"
+                variant="primary"
                 size="sm"
                 onClick={handleRestoreBackup}
                 disabled={!restoreData.trim() || migrationInProgress}
@@ -515,7 +516,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
         <Typography variant="body" className="font-medium">
           {isReady ? "Speicher bereit" : "Speicher benötigt Aufmerksamkeit"}
         </Typography>
-        <Button variant="outline" size="sm" className="ml-auto" onClick={checkHealth}>
+        <Button variant="secondary" size="sm" className="ml-auto" onClick={checkHealth}>
           <RefreshCw className="h-4 w-4" />
           Status aktualisieren
         </Button>

@@ -1,10 +1,11 @@
 import type { ErrorInfo, ReactNode } from "react";
 import React, { Component } from "react";
 
+import { Button } from "@/ui/Button";
+import { Card } from "@/ui/Card";
+
 import { getEnvConfig, getEnvironmentErrors, isEnvironmentValid } from "../config/env";
 import { logger } from "../lib/utils/production-logger";
-import { Button } from "./ui/button";
-import { Card } from "./ui/card";
 
 interface Props {
   children: ReactNode;
@@ -122,7 +123,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="bg-[var(--surface-base)] flex min-h-dvh items-center justify-center p-4">
-          <Card variant="aurora-primary" elevation="strong" size="xl" className="w-full max-w-2xl">
+          <Card className="w-full max-w-2xl">
             <div className="mb-8 text-center">
               <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-red-400)] mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-[var(--shadow-glow-red)] animate-pulse">
                 <svg
@@ -180,29 +181,16 @@ export class ErrorBoundary extends Component<Props, State> {
             )}
 
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Button
-                onClick={this.handleReload}
-                variant="aurora-primary"
-                size="lg"
-                touchFeedback={true}
-                className="flex-1"
-              >
+              <Button onClick={this.handleReload} variant="primary" size="lg" className="flex-1">
                 Seite neu laden
               </Button>
-              <Button
-                onClick={this.handleReset}
-                variant="aurora-soft"
-                size="lg"
-                touchFeedback={true}
-                className="flex-1"
-              >
+              <Button onClick={this.handleReset} variant="secondary" size="lg" className="flex-1">
                 App zurücksetzen
               </Button>
               <Button
                 onClick={this.handleReportError}
-                variant="success"
+                variant="secondary"
                 size="lg"
-                touchFeedback={true}
                 className="flex-1"
               >
                 Fehler melden

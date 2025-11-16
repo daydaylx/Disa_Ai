@@ -1,7 +1,7 @@
 import { Brain, Code2, Link2, PenSquare } from "lucide-react";
 
-import { Button } from "../ui/button";
-import { Card, CardTitle } from "../ui/card";
+import { Button } from "@/ui/Button";
+import { Card, CardTitle } from "@/ui/Card";
 
 const QUICKSTARTS = [
   {
@@ -63,16 +63,7 @@ export function QuickstartGrid({
         {QUICKSTARTS.map((quickstart) => {
           const Icon = quickstart.icon;
           return (
-            <Card
-              key={quickstart.id}
-              tone="glass-primary"
-              elevation="surface"
-              padding="md"
-              interactive="gentle"
-              clickable
-              onClick={() => onStart(quickstart.system, quickstart.user)}
-              className="flex flex-col gap-3"
-            >
+            <Card className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_12px_35px_rgba(97,231,255,0.25)]">
                   <Icon className="h-5 w-5" />
@@ -88,7 +79,7 @@ export function QuickstartGrid({
 
       <section className="flex flex-wrap gap-2">
         {LINK_ACTIONS.map((action) => (
-          <Button key={action.label} asChild variant="glass-ghost" size="sm">
+          <Button key={action.label} variant="ghost" size="sm">
             <a href={action.href}>
               <Link2 className="h-3.5 w-3.5" />
               {action.label}

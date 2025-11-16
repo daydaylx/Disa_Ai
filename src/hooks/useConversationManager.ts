@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { useToasts } from "@/ui";
+
 import {
   deleteConversation as deleteFromDb,
   getAllConversations,

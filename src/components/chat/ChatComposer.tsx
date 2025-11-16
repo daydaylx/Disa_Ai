@@ -1,10 +1,11 @@
 import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef } from "react";
 
+import { Button } from "@/ui/Button";
+import { Textarea } from "@/ui/Textarea";
+
 import { useVisualViewport } from "../../hooks/useVisualViewport";
 import { cn } from "../../lib/utils";
-import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
 
 interface ChatComposerProps {
   value: string;
@@ -180,7 +181,6 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                touchFeedback={true}
                 className="h-12 w-12 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
@@ -193,8 +193,7 @@ export function ChatComposer({
               <Button
                 onClick={handleStop}
                 size="icon"
-                variant="destructive"
-                touchFeedback={true}
+                variant="secondary"
                 className="h-12 w-12"
                 title="Ausgabe stoppen"
                 aria-label="Ausgabe stoppen"
@@ -208,8 +207,7 @@ export function ChatComposer({
               <Button
                 onClick={handleSend}
                 size="icon"
-                variant="brand"
-                touchFeedback={true}
+                variant="primary"
                 className="h-12 w-12"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"

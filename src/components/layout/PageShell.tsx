@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 
+import { Typography } from "@/ui/Typography";
+
 import { cn } from "../../lib/utils";
-import { Typography } from "../ui/typography";
 
 interface PageShellProps {
   children: ReactNode;

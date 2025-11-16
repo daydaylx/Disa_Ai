@@ -1,3 +1,5 @@
+import { Card } from "@/ui/Card";
+
 import {
   AppMenuDrawer,
   defaultMenuSections,
@@ -5,7 +7,6 @@ import {
   useMenuDrawer,
 } from "../components/layout/AppMenuDrawer";
 import { LegalPageShell } from "../components/layout/PageShell";
-import { Card } from "../components/ui/card";
 
 export default function ImpressumPage() {
   const { isOpen, openMenu, closeMenu } = useMenuDrawer();

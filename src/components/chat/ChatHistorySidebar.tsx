@@ -1,12 +1,13 @@
 import { ArrowLeft, Clock, MessageSquare, Plus, Search, Star, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import type { Conversation } from "../../lib/conversation-manager";
+import { Badge } from "@/ui/Badge";
+import { Button } from "@/ui/Button";
+
+import type { Conversation } from "../../lib/conversation-manager-modern";
 import { groupConversationsByDate } from "../../lib/conversation-utils";
 import { formatRelativeTime } from "../../lib/formatRelativeTime";
 import { cn } from "../../lib/utils";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 
 interface ChatHistorySidebarProps {
   isOpen: boolean;
@@ -182,7 +183,7 @@ export function ChatHistorySidebar({
                             role="option"
                             aria-selected={isActive}
                             tabIndex={0}
-                            onKeyDown={(event) => {
+                            onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
                               if (event.key === "Enter" || event.key === " ") {
                                 event.preventDefault();
                                 onSelect(conversation.id);
@@ -223,7 +224,7 @@ export function ChatHistorySidebar({
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={(event) => {
+                              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                                 event.stopPropagation();
                                 onDelete(conversation.id);
                               }}
@@ -257,14 +258,14 @@ export function ChatHistorySidebar({
                       </p>
                     </div>
                     {!searchQuery && (
-                      <Button variant="default" size="sm" onClick={onClose} className="mx-auto">
+                      <Button variant="secondary" size="sm" onClick={onClose} className="mx-auto">
                         <Plus className="h-4 w-4" />
                         Neuen Chat starten
                       </Button>
                     )}
                     {searchQuery && (
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => setSearchQuery("")}
                         className="mx-auto"

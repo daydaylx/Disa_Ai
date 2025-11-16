@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 
+import { Button, Input, ModelCard, Typography } from "@/ui";
+
 import {
   AppMenuDrawer,
   defaultMenuSections,
@@ -7,10 +9,6 @@ import {
   useMenuDrawer,
 } from "../components/layout/AppMenuDrawer";
 import { ModelsPageShell } from "../components/layout/PageShell";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { ModelCard } from "../components/ui/modern-cards";
-import { Typography } from "../components/ui/typography";
 import { Filter, Search, Settings, Star } from "../lib/icons";
 import { cn } from "../lib/utils";
 
@@ -145,7 +143,7 @@ export default function ModelsPage() {
             <Input
               placeholder="Mod"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               className={cn(
                 "rounded-3xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] bg-gradient-to-r from-surface-card to-surface-soft text-primary placeholder-text-muted",
                 "focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:border-primary/50 focus:ring-primary/30 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",

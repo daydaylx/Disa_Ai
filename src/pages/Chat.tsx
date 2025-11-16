@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { useToasts } from "@/ui";
+import { Button } from "@/ui/Button";
+import { Card, CardTitle } from "@/ui/Card";
+import { Typography } from "@/ui/Typography";
+
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
@@ -12,10 +17,6 @@ import {
 } from "../components/layout/AppMenuDrawer";
 import { PageContainer } from "../components/layout/PageContainer";
 import { ChatPageShell } from "../components/layout/PageShell";
-import { Button } from "../components/ui/button";
-import { Card, CardTitle } from "../components/ui/card";
-import { useToasts } from "../components/ui/toast/ToastsProvider";
-import { Typography } from "../components/ui/typography";
 import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
@@ -235,13 +236,13 @@ export default function Chat() {
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                      <Button size="lg" variant="aurora-primary" onClick={focusComposer}>
+                      <Button size="lg" variant="primary" onClick={focusComposer}>
                         Unterhaltung starten
                       </Button>
-                      <Button size="lg" variant="outline" asChild>
+                      <Button size="lg" variant="secondary">
                         <Link to="/settings">Studio öffnen</Link>
                       </Button>
-                      <Button size="lg" variant="glass-ghost" asChild>
+                      <Button size="lg" variant="ghost">
                         <Link to="/models">Modelle & Rollen</Link>
                       </Button>
                     </div>
@@ -268,13 +269,7 @@ export default function Chat() {
                 {insightCards.map((card) => {
                   const Icon = card.icon;
                   return (
-                    <Card
-                      key={card.id}
-                      tone="glass-floating"
-                      padding="lg"
-                      className="space-y-2"
-                      elevation="medium"
-                    >
+                    <Card className="space-y-2">
                       <div className="flex items-center gap-3">
                         <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)]">
                           <Icon className="h-4 w-4" />
@@ -319,7 +314,7 @@ export default function Chat() {
                       Bereiche & Einstellungen
                     </Typography>
                   </div>
-                  <Button variant="ghost" size="sm" asChild>
+                  <Button variant="ghost" size="sm">
                     <Link to="/settings">Alle Einstellungen</Link>
                   </Button>
                 </div>
@@ -329,9 +324,6 @@ export default function Chat() {
                     return (
                       <Card
                         key={card.id}
-                        tone="glass-floating"
-                        interactive="hover"
-                        padding="lg"
                         className="flex h-full flex-col justify-between"
                         role="link"
                         tabIndex={0}
@@ -359,7 +351,7 @@ export default function Chat() {
                           </div>
                         </div>
                         <Button
-                          variant="glass-ghost"
+                          variant="ghost"
                           size="sm"
                           className="mt-4 w-fit"
                           onClick={(event) => {
@@ -376,9 +368,9 @@ export default function Chat() {
               </section>
 
               <section className="grid gap-4 md:grid-cols-2">
-                <Card tone="glass-primary" elevation="medium" padding="lg">
+                <Card>
                   <CardTitle>
-                    <Typography variant="h6" className="flex items-center gap-2">
+                    <Typography variant="h6" as="span" className="flex items-center gap-2">
                       <Waves className="h-4 w-4 text-[var(--accent)]" />
                       Gesten & Shortcuts
                     </Typography>
@@ -395,9 +387,9 @@ export default function Chat() {
                   </ul>
                 </Card>
 
-                <Card tone="glass-primary" elevation="medium" padding="lg">
+                <Card>
                   <CardTitle>
-                    <Typography variant="h6" className="flex items-center gap-2">
+                    <Typography variant="h6" as="span" className="flex items-center gap-2">
                       <Shield className="h-4 w-4 text-[var(--accent)]" />
                       Hinweise
                     </Typography>

@@ -1,13 +1,11 @@
 import { type ComponentType } from "react";
 import { Link } from "react-router-dom";
 
+import { DrawerSheet, GlassPanel, Switch, Typography } from "@/ui";
+
 import { type AppNavItem, isNavItemActive } from "../../config/navigation";
 import { Bot, Check, Sparkles, Users } from "../../lib/icons";
 import { cn } from "../../lib/utils";
-import { DrawerSheet } from "../ui/drawer-sheet";
-import { GlassPanel } from "../ui/GlassPanel";
-import { Switch } from "../ui/Switch";
-import { Typography } from "../ui/typography";
 
 const MODEL_PRESETS = [
   { id: "openai/gpt-4o-mini", label: "GPT‑4o mini", hint: "Schnell & günstig" },
@@ -115,10 +113,7 @@ export function SettingsDrawer({
     <DrawerSheet title="Disa AI Studio" isOpen={isOpen} onClose={onClose}>
       <div className="space-y-6">
         <section aria-labelledby="drawer-nav">
-          <GlassPanel
-            padded
-            className="bg-surface-panel/90 shadow-none border-[var(--glass-border-soft)]"
-          >
+          <GlassPanel className="bg-surface-panel/90 shadow-none border-[var(--glass-border-soft)]">
             <div className="flex items-center gap-2 text-text-muted" id="drawer-nav">
               <Sparkles className="h-4 w-4 text-[var(--accent)]" />
               <Typography variant="caption" className="uppercase tracking-[0.25em]">
@@ -174,7 +169,7 @@ export function SettingsDrawer({
         </section>
 
         <section aria-labelledby="drawer-models">
-          <GlassPanel padded>
+          <GlassPanel>
             <header className="flex items-center justify-between" id="drawer-models">
               <div>
                 <Typography variant="body" className="font-semibold tracking-tight">
@@ -237,7 +232,7 @@ export function SettingsDrawer({
         </section>
 
         <section aria-labelledby="drawer-roles">
-          <GlassPanel padded>
+          <GlassPanel>
             <header className="flex items-center justify-between" id="drawer-roles">
               <Typography variant="body" className="font-semibold tracking-tight">
                 Rollen & Presets
@@ -280,7 +275,7 @@ export function SettingsDrawer({
         </section>
 
         <section aria-labelledby="drawer-preferences">
-          <GlassPanel padded className="space-y-4">
+          <GlassPanel className="space-y-4">
             {preferenceSections.map((section) => {
               const sectionId = `drawer-pref-${section.title.replace(/\s+/g, "-").toLowerCase()}`;
               return (
@@ -316,7 +311,6 @@ export function SettingsDrawer({
                         <Switch
                           checked={toggle.value}
                           onChange={() => toggle.onToggle()}
-                          size="sm"
                           aria-label={toggle.label}
                         />
                       </div>

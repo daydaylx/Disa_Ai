@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
+import { useToasts } from "@/ui";
+import { Button } from "@/ui/Button";
+
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { Download, Smartphone, X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
-import { Button } from "../ui/button";
-import { useToasts } from "../ui/toast/ToastsProvider";
 
 interface PWAInstallPromptProps {
   className?: string;

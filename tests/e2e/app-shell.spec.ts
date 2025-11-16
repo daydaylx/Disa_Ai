@@ -23,11 +23,11 @@ test.describe("AppShell Layout & Navigation", () => {
     const navLinks = nav.locator("a");
     await expect(navLinks).toHaveCount(5);
 
-    const expectedPaths = ["/", "/chat", "/models", "/roles", "/settings"];
-    for (let i = 0; i < 5; i++) {
-      const link = navLinks.nth(i);
+    const expectedPaths = ["/", "/chat", "/models", "/roles", "/settings"] as const;
+    for (const [index, path] of expectedPaths.entries()) {
+      const link = navLinks.nth(index);
       await expect(link).toBeVisible();
-      await expect(link).toHaveAttribute("href", expectedPaths[i]);
+      await expect(link).toHaveAttribute("href", path);
     }
   });
 

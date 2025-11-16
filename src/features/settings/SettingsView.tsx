@@ -1,14 +1,8 @@
 import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Badge, type BadgeProps } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
-import { GlassPanel } from "../../components/ui/GlassPanel";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Switch } from "../../components/ui/Switch";
-import { useToasts } from "../../components/ui/toast/ToastsProvider";
-import { Typography } from "../../components/ui/typography";
+import { Badge, Button, GlassPanel, Input, Label, Switch, Typography, useToasts } from "@/ui";
+
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import {
@@ -203,7 +197,9 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               id="openrouter-key"
               type={showKey ? "text" : "password"}
               value={apiKey}
-              onChange={(event) => setApiKey(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setApiKey(event.target.value)
+              }
               placeholder="sk-or-..."
               className="flex-1"
             />
@@ -221,7 +217,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             </Button>
           </div>
           <div className="flex flex-wrap gap-2 text-sm">
-            <Button variant="accent" size="sm" onClick={handleSaveKey}>
+            <Button variant="primary" size="sm" onClick={handleSaveKey}>
               Speichern
             </Button>
             <Button
@@ -275,7 +271,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             onChange={() => toggleNotifications()}
           />
           <div className="grid gap-2 sm:grid-cols-2">
-            <Button variant="accent" className="justify-between" onClick={handleCleanup}>
+            <Button variant="primary" className="justify-between" onClick={handleCleanup}>
               Verlauf komprimieren
               <RefreshCw className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
@@ -384,15 +380,11 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       content: (
         <>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Button variant="accent" className="justify-between" onClick={handleExport}>
+            <Button variant="primary" className="justify-between" onClick={handleExport}>
               Export als JSON
               <Download className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
-            <Button
-              variant="glass-secondary"
-              className="justify-between"
-              onClick={handleImportClick}
-            >
+            <Button variant="secondary" className="justify-between" onClick={handleImportClick}>
               <div className="flex items-center gap-3">
                 <Upload className="h-5 w-5 text-text-secondary" />
                 <div className="text-left">
@@ -434,30 +426,30 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     : sectionConfigs;
   const sectionStatuses: Record<
     SettingsSectionKey,
-    { label: string; variant: BadgeProps["variant"] }
+    { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
   > = {
     api: {
       label: hasApiKey ? "Key aktiv" : "Nicht gesetzt",
-      variant: hasApiKey ? "success" : "warning",
+      variant: hasApiKey ? "secondary" : "destructive",
     },
     memory: {
       label: memoryEnabled ? "Gedächtnis aktiv" : "Neutral",
-      variant: memoryEnabled ? "success" : "muted",
+      variant: memoryEnabled ? "secondary" : "default",
     },
     filters: {
       label: settings.showNSFWContent ? "Explizit" : "Gefiltert",
-      variant: settings.showNSFWContent ? "warning" : "success",
+      variant: settings.showNSFWContent ? "destructive" : "secondary",
     },
     appearance: {
       label: "Dunkles Theme",
-      variant: "success",
+      variant: "secondary",
     },
     data: {
       label:
         stats.totalConversations > 0
           ? `${stats.totalConversations} Verläufe`
           : "Keine lokalen Daten",
-      variant: stats.totalConversations > 0 ? "muted" : "info",
+      variant: stats.totalConversations > 0 ? "default" : "outline",
     },
   };
   const headerTitle = section ? (sectionsToRender[0]?.title ?? "Einstellungen") : "Einstellungen";
@@ -467,7 +459,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
       <header className="sticky top-0 z-10 border-b border-[var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--bg0)_92%,transparent)]/95 backdrop-blur-xl">
         <div className="flex items-center gap-4 px-4 py-3">
           {section ? (
-            <Button asChild variant="ghost" size="sm" className="px-0 text-sm">
+            <Button variant="ghost" size="sm" className="px-0 text-sm">
               <Link to="/settings" className="inline-flex items-center gap-1 text-text-secondary">
                 ← Übersicht
               </Link>
@@ -492,7 +484,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
                     {config.description}
                   </Typography>
                 </div>
-                <Badge variant={sectionStatuses[config.id].variant} size="sm">
+                <Badge variant={sectionStatuses[config.id].variant}>
                   {sectionStatuses[config.id].label}
                 </Badge>
               </div>
@@ -516,7 +508,7 @@ function ToggleRow({
   label: string;
   description: string;
   checked: boolean;
-  onChange: (checked: boolean) => void;
+  onChange: React.ChangeEventHandler<HTMLButtonElement>;
 }) {
   return (
     <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-soft)] flex items-start justify-between gap-6 px-6 py-4 rounded-3xl hover:shadow-[var(--shadow-glow-primary)] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]">

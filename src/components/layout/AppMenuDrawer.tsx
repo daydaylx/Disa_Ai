@@ -1,8 +1,9 @@
 import { useState } from "react";
 
+import { Button } from "@/ui/Button";
+import { Typography } from "@/ui/Typography";
+
 import { cn } from "../../lib/utils";
-import { Button } from "../ui/button";
-import { Typography } from "../ui/typography";
 
 interface MenuItem {
   label: string;

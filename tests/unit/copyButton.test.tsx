@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { CopyButton } from "../../src/components/ui/CopyButton";
+import { CopyButton } from "@/ui/CopyButton";
 
 const setClipboard = (value: Clipboard | undefined) => {
   Object.defineProperty(navigator, "clipboard", {

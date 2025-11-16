@@ -1,6 +1,7 @@
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/ui/Table";
+
 import type { EnhancedModel } from "../../types/enhanced-interfaces";
 import { formatPricePerK } from "../../utils/pricing";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
 interface ModelComparisonTableProps {
   models: EnhancedModel[];

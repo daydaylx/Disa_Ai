@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
+import { IconButton } from "@/ui/IconButton";
+
 import { Moon, Settings, Sparkles, SunMedium } from "../../lib/icons";
-import { cn } from "../../lib/utils";
-import { IconButton } from "../ui/IconButton";
 
 interface HeaderProps {
   title: string;
@@ -60,18 +60,14 @@ export function Header({ title, subtitle = "Studio", modelLabel, onOpenDrawer }:
 
         <div className="flex flex-shrink-0 items-center gap-2">
           <IconButton
-            variant="secondary"
+            variant="ghost"
             size="md"
             aria-label={`Zum ${theme === "dark" ? "hellen" : "dunklen"} Modus wechseln`}
             onClick={toggleTheme}
           >
             {theme === "dark" ? <SunMedium className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </IconButton>
-          <IconButton
-            aria-label="Modelle & Einstellungen öffnen"
-            onClick={onOpenDrawer}
-            className={cn("shadow-[0_25px_55px_rgba(97,231,255,0.45)]")}
-          >
+          <IconButton aria-label="Modelle & Einstellungen öffnen" onClick={onOpenDrawer}>
             <Settings className="h-5 w-5" />
           </IconButton>
         </div>

@@ -1,8 +1,9 @@
 import { lazy } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
+import { Button } from "@/ui/Button";
+
 import { ErrorBoundary } from "../components/ErrorBoundary";
-import { Button } from "../components/ui/button";
 import { RouteWrapper } from "./components/RouteWrapper";
 import { AppShell } from "./layouts/AppShell";
 
@@ -142,7 +143,7 @@ export const appRouter = createBrowserRouter(
                   </p>
                 </div>
                 <div className="flex justify-center mt-8">
-                  <Button asChild variant="glass-primary" size="lg" className="shadow-glow-primary">
+                  <Button variant="primary" size="lg" className="shadow-glow-primary">
                     <a href="/chat">Zurück zum Chat</a>
                   </Button>
                 </div>

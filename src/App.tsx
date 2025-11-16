@@ -2,13 +2,14 @@ import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
 
 import React, { lazy, Suspense, useRef } from "react";
 
+import { Button } from "@/ui/Button";
+import { ToastsProvider } from "@/ui/toast";
+import { TooltipProvider } from "@/ui/Tooltip";
+
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
 import { EnhancedBottomNav } from "./components/layout/EnhancedBottomNav";
 import MobileBottomNav from "./components/layout/MobileBottomNav";
-import { Button } from "./components/ui/button";
-import { ToastsProvider } from "./components/ui/toast/ToastsProvider";
-import { TooltipProvider } from "./components/ui/tooltip";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { useEdgeSwipeDrawer } from "./hooks/useEdgeSwipe";
 import { useFeatureFlag } from "./hooks/useFeatureFlags";
@@ -87,12 +88,12 @@ function AppContent() {
                 </p>
               </div>
               <div className="mt-6 flex flex-col gap-3">
-                <Button onClick={resetError} variant="aurora-primary" className="w-full">
+                <Button onClick={resetError} variant="primary" className="w-full">
                   Erneut versuchen
                 </Button>
                 <Button
                   onClick={() => (window.location.href = "/")}
-                  variant="outline"
+                  variant="secondary"
                   className="w-full"
                 >
                   Zur Startseite

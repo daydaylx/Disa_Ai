@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { Button, FilterChip, Input, RoleCard, Skeleton, useToasts } from "@/ui";
+
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
 import { Search, Star, Users } from "../../lib/icons";
 import type { EnhancedRole, FilterState } from "../../types/enhanced-interfaces";
 import { migrateRole } from "../../types/enhanced-interfaces";
-import { Button, Input } from "../ui";
-import { FilterChip } from "../ui/FilterChip";
-import { RoleCard } from "../ui/modern-cards";
-import { Skeleton } from "../ui/skeleton";
-import { useToasts } from "../ui/toast/ToastsProvider";
 import { roleFilterFn, roleSortFn } from "./roles-filter";
 
 interface EnhancedRolesInterfaceProps {

@@ -79,6 +79,14 @@ const badgeVariants = cva(
           "bg-transparent border-transparent text-[var(--text-secondary)]",
           "hover:bg-[var(--glass-surface-subtle)] hover:text-[var(--text-primary)]",
         ].join(" "),
+        secondary: [
+          "bg-[var(--surface-muted)]/40 border border-[var(--glass-border-subtle)]",
+          "text-[var(--text-secondary)]",
+        ].join(" "),
+        accent: [
+          "bg-[var(--aurora-primary-500)]/15 border border-[var(--aurora-primary-400)]/40",
+          "text-[var(--aurora-primary-200)]",
+        ].join(" "),
 
         // === SEMANTIC VARIANTS ===
         success: [
@@ -94,6 +102,14 @@ const badgeVariants = cva(
         danger: [
           "bg-[var(--aurora-red-500)]/15 border-transparent",
           "text-[var(--aurora-red-600)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+        ].join(" "),
+        muted: [
+          "bg-[var(--surface-muted)]/60 border border-[var(--glass-border-subtle)]",
+          "text-[var(--text-secondary)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+        ].join(" "),
+        info: [
+          "bg-[var(--aurora-primary-500)]/15 border-transparent",
+          "text-[var(--aurora-primary-300)] backdrop-blur-[var(--backdrop-blur-subtle)]",
         ].join(" "),
       },
 

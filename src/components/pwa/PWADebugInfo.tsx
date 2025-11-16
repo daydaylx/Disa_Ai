@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-import { Card } from "@/components/ui/card";
+import { Button } from "@/ui/Button";
+import { Card } from "@/ui/Card";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { Info } from "../../lib/icons";
-import { Button } from "../ui/button";
 
 function isStandalone(): boolean {
   try {

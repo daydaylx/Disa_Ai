@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
-import { useToasts } from "../components/ui/toast/ToastsProvider";
+import { useToasts } from "@/ui";
+
 import {
   activateServiceWorkerUpdate,
   getServiceWorkerState,
