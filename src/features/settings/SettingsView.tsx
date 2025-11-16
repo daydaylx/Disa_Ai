@@ -386,7 +386,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             </Button>
             <Button variant="secondary" className="justify-between" onClick={handleImportClick}>
               <div className="flex items-center gap-3">
-                <Upload className="h-5 w-5 text-text-secondary" />
+                <Upload className="h-5 w-5 text-text-secondary shadow-[var(--shadow-glow-soft)]" />
                 <div className="text-left">
                   <Typography variant="body" className="font-medium text-text-primary">
                     Einstellungen importieren
@@ -396,7 +396,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
                   </Typography>
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-text-secondary" />
+              <ChevronRight className="h-5 w-5 text-text-secondary shadow-[var(--shadow-glow-soft)]" />
             </Button>
           </div>
           <input

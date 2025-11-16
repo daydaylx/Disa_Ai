@@ -82,7 +82,7 @@ export function ChatHistorySidebar({
                     onClick={onClose}
                     aria-label="Zurück zum Chat"
                   >
-                    <ArrowLeft className="h-5 w-5" />
+                    <ArrowLeft className="h-5 w-5 shadow-[var(--shadow-glow-soft)]" />
                   </Button>
                   <h2 className="text-text-strong text-lg font-semibold">Chat-Verlauf</h2>
                 </div>
@@ -92,13 +92,13 @@ export function ChatHistorySidebar({
                   onClick={onClose}
                   aria-label="Chat-Verlauf schließen"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5 shadow-[var(--shadow-glow-soft)]" />
                 </Button>
               </div>
 
               <div className="space-y-3">
                 <div className="relative">
-                  <Search className="text-text-muted absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
+                  <Search className="text-text-muted absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 shadow-[var(--shadow-glow-soft)]" />
                   <input
                     type="text"
                     placeholder="Chats durchsuchen..."
@@ -119,7 +119,7 @@ export function ChatHistorySidebar({
                         "border-brand/30 bg-brand/12 text-brand shadow-[var(--shadow-glow-brand-subtle)]",
                     )}
                   >
-                    <MessageSquare className="h-3 w-3" />
+                    <MessageSquare className="h-3 w-3 shadow-[var(--shadow-glow-soft)]" />
                     Alle
                   </Button>
                   <Button
@@ -132,7 +132,7 @@ export function ChatHistorySidebar({
                         "border-brand/30 bg-brand/12 text-brand shadow-[var(--shadow-glow-brand-subtle)]",
                     )}
                   >
-                    <Star className="h-3 w-3" />
+                    <Star className="h-3 w-3 shadow-[var(--shadow-glow-soft)]" />
                     Favoriten
                   </Button>
                   <Button
@@ -145,7 +145,7 @@ export function ChatHistorySidebar({
                         "border-brand/30 bg-brand/12 text-brand shadow-[var(--shadow-glow-brand-subtle)]",
                     )}
                   >
-                    <Clock className="h-3 w-3" />
+                    <Clock className="h-3 w-3 shadow-[var(--shadow-glow-soft)]" />
                     Kürzlich
                   </Button>
                 </div>
@@ -215,7 +215,7 @@ export function ChatHistorySidebar({
                                   <span>{formatRelativeTime(lastActivity)}</span>
                                 )}
                                 <div className="flex items-center gap-1">
-                                  <MessageSquare className="h-3 w-3" />
+                                  <MessageSquare className="h-3 w-3 shadow-[var(--shadow-glow-soft)]" />
                                   <span>{messageCount}</span>
                                 </div>
                               </div>
@@ -245,7 +245,7 @@ export function ChatHistorySidebar({
                 <div className="flex h-full flex-col items-center justify-center px-4 text-center">
                   <div className="max-w-xs space-y-4">
                     <div className="border-border mx-auto flex h-16 w-16 items-center justify-center rounded-full border bg-[var(--glass-surface-medium)]">
-                      <MessageSquare className="h-8 w-8 text-text-muted" />
+                      <MessageSquare className="h-8 w-8 text-text-muted shadow-[var(--shadow-glow-soft)]" />
                     </div>
                     <div className="space-y-2">
                       <h3 className="typo-h5 text-text-strong">
@@ -259,7 +259,7 @@ export function ChatHistorySidebar({
                     </div>
                     {!searchQuery && (
                       <Button variant="secondary" size="sm" onClick={onClose} className="mx-auto">
-                        <Plus className="h-4 w-4" />
+                        <Plus className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
                         Neuen Chat starten
                       </Button>
                     )}

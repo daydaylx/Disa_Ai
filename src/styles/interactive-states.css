@@ -1,0 +1,400 @@
+@layer components {
+  /*
+   * Consistent Interactive States System for Disa AI
+   * Standardized hover, focus, and active states for all interactive elements
+   */
+
+  /* Base interactive element styles */
+  .interactive-base {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Hover states */
+  .hover-effect {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  }
+
+  .hover-effect:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-glow-neutral-subtle, 0 4px 12px rgba(0, 0, 0, 0.1));
+  }
+
+  .hover-scale {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+
+  .hover-bg {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  }
+
+  .hover-bg:hover {
+    background-color: var(--color-surface-subtle, rgba(0, 0, 0, 0.05));
+  }
+
+  .hover-border {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  }
+
+  .hover-border:hover {
+    border-color: var(--color-border-strong, rgba(0, 0, 0, 0.3));
+  }
+
+  .hover-text {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  }
+
+  .hover-text:hover {
+    color: var(--color-brand-primary, #8B5CF6);
+  }
+
+  /* Focus states */
+  .focus-ring {
+    outline: none;
+    position: relative;
+  }
+
+  .focus-ring:focus,
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline-offset: 2px;
+  }
+
+  .focus-glow {
+    outline: none;
+    position: relative;
+  }
+
+  .focus-glow:focus,
+  .focus-glow:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-action-primary-focus, rgba(139, 92, 246, 0.35));
+  }
+
+  .focus-outline {
+    outline: none;
+  }
+
+  .focus-outline:focus,
+  .focus-outline:focus-visible {
+    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline-offset: 2px;
+  }
+
+  /* Active states */
+  .active-transform {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  }
+
+  .active-transform:active {
+    transform: scale(0.98);
+  }
+
+  .active-bg {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  }
+
+  .active-bg:active {
+    background-color: var(--color-surface-muted, rgba(0, 0, 0, 0.1));
+  }
+
+  /* Combined states */
+  .interactive-element {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+
+  .interactive-element:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-glow-neutral-subtle, 0 4px 12px rgba(0, 0, 0, 0.1));
+  }
+
+  .interactive-element:focus,
+  .interactive-element:focus-visible {
+    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--color-action-primary-focus, rgba(139, 92, 246, 0.35));
+  }
+
+  .interactive-element:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /* Button-specific interactive states */
+  .btn-interactive {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-interactive:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-interactive:focus,
+  .btn-interactive:focus-visible {
+    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--color-action-primary-focus, rgba(139, 92, 246, 0.35));
+  }
+
+  .btn-interactive:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /* Glassmorphism interactive states */
+  .glass-interactive {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    background: var(--surface-card);
+    border: 1px solid var(--color-border-subtle);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .glass-interactive:hover {
+    background: var(--color-surface-raised);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-glow-brand-subtle);
+  }
+
+  .glass-interactive:focus,
+  .glass-interactive:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-border-focus, #8B5CF6), var(--shadow-glow-brand);
+  }
+
+  .glass-interactive:active {
+    background: var(--color-surface-muted);
+    transform: scale(0.98);
+  }
+
+  /* Card interactive states */
+  .card-interactive {
+    transition: all var(--motion-duration-medium, 160ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-raised, 0 8px 24px rgba(0, 0, 0, 0.15));
+  }
+
+  .card-interactive:focus,
+  .card-interactive:focus-visible {
+    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline-offset: 2px;
+  }
+
+  .card-interactive:active {
+    transform: translateY(0) scale(0.995);
+  }
+
+  /* Link interactive states */
+  .link-interactive {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .link-interactive:hover {
+    color: var(--color-text-link-hover, #7C3AED);
+    text-decoration: underline;
+  }
+
+  .link-interactive:focus,
+  .link-interactive:focus-visible {
+    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .link-interactive:active {
+    color: var(--color-text-link, #8B5CF6);
+  }
+
+  /* Input interactive states */
+  .input-interactive {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    cursor: text;
+  }
+
+  .input-interactive:hover {
+    border-color: var(--color-control-field-border-hover);
+  }
+
+  .input-interactive:focus,
+  .input-interactive:focus-visible {
+    outline: none;
+    border-color: var(--color-control-field-border-active);
+    box-shadow: 0 0 0 3px var(--color-control-field-focus-ring);
+  }
+
+  .input-interactive:active {
+    border-color: var(--color-control-field-border-active);
+  }
+
+  /* Switch/toggle interactive states */
+  .switch-interactive {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    cursor: pointer;
+  }
+
+  .switch-interactive:hover {
+    opacity: 0.9;
+  }
+
+  .switch-interactive:focus,
+  .switch-interactive:focus-visible {
+    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline-offset: 2px;
+  }
+
+  .switch-interactive:active {
+    transform: scale(0.95);
+  }
+
+  /* Chip/Tag interactive states */
+  .chip-interactive {
+    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .chip-interactive:hover {
+    background-color: var(--color-control-chip-hover);
+    transform: translateY(-1px);
+  }
+
+  .chip-interactive:focus,
+  .chip-interactive:focus-visible {
+    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline-offset: 2px;
+  }
+
+  .chip-interactive:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /* Disabled state overrides */
+  .interactive-disabled,
+  .interactive-element:disabled,
+  .btn-interactive:disabled,
+  .glass-interactive:disabled,
+  .card-interactive:disabled,
+  .link-interactive:disabled,
+  .input-interactive:disabled,
+  .switch-interactive:disabled,
+  .chip-interactive:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none !important;
+    pointer-events: none;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .interactive-base,
+    .hover-effect,
+    .hover-scale,
+    .hover-bg,
+    .hover-border,
+    .hover-text,
+    .active-transform,
+    .active-bg,
+    .interactive-element,
+    .btn-interactive,
+    .glass-interactive,
+    .card-interactive,
+    .link-interactive,
+    .input-interactive,
+    .switch-interactive,
+    .chip-interactive {
+      transition: none;
+    }
+
+    .hover-effect:hover,
+    .hover-scale:hover,
+    .interactive-element:hover,
+    .btn-interactive:hover,
+    .glass-interactive:hover,
+    .card-interactive:hover,
+    .link-interactive:hover {
+      transform: none;
+    }
+
+    .active-transform:active,
+    .interactive-element:active,
+    .btn-interactive:active,
+    .glass-interactive:active,
+    .card-interactive:active,
+    .switch-interactive:active,
+    .chip-interactive:active {
+      transform: none;
+    }
+  }
+
+  /* Touch device specific styles */
+  @media (hover: none) and (pointer: coarse) {
+    .touch-interactive {
+      transition: all var(--motion-duration-medium, 160ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    .touch-interactive:active {
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
+
+    .touch-interactive:focus,
+    .touch-interactive:focus-visible {
+      outline: 2px solid var(--color-border-focus, #8B5CF6);
+      outline-offset: 2px;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: more) {
+    .focus-outline:focus,
+    .focus-outline:focus-visible,
+    .interactive-element:focus,
+    .interactive-element:focus-visible,
+    .btn-interactive:focus,
+    .btn-interactive:focus-visible,
+    .glass-interactive:focus,
+    .glass-interactive:focus-visible,
+    .card-interactive:focus,
+    .card-interactive:focus-visible,
+    .link-interactive:focus,
+    .link-interactive:focus-visible,
+    .chip-interactive:focus,
+    .chip-interactive:focus-visible {
+      outline-width: 3px;
+      outline-offset: 3px;
+    }
+
+    .hover-border:hover,
+    .input-interactive:hover,
+    .input-interactive:focus,
+    .input-interactive:focus-visible {
+      border-width: 2px;
+    }
+  }
+}

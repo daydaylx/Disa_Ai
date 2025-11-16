@@ -14,6 +14,11 @@
 @import "./styles/design-tokens-consolidated.css"; /* NEW: Aurora Design System Tokens */
 @import "./styles/base.css";
 @import "./styles/components.css";
+@import "./styles/grid-system.css"; /* NEW: Responsive Grid System */
+@import "./styles/white-space.css"; /* NEW: White Space Management System */
+@import "./styles/page-spacing.css"; /* NEW: Page Margins and Spacing System */
+@import "./styles/vertical-rhythm.css"; /* NEW: Vertical Rhythm and Typography System */
+@import "./styles/interactive-states.css"; /* NEW: Interactive States System */
 @import "./styles/ui-state-animations.css"; /* Universal State System animations */
 
 /* Tailwind CSS */

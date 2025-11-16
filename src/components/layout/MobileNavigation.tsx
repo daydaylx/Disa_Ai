@@ -24,21 +24,20 @@ interface MobileNavigationProps {
 
 export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps) {
   const navClasses = {
-    // === NEW DRAMATIC NEOMORPHIC VARIANTS ===
+    // === AURORA GLASSMORPHISM VARIANTS ===
     "neo-dock": [
       "bottom-navigation fixed bottom-2 left-2 right-2 z-50",
       "mx-auto max-w-sm rounded-[var(--radius-2xl)]",
-      // Dramatic Dock Foundation
+      // Aurora Glass Dock
       "bg-[var(--glass-surface-medium)]",
       "shadow-[var(--shadow-premium-strong)]",
       "border-[var(--glass-border-medium)]",
-      // Enhanced Blur and Effects
-      "backdrop-blur-xl",
+      "backdrop-blur-[var(--backdrop-blur-strong)]",
       "before:absolute before:inset-0 before:rounded-[var(--radius-2xl)]",
-      "before:bg-gradient-to-r before:from-white/20 before:via-white/10 before:to-white/20",
+      "before:bg-gradient-to-r before:from-[var(--glass-surface-subtle)] before:via-[var(--glass-surface-medium)] before:to-[var(--glass-surface-subtle)]",
       "before:pointer-events-none",
       // Hover Enhancement
-      "transition-all duration-300 ease-out",
+      "transition-all duration-300 ease-[var(--motion-ease-elastic)]",
       "hover:shadow-[var(--shadow-glow-primary)]",
       "hover:scale-[1.02]",
     ].join(" "),
@@ -46,14 +45,14 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
     "neo-floating": [
       "bottom-navigation fixed bottom-4 left-4 right-4 z-50",
       "mx-auto max-w-md rounded-[var(--radius-xl)]",
-      // Floating Platform
+      // Aurora Floating Glass
       "bg-[var(--glass-surface-strong)]",
       "shadow-[var(--shadow-premium-medium)]",
-      "border-[var(--glass-border-medium)]",
-      "backdrop-blur-lg",
+      "border-[var(--glass-border-subtle)]",
+      "backdrop-blur-[var(--backdrop-blur-medium)]",
       // Floating Animation
-      "transition-all duration-500 ease-out",
-      "hover:shadow-[var(--shadow-neumorphic-dramatic)]",
+      "transition-all duration-500 ease-[var(--motion-ease-elastic)]",
+      "hover:shadow-[var(--shadow-glow-primary)]",
       "hover:-translate-y-1",
     ].join(" "),
 
@@ -263,7 +262,10 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
             className={({ isActive }) => getNavItemClasses(isActive)}
             aria-label={item.label}
           >
-            <item.icon className="nav-icon h-6 w-6" aria-hidden="true" />
+            <item.icon
+              className="nav-icon h-6 w-6 shadow-[var(--shadow-glow-soft)]"
+              aria-hidden="true"
+            />
             <span className="nav-label text-[11px] mt-1">{item.label}</span>
           </NavLink>
         ))}
