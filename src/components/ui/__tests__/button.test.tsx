@@ -9,22 +9,22 @@ describe("Button", () => {
     render(<Button>Test Button</Button>);
     const button = screen.getByRole("button", { name: /test button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--button-secondary-bg)]"); // glass-primary default
-    expect(button).toHaveClass("h-10 px-6 py-2.5 text-sm"); // default size
+    expect(button).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // hybrid neumorphic default
+    expect(button).toHaveClass("h-10 px-4 py-2 text-sm"); // hybrid default size
   });
 
   it("renders the button with a specific variant", () => {
     render(<Button variant="brand">Brand Button</Button>);
     const button = screen.getByRole("button", { name: /brand button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--accent-surface)]");
+    expect(button).toHaveClass("bg-[var(--color-brand-primary)]");
   });
 
   it("renders the button with a specific size", () => {
     render(<Button size="lg">Large Button</Button>);
     const button = screen.getByRole("button", { name: /large button/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("h-12 px-8 py-3 text-base");
+    expect(button).toHaveClass("h-12 px-6 py-3 text-base");
   });
 
   it("renders the button with dramatic effect", () => {
@@ -72,20 +72,20 @@ describe("Button", () => {
     render(<Button variant="default">Deprecated Default</Button>);
     const button = screen.getByRole("button", { name: /deprecated default/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--button-secondary-bg)]"); // Should map to glass-primary
+    expect(button).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // hybrid neumorphic
   });
 
   it("renders with deprecated 'secondary' variant and maps to 'glass-subtle'", () => {
     render(<Button variant="secondary">Deprecated Secondary</Button>);
     const button = screen.getByRole("button", { name: /deprecated secondary/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--button-secondary-bg)]"); // Should map to glass-primary alias
+    expect(button).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // hybrid neumorphic alias
   });
 
   it("renders with deprecated 'neumorphic' variant and maps to 'glass-primary'", () => {
     render(<Button variant="neumorphic">Deprecated Neumorphic</Button>);
     const button = screen.getByRole("button", { name: /deprecated neumorphic/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("bg-[var(--layer-glass-panel)]"); // Should map to glass-neo surface
+    expect(button).toHaveClass("bg-[var(--surface-neumorphic-raised)]"); // hybrid neumorphic
   });
 });

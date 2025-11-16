@@ -39,6 +39,6 @@ describe("NetworkBanner", () => {
     expect(banner).toHaveAttribute("aria-label", "Offline-Status");
 
     // Verify text content
-    expect(banner).toHaveTextContent("📶 Offline – Eingaben werden gepuffert");
+    expect(banner).toHaveTextContent("📶 Offline – Eingaben werden lokal gepuffert");
   });
 });
