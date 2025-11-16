@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 
 import { useConversationStats, useStorageHealth, useStorageMigration } from "../hooks/use-storage";
 import { Button } from "./ui/button";
+import { Typography } from "./ui/typography";
 
 interface StorageMigrationProps {
   onMigrationComplete?: () => void;
@@ -184,10 +185,12 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
         <div className="flex items-center gap-3">
           <Database className="h-8 w-8 text-accent" />
           <div>
-            <h1 className="text-2xl font-semibold">Storage Migration</h1>
-            <p className="text-sm text-text-secondary">
+            <Typography variant="h3" as="h1">
+              Storage Migration
+            </Typography>
+            <Typography variant="body" className="text-text-secondary">
               Aktualisiere den lokalen Speicher auf IndexedDB
-            </p>
+            </Typography>
           </div>
         </div>
         {onClose && (
@@ -208,19 +211,23 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
           data-tone="danger"
         >
           <AlertTriangle className="h-5 w-5 flex-shrink-0" />
-          <div className="space-y-1 text-sm">
-            <p className="font-semibold text-text-primary">Fehler beim Prüfen</p>
-            <p className="text-text-secondary">{error}</p>
+          <div className="space-y-1">
+            <Typography variant="body" className="font-semibold text-text-primary">
+              Fehler beim Prüfen
+            </Typography>
+            <Typography variant="body" className="text-text-secondary">
+              {error}
+            </Typography>
           </div>
         </section>
       )}
 
       {migrationStatus && (
         <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
-          <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <Typography variant="h5" as="h2" className="flex items-center gap-2">
             <Info className="h-5 w-5 text-accent" />
             Migrationsstatus
-          </h2>
+          </Typography>
 
           <div className="grid gap-3 md:grid-cols-3">
             {statusCards.map((item) => (
@@ -236,8 +243,12 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
                   }}
                 />
                 <div>
-                  <p className="text-sm font-medium">{item.label}</p>
-                  <p className="text-xs text-text-secondary">{item.description}</p>
+                  <Typography variant="body" className="font-medium">
+                    {item.label}
+                  </Typography>
+                  <Typography variant="caption" className="text-text-secondary">
+                    {item.description}
+                  </Typography>
                 </div>
               </div>
             ))}
@@ -247,29 +258,37 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
 
       {stats && (
         <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
-          <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <Typography variant="h5" as="h2" className="flex items-center gap-2">
             <HardDrive className="h-5 w-5 text-accent" />
             Speicherstatistiken
-          </h2>
+          </Typography>
 
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
             <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
-              <p className="text-2xl font-semibold">{stats.totalConversations}</p>
-              <p className="text-xs text-text-secondary">Konversationen</p>
+              <Typography variant="h3">{stats.totalConversations}</Typography>
+              <Typography variant="caption" className="text-text-secondary">
+                Konversationen
+              </Typography>
             </div>
             <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
-              <p className="text-2xl font-semibold">{stats.totalMessages}</p>
-              <p className="text-xs text-text-secondary">Nachrichten</p>
+              <Typography variant="h3">{stats.totalMessages}</Typography>
+              <Typography variant="caption" className="text-text-secondary">
+                Nachrichten
+              </Typography>
             </div>
             <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
-              <p className="text-2xl font-semibold">
+              <Typography variant="h3">
                 {stats.averageMessagesPerConversation.toFixed(1)}
-              </p>
-              <p className="text-xs text-text-secondary">Ø Nachrichten</p>
+              </Typography>
+              <Typography variant="caption" className="text-text-secondary">
+                Ø Nachrichten
+              </Typography>
             </div>
             <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
-              <p className="text-2xl font-semibold">{formatBytes(stats.storageSize)}</p>
-              <p className="text-xs text-text-secondary">Belegung</p>
+              <Typography variant="h3">{formatBytes(stats.storageSize)}</Typography>
+              <Typography variant="caption" className="text-text-secondary">
+                Belegung
+              </Typography>
             </div>
           </div>
         </section>
@@ -280,31 +299,44 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
           className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--aurora-blue-400)] shadow-[var(--shadow-glow-blue)] rounded-3xl p-6 space-y-4"
           data-tone="info"
         >
-          <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <Typography variant="h5" as="h2" className="flex items-center gap-2">
             <Clock className="h-5 w-5" />
             Migrationsschätzung
-          </h2>
+          </Typography>
 
           <div className="grid gap-3 md:grid-cols-3">
             <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-text-tertiary">
+              <Typography
+                variant="caption"
+                className="uppercase tracking-[0.2em] text-text-tertiary"
+              >
                 Konversationen
-              </p>
-              <p className="text-xl font-semibold text-text-primary">
+              </Typography>
+              <Typography variant="h4" className="text-text-primary">
                 {migrationEstimate.conversationCount}
-              </p>
+              </Typography>
             </div>
             <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-text-tertiary">Dauer</p>
-              <p className="text-xl font-semibold text-text-primary">
+              <Typography
+                variant="caption"
+                className="uppercase tracking-[0.2em] text-text-tertiary"
+              >
+                Dauer
+              </Typography>
+              <Typography variant="h4" className="text-text-primary">
                 {formatDuration(migrationEstimate.estimatedDuration)}
-              </p>
+              </Typography>
             </div>
             <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-text-tertiary">Datenmenge</p>
-              <p className="text-xl font-semibold text-text-primary">
+              <Typography
+                variant="caption"
+                className="uppercase tracking-[0.2em] text-text-tertiary"
+              >
+                Datenmenge
+              </Typography>
+              <Typography variant="h4" className="text-text-primary">
                 {formatBytes(migrationEstimate.estimatedSize)}
-              </p>
+              </Typography>
             </div>
           </div>
         </section>
@@ -318,10 +350,12 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
           <div className="flex items-start gap-3">
             <AlertTriangle className="h-5 w-5" />
             <div>
-              <h3 className="text-base font-semibold text-text-primary">Migration starten</h3>
-              <p className="text-sm text-text-secondary">
+              <Typography variant="h6" as="h3" className="text-text-primary">
+                Migration starten
+              </Typography>
+              <Typography variant="body" className="text-text-secondary">
                 Übertrage Konversationen sicher nach IndexedDB. Währenddessen wird nichts gelöscht.
-              </p>
+              </Typography>
             </div>
           </div>
           <Button
@@ -346,15 +380,19 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
       )}
 
       <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
-        <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <Typography variant="h5" as="h2" className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-accent" />
           Backup & Restore
-        </h2>
+        </Typography>
         <div className="grid gap-3">
           <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="font-medium">Backup erstellen</p>
-              <p className="text-sm text-text-secondary">Exportiere deine Daten als JSON-Datei.</p>
+              <Typography variant="body" className="font-medium">
+                Backup erstellen
+              </Typography>
+              <Typography variant="body" className="text-text-secondary">
+                Exportiere deine Daten als JSON-Datei.
+              </Typography>
             </div>
             <Button variant="aurora-primary" size="sm" onClick={handleCreateBackup}>
               <Download className="h-4 w-4" />
@@ -363,10 +401,12 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
           </div>
           <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="font-medium">Backup importieren</p>
-              <p className="text-sm text-text-secondary">
+              <Typography variant="body" className="font-medium">
+                Backup importieren
+              </Typography>
+              <Typography variant="body" className="text-text-secondary">
                 Stelle eine gesicherte Datei wieder her.
-              </p>
+              </Typography>
             </div>
             <Button variant="glass-primary" size="sm" onClick={() => setShowRestore(!showRestore)}>
               <Upload className="h-4 w-4" />
@@ -412,32 +452,36 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
           className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-medium)] rounded-3xl p-6 space-y-3"
           data-tone={migrationResult.success ? "success" : "danger"}
         >
-          <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <Typography variant="h5" as="h2" className="flex items-center gap-2">
             {migrationResult.success ? (
               <CheckCircle className="h-5 w-5" />
             ) : (
               <AlertTriangle className="h-5 w-5" />
             )}
             Migration {migrationResult.success ? "abgeschlossen" : "fehlgeschlagen"}
-          </h2>
+          </Typography>
 
-          <div className="space-y-1 text-sm">
-            <p>
+          <div className="space-y-1">
+            <Typography variant="body">
               <span className="font-semibold">Dauer:</span>{" "}
               {formatDuration(migrationResult.duration)}
-            </p>
-            <p>
+            </Typography>
+            <Typography variant="body">
               <span className="font-semibold">Migriert:</span> {migrationResult.migratedCount}{" "}
               Konversationen
-            </p>
+            </Typography>
           </div>
 
           {migrationResult.errors.length > 0 && (
             <div>
-              <p className="text-sm font-semibold">Fehler</p>
-              <ul className="list-disc list-inside text-xs text-text-secondary">
+              <Typography variant="body" className="font-semibold">
+                Fehler
+              </Typography>
+              <ul className="list-disc list-inside">
                 {migrationResult.errors.map((err: string, idx: number) => (
-                  <li key={idx}>{err}</li>
+                  <Typography variant="caption" as="li" key={idx} className="text-text-secondary">
+                    {err}
+                  </Typography>
                 ))}
               </ul>
             </div>
@@ -445,10 +489,14 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
 
           {migrationResult.warnings.length > 0 && (
             <div>
-              <p className="text-sm font-semibold">Hinweise</p>
-              <ul className="list-disc list-inside text-xs text-text-secondary">
+              <Typography variant="body" className="font-semibold">
+                Hinweise
+              </Typography>
+              <ul className="list-disc list-inside">
                 {migrationResult.warnings.map((warning: string, idx: number) => (
-                  <li key={idx}>{warning}</li>
+                  <Typography variant="caption" as="li" key={idx} className="text-text-secondary">
+                    {warning}
+                  </Typography>
                 ))}
               </ul>
             </div>
@@ -464,9 +512,9 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
           className="h-3 w-3 rounded-full"
           style={{ backgroundColor: toneToColor(isReady ? "success" : "danger") }}
         />
-        <span className="font-medium">
+        <Typography variant="body" className="font-medium">
           {isReady ? "Speicher bereit" : "Speicher benötigt Aufmerksamkeit"}
-        </span>
+        </Typography>
         <Button variant="outline" size="sm" className="ml-auto" onClick={checkHealth}>
           <RefreshCw className="h-4 w-4" />
           Status aktualisieren

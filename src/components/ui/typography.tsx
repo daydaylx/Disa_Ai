@@ -27,7 +27,8 @@ export type TypographyElement =
   | "p"
   | "span"
   | "div"
-  | "small";
+  | "small"
+  | "li";
 
 interface TypographyProps {
   variant?: TypographyVariant;
