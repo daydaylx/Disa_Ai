@@ -2,28 +2,49 @@ import React from "react";
 
 import { cn } from "../../lib/utils";
 
+type ModernButtonVariant =
+  | "aurora-primary"
+  | "aurora-soft"
+  | "glass-primary"
+  | "glass-soft"
+  | "glass-ghost"
+  | "brand"
+  | "success"
+  | "warning"
+  | "destructive"
+  | "ghost"
+  | "outline"
+  | "link";
+
+type LegacyButtonVariant =
+  | "default"
+  | "secondary"
+  | "neumorphic"
+  | "accent"
+  | "glass-secondary"
+  | "glass-accent";
+
+const legacyVariantMap: Record<LegacyButtonVariant, ModernButtonVariant> = {
+  default: "glass-primary",
+  secondary: "glass-soft",
+  neumorphic: "glass-primary",
+  accent: "brand",
+  "glass-secondary": "glass-soft",
+  "glass-accent": "glass-primary",
+};
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?:
-    | "aurora-primary" // Neuer Aurora Hauptstil
-    | "aurora-soft" // Aurora weicher Stil
-    | "glass-primary" // Glassmorphism Primary
-    | "glass-soft" // Glassmorphism weich
-    | "glass-ghost" // Transparenter Glass-Stil
-    | "brand" // Marken-Primary (Aurora Indigo)
-    | "success" // Aurora Green
-    | "warning" // Aurora Yellow
-    | "destructive" // Error rot
-    | "ghost" // Transparent
-    | "outline" // Rahmen-Style
-    | "link"; // Link-Style
+  variant?: ModernButtonVariant | LegacyButtonVariant;
   size?: "xs" | "sm" | "default" | "lg" | "xl" | "icon";
   asChild?: boolean;
   /** Enable enhanced touch feedback for mobile */
   touchFeedback?: boolean;
+  /** Enables dramatic hover motion, used in legacy tests */
+  dramatic?: boolean;
 }
 
 const buttonVariants = (
-  variant: ButtonProps["variant"] = "aurora-primary",
+  variant: ModernButtonVariant = "aurora-primary",
   size: ButtonProps["size"] = "default",
   touchFeedback: boolean = false,
 ) => {
@@ -250,27 +271,44 @@ const buttonVariants = (
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, touchFeedback = false, asChild = false, ...props }, ref) => {
-    const effectiveVariant =
-      variant === "default" || variant === "neumorphic"
-        ? "glass-primary"
-        : variant === "secondary"
-          ? "glass-soft"
-          : variant;
-    const buttonClasses = buttonVariants(effectiveVariant, size, touchFeedback);
+  (
+    {
+      className,
+      variant,
+      size = "default",
+      touchFeedback = false,
+      dramatic = false,
+      asChild = false,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const resolvedVariant: ModernButtonVariant = variant
+      ? (legacyVariantMap[variant as LegacyButtonVariant] ?? (variant as ModernButtonVariant))
+      : "aurora-primary";
 
-    if (asChild && React.isValidElement(props.children)) {
-      return React.cloneElement(
-        props.children as React.ReactElement,
-        {
-          className: cn(buttonClasses, className),
-          ref,
-          ...props,
-        } as React.Attributes,
-      );
+    const buttonClasses = cn(
+      buttonVariants(resolvedVariant, size, touchFeedback),
+      dramatic && "hover:translate-y-[-1px] hover:shadow-[var(--shadow-premium-strong)]",
+    );
+
+    if (asChild && React.isValidElement(children)) {
+      const child = children as React.ReactElement;
+      const childProps = (child.props ?? {}) as { className?: string };
+
+      return React.cloneElement(child, {
+        className: cn(buttonClasses, childProps.className, className),
+        ref,
+        ...props,
+      } as React.Attributes);
     }
 
-    return <button className={cn(buttonClasses, className)} ref={ref} {...props} />;
+    return (
+      <button className={cn(buttonClasses, className)} ref={ref} {...props}>
+        {children}
+      </button>
+    );
   },
 );
 Button.displayName = "Button";

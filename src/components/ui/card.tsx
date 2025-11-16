@@ -1,185 +1,418 @@
-/**
- * CARD AURORA - Streamlined Mobile-First Glassmorphism
- *
- * Komplett neu aufgebaute Card-Komponente für das Aurora Design System
- * - Fokussiert auf Mobile-First Glassmorphism
- * - Touch-optimierte Interaktionen
- * - Balanced Premium Visual Design
- * - 80% weniger Code als die Legacy-Version
- */
-
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
+import { ChevronRight, MoreHorizontal } from "../../lib/icons";
 import { cn } from "../../lib/utils";
+import { Button } from "./button"; // Assuming Button component is updated
 
 const cardVariants = cva(
-  // Aurora Basis - Mobile-First Foundation
-  [
-    "relative isolate overflow-hidden",
-    "text-[var(--text-primary)]",
-    "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]",
-    // Touch-optimiert für Mobile
-    "select-none",
-  ].join(" "),
+  "relative rounded-[var(--radius-xl)] border transition-all duration-300 ease-out",
   {
     variants: {
-      // === CORE AURORA TONES - Nur 5 essenzielle Varianten ===
       variant: {
+        default: "",
+        outline: "border-line bg-surface-base",
+        flat: "border-transparent bg-transparent shadow-none",
         "aurora-primary": [
-          // Aurora Primary Glass mit Premium-Effekt
           "bg-[var(--surface-card)]",
           "backdrop-blur-[var(--backdrop-blur-medium)]",
           "border border-[var(--glass-border-aurora)]",
           "rounded-[var(--radius-lg)]",
-          // Subtle Aurora Glow Overlay
           "before:absolute before:inset-0 before:bg-gradient-to-br",
           "before:from-[var(--aurora-primary-500)]/5 before:to-[var(--aurora-lila-500)]/5",
           "before:pointer-events-none before:rounded-[var(--radius-lg)]",
         ].join(" "),
-
         "aurora-soft": [
-          // Dezenter Aurora Glass-Stil
           "bg-[var(--glass-surface-subtle)]",
           "backdrop-blur-[var(--backdrop-blur-subtle)]",
           "border border-[var(--glass-border-subtle)]",
           "rounded-[var(--radius-md)]",
         ].join(" "),
-
         "glass-primary": [
-          // Vollständiges Premium Glassmorphism
           "bg-[var(--glass-surface-medium)]",
           "backdrop-blur-[var(--backdrop-blur-strong)]",
           "border border-[var(--glass-border-medium)]",
           "rounded-[var(--radius-lg)]",
           "shadow-[var(--shadow-glow-soft)]",
         ].join(" "),
-
         "glass-soft": [
-          // Subtiler Glass-Stil
           "bg-[var(--glass-surface-subtle)]",
           "backdrop-blur-[var(--backdrop-blur-subtle)]",
           "border border-[var(--glass-border-subtle)]",
           "rounded-[var(--radius-md)]",
         ].join(" "),
-
-        ghost: [
-          // Transparenter Stil
+        "glass-ghost": [
           "bg-transparent",
+          "backdrop-blur-[var(--backdrop-blur-subtle)]",
           "border border-transparent",
           "rounded-[var(--radius-md)]",
         ].join(" "),
+        ghost: ["bg-transparent", "border border-transparent", "rounded-[var(--radius-md)]"].join(
+          " ",
+        ),
+        "aurora-glass": [
+          "bg-[var(--glass-surface-medium)]",
+          "backdrop-blur-[var(--backdrop-blur-strong)]",
+          "border border-[var(--glass-border-aurora)]",
+          "rounded-[var(--radius-2xl)]",
+          "shadow-[var(--shadow-glow-primary)]",
+        ].join(" "),
       },
-
-      // === ELEVATION SYSTEM - 4 Level reichen völlig ===
+      tone: {
+        "neo-raised":
+          "bg-[var(--surface-neumorphic-raised)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)]",
+        "neo-subtle":
+          "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)]",
+        "neo-inset":
+          "bg-[var(--surface-neumorphic-base)] border-[var(--border-neumorphic-subtle)] text-[var(--color-text-primary)] shadow-[var(--shadow-inset-subtle)]",
+        "neo-floating":
+          "bg-[var(--surface-neumorphic-floating)] border-[var(--border-neumorphic-light)] text-[var(--color-text-primary)] backdrop-blur-lg",
+        "neo-glass":
+          "bg-[var(--surface-ghost)]/70 border-[var(--border-ghost,rgba(255,255,255,0.3))] text-[var(--color-text-primary)] backdrop-blur-xl",
+        "glass-primary":
+          "bg-[var(--glass-surface-medium)] border-[var(--glass-border-medium)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-strong)]",
+        "glass-floating":
+          "bg-[color-mix(in_srgb,var(--glass-surface-medium)_85%,transparent)] border-[var(--glass-border-aurora)] text-[var(--text-primary)] backdrop-blur-[var(--backdrop-blur-strong)] shadow-[var(--shadow-glow-primary)]",
+      },
+      intent: {
+        default: "",
+        accent: "border-accent",
+        primary: "border-[var(--color-border-focus)]",
+        secondary: "border-[var(--border-line-strong)]",
+        success: "border-success/70",
+        warning: "border-warning/70",
+        danger: "border-danger/70",
+        error: "border-danger/70",
+        info: "border-info/70",
+      },
+      padding: {
+        none: "p-0",
+        sm: "p-space-sm",
+        md: "p-space-md",
+        lg: "p-space-lg",
+        xl: "p-space-xl",
+      },
+      size: {
+        auto: "w-auto",
+        full: "w-full",
+        sm: "max-w-sm",
+        md: "max-w-md",
+        lg: "max-w-lg",
+        xl: "max-w-xl",
+      },
+      state: {
+        default: "",
+        loading: "animate-pulse opacity-70 pointer-events-none",
+        disabled: "opacity-50 pointer-events-none",
+        selected: "border-accent ring-2 ring-accent/30 ring-offset-2 ring-offset-surface-bg",
+        focus: "ring-2 ring-[var(--color-border-focus)] ring-offset-2 ring-offset-surface-bg",
+      },
       elevation: {
         none: "shadow-none",
-        subtle: "shadow-[var(--shadow-depth-1)]", // Leichte Tiefe
-        medium: "shadow-[var(--shadow-premium-medium)]", // Standard Premium
-        strong: "shadow-[var(--shadow-premium-strong)]", // Hero Cards
+        flat: "shadow-none",
+        subtle: "shadow-neo-sm",
+        surface: "shadow-[var(--shadow-surface,0_2px_10px_rgba(15,23,42,0.08))]",
+        medium: "shadow-neo-md",
+        raised: "shadow-neo-md",
+        strong: "shadow-[var(--shadow-premium-strong)]",
+        dramatic: "shadow-neo-xl",
       },
-
-      // === INTERACTIVE STATES - Touch-optimiert ===
       interactive: {
-        false: "",
+        none: "",
+        basic: "cursor-pointer hover:-translate-y-0.5 hover:shadow-neo-sm",
         hover: [
           "cursor-pointer",
-          // Responsive Hover (nur Desktop mit Maus)
-          "md:hover:bg-[var(--surface-raised)]",
-          "md:hover:border-[var(--glass-border-aurora)]",
-          "md:hover:shadow-[var(--shadow-premium-strong)]",
-          "md:hover:transform md:hover:translate-y-[-2px]",
-        ].join(" "),
-        press: [
-          "cursor-pointer",
-          // Mobile Touch-States (alle Geräte)
-          "active:bg-[var(--surface-raised)]",
-          "active:transform active:scale-[var(--touch-scale-press)]",
-          "active:shadow-[var(--shadow-depth-1)]",
-          // Desktop Hover zusätzlich
           "md:hover:bg-[var(--surface-raised)]",
           "md:hover:shadow-[var(--shadow-premium-medium)]",
         ].join(" "),
-      },
-
-      // === SIZE VARIANTS - Mobile-optimierte Abstände ===
-      size: {
-        sm: "p-[var(--spacing-3)]", // 12px - kompakte Cards
-        default: "p-[var(--spacing-4)]", // 16px - Standard
-        lg: "p-[var(--spacing-6)]", // 24px - Hero Cards
-        xl: "p-[var(--spacing-8)]", // 40px - Feature Cards
+        press: [
+          "cursor-pointer",
+          "active:bg-[var(--surface-raised)]",
+          "active:scale-[var(--touch-scale-press,0.98)]",
+          "md:hover:shadow-[var(--shadow-premium-medium)]",
+        ].join(" "),
+        gentle: "cursor-pointer hover:-translate-y-1 hover:shadow-neo-md",
+        glow: "cursor-pointer hover:shadow-[var(--shadow-glow-soft)]",
+        "glow-accent":
+          "cursor-pointer hover:border-accent hover:shadow-[var(--shadow-glow-accent)]",
+        "glow-brand":
+          "cursor-pointer hover:border-[var(--color-primary)] hover:shadow-[var(--shadow-glow-primary)]",
+        "glow-success":
+          "cursor-pointer hover:border-[var(--aurora-green-400)] hover:shadow-[var(--shadow-glow-green)]",
+        "glow-warning":
+          "cursor-pointer hover:border-[var(--aurora-orange-400)] hover:shadow-[var(--shadow-glow-orange)]",
+        "glow-error":
+          "cursor-pointer hover:border-[var(--color-error-border)] hover:shadow-[var(--shadow-glow-red)]",
       },
     },
     defaultVariants: {
       variant: "aurora-soft",
-      elevation: "subtle",
-      interactive: false,
-      size: "default",
+      tone: "neo-raised",
+      intent: "default",
+      padding: "md",
+      size: "full",
+      state: "default",
+      elevation: "surface",
+      interactive: "none",
     },
-    // === COMPOUND VARIANTS - Smart Kombinationen ===
-    compoundVariants: [
-      // Touch-optimierte Mindestgrößen für interaktive Cards
-      {
-        interactive: ["hover", "press"],
-        class: "min-h-[var(--touch-target-compact)]",
-      },
-      // Premium-Kombinationen
-      {
-        variant: "aurora-primary",
-        elevation: "strong",
-        class: "shadow-[var(--shadow-premium-strong)], [var(--shadow-glow-primary)]",
-      },
-      // Glass + Strong = Maximum Premium
-      {
-        variant: "glass-primary",
-        elevation: "strong",
-        class: "shadow-[var(--shadow-glow-primary)], [var(--shadow-premium-strong)]",
-      },
-    ],
   },
 );
+
+type CardVariantProps = VariantProps<typeof cardVariants>;
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {
-  asChild?: boolean;
+    Omit<CardVariantProps, "interactive"> {
+  interactive?: CardVariantProps["interactive"] | boolean;
+  title?: string;
+  subtitle?: string;
+  leading?: React.ReactNode;
+  trailing?: React.ReactNode;
+  actions?: React.ReactNode;
+  selectable?: boolean;
+  selected?: boolean;
+  showChevron?: boolean;
+  showMenu?: boolean;
+  menuItems?: Array<{
+    label: string;
+    onClick: () => void;
+    icon?: React.ReactNode;
+    disabled?: boolean;
+  }>;
+  onCardClick?: () => void;
+  onSelectionChange?: (selected: boolean) => void;
+  isLoading?: boolean;
+  disabled?: boolean;
+  clickable?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-// === MAIN CARD COMPONENT ===
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, elevation, interactive, size, asChild = false, ...props }, ref) => {
-    const cardClasses = cardVariants({ variant, elevation, interactive, size });
+  (
+    {
+      className,
+      variant,
+      tone,
+      elevation,
+      intent,
+      padding,
+      size,
+      state,
+      interactive,
+      clickable = false,
+      onCardClick,
+      onClick,
+      title,
+      subtitle,
+      leading,
+      trailing,
+      actions,
+      selectable = false,
+      selected = false,
+      showChevron = false,
+      showMenu = false,
+      menuItems = [],
+      onSelectionChange,
+      isLoading = false,
+      disabled = false,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-    if (asChild && React.isValidElement(props.children)) {
-      return React.cloneElement(
-        props.children as React.ReactElement,
-        {
-          className: cn(cardClasses, className),
-          ref,
-          ...props,
-        } as React.Attributes,
-      );
-    }
+    const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      if (disabled || isLoading) {
+        event.preventDefault();
+        return;
+      }
 
-    return <div className={cn(cardClasses, className)} ref={ref} {...props} />;
+      if (selectable) {
+        const newSelected = !selected;
+        onSelectionChange?.(newSelected);
+      }
+
+      onCardClick?.();
+      onClick?.(event);
+    };
+
+    const handleMenuClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (disabled || isLoading) {
+        event.preventDefault();
+        return;
+      }
+
+      if (clickable && (event.key === "Enter" || event.key === " ")) {
+        event.preventDefault();
+        if (onCardClick) {
+          onCardClick();
+        }
+      }
+    };
+
+    const isClickable = !disabled && !isLoading && (!!onCardClick || selectable || clickable);
+
+    const resolvedInteractive: CardVariantProps["interactive"] =
+      typeof interactive === "boolean" ? (interactive ? "basic" : "none") : interactive;
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          cardVariants({
+            variant,
+            tone,
+            intent,
+            padding,
+            size,
+            state: isLoading ? "loading" : disabled ? "disabled" : selected ? "selected" : state,
+            elevation,
+            interactive: isClickable
+              ? resolvedInteractive === "none"
+                ? "basic"
+                : resolvedInteractive
+              : resolvedInteractive,
+          }),
+          className,
+        )}
+        onClick={isClickable ? handleCardClick : onClick}
+        onKeyDown={isClickable ? handleKeyDown : undefined}
+        role={isClickable ? "button" : undefined}
+        tabIndex={isClickable && !disabled && !isLoading ? 0 : undefined}
+        aria-disabled={disabled || isLoading ? true : undefined}
+        aria-pressed={selected ? true : undefined}
+        {...props}
+      >
+        {(title || leading || trailing || selectable || showMenu || showChevron) && (
+          <CardHeader className="flex flex-row items-center gap-space-md p-space-md">
+            {/* Selection indicator - Enlarged for accessibility */}
+            {selectable && (
+              <div className="flex-shrink-0">
+                <div
+                  className={cn(
+                    "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors",
+                    selected ? "bg-accent border-accent" : "border-line hover:border-accent",
+                  )}
+                >
+                  {selected && (
+                    <svg
+                      className="h-4 w-4 text-accent-contrast"
+                      fill="currentColor"
+                      viewBox="0 0 12 12"
+                    >
+                      <path
+                        d="M10 3L4.5 8.5L2 6"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        fill="none"
+                      />
+                    </svg>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Leading content */}
+            {leading && <div className="flex-shrink-0">{leading}</div>}
+
+            {/* Title and subtitle */}
+            {(title || subtitle) && (
+              <div className="min-w-0 flex-1">
+                {title && (
+                  <CardTitle className="truncate text-base font-semibold leading-snug text-text-primary">
+                    {title}
+                  </CardTitle>
+                )}
+                {subtitle && (
+                  <p className="mt-1 truncate text-sm text-text-secondary">{subtitle}</p>
+                )}
+              </div>
+            )}
+
+            {/* Trailing content */}
+            <div className="flex flex-shrink-0 items-center gap-space-sm">
+              {trailing}
+
+              {showMenu && (
+                <div className="relative">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleMenuClick}
+                    disabled={disabled || isLoading}
+                    aria-label="More options"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+
+                  {/* Simple dropdown menu */}
+                  {isMenuOpen && menuItems.length > 0 && (
+                    <div className="absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-line bg-surface-card shadow-overlay">
+                      {menuItems.map((item, index) => (
+                        <button
+                          key={index}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            item.onClick();
+                            setIsMenuOpen(false);
+                          }}
+                          disabled={item.disabled}
+                          className="flex w-full items-center gap-space-sm px-space-md py-space-sm text-left text-sm text-text-primary first:rounded-t-lg last:rounded-b-lg hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {item.icon}
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {showChevron && (
+                <div className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-surface-muted/60">
+                  <ChevronRight
+                    className={cn(
+                      "h-5 w-5 text-text-secondary transition-transform",
+                      selected && "rotate-90",
+                    )}
+                  />
+                </div>
+              )}
+            </div>
+          </CardHeader>
+        )}
+
+        {/* Main content */}
+        {children && <CardContent className="px-space-md pb-space-md pt-0">{children}</CardContent>}
+
+        {/* Footer actions */}
+        {actions && (
+          <CardFooter className="border-t border-line px-space-md py-space-md">
+            <div className="flex w-full items-center justify-between gap-space-md">{actions}</div>
+          </CardFooter>
+        )}
+
+        {/* Click overlay for better accessibility when disabled */}
+        {(disabled || isLoading) && isClickable && (
+          <div className="absolute inset-0 cursor-not-allowed bg-transparent" />
+        )}
+      </div>
+    );
   },
 );
 Card.displayName = "Card";
-
-// === CARD SUB-COMPONENTS - Aurora Design System ===
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(
-        "flex flex-col gap-[var(--spacing-2)]",
-        "pb-[var(--spacing-4)]",
-        // Mobile-responsive Padding
-        "px-0 md:px-[var(--spacing-1)]",
-        className,
-      )}
+      className={cn("flex flex-col gap-space-sm", "text-text-primary", className)}
       {...props}
     />
   ),
@@ -191,12 +424,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     <h3
       ref={ref}
       className={cn(
-        // Aurora Typography Scale
-        "text-[var(--text-xl)] font-[var(--font-semibold)]",
-        "leading-[var(--leading-tight)] tracking-[-0.01em]",
-        "text-[var(--text-primary)]",
-        // Mobile-responsive
-        "text-lg md:text-xl",
+        "text-lg font-semibold leading-tight tracking-tight text-text-primary",
         className,
       )}
       {...props}
@@ -211,15 +439,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn(
-      // Aurora Typography
-      "text-[var(--text-base)] font-[var(--font-normal)]",
-      "leading-[var(--leading-normal)]",
-      "text-[var(--text-secondary)]",
-      // Mobile-optimierte Zeilen
-      "text-sm md:text-base",
-      className,
-    )}
+    className={cn("text-sm leading-relaxed text-text-secondary", className)}
     {...props}
   />
 ));
@@ -229,11 +449,7 @@ const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(
-        "flex flex-col gap-[var(--spacing-4)]",
-        // Keine zusätzliche Padding - wird über Card size gesteuert
-        className,
-      )}
+      className={cn("flex flex-col gap-space-md", "text-text-primary", className)}
       {...props}
     />
   ),
@@ -245,11 +461,8 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
     <div
       ref={ref}
       className={cn(
-        "flex items-center justify-between gap-[var(--spacing-4)]",
-        "pt-[var(--spacing-4)]",
-        "border-t border-[var(--border-subtle)]",
-        // Mobile-responsive Layout
-        "flex-col gap-[var(--spacing-3)] md:flex-row md:gap-[var(--spacing-4)]",
+        "flex items-center justify-between gap-space-md border-t border-line",
+        "text-text-primary",
         className,
       )}
       {...props}
@@ -258,45 +471,4 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardFooter.displayName = "CardFooter";
 
-// === EXPORT EVERYTHING ===
 export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, cardVariants };
-
-// === USAGE EXAMPLES ===
-/*
-
-// Standard Aurora Card
-<Card variant="aurora-soft" size="default">
-  <CardHeader>
-    <CardTitle>Model Selection</CardTitle>
-    <CardDescription>Choose your AI model</CardDescription>
-  </CardHeader>
-  <CardContent>
-    Content here...
-  </CardContent>
-</Card>
-
-// Interactive Premium Card
-<Card
-  variant="aurora-primary"
-  elevation="strong"
-  interactive="press"
-  size="lg"
->
-  <CardContent>Hero content</CardContent>
-</Card>
-
-// Glassmorphism Card
-<Card variant="glass-primary" elevation="medium">
-  <CardContent>Glass content</CardContent>
-</Card>
-
-// Touch-optimized Mobile Card
-<Card
-  variant="aurora-soft"
-  interactive="press"
-  className="touch-manipulation"
->
-  <CardContent>Mobile content</CardContent>
-</Card>
-
-*/
