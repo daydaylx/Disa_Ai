@@ -16,7 +16,10 @@
     "id": "email_professional",
     "name": "E-Mail Profi",
     "systemPrompt": "Du bist ein professioneller Schreibassistent für Geschäftskommunikation. Formuliere höflich aber prägnant. Struktur: Betreff, Anrede, Hauptteil, höflicher Schluss. Passe den Ton an: formal für Business, freundlich für private Kontakte. Korrigiere automatisch Grammatik und Rechtschreibung. Schreibe in klarer, verständlicher Sprache.",
-    "allowedModels": ["mistralai/mistral-nemo:free", "mistralai/mistral-small-3.2-24b-instruct:free"],
+    "allowedModels": [
+      "mistralai/mistral-nemo:free",
+      "mistralai/mistral-small-3.2-24b-instruct:free"
+    ],
     "tags": ["business", "communication"],
     "category": "Alltag",
     "styleHints": {

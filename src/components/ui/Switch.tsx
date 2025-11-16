@@ -38,7 +38,15 @@ const switchSizes = {
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
   (
-    { checked, onChange, id, disabled = false, "aria-describedby": describedBy, size = "md", className },
+    {
+      checked,
+      onChange,
+      id,
+      disabled = false,
+      "aria-describedby": describedBy,
+      size = "md",
+      className,
+    },
     ref,
   ) => {
     const handleClick = () => {

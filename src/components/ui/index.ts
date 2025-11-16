@@ -8,7 +8,7 @@ export * from "./dropdown-menu";
 export * from "./GlassPanel";
 export * from "./IconButton";
 export * from "./input";
-export { ActionCard,FilterChip, MetricRow, ModelCard, RoleCard } from "./modern-cards";
+export { ActionCard, FilterChip, MetricRow, ModelCard, RoleCard } from "./modern-cards";
 export * from "./select";
 export * from "./StaticSurfaceSection";
 export * from "./Switch";

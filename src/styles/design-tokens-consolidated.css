@@ -21,10 +21,10 @@
    * ======================================== */
 
   /* Aurora Vibrant Dark - Primäre Basis */
-  --bg-aurora-0: #0a0e1a;    /* Deep Navy Base */
-  --bg-aurora-1: #0f172a;    /* Container Background */
-  --bg-aurora-2: #1a1f2e;    /* Card Surfaces */
-  --bg-aurora-3: #1e293b;    /* Elevated Surfaces */
+  --bg-aurora-0: #0a0e1a; /* Deep Navy Base */
+  --bg-aurora-1: #0f172a; /* Container Background */
+  --bg-aurora-2: #1a1f2e; /* Card Surfaces */
+  --bg-aurora-3: #1e293b; /* Elevated Surfaces */
 
   /* Aurora Primary: Indigo-Violet Familie */
   --aurora-primary-50: #eef2ff;
@@ -32,7 +32,7 @@
   --aurora-primary-200: #c7d2fe;
   --aurora-primary-300: #a5b4fc;
   --aurora-primary-400: #818cf8;
-  --aurora-primary-500: #6366f1;  /* Main Aurora Primary */
+  --aurora-primary-500: #6366f1; /* Main Aurora Primary */
   --aurora-primary-600: #4f46e5;
   --aurora-primary-700: #4338ca;
   --aurora-primary-800: #3730a3;
@@ -40,19 +40,19 @@
   --aurora-primary-950: #1e1b4b;
 
   /* Aurora Accent Colors */
-  --aurora-green-500: #10b981;    /* Success/Positive States */
+  --aurora-green-500: #10b981; /* Success/Positive States */
   --aurora-green-400: #34d399;
   --aurora-green-600: #059669;
 
-  --aurora-lila-500: #8b5cf6;     /* Special/Premium Features */
+  --aurora-lila-500: #8b5cf6; /* Special/Premium Features */
   --aurora-lila-400: #a78bfa;
   --aurora-lila-600: #7c3aed;
 
-  --aurora-yellow-500: #facc15;   /* Warning/Attention */
+  --aurora-yellow-500: #facc15; /* Warning/Attention */
 
   /* Text mit Boosted Contrast für Glass-Hintergründe */
-  --text-primary: #f8fafc;        /* Very high contrast (12:1) */
-  --text-secondary: #d1d5db;      /* Boosted from #9ca3af */
+  --text-primary: #f8fafc; /* Very high contrast (12:1) */
+  --text-secondary: #d1d5db; /* Boosted from #9ca3af */
   --text-muted: #94a3b8;
   --text-disabled: #64748b;
   --text-inverse: #0a0e1a;
@@ -63,10 +63,10 @@
    * ======================================== */
 
   /* Glass Surface Opacities - Balanced Premium */
-  --glass-surface-subtle: rgba(26, 31, 46, 0.2);     /* Leichte Glas-Elemente */
-  --glass-surface-medium: rgba(26, 31, 46, 0.28);     /* Standard Cards */
-  --glass-surface-strong: rgba(26, 31, 46, 0.35);     /* Hero-Bereiche */
-  --glass-surface-overlay: rgba(10, 14, 26, 0.85);    /* Modals */
+  --glass-surface-subtle: rgba(26, 31, 46, 0.2); /* Leichte Glas-Elemente */
+  --glass-surface-medium: rgba(26, 31, 46, 0.28); /* Standard Cards */
+  --glass-surface-strong: rgba(26, 31, 46, 0.35); /* Hero-Bereiche */
+  --glass-surface-overlay: rgba(10, 14, 26, 0.85); /* Modals */
 
   /* Glass Border Glows - Aurora Accents gezielt */
   --glass-border-subtle: rgba(255, 255, 255, 0.24);
@@ -76,9 +76,9 @@
   --glass-border-lila: rgba(139, 92, 246, 0.35);
 
   /* Backdrop Blur - Balanced Premium (6-14px) */
-  --backdrop-blur-subtle: 6px;   /* Erhöht von 4px für Premium-Feel */
-  --backdrop-blur-medium: 10px;  /* Erhöht von 8px */
-  --backdrop-blur-strong: 14px;  /* Erhöht von 12px, noch lesbar */
+  --backdrop-blur-subtle: 6px; /* Erhöht von 4px für Premium-Feel */
+  --backdrop-blur-medium: 10px; /* Erhöht von 8px */
+  --backdrop-blur-strong: 14px; /* Erhöht von 12px, noch lesbar */
 
   /* ========================================
    * AURORA SHADOW & GLOW SYSTEM
@@ -106,21 +106,21 @@
    * ======================================== */
 
   --spacing-0: 0;
-  --spacing-1: 4px;    /* Micro spacing */
-  --spacing-2: 8px;    /* Base unit */
-  --spacing-3: 12px;   /* Small gap */
-  --spacing-4: 16px;   /* Standard gap */
-  --spacing-5: 20px;   /* Medium gap */
-  --spacing-6: 24px;   /* Large gap */
-  --spacing-7: 32px;   /* Section gap */
-  --spacing-8: 40px;   /* Container gap */
-  --spacing-9: 48px;   /* Hero gap */
-  --spacing-10: 64px;  /* Page gap */
+  --spacing-1: 4px; /* Micro spacing */
+  --spacing-2: 8px; /* Base unit */
+  --spacing-3: 12px; /* Small gap */
+  --spacing-4: 16px; /* Standard gap */
+  --spacing-5: 20px; /* Medium gap */
+  --spacing-6: 24px; /* Large gap */
+  --spacing-7: 32px; /* Section gap */
+  --spacing-8: 40px; /* Container gap */
+  --spacing-9: 48px; /* Hero gap */
+  --spacing-10: 64px; /* Page gap */
 
   /* Mobile Touch Spacing */
-  --touch-target-compact: 44px;    /* WCAG AA Minimum */
+  --touch-target-compact: 44px; /* WCAG AA Minimum */
   --touch-target-comfortable: 48px; /* Preferred */
-  --touch-target-spacious: 56px;   /* Hero buttons */
+  --touch-target-spacious: 56px; /* Hero buttons */
 
   /* Mobile Safe Area */
   --safe-top: env(safe-area-inset-top, 0);
@@ -132,12 +132,12 @@
    * UNIFIED RADIUS SYSTEM
    * ======================================== */
 
-  --radius-xs: 6px;    /* Small elements */
-  --radius-sm: 10px;   /* Buttons, chips */
-  --radius-md: 14px;   /* Cards, inputs */
-  --radius-lg: 18px;   /* Hero cards */
-  --radius-xl: 24px;   /* Large surfaces */
-  --radius-full: 50%;  /* Circles */
+  --radius-xs: 6px; /* Small elements */
+  --radius-sm: 10px; /* Buttons, chips */
+  --radius-md: 14px; /* Cards, inputs */
+  --radius-lg: 18px; /* Hero cards */
+  --radius-xl: 24px; /* Large surfaces */
+  --radius-full: 50%; /* Circles */
 
   /* ========================================
    * RESPONSIVE TYPOGRAPHY SCALE
@@ -149,20 +149,20 @@
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
   /* Type Scale - Mobile optimiert */
-  --text-xs: 0.75rem;   /* 12px - Caption, metadata */
-  --text-sm: 0.875rem;  /* 14px - Body small, labels */
-  --text-base: 1rem;    /* 16px - Body text */
-  --text-lg: 1.125rem;  /* 18px - Subtitles */
-  --text-xl: 1.25rem;   /* 20px - Card titles */
-  --text-2xl: 1.5rem;   /* 24px - Page titles */
+  --text-xs: 0.75rem; /* 12px - Caption, metadata */
+  --text-sm: 0.875rem; /* 14px - Body small, labels */
+  --text-base: 1rem; /* 16px - Body text */
+  --text-lg: 1.125rem; /* 18px - Subtitles */
+  --text-xl: 1.25rem; /* 20px - Card titles */
+  --text-2xl: 1.5rem; /* 24px - Page titles */
   --text-3xl: 1.875rem; /* 30px - Hero titles */
-  --text-4xl: 2.25rem;  /* 36px - Display */
+  --text-4xl: 2.25rem; /* 36px - Display */
 
   /* Line Heights - Mobile Reading optimiert */
-  --leading-tight: 1.25;    /* Headlines */
-  --leading-snug: 1.4;      /* Subtitles */
-  --leading-normal: 1.5;    /* Body text (mobile optimiert) */
-  --leading-relaxed: 1.6;   /* Large text */
+  --leading-tight: 1.25; /* Headlines */
+  --leading-snug: 1.4; /* Subtitles */
+  --leading-normal: 1.5; /* Body text (mobile optimiert) */
+  --leading-relaxed: 1.6; /* Large text */
 
   /* Font Weights */
   --font-normal: 400;
@@ -176,15 +176,15 @@
    * ======================================== */
 
   /* Durations */
-  --motion-fast: 120ms;      /* Micro interactions */
-  --motion-medium: 180ms;    /* Standard transitions */
-  --motion-slow: 300ms;      /* Complex animations */
-  --motion-hero: 500ms;      /* Hero effects */
+  --motion-fast: 120ms; /* Micro interactions */
+  --motion-medium: 180ms; /* Standard transitions */
+  --motion-slow: 300ms; /* Complex animations */
+  --motion-hero: 500ms; /* Hero effects */
 
   /* Premium Easings */
-  --ease-aurora: cubic-bezier(0.25, 0.1, 0.25, 1);     /* Smooth aurora */
-  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);       /* Premium spring */
-  --ease-glass: cubic-bezier(0.2, 0, 0.38, 0.9);       /* Glass depth */
+  --ease-aurora: cubic-bezier(0.25, 0.1, 0.25, 1); /* Smooth aurora */
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1); /* Premium spring */
+  --ease-glass: cubic-bezier(0.2, 0, 0.38, 0.9); /* Glass depth */
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Playful */
 
   /* ========================================
@@ -194,8 +194,7 @@
   /* Universal State Transitions */
   --transition-colors:
     background-color var(--motion-fast) var(--ease-aurora),
-    border-color var(--motion-fast) var(--ease-aurora),
-    color var(--motion-fast) var(--ease-aurora);
+    border-color var(--motion-fast) var(--ease-aurora), color var(--motion-fast) var(--ease-aurora);
 
   --transition-transform: transform var(--motion-medium) var(--ease-premium);
   --transition-shadow: box-shadow var(--motion-medium) var(--ease-aurora);
@@ -240,8 +239,8 @@
   --color-error-border: rgba(239, 68, 68, 0.3);
 
   /* Surface System */
-  --surface-base: var(--bg-aurora-1);           /* Page background */
-  --surface-card: var(--glass-surface-medium);  /* Card backgrounds */
+  --surface-base: var(--bg-aurora-1); /* Page background */
+  --surface-card: var(--glass-surface-medium); /* Card backgrounds */
   --surface-raised: var(--glass-surface-strong); /* Elevated cards */
   --surface-overlay: var(--glass-surface-overlay); /* Modals */
 
@@ -270,7 +269,7 @@
 
   /* Mobile Layout Dimensions */
   --header-height: 64px;
-  --bottom-nav-height: 72px;  /* Touch-optimiert */
+  --bottom-nav-height: 72px; /* Touch-optimiert */
   --container-padding: var(--spacing-4);
   --container-max-width: 1200px;
 
@@ -324,8 +323,8 @@
     --grid-gap: var(--spacing-3);
 
     /* Kleinere Typography für enge Screens */
-    --text-3xl: 1.75rem;  /* 28px statt 30px */
-    --text-4xl: 2rem;     /* 32px statt 36px */
+    --text-3xl: 1.75rem; /* 28px statt 30px */
+    --text-4xl: 2rem; /* 32px statt 36px */
   }
 }
 
@@ -342,7 +341,7 @@
     --grid-gap: var(--spacing-6);
 
     /* Erweiterte Touch Targets für Hover-Geräte */
-    --touch-target-comfortable: 44px;  /* Kann kleiner sein mit Maus */
+    --touch-target-comfortable: 44px; /* Kann kleiner sein mit Maus */
   }
 }
 
