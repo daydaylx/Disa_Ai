@@ -63,7 +63,11 @@ export function QuickstartGrid({
         {QUICKSTARTS.map((quickstart) => {
           const Icon = quickstart.icon;
           return (
-            <Card className="flex flex-col gap-3">
+            <Card
+              key={quickstart.id}
+              className="flex flex-col gap-3 cursor-pointer transition-transform hover:scale-105"
+              onClick={() => onStart(quickstart.system, quickstart.user)}
+            >
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_12px_35px_rgba(97,231,255,0.25)]">
                   <Icon className="h-5 w-5" />

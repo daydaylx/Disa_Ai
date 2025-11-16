@@ -270,14 +270,12 @@ function PerformanceBar({
 // Enhanced Model Card for Dense Information Layout
 function DenseModelCard({
   model,
-  isSelected,
   isFavorite,
   onSelect,
   onToggleFavorite,
   onShowDetails,
 }: {
   model: EnhancedModel;
-  isSelected: boolean;
   isFavorite: boolean;
   onSelect: () => void;
   onToggleFavorite: () => void;
@@ -630,7 +628,6 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <DenseModelCard
                 key={model.id}
                 model={model}
-                isSelected={selectedModels.has(model.id)}
                 isFavorite={isModelFavorite(model.id)}
                 onSelect={() => handleSelectModel(model)}
                 onToggleFavorite={() => handleToggleFavorite(model)}

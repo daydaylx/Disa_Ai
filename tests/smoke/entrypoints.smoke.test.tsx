@@ -3,6 +3,8 @@ import type React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
+import { ToastsProvider } from "../../src/ui/toast";
+
 beforeAll(() => {
   if (!("CSS" in window)) {
     Object.defineProperty(window, "CSS", { value: {}, writable: true });
@@ -63,20 +65,18 @@ vi.mock("../../src/hooks/use-storage", () => ({
   }),
 }));
 
-vi.mock("../../src/components/ui/toast/ToastsProvider", () => ({
-  useToasts: () => ({ push: vi.fn() }),
-}));
-
 import Chat from "../../src/pages/Chat";
 import SettingsOverviewPage from "../../src/pages/SettingsOverviewPage";
 
 function renderWithRouter(pathname: string, element: React.ReactElement) {
   return render(
-    <MemoryRouter initialEntries={[pathname]}>
-      <Routes>
-        <Route path={pathname} element={element} />
-      </Routes>
-    </MemoryRouter>,
+    <ToastsProvider>
+      <MemoryRouter initialEntries={[pathname]}>
+        <Routes>
+          <Route path={pathname} element={element} />
+        </Routes>
+      </MemoryRouter>
+    </ToastsProvider>,
   );
 }
 
