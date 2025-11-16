@@ -182,48 +182,68 @@ export function useFavoritesManager(): FavoritesManagerState {
   // ========================================================================
 
   const trackRoleUsage = useCallback((roleId: string, sessionLength = 0) => {
+    if (!roleId) {
+      console.warn("trackRoleUsage called without valid roleId");
+      return;
+    }
+
     const now = new Date();
 
-    setUsage((prev) => ({
-      ...prev,
-      roles: {
-        ...prev.roles,
-        [roleId]: {
-          count: (prev.roles[roleId]?.count || 0) + 1,
-          totalDuration: (prev.roles[roleId]?.totalDuration || 0) + sessionLength,
-          lastUsed: now,
-          averageSessionLength:
-            sessionLength > 0
-              ? ((prev.roles[roleId]?.totalDuration || 0) + sessionLength) /
-                ((prev.roles[roleId]?.count || 0) + 1)
-              : prev.roles[roleId]?.averageSessionLength || 0,
+    setUsage((prev) => {
+      const prevRoles = prev.roles || {};
+      const existingRoleData = prevRoles[roleId] || {};
+
+      return {
+        ...prev,
+        roles: {
+          ...prevRoles,
+          [roleId]: {
+            count: (existingRoleData.count || 0) + 1,
+            totalDuration: (existingRoleData.totalDuration || 0) + sessionLength,
+            lastUsed: now,
+            averageSessionLength:
+              sessionLength > 0
+                ? ((existingRoleData.totalDuration || 0) + sessionLength) /
+                  ((existingRoleData.count || 0) + 1)
+                : existingRoleData.averageSessionLength || 0,
+          },
         },
-      },
-      lastSync: now,
-    }));
+        lastSync: now,
+      };
+    });
   }, []);
 
   const trackModelUsage = useCallback((modelId: string, tokensUsed = 0, cost = 0) => {
+    if (!modelId) {
+      console.warn("trackModelUsage called without valid modelId");
+      return;
+    }
+
     const now = new Date();
 
-    setUsage((prev) => ({
-      ...prev,
-      models: {
-        ...prev.models,
-        [modelId]: {
-          count: (prev.models[modelId]?.count || 0) + 1,
-          totalTokens: (prev.models[modelId]?.totalTokens || 0) + tokensUsed,
-          totalCost: (prev.models[modelId]?.totalCost || 0) + cost,
-          lastUsed: now,
-          averageTokensPerSession:
-            tokensUsed > 0
-              ? ((prev.models[modelId]?.totalTokens || 0) + tokensUsed) /
-                ((prev.models[modelId]?.count || 0) + 1)
-              : prev.models[modelId]?.averageTokensPerSession || 0,
+    setUsage((prev) => {
+      const prevModels = prev.models || {};
+      const existingModelData = prevModels[modelId] || {};
+
+      return {
+        ...prev,
+        models: {
+          ...prevModels,
+          [modelId]: {
+            count: (existingModelData.count || 0) + 1,
+            totalTokens: (existingModelData.totalTokens || 0) + tokensUsed,
+            totalCost: (existingModelData.totalCost || 0) + cost,
+            lastUsed: now,
+            averageTokensPerSession:
+              tokensUsed > 0
+                ? ((existingModelData.totalTokens || 0) + tokensUsed) /
+                  ((existingModelData.count || 0) + 1)
+                : existingModelData.averageTokensPerSession || 0,
+          },
         },
-      },
-      lastSync: now,
-    }));
+        lastSync: now,
+      };
+    });
   }, []);
 
   // ========================================================================
@@ -232,57 +252,67 @@ export function useFavoritesManager(): FavoritesManagerState {
 
   const isRoleFavorite = useCallback(
     (roleId: string): boolean => {
-      return favorites.roles.items.includes(roleId);
+      if (!roleId) return false;
+      return favorites.roles?.items?.includes?.(roleId) ?? false;
     },
-    [favorites.roles.items],
+    [favorites.roles],
   );
 
   const isModelFavorite = useCallback(
     (modelId: string): boolean => {
-      return favorites.models.items.includes(modelId);
+      if (!modelId) return false;
+      return favorites.models?.items?.includes?.(modelId) ?? false;
     },
-    [favorites.models.items],
+    [favorites.models],
   );
 
   const getFavoriteRoles = useCallback(
     (allRoles: EnhancedRole[]): EnhancedRole[] => {
-      const favoriteIds = new Set(favorites.roles.items);
+      const items = favorites.roles?.items || [];
+      const favoriteIds = new Set(items);
       return allRoles
-        .filter((role) => favoriteIds.has(role.id))
+        .filter((role) => role.id && favoriteIds.has(role.id))
         .sort((a, b) => {
           // Sort by favorite order (newest first)
-          const aIndex = favorites.roles.items.indexOf(a.id);
-          const bIndex = favorites.roles.items.indexOf(b.id);
+          const aIndex = items.indexOf(a.id);
+          const bIndex = items.indexOf(b.id);
           return bIndex - aIndex;
         });
     },
-    [favorites.roles.items],
+    [favorites.roles],
   );
 
   const getFavoriteModels = useCallback(
     (allModels: EnhancedModel[]): EnhancedModel[] => {
-      const favoriteIds = new Set(favorites.models.items);
+      const items = favorites.models?.items || [];
+      const favoriteIds = new Set(items);
       return allModels
-        .filter((model) => favoriteIds.has(model.id))
+        .filter((model) => model.id && favoriteIds.has(model.id))
         .sort((a, b) => {
           // Sort by favorite order (newest first)
-          const aIndex = favorites.models.items.indexOf(a.id);
-          const bIndex = favorites.models.items.indexOf(b.id);
+          const aIndex = items.indexOf(a.id);
+          const bIndex = items.indexOf(b.id);
           return bIndex - aIndex;
         });
     },
-    [favorites.models.items],
+    [favorites.models],
   );
 
   const getMostUsedRoles = useCallback(
     (allRoles: EnhancedRole[], limit = 6): EnhancedRole[] => {
-      const roleUsageMap = new Map(Object.entries(usage.roles).map(([id, data]) => [id, data]));
+      const roles = usage.roles || {};
+      const roleUsageMap = new Map(Object.entries(roles).map(([id, data]) => [id, data]));
 
       return allRoles
-        .filter((role) => roleUsageMap.has(role.id))
+        .filter((role) => role.id && roleUsageMap.has(role.id))
         .sort((a, b) => {
-          const aUsage = roleUsageMap.get(a.id)!;
-          const bUsage = roleUsageMap.get(b.id)!;
+          const aUsage = roleUsageMap.get(a.id);
+          const bUsage = roleUsageMap.get(b.id);
+
+          // Check if usage data exists
+          if (!aUsage || !bUsage) {
+            return 0;
+          }
 
           // Primary sort by count, secondary by last used
           if (aUsage.count !== bUsage.count) {
@@ -297,13 +327,19 @@ export function useFavoritesManager(): FavoritesManagerState {
 
   const getMostUsedModels = useCallback(
     (allModels: EnhancedModel[], limit = 8): EnhancedModel[] => {
-      const modelUsageMap = new Map(Object.entries(usage.models).map(([id, data]) => [id, data]));
+      const models = usage.models || {};
+      const modelUsageMap = new Map(Object.entries(models).map(([id, data]) => [id, data]));
 
       return allModels
-        .filter((model) => modelUsageMap.has(model.id))
+        .filter((model) => model.id && modelUsageMap.has(model.id))
         .sort((a, b) => {
-          const aUsage = modelUsageMap.get(a.id)!;
-          const bUsage = modelUsageMap.get(b.id)!;
+          const aUsage = modelUsageMap.get(a.id);
+          const bUsage = modelUsageMap.get(b.id);
+
+          // Check if usage data exists
+          if (!aUsage || !bUsage) {
+            return 0;
+          }
 
           // Primary sort by count, secondary by last used
           if (aUsage.count !== bUsage.count) {
@@ -321,18 +357,26 @@ export function useFavoritesManager(): FavoritesManagerState {
   // ========================================================================
 
   const getPerformanceMetrics = useCallback(() => {
-    const totalRoleUsage = Object.values(usage.roles).reduce((sum, role) => sum + role.count, 0);
-    const totalModelUsage = Object.values(usage.models).reduce(
-      (sum, model) => sum + model.count,
+    const roles = usage.roles || {};
+    const models = usage.models || {};
+    const roleItems = favorites.roles?.items || [];
+    const modelItems = favorites.models?.items || [];
+
+    const totalRoleUsage = Object.values(roles).reduce(
+      (sum, role: any) => sum + (role?.count || 0),
+      0,
+    );
+    const totalModelUsage = Object.values(models).reduce(
+      (sum, model: any) => sum + (model?.count || 0),
       0,
     );
 
-    const favoriteRoleUsage = favorites.roles.items.reduce((sum, roleId) => {
-      return sum + (usage.roles[roleId]?.count || 0);
+    const favoriteRoleUsage = roleItems.reduce((sum, roleId) => {
+      return sum + (roles[roleId]?.count || 0);
     }, 0);
 
-    const favoriteModelUsage = favorites.models.items.reduce((sum, modelId) => {
-      return sum + (usage.models[modelId]?.count || 0);
+    const favoriteModelUsage = modelItems.reduce((sum, modelId) => {
+      return sum + (models[modelId]?.count || 0);
     }, 0);
 
     const favoriteUsageRate =
@@ -340,10 +384,13 @@ export function useFavoritesManager(): FavoritesManagerState {
         ? (favoriteRoleUsage + favoriteModelUsage) / (totalRoleUsage + totalModelUsage)
         : 0;
 
+    const roleValues = Object.values(roles);
     const averageSessionLength =
-      Object.values(usage.roles).reduce((sum, role) => {
-        return sum + role.averageSessionLength;
-      }, 0) / Math.max(Object.keys(usage.roles).length, 1);
+      roleValues.length > 0
+        ? roleValues.reduce((sum, role: any) => {
+            return sum + (role?.averageSessionLength || 0);
+          }, 0) / roleValues.length
+        : 0;
 
     return {
       totalRoleUsage,
@@ -390,21 +437,41 @@ export function useFavoritesManager(): FavoritesManagerState {
 // HELPER FUNCTIONS
 // ============================================================================
 
+/**
+ * Lightweight hook for components that only need to check favorite status
+ * Performance optimized - doesn't trigger re-renders on usage changes
+ */
+export function useFavoriteStatus() {
+  const [favorites] = useState<FavoritesState>(() => loadFavorites());
+
+  return {
+    isRoleFavorite: (roleId: string) => favorites.roles?.items?.includes?.(roleId) ?? false,
+    isModelFavorite: (modelId: string) => favorites.models?.items?.includes?.(modelId) ?? false,
+    favoriteRoles: favorites.roles?.items || [],
+    favoriteModels: favorites.models?.items || [],
+  };
+}
+
 function loadFavorites(): FavoritesState {
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.FAVORITES);
     if (stored) {
       const parsed = JSON.parse(stored);
+
+      // Safely extract roles and models data
+      const parsedRoles = parsed.roles || {};
+      const parsedModels = parsed.models || {};
+
       return {
         roles: {
-          items: parsed.roles?.items || [],
+          items: Array.isArray(parsedRoles.items) ? parsedRoles.items : [],
           maxCount: MAX_FAVORITES.ROLES,
-          lastUpdated: new Date(parsed.roles?.lastUpdated || Date.now()),
+          lastUpdated: new Date(parsedRoles.lastUpdated || Date.now()),
         },
         models: {
-          items: parsed.models?.items || [],
+          items: Array.isArray(parsedModels.items) ? parsedModels.items : [],
           maxCount: MAX_FAVORITES.MODELS,
-          lastUpdated: new Date(parsed.models?.lastUpdated || Date.now()),
+          lastUpdated: new Date(parsedModels.lastUpdated || Date.now()),
         },
       };
     }
@@ -433,20 +500,26 @@ function loadUsageAnalytics(): UsageAnalytics {
     if (stored) {
       const parsed = JSON.parse(stored);
 
+      // Safely extract roles and models, defaulting to empty objects if missing
+      const parsedRoles = parsed.roles || {};
+      const parsedModels = parsed.models || {};
+
       // Convert date strings back to Date objects
       const roles: Record<string, any> = {};
-      for (const [id, data] of Object.entries(parsed.roles || {})) {
+      for (const [id, data] of Object.entries(parsedRoles)) {
+        const roleData = data as any;
         roles[id] = {
-          ...(data as any),
-          lastUsed: new Date((data as any).lastUsed),
+          ...roleData,
+          lastUsed: new Date(roleData.lastUsed || Date.now()),
         };
       }
 
       const models: Record<string, any> = {};
-      for (const [id, data] of Object.entries(parsed.models || {})) {
+      for (const [id, data] of Object.entries(parsedModels)) {
+        const modelData = data as any;
         models[id] = {
-          ...(data as any),
-          lastUsed: new Date((data as any).lastUsed),
+          ...modelData,
+          lastUsed: new Date(modelData.lastUsed || Date.now()),
         };
       }
 
@@ -465,20 +538,5 @@ function loadUsageAnalytics(): UsageAnalytics {
     roles: {},
     models: {},
     lastSync: new Date(),
-  };
-}
-
-/**
- * Lightweight hook for components that only need to check favorite status
- * Performance optimized - doesn't trigger re-renders on usage changes
- */
-export function useFavoriteStatus() {
-  const [favorites] = useState<FavoritesState>(() => loadFavorites());
-
-  return {
-    isRoleFavorite: (roleId: string) => favorites.roles.items.includes(roleId),
-    isModelFavorite: (modelId: string) => favorites.models.items.includes(modelId),
-    favoriteRoles: favorites.roles.items,
-    favoriteModels: favorites.models.items,
   };
 }
