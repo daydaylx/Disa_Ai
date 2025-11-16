@@ -265,7 +265,7 @@ export default defineConfig(({ mode }) => {
           "./src/pages/Chat.tsx",
           "./src/components/chat/ChatScreen.tsx",
           "./src/app/layouts/AppShell.tsx",
-          "./src/components/ui/button.tsx",
+          "./src/ui/Button.tsx",
           "./src/hooks/useSettings.ts",
         ],
       },
