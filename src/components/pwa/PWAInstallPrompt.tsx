@@ -65,11 +65,11 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
         className,
       )}
     >
-      <div className="max-h-[40vh] overflow-y-auto rounded-3xl glass-panel--glow-green border-glass-strong p-6 shadow-glow-green backdrop-blur-[var(--backdrop-blur-strong)] sm:max-h-none sm:p-8 animate-in slide-in-from-bottom-8 duration-500 ease-[var(--motion-ease-elastic)]">
+      <div className="max-h-[40vh] overflow-y-auto rounded-3xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-6 sm:max-h-none sm:p-8 animate-in slide-in-from-bottom-8 duration-500 ease-[var(--motion-ease-elastic)]">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="mb-3 flex items-center gap-3">
-              <div className="p-3 rounded-2xl glass-panel--glow text-primary shadow-glow-primary">
+              <div className="p-3 rounded-2xl bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-medium)] text-primary shadow-[var(--shadow-glow-primary)]">
                 <Smartphone className="h-6 w-6" />
               </div>
               <div>
@@ -84,7 +84,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
               <Button
                 onClick={handleInstall}
                 size="lg"
-                className="order-1 flex-1 glass-panel--glow group hover:shadow-glow-green hover:scale-[1.02]"
+                className="order-1 flex-1 bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-soft)] group hover:shadow-[var(--shadow-glow-green)] hover:scale-[1.02] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]"
               >
                 <Download className="mr-2 h-5 w-5" />
                 Jetzt installieren
@@ -93,7 +93,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
                 onClick={handleDismiss}
                 size="lg"
                 variant="ghost"
-                className="order-2 sm:order-2 group hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-[1.02]"
+                className="order-2 sm:order-2 group hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-subtle)] hover:scale-[1.02] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]"
               >
                 Später
               </Button>
@@ -104,7 +104,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
             onClick={handleDismiss}
             variant="ghost"
             size="icon"
-            className="h-10 w-10 p-2 rounded-2xl glass-panel hover:glass-panel--glow hover:shadow-glow-subtle hover:rotate-90 transition-all duration-300 ease-[var(--motion-ease-elastic)]"
+            className="h-10 w-10 p-2 rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-subtle)] hover:rotate-90 transition-all duration-300 ease-[var(--motion-ease-elastic)]"
             aria-label="Installations-Prompt schließen"
           >
             <X className="h-5 w-5" />

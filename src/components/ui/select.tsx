@@ -1,100 +1,105 @@
 import * as SelectPrimitive from "@radix-ui/react-select";
+import { cva, type VariantProps } from "class-variance-authority";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "../../lib/utils";
 
 const Select = SelectPrimitive.Root;
-
 const SelectGroup = SelectPrimitive.Group;
-
 const SelectValue = SelectPrimitive.Value;
+
+// Aurora Select Trigger Variants with CVA
+const selectTriggerVariants = cva(
+  // Aurora Base Styles - Mobile-First Glass Design
+  [
+    "flex w-full items-center justify-between rounded-[var(--radius-md)]",
+    "text-[var(--text-primary)] font-medium tracking-[-0.01em]",
+    "[&>span]:line-clamp-1 border",
+    // Aurora Premium Transitions
+    "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+    // Focus States
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]",
+    // Disabled States
+    "disabled:cursor-not-allowed disabled:opacity-50",
+    // Touch-optimized
+    "select-none touch-manipulation",
+  ].join(" "),
+  {
+    variants: {
+      // === AURORA GLASS VARIANTS ===
+      variant: {
+        "aurora-soft": [
+          // Subtle Aurora Glass Input
+          "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+          "border-[var(--glass-border-subtle)] shadow-[var(--shadow-glow-soft)]",
+          // Interactive States
+          "hover:bg-[var(--glass-surface-medium)] hover:border-[var(--glass-border-medium)]",
+          "focus-visible:bg-[var(--glass-surface-medium)] focus-visible:border-[var(--glass-border-aurora)]",
+          "data-[state=open]:bg-[var(--glass-surface-medium)] data-[state=open]:border-[var(--glass-border-aurora)]",
+        ].join(" "),
+
+        "glass-primary": [
+          // Premium Aurora Glass Input
+          "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)]",
+          "border-[var(--glass-border-medium)] shadow-[var(--shadow-premium-subtle)]",
+          // Premium Interactive States
+          "hover:bg-[var(--glass-surface-strong)] hover:border-[var(--glass-border-aurora)] hover:shadow-[var(--shadow-premium-medium)]",
+          "focus-visible:bg-[var(--glass-surface-strong)] focus-visible:border-[var(--aurora-primary-500)] focus-visible:shadow-[var(--shadow-glow-primary)]",
+          "data-[state=open]:bg-[var(--glass-surface-strong)] data-[state=open]:border-[var(--aurora-primary-500)] data-[state=open]:shadow-[var(--shadow-glow-primary)]",
+        ].join(" "),
+
+        "glass-ghost": [
+          // Minimal Aurora Glass
+          "bg-transparent backdrop-blur-[var(--backdrop-blur-subtle)]",
+          "border-[var(--glass-border-subtle)]",
+          // Subtle Interactive States
+          "hover:bg-[var(--glass-surface-subtle)] hover:border-[var(--glass-border-medium)]",
+          "focus-visible:bg-[var(--glass-surface-subtle)] focus-visible:border-[var(--glass-border-aurora)]",
+          "data-[state=open]:bg-[var(--glass-surface-subtle)] data-[state=open]:border-[var(--glass-border-aurora)]",
+        ].join(" "),
+      },
+
+      // === TOUCH-OPTIMIZED SIZES ===
+      size: {
+        sm: "min-h-[var(--touch-target-compact)] px-3 py-2 text-[var(--text-sm)]",
+        default: "min-h-[var(--touch-target-comfortable)] px-4 py-3 text-[var(--text-base)]",
+        lg: "min-h-[var(--touch-target-spacious)] px-5 py-4 text-[var(--text-lg)]",
+      },
+    },
+    defaultVariants: {
+      variant: "aurora-soft",
+      size: "default",
+    },
+  },
+);
+
+export interface SelectTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>,
+    VariantProps<typeof selectTriggerVariants> {}
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
-    /** Neomorphic variant for different depth levels */
-    variant?: "default" | "subtle" | "medium" | "strong";
-    /** Size variant for different heights and padding */
-    size?: "sm" | "md" | "lg";
-  }
->(({ className, children, variant = "default", size = "md", ...props }, ref) => {
-  const variants = {
-    default: "neo-inset-subtle",
-    subtle: "neo-inset-subtle",
-    medium: "neo-inset-medium",
-    strong: "neo-inset-strong",
-  };
-
-  const sizes = {
-    sm: "min-h-[2rem] px-2 py-1 text-xs",
-    md: "min-h-[2.5rem] px-3 py-2 text-sm",
-    lg: "min-h-[3rem] px-4 py-3 text-base",
-  };
-
-  return (
-    <SelectPrimitive.Trigger
-      ref={ref}
-      className={cn(
-        // Base Layout
-        "flex w-full items-center justify-between rounded-[var(--radius-md)]",
-        sizes[size],
-
-        // Neomorphic Foundation (Inset Field Style)
-        "bg-[var(--surface-neumorphic-base)]",
-        "border-[var(--border-neumorphic-subtle)]",
-        variants[variant],
-
-        // Typography
-        "text-[var(--color-text-primary)]",
-        "font-medium tracking-[-0.01em]",
-        "[&>span]:line-clamp-1",
-
-        // Interactive States
-        "transition-all duration-200 ease-out",
-        "hover:bg-[var(--surface-neumorphic-base)]",
-        "hover:shadow-[var(--shadow-inset-subtle)]",
-
-        // Focus State (Dramatic Neomorphic)
-        "focus-visible:outline-none",
-        "focus-visible:shadow-[var(--shadow-focus-neumorphic)]",
-        "focus-visible:border-[var(--acc1)]",
-        "focus-visible:bg-[var(--surface-neumorphic-floating)]",
-
-        // Open State
-        "data-[state=open]:shadow-[var(--shadow-focus-neumorphic)]",
-        "data-[state=open]:border-[var(--acc1)]",
-        "data-[state=open]:bg-[var(--surface-neumorphic-floating)]",
-
-        // Disabled State
-        "disabled:cursor-not-allowed",
-        "disabled:opacity-50",
-        "disabled:shadow-[var(--shadow-inset-subtle)]",
-
-        // Dark Mode
-        "dark:bg-[var(--surface-neumorphic-base)]",
-        "dark:border-[var(--border-neumorphic-dark)]",
-
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <SelectPrimitive.Icon asChild>
-        <ChevronDown
-          className={cn(
-            "h-4 w-4 opacity-70 transition-all duration-300 ease-out",
-            "data-[state=open]:rotate-180",
-            "data-[state=open]:opacity-100",
-            "data-[state=open]:scale-110",
-            // Neomorphic icon effect
-            "shadow-[var(--shadow-neumorphic-icon)]",
-          )}
-        />
-      </SelectPrimitive.Icon>
-    </SelectPrimitive.Trigger>
-  );
-});
+  SelectTriggerProps
+>(({ className, variant, size, children, ...props }, ref) => (
+  <SelectPrimitive.Trigger
+    ref={ref}
+    className={cn(selectTriggerVariants({ variant, size }), className)}
+    {...props}
+  >
+    {children}
+    <SelectPrimitive.Icon asChild>
+      <ChevronDown
+        className={cn(
+          "h-5 w-5 opacity-60 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+          "data-[state=open]:rotate-180 data-[state=open]:opacity-100 data-[state=open]:scale-110",
+          // Aurora Icon Enhancement
+          "text-[var(--text-muted)] data-[state=open]:text-[var(--aurora-primary-500)]",
+        )}
+      />
+    </SelectPrimitive.Icon>
+  </SelectPrimitive.Trigger>
+));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButton = React.forwardRef<
@@ -104,16 +109,20 @@ const SelectScrollUpButton = React.forwardRef<
   <SelectPrimitive.ScrollUpButton
     ref={ref}
     className={cn(
-      "flex cursor-default items-center justify-center py-1",
-      "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-[var(--shadow-neumorphic-sm)]",
-      "hover:shadow-[var(--shadow-neumorphic-md)]",
-      "transition-all duration-200 ease-out",
+      // Aurora Glass Scroll Button
+      "flex cursor-default items-center justify-center py-2",
+      "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+      "border-b border-[var(--glass-border-subtle)]",
+      "text-[var(--text-muted)]",
+      // Aurora Interactive States
+      "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+      "hover:bg-[var(--glass-surface-medium)] hover:text-[var(--text-primary)]",
+      "hover:shadow-[var(--shadow-glow-soft)]",
       className,
     )}
     {...props}
   >
-    <ChevronUp className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+    <ChevronUp className="h-4 w-4 transition-transform duration-[var(--motion-medium)]" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -125,16 +134,20 @@ const SelectScrollDownButton = React.forwardRef<
   <SelectPrimitive.ScrollDownButton
     ref={ref}
     className={cn(
-      "flex cursor-default items-center justify-center py-1",
-      "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-[var(--shadow-neumorphic-sm)]",
-      "hover:shadow-[var(--shadow-neumorphic-md)]",
-      "transition-all duration-200 ease-out",
+      // Aurora Glass Scroll Button
+      "flex cursor-default items-center justify-center py-2",
+      "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+      "border-t border-[var(--glass-border-subtle)]",
+      "text-[var(--text-muted)]",
+      // Aurora Interactive States
+      "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+      "hover:bg-[var(--glass-surface-medium)] hover:text-[var(--text-primary)]",
+      "hover:shadow-[var(--shadow-glow-soft)]",
       className,
     )}
     {...props}
   >
-    <ChevronDown className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+    <ChevronDown className="h-4 w-4 transition-transform duration-[var(--motion-medium)]" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
@@ -156,17 +169,15 @@ const SelectContent = React.forwardRef<
         // Layout
         "relative z-50 min-w-[8rem] overflow-hidden rounded-[var(--radius-lg)]",
 
-        // Dramatic Neomorphic Floating Panel
-        "bg-[var(--surface-neumorphic-floating)]",
-        "border-[var(--border-neumorphic-subtle)]",
-        "shadow-[var(--shadow-neumorphic-dramatic)]",
+        // Aurora Premium Glass Floating Panel
+        "bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)]",
+        "border border-[var(--glass-border-medium)] shadow-[var(--shadow-premium-strong)]",
 
-        // Backdrop Effect
-        "backdrop-blur-sm",
-        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none",
+        // Aurora Glass Overlay
+        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-[var(--aurora-primary-500)]/8 before:to-[var(--aurora-lila-500)]/4 before:pointer-events-none",
 
         // Typography
-        "text-[var(--color-text-primary)]",
+        "text-[var(--text-primary)]",
 
         // Positioning
         position === "popper" && [
@@ -176,13 +187,8 @@ const SelectContent = React.forwardRef<
           "data-[side=top]:-translate-y-2",
         ],
 
-        // Enhanced Transitions
-        "transition-all duration-300 ease-out",
-
-        // Dark Mode
-        "dark:bg-[var(--surface-neumorphic-floating)]",
-        "dark:border-[var(--border-neumorphic-light)]",
-        "dark:shadow-[var(--shadow-neumorphic-dramatic)]",
+        // Aurora Premium Transitions
+        "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
 
         className,
       )}
@@ -195,8 +201,8 @@ const SelectContent = React.forwardRef<
           "p-2",
           position === "popper" &&
             "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
-          // Scrollbar styling
-          "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[var(--color-border-subtle)]",
+          // Aurora Scrollbar Styling
+          "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[var(--glass-border-medium)]",
         )}
       >
         {children}
@@ -217,15 +223,15 @@ const SelectLabel = React.forwardRef<
       // Layout
       "px-3 py-1.5",
 
-      // Neomorphic Label Style (Subtle Raised)
-      "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-[var(--shadow-neumorphic-sm)]",
+      // Aurora Glass Label Style
+      "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+      "shadow-[var(--shadow-glow-soft)]",
       "rounded-[var(--radius-sm)]",
-      "border-[var(--border-neumorphic-subtle)]",
+      "border border-[var(--glass-border-subtle)]",
 
       // Typography
       "text-xs font-semibold tracking-wide uppercase",
-      "text-[var(--color-text-tertiary)]",
+      "text-[var(--text-secondary)]",
 
       // Spacing
       "mx-1 mb-1",
@@ -247,37 +253,39 @@ const SelectItem = React.forwardRef<
       // Layout
       "relative flex w-full cursor-default select-none items-center",
       "rounded-[var(--radius-md)] py-2 pl-8 pr-3 mx-1 my-0.5",
+      "min-h-[var(--touch-target-compact)]",
 
-      // Neomorphic Base
-      "bg-[var(--surface-neumorphic-base)]",
-      "border-[var(--border-neumorphic-subtle)]",
+      // Aurora Glass Base
+      "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+      "border border-[var(--glass-border-subtle)]",
 
       // Typography
-      "text-sm text-[var(--color-text-secondary)]",
+      "text-sm text-[var(--text-secondary)]",
       "font-medium tracking-[-0.01em]",
 
-      // Interactive States
-      "transition-all duration-200 ease-out",
+      // Aurora Interactive States
+      "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
       "outline-none",
 
-      // Hover State (Lift Effect)
-      "hover:bg-[var(--surface-neumorphic-raised)]",
-      "hover:shadow-[var(--shadow-neumorphic-sm)]",
-      "hover:text-[var(--color-text-primary)]",
+      // Aurora Hover State
+      "hover:bg-[var(--glass-surface-medium)] hover:backdrop-blur-[var(--backdrop-blur-medium)]",
+      "hover:shadow-[var(--shadow-glow-soft)]",
+      "hover:text-[var(--text-primary)]",
+      "hover:border-[var(--glass-border-medium)]",
       "hover:scale-[1.02]",
 
-      // Focus State
-      "focus:bg-[var(--surface-neumorphic-floating)]",
-      "focus:shadow-[var(--shadow-neumorphic-md)]",
-      "focus:text-[var(--color-text-primary)]",
-      "focus:border-[var(--acc1)]",
+      // Aurora Focus State
+      "focus:bg-[var(--glass-surface-medium)]",
+      "focus:shadow-[var(--shadow-glow-primary)]",
+      "focus:text-[var(--text-primary)]",
+      "focus:border-[var(--glass-border-aurora)]",
 
-      // Selected State (Dramatic Highlight)
-      "data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-[var(--acc1)] data-[state=checked]:to-[var(--acc2)]",
-      "data-[state=checked]:shadow-[var(--shadow-neumorphic-lg)]",
-      "data-[state=checked]:text-white",
+      // Aurora Selected State (Premium Gradient)
+      "data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-[var(--aurora-primary-500)] data-[state=checked]:to-[var(--aurora-lila-500)]",
+      "data-[state=checked]:shadow-[var(--shadow-glow-primary)]",
+      "data-[state=checked]:text-white data-[state=checked]:backdrop-blur-[var(--backdrop-blur-strong)]",
       "data-[state=checked]:font-semibold",
-      "data-[state=checked]:border-[var(--acc1)]",
+      "data-[state=checked]:border-[var(--aurora-primary-400)]",
 
       // Disabled State
       "data-[disabled]:pointer-events-none",
@@ -288,20 +296,20 @@ const SelectItem = React.forwardRef<
     )}
     {...props}
   >
-    {/* Check Icon Container */}
+    {/* Aurora Check Icon Container */}
     <span
       className={cn(
         "absolute left-2 flex h-4 w-4 items-center justify-center",
-        "text-[var(--acc1)]",
-        "data-[state=checked]:text-white",
+        "text-[var(--aurora-primary-500)]",
+        "data-[state=checked]:text-white data-[state=checked]:drop-shadow-sm",
       )}
     >
       <SelectPrimitive.ItemIndicator>
         <Check
           className={cn(
             "h-4 w-4",
-            "shadow-[var(--shadow-neumorphic-icon)]",
-            "animate-in zoom-in-75 duration-200",
+            "drop-shadow-[var(--shadow-glow-soft)]",
+            "animate-in zoom-in-75 duration-[var(--motion-medium)]",
           )}
         />
       </SelectPrimitive.ItemIndicator>
@@ -319,10 +327,10 @@ const SelectSeparator = React.forwardRef<
   <SelectPrimitive.Separator
     ref={ref}
     className={cn(
-      // Neomorphic Inset Line
+      // Aurora Glass Separator Line
       "-mx-1 my-2 h-px",
-      "bg-gradient-to-r from-transparent via-[var(--border-neumorphic-dark)] to-transparent",
-      "shadow-[inset_0_-1px_0_var(--border-neumorphic-light)]",
+      "bg-gradient-to-r from-transparent via-[var(--glass-border-medium)] to-transparent",
+      "shadow-[var(--shadow-glow-soft)]",
 
       className,
     )}

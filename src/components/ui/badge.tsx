@@ -3,47 +3,111 @@ import * as React from "react";
 
 import { cn } from "../../lib/utils";
 
+// Aurora Badge Variants with CVA
 const badgeVariants = cva(
-  "inline-flex items-center gap-1 rounded-pill border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.06em] transition-[color,background,box-shadow]",
+  // Aurora Base Styles - Touch-Optimized
+  [
+    "inline-flex items-center gap-1 rounded-[var(--radius-pill)]",
+    "text-xs font-medium uppercase tracking-[0.06em]",
+    "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+    // Touch-optimized for mobile
+    "select-none touch-manipulation",
+  ].join(" "),
   {
     variants: {
+      // === AURORA GLASS VARIANTS ===
       variant: {
-        default:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-primary)] shadow-none hover:shadow-neo-sm",
-        secondary: "border-border bg-surface-card text-text-secondary",
-        outline: "border-border bg-transparent text-text-secondary",
-        muted: "border-transparent bg-surface-subtle text-text-secondary",
-        destructive: "border-transparent bg-danger/15 text-danger",
-        brand:
-          "border border-[color:rgba(var(--brand-rgb),0.45)] bg-[var(--color-brand-primary)] text-[var(--color-text-on-brand)] shadow-[var(--shadow-glow-brand-subtle)]",
-        soft: "border-transparent bg-surface-subtle text-text-secondary",
-        success: "border-transparent bg-status-success-fg/12 text-status-success-fg",
-        warning: "border-transparent bg-status-warning-fg/12 text-status-warning-fg",
-        error: "border-transparent bg-status-danger-fg/12 text-status-danger-fg",
-        info: "border-transparent bg-status-info-fg/12 text-status-info-fg",
-        neumorphic:
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-text-primary shadow-none hover:shadow-neo-sm",
-        "neumorphic-pressed":
-          "border border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-pressed)] text-text-primary shadow-inset-subtle",
-        "neumorphic-brand":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-brand shadow-none hover:shadow-[var(--shadow-glow-brand-subtle)]",
-        "neumorphic-success":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-success-fg shadow-none hover:shadow-[var(--shadow-glow-success-subtle)]",
-        "neumorphic-warning":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-warning-fg shadow-none hover:shadow-[var(--shadow-glow-warning-subtle)]",
-        "neumorphic-error":
-          "border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-status-danger-fg shadow-none hover:shadow-[var(--shadow-glow-error-subtle)]",
+        "aurora-soft": [
+          // Subtle Aurora Glass
+          "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+          "border border-[var(--glass-border-subtle)] text-[var(--text-primary)]",
+          "shadow-[var(--shadow-glow-soft)]",
+          "hover:bg-[var(--glass-surface-medium)] hover:border-[var(--glass-border-medium)]",
+          "hover:shadow-[var(--shadow-glow-primary)]",
+        ].join(" "),
+
+        "aurora-primary": [
+          // Premium Aurora Primary
+          "bg-gradient-to-r from-[var(--aurora-primary-500)] to-[var(--aurora-primary-600)]",
+          "border border-[var(--aurora-primary-400)] text-white",
+          "shadow-[var(--shadow-glow-primary)]",
+          "hover:from-[var(--aurora-primary-400)] hover:to-[var(--aurora-primary-500)]",
+          "hover:shadow-[var(--shadow-glow-primary)] hover:scale-105",
+        ].join(" "),
+
+        "aurora-success": [
+          // Aurora Success State
+          "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+          "border border-[var(--aurora-green-400)] text-[var(--aurora-green-500)]",
+          "shadow-[var(--shadow-glow-green)]",
+          "hover:bg-[var(--aurora-green-500)]/10 hover:shadow-[var(--shadow-glow-green)]",
+        ].join(" "),
+
+        "aurora-warning": [
+          // Aurora Warning State
+          "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+          "border border-[var(--aurora-orange-400)] text-[var(--aurora-orange-500)]",
+          "shadow-[var(--shadow-glow-orange)]",
+          "hover:bg-[var(--aurora-orange-500)]/10 hover:shadow-[var(--shadow-glow-orange)]",
+        ].join(" "),
+
+        "aurora-danger": [
+          // Aurora Danger State
+          "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+          "border border-[var(--aurora-red-400)] text-[var(--aurora-red-500)]",
+          "shadow-[var(--shadow-glow-red)]",
+          "hover:bg-[var(--aurora-red-500)]/10 hover:shadow-[var(--shadow-glow-red)]",
+        ].join(" "),
+
+        "aurora-lila": [
+          // Aurora Purple Accent
+          "bg-gradient-to-r from-[var(--aurora-lila-500)] to-[var(--aurora-lila-600)]",
+          "border border-[var(--aurora-lila-400)] text-white",
+          "shadow-[var(--shadow-glow-lila)]",
+          "hover:from-[var(--aurora-lila-400)] hover:to-[var(--aurora-lila-500)]",
+          "hover:shadow-[var(--shadow-glow-lila)] hover:scale-105",
+        ].join(" "),
+
+        // === STANDARD VARIANTS (Aurora-enhanced) ===
+        outline: [
+          "bg-transparent border border-[var(--glass-border-medium)]",
+          "text-[var(--text-secondary)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+          "hover:bg-[var(--glass-surface-subtle)] hover:text-[var(--text-primary)]",
+        ].join(" "),
+
+        ghost: [
+          "bg-transparent border-transparent text-[var(--text-secondary)]",
+          "hover:bg-[var(--glass-surface-subtle)] hover:text-[var(--text-primary)]",
+        ].join(" "),
+
+        // === SEMANTIC VARIANTS ===
+        success: [
+          "bg-[var(--aurora-green-500)]/15 border-transparent",
+          "text-[var(--aurora-green-600)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+        ].join(" "),
+
+        warning: [
+          "bg-[var(--aurora-orange-500)]/15 border-transparent",
+          "text-[var(--aurora-orange-600)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+        ].join(" "),
+
+        danger: [
+          "bg-[var(--aurora-red-500)]/15 border-transparent",
+          "text-[var(--aurora-red-600)] backdrop-blur-[var(--backdrop-blur-subtle)]",
+        ].join(" "),
       },
+
+      // === TOUCH-OPTIMIZED SIZES ===
       size: {
-        xs: "text-[10px] px-1.5 py-0.5",
-        sm: "text-[11px] px-2 py-0.5",
-        md: "text-[12px] px-2.5 py-1",
-        lg: "text-[13px] px-3 py-1.5",
+        xs: "px-2 py-1 text-[10px] min-h-[24px]", // Below WCAG but for compact UI elements
+        sm: "px-2.5 py-1 text-[11px] min-h-[var(--touch-target-compact)]", // 32px - WCAG compliant
+        default: "px-3 py-1.5 text-[12px] min-h-[var(--touch-target-comfortable)]", // 40px - Comfortable
+        lg: "px-4 py-2 text-[13px] min-h-[var(--touch-target-spacious)]", // 48px - Spacious
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "md",
+      variant: "aurora-soft",
+      size: "default",
     },
   },
 );
@@ -53,12 +117,7 @@ export interface BadgeProps
     VariantProps<typeof badgeVariants> {}
 
 function Badge({ className, variant, size, ...props }: BadgeProps) {
-  return (
-    <div
-      className={cn("min-h-[22px] items-center", badgeVariants({ variant, size }), className)}
-      {...props}
-    />
-  );
+  return <div className={cn(badgeVariants({ variant, size }), className)} {...props} />;
 }
 
 export { Badge, badgeVariants };

@@ -41,11 +41,13 @@ export function ChatComposer({
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
+
+  // Aurora-optimierte Color-Mix für Premium Pinging
   const supportsColorMix =
     typeof CSS !== "undefined" && CSS.supports("color", "color-mix(in srgb, white 50%, black)");
   const pingBackground = supportsColorMix
-    ? "color-mix(in srgb, var(--color-brand-primary) 45%, transparent)"
-    : "rgba(var(--brand-rgb), 0.45)";
+    ? "color-mix(in srgb, var(--aurora-primary-500) 40%, transparent)"
+    : "var(--aurora-primary-500)";
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -117,26 +119,33 @@ export function ChatComposer({
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="border-border-hairline inline-flex items-center gap-1 rounded-full border bg-[var(--surface-neumorphic-floating)] px-3 py-1 text-text-secondary">
-                  <Zap className="h-3 w-3" />
+                <span className="inline-flex items-center gap-1 rounded-full border border-[var(--glass-border-subtle)] bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-[var(--text-secondary)] shadow-[var(--shadow-glow-soft)]">
+                  <Zap className="h-3 w-3 text-[var(--aurora-primary-500)]" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="border-border-hairline inline-flex items-center gap-2 rounded-full border bg-[var(--surface-neumorphic-floating)] px-3 py-1 text-text-secondary">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[var(--glass-border-subtle)] bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-[var(--text-secondary)]">
                   Maximal: {maxTokens}
                 </span>
               )}
             </div>
             {tokenCount !== undefined && maxTokens !== undefined && (
-              <div>{Math.round((tokenCount / maxTokens) * 100)}% verwendet</div>
+              <div className="text-[var(--text-muted)]">
+                {Math.round((tokenCount / maxTokens) * 100)}% verwendet
+              </div>
             )}
           </div>
         )}
 
         <div
           className={cn(
-            "flex items-end gap-2 rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-floating)] p-2 shadow-[var(--shadow-inset-subtle)] backdrop-blur-sm",
+            // Aurora Premium Glass Design - Verbesserte Mobile-Lesbarkeit
+            "flex items-end gap-2 rounded-[var(--radius-lg)] border border-[var(--glass-border-aurora)] bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] p-3",
+            "shadow-[var(--shadow-premium-medium)] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+            // Premium Aurora Glow-Overlay für Interactive State
+            "relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-[var(--aurora-primary-500)]/5 before:to-[var(--aurora-lila-500)]/5 before:opacity-0 before:transition-opacity before:duration-[var(--motion-medium)] before:rounded-[var(--radius-lg)] before:pointer-events-none",
+            "focus-within:before:opacity-100 focus-within:border-[var(--glass-border-lila)] focus-within:shadow-[var(--shadow-premium-strong)]",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -152,8 +161,14 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "text-text-primary placeholder:text-text-tertiary max-h-[200px] min-h-[48px] resize-none border-0 bg-transparent p-2 text-[15px] leading-relaxed focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                isQuickstartLoading && "text-text-secondary cursor-not-allowed",
+                // Aurora Glass-optimierte Text-Lesbarkeit
+                "text-[var(--text-primary)] placeholder:text-[var(--text-muted)] max-h-[200px] min-h-[var(--touch-target-comfortable)] resize-none border-0 bg-transparent p-2",
+                // Mobile-optimierte Typography
+                "text-base md:text-[15px] leading-[var(--leading-normal)] font-[var(--font-normal)]",
+                // Enhanced Focus States
+                "focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                "selection:bg-[var(--aurora-primary-500)]/20 selection:text-[var(--text-primary)]",
+                isQuickstartLoading && "text-[var(--text-secondary)] cursor-not-allowed",
               )}
               style={{ height: "48px" }}
             />
@@ -165,7 +180,8 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="h-12 w-12 text-text-secondary hover:bg-[var(--surface-neumorphic-raised)] hover:text-text-primary"
+                touchFeedback={true}
+                className="h-12 w-12 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
@@ -178,6 +194,7 @@ export function ChatComposer({
                 onClick={handleStop}
                 size="icon"
                 variant="destructive"
+                touchFeedback={true}
                 className="h-12 w-12"
                 title="Ausgabe stoppen"
                 aria-label="Ausgabe stoppen"
@@ -192,7 +209,8 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="brand"
-                className="h-12 w-12 shadow-neo-sm"
+                touchFeedback={true}
+                className="h-12 w-12"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 aria-label="Nachricht senden"
@@ -208,7 +226,7 @@ export function ChatComposer({
           </div>
         </div>
 
-        <div className="text-text-secondary mt-1 text-center text-xs">
+        <div className="text-[var(--text-muted)] mt-2 text-center text-xs">
           <span className="inline-flex items-center justify-center gap-2">
             {(isLoading || isComposerDisabled) && (
               <span className="relative flex h-2 w-2">
@@ -216,10 +234,10 @@ export function ChatComposer({
                   className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
                   style={{ background: pingBackground }}
                 />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-brand-primary)]" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--aurora-primary-500)]" />
               </span>
             )}
-            <span>
+            <span className="font-[var(--font-normal)]">
               {isLoading
                 ? "Antwort wird erstellt …"
                 : isComposerDisabled

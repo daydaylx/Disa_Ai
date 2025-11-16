@@ -147,8 +147,8 @@ export default function ModelsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn(
-                "rounded-3xl glass-panel bg-gradient-to-r from-surface-card to-surface-soft text-primary placeholder-text-muted",
-                "focus:glass-panel--glow focus:shadow-glow-primary focus:border-primary/50 focus:ring-primary/30 transition-all duration-300 ease-[var(--motion-ease-elastic)]",
+                "rounded-3xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] bg-gradient-to-r from-surface-card to-surface-soft text-primary placeholder-text-muted",
+                "focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:border-primary/50 focus:ring-primary/30 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
               )}
             />
           </div>
@@ -158,10 +158,10 @@ export default function ModelsPage() {
             <button
               onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
               className={cn(
-                "p-3 rounded-2xl glass-panel group min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-300 ease-[var(--motion-ease-elastic)]",
+                "p-3 rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] group min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
                 showFavoritesOnly
-                  ? "glass-panel--glow-green text-primary shadow-glow-green animate-pulse-glow scale-105"
-                  : "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-105 text-text-secondary hover:text-primary",
+                  ? "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] text-primary animate-pulse scale-105"
+                  : "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-105 text-text-secondary hover:text-primary",
               )}
               aria-label="Favoriten anzeigen"
             >
@@ -171,10 +171,10 @@ export default function ModelsPage() {
             <button
               onClick={() => setShowFreeOnly(!showFreeOnly)}
               className={cn(
-                "p-3 rounded-2xl glass-panel group min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-300 ease-[var(--motion-ease-elastic)]",
+                "p-3 rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] group min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
                 showFreeOnly
-                  ? "glass-panel--glow-lila text-primary shadow-glow-lila animate-pulse-glow scale-105"
-                  : "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-105 text-text-secondary hover:text-primary",
+                  ? "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-lila-400)] shadow-[var(--shadow-glow-lila)] text-primary animate-pulse scale-105"
+                  : "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-105 text-text-secondary hover:text-primary",
               )}
               aria-label="Kostenlose Modelle"
             >

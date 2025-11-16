@@ -4,202 +4,254 @@ import { cn } from "../../lib/utils";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
-    | "neo-subtle"
-    | "neo-medium"
-    | "neo-dramatic"
-    | "neo-extreme"
-    | "brand"
-    | "brand-soft"
-    | "destructive"
-    | "ghost"
-    | "outline"
-    | "link"
-    /** @deprecated Use neo-medium instead */
-    | "default"
-    /** @deprecated Use neo-medium instead */
-    | "secondary"
-    /** @deprecated Use neo-medium instead */
-    | "neumorphic";
+    | "aurora-primary" // Neuer Aurora Hauptstil
+    | "aurora-soft" // Aurora weicher Stil
+    | "glass-primary" // Glassmorphism Primary
+    | "glass-soft" // Glassmorphism weich
+    | "glass-ghost" // Transparenter Glass-Stil
+    | "brand" // Marken-Primary (Aurora Indigo)
+    | "success" // Aurora Green
+    | "warning" // Aurora Yellow
+    | "destructive" // Error rot
+    | "ghost" // Transparent
+    | "outline" // Rahmen-Style
+    | "link"; // Link-Style
   size?: "xs" | "sm" | "default" | "lg" | "xl" | "icon";
   asChild?: boolean;
-  /** Enable dramatic hover lift effect */
-  dramatic?: boolean;
+  /** Enable enhanced touch feedback for mobile */
+  touchFeedback?: boolean;
 }
 
 const buttonVariants = (
-  variant: ButtonProps["variant"] = "neo-medium",
+  variant: ButtonProps["variant"] = "aurora-primary",
   size: ButtonProps["size"] = "default",
-  dramatic: boolean = false,
+  touchFeedback: boolean = false,
 ) => {
   const baseClasses = [
     "inline-flex items-center justify-center gap-2",
     "font-medium tracking-[-0.01em]",
-    "transition-[background,box-shadow,transform] duration-200 ease-out",
+    "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
     "disabled:pointer-events-none disabled:opacity-50",
-    "disabled:shadow-neo-sm disabled:translate-y-0",
+    "disabled:shadow-none disabled:transform-none",
+    // Touch-optimierte Basis-Klassen
+    "select-none touch-manipulation",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]",
   ].join(" ");
 
-  const coreVariantClasses = {
-    "neo-subtle": [
-      "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-neo-sm",
-      "border border-[var(--border-neumorphic-light)]",
-      "text-[var(--color-text-primary)]",
-      dramatic ? "hover:-translate-y-[2px]" : "hover:translate-y-[-1px]",
-      "hover:shadow-neo-md",
-      "hover:bg-[var(--surface-neumorphic-floating)]",
-      "active:translate-y-[1px]",
-      "active:shadow-[var(--shadow-inset-subtle)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+  const variantClasses = {
+    "aurora-primary": [
+      // Aurora Primary mit Premium Glass Effect
+      "relative overflow-hidden",
+      "bg-[var(--surface-card)]",
+      `backdrop-blur-[var(--backdrop-blur-medium)]`,
+      "border border-[var(--glass-border-aurora)]",
+      "text-[var(--text-primary)] font-semibold",
+      "shadow-[var(--shadow-premium-medium)]",
+      // Hover States
+      "hover:bg-[var(--surface-raised)]",
+      `hover:shadow-[var(--shadow-premium-strong)]`,
+      "hover:border-[var(--glass-border-lila)]",
+      touchFeedback
+        ? "hover:scale-[var(--touch-scale-hover)]"
+        : "hover:transform hover:translate-y-[-1px]",
+      // Active States
+      "active:transform active:scale-[var(--touch-scale-press)]",
+      "active:shadow-[var(--shadow-depth-1)]",
+      // Before für Aurora Glow Overlay
+      "before:absolute before:inset-0 before:bg-gradient-to-r before:from-[var(--aurora-primary-500)]/10 before:to-[var(--aurora-lila-500)]/10 before:opacity-0 before:transition-opacity before:duration-[var(--motion-medium)]",
+      "hover:before:opacity-100",
     ].join(" "),
-    "neo-medium": [
-      "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-neo-md",
-      "border border-[var(--border-neumorphic-light)]",
-      "text-[var(--color-text-primary)]",
-      dramatic ? "hover:-translate-y-[3px]" : "hover:-translate-y-[2px]",
-      "hover:shadow-neo-lg",
-      "hover:bg-[var(--surface-neumorphic-floating)]",
-      "active:translate-y-[1px]",
-      "active:shadow-[var(--shadow-inset-medium)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+
+    "aurora-soft": [
+      // Aurora Soft - dezenter Glass-Stil
+      "bg-[var(--glass-surface-subtle)]",
+      `backdrop-blur-[var(--backdrop-blur-subtle)]`,
+      "border border-[var(--glass-border-subtle)]",
+      "text-[var(--text-primary)]",
+      "shadow-[var(--shadow-premium-subtle)]",
+      // Hover
+      "hover:bg-[var(--glass-surface-medium)]",
+      "hover:border-[var(--glass-border-medium)]",
+      touchFeedback
+        ? "hover:scale-[var(--touch-scale-hover)]"
+        : "hover:transform hover:translate-y-[-1px]",
+      // Active
+      "active:bg-[var(--glass-surface-strong)]",
+      "active:transform active:scale-[var(--touch-scale-press)]",
     ].join(" "),
-    "neo-dramatic": [
+
+    "glass-primary": [
+      // Vollständiges Glassmorphism Design
       "relative",
-      "bg-gradient-to-br from-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
-      "border border-[var(--border-neumorphic-light)]",
-      "text-[var(--color-text-primary)]",
-      "rounded-[var(--radius-xl)]",
-      "shadow-neo-lg",
-      dramatic ? "hover:-translate-y-[4px]" : "hover:-translate-y-[3px]",
-      "hover:shadow-neo-xl",
-      "hover:bg-gradient-to-br hover:from-white hover:to-[var(--surface-neumorphic-floating)]",
-      "active:translate-y-[2px]",
-      "active:shadow-[var(--shadow-inset-strong)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+      "bg-[var(--glass-surface-medium)]",
+      `backdrop-blur-[var(--backdrop-blur-strong)]`,
+      "border border-[var(--glass-border-aurora)]",
+      "text-[var(--text-primary)] font-semibold",
+      "shadow-[var(--shadow-glow-primary)]",
+      // Hover
+      "hover:bg-[var(--glass-surface-strong)]",
+      "hover:border-[var(--aurora-primary-400)]/50",
+      "hover:shadow-[var(--shadow-glow-primary)], [var(--shadow-depth-3)]",
+      touchFeedback
+        ? "hover:scale-[var(--touch-scale-hover)]"
+        : "hover:transform hover:translate-y-[-2px]",
+      // Active
+      "active:transform active:scale-[var(--touch-scale-press)]",
+      "active:shadow-[var(--shadow-depth-1)]",
     ].join(" "),
-    "neo-extreme": [
-      "relative",
-      "bg-gradient-to-br from-white via-[var(--surface-neumorphic-floating)] to-[var(--surface-neumorphic-raised)]",
-      "border border-[var(--border-neumorphic-light)]",
-      "text-[var(--color-text-primary)]",
-      "rounded-[var(--radius-xl)]",
-      "before:pointer-events-none before:absolute before:inset-0 before:rounded-[var(--radius-xl)] before:bg-gradient-to-br before:from-white/18 before:to-transparent",
-      "shadow-[var(--shadow-neumorphic-dramatic)]",
-      dramatic ? "hover:-translate-y-[6px] hover:scale-[1.03]" : "hover:-translate-y-[4px]",
-      "hover:shadow-[var(--shadow-neumorphic-extreme)]",
-      "hover:bg-gradient-to-br hover:from-white hover:via-[var(--surface-neumorphic-floating)] hover:to-[var(--acc1)]/15",
-      "active:translate-y-[2px]",
-      "active:shadow-[var(--shadow-inset-extreme)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo focus-visible:border-[var(--acc1)]",
+
+    "glass-soft": [
+      "bg-[var(--glass-surface-subtle)]",
+      `backdrop-blur-[var(--backdrop-blur-medium)]`,
+      "border border-[var(--glass-border-subtle)]",
+      "text-[var(--text-secondary)]",
+      "shadow-[var(--shadow-glow-soft)]",
+      // Hover
+      "hover:bg-[var(--glass-surface-medium)]",
+      "hover:text-[var(--text-primary)]",
+      "hover:border-[var(--glass-border-medium)]",
+      touchFeedback
+        ? "hover:scale-[var(--touch-scale-hover)]"
+        : "hover:transform hover:translate-y-[-1px]",
+      // Active
+      "active:transform active:scale-[var(--touch-scale-press)]",
     ].join(" "),
+
+    "glass-ghost": [
+      "bg-transparent",
+      `backdrop-blur-[var(--backdrop-blur-subtle)]`,
+      "border border-transparent",
+      "text-[var(--text-muted)]",
+      "shadow-none",
+      // Hover
+      "hover:bg-[var(--glass-surface-subtle)]",
+      "hover:border-[var(--glass-border-subtle)]",
+      "hover:text-[var(--text-primary)]",
+      touchFeedback ? "hover:scale-[var(--touch-scale-hover)]" : "",
+      // Active
+      "active:bg-[var(--glass-surface-medium)]",
+      "active:transform active:scale-[var(--touch-scale-press)]",
+    ].join(" "),
+
     brand: [
-      "bg-[var(--color-brand-primary)]",
-      "border border-[color:rgba(var(--brand-rgb),0.45)]",
-      "text-[var(--color-text-on-brand)] font-semibold",
-      "rounded-[var(--radius-lg)]",
-      "shadow-neo-md",
-      dramatic ? "hover:-translate-y-[3px]" : "hover:-translate-y-[2px]",
-      "hover:shadow-[var(--shadow-glow-brand-subtle)]",
-      "hover:bg-[var(--color-brand-primary-hover)]",
-      "focus-visible:outline-none focus-visible:border-[var(--color-brand-primary)] focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
-      "active:translate-y-[1px]",
-      "active:bg-[var(--color-brand-primary-active)]",
-      "active:shadow-[var(--shadow-inset-medium)]",
+      // Marken-Button mit Aurora Primary
+      "bg-[var(--color-primary)]",
+      "border border-[var(--aurora-primary-400)]",
+      "text-[var(--color-primary-text)] font-semibold",
+      "shadow-[var(--shadow-glow-primary)]",
+      // Hover
+      "hover:bg-[var(--color-primary-hover)]",
+      "hover:shadow-[var(--shadow-glow-primary)], [var(--shadow-depth-3)]",
+      touchFeedback
+        ? "hover:scale-[var(--touch-scale-hover)]"
+        : "hover:transform hover:translate-y-[-2px]",
+      // Active
+      "active:bg-[var(--color-primary-active)]",
+      "active:transform active:scale-[var(--touch-scale-press)]",
     ].join(" "),
-    "brand-soft": [
-      "bg-[var(--surface-neumorphic-raised)]",
-      "border border-[var(--acc1)]/45",
-      "text-[var(--acc1)] font-semibold",
-      "rounded-[var(--radius-lg)]",
-      "shadow-neo-md",
-      "hover:shadow-neo-lg",
-      "hover:bg-gradient-to-br hover:from-[var(--acc1)]/12 hover:to-[var(--acc2)]/12",
-      "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
-      "active:translate-y-[1px]",
-      "active:shadow-[var(--shadow-inset-subtle)]",
+
+    success: [
+      // Aurora Green für Erfolgs-Aktionen
+      "bg-[var(--aurora-green-500)]",
+      "border border-[var(--aurora-green-400)]",
+      "text-[var(--text-primary)] font-semibold",
+      "shadow-[var(--shadow-glow-green)]",
+      // Hover
+      "hover:bg-[var(--aurora-green-400)]",
+      "hover:shadow-[var(--shadow-glow-green)], [var(--shadow-depth-2)]",
+      touchFeedback
+        ? "hover:scale-[var(--touch-scale-hover)]"
+        : "hover:transform hover:translate-y-[-1px]",
+      // Active
+      "active:bg-[var(--aurora-green-600)]",
+      "active:transform active:scale-[var(--touch-scale-press)]",
     ].join(" "),
+
+    warning: [
+      // Aurora Yellow für Warn-Aktionen
+      "bg-[var(--aurora-yellow-500)]",
+      "border border-[var(--aurora-yellow-500)]/60",
+      "text-[var(--bg-aurora-0)] font-semibold",
+      "shadow-[var(--shadow-depth-2)]",
+      // Hover
+      "hover:bg-[var(--aurora-yellow-500)]/90",
+      "hover:shadow-[var(--shadow-depth-3)]",
+      touchFeedback
+        ? "hover:scale-[var(--touch-scale-hover)]"
+        : "hover:transform hover:translate-y-[-1px]",
+      // Active
+      "active:transform active:scale-[var(--touch-scale-press)]",
+    ].join(" "),
+
     destructive: [
-      "bg-gradient-to-br from-[var(--err)] to-[var(--err-hover)]",
-      "border border-[var(--border-neumorphic-light)]",
-      "text-white font-semibold",
-      "rounded-[var(--radius-lg)]",
-      "shadow-neo-md",
-      "hover:shadow-neo-lg",
-      dramatic ? "hover:-translate-y-[3px]" : "hover:-translate-y-[2px]",
-      "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-error-subtle)]",
-      "active:translate-y-[1px]",
-      "active:shadow-[var(--shadow-inset-medium)]",
+      // Error-Button
+      "bg-[var(--color-error)]",
+      "border border-[var(--color-error-border)]",
+      "text-[var(--text-primary)] font-semibold",
+      "shadow-[var(--shadow-depth-2)]",
+      // Hover
+      "hover:bg-[var(--color-error)]/90",
+      "hover:shadow-[var(--shadow-depth-3)]",
+      touchFeedback
+        ? "hover:scale-[var(--touch-scale-hover)]"
+        : "hover:transform hover:translate-y-[-1px]",
+      // Active
+      "active:transform active:scale-[var(--touch-scale-press)]",
     ].join(" "),
+
     ghost: [
       "bg-transparent",
       "border border-transparent",
-      "text-[var(--color-text-secondary)]",
-      "rounded-[var(--radius-lg)]",
+      "text-[var(--text-muted)]",
       "shadow-none",
-      "hover:bg-[var(--surface-neumorphic-raised)]",
-      "hover:shadow-neo-sm",
-      "hover:text-[var(--color-text-primary)]",
-      dramatic ? "hover:-translate-y-[1px]" : "",
-      "active:shadow-[var(--shadow-inset-subtle)]",
-      "active:bg-[var(--surface-neumorphic-pressed)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo",
+      // Hover
+      "hover:bg-[var(--glass-surface-subtle)]",
+      "hover:text-[var(--text-primary)]",
+      touchFeedback ? "hover:scale-[var(--touch-scale-hover)]" : "",
+      // Active
+      "active:bg-[var(--glass-surface-medium)]",
+      "active:transform active:scale-[var(--touch-scale-press)]",
     ].join(" "),
+
     outline: [
       "bg-transparent",
-      "border-2 border-[var(--border-neumorphic-subtle)]",
-      "text-[var(--color-text-primary)]",
-      "rounded-[var(--radius-lg)]",
-      "shadow-[var(--shadow-inset-subtle)]",
-      "hover:border-[var(--border-neumorphic-light)]",
-      "hover:bg-[var(--surface-neumorphic-raised)]",
-      "hover:shadow-neo-sm",
-      dramatic ? "hover:-translate-y-[1px]" : "",
-      "active:shadow-[var(--shadow-inset-medium)]",
-      "active:bg-[var(--surface-neumorphic-pressed)]",
-      "focus-visible:outline-none focus-visible:shadow-focus-neo",
+      "border-2 border-[var(--border-medium)]",
+      "text-[var(--text-primary)]",
+      // Hover
+      "hover:bg-[var(--glass-surface-subtle)]",
+      "hover:border-[var(--border-aurora)]",
+      touchFeedback ? "hover:scale-[var(--touch-scale-hover)]" : "",
+      // Active
+      "active:bg-[var(--glass-surface-medium)]",
+      "active:transform active:scale-[var(--touch-scale-press)]",
     ].join(" "),
+
     link: [
       "bg-transparent",
       "border border-transparent",
-      "text-[var(--acc1)]",
-      "rounded-[var(--radius-md)]",
+      "text-[var(--aurora-primary-500)]",
       "shadow-none",
-      "hover:underline",
-      "hover:text-[var(--acc2)]",
-      "focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-brand-subtle)]",
+      "hover:underline hover:text-[var(--aurora-primary-400)]",
+      "focus-visible:ring-[var(--aurora-primary-500)]/30",
     ].join(" "),
-  } as const satisfies Record<
-    Exclude<ButtonProps["variant"], "default" | "secondary" | "neumorphic">,
-    string
-  >;
-
-  const deprecatedVariantClasses = {
-    default: coreVariantClasses["neo-medium"],
-    secondary: coreVariantClasses["neo-subtle"],
-    neumorphic: coreVariantClasses["neo-medium"],
   } as const;
 
-  const variantClasses: Record<ButtonProps["variant"], string> = {
-    ...coreVariantClasses,
-    ...deprecatedVariantClasses,
-  };
-
+  // Touch-optimierte Größen mit WCAG AA Compliance
   const sizeClasses = {
-    xs: "h-7 px-2 py-1 text-xs rounded-[var(--radius-md)]",
-    sm: "h-8 px-3 py-1.5 text-xs rounded-[var(--radius-md)]",
-    default: "h-10 px-4 py-2 text-sm rounded-[var(--radius-lg)]",
-    lg: "h-12 px-6 py-3 text-base rounded-[var(--radius-lg)]",
-    xl: "h-14 px-8 py-4 text-lg rounded-[var(--radius-xl)]",
-    icon: "h-10 w-10 rounded-[var(--radius-lg)]",
+    xs: "min-h-[36px] px-3 py-1.5 text-xs rounded-[var(--radius-xs)]",
+    sm: "min-h-[40px] px-4 py-2 text-sm rounded-[var(--radius-sm)]",
+    default: `min-h-[var(--touch-target-compact)] px-6 py-3 text-base rounded-[var(--radius-md)]`,
+    lg: `min-h-[var(--touch-target-comfortable)] px-8 py-4 text-lg rounded-[var(--radius-lg)]`,
+    xl: `min-h-[var(--touch-target-spacious)] px-10 py-5 text-xl rounded-[var(--radius-xl)]`,
+    icon: `min-h-[var(--touch-target-compact)] min-w-[var(--touch-target-compact)] rounded-[var(--radius-md)]`,
   };
 
   return cn(baseClasses, variantClasses[variant], sizeClasses[size]);
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, dramatic = false, asChild = false, ...props }, ref) => {
-    const buttonClasses = buttonVariants(variant, size, dramatic);
+  ({ className, variant, size, touchFeedback = false, asChild = false, ...props }, ref) => {
+    const buttonClasses = buttonVariants(variant, size, touchFeedback);
 
     if (asChild && React.isValidElement(props.children)) {
       return React.cloneElement(

@@ -28,10 +28,10 @@ export function NavPills({ items, pathname }: NavPillsProps) {
               to={item.path}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold glass-panel group transition-all duration-300 ease-[var(--motion-ease-elastic)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50",
+                "flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] group transition-all duration-300 ease-[var(--motion-ease-elastic)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50",
                 isActive
-                  ? "glass-panel--glow text-primary shadow-glow-primary animate-pulse-glow scale-[1.02]"
-                  : "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-[1.02] text-text-secondary hover:text-primary",
+                  ? "bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)] border-[var(--glass-border-aurora)] text-primary shadow-[var(--shadow-glow-primary)] animate-pulse-glow scale-[1.02]"
+                  : "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-subtle)] hover:scale-[1.02] text-text-secondary hover:text-primary",
               )}
             >
               <span

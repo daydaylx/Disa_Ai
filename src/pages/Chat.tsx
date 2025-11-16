@@ -213,7 +213,7 @@ export default function Chat() {
               className="relative z-10 flex flex-col gap-8"
               data-testid="chat-hero"
             >
-              <section className="overflow-hidden rounded-[2.5rem] glass-panel--glow-green p-6 text-text-primary shadow-glow-green aurora-bg sm:p-10">
+              <section className="overflow-hidden rounded-[2.5rem] bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-6 text-text-primary aurora-bg sm:p-10">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
                   <div className="space-y-5 lg:flex-1">
                     <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-white/80">

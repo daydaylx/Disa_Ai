@@ -34,7 +34,10 @@ export function FeatureFlagPanel() {
 
   return (
     <div className="fixed bottom-4 left-4 z-[var(--z-popover)] max-w-sm">
-      <div className="glass-panel glass-panel--dense" data-tone="warning">
+      <div
+        className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-yellow-400)] shadow-[var(--shadow-glow-yellow)] rounded-2xl p-4"
+        data-tone="warning"
+      >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[hsl(var(--warning))] animate-pulse" />
@@ -83,7 +86,7 @@ export function FeatureFlagPanel() {
               {debug.activeFlags.map((flag) => (
                 <div
                   key={flag.key}
-                  className="glass-inline glass-panel--dense space-y-2"
+                  className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-xl p-3 space-y-2"
                   data-tone={flag.riskLevel === "high" ? "danger" : undefined}
                 >
                   <div className="flex items-start justify-between gap-2">

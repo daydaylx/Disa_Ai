@@ -143,7 +143,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
 
   if (loading) {
     return (
-      <div className="glass-panel glass-panel--dense mx-auto mt-8 flex max-w-md items-center gap-3 text-text-secondary">
+      <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-3 mx-auto mt-8 flex max-w-md items-center gap-3 text-text-secondary">
         <RefreshCw className="h-4 w-4 animate-spin text-accent" />
         <span>Migration wird geprüft …</span>
       </div>
@@ -180,7 +180,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
 
   return (
     <div className="page-stack mx-auto max-w-4xl px-page-padding-x py-page-padding-y text-text-primary">
-      <section className="glass-panel flex flex-wrap items-center justify-between gap-4">
+      <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Database className="h-8 w-8 text-accent" />
           <div>
@@ -203,7 +203,10 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
       </section>
 
       {error && (
-        <section className="glass-panel flex items-start gap-3" data-tone="danger">
+        <section
+          className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--aurora-red-400)] shadow-[var(--shadow-glow-red)] rounded-3xl p-6 flex items-start gap-3"
+          data-tone="danger"
+        >
           <AlertTriangle className="h-5 w-5 flex-shrink-0" />
           <div className="space-y-1 text-sm">
             <p className="font-semibold text-text-primary">Fehler beim Prüfen</p>
@@ -213,7 +216,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
       )}
 
       {migrationStatus && (
-        <section className="glass-panel space-y-4">
+        <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
             <Info className="h-5 w-5 text-accent" />
             Migrationsstatus

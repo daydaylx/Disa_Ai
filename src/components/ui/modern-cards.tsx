@@ -26,10 +26,11 @@ export function MetricRow({
 }: MetricRowProps) {
   const percentage = Math.min(100, Math.max(0, (value / maxValue) * 100));
 
+  // Aurora Color Palette Integration
   const colorClasses = {
-    green: "bg-[var(--accent-green)]",
-    yellow: "bg-[var(--accent-yellow)]",
-    primary: "bg-[var(--color-primary-500)]",
+    green: "bg-[var(--aurora-green-500)]",
+    yellow: "bg-[var(--aurora-orange-500)]",
+    primary: "bg-[var(--aurora-primary-500)]",
   };
 
   return (
@@ -46,11 +47,12 @@ export function MetricRow({
         )}
       </div>
 
-      {/* Progress Bar */}
-      <div className="relative h-1.5 bg-[var(--color-neutral-700)] rounded-full overflow-hidden">
+      {/* Aurora Glass Progress Bar */}
+      <div className="relative h-1.5 bg-[var(--glass-surface-subtle)] rounded-full overflow-hidden border border-[var(--glass-border-subtle)]">
         <div
           className={cn(
-            "absolute inset-y-0 left-0 rounded-full transition-all duration-300",
+            "absolute inset-y-0 left-0 rounded-full transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+            "shadow-[var(--shadow-glow-soft)]",
             colorClasses[color],
           )}
           style={{ width: `${percentage}%` }}
@@ -69,22 +71,29 @@ interface ChipProps {
 }
 
 export function Chip({ children, variant = "default", size = "sm", className }: ChipProps) {
+  // Aurora Palette Integration
   const variantClasses = {
-    default: "bg-[var(--color-neutral-700)] text-[var(--text-primary)]",
-    success: "bg-[var(--accent-green)]/20 text-[var(--accent-green)]",
-    warning: "bg-[var(--accent-yellow)]/20 text-[var(--accent-yellow)]",
-    free: "bg-[var(--accent-green)]/10 text-[var(--accent-green)] border border-[var(--accent-green)]/30",
+    default:
+      "bg-[var(--glass-surface-subtle)] text-[var(--text-primary)] border border-[var(--glass-border-subtle)]",
+    success:
+      "bg-[var(--aurora-green-500)]/20 text-[var(--aurora-green-600)] border border-[var(--aurora-green-500)]/30",
+    warning:
+      "bg-[var(--aurora-orange-500)]/20 text-[var(--aurora-orange-600)] border border-[var(--aurora-orange-500)]/30",
+    free: "bg-[var(--aurora-green-500)]/10 text-[var(--aurora-green-600)] border border-[var(--aurora-green-500)]/40 shadow-[var(--shadow-glow-green)]",
   };
 
+  // Aurora Touch-Optimized Sizing
   const sizeClasses = {
-    sm: "px-2 py-1 text-xs",
-    md: "px-3 py-1.5 text-sm",
+    sm: "px-[var(--space-xs)] py-[var(--space-xs)] text-[var(--text-xs)] min-h-[24px]",
+    md: "px-[var(--space-sm)] py-[var(--space-xs)] text-[var(--text-sm)] min-h-[var(--touch-target-compact)]",
   };
 
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full font-medium",
+        "inline-flex items-center rounded-[var(--radius-pill)] font-medium",
+        "backdrop-blur-[var(--backdrop-blur-subtle)] transition-all duration-[var(--motion-medium)]",
+        "select-none touch-manipulation",
         variantClasses[variant],
         sizeClasses[size],
         className,
@@ -110,86 +119,100 @@ interface ModelCardProps {
   className?: string;
 }
 
-const ModelCardComponent = React.memo(({
-  name,
-  vendor,
-  speed,
-  quality,
-  value,
-  isFree,
-  price,
-  contextLength,
-  isFavorite = false,
-  onToggleFavorite,
-  className,
-}: ModelCardProps) => {
-  return (
-    <Card
-      tone="modern-elevated"
-      interactive="gentle"
-      className={cn(
-        "rounded-2xl glass-panel--glow-green shadow-glow-green hover:shadow-glow-lila group",
-        "hover:-translate-y-1 transition-all duration-300 ease-[var(--motion-ease-elastic)]",
-        className,
-      )}
-    >
-      {/* Oben: Name + Provider + Favorite-Icon */}
-      <div className="flex items-center justify-between">
-        <div className="flex-1 min-w-0">
-          <Typography variant="body" className="text-[var(--text-primary)] font-medium truncate">
-            {name}
-          </Typography>
-          <Typography variant="body-xs" className="text-[var(--text-secondary)] mt-0.5">
-            {vendor}
-          </Typography>
+const ModelCardComponent = React.memo(
+  ({
+    name,
+    vendor,
+    speed,
+    quality,
+    value,
+    isFree,
+    price,
+    contextLength,
+    isFavorite = false,
+    onToggleFavorite,
+    className,
+  }: ModelCardProps) => {
+    return (
+      <Card
+        variant="aurora-glass"
+        elevation="medium"
+        interactive
+        className={cn(
+          "rounded-[var(--radius-2xl)] group",
+          // Aurora Premium Glass with Green-to-Lila Transition
+          "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)]",
+          "border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-green)]",
+          "hover:shadow-[var(--shadow-glow-lila)] hover:border-[var(--glass-border-aurora)]",
+          "hover:-translate-y-1 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+          className,
+        )}
+      >
+        {/* Oben: Name + Provider + Favorite-Icon */}
+        <div className="flex items-center justify-between">
+          <div className="flex-1 min-w-0">
+            <Typography variant="body" className="text-[var(--text-primary)] font-medium truncate">
+              {name}
+            </Typography>
+            <Typography variant="body-xs" className="text-[var(--text-secondary)] mt-0.5">
+              {vendor}
+            </Typography>
+          </div>
+
+          {onToggleFavorite && (
+            <button
+              onClick={onToggleFavorite}
+              className={cn(
+                // Aurora Glass Button
+                "p-[var(--space-xs)] rounded-[var(--radius-md)]",
+                "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+                "border border-[var(--glass-border-subtle)]",
+                "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+                "hover:bg-[var(--glass-surface-medium)] hover:scale-105 active:scale-95",
+                "min-h-[var(--touch-target-compact)] min-w-[var(--touch-target-compact)]",
+                "select-none touch-manipulation",
+                isFavorite
+                  ? "text-[var(--aurora-orange-500)] hover:text-[var(--aurora-orange-400)] shadow-[var(--shadow-glow-orange)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]",
+              )}
+              aria-label={isFavorite ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
+            >
+              ★
+            </button>
+          )}
         </div>
 
-        {onToggleFavorite && (
-          <button
-            onClick={onToggleFavorite}
-            className={cn(
-              "p-2 rounded-full transition-colors duration-200",
-              isFavorite
-                ? "text-[var(--accent-yellow)] hover:text-[var(--accent-yellow)]/80"
-                : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]",
-            )}
-            aria-label={isFavorite ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
-          >
-            ★
-          </button>
-        )}
-      </div>
+        {/* Mitte: 3x MetricRow */}
+        <div className="space-y-2">
+          <MetricRow label="Speed" value={speed} score={speed} color="green" />
+          <MetricRow label="Quality" value={quality} score={quality} color="green" />
+          <MetricRow label="Value" value={value} score={value} color="yellow" />
+        </div>
 
-      {/* Mitte: 3x MetricRow */}
-      <div className="space-y-2">
-        <MetricRow label="Speed" value={speed} score={speed} color="green" />
-        <MetricRow label="Quality" value={quality} score={quality} color="green" />
-        <MetricRow label="Value" value={value} score={value} color="yellow" />
-      </div>
-
-      {/* Unten: Chips */}
-      <div className="flex flex-wrap gap-2">
-        {isFree ? (
-          <Chip variant="free" size="sm">
-            FREE
-          </Chip>
-        ) : (
+        {/* Unten: Chips */}
+        <div className="flex flex-wrap gap-2">
+          {isFree ? (
+            <Chip variant="free" size="sm">
+              FREE
+            </Chip>
+          ) : (
+            <Chip variant="default" size="sm">
+              {price}
+            </Chip>
+          )}
           <Chip variant="default" size="sm">
-            {price}
+            {contextLength}
           </Chip>
-        )}
-        <Chip variant="default" size="sm">
-          {contextLength}
-        </Chip>
-        <Chip variant="default" size="sm">
-          Context
-        </Chip>
-      </div>
-    </Card>
-  );
-});
+          <Chip variant="default" size="sm">
+            Context
+          </Chip>
+        </div>
+      </Card>
+    );
+  },
+);
 
-ModelCardComponent.displayName = 'ModelCard';
+ModelCardComponent.displayName = "ModelCard";
 
 export const ModelCard = ModelCardComponent;
 
@@ -202,88 +225,95 @@ interface RoleCardProps {
   className?: string;
 }
 
-const RoleCardComponent = React.memo(({
-  role,
-  isActive = false,
-  onActivate,
-  onDeactivate,
-  className,
-}: RoleCardProps) => {
-  // Destructure properties from role object
-  const { name: title, description, tags = [], usage, allowedModels = [], metadata } = role;
+const RoleCardComponent = React.memo(
+  ({ role, isActive = false, onActivate, onDeactivate, className }: RoleCardProps) => {
+    // Destructure properties from role object
+    const { name: title, description, tags = [], usage, allowedModels = [], metadata } = role;
 
-  const usageCount = usage.count;
-  const modelsCount = allowedModels.length;
-  const isDefault = metadata.isBuiltIn;
-  const formatUsage = (count: number) => {
-    if (count === 0) return "Nie genutzt";
-    if (count === 1) return "1x genutzt";
-    return `${count}x genutzt`;
-  };
+    const usageCount = usage.count;
+    const modelsCount = allowedModels.length;
+    const isDefault = metadata.isBuiltIn;
+    const formatUsage = (count: number) => {
+      if (count === 0) return "Nie genutzt";
+      if (count === 1) return "1x genutzt";
+      return `${count}x genutzt`;
+    };
 
-  const formatModels = (count: number) => {
-    if (count === 1) return "1 Modell";
-    return `${count} Modelle`;
-  };
+    const formatModels = (count: number) => {
+      if (count === 1) return "1 Modell";
+      return `${count} Modelle`;
+    };
 
-  const meta = [formatUsage(usageCount), formatModels(modelsCount), isDefault ? "Standard" : null]
-    .filter(Boolean)
-    .join(" · ");
+    const meta = [formatUsage(usageCount), formatModels(modelsCount), isDefault ? "Standard" : null]
+      .filter(Boolean)
+      .join(" · ");
 
-  return (
-    <Card
-      variant="surface"
-      interactive="glass-lift"
-      className={cn(
-        "rounded-2xl glass-panel shadow-glow-subtle group hover:shadow-glow-primary",
-        "hover:-translate-y-[2px] hover:border-primary/50 transition-all duration-300 [box-shadow:inset_0_2px_4px_rgba(0,0,0,0.1)]",
-        isActive && "ring-2 ring-primary/50 ring-offset-2 shadow-glow-lila !translate-y-[-1px]",
-        className,
-      )}
-    >
-      {/* Zeile 1: Titel + Aktivieren-Button */}
-      <div className="flex items-center justify-between">
-        <Typography variant="body" className="text-[var(--text-primary)] font-medium flex-1 pr-3">
-          {title}
-        </Typography>
+    return (
+      <Card
+        variant="aurora-soft"
+        elevation="subtle"
+        interactive
+        className={cn(
+          "rounded-[var(--radius-2xl)] group",
+          // Aurora Glass Panel with Premium Effects
+          "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
+          "border border-[var(--glass-border-subtle)] shadow-[var(--shadow-glow-soft)]",
+          "hover:bg-[var(--glass-surface-medium)] hover:shadow-[var(--shadow-glow-primary)]",
+          "hover:-translate-y-[2px] hover:border-[var(--aurora-primary-500)]/50",
+          "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+          // Active State with Aurora Ring
+          isActive && [
+            "ring-2 ring-[var(--aurora-primary-500)]/50 ring-offset-2 ring-offset-[var(--surface-base)]",
+            "shadow-[var(--shadow-glow-lila)] !translate-y-[-1px]",
+            "border-[var(--aurora-primary-500)]",
+          ],
+          className,
+        )}
+      >
+        {/* Zeile 1: Titel + Aktivieren-Button */}
+        <div className="flex items-center justify-between">
+          <Typography variant="body" className="text-[var(--text-primary)] font-medium flex-1 pr-3">
+            {title}
+          </Typography>
 
-        <Button
-          variant={isActive ? "outline" : "default"}
-          size="sm"
-          onClick={isActive ? onDeactivate : onActivate}
-          className="flex-shrink-0 tap-target min-h-[44px] min-w-[44px] px-4 py-3"
-        >
-          {isActive ? "Deaktivieren" : "Aktivieren"}
-        </Button>
-      </div>
-
-      {/* Zeile 2: Tags als Pills */}
-      {tags.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {tags.map((tag, index) => (
-            <Chip key={index} variant="default" size="sm">
-              #{tag}
-            </Chip>
-          ))}
+          <Button
+            variant={isActive ? "outline" : "default"}
+            size="sm"
+            onClick={isActive ? onDeactivate : onActivate}
+            className="flex-shrink-0 tap-target min-h-[44px] min-w-[44px] px-4 py-3"
+          >
+            {isActive ? "Deaktivieren" : "Aktivieren"}
+          </Button>
         </div>
-      )}
 
-      {/* Zeile 3: Meta */}
-      <Typography variant="body-xs" className="text-[var(--text-muted)]">
-        {meta}
-      </Typography>
+        {/* Zeile 2: Tags als Pills */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {tags.map((tag, index) => (
+              <Chip key={index} variant="default" size="sm">
+                #{tag}
+              </Chip>
+            ))}
+          </div>
+        )}
 
-      {/* Beschreibung */}
-      {description && (
-        <Typography variant="body-sm" className="text-[var(--text-secondary)] line-clamp-2">
-          {description}
+        {/* Zeile 3: Meta */}
+        <Typography variant="body-xs" className="text-[var(--text-muted)]">
+          {meta}
         </Typography>
-      )}
-    </Card>
-  );
-});
 
-RoleCardComponent.displayName = 'RoleCard';
+        {/* Beschreibung */}
+        {description && (
+          <Typography variant="body-sm" className="text-[var(--text-secondary)] line-clamp-2">
+            {description}
+          </Typography>
+        )}
+      </Card>
+    );
+  },
+);
+
+RoleCardComponent.displayName = "RoleCard";
 
 export const RoleCard = RoleCardComponent;
 
@@ -307,10 +337,24 @@ export function FilterChip({
     <button
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-200",
+        "inline-flex items-center gap-[var(--space-inline-xs)]",
+        "px-[var(--space-sm)] py-[var(--space-xs)] rounded-[var(--radius-pill)]",
+        "text-[var(--text-sm)] font-medium backdrop-blur-[var(--backdrop-blur-medium)]",
+        "min-h-[var(--touch-target-compact)] select-none touch-manipulation",
+        "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+        // Aurora Active/Inactive States
         isActive
-          ? "bg-[var(--color-primary-500)] text-white"
-          : "bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--color-neutral-700)]",
+          ? [
+              "bg-gradient-to-r from-[var(--aurora-primary-500)] to-[var(--aurora-lila-500)]",
+              "border border-[var(--aurora-primary-400)] text-white shadow-[var(--shadow-glow-primary)]",
+              "hover:from-[var(--aurora-primary-400)] hover:to-[var(--aurora-lila-400)]",
+            ].join(" ")
+          : [
+              "bg-[var(--glass-surface-subtle)] border border-[var(--glass-border-subtle)]",
+              "text-[var(--text-secondary)] shadow-[var(--shadow-glow-soft)]",
+              "hover:bg-[var(--glass-surface-medium)] hover:border-[var(--glass-border-medium)]",
+              "hover:text-[var(--text-primary)] hover:shadow-[var(--shadow-glow-primary)]",
+            ].join(" "),
         className,
       )}
     >
@@ -318,10 +362,11 @@ export function FilterChip({
       {count !== undefined && (
         <span
           className={cn(
-            "px-1.5 py-0.5 rounded-full text-xs",
+            "px-[var(--space-xs)] py-0.5 rounded-[var(--radius-pill)] text-[var(--text-xs)]",
+            "transition-all duration-[var(--motion-medium)]",
             isActive
-              ? "bg-white/20 text-white"
-              : "bg-[var(--color-neutral-600)] text-[var(--text-muted)]",
+              ? "bg-white/20 text-white backdrop-blur-[var(--backdrop-blur-subtle)]"
+              : "bg-[var(--glass-surface-medium)] border border-[var(--glass-border-subtle)] text-[var(--text-muted)]",
           )}
         >
           {count}
@@ -349,30 +394,66 @@ export function ActionCard({
   variant = "primary",
   className,
 }: ActionCardProps) {
+  // Aurora Palette Integration
   const variantClasses = {
-    primary: "bg-[var(--color-primary-500)] hover:bg-[var(--color-primary-600)] text-white",
-    secondary:
-      "bg-[var(--surface)] hover:bg-[var(--surface-soft)] text-[var(--text-primary)] border border-[var(--glass-border-soft)]",
+    primary: [
+      "bg-gradient-to-r from-[var(--aurora-primary-500)] to-[var(--aurora-lila-500)]",
+      "hover:from-[var(--aurora-primary-400)] hover:to-[var(--aurora-lila-400)]",
+      "border border-[var(--aurora-primary-400)] text-white shadow-[var(--shadow-glow-primary)]",
+      "hover:shadow-[var(--shadow-premium-medium)] hover:scale-[1.02]",
+    ].join(" "),
+    secondary: [
+      "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)]",
+      "hover:bg-[var(--glass-surface-strong)] text-[var(--text-primary)]",
+      "border border-[var(--glass-border-subtle)] shadow-[var(--shadow-glow-soft)]",
+      "hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-premium-medium)]",
+      "hover:scale-[1.02]",
+    ].join(" "),
   };
 
   return (
     <Card
-      variant="surface"
+      variant="aurora-glass"
       className={cn(
-        "rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:shadow-[var(--shadow-heavy)]",
+        "rounded-[var(--radius-2xl)] p-[var(--space-lg)] cursor-pointer",
+        "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+        "min-h-[var(--touch-target-spacious)] select-none touch-manipulation",
+        "active:scale-[0.98]",
         variantClasses[variant],
         className,
       )}
       onClick={onClick}
     >
-      <div className="flex items-center gap-3">
-        {icon && <div className="text-[var(--text-primary)]">{icon}</div>}
+      <div className="flex items-center gap-[var(--space-inline-sm)]">
+        {icon && (
+          <div
+            className={cn(
+              "flex items-center justify-center",
+              "min-w-[var(--touch-target-compact)] min-h-[var(--touch-target-compact)]",
+              variant === "primary" ? "text-white" : "text-[var(--text-primary)]",
+            )}
+          >
+            {icon}
+          </div>
+        )}
         <div className="flex-1">
-          <Typography variant="body" className="font-medium">
+          <Typography
+            variant="body"
+            className={cn(
+              "font-medium",
+              variant === "primary" ? "text-white" : "text-[var(--text-primary)]",
+            )}
+          >
             {title}
           </Typography>
           {description && (
-            <Typography variant="body-sm" className="text-[var(--text-secondary)] mt-1">
+            <Typography
+              variant="body-sm"
+              className={cn(
+                "mt-1",
+                variant === "primary" ? "text-white/80" : "text-[var(--text-secondary)]",
+              )}
+            >
               {description}
             </Typography>
           )}

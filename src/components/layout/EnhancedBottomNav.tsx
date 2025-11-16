@@ -36,10 +36,10 @@ export function EnhancedBottomNav() {
               key={item.id}
               onClick={() => handleNavigation(item.path)}
               className={cn(
-                "flex flex-col items-center justify-center py-2 px-3 rounded-xl glass-panel relative group transition-all duration-300 ease-[var(--motion-ease-elastic)] min-w-[70px]",
+                "flex flex-col items-center justify-center py-2 px-3 rounded-xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] relative group transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)] min-w-[70px]",
                 isActive
-                  ? "glass-panel--glow text-primary shadow-glow-primary animate-pulse-glow scale-105"
-                  : "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-105 text-text-secondary hover:text-primary",
+                  ? "bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-aurora)] text-primary shadow-[var(--shadow-glow-primary)] animate-pulse scale-105"
+                  : "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-105 text-text-secondary hover:text-primary",
               )}
               aria-label={item.label}
             >

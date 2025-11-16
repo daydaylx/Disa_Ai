@@ -1,17 +1,17 @@
 /**
- * Main CSS Entry Point - Consolidated
+ * Main CSS Entry Point - Aurora Design System
  *
- * This file imports the consolidated CSS structure:
- * - tokens.css: All design tokens
+ * This file imports the consolidated Aurora CSS structure:
+ * - design-tokens-consolidated.css: Aurora Glassmorphism Design System
  * - base.css: Resets, viewport fixes, accessibility
- * - components.css: All component styles and utilities
+ * - components.css: Component styles and Aurora utilities
  *
- * Plus project-specific Fluent 2 Soft-Depth surfaces.
+ * Mobile-first premium glassmorphism with balanced performance.
  */
 
 /* Import consolidated styles */
 @import "./styles/z-index-system.css"; /* FIRST: Establish z-index hierarchy */
-@import "./styles/tokens.css";
+@import "./styles/design-tokens-consolidated.css"; /* NEW: Aurora Design System Tokens */
 @import "./styles/base.css";
 @import "./styles/components.css";
 @import "./styles/ui-state-animations.css"; /* Universal State System animations */

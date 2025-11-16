@@ -101,7 +101,6 @@ export default defineConfig(({ mode }) => {
         "react-dom",
         "react-router-dom",
         "use-sync-external-store/shim",
-        "src/app/layouts/AppShell.tsx",
       ],
       exclude: [
         "react-markdown", // CDN

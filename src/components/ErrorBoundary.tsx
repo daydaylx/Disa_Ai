@@ -3,8 +3,8 @@ import React, { Component } from "react";
 
 import { getEnvConfig, getEnvironmentErrors, isEnvironmentValid } from "../config/env";
 import { logger } from "../lib/utils/production-logger";
-import { AuroraCard } from "./ui/aurora-card";
 import { Button } from "./ui/button";
+import { Card } from "./ui/card";
 
 interface Props {
   children: ReactNode;
@@ -121,10 +121,10 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="bg-surface-base flex min-h-dvh items-center justify-center p-4">
-          <AuroraCard className="shadow-depth-4 w-full max-w-2xl rounded-lg" padding="lg">
+        <div className="bg-[var(--surface-base)] flex min-h-dvh items-center justify-center p-4">
+          <Card variant="aurora-primary" elevation="strong" size="xl" className="w-full max-w-2xl">
             <div className="mb-8 text-center">
-              <div className="glass-panel--glow-destructive mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-glow-destructive animate-pulse-glow">
+              <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-red-400)] mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-[var(--shadow-glow-red)] animate-pulse">
                 <svg
                   className="text-destructive h-10 w-10 drop-shadow-glow-destructive"
                   fill="none"
@@ -145,7 +145,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </p>
             </div>
 
-            <div className="glass-panel--glow-subtle mb-6 rounded-2xl p-6 backdrop-blur">
+            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] shadow-[var(--shadow-glow-soft)] mb-6 rounded-2xl p-6">
               <h2 className="text-text-primary mb-2 font-semibold flex items-center gap-2">
                 <span className="text-destructive text-xl">⚠️</span>Fehlerdetails
               </h2>
@@ -182,25 +182,28 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button
                 onClick={this.handleReload}
-                variant="glass-accent"
+                variant="aurora-primary"
                 size="lg"
-                className="flex-1 shadow-glow-primary hover:shadow-glow-lila"
+                touchFeedback={true}
+                className="flex-1"
               >
                 Seite neu laden
               </Button>
               <Button
                 onClick={this.handleReset}
-                variant="glass-secondary"
+                variant="aurora-soft"
                 size="lg"
+                touchFeedback={true}
                 className="flex-1"
               >
                 App zurücksetzen
               </Button>
               <Button
                 onClick={this.handleReportError}
-                variant="glass-primary"
+                variant="success"
                 size="lg"
-                className="flex-1 shadow-glow-green hover:shadow-glow-green"
+                touchFeedback={true}
+                className="flex-1"
               >
                 Fehler melden
               </Button>
@@ -227,7 +230,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
               </details>
             </div>
-          </AuroraCard>
+          </Card>
         </div>
       );
     }

@@ -125,7 +125,7 @@ export const appRouter = createBrowserRouter(
           <ErrorBoundary>
             <div className="flex min-h-screen flex-col items-center justify-center p-space-md">
               <div
-                className="glass-panel--glow-lila w-full max-w-md text-center rounded-3xl p-8 shadow-glow-lila aurora-bg animate-pulse-glow glow-grid"
+                className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-lila-400)] w-full max-w-md text-center rounded-3xl p-8 shadow-[var(--shadow-glow-lila)] aurora-bg animate-pulse-glow glow-grid"
                 data-testid="not-found-page"
               >
                 <div className="mb-8">

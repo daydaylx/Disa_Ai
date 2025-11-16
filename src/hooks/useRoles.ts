@@ -53,7 +53,7 @@ export function useRoles() {
       try {
         setLoading(true);
         // Fetch roles from public JSON
-        void (await fetch('/data/roles.json'));
+        const response = await fetch("/data/roles.json");
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -77,7 +77,7 @@ export function useRoles() {
       }
     }
 
-    loadRoles();
+    void loadRoles();
   }, [isRoleFavorite]); // Add isRoleFavorite to dependency array so favorites are updated when they change
 
   const activeRole = roles.find((role) => role.isFavorite); // Assuming one favorite role is active

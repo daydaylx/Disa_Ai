@@ -169,8 +169,8 @@ export default function RolesPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className={cn(
-            "w-full rounded-3xl glass-panel bg-gradient-to-r from-surface-card to-surface-soft px-5 py-4 text-primary placeholder-text-muted",
-            "focus:glass-panel--glow focus:shadow-glow-primary focus:border-primary/50 focus:ring-primary/30 transition-all duration-300 ease-[var(--motion-ease-elastic)] focus:outline-none",
+            "w-full rounded-3xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] bg-gradient-to-r from-surface-card to-surface-soft px-5 py-4 text-primary placeholder-text-muted",
+            "focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:border-primary/50 focus:ring-primary/30 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)] focus:outline-none",
           )}
         />
       </div>

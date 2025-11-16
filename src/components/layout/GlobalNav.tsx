@@ -1,6 +1,8 @@
 import { Menu } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
+import { cn } from "../../lib/utils";
+
 const ROUTE_TITLES: Record<string, string> = {
   "/chat": "Chat",
   "/roles": "Rollen",
@@ -36,36 +38,89 @@ export function GlobalNav({ onMenuClick }: GlobalNavProps) {
   const activePath =
     NAV_ITEMS.find((item) => location.pathname.startsWith(item.path))?.path ?? "/chat";
 
-  const headerClass =
-    "sticky top-0 z-40 border-b border-[var(--border-neumorphic-dark)] bg-[var(--surface-neumorphic-floating)] backdrop-blur-md shadow-[var(--shadow-inset-subtle)]";
-
-  const menuButtonClass =
-    "flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] text-[var(--color-text-secondary)] shadow-neo-sm transition-all duration-200 hover:-translate-y-[1px] hover:shadow-neo-md active:translate-y-[1px] active:shadow-[var(--shadow-inset-subtle)] focus-visible:shadow-focus-neo focus-visible:outline-none";
-
   return (
-    <header className={headerClass}>
-      <div className="flex items-center justify-between gap-3 px-4 py-3 pt-[env(safe-area-inset-top)]">
-        <div className="flex flex-col gap-1">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-[var(--color-text-tertiary)]">
+    <header
+      className={cn(
+        // Aurora Premium Glass Header
+        "sticky top-0 z-[var(--z-header)] relative",
+        "bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)]",
+        "border-b border-[var(--glass-border-medium)] shadow-[var(--shadow-premium-medium)]",
+
+        // Aurora Glass Overlay Effect
+        "before:absolute before:inset-0 before:bg-gradient-to-r",
+        "before:from-[var(--aurora-primary-500)]/8 before:to-[var(--aurora-lila-500)]/4",
+        "before:pointer-events-none before:z-[-1]",
+
+        // Mobile-optimized
+        "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+      )}
+    >
+      <div className="relative flex items-center justify-between gap-[var(--space-inline-sm)] px-[var(--space-lg)] py-[var(--space-sm)] pt-[calc(var(--space-sm)+env(safe-area-inset-top))]">
+        {/* Aurora Brand Section */}
+        <div className="flex flex-col gap-[var(--space-stack-xs)] relative z-10">
+          {/* Aurora Brand Label */}
+          <span
+            className={cn(
+              "text-[var(--text-xs)] font-semibold uppercase tracking-[0.4em]",
+              "text-[var(--text-muted)] drop-shadow-sm",
+            )}
+          >
             Disa AI
           </span>
+
+          {/* Aurora Title Section */}
           <div>
-            <h1 className="text-xl font-semibold text-[var(--color-text-primary)] leading-tight">
+            <h1
+              className={cn(
+                "text-[var(--text-xl)] font-semibold leading-[var(--leading-tight)]",
+                "text-[var(--text-primary)] drop-shadow-sm",
+              )}
+            >
               {title}
             </h1>
-            <p className="text-xs text-[var(--color-text-secondary)]">
+            <p
+              className={cn(
+                "text-[var(--text-xs)] text-[var(--text-secondary)]",
+                "drop-shadow-sm mt-[var(--space-stack-xs)]",
+              )}
+            >
               {ROUTE_TITLES[activePath] ?? "Mobile Studio"}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+
+        {/* Aurora Glass Menu Button */}
+        <div className="flex items-center gap-[var(--space-inline-xs)] relative z-10">
           <button
             type="button"
-            className={menuButtonClass}
+            className={cn(
+              // Aurora Glass Button Base
+              "flex items-center justify-center rounded-[var(--radius-xl)]",
+              "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)]",
+              "border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-soft)]",
+              "text-[var(--text-secondary)]",
+
+              // Aurora Touch-Optimized
+              "size-[var(--touch-target-comfortable)] min-h-[var(--touch-target-comfortable)]",
+              "select-none touch-manipulation",
+
+              // Aurora Premium Interactive States
+              "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+              "hover:bg-[var(--glass-surface-strong)] hover:border-[var(--glass-border-aurora)]",
+              "hover:text-[var(--text-primary)] hover:shadow-[var(--shadow-glow-primary)]",
+              "hover:scale-105 active:scale-95",
+
+              // Aurora Focus States
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]",
+              "focus-visible:shadow-[var(--shadow-glow-primary)]",
+            )}
             aria-label="Hauptmenü öffnen"
             onClick={onMenuClick}
           >
-            <Menu className="h-5 w-5" aria-hidden="true" />
+            <Menu
+              className="h-5 w-5 transition-transform duration-[var(--motion-medium)]"
+              aria-hidden="true"
+            />
           </button>
         </div>
       </div>

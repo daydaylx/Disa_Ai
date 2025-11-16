@@ -500,7 +500,7 @@ function ToggleRow({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="glass-panel--glow flex items-start justify-between gap-6 px-6 py-4 rounded-3xl shadow-glow-subtle hover:shadow-glow-primary transition-all duration-300 ease-[var(--motion-ease-elastic)]">
+    <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-soft)] flex items-start justify-between gap-6 px-6 py-4 rounded-3xl hover:shadow-[var(--shadow-glow-primary)] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]">
       <div className="flex-1">
         <p className="text-base font-semibold text-primary">{label}</p>
         <p className="text-sm text-text-secondary">{description}</p>

@@ -93,10 +93,10 @@ export function AppMenuDrawer({ isOpen, onClose, sections, className }: AppMenuD
                     key={itemIndex}
                     onClick={() => handleItemClick(item)}
                     className={cn(
-                      "w-full h-12 rounded-2xl px-4 flex items-center justify-between glass-panel group transition-all duration-300 ease-[var(--motion-ease-elastic)] text-left",
-                      "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-[1.02] focus:glass-panel--glow focus:shadow-glow-primary focus:scale-[1.02] focus:outline-none",
+                      "w-full h-12 rounded-2xl px-4 flex items-center justify-between bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] group transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)] text-left",
+                      "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-[1.02] focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:scale-[1.02] focus:outline-none",
                       item.isActive
-                        ? "glass-panel--glow-active text-primary shadow-glow-primary animate-pulse-glow scale-[1.02] bg-primary/10"
+                        ? "bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-primary-500)] shadow-[var(--shadow-glow-primary)] text-primary animate-pulse scale-[1.02] bg-primary/10"
                         : "text-text-primary hover:text-primary",
                     )}
                   >
@@ -168,9 +168,9 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
     <button
       onClick={onClick}
       className={cn(
-        "relative p-3 rounded-xl glass-panel text-text-secondary min-h-[44px] min-w-[44px] flex items-center justify-center group",
-        "hover:glass-panel--glow hover:shadow-glow-subtle hover:scale-110 hover:text-primary transition-all duration-300 ease-[var(--motion-ease-elastic)]",
-        "focus:glass-panel--glow focus:shadow-glow-primary focus:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50",
+        "relative p-3 rounded-xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] text-text-secondary min-h-[44px] min-w-[44px] flex items-center justify-center group",
+        "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-110 hover:text-primary transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+        "focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50",
         className,
       )}
       aria-label="Menü öffnen"
