@@ -1,11 +1,7 @@
 import { lazy } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
-import { Button } from "@/ui/Button";
-
-import { ErrorBoundary } from "../components/ErrorBoundary";
 import { RouteWrapper } from "./components/RouteWrapper";
-import { AppShell } from "./layouts/AppShell";
 
 // Lazy-loaded Routes für bessere Performance
 const ChatPage = lazy(() => import("../pages/Chat"));
@@ -120,42 +116,8 @@ export const appRouter = createBrowserRouter(
       ),
     },
     {
-      path: "/404",
-      element: (
-        <AppShell>
-          <ErrorBoundary>
-            <div className="flex min-h-screen flex-col items-center justify-center p-space-md">
-              <div
-                className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-lila-400)] w-full max-w-md text-center rounded-3xl p-8 shadow-[var(--shadow-glow-lila)] aurora-bg animate-pulse-glow glow-grid"
-                data-testid="not-found-page"
-              >
-                <div className="mb-8">
-                  <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-destructive/20 to-destructive/10 shadow-glow-destructive">
-                    <span className="text-5xl font-bold text-destructive drop-shadow-glow-destructive">
-                      404
-                    </span>
-                  </div>
-                  <h1 className="text-3xl font-bold text-text-primary mb-2">
-                    Seite nicht gefunden
-                  </h1>
-                  <p className="text-text-secondary text-lg">
-                    Die gesuchte Seite existiert nicht oder wurde verschoben.
-                  </p>
-                </div>
-                <div className="flex justify-center mt-8">
-                  <Button variant="primary" size="lg" className="shadow-glow-primary">
-                    <a href="/chat">Zurück zum Chat</a>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </ErrorBoundary>
-        </AppShell>
-      ),
-    },
-    {
       path: "*",
-      element: <Navigate to="/404" replace />,
+      element: <Navigate to="/" replace />,
     },
   ],
   {
