@@ -220,17 +220,17 @@ export default function Chat() {
                       Studio
                     </span>
                     <div>
-                      <h1 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">
+                      <h1 className="text-[var(--text-4xl)] font-[var(--font-semibold)] leading-[var(--leading-tight)] text-white sm:text-[var(--text-4xl)]">
                         Konzentrierte KI-Arbeit in einer ruhigen Oberfläche.
                       </h1>
-                      <p className="mt-3 max-w-2xl text-base text-white/80">
+                      <p className="mt-3 max-w-2xl text-[var(--text-base)] text-white/80">
                         Starte mit einem klaren Ziel, nutze vorbereitete Flows und schalte Modelle
                         sowie Rollen per Shortcut. Alles offline-fähig, PWA-optimiert und ohne
                         ablenkende Frames.
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                      <Button size="lg" variant="accent" onClick={focusComposer}>
+                      <Button size="lg" variant="aurora-primary" onClick={focusComposer}>
                         Unterhaltung starten
                       </Button>
                       <Button size="lg" variant="outline" asChild>
@@ -266,7 +266,7 @@ export default function Chat() {
                       tone="glass-floating"
                       padding="lg"
                       className="space-y-2"
-                      elevation="surface"
+                      elevation="medium"
                     >
                       <div className="flex items-center gap-3">
                         <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)]">
@@ -312,7 +312,7 @@ export default function Chat() {
                       <Card
                         key={card.id}
                         tone="glass-floating"
-                        interactive="gentle"
+                        interactive="hover"
                         padding="lg"
                         className="flex h-full flex-col justify-between"
                         role="link"
@@ -356,7 +356,7 @@ export default function Chat() {
               </section>
 
               <section className="grid gap-4 md:grid-cols-2">
-                <Card tone="glass-primary" elevation="surface" padding="lg">
+                <Card tone="glass-primary" elevation="medium" padding="lg">
                   <CardTitle className="flex items-center gap-2 text-base font-semibold">
                     <Waves className="h-4 w-4 text-[var(--accent)]" />
                     Gesten & Shortcuts
@@ -371,7 +371,7 @@ export default function Chat() {
                   </ul>
                 </Card>
 
-                <Card tone="glass-primary" elevation="surface" padding="lg">
+                <Card tone="glass-primary" elevation="medium" padding="lg">
                   <CardTitle className="flex items-center gap-2 text-base font-semibold">
                     <Shield className="h-4 w-4 text-[var(--accent)]" />
                     Hinweise

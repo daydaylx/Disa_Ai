@@ -246,28 +246,28 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
       )}
 
       {stats && (
-        <section className="glass-panel space-y-4">
+        <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
             <HardDrive className="h-5 w-5 text-accent" />
             Speicherstatistiken
           </h2>
 
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-            <div className="glass-inline glass-panel--dense text-center">
+            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
               <p className="text-2xl font-semibold">{stats.totalConversations}</p>
               <p className="text-xs text-text-secondary">Konversationen</p>
             </div>
-            <div className="glass-inline glass-panel--dense text-center">
+            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
               <p className="text-2xl font-semibold">{stats.totalMessages}</p>
               <p className="text-xs text-text-secondary">Nachrichten</p>
             </div>
-            <div className="glass-inline glass-panel--dense text-center">
+            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
               <p className="text-2xl font-semibold">
                 {stats.averageMessagesPerConversation.toFixed(1)}
               </p>
               <p className="text-xs text-text-secondary">Ø Nachrichten</p>
             </div>
-            <div className="glass-inline glass-panel--dense text-center">
+            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
               <p className="text-2xl font-semibold">{formatBytes(stats.storageSize)}</p>
               <p className="text-xs text-text-secondary">Belegung</p>
             </div>
@@ -276,14 +276,17 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
       )}
 
       {migrationEstimate && migrationStatus?.needsMigration && (
-        <section className="glass-panel space-y-4" data-tone="info">
+        <section
+          className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--aurora-blue-400)] shadow-[var(--shadow-glow-blue)] rounded-3xl p-6 space-y-4"
+          data-tone="info"
+        >
           <h2 className="flex items-center gap-2 text-lg font-semibold">
             <Clock className="h-5 w-5" />
             Migrationsschätzung
           </h2>
 
           <div className="grid gap-3 md:grid-cols-3">
-            <div className="glass-inline glass-panel--dense">
+            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-text-tertiary">
                 Konversationen
               </p>
@@ -291,13 +294,13 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
                 {migrationEstimate.conversationCount}
               </p>
             </div>
-            <div className="glass-inline glass-panel--dense">
+            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-text-tertiary">Dauer</p>
               <p className="text-xl font-semibold text-text-primary">
                 {formatDuration(migrationEstimate.estimatedDuration)}
               </p>
             </div>
-            <div className="glass-inline glass-panel--dense">
+            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-text-tertiary">Datenmenge</p>
               <p className="text-xl font-semibold text-text-primary">
                 {formatBytes(migrationEstimate.estimatedSize)}
@@ -308,7 +311,10 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
       )}
 
       {migrationStatus?.needsMigration && (
-        <section className="glass-panel space-y-4" data-tone="warning">
+        <section
+          className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--aurora-yellow-400)] shadow-[var(--shadow-glow-yellow)] rounded-3xl p-6 space-y-4"
+          data-tone="warning"
+        >
           <div className="flex items-start gap-3">
             <AlertTriangle className="h-5 w-5" />
             <div>
@@ -319,7 +325,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
             </div>
           </div>
           <Button
-            variant="accent"
+            variant="aurora-primary"
             size="lg"
             onClick={handleStartMigration}
             disabled={migrationInProgress}
@@ -339,23 +345,23 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
         </section>
       )}
 
-      <section className="glass-panel space-y-4">
+      <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
         <h2 className="flex items-center gap-2 text-lg font-semibold">
           <Shield className="h-5 w-5 text-accent" />
           Backup & Restore
         </h2>
         <div className="grid gap-3">
-          <div className="glass-inline glass-panel--dense flex flex-wrap items-center justify-between gap-4">
+          <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="font-medium">Backup erstellen</p>
               <p className="text-sm text-text-secondary">Exportiere deine Daten als JSON-Datei.</p>
             </div>
-            <Button variant="accent" size="sm" onClick={handleCreateBackup}>
+            <Button variant="aurora-primary" size="sm" onClick={handleCreateBackup}>
               <Download className="h-4 w-4" />
               Backup
             </Button>
           </div>
-          <div className="glass-inline glass-panel--dense flex flex-wrap items-center justify-between gap-4">
+          <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="font-medium">Backup importieren</p>
               <p className="text-sm text-text-secondary">
@@ -370,7 +376,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
         </div>
 
         {showRestore && (
-          <div className="glass-inline glass-panel--dense space-y-3">
+          <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 space-y-3">
             <textarea
               value={restoreData}
               onChange={(e) => setRestoreData(e.target.value)}
@@ -379,7 +385,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
             />
             <div className="flex flex-wrap gap-2">
               <Button
-                variant="accent"
+                variant="aurora-primary"
                 size="sm"
                 onClick={handleRestoreBackup}
                 disabled={!restoreData.trim() || migrationInProgress}
@@ -403,7 +409,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
 
       {migrationResult && (
         <section
-          className="glass-panel space-y-3"
+          className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-medium)] rounded-3xl p-6 space-y-3"
           data-tone={migrationResult.success ? "success" : "danger"}
         >
           <h2 className="flex items-center gap-2 text-lg font-semibold">
@@ -451,7 +457,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
       )}
 
       <section
-        className="glass-panel flex flex-wrap items-center gap-3"
+        className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 flex flex-wrap items-center gap-3"
         data-tone={isReady ? "success" : "danger"}
       >
         <span

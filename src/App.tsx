@@ -87,7 +87,7 @@ function AppContent() {
                 </p>
               </div>
               <div className="mt-6 flex flex-col gap-3">
-                <Button onClick={resetError} variant="default" className="w-full">
+                <Button onClick={resetError} variant="aurora-primary" className="w-full">
                   Erneut versuchen
                 </Button>
                 <Button

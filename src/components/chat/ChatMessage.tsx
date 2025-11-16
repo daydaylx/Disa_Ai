@@ -126,7 +126,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
             <span className="text-text-primary font-medium">{isUser ? "Ich" : "Assistent"}</span>
             {message.model && (
               <Badge
-                variant="secondary"
+                variant="aurora-soft"
                 className="border-border bg-card text-text-secondary text-xs"
               >
                 {message.model}

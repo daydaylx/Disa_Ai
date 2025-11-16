@@ -138,7 +138,7 @@ export function SettingsOverview() {
         subtitle="Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis. Das dunkle Design ist bereits aktiv – passe Details jederzeit später an."
       >
         <div className="mt-3 flex flex-wrap gap-2">
-          <Button asChild size="sm" variant="accent">
+          <Button asChild size="sm" variant="aurora-primary">
             <Link to="/settings/api">API-Key speichern</Link>
           </Button>
           <Button asChild size="sm" variant="outline">
