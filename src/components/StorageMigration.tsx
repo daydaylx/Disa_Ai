@@ -1,4 +1,6 @@
 // Storage Migration Component
+import { useEffect, useState } from "react";
+
 import {
   AlertTriangle,
   CheckCircle,
@@ -10,9 +12,7 @@ import {
   RefreshCw,
   Shield,
   Upload,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-
+} from "@/lib/icons";
 import { Button } from "@/ui/Button";
 import { Typography } from "@/ui/Typography";
 

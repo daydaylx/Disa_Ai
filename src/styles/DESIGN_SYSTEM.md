@@ -2,132 +2,108 @@
 
 ## Übersicht
 
-Das Disa AI Design System basiert auf dem "Dramatic Glassmorphism"-Ansatz und ist speziell für mobile Geräte optimiert. Es kombiniert moderne Glaseffekte mit subtilen Schatten und präzisen Abständen, um eine elegante und funktionale Benutzeroberfläche zu schaffen.
+Das Disa AI Design System basiert auf dem "Aurora Glassmorphism"-Ansatz und ist speziell für mobile Geräte optimiert. Es kombiniert moderne Glaseffekte mit subtilen Schatten und präzisen Abständen, um eine elegante und funktionale Benutzeroberfläche zu schaffen. Das System folgt einem konsistenten Token-basierten Ansatz.
 
 ## Farbpalette
 
 Alle Farben werden über CSS Custom Properties definiert und sollten nicht direkt als Hex-Werte verwendet werden.
 
-### Primärfarben
+### Aurora Farbsystem (Laut tailwind.config.ts)
 
-- `--accent`: Hauptakzentfarbe (Lila)
-- `--accent-contrast`: Kontrastfarbe zur Hauptakzentfarbe (Weiß)
-- `--accent-soft`: Abgeschwächte Akzentfarbe für Hintergründe
-- `--accent-surface`: Oberflächenfarbe mit Akzent
+#### Primärfarben
 
-### Neutrale Farben
+- `--bg-0`, `--bg-1`, `--bg-2`: Hintergrundfarben
+- `--surface`, `--surface-soft`, `--surface-card`, `--surface-overlay`: Oberflächenfarben
+- `--text-primary`, `--text-secondary`, `--text-muted`: Textfarben
+- `--color-primary-500` (Indigo-Violet): Hauptakzentfarbe
+- `--accent-aurora-green`, `--accent-lila`, `--accent-yellow`: Akzentfarben
 
-- `--surface-base`: Grundfläche der Anwendung
-- `--surface-card`: Karten- und Panel-Hintergründe
-- `--surface-glass`: Glaseffekt-Hintergründe
-- `--surface-muted`: Abgeschwächte Hintergründe
+### Statusfarben
 
-### Textfarben
+- `--color-success-500`: Erfolgszustand (grün)
+- `--color-warning-500`: Warnungszustand (gelb/orange)
+- `--color-error-500`: Fehlerzustand (rot)
 
-- `--text-primary`: Haupttextfarbe
-- `--text-secondary`: Sekundärtextfarbe
-- `--text-tertiary`: Tertiärtextfarbe
-- `--text-subtle`: Subtile Textfarbe
+## Abstände (8px Raster)
 
-## Abstände (8-Pixel-Raster)
-
-Alle Abstände folgen einem strikten 8-Pixel-Raster:
+Alle Abstände folgen einem konsistenten Rastersystem:
 
 - `--spacing-0`: 0px
-- `--spacing-1`: 8px
-- `--spacing-2`: 16px
-- `--spacing-3`: 24px
-- `--spacing-4`: 32px
-- `--spacing-5`: 40px
-- `--spacing-6`: 48px
-- `--spacing-7`: 56px
-- `--spacing-8`: 64px
-- `--spacing-9`: 72px
-- `--spacing-10`: 80px
+- `--spacing-1`: 4px
+- `--spacing-2`: 8px
+- `--spacing-3`: 12px
+- `--spacing-4`: 16px
+- `--spacing-5`: 20px
+- `--spacing-6`: 24px
+- `--spacing-7`: 32px
+- `--spacing-8`: 40px
+- `--spacing-9`: 48px
+- `--spacing-10`: 64px
 
 ## Border Radius
 
-Die Border Radius-Werte sind standardisiert:
+Standardisierte Border Radius-Werte:
 
 - `--radius-xs`: 6px (kleinste Elemente)
 - `--radius-sm`: 10px (Standard-Buttons, Eingabefelder)
 - `--radius-md`: 14px (Karten, Panels)
 - `--radius-lg`: 18px (Hauptcontainer, Dialoge)
 - `--radius-xl`: 24px (spezielle Fälle)
+- `full`: 9999px (komplett runde Elemente)
 
-## Schatten
-
-Es gibt nur zwei Ebenen von Schatten, um visuelle Konsistenz zu gewährleisten:
-
-- `--shadow-light`: Subtile Hebung (0 2px 8px rgba(0, 0, 0, 0.16))
-- `--shadow-heavy`: Starke Hebung (0 8px 24px rgba(0, 0, 0, 0.32))
-- `--shadow-elevated`: Erhöhte Elemente (0 12px 32px rgba(0, 0, 0, 0.25))
-- `--shadow-floating`: Schwebende Elemente (0 16px 40px rgba(0, 0, 0, 0.3))
-
-## Glaseffekte
+## Aurora Glaseffekte
 
 Für das charakteristische Glassmorphism-Design:
 
-- `--glass-border-soft`: Weiche Glasrahmen (rgba(255, 255, 255, 0.18))
-- `--glass-border-strong`: Starke Glasrahmen (rgba(255, 255, 255, 0.28))
-- `--layer-glass-panel`: Panel-Hintergründe
-- `--layer-glass-inline`: Inline-Element-Hintergründe
+- `--shadow-light`: Subtile Hebung
+- `--shadow-heavy`: Starke Hebung
+- `--shadow-elevated`: Erhöhte Elemente
+- `--shadow-floating`: Schwebende Elemente
+- `--shadow-glow-primary`, `--shadow-glow-green`, `--shadow-glow-lila`, `--shadow-glow-subtle`: Aurora Glüh-Effekte
+- `--backdrop-blur-subtle`, `--backdrop-blur-medium`, `--backdrop-blur-strong`: Hintergrundunschärfe-Ebenen
 
 ## Komponenten
 
 ### Buttons
 
-Neue Glassmorphism-Varianten wurden hinzugefügt:
+Neue Aurora Glassmorphism-Varianten:
 
-1. **glass-accent**: Hochwertige primäre Aktionen mit stärkeren Farben und Schatten
-2. **glass-secondary**: Sekundäre Aktionen mit verbesserten Hover-Effekten
-3. **glass-ghost**: Transparente Buttons mit farbigen Hover-Effekten
-4. **glass-primary**: Standard-Glas-Button
-5. **glass-subtle**: Subtiler Glas-Button
-
-Größen:
-
-- `xs`: 32px Höhe
-- `sm`: 36px Höhe
-- `default`: 40px Höhe
-- `lg`: 48px Höhe
-- `xl`: 56px Höhe
+1. **Primary**: Hauptaktionen mit Akzentfarben und Glüheffekt
+2. **Secondary**: Sekundäre Aktionen mit subtileren Effekten
+3. **Ghost**: Transparente Buttons mit farbigen Hover-Effekten
+4. **Link**: Text-Buttons mit Underline-Effekt
 
 ### Karten
 
-Neue Glassmorphism-Varianten:
+Neue Aurora Glassmorphism-Varianten:
 
-1. **glass-raised**: Stark hervorgehobene Karten
-2. **glass-elevated**: Schwebende Karten mit stärkerem Glaseffekt
-3. **glass-inset**: Eingesunkene Karten für sekundäre Inhalte
-4. **glass-primary**: Standard-Glas-Karte
-5. **glass-subtle**: Subtile Glas-Karte
+1. **Standard**: Mit Glaseffekten und subtilen Schatten
+2. **Elevated**: Mit erhöhtem Glaseffekt für hervorgehobene Inhalte
+3. **Floating**: Mit starkem Schwebeeffekt für modale Inhalte
 
 ### Navigation
 
-Die neue EnhancedBottomNav-Komponente bietet:
+Aurora Navigation-System bietet:
 
-- Animierter aktiver Indikator
-- Bessere visuelle Hierarchie
-- Klarere Zustandsanzeige
-- Glassmorphism-Hintergrund
+- Glaseffekte mit subtilen Glüh-Effekten
+- Responsive Design für verschiedene Bildschirmgrößen
+- Konsistente Hover- und Active-Zustände
+- Touch-optimierte Targets für mobile Geräte
 
 ### Formularelemente
 
 1. **Switch**: Moderner Schalter mit Glaseffekten
-2. **Input**: Eingabefeld mit Glaseffekten
+2. **Input**: Eingabefeld mit Glaseffekten und Glüh-Effekten bei Fokus
 3. **Textarea**: Textbereich mit Glaseffekten
-4. **FilterChip**: Filter-Chips mit Glaseffekten
-
-### Datenanzeige
-
-1. **Table**: Tabellen mit Glaseffekten für Header, Body und Footer
-2. **Badge**: Badges mit verschiedenen Glaseffekt-Varianten
+4. **Select**: Auswahlelemente mit konsistentem Glaseffekt
+5. **Checkbox/Radio**: Mit Glaseffekten und Aurora Akzentfarben
 
 ### Overlay-Komponenten
 
-1. **Dialog**: Dialoge mit starken Glaseffekten und präzisen Schatten
-2. **Dropdown**: Dropdown-Menüs mit Glaseffekten für Inhalte und Elemente
+1. **Dialog**: Mit starken Glaseffekten und Aurora Glüh-Effekten
+2. **Drawer/Sheet**: Mit Aurora Glaseffekten und subtilen Übergängen
+3. **Tooltip**: Mit Glaseffekten und Aurora Akzentfarben
+4. **Toast**: Mit Aurora Glüheffekten für Benachrichtigungen
 
 ## Best Practices
 
@@ -135,4 +111,15 @@ Die neue EnhancedBottomNav-Komponente bietet:
 2. **Konsistenz**: Verwende immer die definierten Design Tokens
 3. **Zugänglichkeit**: Achte auf ausreichende Kontraste und Touch-Target-Größen
 4. **Performance**: Vermeide komplexe Schatten und Animationen auf untergeordneten Elementen
-5. **Glas-Effekte**: Nutze Glaseffekte gezielt, um visuelle Tiefe zu erzeugen, ohne die Lesbarkeit zu beeinträchtigen
+5. **Aurora Glaseffekte**: Nutze Glaseffekte gezielt, um visuelle Tiefe zu erzeugen, ohne die Lesbarkeit zu beeinträchtigen
+
+## Integration mit Tailwind
+
+Die Tailwind-Konfiguration ist auf die Design-Tokens abgestimmt:
+
+- Farben: Verwendung der Aurora Farbpalette
+- Abstände: 4px- und 8px-Raster
+- Typografie: Konsistente Schriftgrößen und Zeilenabstände
+- Schatten: Aurora Glüh- und Hebeeffekte
+- Radii: Standardisierte Border Radius-Werte
+- Bewegungen: Konsistente Übergangszeiten und Timing-Funktionen

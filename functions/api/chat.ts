@@ -9,11 +9,11 @@ import {
 const ALLOWED_ORIGIN = "https://disaai.de";
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
-const rateLimitState = new Map<string, number[]>();
 
 interface Env {
   OPENROUTER_API_KEY: string;
   OPENROUTER_BASE_URL?: string;
+  RATE_LIMIT_KV: KVNamespace; // Cloudflare KV namespace for rate limiting
 }
 
 const createCorsHeaders = (origin: string | null) => {
@@ -31,23 +31,39 @@ const createCorsHeaders = (origin: string | null) => {
 const getClientIdentifier = (request: Request) =>
   request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? "anonymous";
 
-const isRateLimited = (clientId: string) => {
+// Rate limiting using Cloudflare KV
+const isRateLimited = async (clientId: string, kv: KVNamespace) => {
   const now = Date.now();
   const windowStart = now - RATE_LIMIT_WINDOW_MS;
-  const requestTimes = rateLimitState.get(clientId) ?? [];
-  const filteredTimes = requestTimes.filter((timestamp) => timestamp > windowStart);
+  const key = `ratelimit:${clientId}`;
 
-  if (filteredTimes.length >= RATE_LIMIT_MAX_REQUESTS) {
-    rateLimitState.set(clientId, filteredTimes);
-    return true;
-  }
+  try {
+    // Get existing request times from KV
+    const storedData = await kv.get(key, { type: "json" });
+    let requestTimes: number[] = storedData || [];
 
-  filteredTimes.push(now);
-  if (filteredTimes.length > RATE_LIMIT_MAX_REQUESTS) {
-    filteredTimes.splice(0, filteredTimes.length - RATE_LIMIT_MAX_REQUESTS);
+    // Filter requests within the current window
+    requestTimes = requestTimes.filter((timestamp) => timestamp > windowStart);
+
+    // Check if rate limit is exceeded
+    if (requestTimes.length >= RATE_LIMIT_MAX_REQUESTS) {
+      return true;
+    }
+
+    // Add current request time
+    requestTimes.push(now);
+
+    // Store updated request times back to KV with expiration
+    await kv.put(key, JSON.stringify(requestTimes), {
+      expirationTtl: Math.ceil(RATE_LIMIT_WINDOW_MS / 1000), // TTL in seconds
+    });
+
+    return false;
+  } catch (error) {
+    console.error("Rate limiting error:", error);
+    // Fail open - if KV is unavailable, allow the request to proceed
+    return false;
   }
-  rateLimitState.set(clientId, filteredTimes);
-  return false;
 };
 
 export const onRequestOptions: PagesFunction = async ({ request }) => {
@@ -70,7 +86,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 
   const clientId = getClientIdentifier(request);
-  if (isRateLimited(clientId)) {
+  if (await isRateLimited(clientId, env.RATE_LIMIT_KV)) {
     corsHeaders.set("Content-Type", "application/json");
     corsHeaders.set("Cache-Control", "no-store");
     return new Response(JSON.stringify({ error: "Too many requests. Please slow down." }), {

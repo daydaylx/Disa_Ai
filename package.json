@@ -40,7 +40,8 @@
     "prepare": "node -e \"if (process.env.NODE_ENV !== 'production') process.exit(1)\" || husky install",
     "lh": "lhci autorun --config=./lighthouserc.cjs",
     "lint-staged": "lint-staged",
-    "verify:dist": "node scripts/verify-dist.mjs"
+    "verify:dist": "node scripts/verify-dist.mjs",
+    "validate:deploy": "node scripts/validate-deploy.js"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

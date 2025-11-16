@@ -91,6 +91,20 @@ export default defineConfig(({ mode }) => {
     base = "/";
   }
 
+  // Ensure required environment variables for production
+  if (isProduction) {
+    const requiredEnvVars = [
+      "VITE_OPENROUTER_API_KEY",
+      "OPENROUTER_API_KEY", // Runtime from Cloudflare Workers
+    ];
+
+    for (const envVar of requiredEnvVars) {
+      if (!env[envVar]) {
+        console.warn(`⚠️  Missing environment variable: ${envVar} in production mode`);
+      }
+    }
+  }
+
   return {
     // Optimized dependency bundling - less aggressive for faster builds
     optimizeDeps: {
@@ -240,7 +254,6 @@ export default defineConfig(({ mode }) => {
               devOptions: {
                 enabled: true,
                 type: "module",
-                sw: "public/sw.js",
               },
             }),
           ]
@@ -286,147 +299,30 @@ export default defineConfig(({ mode }) => {
       cssCodeSplit: true, // CSS-Chunks für besseres Caching
       // Production-spezifische Optimierungen
       ...(isProduction && {
-        sourcemap: true, // Kleinere Builds in Production
+        sourcemap: false, // Deaktiviert für kleinere Produktions-Builds
         reportCompressedSize: false, // Schnellere Builds
-        // Aggressive optimization settings
-        rollupOptions: {
-          output: {
-            // Optimize chunk loading
-            manualChunks: (id) => {
-              // Separate critical path from non-critical
-              if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
-                return "react-vendor";
-              }
-              if (id.includes("node_modules/@radix-ui/")) {
-                return "radix-ui";
-              }
-              if (id.includes("node_modules/prismjs/")) {
-                return "prism";
-              }
-              if (id.includes("node_modules/katex/")) {
-                return "katex";
-              }
-              // Group analytics and monitoring separately
-              if (id.includes("node_modules/@sentry/") || id.includes("node_modules/posthog")) {
-                return "analytics-vendor";
-              }
-              // Group form libraries
-              if (
-                id.includes("node_modules/react-hook-form") ||
-                id.includes("node_modules/@hookform/")
-              ) {
-                return "forms-vendor";
-              }
-              // Group small utilities
-              if (
-                id.includes("node_modules/clsx") ||
-                id.includes("node_modules/class-variance-authority") ||
-                id.includes("node_modules/tailwind-merge") ||
-                id.includes("node_modules/zod") ||
-                id.includes("node_modules/nanoid")
-              ) {
-                return "utils-vendor";
-              }
-              // Main vendor chunk for everything else
-              if (id.includes("node_modules/")) {
-                return "main-vendor";
-              }
-            },
-          },
-        },
       }),
-      // Additional performance optimizations for main thread
-      modulePreload: {
-        polyfill: true,
-        // Preload critical chunks only
-        resolveDependencies: (filename, deps) => {
-          return deps.filter(
-            (dep) =>
-              dep.includes("react-vendor") || dep.includes("utils") || !dep.includes("katex"), // Don't preload KaTeX - it's lazy loaded
-          );
-        },
-      },
       rollupOptions: {
-        // External non-critical dependencies
-        external: isProduction
-          ? [
-              // Don't bundle these in production - load from CDN if needed
-            ]
-          : [],
-        treeshake: {
-          preset: "smallest",
-          propertyReadSideEffects: false,
-          tryCatchDeoptimization: false,
-          unknownGlobalSideEffects: false,
-          moduleSideEffects: (id) => {
-            // Only essential side effects
-            if (id.includes("react") || id.includes("@radix-ui")) return true;
-            if (id.includes("lucide-react") || id.includes("clsx")) return true;
-            // Exclude dev-only packages
-            if (id.includes("@sentry") && !isProduction) return false;
-            return !id.includes("node_modules");
-          },
-          // Aggressive tree shaking
-          pureExternalModules: true,
-        },
-        // Smart chunking strategy to optimize bundle size without circular dependencies
         output: {
-          compact: true,
+          // Vereinfachte Chunk-Strategie
+          manualChunks: {
+            // React Framework
+            "react-vendor": ["react", "react-dom"],
+            // Router
+            "router-vendor": ["react-router-dom"],
+            // UI-Komponenten
+            "ui-vendor": [
+              "@radix-ui/react-avatar",
+              "@radix-ui/react-dialog",
+              "@radix-ui/react-dropdown-menu",
+            ],
+            // Utility-Bibliotheken
+            "utils-vendor": ["clsx", "class-variance-authority", "tailwind-merge", "nanoid"],
+            // Math/Code Rendering
+            "syntax-vendor": ["katex", "prismjs"],
+          },
           entryFileNames: "assets/js/[name]-[hash].js",
           chunkFileNames: "assets/js/[name]-[hash].js",
-          // Aggressive code splitting for smaller chunks
-          manualChunks: (id) => {
-            // React core (always needed)
-            if (id.includes("react") || id.includes("react-dom")) {
-              return "react-vendor";
-            }
-
-            // Router (needed for navigation)
-            if (id.includes("react-router")) {
-              return "router-vendor";
-            }
-
-            // Radix UI (UI components - can be split further)
-            if (id.includes("@radix-ui/")) {
-              return "radix-vendor";
-            }
-
-            // Form handling (only loaded when needed)
-            if (id.includes("@hookform/") || id.includes("react-hook-form")) {
-              return "forms-vendor";
-            }
-
-            // State management
-            if (id.includes("zustand") || id.includes("jotai")) {
-              return "state-vendor";
-            }
-
-            // Utilities (small, can be grouped)
-            if (
-              id.includes("clsx") ||
-              id.includes("class-variance-authority") ||
-              id.includes("tailwind-merge") ||
-              id.includes("nanoid") ||
-              id.includes("zod")
-            ) {
-              return "utils-vendor";
-            }
-
-            // Monitoring (lazy loaded)
-            if (id.includes("@sentry/")) {
-              return "monitoring-vendor";
-            }
-
-            // Math/Code rendering (lazy loaded)
-            if (id.includes("katex") || id.includes("prismjs")) {
-              return "syntax-vendor";
-            }
-
-            // Everything else
-            if (id.includes("node_modules/")) {
-              return "misc-vendor";
-            }
-          },
           assetFileNames: (assetInfo) => {
             if (!assetInfo.name) return "assets/[name]-[hash][extname]";
 

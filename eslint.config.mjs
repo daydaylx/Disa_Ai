@@ -22,6 +22,7 @@ export default [
       "coverage/**",
       "node_modules/**",
       "src/lib/openrouter.ts", // Legacy client
+      "src/lib/icons/index.ts", // Icon library can import from lucide-react
       "*.config.js",
       "*.config.ts",
       "tailwind.config.ts", // Ignore Tailwind config
@@ -140,6 +141,20 @@ export default [
       "import/no-mutable-exports": "error",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
+
+      // Prevent direct lucide-react imports to avoid bootstrap errors (except in the icons lib itself)
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "lucide-react",
+              message: "Please import icons from '@/lib/icons' instead of directly from 'lucide-react'. This prevents bootstrap errors due to missing icon exports.",
+              allowTypeImports: true,
+            },
+          ],
+        },
+      ],
 
       // TypeScript specific
       "@typescript-eslint/await-thenable": "error",

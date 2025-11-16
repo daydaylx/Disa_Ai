@@ -9,15 +9,27 @@
   Cache-Control: public, max-age=0, must-revalidate
   Service-Worker-Allowed: /
 
-# All other files - Strict security headers
+# All other files - Enhanced security headers for modern PWA
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' static.cloudflareinsights.com https://cloudflare.com https://storage.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://openrouter.ai https://cloudflare.com https://cloudflareinsights.com https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  # Content Security Policy - Optimiert für Vite + React + PWA
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' static.cloudflareinsights.com https://cdn.jsdelivr.net https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://openrouter.ai https://cloudflareinsights.com https://fonts.googleapis.com https://cdn.jsdelivr.net https://esm.sh wss: ws:; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+
+  # Core Security Headers
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()
+
+  # Modern Privacy & Security
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: credentialless
   Cross-Origin-Resource-Policy: same-origin
   X-Permitted-Cross-Domain-Policies: none
+
+  # PWA & Performance Headers
+  Accept-CH: DPR, Viewport-Width, Width
+  Critical-CH: DPR
+
+  # Cache Control für statische Assets
+  Cache-Control: public, max-age=31536000, immutable
