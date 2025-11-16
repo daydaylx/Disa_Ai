@@ -71,7 +71,7 @@ export function ChatHistorySidebar({
       <div className="fixed inset-0 bg-black/50 md:hidden" onClick={onClose} />
 
       <div className="fixed right-0 top-0 flex h-full w-full max-w-sm px-[clamp(12px,4vw,24px)] py-[clamp(16px,5vw,28px)] md:relative md:right-auto md:top-auto md:h-auto md:max-w-none md:px-0 md:py-0">
-        <div className="flex h-full w-full flex-col rounded-[var(--radius-xl)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] shadow-neo-md md:rounded-lg">
+        <div className="flex h-full w-full flex-col rounded-[var(--radius-xl)] border border-[var(--glass-border-subtle)] bg-[var(--glass-surface-medium)] shadow-[var(--shadow-premium-medium)] md:rounded-lg">
           <div className="flex h-full flex-col overflow-hidden">
             <div className="flex flex-col gap-4 px-[clamp(12px,4vw,20px)] pt-4 md:px-6">
               <div className="flex items-center justify-between">
@@ -102,7 +102,7 @@ export function ChatHistorySidebar({
                   <input
                     type="text"
                     placeholder="Chats durchsuchen..."
-                    className="h-11 w-full rounded-[var(--radius-lg)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-raised)] pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted shadow-[var(--shadow-inset-subtle)] focus-visible:border-[var(--acc1)] focus-visible:outline-none focus-visible:shadow-focus-neo"
+                    className="h-11 w-full rounded-[var(--radius-lg)] border border-[var(--glass-border-subtle)] bg-[var(--glass-surface-strong)] pl-11 pr-4 text-sm text-text-primary placeholder:text-text-muted shadow-[var(--shadow-premium-subtle)] focus-visible:border-[var(--acc1)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-glow-primary)]"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -174,7 +174,7 @@ export function ChatHistorySidebar({
                         <li key={conversation.id} role="presentation">
                           <div
                             className={cn(
-                              "group relative flex cursor-pointer rounded-[var(--radius-lg)] border border-[var(--border-neumorphic-subtle)] bg-[var(--surface-neumorphic-floating)] p-[clamp(16px,4vw,20px)] shadow-none transition-[transform,box-shadow,border] duration-200",
+                              "group relative flex cursor-pointer rounded-[var(--radius-lg)] border border-[var(--glass-border-subtle)] bg-[var(--glass-surface-medium)] p-[clamp(16px,4vw,20px)] shadow-none transition-[transform,box-shadow,border] duration-200",
                               "hover:-translate-y-[2px] hover:shadow-neo-sm",
                               isActive &&
                                 "border-[var(--acc1)] shadow-[var(--shadow-glow-brand-subtle)]",
@@ -244,7 +244,7 @@ export function ChatHistorySidebar({
               {filteredConversations.length === 0 && (
                 <div className="flex h-full flex-col items-center justify-center px-4 text-center">
                   <div className="max-w-xs space-y-4">
-                    <div className="border-border mx-auto flex h-16 w-16 items-center justify-center rounded-full border bg-[var(--surface-neumorphic-floating)]">
+                    <div className="border-border mx-auto flex h-16 w-16 items-center justify-center rounded-full border bg-[var(--glass-surface-medium)]">
                       <MessageSquare className="h-8 w-8 text-text-muted" />
                     </div>
                     <div className="space-y-2">

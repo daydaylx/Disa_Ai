@@ -182,7 +182,7 @@ function injectCustomPrismCSS(): void {
 
     /* Loading State */
     .code-block-loading {
-      background: var(--surface-neumorphic-base);
+      background: var(--surface-base);
       padding: var(--space-md);
       text-align: center;
       color: var(--color-text-tertiary);

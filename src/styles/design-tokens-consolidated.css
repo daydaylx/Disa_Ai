@@ -286,8 +286,23 @@
  * DARK THEME OPTIMIERUNGEN
  * ======================================== */
 
-[data-theme="dark"],
-.dark,
+[data-theme="dark"] :root,
+.dark :root {
+  /* Enhanced Glass für Dark Mode */
+  --glass-surface-subtle: rgba(26, 31, 46, 0.25);
+  --glass-surface-medium: rgba(26, 31, 46, 0.32);
+  --glass-surface-strong: rgba(26, 31, 46, 0.4);
+
+  /* Stärkere Border für bessere Sichtbarkeit */
+  --glass-border-subtle: rgba(255, 255, 255, 0.28);
+  --glass-border-medium: rgba(255, 255, 255, 0.35);
+
+  /* Intensivere Glows für Dark */
+  --shadow-glow-primary: 0 0 24px rgba(99, 102, 241, 0.4);
+  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.35);
+  --shadow-glow-lila: 0 0 20px rgba(139, 92, 246, 0.35);
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     /* Enhanced Glass für Dark Mode */

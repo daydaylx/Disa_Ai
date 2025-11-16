@@ -29,9 +29,9 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bottom-navigation fixed bottom-2 left-2 right-2 z-50",
       "mx-auto max-w-sm rounded-[var(--radius-2xl)]",
       // Dramatic Dock Foundation
-      "bg-[var(--surface-neumorphic-floating)]",
-      "shadow-[var(--shadow-neumorphic-dramatic)]",
-      "border-[var(--border-neumorphic-light)]",
+      "bg-[var(--glass-surface-medium)]",
+      "shadow-[var(--shadow-premium-strong)]",
+      "border-[var(--glass-border-medium)]",
       // Enhanced Blur and Effects
       "backdrop-blur-xl",
       "before:absolute before:inset-0 before:rounded-[var(--radius-2xl)]",
@@ -39,7 +39,7 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "before:pointer-events-none",
       // Hover Enhancement
       "transition-all duration-300 ease-out",
-      "hover:shadow-[var(--shadow-neumorphic-extreme)]",
+      "hover:shadow-[var(--shadow-glow-primary)]",
       "hover:scale-[1.02]",
     ].join(" "),
 
@@ -47,9 +47,9 @@ export function MobileNavigation({ variant = "neo-dock" }: MobileNavigationProps
       "bottom-navigation fixed bottom-4 left-4 right-4 z-50",
       "mx-auto max-w-md rounded-[var(--radius-xl)]",
       // Floating Platform
-      "bg-[var(--surface-neumorphic-raised)]",
-      "shadow-[var(--shadow-neumorphic-xl)]",
-      "border-[var(--border-neumorphic-light)]",
+      "bg-[var(--glass-surface-strong)]",
+      "shadow-[var(--shadow-premium-medium)]",
+      "border-[var(--glass-border-medium)]",
       "backdrop-blur-lg",
       // Floating Animation
       "transition-all duration-500 ease-out",

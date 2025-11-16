@@ -168,7 +168,7 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--color-border-subtle)_45%,transparent)] text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-subtle)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary-focus-ring)]"
             onClick={onClose}
           >
-            <X className="h-5 w-5 shadow-[var(--shadow-neumorphic-icon)]" aria-hidden="true" />
+            <X className="h-5 w-5 shadow-[var(--shadow-glow-soft)]" aria-hidden="true" />
           </button>
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-4 text-sm leading-relaxed">{children}</div>

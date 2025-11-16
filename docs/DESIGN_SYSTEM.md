@@ -1,4 +1,4 @@
-# Dramatic Neumorphism Design System
+# Aurora Glassmorphism Design System
 
 > **Version:** 2.0.0-alpha
 > **Status:** In Konsolidierung
@@ -6,7 +6,7 @@
 
 ## Übersicht
 
-Disa AI verwendet ein **Dramatic Neumorphism Design-System**, das sich durch tiefe, mehrschichtige Schatten und erhabene Oberflächen für eine taktile, dreidimensionale Benutzererfahrung auszeichnet. Das System ist vollständig mobile-optimiert und Performance-orientiert.
+Disa AI verwendet ein **Aurora Glassmorphism Design-System**, das sich durch tiefe, mehrschichtige Schatten und erhabene Oberflächen für eine taktile, dreidimensionale Benutzererfahrung auszeichnet. Das System ist vollständig mobile-optimiert und Performance-orientiert.
 
 ---
 

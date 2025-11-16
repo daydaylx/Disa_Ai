@@ -210,9 +210,9 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               onClick={() => setShowKey((prev) => !prev)}
             >
               {showKey ? (
-                <EyeOff className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+                <EyeOff className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
               ) : (
-                <Eye className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+                <Eye className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
               )}
             </Button>
           </div>
@@ -273,7 +273,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
           <div className="grid gap-2 sm:grid-cols-2">
             <Button variant="primary" className="justify-between" onClick={handleCleanup}>
               Verlauf komprimieren
-              <RefreshCw className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+              <RefreshCw className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
             </Button>
             <Button
               variant="ghost"
@@ -289,7 +289,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               }}
             >
               Gedächtnis leeren
-              <Sparkles className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+              <Sparkles className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
             </Button>
           </div>
           <GlassPanel>
@@ -382,7 +382,7 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
           <div className="grid gap-3 sm:grid-cols-2">
             <Button variant="primary" className="justify-between" onClick={handleExport}>
               Export als JSON
-              <Download className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
+              <Download className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
             </Button>
             <Button variant="secondary" className="justify-between" onClick={handleImportClick}>
               <div className="flex items-center gap-3">
