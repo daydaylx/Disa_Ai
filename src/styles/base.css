@@ -140,10 +140,10 @@ a {
 
 :root {
   --vh: 1vh;
-  --inset-t: env(safe-area-inset-top, 0px);
-  --inset-r: env(safe-area-inset-right, 0px);
-  --inset-b: env(safe-area-inset-bottom, 0px);
-  --inset-l: env(safe-area-inset-left, 0px);
+  --inset-t: env(safe-area-inset-top, 0);
+  --inset-r: env(safe-area-inset-right, 0);
+  --inset-b: env(safe-area-inset-bottom, 0);
+  --inset-l: env(safe-area-inset-left, 0);
 }
 
 .safe-top {
