@@ -8,6 +8,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Switch } from "../../components/ui/Switch";
 import { useToasts } from "../../components/ui/toast/ToastsProvider";
+import { Typography } from "../../components/ui/typography";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import {
@@ -234,10 +235,10 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               Entfernen
             </Button>
           </div>
-          <p className="text-xs text-[var(--color-text-secondary)]">
+          <Typography variant="caption" className="text-[var(--color-text-secondary)]">
             Schlüssel wird nur im aktuellen Browser-Tab gespeichert. Bei leerem Feld nutzt Disa den
             öffentlichen Proxy.
-          </p>
+          </Typography>
         </div>
       ),
     },
@@ -295,11 +296,11 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               <Sparkles className="h-4 w-4 shadow-[var(--shadow-neumorphic-icon)]" />
             </Button>
           </div>
-          <GlassPanel className="text-xs text-text-muted">
-            <p>
+          <GlassPanel>
+            <Typography variant="caption" className="text-text-muted">
               {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
               {stats.modelsUsed.length} Modelle
-            </p>
+            </Typography>
           </GlassPanel>
         </div>
       ),
@@ -328,39 +329,49 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
         <div className="space-y-3">
           <div className="space-y-2">
             <Label>Farbschema</Label>
-            <p className="text-xs text-[var(--color-text-secondary)]">
+            <Typography variant="caption" className="text-[var(--color-text-secondary)]">
               Der Dunkelmodus ist standardmäßig aktiv und kann nicht deaktiviert werden. Alle
               Oberflächen, Tokens und Kontraste sind auf die dunkle Darstellung optimiert.
-            </p>
+            </Typography>
           </div>
           <GlassPanel className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent">
+                <Typography
+                  variant="caption"
+                  className="font-semibold uppercase tracking-[0.3em] text-accent"
+                  style={{ fontSize: "10px" }}
+                >
                   Designsystem
-                </span>
-                <h3 className="text-sm font-semibold text-text-primary">
+                </Typography>
+                <Typography variant="body" className="font-semibold text-text-primary">
                   Fluent-2 Soft-Depth · Dark
-                </h3>
-                <p className="text-xs text-text-secondary">
+                </Typography>
+                <Typography variant="caption" className="text-text-secondary">
                   Sanfte Layer, klare Typografie und performante Schatten – optimiert für geringe
                   Umgebungshelligkeit und OLED/AMOLED-Displays.
-                </p>
+                </Typography>
               </div>
               <div className="hidden h-14 w-24 rounded-lg border border-line bg-gradient-to-br from-surface-base to-surface-card sm:block" />
             </div>
-            <div className="flex flex-wrap gap-2 text-xs text-text-secondary">
-              <span>Lesbarkeit 5.6 : 1</span>
-              <span>Blur-frei</span>
-              <span>OLED-optimiert</span>
+            <div className="flex flex-wrap gap-2">
+              <Typography variant="caption" className="text-text-secondary">
+                Lesbarkeit 5.6 : 1
+              </Typography>
+              <Typography variant="caption" className="text-text-secondary">
+                Blur-frei
+              </Typography>
+              <Typography variant="caption" className="text-text-secondary">
+                OLED-optimiert
+              </Typography>
             </div>
-            <p className="text-xs text-text-secondary">
+            <Typography variant="caption" className="text-text-secondary">
               Farb- und Tiefeneffekte respektieren automatisch deine Geräteeinstellungen wie
               <code className="mx-1 rounded bg-surface-muted px-1 text-[10px]">
                 prefers-reduced-motion
               </code>
               oder Kontrastverbesserungen.
-            </p>
+            </Typography>
           </GlassPanel>
         </div>
       ),
@@ -385,10 +396,12 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               <div className="flex items-center gap-3">
                 <Upload className="h-5 w-5 text-text-secondary" />
                 <div className="text-left">
-                  <p className="font-medium text-text-primary">Einstellungen importieren</p>
-                  <p className="text-sm text-text-secondary">
+                  <Typography variant="body" className="font-medium text-text-primary">
+                    Einstellungen importieren
+                  </Typography>
+                  <Typography variant="body" className="text-text-secondary">
                     Vorhandene Einstellungen aus einer Datei laden
-                  </p>
+                  </Typography>
                 </div>
               </div>
               <ChevronRight className="h-5 w-5 text-text-secondary" />
@@ -407,10 +420,10 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               }
             }}
           />
-          <p className="text-xs text-[var(--color-text-secondary)]">
+          <Typography variant="caption" className="text-[var(--color-text-secondary)]">
             Daten bleiben ausschließlich lokal. Import ersetzt vorhandene Chats nicht, sondern
             ergänzt sie.
-          </p>
+          </Typography>
         </>
       ),
     },
@@ -460,7 +473,9 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
               </Link>
             </Button>
           ) : null}
-          <h1 className="text-lg font-semibold text-text-primary">{headerTitle}</h1>
+          <Typography variant="h5" as="h1" className="text-text-primary">
+            {headerTitle}
+          </Typography>
         </div>
       </header>
 
@@ -470,8 +485,12 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
             <GlassPanel key={config.id}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-base font-semibold text-text-primary">{config.title}</p>
-                  <p className="text-sm text-text-muted">{config.description}</p>
+                  <Typography variant="h6" className="text-text-primary">
+                    {config.title}
+                  </Typography>
+                  <Typography variant="body" className="text-text-muted">
+                    {config.description}
+                  </Typography>
                 </div>
                 <Badge variant={sectionStatuses[config.id].variant} size="sm">
                   {sectionStatuses[config.id].label}
@@ -502,8 +521,12 @@ function ToggleRow({
   return (
     <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-soft)] flex items-start justify-between gap-6 px-6 py-4 rounded-3xl hover:shadow-[var(--shadow-glow-primary)] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]">
       <div className="flex-1">
-        <p className="text-base font-semibold text-primary">{label}</p>
-        <p className="text-sm text-text-secondary">{description}</p>
+        <Typography variant="h6" className="text-primary">
+          {label}
+        </Typography>
+        <Typography variant="body" className="text-text-secondary">
+          {description}
+        </Typography>
       </div>
       <Switch id={id} checked={checked} onChange={onChange} aria-label={label} />
     </div>
