@@ -1,6 +1,6 @@
-import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef } from "react";
 
+import { RotateCcw, Send, Square, Zap } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 import { Textarea } from "@/ui/Textarea";
 

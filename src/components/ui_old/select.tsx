@@ -1,7 +1,8 @@
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import * as React from "react";
+
+import { Check, ChevronDown, ChevronUp } from "@/lib/icons";
 
 import { cn } from "../../lib/utils";
 

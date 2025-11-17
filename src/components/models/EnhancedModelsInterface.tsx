@@ -5,9 +5,9 @@
  * Features: Sticky Header, Quick Actions, FAB, Bottom Sheet Details
  */
 
-import { ChevronDown, DollarSign, GitCompare, Search, Star, Zap } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
+import { ChevronDown, DollarSign, GitCompare, Search, Star, Zap } from "@/lib/icons";
 import {
   Badge,
   Button,

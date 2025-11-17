@@ -1,6 +1,6 @@
-import { Zap } from "lucide-react";
 import React from "react";
 
+import { Zap } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";

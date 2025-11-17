@@ -1,5 +1,6 @@
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { ChevronDown, ChevronUp } from "@/lib/icons";
 
 import { appRouter } from "../../app/router";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";

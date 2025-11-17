@@ -1,10 +1,10 @@
-import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
+import { ChevronRight } from "../../lib/icons";
 import {
   BookOpenCheck,
   ChevronUp,
