@@ -1,5 +1,5 @@
-import type { LucideIcon } from "lucide-react";
-import { Cpu, Home, MessageSquare, Settings, Users } from "lucide-react";
+import type { LucideIcon } from "@/lib/icons";
+import { Cpu, Home, MessageSquare, Settings, Users } from "@/lib/icons";
 
 export type AppNavItem = {
   id: string;

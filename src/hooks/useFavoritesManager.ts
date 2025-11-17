@@ -191,21 +191,24 @@ export function useFavoritesManager(): FavoritesManagerState {
 
     setUsage((prev) => {
       const prevRoles = prev.roles || {};
-      const existingRoleData = prevRoles[roleId] || {};
+      const existingRoleData = prevRoles[roleId] || {
+        count: 0,
+        totalDuration: 0,
+        averageSessionLength: 0,
+      };
 
       return {
         ...prev,
         roles: {
           ...prevRoles,
           [roleId]: {
-            count: (existingRoleData.count || 0) + 1,
-            totalDuration: (existingRoleData.totalDuration || 0) + sessionLength,
+            count: existingRoleData.count + 1,
+            totalDuration: existingRoleData.totalDuration + sessionLength,
             lastUsed: now,
             averageSessionLength:
               sessionLength > 0
-                ? ((existingRoleData.totalDuration || 0) + sessionLength) /
-                  ((existingRoleData.count || 0) + 1)
-                : existingRoleData.averageSessionLength || 0,
+                ? (existingRoleData.totalDuration + sessionLength) / (existingRoleData.count + 1)
+                : existingRoleData.averageSessionLength,
           },
         },
         lastSync: now,
@@ -223,22 +226,26 @@ export function useFavoritesManager(): FavoritesManagerState {
 
     setUsage((prev) => {
       const prevModels = prev.models || {};
-      const existingModelData = prevModels[modelId] || {};
+      const existingModelData = prevModels[modelId] || {
+        count: 0,
+        totalTokens: 0,
+        totalCost: 0,
+        averageTokensPerSession: 0,
+      };
 
       return {
         ...prev,
         models: {
           ...prevModels,
           [modelId]: {
-            count: (existingModelData.count || 0) + 1,
-            totalTokens: (existingModelData.totalTokens || 0) + tokensUsed,
-            totalCost: (existingModelData.totalCost || 0) + cost,
+            count: existingModelData.count + 1,
+            totalTokens: existingModelData.totalTokens + tokensUsed,
+            totalCost: existingModelData.totalCost + cost,
             lastUsed: now,
             averageTokensPerSession:
               tokensUsed > 0
-                ? ((existingModelData.totalTokens || 0) + tokensUsed) /
-                  ((existingModelData.count || 0) + 1)
-                : existingModelData.averageTokensPerSession || 0,
+                ? (existingModelData.totalTokens + tokensUsed) / (existingModelData.count + 1)
+                : existingModelData.averageTokensPerSession,
           },
         },
         lastSync: now,

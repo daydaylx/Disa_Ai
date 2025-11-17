@@ -1,6 +1,6 @@
-import { ArrowLeft, Clock, MessageSquare, Plus, Search, Star, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { ArrowLeft, Clock, MessageSquare, Plus, Search, Star, X } from "@/lib/icons";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
 

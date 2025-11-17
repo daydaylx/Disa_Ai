@@ -1,5 +1,4 @@
-import { Brain, Code2, Link2, PenSquare } from "lucide-react";
-
+import { Brain, Code2, Link2, PenSquare } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 import { Card, CardTitle } from "@/ui/Card";
 

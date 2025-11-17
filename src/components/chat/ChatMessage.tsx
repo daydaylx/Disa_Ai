@@ -1,6 +1,6 @@
-import { Bot, Copy, RotateCcw, User } from "lucide-react";
 import { useState } from "react";
 
+import { Bot, Copy, RotateCcw, User } from "@/lib/icons";
 import { Avatar, AvatarFallback } from "@/ui/Avatar";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
