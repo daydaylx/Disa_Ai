@@ -1,6 +1,4 @@
-import "./index.css"; // Consolidated CSS: unified-tokens, base, components, Tailwind
-import "./styles/base.css";
-import "./styles/components.css";
+import "./index.css"; // Consolidated CSS: tokens + Tailwind layers
 import "./lib/css-feature-detection";
 import "./lib/accessibility";
 
