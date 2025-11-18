@@ -1,15 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { Button, FilterChip, RoleCard, Typography } from "@/ui";
-
-import {
-  AppMenuDrawer,
-  defaultMenuSections,
-  MenuIcon,
-  useMenuDrawer,
-} from "../components/layout/AppMenuDrawer";
-import { RolesPageShell } from "../components/layout/PageShell";
-import { cn } from "../lib/utils";
+import { Button, FilterChip, RoleCard, SectionHeader, Typography } from "@/ui";
 
 // Mock data für Rollen - würde normalerweise aus API kommen
 interface Role {
@@ -130,8 +121,6 @@ export default function RolesPage() {
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
-
   // Optimized role filtering with useMemo for better performance
   const filteredRoles = useMemo(() => {
     const searchLower = searchQuery.toLowerCase();
@@ -159,79 +148,72 @@ export default function RolesPage() {
   };
 
   return (
-    <RolesPageShell actions={<MenuIcon onClick={openMenu} />}>
-      {/* Such-Input */}
-      <div className="relative">
+    <div className="space-y-8">
+      <SectionHeader
+        eyebrow="Personas"
+        title="Rollen"
+        description="Aktiviere vorkonfigurierte Assistent:innen oder erstelle eigene Templates"
+      />
+
+      <div className="space-y-4 rounded-3xl border border-[var(--glass-border-soft)] bg-[var(--surface-card)]/70 p-4 shadow-[var(--shadow-sm)]">
         <input
           type="text"
-          placeholder="Rollen durchsuchen..."
+          placeholder="Rollen durchsuchen"
           value={searchQuery}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-          className={cn(
-            "w-full rounded-3xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] bg-gradient-to-r from-surface-card to-surface-soft px-5 py-4 text-primary placeholder-text-muted",
-            "focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:border-primary/50 focus:ring-primary/30 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)] focus:outline-none",
-          )}
+          className="w-full rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] px-4 py-3 text-[var(--text-primary)]"
         />
-      </div>
 
-      {/* Categories als Filter-Chips mit Badge-Zahlen */}
-      <div className="space-y-3">
-        <Typography
-          variant="body-xs"
-          className="text-[var(--text-muted)] uppercase tracking-[0.16em]"
-        >
-          Kategorien
-        </Typography>
-
-        <div className="flex flex-wrap gap-2">
-          <FilterChip
-            count={getCategoryCount("All")}
-            isActive={activeCategory === "All"}
-            onClick={() => setActiveCategory("All")}
+        <div className="space-y-2">
+          <Typography
+            variant="body-xs"
+            className="uppercase tracking-[0.16em] text-[var(--text-muted)]"
           >
-            Alle
-          </FilterChip>
-          {categories.map((category) => (
+            Kategorien
+          </Typography>
+          <div className="flex flex-wrap gap-2">
             <FilterChip
-              key={category.name}
-              count={getCategoryCount(category.name)}
-              isActive={activeCategory === category.name}
-              onClick={() => setActiveCategory(category.name)}
+              count={getCategoryCount("All")}
+              isActive={activeCategory === "All"}
+              onClick={() => setActiveCategory("All")}
             >
-              {category.name}
+              Alle
             </FilterChip>
-          ))}
+            {categories.map((category) => (
+              <FilterChip
+                key={category.name}
+                count={getCategoryCount(category.name)}
+                isActive={activeCategory === category.name}
+                onClick={() => setActiveCategory(category.name)}
+              >
+                {category.name}
+              </FilterChip>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between text-sm text-[var(--text-secondary)]">
+          <span>
+            {filteredRoles.length} Rollen gefunden
+            {searchQuery && ` für "${searchQuery}"`}
+            {activeCategory !== "All" && ` in "${activeCategory}"`}
+          </span>
+          {(activeCategory !== "All" || searchQuery) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setActiveCategory("All");
+                setSearchQuery("");
+              }}
+            >
+              Filter zurücksetzen
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Results Info */}
-      <div className="flex items-center justify-between">
-        <Typography variant="body-sm" className="text-[var(--text-secondary)]">
-          {filteredRoles.length} Rollen gefunden
-          {searchQuery && ` für "${searchQuery}"`}
-          {activeCategory !== "All" && ` in "${activeCategory}"`}
-        </Typography>
-
-        {(activeCategory !== "All" || searchQuery) && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setActiveCategory("All");
-              setSearchQuery("");
-            }}
-            className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-          >
-            Filter zurücksetzen
-          </Button>
-        )}
-      </div>
-
-      {/* Glow Card Grid */}
-      <div
-        className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 glow-card-grid"
-        data-testid="roles-grid"
-      >
+      <div className="grid grid-cols-1 gap-5" data-testid="roles-grid">
         {filteredRoles.map((role) => (
           <RoleCard
             key={role.id}
@@ -270,17 +252,12 @@ export default function RolesPage() {
         ))}
       </div>
 
-      {/* Empty State */}
       {filteredRoles.length === 0 && (
-        <div className="text-center py-16">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[var(--surface)] flex items-center justify-center">
-            <span className="text-2xl">👥</span>
+        <div className="rounded-3xl border border-[var(--glass-border-soft)] bg-[var(--surface-card)]/70 p-10 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--surface)]">
+            👥
           </div>
-          <Typography
-            variant="body-lg"
-            className="text-[var(--text-primary)] font-medium mb-2"
-            aria-label="Roles page empty state heading"
-          >
+          <Typography variant="body-lg" className="font-semibold">
             Keine Rollen gefunden
           </Typography>
           <Typography variant="body-sm" className="text-[var(--text-secondary)]">
@@ -292,9 +269,6 @@ export default function RolesPage() {
           </Typography>
         </div>
       )}
-
-      {/* Menu Drawer */}
-      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
-    </RolesPageShell>
+    </div>
   );
 }

@@ -1,37 +1,27 @@
-import { Card } from "@/ui/Card";
-
-import {
-  AppMenuDrawer,
-  defaultMenuSections,
-  MenuIcon,
-  useMenuDrawer,
-} from "../components/layout/AppMenuDrawer";
-import { LegalPageShell } from "../components/layout/PageShell";
+import { MobileCard, SectionHeader, Typography } from "@/ui";
 
 export default function DatenschutzPage() {
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
-
   return (
-    <LegalPageShell
-      title="Datenschutzerklärung"
-      subtitle="Informationen über die Verarbeitung personenbezogener Daten"
-      actions={<MenuIcon onClick={openMenu} />}
-    >
-      <Card className="max-w-2xl mx-auto p-6 space-y-8">
-        {/* Intro Notice */}
-        <div className="rounded-lg border border-[var(--color-primary-200)] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
-          <p className="font-medium">
-            Diese Datenschutzerklärung informiert Sie über die Verarbeitung personenbezogener Daten
-            bei Nutzung dieser Anwendung.
-          </p>
-        </div>
+    <div className="space-y-6">
+      <SectionHeader
+        eyebrow="Rechtliches"
+        title="Datenschutzerklärung"
+        description="Informationen über die Verarbeitung personenbezogener Daten"
+      />
 
-        {/* 1. Verantwortliche Stelle */}
-        <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
-            1. Verantwortliche Stelle
-          </h2>
-          <div className="text-[var(--text-secondary)] space-y-3">
+      <MobileCard accent="neutral">
+        <div className="space-y-8 text-[var(--text-secondary)]">
+          <div className="rounded-2xl border border-[var(--color-primary-200)] bg-[var(--color-primary-50)]/80 p-4 text-[var(--color-primary-700)]">
+            <p className="font-medium">
+              Diese Datenschutzerklärung informiert Sie über die Verarbeitung personenbezogener
+              Daten bei Nutzung dieser Anwendung.
+            </p>
+          </div>
+
+          <section className="space-y-3">
+            <Typography variant="body" className="font-semibold text-[var(--text-primary)]">
+              1. Verantwortliche Stelle
+            </Typography>
             <p>
               David Grunert
               <br />
@@ -47,15 +37,12 @@ export default function DatenschutzPage() {
               Da diese Seite rein privat und nicht geschäftsmäßig betrieben wird, besteht keine
               Verpflichtung zur Benennung eines Datenschutzbeauftragten.
             </p>
-          </div>
-        </section>
+          </section>
 
-        {/* 2. Allgemeine Hinweise */}
-        <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
-            2. Allgemeine Hinweise
-          </h2>
-          <div className="text-[var(--text-secondary)] space-y-3">
+          <section className="space-y-3">
+            <Typography variant="body" className="font-semibold text-[var(--text-primary)]">
+              2. Allgemeine Hinweise
+            </Typography>
             <p>Die Nutzung dieser Website ist ohne Angabe personenbezogener Daten möglich.</p>
             <p>
               Ich bitte ausdrücklich darum, keine persönlichen oder sensiblen Informationen (z. B.
@@ -67,26 +54,21 @@ export default function DatenschutzPage() {
               können jedoch durch die verwendeten Dienstleister automatisch verarbeitet werden, um
               die Seite bereitzustellen und den Betrieb sicherzustellen.
             </p>
-          </div>
-        </section>
+          </section>
 
-        {/* 3. Verarbeitung durch technische Dienstleister */}
-        <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
-            3. Verarbeitung durch technische Dienstleister
-          </h2>
-
-          {/* INWX */}
-          <div className="mb-6">
-            <h3 className="font-medium text-[var(--text-primary)] mb-2">
-              a) INWX GmbH & Co. KG (Domain-Provider)
-            </h3>
-            <div className="text-[var(--text-secondary)] space-y-2">
+          <section className="space-y-4">
+            <Typography variant="body" className="font-semibold text-[var(--text-primary)]">
+              3. Verarbeitung durch technische Dienstleister
+            </Typography>
+            <div className="space-y-2">
+              <Typography variant="body-sm" className="font-medium text-[var(--text-primary)]">
+                a) INWX GmbH &amp; Co. KG (Domain-Provider)
+              </Typography>
               <p>
-                Die Domain disaai.de wird über den Anbieter INWX GmbH & Co. KG, Prinzessinnenstraße
-                30, 10969 Berlin, betrieben. INWX speichert und verarbeitet technische Daten im
-                Rahmen der Domainverwaltung, z. B. DNS-Einträge, Serververbindungen und
-                administrative Kontaktinformationen.
+                Die Domain disaai.de wird über den Anbieter INWX GmbH &amp; Co. KG,
+                Prinzessinnenstraße 30, 10969 Berlin, betrieben. INWX speichert und verarbeitet
+                technische Daten im Rahmen der Domainverwaltung, z. B. DNS-Einträge,
+                Serververbindungen und administrative Kontaktinformationen.
               </p>
               <p>
                 <strong>Zweck:</strong> Registrierung, Verwaltung und Bereitstellung der Domain.
@@ -96,14 +78,10 @@ export default function DatenschutzPage() {
                 am Betrieb der Domain).
               </p>
             </div>
-          </div>
-
-          {/* Cloudflare */}
-          <div className="mb-6">
-            <h3 className="font-medium text-[var(--text-primary)] mb-2">
-              b) Cloudflare Inc. (Content Delivery / Sicherheitsdienst)
-            </h3>
-            <div className="text-[var(--text-secondary)] space-y-2">
+            <div className="space-y-2">
+              <Typography variant="body-sm" className="font-medium text-[var(--text-primary)]">
+                b) Cloudflare Inc. (Content Delivery / Sicherheitsdienst)
+              </Typography>
               <p>
                 Zur Bereitstellung, Absicherung und Beschleunigung der Website wird der Dienst
                 Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, USA, eingesetzt.
@@ -122,14 +100,10 @@ export default function DatenschutzPage() {
                 Standardvertragsklauseln gemäß Art. 46 DSGVO.
               </p>
             </div>
-          </div>
-
-          {/* OpenRouter */}
-          <div>
-            <h3 className="font-medium text-[var(--text-primary)] mb-2">
-              c) OpenRouter Inc. (KI-Funktion)
-            </h3>
-            <div className="text-[var(--text-secondary)] space-y-2">
+            <div className="space-y-2">
+              <Typography variant="body-sm" className="font-medium text-[var(--text-primary)]">
+                c) OpenRouter Inc. (KI-Funktion)
+              </Typography>
               <p>
                 Für die optionalen KI-Funktionen wird der Dienst OpenRouter Inc. genutzt. Wenn
                 Nutzer Texte oder Fragen eingeben, werden diese an OpenRouter übermittelt, um eine
@@ -148,45 +122,40 @@ export default function DatenschutzPage() {
                 am Funktionsbetrieb).
               </p>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* 4. Cookies und Tracking */}
-        <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
-            4. Cookies und Tracking
-          </h2>
-          <p className="text-[var(--text-secondary)]">
-            Ich selbst verwende keine Cookies und keine Tracking-Dienste. Cloudflare kann technisch
-            notwendige Cookies setzen, um Sicherheits- und Lastverteilungsfunktionen
-            bereitzustellen. Diese speichern keine personenbezogenen Informationen im rechtlichen
-            Sinne.
-          </p>
-        </section>
+          <section className="space-y-2">
+            <Typography variant="body" className="font-semibold text-[var(--text-primary)]">
+              4. Cookies und Tracking
+            </Typography>
+            <p>
+              Ich selbst verwende keine Cookies und keine Tracking-Dienste. Cloudflare kann
+              technisch notwendige Cookies setzen, um Sicherheits- und Lastverteilungsfunktionen
+              bereitzustellen. Diese speichern keine personenbezogenen Informationen im rechtlichen
+              Sinne.
+            </p>
+          </section>
 
-        {/* 5. Speicherdauer */}
-        <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
-            5. Speicherdauer
-          </h2>
-          <p className="text-[var(--text-secondary)]">
-            Ich speichere keinerlei personenbezogene Daten. Daten, die durch INWX, Cloudflare oder
-            OpenRouter verarbeitet werden, unterliegen deren jeweiligen Speicher- und
-            Löschrichtlinien. Ich habe darauf keinen direkten Einfluss.
-          </p>
-        </section>
+          <section className="space-y-2">
+            <Typography variant="body" className="font-semibold text-[var(--text-primary)]">
+              5. Speicherdauer
+            </Typography>
+            <p>
+              Ich speichere keinerlei personenbezogene Daten. Daten, die durch INWX, Cloudflare oder
+              OpenRouter verarbeitet werden, unterliegen deren jeweiligen Speicher- und
+              Löschrichtlinien. Ich habe darauf keinen direkten Einfluss.
+            </p>
+          </section>
 
-        {/* 6. Rechte der betroffenen Personen */}
-        <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
-            6. Rechte der betroffenen Personen
-          </h2>
-          <div className="text-[var(--text-secondary)] space-y-3">
+          <section className="space-y-3">
+            <Typography variant="body" className="font-semibold text-[var(--text-primary)]">
+              6. Rechte der betroffenen Personen
+            </Typography>
             <p>
               Soweit über die genannten Dienstleister personenbezogene Daten verarbeitet werden,
               haben betroffene Personen nach DSGVO folgende Rechte:
             </p>
-            <ul className="list-disc list-inside space-y-1 ml-4">
+            <ul className="ml-4 list-disc space-y-1">
               <li>Auskunft (Art. 15)</li>
               <li>Berichtigung (Art. 16)</li>
               <li>Löschung (Art. 17)</li>
@@ -206,39 +175,37 @@ export default function DatenschutzPage() {
               </a>{" "}
               gestellt werden.
             </p>
-          </div>
-        </section>
+          </section>
 
-        {/* 7. Datensicherheit */}
-        <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
-            7. Datensicherheit
-          </h2>
-          <p className="text-[var(--text-secondary)]">
-            Die Übertragung dieser Website erfolgt über HTTPS (TLS-Verschlüsselung). Ich treffe
-            zumutbare Maßnahmen zum Schutz der übertragenen Daten. Eine absolute Sicherheit der
-            Datenübertragung im Internet kann jedoch nicht garantiert werden.
-          </p>
-        </section>
+          <section className="space-y-2">
+            <Typography variant="body" className="font-semibold text-[var(--text-primary)]">
+              7. Datensicherheit
+            </Typography>
+            <p>
+              Die Übertragung dieser Website erfolgt über HTTPS (TLS-Verschlüsselung). Ich treffe
+              zumutbare Maßnahmen zum Schutz der übertragenen Daten. Eine absolute Sicherheit der
+              Datenübertragung im Internet kann jedoch nicht garantiert werden.
+            </p>
+          </section>
 
-        {/* 8. Änderungen dieser Datenschutzerklärung */}
-        <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
-            8. Änderungen dieser Datenschutzerklärung
-          </h2>
-          <p className="text-[var(--text-secondary)]">
-            Ich behalte mir vor, diese Erklärung zu ändern, falls sich technische Abläufe oder
-            gesetzliche Rahmenbedingungen ändern. Die aktuelle Version ist jederzeit auf{" "}
-            <a href="https://disaai.de" className="text-[var(--color-primary-500)] hover:underline">
-              https://disaai.de
-            </a>{" "}
-            abrufbar.
-          </p>
-        </section>
-      </Card>
-
-      {/* Menu Drawer */}
-      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
-    </LegalPageShell>
+          <section className="space-y-2">
+            <Typography variant="body" className="font-semibold text-[var(--text-primary)]">
+              8. Änderungen dieser Datenschutzerklärung
+            </Typography>
+            <p>
+              Ich behalte mir vor, diese Erklärung zu ändern, falls sich technische Abläufe oder
+              gesetzliche Rahmenbedingungen ändern. Die aktuelle Version ist jederzeit auf{" "}
+              <a
+                href="https://disaai.de"
+                className="text-[var(--color-primary-500)] hover:underline"
+              >
+                https://disaai.de
+              </a>{" "}
+              abrufbar.
+            </p>
+          </section>
+        </div>
+      </MobileCard>
+    </div>
   );
 }

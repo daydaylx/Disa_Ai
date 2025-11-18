@@ -1,14 +1,7 @@
 import { useMemo, useState } from "react";
 
-import { Button, Input, ModelCard, Typography } from "@/ui";
+import { Button, Input, ModelCard, SectionHeader, Typography } from "@/ui";
 
-import {
-  AppMenuDrawer,
-  defaultMenuSections,
-  MenuIcon,
-  useMenuDrawer,
-} from "../components/layout/AppMenuDrawer";
-import { ModelsPageShell } from "../components/layout/PageShell";
 import { Filter, Search, Settings, Star } from "../lib/icons";
 import { cn } from "../lib/utils";
 
@@ -107,8 +100,6 @@ export default function ModelsPage() {
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [showFreeOnly, setShowFreeOnly] = useState(false);
 
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
-
   // Optimized filtering with useMemo - prevents re-computation on every render
   const filteredModels = useMemo(() => {
     const searchLower = searchQuery.toLowerCase();
@@ -133,68 +124,58 @@ export default function ModelsPage() {
   };
 
   return (
-    <ModelsPageShell actions={<MenuIcon onClick={openMenu} />}>
-      {/* Such-/Filterleiste */}
-      <div className="space-y-4">
-        {/* Pill-Input "Mod" links, daneben Icon-Buttons */}
-        <div className="flex items-center gap-3">
-          {/* Pill-Input */}
-          <div className="flex-1 relative">
-            <Input
-              placeholder="Mod"
-              value={searchQuery}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-              className={cn(
-                "rounded-3xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] bg-gradient-to-r from-surface-card to-surface-soft text-primary placeholder-text-muted",
-                "focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:border-primary/50 focus:ring-primary/30 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-              )}
-            />
-          </div>
+    <div className="space-y-8">
+      <SectionHeader
+        eyebrow="Katalog"
+        title="Modelle"
+        description="Vergleiche Geschwindigkeit, Qualität und Kosten deiner Provider"
+      />
 
-          {/* Icon-Buttons als kleine runde Buttons */}
+      <div className="space-y-4 rounded-3xl border border-[var(--glass-border-soft)] bg-[var(--surface-card)]/70 p-4 shadow-[var(--shadow-sm)]">
+        <div className="flex items-center gap-3">
+          <Input
+            placeholder="Modelle durchsuchen"
+            value={searchQuery}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+            className="flex-1 rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] px-4 py-3 text-[var(--text-primary)]"
+          />
+
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
               className={cn(
-                "p-3 rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] group min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-                showFavoritesOnly
-                  ? "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] text-primary animate-pulse scale-105"
-                  : "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-105 text-text-secondary hover:text-primary",
+                "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]",
+                showFavoritesOnly &&
+                  "border-[var(--aurora-green-400)] text-[var(--aurora-green-400)]",
               )}
               aria-label="Favoriten anzeigen"
             >
               <Star className="h-5 w-5" />
             </button>
-
             <button
               onClick={() => setShowFreeOnly(!showFreeOnly)}
               className={cn(
-                "p-3 rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] group min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-                showFreeOnly
-                  ? "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-lila-400)] shadow-[var(--shadow-glow-lila)] text-primary animate-pulse scale-105"
-                  : "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-105 text-text-secondary hover:text-primary",
+                "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]",
+                showFreeOnly && "border-[var(--aurora-lila-400)] text-[var(--aurora-lila-400)]",
               )}
               aria-label="Kostenlose Modelle"
             >
               <Filter className="h-5 w-5" />
             </button>
-
             <button
-              className="p-3 rounded-full bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--color-neutral-700)] transition-colors duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center"
-              aria-label="Einstellungen"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]"
+              aria-label="Weitere Einstellungen"
             >
               <Settings className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        {/* Results Info */}
-        <div className="flex items-center justify-between">
-          <Typography variant="body-sm" className="text-[var(--text-secondary)]">
+        <div className="flex items-center justify-between text-sm text-[var(--text-secondary)]">
+          <span>
             {filteredModels.length} Modelle gefunden
             {searchQuery && ` für "${searchQuery}"`}
-          </Typography>
-
+          </span>
           {(showFavoritesOnly || showFreeOnly) && (
             <Button
               variant="ghost"
@@ -203,7 +184,6 @@ export default function ModelsPage() {
                 setShowFavoritesOnly(false);
                 setShowFreeOnly(false);
               }}
-              className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             >
               Filter zurücksetzen
             </Button>
@@ -211,11 +191,7 @@ export default function ModelsPage() {
         </div>
       </div>
 
-      {/* Glow Card Grid */}
-      <div
-        className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 glow-card-grid"
-        data-testid="models-grid"
-      >
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2" data-testid="models-grid">
         {filteredModels.map((model) => (
           <ModelCard
             key={model.id}
@@ -235,15 +211,11 @@ export default function ModelsPage() {
 
       {/* Empty State */}
       {filteredModels.length === 0 && (
-        <div className="text-center py-16">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[var(--surface)] flex items-center justify-center">
-            <Search className="w-8 h-8 text-[var(--text-muted)]" />
+        <div className="rounded-3xl border border-[var(--glass-border-soft)] bg-[var(--surface-card)]/70 p-10 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--surface)]">
+            <Search className="h-6 w-6 text-[var(--text-muted)]" />
           </div>
-          <Typography
-            variant="body-lg"
-            className="text-[var(--text-primary)] font-medium mb-2"
-            aria-label="Models page empty state heading"
-          >
+          <Typography variant="body-lg" className="font-semibold">
             Keine Modelle gefunden
           </Typography>
           <Typography variant="body-sm" className="text-[var(--text-secondary)]">
@@ -253,9 +225,6 @@ export default function ModelsPage() {
           </Typography>
         </div>
       )}
-
-      {/* Menu Drawer */}
-      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
-    </ModelsPageShell>
+    </div>
   );
 }
