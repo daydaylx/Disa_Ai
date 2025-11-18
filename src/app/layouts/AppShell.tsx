@@ -1,11 +1,13 @@
-import { type ReactNode, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { type ReactNode, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
+import { NavigationDrawer } from "../../components/layout/NavigationDrawer";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
+import { Menu } from "../../lib/icons";
 
 interface AppShellProps {
   children: ReactNode;
@@ -22,7 +24,7 @@ export function AppShell({ children }: AppShellProps) {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
-  const navigate = useNavigate();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { pageTitle, pageDescription } = useMemo(() => {
     const activeItem = PRIMARY_NAV_ITEMS.find((item) => isNavItemActive(item, location.pathname));
@@ -56,10 +58,6 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       pageDescription: "Dashboard & Schnellstart",
     };
   }, [location.pathname]);
-
-  const handleMoreNavigation = () => {
-    void navigate("/more");
-  };
 
   return (
     <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
@@ -95,11 +93,12 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               </div>
             </div>
             <button
-              onClick={handleMoreNavigation}
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] px-4 text-sm font-medium text-[var(--text-primary)] shadow-[var(--shadow-sm)]"
-              aria-label="Mehr anzeigen"
+              onClick={() => setIsDrawerOpen(true)}
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)] shadow-[var(--shadow-sm)] transition-colors hover:bg-[var(--surface-soft)] hover:text-[var(--text-primary)]"
+              aria-label="Menü öffnen"
+              aria-expanded={isDrawerOpen}
             >
-              Mehr
+              <Menu className="h-5 w-5" />
             </button>
           </div>
         </header>
@@ -112,7 +111,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           className="relative flex flex-1 flex-col overflow-hidden"
         >
           <div className="mx-auto flex h-full w-full max-w-5xl flex-1 flex-col overflow-y-auto px-4 py-6 sm:px-6">
-            <div className="page-stack flex flex-1 flex-col gap-6 pb-24">{children}</div>
+            <div className="page-stack flex flex-1 flex-col gap-6">{children}</div>
 
             <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[var(--glass-border-soft)] bg-surface-panel/80 px-4 py-3 text-[11px] text-text-muted shadow-[var(--shadow-sm)]">
               <span>Disa AI · Build</span>
@@ -125,6 +124,9 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         {location.pathname === "/" && <PWAInstallPrompt />}
         {process.env.NODE_ENV === "development" && <PWADebugInfo />}
       </div>
+
+      {/* Navigation Drawer */}
+      <NavigationDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
     </div>
   );
 }

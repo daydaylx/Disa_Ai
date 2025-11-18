@@ -8,11 +8,8 @@ import { TooltipProvider } from "@/ui/Tooltip";
 
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
-import { EnhancedBottomNav } from "./components/layout/EnhancedBottomNav";
-import MobileBottomNav from "./components/layout/MobileBottomNav";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { useEdgeSwipeDrawer } from "./hooks/useEdgeSwipe";
-import { useFeatureFlag } from "./hooks/useFeatureFlags";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 
@@ -33,7 +30,6 @@ function AppContent() {
   useServiceWorker(); // Now safely inside ToastsProvider
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const isNewNavEnabled = useFeatureFlag("enhancedNavigation");
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -114,10 +110,7 @@ function AppContent() {
         )}
         showDialog={false}
       >
-        <div className="pb-16">
-          <Router />
-        </div>
-        {isNewNavEnabled ? <EnhancedBottomNav /> : <MobileBottomNav />}
+        <Router />
       </SentryErrorBoundary>
       <Suspense fallback={null}>
         <FeatureFlagPanel />

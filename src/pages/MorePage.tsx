@@ -5,14 +5,14 @@ import { MobileCard, SectionHeader } from "@/ui";
 
 export default function MorePage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <SectionHeader
         eyebrow="Navigation"
         title="Mehr"
         description="Schnellzugriff auf Einstellungen, Rechtliches und Support"
       />
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         {MORE_MENU_SECTIONS.map((section) => (
           <div key={section.title} className="space-y-4">
             <div>

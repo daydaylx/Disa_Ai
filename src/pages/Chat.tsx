@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
@@ -17,25 +16,28 @@ import { useMemory } from "../hooks/useMemory";
 import { useRoles } from "../hooks/useRoles";
 import { useSettings } from "../hooks/useSettings";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
-import {
-  BookOpenCheck,
-  KeyRound,
-  MessageCircle,
-  Settings,
-  Shield,
-  Sparkles,
-  Waves,
-} from "../lib/icons";
+import { BookOpenCheck, MessageCircle, Shield, Waves } from "../lib/icons";
 
 export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
   const { activeRole } = useRoles();
   const { settings } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
+
+  // Show help sections (gestures/hints) only on first visit
+  const [showHelpSections] = useState(() => {
+    const hasSeenHelp = localStorage.getItem("disa-chat-help-seen");
+    return !hasSeenHelp;
+  });
+
+  useEffect(() => {
+    if (showHelpSections) {
+      localStorage.setItem("disa-chat-help-seen", "true");
+    }
+  }, [showHelpSections]);
 
   const {
     messages,
@@ -161,30 +163,6 @@ export default function Chat() {
     },
   ];
 
-  const studioCards = [
-    {
-      id: "models",
-      title: "Modell- & Rollenstudio",
-      description: "Vergleiche Modelle, aktiviere Presets und verwalte Rollenbibliotheken.",
-      href: "/models",
-      icon: Sparkles,
-    },
-    {
-      id: "settings",
-      title: "Einstellungen & API",
-      description: "API-Key, Privacy-Filter, Darstellungen und Speicher in einem Bereich.",
-      href: "/settings",
-      icon: Settings,
-    },
-    {
-      id: "safety",
-      title: "Speicher & Sicherheit",
-      description: "Backups exportieren, lokales Gedächtnis aufräumen oder komplett löschen.",
-      href: "/settings/data",
-      icon: KeyRound,
-    },
-  ];
-
   const helperShortcuts = [
     "Drei-Finger-Langdruck öffnet jederzeit die Einstellungen.",
     "Doppeltippen am oberen Rand bringt dich nach ganz oben.",
@@ -204,12 +182,12 @@ export default function Chat() {
         {isEmpty ? (
           <PageContainer
             width="max"
-            className="relative z-10 flex flex-col gap-8"
+            className="relative z-10 flex flex-col gap-4"
             data-testid="chat-hero"
           >
-            <section className="overflow-hidden rounded-[2.5rem] bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-6 text-text-primary aurora-bg sm:p-10">
-              <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
-                <div className="space-y-5 lg:flex-1">
+            <section className="overflow-hidden rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-4 text-text-primary aurora-bg sm:p-6">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+                <div className="space-y-3 lg:flex-1">
                   <Typography
                     variant="caption"
                     as="span"
@@ -218,37 +196,30 @@ export default function Chat() {
                     Studio
                   </Typography>
                   <div>
-                    <h1 className="text-[var(--text-4xl)] font-[var(--font-semibold)] leading-[var(--leading-tight)] text-white sm:text-[var(--text-4xl)]">
+                    <h1 className="text-[var(--text-2xl)] font-[var(--font-medium)] leading-[var(--leading-tight)] text-white sm:text-[var(--text-3xl)]">
                       Konzentrierte KI-Arbeit in einer ruhigen Oberfläche.
                     </h1>
-                    <p className="mt-3 max-w-2xl text-[var(--text-base)] text-white/80">
+                    <p className="mt-2 max-w-2xl text-[var(--text-sm)] text-white/80">
                       Starte mit einem klaren Ziel, nutze vorbereitete Flows und schalte Modelle
-                      sowie Rollen per Shortcut. Alles offline-fähig, PWA-optimiert und ohne
-                      ablenkende Frames.
+                      sowie Rollen per Shortcut.
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    <Button size="lg" variant="primary" onClick={focusComposer}>
+                  <div>
+                    <Button size="default" variant="primary" onClick={focusComposer}>
                       Unterhaltung starten
-                    </Button>
-                    <Button size="lg" variant="secondary">
-                      <Link to="/settings">Studio öffnen</Link>
-                    </Button>
-                    <Button size="lg" variant="ghost">
-                      <Link to="/models">Modelle & Rollen</Link>
                     </Button>
                   </div>
                 </div>
-                <div className="grid w-full flex-shrink-0 gap-3 sm:grid-cols-3 lg:max-w-md">
+                <div className="grid w-full flex-shrink-0 gap-2 sm:grid-cols-3 lg:max-w-md">
                   {heroStatus.map((status) => (
                     <div
                       key={status.label}
-                      className="rounded-2xl border border-white/30 bg-white/10 p-3 backdrop-blur"
+                      className="rounded-xl border border-white/30 bg-white/10 p-2 backdrop-blur"
                     >
                       <p className="text-[11px] uppercase tracking-[0.3em] text-white/70">
                         {status.label}
                       </p>
-                      <Typography variant="h5" as="p" className="mt-2 text-white">
+                      <Typography variant="h5" as="p" className="mt-1 text-white">
                         {status.value}
                       </Typography>
                     </div>
@@ -257,34 +228,36 @@ export default function Chat() {
               </div>
             </section>
 
-            <section className="grid gap-4 md:grid-cols-3">
-              {insightCards.map((card) => {
-                const Icon = card.icon;
-                return (
-                  <Card className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)]">
-                        <Icon className="h-4 w-4" />
-                      </span>
-                      <div>
-                        <Typography
-                          variant="caption"
-                          className="uppercase tracking-[0.35em] text-text-muted"
-                        >
-                          {card.label}
-                        </Typography>
-                        <Typography variant="h5" className="text-text-primary">
-                          {card.value}
-                        </Typography>
+            {totalConversations > 0 && (
+              <section className="grid gap-3 md:grid-cols-3">
+                {insightCards.map((card) => {
+                  const Icon = card.icon;
+                  return (
+                    <Card className="space-y-2" key={card.id}>
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent)]">
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        <div>
+                          <Typography
+                            variant="caption"
+                            className="uppercase tracking-[0.35em] text-text-muted"
+                          >
+                            {card.label}
+                          </Typography>
+                          <Typography variant="h5" className="text-text-primary">
+                            {card.value}
+                          </Typography>
+                        </div>
                       </div>
-                    </div>
-                    <Typography variant="body" className="text-text-secondary">
-                      {card.caption}
-                    </Typography>
-                  </Card>
-                );
-              })}
-            </section>
+                      <Typography variant="body" className="text-text-secondary">
+                        {card.caption}
+                      </Typography>
+                    </Card>
+                  );
+                })}
+              </section>
+            )}
 
             <QuickstartGrid
               onStart={startWithPreset}
@@ -292,113 +265,48 @@ export default function Chat() {
               description="Vorbereitete Presets für Recherche, Schreiben und Pair Programming – starte ohne Setup."
             />
 
-            <section className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <Typography
-                    variant="caption"
-                    className="uppercase tracking-[0.32em] text-text-muted"
-                    style={{ fontSize: "10px" }}
-                  >
-                    Studio
-                  </Typography>
-                  <Typography variant="h4" as="h2" className="text-text-primary">
-                    Bereiche & Einstellungen
-                  </Typography>
-                </div>
-                <Button variant="ghost" size="sm">
-                  <Link to="/settings">Alle Einstellungen</Link>
-                </Button>
-              </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {studioCards.map((card) => {
-                  const Icon = card.icon;
-                  return (
-                    <Card
-                      key={card.id}
-                      className="flex h-full flex-col justify-between"
-                      role="link"
-                      tabIndex={0}
-                      onClick={() => {
-                        void navigate(card.href);
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter" || event.key === " ") {
-                          event.preventDefault();
-                          void navigate(card.href);
-                        }
-                      }}
-                    >
-                      <div className="space-y-3">
-                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent-soft)]/40 text-[var(--accent)]">
-                          <Icon className="h-5 w-5" />
-                        </span>
-                        <div>
-                          <Typography variant="h6" className="text-text-primary">
-                            {card.title}
-                          </Typography>
-                          <Typography variant="body" className="text-text-secondary">
-                            {card.description}
-                          </Typography>
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="mt-4 w-fit"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          void navigate(card.href);
-                        }}
-                      >
-                        Bereich öffnen
-                      </Button>
-                    </Card>
-                  );
-                })}
-              </div>
-            </section>
+            {showHelpSections && (
+              <section className="grid gap-3 md:grid-cols-2">
+                <Card>
+                  <CardTitle>
+                    <Typography variant="h6" as="span" className="flex items-center gap-2">
+                      <Waves className="h-4 w-4 text-[var(--accent)]" />
+                      Gesten & Shortcuts
+                    </Typography>
+                  </CardTitle>
+                  <ul className="mt-3 space-y-2">
+                    {helperShortcuts.map((shortcut) => (
+                      <li key={shortcut} className="flex items-start gap-2">
+                        <span className="mt-1 h-2 w-2 rounded-full bg-[var(--accent)]" />
+                        <Typography variant="body-sm" as="span" className="text-text-secondary">
+                          {shortcut}
+                        </Typography>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
 
-            <section className="grid gap-4 md:grid-cols-2">
-              <Card>
-                <CardTitle>
-                  <Typography variant="h6" as="span" className="flex items-center gap-2">
-                    <Waves className="h-4 w-4 text-[var(--accent)]" />
-                    Gesten & Shortcuts
-                  </Typography>
-                </CardTitle>
-                <ul className="mt-4 space-y-3">
-                  {helperShortcuts.map((shortcut) => (
-                    <li key={shortcut} className="flex items-start gap-3">
-                      <span className="mt-1 h-2 w-2 rounded-full bg-[var(--accent)]" />
-                      <Typography variant="body" as="span" className="text-text-secondary">
-                        {shortcut}
-                      </Typography>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-
-              <Card>
-                <CardTitle>
-                  <Typography variant="h6" as="span" className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-[var(--accent)]" />
-                    Hinweise
-                  </Typography>
-                </CardTitle>
-                <div className="mt-4 space-y-2">
-                  <Typography variant="body" as="p" className="text-text-secondary">
-                    • Teile keine sensiblen Daten oder API-Keys im Prompt.
-                  </Typography>
-                  <Typography variant="body" as="p" className="text-text-secondary">
-                    • Speichere längere Recherchen regelmäßig im Studio.
-                  </Typography>
-                  <Typography variant="body" as="p" className="text-text-secondary">
-                    • Installiere die PWA für stabile mobile Sessions.
-                  </Typography>
-                </div>
-              </Card>
-            </section>
+                <Card>
+                  <CardTitle>
+                    <Typography variant="h6" as="span" className="flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-[var(--accent)]" />
+                      Hinweise
+                    </Typography>
+                  </CardTitle>
+                  <div className="mt-3 space-y-1.5">
+                    <Typography variant="body-sm" as="p" className="text-text-secondary">
+                      • Teile keine sensiblen Daten oder API-Keys im Prompt.
+                    </Typography>
+                    <Typography variant="body-sm" as="p" className="text-text-secondary">
+                      • Speichere längere Recherchen regelmäßig im Studio.
+                    </Typography>
+                    <Typography variant="body-sm" as="p" className="text-text-secondary">
+                      • Installiere die PWA für stabile mobile Sessions.
+                    </Typography>
+                  </div>
+                </Card>
+              </section>
+            )}
           </PageContainer>
         ) : (
           <PageContainer width="max" className="relative z-10 flex h-full flex-col">
