@@ -207,21 +207,21 @@ export default function Chat() {
             className="relative z-10 flex flex-col gap-8"
             data-testid="chat-hero"
           >
-            <section className="overflow-hidden rounded-[2.5rem] bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-6 text-text-primary aurora-bg sm:p-10">
+            <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--accent)]/20 to-[var(--success)]/10 backdrop-blur-xl border border-white/10 p-6 text-text-primary sm:p-10">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
                 <div className="space-y-5 lg:flex-1">
                   <Typography
                     variant="caption"
                     as="span"
-                    className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 font-semibold uppercase tracking-[0.35em] text-white/80"
+                    className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 font-semibold uppercase tracking-[0.35em] text-white/80"
                   >
                     Studio
                   </Typography>
                   <div>
-                    <h1 className="text-[var(--text-4xl)] font-[var(--font-semibold)] leading-[var(--leading-tight)] text-white sm:text-[var(--text-4xl)]">
+                    <h1 className="text-4xl font-semibold leading-tight text-white">
                       Konzentrierte KI-Arbeit in einer ruhigen Oberfläche.
                     </h1>
-                    <p className="mt-3 max-w-2xl text-[var(--text-base)] text-white/80">
+                    <p className="mt-3 max-w-2xl text-base text-white/80">
                       Starte mit einem klaren Ziel, nutze vorbereitete Flows und schalte Modelle
                       sowie Rollen per Shortcut. Alles offline-fähig, PWA-optimiert und ohne
                       ablenkende Frames.
@@ -243,7 +243,7 @@ export default function Chat() {
                   {heroStatus.map((status) => (
                     <div
                       key={status.label}
-                      className="rounded-2xl border border-white/30 bg-white/10 p-3 backdrop-blur"
+                      className="rounded-xl border border-white/20 bg-white/5 p-3 backdrop-blur"
                     >
                       <p className="text-[11px] uppercase tracking-[0.3em] text-white/70">
                         {status.label}
@@ -261,9 +261,9 @@ export default function Chat() {
               {insightCards.map((card) => {
                 const Icon = card.icon;
                 return (
-                  <Card className="space-y-2">
+                  <Card className="space-y-2" key={card.id}>
                     <div className="flex items-center gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)]">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
                         <Icon className="h-4 w-4" />
                       </span>
                       <div>
@@ -316,7 +316,7 @@ export default function Chat() {
                   return (
                     <Card
                       key={card.id}
-                      className="flex h-full flex-col justify-between"
+                      className="flex h-full flex-col justify-between cursor-pointer hover:border-white/20 transition-colors"
                       role="link"
                       tabIndex={0}
                       onClick={() => {
@@ -330,7 +330,7 @@ export default function Chat() {
                       }}
                     >
                       <div className="space-y-3">
-                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent-soft)]/40 text-[var(--accent)]">
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
                           <Icon className="h-5 w-5" />
                         </span>
                         <div>
