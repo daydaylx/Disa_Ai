@@ -260,13 +260,12 @@
   /* Typography baseline alignment */
   .baseline-grid {
     line-height: 1.5;
-    background-image:
-      linear-gradient(
-        transparent 0,
-        transparent calc(1.5rem - 1px),
-        var(--color-border-subtle) calc(1.5rem - 1px),
-        var(--color-border-subtle) calc(1.5rem)
-      );
+    background-image: linear-gradient(
+      transparent 0,
+      transparent calc(1.5rem - 1px),
+      var(--color-border-subtle) calc(1.5rem - 1px),
+      var(--color-border-subtle) calc(1.5rem)
+    );
     background-size: 100% 1.5rem;
     background-repeat: repeat-y;
   }

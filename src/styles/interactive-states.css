@@ -6,7 +6,8 @@
 
   /* Base interactive element styles */
   .interactive-base {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -16,7 +17,8 @@
 
   /* Hover states */
   .hover-effect {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
   }
 
   .hover-effect:hover {
@@ -25,7 +27,8 @@
   }
 
   .hover-scale {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
   }
 
   .hover-scale:hover {
@@ -33,7 +36,8 @@
   }
 
   .hover-bg {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
   }
 
   .hover-bg:hover {
@@ -41,7 +45,8 @@
   }
 
   .hover-border {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
   }
 
   .hover-border:hover {
@@ -49,11 +54,12 @@
   }
 
   .hover-text {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
   }
 
   .hover-text:hover {
-    color: var(--color-brand-primary, #8B5CF6);
+    color: var(--color-brand-primary, #8b5cf6);
   }
 
   /* Focus states */
@@ -64,7 +70,7 @@
 
   .focus-ring:focus,
   .focus-ring:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline: 2px solid var(--color-border-focus, #8b5cf6);
     outline-offset: 2px;
   }
 
@@ -84,13 +90,14 @@
 
   .focus-outline:focus,
   .focus-outline:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline: 2px solid var(--color-border-focus, #8b5cf6);
     outline-offset: 2px;
   }
 
   /* Active states */
   .active-transform {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
   }
 
   .active-transform:active {
@@ -98,7 +105,8 @@
   }
 
   .active-bg {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
   }
 
   .active-bg:active {
@@ -107,7 +115,8 @@
 
   /* Combined states */
   .interactive-element {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -121,7 +130,7 @@
 
   .interactive-element:focus,
   .interactive-element:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline: 2px solid var(--color-border-focus, #8b5cf6);
     outline-offset: 2px;
     box-shadow: 0 0 0 3px var(--color-action-primary-focus, rgba(139, 92, 246, 0.35));
   }
@@ -132,7 +141,8 @@
 
   /* Button-specific interactive states */
   .btn-interactive {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     position: relative;
     overflow: hidden;
     cursor: pointer;
@@ -146,7 +156,7 @@
 
   .btn-interactive:focus,
   .btn-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline: 2px solid var(--color-border-focus, #8b5cf6);
     outline-offset: 2px;
     box-shadow: 0 0 0 3px var(--color-action-primary-focus, rgba(139, 92, 246, 0.35));
   }
@@ -157,7 +167,8 @@
 
   /* Glassmorphism interactive states */
   .glass-interactive {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     background: var(--surface-card);
     border: 1px solid var(--color-border-subtle);
     backdrop-filter: blur(12px);
@@ -175,7 +186,9 @@
   .glass-interactive:focus,
   .glass-interactive:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-border-focus, #8B5CF6), var(--shadow-glow-brand);
+    box-shadow:
+      0 0 0 2px var(--color-border-focus, #8b5cf6),
+      var(--shadow-glow-brand);
   }
 
   .glass-interactive:active {
@@ -185,7 +198,8 @@
 
   /* Card interactive states */
   .card-interactive {
-    transition: all var(--motion-duration-medium, 160ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-medium, 160ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -198,7 +212,7 @@
 
   .card-interactive:focus,
   .card-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline: 2px solid var(--color-border-focus, #8b5cf6);
     outline-offset: 2px;
   }
 
@@ -208,31 +222,33 @@
 
   /* Link interactive states */
   .link-interactive {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     text-decoration: none;
     position: relative;
     cursor: pointer;
   }
 
   .link-interactive:hover {
-    color: var(--color-text-link-hover, #7C3AED);
+    color: var(--color-text-link-hover, #7c3aed);
     text-decoration: underline;
   }
 
   .link-interactive:focus,
   .link-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline: 2px solid var(--color-border-focus, #8b5cf6);
     outline-offset: 2px;
     border-radius: 2px;
   }
 
   .link-interactive:active {
-    color: var(--color-text-link, #8B5CF6);
+    color: var(--color-text-link, #8b5cf6);
   }
 
   /* Input interactive states */
   .input-interactive {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     cursor: text;
   }
 
@@ -253,7 +269,8 @@
 
   /* Switch/toggle interactive states */
   .switch-interactive {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     cursor: pointer;
   }
 
@@ -263,7 +280,7 @@
 
   .switch-interactive:focus,
   .switch-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline: 2px solid var(--color-border-focus, #8b5cf6);
     outline-offset: 2px;
   }
 
@@ -273,7 +290,8 @@
 
   /* Chip/Tag interactive states */
   .chip-interactive {
-    transition: all var(--motion-duration-small, 120ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+    transition: all var(--motion-duration-small, 120ms)
+      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -286,7 +304,7 @@
 
   .chip-interactive:focus,
   .chip-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8B5CF6);
+    outline: 2px solid var(--color-border-focus, #8b5cf6);
     outline-offset: 2px;
   }
 
@@ -355,7 +373,8 @@
   /* Touch device specific styles */
   @media (hover: none) and (pointer: coarse) {
     .touch-interactive {
-      transition: all var(--motion-duration-medium, 160ms) var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+      transition: all var(--motion-duration-medium, 160ms)
+        var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
     }
 
     .touch-interactive:active {
@@ -365,7 +384,7 @@
 
     .touch-interactive:focus,
     .touch-interactive:focus-visible {
-      outline: 2px solid var(--color-border-focus, #8B5CF6);
+      outline: 2px solid var(--color-border-focus, #8b5cf6);
       outline-offset: 2px;
     }
   }

@@ -165,91 +165,91 @@
 
   /* Consistent element margins */
   .element-spacing-xs {
- margin: var(--space-xs);
- }
+    margin: var(--space-xs);
+  }
   .element-spacing-sm {
- margin: var(--space-sm);
- }
+    margin: var(--space-sm);
+  }
   .element-spacing-md {
- margin: var(--space-md);
- }
+    margin: var(--space-md);
+  }
   .element-spacing-lg {
- margin: var(--space-lg);
- }
+    margin: var(--space-lg);
+  }
   .element-spacing-xl {
- margin: var(--space-xl);
- }
+    margin: var(--space-xl);
+  }
 
   /* Consistent element padding */
   .element-padding-xs {
- padding: var(--space-xs);
- }
+    padding: var(--space-xs);
+  }
   .element-padding-sm {
- padding: var(--space-sm);
- }
+    padding: var(--space-sm);
+  }
   .element-padding-md {
- padding: var(--space-md);
- }
+    padding: var(--space-md);
+  }
   .element-padding-lg {
- padding: var(--space-lg);
- }
+    padding: var(--space-lg);
+  }
   .element-padding-xl {
- padding: var(--space-xl);
- }
+    padding: var(--space-xl);
+  }
 
   /* Responsive element spacing */
   @media (min-width: 640px) {
     .element-spacing-xs-sm {
- margin: var(--space-xs);
- }
+      margin: var(--space-xs);
+    }
     .element-spacing-sm-sm {
- margin: var(--space-sm);
- }
+      margin: var(--space-sm);
+    }
     .element-spacing-md-sm {
- margin: var(--space-md);
- }
+      margin: var(--space-md);
+    }
     .element-spacing-lg-sm {
- margin: var(--space-lg);
- }
+      margin: var(--space-lg);
+    }
     .element-padding-xs-sm {
- padding: var(--space-xs);
- }
+      padding: var(--space-xs);
+    }
     .element-padding-sm-sm {
- padding: var(--space-sm);
- }
+      padding: var(--space-sm);
+    }
     .element-padding-md-sm {
- padding: var(--space-md);
- }
+      padding: var(--space-md);
+    }
     .element-padding-lg-sm {
- padding: var(--space-lg);
- }
+      padding: var(--space-lg);
+    }
   }
 
   @media (min-width: 768px) {
     .element-spacing-xs-md {
- margin: var(--space-xs);
- }
+      margin: var(--space-xs);
+    }
     .element-spacing-sm-md {
- margin: var(--space-sm);
- }
+      margin: var(--space-sm);
+    }
     .element-spacing-md-md {
- margin: var(--space-md);
- }
+      margin: var(--space-md);
+    }
     .element-spacing-lg-md {
- margin: var(--space-lg);
- }
+      margin: var(--space-lg);
+    }
     .element-padding-xs-md {
- padding: var(--space-xs);
- }
+      padding: var(--space-xs);
+    }
     .element-padding-sm-md {
- padding: var(--space-sm);
- }
+      padding: var(--space-sm);
+    }
     .element-padding-md-md {
- padding: var(--space-md);
- }
+      padding: var(--space-md);
+    }
     .element-padding-lg-md {
- padding: var(--space-lg);
- }
+      padding: var(--space-lg);
+    }
   }
 
   /* Card containers with consistent spacing */
