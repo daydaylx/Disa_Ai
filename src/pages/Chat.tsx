@@ -185,21 +185,21 @@ export default function Chat() {
             className="relative z-10 flex flex-col gap-4"
             data-testid="chat-hero"
           >
-            <section className="overflow-hidden rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-4 text-text-primary aurora-bg sm:p-6">
+            <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--accent)]/20 to-[var(--success)]/10 backdrop-blur-xl border border-white/10 p-4 text-text-primary sm:p-6">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
                 <div className="space-y-3 lg:flex-1">
                   <Typography
                     variant="caption"
                     as="span"
-                    className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 font-semibold uppercase tracking-[0.35em] text-white/80"
+                    className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 font-semibold uppercase tracking-[0.35em] text-white/80"
                   >
                     Studio
                   </Typography>
                   <div>
-                    <h1 className="text-[var(--text-2xl)] font-[var(--font-medium)] leading-[var(--leading-tight)] text-white sm:text-[var(--text-3xl)]">
+                    <h1 className="text-2xl font-semibold leading-tight text-white sm:text-3xl">
                       Konzentrierte KI-Arbeit in einer ruhigen Oberfläche.
                     </h1>
-                    <p className="mt-2 max-w-2xl text-[var(--text-sm)] text-white/80">
+                    <p className="mt-2 max-w-2xl text-sm text-white/80">
                       Starte mit einem klaren Ziel, nutze vorbereitete Flows und schalte Modelle
                       sowie Rollen per Shortcut.
                     </p>
@@ -214,7 +214,7 @@ export default function Chat() {
                   {heroStatus.map((status) => (
                     <div
                       key={status.label}
-                      className="rounded-xl border border-white/30 bg-white/10 p-2 backdrop-blur"
+                      className="rounded-xl border border-white/20 bg-white/5 p-2 backdrop-blur"
                     >
                       <p className="text-[11px] uppercase tracking-[0.3em] text-white/70">
                         {status.label}
@@ -235,7 +235,7 @@ export default function Chat() {
                   return (
                     <Card className="space-y-2" key={card.id}>
                       <div className="flex items-center gap-2">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent)]">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
                           <Icon className="h-4 w-4" />
                         </span>
                         <div>

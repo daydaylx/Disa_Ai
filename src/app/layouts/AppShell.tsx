@@ -60,15 +60,15 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   }, [location.pathname]);
 
   return (
-    <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
+    <div className="relative min-h-screen bg-[var(--bg0)] text-text-primary">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[var(--bg0)]" />
       <div
         className="relative flex min-h-screen flex-col"
         style={{
-          paddingTop: "env(safe-area-inset-top, 0px)",
-          paddingBottom: "env(safe-area-inset-bottom, 0px)",
-          paddingLeft: "env(safe-area-inset-left, 0px)",
-          paddingRight: "env(safe-area-inset-right, 0px)",
+          paddingTop: "var(--safe-top)",
+          paddingBottom: "var(--safe-bottom)",
+          paddingLeft: "var(--safe-left)",
+          paddingRight: "var(--safe-right)",
         }}
       >
         <a
@@ -78,8 +78,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        {/* Modern Header */}
-        <header className="sticky top-0 z-20 border-b border-[var(--glass-border-soft)] bg-[var(--surface-card)]/80 backdrop-blur-xl safe-area-top">
+        {/* Header */}
+        <header className="sticky top-0 z-20 border-b border-white/10 bg-[var(--glass-surface)]/70 backdrop-blur-xl">
           <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-4 px-4 py-4">
             <div className="min-w-0 space-y-1">
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
@@ -94,7 +94,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             </div>
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)] shadow-[var(--shadow-sm)] transition-colors hover:bg-[var(--surface-soft)] hover:text-[var(--text-primary)]"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[var(--text-primary)] shadow-sm transition-colors hover:bg-white/10"
               aria-label="Menü öffnen"
               aria-expanded={isDrawerOpen}
             >
@@ -113,7 +113,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           <div className="mx-auto flex h-full w-full max-w-5xl flex-1 flex-col overflow-y-auto px-4 py-6 sm:px-6">
             <div className="page-stack flex flex-1 flex-col gap-6">{children}</div>
 
-            <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[var(--glass-border-soft)] bg-surface-panel/80 px-4 py-3 text-[11px] text-text-muted shadow-[var(--shadow-sm)]">
+            <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-[11px] text-text-muted">
               <span>Disa AI · Build</span>
               <BuildInfo />
             </footer>
