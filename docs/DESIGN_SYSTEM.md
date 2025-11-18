@@ -1,496 +1,135 @@
-# Aurora Glassmorphism Design System
+# Design-System: Disa AI
 
-> **Version:** 2.0.0-alpha
-> **Status:** In Konsolidierung
+> **Version:** 3.0.0
+> **Status:** Aktiv & konsolidiert
 > **Letztes Update:** November 2025
 
-## Übersicht
+## 1. Übersicht
 
-Disa AI verwendet ein **Aurora Glassmorphism Design-System**, das sich durch tiefe, mehrschichtige Schatten und erhabene Oberflächen für eine taktile, dreidimensionale Benutzererfahrung auszeichnet. Das System ist vollständig mobile-optimiert und Performance-orientiert.
+Das Design-System von Disa AI ist ein modernes, performantes und barrierefreies System, das für eine Mobile-First-Erfahrung optimiert ist. Es ist stark von **Microsoft's Fluent 2 Design-System** inspiriert und setzt auf klare Hierarchien, subtile "Glassmorphism"-Effekte und eine solide Grundlage aus Design-Tokens.
 
----
-
-## 🎨 Design-Philosophie
-
-### Core Principles
-
-1. **Dramatic Depth**: Verwendung tiefer Schatten für starken 3D-Effekt
-2. **Tactile Interaction**: Fühlbare UI-Elemente durch Neumorphic Effects
-3. **Mobile-First Performance**: Optimierte Shadows für Mobile-Geräte
-4. **Accessibility-Aware**: Kontrast und Fokus-Indikatoren berücksichtigt
-
-### Visual Hierarchy
-
-```
-Surface Layer System:
-├── Base Surface (--surface-neumorphic-base)
-├── Floating Elements (--surface-neumorphic-floating)
-├── Raised Interactive (--surface-neumorphic-raised)
-├── Pressed State (--surface-neumorphic-pressed)
-└── Overlay/Modal (--surface-neumorphic-overlay)
-```
+Dieses Dokument beschreibt den aktuellen Stand und ersetzt alle früheren Dokumentationen, die sich auf "Neumorphismus" oder andere veraltete Konzepte bezogen.
 
 ---
 
-## 🔧 Token-System
+## 2. Design-Philosophie
 
-### Color Palette
+### Kernprinzipien
 
-#### Base Colors (Light Theme)
+1.  **Klarheit & Fokus**: Die Benutzeroberfläche soll intuitiv sein und den Nutzer nicht ablenken. Inhalte und Interaktionen stehen im Vordergrund.
+2.  **Performance first**: Alle Design-Entscheidungen müssen die Performance auf mobilen Geräten berücksichtigen. Animationen und Effekte werden sparsam und gezielt eingesetzt.
+3.  **Barrierefreiheit (Accessibility)**: Das System muss den WCAG 2.1 AA-Standards entsprechen. Kontraste, Fokus-Zustände und Tastatur-Navigation sind integraler Bestandteil jeder Komponente.
+4.  **Konsistenz & Wartbarkeit**: Ein zentrales Token-System stellt sicher, dass das Design über die gesamte Anwendung hinweg konsistent und einfach zu warten ist.
 
-```css
-/* Core colors */
---fg0: #0f1724; /* Primary text */
---fg1: #4a5163; /* Secondary text */
---fg2: #676d82; /* Muted text */
---fg-invert: #f6f7ff; /* Inverted text */
---fg-muted: color-mix(in srgb, var(--fg1) 65%, var(--bg1));
+### Visuelle Hierarchie
 
---bg0: #e9ecf4; /* Canvas background */
---bg1: #fdfdff; /* Primary surface */
---bg2: #dfe3f0; /* Secondary surface */
+Die visuelle Tiefe wird durch ein einfaches, zweistufiges Schatten-System erzeugt, das auf dem "Glassmorphism"-Prinzip basiert:
 
---acc1: #4b63ff; /* Primary accent */
---acc1-strong: #3748df; /* Strong primary */
---acc2: #f45d69; /* Secondary accent */
---acc2-strong: #d63b4b; /* Strong secondary */
---color-accent-surface: color-mix(in srgb, var(--acc2) 14%, white 86%);
---color-accent-surface-strong: color-mix(in srgb, var(--acc2) 24%, white 76%);
---color-accent-border: color-mix(in srgb, var(--acc2) 48%, transparent);
-```
+-   **Standard-Oberfläche (`--shadow-elevation-1`)**: Für Basiselemente wie Karten oder statische Container.
+-   **Erhöhte Oberfläche (`--shadow-elevation-2`)**: Für schwebende Elemente wie Modals, Popovers oder wichtige hervorzuhebende Bereiche.
 
-#### Semantic Colors
-
-```css
---ok: #0d8f62; /* Success state */
---warn: #b26a00; /* Warning state */
---err: #c13a32; /* Error state */
---info: #0d73d6; /* Information state */
-```
-
-#### Surface System (Neumorphic)
-
-```css
---color-surface-canvas: var(--bg0);
---color-surface-base: var(--bg1);
---color-surface-subtle: color-mix(in srgb, var(--bg1) 80%, var(--bg2));
---color-surface-muted: var(--bg2);
---color-surface-raised: color-mix(in srgb, var(--bg1) 95%, rgba(255, 255, 255, 0.85));
---color-surface-card: var(--bg1);
---color-surface-popover: color-mix(in srgb, var(--bg1) 98%, rgba(255, 255, 255, 0.9));
---color-surface-overlay: color-mix(in srgb, var(--bg1) 92%, rgba(15, 18, 32, 0.65));
-```
-
-### Accent Usage Guidelines
-
-| Zweck                   | Farbe/Baustein                                   |
-| ----------------------- | ------------------------------------------------ |
-| Brand-Aktionen          | `Button variant="brand"` / `--acc1`              |
-| Sekundäre Highlights    | `Button variant="accent"` / `--color-accent-*`   |
-| Filter-/Toggle-Zustände | Ghost → Accent wechseln (z.B. Favoriten, Filter) |
-| Karten-Auswahl          | `Card intent="accent"` oder `state="selected"`   |
-| Kategorie-Badges        | `Badge variant="accent"` oder `category=*`       |
-
-**Regel:** Brand (`--acc1`) signalisiert Kerninteraktionen, Accent (`--acc2`) bringt Wärme/Fokus. Niemals beide gleichzeitig innerhalb eines Elements kombinieren – pro Komponente entscheidet man sich für Brand _oder_ Accent.
-
-### Shadow System (Dramatic Neumorphic)
-
-#### Light Theme Shadows
-
-```css
-/* Progressive shadow depth scale (Light Theme 2.1) */
---shadow-neumorphic-sm:
-  6px 6px 14px rgba(9, 12, 20, 0.12), -6px -6px 14px rgba(255, 255, 255, 0.08);
-
---shadow-neumorphic-md:
-  12px 12px 26px rgba(9, 12, 20, 0.15), -12px -12px 26px rgba(255, 255, 255, 0.1);
-
---shadow-neumorphic-lg:
-  20px 20px 40px rgba(9, 12, 20, 0.18), -20px -20px 40px rgba(255, 255, 255, 0.12);
-
---shadow-neumorphic-xl:
-  28px 28px 56px rgba(9, 12, 20, 0.21), -28px -28px 56px rgba(255, 255, 255, 0.14);
-
---shadow-neumorphic-dramatic:
-  36px 36px 72px rgba(9, 12, 20, 0.23), -36px -36px 72px rgba(255, 255, 255, 0.16);
-
---shadow-neumorphic-extreme:
-  48px 48px 96px rgba(9, 12, 20, 0.25), -48px -48px 96px rgba(255, 255, 255, 0.18);
-```
-
-#### Dark Theme Shadows (High Contrast)
-
-```css
---shadow-neumorphic-sm: 3px 3px 8px rgba(0, 0, 0, 0.38), -3px -3px 8px rgba(255, 255, 255, 0.04);
-
---shadow-neumorphic-md: 5px 5px 12px rgba(0, 0, 0, 0.46), -5px -5px 12px rgba(255, 255, 255, 0.05);
-
---shadow-neumorphic-lg: 9px 9px 20px rgba(0, 0, 0, 0.52), -9px -9px 20px rgba(255, 255, 255, 0.07);
-
---shadow-neumorphic-xl:
-  14px 14px 30px rgba(0, 0, 0, 0.58), -14px -14px 30px rgba(255, 255, 255, 0.08);
-
---shadow-neumorphic-dramatic:
-  30px 30px 64px rgba(0, 0, 0, 0.74), -30px -30px 64px rgba(255, 255, 255, 0.14);
-
---shadow-neumorphic-extreme:
-  42px 42px 88px rgba(0, 0, 0, 0.78), -42px -42px 88px rgba(255, 255, 255, 0.15);
-```
-
-#### Mobile-Optimized Shadows
-
-```css
-@media (max-width: 768px) {
-  /* Reduzierte Shadow-Complexity für bessere Performance */
-  --shadow-neumorphic-dramatic:
-    30px 30px 60px rgba(9, 12, 20, 0.25), -30px -30px 60px rgba(255, 255, 255, 0.18);
-
-  --shadow-neumorphic-extreme:
-    35px 35px 70px rgba(9, 12, 20, 0.28), -35px -35px 70px rgba(255, 255, 255, 0.2);
-
-  /* Depth-7 und höher sind auf Mobile deaktiviert */
-  --shadow-depth-7: var(--shadow-neumorphic-extreme);
-  --shadow-depth-8: var(--shadow-neumorphic-extreme);
-}
-```
-
-### Typography Scale
-
-```css
-/* Font sizes */
---text-xs: 0.75rem; /* 12px */
---text-sm: 0.875rem; /* 14px */
---text-base: 1rem; /* 16px */
---text-lg: 1.125rem; /* 18px */
---text-xl: 1.25rem; /* 20px */
---text-2xl: 1.5rem; /* 24px */
---text-3xl: 1.875rem; /* 30px */
---text-4xl: 2.25rem; /* 36px */
-
-/* Font weights */
---font-normal: 400;
---font-medium: 500;
---font-semibold: 600;
---font-bold: 700;
-```
-
-### Spacing Scale
-
-```css
-/* Spacing tokens */
---spacing-1: 0.25rem; /* 4px */
---spacing-2: 0.5rem; /* 8px */
---spacing-3: 0.75rem; /* 12px */
---spacing-4: 1rem; /* 16px */
---spacing-5: 1.25rem; /* 20px */
---spacing-6: 1.5rem; /* 24px */
---spacing-8: 2rem; /* 32px */
---spacing-10: 2.5rem; /* 40px */
---spacing-12: 3rem; /* 48px */
---spacing-16: 4rem; /* 64px */
-```
-
-### Border Radius Scale
-
-```css
-/* Radius tokens */
---radius-sm: 0.375rem; /* 6px */
---radius-md: 0.5rem; /* 8px */
---radius-lg: 0.75rem; /* 12px */
---radius-xl: 1rem; /* 16px */
---radius-2xl: 1.5rem; /* 24px */
---radius-full: 9999px; /* Fully rounded */
-```
+Zusätzlich werden "Glow"-Schatten verwendet, um interaktiven oder statusbehafteten Elementen einen dezenten, farbigen Schein zu verleihen (z. B. bei Fokus oder Validierungsfehlern).
 
 ---
 
-## 🧩 Component System
+## 3. Token-System
 
-### Button Variants
+Das gesamte Design-System basiert auf einem Satz von Design-Tokens, die zentral verwaltet und in der gesamten Anwendung wiederverwendet werden.
 
-```typescript
-// Button Tone Variants
-"neo-subtle": {
-  background: "neumorphic-base + subtle elevation",
-  shadow: "shadow-neumorphic-sm",
-  hover: "shadow-neumorphic-md + subtle lift"
-}
+### 3.1. Struktur und Generierung
 
-"neo-medium": {
-  background: "neumorphic-floating",
-  shadow: "shadow-neumorphic-md",
-  hover: "shadow-neumorphic-lg + medium lift"
-}
+1.  **Quelle der Wahrheit (Source of Truth)**: Die Tokens sind in typsicheren TypeScript-Dateien unter `src/styles/tokens/` definiert (z. B. `color.ts`, `shadow.ts`, `spacing.ts`).
+2.  **Generierung von CSS-Variablen**: Ein Build-Skript (`scripts/generate-tokens.mjs`) liest diese TypeScript-Dateien und generiert daraus automatisch CSS-Custom-Properties.
+3.  **Verwendung in Tailwind CSS**: Die `tailwind.config.ts` referenziert diese CSS-Variablen, um die Utility-Klassen zu erstellen.
 
-"neo-dramatic": {
-  background: "neumorphic-raised + gradient",
-  shadow: "shadow-neumorphic-lg",
-  hover: "shadow-neumorphic-dramatic + dramatic lift"
-}
+Dieses System stellt sicher, dass Design-Änderungen nur an einer Stelle vorgenommen werden müssen und sich konsistent auf die gesamte Anwendung auswirken.
 
-"neo-extreme": {
-  background: "complex gradient + overlay",
-  shadow: "shadow-neumorphic-dramatic",
-  hover: "shadow-neumorphic-extreme + extreme lift + scale(1.08)"
-}
-```
+### 3.2. Wichtige Token-Kategorien
 
-### Card Variants (v2.0.0)
+#### Farben (`color.ts`)
 
-```typescript
-// Simplified Card System (Post-Refactor)
-tone: {
-  "neo-subtle": "base neumorphic card",
-  "neo-raised": "elevated card with medium shadow",
-  "neo-floating": "floating card with large shadow",
-  "neo-dramatic": "dramatic depth card"
-}
+Das Farbsystem ist semantisch aufgebaut und unterscheidet zwischen verschiedenen Anwendungsfällen:
 
-elevation: {
-  "subtle": "shadow-neumorphic-sm",
-  "medium": "shadow-neumorphic-md",
-  "raised": "shadow-neumorphic-lg",
-  "dramatic": "shadow-neumorphic-dramatic"
-}
+-   `surfaces`: Hintergrundfarben für verschiedene Ebenen (z. B. `canvas`, `base`, `card`).
+-   `text`: Textfarben für unterschiedliche Hierarchien (z. B. `primary`, `secondary`, `muted`).
+-   `border`: Farben für Ränder und Trennlinien.
+-   `brand`: Die primäre Markenfarbe (`--color-brand-primary`).
+-   `status`: Farben für Erfolgs-, Warn-, Fehler- und Info-Zustände.
+-   `action`: Farben für interaktive Elemente wie Buttons in verschiedenen Zuständen (`hover`, `active`, `focus`).
 
-interactive: {
-  "none": "static card",
-  "gentle": "subtle hover effects",
-  "dramatic": "strong hover + lift",
-  "extreme": "maximum interactivity + haptic feedback"
-}
-```
+#### Schatten (`shadow.ts`)
+
+Wie in der Philosophie beschrieben, gibt es ein minimalistisches, performantes Schatten-System:
+
+-   `--shadow-elevation-1`: Subtiler Schatten für Standard-Elemente.
+-   `--shadow-elevation-2`: Stärkerer Schatten für schwebende Elemente.
+-   `--shadow-inset`: Ein innerer Schatten für "gedrückte" Zustände.
+-   `--shadow-glow-*`: Farbige Schein-Effekte für verschiedene Status (z. B. `--shadow-glow-brand` für Fokus).
+
+#### Typografie, Abstände & Radien
+
+-   **Typografie (`typography.ts`)**: Definiert Schriftgrößen (`--text-sm`, `--text-base`, etc.) und Schriftstärken.
+-   **Abstände (`spacing.ts`)**: Eine rhythmische Skala für `margin`, `padding` und `gap` (z. B. `--spacing-4` für `1rem`).
+-   **Radien (`radius.ts`)**: Definiert Eckradien für Elemente wie Buttons und Karten.
 
 ---
 
-## 📱 Mobile Performance Guidelines
+## 4. Komponenten-System
 
-### Shadow Optimization Rules
+Die UI-Komponenten (`src/components/ui/`) sind nach den folgenden Prinzipien aufgebaut:
 
-1. **Maximum Mobile Blur**: 35px (statt 120px Desktop)
-2. **Hover Effects**: Reduziert auf 60px max blur
-3. **Animation Duration**: 75% der Desktop-Werte
-4. **GPU Layers**: Transform-based animations bevorzugt
+### 4.1. Grundlage: Radix UI
 
-### Performance Budget
+Für die Logik und Barrierefreiheit komplexer Komponenten (Dialoge, Selects, Tooltips etc.) wird **Radix UI** verwendet. Radix liefert "headless" Komponenten, die keine eigenen Stile mitbringen, aber die gesamte Funktionalität, State-Verwaltung und ARIA-Attribute bereitstellen.
 
-```css
-/* Desktop: Unlimited shadow complexity */
-.desktop {
-  box-shadow: 60px 60px 120px rgba(9, 12, 20, 0.32);
-}
+### 4.2. Styling: CVA & Tailwind
 
-/* Mobile: Optimized for 60fps */
-@media (max-width: 768px) {
-  .mobile-optimized {
-    box-shadow: 25px 25px 50px rgba(9, 12, 20, 0.28);
+-   **Tailwind CSS**: Das Styling der Komponenten erfolgt ausschließlich über Tailwind-Utility-Klassen.
+-   **`class-variance-authority` (cva)**: `cva` wird verwendet, um typsichere Varianten für jede Komponente zu erstellen. Dies ermöglicht es, verschiedene Stile (`variant`), Größen (`size`) oder Zustände (`state`) einfach und konsistent anzuwenden.
+
+**Beispiel für eine Button-Komponente:**
+
+```tsx
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md font-semibold",
+  {
+    variants: {
+      variant: {
+        primary: "bg-brand-primary text-on-brand",
+        secondary: "bg-surface-raised text-primary",
+      },
+      size: {
+        default: "h-10 px-4",
+        sm: "h-8 px-3",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "default",
+    },
   }
-}
+);
 ```
 
-### Touch Target Compliance
+### 4.3. Barrierefreiheit (Accessibility)
 
-```css
-/* Minimum touch targets (44px) */
-.interactive-element {
-  min-height: 44px;
-  min-width: 44px;
-  /* Automatisch durch compound variants gesetzt */
-}
-```
+Jede Komponente wird unter Berücksichtigung der Barrierefreiheit entwickelt:
+
+-   **Fokus-Indikatoren**: Alle interaktiven Elemente haben einen klar sichtbaren Fokus-Zustand, der über einen `--shadow-glow-brand`-Effekt realisiert wird.
+-   **Tastatur-Navigation**: Die Navigation und Interaktion mit allen Komponenten ist vollständig per Tastatur möglich.
+-   **Screen-Reader-Unterstützung**: Durch die Verwendung von Radix UI und semantischem HTML sind die Komponenten für Screen-Reader optimiert.
+-   **Reduzierte Bewegung**: Animationen und Übergänge respektieren die `prefers-reduced-motion`-Einstellung des Betriebssystems.
 
 ---
 
-## ♿ Accessibility Features
+## 5. Mobile-Optimierung
 
-### Focus Management
+### Performance
 
-```css
-/* High-visibility focus indicators */
-.focus-visible {
-  outline: none;
-  box-shadow:
-    var(--shadow-neumorphic-current),
-    0 0 0 3px var(--acc1),
-    0 0 0 6px rgba(75, 99, 255, 0.2);
-}
-```
+-   **Minimale Schatten**: Das Schatten-System ist bewusst einfach gehalten, um die Render-Performance auf mobilen Geräten nicht zu beeinträchtigen.
+-   **Lazy Loading**: Komponenten und Bibliotheken, die nicht sofort benötigt werden (z. B. für Syntax-Highlighting), werden verzögert geladen.
 
-### Contrast Requirements
+### Layout
 
-- **AA Compliance**: Minimum 4.5:1 contrast ratio
-- **AAA Target**: 7:1 contrast für kritische Texte
-- **Neumorphic Adaptation**: Schatten verstärkt bei niedrigem Kontrast
-
-### Motion Preferences
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  .neumorphic-interactive {
-    transition: none;
-    transform: none;
-  }
-
-  .neumorphic-hover:hover {
-    transform: none; /* Kein Scale/Lift */
-    transition-duration: 0.1s; /* Minimal feedback */
-  }
-}
-```
-
----
-
-## 🔄 Migration von Legacy-Tokens
-
-### Deprecated Tokens (zu entfernen)
-
-```css
-/* DEPRECATED - Nicht mehr verwenden */
---surface-0  →  --surface-neumorphic-base
---surface-1  →  --surface-neumorphic-floating
---surface-2  →  --surface-neumorphic-raised
---surface-3  →  --surface-neumorphic-overlay
-
---neon       →  focus-visible Utility-Klassen
---neon-strong →  Akkord-basierte Fokus-Schatten
-```
-
-### Migration-Script (Automatisiert)
-
-```bash
-# Suche und ersetze Legacy-Tokens
-grep -r "--surface-0" src/ | wc -l  # → 15 Vorkommen
-grep -r "--neon" src/ | wc -l       # → 8 Vorkommen
-
-# Automatische Migration verfügbar in:
-# scripts/migrate-design-tokens.mjs
-```
-
----
-
-## 🚀 Phase 4 Features (In Entwicklung)
-
-### useUIState Hook Integration
-
-```typescript
-// Neue Data-Attribute basierte State-Management
-<Card
-  data-state="loading|success|error|idle"
-  data-interactive="true|false"
-  data-elevation="subtle|medium|dramatic|extreme"
-/>
-```
-
-### Animation Framework
-
-```css
-/* Neue Keyframes für Phase 4 */
-@keyframes focusExpand {
-  0% {
-    transform: scale(1);
-    box-shadow: var(--shadow-neumorphic-sm);
-  }
-  100% {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-neumorphic-lg);
-  }
-}
-
-@keyframes neo-press {
-  0% {
-    transform: translateY(0px);
-  }
-  100% {
-    transform: translateY(2px);
-    filter: brightness(0.95);
-  }
-}
-```
-
-### Gesture Feedback System
-
-```typescript
-// useGestureFeedback Hook (geplant)
-const { triggerHaptic, triggerVisual } = useGestureFeedback({
-  intensity: "light" | "medium" | "heavy",
-  pattern: "impact" | "selection" | "success",
-});
-```
-
----
-
-## 📊 Performance Metriken
-
-### Target Values
-
-| Metrik             | Desktop | Mobile |
-| ------------------ | ------- | ------ |
-| Shadow Render Time | <8ms    | <16ms  |
-| Layout Shift (CLS) | <0.1    | <0.1   |
-| First Paint        | <1.2s   | <1.8s  |
-| Interactive Time   | <2.5s   | <3.5s  |
-
-### Monitoring
-
-```javascript
-// Performance-Test verfügbar in:
-// tmp/shadow-performance-test.html
-
-console.log("Current Extreme:", "120px blur"); // ⚠️ Performance-kritisch
-console.log("Mobile Optimized:", "50px blur"); // ✅ Mobile-freundlich
-```
-
----
-
-## 🛠️ Development Tools
-
-### Storybook Integration (geplant)
-
-```bash
-# Setup für Design-System Dokumentation
-npm install @storybook/react @storybook/addon-docs
-.storybook/
-├── main.ts (Vite config)
-├── preview.tsx (Neumorphic decorators)
-└── theme.ts (Design-System theme)
-```
-
-### Token-Playground
-
-```bash
-# Interaktiver Token-Browser geplant
-src/tools/token-playground/
-├── TokenBrowser.tsx
-├── ShadowVisualizer.tsx
-└── ColorPalette.tsx
-```
-
----
-
-## 📝 Changelog
-
-### v2.0.0-alpha (Aktuell)
-
-- ✅ README.md: Fluent-2 → Dramatic Neumorphism
-- ✅ Performance-Test für Mobile Shadows
-- ✅ Token-System Analyse abgeschlossen
-- 🔄 Legacy Token Migration (in progress)
-- 🔄 Card.tsx Refactor (breaking change)
-
-### v1.x (Legacy)
-
-- Gemischtes Design-System (Glassmorphism + Neumorphism)
-- 34 @deprecated Card-Varianten
-- Performance-Probleme auf Mobile (120px shadows)
-
----
-
-## 🔗 Weitere Dokumentation
-
-- **[PHASE_4_ACTION_ITEMS.md](PHASE_4_ACTION_ITEMS.md)**: Detaillierte Roadmap
-- **[Mobile Performance Test](tmp/shadow-performance-test.html)**: Live Performance Comparison
-- **[Component Migration Guide](docs/component-migration.md)**: Breaking Changes Documentation
-
----
-
-> **Nächste Schritte**: Legacy Surface-Token entfernen → Card.tsx v2.0.0 Refactor → Storybook Setup
+-   **Safe Area Insets**: Das Layout berücksichtigt die "Safe Areas" von modernen Smartphones, sodass keine UI-Elemente von der "Notch" oder anderen System-UI-Elementen verdeckt werden.
+-   **Dynamische Viewport-Höhe (`--vh`)**: Die Anwendung passt sich an die tatsächliche sichtbare Höhe des Browserfensters an, um Layout-Sprünge beim Ein- und Ausblenden der mobilen Adressleiste zu vermeiden.

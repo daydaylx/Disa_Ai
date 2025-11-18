@@ -131,20 +131,20 @@ export default function ModelsPage() {
         description="Vergleiche Geschwindigkeit, Qualität und Kosten deiner Provider"
       />
 
-      <div className="space-y-4 rounded-3xl border border-[var(--glass-border-soft)] bg-[var(--surface-card)]/70 p-4 shadow-[var(--shadow-sm)]">
-        <div className="flex items-center gap-3">
+      <div className="space-y-3 rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface-card)]/70 p-3 shadow-[var(--shadow-sm)]">
+        <div className="flex items-center gap-2">
           <Input
             placeholder="Modelle durchsuchen"
             value={searchQuery}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-            className="flex-1 rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] px-4 py-3 text-[var(--text-primary)]"
+            className="flex-1 rounded-xl border border-[var(--glass-border-soft)] bg-[var(--surface)] px-3 py-2 text-[var(--text-primary)]"
           />
 
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
               className={cn(
-                "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]",
+                "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]",
                 showFavoritesOnly &&
                   "border-[var(--aurora-green-400)] text-[var(--aurora-green-400)]",
               )}
@@ -155,7 +155,7 @@ export default function ModelsPage() {
             <button
               onClick={() => setShowFreeOnly(!showFreeOnly)}
               className={cn(
-                "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]",
+                "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]",
                 showFreeOnly && "border-[var(--aurora-lila-400)] text-[var(--aurora-lila-400)]",
               )}
               aria-label="Kostenlose Modelle"
@@ -163,7 +163,7 @@ export default function ModelsPage() {
               <Filter className="h-5 w-5" />
             </button>
             <button
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-[var(--glass-border-soft)] bg-[var(--surface)] text-[var(--text-secondary)]"
               aria-label="Weitere Einstellungen"
             >
               <Settings className="h-5 w-5" />
@@ -191,7 +191,7 @@ export default function ModelsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2" data-testid="models-grid">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2" data-testid="models-grid">
         {filteredModels.map((model) => (
           <ModelCard
             key={model.id}
