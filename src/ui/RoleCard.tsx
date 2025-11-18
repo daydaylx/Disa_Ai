@@ -3,8 +3,8 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import type { EnhancedRole } from "@/types/enhanced-interfaces";
 import { Button } from "@/ui/Button";
-import { Card } from "@/ui/Card";
 import { Chip } from "@/ui/Chip";
+import { MobileCard } from "@/ui/MobileCard";
 import { Typography } from "@/ui/Typography";
 
 // RoleCard Component
@@ -40,63 +40,48 @@ const RoleCardComponent = React.memo(
       .join(" · ");
 
     return (
-      <Card
-        className={cn(
-          "rounded-[var(--radius-2xl)] group",
-          // Aurora Glass Panel with Premium Effects
-          "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
-          "border border-[var(--glass-border-subtle)] shadow-[var(--shadow-glow-soft)]",
-          "hover:bg-[var(--glass-surface-medium)] hover:shadow-[var(--shadow-glow-primary)]",
-          "hover:-translate-y-[2px] hover:border-[var(--aurora-primary-500)]/50",
-          "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-          // Active State with Aurora Ring
-          isActive && [
-            "ring-2 ring-[var(--aurora-primary-500)]/50 ring-offset-2 ring-offset-[var(--surface-base)]",
-            "shadow-[var(--shadow-glow-lila)] !translate-y-[-1px]",
-            "border-[var(--aurora-primary-500)]",
-          ],
-          className,
-        )}
+      <MobileCard
+        accent={isActive ? "lila" : "primary"}
+        className={cn("transition-colors", className)}
       >
-        {/* Zeile 1: Titel + Aktivieren-Button */}
-        <div className="flex items-center justify-between">
-          <Typography variant="body" className="text-[var(--text-primary)] font-medium flex-1 pr-3">
-            {title}
-          </Typography>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <Typography variant="body" className="text-[var(--text-primary)] font-semibold">
+                {title}
+              </Typography>
+              {description && (
+                <Typography variant="body-sm" className="text-[var(--text-secondary)] line-clamp-2">
+                  {description}
+                </Typography>
+              )}
+            </div>
 
-          <Button
-            variant={isActive ? "ghost" : "secondary"}
-            size="sm"
-            onClick={isActive ? onDeactivate : onActivate}
-            className="flex-shrink-0 tap-target min-h-[44px] min-w-[44px] px-4 py-3"
-          >
-            {isActive ? "Deaktivieren" : "Aktivieren"}
-          </Button>
-        </div>
-
-        {/* Zeile 2: Tags als Pills */}
-        {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {tags.map((tag, index) => (
-              <Chip key={index} variant="default" size="sm">
-                #{tag}
-              </Chip>
-            ))}
+            <Button
+              variant={isActive ? "secondary" : "primary"}
+              size="sm"
+              onClick={isActive ? onDeactivate : onActivate}
+              className="flex-shrink-0 min-w-[110px]"
+            >
+              {isActive ? "Aktiv" : "Aktivieren"}
+            </Button>
           </div>
-        )}
 
-        {/* Zeile 3: Meta */}
-        <Typography variant="body-xs" className="text-[var(--text-muted)]">
-          {meta}
-        </Typography>
-
-        {/* Beschreibung */}
-        {description && (
-          <Typography variant="body-sm" className="text-[var(--text-secondary)] line-clamp-2">
-            {description}
+          <Typography variant="body-xs" className="text-[var(--text-muted)]">
+            {meta}
           </Typography>
-        )}
-      </Card>
+
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {tags.map((tag, index) => (
+                <Chip key={index} variant="default" size="sm">
+                  #{tag}
+                </Chip>
+              ))}
+            </div>
+          )}
+        </div>
+      </MobileCard>
     );
   },
 );

@@ -16,6 +16,7 @@ const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"))
 const SettingsDataPage = lazy(() => import("../pages/SettingsData"));
 const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
+const MorePage = lazy(() => import("../pages/MorePage"));
 
 export const appRouter = createBrowserRouter(
   [
@@ -112,6 +113,14 @@ export const appRouter = createBrowserRouter(
       element: (
         <RouteWrapper>
           <DatenschutzPage />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/more",
+      element: (
+        <RouteWrapper>
+          <MorePage />
         </RouteWrapper>
       ),
     },

@@ -1,14 +1,7 @@
 import { type ReactNode, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import {
-  AppMenuDrawer,
-  defaultMenuSections,
-  MenuIcon,
-  useMenuDrawer,
-} from "../../components/layout/AppMenuDrawer";
-import { NavPills } from "../../components/navigation/NavPills";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
@@ -29,24 +22,48 @@ export function AppShell({ children }: AppShellProps) {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
+  const navigate = useNavigate();
 
-  const { pageTitle } = useMemo(() => {
+  const { pageTitle, pageDescription } = useMemo(() => {
     const activeItem = PRIMARY_NAV_ITEMS.find((item) => isNavItemActive(item, location.pathname));
+    if (activeItem) {
+      return {
+        pageTitle: activeItem.label,
+        pageDescription: activeItem.description,
+      };
+    }
+
+    const secondaryMap = [
+      { pattern: /^\/more/, title: "Mehr", description: "Shortcuts, Support & Rechtliches" },
+      { pattern: /^\/impressum/, title: "Impressum", description: "Verantwortlich für Inhalte" },
+      {
+        pattern: /^\/datenschutz/,
+        title: "Datenschutz",
+        description: "Informationen zur Verarbeitung",
+      },
+    ];
+
+    const fallback = secondaryMap.find((entry) => entry.pattern.test(location.pathname));
+    if (fallback) {
+      return {
+        pageTitle: fallback.title,
+        pageDescription: fallback.description,
+      };
+    }
+
     return {
-      pageTitle: activeItem?.label ?? "Studio",
+      pageTitle: "Studio",
+      pageDescription: "Dashboard & Schnellstart",
     };
   }, [location.pathname]);
 
+  const handleMoreNavigation = () => {
+    void navigate("/more");
+  };
+
   return (
     <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[var(--bg0)]" />
-        <div
-          className="absolute inset-0 opacity-90"
-          style={{ backgroundImage: "var(--bg-gradient)" }}
-        />
-      </div>
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[var(--bg0)]" />
       <div
         className="relative flex min-h-screen flex-col"
         style={{
@@ -63,24 +80,29 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        {/* Modern Header with PageShell pattern */}
-        <header className="sticky top-0 z-20 border-b border-[var(--glass-border-soft)] bg-[var(--surface)]/80 backdrop-blur-xl safe-area-top">
-          <div className="max-w-4xl mx-auto px-[var(--spacing-4)] py-[var(--spacing-3)] flex items-center justify-between">
-            <div className="flex flex-col min-w-0">
-              <span className="text-[var(--text-xs)] text-[var(--text-muted)] uppercase tracking-[0.16em]">
+        {/* Modern Header */}
+        <header className="sticky top-0 z-20 border-b border-[var(--glass-border-soft)] bg-[var(--surface-card)]/80 backdrop-blur-xl safe-area-top">
+          <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-4 px-4 py-4">
+            <div className="min-w-0 space-y-1">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
                 Disa AI
-              </span>
-              <h1 className="text-[var(--text-2xl)] font-semibold text-[var(--text-primary)]">
-                {pageTitle}
-              </h1>
+              </p>
+              <div>
+                <h1 className="text-2xl font-semibold text-[var(--text-primary)]">{pageTitle}</h1>
+                {pageDescription && (
+                  <p className="text-sm text-[var(--text-secondary)]">{pageDescription}</p>
+                )}
+              </div>
             </div>
-            <MenuIcon onClick={openMenu} />
+            <button
+              onClick={handleMoreNavigation}
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] px-4 text-sm font-medium text-[var(--text-primary)] shadow-[var(--shadow-sm)]"
+              aria-label="Mehr anzeigen"
+            >
+              Mehr
+            </button>
           </div>
         </header>
-
-        <div className="border-b border-[var(--glass-border-soft)] bg-surface-base/40 backdrop-blur-xl">
-          <NavPills items={PRIMARY_NAV_ITEMS} pathname={location.pathname} />
-        </div>
 
         <main
           id="main"
@@ -89,8 +111,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           key={location.pathname}
           className="relative flex flex-1 flex-col overflow-hidden"
         >
-          <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col overflow-y-auto px-6 py-8 sm:px-10 sm:py-12">
-            <div className="page-stack flex flex-1 flex-col gap-6">{children}</div>
+          <div className="mx-auto flex h-full w-full max-w-5xl flex-1 flex-col overflow-y-auto px-4 py-6 sm:px-6">
+            <div className="page-stack flex flex-1 flex-col gap-6 pb-24">{children}</div>
 
             <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[var(--glass-border-soft)] bg-surface-panel/80 px-4 py-3 text-[11px] text-text-muted shadow-[var(--shadow-sm)]">
               <span>Disa AI · Build</span>
@@ -102,8 +124,6 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         <NetworkBanner />
         {location.pathname === "/" && <PWAInstallPrompt />}
         {process.env.NODE_ENV === "development" && <PWADebugInfo />}
-
-        <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
       </div>
     </div>
   );
