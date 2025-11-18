@@ -1,4 +1,3 @@
-import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -7,6 +6,7 @@ import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import {
   BookOpenCheck,
+  ChevronRight,
   ChevronUp,
   KeyRound,
   Moon,
@@ -125,10 +125,10 @@ export function SettingsOverview() {
   ];
 
   return (
-    <div className="space-y-6 pb-12 text-style-body">
+    <div className="space-y-4 pb-8 text-style-body">
       <div className="space-y-1">
         <h1 className="text-style-heading-lg">Einstellungen</h1>
-        <p className="text-style-body text-text-secondary">
+        <p className="text-style-body-sm text-text-secondary">
           Verwalte API-Zugang, Gedächtnis, Filter und Daten zentral an einem Ort.
         </p>
       </div>
@@ -137,8 +137,7 @@ export function SettingsOverview() {
         <CardHeader>
           <CardTitle>Schnellstart</CardTitle>
           <CardDescription>
-            Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis. Das dunkle
-            Design ist bereits aktiv – passe Details jederzeit später an.
+            Richte zuerst deinen API-Key ein und aktiviere anschließend das Gedächtnis.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -163,7 +162,7 @@ export function SettingsOverview() {
           <CardDescription>Eine klare Übersicht über die wichtigsten Bereiche.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {cards.map((cardData) => (
               <Link to={cardData.to} key={cardData.id} className="hover:no-underline">
                 <Card
@@ -197,15 +196,15 @@ export function SettingsOverview() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-2 sm:grid-cols-3">
             {gestureTips.map((gesture) => {
               const Icon = gesture.icon;
               return (
                 <Card key={gesture.id} padding="sm">
                   <CardContent>
-                    <Icon className="mb-3 h-5 w-5 text-accent" aria-hidden="true" />
+                    <Icon className="mb-2 h-5 w-5 text-accent" aria-hidden="true" />
                     <p className="text-sm font-semibold text-text-primary">{gesture.title}</p>
-                    <p className="text-sm text-text-secondary">{gesture.description}</p>
+                    <p className="text-xs text-text-secondary">{gesture.description}</p>
                   </CardContent>
                 </Card>
               );

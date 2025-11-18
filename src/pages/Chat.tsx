@@ -204,12 +204,12 @@ export default function Chat() {
         {isEmpty ? (
           <PageContainer
             width="max"
-            className="relative z-10 flex flex-col gap-8"
+            className="relative z-10 flex flex-col gap-4"
             data-testid="chat-hero"
           >
-            <section className="overflow-hidden rounded-[2.5rem] bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-6 text-text-primary aurora-bg sm:p-10">
-              <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
-                <div className="space-y-5 lg:flex-1">
+            <section className="overflow-hidden rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-4 text-text-primary aurora-bg sm:p-6">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+                <div className="space-y-3 lg:flex-1">
                   <Typography
                     variant="caption"
                     as="span"
@@ -218,37 +218,33 @@ export default function Chat() {
                     Studio
                   </Typography>
                   <div>
-                    <h1 className="text-[var(--text-4xl)] font-[var(--font-semibold)] leading-[var(--leading-tight)] text-white sm:text-[var(--text-4xl)]">
+                    <h1 className="text-[var(--text-2xl)] font-[var(--font-medium)] leading-[var(--leading-tight)] text-white sm:text-[var(--text-3xl)]">
                       Konzentrierte KI-Arbeit in einer ruhigen Oberfläche.
                     </h1>
-                    <p className="mt-3 max-w-2xl text-[var(--text-base)] text-white/80">
+                    <p className="mt-2 max-w-2xl text-[var(--text-sm)] text-white/80">
                       Starte mit einem klaren Ziel, nutze vorbereitete Flows und schalte Modelle
-                      sowie Rollen per Shortcut. Alles offline-fähig, PWA-optimiert und ohne
-                      ablenkende Frames.
+                      sowie Rollen per Shortcut.
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    <Button size="lg" variant="primary" onClick={focusComposer}>
+                  <div className="flex flex-wrap gap-2">
+                    <Button size="default" variant="primary" onClick={focusComposer}>
                       Unterhaltung starten
                     </Button>
-                    <Button size="lg" variant="secondary">
+                    <Button size="default" variant="secondary">
                       <Link to="/settings">Studio öffnen</Link>
-                    </Button>
-                    <Button size="lg" variant="ghost">
-                      <Link to="/models">Modelle & Rollen</Link>
                     </Button>
                   </div>
                 </div>
-                <div className="grid w-full flex-shrink-0 gap-3 sm:grid-cols-3 lg:max-w-md">
+                <div className="grid w-full flex-shrink-0 gap-2 sm:grid-cols-3 lg:max-w-md">
                   {heroStatus.map((status) => (
                     <div
                       key={status.label}
-                      className="rounded-2xl border border-white/30 bg-white/10 p-3 backdrop-blur"
+                      className="rounded-xl border border-white/30 bg-white/10 p-2 backdrop-blur"
                     >
                       <p className="text-[11px] uppercase tracking-[0.3em] text-white/70">
                         {status.label}
                       </p>
-                      <Typography variant="h5" as="p" className="mt-2 text-white">
+                      <Typography variant="h5" as="p" className="mt-1 text-white">
                         {status.value}
                       </Typography>
                     </div>
@@ -257,13 +253,13 @@ export default function Chat() {
               </div>
             </section>
 
-            <section className="grid gap-4 md:grid-cols-3">
+            <section className="grid gap-3 md:grid-cols-3">
               {insightCards.map((card) => {
                 const Icon = card.icon;
                 return (
                   <Card className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)]">
+                    <div className="flex items-center gap-2">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent)]">
                         <Icon className="h-4 w-4" />
                       </span>
                       <div>
@@ -292,8 +288,8 @@ export default function Chat() {
               description="Vorbereitete Presets für Recherche, Schreiben und Pair Programming – starte ohne Setup."
             />
 
-            <section className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+            <section className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <Typography
                     variant="caption"
@@ -310,7 +306,7 @@ export default function Chat() {
                   <Link to="/settings">Alle Einstellungen</Link>
                 </Button>
               </div>
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-3 md:grid-cols-3">
                 {studioCards.map((card) => {
                   const Icon = card.icon;
                   return (
@@ -329,15 +325,15 @@ export default function Chat() {
                         }
                       }}
                     >
-                      <div className="space-y-3">
-                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent-soft)]/40 text-[var(--accent)]">
+                      <div className="space-y-2">
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent-soft)]/40 text-[var(--accent)]">
                           <Icon className="h-5 w-5" />
                         </span>
                         <div>
                           <Typography variant="h6" className="text-text-primary">
                             {card.title}
                           </Typography>
-                          <Typography variant="body" className="text-text-secondary">
+                          <Typography variant="body-sm" className="text-text-secondary">
                             {card.description}
                           </Typography>
                         </div>
@@ -345,7 +341,7 @@ export default function Chat() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="mt-4 w-fit"
+                        className="mt-3 w-fit"
                         onClick={(event) => {
                           event.stopPropagation();
                           void navigate(card.href);
@@ -359,7 +355,7 @@ export default function Chat() {
               </div>
             </section>
 
-            <section className="grid gap-4 md:grid-cols-2">
+            <section className="grid gap-3 md:grid-cols-2">
               <Card>
                 <CardTitle>
                   <Typography variant="h6" as="span" className="flex items-center gap-2">
@@ -367,11 +363,11 @@ export default function Chat() {
                     Gesten & Shortcuts
                   </Typography>
                 </CardTitle>
-                <ul className="mt-4 space-y-3">
+                <ul className="mt-3 space-y-2">
                   {helperShortcuts.map((shortcut) => (
-                    <li key={shortcut} className="flex items-start gap-3">
+                    <li key={shortcut} className="flex items-start gap-2">
                       <span className="mt-1 h-2 w-2 rounded-full bg-[var(--accent)]" />
-                      <Typography variant="body" as="span" className="text-text-secondary">
+                      <Typography variant="body-sm" as="span" className="text-text-secondary">
                         {shortcut}
                       </Typography>
                     </li>
@@ -386,14 +382,14 @@ export default function Chat() {
                     Hinweise
                   </Typography>
                 </CardTitle>
-                <div className="mt-4 space-y-2">
-                  <Typography variant="body" as="p" className="text-text-secondary">
+                <div className="mt-3 space-y-1.5">
+                  <Typography variant="body-sm" as="p" className="text-text-secondary">
                     • Teile keine sensiblen Daten oder API-Keys im Prompt.
                   </Typography>
-                  <Typography variant="body" as="p" className="text-text-secondary">
+                  <Typography variant="body-sm" as="p" className="text-text-secondary">
                     • Speichere längere Recherchen regelmäßig im Studio.
                   </Typography>
-                  <Typography variant="body" as="p" className="text-text-secondary">
+                  <Typography variant="body-sm" as="p" className="text-text-secondary">
                     • Installiere die PWA für stabile mobile Sessions.
                   </Typography>
                 </div>

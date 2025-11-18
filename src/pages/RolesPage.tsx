@@ -155,13 +155,13 @@ export default function RolesPage() {
         description="Aktiviere vorkonfigurierte Assistent:innen oder erstelle eigene Templates"
       />
 
-      <div className="space-y-4 rounded-3xl border border-[var(--glass-border-soft)] bg-[var(--surface-card)]/70 p-4 shadow-[var(--shadow-sm)]">
+      <div className="space-y-3 rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface-card)]/70 p-3 shadow-[var(--shadow-sm)]">
         <input
           type="text"
           placeholder="Rollen durchsuchen"
           value={searchQuery}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-          className="w-full rounded-2xl border border-[var(--glass-border-soft)] bg-[var(--surface)] px-4 py-3 text-[var(--text-primary)]"
+          className="w-full rounded-xl border border-[var(--glass-border-soft)] bg-[var(--surface)] px-3 py-2 text-[var(--text-primary)]"
         />
 
         <div className="space-y-2">
@@ -171,7 +171,7 @@ export default function RolesPage() {
           >
             Kategorien
           </Typography>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             <FilterChip
               count={getCategoryCount("All")}
               isActive={activeCategory === "All"}
@@ -213,7 +213,7 @@ export default function RolesPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5" data-testid="roles-grid">
+      <div className="grid grid-cols-1 gap-4" data-testid="roles-grid">
         {filteredRoles.map((role) => (
           <RoleCard
             key={role.id}
