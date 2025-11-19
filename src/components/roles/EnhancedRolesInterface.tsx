@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Search, Star, Users } from "@/lib/icons";
 import { Button, FilterChip, GlassCard, Input, Skeleton, useToasts } from "@/ui";
@@ -6,14 +6,21 @@ import { Button, FilterChip, GlassCard, Input, Skeleton, useToasts } from "@/ui"
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
-import {
-  CATEGORY_ORDER,
-  type EnhancedRole,
-  type FilterState,
-  migrateRole,
-  roleFilterFn,
-  roleSortFn,
-} from "../../types/enhanced-interfaces";
+import { type EnhancedRole, type FilterState, migrateRole } from "../../types/enhanced-interfaces";
+import { roleFilterFn, roleSortFn } from "./roles-filter";
+
+// Role category order for filters
+const CATEGORY_ORDER = [
+  "Assistance",
+  "Creative",
+  "Technical",
+  "Analysis",
+  "Research",
+  "Education",
+  "Business",
+  "Entertainment",
+  "Spezial",
+] as const;
 
 interface EnhancedRolesInterfaceProps {
   className?: string;
@@ -186,15 +193,17 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         {/* Category Pills */}
         <div className="px-4 pb-4 pt-2">
           <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {CATEGORY_ORDER.filter((cat) => (categoryCounts[cat] || 0) > 0).map((category) => (
-              <FilterChip
-                key={category}
-                selected={selectedCategory === category}
-                onClick={() => handleCategorySelect(category)}
-              >
-                {category}
-              </FilterChip>
-            ))}
+            {CATEGORY_ORDER.filter((cat: string) => (categoryCounts[cat] || 0) > 0).map(
+              (category: string) => (
+                <FilterChip
+                  key={category}
+                  selected={selectedCategory === category}
+                  onClick={() => handleCategorySelect(category)}
+                >
+                  {category}
+                </FilterChip>
+              ),
+            )}
           </div>
         </div>
       </div>

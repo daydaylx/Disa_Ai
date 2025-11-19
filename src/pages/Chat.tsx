@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 import { AppHeader } from "@/ui/AppHeader";
@@ -21,7 +20,6 @@ export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
-  const _navigate = useNavigate();
   const { activeRole: _activeRole } = useRoles();
   const { settings: _settings } = useSettings();
   const { isEnabled: _memoryEnabled } = useMemory();
@@ -128,7 +126,10 @@ export default function Chat() {
             subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
           />
 
-          <ChatStartCard onNewChat={focusComposer} conversationCount={stats.totalConversations} />
+          <ChatStartCard
+            onNewChat={focusComposer}
+            conversationCount={stats?.totalConversations || 0}
+          />
 
           <QuickstartGrid
             onStart={startWithPreset}
