@@ -149,7 +149,8 @@ export default [
           paths: [
             {
               name: "lucide-react",
-              message: "Please import icons from '@/lib/icons' instead of directly from 'lucide-react'. This prevents bootstrap errors due to missing icon exports.",
+              message:
+                "Please import icons from '@/lib/icons' instead of directly from 'lucide-react'. This prevents bootstrap errors due to missing icon exports.",
               allowTypeImports: true,
             },
           ],

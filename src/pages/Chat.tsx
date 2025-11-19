@@ -1,14 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 import { AppHeader } from "@/ui/AppHeader";
-import { Button } from "@/ui/Button";
 import { ChatStartCard } from "@/ui/ChatStartCard";
-import { GlassCard } from "@/ui/GlassCard";
-import { PrimaryButton } from "@/ui/PrimaryButton";
 import { SectionHeader } from "@/ui/SectionHeader";
-import { Typography } from "@/ui/Typography";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
@@ -20,24 +16,15 @@ import { useMemory } from "../hooks/useMemory";
 import { useRoles } from "../hooks/useRoles";
 import { useSettings } from "../hooks/useSettings";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
-import {
-  BookOpenCheck,
-  KeyRound,
-  MessageCircle,
-  Settings,
-  Shield,
-  Sparkles,
-  Waves,
-} from "../lib/icons";
 
 export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
-  const { activeRole } = useRoles();
-  const { settings } = useSettings();
-  const { isEnabled: memoryEnabled } = useMemory();
+  const _navigate = useNavigate();
+  const { activeRole: _activeRole } = useRoles();
+  const { settings: _settings } = useSettings();
+  const { isEnabled: _memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
 
   const {
@@ -141,10 +128,7 @@ export default function Chat() {
             subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
           />
 
-          <ChatStartCard
-            onNewChat={focusComposer}
-            conversationCount={stats.totalConversations}
-          />
+          <ChatStartCard onNewChat={focusComposer} conversationCount={stats.totalConversations} />
 
           <QuickstartGrid
             onStart={startWithPreset}

@@ -2,16 +2,12 @@ import { type ReactNode, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import { AppHeader } from "../../ui/AppHeader";
-import {
-  AppMenuDrawer,
-  MenuIcon,
-  useMenuDrawer,
-} from "../../components/layout/AppMenuDrawer";
+import { AppMenuDrawer, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
+import { AppHeader } from "../../ui/AppHeader";
 
 interface AppShellProps {
   children: ReactNode;

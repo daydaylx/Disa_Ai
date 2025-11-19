@@ -1,15 +1,6 @@
 import { useMemo, useState } from "react";
 
-import {
-  Button,
-  FilterChip,
-  GlassCard,
-  RoleCard,
-  SectionHeader,
-  Typography,
-} from "@/ui";
-
-import { cn } from "../lib/utils";
+import { Button, FilterChip, GlassCard, RoleCard, SectionHeader, Typography } from "@/ui";
 
 // Mock data für Rollen - würde normalerweise aus API kommen
 interface Role {
@@ -158,10 +149,7 @@ export default function RolesPage() {
 
   return (
     <>
-      <SectionHeader
-        title="Rollen"
-        subtitle="Nutze kuratierte Profile für verschiedene Aufgaben"
-      />
+      <SectionHeader title="Rollen" subtitle="Nutze kuratierte Profile für verschiedene Aufgaben" />
       {/* Such-Input */}
       <div className="relative">
         <input

@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { Button } from "@/ui/Button";
 import { GlassCard } from "@/ui/GlassCard";
 import { Typography } from "@/ui/Typography";
 
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
 import { X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
-
 
 interface AppMenuDrawerProps {
   isOpen: boolean;
@@ -34,10 +32,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
   ];
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md"
-      onClick={handleBackdropClick}
-    >
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md" onClick={handleBackdropClick}>
       {/* Vollflächiges Overlay */}
       <div
         className={cn(
@@ -81,29 +76,26 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
                   const Icon = item.Icon;
 
                   return (
-                    <Link
-                      key={item.id}
-                      to={item.path}
-                      onClick={onClose}
-                      className="block"
-                    >
+                    <Link key={item.id} to={item.path} onClick={onClose} className="block">
                       <GlassCard
                         className={cn(
                           "p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]",
                           isActive
                             ? "border-[var(--accent)] bg-[var(--accent-soft)]/30 shadow-lg shadow-[var(--accent)]/10"
-                            : "hover:bg-surface-panel/50 border-transparent"
+                            : "hover:bg-surface-panel/50 border-transparent",
                         )}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={cn(
-                            "flex items-center justify-center w-8 h-8 rounded-lg",
-                            isActive ? "bg-[var(--accent)]/20" : "bg-surface-panel/50"
-                          )}>
+                          <div
+                            className={cn(
+                              "flex items-center justify-center w-8 h-8 rounded-lg",
+                              isActive ? "bg-[var(--accent)]/20" : "bg-surface-panel/50",
+                            )}
+                          >
                             <Icon
                               className={cn(
                                 "h-4 w-4",
-                                isActive ? "text-[var(--accent)]" : "text-text-secondary"
+                                isActive ? "text-[var(--accent)]" : "text-text-secondary",
                               )}
                             />
                           </div>
@@ -112,7 +104,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
                               variant="body-sm"
                               className={cn(
                                 "font-medium mb-0.5",
-                                isActive ? "text-[var(--accent)]" : "text-text-primary"
+                                isActive ? "text-[var(--accent)]" : "text-text-primary",
                               )}
                             >
                               {item.label}
@@ -143,25 +135,20 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
                   const isActive = location.pathname === page.href;
 
                   return (
-                    <Link
-                      key={page.href}
-                      to={page.href}
-                      onClick={onClose}
-                      className="block"
-                    >
+                    <Link key={page.href} to={page.href} onClick={onClose} className="block">
                       <GlassCard
                         className={cn(
                           "p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]",
                           isActive
                             ? "border-[var(--accent)] bg-[var(--accent-soft)]/30 shadow-lg shadow-[var(--accent)]/10"
-                            : "hover:bg-surface-panel/50 border-transparent"
+                            : "hover:bg-surface-panel/50 border-transparent",
                         )}
                       >
                         <Typography
                           variant="body-sm"
                           className={cn(
                             "font-medium",
-                            isActive ? "text-[var(--accent)]" : "text-text-primary"
+                            isActive ? "text-[var(--accent)]" : "text-text-primary",
                           )}
                         >
                           {page.label}
@@ -185,7 +172,6 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
     </div>
   );
 }
-
 
 // Header Icon Component
 interface MenuIconProps {

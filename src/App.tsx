@@ -9,7 +9,6 @@ import { TooltipProvider } from "@/ui/Tooltip";
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
-import { useEdgeSwipeDrawer } from "./hooks/useEdgeSwipe";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 

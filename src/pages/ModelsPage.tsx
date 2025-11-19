@@ -1,16 +1,8 @@
 import { useMemo, useState } from "react";
 
-import {
-  AppHeader,
-  Button,
-  GlassCard,
-  Input,
-  ModelCard,
-  SectionHeader,
-  Typography,
-} from "@/ui";
+import { AppHeader, Button, Input, ModelCard, SectionHeader, Typography } from "@/ui";
 
-import { Filter, Search, Settings, Star } from "../lib/icons";
+import { Filter, Search, Star } from "../lib/icons";
 import { cn } from "../lib/utils";
 
 // Mock data für Modelle - würde normalerweise aus API kommen
@@ -149,7 +141,9 @@ export default function ModelsPage() {
               <Input
                 placeholder="Modell suchen..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchQuery(e.target.value)
+                }
                 className="rounded-full"
               />
             </div>
@@ -159,7 +153,9 @@ export default function ModelsPage() {
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 className={cn(
                   "p-3 rounded-xl border border-[var(--glass-border-soft)] bg-surface-panel/80 backdrop-blur-lg cursor-pointer transition-all",
-                  showFavoritesOnly ? "bg-pink-500/20 border-pink-500/30" : "hover:bg-surface-panel"
+                  showFavoritesOnly
+                    ? "bg-pink-500/20 border-pink-500/30"
+                    : "hover:bg-surface-panel",
                 )}
               >
                 <Star className="h-4 w-4" />
@@ -169,7 +165,7 @@ export default function ModelsPage() {
                 onClick={() => setShowFreeOnly(!showFreeOnly)}
                 className={cn(
                   "p-3 rounded-xl border border-[var(--glass-border-soft)] bg-surface-panel/80 backdrop-blur-lg cursor-pointer transition-all",
-                  showFreeOnly ? "bg-pink-500/20 border-pink-500/30" : "hover:bg-surface-panel"
+                  showFreeOnly ? "bg-pink-500/20 border-pink-500/30" : "hover:bg-surface-panel",
                 )}
               >
                 <Filter className="h-4 w-4" />

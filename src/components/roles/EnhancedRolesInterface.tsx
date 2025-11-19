@@ -1,7 +1,28 @@
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import { Search, Star, Users } from "@/lib/icons";
+import { Button, FilterChip, GlassCard, Input, Skeleton, useToasts } from "@/ui";
+
+import { useStudio } from "../../app/state/StudioContext";
+import { useFavorites } from "../../contexts/FavoritesContext";
+import { useFilteredList } from "../../hooks/useFilteredList";
+import {
+  CATEGORY_ORDER,
+  type EnhancedRole,
+  type FilterState,
+  migrateRole,
+  roleFilterFn,
+  roleSortFn,
+} from "../../types/enhanced-interfaces";
+
+interface EnhancedRolesInterfaceProps {
+  className?: string;
+}
+
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
-  const { roles, activeRole, setActiveRole } = useStudio();
+  const { roles, activeRole: _activeRole, setActiveRole } = useStudio();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
 
   // Local state

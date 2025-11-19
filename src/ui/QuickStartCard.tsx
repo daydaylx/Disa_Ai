@@ -26,9 +26,7 @@ export function QuickStartCard({
   return (
     <GlassCard variant="primary" className="text-center space-y-4">
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent/80">
-          {title}
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent/80">{title}</p>
         <p className="text-sm text-text-secondary max-w-lg mx-auto leading-relaxed">
           {description}
         </p>

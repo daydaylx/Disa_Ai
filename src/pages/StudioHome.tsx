@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { GlassCard, PrimaryButton, RoleCard, SectionHeader } from "@/ui";
+import { GlassCard, PrimaryButton, SectionHeader } from "@/ui";
 
 import { useRoles } from "../hooks/useRoles";
 import { Brain, MessageSquare, Settings, Users } from "../lib/icons";
@@ -8,7 +8,7 @@ import type { EnhancedRole } from "../types/enhanced-interfaces";
 
 export default function StudioHome() {
   const navigate = useNavigate();
-  const { roles, activeRole, activateRole } = useRoles();
+  const { roles, activeRole: _activeRole, activateRole } = useRoles();
 
   return (
     <div className="space-y-6 py-4 safe-area-vertical">

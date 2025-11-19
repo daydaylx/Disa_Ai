@@ -1,15 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import {
-  AppHeader,
-  Button,
-  GlassCard,
-  Input,
-  Label,
-  PrimaryButton,
-  SectionHeader,
-  useToasts,
-} from "@/ui";
+import { AppHeader, Button, GlassCard, Input, Label, PrimaryButton, useToasts } from "@/ui";
 
 import { Eye, EyeOff } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
@@ -86,9 +77,7 @@ export function SettingsApiView() {
       <div className="space-y-4 sm:space-y-6 px-[var(--spacing-4)] py-3 sm:py-[var(--spacing-6)]">
         <GlassCard className="space-y-4 sm:space-y-6">
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-text-primary">
-              API-Key & Verbindung
-            </h2>
+            <h2 className="text-xl font-semibold text-text-primary">API-Key & Verbindung</h2>
             <p className="text-sm text-text-secondary">
               Optionaler OpenRouter-API-Key für persönliche Limits.
             </p>
@@ -113,11 +102,7 @@ export function SettingsApiView() {
                   onClick={() => setShowKey(!showKey)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-secondary hover:text-text-primary transition-colors"
                 >
-                  {showKey ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
@@ -127,18 +112,15 @@ export function SettingsApiView() {
                 Speichern
               </PrimaryButton>
               {hasApiKey && (
-                <Button
-                  variant="secondary"
-                  onClick={handleRemoveKey}
-                  className="w-full sm:w-auto"
-                >
+                <Button variant="secondary" onClick={handleRemoveKey} className="w-full sm:w-auto">
                   Entfernen
                 </Button>
               )}
             </div>
 
             <p className="text-xs text-text-secondary leading-relaxed">
-              Der API-Key wird nur lokal im Browser gespeichert und nie an externe Server übertragen.
+              Der API-Key wird nur lokal im Browser gespeichert und nie an externe Server
+              übertragen.
             </p>
           </div>
         </GlassCard>

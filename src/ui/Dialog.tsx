@@ -1,8 +1,9 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils"; // Assuming cn is available in lib/utils.ts; adjust if needed
+
+import { X } from "../lib/icons";
 
 const Dialog = DialogPrimitive.Root;
 

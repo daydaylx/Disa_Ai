@@ -1,5 +1,4 @@
-import { Brain, Code2, Link2, PenSquare } from "lucide-react";
-
+import { Brain, Code2, Link2, PenSquare } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 import { GlassCard } from "@/ui/GlassCard";
 
@@ -74,7 +73,9 @@ export function QuickstartGrid({
                 </span>
                 <h3 className="text-base font-semibold">{quickstart.title}</h3>
               </div>
-              <p className="text-xs text-text-secondary flex-1 leading-relaxed">{quickstart.description}</p>
+              <p className="text-xs text-text-secondary flex-1 leading-relaxed">
+                {quickstart.description}
+              </p>
               <span className="text-xs font-medium text-accent">Tippen zum Starten →</span>
             </GlassCard>
           );
