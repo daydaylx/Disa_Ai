@@ -1,5 +1,5 @@
 import type { ErrorInfo, ReactNode } from "react";
-import React, { Component } from "react";
+import { Component } from "react";
 
 import { Button } from "@/ui/Button";
 import { GlassCard } from "@/ui/GlassCard";

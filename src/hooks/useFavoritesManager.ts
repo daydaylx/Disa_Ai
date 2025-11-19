@@ -191,7 +191,12 @@ export function useFavoritesManager(): FavoritesManagerState {
 
     setUsage((prev) => {
       const prevRoles = prev.roles || {};
-      const existingRoleData = prevRoles[roleId] || {};
+      const existingRoleData = prevRoles[roleId] || {
+        count: 0,
+        totalDuration: 0,
+        lastUsed: new Date(),
+        averageSessionLength: 0,
+      };
 
       return {
         ...prev,
@@ -223,7 +228,14 @@ export function useFavoritesManager(): FavoritesManagerState {
 
     setUsage((prev) => {
       const prevModels = prev.models || {};
-      const existingModelData = prevModels[modelId] || {};
+      const existingModelData = prevModels[modelId] || {
+        count: 0,
+        totalTokens: 0,
+        totalCost: 0,
+        lastUsed: new Date(),
+        averageTokensPerSession: 0,
+        averageCostPerSession: 0,
+      };
 
       return {
         ...prev,
