@@ -14,6 +14,7 @@ import {
   Upload,
 } from "@/lib/icons";
 import { Button } from "@/ui/Button";
+import { GlassCard } from "@/ui/GlassCard";
 import { Typography } from "@/ui/Typography";
 
 import { useConversationStats, useStorageHealth, useStorageMigration } from "../hooks/use-storage";
@@ -145,10 +146,10 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
 
   if (loading) {
     return (
-      <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-3 mx-auto mt-8 flex max-w-md items-center gap-3 text-text-secondary">
+      <GlassCard className="p-3 mx-auto mt-8 flex max-w-md items-center gap-3 text-text-secondary">
         <RefreshCw className="h-4 w-4 animate-spin text-accent" />
         <span>Migration wird geprüft …</span>
-      </div>
+      </GlassCard>
     );
   }
 
@@ -182,7 +183,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
 
   return (
     <div className="page-stack mx-auto max-w-4xl px-page-padding-x py-page-padding-y text-text-primary">
-      <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 flex flex-wrap items-center justify-between gap-4">
+      <GlassCard className="p-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Database className="h-8 w-8 text-accent" />
           <div>
@@ -204,13 +205,10 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
             ✕
           </Button>
         )}
-      </section>
+      </GlassCard>
 
       {error && (
-        <section
-          className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--aurora-red-400)] shadow-[var(--shadow-glow-red)] rounded-3xl p-6 flex items-start gap-3"
-          data-tone="danger"
-        >
+        <GlassCard className="p-6 flex items-start gap-3" data-tone="danger">
           <AlertTriangle className="h-5 w-5 flex-shrink-0" />
           <div className="space-y-1">
             <Typography variant="body" className="font-semibold text-text-primary">
@@ -220,11 +218,11 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               {error}
             </Typography>
           </div>
-        </section>
+        </GlassCard>
       )}
 
       {migrationStatus && (
-        <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
+        <GlassCard className="p-6 space-y-4">
           <Typography variant="h5" as="h2" className="flex items-center gap-2">
             <Info className="h-5 w-5 text-accent" />
             Migrationsstatus
@@ -254,59 +252,56 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               </div>
             ))}
           </div>
-        </section>
+        </GlassCard>
       )}
 
       {stats && (
-        <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
+        <GlassCard className="p-6 space-y-4">
           <Typography variant="h5" as="h2" className="flex items-center gap-2">
             <HardDrive className="h-5 w-5 text-accent" />
             Speicherstatistiken
           </Typography>
 
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
+            <GlassCard className="p-4 text-center">
               <Typography variant="h3">{stats.totalConversations}</Typography>
               <Typography variant="caption" className="text-text-secondary">
                 Konversationen
               </Typography>
-            </div>
-            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
+            </GlassCard>
+            <GlassCard className="p-4 text-center">
               <Typography variant="h3">{stats.totalMessages}</Typography>
               <Typography variant="caption" className="text-text-secondary">
                 Nachrichten
               </Typography>
-            </div>
-            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
+            </GlassCard>
+            <GlassCard className="p-4 text-center">
               <Typography variant="h3">
                 {stats.averageMessagesPerConversation.toFixed(1)}
               </Typography>
               <Typography variant="caption" className="text-text-secondary">
                 Ø Nachrichten
               </Typography>
-            </div>
-            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 text-center">
+            </GlassCard>
+            <GlassCard className="p-4 text-center">
               <Typography variant="h3">{formatBytes(stats.storageSize)}</Typography>
               <Typography variant="caption" className="text-text-secondary">
                 Belegung
               </Typography>
-            </div>
+            </GlassCard>
           </div>
-        </section>
+        </GlassCard>
       )}
 
       {migrationEstimate && migrationStatus?.needsMigration && (
-        <section
-          className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--aurora-blue-400)] shadow-[var(--shadow-glow-blue)] rounded-3xl p-6 space-y-4"
-          data-tone="info"
-        >
+        <GlassCard className="p-6 space-y-4" data-tone="info">
           <Typography variant="h5" as="h2" className="flex items-center gap-2">
             <Clock className="h-5 w-5" />
             Migrationsschätzung
           </Typography>
 
           <div className="grid gap-3 md:grid-cols-3">
-            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
+            <GlassCard className="p-4">
               <Typography
                 variant="caption"
                 className="uppercase tracking-[0.2em] text-text-tertiary"
@@ -316,8 +311,8 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               <Typography variant="h4" className="text-text-primary">
                 {migrationEstimate.conversationCount}
               </Typography>
-            </div>
-            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
+            </GlassCard>
+            <GlassCard className="p-4">
               <Typography
                 variant="caption"
                 className="uppercase tracking-[0.2em] text-text-tertiary"
@@ -327,8 +322,8 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               <Typography variant="h4" className="text-text-primary">
                 {formatDuration(migrationEstimate.estimatedDuration)}
               </Typography>
-            </div>
-            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4">
+            </GlassCard>
+            <GlassCard className="p-4">
               <Typography
                 variant="caption"
                 className="uppercase tracking-[0.2em] text-text-tertiary"
@@ -338,16 +333,13 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               <Typography variant="h4" className="text-text-primary">
                 {formatBytes(migrationEstimate.estimatedSize)}
               </Typography>
-            </div>
+            </GlassCard>
           </div>
-        </section>
+        </GlassCard>
       )}
 
       {migrationStatus?.needsMigration && (
-        <section
-          className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--aurora-yellow-400)] shadow-[var(--shadow-glow-yellow)] rounded-3xl p-6 space-y-4"
-          data-tone="warning"
-        >
+        <GlassCard className="p-6 space-y-4" data-tone="warning">
           <div className="flex items-start gap-3">
             <AlertTriangle className="h-5 w-5" />
             <div>
@@ -377,16 +369,16 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               </>
             )}
           </Button>
-        </section>
+        </GlassCard>
       )}
 
-      <section className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 space-y-4">
+      <GlassCard className="p-6 space-y-4">
         <Typography variant="h5" as="h2" className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-accent" />
           Backup & Restore
         </Typography>
         <div className="grid gap-3">
-          <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+          <GlassCard className="p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
               <Typography variant="body" className="font-medium">
                 Backup erstellen
@@ -399,8 +391,8 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               <Download className="h-4 w-4" />
               Backup
             </Button>
-          </div>
-          <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+          </GlassCard>
+          <GlassCard className="p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
               <Typography variant="body" className="font-medium">
                 Backup importieren
@@ -413,11 +405,11 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               <Upload className="h-4 w-4" />
               Restore
             </Button>
-          </div>
+          </GlassCard>
         </div>
 
         {showRestore && (
-          <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 space-y-3">
+          <GlassCard className="p-4 space-y-3">
             <textarea
               value={restoreData}
               onChange={(e) => setRestoreData(e.target.value)}
@@ -444,13 +436,13 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
                 Abbrechen
               </Button>
             </div>
-          </div>
+          </GlassCard>
         )}
-      </section>
+      </GlassCard>
 
       {migrationResult && (
-        <section
-          className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-medium)] rounded-3xl p-6 space-y-3"
+        <GlassCard
+          className="p-6 space-y-3"
           data-tone={migrationResult.success ? "success" : "danger"}
         >
           <Typography variant="h5" as="h2" className="flex items-center gap-2">
@@ -502,11 +494,11 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               </ul>
             </div>
           )}
-        </section>
+        </GlassCard>
       )}
 
-      <section
-        className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-3xl p-6 flex flex-wrap items-center gap-3"
+      <GlassCard
+        className="p-6 flex flex-wrap items-center gap-3"
         data-tone={isReady ? "success" : "danger"}
       >
         <span
@@ -520,7 +512,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
           <RefreshCw className="h-4 w-4" />
           Status aktualisieren
         </Button>
-      </section>
+      </GlassCard>
     </div>
   );
 }

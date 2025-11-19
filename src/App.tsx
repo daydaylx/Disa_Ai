@@ -8,11 +8,8 @@ import { TooltipProvider } from "@/ui/Tooltip";
 
 import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
-import { EnhancedBottomNav } from "./components/layout/EnhancedBottomNav";
-import MobileBottomNav from "./components/layout/MobileBottomNav";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { useEdgeSwipeDrawer } from "./hooks/useEdgeSwipe";
-import { useFeatureFlag } from "./hooks/useFeatureFlags";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 
@@ -31,48 +28,6 @@ const FeatureFlagPanel = lazy(() =>
 // AppContent component that runs inside the providers
 function AppContent() {
   useServiceWorker(); // Now safely inside ToastsProvider
-
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const isNewNavEnabled = useFeatureFlag("enhancedNavigation");
-
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const handleStateChange = (event: Event) => {
-      const customEvent = event as CustomEvent<{ open?: boolean }>;
-      if (typeof customEvent.detail?.open === "boolean") {
-        setIsDrawerOpen(customEvent.detail.open);
-      }
-    };
-
-    window.addEventListener("disa:bottom-sheet-state", handleStateChange as EventListener);
-
-    return () => {
-      window.removeEventListener("disa:bottom-sheet-state", handleStateChange as EventListener);
-    };
-  }, []);
-
-  // Edge-Swipe Navigation für BottomSheet
-  const handleOpenDrawer = React.useCallback(() => {
-    window.dispatchEvent(
-      new CustomEvent("disa:bottom-sheet", {
-        detail: { action: "open" as const },
-      }),
-    );
-  }, []);
-
-  const edgeSwipeOptions = React.useMemo(
-    () => ({
-      edgeWidth: 30, // Etwas breiter für bessere UX
-      minDX: 60, // Mindestbewegung
-      maxDY: 120, // Max vertikale Bewegung
-      delay: 50, // Kurze Verzögerung gegen Unfälle
-    }),
-    [],
-  );
-
-  // Edge-Swipe Integration - funktioniert nur auf Touch-Geräten mit Feature-Flag
-  useEdgeSwipeDrawer(isDrawerOpen, handleOpenDrawer, edgeSwipeOptions);
 
   return (
     <>
@@ -114,10 +69,7 @@ function AppContent() {
         )}
         showDialog={false}
       >
-        <div className="pb-16">
-          <Router />
-        </div>
-        {isNewNavEnabled ? <EnhancedBottomNav /> : <MobileBottomNav />}
+        <Router />
       </SentryErrorBoundary>
       <Suspense fallback={null}>
         <FeatureFlagPanel />

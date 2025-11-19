@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
+import { GlassCard } from "@/ui/GlassCard";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { Download, Smartphone, X } from "../../lib/icons";
@@ -66,7 +67,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
         className,
       )}
     >
-      <div className="max-h-[40vh] overflow-y-auto rounded-3xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-green-400)] shadow-[var(--shadow-glow-green)] p-6 sm:max-h-none sm:p-8 animate-in slide-in-from-bottom-8 duration-500 ease-[var(--motion-ease-elastic)]">
+      <GlassCard className="p-6 sm:p-8 animate-in slide-in-from-bottom-8 duration-500 ease-[var(--motion-ease-elastic)]">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="mb-3 flex items-center gap-3">
@@ -111,7 +112,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
             <X className="h-5 w-5" />
           </Button>
         </div>
-      </div>
+      </GlassCard>
     </div>
   );
 }

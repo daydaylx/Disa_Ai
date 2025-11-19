@@ -2,6 +2,7 @@ import { RotateCcw, Send, Square, Zap } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 import { Button } from "@/ui/Button";
+import { GlassCard } from "@/ui/GlassCard";
 import { Textarea } from "@/ui/Textarea";
 
 import { useVisualViewport } from "../../hooks/useVisualViewport";
@@ -139,14 +140,9 @@ export function ChatComposer({
           </div>
         )}
 
-        <div
+        <GlassCard
           className={cn(
-            // Aurora Premium Glass Design - Verbesserte Mobile-Lesbarkeit
-            "flex items-end gap-2 rounded-[var(--radius-lg)] border border-[var(--glass-border-aurora)] bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] p-3",
-            "shadow-[var(--shadow-premium-medium)] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-            // Premium Aurora Glow-Overlay für Interactive State
-            "relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-[var(--aurora-primary-500)]/5 before:to-[var(--aurora-lila-500)]/5 before:opacity-0 before:transition-opacity before:duration-[var(--motion-medium)] before:rounded-[var(--radius-lg)] before:pointer-events-none",
-            "focus-within:before:opacity-100 focus-within:border-[var(--glass-border-lila)] focus-within:shadow-[var(--shadow-premium-strong)]",
+            "flex items-end gap-2 p-3",
             isComposerDisabled && "cursor-not-allowed opacity-60",
           )}
         >
@@ -162,11 +158,8 @@ export function ChatComposer({
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                // Aurora Glass-optimierte Text-Lesbarkeit
                 "text-[var(--text-primary)] placeholder:text-[var(--text-muted)] max-h-[200px] min-h-[var(--touch-target-comfortable)] resize-none border-0 bg-transparent p-2",
-                // Mobile-optimierte Typography
                 "text-base md:text-[15px] leading-[var(--leading-normal)] font-[var(--font-normal)]",
-                // Enhanced Focus States
                 "focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
                 "selection:bg-[var(--aurora-primary-500)]/20 selection:text-[var(--text-primary)]",
                 isQuickstartLoading && "text-[var(--text-secondary)] cursor-not-allowed",
@@ -222,7 +215,7 @@ export function ChatComposer({
               <span className="block h-12 w-12" aria-hidden="true" />
             )}
           </div>
-        </div>
+        </GlassCard>
 
         <div className="text-[var(--text-muted)] mt-2 text-center text-xs">
           <span className="inline-flex items-center justify-center gap-2">

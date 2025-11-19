@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
 
-import { Button, FilterChip, RoleCard, Typography } from "@/ui";
-
 import {
-  AppMenuDrawer,
-  defaultMenuSections,
-  MenuIcon,
-  useMenuDrawer,
-} from "../components/layout/AppMenuDrawer";
-import { RolesPageShell } from "../components/layout/PageShell";
+  Button,
+  FilterChip,
+  GlassCard,
+  RoleCard,
+  SectionHeader,
+  Typography,
+} from "@/ui";
+
 import { cn } from "../lib/utils";
 
 // Mock data für Rollen - würde normalerweise aus API kommen
@@ -130,8 +130,6 @@ export default function RolesPage() {
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
-
   // Optimized role filtering with useMemo for better performance
   const filteredRoles = useMemo(() => {
     const searchLower = searchQuery.toLowerCase();
@@ -159,7 +157,11 @@ export default function RolesPage() {
   };
 
   return (
-    <RolesPageShell actions={<MenuIcon onClick={openMenu} />}>
+    <>
+      <SectionHeader
+        title="Rollen"
+        subtitle="Nutze kuratierte Profile für verschiedene Aufgaben"
+      />
       {/* Such-Input */}
       <div className="relative">
         <input
@@ -167,10 +169,7 @@ export default function RolesPage() {
           placeholder="Rollen durchsuchen..."
           value={searchQuery}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-          className={cn(
-            "w-full rounded-3xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] bg-gradient-to-r from-surface-card to-surface-soft px-5 py-4 text-primary placeholder-text-muted",
-            "focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:border-primary/50 focus:ring-primary/30 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)] focus:outline-none",
-          )}
+          className="w-full rounded-full bg-surface-panel/80 p-4"
         />
       </div>
 
@@ -233,40 +232,18 @@ export default function RolesPage() {
         data-testid="roles-grid"
       >
         {filteredRoles.map((role) => (
-          <RoleCard
-            key={role.id}
-            role={{
-              id: role.id,
-              name: role.title,
-              description: role.description,
-              tags: role.tags,
-              systemPrompt: "",
-              allowedModels: Array(role.modelsCount).fill(""),
-              usage: {
-                count: role.usageCount,
-                lastAccess: null,
-              },
-              metadata: {
-                isBuiltIn: role.isDefault || false,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                version: "1.0.0",
-              },
-              styleHints: {
-                typographyScale: 1,
-                borderRadius: 8,
-                accentColor: "var(--color-primary-500)",
-              },
-              isFavorite: false,
-              lastUsed: null,
-              performance: {
-                priority: "medium" as const,
-              },
-            }}
-            isActive={role.isActive}
-            onActivate={() => handleActivateRole(role.id)}
-            onDeactivate={() => handleActivateRole(role.id)}
-          />
+          <GlassCard key={role.id}>
+            <RoleCard
+              role={{
+                id: role.id,
+                name: role.title,
+                description: role.description,
+              }}
+              isActive={role.isActive}
+              onActivate={() => handleActivateRole(role.id)}
+              onDeactivate={() => handleActivateRole(role.id)}
+            />
+          </GlassCard>
         ))}
       </div>
 
@@ -292,9 +269,6 @@ export default function RolesPage() {
           </Typography>
         </div>
       )}
-
-      {/* Menu Drawer */}
-      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
-    </RolesPageShell>
+    </>
   );
 }

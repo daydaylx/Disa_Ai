@@ -1,8 +1,22 @@
 import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-import { Badge, Button, GlassPanel, Input, Label, Switch, Typography, useToasts } from "@/ui";
+import {
+  AppHeader,
+  Badge,
+  Button,
+  GlassCard,
+  Input,
+  Label,
+  PrimaryButton,
+  QuickStartCard,
+  SectionHeader,
+  Switch,
+  Typography,
+  useToasts,
+} from "@/ui";
 
+import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import {
@@ -19,6 +33,7 @@ import {
   Eye,
   EyeOff,
   KeyRound,
+  Palette,
   RefreshCw,
   Shield,
   Sparkles,
@@ -26,17 +41,7 @@ import {
 } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
 
-export type SettingsSectionKey = "api" | "memory" | "filters" | "appearance" | "data";
-
-interface SettingsSectionConfig {
-  id: SettingsSectionKey;
-  title: string;
-  description: string;
-  icon: ComponentType<{ className?: string }>;
-  content: ReactNode;
-}
-
-export function SettingsView({ section }: { section?: SettingsSectionKey }) {
+export function SettingsView() {
   const toasts = useToasts();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { settings, toggleNSFWContent, toggleAnalytics, toggleNotifications } = useSettings();
@@ -57,12 +62,22 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     modelsUsed: [],
     storageSize: 0,
   });
+  const location = useLocation();
 
   useEffect(() => {
     setHasApiKey(hasStoredApiKey());
     // Load stats asynchronously
     getConversationStats().then(setStats).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (!location.hash) return;
+    const targetId = location.hash.replace("#", "");
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [location.hash]);
 
   const refreshStats = async () => {
     try {
@@ -183,344 +198,102 @@ export function SettingsView({ section }: { section?: SettingsSectionKey }) {
     }
   };
 
-  const sectionConfigs: SettingsSectionConfig[] = [
+  const cards = [
     {
       id: "api",
       title: "API-Key & Verbindung",
-      description: "Optionaler OpenRouter API-Key für persönliche Limits.",
+      description: "OpenRouter-Schlüssel verwalten und Proxy-Status prüfen",
+      to: "/settings/api",
       icon: KeyRound,
-      content: (
-        <div className="space-y-3">
-          <Label htmlFor="openrouter-key">OpenRouter Key</Label>
-          <div className="flex items-center gap-2">
-            <Input
-              id="openrouter-key"
-              type={showKey ? "text" : "password"}
-              value={apiKey}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setApiKey(event.target.value)
-              }
-              placeholder="sk-or-..."
-              className="flex-1"
-            />
-            <Button
-              variant="secondary"
-              size="icon"
-              aria-label={showKey ? "Key verbergen" : "Key anzeigen"}
-              onClick={() => setShowKey((prev) => !prev)}
-            >
-              {showKey ? (
-                <EyeOff className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
-              ) : (
-                <Eye className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
-              )}
-            </Button>
-          </div>
-          <div className="flex flex-wrap gap-2 text-sm">
-            <Button variant="primary" size="sm" onClick={handleSaveKey}>
-              Speichern
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setApiKey("");
-                handleSaveKey();
-              }}
-            >
-              Entfernen
-            </Button>
-          </div>
-          <Typography variant="caption" className="text-[var(--color-text-secondary)]">
-            Schlüssel wird nur im aktuellen Browser-Tab gespeichert. Bei leerem Feld nutzt Disa den
-            öffentlichen Proxy.
-          </Typography>
-        </div>
-      ),
     },
     {
       id: "memory",
       title: "Verlauf & Gedächtnis",
-      description: "Steuere lokale Speicherung und Gedächtnisfunktionen.",
+      description: "Lokales Gedächtnis und Datenschutzoptionen steuern",
+      to: "/settings/memory",
       icon: BookOpenCheck,
-      content: (
-        <div className="space-y-4">
-          <ToggleRow
-            id="memory-toggle"
-            label="Globales Gedächtnis"
-            description={
-              memoryEnabled
-                ? "Antworten berücksichtigen letzte Kontexte."
-                : "Deaktiviert – Antworten sind stateless."
-            }
-            checked={memoryEnabled}
-            onChange={() => toggleMemory()}
-          />
-          <ToggleRow
-            id="analytics-toggle"
-            label="Anonyme Nutzungsdaten"
-            description="Hilft, UI-Fehler früh zu erkennen."
-            checked={settings.enableAnalytics}
-            onChange={() => toggleAnalytics()}
-          />
-          <ToggleRow
-            id="notifications-toggle"
-            label="Benachrichtigungen"
-            description="Push Hinweise bei langen Läufen."
-            checked={settings.enableNotifications}
-            onChange={() => toggleNotifications()}
-          />
-          <div className="grid gap-2 sm:grid-cols-2">
-            <Button variant="primary" className="justify-between" onClick={handleCleanup}>
-              Verlauf komprimieren
-              <RefreshCw className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
-            </Button>
-            <Button
-              variant="ghost"
-              className="justify-between text-[var(--color-status-danger-fg)]"
-              onClick={() => {
-                void clearAllMemory();
-                void refreshStats();
-                toasts.push({
-                  kind: "success",
-                  title: "Gedächtnis geleert",
-                  message: "Alle gespeicherten Personas entfernt.",
-                });
-              }}
-            >
-              Gedächtnis leeren
-              <Sparkles className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
-            </Button>
-          </div>
-          <GlassPanel>
-            <Typography variant="caption" className="text-text-muted">
-              {stats.totalConversations} gespeicherte Verläufe · {stats.totalMessages} Nachrichten ·{" "}
-              {stats.modelsUsed.length} Modelle
-            </Typography>
-          </GlassPanel>
-        </div>
-      ),
     },
     {
       id: "filters",
       title: "Inhalte & Filter",
-      description: "Steuere NSFW-Filter und Sicherheitsoptionen.",
+      description: "Sicherheitsfilter und Jugendschutz anpassen",
+      to: "/settings/filters",
       icon: Shield,
-      content: (
-        <ToggleRow
-          id="nsfw-toggle"
-          label="NSFW Inhalte zulassen"
-          description="Nur aktivieren, wenn du explizite Antworten erwartest."
-          checked={settings.showNSFWContent}
-          onChange={() => toggleNSFWContent()}
-        />
-      ),
     },
     {
       id: "appearance",
       title: "Darstellung",
-      description: "Das dunkle Design ist dauerhaft aktiv.",
-      icon: Sparkles,
-      content: (
-        <div className="space-y-3">
-          <div className="space-y-2">
-            <Label>Farbschema</Label>
-            <Typography variant="caption" className="text-[var(--color-text-secondary)]">
-              Der Dunkelmodus ist standardmäßig aktiv und kann nicht deaktiviert werden. Alle
-              Oberflächen, Tokens und Kontraste sind auf die dunkle Darstellung optimiert.
-            </Typography>
-          </div>
-          <GlassPanel className="space-y-3">
-            <div className="flex items-center justify-between gap-3">
-              <div className="space-y-1">
-                <Typography
-                  variant="caption"
-                  className="font-semibold uppercase tracking-[0.3em] text-accent"
-                  style={{ fontSize: "10px" }}
-                >
-                  Designsystem
-                </Typography>
-                <Typography variant="body" className="font-semibold text-text-primary">
-                  Fluent-2 Soft-Depth · Dark
-                </Typography>
-                <Typography variant="caption" className="text-text-secondary">
-                  Sanfte Layer, klare Typografie und performante Schatten – optimiert für geringe
-                  Umgebungshelligkeit und OLED/AMOLED-Displays.
-                </Typography>
-              </div>
-              <div className="hidden h-14 w-24 rounded-lg border border-line bg-gradient-to-br from-surface-base to-surface-card sm:block" />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Typography variant="caption" className="text-text-secondary">
-                Lesbarkeit 5.6 : 1
-              </Typography>
-              <Typography variant="caption" className="text-text-secondary">
-                Blur-frei
-              </Typography>
-              <Typography variant="caption" className="text-text-secondary">
-                OLED-optimiert
-              </Typography>
-            </div>
-            <Typography variant="caption" className="text-text-secondary">
-              Farb- und Tiefeneffekte respektieren automatisch deine Geräteeinstellungen wie
-              <code className="mx-1 rounded bg-surface-muted px-1 text-[10px]">
-                prefers-reduced-motion
-              </code>
-              oder Kontrastverbesserungen.
-            </Typography>
-          </GlassPanel>
-        </div>
-      ),
+      description: "Dunkles Design und Interface-Optionen",
+      to: "/settings/appearance",
+      icon: Palette,
     },
     {
       id: "data",
       title: "Import & Export",
-      description: "Verwalte Konversationen lokal.",
+      description: "Konversationen sichern und verwalten",
+      to: "/settings/data",
       icon: Upload,
-      content: (
-        <>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Button variant="primary" className="justify-between" onClick={handleExport}>
-              Export als JSON
-              <Download className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" />
-            </Button>
-            <Button variant="secondary" className="justify-between" onClick={handleImportClick}>
-              <div className="flex items-center gap-3">
-                <Upload className="h-5 w-5 text-text-secondary shadow-[var(--shadow-glow-soft)]" />
-                <div className="text-left">
-                  <Typography variant="body" className="font-medium text-text-primary">
-                    Einstellungen importieren
-                  </Typography>
-                  <Typography variant="body" className="text-text-secondary">
-                    Vorhandene Einstellungen aus einer Datei laden
-                  </Typography>
-                </div>
-              </div>
-              <ChevronRight className="h-5 w-5 text-text-secondary shadow-[var(--shadow-glow-soft)]" />
-            </Button>
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/json"
-            className="hidden"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) {
-                void handleImport(file);
-                event.target.value = "";
-              }
-            }}
-          />
-          <Typography variant="caption" className="text-[var(--color-text-secondary)]">
-            Daten bleiben ausschließlich lokal. Import ersetzt vorhandene Chats nicht, sondern
-            ergänzt sie.
-          </Typography>
-        </>
-      ),
     },
   ];
 
-  const sectionsToRender = section
-    ? sectionConfigs.filter((config) => config.id === section)
-    : sectionConfigs;
-  const sectionStatuses: Record<
-    SettingsSectionKey,
-    { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
-  > = {
-    api: {
-      label: hasApiKey ? "Key aktiv" : "Nicht gesetzt",
-      variant: hasApiKey ? "secondary" : "destructive",
-    },
-    memory: {
-      label: memoryEnabled ? "Gedächtnis aktiv" : "Neutral",
-      variant: memoryEnabled ? "secondary" : "default",
-    },
-    filters: {
-      label: settings.showNSFWContent ? "Explizit" : "Gefiltert",
-      variant: settings.showNSFWContent ? "destructive" : "secondary",
-    },
-    appearance: {
-      label: "Dunkles Theme",
-      variant: "secondary",
-    },
-    data: {
-      label:
-        stats.totalConversations > 0
-          ? `${stats.totalConversations} Verläufe`
-          : "Keine lokalen Daten",
-      variant: stats.totalConversations > 0 ? "default" : "outline",
-    },
-  };
-  const headerTitle = section ? (sectionsToRender[0]?.title ?? "Einstellungen") : "Einstellungen";
-
   return (
-    <div className="flex min-h-dvh flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 border-b border-[var(--glass-border-soft)] bg-[color-mix(in_srgb,var(--bg0)_92%,transparent)]/95 backdrop-blur-xl">
-        <div className="flex items-center gap-4 px-4 py-3">
-          {section ? (
-            <Button variant="ghost" size="sm" className="px-0 text-sm">
-              <Link to="/settings" className="inline-flex items-center gap-1 text-text-secondary">
-                ← Übersicht
-              </Link>
-            </Button>
-          ) : null}
-          <Typography variant="h5" as="h1" className="text-text-primary">
-            {headerTitle}
-          </Typography>
+    <div className="relative flex flex-col text-text-primary h-full">
+      <AppHeader pageTitle="Einstellungen" />
+
+      <div className="space-y-4 sm:space-y-6 px-[var(--spacing-4)] py-3 sm:py-[var(--spacing-6)]">
+        <QuickStartCard
+          primaryAction={{
+            label: "API-Key speichern",
+            to: "/settings/api"
+          }}
+          secondaryAction={{
+            label: "Gedächtnis konfigurieren",
+            to: "/settings/memory"
+          }}
+        />
+
+        <div className="space-y-4">
+          <SectionHeader
+            variant="compact"
+            title="Einstellungen"
+            subtitle="Verwalte deine Daten, APIs und Darstellung"
+          />
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {cards.map((cardData) => {
+              const Icon = cardData.icon;
+              return (
+                <GlassCard
+                  key={cardData.id}
+                  className="group cursor-pointer transition-transform hover:scale-105"
+                >
+                  <Link
+                    to={cardData.to}
+                    className="block p-4 focus:outline-none focus:ring-2 focus:ring-pink-500 rounded-2xl"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_8px_24px_rgba(97,231,255,0.2)]">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <h3 className="text-base font-semibold text-text-primary group-hover:text-pink-300 transition-colors">
+                          {cardData.title}
+                        </h3>
+                        <p className="text-xs text-text-secondary leading-relaxed">
+                          {cardData.description}
+                        </p>
+                        <span className="text-xs font-medium text-accent">
+                          Details anzeigen →
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </GlassCard>
+              );
+            })}
+          </div>
         </div>
-      </header>
-
-      <div className="space-y-6 px-4 py-4 pb-10">
-        {sectionsToRender.map((config) => {
-          return (
-            <GlassPanel key={config.id}>
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <Typography variant="h6" className="text-text-primary">
-                    {config.title}
-                  </Typography>
-                  <Typography variant="body" className="text-text-muted">
-                    {config.description}
-                  </Typography>
-                </div>
-                <Badge variant={sectionStatuses[config.id].variant}>
-                  {sectionStatuses[config.id].label}
-                </Badge>
-              </div>
-              <div className="mt-4 space-y-4">{config.content}</div>
-            </GlassPanel>
-          );
-        })}
       </div>
-    </div>
-  );
-}
-
-function ToggleRow({
-  id,
-  label,
-  description,
-  checked,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  description: string;
-  checked: boolean;
-  onChange: React.ChangeEventHandler<HTMLButtonElement>;
-}) {
-  return (
-    <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-soft)] flex items-start justify-between gap-6 px-6 py-4 rounded-3xl hover:shadow-[var(--shadow-glow-primary)] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]">
-      <div className="flex-1">
-        <Typography variant="h6" className="text-primary">
-          {label}
-        </Typography>
-        <Typography variant="body" className="text-text-secondary">
-          {description}
-        </Typography>
-      </div>
-      <Switch id={id} checked={checked} onChange={onChange} aria-label={label} />
     </div>
   );
 }

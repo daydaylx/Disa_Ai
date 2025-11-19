@@ -1,10 +1,10 @@
-import { Zap } from "lucide-react";
+import { Star } from "lucide-react";
 import React from "react";
 
 import { cn } from "@/lib/utils";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
-import { Card } from "@/ui/Card";
+import { GlassCard } from "@/ui/GlassCard";
 import { MetricRow } from "@/ui/MetricRow";
 import { Typography } from "@/ui/Typography";
 
@@ -40,73 +40,93 @@ const ModelCardComponent = React.memo(
     onCardClick,
   }: ModelCardProps) => {
     return (
-      <Card
-        className={cn(
-          "rounded-[var(--radius-2xl)] group",
-          // Aurora Premium Glass with Green-to-Lila Transition
-          "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)]",
-          "border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-green)]",
-          "hover:shadow-[var(--shadow-glow-lila)] hover:border-[var(--glass-border-aurora)]",
-          "hover:-translate-y-1 transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-          className,
-        )}
+      <GlassCard
+        className={cn("cursor-pointer group transition-transform hover:scale-105", className)}
         onClick={onCardClick}
       >
-        {/* Oben: Name + Provider + Favorite-Icon */}
-        <div className="flex items-center justify-between">
-          <div className="flex-1 min-w-0">
-            <Typography variant="body" className="text-[var(--text-primary)] font-medium truncate">
-              {name}
-            </Typography>
-            <Typography variant="body-xs" className="text-[var(--text-secondary)] mt-0.5">
-              {vendor}
-            </Typography>
+        <div className="space-y-2.5">
+          {/* Row 1: Name + Badges */}
+          <div className="flex items-start justify-between">
+            <div className="flex-1 min-w-0 mr-2">
+              <h3 className="text-sm font-semibold text-text-primary truncate">{name}</h3>
+            </div>
+            <div className="flex items-center gap-1 flex-shrink-0">
+              {isFavorite && (
+                <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-600 px-1 py-0.5 text-xs">
+                  ⭐
+                </Badge>
+              )}
+              <Badge
+                variant="secondary"
+                className={cn(
+                  "px-1 py-0.5 text-xs font-medium",
+                  isFree
+                    ? "bg-green-500/20 text-green-600"
+                    : "bg-blue-500/20 text-blue-600"
+                )}
+              >
+                {isFree ? "FREE" : price}
+              </Badge>
+            </div>
           </div>
 
-          {onToggleFavorite && (
-            <Button
-              onClick={onToggleFavorite}
-              className={cn(
-                // Aurora Glass Button
-                "p-[var(--space-xs)] rounded-[var(--radius-md)]",
-                "bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)]",
-                "border border-[var(--glass-border-subtle)]",
-                "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-                "hover:bg-[var(--glass-surface-medium)] hover:scale-105 active:scale-95",
-                "min-h-[var(--touch-target-compact)] min-w-[var(--touch-target-compact)]",
-                "select-none touch-manipulation",
-                isFavorite
-                  ? "text-[var(--aurora-orange-500)] hover:text-[var(--aurora-orange-400)] shadow-[var(--shadow-glow-orange)]"
-                  : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]",
-              )}
-              aria-label={isFavorite ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
-            >
-              ★
-            </Button>
-          )}
-        </div>
+          {/* Row 2: Provider */}
+          <p className="text-xs text-text-secondary font-medium uppercase tracking-wide">
+            {vendor}
+          </p>
 
-        {/* Mitte: 3x MetricRow */}
-        <div className="space-y-2">
-          <MetricRow label="Speed" value={speed} score={speed} color="green" />
-          <MetricRow label="Quality" value={quality} score={quality} color="green" />
-          <MetricRow label="Value" value={value} score={value} color="yellow" />
-        </div>
+          {/* Row 3: Horizontal bars - kompakter */}
+          <div className="space-y-1.5">
+            {[
+              { label: 'Speed', val: speed, color: 'bg-green-500' },
+              { label: 'Quality', val: quality, color: 'bg-blue-500' },
+              { label: 'Value', val: value, color: 'bg-orange-500' }
+            ].map(({label, val, color}) => (
+              <div key={label} className="flex items-center gap-2">
+                <span className="text-xs font-medium text-text-secondary w-11 flex-shrink-0">
+                  {label}
+                </span>
+                <div className="flex-1 h-1 bg-surface-panel/50 rounded-full overflow-hidden">
+                  <div
+                    className={cn(
+                      "h-full rounded-full transition-all duration-300",
+                      color
+                    )}
+                    style={{width: `${val}%`}}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-text-primary w-6 text-right flex-shrink-0">
+                  {val}
+                </span>
+              </div>
+            ))}
+          </div>
 
-        {/* Unten: Chips */}
-        <div className="flex flex-wrap gap-2">
-          {isFree ? (
-            <Badge variant="secondary">
-              <Zap className="w-3 h-3 mr-1" />
-              FREE
+          {/* Row 4: Chips & Favorite Action */}
+          <div className="flex items-center justify-between pt-1">
+            <Badge variant="outline" className="text-xs px-1.5 py-0.5 border-[var(--glass-border-soft)]">
+              {contextLength}
             </Badge>
-          ) : (
-            <Badge variant="secondary">{price}</Badge>
-          )}
-          <Badge variant="secondary">{contextLength}</Badge>
-          <Badge variant="secondary">Context</Badge>
+
+            {onToggleFavorite && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite();
+                }}
+                className="p-0.5 rounded text-text-secondary hover:text-yellow-500 transition-colors"
+              >
+                <Star
+                  className={cn(
+                    "h-3.5 w-3.5",
+                    isFavorite && "fill-yellow-500 text-yellow-500"
+                  )}
+                />
+              </button>
+            )}
+          </div>
         </div>
-      </Card>
+      </GlassCard>
     );
   },
 );

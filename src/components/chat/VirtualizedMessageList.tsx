@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Card } from "@/ui/Card";
+import { GlassCard } from "@/ui";
 
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
@@ -130,7 +130,7 @@ export function VirtualizedMessageList({
 
       {isLoading && (
         <div className="flex items-start gap-4 px-4 py-6">
-          <Card className="border-border text-text-secondary flex h-9 w-9 items-center justify-center rounded-full border">
+          <GlassCard className="border-border text-text-secondary flex h-9 w-9 items-center justify-center rounded-full border">
             <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
               <path
                 d="M12 3a9 9 0 019 9"
@@ -149,8 +149,8 @@ export function VirtualizedMessageList({
                 className="opacity-20"
               />
             </svg>
-          </Card>
-          <Card className="border-border text-text-secondary flex-1 rounded-lg border p-4 text-sm">
+          </GlassCard>
+          <GlassCard className="border-border text-text-secondary flex-1 rounded-lg border p-4 text-sm">
             <div className="text-text-secondary flex items-center gap-2 text-xs uppercase tracking-wider">
               <span>Assistent</span>
               <span className="bg-text-1 inline-flex h-1.5 w-1.5 animate-pulse rounded-full" />
@@ -167,7 +167,7 @@ export function VirtualizedMessageList({
                 style={{ animationDelay: "0.3s" }}
               />
             </div>
-          </Card>
+          </GlassCard>
         </div>
       )}
 

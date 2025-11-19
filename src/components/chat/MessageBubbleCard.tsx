@@ -1,3 +1,5 @@
+import { GlassCard } from "@/ui";
+
 import { cn } from "../../lib/utils";
 
 interface MessageBubbleCardProps {
@@ -27,9 +29,9 @@ export function MessageBubbleCard({
       : timeFormatter.format(new Date(timestamp));
 
   return (
-    <div
+    <GlassCard
       className={cn(
-        "rounded-2xl border px-4 py-3 text-left shadow-sm",
+        "px-4 py-3 text-left",
         isUser
           ? "border-[var(--glass-border-medium)] bg-[var(--glass-surface-strong)] text-[var(--color-text-primary)]"
           : "border-[var(--glass-border-soft)] bg-[var(--glass-surface-subtle)] text-[var(--text-primary)]",
@@ -46,6 +48,6 @@ export function MessageBubbleCard({
         <span className="text-[var(--text-muted)]">{formattedTime}</span>
       </div>
       <p className="whitespace-pre-wrap text-sm leading-relaxed">{body}</p>
-    </div>
+    </GlassCard>
   );
 }

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { Button, Card, RoleCard } from "@/ui";
+import { GlassCard, PrimaryButton, RoleCard, SectionHeader } from "@/ui";
 
 import { useRoles } from "../hooks/useRoles";
 import { Brain, MessageSquare, Settings, Users } from "../lib/icons";
@@ -14,23 +14,20 @@ export default function StudioHome() {
     <div className="space-y-6 py-4 safe-area-vertical">
       {/* Hero Section with dominant primary action */}
       <div className="text-center space-y-6 max-w-2xl mx-auto">
-        <div className="space-y-4">
-          <h1 className="text-2xl font-semibold text-text-primary">Disa AI</h1>
-          <p className="text-sm text-text-secondary">
-            Dein ruhiges KI-Studio für klare, produktive Konversationen
-          </p>
-        </div>
+        <SectionHeader
+          title="Dein ruhiges KI-Studio"
+          subtitle="für klare, produktive Konversationen"
+        />
 
         <div className="pt-4">
-          <Button
-            variant="primary"
+          <PrimaryButton
             size="lg"
-            className="w-full max-w-xs mx-auto text-base font-semibold h-14"
+            className="w-full max-w-xs mx-auto"
             onClick={() => navigate("/chat")}
           >
             <MessageSquare className="mr-2 h-5 w-5" />
-            Chat starten
-          </Button>
+            Neuer Chat
+          </PrimaryButton>
         </div>
       </div>
 
@@ -40,14 +37,16 @@ export default function StudioHome() {
         <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2">
           {roles.slice(0, 6).map((role: EnhancedRole) => (
             <div key={role.id} className="min-w-[280px] flex-shrink-0">
-              <RoleCard
-                role={role}
-                isActive={activeRole?.id === role.id}
-                onActivate={() => {
+              <GlassCard
+                onClick={() => {
                   activateRole(role.id);
                   setTimeout(() => navigate("/chat"), 100); // Delay to allow state update
                 }}
-              />
+                className="cursor-pointer"
+              >
+                <h3 className="font-semibold text-text-primary">{role.name}</h3>
+                <p className="text-sm text-text-secondary">{role.description}</p>
+              </GlassCard>
             </div>
           ))}
         </div>
@@ -57,7 +56,7 @@ export default function StudioHome() {
       <div className="pt-6">
         <h2 className="text-lg font-medium text-text-primary mb-4">Studio-Funktionen</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Card
+          <GlassCard
             onClick={() => navigate("/models")}
             className="flex items-center gap-4 p-4 cursor-pointer"
           >
@@ -68,9 +67,9 @@ export default function StudioHome() {
                 Vergleiche Kosten, Kontext und Fähigkeiten
               </p>
             </div>
-          </Card>
+          </GlassCard>
 
-          <Card
+          <GlassCard
             onClick={() => navigate("/roles")}
             className="flex items-center gap-4 p-4 cursor-pointer"
           >
@@ -81,9 +80,9 @@ export default function StudioHome() {
                 Nutze kuratierte Profile für verschiedene Aufgaben
               </p>
             </div>
-          </Card>
+          </GlassCard>
 
-          <Card
+          <GlassCard
             onClick={() => navigate("/settings")}
             className="flex items-center gap-4 p-4 cursor-pointer"
           >
@@ -94,7 +93,7 @@ export default function StudioHome() {
                 Verwalte API-Keys, Speicher und deine Daten
               </p>
             </div>
-          </Card>
+          </GlassCard>
         </div>
       </div>
     </div>

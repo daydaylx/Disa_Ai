@@ -1,23 +1,13 @@
-import { Card } from "@/ui/Card";
-
-import {
-  AppMenuDrawer,
-  defaultMenuSections,
-  MenuIcon,
-  useMenuDrawer,
-} from "../components/layout/AppMenuDrawer";
-import { LegalPageShell } from "../components/layout/PageShell";
+import { GlassCard, SectionHeader } from "@/ui";
 
 export default function DatenschutzPage() {
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
-
   return (
-    <LegalPageShell
-      title="Datenschutzerklärung"
-      subtitle="Informationen über die Verarbeitung personenbezogener Daten"
-      actions={<MenuIcon onClick={openMenu} />}
-    >
-      <Card className="max-w-2xl mx-auto p-6 space-y-8">
+    <>
+      <SectionHeader
+        title="Datenschutzerklärung"
+        subtitle="Informationen über die Verarbeitung personenbezogener Daten"
+      />
+      <GlassCard className="max-w-2xl mx-auto p-6 space-y-8">
         {/* Intro Notice */}
         <div className="rounded-lg border border-[var(--color-primary-200)] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
           <p className="font-medium">
@@ -235,10 +225,7 @@ export default function DatenschutzPage() {
             abrufbar.
           </p>
         </section>
-      </Card>
-
-      {/* Menu Drawer */}
-      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
-    </LegalPageShell>
+      </GlassCard>
+    </>
   );
 }

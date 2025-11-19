@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/ui/Avatar";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
+import { GlassCard } from "@/ui/GlassCard";
 
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
@@ -142,7 +143,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           </div>
         )}
 
-        <div className={cn("border-border bg-card rounded-lg border", bubbleClass, "p-4")}>
+        <GlassCard className={cn(bubbleClass, "p-4")}>
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
@@ -156,7 +157,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
               </div>
             ))}
           </div>
-        </div>
+        </GlassCard>
 
         {!isSystem && showActions && (
           <div

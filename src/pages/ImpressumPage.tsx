@@ -1,23 +1,10 @@
-import { Card } from "@/ui/Card";
-
-import {
-  AppMenuDrawer,
-  defaultMenuSections,
-  MenuIcon,
-  useMenuDrawer,
-} from "../components/layout/AppMenuDrawer";
-import { LegalPageShell } from "../components/layout/PageShell";
+import { GlassCard, SectionHeader } from "@/ui";
 
 export default function ImpressumPage() {
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
-
   return (
-    <LegalPageShell
-      title="Impressum"
-      subtitle="Verantwortlich für den Inhalt"
-      actions={<MenuIcon onClick={openMenu} />}
-    >
-      <Card className="max-w-2xl mx-auto p-6 space-y-6">
+    <>
+      <SectionHeader title="Impressum" subtitle="Verantwortlich für den Inhalt" />
+      <GlassCard className="max-w-2xl mx-auto p-6 space-y-6">
         {/* Intro Notice */}
         <div className="rounded-lg border border-[var(--color-success-200)] bg-[var(--color-success-50)] p-4 text-[var(--color-success-700)]">
           <p className="font-medium">
@@ -48,10 +35,7 @@ export default function ImpressumPage() {
             </p>
           </div>
         </section>
-      </Card>
-
-      {/* Menu Drawer */}
-      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
-    </LegalPageShell>
+      </GlassCard>
+    </>
   );
 }

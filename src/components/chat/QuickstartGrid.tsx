@@ -1,7 +1,7 @@
 import { Brain, Code2, Link2, PenSquare } from "lucide-react";
 
 import { Button } from "@/ui/Button";
-import { Card, CardTitle } from "@/ui/Card";
+import { GlassCard } from "@/ui/GlassCard";
 
 const QUICKSTARTS = [
   {
@@ -59,24 +59,24 @@ export function QuickstartGrid({
         </section>
       )}
 
-      <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+      <section className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {QUICKSTARTS.map((quickstart) => {
           const Icon = quickstart.icon;
           return (
-            <Card
+            <GlassCard
               key={quickstart.id}
-              className="flex flex-col gap-3 cursor-pointer transition-transform hover:scale-105"
+              className="flex flex-col gap-2.5 cursor-pointer transition-transform hover:scale-105 p-4"
               onClick={() => onStart(quickstart.system, quickstart.user)}
             >
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_12px_35px_rgba(97,231,255,0.25)]">
-                  <Icon className="h-5 w-5" />
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_8px_24px_rgba(97,231,255,0.2)]">
+                  <Icon className="h-4 w-4" />
                 </span>
-                <CardTitle className="text-lg font-semibold">{quickstart.title}</CardTitle>
+                <h3 className="text-base font-semibold">{quickstart.title}</h3>
               </div>
-              <p className="text-sm text-text-secondary flex-1">{quickstart.description}</p>
-              <span className="text-xs font-semibold text-text-muted">Tippen zum Starten</span>
-            </Card>
+              <p className="text-xs text-text-secondary flex-1 leading-relaxed">{quickstart.description}</p>
+              <span className="text-xs font-medium text-accent">Tippen zum Starten →</span>
+            </GlassCard>
           );
         })}
       </section>

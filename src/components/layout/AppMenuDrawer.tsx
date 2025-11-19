@@ -1,31 +1,24 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import { Button } from "@/ui/Button";
+import { GlassCard } from "@/ui/GlassCard";
 import { Typography } from "@/ui/Typography";
 
+import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
+import { X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
-interface MenuItem {
-  label: string;
-  href?: string;
-  onClick?: () => void;
-  badge?: string | number;
-  isActive?: boolean;
-}
-
-interface MenuSection {
-  title?: string;
-  items: MenuItem[];
-}
 
 interface AppMenuDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  sections: MenuSection[];
   className?: string;
 }
 
-export function AppMenuDrawer({ isOpen, onClose, sections, className }: AppMenuDrawerProps) {
+export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps) {
+  const location = useLocation();
+
   if (!isOpen) return null;
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -34,128 +27,165 @@ export function AppMenuDrawer({ isOpen, onClose, sections, className }: AppMenuD
     }
   };
 
-  const handleItemClick = (item: MenuItem) => {
-    item.onClick?.();
-    if (item.href) {
-      // Navigation würde hier stattfinden
-      onClose();
-    }
-  };
+  // Sekundäre Seiten
+  const secondaryPages = [
+    { label: "Impressum", href: "/impressum" },
+    { label: "Datenschutz", href: "/datenschutz" },
+  ];
 
   return (
     <div
-      className="fixed inset-0 z-[var(--z-modal)] bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md"
       onClick={handleBackdropClick}
     >
-      {/* Rechte Panel */}
+      {/* Vollflächiges Overlay */}
       <div
         className={cn(
-          "fixed right-0 top-0 bottom-0 w-[80%] max-w-sm transform-gpu",
-          "bg-gradient-to-b from-surface-card via-surface-soft to-surface aurora-bg backdrop-blur-[var(--backdrop-blur-strong)]",
-          "rounded-l-[3rem] p-6 space-y-4 overflow-y-auto shadow-glow-lila shadow-floating",
-          "border-l border-glass-strong transition-all duration-500 ease-[var(--motion-ease-elastic)]",
+          "fixed inset-0 flex items-center justify-center p-4 sm:p-6",
+          "transition-all duration-300 ease-out",
           className,
         )}
-        style={{ transform: isOpen ? "translateX(0) scale(1)" : "translateX(100%) scale(0.95)" }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between pt-2 pb-4">
-          <Typography variant="body-lg" className="text-[var(--text-primary)] font-semibold">
-            Disa AI
-          </Typography>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-            aria-label="Menü schließen"
-          >
-            ×
-          </Button>
-        </div>
+        <GlassCard
+          variant="primary"
+          className="w-full max-w-md max-h-[85vh] overflow-y-auto relative transform scale-100 transition-all duration-300"
+        >
+          {/* Header with Close Button */}
+          <div className="flex items-center justify-between mb-6">
+            <Typography variant="body-lg" className="text-text-primary font-semibold">
+              Disa AI
+            </Typography>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-panel/50 transition-colors"
+              aria-label="Menü schließen"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
 
-        {/* Menu Sections */}
-        <div className="space-y-6">
-          {sections.map((section, sectionIndex) => (
-            <div key={sectionIndex}>
-              {section.title && (
-                <Typography
-                  variant="body-xs"
-                  className="text-[var(--text-muted)] uppercase tracking-[0.16em] mb-3 px-3"
-                >
-                  {section.title}
-                </Typography>
-              )}
+          {/* Navigation Section */}
+          <div className="space-y-6">
+            <div>
+              <Typography
+                variant="body-xs"
+                className="text-text-secondary uppercase tracking-[0.2em] mb-3 font-semibold"
+              >
+                Navigation
+              </Typography>
 
-              <div className="space-y-1">
-                {section.items.map((item, itemIndex) => (
-                  <button
-                    key={itemIndex}
-                    onClick={() => handleItemClick(item)}
-                    className={cn(
-                      "w-full h-12 rounded-2xl px-4 flex items-center justify-between bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] group transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)] text-left",
-                      "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-[1.02] focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:scale-[1.02] focus:outline-none",
-                      item.isActive
-                        ? "bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-primary-500)] shadow-[var(--shadow-glow-primary)] text-primary animate-pulse scale-[1.02] bg-primary/10"
-                        : "text-text-primary hover:text-primary",
-                    )}
-                  >
-                    <span className="font-medium">{item.label}</span>
-                    {item.badge && (
-                      <span
+              <div className="space-y-2">
+                {PRIMARY_NAV_ITEMS.map((item) => {
+                  const isActive = isNavItemActive(item, location.pathname);
+                  const Icon = item.Icon;
+
+                  return (
+                    <Link
+                      key={item.id}
+                      to={item.path}
+                      onClick={onClose}
+                      className="block"
+                    >
+                      <GlassCard
                         className={cn(
-                          "px-2 py-0.5 rounded-full text-xs font-medium",
-                          item.isActive
-                            ? "bg-[var(--color-primary-500)]/20 text-[var(--color-primary-500)]"
-                            : "bg-[var(--color-neutral-600)] text-[var(--text-muted)]",
+                          "p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]",
+                          isActive
+                            ? "border-[var(--accent)] bg-[var(--accent-soft)]/30 shadow-lg shadow-[var(--accent)]/10"
+                            : "hover:bg-surface-panel/50 border-transparent"
                         )}
                       >
-                        {item.badge}
-                      </span>
-                    )}
-                  </button>
-                ))}
+                        <div className="flex items-center gap-3">
+                          <div className={cn(
+                            "flex items-center justify-center w-8 h-8 rounded-lg",
+                            isActive ? "bg-[var(--accent)]/20" : "bg-surface-panel/50"
+                          )}>
+                            <Icon
+                              className={cn(
+                                "h-4 w-4",
+                                isActive ? "text-[var(--accent)]" : "text-text-secondary"
+                              )}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <Typography
+                              variant="body-sm"
+                              className={cn(
+                                "font-medium mb-0.5",
+                                isActive ? "text-[var(--accent)]" : "text-text-primary"
+                              )}
+                            >
+                              {item.label}
+                            </Typography>
+                            <Typography variant="body-xs" className="text-text-secondary">
+                              {item.description}
+                            </Typography>
+                          </div>
+                        </div>
+                      </GlassCard>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Footer */}
-        <div className="mt-8 pt-4 border-t border-[var(--glass-border-soft)]">
-          <Typography variant="body-xs" className="text-[var(--text-muted)] text-center">
-            © 2025 Disa AI · Mobile Studio Preview
-          </Typography>
-        </div>
+            {/* Sekundäre Seiten */}
+            <div>
+              <Typography
+                variant="body-xs"
+                className="text-text-secondary uppercase tracking-[0.2em] mb-3 font-semibold"
+              >
+                Sekundäre Seiten
+              </Typography>
+
+              <div className="space-y-2">
+                {secondaryPages.map((page) => {
+                  const isActive = location.pathname === page.href;
+
+                  return (
+                    <Link
+                      key={page.href}
+                      to={page.href}
+                      onClick={onClose}
+                      className="block"
+                    >
+                      <GlassCard
+                        className={cn(
+                          "p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]",
+                          isActive
+                            ? "border-[var(--accent)] bg-[var(--accent-soft)]/30 shadow-lg shadow-[var(--accent)]/10"
+                            : "hover:bg-surface-panel/50 border-transparent"
+                        )}
+                      >
+                        <Typography
+                          variant="body-sm"
+                          className={cn(
+                            "font-medium",
+                            isActive ? "text-[var(--accent)]" : "text-text-primary"
+                          )}
+                        >
+                          {page.label}
+                        </Typography>
+                      </GlassCard>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-6 pt-4 border-t border-[var(--glass-border-soft)]">
+            <Typography variant="body-xs" className="text-text-secondary text-center">
+              © 2025 Disa AI
+            </Typography>
+          </div>
+        </GlassCard>
       </div>
     </div>
   );
 }
 
-// Default Menu Items für die Navigation
-export const defaultMenuSections: MenuSection[] = [
-  {
-    title: "Navigation",
-    items: [
-      { label: "Chat", href: "/" },
-      { label: "Rollen", href: "/roles" },
-      { label: "Modelle", href: "/models" },
-      { label: "Einstellungen", href: "/settings" },
-      { label: "API", href: "/api" },
-      { label: "Verlauf", href: "/history" },
-      { label: "Filter", href: "/filters" },
-      { label: "Darstellung", href: "/appearance" },
-      { label: "Daten", href: "/data" },
-    ],
-  },
-  {
-    title: "Sekundäre Seiten",
-    items: [
-      { label: "Impressum", href: "/impressum" },
-      { label: "Datenschutz", href: "/datenschutz" },
-    ],
-  },
-];
 
 // Header Icon Component
 interface MenuIconProps {

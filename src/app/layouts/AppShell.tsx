@@ -2,13 +2,12 @@ import { type ReactNode, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
+import { AppHeader } from "../../ui/AppHeader";
 import {
   AppMenuDrawer,
-  defaultMenuSections,
   MenuIcon,
   useMenuDrawer,
 } from "../../components/layout/AppMenuDrawer";
-import { NavPills } from "../../components/navigation/NavPills";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
@@ -63,24 +62,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        {/* Modern Header with PageShell pattern */}
-        <header className="sticky top-0 z-20 border-b border-[var(--glass-border-soft)] bg-[var(--surface)]/80 backdrop-blur-xl safe-area-top">
-          <div className="max-w-4xl mx-auto px-[var(--spacing-4)] py-[var(--spacing-3)] flex items-center justify-between">
-            <div className="flex flex-col min-w-0">
-              <span className="text-[var(--text-xs)] text-[var(--text-muted)] uppercase tracking-[0.16em]">
-                Disa AI
-              </span>
-              <h1 className="text-[var(--text-2xl)] font-semibold text-[var(--text-primary)]">
-                {pageTitle}
-              </h1>
-            </div>
-            <MenuIcon onClick={openMenu} />
-          </div>
-        </header>
-
-        <div className="border-b border-[var(--glass-border-soft)] bg-surface-base/40 backdrop-blur-xl">
-          <NavPills items={PRIMARY_NAV_ITEMS} pathname={location.pathname} />
-        </div>
+        <AppHeader pageTitle={pageTitle} onClickMenu={openMenu} />
 
         <main
           id="main"
@@ -103,7 +85,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         {location.pathname === "/" && <PWAInstallPrompt />}
         {process.env.NODE_ENV === "development" && <PWADebugInfo />}
 
-        <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} sections={defaultMenuSections} />
+        <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} />
       </div>
     </div>
   );

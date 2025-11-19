@@ -2,7 +2,7 @@ import type { ErrorInfo, ReactNode } from "react";
 import React, { Component } from "react";
 
 import { Button } from "@/ui/Button";
-import { Card } from "@/ui/Card";
+import { GlassCard } from "@/ui/GlassCard";
 
 import { getEnvConfig, getEnvironmentErrors, isEnvironmentValid } from "../config/env";
 import { logger } from "../lib/utils/production-logger";
@@ -123,7 +123,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="bg-[var(--surface-base)] flex min-h-dvh items-center justify-center p-4">
-          <Card className="w-full max-w-2xl">
+          <GlassCard className="w-full max-w-2xl">
             <div className="mb-8 text-center">
               <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-red-400)] mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-[var(--shadow-glow-red)] animate-pulse">
                 <svg
@@ -218,109 +218,11 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
               </details>
             </div>
-          </Card>
+          </GlassCard>
         </div>
       );
     }
 
     return this.props.children;
   }
-}
-
-export function useErrorReporting() {
-  const reportError = (error: Error, context?: string) => {
-    logger.error("🚨 Manual Error Report");
-    logger.error("Error:", error);
-    if (context) logger.error("Context:", context);
-  };
-
-  return { reportError };
-}
-
-export function StartupDiagnostics({ children }: { children: ReactNode }) {
-  const [warnings, setWarnings] = React.useState<string[]>([]);
-  const [showWarnings, setShowWarnings] = React.useState(false);
-
-  React.useEffect(() => {
-    const runDiagnostics = () => {
-      const diagnosticWarnings: string[] = [];
-
-      try {
-        if (!isEnvironmentValid()) {
-          diagnosticWarnings.push(...getEnvironmentErrors());
-        }
-
-        if (!navigator.onLine) {
-          diagnosticWarnings.push("Offline-Modus aktiv");
-        }
-
-        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent,
-        );
-
-        if (!isMobile) {
-          setTimeout(async () => {
-            try {
-              const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 3000);
-
-              const { checkApiHealth } = await import("../api/openrouter");
-              await checkApiHealth({ timeoutMs: 3000, signal: controller.signal });
-
-              clearTimeout(timeoutId);
-            } catch {
-              logger.warn("API connectivity check failed - using existing error handling");
-            }
-          }, 2000);
-        }
-
-        if (diagnosticWarnings.length > 0) {
-          setWarnings(diagnosticWarnings);
-          setShowWarnings(true);
-        }
-      } catch (error) {
-        logger.warn("Startup diagnostics failed:", error);
-      }
-    };
-
-    runDiagnostics();
-  }, []);
-
-  return (
-    <>
-      {showWarnings && warnings.length > 0 && (
-        <div className="border-warn/30 bg-warn/10 fixed left-0 right-0 top-0 z-60 border-b p-4">
-          <div className="mx-auto flex max-w-7xl items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <svg
-                className="text-warn h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 14.5c-.77.833.192 2.5 1.732 2.5z"
-                />
-              </svg>
-              <span className="text-warn text-sm">
-                {warnings.length === 1 ? warnings[0] : `${warnings.length} Konfigurationswarnungen`}
-              </span>
-            </div>
-            <button
-              onClick={() => setShowWarnings(false)}
-              className="text-warn hover:text-warn/80 text-xl font-bold"
-              aria-label="Warning schließen"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
-
-      <div className={showWarnings && warnings.length > 0 ? "pt-12" : ""}>{children}</div>
-    </>
-  );
 }

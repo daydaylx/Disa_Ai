@@ -1,10 +1,5 @@
-import { PageContainer } from "../components/layout/PageContainer";
-import { SettingsOverview } from "../features/settings/SettingsOverview";
+import { SettingsView } from "../features/settings/SettingsView";
 
 export default function SettingsOverviewPage() {
-  return (
-    <PageContainer width="wide" className="flex flex-col gap-6">
-      <SettingsOverview />
-    </PageContainer>
-  );
+  return <SettingsView />;
 }

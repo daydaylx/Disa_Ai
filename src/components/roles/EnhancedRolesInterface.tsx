@@ -1,30 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-
-import { Button, FilterChip, Input, RoleCard, Skeleton, useToasts } from "@/ui";
-
-import { useStudio } from "../../app/state/StudioContext";
-import { useFavorites } from "../../contexts/FavoritesContext";
-import { useFilteredList } from "../../hooks/useFilteredList";
-import { Search, Star, Users } from "../../lib/icons";
-import type { EnhancedRole, FilterState } from "../../types/enhanced-interfaces";
-import { migrateRole } from "../../types/enhanced-interfaces";
-import { roleFilterFn, roleSortFn } from "./roles-filter";
-
-interface EnhancedRolesInterfaceProps {
-  className?: string;
-}
-
-const CATEGORY_ORDER = [
-  "Alltag",
-  "Business & Karriere",
-  "Kreativ & Unterhaltung",
-  "Lernen & Bildung",
-  "Leben & Familie",
-  "Experten & Beratung",
-  "Erwachsene",
-  "Spezial",
-];
-
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
@@ -233,12 +206,20 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             data-testid="role-card-grid"
           >
             {filteredRoles.map((role) => (
-              <RoleCard
+              <GlassCard
                 key={role.id}
-                role={role}
-                isActive={activeRole?.id === role.id}
-                onActivate={() => handleActivateRole(role)}
-              />
+                className="p-4 transition-all duration-200 min-h-[180px]"
+                onClick={() => handleActivateRole(role)}
+              >
+                <h3 className="font-semibold text-text-primary text-base flex-1 min-w-0 pr-2">
+                  <span className="truncate inline-block max-w-full" title={role.name}>
+                    {role.name}
+                  </span>
+                </h3>
+                <p className="text-sm text-text-secondary" title={role.description}>
+                  {role.description}
+                </p>
+              </GlassCard>
             ))}
           </div>
 
