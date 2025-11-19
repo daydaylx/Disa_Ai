@@ -21,7 +21,7 @@ export function AppHeader({ pageTitle, onClickMenu, ...props }: AppHeaderProps) 
         </div>
         <div className="flex items-center gap-2">
           {/* Placeholder for theme and settings buttons */}
-          <MenuIcon onClick={onClickMenu} />
+          {onClickMenu && <MenuIcon onClick={onClickMenu} />}
         </div>
       </div>
     </header>
