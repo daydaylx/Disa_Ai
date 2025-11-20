@@ -217,16 +217,16 @@ Die Anwendung ist hochgradig konfigurierbar, um Flexibilität und einfache Wartu
   - `getPreferRolePolicy()` / `setPreferRolePolicy()`: Steuert, ob die Sicherheits-Policy einer Rolle die Modellauswahl einschränken soll.
   - `getVirtualListEnabled()` / `setVirtualListEnabled()`: Aktiviert/deaktiviert die Virtualisierung der Modell-Liste.
 
-- **Modell-Katalog (`src/config/models.ts`)**
-  Diese Datei enthält die komplexe Logik zum Laden, Filtern und Aufbereiten der verfügbaren KI-Modelle.
-  - `loadModelCatalog()`: Ruft die Rohdaten von der OpenRouter-API ab, filtert sie anhand einer erlaubten Liste (`styles.json`) und reichert sie mit benutzerfreundlichen deutschen Beschreibungen an.
-  - `GERMAN_DESCRIPTIONS`: Ein großes Mapping, das den oft kryptischen API-Beschreibungen verständliche deutsche Erklärungen zuweist.
-  - **Fallback-Logik**: Falls die API nicht erreichbar ist, gibt es mehrere Fallback-Ebenen, bis hin zu einer statischen Notfall-Liste, um die Funktionsfähigkeit der App sicherzustellen.
+  - **Modell-Katalog (`src/config/models.ts`)**
+    Diese Datei lädt den Modellkatalog aus der statischen Quelle `public/models.json` (Single Source of Truth für die UI) und passt ihn für die Oberflächen an.
+    - `loadModelCatalog()`: Holt `models.json` immer relativ zu `import.meta.env.BASE_URL`, um Deployments unter Unterpfaden zu unterstützen, und nutzt `cache: "no-store"`, damit PWA-/SW-Caches keine veralteten Daten ausliefern.
+    - `GERMAN_DESCRIPTIONS`: Ein großes Mapping, das den oft kryptischen API-Beschreibungen verständliche deutsche Erklärungen zuweist.
 
-- **Personas / Rollen (`public/persona.json`)**
-  Eine zentrale JSON-Datei, die die verschiedenen "Persönlichkeiten" definiert, die die KI annehmen kann.
-  - **Struktur**: Jede Persona hat eine `id`, einen `name` und einen `system`-Prompt, der das Verhalten der KI steuert.
-  - **Modell-Einschränkungen**: Optional kann ein `allow`-Array von Modell-IDs angegeben werden, um sicherzustellen, dass eine Persona nur mit geeigneten Modellen verwendet wird (z.B. unzensierte Personas nur mit unzensierten Modellen).
+  - **Personas / Rollen (`public/persona.json`)**
+    Eine zentrale JSON-Datei, die die verschiedenen "Persönlichkeiten" definiert, die die KI annehmen kann.
+    - **Struktur**: Jede Persona hat eine `id`, einen `name` und einen `system`-Prompt, der das Verhalten der KI steuert.
+    - **Modell-Einschränkungen**: Optional kann ein `allow`-Array von Modell-IDs angegeben werden, um sicherzustellen, dass eine Persona nur mit geeigneten Modellen verwendet wird (z.B. unzensierte Personas nur mit unzensierten Modellen).
+    - **Ladepfad**: `src/config/roleStore.ts` lädt `persona.json` über `resolvePublicAssetUrl()` mit `cache: "no-store"`, damit sowohl Dev-Server als auch Build unter einem Unterpfad ohne 404s funktionieren und bei Fehlern eine klare UI-Fehlermeldung angezeigt wird.
 
 ### PWA und Offline-Fähigkeit
 

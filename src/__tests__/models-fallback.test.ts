@@ -7,6 +7,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { loadModelCatalog } from "../config/models";
+import { resolvePublicAssetUrl } from "../lib/publicAssets";
 
 const mockFetch = vi.fn();
 
@@ -44,7 +45,9 @@ describe("loadModelCatalog", () => {
 
     const models = await loadModelCatalog();
 
-    expect(mockFetch).toHaveBeenCalledWith("/models.json", { cache: "default" });
+    expect(mockFetch).toHaveBeenCalledWith(resolvePublicAssetUrl("models.json"), {
+      cache: "no-store",
+    });
     expect(models).toHaveLength(2);
     const freeModel = models.find((m) => m.id === "openrouter/demo-free:free");
     const paidModel = models.find((m) => m.id === "acme/paid-model");
@@ -74,8 +77,7 @@ describe("loadModelCatalog", () => {
       },
     });
 
-    const models = await loadModelCatalog();
-    expect(models).toEqual([]);
+    await expect(loadModelCatalog()).rejects.toThrow(/leer oder ungültig/);
   });
 
   it("fängt HTTP-Fehler ab und liefert eine leere Liste", async () => {
@@ -85,14 +87,12 @@ describe("loadModelCatalog", () => {
       statusText: "Server Error",
     });
 
-    const models = await loadModelCatalog();
-    expect(models).toEqual([]);
+    await expect(loadModelCatalog()).rejects.toThrow(/HTTP 500/);
   });
 
   it("behandelt Netzwerkfehler und liefert eine leere Liste", async () => {
     mockFetch.mockRejectedValueOnce(new Error("Network down"));
 
-    const models = await loadModelCatalog();
-    expect(models).toEqual([]);
+    await expect(loadModelCatalog()).rejects.toThrow(/Network down/);
   });
 });

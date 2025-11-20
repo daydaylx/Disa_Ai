@@ -1,4 +1,5 @@
 import { mapError } from "../lib/errors";
+import { resolvePublicAssetUrl } from "../lib/publicAssets";
 import type { Role } from "../lib/validators/roles";
 import { parseRoles } from "../lib/validators/roles";
 import type { Safety } from "./models";
@@ -22,6 +23,7 @@ let _loaded = false;
 let _loading: Promise<RoleTemplate[]> | null = null;
 let _state: RoleState = "idle";
 let _error: string | null = null;
+const PERSONA_URL = resolvePublicAssetUrl("persona.json");
 
 /* -------------------- Validation -------------------- */
 
@@ -74,19 +76,15 @@ async function fetchJson(url: string, signal?: AbortSignal): Promise<unknown> {
 }
 
 async function tryLoadRoles(signal?: AbortSignal): Promise<RoleTemplate[] | null> {
-  try {
-    const data = await fetchJson("/persona.json", signal);
-    const arr = Array.isArray(data)
-      ? data
-      : Array.isArray((data as Record<string, unknown>)["styles"])
-        ? ((data as Record<string, unknown>)["styles"] as unknown[])
-        : null;
-    if (!arr) return null;
-    const parsed = parseRoles(arr);
-    return parsed && parsed.length > 0 ? sanitize(parsed) : null;
-  } catch {
-    return null;
-  }
+  const data = await fetchJson(PERSONA_URL, signal);
+  const arr = Array.isArray(data)
+    ? data
+    : Array.isArray((data as Record<string, unknown>)["styles"])
+      ? ((data as Record<string, unknown>)["styles"] as unknown[])
+      : null;
+  if (!arr) return null;
+  const parsed = parseRoles(arr);
+  return parsed && parsed.length > 0 ? sanitize(parsed) : null;
 }
 
 /* -------------------- Public API -------------------- */
@@ -130,7 +128,7 @@ export async function fetchRoleTemplates(
         _roles = [];
         _loaded = true;
         _state = "missing";
-        _error = "persona.json nicht gefunden oder ungültig (public/persona.json)";
+        _error = `persona.json nicht gefunden oder ungültig (${PERSONA_URL})`;
         return _roles;
       }
       _roles = list;
@@ -144,7 +142,7 @@ export async function fetchRoleTemplates(
       _roles = [];
       _loaded = true;
       _state = "error";
-      _error = err.message;
+      _error = `${err.message} (${PERSONA_URL})`;
       return _roles;
     } finally {
       _loading = null;
