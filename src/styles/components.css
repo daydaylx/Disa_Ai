@@ -18,6 +18,58 @@
   }
 
   /* ========================================================================
+     MICRO-INTERACTION ANIMATIONS (Phase 7)
+     ======================================================================== */
+
+  /* Card Enter Animation - 120ms scale + fade */
+  @keyframes card-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Favorite Star Pop Animation - Bounce effect */
+  @keyframes favorite-pop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* Press Feedback - Inset + scale */
+  @keyframes press-feedback {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      transform: translateY(1px) scale(0.98);
+    }
+  }
+
+  /* Apply animations via classes */
+  .animate-card-enter {
+    animation: card-enter var(--motion-fast) var(--ease-out);
+  }
+
+  .animate-favorite-pop {
+    animation: favorite-pop 300ms var(--ease-bounce);
+  }
+
+  .animate-press {
+    animation: press-feedback var(--motion-instant) var(--ease-in-out);
+  }
+
+  /* ========================================================================
      CARD SURFACE UTILITIES
      ======================================================================== */
 

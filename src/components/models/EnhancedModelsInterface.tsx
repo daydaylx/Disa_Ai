@@ -397,10 +397,16 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     [selectedModels, trackModelUsage, push],
   );
 
+  const [animatingFavorite, setAnimatingFavorite] = useState<string | null>(null);
+
   const handleToggleFavorite = useCallback(
     (model: EnhancedModel) => {
       toggleModelFavorite(model.id);
       const isFav = isModelFavorite(model.id);
+
+      // Trigger animation
+      setAnimatingFavorite(model.id);
+      setTimeout(() => setAnimatingFavorite(null), 300);
 
       push({
         kind: "success",
@@ -515,7 +521,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             {filteredModels.map((model) => (
               <GlassCard
                 key={model.id}
-                className="p-4 transition-all duration-200 min-h-[180px]"
+                className="p-4 transition-all duration-200 min-h-[180px] animate-card-enter"
                 onClick={() => handleSelectModel(model)}
               >
                 {/* Header Row */}
@@ -615,7 +621,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                         isModelFavorite(model.id)
                           ? "fill-yellow-400 text-yellow-400"
                           : "text-text-secondary"
-                      }`}
+                      } ${animatingFavorite === model.id ? "animate-favorite-pop" : ""}`}
                     />
                   </Button>
                   <Button

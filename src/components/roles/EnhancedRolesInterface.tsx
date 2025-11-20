@@ -249,7 +249,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 <GlassCard
                   key={role.id}
                   variant="raised"
-                  className="cursor-pointer hover:shadow-raiseLg transition-all duration-fast group"
+                  className="cursor-pointer hover:shadow-raiseLg transition-all duration-fast group animate-card-enter"
                   onClick={() => handleActivateRole(role)}
                 >
                   {/* CARD HEADER */}
@@ -276,7 +276,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   </p>
 
                   {/* CARD FOOTER */}
-                  <div className="flex items-center justify-between pt-3 border-t border-surface-inset">
+                  <div className="flex items-center justify-between pt-4 mt-1">
                     {/* Category Badge */}
                     <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-meta">
                       {role.category || "Spezial"}

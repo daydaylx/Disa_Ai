@@ -173,15 +173,15 @@
 
   /* Durations - Schnelle, responsive Feedback */
   --motion-instant: 80ms; /* Instant feedback */
-  --motion-fast: 120ms; /* Micro interactions */
+  --motion-fast: 120ms; /* Micro interactions (card open, chip press) */
   --motion-medium: 200ms; /* Standard transitions */
   --motion-slow: 300ms; /* Complex animations */
 
   /* Easings - Natural Physics */
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* Standard */
-  --ease-out: cubic-bezier(0.0, 0, 0.2, 1); /* Deceleration */
+  --ease-out: cubic-bezier(0.0, 0, 0.2, 1); /* Deceleration (card open) */
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1); /* Spring effect */
-  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce (favorite pop) */
 
   /* ========================================
    * INTERACTIVE STATE SYSTEM
