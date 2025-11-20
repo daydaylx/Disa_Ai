@@ -1,5 +1,3 @@
-import { defaultRolesData } from "./roles.dataset";
-
 export interface Role {
   id: string;
   name: string;
@@ -15,17 +13,16 @@ export interface Role {
   };
 }
 
-let cachedDefaultRoles: Role[] = [...defaultRolesData];
-let cachedCombinedRoles: Role[] = [...defaultRolesData];
+let cachedCombinedRoles: Role[] = [];
 
 // Helper functions
 export async function loadRoles(): Promise<Role[]> {
-  // Lade externe Rollen aus roleStore (persona.json)
+  // Lade Rollen nur aus roleStore (persona.json)
   const { fetchRoleTemplates } = await import("../config/roleStore");
   const externalRoles = await fetchRoleTemplates();
 
   // Konvertiere externe Rollen zu Role-Format
-  const externalRolesFormatted: Role[] = externalRoles.map((role) => ({
+  const rolesFormatted: Role[] = externalRoles.map((role) => ({
     id: role.id,
     name: role.name,
     systemPrompt: role.system || "",
@@ -39,17 +36,7 @@ export async function loadRoles(): Promise<Role[]> {
     },
   }));
 
-  const baseRoles = [...cachedDefaultRoles];
-  const merged = new Map<string, Role>();
-  for (const role of baseRoles) {
-    merged.set(role.id, role);
-  }
-  for (const role of externalRolesFormatted) {
-    if (!merged.has(role.id)) {
-      merged.set(role.id, role);
-    }
-  }
-  cachedCombinedRoles = Array.from(merged.values());
+  cachedCombinedRoles = rolesFormatted;
   return cachedCombinedRoles;
 }
 

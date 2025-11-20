@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-9d95c56",
-  "buildTime": "2025-11-20T11:11:37.452Z",
-  "gitSha": "9d95c567f80ef530c7c6e5cd7190f86a0ec3169a",
-  "gitBranch": "claude/verify-tailwind-config-01CQrTo3TUWyVuKgYAK4ek7P",
+  "buildId": "v1.0.0-a8837ec",
+  "buildTime": "2025-11-20T12:28:43.088Z",
+  "gitSha": "a8837ecb97f120e8cf1016522c89f1a410f0e168",
+  "gitBranch": "claude/update-models-and-roles-01MGrhki33swj4xKNcnhMgXk",
   "version": "1.0.0"
 }
