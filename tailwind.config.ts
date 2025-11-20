@@ -170,12 +170,6 @@ export default {
         medium: "var(--backdrop-blur-medium)", // 8px
         strong: "var(--backdrop-blur-strong)", // 12px
       },
-      boxShadow: {
-        glowPrimary: "var(--shadow-glow-primary)",
-        glowGreen: "var(--shadow-glow-green)",
-        glowLila: "var(--shadow-glow-lila)",
-        glowSubtle: "var(--shadow-glow-subtle)",
-      },
       padding: {
         "safe-top": "env(safe-area-inset-top)",
         "safe-bottom": "env(safe-area-inset-bottom)",
