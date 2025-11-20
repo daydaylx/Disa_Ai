@@ -7,6 +7,15 @@ interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   isActive?: boolean;
 }
 
+/**
+ * MaterialChip (formerly FilterChip)
+ *
+ * Neumorphism/Soft-Depth Chip Component
+ * - NO borders
+ * - Default: mini-raised (soft-raise shadow)
+ * - Active: inset + accent ring
+ * - Press: scale(0.98) + inset shadow
+ */
 export function FilterChip({
   selected,
   leading,
@@ -16,25 +25,27 @@ export function FilterChip({
   isActive,
   ...props
 }: FilterChipProps) {
+  const isActiveState = selected || isActive;
+
   return (
     <button
       type="button"
       className={cn(
-        "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-full border",
-        "border-[color-mix(in_srgb,var(--line)_70%,transparent)]",
-        "bg-[color-mix(in_srgb,var(--surface-card)_85%,transparent)]",
-        "px-4 text-sm font-medium text-text-secondary",
-        "shadow-[0_2px_8px_rgba(0,0,0,0.05)] backdrop-blur-sm",
-        "transition-all duration-150",
-        "hover:bg-[color-mix(in_srgb,var(--surface-card)_90%,white_5%)] hover:text-text-primary",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-        (selected || isActive) &&
-          [
-            "border-[color-mix(in_srgb,var(--accent)_50%,transparent)]",
-            "bg-[color-mix(in_srgb,var(--accent)_20%,transparent)]",
-            "text-accent",
-            "shadow-[0_2px_12px_rgba(139,92,246,0.2)]",
-          ].join(" "),
+        "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-sm",
+        "px-4 text-sm font-medium",
+        "transition-all duration-fast",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary",
+        // Default raised state
+        !isActiveState && [
+          "bg-surface-2 text-text-secondary shadow-raise",
+          "hover:text-text-primary hover:shadow-raiseLg",
+          "active:scale-[0.98] active:shadow-inset active:translate-y-px",
+        ],
+        // Active inset state
+        isActiveState && [
+          "bg-surface-inset text-accent-primary shadow-inset",
+          "ring-1 ring-accent-primary",
+        ],
         className,
       )}
       {...props}

@@ -2,7 +2,12 @@ import { type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-// Chip/Pill Component
+/**
+ * MaterialChip Component
+ * Neumorphism/Soft-Depth Chip
+ * - NO backdrop-blur, NO borders (except accent ring for success/warning)
+ * - Raised shadow for depth
+ */
 interface ChipProps {
   children: ReactNode;
   variant?: "default" | "success" | "warning" | "free";
@@ -11,28 +16,24 @@ interface ChipProps {
 }
 
 export function Chip({ children, variant = "default", size = "sm", className }: ChipProps) {
-  // Aurora Palette Integration
   const variantClasses = {
-    default:
-      "bg-[var(--glass-surface-subtle)] text-[var(--text-primary)] border border-[var(--glass-border-subtle)]",
+    default: "bg-surface-2 text-text-primary shadow-raise",
     success:
-      "bg-[var(--aurora-green-500)]/20 text-[var(--aurora-green-600)] border border-[var(--aurora-green-500)]/30",
-    warning:
-      "bg-[var(--aurora-orange-500)]/20 text-[var(--aurora-orange-600)] border border-[var(--aurora-orange-500)]/30",
-    free: "bg-[var(--aurora-green-500)]/10 text-[var(--aurora-green-600)] border border-[var(--aurora-green-500)]/40 shadow-[var(--shadow-glow-green)]",
+      "bg-surface-2 text-accent-secondary shadow-raise ring-1 ring-accent-secondary/30",
+    warning: "bg-surface-2 text-accent-danger shadow-raise ring-1 ring-accent-danger/30",
+    free: "bg-surface-2 text-accent-secondary shadow-raise shadow-accentGlow ring-1 ring-accent-secondary/40",
   };
 
-  // Aurora Touch-Optimized Sizing
   const sizeClasses = {
-    sm: "px-[var(--space-xs)] py-[var(--space-xs)] text-[var(--text-xs)] min-h-[24px]",
-    md: "px-[var(--space-sm)] py-[var(--space-xs)] text-[var(--text-sm)] min-h-[var(--touch-target-compact)]",
+    sm: "px-2 py-1 text-xs min-h-[24px]",
+    md: "px-3 py-1.5 text-sm min-h-[var(--touch-target-compact)]",
   };
 
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-[var(--radius-pill)] font-medium",
-        "backdrop-blur-[var(--backdrop-blur-subtle)] transition-all duration-[var(--motion-medium)]",
+        "inline-flex items-center rounded-sm font-medium",
+        "transition-all duration-fast",
         "select-none touch-manipulation",
         variantClasses[variant],
         sizeClasses[size],

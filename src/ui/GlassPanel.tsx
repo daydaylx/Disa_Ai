@@ -7,13 +7,19 @@ interface GlassPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
+/**
+ * MaterialPanel (formerly GlassPanel)
+ * Neumorphism/Soft-Depth Panel Component
+ * - NO backdrop-blur, NO borders
+ * - Raised shadow for depth
+ */
 export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
-          "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-subtle)] rounded-2xl p-4 shadow-[var(--shadow-glow-soft)]",
+          "bg-surface-2 rounded-md p-4 shadow-raise",
           className,
         )}
         {...props}

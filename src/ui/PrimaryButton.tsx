@@ -1,16 +1,23 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
+/**
+ * PrimaryButton - Hero Material Button
+ *
+ * Large, prominent call-to-action button with strong material presence
+ * NO borders - depth through shadows + accent glow
+ */
 const primaryButtonVariants = cva(
-  "inline-flex items-center justify-center rounded-full text-base font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center rounded-md text-base font-bold transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary disabled:opacity-50 disabled:pointer-events-none",
   {
     variants: {
       variant: {
-        default: "bg-primary-500 text-white shadow-lg hover:bg-primary-600/90",
+        default:
+          "bg-accent-primary text-white shadow-raiseLg hover:bg-accent-hover hover:shadow-accentGlowLg active:scale-[0.98] active:translate-y-px active:bg-accent-active",
       },
       size: {
         default: "h-12 py-3 px-8",
-        lg: "h-14 rounded-full px-10 text-lg",
+        lg: "h-14 px-10 text-lg",
       },
     },
     defaultVariants: {

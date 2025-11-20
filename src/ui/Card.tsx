@@ -1,21 +1,32 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
-const cardVariants = cva("rounded-lg shadow-elevated transition-all", {
+/**
+ * Material Card Component - Neumorphism/Soft-Depth System
+ *
+ * NO backdrop-blur, NO borders - depth through shadows only
+ *
+ * Variants:
+ * - raised: Standard raised card (default)
+ * - inset: Pressed/inset appearance
+ * - hero: Strong raised shadow for focal elements
+ */
+const cardVariants = cva("rounded-md transition-all duration-fast", {
   variants: {
     variant: {
-      default: "bg-surface-card/50 backdrop-blur-medium border border-white/10",
-      outline: "border border-white/20 bg-transparent",
-      filled: "bg-surface",
+      raised: "bg-surface-2 shadow-raise",
+      inset: "bg-surface-1 shadow-inset",
+      hero: "bg-surface-2 shadow-raiseLg",
     },
     padding: {
       default: "p-6",
       sm: "p-4",
       lg: "p-8",
+      none: "p-0",
     },
   },
   defaultVariants: {
-    variant: "default",
+    variant: "raised",
     padding: "default",
   },
 });
@@ -42,7 +53,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={`text-2xl font-semibold leading-none tracking-tight ${className}`}
+      className={`text-2xl font-semibold leading-none tracking-tight text-text-primary ${className}`}
       {...props}
     />
   ),
@@ -53,7 +64,7 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={`text-sm text-muted-foreground ${className}`} {...props} />
+  <p ref={ref} className={`text-sm text-text-muted ${className}`} {...props} />
 ));
 CardDescription.displayName = "CardDescription";
 

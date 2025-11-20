@@ -1,105 +1,88 @@
 /**
- * DISA AI DESIGN TOKENS - CONSOLIDATED AURORA GLOW SYSTEM
+ * DISA AI DESIGN TOKENS - NEUMORPHISM/SOFT-DEPTH SYSTEM
  *
- * Mobile-First Premium Glassmorphism Design System
- * Konsolidiert aus design-tokens.css + tokens.css mit Aurora-Fokus
+ * Mobile-First Material Tool Design System
+ * Umstellung von Glassmorphism zu Neumorphism/Soft-Depth
  *
  * DESIGNPHILOSOPHIE:
- * ✦ Aurora Vibrant Dark als Basis (#0a0e1a → #1a1f2e)
- * ✦ Balanced Premium Glassmorphism (6-14px blur, 0.20-0.35 opacity)
- * ✦ Visual-First Performance (premium effects beibehalten)
- * ✦ Mobile-First Responsive (360px-414px optimiert)
- * ✦ 8px Spacing Grid + rem Typography
- * ✦ Aurora Accents: Indigo #6366f1, Green #10b981, Lila #8b5cf6
+ * ✦ Material-Tiefe durch Shadows (Raised/Inset)
+ * ✦ Drückbare Controls mit physischem Feedback
+ * ✦ Konsistente Lichtlogik (Top-Left Light Source)
+ * ✦ Mobile-First (360px-414px optimiert)
+ * ✦ Strikte Konsistenz: 3 Shadow-Typen, 3 Radii-Stufen
+ * ✦ KEINE Borders/Outlines (nur Shadows für Depth)
+ * ✦ Accent: Indigo #6366f1 (sparsam eingesetzt)
  *
  * Single Source of Truth für alle Design Values.
  */
 
 :root {
   /* ========================================
-   * CORE AURORA COLOR PALETTE
+   * CORE MATERIAL COLOR PALETTE
    * ======================================== */
 
-  /* Aurora Vibrant Dark - Primäre Basis */
-  --bg-aurora-0: #0a0e1a; /* Deep Navy Base */
-  --bg-aurora-1: #0f172a; /* Container Background */
-  --bg-aurora-2: #1a1f2e; /* Card Surfaces */
-  --bg-aurora-3: #1e293b; /* Elevated Surfaces */
+  /* Material Base - Dunkle Oberflächen */
+  --bg-base: #0f172a; /* Page background */
+  --surface-1: #1a1f2e; /* Base cards, inset areas */
+  --surface-2: #1e293b; /* Raised cards (default) */
+  --surface-inset: #151a27; /* Inset/pressed areas (darker) */
 
-  /* Aurora Primary: Indigo-Violet Familie */
-  --aurora-primary-50: #eef2ff;
-  --aurora-primary-100: #e0e7ff;
-  --aurora-primary-200: #c7d2fe;
-  --aurora-primary-300: #a5b4fc;
-  --aurora-primary-400: #818cf8;
-  --aurora-primary-500: #6366f1; /* Main Aurora Primary */
-  --aurora-primary-600: #4f46e5;
-  --aurora-primary-700: #4338ca;
-  --aurora-primary-800: #3730a3;
-  --aurora-primary-900: #312e81;
-  --aurora-primary-950: #1e1b4b;
+  /* Material Highlights - Subtile Lichtreflexion */
+  --surface-highlight: rgba(255, 255, 255, 0.03);
+  --surface-highlight-strong: rgba(255, 255, 255, 0.06);
 
-  /* Aurora Accent Colors */
-  --aurora-green-500: #10b981; /* Success/Positive States */
-  --aurora-green-400: #34d399;
-  --aurora-green-600: #059669;
-
-  --aurora-lila-500: #8b5cf6; /* Special/Premium Features */
-  --aurora-lila-400: #a78bfa;
-  --aurora-lila-600: #7c3aed;
-
-  --aurora-yellow-500: #facc15; /* Warning/Attention */
-
-  /* Text mit Boosted Contrast für Glass-Hintergründe */
-  --text-primary: #f8fafc; /* Very high contrast (12:1) */
-  --text-secondary: #d1d5db; /* Boosted from #9ca3af */
-  --text-muted: #94a3b8;
+  /* Text Hierarchy */
+  --text-primary: #f8fafc; /* Very high contrast */
+  --text-secondary: #d1d5db; /* Secondary text */
+  --text-muted: #94a3b8; /* Muted/disabled */
   --text-disabled: #64748b;
-  --text-inverse: #0a0e1a;
 
   /* ========================================
-   * BALANCED PREMIUM GLASS SYSTEM 3.5
-   * Optimiert für mobile Lesbarkeit
+   * ACCENT SYSTEM - INDIGO PRIMARY
    * ======================================== */
 
-  /* Glass Surface Opacities - Balanced Premium */
-  --glass-surface-subtle: rgba(26, 31, 46, 0.2); /* Leichte Glas-Elemente */
-  --glass-surface-medium: rgba(26, 31, 46, 0.28); /* Standard Cards */
-  --glass-surface-strong: rgba(26, 31, 46, 0.35); /* Hero-Bereiche */
-  --glass-surface-overlay: rgba(10, 14, 26, 0.85); /* Modals */
+  /* Accent Colors - Indigo Familie */
+  --accent-primary: #6366f1; /* Main accent */
+  --accent-hover: #4f46e5; /* Hover state */
+  --accent-active: #4338ca; /* Active/pressed state */
 
-  /* Glass Border Glows - Aurora Accents gezielt */
-  --glass-border-subtle: rgba(255, 255, 255, 0.24);
-  --glass-border-medium: rgba(255, 255, 255, 0.32);
-  --glass-border-aurora: rgba(99, 102, 241, 0.4);
-  --glass-border-green: rgba(16, 185, 129, 0.35);
-  --glass-border-lila: rgba(139, 92, 246, 0.35);
+  /* Accent Secondary (Success/Positive) */
+  --accent-secondary: #10b981; /* Green for success */
 
-  /* Backdrop Blur - Balanced Premium (6-14px) */
-  --backdrop-blur-subtle: 6px; /* Erhöht von 4px für Premium-Feel */
-  --backdrop-blur-medium: 10px; /* Erhöht von 8px */
-  --backdrop-blur-strong: 14px; /* Erhöht von 12px, noch lesbar */
+  /* Accent Danger (Warnings/Errors) */
+  --accent-danger: #ef4444; /* Red for errors */
 
   /* ========================================
-   * AURORA SHADOW & GLOW SYSTEM
+   * NEUMORPHISM SHADOW SYSTEM (NUR 3 TYPEN!)
+   * Konsistente Lichtlogik: Top-Left Light Source
    * ======================================== */
 
-  /* Aurora Glow Effects - Strategisch eingesetzt */
-  --shadow-glow-primary: 0 0 20px rgba(99, 102, 241, 0.35);
-  --shadow-glow-green: 0 0 18px rgba(16, 185, 129, 0.3);
-  --shadow-glow-lila: 0 0 18px rgba(139, 92, 246, 0.3);
-  --shadow-glow-soft: 0 0 12px rgba(255, 255, 255, 0.1);
+  /* 1. SOFT RAISE - Standard UI Elements */
+  --shadow-soft-raise:
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1);
 
-  /* Premium Depth Shadows (Glow + Traditional) */
-  --shadow-depth-1: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-depth-2: 0 4px 16px rgba(0, 0, 0, 0.2);
-  --shadow-depth-3: 0 8px 24px rgba(0, 0, 0, 0.25);
-  --shadow-depth-4: 0 12px 32px rgba(0, 0, 0, 0.3);
+  /* 2. STRONG RAISE - Hero/Focal Elements */
+  --shadow-strong-raise:
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    0 4px 12px rgba(0, 0, 0, 0.15);
 
-  /* Kombinierte Premium Shadows (Depth + Glow) */
-  --shadow-premium-subtle: var(--shadow-depth-1), var(--shadow-glow-soft);
-  --shadow-premium-medium: var(--shadow-depth-2), var(--shadow-glow-primary);
-  --shadow-premium-strong: var(--shadow-depth-3), var(--shadow-glow-primary);
+  /* 3. INSET - Pressed/Input Fields */
+  --shadow-inset:
+    inset 0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 3px rgba(0, 0, 0, 0.15);
+
+  /* Accent Glow (nur für active states) */
+  --shadow-accent-glow: 0 0 12px rgba(99, 102, 241, 0.25);
+  --shadow-accent-glow-strong: 0 0 20px rgba(99, 102, 241, 0.35);
+
+  /* ========================================
+   * STRICT RADIUS SYSTEM (NUR 3 STUFEN!)
+   * ======================================== */
+
+  --r-sm: 8px; /* Small controls: Chips, Badges */
+  --r-md: 12px; /* Standard: Cards, Buttons */
+  --r-lg: 16px; /* Hero: Large Cards, Panels */
 
   /* ========================================
    * MOBILE-OPTIMIERTE SPACING (8px Grid)
@@ -129,23 +112,13 @@
   --safe-left: env(safe-area-inset-left, 0);
 
   /* ========================================
-   * UNIFIED RADIUS SYSTEM
-   * ======================================== */
-
-  --radius-xs: 6px; /* Small elements */
-  --radius-sm: 10px; /* Buttons, chips */
-  --radius-md: 14px; /* Cards, inputs */
-  --radius-lg: 18px; /* Hero cards */
-  --radius-xl: 24px; /* Large surfaces */
-  --radius-full: 50%; /* Circles */
-
-  /* ========================================
    * RESPONSIVE TYPOGRAPHY SCALE
    * Mobile-First rem-basiert
    * ======================================== */
 
   /* Font Families */
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+    sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
   /* Type Scale - Mobile optimiert */
@@ -171,21 +144,20 @@
   --font-bold: 700;
 
   /* ========================================
-   * PREMIUM MOTION SYSTEM
-   * Visual-First mit Performance-Balance
+   * MOTION SYSTEM - PHYSICAL FEEDBACK
    * ======================================== */
 
-  /* Durations */
+  /* Durations - Schnelle, responsive Feedback */
+  --motion-instant: 80ms; /* Instant feedback */
   --motion-fast: 120ms; /* Micro interactions */
-  --motion-medium: 180ms; /* Standard transitions */
+  --motion-medium: 200ms; /* Standard transitions */
   --motion-slow: 300ms; /* Complex animations */
-  --motion-hero: 500ms; /* Hero effects */
 
-  /* Premium Easings */
-  --ease-aurora: cubic-bezier(0.25, 0.1, 0.25, 1); /* Smooth aurora */
-  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1); /* Premium spring */
-  --ease-glass: cubic-bezier(0.2, 0, 0.38, 0.9); /* Glass depth */
-  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Playful */
+  /* Easings - Natural Physics */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* Standard */
+  --ease-out: cubic-bezier(0.0, 0, 0.2, 1); /* Deceleration */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1); /* Spring effect */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce */
 
   /* ========================================
    * INTERACTIVE STATE SYSTEM
@@ -193,61 +165,50 @@
 
   /* Universal State Transitions */
   --transition-colors:
-    background-color var(--motion-fast) var(--ease-aurora),
-    border-color var(--motion-fast) var(--ease-aurora), color var(--motion-fast) var(--ease-aurora);
+    background-color var(--motion-fast) var(--ease-in-out),
+    color var(--motion-fast) var(--ease-in-out);
 
-  --transition-transform: transform var(--motion-medium) var(--ease-premium);
-  --transition-shadow: box-shadow var(--motion-medium) var(--ease-aurora);
-  --transition-glass: backdrop-filter var(--motion-medium) var(--ease-glass);
+  --transition-transform: transform var(--motion-fast) var(--ease-out);
+  --transition-shadow: box-shadow var(--motion-medium) var(--ease-in-out);
 
-  /* Touch Feedback */
-  --touch-scale-press: scale(0.98);
-  --touch-scale-hover: scale(1.02);
-  --touch-lift: translateY(-1px);
-  --touch-press: translateY(1px);
+  /* Physical Feedback Transforms */
+  --transform-press: translateY(1px) scale(0.98);
+  --transform-lift: translateY(-1px);
+  --transform-scale-in: scale(0.98);
+  --transform-scale-out: scale(1.02);
 
   /* Focus States */
   --focus-ring: 0 0 0 3px rgba(99, 102, 241, 0.25);
-  --focus-glow: var(--shadow-glow-primary);
 
   /* ========================================
-   * SEMANTIC COLOR SYSTEM
-   * Aurora-basiert für alle States
+   * SEMANTIC COMPONENT TOKENS
    * ======================================== */
 
-  /* Action Colors */
-  --color-primary: var(--aurora-primary-500);
-  --color-primary-hover: var(--aurora-primary-600);
-  --color-primary-active: var(--aurora-primary-700);
-  --color-primary-text: var(--text-primary);
+  /* Card System */
+  --card-raised-bg: var(--surface-2);
+  --card-raised-shadow: var(--shadow-soft-raise);
 
-  --color-secondary: var(--glass-surface-medium);
-  --color-secondary-hover: var(--glass-surface-strong);
-  --color-secondary-text: var(--text-primary);
+  --card-inset-bg: var(--surface-1);
+  --card-inset-shadow: var(--shadow-inset);
 
-  /* Status Colors */
-  --color-success: var(--aurora-green-500);
-  --color-success-bg: color-mix(in srgb, var(--aurora-green-500) 15%, var(--bg-aurora-2));
-  --color-success-border: rgba(16, 185, 129, 0.3);
+  --card-hero-bg: var(--surface-2);
+  --card-hero-shadow: var(--shadow-strong-raise);
 
-  --color-warning: var(--aurora-yellow-500);
-  --color-warning-bg: color-mix(in srgb, var(--aurora-yellow-500) 15%, var(--bg-aurora-2));
-  --color-warning-border: rgba(250, 204, 21, 0.3);
+  /* Button System */
+  --button-primary-bg: var(--accent-primary);
+  --button-primary-hover: var(--accent-hover);
+  --button-primary-active: var(--accent-active);
+  --button-primary-shadow: var(--shadow-soft-raise);
 
-  --color-error: #ef4444;
-  --color-error-bg: color-mix(in srgb, #ef4444 15%, var(--bg-aurora-2));
-  --color-error-border: rgba(239, 68, 68, 0.3);
+  --button-secondary-bg: var(--surface-2);
+  --button-secondary-hover: var(--surface-2);
+  --button-secondary-shadow: var(--shadow-soft-raise);
 
-  /* Surface System */
-  --surface-base: var(--bg-aurora-1); /* Page background */
-  --surface-card: var(--glass-surface-medium); /* Card backgrounds */
-  --surface-raised: var(--glass-surface-strong); /* Elevated cards */
-  --surface-overlay: var(--glass-surface-overlay); /* Modals */
-
-  /* Border System */
-  --border-subtle: var(--glass-border-subtle);
-  --border-medium: var(--glass-border-medium);
-  --border-aurora: var(--glass-border-aurora);
+  /* Chip System */
+  --chip-bg: var(--surface-2);
+  --chip-shadow: var(--shadow-soft-raise);
+  --chip-active-bg: var(--surface-inset);
+  --chip-active-shadow: var(--shadow-inset);
 
   /* ========================================
    * Z-INDEX HIERARCHY
@@ -274,8 +235,12 @@
   --container-max-width: 1200px;
 
   /* Content Spacing */
-  --content-padding-top: calc(var(--header-height) + var(--safe-top) + var(--spacing-4));
-  --content-padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--spacing-4));
+  --content-padding-top: calc(
+    var(--header-height) + var(--safe-top) + var(--spacing-4)
+  );
+  --content-padding-bottom: calc(
+    var(--bottom-nav-height) + var(--safe-bottom) + var(--spacing-4)
+  );
 
   /* Grid System */
   --grid-gap: var(--spacing-4);
@@ -283,56 +248,12 @@
 }
 
 /* ========================================
- * DARK THEME OPTIMIERUNGEN
- * ======================================== */
-
-[data-theme="dark"] :root,
-.dark :root {
-  /* Enhanced Glass für Dark Mode */
-  --glass-surface-subtle: rgba(26, 31, 46, 0.25);
-  --glass-surface-medium: rgba(26, 31, 46, 0.32);
-  --glass-surface-strong: rgba(26, 31, 46, 0.4);
-
-  /* Stärkere Border für bessere Sichtbarkeit */
-  --glass-border-subtle: rgba(255, 255, 255, 0.28);
-  --glass-border-medium: rgba(255, 255, 255, 0.35);
-
-  /* Intensivere Glows für Dark */
-  --shadow-glow-primary: 0 0 24px rgba(99, 102, 241, 0.4);
-  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.35);
-  --shadow-glow-lila: 0 0 20px rgba(139, 92, 246, 0.35);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    /* Enhanced Glass für Dark Mode */
-    --glass-surface-subtle: rgba(26, 31, 46, 0.25);
-    --glass-surface-medium: rgba(26, 31, 46, 0.32);
-    --glass-surface-strong: rgba(26, 31, 46, 0.4);
-
-    /* Stärkere Border für bessere Sichtbarkeit */
-    --glass-border-subtle: rgba(255, 255, 255, 0.28);
-    --glass-border-medium: rgba(255, 255, 255, 0.35);
-
-    /* Intensivere Glows für Dark */
-    --shadow-glow-primary: 0 0 24px rgba(99, 102, 241, 0.4);
-    --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.35);
-    --shadow-glow-lila: 0 0 20px rgba(139, 92, 246, 0.35);
-  }
-}
-
-/* ========================================
- * MOBILE RESPONSIVE ANPASSUNGEN
+ * RESPONSIVE ANPASSUNGEN
  * ======================================== */
 
 /* Kleine Mobile (360px-480px) */
 @media (max-width: 480px) {
   :root {
-    /* Reduzierte Blur für Performance auf Low-End */
-    --backdrop-blur-subtle: 4px;
-    --backdrop-blur-medium: 8px;
-    --backdrop-blur-strong: 12px;
-
     /* Kompaktere Abstände */
     --container-padding: var(--spacing-3);
     --grid-gap: var(--spacing-3);
@@ -346,30 +267,28 @@
 /* Tablet (768px+) */
 @media (min-width: 768px) {
   :root {
-    /* Verstärkte Premium Effects für größere Screens */
-    --backdrop-blur-subtle: 8px;
-    --backdrop-blur-medium: 12px;
-    --backdrop-blur-strong: 16px;
-
     /* Größzügigere Abstände */
     --container-padding: var(--spacing-6);
     --grid-gap: var(--spacing-6);
 
-    /* Erweiterte Touch Targets für Hover-Geräte */
-    --touch-target-comfortable: 44px; /* Kann kleiner sein mit Maus */
+    /* Stärkere Shadows für größere Screens */
+    --shadow-strong-raise:
+      0 12px 32px rgba(0, 0, 0, 0.28),
+      0 6px 16px rgba(0, 0, 0, 0.18);
   }
 }
 
 /* Desktop (1024px+) */
 @media (min-width: 1024px) {
   :root {
-    /* Maximale Premium Effects */
-    --backdrop-blur-strong: 20px;
-    --shadow-glow-primary: 0 0 28px rgba(99, 102, 241, 0.45);
-
     /* Desktop-optimierte Layout */
     --container-padding: var(--spacing-8);
     --grid-gap-lg: var(--spacing-8);
+
+    /* Noch stärkere Hero-Shadows */
+    --shadow-strong-raise:
+      0 16px 40px rgba(0, 0, 0, 0.3),
+      0 8px 20px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -380,10 +299,10 @@
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --motion-instant: 0ms;
     --motion-fast: 0ms;
     --motion-medium: 0ms;
     --motion-slow: 0ms;
-    --motion-hero: 0ms;
   }
 }
 
@@ -392,31 +311,49 @@
   :root {
     /* Verstärkte Kontraste für bessere Zugänglichkeit */
     --text-primary: #ffffff;
-    --glass-border-subtle: rgba(255, 255, 255, 0.45);
-    --glass-border-medium: rgba(255, 255, 255, 0.6);
+    --shadow-soft-raise:
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      0 2px 6px rgba(0, 0, 0, 0.2);
   }
 }
 
 /* ========================================
- * LEGACY COMPATIBILITY
+ * LEGACY COMPATIBILITY MAPPINGS
  * Für smooth Migration bestehender Komponenten
  * ======================================== */
 
 :root {
-  /* Legacy Shadow Mappings */
-  --shadow-sm: var(--shadow-depth-1);
-  --shadow-md: var(--shadow-depth-2);
-  --shadow-lg: var(--shadow-depth-3);
-  --shadow-xl: var(--shadow-depth-4);
+  /* Legacy Radius Mappings (mapped to new 3-tier system) */
+  --radius-xs: var(--r-sm);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-lg);
 
-  /* Legacy Color Mappings */
-  --primary: var(--aurora-primary-500);
-  --secondary: var(--text-secondary);
-  --muted: var(--text-muted);
+  /* Legacy Shadow Mappings */
+  --shadow-sm: var(--shadow-soft-raise);
+  --shadow-md: var(--shadow-soft-raise);
+  --shadow-lg: var(--shadow-strong-raise);
+  --shadow-xl: var(--shadow-strong-raise);
 
   /* Legacy Surface Mappings */
-  --background: var(--bg-aurora-1);
+  --bg-0: var(--bg-base);
+  --bg-1: var(--surface-1);
+  --bg-2: var(--surface-2);
+  --surface: var(--surface-2);
+  --surface-soft: var(--surface-1);
+  --surface-card: var(--surface-2);
+
+  /* Legacy Color Mappings */
+  --primary: var(--accent-primary);
+  --color-primary-500: var(--accent-primary);
+  --color-primary-600: var(--accent-hover);
+  --color-primary-700: var(--accent-active);
+
+  /* Legacy Text Mappings */
   --foreground: var(--text-primary);
-  --card: var(--surface-card);
-  --border: var(--border-subtle);
+
+  /* Aurora Accent Legacy Support */
+  --accent-aurora-green: var(--accent-secondary);
+  --color-success-500: var(--accent-secondary);
 }

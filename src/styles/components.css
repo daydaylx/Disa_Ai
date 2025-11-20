@@ -1,264 +1,107 @@
 @layer components {
-  /* Aurora background layer for header/hero/overlays */
-  .brand-aurora {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-  }
-  .brand-aurora::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--grad-aurora);
-    opacity: 0.95;
-    z-index: -1;
-    pointer-events: none;
+  /* ========================================================================
+     NEUMORPHISM/SOFT-DEPTH MATERIAL SYSTEM
+     NO borders, NO backdrop-blur - depth through shadows only
+     ======================================================================== */
+
+  /* Material Depth Utilities */
+  .material-raise {
+    box-shadow: var(--shadow-soft-raise);
   }
 
-  .header-shell {
-    height: 4.5rem; /* 72px */
-    background: linear-gradient(
-      to bottom,
-      hsl(var(--bg0) / 0.85) 0%,
-      hsl(var(--bg0) / 0.75) 50%,
-      hsl(var(--bg0) / 0.65) 100%
-    );
-    -webkit-backdrop-filter: saturate(180%) blur(12px);
-    backdrop-filter: saturate(180%) blur(12px);
-    border-bottom: 1px solid hsl(var(--brand-4) / 0.2);
-    box-shadow:
-      0 8px 32px hsl(var(--bg0) / 0.8),
-      0 1px 0 hsl(var(--brand-2) / 0.15),
-      inset 0 1px 0 hsl(var(--brand-1) / 0.1);
+  .material-raise-strong {
+    box-shadow: var(--shadow-strong-raise);
   }
+
+  .material-inset {
+    box-shadow: var(--shadow-inset);
+  }
+
+  /* ========================================================================
+     CARD SURFACE UTILITIES
+     ======================================================================== */
 
   .card-surface {
-    background: var(--surface-card);
+    background: var(--surface-2);
     color: var(--text-primary);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-md);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-soft-raise);
   }
 
-  /* Aurora Animations */
-  @keyframes aurora-flow {
-    0%,
-    100% {
-      transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-    25% {
-      transform: translate(5%, -2%) rotate(1deg) scale(1.02);
-    }
-    50% {
-      transform: translate(-3%, 3%) rotate(-0.5deg) scale(0.98);
-    }
-    75% {
-      transform: translate(-2%, -1%) rotate(0.8deg) scale(1.01);
-    }
+  .surface-card--raised {
+    box-shadow: var(--shadow-strong-raise);
   }
 
-  @keyframes aurora-glow {
-    0%,
-    100% {
-      opacity: 0.85;
-      filter: brightness(1.05) contrast(1.1) saturate(1.2);
-    }
-    33% {
-      opacity: 1;
-      filter: brightness(1.2) contrast(1.15) saturate(1.4);
-    }
-    66% {
-      opacity: 0.92;
-      filter: brightness(1.1) contrast(1.08) saturate(1.25);
-    }
+  /* ========================================================================
+     BRAND COMPONENTS (Updated for Material System)
+     ======================================================================== */
+
+  .brand-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: var(--r-sm);
+    background: color-mix(in srgb, var(--accent-primary) 14%, transparent);
+    color: var(--accent-primary);
+    padding: 0.25rem 0.75rem;
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-soft-raise);
+    transition: all var(--motion-fast) var(--ease-in-out);
   }
 
-  @keyframes aurora-shimmer {
-    0% {
-      transform: translateX(-100%) skewX(-15deg);
-    }
-    100% {
-      transform: translateX(200%) skewX(-15deg);
-    }
-  }
-
-  /* Aurora Animation Classes */
-  .aurora-animated .brand-aurora::before {
-    animation:
-      aurora-flow 20s ease-in-out infinite,
-      aurora-glow 8s ease-in-out infinite;
-  }
-
-  .aurora-shimmer {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .aurora-shimmer::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      hsla(var(--brand-4), 0.3) 50%,
-      transparent 100%
-    );
-    animation: aurora-shimmer 3s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  .aurora-pulse {
-    animation: aurora-glow 4s ease-in-out infinite;
-  }
-
-  /* Hover Effects */
-  .brand-aurora:hover::before {
-    opacity: 0.75;
-    transition: opacity 0.3s ease-out;
-  }
-
-  .aurora-button-glow {
-    position: relative;
-    transition: all 0.3s ease-out;
-  }
-
-  .aurora-button-glow:hover {
-    box-shadow:
-      0 0 20px hsl(var(--brand-2) / 0.4),
-      0 0 40px hsl(var(--brand-1) / 0.2),
-      var(--shadow-md);
+  .brand-chip:hover {
+    background: color-mix(in srgb, var(--accent-primary) 18%, transparent);
+    box-shadow: var(--shadow-accent-glow);
     transform: translateY(-1px);
   }
 
-  /* Hero Section Aurora Effects */
-  .aurora-hero {
+  .brand-panel {
     position: relative;
-    background: radial-gradient(
-      ellipse at center top,
-      hsl(var(--brand-1) / 0.15) 0%,
-      hsl(var(--brand-2) / 0.12) 30%,
-      hsl(var(--bg0)) 70%
-    );
-    min-height: 60dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
+    border-radius: var(--r-lg);
+    background:
+      linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
+      linear-gradient(200deg, rgba(16, 185, 129, 0.06) 0%, transparent 70%),
+      var(--surface-2);
+    box-shadow: var(--shadow-strong-raise);
   }
 
-  /* Mobile-optimierter Hero */
-  .aurora-hero-mobile {
-    position: relative;
-    background: radial-gradient(
-      ellipse at center top,
-      hsl(var(--brand-1) / 0.15) 0%,
-      hsl(var(--brand-2) / 0.12) 30%,
-      hsl(var(--bg0)) 70%
-    );
-    min-height: calc(100dvh - 200px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding-top: max(env(safe-area-inset-top), 1rem);
-    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
-  }
-
-  @media (min-width: 768px) {
-    .aurora-hero-mobile {
-      min-height: 60dvh;
-    }
-  }
-
-  .aurora-hero::before {
+  .brand-panel::after {
     content: "";
     position: absolute;
-    inset: -50%;
-    background: conic-gradient(
-      from 0deg,
-      hsl(var(--brand-1) / 0.1),
-      hsl(var(--brand-2) / 0.15),
-      hsl(var(--brand-3) / 0.1),
-      hsl(var(--brand-4) / 0.12),
-      hsl(var(--brand-1) / 0.1)
+    inset: 0;
+    opacity: 0.4;
+    background: radial-gradient(
+      140% 120% at 90% 0%,
+      rgba(99, 102, 241, 0.12) 0%,
+      transparent 60%
     );
-    animation: aurora-flow 25s linear infinite;
-    z-index: -1;
+    pointer-events: none;
   }
 
-  .aurora-text-glow {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--brand-2)),
-      hsl(var(--brand-1)),
-      hsl(var(--brand-3)),
-      hsl(var(--brand-4))
-    );
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: aurora-text-flow 8s ease-in-out infinite;
-    filter: drop-shadow(0 0 12px hsl(var(--brand-2) / 0.3));
+  .brand-panel > * {
+    position: relative;
+    z-index: 1;
   }
 
-  @keyframes aurora-text-flow {
-    0%,
-    100% {
-      background-position: 0% 50%;
-    }
-    25% {
-      background-position: 100% 50%;
-    }
-    50% {
-      background-position: 100% 100%;
-    }
-    75% {
-      background-position: 0% 100%;
-    }
+  /* ========================================================================
+     TOUCH-OPTIMIZED UTILITIES
+     ======================================================================== */
+
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
-  .aurora-card-elevated {
-    background: linear-gradient(145deg, hsl(var(--bg1) / 0.8) 0%, hsl(var(--bg2) / 0.9) 100%);
-    border: 1px solid hsl(var(--brand-4) / 0.15);
-    backdrop-filter: blur(16px);
-    box-shadow:
-      0 20px 40px hsl(var(--bg0) / 0.3),
-      0 8px 24px hsl(var(--brand-2) / 0.1),
-      inset 0 1px 0 hsl(var(--brand-1) / 0.05);
-  }
-
-  .aurora-card-elevated:hover {
-    transform: translateY(-4px);
-    box-shadow:
-      0 32px 64px hsl(var(--bg0) / 0.4),
-      0 12px 32px hsl(var(--brand-2) / 0.15),
-      inset 0 1px 0 hsl(var(--brand-1) / 0.1);
-    transition: all 0.4s ease-out;
-  }
-
-  .aurora-glow-strong {
-    box-shadow:
-      0 0 30px hsl(var(--brand-2) / 0.3),
-      0 0 60px hsl(var(--brand-1) / 0.2),
-      0 0 90px hsl(var(--brand-3) / 0.1);
-    animation: aurora-pulse-strong 6s ease-in-out infinite;
-  }
-
-  @keyframes aurora-pulse-strong {
-    0%,
-    100% {
-      box-shadow:
-        0 0 30px hsl(var(--brand-2) / 0.3),
-        0 0 60px hsl(var(--brand-1) / 0.2),
-        0 0 90px hsl(var(--brand-3) / 0.1);
-    }
-    50% {
-      box-shadow:
-        0 0 50px hsl(var(--brand-2) / 0.5),
-        0 0 80px hsl(var(--brand-1) / 0.3),
-        0 0 120px hsl(var(--brand-3) / 0.15);
-    }
+  /* Mobile Chat Container */
+  .mobile-chat-container {
+    min-height: 100dvh;
+    padding-left: max(env(safe-area-inset-left), 0px);
+    padding-right: max(env(safe-area-inset-right), 0px);
   }
 
   /* Mobile Feature Grid - Horizontal auf Mobile */
@@ -278,25 +121,37 @@
   }
 
   .mobile-feature-card {
-    transition: all 0.3s ease-out;
+    transition: all var(--motion-fast) var(--ease-in-out);
   }
 
   .mobile-feature-card:active {
     transform: scale(0.98);
   }
 
-  /* Touch-optimierte Targets */
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+  /* ========================================================================
+     RESPONSIVE & ACCESSIBILITY OVERRIDES
+     ======================================================================== */
+
+  @media (prefers-contrast: more) {
+    .card-surface,
+    .card-depth {
+      box-shadow: var(--shadow-strong-raise);
+      background-color: var(--surface-2);
+    }
   }
 
-  /* Mobile Chat Container */
-  .mobile-chat-container {
-    min-height: 100dvh;
-    padding-left: max(env(safe-area-inset-left), 0px);
-    padding-right: max(env(safe-area-inset-right), 0px);
+  @media (prefers-reduced-motion: reduce) {
+    .card-surface,
+    .card-depth,
+    .brand-chip,
+    .mobile-feature-card {
+      transform: none !important;
+    }
+
+    .card-surface:hover,
+    .card-depth:hover {
+      transform: none;
+      box-shadow: var(--shadow-soft-raise);
+    }
   }
 }
