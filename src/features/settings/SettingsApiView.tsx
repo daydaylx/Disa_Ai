@@ -74,10 +74,10 @@ export function SettingsApiView() {
     <div className="relative flex flex-col text-text-primary h-full">
       <AppHeader pageTitle="API-Key" />
 
-      <div className="space-y-4 sm:space-y-6 px-[var(--spacing-4)] py-3 sm:py-[var(--spacing-6)]">
-        <GlassCard className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6 px-4 py-3 sm:px-6 sm:py-6">
+        <GlassCard variant="raised" className="space-y-4 sm:space-y-6">
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-text-primary">API-Key & Verbindung</h2>
+            <h2 className="text-xl font-semibold text-text-on-raised">API-Key & Verbindung</h2>
             <p className="text-sm text-text-secondary">
               Optionaler OpenRouter-API-Key für persönliche Limits.
             </p>
