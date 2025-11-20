@@ -9,10 +9,17 @@
  * Mobile-first premium glassmorphism with balanced performance.
  */
 
-/* Import consolidated styles */
+/* Import consolidated styles FIRST - postcss-import will process these before Tailwind */
 @import "./styles/z-index-system.css"; /* FIRST: Establish z-index hierarchy */
 @import "./styles/design-tokens-consolidated.css"; /* NEW: Aurora Design System Tokens */
 @import "./styles/base.css";
+
+/* Tailwind CSS - after base imports but before component styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Component and utility styles that use @layer directives */
 @import "./styles/components.css";
 @import "./styles/grid-system.css"; /* NEW: Responsive Grid System */
 @import "./styles/white-space.css"; /* NEW: White Space Management System */
@@ -20,11 +27,6 @@
 @import "./styles/vertical-rhythm.css"; /* NEW: Vertical Rhythm and Typography System */
 @import "./styles/interactive-states.css"; /* NEW: Interactive States System */
 @import "./styles/ui-state-animations.css"; /* Universal State System animations */
-
-/* Tailwind CSS */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* ============================================================================
    PROJECT-SPECIFIC STYLES
