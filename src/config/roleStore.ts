@@ -74,22 +74,22 @@ async function fetchJson(url: string, signal?: AbortSignal): Promise<unknown> {
 }
 
 async function tryLoadRoles(signal?: AbortSignal): Promise<RoleTemplate[] | null> {
-  const candidates = ["/styles.json", "/persona.json", "/roles.json"];
-  for (const url of candidates) {
-    try {
-      const data = await fetchJson(url, signal);
-      if (!data) continue;
-      const arr = Array.isArray(data)
-        ? data
-        : Array.isArray((data as Record<string, unknown>)["styles"])
-          ? ((data as Record<string, unknown>)["styles"] as unknown[])
-          : null;
-      if (!arr) continue;
-      const parsed = parseRoles(arr);
-      if (parsed && parsed.length > 0) return sanitize(parsed);
-    } catch {
-      // next candidate
-    }
+  // Nur persona.json verwenden (nicht styles.json oder roles.json)
+  try {
+    const data = await fetchJson("/persona.json", signal);
+    if (!data) return null;
+
+    const arr = Array.isArray(data)
+      ? data
+      : Array.isArray((data as Record<string, unknown>)["styles"])
+        ? ((data as Record<string, unknown>)["styles"] as unknown[])
+        : null;
+
+    if (!arr) return null;
+    const parsed = parseRoles(arr);
+    if (parsed && parsed.length > 0) return sanitize(parsed);
+  } catch (error) {
+    console.error("[RoleStore] Failed to load persona.json:", error);
   }
   return null;
 }
@@ -135,7 +135,7 @@ export async function fetchRoleTemplates(
         _roles = [];
         _loaded = true;
         _state = "missing";
-        _error = "styles.json nicht gefunden oder ungültig (public/styles.json)";
+        _error = "persona.json nicht gefunden oder ungültig (public/persona.json)";
         return _roles;
       }
       _roles = list;
