@@ -121,19 +121,19 @@ export function ChatComposer({
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-[var(--glass-border-subtle)] bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-[var(--text-secondary)] shadow-[var(--shadow-glow-soft)]">
-                  <Zap className="h-3 w-3 text-[var(--aurora-primary-500)]" />
+                <span className="inline-flex items-center gap-1 rounded-sm bg-surface-inset shadow-inset px-3 py-1 text-text-meta">
+                  <Zap className="h-3 w-3 text-accent-primary" />
                   {tokenCount} Token
                 </span>
               )}
               {maxTokens !== undefined && (
-                <span className="inline-flex items-center gap-2 rounded-full border border-[var(--glass-border-subtle)] bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-subtle)] px-3 py-1 text-[var(--text-secondary)]">
+                <span className="inline-flex items-center gap-2 rounded-sm bg-surface-inset shadow-inset px-3 py-1 text-text-meta">
                   Maximal: {maxTokens}
                 </span>
               )}
             </div>
             {tokenCount !== undefined && maxTokens !== undefined && (
-              <div className="text-[var(--text-muted)]">
+              <div className="text-text-muted">
                 {Math.round((tokenCount / maxTokens) * 100)}% verwendet
               </div>
             )}

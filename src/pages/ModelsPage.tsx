@@ -148,14 +148,15 @@ export default function ModelsPage() {
               />
             </div>
 
+            {/* Material Filter Buttons */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 className={cn(
-                  "p-3 rounded-xl border border-[var(--glass-border-soft)] bg-surface-panel/80 backdrop-blur-lg cursor-pointer transition-all",
+                  "p-3 rounded-sm shadow-raise cursor-pointer transition-all duration-fast",
                   showFavoritesOnly
-                    ? "bg-pink-500/20 border-pink-500/30"
-                    : "hover:bg-surface-panel",
+                    ? "bg-surface-inset shadow-inset ring-1 ring-accent-primary text-accent-primary"
+                    : "bg-surface-2 hover:shadow-raiseLg active:scale-[0.98]",
                 )}
               >
                 <Star className="h-4 w-4" />
@@ -164,8 +165,10 @@ export default function ModelsPage() {
               <button
                 onClick={() => setShowFreeOnly(!showFreeOnly)}
                 className={cn(
-                  "p-3 rounded-xl border border-[var(--glass-border-soft)] bg-surface-panel/80 backdrop-blur-lg cursor-pointer transition-all",
-                  showFreeOnly ? "bg-pink-500/20 border-pink-500/30" : "hover:bg-surface-panel",
+                  "p-3 rounded-sm shadow-raise cursor-pointer transition-all duration-fast",
+                  showFreeOnly
+                    ? "bg-surface-inset shadow-inset ring-1 ring-accent-primary text-accent-primary"
+                    : "bg-surface-2 hover:shadow-raiseLg active:scale-[0.98]",
                 )}
               >
                 <Filter className="h-4 w-4" />
@@ -217,11 +220,11 @@ export default function ModelsPage() {
           ))}
         </div>
 
-        {/* Empty State */}
+        {/* Empty State - Material */}
         {filteredModels.length === 0 && (
           <div className="text-center py-16">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface-panel flex items-center justify-center">
-              <Search className="w-8 h-8 text-text-secondary" />
+            <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
+              <Search className="w-8 h-8 text-text-muted" />
             </div>
             <Typography
               variant="body-lg"

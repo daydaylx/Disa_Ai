@@ -7,9 +7,9 @@ export default function DatenschutzPage() {
         title="Datenschutzerklärung"
         subtitle="Informationen über die Verarbeitung personenbezogener Daten"
       />
-      <GlassCard className="max-w-2xl mx-auto p-6 space-y-8">
-        {/* Intro Notice */}
-        <div className="rounded-lg border border-[var(--color-primary-200)] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
+      <GlassCard variant="raised" className="max-w-2xl mx-auto p-6 space-y-8">
+        {/* Intro Notice - Material Style */}
+        <div className="rounded-sm bg-surface-inset shadow-inset p-4 text-accent-primary">
           <p className="font-medium">
             Diese Datenschutzerklärung informiert Sie über die Verarbeitung personenbezogener Daten
             bei Nutzung dieser Anwendung.
@@ -18,17 +18,17 @@ export default function DatenschutzPage() {
 
         {/* 1. Verantwortliche Stelle */}
         <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
             1. Verantwortliche Stelle
           </h2>
-          <div className="text-[var(--text-secondary)] space-y-3">
+          <div className="text-text-secondary space-y-3">
             <p>
               David Grunert
               <br />
               E-Mail:{" "}
               <a
                 href="mailto:grunert94@hotmail.com"
-                className="text-[var(--color-primary-500)] hover:underline"
+                className="text-accent-primary hover:underline"
               >
                 grunert94@hotmail.com
               </a>
@@ -42,10 +42,10 @@ export default function DatenschutzPage() {
 
         {/* 2. Allgemeine Hinweise */}
         <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
             2. Allgemeine Hinweise
           </h2>
-          <div className="text-[var(--text-secondary)] space-y-3">
+          <div className="text-text-secondary space-y-3">
             <p>Die Nutzung dieser Website ist ohne Angabe personenbezogener Daten möglich.</p>
             <p>
               Ich bitte ausdrücklich darum, keine persönlichen oder sensiblen Informationen (z. B.
@@ -62,16 +62,16 @@ export default function DatenschutzPage() {
 
         {/* 3. Verarbeitung durch technische Dienstleister */}
         <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
             3. Verarbeitung durch technische Dienstleister
           </h2>
 
           {/* INWX */}
           <div className="mb-6">
-            <h3 className="font-medium text-[var(--text-primary)] mb-2">
+            <h3 className="font-medium text-text-primary mb-2">
               a) INWX GmbH & Co. KG (Domain-Provider)
             </h3>
-            <div className="text-[var(--text-secondary)] space-y-2">
+            <div className="text-text-secondary space-y-2">
               <p>
                 Die Domain disaai.de wird über den Anbieter INWX GmbH & Co. KG, Prinzessinnenstraße
                 30, 10969 Berlin, betrieben. INWX speichert und verarbeitet technische Daten im
@@ -90,10 +90,10 @@ export default function DatenschutzPage() {
 
           {/* Cloudflare */}
           <div className="mb-6">
-            <h3 className="font-medium text-[var(--text-primary)] mb-2">
+            <h3 className="font-medium text-text-primary mb-2">
               b) Cloudflare Inc. (Content Delivery / Sicherheitsdienst)
             </h3>
-            <div className="text-[var(--text-secondary)] space-y-2">
+            <div className="text-text-secondary space-y-2">
               <p>
                 Zur Bereitstellung, Absicherung und Beschleunigung der Website wird der Dienst
                 Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, USA, eingesetzt.
@@ -116,10 +116,10 @@ export default function DatenschutzPage() {
 
           {/* OpenRouter */}
           <div>
-            <h3 className="font-medium text-[var(--text-primary)] mb-2">
+            <h3 className="font-medium text-text-primary mb-2">
               c) OpenRouter Inc. (KI-Funktion)
             </h3>
-            <div className="text-[var(--text-secondary)] space-y-2">
+            <div className="text-text-secondary space-y-2">
               <p>
                 Für die optionalen KI-Funktionen wird der Dienst OpenRouter Inc. genutzt. Wenn
                 Nutzer Texte oder Fragen eingeben, werden diese an OpenRouter übermittelt, um eine
@@ -143,10 +143,10 @@ export default function DatenschutzPage() {
 
         {/* 4. Cookies und Tracking */}
         <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
             4. Cookies und Tracking
           </h2>
-          <p className="text-[var(--text-secondary)]">
+          <p className="text-text-secondary">
             Ich selbst verwende keine Cookies und keine Tracking-Dienste. Cloudflare kann technisch
             notwendige Cookies setzen, um Sicherheits- und Lastverteilungsfunktionen
             bereitzustellen. Diese speichern keine personenbezogenen Informationen im rechtlichen
@@ -156,10 +156,10 @@ export default function DatenschutzPage() {
 
         {/* 5. Speicherdauer */}
         <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
             5. Speicherdauer
           </h2>
-          <p className="text-[var(--text-secondary)]">
+          <p className="text-text-secondary">
             Ich speichere keinerlei personenbezogene Daten. Daten, die durch INWX, Cloudflare oder
             OpenRouter verarbeitet werden, unterliegen deren jeweiligen Speicher- und
             Löschrichtlinien. Ich habe darauf keinen direkten Einfluss.
@@ -168,10 +168,10 @@ export default function DatenschutzPage() {
 
         {/* 6. Rechte der betroffenen Personen */}
         <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
             6. Rechte der betroffenen Personen
           </h2>
-          <div className="text-[var(--text-secondary)] space-y-3">
+          <div className="text-text-secondary space-y-3">
             <p>
               Soweit über die genannten Dienstleister personenbezogene Daten verarbeitet werden,
               haben betroffene Personen nach DSGVO folgende Rechte:
@@ -190,7 +190,7 @@ export default function DatenschutzPage() {
               Zur Ausübung dieser Rechte kann eine Anfrage an{" "}
               <a
                 href="mailto:grunert94@hotmail.com"
-                className="text-[var(--color-primary-500)] hover:underline"
+                className="text-accent-primary hover:underline"
               >
                 grunert94@hotmail.com
               </a>{" "}
@@ -201,10 +201,10 @@ export default function DatenschutzPage() {
 
         {/* 7. Datensicherheit */}
         <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
             7. Datensicherheit
           </h2>
-          <p className="text-[var(--text-secondary)]">
+          <p className="text-text-secondary">
             Die Übertragung dieser Website erfolgt über HTTPS (TLS-Verschlüsselung). Ich treffe
             zumutbare Maßnahmen zum Schutz der übertragenen Daten. Eine absolute Sicherheit der
             Datenübertragung im Internet kann jedoch nicht garantiert werden.
@@ -213,13 +213,13 @@ export default function DatenschutzPage() {
 
         {/* 8. Änderungen dieser Datenschutzerklärung */}
         <section>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3">
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
             8. Änderungen dieser Datenschutzerklärung
           </h2>
-          <p className="text-[var(--text-secondary)]">
+          <p className="text-text-secondary">
             Ich behalte mir vor, diese Erklärung zu ändern, falls sich technische Abläufe oder
             gesetzliche Rahmenbedingungen ändern. Die aktuelle Version ist jederzeit auf{" "}
-            <a href="https://disaai.de" className="text-[var(--color-primary-500)] hover:underline">
+            <a href="https://disaai.de" className="text-accent-primary hover:underline">
               https://disaai.de
             </a>{" "}
             abrufbar.

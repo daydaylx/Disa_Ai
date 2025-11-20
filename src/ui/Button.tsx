@@ -1,19 +1,34 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
+/**
+ * MaterialButton - Neumorphism/Soft-Depth Button Component
+ *
+ * NO borders - depth through shadows only
+ * Physical feedback: press transforms to scale(0.98) + translateY
+ *
+ * Variants:
+ * - primary: Accent-colored with soft glow on hover
+ * - secondary: Raised surface with no accent
+ * - ghost: Minimal, no shadow
+ * - link: Text-only link style
+ */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary disabled:opacity-50 disabled:pointer-events-none",
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        primary:
+          "bg-accent-primary text-white shadow-raise hover:bg-accent-hover hover:shadow-accentGlow active:scale-[0.98] active:translate-y-px active:bg-accent-active",
+        secondary:
+          "bg-surface-2 text-text-primary shadow-raise hover:shadow-raiseLg active:scale-[0.98] active:translate-y-px active:shadow-inset",
+        ghost:
+          "hover:bg-surface-2 hover:text-text-primary active:scale-[0.98]",
+        link: "text-accent-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "min-h-[44px] py-2 px-4",
-        sm: "min-h-[44px] rounded-md px-3",
+        sm: "min-h-[44px] rounded-sm px-3",
         lg: "min-h-[48px] rounded-md px-8",
         icon: "min-h-[44px] min-w-[44px]",
       },

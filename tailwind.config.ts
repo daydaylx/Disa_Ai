@@ -80,27 +80,22 @@ const spacingScale = {
   10: "var(--spacing-10)", // 64px
 };
 
-// Border radius from design-tokens.css
+// Border radius from design-tokens.css (STRICT 3-TIER SYSTEM)
 const radii = {
   none: "0px",
-  xs: "var(--radius-xs)", // 6px
-  sm: "var(--radius-sm)", // 10px
-  md: "var(--radius-md)", // 14px
-  lg: "var(--radius-lg)", // 18px
-  xl: "var(--radius-xl)", // 24px
+  sm: "var(--r-sm)", // 8px - Small controls (Chips, Badges)
+  md: "var(--r-md)", // 12px - Standard (Cards, Buttons)
+  lg: "var(--r-lg)", // 16px - Hero (Large Cards, Panels)
   full: "9999px",
 };
 
-// Aurora Glow Shadows
+// Neumorphism Shadow System (STRICT 3-TYPE SYSTEM)
 const boxShadows = {
-  light: "var(--shadow-light)",
-  heavy: "var(--shadow-heavy)",
-  elevated: "var(--shadow-elevated)",
-  floating: "var(--shadow-floating)",
-  glowPrimary: "var(--shadow-glow-primary)",
-  glowGreen: "var(--shadow-glow-green)",
-  glowLila: "var(--shadow-glow-lila)",
-  glowSubtle: "var(--shadow-glow-subtle)",
+  raise: "var(--shadow-soft-raise)", // Standard UI elements
+  raiseLg: "var(--shadow-strong-raise)", // Hero/focal elements
+  inset: "var(--shadow-inset)", // Pressed/input fields
+  accentGlow: "var(--shadow-accent-glow)", // Active state glow
+  accentGlowLg: "var(--shadow-accent-glow-strong)", // Strong glow
 };
 
 // Font sizes from design-tokens.css typography tokens
@@ -115,18 +110,19 @@ const fontSizes = {
   "4xl": ["var(--text-4xl)", { lineHeight: "var(--leading-tight)" }], // 36px
 };
 
-// Aurora Motion (elastic added)
+// Physical Feedback Motion System
 const motionDurations = {
-  fast: "var(--motion-duration-fast)", // 100ms
-  1: "var(--motion-duration-1)", // 150ms
-  medium: "var(--motion-duration-medium)", // 200ms
-  slow: "var(--motion-duration-slow)", // 300ms
+  instant: "var(--motion-instant)", // 80ms
+  fast: "var(--motion-fast)", // 120ms
+  medium: "var(--motion-medium)", // 200ms
+  slow: "var(--motion-slow)", // 300ms
 };
 
 const motionEasings = {
-  elastic: "var(--motion-ease-elastic)",
-  out: "var(--motion-ease-out)",
-  standard: "var(--motion-ease-standard)",
+  "in-out": "var(--ease-in-out)",
+  out: "var(--ease-out)",
+  spring: "var(--ease-spring)",
+  bounce: "var(--ease-bounce)",
 };
 
 export default {
@@ -165,11 +161,6 @@ export default {
       },
       transitionDuration: motionDurations,
       transitionTimingFunction: motionEasings,
-      backdropBlur: {
-        subtle: "var(--backdrop-blur-subtle)", // 4px
-        medium: "var(--backdrop-blur-medium)", // 8px
-        strong: "var(--backdrop-blur-strong)", // 12px
-      },
       padding: {
         "safe-top": "env(safe-area-inset-top)",
         "safe-bottom": "env(safe-area-inset-bottom)",
@@ -188,17 +179,22 @@ export default {
 } satisfies Config;
 
 /*
- * DESIGN SYSTEM INTEGRATION
+ * NEUMORPHISM/SOFT-DEPTH DESIGN SYSTEM INTEGRATION
  *
- * This Tailwind config now maps directly to design-tokens.css variables,
- * ensuring consistent design token usage across the entire application.
+ * This Tailwind config maps to the new Material Design system in design-tokens.css
  *
  * Key mappings:
- * - Colors: design-tokens.css primary/neutral/status color scales
+ * - Colors: Material palette with Indigo accent
  * - Spacing: 8px grid system (--spacing-0 to --spacing-10)
- * - Typography: Font sizes and line heights from design-tokens.css
- * - Shadows: Light/heavy/elevated/floating shadow system
- * - Radii: 6px to 24px border radius scale
+ * - Typography: Mobile-first font sizes and line heights
+ * - Shadows: STRICT 3-type system (raise, raiseLg, inset)
+ * - Radii: STRICT 3-tier system (sm: 8px, md: 12px, lg: 16px)
  *
- * ALL NEW COMPONENTS MUST USE DESIGN-TOKENS.CSS SYSTEM ONLY!
+ * RULES:
+ * - NO backdrop-blur (removed)
+ * - NO borders (only shadows for depth)
+ * - ONLY 3 shadow types
+ * - ONLY 3 radii sizes
+ *
+ * ALL COMPONENTS MUST USE THIS NEUMORPHISM SYSTEM!
  */
