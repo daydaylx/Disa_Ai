@@ -23,6 +23,7 @@ export default defineConfig({
       "src/**/*.{test,spec}.{ts,tsx}",
       "tests/unit/**/*.{test,spec}.{ts,tsx}",
       "tests/smoke/**/*.{test,spec}.{ts,tsx}",
+      "tests/build/**/*.{test,spec}.{ts,tsx}",
     ],
     exclude: ["**/node_modules/**", "**/dist/**", "**/e2e/**", "**/*.stories.{ts,tsx}"],
     coverage: {
