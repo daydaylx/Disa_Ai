@@ -27,19 +27,28 @@ export async function loadRoles(): Promise<Role[]> {
   }
 
   // Konvertiere externe Rollen zu Role-Format
-  const rolesFormatted: Role[] = externalRoles.map((role) => ({
-    id: role.id,
-    name: role.name,
-    systemPrompt: role.system || "",
-    allowedModels: role.allow,
-    tags: role.tags,
-    category: categorizeRole(role),
-    styleHints: {
-      typographyScale: 1.0,
-      borderRadius: 0.5,
-      accentColor: getAccentColorForRole(role),
-    },
-  }));
+  const rolesFormatted: Role[] = externalRoles.map((role) => {
+    // Generate a description from the first sentence of the system prompt
+    const systemPrompt = role.system || "";
+    const firstSentence = systemPrompt.split(/[.!?]/)[0]?.trim() || "";
+    const description =
+      firstSentence.length > 0 && firstSentence.length <= 200 ? firstSentence : role.name;
+
+    return {
+      id: role.id,
+      name: role.name,
+      description,
+      systemPrompt,
+      allowedModels: role.allow,
+      tags: role.tags,
+      category: categorizeRole(role),
+      styleHints: {
+        typographyScale: 1.0,
+        borderRadius: 0.5,
+        accentColor: getAccentColorForRole(role),
+      },
+    };
+  });
 
   cachedCombinedRoles = rolesFormatted;
   return cachedCombinedRoles;
