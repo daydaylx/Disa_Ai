@@ -1,25 +1,20 @@
 import { useEffect, useState } from "react";
 
 import { useFavorites } from "../contexts/FavoritesContext";
+import type { Role } from "../data/roles";
+import { loadRoles as loadRolesFromJson } from "../data/roles";
 import type { EnhancedRole } from "../types/enhanced-interfaces";
-type Role = {
-  id: string;
-  name: string;
-  systemPrompt: string;
-  allowedModels: string[];
-  tags: string[];
-  category: string;
-  styleHints: {
-    typographyScale: number;
-    borderRadius: number;
-    accentColor: string;
-  };
-};
 
 // Convert a Role to EnhancedRole
 function enhanceRole(role: Role): EnhancedRole {
   return {
-    ...role,
+    id: role.id,
+    name: role.name,
+    systemPrompt: role.systemPrompt,
+    allowedModels: role.allowedModels || [],
+    tags: role.tags || [],
+    category: role.category || "Spezial",
+    styleHints: role.styleHints,
     isFavorite: false, // Will be updated by favorites context
     lastUsed: null,
     usage: {
@@ -52,12 +47,10 @@ export function useRoles() {
     async function loadRoles() {
       try {
         setLoading(true);
-        // Fetch roles from public JSON
-        const response = await fetch("/data/roles.json");
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        const baseRoles: Role[] = await response.json();
+        // Use the correct loadRoles function from data/roles.ts
+        // which loads from persona.json via roleStore
+        const baseRoles: Role[] = await loadRolesFromJson();
+
         // Convert to EnhancedRole format
         const enhancedRoles = baseRoles.map(enhanceRole);
 
