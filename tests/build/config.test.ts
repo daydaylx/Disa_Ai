@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
+import { describe, expect,it } from 'vitest';
 
 describe('Build Configuration Smoke Tests', () => {
   const rootDir = process.cwd();
@@ -16,8 +16,10 @@ describe('Build Configuration Smoke Tests', () => {
 
     expect(config, 'PostCSS config should export a default object').toBeDefined();
     expect(config.plugins, 'PostCSS config should have plugins').toBeDefined();
-    expect(config.plugins).toHaveProperty('tailwindcss', {}, 'Tailwind plugin missing in PostCSS');
-    expect(config.plugins).toHaveProperty('autoprefixer', {}, 'Autoprefixer plugin missing in PostCSS');
+    // Check for Tailwind plugin in PostCSS config
+    expect(config.plugins).toHaveProperty('tailwindcss', {});
+    // Check for Autoprefixer plugin in PostCSS config
+    expect(config.plugins).toHaveProperty('autoprefixer', {});
   });
 
   it('tailwind.config.ts exists and has correct content globs', async () => {
@@ -34,9 +36,9 @@ describe('Build Configuration Smoke Tests', () => {
     // Check for index.html
     expect(config.content).toContain('./index.html');
 
-    // Check for src/**/*.{ts,tsx} or similar
+    // Check for src/**/*.{ts,tsx} or similar - Tailwind content should include src ts/tsx files
     const srcGlob = config.content.find((c: string) => c.includes('src/') && c.includes('ts') && c.includes('tsx'));
-    expect(srcGlob, 'Tailwind content should include src ts/tsx files').toBeDefined();
+    expect(srcGlob).toBeDefined();
   });
 
   it('src/index.css contains Tailwind directives', () => {
@@ -54,7 +56,8 @@ describe('Build Configuration Smoke Tests', () => {
       expect(fs.existsSync(mainPath), 'src/main.tsx should exist').toBe(true);
 
       const content = fs.readFileSync(mainPath, 'utf-8');
-      expect(content).toMatch(/import "\.\/index\.css"/, 'main.tsx should import index.css');
+      // main.tsx should import index.css
+      expect(content).toMatch(/import "\.\/index\.css"/);
   });
 
   it('index.html contains entry point and mount node', () => {

@@ -1,6 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import React from "react";
-import { describe, it, expect, vi, beforeAll } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
+
 import App from "../../src/App";
 
 // Mock the Router component to avoid full routing setup/side-effects
@@ -30,34 +31,34 @@ vi.mock("@sentry/react", () => ({
 
 // Setup browser mocks
 beforeAll(() => {
-    // matchMedia mock
-    Object.defineProperty(window, 'matchMedia', {
-        writable: true,
-        value: vi.fn().mockImplementation(query => ({
-            matches: false,
-            media: query,
-            onchange: null,
-            addListener: vi.fn(),
-            removeListener: vi.fn(),
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-            dispatchEvent: vi.fn(),
-        })),
-    });
+  // matchMedia mock
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
 
-    // ResizeObserver mock
-    global.ResizeObserver = vi.fn().mockImplementation(() => ({
-        observe: vi.fn(),
-        unobserve: vi.fn(),
-        disconnect: vi.fn(),
-    }));
+  // ResizeObserver mock
+  global.ResizeObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
 
-    // IntersectionObserver mock
-    global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-        observe: vi.fn(),
-        unobserve: vi.fn(),
-        disconnect: vi.fn(),
-    }));
+  // IntersectionObserver mock
+  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
 });
 
 describe("App Entry Point Smoke Test", () => {
