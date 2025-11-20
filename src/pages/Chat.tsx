@@ -119,7 +119,7 @@ export default function Chat() {
     <div className="relative flex flex-col text-text-primary h-full">
       <AppHeader pageTitle="Chat" />
       {isEmpty ? (
-        <div className="flex flex-col gap-4 sm:gap-6 px-[var(--spacing-4)] py-3 sm:py-[var(--spacing-6)]">
+        <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)]">
           <SectionHeader
             variant="compact"
             title="Chat-Start"
@@ -139,7 +139,7 @@ export default function Chat() {
         </div>
       ) : (
         <div
-          className="flex-1 overflow-y-auto rounded-2xl border border-[color:var(--glass-border-soft)] bg-surface-panel/80 p-4 shadow-lg"
+          className="flex-1 overflow-y-auto rounded-2xl border border-[color:var(--glass-border-soft)] bg-surface-panel/80 p-[var(--spacing-4)] shadow-glowSubtle"
           data-testid="chat-message-list"
         >
           <VirtualizedMessageList
@@ -158,8 +158,8 @@ export default function Chat() {
         </div>
       )}
 
-      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base to-transparent pt-4 z-10 safe-area-bottom">
-        <div className="px-page-padding-x safe-area-horizontal" ref={composerContainerRef}>
+      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base to-transparent pt-[var(--spacing-4)] pb-[calc(var(--spacing-4)+env(safe-area-inset-bottom))] z-10">
+        <div className="px-[var(--spacing-4)] safe-area-horizontal" ref={composerContainerRef}>
           <ChatComposer
             value={input}
             onChange={setInput}
