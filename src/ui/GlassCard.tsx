@@ -10,15 +10,15 @@ interface GlassCardProps extends ComponentProps<"div"> {
 /**
  * MaterialCard (formerly GlassCard)
  *
- * Neumorphism/Soft-Depth Card Component
- * - NO backdrop-blur
- * - NO borders
+ * Neumorphism/Soft-Depth Card Component with Signature Bevel Highlight
+ * - NO backdrop-blur, NO borders
  * - Depth durch Shadows (raised/inset)
+ * - Bevel highlight auf raised variants (Werkzeug-DNA)
  *
  * Variants:
- * - "raised" (default): Standard card with soft raise shadow
- * - "inset": Pressed/inset appearance for contained areas
- * - "hero": Strong raised shadow for focal elements
+ * - "raised" (default): Standard card with soft raise shadow + bevel
+ * - "inset": Pressed/inset appearance for contained areas (NO bevel)
+ * - "hero": Strong raised shadow + stronger bevel for focal elements
  */
 export function GlassCard({
   children,
@@ -26,12 +26,12 @@ export function GlassCard({
   variant = "raised",
   ...props
 }: GlassCardProps) {
-  const baseStyles = "rounded-md p-6 transition-all duration-fast";
+  const baseStyles = "relative rounded-md p-6 transition-all duration-fast overflow-hidden";
 
   const variantStyles = {
-    raised: "bg-surface-2 shadow-raise",
+    raised: "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
     inset: "bg-surface-1 shadow-inset",
-    hero: "bg-surface-2 shadow-raiseLg",
+    hero: "bg-surface-2 shadow-raiseLg before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight-strong)]",
   };
 
   return (
@@ -43,7 +43,7 @@ export function GlassCard({
       )}
       {...props}
     >
-      {children}
+      <div className="relative z-10">{children}</div>
     </div>
   );
 }

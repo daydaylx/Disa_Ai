@@ -133,22 +133,22 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   // Show loading skeleton while roles are loading
   if (rolesLoading) {
     return (
-      <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
+      <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
         <div className="p-4 space-y-4">
-          <Skeleton className="h-10 w-full rounded-full" /> {/* Search bar skeleton */}
+          <Skeleton className="h-10 w-full rounded-md" /> {/* Search bar skeleton */}
           <div className="flex gap-2">
-            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
-            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
-            <Skeleton className="h-9 w-24 rounded-full" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-sm" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-sm" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-sm" /> {/* Filter chip skeleton */}
           </div>
           <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-32 rounded-full" /> // Category pill skeleton
+              <Skeleton key={i} className="h-10 w-32 rounded-sm" /> // Category pill skeleton
             ))}
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-[180px] w-full" /> // Role card skeleton
+              <Skeleton key={i} className="h-[200px] w-full rounded-md" /> // Role card skeleton
             ))}
           </div>
         </div>
@@ -157,22 +157,24 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   }
 
   return (
-    <div className={`flex flex-col h-full bg-surface-base ${className || ""}`}>
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-40 border-b border-line bg-surface-glass/80 backdrop-blur-md">
+    <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
+      {/* MATERIAL INSET HEADER PANEL */}
+      <div className="sticky top-0 z-40 bg-surface-1 shadow-inset">
         <div className="p-4 space-y-4">
-          {/* Search Input */}
+          {/* Search Input - Material Style */}
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1.5 shadow-inset">
+              <Search className="w-4 h-4 text-text-muted" />
+            </div>
             <Input
               placeholder="Rollen durchsuchen..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full border-transparent bg-surface-muted/70 pl-11 pr-4 py-3 text-base focus:bg-surface-base focus:border-accent"
+              className="w-full rounded-md bg-surface-2 pl-14 pr-4 py-3 text-base shadow-raise focus:shadow-raiseLg transition-all"
             />
           </div>
 
-          {/* Filter Chips */}
+          {/* Filter Chips Row */}
           <div className="flex gap-3">
             <FilterChip
               selected={filters.showFavoritesOnly}
@@ -195,15 +197,16 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           </div>
         </div>
 
-        {/* Category Pills */}
-        <div className="px-4 pb-4 pt-2">
-          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* CATEGORY PILLS - INSET CONTAINER */}
+        <div className="mx-4 mb-4 rounded-md bg-surface-inset shadow-inset p-3">
+          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {CATEGORY_ORDER.filter((cat: string) => (categoryCounts[cat] || 0) > 0).map(
               (category: string) => (
                 <FilterChip
                   key={category}
                   selected={selectedCategory === category}
                   onClick={() => handleCategorySelect(category)}
+                  count={categoryCounts[category]}
                 >
                   {category}
                 </FilterChip>
@@ -216,13 +219,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       {/* Roles List */}
       <div className="flex-1 overflow-auto">
         <div className="p-4">
-          {/* Results Header */}
+          {/* Results Header - Typography Semantic */}
           <div className="flex items-center justify-between mb-6">
-            <div className="text-sm text-text-secondary">
+            <h2 className="text-lg font-medium text-text-secondary">
               {filteredRoles.length} Rollen gefunden
-              {searchQuery && ` für "${searchQuery}"`}
-              {selectedCategory && ` in ${selectedCategory}`}
-            </div>
+              {searchQuery && <span className="text-text-accent"> für "{searchQuery}"</span>}
+              {selectedCategory && <span className="text-text-accent"> in {selectedCategory}</span>}
+            </h2>
             {selectedCategory && (
               <Button
                 variant="ghost"
@@ -235,35 +238,68 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             )}
           </div>
 
-          {/* Roles Grid */}
+          {/* ROLES GRID - MATERIAL CARDS */}
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"
             data-testid="role-card-grid"
           >
-            {filteredRoles.map((role) => (
-              <GlassCard
-                key={role.id}
-                className="p-4 transition-all duration-200 min-h-[180px]"
-                onClick={() => handleActivateRole(role)}
-              >
-                <h3 className="font-semibold text-text-primary text-base flex-1 min-w-0 pr-2">
-                  <span className="truncate inline-block max-w-full" title={role.name}>
-                    {role.name}
-                  </span>
-                </h3>
-                <p className="text-sm text-text-secondary" title={role.description}>
-                  {role.description}
-                </p>
-              </GlassCard>
-            ))}
+            {filteredRoles.map((role) => {
+              const isFavorite = isRoleFavorite(role.id);
+              return (
+                <GlassCard
+                  key={role.id}
+                  variant="raised"
+                  className="cursor-pointer hover:shadow-raiseLg transition-all duration-fast group"
+                  onClick={() => handleActivateRole(role)}
+                >
+                  {/* CARD HEADER */}
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="flex items-center gap-3">
+                      {/* Icon Container - Inset */}
+                      <div className="w-10 h-10 rounded-sm bg-surface-inset shadow-inset flex items-center justify-center">
+                        <Users className="w-5 h-5 text-text-accent" />
+                      </div>
+                      {/* Title */}
+                      <h3 className="font-semibold text-xl text-text-on-raised">
+                        {role.name}
+                      </h3>
+                    </div>
+                    {/* Favorite Star */}
+                    {isFavorite && (
+                      <Star className="w-5 h-5 text-accent-primary fill-accent-primary" />
+                    )}
+                  </div>
+
+                  {/* CARD BODY */}
+                  <p className="text-sm text-text-secondary mb-4 line-clamp-3">
+                    {role.description}
+                  </p>
+
+                  {/* CARD FOOTER */}
+                  <div className="flex items-center justify-between pt-3 border-t border-surface-inset">
+                    {/* Category Badge */}
+                    <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-meta">
+                      {role.category || "Spezial"}
+                    </span>
+                    {/* Usage indicator */}
+                    {usage[role.id] && (
+                      <span className="text-xs text-text-meta">
+                        {usage[role.id].count}× verwendet
+                      </span>
+                    )}
+                  </div>
+                </GlassCard>
+              );
+            })}
           </div>
 
+          {/* Empty State */}
           {filteredRoles.length === 0 && !roleLoadError && (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface-muted flex items-center justify-center">
-                <Users className="w-8 h-8 text-text-secondary" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
+                <Users className="w-8 h-8 text-text-muted" />
               </div>
-              <h3 className="text-lg font-medium text-text-primary mb-3">Keine Rollen gefunden</h3>
+              <h3 className="text-xl font-semibold text-text-primary mb-3">Keine Rollen gefunden</h3>
               <p className="text-text-secondary">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
@@ -274,17 +310,18 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             </div>
           )}
 
+          {/* Error State */}
           {roleLoadError && (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-status-danger/10 flex items-center justify-center">
-                <Users className="w-8 h-8 text-status-danger" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
+                <Users className="w-8 h-8 text-accent-danger" />
               </div>
-              <h3 className="text-lg font-medium text-text-primary mb-3">
+              <h3 className="text-xl font-semibold text-text-primary mb-3">
                 Rollen konnten nicht geladen werden
               </h3>
               <p className="text-text-secondary mb-6 max-w-md mx-auto">{roleLoadError}</p>
-              <p className="text-sm text-text-tertiary">
-                Stelle sicher, dass <code className="px-2 py-1 bg-surface-muted rounded">public/persona.json</code> existiert und korrekt formatiert ist.
+              <p className="text-sm text-text-meta">
+                Stelle sicher, dass <code className="px-2 py-1 bg-surface-inset rounded-sm shadow-inset">public/persona.json</code> existiert und korrekt formatiert ist.
               </p>
             </div>
           )}

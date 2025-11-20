@@ -31,11 +31,28 @@
   --surface-highlight: rgba(255, 255, 255, 0.03);
   --surface-highlight-strong: rgba(255, 255, 255, 0.06);
 
-  /* Text Hierarchy */
-  --text-primary: #f8fafc; /* Very high contrast */
+  /* SIGNATURE ELEMENT: Bevel Highlight (Werkzeug-DNA) */
+  --bevel-highlight: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 30%,
+    transparent 60%
+  );
+  --bevel-highlight-strong: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 30%,
+    transparent 60%
+  );
+
+  /* Text Hierarchy - Verschärft für Material-Tiefe */
+  --text-primary: #f8fafc; /* Very high contrast - Base BG */
+  --text-on-raised: #ffffff; /* Pure white - Text on raised cards (enhanced) */
   --text-secondary: #d1d5db; /* Secondary text */
-  --text-muted: #94a3b8; /* Muted/disabled */
+  --text-muted: #94a3b8; /* Muted text */
+  --text-meta: #71829b; /* Meta info - stärker gedimmt */
   --text-disabled: #64748b;
+  --text-accent: var(--accent-primary); /* Accent text for key info only */
 
   /* ========================================
    * ACCENT SYSTEM - INDIGO PRIMARY
@@ -121,14 +138,14 @@
     sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
-  /* Type Scale - Mobile optimiert */
-  --text-xs: 0.75rem; /* 12px - Caption, metadata */
-  --text-sm: 0.875rem; /* 14px - Body small, labels */
-  --text-base: 1rem; /* 16px - Body text */
-  --text-lg: 1.125rem; /* 18px - Subtitles */
+  /* Type Scale - Verschärfte Hierarchie für Material-UI */
+  --text-xs: 0.75rem; /* 12px - Meta info (Preis, Stats) */
+  --text-sm: 0.875rem; /* 14px - Labels, small body */
+  --text-base: 1rem; /* 16px - Body text (Standard-Lesetext) */
+  --text-lg: 1.125rem; /* 18px - Section titles */
   --text-xl: 1.25rem; /* 20px - Card titles */
   --text-2xl: 1.5rem; /* 24px - Page titles */
-  --text-3xl: 1.875rem; /* 30px - Hero titles */
+  --text-3xl: 1.75rem; /* 28px - Hero titles */
   --text-4xl: 2.25rem; /* 36px - Display */
 
   /* Line Heights - Mobile Reading optimiert */
@@ -137,11 +154,18 @@
   --leading-normal: 1.5; /* Body text (mobile optimiert) */
   --leading-relaxed: 1.6; /* Large text */
 
-  /* Font Weights */
-  --font-normal: 400;
-  --font-medium: 500;
-  --font-semibold: 600;
-  --font-bold: 700;
+  /* Font Weights - Hierarchie */
+  --font-normal: 400; /* Body text */
+  --font-medium: 500; /* Section titles, Meta */
+  --font-semibold: 600; /* Page titles, Card titles */
+  --font-bold: 700; /* Hero, Emphasis */
+
+  /* Typography Semantic Tokens */
+  --typo-page-title: var(--font-semibold) var(--text-2xl)/var(--leading-tight);
+  --typo-section-title: var(--font-medium) var(--text-lg)/var(--leading-snug);
+  --typo-card-title: var(--font-semibold) var(--text-xl)/var(--leading-snug);
+  --typo-body: var(--font-normal) var(--text-base)/var(--leading-normal);
+  --typo-meta: var(--font-medium) var(--text-xs)/var(--leading-snug);
 
   /* ========================================
    * MOTION SYSTEM - PHYSICAL FEEDBACK

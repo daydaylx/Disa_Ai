@@ -11,87 +11,139 @@ export default function StudioHome() {
   const { roles, activeRole: _activeRole, activateRole } = useRoles();
 
   return (
-    <div className="space-y-6 py-4 safe-area-vertical">
-      {/* Hero Section with dominant primary action */}
+    <div className="space-y-8 py-6 px-4 safe-area-vertical">
+      {/* HERO SECTION - Material */}
       <div className="text-center space-y-6 max-w-2xl mx-auto">
-        <SectionHeader
-          title="Dein ruhiges KI-Studio"
-          subtitle="für klare, produktive Konversationen"
-        />
-
-        <div className="pt-4">
-          <PrimaryButton
-            size="lg"
-            className="w-full max-w-xs mx-auto"
-            onClick={() => navigate("/chat")}
-          >
-            <MessageSquare className="mr-2 h-5 w-5" />
-            Neuer Chat
-          </PrimaryButton>
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-text-on-raised">
+            Dein ruhiges KI-Studio
+          </h1>
+          <p className="text-lg text-text-secondary">
+            für klare, produktive Konversationen
+          </p>
         </div>
+
+        {/* HERO CARD - "Neuer Chat" */}
+        <GlassCard
+          variant="hero"
+          className="max-w-xs mx-auto cursor-pointer hover:shadow-accentGlowLg transition-all group"
+          onClick={() => navigate("/chat")}
+        >
+          <div className="flex items-center justify-center gap-3 py-2">
+            <div className="w-10 h-10 rounded-sm bg-accent-primary shadow-accentGlow flex items-center justify-center group-hover:scale-110 transition-transform">
+              <MessageSquare className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-xl font-semibold text-text-on-raised">
+              Neuer Chat
+            </span>
+          </div>
+        </GlassCard>
       </div>
 
-      {/* Horizontal list of roles */}
+      {/* SCHNELLSTART-ROLLEN */}
       <div className="space-y-4">
-        <h2 className="text-lg font-medium text-text-primary">Schnellstart-Rollen</h2>
-        <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2">
-          {roles.slice(0, 6).map((role: EnhancedRole) => (
-            <div key={role.id} className="min-w-[280px] flex-shrink-0">
-              <GlassCard
-                onClick={() => {
-                  activateRole(role.id);
-                  setTimeout(() => navigate("/chat"), 100); // Delay to allow state update
-                }}
-                className="cursor-pointer"
-              >
-                <h3 className="font-semibold text-text-primary">{role.name}</h3>
-                <p className="text-sm text-text-secondary">{role.description}</p>
-              </GlassCard>
-            </div>
-          ))}
+        <h2 className="text-lg font-medium text-text-secondary px-2">
+          Schnellstart-Rollen
+        </h2>
+        {/* INSET CONTAINER for horizontal scroll */}
+        <div className="rounded-md bg-surface-inset shadow-inset p-3">
+          <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {roles.slice(0, 6).map((role: EnhancedRole) => (
+              <div key={role.id} className="min-w-[280px] flex-shrink-0">
+                <GlassCard
+                  variant="raised"
+                  onClick={() => {
+                    activateRole(role.id);
+                    setTimeout(() => navigate("/chat"), 100);
+                  }}
+                  className="cursor-pointer hover:shadow-raiseLg transition-all h-full"
+                >
+                  {/* Icon + Title */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-8 h-8 rounded-sm bg-surface-inset shadow-inset flex items-center justify-center">
+                      <Users className="w-4 h-4 text-text-accent" />
+                    </div>
+                    <h3 className="font-semibold text-text-on-raised">{role.name}</h3>
+                  </div>
+                  {/* Description */}
+                  <p className="text-sm text-text-secondary line-clamp-2">
+                    {role.description}
+                  </p>
+                </GlassCard>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Secondary actions */}
-      <div className="pt-6">
-        <h2 className="text-lg font-medium text-text-primary mb-4">Studio-Funktionen</h2>
+      {/* STUDIO-FUNKTIONEN */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-medium text-text-secondary px-2">
+          Studio-Funktionen
+        </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* Modelle */}
           <GlassCard
+            variant="raised"
             onClick={() => navigate("/models")}
-            className="flex items-center gap-4 p-4 cursor-pointer"
+            className="cursor-pointer hover:shadow-raiseLg transition-all group"
           >
-            <Brain className="h-8 w-8 text-accent" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-text-primary">Modelle</h3>
-              <p className="text-sm text-text-secondary">
-                Vergleiche Kosten, Kontext und Fähigkeiten
-              </p>
+            <div className="flex items-center gap-4">
+              {/* Icon Inset */}
+              <div className="w-12 h-12 rounded-sm bg-surface-inset shadow-inset flex items-center justify-center group-hover:bg-accent-primary/10 transition-colors">
+                <Brain className="w-6 h-6 text-text-accent group-hover:text-accent-primary transition-colors" />
+              </div>
+              {/* Content */}
+              <div className="flex-1">
+                <h3 className="font-semibold text-xl text-text-on-raised mb-1">
+                  Modelle
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  Vergleiche Kosten, Kontext und Fähigkeiten
+                </p>
+              </div>
             </div>
           </GlassCard>
 
+          {/* Rollen */}
           <GlassCard
+            variant="raised"
             onClick={() => navigate("/roles")}
-            className="flex items-center gap-4 p-4 cursor-pointer"
+            className="cursor-pointer hover:shadow-raiseLg transition-all group"
           >
-            <Users className="h-8 w-8 text-accent" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-text-primary">Rollen</h3>
-              <p className="text-sm text-text-secondary">
-                Nutze kuratierte Profile für verschiedene Aufgaben
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-sm bg-surface-inset shadow-inset flex items-center justify-center group-hover:bg-accent-primary/10 transition-colors">
+                <Users className="w-6 h-6 text-text-accent group-hover:text-accent-primary transition-colors" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-xl text-text-on-raised mb-1">
+                  Rollen
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  Nutze kuratierte Profile für verschiedene Aufgaben
+                </p>
+              </div>
             </div>
           </GlassCard>
 
+          {/* Einstellungen */}
           <GlassCard
+            variant="raised"
             onClick={() => navigate("/settings")}
-            className="flex items-center gap-4 p-4 cursor-pointer"
+            className="cursor-pointer hover:shadow-raiseLg transition-all group sm:col-span-2"
           >
-            <Settings className="h-8 w-8 text-accent" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-text-primary">Einstellungen</h3>
-              <p className="text-sm text-text-secondary">
-                Verwalte API-Keys, Speicher und deine Daten
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-sm bg-surface-inset shadow-inset flex items-center justify-center group-hover:bg-accent-primary/10 transition-colors">
+                <Settings className="w-6 h-6 text-text-accent group-hover:text-accent-primary transition-colors" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-xl text-text-on-raised mb-1">
+                  Einstellungen
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  Verwalte API-Keys, Speicher und deine Daten
+                </p>
+              </div>
             </div>
           </GlassCard>
         </div>
