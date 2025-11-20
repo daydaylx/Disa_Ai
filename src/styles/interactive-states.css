@@ -59,7 +59,7 @@
   }
 
   .hover-text:hover {
-    color: var(--color-brand-primary, #8b5cf6);
+    color: var(--color-brand-primary);
   }
 
   /* Focus states */
@@ -70,7 +70,7 @@
 
   .focus-ring:focus,
   .focus-ring:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8b5cf6);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
   }
 
@@ -90,7 +90,7 @@
 
   .focus-outline:focus,
   .focus-outline:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8b5cf6);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
   }
 
@@ -130,7 +130,7 @@
 
   .interactive-element:focus,
   .interactive-element:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8b5cf6);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
     box-shadow: 0 0 0 3px var(--color-action-primary-focus, rgba(139, 92, 246, 0.35));
   }
@@ -156,7 +156,7 @@
 
   .btn-interactive:focus,
   .btn-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8b5cf6);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
     box-shadow: 0 0 0 3px var(--color-action-primary-focus, rgba(139, 92, 246, 0.35));
   }
@@ -187,7 +187,7 @@
   .glass-interactive:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 2px var(--color-border-focus, #8b5cf6),
+      0 0 0 2px var(--color-border-focus),
       var(--shadow-glow-brand);
   }
 
@@ -212,7 +212,7 @@
 
   .card-interactive:focus,
   .card-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8b5cf6);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
   }
 
@@ -230,19 +230,19 @@
   }
 
   .link-interactive:hover {
-    color: var(--color-text-link-hover, #7c3aed);
+    color: var(--color-text-link-hover);
     text-decoration: underline;
   }
 
   .link-interactive:focus,
   .link-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8b5cf6);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
     border-radius: 2px;
   }
 
   .link-interactive:active {
-    color: var(--color-text-link, #8b5cf6);
+    color: var(--color-text-link);
   }
 
   /* Input interactive states */
@@ -280,7 +280,7 @@
 
   .switch-interactive:focus,
   .switch-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8b5cf6);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
   }
 
@@ -304,7 +304,7 @@
 
   .chip-interactive:focus,
   .chip-interactive:focus-visible {
-    outline: 2px solid var(--color-border-focus, #8b5cf6);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
   }
 
@@ -384,7 +384,7 @@
 
     .touch-interactive:focus,
     .touch-interactive:focus-visible {
-      outline: 2px solid var(--color-border-focus, #8b5cf6);
+      outline: 2px solid var(--color-border-focus);
       outline-offset: 2px;
     }
   }
