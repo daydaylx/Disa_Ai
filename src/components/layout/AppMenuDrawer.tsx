@@ -36,7 +36,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
       {/* Vollflächiges Overlay */}
       <div
         className={cn(
-          "fixed inset-0 flex items-center justify-center p-4 sm:p-6",
+          "fixed inset-0 flex items-center justify-center p-[var(--spacing-4)] sm:p-[var(--spacing-6)]",
           "transition-all duration-300 ease-out",
           className,
         )}
@@ -53,7 +53,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
             </Typography>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-panel/50 transition-colors"
+              className="p-[var(--spacing-3)] min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-panel/50 transition-colors"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
@@ -79,7 +79,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
                     <Link key={item.id} to={item.path} onClick={onClose} className="block">
                       <GlassCard
                         className={cn(
-                          "p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]",
+                          "p-[var(--spacing-4)] cursor-pointer transition-all duration-300 hover:scale-[1.02]",
                           isActive
                             ? "border-[var(--accent)] bg-[var(--accent-soft)]/30 shadow-lg shadow-[var(--accent)]/10"
                             : "hover:bg-surface-panel/50 border-transparent",
@@ -88,7 +88,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
                         <div className="flex items-center gap-3">
                           <div
                             className={cn(
-                              "flex items-center justify-center w-8 h-8 rounded-lg",
+                              "flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg",
                               isActive ? "bg-[var(--accent)]/20" : "bg-surface-panel/50",
                             )}
                           >
@@ -138,7 +138,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
                     <Link key={page.href} to={page.href} onClick={onClose} className="block">
                       <GlassCard
                         className={cn(
-                          "p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]",
+                          "p-[var(--spacing-4)] cursor-pointer transition-all duration-300 hover:scale-[1.02]",
                           isActive
                             ? "border-[var(--accent)] bg-[var(--accent-soft)]/30 shadow-lg shadow-[var(--accent)]/10"
                             : "hover:bg-surface-panel/50 border-transparent",
