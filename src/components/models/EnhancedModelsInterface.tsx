@@ -244,23 +244,23 @@ function PerformanceBar({
   const percentage = Math.min((value / maxValue) * 100, 100);
 
   const colorClasses = {
-    primary: "bg-accent",
-    success: "bg-status-success",
+    primary: "bg-accent-primary",
+    success: "bg-accent-secondary",
     warning: "bg-status-warning",
     error: "bg-status-danger",
   };
 
-  // Using the design system for the bar - could use a progress bar component if available
+  // Material Design Performance Bar - Inset container with raised fill
   return (
     <div className="flex items-center gap-3">
-      <span className="text-xs text-fg-muted min-w-[70px]">{label}</span>
-      <div className="flex-1 h-2.5 bg-surface-base rounded-full overflow-hidden border border-line shadow-1">
+      <span className="text-xs text-text-meta min-w-[70px]">{label}</span>
+      <div className="flex-1 h-2.5 bg-surface-inset rounded-full overflow-hidden shadow-inset">
         <div
-          className={`h-full ${colorClasses[color]} transition-all duration-300 shadow-[inset_0_0_4px_rgba(0,0,0,0.2)]`}
+          className={`h-full ${colorClasses[color]} transition-all duration-300 shadow-raise`}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <span className="text-xs font-medium min-w-[35px] text-right text-fg">
+      <span className="text-xs font-medium min-w-[35px] text-right text-text-primary">
         {Math.round(value)}
       </span>
     </div>
@@ -434,17 +434,17 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   // Show loading state while models are being loaded
   if (isLoadingModels) {
     return (
-      <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
+      <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
         <div className="p-4 space-y-4">
-          <Skeleton className="h-10 w-full rounded-full" />
+          <Skeleton className="h-10 w-full rounded-md" /> {/* Search bar skeleton */}
           <div className="flex gap-2">
-            <Skeleton className="h-9 w-24 rounded-full" />
-            <Skeleton className="h-9 w-24 rounded-full" />
-            <Skeleton className="h-9 w-24 rounded-full" />
+            <Skeleton className="h-9 w-24 rounded-sm" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-sm" />
+            <Skeleton className="h-9 w-24 rounded-sm" />
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-[180px] w-full" />
+              <Skeleton key={i} className="h-[180px] w-full rounded-md" /> // Model card skeleton
             ))}
           </div>
         </div>
@@ -453,22 +453,24 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   }
 
   return (
-    <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-40 border-b border-line bg-surface-glass/80 backdrop-blur-md">
+    <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
+      {/* MATERIAL INSET HEADER PANEL */}
+      <div className="sticky top-0 z-40 bg-surface-1 shadow-inset">
         <div className="p-4 space-y-4">
-          {/* Search Input */}
+          {/* Search Input - Material Style */}
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1.5 shadow-inset">
+              <Search className="w-4 h-4 text-text-muted" />
+            </div>
             <Input
               placeholder="Modelle durchsuchen..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full border-transparent bg-surface-muted/70 pl-11 pr-4 py-3 text-base focus:bg-surface-base focus:border-accent"
+              className="w-full rounded-md bg-surface-2 pl-14 pr-4 py-3 text-base shadow-raise focus:shadow-raiseLg transition-all"
             />
           </div>
 
-          {/* Filter Chips */}
+          {/* Filter Chips Row */}
           <div className="flex gap-3">
             <FilterChip
               selected={filters.showFavoritesOnly}
@@ -505,14 +507,14 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       {/* Models List */}
       <div className="flex-1 overflow-auto">
         <div className="p-4">
-          {/* Results Header */}
+          {/* Results Header - Typography Semantic */}
           <div className="flex items-center justify-between mb-6">
-            <div className="text-sm text-fg-muted">
+            <h2 className="text-lg font-medium text-text-secondary">
               {filteredModels.length} Modelle gefunden
-              {searchQuery && ` für "${searchQuery}"`}
-            </div>
+              {searchQuery && <span className="text-text-accent"> für "{searchQuery}"</span>}
+            </h2>
             {selectedModels.size > 0 && (
-              <div className="text-sm text-fg-muted">{selectedModels.size} ausgewählt</div>
+              <div className="text-sm text-text-meta">{selectedModels.size} ausgewählt</div>
             )}
           </div>
 
@@ -521,13 +523,14 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             {filteredModels.map((model) => (
               <GlassCard
                 key={model.id}
-                className="p-4 transition-all duration-200 min-h-[180px] animate-card-enter"
+                variant="raised"
+                className="p-4 cursor-pointer hover:shadow-raiseLg transition-all duration-fast animate-card-enter"
                 onClick={() => handleSelectModel(model)}
               >
-                {/* Header Row */}
+                {/* CARD HEADER */}
                 <div className="flex flex-col gap-2 mb-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-text-primary text-base flex-1 min-w-0 pr-2">
+                    <h3 className="font-semibold text-text-on-raised text-base flex-1 min-w-0 pr-2">
                       <span className="truncate inline-block max-w-full" title={model.label}>
                         {model.label}
                       </span>
@@ -641,13 +644,14 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             ))}
           </div>
 
+          {/* Empty State */}
           {filteredModels.length === 0 && !modelLoadError && (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface flex items-center justify-center">
-                <Search className="w-8 h-8 text-fg-muted" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
+                <Search className="w-8 h-8 text-text-muted" />
               </div>
-              <h3 className="text-lg font-medium text-fg mb-3">Keine Modelle gefunden</h3>
-              <p className="text-fg-muted">
+              <h3 className="text-xl font-semibold text-text-primary mb-3">Keine Modelle gefunden</h3>
+              <p className="text-text-secondary">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
                   : "Versuche es mit anderen Filtereinstellungen"}
@@ -655,36 +659,37 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             </div>
           )}
 
+          {/* Error State */}
           {modelLoadError && (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-status-danger/10 flex items-center justify-center">
-                <Search className="w-8 h-8 text-status-danger" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
+                <Search className="w-8 h-8 text-accent-danger" />
               </div>
-              <h3 className="text-lg font-medium text-fg mb-3">
+              <h3 className="text-xl font-semibold text-text-primary mb-3">
                 Modelle konnten nicht geladen werden
               </h3>
-              <p className="text-fg-muted mb-6 max-w-md mx-auto">{modelLoadError}</p>
-              <p className="text-sm text-text-tertiary">
-                Stelle sicher, dass <code className="px-2 py-1 bg-surface-muted rounded">public/models.json</code> existiert und korrekt formatiert ist.
+              <p className="text-text-secondary mb-6 max-w-md mx-auto">{modelLoadError}</p>
+              <p className="text-sm text-text-meta">
+                Stelle sicher, dass <code className="px-2 py-1 bg-surface-inset shadow-inset rounded-sm">public/models.json</code> existiert und korrekt formatiert ist.
               </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Floating Action Button */}
+      {/* Floating Action Button - Material Hero */}
       {selectedModels.size > 0 && (
         <div className="fixed bottom-6 right-6 z-popover">
           <Button
             variant="primary"
-            className="rounded-full w-14 h-14 shadow-lg"
+            className="rounded-full w-14 h-14 shadow-raiseLg hover:shadow-accentGlowLg"
             onClick={handleCompareModels}
           >
             <GitCompare className="w-6 h-6" />
             <span className="sr-only">Vergleichen</span>
           </Button>
           {selectedModels.size > 1 && (
-            <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold">
+            <div className="absolute -top-2 -right-2 w-6 h-6 bg-accent-primary text-white rounded-full shadow-accentGlow flex items-center justify-center text-xs font-bold">
               {selectedModels.size}
             </div>
           )}
