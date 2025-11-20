@@ -29,7 +29,8 @@ interface EnhancedRolesInterfaceProps {
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
-  const { roles, activeRole: _activeRole, setActiveRole } = useStudio();
+  const { roles, activeRole: _activeRole, setActiveRole, rolesLoading, roleLoadError } =
+    useStudio();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
 
   // Local state
@@ -54,18 +55,21 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     sortDirection: "asc",
   });
 
-  const [isLoadingRoles, setIsLoadingRoles] = useState(true);
-
   // Convert legacy roles to enhanced roles
   const enhancedRoles = useMemo(() => {
     return roles.map(migrateRole);
   }, [roles]);
 
+  // Show error toast when role loading fails
   useEffect(() => {
-    if (roles.length > 0) {
-      setIsLoadingRoles(false);
+    if (roleLoadError) {
+      push({
+        kind: "error",
+        title: "Fehler beim Laden der Rollen",
+        message: roleLoadError,
+      });
     }
-  }, [roles]);
+  }, [roleLoadError, push]);
 
   // Get category counts
   const categoryCounts = useMemo(() => {
@@ -126,7 +130,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     setSelectedCategory((prev) => (prev === category ? null : category));
   }, []);
 
-  if (isLoadingRoles) {
+  // Show loading skeleton while roles are loading
+  if (rolesLoading) {
     return (
       <div className={`flex flex-col h-full bg-bg-1 ${className || ""}`}>
         <div className="p-4 space-y-4">
@@ -253,7 +258,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             ))}
           </div>
 
-          {filteredRoles.length === 0 && (
+          {filteredRoles.length === 0 && !roleLoadError && (
             <div className="text-center py-16">
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface-muted flex items-center justify-center">
                 <Users className="w-8 h-8 text-text-secondary" />
@@ -265,6 +270,21 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   : selectedCategory
                     ? `Keine Rollen in "${selectedCategory}"`
                     : "Versuche es mit anderen Filtereinstellungen"}
+              </p>
+            </div>
+          )}
+
+          {roleLoadError && (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-status-danger/10 flex items-center justify-center">
+                <Users className="w-8 h-8 text-status-danger" />
+              </div>
+              <h3 className="text-lg font-medium text-text-primary mb-3">
+                Rollen konnten nicht geladen werden
+              </h3>
+              <p className="text-text-secondary mb-6 max-w-md mx-auto">{roleLoadError}</p>
+              <p className="text-sm text-text-tertiary">
+                Stelle sicher, dass <code className="px-2 py-1 bg-surface-muted rounded">public/persona.json</code> existiert und korrekt formatiert ist.
               </p>
             </div>
           )}

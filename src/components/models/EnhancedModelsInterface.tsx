@@ -283,20 +283,25 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   // Load models dynamically from OpenRouter
   const [enhancedModels, setEnhancedModels] = useState<EnhancedModel[]>([]);
   const [isLoadingModels, setIsLoadingModels] = useState(true);
+  const [modelLoadError, setModelLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadModels = async () => {
       try {
         setIsLoadingModels(true);
+        setModelLoadError(null);
         const modelEntries = await loadModelCatalog();
         const converted = modelEntries.map(modelEntryToEnhanced);
         setEnhancedModels(converted);
       } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Modelle konnten nicht geladen werden";
         console.error("Failed to load models:", error);
+        setModelLoadError(errorMessage);
         push({
           kind: "error",
-          title: "Fehler beim Laden",
-          message: "Modelle konnten nicht geladen werden",
+          title: "Fehler beim Laden der Modelle",
+          message: errorMessage,
         });
         // Fallback to empty array
         setEnhancedModels([]);
@@ -630,7 +635,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             ))}
           </div>
 
-          {filteredModels.length === 0 && (
+          {filteredModels.length === 0 && !modelLoadError && (
             <div className="text-center py-16">
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface flex items-center justify-center">
                 <Search className="w-8 h-8 text-fg-muted" />
@@ -640,6 +645,21 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
                   : "Versuche es mit anderen Filtereinstellungen"}
+              </p>
+            </div>
+          )}
+
+          {modelLoadError && (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-status-danger/10 flex items-center justify-center">
+                <Search className="w-8 h-8 text-status-danger" />
+              </div>
+              <h3 className="text-lg font-medium text-fg mb-3">
+                Modelle konnten nicht geladen werden
+              </h3>
+              <p className="text-fg-muted mb-6 max-w-md mx-auto">{modelLoadError}</p>
+              <p className="text-sm text-text-tertiary">
+                Stelle sicher, dass <code className="px-2 py-1 bg-surface-muted rounded">public/models.json</code> existiert und korrekt formatiert ist.
               </p>
             </div>
           )}
