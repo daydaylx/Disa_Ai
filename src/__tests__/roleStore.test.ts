@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { resolvePublicAssetUrl } from "../lib/publicAssets";
+
 type FetchMock = ReturnType<typeof vi.fn>;
 
 describe("roleStore", () => {
@@ -41,7 +43,9 @@ describe("roleStore", () => {
 
     const roles = await fetchRoleTemplates(true);
 
-    expect(mockFetch).toHaveBeenCalledWith("/persona.json", { cache: "no-store" });
+    expect(mockFetch).toHaveBeenCalledWith(resolvePublicAssetUrl("persona.json"), {
+      cache: "no-store",
+    });
     expect(roles).toEqual([
       {
         id: "author",
@@ -62,7 +66,7 @@ describe("roleStore", () => {
     const roles = await fetchRoleTemplates(true);
 
     expect(roles).toEqual([]);
-    expect(getRoleState().state).toBe("missing");
-    expect(getRoleState().error).toContain("persona.json");
+    expect(getRoleState().state).toBe("error");
+    expect(getRoleState().error).toContain(resolvePublicAssetUrl("persona.json"));
   });
 });

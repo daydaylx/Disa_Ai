@@ -18,8 +18,13 @@ let cachedCombinedRoles: Role[] = [];
 // Helper functions
 export async function loadRoles(): Promise<Role[]> {
   // Lade Rollen nur aus roleStore (persona.json)
-  const { fetchRoleTemplates } = await import("../config/roleStore");
+  const { fetchRoleTemplates, getRoleState } = await import("../config/roleStore");
   const externalRoles = await fetchRoleTemplates();
+  const { state, error } = getRoleState();
+
+  if (state !== "ok") {
+    throw new Error(error ?? "Rollen konnten nicht geladen werden (public/persona.json)");
+  }
 
   // Konvertiere externe Rollen zu Role-Format
   const rolesFormatted: Role[] = externalRoles.map((role) => ({

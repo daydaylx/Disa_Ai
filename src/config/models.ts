@@ -1,3 +1,5 @@
+import { resolvePublicAssetUrl } from "../lib/publicAssets";
+
 /** Policy-Typ (wird von rolePolicy/roleStore/Settings importiert) */
 export type Safety = "any" | "moderate" | "strict" | "loose";
 
@@ -102,29 +104,32 @@ function byLabel(a: ModelEntry, b: ModelEntry) {
  * Lädt Modelle aus /public/models.json
  */
 export async function loadModelCatalog(_opts?: CatalogOptions | boolean): Promise<ModelEntry[]> {
+  const url = resolvePublicAssetUrl("models.json");
+
   try {
-    const response = await fetch("/models.json", {
-      cache: "default",
+    const response = await fetch(url, {
+      cache: "no-store",
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      throw new Error(
+        `models.json konnte nicht geladen werden (HTTP ${response.status}: ${response.statusText})`,
+      );
     }
 
     const data: JsonModel[] = await response.json();
 
     if (!Array.isArray(data) || data.length === 0) {
-      throw new Error("models.json ist leer oder ungültig");
+      throw new Error("models.json ist leer oder ungültig (public/models.json)");
     }
 
     const models = data.map(jsonModelToEntry).sort(byLabel);
-    console.warn(`[Models] Loaded ${models.length} models from models.json`);
+    console.info(`[Models] Loaded ${models.length} models from ${url}`);
     return models;
   } catch (error) {
-    console.error("[Models] Failed to load models from models.json:", error);
-
-    // Emergency fallback: Return empty array or minimal set
-    console.warn("[Models] Using emergency fallback: empty model list");
-    return [];
+    console.error(`[Models] Failed to load ${url}:`, error);
+    throw error instanceof Error
+      ? error
+      : new Error("Model-Katalog konnte nicht geladen werden (public/models.json)");
   }
 }
