@@ -6,7 +6,7 @@ const primaryButtonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-pink-500 text-white shadow-lg hover:bg-pink-600/90",
+        default: "bg-primary-500 text-white shadow-lg hover:bg-primary-600/90",
       },
       size: {
         default: "h-12 py-3 px-8",

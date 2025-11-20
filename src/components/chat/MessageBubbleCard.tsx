@@ -33,7 +33,7 @@ export function MessageBubbleCard({
       className={cn(
         "px-4 py-3 text-left",
         isUser
-          ? "border-[var(--glass-border-medium)] bg-[var(--glass-surface-strong)] text-[var(--color-text-primary)]"
+          ? "border-[var(--glass-border-medium)] bg-[var(--glass-surface-strong)] text-[var(--text-primary)]"
           : "border-[var(--glass-border-soft)] bg-[var(--glass-surface-subtle)] text-[var(--text-primary)]",
         className,
       )}

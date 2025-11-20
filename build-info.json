@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-4b01f02",
-  "buildTime": "2025-11-20T12:53:34.872Z",
-  "gitSha": "4b01f0233c78d5fa1680e6e6bfbcca0047064678",
-  "gitBranch": "claude/fix-code-formatting-017yrkaLsa1CQcEZTMB5FJBQ",
+  "buildId": "v1.0.0-a864347",
+  "buildTime": "2025-11-20T13:49:40.136Z",
+  "gitSha": "a864347800f1cc0d103425e7594a912bf3b70678",
+  "gitBranch": "claude/ux-improvement-search-017sPGPEE5C35wUiUhYxzWRL",
   "version": "1.0.0"
 }
