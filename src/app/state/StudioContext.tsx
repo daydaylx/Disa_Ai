@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 
 import type { Role } from "../../data/roles";
 import { getRoles, loadRoles } from "../../data/roles";
-import { useDeferredCachedFetch } from "../../hooks/useDeferredFetch";
+import { useDeferredFetch } from "../../hooks/useDeferredFetch";
 
 interface StudioContextType {
   roles: Role[];
@@ -27,19 +27,21 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [borderRadius, setBorderRadius] = useState(0.5);
   const [accentColor, setAccentColor] = useState("hsl(var(--primary))");
 
-  // Check if roles are cached (from default data)
-  const checkCachedRoles = useCallback(() => {
-    const cached = getRoles();
-    return cached.length > 0 ? cached : null;
-  }, []);
-
-  // Deferred fetch for external roles with immediate loading if cached
+  // Load roles immediately from persona.json
+  // IMPORTANT: immediate: true ensures roles are loaded on app start
+  // This fixes the issue where roles weren't being loaded from public/persona.json
   const {
     data: loadedRoles,
     loading: rolesLoading,
     error: roleLoadError,
     trigger: refreshRoles,
-  } = useDeferredCachedFetch(loadRoles, checkCachedRoles, []);
+  } = useDeferredFetch({
+    fetchFn: loadRoles,
+    immediate: true, // Always load immediately
+    maxDelay: 1000,
+    triggerEvents: ["focus", "click"],
+    deps: [],
+  });
 
   // Use loaded roles or fall back to cached default roles
   const roles = loadedRoles || getRoles();

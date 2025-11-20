@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-a864347",
-  "buildTime": "2025-11-20T13:49:40.136Z",
-  "gitSha": "a864347800f1cc0d103425e7594a912bf3b70678",
-  "gitBranch": "claude/ux-improvement-search-017sPGPEE5C35wUiUhYxzWRL",
+  "buildId": "v1.0.0-95fe742",
+  "buildTime": "2025-11-20T18:14:07.432Z",
+  "gitSha": "95fe7428a1b0340bcad905faeb3d1b5eab5b889b",
+  "gitBranch": "claude/fix-json-loading-012H3o6WHU17gYiuSoXbBTno",
   "version": "1.0.0"
 }
