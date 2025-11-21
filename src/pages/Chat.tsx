@@ -24,6 +24,14 @@ export default function Chat() {
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
 
+  const safetyPrompt = useMemo(
+    () =>
+      settings.showNSFWContent
+        ? ""
+        : "Content-Safety: Keine sexualisierten, verstörenden oder jugendgefährdenden Inhalte. Bleibe sachlich, respektvoll und filtere NSFW-Anfragen.",
+    [settings.showNSFWContent],
+  );
+
   const requestOptions = useMemo(
     () => ({
       model: settings.preferredModelId,
@@ -52,10 +60,9 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    if (activeRole?.systemPrompt) {
-      setCurrentSystemPrompt(activeRole.systemPrompt);
-    }
-  }, [activeRole, setCurrentSystemPrompt]);
+    const combinedPrompt = [safetyPrompt, activeRole?.systemPrompt].filter(Boolean).join("\n\n");
+    setCurrentSystemPrompt(combinedPrompt || undefined);
+  }, [activeRole?.systemPrompt, safetyPrompt, setCurrentSystemPrompt]);
 
   useEffect(() => {
     setRequestOptions(requestOptions);
