@@ -126,7 +126,7 @@ export default function ModelsPage() {
       }
     }
 
-    fetchModels();
+    void fetchModels();
 
     return () => {
       mounted = false;
@@ -249,10 +249,7 @@ export default function ModelsPage() {
             <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
               <div className="w-8 h-8 text-destructive">⚠</div>
             </div>
-            <Typography
-              variant="body-lg"
-              className="text-text-primary font-medium mb-2"
-            >
+            <Typography variant="body-lg" className="text-text-primary font-medium mb-2">
               Fehler beim Laden
             </Typography>
             <Typography variant="body-sm" className="text-text-secondary">
