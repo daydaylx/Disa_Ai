@@ -90,7 +90,9 @@ export function SettingsView() {
                         <p className="text-xs text-text-secondary leading-relaxed">
                           {cardData.description}
                         </p>
-                        <span className="text-xs font-medium text-accent-primary">Details anzeigen →</span>
+                        <span className="text-xs font-medium text-accent-primary">
+                          Details anzeigen →
+                        </span>
                       </div>
                     </div>
                   </Link>

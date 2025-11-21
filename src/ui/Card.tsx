@@ -15,7 +15,8 @@ import React from "react";
 const cardVariants = cva("relative rounded-md transition-all duration-fast overflow-hidden", {
   variants: {
     variant: {
-      raised: "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
+      raised:
+        "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
       inset: "bg-surface-1 shadow-inset",
       hero: "bg-surface-2 shadow-raiseLg before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight-strong)]",
     },

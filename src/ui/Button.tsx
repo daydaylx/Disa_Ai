@@ -22,8 +22,7 @@ const buttonVariants = cva(
           "bg-accent-primary text-white shadow-raise hover:bg-accent-hover hover:shadow-accentGlow active:scale-[0.98] active:translate-y-px active:bg-accent-active",
         secondary:
           "bg-surface-2 text-text-primary shadow-raise hover:shadow-raiseLg active:scale-[0.98] active:translate-y-px active:shadow-inset",
-        ghost:
-          "hover:bg-surface-2 hover:text-text-primary active:scale-[0.98]",
+        ghost: "hover:bg-surface-2 hover:text-text-primary active:scale-[0.98]",
         link: "text-accent-primary underline-offset-4 hover:underline",
       },
       size: {

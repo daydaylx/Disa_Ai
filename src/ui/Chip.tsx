@@ -18,8 +18,7 @@ interface ChipProps {
 export function Chip({ children, variant = "default", size = "sm", className }: ChipProps) {
   const variantClasses = {
     default: "bg-surface-2 text-text-primary shadow-raise",
-    success:
-      "bg-surface-2 text-accent-secondary shadow-raise ring-1 ring-accent-secondary/30",
+    success: "bg-surface-2 text-accent-secondary shadow-raise ring-1 ring-accent-secondary/30",
     warning: "bg-surface-2 text-accent-danger shadow-raise ring-1 ring-accent-danger/30",
     free: "bg-surface-2 text-accent-secondary shadow-raise shadow-accentGlow ring-1 ring-accent-secondary/40",
   };

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { GlassCard, PrimaryButton, SectionHeader } from "@/ui";
+import { GlassCard } from "@/ui";
 
 import { useRoles } from "../hooks/useRoles";
 import { Brain, MessageSquare, Settings, Users } from "../lib/icons";
@@ -15,12 +15,8 @@ export default function StudioHome() {
       {/* HERO SECTION - Material */}
       <div className="text-center space-y-6 max-w-2xl mx-auto">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-text-on-raised">
-            Dein ruhiges KI-Studio
-          </h1>
-          <p className="text-lg text-text-secondary">
-            für klare, produktive Konversationen
-          </p>
+          <h1 className="text-3xl font-bold text-text-on-raised">Dein ruhiges KI-Studio</h1>
+          <p className="text-lg text-text-secondary">für klare, produktive Konversationen</p>
         </div>
 
         {/* HERO CARD - "Neuer Chat" */}
@@ -33,18 +29,14 @@ export default function StudioHome() {
             <div className="w-10 h-10 rounded-sm bg-accent-primary shadow-accentGlow flex items-center justify-center group-hover:scale-110 transition-transform">
               <MessageSquare className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-semibold text-text-on-raised">
-              Neuer Chat
-            </span>
+            <span className="text-xl font-semibold text-text-on-raised">Neuer Chat</span>
           </div>
         </GlassCard>
       </div>
 
       {/* SCHNELLSTART-ROLLEN */}
       <div className="space-y-4">
-        <h2 className="text-lg font-medium text-text-secondary px-2">
-          Schnellstart-Rollen
-        </h2>
+        <h2 className="text-lg font-medium text-text-secondary px-2">Schnellstart-Rollen</h2>
         {/* INSET CONTAINER for horizontal scroll */}
         <div className="rounded-md bg-surface-inset shadow-inset p-3">
           <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -66,9 +58,7 @@ export default function StudioHome() {
                     <h3 className="font-semibold text-text-on-raised">{role.name}</h3>
                   </div>
                   {/* Description */}
-                  <p className="text-sm text-text-secondary line-clamp-2">
-                    {role.description}
-                  </p>
+                  <p className="text-sm text-text-secondary line-clamp-2">{role.description}</p>
                 </GlassCard>
               </div>
             ))}
@@ -78,9 +68,7 @@ export default function StudioHome() {
 
       {/* STUDIO-FUNKTIONEN */}
       <div className="space-y-4">
-        <h2 className="text-lg font-medium text-text-secondary px-2">
-          Studio-Funktionen
-        </h2>
+        <h2 className="text-lg font-medium text-text-secondary px-2">Studio-Funktionen</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Modelle */}
           <GlassCard
@@ -95,9 +83,7 @@ export default function StudioHome() {
               </div>
               {/* Content */}
               <div className="flex-1">
-                <h3 className="font-semibold text-xl text-text-on-raised mb-1">
-                  Modelle
-                </h3>
+                <h3 className="font-semibold text-xl text-text-on-raised mb-1">Modelle</h3>
                 <p className="text-sm text-text-secondary">
                   Vergleiche Kosten, Kontext und Fähigkeiten
                 </p>
@@ -116,9 +102,7 @@ export default function StudioHome() {
                 <Users className="w-6 h-6 text-text-accent group-hover:text-accent-primary transition-colors" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-xl text-text-on-raised mb-1">
-                  Rollen
-                </h3>
+                <h3 className="font-semibold text-xl text-text-on-raised mb-1">Rollen</h3>
                 <p className="text-sm text-text-secondary">
                   Nutze kuratierte Profile für verschiedene Aufgaben
                 </p>
@@ -137,9 +121,7 @@ export default function StudioHome() {
                 <Settings className="w-6 h-6 text-text-accent group-hover:text-accent-primary transition-colors" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-xl text-text-on-raised mb-1">
-                  Einstellungen
-                </h3>
+                <h3 className="font-semibold text-xl text-text-on-raised mb-1">Einstellungen</h3>
                 <p className="text-sm text-text-secondary">
                   Verwalte API-Keys, Speicher und deine Daten
                 </p>

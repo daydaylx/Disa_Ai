@@ -20,29 +20,18 @@ interface GlassCardProps extends ComponentProps<"div"> {
  * - "inset": Pressed/inset appearance for contained areas (NO bevel)
  * - "hero": Strong raised shadow + stronger bevel for focal elements
  */
-export function GlassCard({
-  children,
-  className,
-  variant = "raised",
-  ...props
-}: GlassCardProps) {
+export function GlassCard({ children, className, variant = "raised", ...props }: GlassCardProps) {
   const baseStyles = "relative rounded-md p-6 transition-all duration-fast overflow-hidden";
 
   const variantStyles = {
-    raised: "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
+    raised:
+      "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
     inset: "bg-surface-1 shadow-inset",
     hero: "bg-surface-2 shadow-raiseLg before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight-strong)]",
   };
 
   return (
-    <div
-      className={cn(
-        baseStyles,
-        variantStyles[variant],
-        className
-      )}
-      {...props}
-    >
+    <div className={cn(baseStyles, variantStyles[variant], className)} {...props}>
       <div className="relative z-10">{children}</div>
     </div>
   );

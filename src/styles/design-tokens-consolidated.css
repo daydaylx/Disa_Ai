@@ -75,19 +75,13 @@
    * ======================================== */
 
   /* 1. SOFT RAISE - Standard UI Elements */
-  --shadow-soft-raise:
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-soft-raise: 0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
 
   /* 2. STRONG RAISE - Hero/Focal Elements */
-  --shadow-strong-raise:
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-strong-raise: 0 8px 24px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15);
 
   /* 3. INSET - Pressed/Input Fields */
-  --shadow-inset:
-    inset 0 2px 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 3px rgba(0, 0, 0, 0.15);
+  --shadow-inset: inset 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.15);
 
   /* Accent Glow (nur für active states) */
   --shadow-accent-glow: 0 0 12px rgba(99, 102, 241, 0.25);
@@ -134,8 +128,7 @@
    * ======================================== */
 
   /* Font Families */
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
-    sans-serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
   /* Type Scale - Verschärfte Hierarchie für Material-UI */
@@ -161,11 +154,11 @@
   --font-bold: 700; /* Hero, Emphasis */
 
   /* Typography Semantic Tokens */
-  --typo-page-title: var(--font-semibold) var(--text-2xl)/var(--leading-tight);
-  --typo-section-title: var(--font-medium) var(--text-lg)/var(--leading-snug);
-  --typo-card-title: var(--font-semibold) var(--text-xl)/var(--leading-snug);
-  --typo-body: var(--font-normal) var(--text-base)/var(--leading-normal);
-  --typo-meta: var(--font-medium) var(--text-xs)/var(--leading-snug);
+  --typo-page-title: var(--font-semibold) var(--text-2xl) / var(--leading-tight);
+  --typo-section-title: var(--font-medium) var(--text-lg) / var(--leading-snug);
+  --typo-card-title: var(--font-semibold) var(--text-xl) / var(--leading-snug);
+  --typo-body: var(--font-normal) var(--text-base) / var(--leading-normal);
+  --typo-meta: var(--font-medium) var(--text-xs) / var(--leading-snug);
 
   /* ========================================
    * MOTION SYSTEM - PHYSICAL FEEDBACK
@@ -179,7 +172,7 @@
 
   /* Easings - Natural Physics */
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* Standard */
-  --ease-out: cubic-bezier(0.0, 0, 0.2, 1); /* Deceleration (card open) */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1); /* Deceleration (card open) */
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1); /* Spring effect */
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce (favorite pop) */
 
@@ -259,12 +252,8 @@
   --container-max-width: 1200px;
 
   /* Content Spacing */
-  --content-padding-top: calc(
-    var(--header-height) + var(--safe-top) + var(--spacing-4)
-  );
-  --content-padding-bottom: calc(
-    var(--bottom-nav-height) + var(--safe-bottom) + var(--spacing-4)
-  );
+  --content-padding-top: calc(var(--header-height) + var(--safe-top) + var(--spacing-4));
+  --content-padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--spacing-4));
 
   /* Grid System */
   --grid-gap: var(--spacing-4);
@@ -296,9 +285,7 @@
     --grid-gap: var(--spacing-6);
 
     /* Stärkere Shadows für größere Screens */
-    --shadow-strong-raise:
-      0 12px 32px rgba(0, 0, 0, 0.28),
-      0 6px 16px rgba(0, 0, 0, 0.18);
+    --shadow-strong-raise: 0 12px 32px rgba(0, 0, 0, 0.28), 0 6px 16px rgba(0, 0, 0, 0.18);
   }
 }
 
@@ -310,9 +297,7 @@
     --grid-gap-lg: var(--spacing-8);
 
     /* Noch stärkere Hero-Shadows */
-    --shadow-strong-raise:
-      0 16px 40px rgba(0, 0, 0, 0.3),
-      0 8px 20px rgba(0, 0, 0, 0.2);
+    --shadow-strong-raise: 0 16px 40px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -335,9 +320,7 @@
   :root {
     /* Verstärkte Kontraste für bessere Zugänglichkeit */
     --text-primary: #ffffff;
-    --shadow-soft-raise:
-      0 4px 12px rgba(0, 0, 0, 0.3),
-      0 2px 6px rgba(0, 0, 0, 0.2);
+    --shadow-soft-raise: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 }
 

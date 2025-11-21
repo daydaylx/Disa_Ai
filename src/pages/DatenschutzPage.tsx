@@ -42,9 +42,7 @@ export default function DatenschutzPage() {
 
         {/* 2. Allgemeine Hinweise */}
         <section>
-          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
-            2. Allgemeine Hinweise
-          </h2>
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">2. Allgemeine Hinweise</h2>
           <div className="text-text-secondary space-y-3">
             <p>Die Nutzung dieser Website ist ohne Angabe personenbezogener Daten möglich.</p>
             <p>
@@ -116,9 +114,7 @@ export default function DatenschutzPage() {
 
           {/* OpenRouter */}
           <div>
-            <h3 className="font-medium text-text-primary mb-2">
-              c) OpenRouter Inc. (KI-Funktion)
-            </h3>
+            <h3 className="font-medium text-text-primary mb-2">c) OpenRouter Inc. (KI-Funktion)</h3>
             <div className="text-text-secondary space-y-2">
               <p>
                 Für die optionalen KI-Funktionen wird der Dienst OpenRouter Inc. genutzt. Wenn
@@ -156,9 +152,7 @@ export default function DatenschutzPage() {
 
         {/* 5. Speicherdauer */}
         <section>
-          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
-            5. Speicherdauer
-          </h2>
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">5. Speicherdauer</h2>
           <p className="text-text-secondary">
             Ich speichere keinerlei personenbezogene Daten. Daten, die durch INWX, Cloudflare oder
             OpenRouter verarbeitet werden, unterliegen deren jeweiligen Speicher- und
@@ -201,9 +195,7 @@ export default function DatenschutzPage() {
 
         {/* 7. Datensicherheit */}
         <section>
-          <h2 className="text-lg font-semibold text-text-on-raised mb-3">
-            7. Datensicherheit
-          </h2>
+          <h2 className="text-lg font-semibold text-text-on-raised mb-3">7. Datensicherheit</h2>
           <p className="text-text-secondary">
             Die Übertragung dieser Website erfolgt über HTTPS (TLS-Verschlüsselung). Ich treffe
             zumutbare Maßnahmen zum Schutz der übertragenen Daten. Eine absolute Sicherheit der

@@ -29,8 +29,13 @@ interface EnhancedRolesInterfaceProps {
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
-  const { roles, activeRole: _activeRole, setActiveRole, rolesLoading, roleLoadError } =
-    useStudio();
+  const {
+    roles,
+    activeRole: _activeRole,
+    setActiveRole,
+    rolesLoading,
+    roleLoadError,
+  } = useStudio();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
 
   // Local state
@@ -260,9 +265,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         <Users className="w-5 h-5 text-text-accent" />
                       </div>
                       {/* Title */}
-                      <h3 className="font-semibold text-xl text-text-on-raised">
-                        {role.name}
-                      </h3>
+                      <h3 className="font-semibold text-xl text-text-on-raised">{role.name}</h3>
                     </div>
                     {/* Favorite Star */}
                     {isFavorite && (
@@ -299,7 +302,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
                 <Users className="w-8 h-8 text-text-muted" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-3">Keine Rollen gefunden</h3>
+              <h3 className="text-xl font-semibold text-text-primary mb-3">
+                Keine Rollen gefunden
+              </h3>
               <p className="text-text-secondary">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
@@ -321,7 +326,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </h3>
               <p className="text-text-secondary mb-6 max-w-md mx-auto">{roleLoadError}</p>
               <p className="text-sm text-text-meta">
-                Stelle sicher, dass <code className="px-2 py-1 bg-surface-inset rounded-sm shadow-inset">public/persona.json</code> existiert und korrekt formatiert ist.
+                Stelle sicher, dass{" "}
+                <code className="px-2 py-1 bg-surface-inset rounded-sm shadow-inset">
+                  public/persona.json
+                </code>{" "}
+                existiert und korrekt formatiert ist.
               </p>
             </div>
           )}

@@ -18,10 +18,7 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(
     return (
       <div
         ref={ref}
-        className={cn(
-          "bg-surface-2 rounded-md p-4 shadow-raise",
-          className,
-        )}
+        className={cn("bg-surface-2 rounded-md p-4 shadow-raise", className)}
         {...props}
       >
         {children}
