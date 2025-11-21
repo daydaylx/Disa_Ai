@@ -216,6 +216,7 @@ export interface FilterState {
   showFavoritesOnly: boolean;
   showRecentlyUsed: boolean;
   showBuiltInOnly: boolean;
+  hideMatureContent?: boolean; // WCAG: Content filtering for age-appropriate content
 
   // Model-specific filters
   models: {

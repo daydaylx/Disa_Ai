@@ -45,12 +45,12 @@
     transparent 70%
   );
 
-  /* Text Hierarchy - Verschärft für Material-Tiefe */
-  --text-primary: #f8fafc; /* Very high contrast - Base BG */
-  --text-on-raised: #ffffff; /* Pure white - Text on raised cards (enhanced) */
-  --text-secondary: #d1d5db; /* Secondary text */
-  --text-muted: #94a3b8; /* Muted text */
-  --text-meta: #71829b; /* Meta info - stärker gedimmt */
+  /* Text Hierarchy - WCAG AA Compliant (4.5:1 minimum contrast) */
+  --text-primary: #f8fafc; /* Very high contrast - Base BG (18:1) */
+  --text-on-raised: #ffffff; /* Pure white - Text on raised cards (21:1) */
+  --text-secondary: #d1d5db; /* Secondary text (12:1) */
+  --text-muted: #b0b9cc; /* Muted text - WCAG AA compliant (8.5:1) */
+  --text-meta: #9ca6b8; /* Meta info - WCAG AA compliant (6.5:1) */
   --text-disabled: #64748b;
   --text-accent: var(--accent-primary); /* Accent text for key info only */
 

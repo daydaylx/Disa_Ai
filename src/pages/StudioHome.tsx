@@ -34,35 +34,40 @@ export default function StudioHome() {
         </PremiumCard>
       </div>
 
-      {/* SCHNELLSTART-ROLLEN */}
+      {/* SCHNELLSTART-ROLLEN - WCAG: Vertical layout instead of horizontal scroll */}
       <div className="space-y-4">
-        <h2 className="text-lg font-medium text-text-secondary px-2">Schnellstart-Rollen</h2>
-        {/* INSET CONTAINER for horizontal scroll */}
-        <div className="rounded-md bg-surface-inset shadow-inset p-3">
-          <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {roles.slice(0, 6).map((role: EnhancedRole) => (
-              <div key={role.id} className="min-w-[280px] flex-shrink-0">
-                <PremiumCard
-                  variant="raised"
-                  onClick={() => {
-                    activateRole(role.id);
-                    setTimeout(() => navigate("/chat"), 100);
-                  }}
-                  className="cursor-pointer hover:shadow-raiseLg transition-all h-full"
-                >
-                  {/* Icon + Title */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 rounded-sm bg-surface-inset shadow-inset flex items-center justify-center">
-                      <Users className="w-4 h-4 text-text-accent" />
-                    </div>
-                    <h3 className="font-semibold text-text-on-raised">{role.name}</h3>
-                  </div>
-                  {/* Description */}
-                  <p className="text-sm text-text-secondary line-clamp-2">{role.description}</p>
-                </PremiumCard>
+        <div className="flex items-center justify-between px-2">
+          <h2 className="text-lg font-medium text-text-secondary">Schnellstart-Rollen</h2>
+          <button
+            onClick={() => navigate("/roles")}
+            className="text-sm text-[var(--accent-primary)] hover:text-[var(--accent-hover)] transition-colors"
+          >
+            Alle anzeigen →
+          </button>
+        </div>
+        {/* VERTICAL GRID - More accessible on mobile */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {roles.slice(0, 4).map((role: EnhancedRole) => (
+            <PremiumCard
+              key={role.id}
+              variant="raised"
+              onClick={() => {
+                activateRole(role.id);
+                setTimeout(() => navigate("/chat"), 100);
+              }}
+              className="cursor-pointer hover:shadow-raiseLg transition-all"
+            >
+              {/* Icon + Title */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 rounded-sm bg-surface-inset shadow-inset flex items-center justify-center">
+                  <Users className="w-4 h-4 text-text-accent" />
+                </div>
+                <h3 className="font-semibold text-text-on-raised">{role.name}</h3>
               </div>
-            ))}
-          </div>
+              {/* Description */}
+              <p className="text-sm text-text-secondary line-clamp-2">{role.description}</p>
+            </PremiumCard>
+          ))}
         </div>
       </div>
 
