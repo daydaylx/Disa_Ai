@@ -322,6 +322,10 @@ export interface AnalyticsStats {
 // Create singleton instance
 export const analytics = new LocalAnalytics();
 
+export function setAnalyticsEnabled(enabled: boolean): void {
+  analytics.setEnabled(enabled);
+}
+
 // Auto-track page loads
 if (typeof window !== "undefined") {
   analytics.trackPageView(window.location.pathname);

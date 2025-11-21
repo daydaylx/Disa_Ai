@@ -6,6 +6,7 @@ import { Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/u
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
+import { useSettings } from "../../hooks/useSettings";
 import { type EnhancedRole, type FilterState, migrateRole } from "../../types/enhanced-interfaces";
 import { roleFilterFn, roleSortFn } from "./roles-filter";
 
@@ -37,6 +38,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     roleLoadError,
   } = useStudio();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
+  const { settings } = useSettings();
 
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,7 +51,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     showFavoritesOnly: false,
     showRecentlyUsed: false,
     showBuiltInOnly: false,
-    hideMatureContent: true, // WCAG: Enable mature content filter by default
+    hideMatureContent: !settings.showNSFWContent, // Respect global NSFW setting
     models: {
       showFreeOnly: false,
       showPremiumOnly: false,
@@ -60,6 +62,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     sortBy: "name",
     sortDirection: "asc",
   });
+
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      hideMatureContent: !settings.showNSFWContent,
+    }));
+  }, [settings.showNSFWContent]);
 
   // Convert legacy roles to enhanced roles
   const enhancedRoles = useMemo(() => {

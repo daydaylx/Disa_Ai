@@ -1,6 +1,6 @@
 import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
 
-import React, { lazy, Suspense, useRef } from "react";
+import React, { lazy, Suspense, useEffect, useRef } from "react";
 
 import { Button } from "@/ui/Button";
 import { ToastsProvider } from "@/ui/toast";
@@ -10,6 +10,8 @@ import { Router } from "./app/router";
 import { StudioProvider } from "./app/state/StudioContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { useServiceWorker } from "./hooks/useServiceWorker";
+import { useSettings } from "./hooks/useSettings";
+import { analytics, setAnalyticsEnabled } from "./lib/analytics";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 
 declare global {
@@ -27,6 +29,28 @@ const FeatureFlagPanel = lazy(() =>
 // AppContent component that runs inside the providers
 function AppContent() {
   useServiceWorker(); // Now safely inside ToastsProvider
+  const { settings } = useSettings();
+
+  // Apply analytics opt-in/out
+  useEffect(() => {
+    setAnalyticsEnabled(settings.enableAnalytics);
+  }, [settings.enableAnalytics]);
+
+  // Apply notification preference (best-effort)
+  useEffect(() => {
+    if (!settings.enableNotifications) return;
+    if (typeof window === "undefined" || typeof Notification === "undefined") return;
+    if (Notification.permission === "default") {
+      Notification.requestPermission().catch(() => {});
+    }
+  }, [settings.enableNotifications]);
+
+  // Track route-level page view when analytics enabled
+  useEffect(() => {
+    if (typeof window !== "undefined" && settings.enableAnalytics) {
+      analytics.trackPageView(window.location.pathname);
+    }
+  }, [settings.enableAnalytics]);
 
   return (
     <>
