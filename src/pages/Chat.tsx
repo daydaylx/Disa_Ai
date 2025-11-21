@@ -139,7 +139,7 @@ export default function Chat() {
         </div>
       ) : (
         <div
-          className="flex-1 overflow-y-auto rounded-2xl border border-[color:var(--glass-border-soft)] bg-surface-panel/80 p-[var(--spacing-4)] shadow-glowSubtle"
+          className="flex-1 overflow-y-auto mx-[var(--spacing-4)] rounded-md bg-surface-2 shadow-raise p-[var(--spacing-4)]"
           data-testid="chat-message-list"
         >
           <VirtualizedMessageList

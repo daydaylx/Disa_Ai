@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Search, Star, Users } from "@/lib/icons";
-import { Button, FilterChip, GlassCard, Input, Skeleton, useToasts } from "@/ui";
+import { Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavorites } from "../../contexts/FavoritesContext";
@@ -29,8 +29,13 @@ interface EnhancedRolesInterfaceProps {
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
-  const { roles, activeRole: _activeRole, setActiveRole, rolesLoading, roleLoadError } =
-    useStudio();
+  const {
+    roles,
+    activeRole: _activeRole,
+    setActiveRole,
+    rolesLoading,
+    roleLoadError,
+  } = useStudio();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
 
   // Local state
@@ -238,57 +243,52 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             )}
           </div>
 
-          {/* ROLES GRID - MATERIAL CARDS */}
+          {/* ROLES GRID - PREMIUM CARDS mit Lila-Akzent */}
           <div
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3"
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
             data-testid="role-card-grid"
           >
             {filteredRoles.map((role) => {
               const isFavorite = isRoleFavorite(role.id);
               return (
-                <GlassCard
+                <PremiumCard
                   key={role.id}
-                  variant="raised"
-                  className="cursor-pointer hover:shadow-raiseLg transition-all duration-fast group animate-card-enter"
+                  className="group animate-card-enter"
                   onClick={() => handleActivateRole(role)}
                 >
                   {/* CARD HEADER */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
-                      {/* Icon Container - Inset */}
-                      <div className="w-10 h-10 rounded-sm bg-surface-inset shadow-inset flex items-center justify-center">
-                        <Users className="w-5 h-5 text-text-accent" />
+                      {/* Icon Container mit Brand-Akzent */}
+                      <div className="w-10 h-10 rounded-md bg-brand/10 shadow-brandGlow flex items-center justify-center">
+                        <Users className="w-5 h-5 text-brand" />
                       </div>
                       {/* Title */}
-                      <h3 className="font-semibold text-xl text-text-on-raised">
-                        {role.name}
-                      </h3>
+                      <h3 className="font-semibold text-lg text-text-primary">{role.name}</h3>
                     </div>
                     {/* Favorite Star */}
-                    {isFavorite && (
-                      <Star className="w-5 h-5 text-accent-primary fill-accent-primary" />
-                    )}
+                    {isFavorite && <Star className="w-5 h-5 text-brand fill-brand" />}
                   </div>
 
                   {/* CARD BODY */}
-                  <p className="text-sm text-text-secondary mb-4 line-clamp-3">
+                  <p className="text-sm text-text-secondary mb-4 line-clamp-3 leading-relaxed">
                     {role.description}
                   </p>
 
                   {/* CARD FOOTER */}
-                  <div className="flex items-center justify-between pt-4 mt-1">
+                  <div className="flex items-center justify-between pt-2 border-t border-surface-1">
                     {/* Category Badge */}
-                    <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-meta">
+                    <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-muted">
                       {role.category || "Spezial"}
                     </span>
                     {/* Usage indicator */}
                     {usage[role.id] && (
-                      <span className="text-xs text-text-meta">
-                        {usage[role.id].count}× verwendet
+                      <span className="text-xs font-medium text-brand">
+                        {usage[role.id].count}× genutzt
                       </span>
                     )}
                   </div>
-                </GlassCard>
+                </PremiumCard>
               );
             })}
           </div>
@@ -299,7 +299,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
                 <Users className="w-8 h-8 text-text-muted" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-3">Keine Rollen gefunden</h3>
+              <h3 className="text-xl font-semibold text-text-primary mb-3">
+                Keine Rollen gefunden
+              </h3>
               <p className="text-text-secondary">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
@@ -321,7 +323,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </h3>
               <p className="text-text-secondary mb-6 max-w-md mx-auto">{roleLoadError}</p>
               <p className="text-sm text-text-meta">
-                Stelle sicher, dass <code className="px-2 py-1 bg-surface-inset rounded-sm shadow-inset">public/persona.json</code> existiert und korrekt formatiert ist.
+                Stelle sicher, dass{" "}
+                <code className="px-2 py-1 bg-surface-inset rounded-sm shadow-inset">
+                  public/persona.json
+                </code>{" "}
+                existiert und korrekt formatiert ist.
               </p>
             </div>
           )}

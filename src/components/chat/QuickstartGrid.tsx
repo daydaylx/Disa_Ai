@@ -1,6 +1,6 @@
 import { Brain, Code2, Link2, PenSquare } from "@/lib/icons";
 import { Button } from "@/ui/Button";
-import { GlassCard } from "@/ui/GlassCard";
+import { PremiumCard } from "@/ui/PremiumCard";
 
 const QUICKSTARTS = [
   {
@@ -49,12 +49,12 @@ export function QuickstartGrid({
   return (
     <div className="space-y-6">
       {(title || description) && (
-        <section className="space-y-1">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-accent/80">
-            Workflows
-          </p>
-          {title && <h2 className="text-2xl font-semibold text-text-primary">{title}</h2>}
-          {description && <p className="max-w-2xl text-sm text-text-secondary">{description}</p>}
+        <section className="space-y-2">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-brand/80">Workflows</p>
+          {title && <h2 className="text-2xl font-bold text-text-primary">{title}</h2>}
+          {description && (
+            <p className="max-w-2xl text-sm text-text-secondary leading-relaxed">{description}</p>
+          )}
         </section>
       )}
 
@@ -62,22 +62,25 @@ export function QuickstartGrid({
         {QUICKSTARTS.map((quickstart) => {
           const Icon = quickstart.icon;
           return (
-            <GlassCard
+            <PremiumCard
               key={quickstart.id}
-              className="flex flex-col gap-2.5 cursor-pointer transition-transform hover:scale-105 p-4"
+              className="flex flex-col gap-3"
               onClick={() => onStart(quickstart.system, quickstart.user)}
             >
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] shadow-[0_8px_24px_rgba(97,231,255,0.2)]">
-                  <Icon className="h-4 w-4" />
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-md bg-brand/10 text-brand shadow-brandGlow">
+                  <Icon className="h-5 w-5" />
                 </span>
-                <h3 className="text-base font-semibold">{quickstart.title}</h3>
+                <h3 className="text-base font-semibold text-text-primary">{quickstart.title}</h3>
               </div>
-              <p className="text-xs text-text-secondary flex-1 leading-relaxed">
+              <p className="text-sm text-text-secondary flex-1 leading-relaxed">
                 {quickstart.description}
               </p>
-              <span className="text-xs font-medium text-accent">Tippen zum Starten →</span>
-            </GlassCard>
+              <span className="text-xs font-semibold text-brand flex items-center gap-1">
+                Starten
+                <span className="text-brand-bright">→</span>
+              </span>
+            </PremiumCard>
           );
         })}
       </section>
