@@ -5,8 +5,10 @@ import { RouteWrapper } from "./components/RouteWrapper";
 
 // Lazy-loaded Routes für bessere Performance
 const ChatPage = lazy(() => import("../pages/Chat"));
+const ChatHistoryPage = lazy(() => import("../pages/ChatHistoryPage"));
 const StudioHomePage = lazy(() => import("../pages/StudioHome"));
 const ModelsPage = lazy(() => import("../pages/ModelsPage"));
+const MobileModelsPage = lazy(() => import("../pages/MobileModels"));
 const RolesPage = lazy(() => import("../pages/RolesPage"));
 const SettingsOverviewPage = lazy(() => import("../pages/SettingsOverviewPage"));
 const SettingsApiPage = lazy(() => import("../pages/SettingsApi"));
@@ -44,10 +46,26 @@ export const appRouter = createBrowserRouter(
       ),
     },
     {
+      path: "/chat/history",
+      element: (
+        <RouteWrapper>
+          <ChatHistoryPage />
+        </RouteWrapper>
+      ),
+    },
+    {
       path: "/models",
       element: (
         <RouteWrapper>
           <ModelsPage />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/models/mobile",
+      element: (
+        <RouteWrapper>
+          <MobileModelsPage />
         </RouteWrapper>
       ),
     },

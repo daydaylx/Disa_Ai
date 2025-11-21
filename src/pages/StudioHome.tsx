@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 
 import { PremiumCard } from "@/ui";
 
-import { useRoles } from "../hooks/useRoles";
+import { useStudio } from "../app/state/StudioContext";
+import type { Role } from "../data/roles";
 import { Brain, MessageSquare, Settings, Users } from "../lib/icons";
-import type { EnhancedRole } from "../types/enhanced-interfaces";
 
 export default function StudioHome() {
   const navigate = useNavigate();
-  const { roles, activeRole: _activeRole, activateRole } = useRoles();
+  const { roles, setActiveRole } = useStudio();
 
   return (
     <div className="space-y-8 py-6 px-4 safe-area-vertical">
@@ -47,12 +47,21 @@ export default function StudioHome() {
         </div>
         {/* VERTICAL GRID - More accessible on mobile */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {roles.slice(0, 4).map((role: EnhancedRole) => (
+          {roles.slice(0, 4).map((role: Role) => (
             <PremiumCard
               key={role.id}
               variant="default"
               onClick={() => {
-                activateRole(role.id);
+                setActiveRole({
+                  id: role.id,
+                  name: role.name,
+                  description: role.description,
+                  systemPrompt: role.systemPrompt,
+                  allowedModels: role.allowedModels,
+                  tags: role.tags,
+                  category: role.category,
+                  styleHints: role.styleHints,
+                });
                 setTimeout(() => navigate("/chat"), 100);
               }}
               className="cursor-pointer hover:shadow-raiseLg transition-all"

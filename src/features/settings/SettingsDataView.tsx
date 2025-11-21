@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Button, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
+import { StorageMigration } from "../../components/StorageMigration";
 import { useConversationStats } from "../../hooks/use-storage";
 import { Download, HardDrive, Upload } from "../../lib/icons";
 import type { ExportData } from "../../lib/storage-layer";
@@ -15,6 +16,7 @@ export function SettingsDataView() {
   const { stats, refresh } = useConversationStats();
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [showMigration, setShowMigration] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportConversations = async () => {
@@ -257,6 +259,22 @@ export function SettingsDataView() {
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* Migration & Backup */}
+            <div className="space-y-4 border-t border-border pt-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-text-primary">Migration & Backup</h3>
+                <Button variant="secondary" size="sm" onClick={() => setShowMigration((v) => !v)}>
+                  {showMigration ? "Schließen" : "Öffnen"}
+                </Button>
+              </div>
+              {showMigration && (
+                <StorageMigration
+                  onMigrationComplete={refresh}
+                  onClose={() => setShowMigration(false)}
+                />
+              )}
             </div>
 
             {/* Info */}

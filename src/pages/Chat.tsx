@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
+import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
@@ -11,7 +12,6 @@ import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
 import { useMemory } from "../hooks/useMemory";
-import { useRoles } from "../hooks/useRoles";
 import { useSettings } from "../hooks/useSettings";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 
@@ -19,10 +19,17 @@ export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
-  const { activeRole: _activeRole } = useRoles();
-  const { settings: _settings } = useSettings();
-  const { isEnabled: _memoryEnabled } = useMemory();
+  const { activeRole } = useStudio();
+  const { settings } = useSettings();
+  const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
+
+  const requestOptions = useMemo(
+    () => ({
+      model: settings.preferredModelId,
+    }),
+    [settings.preferredModelId],
+  );
 
   const {
     messages,
@@ -33,6 +40,7 @@ export default function Chat() {
     setInput,
     stop,
     setCurrentSystemPrompt,
+    setRequestOptions,
   } = useChat({
     onError: (error) => {
       toasts.push({
@@ -43,12 +51,23 @@ export default function Chat() {
     },
   });
 
+  useEffect(() => {
+    if (activeRole?.systemPrompt) {
+      setCurrentSystemPrompt(activeRole.systemPrompt);
+    }
+  }, [activeRole, setCurrentSystemPrompt]);
+
+  useEffect(() => {
+    setRequestOptions(requestOptions);
+  }, [requestOptions, setRequestOptions]);
+
   useConversationManager({
     messages,
     isLoading,
     setMessages,
     setCurrentSystemPrompt,
     onNewConversation: () => {},
+    saveEnabled: memoryEnabled,
   });
 
   useEffect(() => {
@@ -149,7 +168,32 @@ export default function Chat() {
               });
             }}
             onRetry={(messageId) => {
-              console.warn("Retry functionality not implemented for messageId:", messageId);
+              const messageIndex = messages.findIndex((m) => m.id === messageId);
+              if (messageIndex === -1) return;
+
+              const targetUserIndex = (() => {
+                for (let i = messageIndex; i >= 0; i -= 1) {
+                  const candidate = messages[i];
+                  if (candidate && candidate.role === "user") return i;
+                }
+                return -1;
+              })();
+
+              if (targetUserIndex === -1) {
+                toasts.push({
+                  kind: "warning",
+                  title: "Retry nicht möglich",
+                  message: "Keine passende Nutzernachricht gefunden.",
+                });
+                return;
+              }
+
+              const userMessage = messages[targetUserIndex];
+              if (!userMessage) return;
+              void append(
+                { role: "user", content: userMessage.content },
+                messages.slice(0, targetUserIndex),
+              );
             }}
             className="h-full"
           />

@@ -18,6 +18,7 @@ interface ConversationManagerProps {
   setMessages: (messages: ChatMessageType[]) => void;
   setCurrentSystemPrompt: (prompt: string | undefined) => void;
   onNewConversation: () => void;
+  saveEnabled?: boolean;
 }
 
 export function useConversationManager({
@@ -26,6 +27,7 @@ export function useConversationManager({
   setMessages,
   setCurrentSystemPrompt,
   onNewConversation,
+  saveEnabled = true,
 }: ConversationManagerProps) {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -58,6 +60,8 @@ export function useConversationManager({
   useEffect(() => {
     const saveConversationIfNeeded = async () => {
       const lastMessage = messages[messages.length - 1];
+
+      if (!saveEnabled) return;
 
       if (!isLoading && messages.length > 0 && lastMessage?.role === "assistant") {
         const storageMessages = messages.map((msg) => ({
@@ -116,6 +120,7 @@ export function useConversationManager({
     setActiveConversationId,
     refreshConversations,
     toasts,
+    saveEnabled,
   ]);
 
   useEffect(() => {

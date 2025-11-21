@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AppHeader, Button, Input, ModelCard, SectionHeader, Typography } from "@/ui";
 
 import { loadModelCatalog, type ModelEntry } from "../config/models";
+import { useFavorites } from "../contexts/FavoritesContext";
 import { Filter, Search, Star } from "../lib/icons";
 import { cn } from "../lib/utils";
 
@@ -99,6 +100,7 @@ export default function ModelsPage() {
   const [showFreeOnly, setShowFreeOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isModelFavorite, toggleModelFavorite, trackModelUsage } = useFavorites();
 
   // Lade Modelle beim Mount
   useEffect(() => {
@@ -141,20 +143,12 @@ export default function ModelsPage() {
       const matchesSearch =
         model.name.toLowerCase().includes(searchLower) ||
         model.provider.toLowerCase().includes(searchLower);
-      const matchesFavorites = !showFavoritesOnly || model.isFavorite;
+      const matchesFavorites = !showFavoritesOnly || isModelFavorite(model.id);
       const matchesFree = !showFreeOnly || model.isFree;
 
       return matchesSearch && matchesFavorites && matchesFree;
     });
-  }, [models, searchQuery, showFavoritesOnly, showFreeOnly]);
-
-  const toggleFavorite = (modelId: string) => {
-    setModels((prev) =>
-      prev.map((model) =>
-        model.id === modelId ? { ...model, isFavorite: !model.isFavorite } : model,
-      ),
-    );
-  };
+  }, [isModelFavorite, models, searchQuery, showFavoritesOnly, showFreeOnly]);
 
   return (
     <div className="relative flex flex-col text-text-primary h-full">
@@ -275,8 +269,11 @@ export default function ModelsPage() {
                 isFree={model.isFree}
                 price={model.price}
                 contextLength={model.contextLength}
-                isFavorite={model.isFavorite}
-                onToggleFavorite={() => toggleFavorite(model.id)}
+                isFavorite={isModelFavorite(model.id)}
+                onToggleFavorite={() => {
+                  toggleModelFavorite(model.id);
+                  trackModelUsage(model.id, 0, 0);
+                }}
               />
             ))}
           </div>

@@ -27,6 +27,7 @@ vi.mock("../../src/hooks/useChat", () => ({
     setInput: vi.fn(),
     stop: vi.fn(),
     setCurrentSystemPrompt: vi.fn(),
+    setRequestOptions: vi.fn(),
   }),
 }));
 
@@ -43,6 +44,23 @@ vi.mock("../../src/hooks/useMemory", () => ({
     isEnabled: false,
     toggleMemory: vi.fn(),
     clearAllMemory: vi.fn(),
+  }),
+}));
+
+vi.mock("../../src/app/state/StudioContext", () => ({
+  useStudio: () => ({
+    roles: [],
+    rolesLoading: false,
+    roleLoadError: null,
+    refreshRoles: vi.fn(),
+    activeRole: null,
+    setActiveRole: vi.fn(),
+    typographyScale: 1,
+    setTypographyScale: vi.fn(),
+    borderRadius: 0.5,
+    setBorderRadius: vi.fn(),
+    accentColor: "hsl(0 0% 0%)",
+    setAccentColor: vi.fn(),
   }),
 }));
 
