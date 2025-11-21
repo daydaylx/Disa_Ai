@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
@@ -14,9 +15,11 @@ import { useConversationManager } from "../hooks/useConversationManager";
 import { useMemory } from "../hooks/useMemory";
 import { useSettings } from "../hooks/useSettings";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
+import { History } from "../lib/icons";
 
 export default function Chat() {
   const toasts = useToasts();
+  const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
   const { activeRole } = useStudio();
@@ -144,22 +147,34 @@ export default function Chat() {
     <div className="relative flex flex-col text-text-primary h-full">
       {isEmpty ? (
         <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)]">
-          <SectionHeader
-            variant="compact"
-            title="Chat-Start"
-            subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
-          />
+          <div className="flex items-start justify-between gap-3">
+            <SectionHeader
+              variant="compact"
+              title="Chat-Start"
+              subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
+            />
+            <button
+              type="button"
+              onClick={() => navigate("/chat/history")}
+              className="inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-1 px-3 py-2 text-sm font-medium text-text-secondary shadow-raise hover:text-text-primary hover:shadow-raiseLg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            >
+              <History className="h-4 w-4" />
+              Verlauf
+            </button>
+          </div>
 
           <ChatStartCard
             onNewChat={focusComposer}
             conversationCount={stats?.totalConversations || 0}
           />
 
-          <QuickstartGrid
-            onStart={startWithPreset}
-            title="Fokus-Workflows"
-            description="Vorbereitete Presets für Recherche, Schreiben und Pair Programming"
-          />
+          <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)]">
+            <QuickstartGrid
+              onStart={startWithPreset}
+              title="Fokus-Workflows"
+              description="Vorbereitete Presets für Recherche, Schreiben und Pair Programming"
+            />
+          </div>
         </div>
       ) : (
         <div

@@ -180,10 +180,10 @@ export default function ModelsPage() {
               <button
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 className={cn(
-                  "p-3 rounded-sm shadow-raise cursor-pointer transition-all duration-fast",
+                  "p-3 rounded-sm cursor-pointer transition-all duration-fast border",
                   showFavoritesOnly
-                    ? "bg-surface-inset shadow-inset shadow-brandGlow ring-1 ring-brand text-brand"
-                    : "bg-surface-2 hover:shadow-raiseLg active:scale-[0.98]",
+                    ? "bg-brand/10 border-brand text-brand shadow-[var(--shadow-inset),var(--shadow-accent-glow)]"
+                    : "bg-surface-2 border-surface-2 text-text-secondary hover:border-brand/60 hover:text-text-primary hover:shadow-raiseLg active:scale-[0.98]",
                 )}
               >
                 <Star className="h-4 w-4" />
@@ -192,10 +192,10 @@ export default function ModelsPage() {
               <button
                 onClick={() => setShowFreeOnly(!showFreeOnly)}
                 className={cn(
-                  "p-3 rounded-sm shadow-raise cursor-pointer transition-all duration-fast",
+                  "p-3 rounded-sm cursor-pointer transition-all duration-fast border",
                   showFreeOnly
-                    ? "bg-surface-inset shadow-inset shadow-brandGlow ring-1 ring-brand text-brand"
-                    : "bg-surface-2 hover:shadow-raiseLg active:scale-[0.98]",
+                    ? "bg-brand/10 border-brand text-brand shadow-[var(--shadow-inset),var(--shadow-accent-glow)]"
+                    : "bg-surface-2 border-surface-2 text-text-secondary hover:border-brand/60 hover:text-text-primary hover:shadow-raiseLg active:scale-[0.98]",
                 )}
               >
                 <Filter className="h-4 w-4" />
@@ -225,11 +225,47 @@ export default function ModelsPage() {
           </div>
         </div>
 
+        {/* Active Filters Bar */}
+        {(showFavoritesOnly || showFreeOnly || searchQuery) && (
+          <div className="sticky top-[var(--spacing-2)] z-30 bg-surface-inset/90 backdrop-blur rounded-md border border-surface-2 px-3 py-2 flex items-center gap-3 shadow-inset">
+            <Typography variant="body-sm" className="text-text-secondary">
+              Aktive Filter
+            </Typography>
+            {searchQuery && (
+              <span className="text-xs rounded-sm bg-surface-1 px-2 py-1 text-text-primary border border-surface-2">
+                Suche: “{searchQuery}”
+              </span>
+            )}
+            {showFavoritesOnly && (
+              <span className="text-xs rounded-sm bg-brand/10 px-2 py-1 text-brand border border-brand/50">
+                Favoriten
+              </span>
+            )}
+            {showFreeOnly && (
+              <span className="text-xs rounded-sm bg-brand/10 px-2 py-1 text-brand border border-brand/50">
+                Free
+              </span>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="ml-auto"
+              onClick={() => {
+                setShowFavoritesOnly(false);
+                setShowFreeOnly(false);
+                setSearchQuery("");
+              }}
+            >
+              Zurücksetzen
+            </Button>
+          </div>
+        )}
+
         {/* Loading State */}
         {isLoading && (
           <div className="text-center py-16">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
-              <div className="w-8 h-8 border-4 border-brand/30 border-t-brand rounded-full animate-spin" />
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface-inset shadow-inset flex items-center justify-center">
+              <div className="w-10 h-10 border-4 border-brand/30 border-t-brand rounded-full animate-spin shadow-brandGlow" />
             </div>
             <Typography variant="body-lg" className="text-text-primary font-medium">
               Lade Modelle...
@@ -297,6 +333,19 @@ export default function ModelsPage() {
                 ? `Keine Ergebnisse für "${searchQuery}"`
                 : "Versuche es mit anderen Filtereinstellungen"}
             </Typography>
+            <div className="mt-4 flex justify-center">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setSearchQuery("");
+                  setShowFavoritesOnly(false);
+                  setShowFreeOnly(false);
+                }}
+              >
+                Filter zurücksetzen
+              </Button>
+            </div>
           </div>
         )}
       </div>

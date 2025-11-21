@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Search, Star, Users } from "@/lib/icons";
-import { Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
+import { Badge, Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
 
 import { useStudio } from "../../app/state/StudioContext";
 import { useFavorites } from "../../contexts/FavoritesContext";
@@ -245,6 +245,58 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       {/* Roles List */}
       <div className="flex-1 overflow-auto">
         <div className="p-4">
+          {(filters.showFavoritesOnly ||
+            filters.showBuiltInOnly ||
+            filters.hideMatureContent ||
+            selectedCategory ||
+            searchQuery) && (
+            <div className="sticky top-0 z-30 mb-4 flex flex-wrap items-center gap-2 rounded-md border border-surface-1 bg-surface-inset/90 px-3 py-2 shadow-inset backdrop-blur">
+              <span className="text-xs font-semibold text-text-secondary">Aktive Filter:</span>
+              {filters.showFavoritesOnly && (
+                <Badge variant="secondary" className="text-xs">
+                  Favoriten
+                </Badge>
+              )}
+              {filters.showBuiltInOnly && (
+                <Badge variant="secondary" className="text-xs">
+                  Standard
+                </Badge>
+              )}
+              {selectedCategory && (
+                <Badge variant="outline" className="text-xs">
+                  Kategorie: {selectedCategory}
+                </Badge>
+              )}
+              {filters.hideMatureContent && (
+                <Badge variant="outline" className="text-xs">
+                  Jugendschutz
+                </Badge>
+              )}
+              {searchQuery && (
+                <Badge variant="outline" className="text-xs">
+                  Suche: “{searchQuery}”
+                </Badge>
+              )}
+              <Button
+                variant="ghost"
+                size="xs"
+                className="ml-auto"
+                onClick={() => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    showFavoritesOnly: false,
+                    showBuiltInOnly: false,
+                    hideMatureContent: !settings.showNSFWContent,
+                  }));
+                  setSelectedCategory(null);
+                  setSearchQuery("");
+                }}
+              >
+                Zurücksetzen
+              </Button>
+            </div>
+          )}
+
           {/* Results Header - Typography Semantic */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-medium text-text-secondary">
@@ -331,6 +383,24 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     ? `Keine Rollen in "${selectedCategory}"`
                     : "Versuche es mit anderen Filtereinstellungen"}
               </p>
+              <div className="mt-4 flex justify-center">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory(null);
+                    setFilters((prev) => ({
+                      ...prev,
+                      showFavoritesOnly: false,
+                      showBuiltInOnly: false,
+                      hideMatureContent: !settings.showNSFWContent,
+                    }));
+                  }}
+                >
+                  Filter zurücksetzen
+                </Button>
+              </div>
             </div>
           )}
 
