@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { AppHeader, GlassCard, QuickStartCard } from "@/ui";
+import { AppHeader, PremiumCard, QuickStartCard } from "@/ui";
 
 import { BookOpenCheck, KeyRound, Palette, Shield, Upload } from "../../lib/icons";
 
@@ -59,39 +59,34 @@ export function SettingsView() {
           }}
         />
 
-        <div className="space-y-4 bg-surface-inset shadow-inset p-4 rounded-lg">
-          <div className="grid gap-4 sm:grid-cols-2">
-            {cards.map((cardData) => {
-              const Icon = cardData.icon;
-              return (
-                <GlassCard
-                  key={cardData.id}
-                  variant="raised"
-                  className="group cursor-pointer transition-all duration-fast hover:shadow-raiseLg animate-card-enter"
-                >
-                  <Link
-                    to={cardData.to}
-                    className="block p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-md"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-surface-inset shadow-inset">
-                        <Icon className="h-5 w-5 text-accent-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0 space-y-1">
-                        <h3 className="text-base font-semibold text-text-on-raised group-hover:text-accent-primary transition-colors">
-                          {cardData.title}
-                        </h3>
-                        <p className="text-xs text-text-secondary leading-relaxed">
-                          {cardData.description}
-                        </p>
-                        <span className="text-xs font-medium text-accent-primary">Details anzeigen →</span>
-                      </div>
+        <div className="grid gap-4 sm:grid-cols-2 max-w-4xl mx-auto">
+          {cards.map((cardData) => {
+            const Icon = cardData.icon;
+            return (
+              <Link key={cardData.id} to={cardData.to} className="block">
+                <PremiumCard className="group h-full">
+                  <div className="flex items-start gap-3">
+                    {/* Icon Container mit Brand-Akzent */}
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand/10 shadow-brandGlow group-hover:shadow-brandGlowLg transition-all duration-fast">
+                      <Icon className="h-5 w-5 text-brand" />
                     </div>
-                  </Link>
-                </GlassCard>
-              );
-            })}
-          </div>
+                    <div className="flex-1 min-w-0 space-y-2">
+                      <h3 className="text-base font-semibold text-text-primary group-hover:text-brand transition-colors">
+                        {cardData.title}
+                      </h3>
+                      <p className="text-sm text-text-secondary leading-relaxed">
+                        {cardData.description}
+                      </p>
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand">
+                        Details
+                        <span className="text-brand-bright">→</span>
+                      </span>
+                    </div>
+                  </div>
+                </PremiumCard>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

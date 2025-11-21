@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { AppHeader, Button, GlassCard, Input, Label, PrimaryButton, useToasts } from "@/ui";
+import { AppHeader, Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
 import { Eye, EyeOff } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
@@ -74,18 +74,28 @@ export function SettingsApiView() {
     <div className="relative flex flex-col text-text-primary h-full">
       <AppHeader pageTitle="API-Key" />
 
-      <div className="space-y-4 sm:space-y-6 px-4 py-3 sm:px-6 sm:py-6">
-        <GlassCard variant="raised" className="space-y-4 sm:space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-text-on-raised">API-Key & Verbindung</h2>
-            <p className="text-sm text-text-secondary">
-              Optionaler OpenRouter-API-Key für persönliche Limits.
-            </p>
-          </div>
-
-          <div className="space-y-4">
+      <div className="space-y-4 px-4 py-4 sm:px-6">
+        <PremiumCard variant="default" className="max-w-2xl mx-auto">
+          <div className="space-y-6">
+            {/* Header Section */}
             <div className="space-y-2">
-              <Label htmlFor="api-key" className="text-sm font-medium text-text-primary">
+              <h2 className="text-xl font-bold text-text-primary">API-Key & Verbindung</h2>
+              <p className="text-sm text-text-secondary leading-relaxed">
+                Optionaler OpenRouter-API-Key für persönliche Limits.
+              </p>
+            </div>
+
+            {/* Status Indicator */}
+            {hasApiKey && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-brand/10 border border-brand/20">
+                <div className="w-2 h-2 rounded-full bg-brand shadow-brandGlow" />
+                <span className="text-sm font-medium text-brand">API-Key aktiv</span>
+              </div>
+            )}
+
+            {/* Input Section */}
+            <div className="space-y-3">
+              <Label htmlFor="api-key" className="text-sm font-semibold text-text-primary">
                 OpenRouter Key
               </Label>
               <div className="relative">
@@ -100,15 +110,17 @@ export function SettingsApiView() {
                 <button
                   type="button"
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-secondary hover:text-text-primary transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-sm text-text-muted hover:text-brand hover:bg-brand/10 transition-all duration-fast"
+                  aria-label={showKey ? "Key verbergen" : "Key anzeigen"}
                 >
                   {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
 
+            {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <PrimaryButton onClick={handleSaveKey} className="w-full sm:w-auto">
+              <PrimaryButton onClick={handleSaveKey} className="w-full sm:w-auto shadow-brandGlow">
                 Speichern
               </PrimaryButton>
               {hasApiKey && (
@@ -118,12 +130,15 @@ export function SettingsApiView() {
               )}
             </div>
 
-            <p className="text-xs text-text-secondary leading-relaxed">
-              Der API-Key wird nur lokal im Browser gespeichert und nie an externe Server
-              übertragen.
-            </p>
+            {/* Info Notice */}
+            <div className="rounded-md bg-surface-inset shadow-inset p-3">
+              <p className="text-xs text-text-secondary leading-relaxed">
+                🔒 Der API-Key wird nur lokal im Browser gespeichert und nie an externe Server
+                übertragen.
+              </p>
+            </div>
           </div>
-        </GlassCard>
+        </PremiumCard>
       </div>
     </div>
   );

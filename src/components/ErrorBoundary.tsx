@@ -2,7 +2,7 @@ import type { ErrorInfo, ReactNode } from "react";
 import { Component } from "react";
 
 import { Button } from "@/ui/Button";
-import { GlassCard } from "@/ui/GlassCard";
+import { PremiumCard } from "@/ui/PremiumCard";
 
 import { getEnvConfig, getEnvironmentErrors, isEnvironmentValid } from "../config/env";
 import { logger } from "../lib/utils/production-logger";
@@ -123,7 +123,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="bg-[var(--surface-base)] flex min-h-dvh items-center justify-center p-4">
-          <GlassCard className="w-full max-w-2xl">
+          <PremiumCard className="w-full max-w-2xl">
             <div className="mb-8 text-center">
               <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-red-400)] mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-[var(--shadow-glow-red)] animate-pulse">
                 <svg
@@ -218,7 +218,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
               </details>
             </div>
-          </GlassCard>
+          </PremiumCard>
         </div>
       );
     }

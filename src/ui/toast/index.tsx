@@ -91,10 +91,20 @@ function ToastViewport({
 
   const kindClasses = useMemo(
     () => ({
-      success: "border-[var(--success)] text-[var(--success)]",
-      error: "border-[var(--danger)] text-[var(--danger)]",
-      warning: "border-[var(--warning)] text-[var(--warning)]",
-      info: "border-[var(--accent)] text-[var(--accent)]",
+      success: "ring-1 ring-accent-secondary/30 shadow-[0_0_16px_rgba(16,185,129,0.3)]",
+      error: "ring-1 ring-accent-danger/30 shadow-[0_0_16px_rgba(239,68,68,0.3)]",
+      warning: "ring-1 ring-yellow/30 shadow-[0_0_16px_rgba(250,204,21,0.3)]",
+      info: "ring-1 ring-brand/30 shadow-brandGlow",
+    }),
+    [],
+  );
+
+  const iconClasses = useMemo(
+    () => ({
+      success: "text-accent-secondary",
+      error: "text-accent-danger",
+      warning: "text-yellow",
+      info: "text-brand",
     }),
     [],
   );
@@ -112,17 +122,28 @@ function ToastViewport({
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto rounded-2xl border bg-surface-base/98 px-4 py-3 text-sm shadow-elevated backdrop-blur-md ${kindClasses[toast.kind]}`}
+          className={`pointer-events-auto rounded-md bg-surface-2 px-4 py-3 text-sm shadow-raiseLg transition-all duration-fast animate-in slide-in-from-right ${kindClasses[toast.kind]}`}
         >
           <div className="flex items-start gap-3">
+            {/* Status Icon */}
+            <div className={`mt-0.5 ${iconClasses[toast.kind]}`}>
+              {toast.kind === "success" && "✓"}
+              {toast.kind === "error" && "✕"}
+              {toast.kind === "warning" && "⚠"}
+              {toast.kind === "info" && "ⓘ"}
+            </div>
             <div className="flex-1">
-              {toast.title && <p className="font-semibold text-text-primary">{toast.title}</p>}
-              {toast.message && <p className="mt-1 text-xs text-text-secondary">{toast.message}</p>}
+              {toast.title && (
+                <p className="font-semibold text-text-primary leading-snug">{toast.title}</p>
+              )}
+              {toast.message && (
+                <p className="mt-1 text-xs text-text-secondary leading-relaxed">{toast.message}</p>
+              )}
             </div>
             <button
               type="button"
               aria-label="Benachrichtigung schließen"
-              className="ml-1 rounded-full px-2 text-[inherit] transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+              className="ml-1 rounded-sm px-2 text-text-muted hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               onClick={() => onDismiss(toast.id)}
             >
               ×
@@ -131,7 +152,7 @@ function ToastViewport({
           {toast.action && (
             <button
               type="button"
-              className="mt-3 rounded-xl border border-current px-3 py-1 text-xs font-semibold text-[inherit] transition-colors hover:bg-white/10"
+              className={`mt-3 rounded-sm px-3 py-1.5 text-xs font-semibold transition-all duration-fast shadow-raise hover:shadow-raiseLg active:scale-95 ${iconClasses[toast.kind]} bg-surface-inset`}
               onClick={() => {
                 toast.action?.onClick();
                 onDismiss(toast.id);
