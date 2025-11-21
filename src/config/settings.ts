@@ -136,7 +136,18 @@ export function setHapticFeedback(v: boolean): void {
 export function getDiscussionPreset(): DiscussionPresetKey {
   try {
     const raw = localStorage.getItem(LS.discussionPreset) as DiscussionPresetKey | null;
-    if (raw === "locker_neugierig" || raw === "edgy_provokant" || raw === "nuechtern_pragmatisch") {
+    // Support all available discussion presets
+    const validPresets: DiscussionPresetKey[] = [
+      "locker_neugierig",
+      "edgy_provokant",
+      "nuechtern_pragmatisch",
+      "akademisch_formell",
+      "freundlich_offen",
+      "analytisch_detailliert",
+      "sarkastisch_witzig",
+      "fachlich_tiefgehend",
+    ];
+    if (raw && validPresets.includes(raw)) {
       return raw;
     }
     return "locker_neugierig";
