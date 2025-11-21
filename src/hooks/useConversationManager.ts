@@ -21,6 +21,8 @@ interface ConversationManagerProps {
   saveEnabled?: boolean;
 }
 
+const LAST_CONVERSATION_LS_KEY = "disa:last-conversation-id";
+
 export function useConversationManager({
   messages,
   isLoading,
@@ -36,11 +38,40 @@ export function useConversationManager({
   const navigate = useNavigate();
   const location = useLocation();
   const lastSavedSignatureRef = useRef<string | null>(null);
+  const hydratedFromStorageRef = useRef(false);
+
+  const persistLastConversationId = useCallback((id: string | null) => {
+    try {
+      if (id) {
+        localStorage.setItem(LAST_CONVERSATION_LS_KEY, id);
+      } else {
+        localStorage.removeItem(LAST_CONVERSATION_LS_KEY);
+      }
+    } catch {
+      /* non-critical */
+    }
+  }, []);
+
+  const readLastConversationId = useCallback((): string | null => {
+    try {
+      return localStorage.getItem(LAST_CONVERSATION_LS_KEY);
+    } catch {
+      return null;
+    }
+  }, []);
 
   const refreshConversations = useCallback(async () => {
     try {
       const conversations = await getAllConversations();
       setConversations(conversations);
+      if (
+        conversations.length > 0 &&
+        activeConversationId &&
+        !conversations.some((conv) => conv.id === activeConversationId)
+      ) {
+        setActiveConversationId(null);
+        persistLastConversationId(null);
+      }
     } catch (error) {
       console.error("Failed to refresh conversations:", error);
       toasts.push({
@@ -49,7 +80,7 @@ export function useConversationManager({
         message: "Konversationen konnten nicht geladen werden",
       });
     }
-  }, [toasts]);
+  }, [activeConversationId, persistLastConversationId, toasts]);
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -63,7 +94,23 @@ export function useConversationManager({
 
       if (!saveEnabled) return;
 
-      if (!isLoading && messages.length > 0 && lastMessage?.role === "assistant") {
+      const hasMessages = messages.length > 0;
+      const lastMessageRole = lastMessage?.role;
+      const isAssistantCompleted = lastMessageRole === "assistant" && !isLoading;
+      const isUserDraft = lastMessageRole === "user";
+
+      if (!hasMessages || (!isAssistantCompleted && !isUserDraft)) {
+        return;
+      }
+
+      if (lastMessageRole === "assistant" && isLoading) {
+        // Do not persist half-finished assistant replies
+        return;
+      }
+
+      if (!lastMessage) return;
+
+      if (messages.length > 0) {
         const storageMessages = messages.map((msg) => ({
           id: msg.id,
           role: msg.role,
@@ -73,32 +120,46 @@ export function useConversationManager({
         }));
 
         try {
-          const signature = `${storageMessages.length}:${lastMessage.id}:${lastMessage.content}`;
+          const signature = `${storageMessages.length}:${lastMessage.id}:${lastMessage.role}:${lastMessage.content}`;
           if (lastSavedSignatureRef.current === signature) return;
 
           const now = new Date().toISOString();
+          const messageCount = storageMessages.length;
+          const model = lastMessage?.model || "default";
 
-          if (activeConversationId) {
-            await updateConversation(activeConversationId, {
+          const firstUserMessage = storageMessages.find((msg) => msg.role === "user");
+          const fallbackTitle = `Conversation ${new Date().toLocaleDateString()}`;
+          const titleFromUser = firstUserMessage?.content?.slice(0, 80).trim() || fallbackTitle;
+
+          let conversationId = activeConversationId;
+
+          if (conversationId) {
+            await updateConversation(conversationId, {
               messages: storageMessages,
               updatedAt: now,
-              messageCount: storageMessages.length,
+              messageCount,
+              model,
+              title: titleFromUser,
             });
           } else {
-            const conversationId = crypto.randomUUID();
+            conversationId = crypto.randomUUID();
             const conversation = {
               id: conversationId,
-              title: `Conversation ${new Date().toLocaleDateString()}`,
+              title: titleFromUser,
               messages: storageMessages,
               createdAt: now,
               updatedAt: now,
-              model: "default",
-              messageCount: storageMessages.length,
+              model,
+              messageCount,
             };
             await saveConversation(conversation);
             setActiveConversationId(conversationId);
           }
 
+          persistLastConversationId(activeConversationId ?? null);
+          if (conversationId) {
+            persistLastConversationId(conversationId);
+          }
           lastSavedSignatureRef.current = signature;
           await refreshConversations();
         } catch (error) {
@@ -121,6 +182,7 @@ export function useConversationManager({
     refreshConversations,
     toasts,
     saveEnabled,
+    persistLastConversationId,
   ]);
 
   useEffect(() => {
@@ -130,16 +192,18 @@ export function useConversationManager({
   }, [isHistoryOpen, refreshConversations]);
 
   const handleSelectConversation = useCallback(
-    async (id: string) => {
+    async (id: string, opts?: { silent?: boolean }) => {
       try {
         const conversation = await getFromDb(id);
 
         if (!conversation?.messages || !Array.isArray(conversation.messages)) {
-          toasts.push({
-            kind: "error",
-            title: "Fehler",
-            message: "Konversation ist beschädigt oder konnte nicht geladen werden",
-          });
+          if (!opts?.silent) {
+            toasts.push({
+              kind: "error",
+              title: "Fehler",
+              message: "Konversation ist beschädigt oder konnte nicht geladen werden",
+            });
+          }
           return;
         }
 
@@ -154,38 +218,71 @@ export function useConversationManager({
           }));
 
         if (chatMessages.length === 0) {
-          toasts.push({
-            kind: "warning",
-            title: "Konversation leer",
-            message: "Diese Konversation enthält keine gültigen Nachrichten",
-          });
+          if (!opts?.silent) {
+            toasts.push({
+              kind: "warning",
+              title: "Konversation leer",
+              message: "Diese Konversation enthält keine gültigen Nachrichten",
+            });
+          }
           return;
         }
 
         setMessages(chatMessages);
         setActiveConversationId(id);
+        persistLastConversationId(id);
         onNewConversation(); // Resets discussion context etc.
 
         const systemMessage = chatMessages.find((msg) => msg.role === "system");
         setCurrentSystemPrompt(systemMessage?.content);
         setIsHistoryOpen(false);
 
-        toasts.push({
-          kind: "success",
-          title: "Konversation geladen",
-          message: `${conversation.title} wurde geladen`,
-        });
+        const lastMsg = chatMessages[chatMessages.length - 1];
+        if (lastMsg) {
+          lastSavedSignatureRef.current = `${chatMessages.length}:${lastMsg.id}:${lastMsg.role}:${lastMsg.content}`;
+        }
+
+        if (!opts?.silent) {
+          toasts.push({
+            kind: "success",
+            title: "Konversation geladen",
+            message: `${conversation.title} wurde geladen`,
+          });
+        }
       } catch (error) {
         console.error("Failed to load conversation:", error);
-        toasts.push({
-          kind: "error",
-          title: "Fehler",
-          message: "Konversation konnte nicht geladen werden",
-        });
+        if (!opts?.silent) {
+          toasts.push({
+            kind: "error",
+            title: "Fehler",
+            message: "Konversation konnte nicht geladen werden",
+          });
+        }
       }
     },
-    [setMessages, setCurrentSystemPrompt, onNewConversation, toasts],
+    [setMessages, setCurrentSystemPrompt, onNewConversation, persistLastConversationId, toasts],
   );
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+    if (hydratedFromStorageRef.current) return;
+    if (messages.length > 0 || isLoading) return;
+
+    const lastId = readLastConversationId();
+    if (!lastId) return;
+
+    hydratedFromStorageRef.current = true;
+    void handleSelectConversation(lastId, { silent: true }).catch(() => {
+      persistLastConversationId(null);
+    });
+  }, [
+    handleSelectConversation,
+    isLoading,
+    messages.length,
+    persistLastConversationId,
+    readLastConversationId,
+    saveEnabled,
+  ]);
 
   const handleDeleteConversation = useCallback(
     async (id: string) => {
@@ -201,6 +298,7 @@ export function useConversationManager({
       await refreshConversations();
       if (activeConversationId === id) {
         setActiveConversationId(null);
+        persistLastConversationId(null);
         setCurrentSystemPrompt(undefined);
         setMessages([]);
         onNewConversation();
@@ -217,6 +315,7 @@ export function useConversationManager({
       setMessages,
       setCurrentSystemPrompt,
       onNewConversation,
+      persistLastConversationId,
       toasts,
     ],
   );
@@ -225,13 +324,14 @@ export function useConversationManager({
     onNewConversation();
     setMessages([]);
     setActiveConversationId(null);
+    persistLastConversationId(null);
     setCurrentSystemPrompt(undefined);
     toasts.push({
       kind: "info",
       title: "Neue Unterhaltung",
       message: "Bereit für eine neue Unterhaltung",
     });
-  }, [onNewConversation, setMessages, setCurrentSystemPrompt, toasts]);
+  }, [onNewConversation, persistLastConversationId, setMessages, setCurrentSystemPrompt, toasts]);
 
   // Effect to load conversation from URL
   useEffect(() => {

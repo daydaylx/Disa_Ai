@@ -115,8 +115,7 @@
     border-radius: var(--r-lg);
     background:
       linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
-      linear-gradient(200deg, rgba(16, 185, 129, 0.06) 0%, transparent 70%),
-      var(--surface-2);
+      linear-gradient(200deg, rgba(16, 185, 129, 0.06) 0%, transparent 70%), var(--surface-2);
     box-shadow: var(--shadow-strong-raise);
   }
 
@@ -125,11 +124,7 @@
     position: absolute;
     inset: 0;
     opacity: 0.4;
-    background: radial-gradient(
-      140% 120% at 90% 0%,
-      rgba(99, 102, 241, 0.12) 0%,
-      transparent 60%
-    );
+    background: radial-gradient(140% 120% at 90% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
     pointer-events: none;
   }
 

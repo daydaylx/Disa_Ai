@@ -25,7 +25,7 @@
   --bg-base: #020617; /* Page background - Deep Dark */
   --surface-1: #111827; /* Base Surface - Visible against BG */
   --surface-2: #1f2937; /* Raised Surface - Clearly lighter */
-  --surface-inset: #0B101B; /* Inset - Minimal darker than S1, distinct */
+  --surface-inset: #0b101b; /* Inset - Minimal darker than S1, distinct */
 
   /* Material Highlights - Subtile Lichtreflexion */
   --surface-highlight: rgba(255, 255, 255, 0.05);
@@ -66,7 +66,11 @@
 
   /* Brand Gradient (für Signature-Elemente) */
   --brand-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-  --brand-gradient-soft: linear-gradient(135deg, rgba(139, 92, 246, 0.6) 0%, rgba(124, 58, 237, 0.4) 100%);
+  --brand-gradient-soft: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.6) 0%,
+    rgba(124, 58, 237, 0.4) 100%
+  );
 
   /* Accent Secondary (Success/Positive) */
   --accent-secondary: #10b981; /* Green for success */
@@ -80,19 +84,14 @@
    * ======================================== */
 
   /* 1. SOFT RAISE - Standard UI Elements (Mobile-First Calibrated) */
-  --shadow-soft-raise:
-    0 4px 12px rgba(0, 0, 0, 0.4),
-    0 1px 4px rgba(0, 0, 0, 0.2);
+  --shadow-soft-raise: 0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.2);
 
   /* 2. STRONG RAISE - Hero/Focal Elements */
-  --shadow-strong-raise:
-    0 12px 32px rgba(0, 0, 0, 0.5),
-    0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-strong-raise: 0 12px 32px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
 
   /* 3. INSET - Pressed/Input Fields (Deep tool feel) */
   --shadow-inset:
-    inset 0 3px 6px rgba(0, 0, 0, 0.4),
-    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(0, 0, 0, 0.3),
     0 1px 0 rgba(255, 255, 255, 0.05); /* Subtle bottom lip */
 
   /* Brand Glow (für Lila-Akzente) - SIGNATURE ELEMENT */
@@ -144,8 +143,7 @@
    * ======================================== */
 
   /* Font Families */
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
-    sans-serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
   /* Type Scale - Verschärfte Hierarchie für Material-UI */
@@ -171,11 +169,11 @@
   --font-bold: 700; /* Hero, Emphasis */
 
   /* Typography Semantic Tokens */
-  --typo-page-title: var(--font-semibold) var(--text-2xl)/var(--leading-tight);
-  --typo-section-title: var(--font-medium) var(--text-lg)/var(--leading-snug);
-  --typo-card-title: var(--font-semibold) var(--text-xl)/var(--leading-snug);
-  --typo-body: var(--font-normal) var(--text-base)/var(--leading-normal);
-  --typo-meta: var(--font-medium) var(--text-xs)/var(--leading-snug);
+  --typo-page-title: var(--font-semibold) var(--text-2xl) / var(--leading-tight);
+  --typo-section-title: var(--font-medium) var(--text-lg) / var(--leading-snug);
+  --typo-card-title: var(--font-semibold) var(--text-xl) / var(--leading-snug);
+  --typo-body: var(--font-normal) var(--text-base) / var(--leading-normal);
+  --typo-meta: var(--font-medium) var(--text-xs) / var(--leading-snug);
 
   /* ========================================
    * MOTION SYSTEM - PHYSICAL FEEDBACK
@@ -282,12 +280,8 @@
   --container-max-width: 1200px;
 
   /* Content Spacing */
-  --content-padding-top: calc(
-    var(--header-height) + var(--safe-top) + var(--spacing-4)
-  );
-  --content-padding-bottom: calc(
-    var(--bottom-nav-height) + var(--safe-bottom) + var(--spacing-4)
-  );
+  --content-padding-top: calc(var(--header-height) + var(--safe-top) + var(--spacing-4));
+  --content-padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--spacing-4));
 
   /* Grid System */
   --grid-gap: var(--spacing-4);
@@ -319,9 +313,7 @@
     --grid-gap: var(--spacing-6);
 
     /* Stärkere Shadows für größere Screens */
-    --shadow-strong-raise:
-      0 12px 32px rgba(0, 0, 0, 0.28),
-      0 6px 16px rgba(0, 0, 0, 0.18);
+    --shadow-strong-raise: 0 12px 32px rgba(0, 0, 0, 0.28), 0 6px 16px rgba(0, 0, 0, 0.18);
   }
 }
 
@@ -333,9 +325,7 @@
     --grid-gap-lg: var(--spacing-8);
 
     /* Noch stärkere Hero-Shadows */
-    --shadow-strong-raise:
-      0 16px 40px rgba(0, 0, 0, 0.3),
-      0 8px 20px rgba(0, 0, 0, 0.2);
+    --shadow-strong-raise: 0 16px 40px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -358,9 +348,7 @@
   :root {
     /* Verstärkte Kontraste für bessere Zugänglichkeit */
     --text-primary: #ffffff;
-    --shadow-soft-raise:
-      0 4px 12px rgba(0, 0, 0, 0.3),
-      0 2px 6px rgba(0, 0, 0, 0.2);
+    --shadow-soft-raise: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 }
 

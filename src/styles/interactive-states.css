@@ -165,7 +165,6 @@
     transform: translateY(0) scale(0.98);
   }
 
-
   /* Card interactive states */
   .card-interactive {
     transition: all var(--motion-duration-medium, 160ms)

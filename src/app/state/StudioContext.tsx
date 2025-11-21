@@ -4,6 +4,8 @@ import type { Role } from "../../data/roles";
 import { getRoles, loadRoles } from "../../data/roles";
 import { useDeferredFetch } from "../../hooks/useDeferredFetch";
 
+const LS_ACTIVE_ROLE_KEY = "disa:activeRoleId";
+
 interface StudioContextType {
   roles: Role[];
   rolesLoading: boolean;
@@ -46,6 +48,27 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Use loaded roles or fall back to cached default roles
   const roles = loadedRoles || getRoles();
 
+  // Hydrate active role from localStorage once roles are available
+  React.useEffect(() => {
+    if (!roles.length) return;
+    const stored = (() => {
+      try {
+        return localStorage.getItem(LS_ACTIVE_ROLE_KEY);
+      } catch {
+        return null;
+      }
+    })();
+    if (stored) {
+      const match = roles.find((r) => r.id === stored);
+      if (match) {
+        setActiveRoleState(match);
+        const { typographyScale: scale, borderRadius: radius } = match.styleHints;
+        setTypographyScale(scale ?? 1);
+        setBorderRadius(radius ?? 0.5);
+      }
+    }
+  }, [roles]);
+
   const setActiveRole = useCallback(
     (role: Role | null) => {
       setActiveRoleState(role);
@@ -61,6 +84,12 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const { typographyScale: scale, borderRadius: radius } = role.styleHints;
       setTypographyScale(scale ?? 1);
       setBorderRadius(radius ?? 0.5);
+
+      try {
+        localStorage.setItem(LS_ACTIVE_ROLE_KEY, role.id);
+      } catch {
+        /* ignore */
+      }
       // Aktualisiere accentColor nicht automatisch bei Rollen-Auswahl, um ungewollte globale Farbänderungen zu vermeiden
       // setAccentColor(color ?? "hsl(var(--primary))");
     },

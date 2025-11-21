@@ -9,6 +9,11 @@ import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
+import {
+  getDiscussionMaxSentences,
+  getDiscussionPreset,
+  getDiscussionStrictMode,
+} from "../config/settings";
 import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
@@ -16,6 +21,7 @@ import { useMemory } from "../hooks/useMemory";
 import { useSettings } from "../hooks/useSettings";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { History } from "../lib/icons";
+import { discussionPresets } from "../prompts/discussion/presets";
 
 export default function Chat() {
   const toasts = useToasts();
@@ -34,6 +40,25 @@ export default function Chat() {
         : "Content-Safety: Keine sexualisierten, verstörenden oder jugendgefährdenden Inhalte. Bleibe sachlich, respektvoll und filtere NSFW-Anfragen.",
     [settings.showNSFWContent],
   );
+
+  const discussionPrompt = useMemo(() => {
+    const preset = getDiscussionPreset();
+    const presetStyle = discussionPresets[preset];
+    const strict = getDiscussionStrictMode();
+    const maxSentences = getDiscussionMaxSentences();
+    const language = settings.language || "de";
+
+    const parts = [
+      `Antwortsprache: ${language}.`,
+      presetStyle ? `Diskussionsstil: ${presetStyle}.` : "",
+      `Begrenze Antworten auf maximal ${maxSentences} Sätze. Falls kürzere Antworten klarer sind, wähle prägnante Formulierungen.`,
+      strict
+        ? "Strenger Moderationsmodus: filtere riskante, hetzerische oder gesetzeswidrige Inhalte, antworte neutral und verweise respektvoll auf Richtlinien."
+        : "",
+    ].filter(Boolean);
+
+    return parts.join(" ");
+  }, [settings.language]);
 
   const requestOptions = useMemo(
     () => ({
@@ -63,9 +88,11 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    const combinedPrompt = [safetyPrompt, activeRole?.systemPrompt].filter(Boolean).join("\n\n");
+    const combinedPrompt = [safetyPrompt, discussionPrompt, activeRole?.systemPrompt]
+      .filter(Boolean)
+      .join("\n\n");
     setCurrentSystemPrompt(combinedPrompt || undefined);
-  }, [activeRole?.systemPrompt, safetyPrompt, setCurrentSystemPrompt]);
+  }, [activeRole?.systemPrompt, discussionPrompt, safetyPrompt, setCurrentSystemPrompt]);
 
   useEffect(() => {
     setRequestOptions(requestOptions);
