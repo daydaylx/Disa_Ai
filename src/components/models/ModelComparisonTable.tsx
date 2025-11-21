@@ -1,4 +1,4 @@
-import { GlassCard } from "@/ui";
+import { MaterialCard } from "@/ui";
 
 import type { EnhancedModel } from "../../types/enhanced-interfaces";
 import { formatPricePerK } from "../../utils/pricing";
@@ -48,7 +48,7 @@ export function ModelComparisonTable({ models }: ModelComparisonTableProps) {
   ];
 
   return (
-    <GlassCard>
+    <MaterialCard>
       <div className="flex flex-col">
         <div className="flex">
           <div className="w-[200px] font-medium p-4">Eigenschaft</div>
@@ -69,6 +69,6 @@ export function ModelComparisonTable({ models }: ModelComparisonTableProps) {
           </div>
         ))}
       </div>
-    </GlassCard>
+    </MaterialCard>
   );
 }

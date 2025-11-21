@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { AppHeader, Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
+import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
 import { Eye, EyeOff } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
@@ -72,7 +73,13 @@ export function SettingsApiView() {
 
   return (
     <div className="relative flex flex-col text-text-primary h-full">
-      <AppHeader pageTitle="API-Key" />
+      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
+        <Link to="/settings">
+          <Button variant="ghost" size="sm">
+            ← Zurück zu Einstellungen
+          </Button>
+        </Link>
+      </div>
 
       <div className="space-y-4 px-4 py-4 sm:px-6">
         <PremiumCard variant="default" className="max-w-2xl mx-auto">

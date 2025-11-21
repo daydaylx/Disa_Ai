@@ -232,7 +232,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
             {statusCards.map((item) => (
               <div
                 key={item.label}
-                className="glass-inline flex items-center gap-3"
+                className="bg-surface-2 shadow-raise rounded-md p-3 flex items-center gap-3"
                 data-tone={item.active ? item.tone : undefined}
               >
                 <span
@@ -414,7 +414,7 @@ export function StorageMigration({ onMigrationComplete, onClose }: StorageMigrat
               value={restoreData}
               onChange={(e) => setRestoreData(e.target.value)}
               placeholder="Backup JSON hier einfügen…"
-              className="glass-field h-32 resize-none"
+              className="bg-surface-inset shadow-inset rounded-md p-3 w-full h-32 resize-none"
             />
             <div className="flex flex-wrap gap-2">
               <Button

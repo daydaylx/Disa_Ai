@@ -50,7 +50,7 @@ export default function StudioHome() {
           {roles.slice(0, 4).map((role: EnhancedRole) => (
             <PremiumCard
               key={role.id}
-              variant="raised"
+              variant="default"
               onClick={() => {
                 activateRole(role.id);
                 setTimeout(() => navigate("/chat"), 100);
@@ -77,7 +77,7 @@ export default function StudioHome() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Modelle */}
           <PremiumCard
-            variant="raised"
+            variant="default"
             onClick={() => navigate("/models")}
             className="cursor-pointer hover:shadow-raiseLg transition-all group"
           >
@@ -98,7 +98,7 @@ export default function StudioHome() {
 
           {/* Rollen */}
           <PremiumCard
-            variant="raised"
+            variant="default"
             onClick={() => navigate("/roles")}
             className="cursor-pointer hover:shadow-raiseLg transition-all group"
           >
@@ -117,7 +117,7 @@ export default function StudioHome() {
 
           {/* Einstellungen */}
           <PremiumCard
-            variant="raised"
+            variant="default"
             onClick={() => navigate("/settings")}
             className="cursor-pointer hover:shadow-raiseLg transition-all group sm:col-span-2"
           >

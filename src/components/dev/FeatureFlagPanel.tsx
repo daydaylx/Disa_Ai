@@ -12,16 +12,20 @@ import { Button } from "@/ui/Button";
 import { useFeatureFlagDebug } from "../../hooks/useFeatureFlags";
 import { cn } from "../../lib/utils";
 
+// Base styles for a chip, inspired by src/ui/Chip.tsx
+const CHIP_BASE_STYLES =
+  "inline-flex items-center rounded-sm font-medium bg-surface-2 shadow-raise px-2 py-1 text-xs";
+
 const RISK_CHIP_VARIANTS: Record<string, string> = {
-  high: "glass-chip--danger",
-  medium: "glass-chip--warning",
-  low: "glass-chip--success",
+  high: "text-accent-danger",
+  medium: "text-yellow-400", // Assuming a warning color
+  low: "text-accent-secondary",
 };
 
 const SPRINT_CHIP_VARIANTS: Record<number, string> = {
-  1: "glass-chip--info",
-  2: "glass-chip--accent",
-  3: "glass-chip--warning",
+  1: "text-blue-400", // Assuming an info color
+  2: "text-accent-primary",
+  3: "text-yellow-400", // Assuming a warning color
 };
 
 export function FeatureFlagPanel() {
@@ -35,19 +39,14 @@ export function FeatureFlagPanel() {
 
   return (
     <div className="fixed bottom-4 left-4 z-[var(--z-popover)] max-w-sm">
-      <div
-        className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-yellow-400)] shadow-[var(--shadow-glow-yellow)] rounded-2xl p-4"
-        data-tone="warning"
-      >
+      <div className="bg-surface-2 shadow-raiseLg rounded-2xl p-4" data-tone="warning">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[hsl(var(--warning))] animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-yellow-400 animate-pulse" />
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-text-primary">
               Feature Flags aktiv
             </span>
-            <span className="glass-chip glass-chip--info glass-chip--compact">
-              {debug.activeCount}
-            </span>
+            <span className={cn(CHIP_BASE_STYLES, "text-blue-400")}>{debug.activeCount}</span>
           </div>
           <Button
             size="icon"
@@ -66,15 +65,15 @@ export function FeatureFlagPanel() {
               <span
                 key={flag.key}
                 className={cn(
-                  "glass-chip glass-chip--compact",
-                  RISK_CHIP_VARIANTS[flag.riskLevel] ?? "glass-chip--muted",
+                  CHIP_BASE_STYLES,
+                  RISK_CHIP_VARIANTS[flag.riskLevel] ?? "text-text-secondary",
                 )}
               >
                 {flag.key}
               </span>
             ))}
             {debug.activeFlags.length > 3 && (
-              <span className="glass-chip glass-chip--compact glass-chip--muted">
+              <span className={cn(CHIP_BASE_STYLES, "text-text-secondary")}>
                 +{debug.activeFlags.length - 3}
               </span>
             )}
@@ -87,7 +86,7 @@ export function FeatureFlagPanel() {
               {debug.activeFlags.map((flag) => (
                 <div
                   key={flag.key}
-                  className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] rounded-xl p-3 space-y-2"
+                  className="bg-surface-inset shadow-inset rounded-xl p-3 space-y-2"
                   data-tone={flag.riskLevel === "high" ? "danger" : undefined}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -99,8 +98,8 @@ export function FeatureFlagPanel() {
                       {flag.sprint && (
                         <span
                           className={cn(
-                            "glass-chip glass-chip--compact",
-                            SPRINT_CHIP_VARIANTS[flag.sprint] ?? "glass-chip--accent",
+                            CHIP_BASE_STYLES,
+                            SPRINT_CHIP_VARIANTS[flag.sprint] ?? "text-accent-primary",
                           )}
                         >
                           S{flag.sprint}
@@ -108,8 +107,8 @@ export function FeatureFlagPanel() {
                       )}
                       <span
                         className={cn(
-                          "glass-chip glass-chip--compact",
-                          RISK_CHIP_VARIANTS[flag.riskLevel] ?? "glass-chip--muted",
+                          CHIP_BASE_STYLES,
+                          RISK_CHIP_VARIANTS[flag.riskLevel] ?? "text-text-secondary",
                         )}
                       >
                         {flag.riskLevel}
@@ -121,16 +120,16 @@ export function FeatureFlagPanel() {
               ))}
             </div>
 
-            <div className="space-y-2 border-t border-line/40 pt-3 text-xs text-text-secondary">
+            <div className="space-y-2 border-t border-surface-1 pt-3 text-xs text-text-secondary">
               {debug.environmentFlags.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="glass-chip glass-chip--compact glass-chip--muted">ENV</span>
+                  <span className={cn(CHIP_BASE_STYLES, "text-text-secondary")}>ENV</span>
                   <span>{debug.environmentFlags.join(", ")}</span>
                 </div>
               )}
               {debug.queryFlags.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="glass-chip glass-chip--compact glass-chip--muted">Query</span>
+                  <span className={cn(CHIP_BASE_STYLES, "text-text-secondary")}>Query</span>
                   <span>{debug.queryFlags.join(", ")}</span>
                 </div>
               )}
@@ -139,9 +138,9 @@ export function FeatureFlagPanel() {
               </div>
             </div>
 
-            <div className="border-t border-line/40 pt-3 text-xs text-text-secondary">
+            <div className="border-t border-surface-1 pt-3 text-xs text-text-secondary">
               💡 Teste Flags mit{" "}
-              <code className="glass-chip glass-chip--compact normal-case tracking-normal font-mono">
+              <code className={cn(CHIP_BASE_STYLES, "normal-case tracking-normal font-mono")}>
                 ?ff=flagname
               </code>
             </div>
@@ -165,7 +164,7 @@ export function FeatureFlagIndicator() {
 
   return (
     <span
-      className="glass-chip glass-chip--warning glass-chip--compact"
+      className={cn(CHIP_BASE_STYLES, "text-yellow-400")}
       title={`Aktive Feature-Flags: ${debug.activeFlags.map((f) => f.key).join(", ")}`}
     >
       FF: {debug.activeCount}

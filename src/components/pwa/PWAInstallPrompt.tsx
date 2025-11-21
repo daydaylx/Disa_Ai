@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
-import { GlassCard } from "@/ui/GlassCard";
+import { MaterialCard } from "@/ui/MaterialCard";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { Download, Smartphone, X } from "../../lib/icons";
@@ -92,7 +92,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
         className,
       )}
     >
-      <GlassCard className="p-4">
+      <MaterialCard className="p-4">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             <div className="p-2 rounded-xl bg-[var(--surface-2)] text-[var(--accent-primary)]">
@@ -109,20 +109,11 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
             </p>
 
             <div className="flex gap-2">
-              <Button
-                onClick={handleInstall}
-                size="sm"
-                className="flex-1 text-xs"
-              >
+              <Button onClick={handleInstall} size="sm" className="flex-1 text-xs">
                 <Download className="mr-1 h-3.5 w-3.5" />
                 Installieren
               </Button>
-              <Button
-                onClick={handleDismiss}
-                size="sm"
-                variant="ghost"
-                className="px-3 text-xs"
-              >
+              <Button onClick={handleDismiss} size="sm" variant="ghost" className="px-3 text-xs">
                 Später
               </Button>
             </div>
@@ -138,7 +129,7 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
             <X className="h-4 w-4" />
           </Button>
         </div>
-      </GlassCard>
+      </MaterialCard>
     </div>
   );
 }

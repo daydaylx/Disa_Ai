@@ -1,4 +1,4 @@
-import { GlassCard } from "@/ui";
+import { MaterialCard } from "@/ui";
 
 import { cn } from "../../lib/utils";
 
@@ -29,14 +29,9 @@ export function MessageBubbleCard({
       : timeFormatter.format(new Date(timestamp));
 
   return (
-    <GlassCard
-      className={cn(
-        "px-4 py-3 text-left",
-        isUser
-          ? "border-[var(--glass-border-medium)] bg-[var(--glass-surface-strong)] text-[var(--text-primary)]"
-          : "border-[var(--glass-border-soft)] bg-[var(--glass-surface-subtle)] text-[var(--text-primary)]",
-        className,
-      )}
+    <MaterialCard
+      variant={isUser ? "inset" : "raised"}
+      className={cn("px-4 py-3 text-left", className)}
     >
       <div
         className={cn(
@@ -48,6 +43,6 @@ export function MessageBubbleCard({
         <span className="text-[var(--text-muted)]">{formattedTime}</span>
       </div>
       <p className="whitespace-pre-wrap text-sm leading-relaxed">{body}</p>
-    </GlassCard>
+    </MaterialCard>
   );
 }

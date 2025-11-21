@@ -124,7 +124,6 @@ export async function loadModelCatalog(_opts?: CatalogOptions | boolean): Promis
     }
 
     const models = data.map(jsonModelToEntry).sort(byLabel);
-    console.info(`[Models] Loaded ${models.length} models from ${url}`);
     return models;
   } catch (error) {
     console.error(`[Models] Failed to load ${url}:`, error);

@@ -31,10 +31,8 @@ export function ActionCard({
       "hover:shadow-[var(--shadow-premium-medium)] hover:scale-[1.02]",
     ].join(" "),
     secondary: [
-      "bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)]",
-      "hover:bg-[var(--glass-surface-strong)] text-[var(--text-primary)]",
-      "border border-[var(--glass-border-subtle)] shadow-[var(--shadow-glow-soft)]",
-      "hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-premium-medium)]",
+      "bg-surface-2 shadow-raise text-text-primary",
+      "hover:shadow-raiseLg",
       "hover:scale-[1.02]",
     ].join(" "),
   };

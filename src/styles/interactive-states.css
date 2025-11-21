@@ -165,36 +165,6 @@
     transform: translateY(0) scale(0.98);
   }
 
-  /* Glassmorphism interactive states */
-  .glass-interactive {
-    transition: all var(--motion-duration-small, 120ms)
-      var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
-    background: var(--surface-card);
-    border: 1px solid var(--color-border-subtle);
-    backdrop-filter: blur(12px);
-    cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .glass-interactive:hover {
-    background: var(--color-surface-raised);
-    border-color: var(--color-border-strong);
-    box-shadow: var(--shadow-glow-brand-subtle);
-  }
-
-  .glass-interactive:focus,
-  .glass-interactive:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 2px var(--color-border-focus),
-      var(--shadow-glow-brand);
-  }
-
-  .glass-interactive:active {
-    background: var(--color-surface-muted);
-    transform: scale(0.98);
-  }
 
   /* Card interactive states */
   .card-interactive {
@@ -316,7 +286,6 @@
   .interactive-disabled,
   .interactive-element:disabled,
   .btn-interactive:disabled,
-  .glass-interactive:disabled,
   .card-interactive:disabled,
   .link-interactive:disabled,
   .input-interactive:disabled,
@@ -340,7 +309,6 @@
     .active-bg,
     .interactive-element,
     .btn-interactive,
-    .glass-interactive,
     .card-interactive,
     .link-interactive,
     .input-interactive,
@@ -353,7 +321,6 @@
     .hover-scale:hover,
     .interactive-element:hover,
     .btn-interactive:hover,
-    .glass-interactive:hover,
     .card-interactive:hover,
     .link-interactive:hover {
       transform: none;
@@ -362,7 +329,6 @@
     .active-transform:active,
     .interactive-element:active,
     .btn-interactive:active,
-    .glass-interactive:active,
     .card-interactive:active,
     .switch-interactive:active,
     .chip-interactive:active {
@@ -397,8 +363,6 @@
     .interactive-element:focus-visible,
     .btn-interactive:focus,
     .btn-interactive:focus-visible,
-    .glass-interactive:focus,
-    .glass-interactive:focus-visible,
     .card-interactive:focus,
     .card-interactive:focus-visible,
     .link-interactive:focus,

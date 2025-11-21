@@ -8,7 +8,6 @@ interface MetricRowProps {
   maxValue?: number;
   color?: "green" | "yellow" | "primary";
   score?: number;
-  showScore?: boolean;
   tooltip?: string; // WCAG: Explanatory tooltip for accessibility
 }
 
@@ -18,7 +17,6 @@ export function MetricRow({
   maxValue = 100,
   color = "green",
   score,
-  showScore = true,
   tooltip,
 }: MetricRowProps) {
   const percentage = Math.min(100, Math.max(0, (value / maxValue) * 100));
@@ -50,7 +48,7 @@ export function MetricRow({
 
       {/* Progress Bar - WCAG: Not relying solely on color */}
       <div
-        className="relative h-1.5 bg-[var(--glass-surface-subtle)] rounded-full overflow-hidden border border-[var(--glass-border-subtle)]"
+        className="relative h-1.5 bg-surface-inset rounded-full overflow-hidden"
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}

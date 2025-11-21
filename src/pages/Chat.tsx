@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import { useToasts } from "@/ui";
-import { AppHeader } from "@/ui/AppHeader";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
@@ -117,7 +116,6 @@ export default function Chat() {
 
   return (
     <div className="relative flex flex-col text-text-primary h-full">
-      <AppHeader pageTitle="Chat" />
       {isEmpty ? (
         <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)]">
           <SectionHeader

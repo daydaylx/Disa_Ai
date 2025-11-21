@@ -262,6 +262,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           >
             {filteredRoles.map((role) => {
               const isFavorite = isRoleFavorite(role.id);
+              const roleUsage = usage.roles[role.id];
               return (
                 <PremiumCard
                   key={role.id}
@@ -294,9 +295,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       {role.category || "Spezial"}
                     </span>
                     {/* Usage indicator */}
-                    {usage[role.id] && (
+                    {roleUsage && (
                       <span className="text-xs font-medium text-brand">
-                        {usage[role.id].count}× genutzt
+                        {roleUsage?.count}× genutzt
                       </span>
                     )}
                   </div>

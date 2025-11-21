@@ -125,7 +125,7 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="bg-[var(--surface-base)] flex min-h-dvh items-center justify-center p-4">
           <PremiumCard className="w-full max-w-2xl">
             <div className="mb-8 text-center">
-              <div className="bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--aurora-red-400)] mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-[var(--shadow-glow-red)] animate-pulse">
+              <div className="bg-surface-2 mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-[var(--shadow-glow-red)] animate-pulse">
                 <svg
                   className="text-destructive h-10 w-10 drop-shadow-glow-destructive"
                   fill="none"
@@ -146,7 +146,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </p>
             </div>
 
-            <div className="bg-[var(--glass-surface-subtle)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] shadow-[var(--shadow-glow-soft)] mb-6 rounded-2xl p-6">
+            <div className="bg-surface-inset shadow-inset mb-6 rounded-2xl p-6">
               <h2 className="text-text-primary mb-2 font-semibold flex items-center gap-2">
                 <span className="text-destructive text-xl">⚠️</span>Fehlerdetails
               </h2>

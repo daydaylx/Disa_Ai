@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { AppHeader, PremiumCard, QuickStartCard } from "@/ui";
+import { PremiumCard, QuickStartCard, SectionHeader } from "@/ui";
 
 import { BookOpenCheck, KeyRound, Palette, Shield, Upload } from "../../lib/icons";
 
@@ -45,7 +45,7 @@ export function SettingsView() {
 
   return (
     <div className="relative flex flex-col text-text-primary h-full">
-      <AppHeader pageTitle="Einstellungen" />
+      <SectionHeader title="Einstellungen" />
 
       <div className="space-y-4 sm:space-y-6 px-4 py-3 sm:px-6 sm:py-6">
         <QuickStartCard

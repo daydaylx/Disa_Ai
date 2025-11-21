@@ -4,7 +4,7 @@ import { Bot, Copy, RotateCcw, User } from "@/lib/icons";
 import { Avatar, AvatarFallback } from "@/ui/Avatar";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
-import { GlassCard } from "@/ui/GlassCard";
+import { MaterialCard } from "@/ui/MaterialCard";
 
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
@@ -143,7 +143,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           </div>
         )}
 
-        <GlassCard className={cn(bubbleClass, "p-4")}>
+        <MaterialCard variant={isUser ? "inset" : "raised"} className={cn(bubbleClass, "p-4")}>
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
@@ -157,7 +157,7 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
               </div>
             ))}
           </div>
-        </GlassCard>
+        </MaterialCard>
 
         {!isSystem && showActions && (
           <div

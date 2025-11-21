@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Button } from "@/ui/Button";
-import { GlassCard } from "@/ui/GlassCard";
+import { MaterialCard } from "@/ui/MaterialCard";
 
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { Info } from "../../lib/icons";
@@ -69,7 +69,7 @@ export function PWADebugInfo() {
 
   return (
     <div className="fixed right-4 top-20 z-40 max-w-sm">
-      <GlassCard className="p-4">
+      <MaterialCard className="p-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-text-primary text-sm font-semibold">PWA Debug Info</h3>
@@ -130,7 +130,7 @@ export function PWADebugInfo() {
             </ul>
           </div>
         </div>
-      </GlassCard>
+      </MaterialCard>
     </div>
   );
 }

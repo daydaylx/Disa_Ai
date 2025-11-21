@@ -17,8 +17,8 @@ import {
   DialogHeader,
   DialogTitle,
   FilterChip,
-  GlassCard,
   Input,
+  MaterialCard,
   Skeleton,
   useToasts,
 } from "@/ui";
@@ -521,7 +521,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           {/* Models Grid */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {filteredModels.map((model) => (
-              <GlassCard
+              <MaterialCard
                 key={model.id}
                 variant="raised"
                 className="p-4 cursor-pointer hover:shadow-raiseLg transition-all duration-fast animate-card-enter"
@@ -640,7 +640,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     <ChevronDown className="w-4 h-4" />
                   </Button>
                 </div>
-              </GlassCard>
+              </MaterialCard>
             ))}
           </div>
 
@@ -650,7 +650,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
                 <Search className="w-8 h-8 text-text-muted" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-3">Keine Modelle gefunden</h3>
+              <h3 className="text-xl font-semibold text-text-primary mb-3">
+                Keine Modelle gefunden
+              </h3>
               <p className="text-text-secondary">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
@@ -670,7 +672,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               </h3>
               <p className="text-text-secondary mb-6 max-w-md mx-auto">{modelLoadError}</p>
               <p className="text-sm text-text-meta">
-                Stelle sicher, dass <code className="px-2 py-1 bg-surface-inset shadow-inset rounded-sm">public/models.json</code> existiert und korrekt formatiert ist.
+                Stelle sicher, dass{" "}
+                <code className="px-2 py-1 bg-surface-inset shadow-inset rounded-sm">
+                  public/models.json
+                </code>{" "}
+                existiert und korrekt formatiert ist.
               </p>
             </div>
           )}

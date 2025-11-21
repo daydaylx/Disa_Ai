@@ -72,7 +72,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
             {/* Footer - Only show in development */}
             {process.env.NODE_ENV === "development" && (
-              <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[var(--brand-soft)] bg-surface-panel/80 px-4 py-3 text-[11px] text-text-muted shadow-[var(--shadow-sm)]">
+              <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-surface-inset shadow-inset px-4 py-3 text-[11px] text-text-muted">
                 <span>Disa AI · Build</span>
                 <BuildInfo />
               </footer>

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { GlassCard } from "@/ui/GlassCard";
+import { Button } from "@/ui/Button";
+import { MaterialCard } from "@/ui/MaterialCard";
 import { Typography } from "@/ui/Typography";
 
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
@@ -32,7 +33,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md" onClick={handleBackdropClick}>
+    <div className="fixed inset-0 z-50 bg-black/60" onClick={handleBackdropClick}>
       {/* Vollflächiges Overlay */}
       <div
         className={cn(
@@ -42,8 +43,8 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <GlassCard
-          variant="primary"
+        <MaterialCard
+          variant="hero"
           className="w-full max-w-md max-h-[85vh] overflow-y-auto relative transform scale-100 transition-all duration-300"
         >
           {/* Header with Close Button */}
@@ -77,25 +78,21 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
 
                   return (
                     <Link key={item.id} to={item.path} onClick={onClose} className="block">
-                      <GlassCard
-                        className={cn(
-                          "p-[var(--spacing-4)] cursor-pointer transition-all duration-300 hover:scale-[1.02]",
-                          isActive
-                            ? "border-[var(--accent)] bg-[var(--accent-soft)]/30 shadow-lg shadow-[var(--accent)]/10"
-                            : "hover:bg-surface-panel/50 border-transparent",
-                        )}
+                      <MaterialCard
+                        variant={isActive ? "inset" : "raised"}
+                        className="p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
                       >
                         <div className="flex items-center gap-3">
                           <div
                             className={cn(
                               "flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg",
-                              isActive ? "bg-[var(--accent)]/20" : "bg-surface-panel/50",
+                              isActive ? "bg-accent-primary/20" : "bg-surface-1",
                             )}
                           >
                             <Icon
                               className={cn(
                                 "h-4 w-4",
-                                isActive ? "text-[var(--accent)]" : "text-text-secondary",
+                                isActive ? "text-accent-primary" : "text-text-secondary",
                               )}
                             />
                           </div>
@@ -104,7 +101,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
                               variant="body-sm"
                               className={cn(
                                 "font-medium mb-0.5",
-                                isActive ? "text-[var(--accent)]" : "text-text-primary",
+                                isActive ? "text-accent-primary" : "text-text-primary",
                               )}
                             >
                               {item.label}
@@ -114,7 +111,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
                             </Typography>
                           </div>
                         </div>
-                      </GlassCard>
+                      </MaterialCard>
                     </Link>
                   );
                 })}
@@ -136,24 +133,20 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
 
                   return (
                     <Link key={page.href} to={page.href} onClick={onClose} className="block">
-                      <GlassCard
-                        className={cn(
-                          "p-[var(--spacing-4)] cursor-pointer transition-all duration-300 hover:scale-[1.02]",
-                          isActive
-                            ? "border-[var(--accent)] bg-[var(--accent-soft)]/30 shadow-lg shadow-[var(--accent)]/10"
-                            : "hover:bg-surface-panel/50 border-transparent",
-                        )}
+                      <MaterialCard
+                        variant={isActive ? "inset" : "raised"}
+                        className="p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
                       >
                         <Typography
                           variant="body-sm"
                           className={cn(
                             "font-medium",
-                            isActive ? "text-[var(--accent)]" : "text-text-primary",
+                            isActive ? "text-accent-primary" : "text-text-primary",
                           )}
                         >
                           {page.label}
                         </Typography>
-                      </GlassCard>
+                      </MaterialCard>
                     </Link>
                   );
                 })}
@@ -162,12 +155,12 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
           </div>
 
           {/* Footer */}
-          <div className="mt-6 pt-4 border-t border-[var(--glass-border-soft)]">
+          <div className="mt-6 pt-4 border-t border-surface-1">
             <Typography variant="body-xs" className="text-text-secondary text-center">
               © 2025 Disa AI
             </Typography>
           </div>
-        </GlassCard>
+        </MaterialCard>
       </div>
     </div>
   );
@@ -182,14 +175,11 @@ interface MenuIconProps {
 
 export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
   return (
-    <button
+    <Button
       onClick={onClick}
-      className={cn(
-        "relative p-3 rounded-xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] text-text-secondary min-h-[44px] min-w-[44px] flex items-center justify-center group",
-        "hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-soft)] hover:scale-110 hover:text-primary transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-        "focus:bg-[var(--glass-surface-strong)] focus:backdrop-blur-[var(--backdrop-blur-strong)] focus:border-[var(--glass-border-aurora)] focus:shadow-[var(--shadow-glow-primary)] focus:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50",
-        className,
-      )}
+      variant="secondary"
+      size="icon"
+      className={cn("relative group", className)}
       aria-label="Menü öffnen"
     >
       {/* Hamburger Icon */}
@@ -205,7 +195,7 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
           {badge}
         </span>
       )}
-    </button>
+    </Button>
   );
 }
 
