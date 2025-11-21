@@ -36,6 +36,15 @@ export function roleFilterFn(
     return false;
   }
 
+  // WCAG: Filter mature content for age-appropriate display
+  if (filters.hideMatureContent) {
+    const hasMatureTag = role.tags?.includes("mature");
+    const hasAdultRating = (role as any).ageRating === "18+";
+    if (hasMatureTag || hasAdultRating) {
+      return false;
+    }
+  }
+
   return true;
 }
 

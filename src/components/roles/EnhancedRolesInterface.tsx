@@ -49,6 +49,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     showFavoritesOnly: false,
     showRecentlyUsed: false,
     showBuiltInOnly: false,
+    hideMatureContent: true, // WCAG: Enable mature content filter by default
     models: {
       showFreeOnly: false,
       showPremiumOnly: false,
@@ -179,8 +180,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             />
           </div>
 
-          {/* Filter Chips Row */}
-          <div className="flex gap-3">
+          {/* Filter Chips Row - WCAG: Added mature content filter */}
+          <div className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <FilterChip
               selected={filters.showFavoritesOnly}
               onClick={() =>
@@ -198,6 +199,17 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               leading={<Users className="w-4 h-4" />}
             >
               Standard
+            </FilterChip>
+            <FilterChip
+              selected={filters.hideMatureContent ?? true}
+              onClick={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  hideMatureContent: !(prev.hideMatureContent ?? true),
+                }))
+              }
+            >
+              Jugendschutz 🔞
             </FilterChip>
           </div>
         </div>
