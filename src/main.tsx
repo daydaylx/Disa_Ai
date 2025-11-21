@@ -106,13 +106,12 @@ function safeInitialize(): void {
       window.addEventListener("load", async () => {
         // Request persistent storage (fixes StorageType.persistent deprecation)
         if ("storage" in navigator && "persist" in navigator.storage) {
-          const isPersistent = await navigator.storage.persist();
-          console.log("Storage persistent:", isPersistent);
+          await navigator.storage.persist();
         }
 
         navigator.serviceWorker.register("/sw.js").then(
-          (registration) => {
-            console.log("SW registered:", registration);
+          () => {
+            // Service Worker registered successfully
           },
           (registrationError) => {
             console.warn("SW registration failed:", registrationError);

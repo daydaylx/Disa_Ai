@@ -1,5 +1,5 @@
-import { SettingsView } from "../features/settings/SettingsView";
+import { SettingsMemoryView } from "../features/settings/SettingsMemoryView";
 
 export default function SettingsMemoryPage() {
-  return <SettingsView />;
+  return <SettingsMemoryView />;
 }

@@ -282,9 +282,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       {role.category || "Spezial"}
                     </span>
                     {/* Usage indicator */}
-                    {usage[role.id] && (
+                    {usage.roles?.[role.id] && (
                       <span className="text-xs font-medium text-brand">
-                        {usage[role.id].count}× genutzt
+                        {usage.roles[role.id]?.count}× genutzt
                       </span>
                     )}
                   </div>

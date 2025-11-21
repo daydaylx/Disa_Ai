@@ -1,5 +1,5 @@
-import { SettingsView } from "../features/settings/SettingsView";
+import { SettingsFiltersView } from "../features/settings/SettingsFiltersView";
 
 export default function SettingsFiltersPage() {
-  return <SettingsView />;
+  return <SettingsFiltersView />;
 }

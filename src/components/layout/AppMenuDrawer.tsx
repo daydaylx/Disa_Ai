@@ -43,7 +43,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
         onClick={(e) => e.stopPropagation()}
       >
         <GlassCard
-          variant="primary"
+          variant="raised"
           className="w-full max-w-md max-h-[85vh] overflow-y-auto relative transform scale-100 transition-all duration-300"
         >
           {/* Header with Close Button */}
