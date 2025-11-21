@@ -226,6 +226,19 @@ export default defineConfig(({ mode }) => {
                       networkTimeoutSeconds: 10,
                     },
                   },
+                  // Cache models.json for offline use, always try network first
+                  {
+                    urlPattern: /\/models\.json$/i,
+                    handler: "NetworkFirst",
+                    options: {
+                      cacheName: "models-cache",
+                      expiration: {
+                        maxEntries: 1,
+                        maxAgeSeconds: 60 * 60 * 24, // 24 hours
+                      },
+                      networkTimeoutSeconds: 5,
+                    },
+                  },
                 ],
               },
               includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
