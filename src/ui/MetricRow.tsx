@@ -9,6 +9,7 @@ interface MetricRowProps {
   color?: "green" | "yellow" | "primary";
   score?: number;
   showScore?: boolean;
+  tooltip?: string; // WCAG: Explanatory tooltip for accessibility
 }
 
 export function MetricRow({
@@ -18,8 +19,10 @@ export function MetricRow({
   color = "green",
   score,
   showScore = true,
+  tooltip,
 }: MetricRowProps) {
   const percentage = Math.min(100, Math.max(0, (value / maxValue) * 100));
+  const displayValue = score !== undefined ? score : value;
 
   // Aurora Color Palette Integration
   const colorClasses = {
@@ -29,21 +32,31 @@ export function MetricRow({
   };
 
   return (
-    <div className="space-y-1">
-      {/* Label und Score */}
+    <div className="space-y-1" title={tooltip}>
+      {/* Label und Score - WCAG: Always show numerical value */}
       <div className="flex items-center justify-between">
         <Typography variant="body-sm" className="text-[var(--text-secondary)]">
           {label}
         </Typography>
-        {showScore && score !== undefined && (
-          <Typography variant="body-xs" className="text-[var(--text-muted)]">
-            {score}
-          </Typography>
-        )}
+        {/* WCAG: Always display numerical value for accessibility */}
+        <Typography
+          variant="body-xs"
+          className="text-[var(--text-muted)] font-[var(--font-medium)]"
+          aria-label={`${label}: ${displayValue} out of ${maxValue}`}
+        >
+          {displayValue}/{maxValue}
+        </Typography>
       </div>
 
-      {/* Aurora Glass Progress Bar */}
-      <div className="relative h-1.5 bg-[var(--glass-surface-subtle)] rounded-full overflow-hidden border border-[var(--glass-border-subtle)]">
+      {/* Progress Bar - WCAG: Not relying solely on color */}
+      <div
+        className="relative h-1.5 bg-[var(--glass-surface-subtle)] rounded-full overflow-hidden border border-[var(--glass-border-subtle)]"
+        role="progressbar"
+        aria-valuenow={value}
+        aria-valuemin={0}
+        aria-valuemax={maxValue}
+        aria-label={`${label} progress`}
+      >
         <div
           className={cn(
             "absolute inset-y-0 left-0 rounded-full transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",

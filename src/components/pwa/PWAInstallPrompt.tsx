@@ -15,15 +15,33 @@ interface PWAInstallPromptProps {
 export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
   const { canInstall, requestInstall, installed } = usePWAInstall();
   const [isVisible, setIsVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const toasts = useToasts();
 
   useEffect(() => {
-    if (canInstall) {
-      const timer = setTimeout(() => setIsVisible(true), 3000);
-      return () => clearTimeout(timer);
+    // Check if user has dismissed the prompt before
+    const wasDismissed = localStorage.getItem("pwa-prompt-dismissed");
+    if (wasDismissed) {
+      setDismissed(true);
+      return undefined;
+    }
+
+    if (canInstall && !dismissed) {
+      // Show after 5 seconds (less aggressive)
+      const showTimer = setTimeout(() => setIsVisible(true), 5000);
+
+      // Auto-dismiss after 15 seconds
+      const hideTimer = setTimeout(() => {
+        setIsVisible(false);
+      }, 20000); // 5s delay + 15s visible
+
+      return () => {
+        clearTimeout(showTimer);
+        clearTimeout(hideTimer);
+      };
     }
     return undefined;
-  }, [canInstall]);
+  }, [canInstall, dismissed]);
 
   const handleInstall = async () => {
     try {
@@ -54,48 +72,56 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
 
   const handleDismiss = () => {
     setIsVisible(false);
+    setDismissed(true);
+    // Remember dismissal for 7 days
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 7);
+    localStorage.setItem("pwa-prompt-dismissed", expiryDate.toISOString());
   };
 
-  if (installed || !canInstall || !isVisible) {
+  if (installed || !canInstall || !isVisible || dismissed) {
     return null;
   }
 
   return (
     <div
       className={cn(
-        "fixed bottom-4 left-4 right-4 z-notification md:left-auto md:right-4 md:max-w-sm lg:max-w-md",
+        // WCAG: Less intrusive - positioned at top, smaller, auto-dismisses
+        "fixed top-20 right-4 z-notification max-w-xs",
+        "animate-in slide-in-from-top-4 duration-500",
         className,
       )}
     >
-      <GlassCard className="p-6 sm:p-8 animate-in slide-in-from-bottom-8 duration-500 ease-[var(--motion-ease-elastic)]">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <div className="mb-3 flex items-center gap-3">
-              <div className="p-3 rounded-2xl bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-medium)] text-primary shadow-[var(--shadow-glow-primary)]">
-                <Smartphone className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-primary">Disa AI als App installieren</h3>
-                <p className="text-sm text-text-secondary">
-                  Schnellerer Zugriff, volle Offline-Fähigkeiten & Push-Notifications
-                </p>
-              </div>
+      <GlassCard className="p-4">
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0">
+            <div className="p-2 rounded-xl bg-[var(--surface-2)] text-[var(--accent-primary)]">
+              <Smartphone className="h-5 w-5" />
             </div>
+          </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-1">
+              Als App installieren
+            </h3>
+            <p className="text-xs text-[var(--text-muted)] mb-3">
+              Schnellerer Zugriff & Offline-Nutzung
+            </p>
+
+            <div className="flex gap-2">
               <Button
                 onClick={handleInstall}
-                size="lg"
-                className="order-1 flex-1 bg-[var(--glass-surface-strong)] backdrop-blur-[var(--backdrop-blur-strong)] border border-[var(--glass-border-medium)] shadow-[var(--shadow-glow-soft)] group hover:shadow-[var(--shadow-glow-green)] hover:scale-[1.02] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]"
+                size="sm"
+                className="flex-1 text-xs"
               >
-                <Download className="mr-2 h-5 w-5" />
-                Jetzt installieren
+                <Download className="mr-1 h-3.5 w-3.5" />
+                Installieren
               </Button>
               <Button
                 onClick={handleDismiss}
-                size="lg"
+                size="sm"
                 variant="ghost"
-                className="order-2 sm:order-2 group hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-subtle)] hover:scale-[1.02] transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]"
+                className="px-3 text-xs"
               >
                 Später
               </Button>
@@ -106,10 +132,10 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
             onClick={handleDismiss}
             variant="ghost"
             size="icon"
-            className="h-10 w-10 p-2 rounded-2xl bg-[var(--glass-surface-medium)] backdrop-blur-[var(--backdrop-blur-medium)] border border-[var(--glass-border-subtle)] hover:bg-[var(--glass-surface-strong)] hover:backdrop-blur-[var(--backdrop-blur-strong)] hover:border-[var(--glass-border-medium)] hover:shadow-[var(--shadow-glow-subtle)] hover:rotate-90 transition-all duration-300 ease-[var(--motion-ease-elastic)]"
+            className="h-6 w-6 p-1 flex-shrink-0"
             aria-label="Installations-Prompt schließen"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </Button>
         </div>
       </GlassCard>
