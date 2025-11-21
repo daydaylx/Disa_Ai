@@ -35,6 +35,7 @@ export const PremiumCard = React.memo(
     return (
       <div
         onClick={onClick}
+        tabIndex={onClick ? 0 : undefined}
         className={cn(
           "relative overflow-hidden rounded-md transition-all duration-fast",
           // Material Depth
@@ -46,6 +47,9 @@ export const PremiumCard = React.memo(
           onClick && "cursor-pointer hover:shadow-raiseLg hover:-translate-y-0.5",
           // Active State
           onClick && "active:scale-[0.99] active:translate-y-0",
+          // Focus
+          onClick &&
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2",
           className,
         )}
       >

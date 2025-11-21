@@ -160,6 +160,11 @@ export default function ModelsPage() {
           title="Katalog & Bewertungen"
           subtitle="Vergleiche Kosten, Kontext und Fähigkeiten"
         />
+        <div className="flex justify-end">
+          <Button variant="ghost" size="sm" onClick={() => window.open("/models/mobile", "_self")}>
+            Mobile Ansicht
+          </Button>
+        </div>
 
         {/* Such-/Filterleiste */}
         <div className="space-y-3">

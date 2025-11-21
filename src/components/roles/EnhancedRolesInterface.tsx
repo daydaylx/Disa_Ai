@@ -279,7 +279,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               )}
               <Button
                 variant="ghost"
-                size="xs"
+                size="sm"
                 className="ml-auto"
                 onClick={() => {
                   setFilters((prev) => ({
