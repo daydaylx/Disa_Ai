@@ -22,27 +22,27 @@
    * ======================================== */
 
   /* Material Base - Dunkle Oberflächen */
-  --bg-base: #0f172a; /* Page background */
-  --surface-1: #1a1f2e; /* Base cards, inset areas */
-  --surface-2: #1e293b; /* Raised cards (default) */
-  --surface-inset: #151a27; /* Inset/pressed areas (darker) */
+  --bg-base: #020617; /* Page background - Deep Dark */
+  --surface-1: #111827; /* Base Surface - Visible against BG */
+  --surface-2: #1f2937; /* Raised Surface - Clearly lighter */
+  --surface-inset: #0B101B; /* Inset - Minimal darker than S1, distinct */
 
   /* Material Highlights - Subtile Lichtreflexion */
-  --surface-highlight: rgba(255, 255, 255, 0.03);
-  --surface-highlight-strong: rgba(255, 255, 255, 0.06);
+  --surface-highlight: rgba(255, 255, 255, 0.05);
+  --surface-highlight-strong: rgba(255, 255, 255, 0.08);
 
   /* SIGNATURE ELEMENT: Bevel Highlight (Werkzeug-DNA) */
   --bevel-highlight: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.04) 30%,
-    transparent 60%
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    transparent 70%
   );
   --bevel-highlight-strong: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.06) 30%,
-    transparent 60%
+    rgba(255, 255, 255, 0.20) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    transparent 70%
   );
 
   /* Text Hierarchy - Verschärft für Material-Tiefe */
@@ -74,20 +74,21 @@
    * Konsistente Lichtlogik: Top-Left Light Source
    * ======================================== */
 
-  /* 1. SOFT RAISE - Standard UI Elements */
+  /* 1. SOFT RAISE - Standard UI Elements (Mobile-First Calibrated) */
   --shadow-soft-raise:
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 1px 3px rgba(0, 0, 0, 0.1);
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 1px 4px rgba(0, 0, 0, 0.2);
 
   /* 2. STRONG RAISE - Hero/Focal Elements */
   --shadow-strong-raise:
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    0 4px 12px rgba(0, 0, 0, 0.15);
+    0 12px 32px rgba(0, 0, 0, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.3);
 
-  /* 3. INSET - Pressed/Input Fields */
+  /* 3. INSET - Pressed/Input Fields (Deep tool feel) */
   --shadow-inset:
-    inset 0 2px 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 3px rgba(0, 0, 0, 0.15);
+    inset 0 3px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.05); /* Subtle bottom lip */
 
   /* Accent Glow (nur für active states) */
   --shadow-accent-glow: 0 0 12px rgba(99, 102, 241, 0.25);
@@ -361,6 +362,7 @@
   --shadow-xl: var(--shadow-strong-raise);
 
   /* Legacy Surface Mappings */
+  --surface-base: var(--bg-base);
   --bg-0: var(--bg-base);
   --bg-1: var(--surface-1);
   --bg-2: var(--surface-2);

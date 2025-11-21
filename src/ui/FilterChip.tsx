@@ -43,7 +43,7 @@ export function FilterChip({
         ],
         // Active inset state
         isActiveState && [
-          "bg-surface-inset text-accent-primary shadow-inset",
+          "bg-surface-inset text-accent-primary shadow-[var(--shadow-inset),var(--shadow-accent-glow)]",
           "ring-1 ring-accent-primary",
         ],
         className,

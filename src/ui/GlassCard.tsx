@@ -30,7 +30,7 @@ export function GlassCard({
 
   const variantStyles = {
     raised: "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
-    inset: "bg-surface-1 shadow-inset",
+    inset: "bg-surface-inset shadow-inset border border-white/5",
     hero: "bg-surface-2 shadow-raiseLg before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight-strong)]",
   };
 

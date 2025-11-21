@@ -16,7 +16,7 @@ const cardVariants = cva("relative rounded-md transition-all duration-fast overf
   variants: {
     variant: {
       raised: "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
-      inset: "bg-surface-1 shadow-inset",
+      inset: "bg-surface-inset shadow-inset border border-white/5",
       hero: "bg-surface-2 shadow-raiseLg before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight-strong)]",
     },
     padding: {
@@ -58,7 +58,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={`text-2xl font-semibold leading-none tracking-tight text-text-primary ${className}`}
+      className={`text-xl font-semibold leading-snug tracking-normal text-text-primary ${className}`}
       {...props}
     />
   ),
