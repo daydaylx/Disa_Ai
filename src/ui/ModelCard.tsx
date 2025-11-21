@@ -75,7 +75,7 @@ const ModelCardComponent = React.memo(
           </p>
 
           {/* Row 3: Horizontal bars - kompakter */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 bg-surface-inset shadow-inset p-3 rounded-md">
             {[
               { label: "Speed", val: speed, color: "bg-green-500" },
               { label: "Quality", val: quality, color: "bg-blue-500" },

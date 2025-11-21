@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { AppHeader, GlassCard, QuickStartCard, SectionHeader } from "@/ui";
+import { AppHeader, GlassCard, QuickStartCard } from "@/ui";
 
 import { BookOpenCheck, KeyRound, Palette, Shield, Upload } from "../../lib/icons";
 
@@ -59,13 +59,7 @@ export function SettingsView() {
           }}
         />
 
-        <div className="space-y-4">
-          <SectionHeader
-            variant="compact"
-            title="Einstellungen"
-            subtitle="Verwalte deine Daten, APIs und Darstellung"
-          />
-
+        <div className="space-y-4 bg-surface-inset shadow-inset p-4 rounded-lg">
           <div className="grid gap-4 sm:grid-cols-2">
             {cards.map((cardData) => {
               const Icon = cardData.icon;

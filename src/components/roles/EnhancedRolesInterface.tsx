@@ -159,18 +159,18 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
       {/* MATERIAL INSET HEADER PANEL */}
-      <div className="sticky top-0 z-40 bg-surface-1 shadow-inset">
+      <div className="sticky top-0 z-40 bg-surface-inset shadow-inset pb-2">
         <div className="p-4 space-y-4">
           {/* Search Input - Material Style */}
           <div className="relative">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1.5 shadow-inset">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1.5 shadow-inset z-10">
               <Search className="w-4 h-4 text-text-muted" />
             </div>
             <Input
               placeholder="Rollen durchsuchen..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-md bg-surface-2 pl-14 pr-4 py-3 text-base shadow-raise focus:shadow-raiseLg transition-all"
+              className="w-full pl-14 pr-4 py-6 text-base"
             />
           </div>
 

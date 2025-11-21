@@ -19,7 +19,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-accent-primary text-white shadow-raise hover:bg-accent-hover hover:shadow-accentGlow active:scale-[0.98] active:translate-y-px active:bg-accent-active",
+          "bg-accent-primary text-white shadow-[var(--shadow-soft-raise),var(--shadow-accent-glow)] hover:bg-accent-hover hover:shadow-[var(--shadow-soft-raise),var(--shadow-accent-glow-strong)] active:scale-[0.98] active:translate-y-px active:bg-accent-active",
         secondary:
           "bg-surface-2 text-text-primary shadow-raise hover:shadow-raiseLg active:scale-[0.98] active:translate-y-px active:shadow-inset",
         ghost:

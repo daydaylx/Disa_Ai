@@ -2,12 +2,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
 const inputVariants = cva(
-  "flex min-h-[44px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "flex min-h-[44px] w-full rounded-md px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-fast",
   {
     variants: {
       variant: {
-        default: "border-input",
-        outline: "border-border bg-transparent",
+        default: "bg-surface-inset shadow-inset text-text-primary placeholder:text-text-muted focus-visible:ring-1 focus-visible:ring-accent-primary",
+        outline: "border border-border bg-transparent placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       },
     },
     defaultVariants: {
