@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { AppHeader, Button, Input, ModelCard, SectionHeader, Typography } from "@/ui";
 
+import { loadModelCatalog, type ModelEntry } from "../config/models";
 import { Filter, Search, Star } from "../lib/icons";
 import { cn } from "../lib/utils";
 
-// Mock data für Modelle - würde normalerweise aus API kommen
 interface Model {
   id: string;
   name: string;
@@ -17,88 +17,121 @@ interface Model {
   price: string;
   contextLength: string;
   isFavorite?: boolean;
+  description?: string;
 }
 
-const mockModels: Model[] = [
-  {
-    id: "gpt-4-turbo",
-    name: "GPT-4 Turbo",
-    provider: "openai",
-    speed: 85,
-    quality: 95,
-    value: 75,
-    isFree: false,
-    price: "$0.030/1K",
-    contextLength: "128K",
-    isFavorite: true,
-  },
-  {
-    id: "claude-3-haiku",
-    name: "Claude 3 Haiku",
-    provider: "anthropic",
-    speed: 90,
-    quality: 92,
-    value: 80,
-    isFree: false,
-    price: "$0.025/1K",
-    contextLength: "200K",
+/**
+ * Konvertiert ModelEntry aus models.json zu UI Model Format
+ * Generiert heuristische Metriken basierend auf Preis und Modellgröße
+ */
+function convertToUIModel(entry: ModelEntry): Model {
+  const isFree = entry.tags.includes("free") || !entry.pricing;
+  const provider = entry.provider ?? "unknown";
+  const name = entry.label ?? entry.id;
+
+  // Heuristische Metriken basierend auf Preis und Modellgröße
+  let speed = 85;
+  let quality = 85;
+  let value = 85;
+
+  if (isFree) {
+    // Kostenlose Modelle: guter Value, variable Quality
+    speed = 88;
+    quality = 82;
+    value = 92;
+  } else if (entry.pricing) {
+    // Preisbasierte Heuristik
+    const avgPrice = ((entry.pricing.in ?? 0) + (entry.pricing.out ?? 0)) / 2;
+
+    if (avgPrice < 0.05) {
+      speed = 92;
+      quality = 80;
+      value = 90;
+    } else if (avgPrice < 0.15) {
+      speed = 85;
+      quality = 88;
+      value = 85;
+    } else {
+      speed = 78;
+      quality = 93;
+      value = 75;
+    }
+  }
+
+  // Context Length formatieren
+  let contextLength = "N/A";
+  if (entry.ctx) {
+    if (entry.ctx >= 1000000) {
+      contextLength = `${(entry.ctx / 1000000).toFixed(1)}M`;
+    } else if (entry.ctx >= 1000) {
+      contextLength = `${Math.round(entry.ctx / 1000)}K`;
+    } else {
+      contextLength = `${entry.ctx}`;
+    }
+  }
+
+  // Preis formatieren
+  let price = "FREE";
+  if (!isFree && entry.pricing) {
+    const displayPrice = entry.pricing.in ?? entry.pricing.out ?? 0;
+    price = `$${displayPrice.toFixed(3)}/1K`;
+  }
+
+  return {
+    id: entry.id,
+    name,
+    provider,
+    speed,
+    quality,
+    value,
+    isFree,
+    price,
+    contextLength,
+    description: entry.description,
     isFavorite: false,
-  },
-  {
-    id: "gpt-3.5-turbo",
-    name: "GPT-3.5 Turbo",
-    provider: "openai",
-    speed: 95,
-    quality: 85,
-    value: 90,
-    isFree: false,
-    price: "$0.002/1K",
-    contextLength: "16K",
-    isFavorite: false,
-  },
-  {
-    id: "mistral-nemo",
-    name: "Mistral: Mistral Nemo",
-    provider: "mistralai",
-    speed: 88,
-    quality: 87,
-    value: 88,
-    isFree: true,
-    price: "FREE",
-    contextLength: "131K",
-    isFavorite: true,
-  },
-  {
-    id: "llama-3-70b",
-    name: "Meta: Llama 3 70B",
-    provider: "meta-llama",
-    speed: 80,
-    quality: 88,
-    value: 85,
-    isFree: false,
-    price: "$0.007/1K",
-    contextLength: "32K",
-    isFavorite: false,
-  },
-  {
-    id: "gemini-pro",
-    name: "Gemini Pro",
-    provider: "google",
-    speed: 82,
-    quality: 90,
-    value: 78,
-    isFree: false,
-    price: "$0.001/1K",
-    contextLength: "1M",
-    isFavorite: false,
-  },
-];
+  };
+}
 
 export default function ModelsPage() {
-  const [models, setModels] = useState<Model[]>(mockModels);
+  const [models, setModels] = useState<Model[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [showFreeOnly, setShowFreeOnly] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Lade Modelle beim Mount
+  useEffect(() => {
+    let mounted = true;
+
+    async function fetchModels() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const catalog = await loadModelCatalog();
+        const uiModels = catalog.map(convertToUIModel);
+
+        if (mounted) {
+          setModels(uiModels);
+        }
+      } catch (err) {
+        console.error("Failed to load models:", err);
+        if (mounted) {
+          setError(err instanceof Error ? err.message : "Fehler beim Laden der Modelle");
+        }
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    fetchModels();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Optimized filtering with useMemo - prevents re-computation on every render
   const filteredModels = useMemo(() => {
@@ -198,30 +231,62 @@ export default function ModelsPage() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-brand/30 border-t-brand rounded-full animate-spin" />
+            </div>
+            <Typography variant="body-lg" className="text-text-primary font-medium">
+              Lade Modelle...
+            </Typography>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
+              <div className="w-8 h-8 text-destructive">⚠</div>
+            </div>
+            <Typography
+              variant="body-lg"
+              className="text-text-primary font-medium mb-2"
+            >
+              Fehler beim Laden
+            </Typography>
+            <Typography variant="body-sm" className="text-text-secondary">
+              {error}
+            </Typography>
+          </div>
+        )}
+
         {/* Model Grid - kompakter für mobile Ansicht */}
-        <div
-          className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          data-testid="models-grid"
-        >
-          {filteredModels.map((model) => (
-            <ModelCard
-              key={model.id}
-              name={model.name}
-              vendor={model.provider}
-              speed={model.speed}
-              quality={model.quality}
-              value={model.value}
-              isFree={model.isFree}
-              price={model.price}
-              contextLength={model.contextLength}
-              isFavorite={model.isFavorite}
-              onToggleFavorite={() => toggleFavorite(model.id)}
-            />
-          ))}
-        </div>
+        {!isLoading && !error && (
+          <div
+            className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            data-testid="models-grid"
+          >
+            {filteredModels.map((model) => (
+              <ModelCard
+                key={model.id}
+                name={model.name}
+                vendor={model.provider}
+                speed={model.speed}
+                quality={model.quality}
+                value={model.value}
+                isFree={model.isFree}
+                price={model.price}
+                contextLength={model.contextLength}
+                isFavorite={model.isFavorite}
+                onToggleFavorite={() => toggleFavorite(model.id)}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Empty State - Material */}
-        {filteredModels.length === 0 && (
+        {!isLoading && !error && filteredModels.length === 0 && (
           <div className="text-center py-16">
             <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
               <Search className="w-8 h-8 text-text-muted" />

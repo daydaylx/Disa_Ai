@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-dce9afb",
-  "buildTime": "2025-11-21T15:48:04.320Z",
-  "gitSha": "dce9afb1cda345db0ecfacec2bbb5d6c03c0bb64",
-  "gitBranch": "main",
+  "buildId": "v1.0.0-5e421ff",
+  "buildTime": "2025-11-21T16:03:31.313Z",
+  "gitSha": "5e421ffb286abde77a78fd6b803377c51507fb1f",
+  "gitBranch": "claude/load-model-series-01HMTcxZXvnwWnJtK3V21bdn",
   "version": "1.0.0"
 }
