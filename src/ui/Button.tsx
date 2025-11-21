@@ -2,19 +2,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
 /**
- * MaterialButton - Neumorphism/Soft-Depth Button Component
+ * PremiumButton - Premium Material Button mit Brand-Glow
  *
  * NO borders - depth through shadows only
  * Physical feedback: press transforms to scale(0.98) + translateY
+ * Brand-Glow: Lila-Glow auf Primary-Buttons (SIGNATURE)
  *
  * Variants:
- * - primary: Accent-colored with soft glow on hover
+ * - primary: Lila Brand-Color mit Brand-Glow auf hover
  * - secondary: Raised surface with no accent
  * - ghost: Minimal, no shadow
  * - link: Text-only link style
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center rounded-md text-sm font-semibold transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:opacity-50 disabled:pointer-events-none",
   {
     variants: {
       variant: {
@@ -22,8 +23,7 @@ const buttonVariants = cva(
           "bg-accent-primary text-white shadow-[var(--shadow-soft-raise),var(--shadow-accent-glow)] hover:bg-accent-hover hover:shadow-[var(--shadow-soft-raise),var(--shadow-accent-glow-strong)] active:scale-[0.98] active:translate-y-px active:bg-accent-active",
         secondary:
           "bg-surface-2 text-text-primary shadow-raise hover:shadow-raiseLg active:scale-[0.98] active:translate-y-px active:shadow-inset",
-        ghost:
-          "hover:bg-surface-2 hover:text-text-primary active:scale-[0.98]",
+        ghost: "hover:bg-surface-2 hover:text-text-primary active:scale-[0.98]",
         link: "text-accent-primary underline-offset-4 hover:underline",
       },
       size: {

@@ -40,7 +40,7 @@
   );
   --bevel-highlight-strong: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.20) 0%,
+    rgba(255, 255, 255, 0.2) 0%,
     rgba(255, 255, 255, 0.08) 40%,
     transparent 70%
   );
@@ -55,13 +55,18 @@
   --text-accent: var(--accent-primary); /* Accent text for key info only */
 
   /* ========================================
-   * ACCENT SYSTEM - INDIGO PRIMARY
+   * ACCENT SYSTEM - LILA/VIOLET PRIMARY (BRAND)
    * ======================================== */
 
-  /* Accent Colors - Indigo Familie */
-  --accent-primary: #6366f1; /* Main accent */
-  --accent-hover: #4f46e5; /* Hover state */
-  --accent-active: #4338ca; /* Active/pressed state */
+  /* Accent Colors - Lila/Violet Brand Familie */
+  --accent-primary: #8b5cf6; /* Main brand accent - Lila */
+  --accent-hover: #7c3aed; /* Hover state */
+  --accent-active: #6d28d9; /* Active/pressed state */
+  --accent-bright: #a78bfa; /* Bright variant for highlights */
+
+  /* Brand Gradient (für Signature-Elemente) */
+  --brand-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --brand-gradient-soft: linear-gradient(135deg, rgba(139, 92, 246, 0.6) 0%, rgba(124, 58, 237, 0.4) 100%);
 
   /* Accent Secondary (Success/Positive) */
   --accent-secondary: #10b981; /* Green for success */
@@ -90,9 +95,13 @@
     inset 0 1px 2px rgba(0, 0, 0, 0.3),
     0 1px 0 rgba(255, 255, 255, 0.05); /* Subtle bottom lip */
 
-  /* Accent Glow (nur für active states) */
-  --shadow-accent-glow: 0 0 12px rgba(99, 102, 241, 0.25);
-  --shadow-accent-glow-strong: 0 0 20px rgba(99, 102, 241, 0.35);
+  /* Brand Glow (für Lila-Akzente) - SIGNATURE ELEMENT */
+  --shadow-brand-glow: 0 0 16px rgba(139, 92, 246, 0.3);
+  --shadow-brand-glow-strong: 0 0 24px rgba(139, 92, 246, 0.4);
+
+  /* Legacy: Accent Glow mapped to Brand */
+  --shadow-accent-glow: var(--shadow-brand-glow);
+  --shadow-accent-glow-strong: var(--shadow-brand-glow-strong);
 
   /* ========================================
    * STRICT RADIUS SYSTEM (NUR 3 STUFEN!)
@@ -180,7 +189,7 @@
 
   /* Easings - Natural Physics */
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* Standard */
-  --ease-out: cubic-bezier(0.0, 0, 0.2, 1); /* Deceleration (card open) */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1); /* Deceleration (card open) */
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1); /* Spring effect */
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce (favorite pop) */
 
@@ -203,7 +212,15 @@
   --transform-scale-out: scale(1.02);
 
   /* Focus States */
-  --focus-ring: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  --focus-ring: 0 0 0 3px rgba(139, 92, 246, 0.25);
+
+  /* ========================================
+   * UNIFIED METRIC SYSTEM (Brand-Gradient)
+   * Alle Progress Bars nutzen einheitlichen Lila-Gradient
+   * ======================================== */
+
+  --metric-gradient: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+  --metric-gradient-bg: rgba(139, 92, 246, 0.12);
 
   /* ========================================
    * SEMANTIC COMPONENT TOKENS
@@ -218,6 +235,11 @@
 
   --card-hero-bg: var(--surface-2);
   --card-hero-shadow: var(--shadow-strong-raise);
+
+  /* SIGNATURE CARD ELEMENTS (Premium Brand Identity) */
+  --card-accent-strip-height: 3px;
+  --card-accent-strip-bg: var(--brand-gradient);
+  --card-accent-strip-glow: 0 0 8px rgba(139, 92, 246, 0.4);
 
   /* Button System */
   --button-primary-bg: var(--accent-primary);
@@ -375,6 +397,7 @@
   --color-primary-500: var(--accent-primary);
   --color-primary-600: var(--accent-hover);
   --color-primary-700: var(--accent-active);
+  --text-brand: var(--accent-primary); /* Brand text color für BrandWordmark */
 
   /* Legacy Text Mappings */
   --foreground: var(--text-primary);

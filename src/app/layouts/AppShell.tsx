@@ -70,7 +70,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col overflow-y-auto px-6 py-8 sm:px-10 sm:py-12">
             <div className="page-stack flex flex-1 flex-col gap-6">{children}</div>
 
-            <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[var(--glass-border-soft)] bg-surface-panel/80 px-4 py-3 text-[11px] text-text-muted shadow-[var(--shadow-sm)]">
+            <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-[var(--brand-soft)] bg-surface-panel/80 px-4 py-3 text-[11px] text-text-muted shadow-[var(--shadow-sm)]">
               <span>Disa AI · Build</span>
               <BuildInfo />
             </footer>

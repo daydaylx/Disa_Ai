@@ -26,20 +26,28 @@ const colorTokens = {
     disabled: "var(--text-disabled)", // #64748b
   },
 
-  // Primary: Indigo-Violet
+  // Primary: Lila/Violet Brand
   primary: {
     50: "var(--color-primary-50)",
     100: "var(--color-primary-100)",
     200: "var(--color-primary-200)",
     300: "var(--color-primary-300)",
     400: "var(--color-primary-400)",
-    500: "var(--color-primary-500)", // #6366f1
-    600: "var(--color-primary-600)",
-    700: "var(--color-primary-700)",
+    500: "var(--accent-primary)", // #8b5cf6 - Lila Brand
+    600: "var(--accent-hover)", // #7c3aed
+    700: "var(--accent-active)", // #6d28d9
     800: "var(--color-primary-800)",
     900: "var(--color-primary-900)",
     950: "var(--color-primary-950)",
-    DEFAULT: "var(--color-primary-500)",
+    DEFAULT: "var(--accent-primary)",
+  },
+
+  // Brand Colors (Signature)
+  brand: {
+    DEFAULT: "var(--accent-primary)",
+    hover: "var(--accent-hover)",
+    active: "var(--accent-active)",
+    bright: "var(--accent-bright)",
   },
 
   // Aurora Accents
@@ -96,6 +104,8 @@ const boxShadows = {
   inset: "var(--shadow-inset)", // Pressed/input fields
   accentGlow: "var(--shadow-accent-glow)", // Active state glow
   accentGlowLg: "var(--shadow-accent-glow-strong)", // Strong glow
+  brandGlow: "var(--shadow-brand-glow)", // Brand Lila glow
+  brandGlowLg: "var(--shadow-brand-glow-strong)", // Strong brand glow
 };
 
 // Font sizes from design-tokens.css typography tokens
@@ -142,6 +152,13 @@ export default {
       spacing: spacingScale,
       borderRadius: radii,
       boxShadow: boxShadows,
+      backgroundImage: {
+        "brand-gradient": "var(--brand-gradient)",
+        "brand-gradient-soft": "var(--brand-gradient-soft)",
+        "metric-gradient": "var(--metric-gradient)",
+        "bevel-highlight": "var(--bevel-highlight)",
+        "bevel-highlight-strong": "var(--bevel-highlight-strong)",
+      },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
@@ -179,22 +196,32 @@ export default {
 } satisfies Config;
 
 /*
- * NEUMORPHISM/SOFT-DEPTH DESIGN SYSTEM INTEGRATION
+ * PREMIUM MATERIAL STUDIO - DESIGN SYSTEM INTEGRATION
  *
- * This Tailwind config maps to the new Material Design system in design-tokens.css
+ * This Tailwind config maps to the "Premium Material Studio" design system
+ * in design-tokens-consolidated.css
+ *
+ * BRAND IDENTITY: Lila/Violet (#8b5cf6) - Disa AI Signature
  *
  * Key mappings:
- * - Colors: Material palette with Indigo accent
+ * - Colors: Material palette with Lila Brand accent
  * - Spacing: 8px grid system (--spacing-0 to --spacing-10)
  * - Typography: Mobile-first font sizes and line heights
- * - Shadows: STRICT 3-type system (raise, raiseLg, inset)
+ * - Shadows: STRICT 3-type system (raise, raiseLg, inset) + brandGlow
  * - Radii: STRICT 3-tier system (sm: 8px, md: 12px, lg: 16px)
+ * - Gradients: Brand gradient, Metric gradient, Bevel highlights
+ *
+ * SIGNATURE ELEMENTS:
+ * - Accent-Strip Cards (Lila top-strip + Bevel-Highlight)
+ * - Unified Lila Metric Gradients
+ * - Brand Glow on interactive elements
  *
  * RULES:
- * - NO backdrop-blur (removed)
+ * - NO backdrop-blur
  * - NO borders (only shadows for depth)
- * - ONLY 3 shadow types
+ * - ONLY 3 shadow types + brand glow
  * - ONLY 3 radii sizes
+ * - CONSISTENT Lila brand accent everywhere
  *
- * ALL COMPONENTS MUST USE THIS NEUMORPHISM SYSTEM!
+ * ALL COMPONENTS MUST USE THIS SYSTEM!
  */

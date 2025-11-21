@@ -17,6 +17,7 @@ export * from "./Input";
 export * from "./Label";
 export * from "./MetricRow";
 export * from "./ModelCard";
+export * from "./PremiumCard";
 export * from "./PrimaryButton";
 export * from "./QuickStartCard";
 export * from "./RoleCard";

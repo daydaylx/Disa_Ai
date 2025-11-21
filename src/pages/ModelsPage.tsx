@@ -148,14 +148,14 @@ export default function ModelsPage() {
               />
             </div>
 
-            {/* Material Filter Buttons */}
+            {/* Premium Filter Buttons mit Brand-Akzent */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 className={cn(
                   "p-3 rounded-sm shadow-raise cursor-pointer transition-all duration-fast",
                   showFavoritesOnly
-                    ? "bg-surface-inset shadow-inset ring-1 ring-accent-primary text-accent-primary"
+                    ? "bg-surface-inset shadow-inset shadow-brandGlow ring-1 ring-brand text-brand"
                     : "bg-surface-2 hover:shadow-raiseLg active:scale-[0.98]",
                 )}
               >
@@ -167,7 +167,7 @@ export default function ModelsPage() {
                 className={cn(
                   "p-3 rounded-sm shadow-raise cursor-pointer transition-all duration-fast",
                   showFreeOnly
-                    ? "bg-surface-inset shadow-inset ring-1 ring-accent-primary text-accent-primary"
+                    ? "bg-surface-inset shadow-inset shadow-brandGlow ring-1 ring-brand text-brand"
                     : "bg-surface-2 hover:shadow-raiseLg active:scale-[0.98]",
                 )}
               >
