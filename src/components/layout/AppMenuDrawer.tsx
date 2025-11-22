@@ -55,8 +55,9 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
         <MaterialCard
           variant="hero"
           className={cn(
-            "h-full w-[min(480px,100%)] sm:rounded-3xl rounded-none overflow-y-auto relative transform transition-all duration-300 bg-surface-1",
-            "translate-x-0 shadow-raiseLg",
+            "h-full w-[min(480px,100%)] sm:rounded-3xl rounded-none overflow-y-auto relative bg-surface-1 shadow-raiseLg",
+            "transition-transform duration-200 ease-out",
+            "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
         >
           {/* Header with Close Button */}

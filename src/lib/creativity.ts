@@ -45,6 +45,9 @@ export function mapCreativityToParams(
   presence_penalty = clamp(presence_penalty, 0.0, 0.4);
 
   const supportsPresencePenalty = modelSupportsPresencePenalty(modelId);
+  if (!supportsPresencePenalty && import.meta.env.DEV) {
+    console.warn("[creativity] presence_penalty omitted for model", modelId ?? "(unknown model)");
+  }
 
   return {
     temperature,

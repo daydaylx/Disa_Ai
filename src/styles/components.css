@@ -201,4 +201,14 @@
       box-shadow: var(--shadow-soft-raise);
     }
   }
+
+  /* Animations */
+  @keyframes slideInLeft {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Search, Shield, Star, Users } from "@/lib/icons";
 import { Badge, Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
@@ -39,6 +40,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   } = useStudio();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const { settings } = useSettings();
+  const navigate = useNavigate();
 
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
@@ -474,6 +476,16 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   Schließen
                 </Button>
                 <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    void navigate("/chat");
+                    setSelectedRole(null);
+                  }}
+                >
+                  Im Chat öffnen
+                </Button>
+                <Button
                   variant="primary"
                   size="sm"
                   onClick={() => {
@@ -491,6 +503,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 <p className="text-sm text-text-secondary leading-relaxed">
                   {selectedRole.description}
                 </p>
+                {usage.roles[selectedRole.id]?.lastUsed && (
+                  <p className="text-xs text-text-muted">
+                    Zuletzt genutzt:{" "}
+                    {usage.roles[selectedRole.id]?.lastUsed?.toLocaleString?.() ||
+                      String(usage.roles[selectedRole.id]?.lastUsed)}
+                  </p>
+                )}
                 {selectedRole.tags?.length ? (
                   <div className="flex flex-wrap gap-2">
                     {selectedRole.tags.map((tag) => (
