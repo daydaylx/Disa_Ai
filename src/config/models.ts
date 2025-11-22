@@ -27,6 +27,12 @@ export type ModelEntry = {
   pricing?: Price | undefined;
   /** grobe Einordnung (nur für Heuristiken/Filter) */
   safety: ModelSafety;
+  /** Sampling Capabilities: best-effort heuristics, optional in JSON */
+  capabilities?: {
+    temperature?: boolean;
+    top_p?: boolean;
+    presence_penalty?: boolean;
+  };
 };
 
 export type CatalogOptions = {
@@ -40,6 +46,11 @@ type JsonModel = {
   desc: string;
   price_in: number;
   price_out: number;
+  capabilities?: {
+    temperature?: boolean;
+    top_p?: boolean;
+    presence_penalty?: boolean;
+  };
 };
 
 /* ---- interne Helfer ---- */
@@ -89,6 +100,7 @@ function jsonModelToEntry(m: JsonModel): ModelEntry {
     ...(pricing ? { pricing } : {}),
     tags: deriveTags(m),
     safety: deriveModelSafety(m),
+    ...(m.capabilities ? { capabilities: m.capabilities } : {}),
   };
 }
 

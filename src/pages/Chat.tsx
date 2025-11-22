@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
@@ -9,6 +9,7 @@ import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
+import type { ModelEntry } from "../config/models";
 import {
   getDiscussionMaxSentences,
   getDiscussionPreset,
@@ -22,6 +23,7 @@ import { useSettings } from "../hooks/useSettings";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { History } from "../lib/icons";
+import { getSamplingCapabilities } from "../lib/modelCapabilities";
 import { discussionPresets } from "../prompts/discussion/presets";
 
 export default function Chat() {
@@ -33,6 +35,15 @@ export default function Chat() {
   const { settings } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
+  const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
+
+  useEffect(() => {
+    const isTestEnv = typeof (globalThis as any).vitest !== "undefined";
+    if (typeof window === "undefined" || isTestEnv || typeof window.fetch === "undefined") return;
+    import("../config/models")
+      .then((mod) => mod.loadModelCatalog().then(setModelCatalog))
+      .catch(() => setModelCatalog(null));
+  }, []);
 
   const safetyPrompt = useMemo(
     () =>
@@ -62,12 +73,15 @@ export default function Chat() {
   }, [settings.language]);
 
   const requestOptions = useMemo(() => {
+    const capabilities = getSamplingCapabilities(settings.preferredModelId, modelCatalog);
     const params = mapCreativityToParams(settings.creativity ?? 45, settings.preferredModelId);
     return {
       model: settings.preferredModelId,
-      ...params,
+      temperature: capabilities.temperature ? params.temperature : undefined,
+      top_p: capabilities.top_p ? params.top_p : undefined,
+      presence_penalty: capabilities.presence_penalty ? params.presence_penalty : undefined,
     };
-  }, [settings.creativity, settings.preferredModelId]);
+  }, [modelCatalog, settings.creativity, settings.preferredModelId]);
 
   const {
     messages,
