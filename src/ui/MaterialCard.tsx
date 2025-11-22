@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 interface MaterialCardProps extends ComponentProps<"div"> {
   children: ReactNode;
   variant?: "raised" | "inset" | "hero";
+  spineSide?: "left" | "right" | "none";
 }
 
 /**
@@ -24,6 +25,7 @@ export function MaterialCard({
   children,
   className,
   variant = "raised",
+  spineSide = "left",
   ...props
 }: MaterialCardProps) {
   const baseStyles =
@@ -35,8 +37,11 @@ export function MaterialCard({
     hero: "bg-surface-2 shadow-raiseLg with-spine",
   };
 
+  const spineSideClass =
+    spineSide === "none" ? "with-spine-none" : spineSide === "right" ? "with-spine-right" : "";
+
   return (
-    <div className={cn(baseStyles, variantStyles[variant], className)} {...props}>
+    <div className={cn(baseStyles, variantStyles[variant], spineSideClass, className)} {...props}>
       <div className="relative z-10">{children}</div>
     </div>
   );

@@ -35,6 +35,15 @@
     pointer-events: none;
   }
 
+  .with-spine-right::after {
+    left: auto;
+    right: 0;
+  }
+
+  .with-spine-none::after {
+    display: none;
+  }
+
   /* Signature Gleam Overlay */
   .with-gleam {
     position: relative;

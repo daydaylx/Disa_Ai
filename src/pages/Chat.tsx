@@ -301,8 +301,11 @@ export default function Chat() {
         </div>
       )}
 
-      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base to-transparent pt-[var(--spacing-4)] pb-[calc(var(--spacing-4)+env(safe-area-inset-bottom))] z-10">
-        <div className="px-[var(--spacing-4)] safe-area-horizontal" ref={composerContainerRef}>
+      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] pb-[calc(var(--spacing-4)+env(safe-area-inset-bottom))] z-10">
+        <div
+          className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95"
+          ref={composerContainerRef}
+        >
           <ChatComposer
             value={input}
             onChange={setInput}

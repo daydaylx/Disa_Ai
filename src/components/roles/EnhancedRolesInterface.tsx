@@ -338,14 +338,15 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               return (
                 <PremiumCard
                   key={role.id}
-                  className="group animate-card-enter cursor-pointer"
+                  className="group animate-card-enter cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
                   onClick={() => setSelectedRole(role)}
+                  tabIndex={0}
                 >
                   {/* CARD HEADER */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
                       {/* Icon Container mit Brand-Akzent */}
-                      <div className="w-10 h-10 rounded-md bg-brand/10 shadow-brandGlow flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-md bg-brand/10 shadow-brandGlow flex items-center justify-center with-spine">
                         <Users className="w-5 h-5 text-brand" />
                       </div>
                       {/* Title */}

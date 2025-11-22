@@ -31,7 +31,8 @@ export function MessageBubbleCard({
   return (
     <MaterialCard
       variant={isUser ? "inset" : "raised"}
-      className={cn("px-4 py-3 text-left", className)}
+      spineSide={isUser ? "right" : "left"}
+      className={cn("px-4 py-3 text-left", isUser ? "bg-surface-inset" : "bg-surface-2", className)}
     >
       <div
         className={cn(
