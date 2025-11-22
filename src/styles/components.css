@@ -1,7 +1,7 @@
 @layer components {
   /* ========================================================================
-     NEUMORPHISM/SOFT-DEPTH MATERIAL SYSTEM
-     NO borders, NO backdrop-blur - depth through shadows only
+     AURORA SPINE SYSTEM
+     3 Schatten-Typen, konsistente Radii, keine Zufalls-Borders
      ======================================================================== */
 
   /* Material Depth Utilities */
@@ -15,6 +15,40 @@
 
   .material-inset {
     box-shadow: var(--shadow-inset);
+  }
+
+  /* Signature: Aurora-Spine für Cards & Buttons */
+  .with-spine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .with-spine::after {
+    content: "";
+    position: absolute;
+    inset: 10% auto 10% 0;
+    width: 4px;
+    border-radius: 9999px;
+    background: var(--signature-spine);
+    box-shadow: var(--shadow-brand-glow);
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  /* Signature Gleam Overlay */
+  .with-gleam {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .with-gleam::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--signature-gleam);
+    opacity: 0.08;
+    pointer-events: none;
+    mix-blend-mode: screen;
   }
 
   /* ========================================================================
@@ -114,8 +148,9 @@
     overflow: hidden;
     border-radius: var(--r-lg);
     background:
-      linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
-      linear-gradient(200deg, rgba(16, 185, 129, 0.06) 0%, transparent 70%), var(--surface-2);
+      radial-gradient(120% 120% at 80% 0%, rgba(94, 228, 255, 0.08) 0%, transparent 60%),
+      radial-gradient(120% 120% at 10% 10%, rgba(143, 123, 255, 0.1) 0%, transparent 55%),
+      var(--surface-2);
     box-shadow: var(--shadow-strong-raise);
   }
 
@@ -173,6 +208,34 @@
 
   .mobile-feature-card:active {
     transform: scale(0.98);
+  }
+
+  /* Buttons mit Aurora-Gleam */
+  .btn-aurora {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .btn-aurora::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: radial-gradient(circle at 20% 20%, rgba(94, 228, 255, 0.18), transparent 45%),
+      radial-gradient(circle at 80% 0%, rgba(143, 123, 255, 0.2), transparent 42%);
+    opacity: 0;
+    transition: opacity var(--motion-fast) var(--ease-in-out);
+    z-index: 0;
+  }
+
+  .btn-aurora:hover::before,
+  .btn-aurora:focus-visible::before {
+    opacity: 0.5;
+  }
+
+  .btn-aurora > * {
+    position: relative;
+    z-index: 1;
   }
 
   /* ========================================================================

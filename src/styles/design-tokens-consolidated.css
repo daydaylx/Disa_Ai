@@ -1,19 +1,15 @@
 /**
- * DISA AI DESIGN TOKENS - NEUMORPHISM/SOFT-DEPTH SYSTEM
+ * DISA AI DESIGN TOKENS — "Aurora Spine" System
  *
- * Mobile-First Material Tool Design System
- * Umstellung von Glassmorphism zu Neumorphism/Soft-Depth
+ * Visuelle Leitidee: Instrument-Panel bei Nacht mit einer leuchtenden Aurora-Spine,
+ * die Karten, Buttons und Navigation verbindet. Tiefe entsteht über drei klar
+ * definierte Schatten-Tiefen, keine zufälligen Ränder. Mobile-first (360–414px).
  *
- * DESIGNPHILOSOPHIE:
- * ✦ Material-Tiefe durch Shadows (Raised/Inset)
- * ✦ Drückbare Controls mit physischem Feedback
- * ✦ Konsistente Lichtlogik (Top-Left Light Source)
- * ✦ Mobile-First (360px-414px optimiert)
- * ✦ Strikte Konsistenz: 3 Shadow-Typen, 3 Radii-Stufen
- * ✦ KEINE Borders/Outlines (nur Shadows für Depth)
- * ✦ Accent: Indigo #6366f1 (sparsam eingesetzt)
- *
- * Single Source of Truth für alle Design Values.
+ * Regeln:
+ * ✦ Max 3 Shadow-Typen: lift, float, press (inset)
+ * ✦ Konsistente Radii (sm/md/lg)
+ * ✦ Signatur: Aurora-Spine (violett→cyan Gradient) + dezente Körnung
+ * ✦ Kein Backdrop-Blur, Fokus auf Performance
  */
 
 :root {
@@ -21,11 +17,11 @@
    * CORE MATERIAL COLOR PALETTE
    * ======================================== */
 
-  /* Material Base - Dunkle Oberflächen */
-  --bg-base: #020617; /* Page background - Deep Dark */
-  --surface-1: #111827; /* Base Surface - Visible against BG */
-  --surface-2: #1f2937; /* Raised Surface - Clearly lighter */
-  --surface-inset: #0b101b; /* Inset - Minimal darker than S1, distinct */
+  /* Nachtmodus mit subtilem Blau-Anteil */
+  --bg-base: #040714; /* Page background - tiefer Navy */
+  --surface-1: #0c1222; /* Base Surface */
+  --surface-2: #121b2f; /* Raised Surface */
+  --surface-inset: #0a0f1d; /* Inset Fläche */
 
   /* Material Highlights - Subtile Lichtreflexion */
   --surface-highlight: rgba(255, 255, 255, 0.05);
@@ -46,30 +42,31 @@
   );
 
   /* Text Hierarchy - WCAG AA Compliant (4.5:1 minimum contrast) */
-  --text-primary: #f8fafc; /* Very high contrast - Base BG (18:1) */
-  --text-on-raised: #ffffff; /* Pure white - Text on raised cards (21:1) */
-  --text-secondary: #d1d5db; /* Secondary text (12:1) */
-  --text-muted: #b0b9cc; /* Muted text - WCAG AA compliant (8.5:1) */
-  --text-meta: #9ca6b8; /* Meta info - WCAG AA compliant (6.5:1) */
+  --text-primary: #f5f7ff;
+  --text-on-raised: #ffffff;
+  --text-secondary: #c9d2e9;
+  --text-muted: #9eabc6;
+  --text-meta: #8a96b4;
   --text-disabled: #64748b;
   --text-accent: var(--accent-primary); /* Accent text for key info only */
 
   /* ========================================
-   * ACCENT SYSTEM - LILA/VIOLET PRIMARY (BRAND)
+   * ACCENT SYSTEM - AURORA VIOLET / CYAN
    * ======================================== */
 
-  /* Accent Colors - Lila/Violet Brand Familie */
-  --accent-primary: #8b5cf6; /* Main brand accent - Lila */
-  --accent-hover: #7c3aed; /* Hover state */
-  --accent-active: #6d28d9; /* Active/pressed state */
-  --accent-bright: #a78bfa; /* Bright variant for highlights */
+  /* Duo-Accent für Wiedererkennung */
+  --accent-primary: #8f7bff; /* Aurora Violet */
+  --accent-hover: #7b6ae6;
+  --accent-active: #6653d1;
+  --accent-bright: #5ee4ff; /* Cyan highlight */
 
-  /* Brand Gradient (für Signature-Elemente) */
-  --brand-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  /* Brand Gradient (Signature Spine) */
+  --brand-gradient: linear-gradient(130deg, #8f7bff 0%, #5ee4ff 48%, #12c2b9 100%);
   --brand-gradient-soft: linear-gradient(
-    135deg,
-    rgba(139, 92, 246, 0.6) 0%,
-    rgba(124, 58, 237, 0.4) 100%
+    130deg,
+    rgba(143, 123, 255, 0.55) 0%,
+    rgba(94, 228, 255, 0.35) 50%,
+    rgba(18, 194, 185, 0.25) 100%
   );
 
   /* Accent Secondary (Success/Positive) */
@@ -78,27 +75,29 @@
   /* Accent Danger (Warnings/Errors) */
   --accent-danger: #ef4444; /* Red for errors */
 
+  /* Signature Aurora Spine Assets */
+  --signature-spine: linear-gradient(180deg, #8f7bff 0%, #5ee4ff 60%, #12c2b9 100%);
+  --signature-gleam: linear-gradient(120deg, rgba(143, 123, 255, 0.35), rgba(94, 228, 255, 0.22));
+  --signature-noise: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04) 0, transparent 32%),
+    radial-gradient(circle at 80% 0%, rgba(94, 228, 255, 0.06) 0, transparent 35%);
+
   /* ========================================
-   * NEUMORPHISM SHADOW SYSTEM (NUR 3 TYPEN!)
-   * Konsistente Lichtlogik: Top-Left Light Source
+   * SHADOW SYSTEM (MAX 3 TYPEN)
+   * Lichtquelle: oben/links, leichte Wärme
    * ======================================== */
 
-  /* 1. SOFT RAISE - Standard UI Elements (Mobile-First Calibrated) */
-  --shadow-soft-raise: 0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.2);
+  /* 1) lift: Standard Tiefe */
+  --shadow-soft-raise: 0 8px 20px rgba(4, 7, 20, 0.38), 0 2px 6px rgba(4, 7, 20, 0.28);
 
-  /* 2. STRONG RAISE - Hero/Focal Elements */
-  --shadow-strong-raise: 0 12px 32px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  /* 2) float: Fokusebene / hero */
+  --shadow-strong-raise: 0 14px 36px rgba(4, 7, 20, 0.46), 0 6px 16px rgba(4, 7, 20, 0.32);
 
-  /* 3. INSET - Pressed/Input Fields (Deep tool feel) */
-  --shadow-inset:
-    inset 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(0, 0, 0, 0.3),
-    0 1px 0 rgba(255, 255, 255, 0.05); /* Subtle bottom lip */
+  /* 3) press: Inputs / gedrückt */
+  --shadow-inset: inset 0 2px 6px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.06);
 
-  /* Brand Glow (für Lila-Akzente) - SIGNATURE ELEMENT */
-  --shadow-brand-glow: 0 0 16px rgba(139, 92, 246, 0.3);
-  --shadow-brand-glow-strong: 0 0 24px rgba(139, 92, 246, 0.4);
-
-  /* Legacy: Accent Glow mapped to Brand */
+  /* Alias: Glow = Float mit Farbanteil (bleibt innerhalb 3 Typen) */
+  --shadow-brand-glow: 0 12px 28px rgba(143, 123, 255, 0.35);
+  --shadow-brand-glow-strong: 0 16px 40px rgba(94, 228, 255, 0.4);
   --shadow-accent-glow: var(--shadow-brand-glow);
   --shadow-accent-glow-strong: var(--shadow-brand-glow-strong);
 
@@ -106,9 +105,9 @@
    * STRICT RADIUS SYSTEM (NUR 3 STUFEN!)
    * ======================================== */
 
-  --r-sm: 8px; /* Small controls: Chips, Badges */
-  --r-md: 12px; /* Standard: Cards, Buttons */
-  --r-lg: 16px; /* Hero: Large Cards, Panels */
+  --r-sm: 10px; /* Small controls */
+  --r-md: 14px; /* Standard */
+  --r-lg: 18px; /* Hero */
 
   /* ========================================
    * MOBILE-OPTIMIERTE SPACING (8px Grid)

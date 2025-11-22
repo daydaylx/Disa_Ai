@@ -26,13 +26,13 @@ export function MaterialCard({
   variant = "raised",
   ...props
 }: MaterialCardProps) {
-  const baseStyles = "relative rounded-md p-6 transition-all duration-fast overflow-hidden";
+  const baseStyles =
+    "relative rounded-md p-6 transition-all duration-fast overflow-hidden with-gleam";
 
   const variantStyles = {
-    raised:
-      "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
+    raised: "bg-surface-2 shadow-raise with-spine",
     inset: "bg-surface-inset shadow-inset",
-    hero: "bg-surface-2 shadow-raiseLg before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight-strong)]",
+    hero: "bg-surface-2 shadow-raiseLg with-spine",
   };
 
   return (

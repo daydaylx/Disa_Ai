@@ -196,7 +196,7 @@ export default function Chat() {
   );
 
   const infoBar = (
-    <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 backdrop-blur px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise">
+    <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
       <span className="text-xs font-semibold text-text-secondary">Kontext</span>
       <button
         type="button"

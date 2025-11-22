@@ -55,7 +55,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
         <MaterialCard
           variant="hero"
           className={cn(
-            "h-full w-[min(480px,100%)] sm:rounded-3xl rounded-none overflow-y-auto relative bg-surface-1 shadow-raiseLg",
+            "h-full w-[min(480px,100%)] sm:rounded-3xl rounded-none overflow-y-auto relative bg-surface-1 shadow-raiseLg with-spine",
             "transition-transform duration-220 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
