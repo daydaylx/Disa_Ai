@@ -1,1 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4f46e5" /><stop offset="100%" stop-color="#ec4899" /></linearGradient></defs><path d="M50 0A50 50 0 0 0 0 50A50 50 0 0 0 50 100A50 50 0 0 0 100 50A50 50 0 0 0 50 0z" fill="url(#g)"/><path d="M50 25L25 50L50 75L75 50z" fill="#fff"/></svg>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Disa AI">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220" />
+      <stop offset="100%" stop-color="#0a1a2f" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#007aff" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#001428" flood-opacity="0.35" />
+    </filter>
+  </defs>
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#bg)" />
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#accent)" opacity="0.08" />
+  <g filter="url(#shadow)" transform="translate(86 116)">
+    <path d="M64 0h86c86 0 140 54 140 132 0 78-54 132-140 132H64Z" fill="none" stroke="url(#accent)" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M64 0h86c52 0 95 40 95 98 0 58-43 98-95 98H64Z" fill="none" stroke="#e2f3ff" stroke-opacity="0.85" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="276" cy="192" r="22" fill="#38bdf8" />
+  </g>
+  <circle cx="404" cy="116" r="46" fill="#0b1220" />
+  <path d="M368 116c0-20 16-36 36-36s36 16 36 36-16 36-36 36-36-16-36-36Z" fill="url(#accent)" opacity="0.9" />
+  <circle cx="404" cy="116" r="12" fill="#e6f7ff" />
+</svg>
