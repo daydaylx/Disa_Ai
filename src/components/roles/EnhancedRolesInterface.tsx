@@ -526,7 +526,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
                       <div className="space-y-2">
                         <h4 className="text-sm font-semibold text-text-primary">
-                          Zugelassene Modelle
+                          Empfohlene Modelle
                         </h4>
                         {role.allowedModels?.length ? (
                           <div className="flex flex-wrap gap-2">
@@ -539,7 +539,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         ) : (
                           <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-text-muted">
                             <span className="text-lg">✓</span>
-                            Alle Modelle erlaubt
+                            Keine Empfehlung – alle Modelle möglich
                           </div>
                         )}
                       </div>
