@@ -11,7 +11,42 @@ export function SettingsYouthFilterView() {
 
   const youthProtectionEnabled = !settings.showNSFWContent;
 
+  const confirmBirthYear = () => {
+    const input = window.prompt("Bitte gib dein Geburtsjahr ein (YYYY):")?.trim();
+    if (!input) {
+      toasts.push({
+        kind: "warning",
+        title: "Abbruch",
+        message: "Jugendschutz bleibt aktiv.",
+      });
+      return false;
+    }
+    const year = Number(input);
+    const currentYear = new Date().getFullYear();
+    const age = currentYear - year;
+    if (!Number.isFinite(year) || input.length !== 4 || year < 1900 || age < 0) {
+      toasts.push({
+        kind: "error",
+        title: "Ungültiges Jahr",
+        message: "Bitte ein gültiges Geburtsjahr im Format YYYY eingeben.",
+      });
+      return false;
+    }
+    if (age < 18) {
+      toasts.push({
+        kind: "error",
+        title: "Mindestalter 18",
+        message: "Jugendschutz kann nur von volljährigen Nutzern deaktiviert werden.",
+      });
+      return false;
+    }
+    return true;
+  };
+
   const handleToggle = () => {
+    if (youthProtectionEnabled && !confirmBirthYear()) {
+      return;
+    }
     toggleNSFWContent();
     const newStateIsYouthOn = youthProtectionEnabled ? "aus" : "an";
     toasts.push({

@@ -9,6 +9,18 @@ export function SettingsView() {
   const { settings, toggleNSFWContent } = useSettings();
   const youthProtectionEnabled = !settings.showNSFWContent;
 
+  const confirmBirthYear = () => {
+    const input = window.prompt("Bitte gib dein Geburtsjahr ein (YYYY):")?.trim();
+    const currentYear = new Date().getFullYear();
+    if (!input) return false;
+    const year = Number(input);
+    const age = currentYear - year;
+    if (!Number.isFinite(year) || input.length !== 4 || year < 1900 || age < 0) {
+      return false;
+    }
+    return age >= 18;
+  };
+
   const cards = [
     {
       id: "memory",
@@ -53,7 +65,10 @@ export function SettingsView() {
             </p>
           </div>
           <button
-            onClick={toggleNSFWContent}
+            onClick={() => {
+              if (youthProtectionEnabled && !confirmBirthYear()) return;
+              toggleNSFWContent();
+            }}
             className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-fast ${
               youthProtectionEnabled ? "bg-brand shadow-brandGlow" : "bg-surface-inset"
             }`}
