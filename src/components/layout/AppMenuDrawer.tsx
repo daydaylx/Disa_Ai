@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { Button } from "@/ui/Button";
@@ -18,7 +18,14 @@ interface AppMenuDrawerProps {
 export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps) {
   const location = useLocation();
 
-  if (!isOpen) return null;
+  // Escape to close
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -32,12 +39,14 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
     { label: "Datenschutz", href: "/datenschutz" },
   ];
 
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 z-50 bg-black/60" onClick={handleBackdropClick}>
       {/* Vollflächiges Overlay */}
       <div
         className={cn(
-          "fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-[var(--spacing-6)]",
+          "fixed inset-0 flex justify-end p-0 sm:p-[var(--spacing-6)]",
           "transition-all duration-300 ease-out",
           className,
         )}
@@ -45,10 +54,13 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
       >
         <MaterialCard
           variant="hero"
-          className="w-full max-w-lg h-full sm:h-auto sm:max-h-[85vh] overflow-y-auto relative transform scale-100 transition-all duration-300 rounded-none sm:rounded-3xl"
+          className={cn(
+            "h-full w-[min(480px,100%)] sm:rounded-3xl rounded-none overflow-y-auto relative transform transition-all duration-300 bg-surface-1",
+            "translate-x-0 shadow-raiseLg",
+          )}
         >
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between mb-6 sticky top-0 bg-surface-1 z-10 py-4 px-4 sm:px-5 border-b border-surface-2">
+          <div className="flex items-center justify-between sticky top-0 bg-surface-1 z-10 py-4 px-4 sm:px-5 border-b border-surface-2">
             <Typography variant="body-lg" className="text-text-primary font-semibold">
               Disa AI
             </Typography>
