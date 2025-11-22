@@ -69,18 +69,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     }));
   }, [settings.showNSFWContent]);
 
-  // Prevent background scroll while the role detail sheet is open
-  useEffect(() => {
-    if (!selectedRole) return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [selectedRole]);
-
   // Convert legacy roles to enhanced roles
   const enhancedRoles = useMemo(() => {
     return roles.map(migrateRole);
@@ -480,7 +468,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         typeof document !== "undefined" &&
         createPortal(
           <div
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-end sm:items-center p-0 sm:p-6"
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-center p-3 sm:p-6"
             role="dialog"
             aria-modal="true"
             onClick={() => setSelectedRole(null)}
