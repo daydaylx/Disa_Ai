@@ -155,11 +155,16 @@ export default function ModelsPage() {
       <AppHeader pageTitle="Modelle" />
 
       <div className="space-y-4 sm:space-y-6 px-[var(--spacing-4)] py-3 sm:py-[var(--spacing-6)]">
-        <SectionHeader
-          variant="compact"
-          title="Katalog & Bewertungen"
-          subtitle="Vergleiche Kosten, Kontext und Fähigkeiten"
-        />
+        <div className="with-spine flex flex-col gap-1">
+          <SectionHeader
+            variant="compact"
+            title="Katalog & Bewertungen"
+            subtitle="Vergleiche Kosten, Kontext und Fähigkeiten"
+          />
+          <p className="text-sm text-text-muted">
+            Aurora-Line zeigt wichtige Bereiche auf einen Blick.
+          </p>
+        </div>
         <div className="flex justify-end">
           <Button variant="ghost" size="sm" onClick={() => window.open("/models/mobile", "_self")}>
             Mobile Ansicht
