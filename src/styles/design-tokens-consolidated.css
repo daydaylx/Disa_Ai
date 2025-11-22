@@ -78,7 +78,8 @@
   /* Signature Aurora Spine Assets */
   --signature-spine: linear-gradient(180deg, #8f7bff 0%, #5ee4ff 60%, #12c2b9 100%);
   --signature-gleam: linear-gradient(120deg, rgba(143, 123, 255, 0.35), rgba(94, 228, 255, 0.22));
-  --signature-noise: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04) 0, transparent 32%),
+  --signature-noise:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04) 0, transparent 32%),
     radial-gradient(circle at 80% 0%, rgba(94, 228, 255, 0.06) 0, transparent 35%);
 
   /* ========================================

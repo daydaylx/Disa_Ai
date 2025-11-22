@@ -257,7 +257,8 @@
     content: "";
     position: absolute;
     inset: -2px;
-    background: radial-gradient(circle at 20% 20%, rgba(94, 228, 255, 0.18), transparent 45%),
+    background:
+      radial-gradient(circle at 20% 20%, rgba(94, 228, 255, 0.18), transparent 45%),
       radial-gradient(circle at 80% 0%, rgba(143, 123, 255, 0.2), transparent 42%);
     opacity: 0;
     transition: opacity var(--motion-fast) var(--ease-in-out);
