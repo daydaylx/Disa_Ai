@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { createPortal } from "react-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Check, Search, Shield, Star, Users } from "@/lib/icons";
@@ -41,8 +40,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedRole, setSelectedRole] = useState<EnhancedRole | null>(null);
+  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [expandedRoles, setExpandedRoles] = useState<Set<string>>(new Set());
+  const detailRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: "",
     searchHistory: [],
@@ -156,6 +156,18 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       return next;
     });
   }, []);
+
+  const toggleRoleDetails = useCallback((roleId: string) => {
+    setSelectedRoleId((prev) => (prev === roleId ? null : roleId));
+  }, []);
+
+  useEffect(() => {
+    if (!selectedRoleId) return;
+    const el = detailRefs.current[selectedRoleId];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [selectedRoleId]);
 
   // Show loading skeleton while roles are loading
   if (rolesLoading) {
@@ -353,98 +365,205 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               const isFavorite = isRoleFavorite(role.id);
               const isActive = activeRole?.id === role.id;
               const isExpanded = expandedRoles.has(role.id);
+              const isSelected = selectedRoleId === role.id;
               return (
-                <PremiumCard
-                  key={role.id}
-                  className={cn(
-                    "group animate-card-enter cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
-                    isActive && "ring-2 ring-brand shadow-raiseLg",
-                  )}
-                  onClick={() => setSelectedRole(role)}
-                >
-                  {isActive && (
-                    <div className="absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-sm bg-brand/10 px-2 py-1 text-[11px] font-semibold text-brand shadow-inset">
-                      <Check className="h-3.5 w-3.5" />
-                      Aktiv
-                    </div>
-                  )}
-                  {/* CARD HEADER */}
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-3">
-                      {/* Icon Container mit Brand-Akzent */}
-                      <div className="w-10 h-10 rounded-md bg-brand/10 shadow-brandGlow flex items-center justify-center with-spine">
-                        <Users className="w-5 h-5 text-brand" />
+                <div key={role.id} className="space-y-2">
+                  <PremiumCard
+                    className={cn(
+                      "group animate-card-enter cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+                      isActive && "ring-2 ring-brand shadow-raiseLg",
+                    )}
+                    onClick={() => toggleRoleDetails(role.id)}
+                  >
+                    {isActive && (
+                      <div className="absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-sm bg-brand/10 px-2 py-1 text-[11px] font-semibold text-brand shadow-inset">
+                        <Check className="h-3.5 w-3.5" />
+                        Aktiv
                       </div>
-                      {/* Title */}
-                      <h3 className="font-semibold text-lg text-text-primary">{role.name}</h3>
+                    )}
+                    {/* CARD HEADER */}
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3">
+                        {/* Icon Container mit Brand-Akzent */}
+                        <div className="w-10 h-10 rounded-md bg-brand/10 shadow-brandGlow flex items-center justify-center with-spine">
+                          <Users className="w-5 h-5 text-brand" />
+                        </div>
+                        {/* Title */}
+                        <h3 className="font-semibold text-lg text-text-primary">{role.name}</h3>
+                      </div>
+                      {/* Favorite Star */}
+                      {isFavorite && <Star className="w-5 h-5 text-brand fill-brand" />}
                     </div>
-                    {/* Favorite Star */}
-                    {isFavorite && <Star className="w-5 h-5 text-brand fill-brand" />}
-                  </div>
 
-                  {/* CARD BODY */}
-                  <div className="mb-4">
-                    <p
-                      className={cn(
-                        "text-sm text-text-secondary leading-relaxed transition-all duration-300 ease-in-out motion-reduce:transition-none",
-                        !isExpanded && "line-clamp-3",
-                      )}
-                    >
-                      {role.description}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleRoleExpansion(role.id);
-                      }}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 -ml-2 min-h-[32px] touch-manipulation"
-                      aria-expanded={isExpanded}
-                      aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
-                    >
-                      <span>{isExpanded ? "Weniger" : "Mehr anzeigen"}</span>
-                      <svg
+                    {/* CARD BODY */}
+                    <div className="mb-4">
+                      <p
                         className={cn(
-                          "w-3.5 h-3.5 transition-transform duration-300 ease-in-out motion-reduce:transition-none",
-                          isExpanded && "rotate-180",
+                          "text-sm text-text-secondary leading-relaxed transition-all duration-300 ease-in-out motion-reduce:transition-none",
+                          !isExpanded && "line-clamp-3",
                         )}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* CARD FOOTER */}
-                  <div className="flex items-center justify-between pt-2 border-t border-surface-1">
-                    {/* Category Badge */}
-                    <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-muted">
-                      {role.category || "Spezial"}
-                    </span>
-                    {/* Usage indicator */}
-                    <div className="flex items-center gap-2">
-                      {isActive && (
-                        <Badge variant="secondary" className="text-xs bg-brand/10 text-brand">
-                          Aktiv
-                        </Badge>
-                      )}
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        disabled={isActive}
+                        {role.description}
+                      </p>
+                      <button
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleActivateRole(role);
+                          toggleRoleExpansion(role.id);
                         }}
+                        className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 -ml-2 min-h-[32px] touch-manipulation"
+                        aria-expanded={isExpanded}
+                        aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
                       >
-                        {isActive ? "Aktiv" : "Aktivieren"}
-                      </Button>
+                        <span>{isExpanded ? "Weniger" : "Mehr anzeigen"}</span>
+                        <svg
+                          className={cn(
+                            "w-3.5 h-3.5 transition-transform duration-300 ease-in-out motion-reduce:transition-none",
+                            isExpanded && "rotate-180",
+                          )}
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
                     </div>
-                  </div>
-                </PremiumCard>
+
+                    {/* CARD FOOTER */}
+                    <div className="flex items-center justify-between pt-2 border-t border-surface-1">
+                      {/* Category Badge */}
+                      <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-muted">
+                        {role.category || "Spezial"}
+                      </span>
+                      {/* Usage indicator */}
+                      <div className="flex items-center gap-2">
+                        {isActive && (
+                          <Badge variant="secondary" className="text-xs bg-brand/10 text-brand">
+                            Aktiv
+                          </Badge>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="primary"
+                          disabled={isActive}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleActivateRole(role);
+                          }}
+                        >
+                          {isActive ? "Aktiv" : "Aktivieren"}
+                        </Button>
+                      </div>
+                    </div>
+                  </PremiumCard>
+
+                  {isSelected && (
+                    <div
+                      ref={(el) => {
+                        detailRefs.current[role.id] = el;
+                      }}
+                      className="rounded-lg border border-surface-2 bg-surface-1 shadow-raise p-4 space-y-4 animate-[fadeIn_180ms_ease]"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="text-base font-semibold text-text-primary">{role.name}</h3>
+                          <p className="text-xs text-text-secondary">
+                            {role.category || "Spezial"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleRoleDetails(role.id)}
+                          >
+                            Schließen
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => {
+                              void navigate("/chat");
+                              toggleRoleDetails(role.id);
+                            }}
+                          >
+                            Im Chat öffnen
+                          </Button>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => {
+                              handleActivateRole(role);
+                              toggleRoleDetails(role.id);
+                            }}
+                          >
+                            Aktivieren
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 text-sm text-text-secondary leading-relaxed">
+                        <p>{role.description}</p>
+                        {usage.roles[role.id]?.lastUsed && (
+                          <p className="text-xs text-text-muted">
+                            Zuletzt genutzt:{" "}
+                            {usage.roles[role.id]?.lastUsed?.toLocaleString?.() ||
+                              String(usage.roles[role.id]?.lastUsed)}
+                          </p>
+                        )}
+                        {role.tags?.length ? (
+                          <div className="flex flex-wrap gap-2">
+                            {role.tags.map((tag) => (
+                              <Badge key={tag} variant="outline" className="text-[11px]">
+                                #{tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-text-primary">
+                          Zugelassene Modelle
+                        </h4>
+                        {role.allowedModels?.length ? (
+                          <div className="flex flex-wrap gap-2">
+                            {role.allowedModels.map((model) => (
+                              <Badge key={model} variant="secondary" className="text-xs">
+                                {model}
+                              </Badge>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-text-muted">
+                            <span className="text-lg">✓</span>
+                            Alle Modelle erlaubt
+                          </div>
+                        )}
+                      </div>
+
+                      {role.examples && role.examples.length > 0 && (
+                        <div className="space-y-1">
+                          <h4 className="text-sm font-semibold text-text-primary">
+                            Beispiel-Prompt
+                          </h4>
+                          <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary">
+                            {role.examples[0]}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-text-primary">System-Prompt</h4>
+                        <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary whitespace-pre-wrap">
+                          {role.systemPrompt || "Kein Prompt hinterlegt."}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
@@ -507,121 +626,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           )}
         </div>
       </div>
-
-      {/* Role Detail Sheet (portaled so it stays visible even when scrolled deep) */}
-      {selectedRole &&
-        typeof document !== "undefined" &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-center p-3 sm:p-6"
-            role="dialog"
-            aria-modal="true"
-            onClick={() => setSelectedRole(null)}
-          >
-            <div
-              className="w-full sm:max-w-2xl bg-surface-1 rounded-t-2xl sm:rounded-2xl shadow-raiseLg max-h-[90vh] overflow-y-auto border border-surface-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-surface-2 sticky top-0 bg-surface-1 z-10">
-                <div>
-                  <h3 className="text-lg font-semibold text-text-primary">{selectedRole.name}</h3>
-                  <p className="text-sm text-text-secondary">
-                    {selectedRole.category || "Spezial"}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedRole(null)}
-                    aria-label="Detail schließen"
-                  >
-                    Schließen
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => {
-                      void navigate("/chat");
-                      setSelectedRole(null);
-                    }}
-                  >
-                    Im Chat öffnen
-                  </Button>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => {
-                      handleActivateRole(selectedRole);
-                      setSelectedRole(null);
-                    }}
-                  >
-                    Aktivieren
-                  </Button>
-                </div>
-              </div>
-
-              <div className="p-4 sm:p-6 space-y-4">
-                <div className="space-y-2">
-                  <p className="text-sm text-text-secondary leading-relaxed">
-                    {selectedRole.description}
-                  </p>
-                  {usage.roles[selectedRole.id]?.lastUsed && (
-                    <p className="text-xs text-text-muted">
-                      Zuletzt genutzt:{" "}
-                      {usage.roles[selectedRole.id]?.lastUsed?.toLocaleString?.() ||
-                        String(usage.roles[selectedRole.id]?.lastUsed)}
-                    </p>
-                  )}
-                  {selectedRole.tags?.length ? (
-                    <div className="flex flex-wrap gap-2">
-                      {selectedRole.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs">
-                          #{tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className="space-y-2">
-                  <h4 className="text-sm font-semibold text-text-primary">Zugelassene Modelle</h4>
-                  {selectedRole.allowedModels?.length ? (
-                    <div className="flex flex-wrap gap-2">
-                      {selectedRole.allowedModels.map((model) => (
-                        <Badge key={model} variant="secondary" className="text-xs">
-                          {model}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-text-muted">
-                      <span className="text-lg">✓</span>
-                      Alle Modelle erlaubt
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  {selectedRole.examples && selectedRole.examples.length > 0 && (
-                    <div className="space-y-1">
-                      <h4 className="text-sm font-semibold text-text-primary">Beispiel-Prompt</h4>
-                      <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary">
-                        {selectedRole.examples[0]}
-                      </div>
-                    </div>
-                  )}
-
-                  <h4 className="text-sm font-semibold text-text-primary">System-Prompt</h4>
-                  <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary whitespace-pre-wrap">
-                    {selectedRole.systemPrompt || "Kein Prompt hinterlegt."}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>,
-          document.body,
-        )}
 
       {/* Always-visible active role pill (helps when far down the list) */}
       {activeRole &&
