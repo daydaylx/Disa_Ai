@@ -206,16 +206,17 @@ jobs:
 
       - name: Check Mobile Performance Budget
         run: |
-          # LCP < 2.5s Check
-          LCP=$(jq -r '.audits."largest-contentful-paint".numericValue' .lighthouseci/lhr-*.json | head -1)
-          LCP_MS=$(echo "$LCP * 1000" | bc)
-          echo "Mobile LCP: ${LCP_MS} ms"
+          # LCP < 2.5s Check (Lighthouse returns value in milliseconds)
+          LCP_MS=$(jq -r '.audits."largest-contentful-paint".numericValue' .lighthouseci/lhr-*.json | head -1)
+          # Convert to integer for comparison
+          LCP_MS_INT=$(printf "%.0f" "$LCP_MS")
+          echo "Mobile LCP: ${LCP_MS_INT} ms"
 
-          if (( $(echo "$LCP > 2500" | bc -l) )); then
-            echo "❌ Mobile LCP ${LCP_MS}ms exceeds 2500ms limit!"
+          if [ "$LCP_MS_INT" -gt 2500 ]; then
+            echo "❌ Mobile LCP ${LCP_MS_INT}ms exceeds 2500ms limit!"
             exit 1
           else
-            echo "✅ Mobile LCP ${LCP_MS}ms is within 2500ms limit"
+            echo "✅ Mobile LCP ${LCP_MS_INT}ms is within 2500ms limit"
           fi
 
       - name: Upload Lighthouse Reports
@@ -231,7 +232,7 @@ jobs:
     name: "Preview Deploy to Cloudflare Pages"
     runs-on: ubuntu-latest
     needs: [build-and-budget]
-    if: github.event_name == 'pull_request' && secrets.CLOUDFLARE_API_TOKEN != ''
+    if: github.event_name == 'pull_request'
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v5
@@ -249,6 +250,7 @@ jobs:
         run: npm run build
 
       - name: "Publish Preview to Cloudflare Pages"
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -257,12 +259,8 @@ jobs:
           directory: "dist"
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
-  preview-cloudflare-skip:
-    name: "Skip Cloudflare Pages Preview"
-    runs-on: ubuntu-latest
-    needs: [build-and-budget]
-    if: github.event_name == 'pull_request' && secrets.CLOUDFLARE_API_TOKEN == ''
-    steps:
       - name: "Cloudflare Preview Skipped"
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN == '' }}
         run: |
           echo "Cloudflare Pages preview deployment skipped because CLOUDFLARE_API_TOKEN is not configured." | tee -a $GITHUB_STEP_SUMMARY
+
