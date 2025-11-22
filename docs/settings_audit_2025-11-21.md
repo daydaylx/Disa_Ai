@@ -20,6 +20,7 @@
 | **Show/Hide API-Key** | ✅ OK | `SettingsApiView.tsx:117` | `useState` | Session only | Passwort-Sichtbarkeit |
 | **Theme Selection** | ✅ FIXED | `SettingsAppearanceView.tsx:92` | `useSettings` Hook | `localStorage["disa-ai-settings"]` | Dark/Light/Auto Theme |
 | **NSFW Content Filter** | ✅ FIXED | `SettingsAppearanceView.tsx:211` | `useSettings` Hook | `localStorage["disa-ai-settings"]` | Inhaltsfilterung |
+| **Kreativität (0-100)** | ✅ Neu | `SettingsFiltersView.tsx` | `useSettings` Hook + `mapCreativityToParams` | `localStorage["disa-ai-settings"]` | Steuert Temperatur/TopP/Penalty |
 | **Font Size** | ✅ FIXED | `SettingsAppearanceView.tsx:142` | `config/settings.ts` | `localStorage["disa:ui:fontSize"]` | Schriftgröße 12-24px |
 | **Reduce Motion** | ✅ FIXED | `SettingsAppearanceView.tsx:174` | `config/settings.ts` | `localStorage["disa:ui:reduceMotion"]` | Animationen reduzieren |
 | **Haptic Feedback** | ✅ FIXED | `SettingsAppearanceView.tsx:192` | `config/settings.ts` | `localStorage["disa:ui:hapticFeedback"]` | Mobile Vibration |

@@ -7,6 +7,7 @@ interface Settings {
   theme: "light" | "dark" | "auto";
   language: string;
   preferredModelId: string;
+  creativity: number; // 0-100 slider value
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -16,6 +17,7 @@ const DEFAULT_SETTINGS: Settings = {
   theme: "auto",
   language: "de",
   preferredModelId: "openai/gpt-4o-mini",
+  creativity: 45,
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
@@ -76,6 +78,14 @@ export function useSettings() {
     [saveSettings],
   );
 
+  const setCreativity = useCallback(
+    (creativity: number) => {
+      const clamped = Math.min(100, Math.max(0, Math.round(creativity)));
+      saveSettings({ creativity: clamped });
+    },
+    [saveSettings],
+  );
+
   return {
     settings,
     toggleNSFWContent,
@@ -85,5 +95,6 @@ export function useSettings() {
     setLanguage,
     saveSettings,
     setPreferredModel,
+    setCreativity,
   };
 }

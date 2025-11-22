@@ -20,6 +20,7 @@ import { useConversationManager } from "../hooks/useConversationManager";
 import { useMemory } from "../hooks/useMemory";
 import { useSettings } from "../hooks/useSettings";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
+import { mapCreativityToParams } from "../lib/creativity";
 import { History } from "../lib/icons";
 import { discussionPresets } from "../prompts/discussion/presets";
 
@@ -60,12 +61,13 @@ export default function Chat() {
     return parts.join(" ");
   }, [settings.language]);
 
-  const requestOptions = useMemo(
-    () => ({
+  const requestOptions = useMemo(() => {
+    const params = mapCreativityToParams(settings.creativity ?? 45, settings.preferredModelId);
+    return {
       model: settings.preferredModelId,
-    }),
-    [settings.preferredModelId],
-  );
+      ...params,
+    };
+  }, [settings.creativity, settings.preferredModelId]);
 
   const {
     messages,

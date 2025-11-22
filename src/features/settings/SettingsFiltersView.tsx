@@ -11,16 +11,19 @@ import {
   setDiscussionPreset,
   setDiscussionStrictMode,
 } from "../../config/settings";
+import { useSettings } from "../../hooks/useSettings";
 import type { DiscussionPresetKey } from "../../prompts/discussion/presets";
 import { discussionPresetOptions } from "../../prompts/discussion/presets";
 
 export function SettingsFiltersView() {
   const toasts = useToasts();
+  const { settings, setCreativity } = useSettings();
 
   // Local state for discussion settings
   const [discussionPreset, setLocalDiscussionPreset] = useState(() => getDiscussionPreset());
   const [strictMode, setLocalStrictMode] = useState(() => getDiscussionStrictMode());
   const [maxSentences, setLocalMaxSentences] = useState(() => getDiscussionMaxSentences());
+  const [creativity, setCreativityState] = useState(() => settings.creativity ?? 45);
 
   const handlePresetChange = (preset: DiscussionPresetKey) => {
     setLocalDiscussionPreset(preset);
@@ -32,6 +35,18 @@ export function SettingsFiltersView() {
       message: `"${selectedOption?.label}" aktiviert`,
     });
   };
+
+  const setCreativityValue = (value: number) => {
+    const clamped = Math.min(100, Math.max(0, Math.round(value)));
+    setCreativityState(clamped);
+    setCreativity(clamped);
+  };
+
+  const creativityLabel = (() => {
+    if (creativity <= 20) return "Präzise";
+    if (creativity <= 60) return "Ausgewogen";
+    return "Fantasie";
+  })();
 
   const handleStrictModeToggle = () => {
     const newValue = !strictMode;
@@ -143,6 +158,48 @@ export function SettingsFiltersView() {
                   </span>
                 </div>
               )}
+            </div>
+
+            {/* Creativity Slider */}
+            <div className="space-y-4 border-t border-border pt-4">
+              <h3 className="text-sm font-semibold text-text-primary">Kreativität</h3>
+              <p className="text-xs text-text-muted">
+                Niedrig = verlässlicher, hoch = kreativer aber ungenauer.
+              </p>
+
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between text-sm font-medium text-text-primary">
+                  <span>Kreativität</span>
+                  <span className="text-text-secondary">
+                    {creativity} · {creativityLabel}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={creativity}
+                  onChange={(e) => setCreativityValue(Number(e.target.value))}
+                  className="w-full accent-brand h-2 rounded-full bg-surface-inset"
+                />
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { label: "Präzise", value: 10 },
+                    { label: "Ausgewogen", value: 45 },
+                    { label: "Fantasie", value: 85 },
+                  ].map((preset) => (
+                    <Button
+                      key={preset.label}
+                      variant={creativity === preset.value ? "primary" : "secondary"}
+                      size="sm"
+                      className="w-full"
+                      onClick={() => setCreativityValue(preset.value)}
+                    >
+                      {preset.label}
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Response Length Control */}
