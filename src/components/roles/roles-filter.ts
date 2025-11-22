@@ -38,9 +38,13 @@ export function roleFilterFn(
 
   // WCAG: Filter mature content for age-appropriate display
   if (filters.hideMatureContent) {
-    const hasMatureTag = role.tags?.includes("mature");
-    const hasAdultRating = (role as any).ageRating === "18+";
-    if (hasMatureTag || hasAdultRating) {
+    const tags = (role.tags || []).map((t) => t.toLowerCase());
+    const nsfwTags = ["mature", "nsfw", "adult", "erotic", "kink", "fetish", "18+"]; // conservative blocklist
+    const hasBlockedTag = tags.some((tag) => nsfwTags.includes(tag));
+    const hasAdultRating =
+      typeof (role as any).ageRating === "string" &&
+      ((role as any).ageRating as string).toLowerCase().includes("18");
+    if (hasBlockedTag || hasAdultRating) {
       return false;
     }
   }

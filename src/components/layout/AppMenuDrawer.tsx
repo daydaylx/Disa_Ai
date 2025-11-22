@@ -37,7 +37,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
       {/* Vollflächiges Overlay */}
       <div
         className={cn(
-          "fixed inset-0 flex items-center justify-center p-[var(--spacing-4)] sm:p-[var(--spacing-6)]",
+          "fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-[var(--spacing-6)]",
           "transition-all duration-300 ease-out",
           className,
         )}
@@ -45,16 +45,16 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
       >
         <MaterialCard
           variant="hero"
-          className="w-full max-w-md max-h-[85vh] overflow-y-auto relative transform scale-100 transition-all duration-300"
+          className="w-full max-w-lg h-full sm:h-auto sm:max-h-[85vh] overflow-y-auto relative transform scale-100 transition-all duration-300 rounded-none sm:rounded-3xl"
         >
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 sticky top-0 bg-surface-1 z-10 py-4 px-4 sm:px-5 border-b border-surface-2">
             <Typography variant="body-lg" className="text-text-primary font-semibold">
               Disa AI
             </Typography>
             <button
               onClick={onClose}
-              className="p-[var(--spacing-3)] min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-panel/50 transition-colors"
+              className="p-[var(--spacing-3)] min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full text-text-primary bg-surface-2 hover:bg-surface-3 shadow-raise focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />

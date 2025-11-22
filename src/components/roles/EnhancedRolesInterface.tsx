@@ -43,6 +43,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<EnhancedRole | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: "",
     searchHistory: [],
@@ -327,8 +328,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               return (
                 <PremiumCard
                   key={role.id}
-                  className="group animate-card-enter"
-                  onClick={() => handleActivateRole(role)}
+                  className="group animate-card-enter cursor-pointer"
+                  onClick={() => setSelectedRole(role)}
                 >
                   {/* CARD HEADER */}
                   <div className="flex items-start justify-between gap-3 mb-3">
@@ -356,11 +357,23 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       {role.category || "Spezial"}
                     </span>
                     {/* Usage indicator */}
-                    {roleUsage && (
-                      <span className="text-xs font-medium text-brand">
-                        {roleUsage?.count}× genutzt
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {roleUsage && (
+                        <span className="text-xs font-medium text-brand">
+                          {roleUsage?.count}× genutzt
+                        </span>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleActivateRole(role);
+                        }}
+                      >
+                        Aktivieren
+                      </Button>
+                    </div>
                   </div>
                 </PremiumCard>
               );
@@ -425,6 +438,87 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           )}
         </div>
       </div>
+
+      {/* Role Detail Sheet */}
+      {selectedRole && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-end sm:items-center p-0 sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setSelectedRole(null)}
+        >
+          <div
+            className="w-full sm:max-w-2xl bg-surface-1 rounded-t-2xl sm:rounded-2xl shadow-raiseLg max-h-[90vh] overflow-y-auto border border-surface-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-surface-2 sticky top-0 bg-surface-1 z-10">
+              <div>
+                <h3 className="text-lg font-semibold text-text-primary">{selectedRole.name}</h3>
+                <p className="text-sm text-text-secondary">{selectedRole.category || "Spezial"}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setSelectedRole(null)}
+                  aria-label="Detail schließen"
+                >
+                  Schließen
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => {
+                    handleActivateRole(selectedRole);
+                    setSelectedRole(null);
+                  }}
+                >
+                  Aktivieren
+                </Button>
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-6 space-y-4">
+              <div className="space-y-2">
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  {selectedRole.description}
+                </p>
+                {selectedRole.tags?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedRole.tags.map((tag) => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-text-primary">Zugelassene Modelle</h4>
+                {selectedRole.allowedModels?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedRole.allowedModels.map((model) => (
+                      <Badge key={model} variant="secondary" className="text-xs">
+                        {model}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-text-muted">Keine Modellbeschränkung angegeben.</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-text-primary">System-Prompt</h4>
+                <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary whitespace-pre-wrap">
+                  {selectedRole.systemPrompt || "Kein Prompt hinterlegt."}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
