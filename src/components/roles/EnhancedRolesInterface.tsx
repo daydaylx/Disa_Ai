@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Search, Star, Users } from "@/lib/icons";
+import { Search, Shield, Star, Users } from "@/lib/icons";
 import { Badge, Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
 
 import { useStudio } from "../../app/state/StudioContext";
@@ -222,6 +222,14 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               Jugendschutz 🔞
             </FilterChip>
           </div>
+
+          {/* Jugendschutz Hinweis */}
+          {filters.hideMatureContent && (
+            <div className="flex items-center gap-2 rounded-md bg-amber-50 border border-amber-200 px-3 py-2 text-amber-700 text-sm shadow-inset">
+              <Shield className="w-4 h-4" />
+              <span>Jugendschutz aktiv – NSFW-Rollen sind ausgeblendet.</span>
+            </div>
+          )}
         </div>
 
         {/* CATEGORY PILLS - INSET CONTAINER */}
