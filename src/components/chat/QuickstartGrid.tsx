@@ -32,7 +32,7 @@ const QUICKSTARTS = [
 const LINK_ACTIONS = [
   { label: "Modelle vergleichen", href: "/models" },
   { label: "Rollenbibliothek erkunden", href: "/roles" },
-  { label: "API-Key prüfen", href: "/settings/api" },
+  { label: "API-Key prüfen", href: "/settings/api-data" },
 ];
 
 interface QuickstartGridProps {

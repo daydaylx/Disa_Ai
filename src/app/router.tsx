@@ -11,11 +11,10 @@ const ModelsPage = lazy(() => import("../pages/ModelsPage"));
 const MobileModelsPage = lazy(() => import("../pages/MobileModels"));
 const RolesPage = lazy(() => import("../pages/RolesPage"));
 const SettingsOverviewPage = lazy(() => import("../pages/SettingsOverviewPage"));
-const SettingsApiPage = lazy(() => import("../pages/SettingsApi"));
 const SettingsMemoryPage = lazy(() => import("../pages/SettingsMemory"));
-const SettingsFiltersPage = lazy(() => import("../pages/SettingsFilters"));
-const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
-const SettingsDataPage = lazy(() => import("../pages/SettingsData"));
+const SettingsBehaviorPage = lazy(() => import("../pages/SettingsBehavior"));
+const SettingsYouthFilterPage = lazy(() => import("../pages/SettingsYouthFilter"));
+const SettingsApiDataPage = lazy(() => import("../pages/SettingsApiData"));
 const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
 
@@ -78,14 +77,6 @@ export const appRouter = createBrowserRouter(
       ),
     },
     {
-      path: "/settings/api",
-      element: (
-        <RouteWrapper>
-          <SettingsApiPage />
-        </RouteWrapper>
-      ),
-    },
-    {
       path: "/settings/memory",
       element: (
         <RouteWrapper>
@@ -94,28 +85,44 @@ export const appRouter = createBrowserRouter(
       ),
     },
     {
-      path: "/settings/filters",
+      path: "/settings/behavior",
       element: (
         <RouteWrapper>
-          <SettingsFiltersPage />
+          <SettingsBehaviorPage />
         </RouteWrapper>
       ),
+    },
+    {
+      path: "/settings/youth",
+      element: (
+        <RouteWrapper>
+          <SettingsYouthFilterPage />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/settings/api-data",
+      element: (
+        <RouteWrapper>
+          <SettingsApiDataPage />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/settings/filters",
+      element: <Navigate to="/settings/behavior" replace />,
     },
     {
       path: "/settings/appearance",
-      element: (
-        <RouteWrapper>
-          <SettingsAppearancePage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings/behavior" replace />,
+    },
+    {
+      path: "/settings/api",
+      element: <Navigate to="/settings/api-data" replace />,
     },
     {
       path: "/settings/data",
-      element: (
-        <RouteWrapper>
-          <SettingsDataPage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings/api-data" replace />,
     },
     {
       path: "/impressum",

@@ -1,5 +1,5 @@
-import { SettingsDataView } from "../features/settings/SettingsDataView";
+import { SettingsApiDataView } from "../features/settings/SettingsApiDataView";
 
 export default function SettingsDataPage() {
-  return <SettingsDataView />;
+  return <SettingsApiDataView />;
 }

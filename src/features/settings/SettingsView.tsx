@@ -2,44 +2,41 @@ import { Link } from "react-router-dom";
 
 import { PremiumCard, QuickStartCard, SectionHeader } from "@/ui";
 
-import { BookOpenCheck, KeyRound, Palette, Shield, Upload } from "../../lib/icons";
+import { useSettings } from "../../hooks/useSettings";
+import { BookOpenCheck, Database, Shield, SlidersHorizontal } from "../../lib/icons";
 
 export function SettingsView() {
+  const { settings, toggleNSFWContent } = useSettings();
+  const youthProtectionEnabled = !settings.showNSFWContent;
+
   const cards = [
     {
-      id: "api",
-      title: "API-Key & Verbindung",
-      description: "OpenRouter-Schlüssel verwalten und Proxy-Status prüfen",
-      to: "/settings/api",
-      icon: KeyRound,
-    },
-    {
       id: "memory",
-      title: "Verlauf & Gedächtnis",
-      description: "Lokales Gedächtnis und Datenschutzoptionen steuern",
+      title: "Gedächtnis",
+      description: "Profil, Verlauf & Reset des lokalen Gedächtnisses",
       to: "/settings/memory",
       icon: BookOpenCheck,
     },
     {
-      id: "filters",
-      title: "Inhalte & Filter",
-      description: "Sicherheitsfilter, Jugendschutz und Kreativität",
-      to: "/settings/filters",
+      id: "behavior",
+      title: "KI Verhalten",
+      description: "Diskussionsstil, Kreativität, Antwortlänge & Darstellung",
+      to: "/settings/behavior",
+      icon: SlidersHorizontal,
+    },
+    {
+      id: "youth",
+      title: "Jugendfilter",
+      description: "Jugendschutz / NSFW-Anzeige zentral steuern",
+      to: "/settings/youth",
       icon: Shield,
     },
     {
-      id: "appearance",
-      title: "Darstellung",
-      description: "Dunkles Design und Interface-Optionen",
-      to: "/settings/appearance",
-      icon: Palette,
-    },
-    {
-      id: "data",
-      title: "Import & Export",
-      description: "Konversationen sichern und verwalten",
-      to: "/settings/data",
-      icon: Upload,
+      id: "api-data",
+      title: "API & Daten",
+      description: "API-Key, Import/Export und Speicherstatistiken",
+      to: "/settings/api-data",
+      icon: Database,
     },
   ];
 
@@ -48,13 +45,34 @@ export function SettingsView() {
       <SectionHeader title="Einstellungen" />
 
       <div className="space-y-4 sm:space-y-6 px-4 py-3 sm:px-6 sm:py-6">
+        <div className="flex items-center justify-between rounded-md border bg-surface-inset px-4 py-3">
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-text-primary">Jugendschutz Schnellschalter</p>
+            <p className="text-xs text-text-muted">
+              Schaltet den Jugendfilter sofort um (wirkt auf alle neuen Antworten).
+            </p>
+          </div>
+          <button
+            onClick={toggleNSFWContent}
+            className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-fast ${
+              youthProtectionEnabled ? "bg-brand shadow-brandGlow" : "bg-surface-inset"
+            }`}
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-fast ${
+                youthProtectionEnabled ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
+          </button>
+        </div>
+
         <QuickStartCard
           primaryAction={{
             label: "API-Key speichern",
-            to: "/settings/api",
+            to: "/settings/api-data",
           }}
           secondaryAction={{
-            label: "Gedächtnis konfigurieren",
+            label: "Gedächtnis einstellen",
             to: "/settings/memory",
           }}
         />
@@ -77,11 +95,6 @@ export function SettingsView() {
                       <p className="text-sm text-text-secondary leading-relaxed">
                         {cardData.description}
                       </p>
-                      {cardData.id === "filters" && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-brand/10 text-brand text-xs font-semibold px-2 py-1">
-                          Neu: Kreativitäts-Regler
-                        </span>
-                      )}
                       <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand">
                         Details
                         <span className="text-brand-bright">→</span>

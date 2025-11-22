@@ -66,7 +66,33 @@ vi.mock("../../src/app/state/StudioContext", () => ({
 
 vi.mock("../../src/hooks/useSettings", () => ({
   useSettings: () => ({
-    settings: { preferredModelId: "openai/gpt-4o-mini" },
+    settings: {
+      preferredModelId: "openai/gpt-4o-mini",
+      showNSFWContent: false,
+      language: "de",
+      discussionPreset: "locker_neugierig",
+      discussionStrict: false,
+      discussionMaxSentences: 8,
+      creativity: 45,
+      restoreLastConversation: true,
+      fontSize: 16,
+      reduceMotion: false,
+      hapticFeedback: false,
+      theme: "auto",
+      enableAnalytics: true,
+      enableNotifications: true,
+    },
+    setPreferredModel: vi.fn(),
+    setCreativity: vi.fn(),
+    setDiscussionPreset: vi.fn(),
+    setDiscussionStrict: vi.fn(),
+    setDiscussionMaxSentences: vi.fn(),
+    setTheme: vi.fn(),
+    setFontSize: vi.fn(),
+    setReduceMotion: vi.fn(),
+    setHapticFeedback: vi.fn(),
+    toggleNSFWContent: vi.fn(),
+    saveSettings: vi.fn(),
   }),
 }));
 

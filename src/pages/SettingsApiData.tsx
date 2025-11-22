@@ -1,5 +1,5 @@
 import { SettingsApiDataView } from "../features/settings/SettingsApiDataView";
 
-export default function SettingsApiPage() {
+export default function SettingsApiDataPage() {
   return <SettingsApiDataView />;
 }

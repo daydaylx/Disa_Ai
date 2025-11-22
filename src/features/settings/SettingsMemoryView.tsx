@@ -1,13 +1,18 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
+import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
-import { Shield, Trash2 } from "../../lib/icons";
+import { useSettings } from "../../hooks/useSettings";
+import { History, Shield, Trash2 } from "../../lib/icons";
 
 export function SettingsMemoryView() {
   const toasts = useToasts();
   const { isEnabled, globalMemory, toggleMemory, updateGlobalMemory, clearAllMemory } = useMemory();
+  const { settings, toggleRestoreLastConversation } = useSettings();
+  const { stats, refresh } = useConversationStats();
 
   const handleToggleMemory = () => {
     toggleMemory();
@@ -58,6 +63,26 @@ export function SettingsMemoryView() {
       });
     }
   };
+
+  const handleToggleRestore = () => {
+    if (!isEnabled) {
+      toasts.push({
+        kind: "warning",
+        title: "Gedächtnis aus",
+        message: "Aktiviere das Gedächtnis, um den Verlauf automatisch zu laden.",
+      });
+      return;
+    }
+    toggleRestoreLastConversation();
+  };
+
+  const showHistoryStats = isEnabled && stats;
+
+  useEffect(() => {
+    if (isEnabled) {
+      void refresh();
+    }
+  }, [isEnabled, refresh]);
 
   return (
     <div className="relative flex flex-col text-text-primary h-full">
@@ -185,20 +210,69 @@ export function SettingsMemoryView() {
             {/* Memory Management */}
             {isEnabled && (
               <div className="space-y-4 border-t border-border pt-4">
-                <h3 className="text-sm font-semibold text-text-primary">Gedächtnis-Verwaltung</h3>
+                <h3 className="text-sm font-semibold text-text-primary">Verlauf &amp; Kontext</h3>
 
-                <div className="space-y-3">
-                  <Button
-                    variant="secondary"
-                    onClick={handleClearMemory}
-                    className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                <div className="flex items-center justify-between p-3 rounded-md bg-surface-inset">
+                  <div className="space-y-1">
+                    <Label className="text-sm text-text-primary">
+                      Letzte Unterhaltung automatisch öffnen
+                    </Label>
+                    <p className="text-xs text-text-muted">
+                      Merkt sich die letzte Session und lädt sie beim Start.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleToggleRestore}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast ${
+                      settings.restoreLastConversation ? "bg-brand" : "bg-surface-inset"
+                    }`}
                   >
-                    <Trash2 className="w-4 h-4" />
-                    Alle Erinnerungen löschen
-                  </Button>
-                  <p className="text-xs text-text-muted">
-                    ⚠️ Löscht alle gespeicherten Kontextinformationen permanent.
-                  </p>
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-fast ${
+                        settings.restoreLastConversation ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {showHistoryStats && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 rounded-md bg-surface-inset flex flex-col gap-1">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+                        <History className="w-4 h-4 text-brand" />
+                        Gespräche
+                      </div>
+                      <div className="text-lg font-bold text-brand">
+                        {stats?.totalConversations ?? 0}
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-md bg-surface-inset flex flex-col gap-1">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+                        <Shield className="w-4 h-4 text-brand" />
+                        Nachrichten
+                      </div>
+                      <div className="text-lg font-bold text-brand">
+                        {stats?.totalMessages ?? 0}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-4 border-t border-border pt-4">
+                  <h3 className="text-sm font-semibold text-text-primary">Löschen &amp; Reset</h3>
+                  <div className="space-y-3">
+                    <Button
+                      variant="secondary"
+                      onClick={handleClearMemory}
+                      className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Alle Erinnerungen löschen
+                    </Button>
+                    <p className="text-xs text-text-muted">
+                      ⚠️ Löscht alle gespeicherten Kontextinformationen permanent.
+                    </p>
+                  </div>
                 </div>
               </div>
             )}

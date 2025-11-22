@@ -19,6 +19,7 @@ interface ConversationManagerProps {
   setCurrentSystemPrompt: (prompt: string | undefined) => void;
   onNewConversation: () => void;
   saveEnabled?: boolean;
+  restoreEnabled?: boolean;
 }
 
 const LAST_CONVERSATION_LS_KEY = "disa:last-conversation-id";
@@ -30,6 +31,7 @@ export function useConversationManager({
   setCurrentSystemPrompt,
   onNewConversation,
   saveEnabled = true,
+  restoreEnabled = true,
 }: ConversationManagerProps) {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -264,7 +266,7 @@ export function useConversationManager({
   );
 
   useEffect(() => {
-    if (!saveEnabled) return;
+    if (!saveEnabled || !restoreEnabled) return;
     if (hydratedFromStorageRef.current) return;
     if (messages.length > 0 || isLoading) return;
 
@@ -282,6 +284,7 @@ export function useConversationManager({
     persistLastConversationId,
     readLastConversationId,
     saveEnabled,
+    restoreEnabled,
   ]);
 
   const handleDeleteConversation = useCallback(

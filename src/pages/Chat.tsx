@@ -10,11 +10,6 @@ import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import type { ModelEntry } from "../config/models";
-import {
-  getDiscussionMaxSentences,
-  getDiscussionPreset,
-  getDiscussionStrictMode,
-} from "../config/settings";
 import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
@@ -67,10 +62,9 @@ export default function Chat() {
   );
 
   const discussionPrompt = useMemo(() => {
-    const preset = getDiscussionPreset();
-    const presetStyle = discussionPresets[preset];
-    const strict = getDiscussionStrictMode();
-    const maxSentences = getDiscussionMaxSentences();
+    const presetStyle = discussionPresets[settings.discussionPreset];
+    const strict = settings.discussionStrict;
+    const maxSentences = settings.discussionMaxSentences;
     const language = settings.language || "de";
 
     const parts = [
@@ -83,7 +77,12 @@ export default function Chat() {
     ].filter(Boolean);
 
     return parts.join(" ");
-  }, [settings.language]);
+  }, [
+    settings.language,
+    settings.discussionPreset,
+    settings.discussionStrict,
+    settings.discussionMaxSentences,
+  ]);
 
   const requestOptions = useMemo(() => {
     const capabilities = getSamplingCapabilities(settings.preferredModelId, modelCatalog);
@@ -134,6 +133,7 @@ export default function Chat() {
     setCurrentSystemPrompt,
     onNewConversation: () => {},
     saveEnabled: memoryEnabled,
+    restoreEnabled: settings.restoreLastConversation && memoryEnabled,
   });
 
   useEffect(() => {
@@ -220,7 +220,7 @@ export default function Chat() {
       </button>
       <button
         type="button"
-        onClick={() => navigate("/settings/filters")}
+        onClick={() => navigate("/settings/behavior")}
         className="inline-flex items-center gap-1 rounded-full bg-surface-inset px-2 py-1 text-xs font-semibold text-text-primary hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/70"
       >
         Kreativität: {settings.creativity ?? 45}
