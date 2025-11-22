@@ -42,6 +42,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<EnhancedRole | null>(null);
+  const [expandedRoles, setExpandedRoles] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: "",
     searchHistory: [],
@@ -142,6 +143,18 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
   const handleCategorySelect = useCallback((category: string) => {
     setSelectedCategory((prev) => (prev === category ? null : category));
+  }, []);
+
+  const toggleRoleExpansion = useCallback((roleId: string) => {
+    setExpandedRoles((prev) => {
+      const next = new Set(prev);
+      if (next.has(roleId)) {
+        next.delete(roleId);
+      } else {
+        next.add(roleId);
+      }
+      return next;
+    });
   }, []);
 
   // Show loading skeleton while roles are loading
@@ -339,6 +352,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             {filteredRoles.map((role) => {
               const isFavorite = isRoleFavorite(role.id);
               const isActive = activeRole?.id === role.id;
+              const isExpanded = expandedRoles.has(role.id);
               return (
                 <PremiumCard
                   key={role.id}
@@ -369,9 +383,40 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   </div>
 
                   {/* CARD BODY */}
-                  <p className="text-sm text-text-secondary mb-4 line-clamp-3 leading-relaxed">
-                    {role.description}
-                  </p>
+                  <div className="mb-4">
+                    <p
+                      className={cn(
+                        "text-sm text-text-secondary leading-relaxed transition-all duration-300 ease-in-out motion-reduce:transition-none",
+                        !isExpanded && "line-clamp-3",
+                      )}
+                    >
+                      {role.description}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleRoleExpansion(role.id);
+                      }}
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 -ml-2 min-h-[32px] touch-manipulation"
+                      aria-expanded={isExpanded}
+                      aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
+                    >
+                      <span>{isExpanded ? "Weniger" : "Mehr anzeigen"}</span>
+                      <svg
+                        className={cn(
+                          "w-3.5 h-3.5 transition-transform duration-300 ease-in-out motion-reduce:transition-none",
+                          isExpanded && "rotate-180",
+                        )}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
 
                   {/* CARD FOOTER */}
                   <div className="flex items-center justify-between pt-2 border-t border-surface-1">
