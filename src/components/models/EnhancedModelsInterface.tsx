@@ -8,6 +8,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ChevronDown, DollarSign, GitCompare, Search, Star, Zap } from "@/lib/icons";
+import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import {
   Badge,
   Button,
@@ -30,7 +31,6 @@ import { useFilteredList } from "../../hooks/useFilteredList";
 import { useSettings } from "../../hooks/useSettings";
 import { cn } from "../../lib/utils";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
-import { coercePrice, formatPricePerK } from "../../utils/pricing";
 import { ModelComparisonTable } from "./ModelComparisonTable";
 
 type SortOption = "name" | "performance" | "price";
