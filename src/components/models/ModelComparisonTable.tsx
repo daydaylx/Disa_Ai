@@ -1,7 +1,7 @@
+import { formatPricePerK } from "@/lib/pricing";
 import { MaterialCard } from "@/ui";
 
 import type { EnhancedModel } from "../../types/enhanced-interfaces";
-import { formatPricePerK } from "../../utils/pricing";
 
 interface ModelComparisonTableProps {
   models: EnhancedModel[];

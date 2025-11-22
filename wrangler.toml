@@ -12,29 +12,28 @@ id = "0d65c85d47bf490f961707338ad47993"  # Production KV-Namespace ID
 preview_id = "eca29f3a0056484785f3b0f6637c8f58"  # Preview KV-Namespace ID
 
 [env.production]
-  # Main branch als Produktionsumgebung
-  pages_build_output_dir = "dist"
-  compatibility_date = "2025-11-16"
+# Main branch als Produktionsumgebung
+pages_build_output_dir = "dist"
+compatibility_date = "2025-11-16"
 
-  vars = {
-    NODE_ENV = "production",
-    VITE_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1",
-    VITE_BASE_URL = "/",
-    VITE_ENABLE_ANALYTICS = "false",
-    VITE_ENABLE_DEBUG = "false",
-    VITE_ENABLE_PWA = "true",
-    VITE_ENV = "production",
-    VITE_SENTRY_DSN = "",
-    SENTRY_ORG = "disa-ai",
-    SENTRY_PROJECT = "disa-ai-web",
-    # Build info wird automatisch durch scripts gesetzt
-    VITE_BUILD_ID = "",
-    VITE_BUILD_TIME = "",
-    VITE_BUILD_TIMESTAMP = "",
-    VITE_GIT_SHA = "",
-    VITE_GIT_BRANCH = "",
-    VITE_VERSION = ""
-  }
+[env.production.vars]
+NODE_ENV = "production"
+VITE_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+VITE_BASE_URL = "/"
+VITE_ENABLE_ANALYTICS = "false"
+VITE_ENABLE_DEBUG = "false"
+VITE_ENABLE_PWA = "true"
+VITE_ENV = "production"
+VITE_SENTRY_DSN = ""
+SENTRY_ORG = "disa-ai"
+SENTRY_PROJECT = "disa-ai-web"
+# Build info wird automatisch durch scripts gesetzt
+VITE_BUILD_ID = ""
+VITE_BUILD_TIME = ""
+VITE_BUILD_TIMESTAMP = ""
+VITE_GIT_SHA = ""
+VITE_GIT_BRANCH = ""
+VITE_VERSION = ""
 
   # KRITISCH: Fehlende Secrets - müssen in Cloudflare Dashboard gesetzt werden:
   # - OPENROUTER_API_KEY (für functions/api/chat.ts)
@@ -46,29 +45,28 @@ preview_id = "eca29f3a0056484785f3b0f6637c8f58"  # Preview KV-Namespace ID
   id = "0d65c85d47bf490f961707338ad47993"  # Production KV-Namespace ID
 
 [env.preview]
-  # Alle anderen Branches als Preview-Umgebung
-  pages_build_output_dir = "dist"
-  compatibility_date = "2025-11-16"
+# Alle anderen Branches als Preview-Umgebung
+pages_build_output_dir = "dist"
+compatibility_date = "2025-11-16"
 
-  vars = {
-    NODE_ENV = "production",
-    VITE_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1",
-    VITE_BASE_URL = "/",
-    VITE_ENABLE_ANALYTICS = "false",
-    VITE_ENABLE_DEBUG = "true",
-    VITE_ENABLE_PWA = "true",
-    VITE_ENV = "staging",
-    VITE_SENTRY_DSN = "",
-    SENTRY_ORG = "disa-ai",
-    SENTRY_PROJECT = "disa-ai-web",
-    # Build info wird automatisch durch scripts gesetzt
-    VITE_BUILD_ID = "",
-    VITE_BUILD_TIME = "",
-    VITE_BUILD_TIMESTAMP = "",
-    VITE_GIT_SHA = "",
-    VITE_GIT_BRANCH = "",
-    VITE_VERSION = ""
-  }
+[env.preview.vars]
+NODE_ENV = "production"
+VITE_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+VITE_BASE_URL = "/"
+VITE_ENABLE_ANALYTICS = "false"
+VITE_ENABLE_DEBUG = "true"
+VITE_ENABLE_PWA = "true"
+VITE_ENV = "staging"
+VITE_SENTRY_DSN = ""
+SENTRY_ORG = "disa-ai"
+SENTRY_PROJECT = "disa-ai-web"
+# Build info wird automatisch durch scripts gesetzt
+VITE_BUILD_ID = ""
+VITE_BUILD_TIME = ""
+VITE_BUILD_TIMESTAMP = ""
+VITE_GIT_SHA = ""
+VITE_GIT_BRANCH = ""
+VITE_VERSION = ""
 
   [[env.preview.kv_namespaces]]
   binding = "RATE_LIMIT_KV"

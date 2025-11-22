@@ -1,4 +1,8 @@
-export interface Role {
+/**
+ * UI-enhanced Role with additional styling and categorization.
+ * Extends the base RoleTemplate from roleStore with UI-specific fields.
+ */
+export interface UIRole {
   id: string;
   name: string;
   description?: string;
@@ -13,10 +17,10 @@ export interface Role {
   };
 }
 
-let cachedCombinedRoles: Role[] = [];
+let cachedCombinedRoles: UIRole[] = [];
 
 // Helper functions
-export async function loadRoles(): Promise<Role[]> {
+export async function loadRoles(): Promise<UIRole[]> {
   // Lade Rollen nur aus roleStore (persona.json)
   const { fetchRoleTemplates, getRoleState } = await import("../config/roleStore");
   const externalRoles = await fetchRoleTemplates();
@@ -26,8 +30,8 @@ export async function loadRoles(): Promise<Role[]> {
     throw new Error(error ?? "Rollen konnten nicht geladen werden (public/persona.json)");
   }
 
-  // Konvertiere externe Rollen zu Role-Format
-  const rolesFormatted: Role[] = externalRoles.map((role) => {
+  // Konvertiere externe Rollen zu UIRole-Format
+  const rolesFormatted: UIRole[] = externalRoles.map((role) => {
     // Generate a description from the first sentence of the system prompt
     const systemPrompt = role.system || "";
     const firstSentence = systemPrompt.split(/[.!?]/)[0]?.trim() || "";
@@ -54,7 +58,7 @@ export async function loadRoles(): Promise<Role[]> {
   return cachedCombinedRoles;
 }
 
-export function getRoles(): Role[] {
+export function getRoles(): UIRole[] {
   return cachedCombinedRoles;
 }
 
@@ -177,11 +181,11 @@ function getAccentColorForRole(role: { name: string; tags?: string[] }): string 
   return "var(--acc1)"; // Default Blau
 }
 
-export function getRoleById(id: string): Role | undefined {
+export function getRoleById(id: string): UIRole | undefined {
   return cachedCombinedRoles.find((p) => p.id === id);
 }
 
-export function getRolesByCategory(category: string): Role[] {
+export function getRolesByCategory(category: string): UIRole[] {
   return cachedCombinedRoles.filter((p) => p.category === category);
 }
 
