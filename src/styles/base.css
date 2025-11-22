@@ -41,8 +41,7 @@ body {
   overflow-x: hidden;
   position: relative;
   overscroll-behavior: none;
-  background:
-    radial-gradient(120% 140% at 10% 20%, rgba(143, 123, 255, 0.08), transparent 55%),
+  background: radial-gradient(120% 140% at 10% 20%, rgba(143, 123, 255, 0.08), transparent 55%),
     radial-gradient(120% 140% at 90% 10%, rgba(94, 228, 255, 0.08), transparent 55%),
     var(--surface-base);
   color: var(--color-text-primary, var(--fg0));
@@ -328,8 +327,7 @@ a {
 }
 
 .bottom-sheet-transition {
-  transition:
-    transform var(--motion-duration-medium) var(--motion-easing-standard),
+  transition: transform var(--motion-duration-medium) var(--motion-easing-standard),
     height var(--motion-duration-medium) var(--motion-easing-standard);
 }
 

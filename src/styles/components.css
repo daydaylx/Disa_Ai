@@ -183,8 +183,7 @@
     position: relative;
     overflow: hidden;
     border-radius: var(--r-lg);
-    background:
-      radial-gradient(120% 120% at 80% 0%, rgba(94, 228, 255, 0.08) 0%, transparent 60%),
+    background: radial-gradient(120% 120% at 80% 0%, rgba(94, 228, 255, 0.08) 0%, transparent 60%),
       radial-gradient(120% 120% at 10% 10%, rgba(143, 123, 255, 0.1) 0%, transparent 55%),
       var(--surface-2);
     box-shadow: var(--shadow-strong-raise);
@@ -257,8 +256,7 @@
     content: "";
     position: absolute;
     inset: -2px;
-    background:
-      radial-gradient(circle at 20% 20%, rgba(94, 228, 255, 0.18), transparent 45%),
+    background: radial-gradient(circle at 20% 20%, rgba(94, 228, 255, 0.18), transparent 45%),
       radial-gradient(circle at 80% 0%, rgba(143, 123, 255, 0.2), transparent 42%);
     opacity: 0;
     transition: opacity var(--motion-fast) var(--ease-in-out);

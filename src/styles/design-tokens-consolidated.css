@@ -78,8 +78,7 @@
   /* Signature Aurora Spine Assets */
   --signature-spine: linear-gradient(180deg, #8f7bff 0%, #5ee4ff 60%, #12c2b9 100%);
   --signature-gleam: linear-gradient(120deg, rgba(143, 123, 255, 0.35), rgba(94, 228, 255, 0.22));
-  --signature-noise:
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04) 0, transparent 32%),
+  --signature-noise: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04) 0, transparent 32%),
     radial-gradient(circle at 80% 0%, rgba(94, 228, 255, 0.06) 0, transparent 35%);
 
   /* ========================================
@@ -143,8 +142,7 @@
    * ======================================== */
 
   /* Font Families */
-  --font-sans:
-    "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
   /* Type Scale - Verschärfte Hierarchie für Material-UI */
@@ -197,8 +195,7 @@
    * ======================================== */
 
   /* Universal State Transitions */
-  --transition-colors:
-    background-color var(--motion-fast) var(--ease-in-out),
+  --transition-colors: background-color var(--motion-fast) var(--ease-in-out),
     color var(--motion-fast) var(--ease-in-out);
 
   --transition-transform: transform var(--motion-fast) var(--ease-out);
