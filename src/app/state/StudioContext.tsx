@@ -1,18 +1,18 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
 
-import type { Role } from "../../data/roles";
+import type { UIRole } from "../../data/roles";
 import { getRoles, loadRoles } from "../../data/roles";
 import { useDeferredFetch } from "../../hooks/useDeferredFetch";
 
 const LS_ACTIVE_ROLE_KEY = "disa:activeRoleId";
 
 interface StudioContextType {
-  roles: Role[];
+  roles: UIRole[];
   rolesLoading: boolean;
   roleLoadError: string | null;
   refreshRoles: () => void;
-  activeRole: Role | null;
-  setActiveRole: (role: Role | null) => void;
+  activeRole: UIRole | null;
+  setActiveRole: (role: UIRole | null) => void;
   typographyScale: number;
   setTypographyScale: (scale: number) => void;
   borderRadius: number;
@@ -24,7 +24,7 @@ interface StudioContextType {
 const StudioContext = createContext<StudioContextType | undefined>(undefined);
 
 export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activeRole, setActiveRoleState] = useState<Role | null>(null);
+  const [activeRole, setActiveRoleState] = useState<UIRole | null>(null);
   const [typographyScale, setTypographyScale] = useState(1);
   const [borderRadius, setBorderRadius] = useState(0.5);
   const [accentColor, setAccentColor] = useState("hsl(var(--primary))");
@@ -70,7 +70,7 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [roles]);
 
   const setActiveRole = useCallback(
-    (role: Role | null) => {
+    (role: UIRole | null) => {
       setActiveRoleState(role);
 
       if (!role) {

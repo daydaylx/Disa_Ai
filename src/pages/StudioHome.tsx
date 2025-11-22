@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { PremiumCard } from "@/ui";
 
 import { useStudio } from "../app/state/StudioContext";
-import type { Role } from "../data/roles";
 import { Brain, MessageSquare, Settings, Users } from "../lib/icons";
 
 export default function StudioHome() {
@@ -47,7 +46,7 @@ export default function StudioHome() {
         </div>
         {/* VERTICAL GRID - More accessible on mobile */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {roles.slice(0, 4).map((role: Role) => (
+          {roles.slice(0, 4).map((role) => (
             <PremiumCard
               key={role.id}
               variant="default"

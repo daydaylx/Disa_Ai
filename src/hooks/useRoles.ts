@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { useFavorites } from "../contexts/FavoritesContext";
-import type { Role } from "../data/roles";
+import type { UIRole } from "../data/roles";
 import { loadRoles as loadRolesFromJson } from "../data/roles";
 import type { EnhancedRole } from "../types/enhanced-interfaces";
 
-// Convert a Role to EnhancedRole
-function enhanceRole(role: Role): EnhancedRole {
+// Convert a UIRole to EnhancedRole
+function enhanceRole(role: UIRole): EnhancedRole {
   return {
     id: role.id,
     name: role.name,
@@ -49,7 +49,7 @@ export function useRoles() {
         setLoading(true);
         // Use the correct loadRoles function from data/roles.ts
         // which loads from persona.json via roleStore
-        const baseRoles: Role[] = await loadRolesFromJson();
+        const baseRoles: UIRole[] = await loadRolesFromJson();
 
         // Convert to EnhancedRole format
         const enhancedRoles = baseRoles.map(enhanceRole);
