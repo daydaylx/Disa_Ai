@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 
-import { Search, Shield, Star, Users } from "@/lib/icons";
+import { Check, Search, Shield, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge, Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
 
@@ -360,6 +360,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   )}
                   onClick={() => setSelectedRole(role)}
                 >
+                  {isActive && (
+                    <div className="absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-sm bg-brand/10 px-2 py-1 text-[11px] font-semibold text-brand shadow-inset">
+                      <Check className="h-3.5 w-3.5" />
+                      Aktiv
+                    </div>
+                  )}
                   {/* CARD HEADER */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
@@ -580,6 +586,27 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 </div>
               </div>
             </div>
+          </div>,
+          document.body,
+        )}
+
+      {/* Always-visible active role pill (helps when far down the list) */}
+      {activeRole &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div className="fixed bottom-4 right-4 z-[60] flex items-center gap-2 rounded-full bg-surface-1/95 px-4 py-2 shadow-raiseLg border border-surface-2">
+            <span className="text-xs font-semibold text-text-secondary">Aktive Rolle</span>
+            <Badge variant="secondary" className="text-xs">
+              {activeRole.name}
+            </Badge>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-xs"
+              onClick={() => setActiveRole(null)}
+            >
+              Zurücksetzen
+            </Button>
           </div>,
           document.body,
         )}
