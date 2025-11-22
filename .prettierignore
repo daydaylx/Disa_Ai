@@ -18,3 +18,6 @@ screenshots/
 
 # Exclude CSS files that have conflicts with stylelint
 src/styles/design-tokens-consolidated.css
+src/styles/aurora-optimized.css
+src/styles/base.css
+src/styles/components.css
