@@ -46,7 +46,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
       {/* Vollflächiges Overlay */}
       <div
         className={cn(
-          "fixed inset-0 flex justify-end p-0 sm:p-[var(--spacing-6)]",
+          "fixed inset-0 flex justify-start p-0 sm:p-[var(--spacing-6)]",
           "transition-all duration-300 ease-out",
           className,
         )}
