@@ -23,7 +23,7 @@ export function SettingsView() {
     {
       id: "filters",
       title: "Inhalte & Filter",
-      description: "Sicherheitsfilter und Jugendschutz anpassen",
+      description: "Sicherheitsfilter, Jugendschutz und Kreativität",
       to: "/settings/filters",
       icon: Shield,
     },
@@ -77,6 +77,11 @@ export function SettingsView() {
                       <p className="text-sm text-text-secondary leading-relaxed">
                         {cardData.description}
                       </p>
+                      {cardData.id === "filters" && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-brand/10 text-brand text-xs font-semibold px-2 py-1">
+                          Neu: Kreativitäts-Regler
+                        </span>
+                      )}
                       <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand">
                         Details
                         <span className="text-brand-bright">→</span>

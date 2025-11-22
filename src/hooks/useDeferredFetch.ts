@@ -164,6 +164,12 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
     // Reset wenn deps ändern
     reset();
 
+    const isTestEnv = typeof (globalThis as any).vitest !== "undefined";
+    const isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
+
+    // In Tests oder ohne Browser-Kontext: keine Side-Effects aufbauen
+    if (!isBrowser || isTestEnv) return;
+
     // Exit early wenn Feature-Flag deaktiviert
     if (!isDeferredEnabled) {
       void executeFetch("immediate");

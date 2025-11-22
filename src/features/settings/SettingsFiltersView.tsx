@@ -179,25 +179,38 @@ export function SettingsFiltersView() {
                   min={0}
                   max={100}
                   value={creativity}
+                  aria-valuetext={creativityLabel}
                   onChange={(e) => setCreativityValue(Number(e.target.value))}
-                  className="w-full accent-brand h-2 rounded-full bg-surface-inset"
+                  className="w-full accent-brand h-2 rounded-full bg-surface-inset focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/70"
                 />
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-surface-inset px-3 py-1 text-xs font-semibold text-text-secondary transition-colors">
+                    Antwortstil: {creativityLabel}
+                  </span>
+                </div>
                 <div className="grid grid-cols-3 gap-2">
                   {[
                     { label: "Präzise", value: 10 },
                     { label: "Ausgewogen", value: 45 },
                     { label: "Fantasie", value: 85 },
-                  ].map((preset) => (
-                    <Button
-                      key={preset.label}
-                      variant={creativity === preset.value ? "primary" : "secondary"}
-                      size="sm"
-                      className="w-full"
-                      onClick={() => setCreativityValue(preset.value)}
-                    >
-                      {preset.label}
-                    </Button>
-                  ))}
+                  ].map((preset) => {
+                    const active = creativity === preset.value;
+                    return (
+                      <button
+                        key={preset.label}
+                        onClick={() => setCreativityValue(preset.value)}
+                        className={`w-full rounded-md px-3 py-2 text-sm font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/70 ${
+                          active
+                            ? "bg-brand text-white shadow-brandGlow"
+                            : "bg-surface border border-surface-2 text-text-primary hover:bg-surface-hover"
+                        }`}
+                        type="button"
+                        aria-pressed={active}
+                      >
+                        {preset.label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>

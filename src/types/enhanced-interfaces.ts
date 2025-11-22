@@ -19,6 +19,7 @@ export interface EnhancedRole {
   allowedModels?: string[];
   tags?: string[];
   category?: string;
+  examples?: string[];
   styleHints: {
     typographyScale: number;
     borderRadius: number;

@@ -468,7 +468,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </div>
               <div className="flex items-center gap-2">
                 <Button
-                  variant="secondary"
+                  variant="ghost"
                   size="sm"
                   onClick={() => setSelectedRole(null)}
                   aria-label="Detail schließen"
@@ -532,11 +532,23 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-text-muted">Keine Modellbeschränkung angegeben.</p>
+                  <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-text-muted">
+                    <span className="text-lg">✓</span>
+                    Alle Modelle erlaubt
+                  </div>
                 )}
               </div>
 
               <div className="space-y-2">
+                {selectedRole.examples && selectedRole.examples.length > 0 && (
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-semibold text-text-primary">Beispiel-Prompt</h4>
+                    <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary">
+                      {selectedRole.examples[0]}
+                    </div>
+                  </div>
+                )}
+
                 <h4 className="text-sm font-semibold text-text-primary">System-Prompt</h4>
                 <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary whitespace-pre-wrap">
                   {selectedRole.systemPrompt || "Kein Prompt hinterlegt."}

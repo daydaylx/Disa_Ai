@@ -42,12 +42,12 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60" onClick={handleBackdropClick}>
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={handleBackdropClick}>
       {/* Vollflächiges Overlay */}
       <div
         className={cn(
           "fixed inset-0 flex justify-start p-0 sm:p-[var(--spacing-6)]",
-          "transition-all duration-300 ease-out",
+          "transition-all duration-200 ease-out",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
@@ -56,7 +56,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
           variant="hero"
           className={cn(
             "h-full w-[min(480px,100%)] sm:rounded-3xl rounded-none overflow-y-auto relative bg-surface-1 shadow-raiseLg",
-            "transition-transform duration-200 ease-out",
+            "transition-transform duration-220 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
         >
