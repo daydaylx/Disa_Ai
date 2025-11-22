@@ -38,6 +38,17 @@ interface DeferredFetchState<T> {
 
 type IdleCallbackHandle = number;
 
+const requestIdle =
+  typeof window !== "undefined" && typeof window.requestIdleCallback === "function"
+    ? window.requestIdleCallback.bind(window)
+    : (cb: IdleRequestCallback, options?: IdleRequestOptions) =>
+        window.setTimeout(cb, options?.timeout ?? 200);
+
+const cancelIdle =
+  typeof window !== "undefined" && typeof window.cancelIdleCallback === "function"
+    ? window.cancelIdleCallback.bind(window)
+    : (id: IdleCallbackHandle) => window.clearTimeout(id);
+
 function depsAreEqual(
   prev: React.DependencyList | undefined,
   next: React.DependencyList | undefined,
@@ -232,14 +243,9 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
 
     // requestIdleCallback für deferred loading
     const scheduleIdleFetch = () => {
-      if ("requestIdleCallback" in window) {
-        idleCallbackRef.current = requestIdleCallback(() => void executeFetch("idle"), {
-          timeout: maxDelay,
-        });
-      } else {
-        // Fallback für Browser ohne requestIdleCallback
-        timeoutRef.current = setTimeout(() => void executeFetch("idle"), Math.min(maxDelay, 2000));
-      }
+      idleCallbackRef.current = requestIdle(() => void executeFetch("idle"), {
+        timeout: maxDelay,
+      });
     };
 
     scheduleIdleFetch();
@@ -252,7 +258,7 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
         timeoutRef.current = null;
       }
       if (idleCallbackRef.current) {
-        cancelIdleCallback(idleCallbackRef.current);
+        cancelIdle(idleCallbackRef.current);
         idleCallbackRef.current = null;
       }
 
