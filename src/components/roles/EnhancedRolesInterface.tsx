@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 
 import { Search, Shield, Star, Users } from "@/lib/icons";
+import { cn } from "@/lib/utils";
 import { Badge, Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
 
 import { useStudio } from "../../app/state/StudioContext";
@@ -31,13 +33,7 @@ interface EnhancedRolesInterfaceProps {
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
-  const {
-    roles,
-    activeRole: _activeRole,
-    setActiveRole,
-    rolesLoading,
-    roleLoadError,
-  } = useStudio();
+  const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError } = useStudio();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const { settings } = useSettings();
   const navigate = useNavigate();
@@ -72,6 +68,18 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       hideMatureContent: !settings.showNSFWContent,
     }));
   }, [settings.showNSFWContent]);
+
+  // Prevent background scroll while the role detail sheet is open
+  useEffect(() => {
+    if (!selectedRole) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selectedRole]);
 
   // Convert legacy roles to enhanced roles
   const enhancedRoles = useMemo(() => {
@@ -309,7 +317,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           )}
 
           {/* Results Header - Typography Semantic */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-medium text-text-secondary">
               {filteredRoles.length} Rollen gefunden
               {searchQuery && <span className="text-text-accent"> für "{searchQuery}"</span>}
@@ -326,6 +334,14 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </Button>
             )}
           </div>
+          {activeRole && (
+            <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-inset px-3 py-2 text-sm text-text-secondary shadow-inset">
+              <span className="font-semibold text-text-primary">Aktive Rolle:</span>
+              <Badge variant="secondary" className="text-xs">
+                {activeRole.name}
+              </Badge>
+            </div>
+          )}
 
           {/* ROLES GRID - PREMIUM CARDS mit Aurora Spine */}
           <div
@@ -334,13 +350,15 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           >
             {filteredRoles.map((role) => {
               const isFavorite = isRoleFavorite(role.id);
-              const roleUsage = usage.roles[role.id];
+              const isActive = activeRole?.id === role.id;
               return (
                 <PremiumCard
                   key={role.id}
-                  className="group animate-card-enter cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
+                  className={cn(
+                    "group animate-card-enter cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
+                    isActive && "ring-2 ring-brand shadow-raiseLg",
+                  )}
                   onClick={() => setSelectedRole(role)}
-                  tabIndex={0}
                 >
                   {/* CARD HEADER */}
                   <div className="flex items-start justify-between gap-3 mb-3">
@@ -369,20 +387,21 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     </span>
                     {/* Usage indicator */}
                     <div className="flex items-center gap-2">
-                      {roleUsage && (
-                        <span className="text-xs font-medium text-brand">
-                          {roleUsage?.count}× genutzt
-                        </span>
+                      {isActive && (
+                        <Badge variant="secondary" className="text-xs bg-brand/10 text-brand">
+                          Aktiv
+                        </Badge>
                       )}
                       <Button
                         size="sm"
                         variant="primary"
+                        disabled={isActive}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleActivateRole(role);
                         }}
                       >
-                        Aktivieren
+                        {isActive ? "Aktiv" : "Aktivieren"}
                       </Button>
                     </div>
                   </div>
@@ -450,115 +469,120 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         </div>
       </div>
 
-      {/* Role Detail Sheet */}
-      {selectedRole && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-end sm:items-center p-0 sm:p-6"
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setSelectedRole(null)}
-        >
+      {/* Role Detail Sheet (portaled so it stays visible even when scrolled deep) */}
+      {selectedRole &&
+        typeof document !== "undefined" &&
+        createPortal(
           <div
-            className="w-full sm:max-w-2xl bg-surface-1 rounded-t-2xl sm:rounded-2xl shadow-raiseLg max-h-[90vh] overflow-y-auto border border-surface-2"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-end sm:items-center p-0 sm:p-6"
+            role="dialog"
+            aria-modal="true"
+            onClick={() => setSelectedRole(null)}
           >
-            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-surface-2 sticky top-0 bg-surface-1 z-10">
-              <div>
-                <h3 className="text-lg font-semibold text-text-primary">{selectedRole.name}</h3>
-                <p className="text-sm text-text-secondary">{selectedRole.category || "Spezial"}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedRole(null)}
-                  aria-label="Detail schließen"
-                >
-                  Schließen
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    void navigate("/chat");
-                    setSelectedRole(null);
-                  }}
-                >
-                  Im Chat öffnen
-                </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => {
-                    handleActivateRole(selectedRole);
-                    setSelectedRole(null);
-                  }}
-                >
-                  Aktivieren
-                </Button>
-              </div>
-            </div>
-
-            <div className="p-4 sm:p-6 space-y-4">
-              <div className="space-y-2">
-                <p className="text-sm text-text-secondary leading-relaxed">
-                  {selectedRole.description}
-                </p>
-                {usage.roles[selectedRole.id]?.lastUsed && (
-                  <p className="text-xs text-text-muted">
-                    Zuletzt genutzt:{" "}
-                    {usage.roles[selectedRole.id]?.lastUsed?.toLocaleString?.() ||
-                      String(usage.roles[selectedRole.id]?.lastUsed)}
+            <div
+              className="w-full sm:max-w-2xl bg-surface-1 rounded-t-2xl sm:rounded-2xl shadow-raiseLg max-h-[90vh] overflow-y-auto border border-surface-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-surface-2 sticky top-0 bg-surface-1 z-10">
+                <div>
+                  <h3 className="text-lg font-semibold text-text-primary">{selectedRole.name}</h3>
+                  <p className="text-sm text-text-secondary">
+                    {selectedRole.category || "Spezial"}
                   </p>
-                )}
-                {selectedRole.tags?.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {selectedRole.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        #{tag}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : null}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedRole(null)}
+                    aria-label="Detail schließen"
+                  >
+                    Schließen
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      void navigate("/chat");
+                      setSelectedRole(null);
+                    }}
+                  >
+                    Im Chat öffnen
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => {
+                      handleActivateRole(selectedRole);
+                      setSelectedRole(null);
+                    }}
+                  >
+                    Aktivieren
+                  </Button>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-text-primary">Zugelassene Modelle</h4>
-                {selectedRole.allowedModels?.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {selectedRole.allowedModels.map((model) => (
-                      <Badge key={model} variant="secondary" className="text-xs">
-                        {model}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-text-muted">
-                    <span className="text-lg">✓</span>
-                    Alle Modelle erlaubt
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                {selectedRole.examples && selectedRole.examples.length > 0 && (
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-semibold text-text-primary">Beispiel-Prompt</h4>
-                    <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary">
-                      {selectedRole.examples[0]}
+              <div className="p-4 sm:p-6 space-y-4">
+                <div className="space-y-2">
+                  <p className="text-sm text-text-secondary leading-relaxed">
+                    {selectedRole.description}
+                  </p>
+                  {usage.roles[selectedRole.id]?.lastUsed && (
+                    <p className="text-xs text-text-muted">
+                      Zuletzt genutzt:{" "}
+                      {usage.roles[selectedRole.id]?.lastUsed?.toLocaleString?.() ||
+                        String(usage.roles[selectedRole.id]?.lastUsed)}
+                    </p>
+                  )}
+                  {selectedRole.tags?.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedRole.tags.map((tag) => (
+                        <Badge key={tag} variant="outline" className="text-xs">
+                          #{tag}
+                        </Badge>
+                      ))}
                     </div>
-                  </div>
-                )}
+                  ) : null}
+                </div>
 
-                <h4 className="text-sm font-semibold text-text-primary">System-Prompt</h4>
-                <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary whitespace-pre-wrap">
-                  {selectedRole.systemPrompt || "Kein Prompt hinterlegt."}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-semibold text-text-primary">Zugelassene Modelle</h4>
+                  {selectedRole.allowedModels?.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedRole.allowedModels.map((model) => (
+                        <Badge key={model} variant="secondary" className="text-xs">
+                          {model}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-text-muted">
+                      <span className="text-lg">✓</span>
+                      Alle Modelle erlaubt
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  {selectedRole.examples && selectedRole.examples.length > 0 && (
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-semibold text-text-primary">Beispiel-Prompt</h4>
+                      <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary">
+                        {selectedRole.examples[0]}
+                      </div>
+                    </div>
+                  )}
+
+                  <h4 className="text-sm font-semibold text-text-primary">System-Prompt</h4>
+                  <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary whitespace-pre-wrap">
+                    {selectedRole.systemPrompt || "Kein Prompt hinterlegt."}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

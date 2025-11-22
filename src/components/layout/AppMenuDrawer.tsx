@@ -1,4 +1,6 @@
+import type { MouseEvent } from "react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 
 import { Button } from "@/ui/Button";
@@ -27,7 +29,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  const handleBackdropClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -39,9 +41,34 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
     { label: "Datenschutz", href: "/datenschutz" },
   ];
 
+  // Lock background scroll while the drawer is open
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    if (typeof document === "undefined") return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const previousPosition = document.body.style.position;
+    const previousTop = document.body.style.top;
+    const previousWidth = document.body.style.width;
+    const scrollY = window.scrollY;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.position = previousPosition;
+      document.body.style.top = previousTop;
+      document.body.style.width = previousWidth;
+      window.scrollTo(0, scrollY);
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  return (
+  const drawer = (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={handleBackdropClick}>
       {/* Vollflächiges Overlay */}
       <div
@@ -55,7 +82,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
         <MaterialCard
           variant="hero"
           className={cn(
-            "h-full w-[min(480px,100%)] sm:rounded-3xl rounded-none overflow-y-auto relative bg-surface-1 shadow-raiseLg with-spine",
+            "h-full w-[clamp(18rem,80vw,24rem)] sm:w-[clamp(22rem,70vw,28rem)] sm:rounded-3xl rounded-none overflow-y-auto relative bg-surface-1 shadow-raiseLg with-spine",
             "transition-transform duration-220 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
@@ -177,6 +204,9 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
       </div>
     </div>
   );
+
+  if (typeof document === "undefined") return drawer;
+  return createPortal(drawer, document.body);
 }
 
 // Header Icon Component

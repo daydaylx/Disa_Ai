@@ -4,6 +4,7 @@ import { AppHeader, Button, Input, ModelCard, SectionHeader, Typography } from "
 
 import { loadModelCatalog, type ModelEntry } from "../config/models";
 import { useFavorites } from "../contexts/FavoritesContext";
+import { useSettings } from "../hooks/useSettings";
 import { Filter, Search, Star } from "../lib/icons";
 import { cn } from "../lib/utils";
 
@@ -101,6 +102,11 @@ export default function ModelsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { isModelFavorite, toggleModelFavorite, trackModelUsage } = useFavorites();
+  const { settings, setPreferredModel } = useSettings();
+  const activeModelName = useMemo(
+    () => models.find((m) => m.id === settings.preferredModelId)?.name ?? settings.preferredModelId,
+    [models, settings.preferredModelId],
+  );
 
   // Lade Modelle beim Mount
   useEffect(() => {
@@ -235,6 +241,14 @@ export default function ModelsPage() {
           </div>
         </div>
 
+        {/* Aktives Modell Hinweis */}
+        {settings.preferredModelId && (
+          <div className="flex items-center gap-2 rounded-md border border-surface-2 bg-surface-inset px-3 py-2 text-sm text-text-secondary shadow-inset">
+            <span className="font-semibold text-text-primary">Aktives Modell:</span>
+            <span className="text-text-primary">{activeModelName}</span>
+          </div>
+        )}
+
         {/* Active Filters Bar */}
         {(showFavoritesOnly || showFreeOnly || searchQuery) && (
           <div className="sticky top-[var(--spacing-2)] z-30 bg-surface-inset/90 backdrop-blur rounded-md border border-surface-2 px-3 py-2 flex items-center gap-3 shadow-inset">
@@ -304,24 +318,32 @@ export default function ModelsPage() {
             className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3"
             data-testid="models-grid"
           >
-            {filteredModels.map((model) => (
-              <ModelCard
-                key={model.id}
-                name={model.name}
-                vendor={model.provider}
-                speed={model.speed}
-                quality={model.quality}
-                value={model.value}
-                isFree={model.isFree}
-                price={model.price}
-                contextLength={model.contextLength}
-                isFavorite={isModelFavorite(model.id)}
-                onToggleFavorite={() => {
-                  toggleModelFavorite(model.id);
-                  trackModelUsage(model.id, 0, 0);
-                }}
-              />
-            ))}
+            {filteredModels.map((model) => {
+              const isActive = settings.preferredModelId === model.id;
+              return (
+                <ModelCard
+                  key={model.id}
+                  name={model.name}
+                  vendor={model.provider}
+                  speed={model.speed}
+                  quality={model.quality}
+                  value={model.value}
+                  isFree={model.isFree}
+                  price={model.price}
+                  contextLength={model.contextLength}
+                  isFavorite={isModelFavorite(model.id)}
+                  isActive={isActive}
+                  onToggleFavorite={() => {
+                    toggleModelFavorite(model.id);
+                    trackModelUsage(model.id, 0, 0);
+                  }}
+                  onCardClick={() => {
+                    setPreferredModel(model.id);
+                    trackModelUsage(model.id, 0, 0);
+                  }}
+                />
+              );
+            })}
           </div>
         )}
 

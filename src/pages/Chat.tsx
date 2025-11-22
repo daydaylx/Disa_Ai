@@ -38,11 +38,24 @@ export default function Chat() {
   const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
 
   useEffect(() => {
+    let active = true;
     const isTestEnv = typeof (globalThis as any).vitest !== "undefined";
     if (typeof window === "undefined" || isTestEnv || typeof window.fetch === "undefined") return;
     import("../config/models")
-      .then((mod) => mod.loadModelCatalog().then(setModelCatalog))
-      .catch(() => setModelCatalog(null));
+      .then((mod) =>
+        mod.loadModelCatalog().then((data) => {
+          if (!active) return;
+          setModelCatalog(data);
+        }),
+      )
+      .catch(() => {
+        if (!active) return;
+        setModelCatalog(null);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const safetyPrompt = useMemo(

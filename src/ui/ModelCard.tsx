@@ -27,6 +27,7 @@ interface ModelCardProps {
   contextLength: string;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
+  isActive?: boolean;
   className?: string;
   onCardClick?: () => void;
 }
@@ -42,12 +43,16 @@ const ModelCardComponent = React.memo(
     price,
     contextLength,
     isFavorite = false,
+    isActive = false,
     onToggleFavorite,
     className,
     onCardClick,
   }: ModelCardProps) => {
     return (
-      <PremiumCard onClick={onCardClick} className={cn("group", className)}>
+      <PremiumCard
+        onClick={onCardClick}
+        className={cn("group", isActive && "ring-2 ring-brand shadow-raiseLg", className)}
+      >
         <div className="space-y-3">
           {/* Row 1: Name + Badges */}
           <div className="flex items-start justify-between gap-2">
@@ -58,6 +63,14 @@ const ModelCardComponent = React.memo(
               </p>
             </div>
             <div className="flex items-center gap-1.5 flex-shrink-0">
+              {isActive && (
+                <Badge
+                  variant="secondary"
+                  className="text-[11px] font-semibold bg-brand/10 text-brand border-brand/40"
+                >
+                  Aktiv
+                </Badge>
+              )}
               {isFavorite && (
                 <div className="w-5 h-5 rounded-full bg-brand/10 flex items-center justify-center">
                   <Star className="h-3 w-3 fill-brand text-brand" />

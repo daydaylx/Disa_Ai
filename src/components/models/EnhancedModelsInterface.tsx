@@ -5,7 +5,7 @@
  * Features: Sticky Header, Quick Actions, FAB, Bottom Sheet Details
  */
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ChevronDown, DollarSign, GitCompare, Search, Star, Zap } from "@/lib/icons";
 import {
@@ -27,6 +27,8 @@ import { MODEL_POLICY } from "../../config/modelPolicy";
 import { loadModelCatalog, type ModelEntry } from "../../config/models";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
+import { useSettings } from "../../hooks/useSettings";
+import { cn } from "../../lib/utils";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { coercePrice, formatPricePerK } from "../../utils/pricing";
 import { ModelComparisonTable } from "./ModelComparisonTable";
@@ -271,6 +273,7 @@ function PerformanceBar({
 export function EnhancedModelsInterface({ className }: EnhancedModelsInterfaceProps) {
   const { push } = useToasts();
   const { toggleModelFavorite, isModelFavorite, trackModelUsage } = useFavorites();
+  const { settings, setPreferredModel } = useSettings();
 
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
@@ -373,6 +376,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     modelSortFn,
   );
 
+  const activeModelLabel = useMemo(
+    () => enhancedModels.find((m) => m.id === settings.preferredModelId)?.label,
+    [enhancedModels, settings.preferredModelId],
+  );
+
   // Handlers
   const handleSelectModel = useCallback(
     (model: EnhancedModel) => {
@@ -414,6 +422,19 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       });
     },
     [toggleModelFavorite, isModelFavorite, push],
+  );
+
+  const handleActivateModel = useCallback(
+    (model: EnhancedModel) => {
+      setPreferredModel(model.id);
+      trackModelUsage(model.id);
+      push({
+        kind: "success",
+        title: `${model.label} aktiviert`,
+        message: "Dieses Modell wird jetzt als Standard verwendet.",
+      });
+    },
+    [setPreferredModel, trackModelUsage, push],
   );
 
   const handleCompareModels = useCallback(() => {
@@ -508,7 +529,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       <div className="flex-1 overflow-auto">
         <div className="p-4">
           {/* Results Header - Typography Semantic */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-medium text-text-secondary">
               {filteredModels.length} Modelle gefunden
               {searchQuery && <span className="text-text-accent"> für "{searchQuery}"</span>}
@@ -517,131 +538,161 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <div className="text-sm text-text-meta">{selectedModels.size} ausgewählt</div>
             )}
           </div>
+          {settings.preferredModelId && (
+            <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-inset px-3 py-2 text-sm text-text-secondary shadow-inset">
+              <span className="font-semibold text-text-primary">Aktives Modell:</span>
+              <Badge variant="secondary" className="text-xs">
+                {activeModelLabel ?? settings.preferredModelId}
+              </Badge>
+            </div>
+          )}
 
           {/* Models Grid */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filteredModels.map((model) => (
-              <MaterialCard
-                key={model.id}
-                variant="raised"
-                className="p-4 cursor-pointer hover:shadow-raiseLg transition-all duration-fast animate-card-enter"
-                onClick={() => handleSelectModel(model)}
-              >
-                {/* CARD HEADER */}
-                <div className="flex flex-col gap-2 mb-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-text-on-raised text-base flex-1 min-w-0 pr-2">
-                      <span className="truncate inline-block max-w-full" title={model.label}>
-                        {model.label}
-                      </span>
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      {model.pricing.isFree && (
-                        <Badge variant="secondary" className="text-xs">
-                          <Zap className="w-3 h-3 mr-1" />
-                          FREE
-                        </Badge>
-                      )}
+            {filteredModels.map((model) => {
+              const isActive = settings.preferredModelId === model.id;
+              return (
+                <MaterialCard
+                  key={model.id}
+                  variant="raised"
+                  className={cn(
+                    "p-4 cursor-pointer hover:shadow-raiseLg transition-all duration-fast animate-card-enter",
+                    isActive && "ring-2 ring-brand shadow-raiseLg",
+                  )}
+                  onClick={() => handleSelectModel(model)}
+                >
+                  {/* CARD HEADER */}
+                  <div className="flex flex-col gap-2 mb-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold text-text-on-raised text-base flex-1 min-w-0 pr-2">
+                        <span className="truncate inline-block max-w-full" title={model.label}>
+                          {model.label}
+                        </span>
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        {isActive && (
+                          <Badge variant="secondary" className="text-[11px] bg-brand/10 text-brand">
+                            Aktiv
+                          </Badge>
+                        )}
+                        {model.pricing.isFree && (
+                          <Badge variant="secondary" className="text-xs">
+                            <Zap className="w-3 h-3 mr-1" />
+                            FREE
+                          </Badge>
+                        )}
+                      </div>
                     </div>
+
+                    <p className="text-sm text-text-secondary" title={model.provider}>
+                      {model.provider}
+                    </p>
                   </div>
 
-                  <p className="text-sm text-text-secondary" title={model.provider}>
-                    {model.provider}
-                  </p>
-                </div>
-
-                {/* Performance Bars */}
-                <div className="space-y-2 mb-4">
-                  <PerformanceBar label="Speed" value={model.performance.speed} color="primary" />
-                  <PerformanceBar
-                    label="Quality"
-                    value={model.performance.quality}
-                    color="success"
-                  />
-                  <PerformanceBar
-                    label="Value"
-                    value={model.performance.efficiency}
-                    color="warning"
-                  />
-                </div>
-
-                {/* Badges Row */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {/* Price Info */}
-                  {!model.pricing.isFree && (
-                    <Badge variant="secondary" className="text-xs">
-                      <DollarSign className="w-3 h-3 mr-1" />
-                      {formatPricePerK(model.pricing.inputPrice)}
-                    </Badge>
-                  )}
-
-                  <Badge variant="secondary" className="text-xs">
-                    {formatContext(model.context.maxTokens)} context
-                  </Badge>
-
-                  {/* Primary Tag */}
-                  {model.tags[0] && (
-                    <Badge
-                      variant="secondary"
-                      className="max-w-[100px] truncate text-xs"
-                      title={model.tags[0]}
-                    >
-                      {model.tags[0]}
-                    </Badge>
-                  )}
-
-                  {/* Capabilities */}
-                  {model.capabilities.multimodal && (
-                    <Badge variant="secondary" className="text-xs" title="Multimodal">
-                      🖼️
-                    </Badge>
-                  )}
-                  {model.capabilities.codeGeneration && (
-                    <Badge variant="secondary" className="text-xs" title="Code Generation">
-                      💻
-                    </Badge>
-                  )}
-                </div>
-
-                {/* Action buttons row at bottom */}
-                <div className="flex justify-end gap-2 mt-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 h-auto"
-                    aria-label={
-                      isModelFavorite(model.id)
-                        ? "Von Favoriten entfernen"
-                        : "Zu Favoriten hinzufügen"
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleFavorite(model);
-                    }}
-                  >
-                    <Star
-                      className={`w-4 h-4 ${
-                        isModelFavorite(model.id)
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-text-secondary"
-                      } ${animatingFavorite === model.id ? "animate-favorite-pop" : ""}`}
+                  {/* Performance Bars */}
+                  <div className="space-y-2 mb-4">
+                    <PerformanceBar label="Speed" value={model.performance.speed} color="primary" />
+                    <PerformanceBar
+                      label="Quality"
+                      value={model.performance.quality}
+                      color="success"
                     />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 h-auto"
-                    aria-label="Modelldetails anzeigen"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDetailsModel(model);
-                    }}
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                  </Button>
-                </div>
-              </MaterialCard>
-            ))}
+                    <PerformanceBar
+                      label="Value"
+                      value={model.performance.efficiency}
+                      color="warning"
+                    />
+                  </div>
+
+                  {/* Badges Row */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {/* Price Info */}
+                    {!model.pricing.isFree && (
+                      <Badge variant="secondary" className="text-xs">
+                        <DollarSign className="w-3 h-3 mr-1" />
+                        {formatPricePerK(model.pricing.inputPrice)}
+                      </Badge>
+                    )}
+
+                    <Badge variant="secondary" className="text-xs">
+                      {formatContext(model.context.maxTokens)} context
+                    </Badge>
+
+                    {/* Primary Tag */}
+                    {model.tags[0] && (
+                      <Badge
+                        variant="secondary"
+                        className="max-w-[100px] truncate text-xs"
+                        title={model.tags[0]}
+                      >
+                        {model.tags[0]}
+                      </Badge>
+                    )}
+
+                    {/* Capabilities */}
+                    {model.capabilities.multimodal && (
+                      <Badge variant="secondary" className="text-xs" title="Multimodal">
+                        🖼️
+                      </Badge>
+                    )}
+                    {model.capabilities.codeGeneration && (
+                      <Badge variant="secondary" className="text-xs" title="Code Generation">
+                        💻
+                      </Badge>
+                    )}
+                  </div>
+
+                  {/* Action buttons row at bottom */}
+                  <div className="flex justify-end gap-2 mt-2">
+                    <Button
+                      variant={isActive ? "secondary" : "primary"}
+                      size="sm"
+                      disabled={isActive}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleActivateModel(model);
+                      }}
+                    >
+                      {isActive ? "Aktiv" : "Aktivieren"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="p-2 h-auto"
+                      aria-label={
+                        isModelFavorite(model.id)
+                          ? "Von Favoriten entfernen"
+                          : "Zu Favoriten hinzufügen"
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleFavorite(model);
+                      }}
+                    >
+                      <Star
+                        className={`w-4 h-4 ${
+                          isModelFavorite(model.id)
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-text-secondary"
+                        } ${animatingFavorite === model.id ? "animate-favorite-pop" : ""}`}
+                      />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="p-2 h-auto"
+                      aria-label="Modelldetails anzeigen"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDetailsModel(model);
+                      }}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </MaterialCard>
+              );
+            })}
           </div>
 
           {/* Empty State */}
