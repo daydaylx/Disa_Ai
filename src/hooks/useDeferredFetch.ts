@@ -38,16 +38,18 @@ interface DeferredFetchState<T> {
 
 type IdleCallbackHandle = number;
 
+const hasWindow = typeof window !== "undefined";
+
 const requestIdle =
-  typeof window !== "undefined" && typeof window.requestIdleCallback === "function"
+  hasWindow && typeof window.requestIdleCallback === "function"
     ? window.requestIdleCallback.bind(window)
     : (cb: IdleRequestCallback, options?: IdleRequestOptions) =>
-        window.setTimeout(cb, options?.timeout ?? 200);
+        setTimeout(cb, options?.timeout ?? 200);
 
 const cancelIdle =
-  typeof window !== "undefined" && typeof window.cancelIdleCallback === "function"
+  hasWindow && typeof window.cancelIdleCallback === "function"
     ? window.cancelIdleCallback.bind(window)
-    : (id: IdleCallbackHandle) => window.clearTimeout(id);
+    : (id: IdleCallbackHandle) => clearTimeout(id);
 
 function depsAreEqual(
   prev: React.DependencyList | undefined,
@@ -106,6 +108,14 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
   const idleCallbackRef = useRef<IdleCallbackHandle | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const hasTriggeredRef = useRef(false);
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Feature-Flag Check
   const isDeferredEnabled = isFeatureEnabled("deferredDataFetch");
@@ -119,13 +129,15 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
       abortControllerRef.current.abort();
     }
 
-    setState((prev) => ({ ...prev, loading: true, error: null, triggered: true }));
+    if (isMountedRef.current) {
+      setState((prev) => ({ ...prev, loading: true, error: null, triggered: true }));
+    }
     abortControllerRef.current = new AbortController();
 
     try {
       const result = await fetchFnRef.current();
 
-      if (!abortControllerRef.current.signal.aborted) {
+      if (!abortControllerRef.current.signal.aborted && isMountedRef.current) {
         setState((prev) => ({ ...prev, data: result, loading: false }));
 
         if (import.meta.env.DEV) {
@@ -133,7 +145,7 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
         }
       }
     } catch (error: any) {
-      if (!abortControllerRef.current.signal.aborted) {
+      if (!abortControllerRef.current.signal.aborted && isMountedRef.current) {
         const errorMessage = error?.message || "Unknown fetch error";
         setState((prev) => ({ ...prev, error: errorMessage, loading: false }));
 
@@ -162,12 +174,14 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
     }
 
     hasTriggeredRef.current = false;
-    setState({
-      data: null,
-      loading: false,
-      error: null,
-      triggered: false,
-    });
+    if (isMountedRef.current) {
+      setState({
+        data: null,
+        loading: false,
+        error: null,
+        triggered: false,
+      });
+    }
   }, []);
 
   const triggerEventsString = triggerEvents.join(",");
@@ -326,7 +340,7 @@ export function useDeferredCachedFetch<T>(
 export function getDeferredFetchStatus() {
   return {
     featureFlagEnabled: isFeatureEnabled("deferredDataFetch"),
-    supportsRequestIdleCallback: "requestIdleCallback" in window,
+    supportsRequestIdleCallback: hasWindow && "requestIdleCallback" in window,
     timestamp: new Date().toISOString(),
   };
 }

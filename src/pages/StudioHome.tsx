@@ -16,6 +16,10 @@ export default function StudioHome() {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-text-on-raised">Dein ruhiges KI-Studio</h1>
           <p className="text-lg text-text-secondary">für klare, produktive Konversationen</p>
+          <p className="text-sm text-text-secondary leading-relaxed">
+            Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und
+            ruhiges, fokussiertes Arbeiten.
+          </p>
         </div>
 
         {/* HERO CARD - "Neuer Chat" */}
