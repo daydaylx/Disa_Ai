@@ -54,8 +54,8 @@ let _appRoot: ReactDOM.Root | null = null;
 
 // Initialize app
 function initializeApp() {
-  const el = document.getElementById("app");
-  if (!el) throw new Error("#app element not found");
+  const el = document.getElementById("root");
+  if (!el) throw new Error("#root element not found");
 
   // Create root only once (singleton pattern)
   if (!_appRoot) {
@@ -80,7 +80,7 @@ function safeInitialize(): void {
   } catch (error) {
     safeError("[INIT] React mounting failed:", error);
     // Fallback: try basic mounting without context using same root
-    const el = document.getElementById("app");
+    const el = document.getElementById("root");
     if (el) {
       // Use singleton root for fallback too
       if (!_appRoot) {
@@ -103,22 +103,102 @@ function safeInitialize(): void {
   if (!import.meta.env.VITE_PWA_DISABLED) {
     // Register service worker if available
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
+      const warmDevCache = async () => {
+        try {
+          if (!("caches" in window)) return;
+          const urls = Array.from(
+            document.querySelectorAll<HTMLLinkElement | HTMLScriptElement>(
+              "link[rel='stylesheet'], script[src]",
+            ),
+          )
+            .map((el) => ("href" in el ? el.href : el.src))
+            .filter(Boolean);
+          urls.push(location.origin + "/");
+          urls.push(location.pathname);
+          urls.push("/manifest.webmanifest");
+          const cache = await caches.open("disa-dev-cache");
+          await cache.addAll([...new Set(urls)]);
+        } catch (err) {
+          safeWarn("Warm cache failed", err);
+        }
+      };
+
+      const registerInlineDevSW = async () => {
+        const swCode = `
+          const CACHE = 'disa-dev-cache';
+          self.addEventListener('install', (event) => {
+            event.waitUntil(caches.open(CACHE).then(() => self.skipWaiting()));
+          });
+          self.addEventListener('activate', (event) => {
+            event.waitUntil(self.clients.claim());
+          });
+          self.addEventListener('fetch', (event) => {
+            if (event.request.method !== 'GET') return;
+            event.respondWith(
+              caches.open(CACHE).then((cache) =>
+                cache.match(event.request).then((resp) => {
+                  if (resp) return resp;
+                  return fetch(event.request)
+                    .then((networkResp) => {
+                      cache.put(event.request, networkResp.clone()).catch(() => {});
+                      return networkResp;
+                    })
+                    .catch(async () => (await cache.match('/')) ?? Response.error());
+                }),
+              ),
+            );
+          });
+        `;
+        const swUrl = URL.createObjectURL(new Blob([swCode], { type: "application/javascript" }));
+        try {
+          const registration = await navigator.serviceWorker.register(swUrl, { scope: "/" });
+          return registration;
+        } catch (err) {
+          safeWarn("Inline SW registration failed", err);
+          return null;
+        }
+      };
+
+      const registerDevServiceWorker = async () => {
+        try {
+          const registration = await navigator.serviceWorker.register("/dev-sw.js", { scope: "/" });
+          safeWarn("Dev SW registered:", registration);
+          return registration;
+        } catch (err) {
+          safeWarn("Dev SW registration failed", err);
+          return null;
+        }
+      };
+
+      const registerServiceWorker = async () => {
         // Request persistent storage (fixes StorageType.persistent deprecation)
         if ("storage" in navigator && "persist" in navigator.storage) {
           const isPersistent = await navigator.storage.persist();
           safeWarn("Storage persistent:", isPersistent);
         }
 
-        navigator.serviceWorker.register("/sw.js").then(
-          (registration) => {
-            safeWarn("SW registered:", registration);
-          },
-          (registrationError) => {
-            console.warn("SW registration failed:", registrationError);
-          },
-        );
-      });
+        try {
+          const registration = await navigator.serviceWorker.register("/sw.js");
+          safeWarn("SW registered:", registration);
+        } catch (registrationError) {
+          console.warn("SW registration failed:", registrationError);
+        }
+      };
+
+      // Try immediately (helps e2e/dev where load already fired) and also on load
+      if (import.meta.env.DEV) {
+        const ensureDevServiceWorker = async () => {
+          const registration = (await registerDevServiceWorker()) ?? (await registerInlineDevSW());
+          return registration;
+        };
+
+        void ensureDevServiceWorker().then(() => warmDevCache());
+        window.addEventListener("load", () => void ensureDevServiceWorker());
+      } else {
+        void registerServiceWorker();
+        window.addEventListener("load", () => void registerServiceWorker());
+        void warmDevCache();
+      }
     }
   }
 
