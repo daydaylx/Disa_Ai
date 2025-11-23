@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-5e4b22a",
-  "buildTime": "2025-11-22T22:24:19.118Z",
-  "gitSha": "5e4b22ae311cd84ebce76095d4710dd4bc879af2",
-  "gitBranch": "claude/fix-icon-display-01Euxpqg1a73Uq7fd3P8scPs",
+  "buildId": "v1.0.0-4a1191e",
+  "buildTime": "2025-11-23T18:36:02.351Z",
+  "gitSha": "4a1191e7497a970dabada0d9ad7aa0ce6d7d50f0",
+  "gitBranch": "claude/remove-nrue-navigation-01PBDDocCR6TPjxR1mALeVPx",
   "version": "1.0.0"
 }
