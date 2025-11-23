@@ -15,6 +15,8 @@ const SettingsMemoryPage = lazy(() => import("../pages/SettingsMemory"));
 const SettingsBehaviorPage = lazy(() => import("../pages/SettingsBehavior"));
 const SettingsYouthFilterPage = lazy(() => import("../pages/SettingsYouthFilter"));
 const SettingsApiDataPage = lazy(() => import("../pages/SettingsApiData"));
+const SettingsFiltersPage = lazy(() => import("../pages/SettingsFilters"));
+const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
 const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
 
@@ -22,6 +24,14 @@ export const appRouter = createBrowserRouter(
   [
     {
       path: "/",
+      element: (
+        <RouteWrapper>
+          <StudioHomePage />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/studio",
       element: (
         <RouteWrapper>
           <StudioHomePage />
@@ -110,15 +120,27 @@ export const appRouter = createBrowserRouter(
     },
     {
       path: "/settings/filters",
-      element: <Navigate to="/settings/behavior" replace />,
+      element: (
+        <RouteWrapper>
+          <SettingsFiltersPage />
+        </RouteWrapper>
+      ),
     },
     {
       path: "/settings/appearance",
-      element: <Navigate to="/settings/behavior" replace />,
+      element: (
+        <RouteWrapper>
+          <SettingsAppearancePage />
+        </RouteWrapper>
+      ),
     },
     {
       path: "/settings/api",
-      element: <Navigate to="/settings/api-data" replace />,
+      element: (
+        <RouteWrapper>
+          <SettingsApiDataPage />
+        </RouteWrapper>
+      ),
     },
     {
       path: "/settings/data",

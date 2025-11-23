@@ -99,7 +99,9 @@ export function SettingsMemoryView() {
           <div className="space-y-6">
             {/* Header */}
             <div className="space-y-2">
-              <h2 className="text-xl font-bold text-text-primary">Verlauf & Gedächtnis</h2>
+              <h2 className="text-xl font-bold text-text-primary">
+                Verlauf, Erinnerung &amp; Memory
+              </h2>
               <p className="text-sm text-text-secondary leading-relaxed">
                 Kontextuelles Gedächtnis für personalisierte Gespräche verwalten
               </p>

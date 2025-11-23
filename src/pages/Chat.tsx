@@ -20,6 +20,7 @@ import { mapCreativityToParams } from "../lib/creativity";
 import { History } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 import { discussionPresets } from "../prompts/discussion/presets";
+import type { ChatMessageType } from "../types/chatMessage";
 
 export default function Chat() {
   const toasts = useToasts();
@@ -181,10 +182,33 @@ export default function Chat() {
   }, [append, input, isLoading, setInput, toasts]);
 
   const startWithPreset = (system: string, user?: string) => {
-    void append({ role: "system", content: system });
-    if (user) {
-      void append({ role: "user", content: user });
+    // Setze System-Prompt für nachfolgende Requests, ohne sofort API-Calls zu triggern
+    setCurrentSystemPrompt(system);
+
+    const now = Date.now();
+    const presetMessages: ChatMessageType[] = [];
+
+    if (system) {
+      presetMessages.push({
+        id: `preset-system-${now}`,
+        role: "system",
+        content: system,
+        timestamp: now,
+      });
     }
+
+    if (user) {
+      presetMessages.push({
+        id: `preset-user-${now + 1}`,
+        role: "user",
+        content: user,
+        timestamp: now + 1,
+      });
+    }
+
+    // Zeige die kontextuellen Nachrichten an, aber warte auf echte User-Eingaben zum Senden
+    setMessages(presetMessages);
+    setInput("");
   };
 
   const focusComposer = () => {
@@ -239,6 +263,16 @@ export default function Chat() {
       {!isEmpty && infoBar}
       {isEmpty ? (
         <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)]">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-text-primary">
+              Was möchtest du heute mit Disa AI erledigen?
+            </h1>
+            <p className="text-sm text-text-secondary">
+              Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und
+              ruhiges, fokussiertes Arbeiten.
+            </p>
+          </div>
+
           <div className="flex items-start justify-between gap-3">
             <SectionHeader
               variant="compact"
@@ -263,8 +297,8 @@ export default function Chat() {
           <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)]">
             <QuickstartGrid
               onStart={startWithPreset}
-              title="Fokus-Workflows"
-              description="Vorbereitete Presets für Recherche, Schreiben und Pair Programming"
+              title="Diskussionen"
+              description="Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert."
             />
           </div>
         </div>

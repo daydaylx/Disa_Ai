@@ -20,6 +20,8 @@ interface PremiumCardProps {
   onClick?: () => void;
   variant?: "default" | "hero";
   withAccentStrip?: boolean;
+  interactiveRole?: "button" | "group" | "presentation" | "none";
+  focusable?: boolean;
 }
 
 export const PremiumCard = React.memo(
@@ -29,24 +31,19 @@ export const PremiumCard = React.memo(
     onClick,
     variant = "default",
     withAccentStrip = true,
+    interactiveRole = "button",
+    focusable = true,
   }: PremiumCardProps) => {
     const isHero = variant === "hero";
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (!onClick) return;
-
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        onClick();
-      }
-    };
+    const isInteractive = Boolean(onClick) && interactiveRole !== "none";
+    const role = isInteractive ? interactiveRole : undefined;
+    const tabIndex = isInteractive && focusable ? 0 : undefined;
 
     return (
       <div
         onClick={onClick}
-        onKeyDown={handleKeyDown}
-        role={onClick ? "button" : undefined}
-        tabIndex={onClick ? 0 : undefined}
+        tabIndex={tabIndex}
+        role={role}
         className={cn(
           "relative overflow-hidden rounded-md transition-all duration-fast",
           // Material Depth

@@ -161,6 +161,7 @@ export default function ModelsPage() {
       <AppHeader pageTitle="Modelle" />
 
       <div className="space-y-4 sm:space-y-6 px-[var(--spacing-4)] py-3 sm:py-[var(--spacing-6)]">
+        <h1 className="text-2xl font-bold text-text-primary">Modelle</h1>
         <div className="with-spine flex flex-col gap-1">
           <SectionHeader
             variant="compact"
@@ -188,6 +189,7 @@ export default function ModelsPage() {
                   setSearchQuery(e.target.value)
                 }
                 className="rounded-full"
+                aria-label="Modelle durchsuchen"
               />
             </div>
 
@@ -201,6 +203,8 @@ export default function ModelsPage() {
                     ? "bg-brand/10 border-brand text-brand shadow-[var(--shadow-inset),var(--shadow-accent-glow)]"
                     : "bg-surface-2 border-surface-2 text-text-secondary hover:border-brand/60 hover:text-text-primary hover:shadow-raiseLg active:scale-[0.98]",
                 )}
+                aria-pressed={showFavoritesOnly}
+                aria-label="Nur Favoriten anzeigen"
               >
                 <Star className="h-4 w-4" />
               </button>
@@ -213,6 +217,8 @@ export default function ModelsPage() {
                     ? "bg-brand/10 border-brand text-brand shadow-[var(--shadow-inset),var(--shadow-accent-glow)]"
                     : "bg-surface-2 border-surface-2 text-text-secondary hover:border-brand/60 hover:text-text-primary hover:shadow-raiseLg active:scale-[0.98]",
                 )}
+                aria-pressed={showFreeOnly}
+                aria-label="Nur kostenlose Modelle anzeigen"
               >
                 <Filter className="h-4 w-4" />
               </button>

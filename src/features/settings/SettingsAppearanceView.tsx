@@ -1,5 +1,5 @@
-import { Navigate } from "react-router-dom";
+import { SettingsBehaviorView } from "./SettingsFiltersView";
 
 export function SettingsAppearanceView() {
-  return <Navigate to="/settings/behavior" replace />;
+  return <SettingsBehaviorView />;
 }

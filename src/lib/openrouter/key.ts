@@ -40,7 +40,29 @@ function safeGet(key: string): string | null {
   }
 }
 
+function safeGetLocal(key: string): string | null {
+  try {
+    const localVal = localStorage.getItem(key);
+    if (!localVal) return null;
+    const trimmed = localVal.replace(/^"+|"+$/g, "").trim();
+    return trimmed.length ? trimmed : null;
+  } catch {
+    return null;
+  }
+}
+
 export function readApiKey(): string | null {
+  // Persisted (localStorage) value wins to survive reloads/navigation
+  const local = safeGetLocal(CANONICAL_KEY);
+  if (local) {
+    try {
+      sessionStorage.setItem(CANONICAL_KEY, local);
+    } catch {
+      /* ignore */
+    }
+    return local;
+  }
+
   // First, try the canonical key
   const canonical = safeGet(CANONICAL_KEY);
   if (canonical) return canonical;

@@ -97,95 +97,98 @@ export function VirtualizedMessageList({
   );
 
   return (
-    <div
-      ref={setRefs}
-      className={cn("chat-scroll-area flex-1 overflow-y-auto scroll-smooth", className)}
-      role="log"
-      aria-label="Chat messages"
-      data-testid="message-list"
-    >
-      {shouldVirtualize && hiddenCount > 0 && (
-        <div className="sticky top-0 z-10 flex justify-center py-2">
-          <Button
-            onClick={loadOlderMessages}
-            variant="secondary"
-            size="sm"
-            className="rounded-full"
-            data-testid="load-older-messages"
-          >
-            ↑ {hiddenCount} ältere Nachrichten laden
-          </Button>
-        </div>
-      )}
+    <div data-testid="message-list">
+      <div
+        ref={setRefs}
+        className={cn("chat-scroll-area flex-1 overflow-y-auto scroll-smooth", className)}
+        role="log"
+        aria-label="Chat messages"
+        data-testid="virtualized-chat-log"
+      >
+        {shouldVirtualize && hiddenCount > 0 && (
+          <div className="sticky top-0 z-10 flex justify-center py-2">
+            <Button
+              onClick={loadOlderMessages}
+              variant="secondary"
+              size="sm"
+              className="rounded-full"
+              data-testid="load-older-messages"
+            >
+              ↑ {hiddenCount} ältere Nachrichten laden
+            </Button>
+          </div>
+        )}
 
-      <div className="chat-stack">
-        {visibleMessages.map((message, index) => (
-          <ChatMessage
-            key={message.id}
-            message={message}
-            isLast={index === visibleMessages.length - 1 && !isLoading}
-            onRetry={handleRetry}
-            onCopy={handleCopy}
-          />
-        ))}
+        <div className="chat-stack">
+          {visibleMessages.map((message, index) => (
+            <div key={message.id} data-testid="message-bubble">
+              <ChatMessage
+                message={message}
+                isLast={index === visibleMessages.length - 1 && !isLoading}
+                onRetry={handleRetry}
+                onCopy={handleCopy}
+              />
+            </div>
+          ))}
+        </div>
+
+        {isLoading && (
+          <div className="flex items-start gap-4 px-4 py-6">
+            <MaterialCard className="border-border text-text-secondary flex h-9 w-9 items-center justify-center rounded-full border">
+              <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 3a9 9 0 019 9"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="opacity-60"
+                />
+                <path
+                  d="M21 12a9 9 0 01-9 9"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="opacity-20"
+                />
+              </svg>
+            </MaterialCard>
+            <MaterialCard className="border-border text-text-secondary flex-1 rounded-lg border p-4 text-sm">
+              <div className="text-text-secondary flex items-center gap-2 text-xs uppercase tracking-wider">
+                <span>Assistent</span>
+                <span className="bg-text-1 inline-flex h-1.5 w-1.5 animate-pulse rounded-full" />
+                <span>Schreibt …</span>
+              </div>
+              <div className="mt-3 flex gap-1">
+                <div className="bg-text-1 h-2 w-2 animate-pulse rounded-full" />
+                <div
+                  className="bg-text-1 h-2 w-2 animate-pulse rounded-full"
+                  style={{ animationDelay: "0.15s" }}
+                />
+                <div
+                  className="bg-text-1 h-2 w-2 animate-pulse rounded-full"
+                  style={{ animationDelay: "0.3s" }}
+                />
+              </div>
+            </MaterialCard>
+          </div>
+        )}
+
+        {!isSticking && (
+          <div className="flex justify-center py-2">
+            <Button
+              onClick={() => scrollToBottom()}
+              variant="secondary"
+              size="sm"
+              className="rounded-full"
+              aria-label="Zu neuen Nachrichten scrollen"
+            >
+              ↓ Nach unten
+            </Button>
+          </div>
+        )}
       </div>
-
-      {isLoading && (
-        <div className="flex items-start gap-4 px-4 py-6">
-          <MaterialCard className="border-border text-text-secondary flex h-9 w-9 items-center justify-center rounded-full border">
-            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 3a9 9 0 019 9"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="opacity-60"
-              />
-              <path
-                d="M21 12a9 9 0 01-9 9"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="opacity-20"
-              />
-            </svg>
-          </MaterialCard>
-          <MaterialCard className="border-border text-text-secondary flex-1 rounded-lg border p-4 text-sm">
-            <div className="text-text-secondary flex items-center gap-2 text-xs uppercase tracking-wider">
-              <span>Assistent</span>
-              <span className="bg-text-1 inline-flex h-1.5 w-1.5 animate-pulse rounded-full" />
-              <span>Schreibt …</span>
-            </div>
-            <div className="mt-3 flex gap-1">
-              <div className="bg-text-1 h-2 w-2 animate-pulse rounded-full" />
-              <div
-                className="bg-text-1 h-2 w-2 animate-pulse rounded-full"
-                style={{ animationDelay: "0.15s" }}
-              />
-              <div
-                className="bg-text-1 h-2 w-2 animate-pulse rounded-full"
-                style={{ animationDelay: "0.3s" }}
-              />
-            </div>
-          </MaterialCard>
-        </div>
-      )}
-
-      {!isSticking && (
-        <div className="flex justify-center py-2">
-          <Button
-            onClick={() => scrollToBottom()}
-            variant="secondary"
-            size="sm"
-            className="rounded-full"
-            aria-label="Zu neuen Nachrichten scrollen"
-          >
-            ↓ Nach unten
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

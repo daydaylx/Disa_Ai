@@ -138,6 +138,7 @@ const ModelCardComponent = React.memo(
                     ? "bg-brand/10 text-brand shadow-brandGlow"
                     : "text-text-muted hover:bg-surface-1 hover:text-brand hover:shadow-raise active:scale-95",
                 )}
+                aria-label={isFavorite ? "Favorit entfernen" : "Als Favorit markieren"}
               >
                 <Star className={cn("h-4 w-4", isFavorite && "fill-brand")} />
               </button>

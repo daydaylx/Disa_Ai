@@ -14,9 +14,9 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
   {
     id: "studio",
     label: "Studio",
-    path: "/",
+    path: "/studio",
     Icon: Home,
-    activePattern: /^\/?$/,
+    activePattern: /^\/(studio)?$/,
     description: "Dashboard & Schnellstart",
   },
   {

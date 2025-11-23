@@ -29,7 +29,8 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
             Was möchtest du heute mit Disa AI erledigen?
           </h2>
           <p className="text-sm text-text-secondary max-w-md mx-auto leading-relaxed">
-            Starte ein neues Gespräch oder wähle aus vorbereiteten Workflows
+            Starte ein neues Gespräch oder wähle aus vorbereiteten Workflows – optimiert für
+            ruhiges, fokussiertes Arbeiten.
           </p>
           <p className="text-sm text-text-secondary max-w-md mx-auto leading-relaxed">
             Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und

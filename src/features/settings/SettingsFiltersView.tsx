@@ -112,10 +112,12 @@ export function SettingsBehaviorView() {
         <PremiumCard variant="default" className="max-w-2xl mx-auto">
           <div className="space-y-6">
             <div className="space-y-2">
-              <h2 className="text-xl font-bold text-text-primary">KI-Verhalten</h2>
+              <h2 className="text-xl font-bold text-text-primary">
+                KI-Verhalten, Darstellung &amp; Filter
+              </h2>
               <p className="text-sm text-text-secondary leading-relaxed">
-                Gesprächsstil, Sicherheitsniveau und Antwortlänge steuern. Änderungen gelten sofort
-                für neue Antworten.
+                Gesprächsstil, Sicherheitsniveau, Darstellung und Filter steuern. Änderungen gelten
+                sofort für neue Antworten.
               </p>
             </div>
 

@@ -4,6 +4,15 @@ import { PremiumCard } from "@/ui/PremiumCard";
 
 const QUICKSTARTS = [
   {
+    id: "discussion-aliens",
+    title: "Gibt es Außerirdische?",
+    description: "Diskutiere prägnant mit max. 5 Sätzen, halte den Ton sachlich und fokussiert.",
+    icon: Brain,
+    system:
+      "Führe eine kurze, faktenbasierte Diskussion. Antworte in maximal 5 Sätzen, nummeriere keine Aufzählungen und halte den Ton sachlich-neutral.",
+    user: "Gibt es Außerirdische?",
+  },
+  {
     id: "research",
     title: "Research",
     description: "Tiefe Recherchen, Quellencheck, Pro/Contra-Analysen.",

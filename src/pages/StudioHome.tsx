@@ -14,9 +14,10 @@ export default function StudioHome() {
       {/* HERO SECTION - Material */}
       <div className="text-center space-y-6 max-w-2xl mx-auto">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-text-on-raised">Dein ruhiges KI-Studio</h1>
-          <p className="text-lg text-text-secondary">für klare, produktive Konversationen</p>
-          <p className="text-sm text-text-secondary leading-relaxed">
+          <h1 className="text-3xl font-bold text-text-on-raised">
+            Was möchtest du heute mit Disa AI erledigen?
+          </h1>
+          <p className="text-lg text-text-secondary">
             Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und
             ruhiges, fokussiertes Arbeiten.
           </p>

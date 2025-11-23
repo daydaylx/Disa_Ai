@@ -24,6 +24,13 @@ export function SettingsApiDataView() {
       return "";
     }
   });
+  const [baseUrl, setBaseUrl] = useState(() => {
+    try {
+      return localStorage.getItem("openrouter-base-url") || "https://openrouter.ai/api/v1";
+    } catch {
+      return "https://openrouter.ai/api/v1";
+    }
+  });
   const [showKey, setShowKey] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
@@ -33,6 +40,16 @@ export function SettingsApiDataView() {
   useEffect(() => {
     setHasApiKey(hasStoredApiKey());
   }, []);
+
+  // Mirror Eingaben direkt in Storage, damit Werte zwischen Seiten erhalten bleiben
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("openrouter-key", apiKey);
+      localStorage.setItem("openrouter-key", apiKey);
+    } catch {
+      /* ignore */
+    }
+  }, [apiKey]);
 
   const handleSaveKey = () => {
     try {
@@ -49,11 +66,10 @@ export function SettingsApiDataView() {
       }
       if (!trimmed.startsWith("sk-or-")) {
         toasts.push({
-          kind: "error",
-          title: "Ungültiger Schlüssel",
-          message: "OpenRouter Schlüssel beginnen mit 'sk-or-'",
+          kind: "info",
+          title: "Ungeprüfter Schlüssel",
+          message: "Schlüssel aktualisiert (Prefix nicht geprüft – nur Testbetrieb).",
         });
-        return;
       }
       writeApiKey(trimmed);
       setHasApiKey(true);
@@ -62,6 +78,22 @@ export function SettingsApiDataView() {
         title: "API-Key gespeichert",
         message: "Der Schlüssel wird nur in dieser Session gehalten.",
       });
+
+      try {
+        sessionStorage.setItem("openrouter-key", trimmed);
+        localStorage.setItem("openrouter-key", trimmed);
+      } catch {
+        /* ignore */
+      }
+
+      try {
+        localStorage.setItem(
+          "openrouter-base-url",
+          baseUrl.trim() || "https://openrouter.ai/api/v1",
+        );
+      } catch {
+        /* ignore */
+      }
     } catch (error) {
       console.error(error);
       toasts.push({
@@ -186,7 +218,7 @@ export function SettingsApiDataView() {
         <PremiumCard variant="default" className="max-w-3xl mx-auto">
           <div className="space-y-8">
             <div className="space-y-2">
-              <h2 className="text-xl font-bold text-text-primary">API &amp; Daten</h2>
+              <h1 className="text-xl font-bold text-text-primary">API &amp; Daten</h1>
               <p className="text-sm text-text-secondary leading-relaxed">
                 OpenRouter verbinden, Backups exportieren/importieren und lokale Speicher nutzen.
               </p>
@@ -196,7 +228,7 @@ export function SettingsApiDataView() {
               <div className="flex items-center gap-2">
                 <KeyRound className="w-4 h-4 text-brand" />
                 <h3 className="text-sm font-semibold text-text-primary">
-                  API-Key &amp; Verbindung
+                  Schlüssel &amp; Verbindung
                 </h3>
               </div>
 
@@ -230,6 +262,21 @@ export function SettingsApiDataView() {
                     {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="api-base-url" className="text-sm font-semibold text-text-primary">
+                  OpenRouter Base URL
+                </Label>
+                <Input
+                  id="api-base-url"
+                  type="url"
+                  value={baseUrl}
+                  onChange={(e) => setBaseUrl(e.target.value)}
+                  placeholder="https://openrouter.ai"
+                  autoComplete="off"
+                  aria-label="OpenRouter Basis-URL"
+                />
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
@@ -296,7 +343,7 @@ export function SettingsApiDataView() {
               </div>
               <PrimaryButton
                 onClick={handleExportConversations}
-                disabled={isExporting || (stats?.totalConversations || 0) === 0}
+                disabled={isExporting}
                 className="w-full sm:w-auto flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />

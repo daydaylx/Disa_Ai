@@ -360,7 +360,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           {/* ROLES GRID - PREMIUM CARDS mit Aurora Spine */}
           <div
             className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
-            data-testid="role-card-grid"
+            data-testid="roles-grid"
           >
             {filteredRoles.map((role) => {
               const isFavorite = isRoleFavorite(role.id);
@@ -375,6 +375,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       isActive && "ring-2 ring-brand shadow-raiseLg",
                     )}
                     onClick={() => toggleRoleDetails(role.id)}
+                    interactiveRole="group"
+                    focusable={false}
                   >
                     {isActive && (
                       <div className="absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-sm bg-brand/10 px-2 py-1 text-[11px] font-semibold text-brand shadow-inset">
@@ -406,30 +408,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       >
                         {role.description}
                       </p>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleRoleExpansion(role.id);
-                        }}
-                        className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 -ml-2 min-h-[32px] touch-manipulation"
-                        aria-expanded={isExpanded}
-                        aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
-                      >
-                        <span>{isExpanded ? "Weniger" : "Mehr anzeigen"}</span>
-                        <svg
-                          className={cn(
-                            "w-3.5 h-3.5 transition-transform duration-300 ease-in-out motion-reduce:transition-none",
-                            isExpanded && "rotate-180",
-                          )}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
                     </div>
 
                     {/* CARD FOOTER */}
@@ -448,16 +426,44 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         <Button
                           size="sm"
                           variant="primary"
-                          disabled={isActive}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleActivateRole(role);
+                            if (isActive) {
+                              setActiveRole(null);
+                            } else {
+                              handleActivateRole(role);
+                            }
                           }}
                         >
-                          {isActive ? "Aktiv" : "Aktivieren"}
+                          {isActive ? "Deaktivieren" : "Aktivieren"}
                         </Button>
                       </div>
                     </div>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleRoleExpansion(role.id);
+                      }}
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 -ml-2 min-h-[32px] touch-manipulation"
+                      aria-expanded={isExpanded}
+                      aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
+                    >
+                      <span>{isExpanded ? "Weniger" : "Mehr anzeigen"}</span>
+                      <svg
+                        className={cn(
+                          "w-3.5 h-3.5 transition-transform duration-300 ease-in-out motion-reduce:transition-none",
+                          isExpanded && "rotate-180",
+                        )}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
                   </PremiumCard>
 
                   {isSelected && (
