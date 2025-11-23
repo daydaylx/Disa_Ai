@@ -155,6 +155,7 @@ export function ChatComposer({
               onKeyDown={handleKeyDown}
               onFocus={handleFocus}
               placeholder={placeholder}
+              aria-label="Nachricht an Disa AI schreiben"
               disabled={isComposerDisabled}
               readOnly={isQuickstartLoading}
               data-testid="composer-input"

@@ -32,9 +32,20 @@ export const PremiumCard = React.memo(
   }: PremiumCardProps) => {
     const isHero = variant === "hero";
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!onClick) return;
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        onClick();
+      }
+    };
+
     return (
       <div
         onClick={onClick}
+        onKeyDown={handleKeyDown}
+        role={onClick ? "button" : undefined}
         tabIndex={onClick ? 0 : undefined}
         className={cn(
           "relative overflow-hidden rounded-md transition-all duration-fast",

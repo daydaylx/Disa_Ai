@@ -102,7 +102,7 @@ export function VirtualizedMessageList({
       className={cn("chat-scroll-area flex-1 overflow-y-auto scroll-smooth", className)}
       role="log"
       aria-label="Chat messages"
-      data-testid="virtualized-chat-log"
+      data-testid="message-list"
     >
       {shouldVirtualize && hiddenCount > 0 && (
         <div className="sticky top-0 z-10 flex justify-center py-2">

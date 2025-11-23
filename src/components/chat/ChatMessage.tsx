@@ -143,7 +143,11 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           </div>
         )}
 
-        <MaterialCard variant={isUser ? "inset" : "raised"} className={cn(bubbleClass, "p-4")}>
+        <MaterialCard
+          variant={isUser ? "inset" : "raised"}
+          className={cn(bubbleClass, "p-4")}
+          data-testid="message-bubble"
+        >
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>

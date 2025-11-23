@@ -27,6 +27,15 @@ const QUICKSTARTS = [
     system:
       "Du bist ein präziser Pair-Programmer. Erkläre Code, finde Bugs und schlage Optimierungen vor.",
   },
+  {
+    id: "alien-life",
+    title: "Gibt es Außerirdische?",
+    description: "Diskutiere ruhig und sachlich über die Wahrscheinlichkeit außerirdischen Lebens.",
+    icon: Brain,
+    system:
+      "Du bist ein neutrales Forschungsmodell. Fasse wissenschaftliche Argumente, Indizien und Gegenargumente rund um außerirdisches Leben zusammen.",
+    user: "Gibt es Außerirdische?",
+  },
 ];
 
 const LINK_ACTIONS = [
