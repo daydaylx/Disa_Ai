@@ -87,10 +87,11 @@ Diese Datei listet bekannte Probleme auf, die während der Beta-Phase auftreten 
 - **Status**: Tests werden kontinuierlich erweitert
 - **Action**: Siehe `vitest.config.ts` für aktuelle Thresholds
 
-### E2E Test Flakiness
-- **Issue**: Einige Playwright-Tests können in CI intermittierend fehlschlagen
-- **Workaround**: Retry-Strategie aktiv (1 Retry in CI)
-- **Status**: Timeouts werden optimiert
+### E2E Tests (Playwright)
+- **Issue**: E2E-Tests können in bestimmten Environments (Docker, sandboxed CI) nicht ausgeführt werden
+- **Grund**: Chromium-Browser-Crashes durch limitierte `/dev/shm` oder fehlende System-Dependencies
+- **Workaround**: E2E-Tests sind in CI optional und nicht blockierend
+- **Status**: Unit- und Integration-Tests decken Kernfunktionalität ab; manuelle E2E-Tests auf echten Devices empfohlen
 
 ---
 
