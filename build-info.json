@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-4a1191e",
-  "buildTime": "2025-11-23T18:36:02.351Z",
-  "gitSha": "4a1191e7497a970dabada0d9ad7aa0ce6d7d50f0",
-  "gitBranch": "claude/remove-nrue-navigation-01PBDDocCR6TPjxR1mALeVPx",
+  "buildId": "v1.0.0-a229fd3",
+  "buildTime": "2025-11-23T22:29:24.794Z",
+  "gitSha": "a229fd36f419444845fd8f7cd41fff0a89d4bd40",
+  "gitBranch": "claude/redesign-top-navbar-01FLzQmnmNF17ppyqJ7BzpCe",
   "version": "1.0.0"
 }
