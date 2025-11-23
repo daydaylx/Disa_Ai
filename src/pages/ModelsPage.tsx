@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { AppHeader, Button, Input, ModelCard, SectionHeader, Typography } from "@/ui";
+import { Button, Input, ModelCard, SectionHeader, Typography } from "@/ui";
 
 import { loadModelCatalog, type ModelEntry } from "../config/models";
 import { useFavorites } from "../contexts/FavoritesContext";
@@ -158,8 +158,6 @@ export default function ModelsPage() {
 
   return (
     <div className="relative flex flex-col text-text-primary h-full">
-      <AppHeader pageTitle="Modelle" />
-
       <div className="space-y-4 sm:space-y-6 px-[var(--spacing-4)] py-3 sm:py-[var(--spacing-6)]">
         <h1 className="text-2xl font-bold text-text-primary">Modelle</h1>
         <div className="with-spine flex flex-col gap-1">

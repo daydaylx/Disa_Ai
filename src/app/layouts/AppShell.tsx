@@ -1,14 +1,11 @@
-import { type ReactNode, useCallback, useMemo } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { type ReactNode, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
-import { AppMenuDrawer, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
+import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
-import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
-import { cn } from "../../lib/utils";
-import { AppHeader } from "../../ui/AppHeader";
 
 interface AppShellProps {
   children: ReactNode;
@@ -34,13 +31,6 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     }
     mainEl.focus({ preventScroll: false });
   }, []);
-
-  const { pageTitle } = useMemo(() => {
-    const activeItem = PRIMARY_NAV_ITEMS.find((item) => isNavItemActive(item, location.pathname));
-    return {
-      pageTitle: activeItem?.label ?? "Studio",
-    };
-  }, [location.pathname]);
 
   return (
     <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
@@ -81,33 +71,15 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        <AppHeader pageTitle={pageTitle} onClickMenu={openMenu} />
-
-        <nav
-          aria-label="Primäre Navigation"
-          className="sticky top-[var(--header-height)] z-10 bg-surface-2/90 backdrop-blur supports-[backdrop-filter]:bg-surface-2/80 border-b border-surface-2 shadow-raise"
+        {/* Floating Hamburger Menu Trigger */}
+        <div
+          className="fixed left-4 z-30"
+          style={{
+            top: "max(env(safe-area-inset-top, 0px) + 1rem, 1rem)",
+          }}
         >
-          <ul className="flex items-center gap-2 overflow-x-auto px-4 py-3 sm:px-6">
-            {PRIMARY_NAV_ITEMS.map((item) => (
-              <li key={item.id} className="flex-shrink-0">
-                <NavLink
-                  to={item.path}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium min-h-[40px] min-w-[44px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2",
-                      isActive
-                        ? "bg-surface-3 text-text-primary shadow-inset"
-                        : "bg-surface-1 text-text-secondary hover:text-text-primary hover:bg-surface-2",
-                    )
-                  }
-                >
-                  <item.Icon className="h-4 w-4" aria-hidden />
-                  <span>{item.label}</span>
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <MenuIcon onClick={openMenu} />
+        </div>
 
         <div
           id="main"
