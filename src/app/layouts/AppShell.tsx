@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback } from "react";
+import { type ReactNode, useCallback, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
@@ -6,6 +6,8 @@ import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
+import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
+import { BrandWordmark } from "../components/BrandWordmark";
 
 interface AppShellProps {
   children: ReactNode;
@@ -31,6 +33,11 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     }
     mainEl.focus({ preventScroll: false });
   }, []);
+
+  const pageTitle = useMemo(() => {
+    const active = PRIMARY_NAV_ITEMS.find((item) => isNavItemActive(item, location.pathname));
+    return active?.label ?? "Disa AI";
+  }, [location.pathname]);
 
   return (
     <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
@@ -71,16 +78,20 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        {/* Floating Hamburger Menu Trigger (top-right) */}
-        <div
-          className="fixed right-4 z-30"
-          style={{
-            top: "max(env(safe-area-inset-top, 0px) + 1rem, 1rem)",
-            right: "max(env(safe-area-inset-right, 0px) + 1rem, 1rem)",
-          }}
-        >
-          <MenuIcon onClick={openMenu} />
-        </div>
+        {/* Compact Top Header */}
+        <header className="sticky top-0 z-30 border-b border-surface-2 bg-surface-2/90 backdrop-blur supports-[backdrop-filter]:bg-surface-2/80 shadow-raise">
+          <div
+            className="flex items-center gap-3 px-4 py-3"
+            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
+          >
+            <BrandWordmark />
+            <span className="h-6 w-px bg-surface-1 shadow-inset" aria-hidden />
+            <span className="text-base font-semibold text-text-primary truncate">{pageTitle}</span>
+            <div className="ml-auto">
+              <MenuIcon onClick={openMenu} />
+            </div>
+          </div>
+        </header>
 
         <div
           id="main"

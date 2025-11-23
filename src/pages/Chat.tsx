@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useToasts } from "@/ui";
+import { Button, useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
 import { useStudio } from "../app/state/StudioContext";
@@ -18,6 +18,7 @@ import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { History } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
+import { hasApiKey as hasStoredApiKey } from "../lib/openrouter/key";
 import { discussionPresets } from "../prompts/discussion/presets";
 import type { ChatMessageType } from "../types/chatMessage";
 
@@ -31,6 +32,7 @@ export default function Chat() {
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
   const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
+  const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
 
   useEffect(() => {
     let active = true;
@@ -51,6 +53,10 @@ export default function Chat() {
     return () => {
       active = false;
     };
+  }, []);
+
+  useEffect(() => {
+    setHasApiKey(hasStoredApiKey());
   }, []);
 
   const safetyPrompt = useMemo(
@@ -282,6 +288,29 @@ export default function Chat() {
               Verlauf
             </button>
           </div>
+
+          {!hasApiKey && (
+            <div className="flex gap-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-3 text-amber-900 shadow-inset">
+              <span aria-hidden className="text-lg">
+                ⚠️
+              </span>
+              <div className="space-y-1 text-sm">
+                <p className="font-semibold">API-Key fehlt</p>
+                <p className="leading-relaxed">
+                  Hinterlege einen OpenRouter-Key, sonst können Antworten ausbleiben oder gedrosselt
+                  werden.
+                </p>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="border border-amber-300 bg-white text-amber-900 hover:bg-amber-100"
+                  onClick={() => navigate("/settings/api-data")}
+                >
+                  API-Key hinterlegen
+                </Button>
+              </div>
+            </div>
+          )}
 
           <ChatStartCard
             onNewChat={focusComposer}

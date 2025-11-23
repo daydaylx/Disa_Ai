@@ -1,5 +1,5 @@
-import type { MouseEvent } from "react";
-import { useEffect, useState } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 
@@ -19,8 +19,10 @@ interface AppMenuDrawerProps {
 
 export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps) {
   const location = useLocation();
+  const drawerRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  // Escape to close
+  // Escape to close + focus trap
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -28,6 +30,33 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    // Initial focus on close button
+    closeButtonRef.current?.focus({ preventScroll: true });
+  }, [isOpen]);
+
+  const handleKeyDown = (event: ReactKeyboardEvent) => {
+    if (event.key !== "Tab") return;
+    const container = drawerRef.current;
+    if (!container) return;
+    const focusable = container.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey) {
+      if (document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      }
+    } else if (document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
 
   const handleBackdropClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -69,7 +98,11 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
   if (!isOpen) return null;
 
   const drawer = (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={handleBackdropClick}>
+    <div
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+      onClick={handleBackdropClick}
+      onKeyDown={handleKeyDown}
+    >
       {/* Vollflächiges Overlay */}
       <div
         className={cn(
@@ -86,6 +119,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
             "transition-transform duration-220 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
+          ref={drawerRef}
         >
           {/* Header with Close Button */}
           <div className="flex items-center justify-between sticky top-0 bg-surface-1 z-10 py-4 px-4 sm:px-5 border-b border-surface-2">
@@ -94,6 +128,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
             </Typography>
             <button
               onClick={onClose}
+              ref={closeButtonRef}
               className="p-[var(--spacing-3)] min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full text-text-primary bg-surface-2 hover:bg-surface-3 shadow-raise focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
               aria-label="Menü schließen"
             >

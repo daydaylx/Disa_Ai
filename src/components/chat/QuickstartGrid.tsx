@@ -1,5 +1,7 @@
+import React from "react";
+
 import { Brain, Link2, PenSquare } from "@/lib/icons";
-import { Button } from "@/ui/Button";
+import { buttonVariants } from "@/ui/Button";
 import { PremiumCard } from "@/ui/PremiumCard";
 
 const QUICKSTARTS = [
@@ -69,6 +71,13 @@ export function QuickstartGrid({
   title = "Schnellstart-Flows",
   description = "Vorgefertigte Prompts für typische Aufgaben – tippe und starte direkt fokussiert.",
 }: QuickstartGridProps) {
+  const handleKeyActivate = (event: React.KeyboardEvent, system: string, user?: string) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onStart(system, user);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {(title || description) && (
@@ -87,8 +96,10 @@ export function QuickstartGrid({
           return (
             <PremiumCard
               key={quickstart.id}
-              className="flex flex-col gap-3"
+              className="flex flex-col gap-3 focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2"
               onClick={() => onStart(quickstart.system, quickstart.user)}
+              interactiveRole="button"
+              onKeyDown={(event) => handleKeyActivate(event, quickstart.system, quickstart.user)}
             >
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-md bg-brand/10 text-brand shadow-brandGlow">
@@ -110,12 +121,18 @@ export function QuickstartGrid({
 
       <section className="flex flex-wrap gap-2">
         {LINK_ACTIONS.map((action) => (
-          <Button key={action.label} variant="ghost" size="sm">
-            <a href={action.href}>
-              <Link2 className="h-3.5 w-3.5" />
-              {action.label}
-            </a>
-          </Button>
+          <a
+            key={action.label}
+            href={action.href}
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+              className: "inline-flex items-center gap-2",
+            })}
+          >
+            <Link2 className="h-3.5 w-3.5" />
+            {action.label}
+          </a>
         ))}
       </section>
     </div>
