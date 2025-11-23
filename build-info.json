@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-5e4b22a",
-  "buildTime": "2025-11-22T22:24:19.118Z",
-  "gitSha": "5e4b22ae311cd84ebce76095d4710dd4bc879af2",
-  "gitBranch": "claude/fix-icon-display-01Euxpqg1a73Uq7fd3P8scPs",
+  "buildId": "v1.0.0-e5bcfde",
+  "buildTime": "2025-11-23T00:54:18.045Z",
+  "gitSha": "e5bcfde6ecc235bf161bb92a7c555a2cf5ecc60e",
+  "gitBranch": "claude/age-filter-roles-0112YFqXVQBsu1FnhJLsjXsv",
   "version": "1.0.0"
 }
