@@ -1,7 +1,19 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Button, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Label,
+  PremiumCard,
+  PrimaryButton,
+  useToasts,
+} from "@/ui";
 
 import { StorageMigration } from "../../components/StorageMigration";
 import { useConversationStats } from "../../hooks/use-storage";
@@ -19,6 +31,7 @@ export function SettingsDataView() {
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [showMigration, setShowMigration] = useState(false);
+  const [showResetDialog, setShowResetDialog] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportConversations = async () => {
@@ -288,20 +301,7 @@ export function SettingsDataView() {
               <div className="space-y-3">
                 <Button
                   variant="secondary"
-                  onClick={() => {
-                    if (
-                      confirm(
-                        "Möchtest du alle Einstellungen auf die Standardwerte zurücksetzen?\n\nGespräche und Daten bleiben erhalten.",
-                      )
-                    ) {
-                      resetSettings();
-                      toasts.push({
-                        kind: "success",
-                        title: "Einstellungen zurückgesetzt",
-                        message: "Alle Einstellungen wurden auf die Standardwerte zurückgesetzt",
-                      });
-                    }
-                  }}
+                  onClick={() => setShowResetDialog(true)}
                   className="w-full sm:w-auto"
                 >
                   Auf Standardwerte zurücksetzen
@@ -313,6 +313,41 @@ export function SettingsDataView() {
                 </p>
               </div>
             </div>
+
+            {/* Reset Confirmation Dialog */}
+            <Dialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Einstellungen zurücksetzen?</DialogTitle>
+                  <DialogDescription>
+                    Alle Einstellungen werden auf die Standardwerte zurückgesetzt. Diese Aktion kann
+                    nicht rückgängig gemacht werden.
+                    <br />
+                    <br />
+                    <strong>Gespräche und Daten bleiben erhalten.</strong>
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="flex gap-2">
+                  <Button variant="ghost" onClick={() => setShowResetDialog(false)}>
+                    Abbrechen
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      resetSettings();
+                      setShowResetDialog(false);
+                      toasts.push({
+                        kind: "success",
+                        title: "Einstellungen zurückgesetzt",
+                        message: "Alle Einstellungen wurden auf die Standardwerte zurückgesetzt",
+                      });
+                    }}
+                  >
+                    Zurücksetzen
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
 
             {/* Info */}
             <div className="rounded-md bg-surface-inset shadow-inset p-3">

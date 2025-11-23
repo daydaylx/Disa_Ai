@@ -79,9 +79,19 @@ export function initializeSentry() {
         if (event.breadcrumbs) {
           event.breadcrumbs = event.breadcrumbs
             .map((breadcrumb) => {
-              // Remove or redact console logs that might contain chat content
+              // Selectively filter console logs - keep errors/warnings but sanitize
               if (breadcrumb.category === "console") {
-                return null; // Skip all console logs
+                // Only keep error and warning levels for debugging
+                if (breadcrumb.level === "error" || breadcrumb.level === "warning") {
+                  if (breadcrumb.message) {
+                    // Redact common chat-related patterns
+                    breadcrumb.message = breadcrumb.message
+                      .replace(/user:|assistant:|message:|prompt:|content:/gi, "[REDACTED]")
+                      .substring(0, 200); // Limit length
+                  }
+                  return breadcrumb;
+                }
+                return null; // Skip info/debug/log levels
               }
 
               // Sanitize xhr/fetch breadcrumbs
