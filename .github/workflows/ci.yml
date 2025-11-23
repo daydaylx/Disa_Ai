@@ -69,8 +69,16 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Unit Tests
-        run: npm run test:ci
+      - name: Unit Tests with Coverage
+        run: npm run test:ci -- --coverage
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-node-${{ matrix.node-version }}
+          path: coverage/
+          retention-days: 7
 
   # Bundle-Größe & Performance Budget (Workflow-Regel #17)
   build-and-budget:

@@ -28,6 +28,15 @@ export default defineConfig({
     exclude: ["**/node_modules/**", "**/dist/**", "**/e2e/**", "**/*.stories.{ts,tsx}"],
     coverage: {
       provider: "v8",
+      enabled: true,
+      reporter: ["text", "json-summary", "html", "lcov"],
+      reportsDirectory: "./coverage",
+      thresholds: {
+        lines: 35,
+        functions: 55,
+        branches: 35,
+        statements: 35,
+      },
       exclude: [
         "**/node_modules/**",
         "**/dist/**",

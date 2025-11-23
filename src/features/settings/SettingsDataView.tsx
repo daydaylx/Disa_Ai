@@ -5,6 +5,7 @@ import { Button, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
 import { StorageMigration } from "../../components/StorageMigration";
 import { useConversationStats } from "../../hooks/use-storage";
+import { useSettings } from "../../hooks/useSettings";
 import { Download, HardDrive, Upload } from "../../lib/icons";
 import type { ExportData } from "../../lib/storage-layer";
 import { ModernStorageLayer } from "../../lib/storage-layer";
@@ -14,6 +15,7 @@ const storageLayer = new ModernStorageLayer();
 export function SettingsDataView() {
   const toasts = useToasts();
   const { stats, refresh } = useConversationStats();
+  const { resetSettings } = useSettings();
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [showMigration, setShowMigration] = useState(false);
@@ -275,6 +277,41 @@ export function SettingsDataView() {
                   onClose={() => setShowMigration(false)}
                 />
               )}
+            </div>
+
+            {/* Reset Settings */}
+            <div className="space-y-4 border-t border-border pt-4">
+              <h3 className="text-sm font-semibold text-text-primary">
+                Einstellungen zurücksetzen
+              </h3>
+
+              <div className="space-y-3">
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    if (
+                      confirm(
+                        "Möchtest du alle Einstellungen auf die Standardwerte zurücksetzen?\n\nGespräche und Daten bleiben erhalten.",
+                      )
+                    ) {
+                      resetSettings();
+                      toasts.push({
+                        kind: "success",
+                        title: "Einstellungen zurückgesetzt",
+                        message: "Alle Einstellungen wurden auf die Standardwerte zurückgesetzt",
+                      });
+                    }
+                  }}
+                  className="w-full sm:w-auto"
+                >
+                  Auf Standardwerte zurücksetzen
+                </Button>
+
+                <p className="text-xs text-text-muted">
+                  Setzt Theme, Modellwahl, Kreativität und alle anderen Einstellungen auf
+                  Standardwerte zurück. Gespräche und Daten werden nicht gelöscht.
+                </p>
+              </div>
             </div>
 
             {/* Info */}

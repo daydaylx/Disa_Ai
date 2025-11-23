@@ -228,6 +228,17 @@ export function useSettings() {
     saveSettings((prev) => ({ restoreLastConversation: !prev.restoreLastConversation }));
   }, [saveSettings]);
 
+  const resetSettings = useCallback(() => {
+    try {
+      localStorage.removeItem(SETTINGS_STORAGE_KEY);
+      const resetDefaults = normalizeSettings({});
+      setSettings(resetDefaults);
+      syncLegacyStores(resetDefaults);
+    } catch (error) {
+      console.error("Failed to reset settings:", error);
+    }
+  }, [syncLegacyStores]);
+
   // Side effects that should always reflect persisted state
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -261,5 +272,6 @@ export function useSettings() {
     setReduceMotion,
     setHapticFeedback,
     toggleRestoreLastConversation,
+    resetSettings,
   };
 }
