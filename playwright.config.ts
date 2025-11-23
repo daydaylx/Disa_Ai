@@ -17,6 +17,12 @@ export default defineConfig({
     trace: "retain-on-failure",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
+    serviceWorkers: "block", // Block Service Workers in E2E tests to prevent crashes
+    // Block external font requests to prevent DNS resolution failures in test environment
+    // These are not needed for functional E2E tests
+    extraHTTPHeaders: {
+      Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    },
   },
 
   webServer: {
@@ -32,6 +38,11 @@ export default defineConfig({
       name: "android-chrome",
       use: {
         ...devices["Pixel 7"],
+        launchOptions: {
+          args: [
+            "--disable-dev-shm-usage", // Fix crashes in limited /dev/shm environments
+          ],
+        },
       },
     },
   ],
