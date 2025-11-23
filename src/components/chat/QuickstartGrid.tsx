@@ -6,26 +6,49 @@ const QUICKSTARTS = [
   {
     id: "discussion-aliens",
     title: "Gibt es Außerirdische?",
-    description: "Diskutiere prägnant mit max. 5 Sätzen, halte den Ton sachlich und fokussiert.",
+    description:
+      "Diskutiere prägnant, max. 5–6 Sätze pro Antwort. Argumentiere offen pro/contra, ohne so zu tun als gäbe es eine sichere Lösung.",
     icon: Brain,
     system:
-      "Führe eine kurze, faktenbasierte Diskussion. Antworte in maximal 5 Sätzen, nummeriere keine Aufzählungen und halte den Ton sachlich-neutral.",
-    user: "Gibt es Außerirdische?",
+      "Wir führen eine lockere, argumentierende Diskussion. Du gibst ausgewogene Pro- und Contra-Punkte, fragst nach meiner Sicht und reagierst darauf. Keine Fachvorträge, eher Alltagslogik. Wenn etwas unklar ist, sag das offen.",
+    user: "Gibt es Außerirdische? Wie siehst du das?",
   },
   {
-    id: "writing",
-    title: "Schreiben",
-    description: "Klare Mails, Support-Texte, Social Posts auf Knopfdruck.",
+    id: "discussion-ai-risk",
+    title: "Wie gefährlich ist KI wirklich?",
+    description:
+      "Keine Panikmache, keine Verharmlosung. Diskutiere Nutzen vs. Risiken, mit echten Gegenargumenten.",
+    icon: Brain,
+    system:
+      "Diskutiere mit mir wie in einem normalen Gespräch. Erst kurze Einordnung, dann Pro- und Contra-Argumente, dann eine Rückfrage an mich. Nutze einfache Beispiele statt Fachjargon. Ziel: echtes Abwägen, kein Predigen.",
+    user: "Wie gefährlich ist KI deiner Meinung nach?",
+  },
+  {
+    id: "discussion-minimum-wage",
+    title: "Macht eine Mindestlohn-Erhöhung Sinn?",
+    description: "Abwägen statt Parolen: Vorteile, Nachteile, wer gewinnt, wer verliert.",
     icon: PenSquare,
-    system: "Du unterstützt beim Schreiben klarer, freundlicher Nachrichten und E-Mails.",
+    system:
+      "Führe eine ausgewogene Diskussion. Liefere je 2–3 klare Argumente pro und contra, erwähne Unsicherheiten, und frag mich nach meiner Position. Keine Zahlen-Wüste, sondern nachvollziehbare Logik.",
+    user: "Sollte der Mindestlohn steigen?",
   },
   {
-    id: "fact-check",
-    title: "Faktencheck",
-    description: "Prüfe Behauptungen, Zahlen und Quellen schnell auf Plausibilität.",
+    id: "discussion-social-media",
+    title: "Sollten soziale Medien stärker reguliert werden?",
+    description: "Freiheit vs. Schutz: Wo zieht man Grenzen? Diskutiere beides fair.",
     icon: Brain,
     system:
-      "Du bist ein faktenorientierter Assistent. Prüfe Aussagen auf Konsistenz, kennzeichne Unsicherheiten und liefere kurze Quellenhinweise, falls bekannt.",
+      "Diskutiere fair und nicht zu technisch. Bring Argumente beider Seiten, zeig Graubereiche, stell mir am Ende eine offene Frage zur Einschätzung.",
+    user: "Wie stark sollten soziale Medien reguliert sein?",
+  },
+  {
+    id: "discussion-nuclear-energy",
+    title: "Ist Kernenergie sinnvoll für die Energiewende?",
+    description: "Pragmatisch diskutieren: Klima, Kosten, Risiken, Realität.",
+    icon: Brain,
+    system:
+      "Kurze, alltagsnahe Diskussion mit echten Gegenargumenten. Kein Experten-Gelaber. Pro/contra, dann Rückfrage an mich. Erkenne an, dass es mehrere vernünftige Sichtweisen gibt.",
+    user: "Sollte Kernenergie Teil der Energiewende sein?",
   },
 ];
 
