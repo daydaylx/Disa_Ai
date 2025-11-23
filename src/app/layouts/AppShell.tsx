@@ -1,5 +1,5 @@
 import { type ReactNode, useCallback, useMemo } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { AppMenuDrawer, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
@@ -7,7 +7,6 @@ import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
-import { cn } from "../../lib/utils";
 import { AppHeader } from "../../ui/AppHeader";
 
 interface AppShellProps {
@@ -73,35 +72,6 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         </a>
 
         <AppHeader pageTitle={pageTitle} onClickMenu={openMenu} />
-
-        <nav
-          aria-label="Primäre Navigation"
-          className="sticky top-[var(--header-height)] z-20 border-b border-surface-2/60 bg-surface-2/80 backdrop-blur-md"
-        >
-          <ul className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-6 py-3 sm:px-10">
-            {PRIMARY_NAV_ITEMS.map((item) => {
-              const isActive = isNavItemActive(item, location.pathname);
-              const Icon = item.Icon;
-
-              return (
-                <li key={item.id} className="flex-shrink-0">
-                  <Link
-                    to={item.path}
-                    className={cn(
-                      "inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors tap-target min-h-[44px]",
-                      isActive
-                        ? "bg-surface-3 text-text-primary shadow-inset ring-1 ring-accent-primary"
-                        : "bg-surface-1 text-text-secondary hover:bg-surface-2 hover:text-text-primary",
-                    )}
-                  >
-                    {Icon ? <Icon className="h-4 w-4" /> : null}
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
 
         <main
           id="main"
