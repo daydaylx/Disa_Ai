@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
-import { SectionHeader } from "@/ui/SectionHeader";
 
 import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
@@ -263,26 +262,21 @@ export default function Chat() {
       {!isEmpty && infoBar}
       {isEmpty ? (
         <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)]">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-text-primary">
-              Was möchtest du heute mit Disa AI erledigen?
-            </h1>
-            <p className="text-sm text-text-secondary">
-              Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und
-              ruhiges, fokussiertes Arbeiten.
-            </p>
-          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold text-text-primary">
+                Was möchtest du heute mit Disa AI erledigen?
+              </h1>
+              <p className="text-sm text-text-secondary max-w-xl">
+                Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA
+                und ruhiges, fokussiertes Arbeiten.
+              </p>
+            </div>
 
-          <div className="flex items-start justify-between gap-3">
-            <SectionHeader
-              variant="compact"
-              title="Chat-Start"
-              subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
-            />
             <button
               type="button"
               onClick={() => navigate("/chat/history")}
-              className="inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-1 px-3 py-2 text-sm font-medium text-text-secondary shadow-raise hover:text-text-primary hover:shadow-raiseLg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              className="inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-1 px-3 py-2 text-sm font-medium text-text-secondary shadow-raise hover:text-text-primary hover:shadow-raiseLg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand self-start"
             >
               <History className="h-4 w-4" />
               Verlauf

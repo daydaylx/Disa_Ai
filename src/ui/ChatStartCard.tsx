@@ -25,16 +25,10 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
       <div className="space-y-4">
         <div className="space-y-2">
           <h2 className="sr-only">Disa AI Chat</h2>
-          <h2 className="text-2xl font-bold text-text-primary">
-            Was möchtest du heute mit Disa AI erledigen?
-          </h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-text-primary">Neuer Chat</h2>
           <p className="text-sm text-text-secondary max-w-md mx-auto leading-relaxed">
-            Starte ein neues Gespräch oder wähle aus vorbereiteten Workflows – optimiert für
-            ruhiges, fokussiertes Arbeiten.
-          </p>
-          <p className="text-sm text-text-secondary max-w-md mx-auto leading-relaxed">
-            Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und
-            ruhiges, fokussiertes Arbeiten.
+            Starte eine Unterhaltung oder springe in vorbereitete Workflows – optimiert für ruhiges,
+            fokussiertes Arbeiten.
           </p>
         </div>
 

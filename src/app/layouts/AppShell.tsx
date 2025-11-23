@@ -71,11 +71,12 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        {/* Floating Hamburger Menu Trigger */}
+        {/* Floating Hamburger Menu Trigger (top-right) */}
         <div
-          className="fixed left-4 z-30"
+          className="fixed right-4 z-30"
           style={{
             top: "max(env(safe-area-inset-top, 0px) + 1rem, 1rem)",
+            right: "max(env(safe-area-inset-right, 0px) + 1rem, 1rem)",
           }}
         >
           <MenuIcon onClick={openMenu} />

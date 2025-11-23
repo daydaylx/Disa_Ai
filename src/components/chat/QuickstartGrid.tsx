@@ -1,4 +1,4 @@
-import { Brain, Code2, Link2, PenSquare } from "@/lib/icons";
+import { Brain, Link2, PenSquare } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 import { PremiumCard } from "@/ui/PremiumCard";
 
@@ -13,15 +13,6 @@ const QUICKSTARTS = [
     user: "Gibt es Außerirdische?",
   },
   {
-    id: "research",
-    title: "Research",
-    description: "Tiefe Recherchen, Quellencheck, Pro/Contra-Analysen.",
-    icon: Brain,
-    system:
-      "Du bist ein strukturierter Research-Assistent. Fasse Quellen, Argumente und Risiken sachlich zusammen.",
-    user: "Hilf mir bei einer tiefen Recherche zu einem Thema meiner Wahl.",
-  },
-  {
     id: "writing",
     title: "Schreiben",
     description: "Klare Mails, Support-Texte, Social Posts auf Knopfdruck.",
@@ -29,21 +20,12 @@ const QUICKSTARTS = [
     system: "Du unterstützt beim Schreiben klarer, freundlicher Nachrichten und E-Mails.",
   },
   {
-    id: "code",
-    title: "Code & Reviews",
-    description: "Erklärungen, Refactors und sichere Vorschläge für deinen Code.",
-    icon: Code2,
-    system:
-      "Du bist ein präziser Pair-Programmer. Erkläre Code, finde Bugs und schlage Optimierungen vor.",
-  },
-  {
-    id: "alien-life",
-    title: "Gibt es Außerirdische?",
-    description: "Diskutiere ruhig und sachlich über die Wahrscheinlichkeit außerirdischen Lebens.",
+    id: "fact-check",
+    title: "Faktencheck",
+    description: "Prüfe Behauptungen, Zahlen und Quellen schnell auf Plausibilität.",
     icon: Brain,
     system:
-      "Du bist ein neutrales Forschungsmodell. Fasse wissenschaftliche Argumente, Indizien und Gegenargumente rund um außerirdisches Leben zusammen.",
-    user: "Gibt es Außerirdische?",
+      "Du bist ein faktenorientierter Assistent. Prüfe Aussagen auf Konsistenz, kennzeichne Unsicherheiten und liefere kurze Quellenhinweise, falls bekannt.",
   },
 ];
 
