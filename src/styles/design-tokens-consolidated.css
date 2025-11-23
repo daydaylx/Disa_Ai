@@ -391,4 +391,7 @@
   /* Aurora Accent Legacy Support */
   --accent-aurora-green: var(--accent-secondary);
   --color-success-500: var(--accent-secondary);
+
+  /* Legacy Dimensions Mappings */
+  --size-touch-compact: var(--touch-target-compact);
 }

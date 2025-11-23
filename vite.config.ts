@@ -156,7 +156,7 @@ export default defineConfig(({ mode }) => {
             VitePWA({
               // Disable auto-injected register script, we register manually in the app
               injectRegister: null,
-              registerType: "autoUpdate",
+              registerType: "prompt",
               workbox: {
                 globPatterns: ["**/*.{js,css,html,ico,png,svg,webmanifest}"],
                 // Skip large KaTeX font files from precache - they're lazy loaded

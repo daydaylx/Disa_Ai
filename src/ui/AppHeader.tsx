@@ -40,7 +40,7 @@ export function AppHeader({ pageTitle, onClickMenu, ...props }: AppHeaderProps) 
         <div className="flex items-center gap-3">
           <BrandWordmark />
           <div className="w-px h-6 bg-surface-1 shadow-inset" />
-          <span className="text-base font-semibold text-text-primary">{pageTitle}</span>
+          <h1 className="text-base font-semibold text-text-primary m-0">{pageTitle}</h1>
         </div>
         <div className="flex items-center gap-2">
           {onClickMenu && <MenuIcon onClick={onClickMenu} />}

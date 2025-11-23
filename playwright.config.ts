@@ -29,9 +29,36 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "android-chrome",
+      name: "mobile-small",
       use: {
-        ...devices["Pixel 7"],
+        viewport: { width: 360, height: 800 },
+        isMobile: true,
+        hasTouch: true,
+        userAgent: devices["Pixel 7"].userAgent,
+      },
+    },
+    {
+      name: "mobile-medium",
+      use: {
+        viewport: { width: 390, height: 844 },
+        isMobile: true,
+        hasTouch: true,
+        userAgent: devices["iPhone 13"].userAgent,
+      },
+    },
+    {
+      name: "mobile-large",
+      use: {
+        viewport: { width: 414, height: 896 },
+        isMobile: true,
+        hasTouch: true,
+        userAgent: devices["iPhone XR"].userAgent,
+      },
+    },
+    {
+      name: "desktop-chrome",
+      use: {
+        ...devices["Desktop Chrome"],
       },
     },
   ],

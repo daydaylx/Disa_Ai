@@ -51,4 +51,50 @@ describe("useSettings", () => {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
     expect(saved.showNSFWContent).toBe(true);
   });
+
+  it("persistiert das bevorzugte Modell", () => {
+    const { result } = renderHook(() => useSettings());
+
+    act(() => {
+      result.current.setPreferredModel("anthropic/claude-3-opus");
+    });
+
+    expect(result.current.settings.preferredModelId).toBe("anthropic/claude-3-opus");
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    expect(saved.preferredModelId).toBe("anthropic/claude-3-opus");
+  });
+
+  it("persistiert das Theme", () => {
+    const { result } = renderHook(() => useSettings());
+
+    act(() => {
+      result.current.setTheme("dark");
+    });
+
+    expect(result.current.settings.theme).toBe("dark");
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    expect(saved.theme).toBe("dark");
+  });
+
+  it("validiert und persistiert Creativity", () => {
+    const { result } = renderHook(() => useSettings());
+
+    act(() => {
+      result.current.setCreativity(150); // Should clamp to 100
+    });
+    expect(result.current.settings.creativity).toBe(100);
+
+    act(() => {
+      result.current.setCreativity(-10); // Should clamp to 0
+    });
+    expect(result.current.settings.creativity).toBe(0);
+
+    act(() => {
+      result.current.setCreativity(50);
+    });
+    expect(result.current.settings.creativity).toBe(50);
+
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    expect(saved.creativity).toBe(50);
+  });
 });

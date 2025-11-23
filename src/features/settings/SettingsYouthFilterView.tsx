@@ -92,6 +92,10 @@ export function SettingsYouthFilterView() {
               </div>
               <button
                 onClick={handleToggle}
+                role="switch"
+                aria-checked={youthProtectionEnabled}
+                aria-label="Jugendschutz aktivieren"
+                type="button"
                 className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-fast ${
                   youthProtectionEnabled ? "bg-brand shadow-brandGlow" : "bg-surface-inset"
                 }`}

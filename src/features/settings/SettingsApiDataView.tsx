@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
+import { Button, Input, Label, PremiumCard, PrimaryButton, Skeleton, useToasts } from "@/ui";
 
 import { StorageMigration } from "../../components/StorageMigration";
 import { useConversationStats } from "../../hooks/use-storage";
+import { useSettings } from "../../hooks/useSettings";
 import { Download, Eye, EyeOff, HardDrive, KeyRound, Upload } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
 import type { ExportData } from "../../lib/storage-layer";
@@ -14,7 +15,8 @@ const storageLayer = new ModernStorageLayer();
 
 export function SettingsApiDataView() {
   const toasts = useToasts();
-  const { stats, refresh } = useConversationStats();
+  const { resetSettings } = useSettings();
+  const { stats, loading, refresh } = useConversationStats();
 
   const [hasApiKey, setHasApiKey] = useState(() => hasStoredApiKey());
   const [apiKey, setApiKey] = useState(() => {
@@ -266,23 +268,37 @@ export function SettingsApiDataView() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3 rounded-md bg-surface-inset">
                   <div className="text-lg font-bold text-brand">
-                    {stats?.totalConversations || 0}
+                    {loading ? (
+                      <Skeleton className="h-7 w-8" />
+                    ) : (
+                      stats?.totalConversations || 0
+                    )}
                   </div>
                   <div className="text-xs text-text-muted">Gespräche</div>
                 </div>
                 <div className="p-3 rounded-md bg-surface-inset">
-                  <div className="text-lg font-bold text-brand">{stats?.totalMessages || 0}</div>
+                  <div className="text-lg font-bold text-brand">
+                    {loading ? <Skeleton className="h-7 w-12" /> : stats?.totalMessages || 0}
+                  </div>
                   <div className="text-xs text-text-muted">Nachrichten</div>
                 </div>
                 <div className="p-3 rounded-md bg-surface-inset">
                   <div className="text-lg font-bold text-brand">
-                    {stats?.averageMessagesPerConversation?.toFixed(1) || "0.0"}
+                    {loading ? (
+                      <Skeleton className="h-7 w-12" />
+                    ) : (
+                      stats?.averageMessagesPerConversation?.toFixed(1) || "0.0"
+                    )}
                   </div>
                   <div className="text-xs text-text-muted">⌀ Nachrichten</div>
                 </div>
                 <div className="p-3 rounded-md bg-surface-inset">
                   <div className="text-lg font-bold text-brand">
-                    {formatFileSize(stats?.storageSize || 0)}
+                    {loading ? (
+                      <Skeleton className="h-7 w-16" />
+                    ) : (
+                      formatFileSize(stats?.storageSize || 0)
+                    )}
                   </div>
                   <div className="text-xs text-text-muted">Speicher</div>
                 </div>
@@ -296,7 +312,7 @@ export function SettingsApiDataView() {
               </div>
               <PrimaryButton
                 onClick={handleExportConversations}
-                disabled={isExporting || (stats?.totalConversations || 0) === 0}
+                disabled={isExporting || loading || (stats?.totalConversations || 0) === 0}
                 className="w-full sm:w-auto flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
@@ -357,6 +373,26 @@ export function SettingsApiDataView() {
                 Import mergt neue Gespräche, ohne bestehende zu überschreiben.
               </p>
             </div>
+
+            <section className="space-y-4 border-t border-border pt-4">
+              <h3 className="text-sm font-semibold text-text-primary">Gefahrenzone</h3>
+              <Button
+                variant="ghost"
+                className="w-full sm:w-auto text-destructive hover:bg-destructive/10 justify-start px-0 sm:px-4"
+                onClick={() => {
+                  if (window.confirm("Einstellungen wirklich zurücksetzen?")) {
+                    resetSettings();
+                    toasts.push({
+                      kind: "success",
+                      title: "Zurückgesetzt",
+                      message: "Alle Einstellungen wurden zurückgesetzt.",
+                    });
+                  }
+                }}
+              >
+                Einstellungen auf Standard zurücksetzen
+              </Button>
+            </section>
           </div>
         </PremiumCard>
       </div>

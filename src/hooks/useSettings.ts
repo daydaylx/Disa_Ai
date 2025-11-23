@@ -228,6 +228,12 @@ export function useSettings() {
     saveSettings((prev) => ({ restoreLastConversation: !prev.restoreLastConversation }));
   }, [saveSettings]);
 
+  const resetSettings = useCallback(() => {
+    setSettings(DEFAULT_SETTINGS);
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(DEFAULT_SETTINGS));
+    syncLegacyStores(DEFAULT_SETTINGS);
+  }, [syncLegacyStores]);
+
   // Side effects that should always reflect persisted state
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -261,5 +267,6 @@ export function useSettings() {
     setReduceMotion,
     setHapticFeedback,
     toggleRestoreLastConversation,
+    resetSettings,
   };
 }
