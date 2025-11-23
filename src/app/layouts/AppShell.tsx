@@ -103,9 +103,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           </ul>
         </nav>
 
-        <div
+        <main
           id="main"
-          role="main"
           data-testid="app-main"
           tabIndex={-1}
           key={location.pathname}
@@ -122,7 +121,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               </footer>
             )}
           </div>
-        </div>
+        </main>
 
         <NetworkBanner />
         {location.pathname === "/" && <PWAInstallPrompt />}
