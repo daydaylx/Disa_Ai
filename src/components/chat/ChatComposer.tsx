@@ -70,13 +70,8 @@ export function ChatComposer({
   };
 
   const handleFocus = () => {
-    // iOS Safari keyboard handling - scroll input into view
-    setTimeout(() => {
-      textareaRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }, 300); // Wait for keyboard animation to complete
+    // Prevent default scroll behavior - let the viewport handle it
+    // This prevents jumping when keyboard opens
   };
 
   const handleSend = () => {
@@ -112,9 +107,6 @@ export function ChatComposer({
           : "pb-[calc(1.5rem+var(--inset-b))]",
         className,
       )}
-      style={{
-        transform: viewport.isKeyboardOpen ? `translateY(-${viewport.offsetTop}px)` : undefined,
-      }}
     >
       <div className="mx-auto max-w-md space-y-3 text-text-secondary">
         {(tokenCount !== undefined || maxTokens !== undefined) && (
