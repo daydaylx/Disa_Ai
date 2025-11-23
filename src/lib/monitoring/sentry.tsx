@@ -75,6 +75,51 @@ export function initializeSentry() {
           event.request.url = event.request.url.split("?")[0];
         }
 
+        // Filter breadcrumbs to remove sensitive chat data
+        if (event.breadcrumbs) {
+          event.breadcrumbs = event.breadcrumbs
+            .map((breadcrumb) => {
+              // Remove or redact console logs that might contain chat content
+              if (breadcrumb.category === "console") {
+                return null; // Skip all console logs
+              }
+
+              // Sanitize xhr/fetch breadcrumbs
+              if (breadcrumb.category === "xhr" || breadcrumb.category === "fetch") {
+                if (breadcrumb.data) {
+                  // Remove request/response bodies
+                  delete breadcrumb.data.body;
+                  delete breadcrumb.data.response;
+
+                  // Redact OpenRouter API calls
+                  if (breadcrumb.data.url?.includes("openrouter.ai")) {
+                    breadcrumb.data.url = "[REDACTED_API_ENDPOINT]";
+                  }
+                }
+              }
+
+              // Remove any breadcrumb data that looks like chat messages
+              if (breadcrumb.data) {
+                const sensitiveKeys = [
+                  "message",
+                  "messages",
+                  "prompt",
+                  "content",
+                  "text",
+                  "response",
+                ];
+                for (const key of sensitiveKeys) {
+                  if (key in breadcrumb.data) {
+                    breadcrumb.data[key] = "[REDACTED]";
+                  }
+                }
+              }
+
+              return breadcrumb;
+            })
+            .filter(Boolean) as any[];
+        }
+
         return event;
       },
 
