@@ -65,7 +65,7 @@ describe('Build Configuration Smoke Tests', () => {
       expect(fs.existsSync(htmlPath), 'index.html should exist').toBe(true);
 
       const content = fs.readFileSync(htmlPath, 'utf-8');
-      expect(content).toContain('<div id="app">');
+      expect(content).toContain('<div id="root">');
       expect(content).toContain('src/main.tsx');
   });
 });

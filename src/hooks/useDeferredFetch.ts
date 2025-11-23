@@ -38,16 +38,15 @@ interface DeferredFetchState<T> {
 
 type IdleCallbackHandle = number;
 
-const hasWindow = typeof window !== "undefined";
-
+const isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
 const requestIdle =
-  hasWindow && typeof window.requestIdleCallback === "function"
+  isBrowser && typeof window.requestIdleCallback === "function"
     ? window.requestIdleCallback.bind(window)
     : (cb: IdleRequestCallback, options?: IdleRequestOptions) =>
         setTimeout(cb, options?.timeout ?? 200);
 
 const cancelIdle =
-  hasWindow && typeof window.cancelIdleCallback === "function"
+  isBrowser && typeof window.cancelIdleCallback === "function"
     ? window.cancelIdleCallback.bind(window)
     : (id: IdleCallbackHandle) => clearTimeout(id);
 
@@ -185,12 +184,13 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
   }, []);
 
   const triggerEventsString = triggerEvents.join(",");
+  const isTestEnv =
+    typeof import.meta !== "undefined" &&
+    Boolean((import.meta as any).vitest || (globalThis as any).__vitest_worker__);
+
   useEffect(() => {
     // Reset wenn deps ändern
     reset();
-
-    const isTestEnv = typeof (globalThis as any).vitest !== "undefined";
-    const isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
 
     // In Tests oder ohne Browser-Kontext: keine Side-Effects aufbauen
     if (!isBrowser || isTestEnv) return;
@@ -293,7 +293,16 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
         abortControllerRef.current = null;
       }
     };
-  }, [isDeferredEnabled, immediate, maxDelay, triggerEventsString, executeFetch, reset, depsToken]);
+  }, [
+    isDeferredEnabled,
+    immediate,
+    isTestEnv,
+    maxDelay,
+    triggerEventsString,
+    executeFetch,
+    reset,
+    depsToken,
+  ]);
 
   return {
     ...state,
@@ -338,9 +347,10 @@ export function useDeferredCachedFetch<T>(
  * Status-Debugging für Development
  */
 export function getDeferredFetchStatus() {
+  const browserAvailable = typeof window !== "undefined";
   return {
     featureFlagEnabled: isFeatureEnabled("deferredDataFetch"),
-    supportsRequestIdleCallback: hasWindow && "requestIdleCallback" in window,
+    supportsRequestIdleCallback: browserAvailable && "requestIdleCallback" in window,
     timestamp: new Date().toISOString(),
   };
 }
