@@ -49,6 +49,8 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
     if (focusable.length === 0) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
+    if (!first || !last) return;
+
     if (event.shiftKey) {
       if (document.activeElement === first) {
         event.preventDefault();

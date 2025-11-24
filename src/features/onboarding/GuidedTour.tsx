@@ -195,19 +195,19 @@ export default function GuidedTour() {
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0">
               <div className="w-12 h-12 rounded-full bg-liquid-surface flex items-center justify-center">
-                {currentTourStep.icon}
+                {currentTourStep?.icon}
               </div>
             </div>
             <div className="flex-1">
               <Typography variant="h3" className="text-xl font-semibold text-text-primary mb-2">
-                {currentTourStep.title}
+                {currentTourStep?.title}
               </Typography>
               <Typography variant="body-sm" className="text-text-secondary mb-4">
-                {currentTourStep.description}
+                {currentTourStep?.description}
               </Typography>
               <div className="bg-surface-inset rounded-lg p-3">
                 <Typography variant="body-sm" className="text-text-secondary font-medium">
-                  {currentTourStep.target}
+                  {currentTourStep?.target}
                 </Typography>
               </div>
             </div>

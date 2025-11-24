@@ -53,14 +53,14 @@ function isTestEnv(): boolean {
   return viaImportMeta || viaProcess;
 }
 
-function getHeaders() {
+function getHeaders(): Record<string, string> {
   // In production, use proxy endpoint without API key
   if (!isTestEnv()) {
     return {
       "Content-Type": "application/json",
       "HTTP-Referer": getReferer(),
       "X-Title": "Disa AI",
-    } satisfies Record<string, string>;
+    };
   }
 
   // In test environment, require valid API key (no hardcoded fallbacks)
@@ -75,7 +75,7 @@ function getHeaders() {
     "Content-Type": "application/json",
     "HTTP-Referer": getReferer(),
     "X-Title": "Disa AI",
-  } satisfies Record<string, string>;
+  };
 }
 
 function getReferer(): string {

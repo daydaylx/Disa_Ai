@@ -327,14 +327,14 @@ export default function CustomSetup() {
         <MaterialCard variant="hero" className="p-6">
           <div className="mb-4">
             <Typography variant="h3" className="text-xl font-semibold text-text-primary mb-2">
-              {setupSteps[currentStep].title}
+              {setupSteps[currentStep]?.title}
             </Typography>
             <Typography variant="body-sm" className="text-text-secondary">
-              {setupSteps[currentStep].description}
+              {setupSteps[currentStep]?.description}
             </Typography>
           </div>
 
-          <div className="space-y-4">{setupSteps[currentStep].component}</div>
+          <div className="space-y-4">{setupSteps[currentStep]?.component}</div>
         </MaterialCard>
       </div>
 

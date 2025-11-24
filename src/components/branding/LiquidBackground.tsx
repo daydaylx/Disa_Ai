@@ -47,14 +47,14 @@ export function LiquidBackground({ className, animate = true }: LiquidBackground
       for (let i = 0; i < 3; i++) {
         const phase = time * (0.5 + i * 0.2);
         const amplitude = 20 + i * 10;
-        const frequency = 0.005 + i * 0.002;
+        const frequency = 5 + i * 2;
 
         ctx.beginPath();
         ctx.strokeStyle = `hsla(${220 + i * 20}, 70%, 60%, 0.1)`;
         ctx.lineWidth = 2 + i * 1;
 
         for (let angle = 0; angle < Math.PI * 2; angle += 0.01) {
-          const waveOffset = Math.sin(angle * 5 + phase) * amplitude;
+          const waveOffset = Math.sin(angle * frequency + phase) * amplitude;
           const radius = maxRadius * (0.5 + i * 0.1) + waveOffset;
 
           const x = centerX + Math.cos(angle) * radius;

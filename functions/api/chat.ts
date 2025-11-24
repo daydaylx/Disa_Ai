@@ -13,7 +13,7 @@ const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 const DAILY_BUDGET = 50; // Daily request budget per IP/Device
 const SOFT_THROTTLE_COOLDOWN_MS = 120_000; // 2 minutes cooldown when budget exceeded
-const SOFT_THROTTLE_TOKEN_REDUCTION = 300; // Reduced max_tokens when throttled
+const _SOFT_THROTTLE_TOKEN_REDUCTION = 300; // Reserved for future use: Reduced max_tokens when throttled
 
 interface Env {
   OPENROUTER_API_KEY: string;

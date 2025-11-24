@@ -9,7 +9,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { UnstableDevWorker } from "wrangler";
+import type { Unstable_DevWorker } from "wrangler";
 import { unstable_dev } from "wrangler";
 
 // Mock data for testing
@@ -22,7 +22,7 @@ const TEST_MESSAGES = [
 ];
 
 describe("DisaAI Proxy Smoke Tests", () => {
-  let worker: UnstableDevWorker;
+  let worker: Unstable_DevWorker;
 
   beforeAll(async () => {
     // Start the worker in dev mode
@@ -131,7 +131,7 @@ describe("DisaAI Proxy Smoke Tests", () => {
     });
 
     expect(response.status).toBe(400);
-    const data = await response.json();
+    const data = (await response.json()) as { error: string };
     expect(data.error).toContain("Ungültige Anfragestruktur");
   });
 
@@ -149,7 +149,7 @@ describe("DisaAI Proxy Smoke Tests", () => {
     });
 
     expect(response.status).toBe(403);
-    const data = await response.json();
+    const data = (await response.json()) as { error: string };
     expect(data.error).toBe("Untrusted origin.");
   });
 
@@ -184,7 +184,7 @@ describe("DisaAI Proxy Smoke Tests", () => {
     });
 
     expect(response.status).toBe(429);
-    const data = await response.json();
+    const data = (await response.json()) as { error: string };
     expect(data.error).toContain("Zu viele Anfragen");
   });
 });

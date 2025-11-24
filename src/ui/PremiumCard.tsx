@@ -18,6 +18,7 @@ interface PremiumCardProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   variant?: "default" | "hero";
   withAccentStrip?: boolean;
   interactiveRole?: "button" | "group" | "presentation" | "none";
@@ -29,6 +30,7 @@ export const PremiumCard = React.memo(
     children,
     className,
     onClick,
+    onKeyDown,
     variant = "default",
     withAccentStrip = true,
     interactiveRole = "button",
@@ -42,6 +44,7 @@ export const PremiumCard = React.memo(
     return (
       <div
         onClick={onClick}
+        onKeyDown={onKeyDown}
         tabIndex={tabIndex}
         role={role}
         className={cn(
