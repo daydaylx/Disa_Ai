@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Core React + TypeScript code lives in `src/`: `src/app` covers shell/routing, `src/components/ui` houses Radix primitives, `src/features` groups flows, and `src/hooks` keeps orchestration isolated. Config sits in `src/config`, while tokens in `src/styles/design-tokens.css` feed Tailwind. Automation runs from `scripts/` and `tools/`, assets stay in `public/`, docs (see `docs/ENVIRONMENT_VARIABLES.md`) in `docs/`, deployment manifests in `deploy/`, and tests in `tests/` with artifacts in `test-results/`.
+Core React + TypeScript code lives in `src/`: `src/app` covers shell/routing, `src/ui` houses Radix-based UI primitives, `src/components` contains feature-specific components, `src/features` groups flows, and `src/hooks` keeps orchestration isolated. Config sits in `src/config` (env.ts, flags.ts, models.ts, settings.ts), while design tokens in `src/styles/` (design-tokens-consolidated.css, design-tokens.generated.ts) feed Tailwind. State management lives in `src/state/`, contexts in `src/contexts/`, API layer in `src/api/`, pages in `src/pages/`, and data/fixtures in `src/data/`. Automation runs from `scripts/` and `tools/`, assets stay in `public/`, docs (see `docs/ENVIRONMENT_VARIABLES.md`) in `docs/`, deployment manifests in `deploy/`, and tests in `tests/` with artifacts in `test-results/`.
 
 ## Build, Test, and Development Commands
 
@@ -14,7 +14,7 @@ Core React + TypeScript code lives in `src/`: `src/app` covers shell/routing, `s
 
 ## Coding Style & Naming Conventions
 
-Prettier plus `.editorconfig` enforce 2-space indentation, LF endings, and trailing newlines—run `npm run format:fix` before commits. Components and pages stay in PascalCase files, hooks are camelCase with a `use` prefix, and config constants remain SCREAMING_SNAKE_CASE inside `src/config/defaults.ts`. Styling relies on Tailwind utilities fed by tokens in `src/styles/design-tokens.css`; avoid raw hex or `100vh`, and keep primitives aligned with `class-variance-authority` variants. Keep `src/lib` helpers pure.
+Prettier plus `.editorconfig` enforce 2-space indentation, LF endings, and trailing newlines—run `npm run format:fix` before commits. Components and pages stay in PascalCase files, hooks are camelCase with a `use` prefix, and config constants remain SCREAMING_SNAKE_CASE inside `src/config/` files (env.ts, flags.ts, models.ts, settings.ts). Styling relies on Tailwind utilities fed by tokens in `src/styles/` (design-tokens-consolidated.css, design-tokens.generated.ts); avoid raw hex or `100vh`, and keep primitives aligned with `class-variance-authority` variants. Keep `src/lib` helpers pure.
 
 ## Testing Guidelines
 
@@ -26,4 +26,4 @@ Use Conventional Commits (`feat(chat): stream delta batching`) and keep branches
 
 ## Security & Configuration Tips
 
-Keep secrets out of the repo: store local keys in `.env.local` and expose only `VITE_`-prefixed values from `docs/ENVIRONMENT_VARIABLES.md`. Let `scripts/build-info.js` maintain `build-info.json`. Use Node 20.19+ (`.nvmrc`) before installing or building. Deployment credentials live in the Cloudflare Pages/Workers dashboards under `deploy/`, and nothing sensitive should land in `public/`.
+Keep secrets out of the repo: store local keys in `.env.local` and expose only `VITE_`-prefixed values from `docs/ENVIRONMENT_VARIABLES.md`. Let `scripts/build-info.js` maintain `build-info.json`. Use Node 20.19+ up to (but not including) Node 24 (see `package.json` engines field; `.nvmrc` specifies 22.19.0) before installing or building. Deployment credentials live in the Cloudflare Pages/Workers dashboards under `deploy/`, and nothing sensitive should land in `public/`.
