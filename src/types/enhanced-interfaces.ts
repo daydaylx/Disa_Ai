@@ -73,6 +73,10 @@ export interface EnhancedModel {
     effectiveTokens?: number; // real-world usable context
   };
 
+  // Optional raw context meta for UI badges
+  contextK?: number;
+  contextTokens?: number;
+
   // NEW: Performance Scores (0-100 scale)
   performance: {
     speed: number; // Response time score
@@ -81,10 +85,19 @@ export interface EnhancedModel {
     efficiency: number; // Cost/performance ratio
   };
 
+  // Optional quality/openness scores from catalog
+  qualityScore?: number;
+  contextScore?: number; // 0-100 normalized context score
+  openness?: number;
+  censorScore?: number;
+
   // Enhanced tags and categorization
   tags: string[];
   category: ModelCategory;
   tier: "free" | "budget" | "premium" | "enterprise";
+
+  // Optional catalog notes
+  notes?: string;
 
   // NEW: Favorites & Usage System
   isFavorite: boolean;

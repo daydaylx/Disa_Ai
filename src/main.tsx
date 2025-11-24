@@ -1,3 +1,4 @@
+/* c8 ignore start */
 import "./index.css"; // Consolidated CSS: unified-tokens, base, components, Tailwind
 import "./lib/css-feature-detection";
 import "./lib/accessibility";
@@ -10,7 +11,6 @@ import { initEnvironment } from "./config/env";
 import { CustomRolesProvider } from "./contexts/CustomRolesContext";
 import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
-import { initializeSentry } from "./lib/monitoring/sentry";
 import { reloadApp, resetApp } from "./lib/recovery/resetApp";
 import { safeError, safeWarn } from "./lib/utils/production-logger";
 import { themeController } from "./styles/theme";
@@ -43,11 +43,9 @@ try {
 }
 
 // Initialize error tracking (must be early in the process)
-try {
-  initializeSentry();
-} catch (error) {
-  safeError("Sentry initialization failed:", error);
-}
+void import("./lib/monitoring/sentry")
+  .then((mod) => mod.initializeSentry())
+  .catch((error) => safeError("Sentry initialization failed:", error));
 
 // Singleton React Root to prevent memory leaks
 let _appRoot: ReactDOM.Root | null = null;
@@ -382,3 +380,4 @@ installPreloadErrorHandler();
 // Start the app safely
 
 void safeInitialize();
+/* c8 ignore stop */

@@ -1,12 +1,12 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
 
-import type { UIRole } from "../../data/roles";
-import { getRoles, loadRoles } from "../../data/roles";
-import { useDeferredFetch } from "../../hooks/useDeferredFetch";
+import type { UIRole } from "../data/roles";
+import { getRoles, loadRoles } from "../data/roles";
+import { useDeferredFetch } from "../hooks/useDeferredFetch";
 
 const LS_ACTIVE_ROLE_KEY = "disa:activeRoleId";
 
-interface StudioContextType {
+interface RolesContextType {
   roles: UIRole[];
   rolesLoading: boolean;
   roleLoadError: string | null;
@@ -21,9 +21,9 @@ interface StudioContextType {
   setAccentColor: (color: string) => void;
 }
 
-const StudioContext = createContext<StudioContextType | undefined>(undefined);
+const RolesContext = createContext<RolesContextType | undefined>(undefined);
 
-export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeRole, setActiveRoleState] = useState<UIRole | null>(null);
   const [typographyScale, setTypographyScale] = useState(1);
   const [borderRadius, setBorderRadius] = useState(0.5);
@@ -31,7 +31,6 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Load roles immediately from persona.json
   // IMPORTANT: immediate: true ensures roles are loaded on app start
-  // This fixes the issue where roles weren't being loaded from public/persona.json
   const {
     data: loadedRoles,
     loading: rolesLoading,
@@ -77,7 +76,6 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setTypographyScale(1);
         setBorderRadius(0.5);
         // Behalte accentColor bei Rolle-Zurücksetzen bei, um globale Farbänderungen zu vermeiden
-        // setAccentColor("hsl(var(--primary))");
         return;
       }
 
@@ -90,8 +88,6 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       } catch {
         /* ignore */
       }
-      // Aktualisiere accentColor nicht automatisch bei Rollen-Auswahl, um ungewollte globale Farbänderungen zu vermeiden
-      // setAccentColor(color ?? "hsl(var(--primary))");
     },
     [setBorderRadius, setTypographyScale],
   );
@@ -111,13 +107,13 @@ export const StudioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setAccentColor,
   };
 
-  return <StudioContext.Provider value={value}>{children}</StudioContext.Provider>;
+  return <RolesContext.Provider value={value}>{children}</RolesContext.Provider>;
 };
 
-export function useStudio() {
-  const context = useContext(StudioContext);
+export function useRoles() {
+  const context = useContext(RolesContext);
   if (context === undefined) {
-    throw new Error("useStudio must be used within a StudioProvider");
+    throw new Error("useRoles must be used within a RolesProvider");
   }
   return context;
 }

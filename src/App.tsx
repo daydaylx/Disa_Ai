@@ -7,8 +7,8 @@ import { ToastsProvider } from "@/ui/toast";
 import { TooltipProvider } from "@/ui/Tooltip";
 
 import { Router } from "./app/router";
-import { StudioProvider } from "./app/state/StudioContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
+import { RolesProvider } from "./contexts/RolesContext";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { useSettings } from "./hooks/useSettings";
 import { analytics, setAnalyticsEnabled } from "./lib/analytics";
@@ -142,13 +142,13 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <StudioProvider>
+      <RolesProvider>
         <FavoritesProvider>
           <ToastsProvider>
             <AppContent />
           </ToastsProvider>
         </FavoritesProvider>
-      </StudioProvider>
+      </RolesProvider>
     </TooltipProvider>
   );
 }

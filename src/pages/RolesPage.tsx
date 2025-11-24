@@ -10,7 +10,7 @@ const EnhancedRolesInterface = lazy(() =>
  * RolesPage - Material Design Roles Browser
  *
  * Uses the enhanced Material-Design roles interface with:
- * - Real roles from persona.json (via StudioContext)
+ * - Real roles from persona.json
  * - Favorites & usage tracking
  * - Category navigation
  * - Material depth system (raised/inset)

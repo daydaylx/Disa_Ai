@@ -10,7 +10,7 @@
 ### 1.1 Hierarchie-Struktur (Max 2 Ebenen)
 
 ```
-Level 1 (Bottom Nav)          Level 2 (Screen Content)
+Level 1 (Navigation)          Level 2 (Screen Content)
 ┌─────────────────────────────────────────────────────┐
 │ 🏠 Home                   → Landing Cards           │
 │                           → Quick Actions           │
@@ -33,7 +33,7 @@ Level 1 (Bottom Nav)          Level 2 (Screen Content)
 └─────────────────────────────────────────────────────┘
 ```
 
-### 1.2 Bottom Navigation Tabs (5)
+### 1.2 Navigation Tabs (5)
 
 | Tab | Icon | Label | Route | Priority |
 |-----|------|-------|-------|----------|
@@ -71,13 +71,13 @@ Level 1 (Bottom Nav)          Level 2 (Screen Content)
 
 ---
 
-## 2. BOTTOM NAVIGATION DEFINITION
+## 2. NAVIGATION DEFINITION
 
 ### 2.1 Tab Specifications
 
 ```json
 {
-  "bottomNav": {
+  "navigation": {
     "container": {
       "height": "56px",
       "paddingBottom": "env(safe-area-inset-bottom)",

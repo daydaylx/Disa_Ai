@@ -9,10 +9,10 @@
    - CSS-Variablen für Tokens (`--bg0`, `--accent` …) + `data-theme` Light/Dark.  
    - Tailwind-Mapping (Farben, Radius, Schatten, Typo, 4pt-Spacing, motion tokens) und Purge-Bereinigung.  
    - Globale Styles vereinheitlichen, Fokus-Ringe & prefers-reduced-motion sicherstellen.
-3. **AppShell & Navigation erneuern**  
-   - `features/shell` mit `<AppShell/>`, `<BottomNav/>`, `<SideDrawer/>`.  
-   - Mobile-first Layout (Bottom-Nav ≤5 Tabs, FAB „Neue Session“, Drawer mit Swipe/Haptics).  
-   - Desktop-Breakpoint zeigt Sidebar statt Bottom-Nav; Skip-Link & Landmarks erhalten.
+3. **AppShell & Navigation erneuern**
+   - `features/shell` mit `<AppShell/>`, `<SideDrawer/>`.
+   - Mobile-first Layout (FAB „Neue Session", Drawer mit Swipe/Haptics).
+   - Desktop-Breakpoint zeigt Sidebar; Skip-Link & Landmarks erhalten.
 4. **Domänenfeatures implementieren**  
    - Chat: Header, MessageList (virtualisiert), Bubbles (user/assistant/system), Composer (Send/Stop/Presets/Rollen), QuickChips, Streaming-State (aria-live).  
    - Sessions: Verlaufsliste, Suche/Filter, Merge-Dubletten, Batch-Operationen, Drawer/Details.  
@@ -36,7 +36,7 @@
 
 ## 3. Struktur-Snapshot & Altlasten
 - Router (`src/app/router.tsx`) nutzt `RouteWrapper -> AppShell`, aber Pages liegen verstreut (`src/pages`, `src/features`, `src/components/studio`, etc.), nicht nach geforderter Domain-Ordnung (`features/chat`, `shared/ui` ...).
-- Mehrere parallel existierende Shell-/Layout-Konzepte (`AppShell`, `MobilePageShell`, `DesktopSidebar`, `GlobalNav`, `DrawerSheet`), keine einheitliche Mobile-First-Implementierung mit Bottom-Nav + Sidebar.
+- Mehrere parallel existierende Shell-/Layout-Konzepte (`AppShell`, `MobilePageShell`, `DesktopSidebar`, `GlobalNav`, `DrawerSheet`), keine einheitliche Mobile-First-Implementierung mit Sidebar.
 - Chat-spezifische Komponenten liegen unter `src/components/chat`, während Sessions/Presets/Models über mehrere Verzeichnisse verstreut sind; erschwert Aufräum- und Tree-Shaking.
 - Dubletten/Backups: `ChatMessage.tsx.backup`, `ChatMessage.tsx.backup2`, `docs/archive/**`, `report/**` enthalten Legacy-Implementierungen; müssen bereinigt werden.
 
@@ -48,7 +48,7 @@
 - Fokus-Stile/Tokens vorhanden, aber heterogen; `index.css` erzwingt `color-scheme: dark`, blockiert helles Theme.
 
 ## 5. AppShell & Navigation
-- `AppShell` (src/app/layouts/AppShell.tsx) kombiniert Sticky-Header + Drawer + Footer; kein Bottom-Nav; Desktop-Sidebar wird immer angezeigt (fixed width 64). Kein FAB/New Session Shortcut.
+- `AppShell` (src/app/layouts/AppShell.tsx) kombiniert Sticky-Header + Drawer + Footer; Desktop-Sidebar wird immer angezeigt (fixed width 64). Kein FAB/New Session Shortcut.
 - Drawer (`components/ui/drawer-sheet`) fungiert als Overflow-Menü statt vollwertigem SideDrawer mit Fokus-Trap/Swipe-Gesten; Edge-Swipe Hook existiert (`useEdgeSwipe`), aber Drawer-Open-State lokal, keine UI-Synchronisierung.
 - `GlobalNav` zeigt Page-Titel + Burger-Button, aber Navigation erfolgt über Drawer-Liste ⇒ zwei Interaktionsebenen für Tab-Wechsel, nicht finger-first.
 - Kein Mechanismus für SideDrawer (Modelle/Presets) oder Secondary panel; Vorgaben zu breadcrumbs, gestures, accessible focus nur rudimentär erfüllt.
@@ -57,7 +57,7 @@
 - Page `src/pages/Chat.tsx` orchestriert ChatFlow via `useChat`, `useConversationManager`, `useDiscussion`; UI setzt auf `ChatList`, `ChatComposer`, `ChatMessage`.
 - QuickChips/Actions: improvisiert über Quickstarts + RoleCards, aber keine dedizierte `QuickChips`-Komponente mit horizontalem Scroll + Filterzustand.
 - `ChatMessage` (neomorphische Cards) bietet Copy/Retry, aber keine Edit/Delete/Pins, keine `aria-live` für Streaming, Codeblöcke im eigenen Container ohne thematisierte Buttons.
-- `VirtualizedMessageList` existiert, dennoch Scroll-Anchoring nicht robust (separate `useStickToBottom` Instanz), „Neue Nachrichten“-Marker nur Buttons; kein pinned composer.
+- `VirtualizedMessageList` existiert, dennoch Scroll-Anchoring nicht robust (separate `useStickToBottom` Instanz), „Neue Nachrichten"-Marker nur Buttons.
 - Composer (`ChatComposer`) unterstützt Send/Stop/Retry, aber keine Attachments/Role-Picker/Token-Infos (nur optional), keine Quick-Chip Andockung. Icon-Buttons 48px, jedoch Buttons-Legacy-Variants.
 - Streaming State: `useChat` dispatcht Deltas, aber UI zeigt generisches Loading-Card statt typendem Bubble mit `aria-live="polite"`.
 
@@ -69,17 +69,17 @@
 ## 8. Presets & Rollen
 - Rollen/Preset-Funktionalität verteilt: `src/pages/MobileStudio.tsx`, `src/components/studio/RoleCard.tsx`, `config/roleStore.ts`, `contexts/CustomRolesContext`.
 - Keine Presets-Grid-View nach Vorgabe (Gruppen, Suche, Favoriten). CRUD über Kontext, aber UI stark modul-spezifisch, nicht generisch.
-- Import/Export JSON nicht durchgänging (es gibt `config/quickstarts` + `role dataset`), aber kein zentraler „PresetsView“ mit Modal/Drawer.
+- Import/Export JSON nicht durchgänging (es gibt `config/quickstarts` + `role dataset`), aber kein zentraler „PresetsView" mit Drawer.
 
 ## 9. Model Management
-- `MobileModels` + `EnhancedModelsInterface` bieten umfangreiche Filter/Sort, aber UI-Pattern (Material Alternative B) weicht vom gewünschten Drawer/Modal `ModelSwitcher` ab.
+- `MobileModels` + `EnhancedModelsInterface` bieten umfangreiche Filter/Sort, aber UI-Pattern (Material Alternative B) weicht vom gewünschten Drawer `ModelSwitcher` ab.
 - Modelwechsel nicht Session-Scoped: `useChat` erhält `setRequestOptions`, aber es existiert kein globaler models-Context; Modelauswahl ist entkoppelt von Chat-Sessions.
-- Keine Provider-Filter wie „Free/Code/Kreativ“ laut Vorgabe; capabilities existieren, aber UI zeigt generische Filter.
-- Drawer/BottomSheet zur schnellen Model-Umschaltung fehlt; stattdessen separate Seite.
+- Keine Provider-Filter wie „Free/Code/Kreativ" laut Vorgabe; capabilities existieren, aber UI zeigt generische Filter.
+- Drawer zur schnellen Model-Umschaltung fehlt; stattdessen separate Seite.
 
 ## 10. Settings & Extras
-- Settings-Seiten (`src/pages/Settings*.tsx`) sind einzelne Routen, mit `SettingsOverview` (features/settings) + `SettingsView`. Theme-/Language-Schalter existieren isoliert; kein gebündelter „Sektionen“-Screen.
-- API-Key-Handling nur per Page, kein einheitlicher Drawer/Modal.
+- Settings-Seiten (`src/pages/Settings*.tsx`) sind einzelne Routen, mit `SettingsOverview` (features/settings) + `SettingsView`. Theme-/Language-Schalter existieren isoliert; kein gebündelter „Sektionen"-Screen.
+- API-Key-Handling nur per Page, kein einheitlicher Drawer.
 - Language/i18n: `src/lib/i18n/locales` leer; Strings hardcoded (deutsch), keine Fallback-Mechanik.
 - Extras/Spiele: nicht vorhanden; keine dedizierte Route/Feature.
 

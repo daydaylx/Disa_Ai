@@ -21,6 +21,8 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
   const location = useLocation();
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const firstTrapRef = useRef<HTMLSpanElement | null>(null);
+  const lastTrapRef = useRef<HTMLSpanElement | null>(null);
 
   // Escape to close + focus trap
   useEffect(() => {
@@ -57,6 +59,8 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
       first.focus();
     }
   };
+
+  const focusFirst = () => closeButtonRef.current?.focus({ preventScroll: true });
 
   const handleBackdropClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -120,7 +124,17 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
           ref={drawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigationsmenü"
         >
+          <span
+            ref={firstTrapRef}
+            tabIndex={0}
+            onFocus={focusFirst}
+            aria-hidden="true"
+            className="sr-only"
+          />
           {/* Header with Close Button */}
           <div className="flex items-center justify-between sticky top-0 bg-surface-1 z-10 py-4 px-4 sm:px-5 border-b border-surface-2">
             <Typography variant="body-lg" className="text-text-primary font-semibold">
@@ -235,6 +249,13 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
               © 2025 Disa AI
             </Typography>
           </div>
+          <span
+            ref={lastTrapRef}
+            tabIndex={0}
+            onFocus={focusFirst}
+            aria-hidden="true"
+            className="sr-only"
+          />
         </MaterialCard>
       </div>
     </div>

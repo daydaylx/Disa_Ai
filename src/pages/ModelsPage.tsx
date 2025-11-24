@@ -12,15 +12,23 @@ interface Model {
   id: string;
   name: string;
   provider: string;
-  speed: number;
   quality: number;
-  value: number;
+  contextScore: number;
+  openness: number;
   isFree: boolean;
   price: string;
   contextLength: string;
   isFavorite?: boolean;
   description?: string;
+  notes?: string;
 }
+
+const clampPercentage = (value: number, min = 0, max = 100) => Math.min(Math.max(value, min), max);
+
+const formatContext = (k?: number, tokens?: number) => {
+  const val = k ?? (tokens ? Math.round(tokens / 1024) : undefined);
+  return val ? `${val}K` : "N/A";
+};
 
 /**
  * Konvertiert ModelEntry aus models.json zu UI Model Format
@@ -30,47 +38,27 @@ function convertToUIModel(entry: ModelEntry): Model {
   const isFree = entry.tags.includes("free") || !entry.pricing;
   const provider = entry.provider ?? "unknown";
   const name = entry.label ?? entry.id;
+  const contextK =
+    entry.contextK ??
+    (entry.contextTokens
+      ? Math.round(entry.contextTokens / 1024)
+      : entry.ctx
+        ? Math.round(entry.ctx / 1024)
+        : undefined);
 
-  // Heuristische Metriken basierend auf Preis und Modellgröße
-  let speed = 85;
-  let quality = 85;
-  let value = 85;
-
-  if (isFree) {
-    // Kostenlose Modelle: guter Value, variable Quality
-    speed = 88;
-    quality = 82;
-    value = 92;
-  } else if (entry.pricing) {
-    // Preisbasierte Heuristik
-    const avgPrice = ((entry.pricing.in ?? 0) + (entry.pricing.out ?? 0)) / 2;
-
-    if (avgPrice < 0.05) {
-      speed = 92;
-      quality = 80;
-      value = 90;
-    } else if (avgPrice < 0.15) {
-      speed = 85;
-      quality = 88;
-      value = 85;
-    } else {
-      speed = 78;
-      quality = 93;
-      value = 75;
-    }
-  }
+  // Neue Metriken aus dem Katalog
+  const quality = clampPercentage(entry.qualityScore ?? 70, 0, 100);
+  const contextScore = contextK
+    ? clampPercentage((contextK / 262) * 100, 5, 100)
+    : clampPercentage(8, 0, 100);
+  const opennessValue =
+    entry.openness ??
+    (typeof entry.censorScore === "number" ? 1 - entry.censorScore / 100 : undefined);
+  const openness =
+    typeof opennessValue === "number" ? clampPercentage(opennessValue * 100, 0, 100) : 8;
 
   // Context Length formatieren
-  let contextLength = "N/A";
-  if (entry.ctx) {
-    if (entry.ctx >= 1000000) {
-      contextLength = `${(entry.ctx / 1000000).toFixed(1)}M`;
-    } else if (entry.ctx >= 1000) {
-      contextLength = `${Math.round(entry.ctx / 1000)}K`;
-    } else {
-      contextLength = `${entry.ctx}`;
-    }
-  }
+  const contextLength = formatContext(contextK, entry.contextTokens ?? entry.ctx);
 
   // Preis formatieren
   let price = "FREE";
@@ -83,13 +71,14 @@ function convertToUIModel(entry: ModelEntry): Model {
     id: entry.id,
     name,
     provider,
-    speed,
     quality,
-    value,
+    contextScore,
+    openness,
     isFree,
     price,
     contextLength,
     description: entry.description,
+    notes: entry.notes,
     isFavorite: false,
   };
 }
@@ -329,12 +318,13 @@ export default function ModelsPage() {
                   key={model.id}
                   name={model.name}
                   vendor={model.provider}
-                  speed={model.speed}
                   quality={model.quality}
-                  value={model.value}
+                  contextScore={model.contextScore}
+                  openness={model.openness}
                   isFree={model.isFree}
                   price={model.price}
                   contextLength={model.contextLength}
+                  notes={model.notes}
                   isFavorite={isModelFavorite(model.id)}
                   isActive={isActive}
                   onToggleFavorite={() => {

@@ -6,8 +6,8 @@ import { Check, Search, Shield, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge, Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
 
-import { useStudio } from "../../app/state/StudioContext";
 import { useFavorites } from "../../contexts/FavoritesContext";
+import { useRoles } from "../../contexts/RolesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
 import { useSettings } from "../../hooks/useSettings";
 import { type EnhancedRole, type FilterState, migrateRole } from "../../types/enhanced-interfaces";
@@ -33,7 +33,7 @@ interface EnhancedRolesInterfaceProps {
 // Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { push } = useToasts();
-  const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError } = useStudio();
+  const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError } = useRoles();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const { settings } = useSettings();
   const navigate = useNavigate();

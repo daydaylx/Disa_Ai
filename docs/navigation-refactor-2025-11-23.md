@@ -61,7 +61,6 @@ Die Top-Navigationsleiste (AppHeader) wurde vollständig aus der Anwendung entfe
 - `--content-padding-top: calc(var(--header-height) + var(--safe-top) + var(--spacing-4));`
 
 **Beibehalten:**
-- `--bottom-nav-height: 72px;` (für zukünftige Bottom-Navigation)
 - `--content-padding-bottom` (für Bottom-Spacing)
 
 ## Navigation-Architektur (NEU)

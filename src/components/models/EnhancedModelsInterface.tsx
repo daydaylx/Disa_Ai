@@ -93,14 +93,23 @@ interface EnhancedModelsInterfaceProps {
 }
 
 // Helper function to convert ModelEntry to EnhancedModel
-function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
+export function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
   const inputPrice = coercePrice(entry.pricing?.in);
   const outputPrice = coercePrice(entry.pricing?.out);
   const isFree = inputPrice === 0 || outputPrice === 0 || entry.tags.includes("free");
   const { heuristics } = MODEL_POLICY;
-  const maxTokens = entry.ctx ?? heuristics.defaultContextTokens;
+  const maxTokens = entry.ctx ?? entry.contextTokens ?? heuristics.defaultContextTokens;
+  const contextK = entry.contextK ?? (maxTokens ? Math.round(maxTokens / 1024) : undefined);
   const effectiveTokens = Math.floor(maxTokens * heuristics.effectiveContextRatio);
   const performanceProfile = isFree ? heuristics.performance.free : heuristics.performance.paid;
+
+  // New Score Logic
+  const qualityScore = entry.qualityScore ?? 70;
+  // Context score: normalized to 262K (max free context)
+  const contextScore = Math.min((maxTokens / 262144) * 100, 100);
+  // Openness: explicitly calculated or default
+  const openness =
+    entry.openness ?? (typeof entry.censorScore === "number" ? 1 - entry.censorScore / 100 : 0.5);
 
   return {
     // Core properties from ModelEntry
@@ -122,19 +131,26 @@ function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
       maxTokens,
       effectiveTokens,
     },
+    contextK,
+    contextTokens: maxTokens,
 
     // Performance scores (estimated based on model characteristics)
     performance: {
       speed: performanceProfile.speed,
       reliability: performanceProfile.reliability,
-      quality: performanceProfile.quality,
+      quality: qualityScore,
       efficiency: performanceProfile.efficiency,
     },
+    qualityScore,
+    contextScore,
+    openness,
+    censorScore: entry.censorScore,
 
     // Enhanced categorization
     tags: entry.tags,
     category: categorizeModelFromTags(entry.tags, isFree),
     tier: isFree ? "free" : determineTierFromPrice(inputPrice),
+    notes: entry.notes,
 
     // Favorites & Usage (default values)
     isFavorite: false,
@@ -591,15 +607,19 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
                   {/* Performance Bars */}
                   <div className="space-y-2 mb-4">
-                    <PerformanceBar label="Speed" value={model.performance.speed} color="primary" />
                     <PerformanceBar
-                      label="Quality"
-                      value={model.performance.quality}
+                      label="Qualität"
+                      value={model.qualityScore ?? 70}
+                      color="primary"
+                    />
+                    <PerformanceBar
+                      label="Kontext"
+                      value={model.contextScore ?? 0}
                       color="success"
                     />
                     <PerformanceBar
-                      label="Value"
-                      value={model.performance.efficiency}
+                      label="Offenheit"
+                      value={(model.openness ?? 0) * 100}
                       color="warning"
                     />
                   </div>
@@ -778,15 +798,23 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             </DialogHeader>
             <div className="grid grid-cols-2 gap-4 py-4">
               <div>
-                <h4 className="font-medium mb-2 text-sm text-fg-muted">Performance</h4>
+                <h4 className="font-medium mb-2 text-sm text-fg-muted">Metriken</h4>
                 <div className="space-y-2">
-                  <PerformanceBar label="Speed" value={detailsModel.performance.speed} />
-                  <PerformanceBar label="Quality" value={detailsModel.performance.quality} />
                   <PerformanceBar
-                    label="Reliability"
-                    value={detailsModel.performance.reliability}
+                    label="Qualität"
+                    value={detailsModel.qualityScore ?? 70}
+                    color="primary"
                   />
-                  <PerformanceBar label="Efficiency" value={detailsModel.performance.efficiency} />
+                  <PerformanceBar
+                    label="Kontext"
+                    value={detailsModel.contextScore ?? 0}
+                    color="success"
+                  />
+                  <PerformanceBar
+                    label="Offenheit"
+                    value={(detailsModel.openness ?? 0) * 100}
+                    color="warning"
+                  />
                 </div>
               </div>
               <div>

@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Button, useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
-import { useStudio } from "../app/state/StudioContext";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import type { ModelEntry } from "../config/models";
+import { useRoles } from "../contexts/RolesContext";
 import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
@@ -27,7 +27,7 @@ export default function Chat() {
   const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
-  const { activeRole } = useStudio();
+  const { activeRole } = useRoles();
   const { settings } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
@@ -77,6 +77,8 @@ export default function Chat() {
       `Antwortsprache: ${language}.`,
       presetStyle ? `Diskussionsstil: ${presetStyle}.` : "",
       `Begrenze Antworten auf maximal ${maxSentences} Sätze. Falls kürzere Antworten klarer sind, wähle prägnante Formulierungen.`,
+      // WICHTIG: Sicherheits-Leitplanken für Diskussionen
+      `KRITISCH: Trenne IMMER klar zwischen (1) gesicherten Fakten/wissenschaftlichem Konsens, (2) plausiblen Hypothesen mit Belegen, und (3) reiner Spekulation/Fiktion. Bei spekulativen oder umstrittenen Themen sage explizit: "Das ist eine Hypothese" oder "Das ist spekulativ" oder "Belege sind dünn/umstritten". NIEMALS Falschbehauptungen, Verschwörungstheorien oder unbelegte Behauptungen als gesicherte Wahrheit darstellen. Bei kontroversen Themen: neutral, kritisch, ausgewogen. Zeige verschiedene Perspektiven und ihre Stärken/Schwächen.`,
       strict
         ? "Strenger Moderationsmodus: filtere riskante, hetzerische oder gesetzeswidrige Inhalte, antworte neutral und verweise respektvoll auf Richtlinien."
         : "",

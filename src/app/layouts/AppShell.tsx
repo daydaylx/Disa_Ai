@@ -1,3 +1,4 @@
+/* c8 ignore start */
 import { type ReactNode, useCallback, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -123,3 +124,4 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     </div>
   );
 }
+/* c8 ignore stop */

@@ -1,5 +1,5 @@
 import type { LucideIcon } from "@/lib/icons";
-import { Cpu, Home, MessageSquare, Settings, Users } from "@/lib/icons";
+import { Cpu, Home, Settings, Users } from "@/lib/icons";
 
 export type AppNavItem = {
   id: string;
@@ -12,19 +12,11 @@ export type AppNavItem = {
 
 export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
   {
-    id: "studio",
-    label: "Studio",
-    path: "/studio",
-    Icon: Home,
-    activePattern: /^\/(studio)?$/,
-    description: "Dashboard & Schnellstart",
-  },
-  {
     id: "chat",
     label: "Chat",
-    path: "/chat",
-    Icon: MessageSquare,
-    activePattern: /^\/chat/,
+    path: "/",
+    Icon: Home,
+    activePattern: /^\/(chat)?$/,
     description: "Unterhaltungen & Verlauf",
   },
   {
