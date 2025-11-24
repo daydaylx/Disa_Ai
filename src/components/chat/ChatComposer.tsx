@@ -176,7 +176,7 @@ export function ChatComposer({
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="h-12 w-12 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                className="h-12 w-12 text-[var(--text-muted)] hover:text-[var(--text-primary)] tap-target-icon"
                 title="Letzte Antwort erneut anfordern"
                 aria-label="Letzte Antwort erneut anfordern"
               >
@@ -189,7 +189,7 @@ export function ChatComposer({
                 onClick={handleStop}
                 size="icon"
                 variant="secondary"
-                className="h-12 w-12"
+                className="h-12 w-12 tap-target-icon"
                 title="Ausgabe stoppen"
                 aria-label="Ausgabe stoppen"
                 data-testid="composer-stop"
@@ -203,7 +203,7 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="primary"
-                className="h-12 w-12"
+                className="h-12 w-12 tap-target-icon"
                 disabled={disabled}
                 title="Nachricht senden (Enter)"
                 aria-label="Nachricht senden"
@@ -214,7 +214,7 @@ export function ChatComposer({
             )}
 
             {!shouldShowRetry && !shouldShowStop && !shouldShowSend && (
-              <span className="block h-12 w-12" aria-hidden="true" />
+              <span className="block h-12 w-12 tap-target-icon" aria-hidden="true" />
             )}
           </div>
         </MaterialCard>

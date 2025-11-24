@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/ui/Tooltip";
 import { Router } from "./app/router";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { RolesProvider } from "./contexts/RolesContext";
+import { useOnboarding } from "./hooks/useOnboarding";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { useSettings } from "./hooks/useSettings";
 import { analytics, setAnalyticsEnabled } from "./lib/analytics";
@@ -27,6 +28,16 @@ const FeatureFlagPanel = lazy(() =>
 );
 
 // AppContent component that runs inside the providers
+function AppWithOnboarding() {
+  const { isFirstVisit } = useOnboarding();
+
+  if (isFirstVisit) {
+    return <Router />;
+  }
+
+  return <AppContent />;
+}
+
 function AppContent() {
   useServiceWorker(); // Now safely inside ToastsProvider
   const { settings } = useSettings();
@@ -101,7 +112,7 @@ function AppContent() {
   );
 }
 
-export default function App() {
+function AppRoot() {
   // Initialize viewport height with optimized throttling for scroll performance and fix overflow
   const prevBodyOverflowRef = useRef<string>("");
   const prevDocOverflowRef = useRef<string>("");
@@ -145,10 +156,14 @@ export default function App() {
       <RolesProvider>
         <FavoritesProvider>
           <ToastsProvider>
-            <AppContent />
+            <AppWithOnboarding />
           </ToastsProvider>
         </FavoritesProvider>
       </RolesProvider>
     </TooltipProvider>
   );
+}
+
+export default function App() {
+  return <AppRoot />;
 }

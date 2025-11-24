@@ -513,6 +513,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               selected={filters.showFavoritesOnly}
               onClick={() => dispatchFilters({ type: "toggleFavorites" })}
               leading={<Star className="w-4 h-4" />}
+              className="tap-target-chip"
             >
               Favoriten
             </FilterChip>
@@ -522,6 +523,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                 dispatchFilters({ type: "setShowFreeOnly", value: !filters.showFreeOnly })
               }
               leading={<Zap className="w-4 h-4" />}
+              className="tap-target-chip"
             >
               Kostenlos
             </FilterChip>
@@ -534,6 +536,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                 })
               }
               leading={<DollarSign className="w-4 h-4" />}
+              className="tap-target-chip"
             >
               Premium
             </FilterChip>
@@ -672,13 +675,14 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                         e.stopPropagation();
                         handleActivateModel(model);
                       }}
+                      className="tap-target"
                     >
                       {isActive ? "Aktiv" : "Aktivieren"}
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="p-2 h-auto"
+                      className="p-2 h-auto tap-target-icon"
                       aria-label={
                         isModelFavorite(model.id)
                           ? "Von Favoriten entfernen"
@@ -700,7 +704,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="p-2 h-auto"
+                      className="p-2 h-auto tap-target-icon"
                       aria-label="Modelldetails anzeigen"
                       onClick={(e) => {
                         e.stopPropagation();

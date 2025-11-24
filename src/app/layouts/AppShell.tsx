@@ -2,6 +2,8 @@
 import { type ReactNode, useCallback, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
+import { LiquidBackground } from "../../components/branding/LiquidBackground";
+import { LiquidLogo } from "../../components/branding/LiquidLogo";
 import { BuildInfo } from "../../components/BuildInfo";
 import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -42,13 +44,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
   return (
     <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[var(--bg0)]" />
-        <div
-          className="absolute inset-0 opacity-90"
-          style={{ backgroundImage: "var(--bg-gradient)" }}
-        />
-      </div>
+      <LiquidBackground />
       <div
         className="relative flex min-h-screen flex-col"
         style={{
@@ -60,7 +56,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
       >
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-6 focus:py-4 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent tap-target min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-6 focus:py-4 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent tap-target min-h-[48px] min-w-[48px] flex items-center justify-center"
           onClick={(event) => {
             event.preventDefault();
             focusMain();
@@ -79,14 +75,17 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        {/* Compact Top Header */}
-        <header className="sticky top-0 z-30 border-b border-surface-2 bg-surface-2/90 backdrop-blur supports-[backdrop-filter]:bg-surface-2/80 shadow-raise">
+        {/* Liquid Intelligence Header */}
+        <header className="sticky top-0 z-30 border-b border-liquid-surface/30 bg-liquid-surface/90 backdrop-blur supports-[backdrop-filter]:bg-liquid-surface/80 shadow-raise">
           <div
             className="flex items-center gap-3 px-4 py-3"
             style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
           >
-            <BrandWordmark />
-            <span className="h-6 w-px bg-surface-1 shadow-inset" aria-hidden />
+            <div className="flex items-center gap-2">
+              <LiquidLogo size={28} animate={true} />
+              <BrandWordmark showTagline={true} />
+            </div>
+            <span className="h-6 w-px bg-liquid-surface/50 shadow-inset" aria-hidden />
             <span className="text-base font-semibold text-text-primary truncate">{pageTitle}</span>
             <div className="ml-auto">
               <MenuIcon onClick={openMenu} />

@@ -9,6 +9,7 @@ import {
   generateCategoryTonalTokens,
 } from "./tokens/category-tonal-scales";
 import { colorTokens, type ThemeMode } from "./tokens/color";
+import { generateLiquidColorTokens } from "./tokens/liquid-colors";
 import { motionCssVars, motionTokens } from "./tokens/motion";
 import { radiusCssVars, radiusTokens } from "./tokens/radius";
 import { shadowTokens } from "./tokens/shadow";
@@ -56,6 +57,10 @@ export function getDesignTokenVariables(mode: ThemeMode): CssVariableMap {
   // Add category color tokens (still dynamic for flexibility)
   const categoryTokens = generateCategoryTokens();
   Object.assign(baseTokens, categoryTokens);
+
+  // Add Liquid Intelligence color tokens
+  const liquidColorTokens = generateLiquidColorTokens();
+  Object.assign(baseTokens, liquidColorTokens);
 
   // Add category tonal scale tokens
   const categoryTonalTokens = {

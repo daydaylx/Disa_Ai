@@ -7,8 +7,8 @@ import { Button } from "@/ui/Button";
 import { MaterialCard } from "@/ui/MaterialCard";
 import { Typography } from "@/ui/Typography";
 
-import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
-import { X } from "../../lib/icons";
+import { BrandWordmark } from "../../app/components/BrandWordmark";
+import { Cpu, History, Home, Settings, Users, X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
 interface AppMenuDrawerProps {
@@ -68,10 +68,55 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
     }
   };
 
-  // Sekundäre Seiten
-  const secondaryPages = [
-    { label: "Impressum", href: "/impressum" },
-    { label: "Datenschutz", href: "/datenschutz" },
+  // Sekundäre Navigation (progressive Disclosure)
+  const secondaryNavigation = [
+    {
+      label: "Hauptfunktionen",
+      items: [
+        {
+          label: "Chat",
+          href: "/",
+          icon: <Home className="h-4 w-4" />,
+          description: "Unterhaltungen & Verlauf",
+        },
+        {
+          label: "Modelle",
+          href: "/models",
+          icon: <Cpu className="h-4 w-4" />,
+          description: "Katalog & Bewertungen",
+        },
+        {
+          label: "Rollen",
+          href: "/roles",
+          icon: <Users className="h-4 w-4" />,
+          description: "Persona-Templates",
+        },
+      ],
+    },
+    {
+      label: "Erweiterte Funktionen",
+      items: [
+        {
+          label: "Verlauf",
+          href: "/chat/history",
+          icon: <History className="h-4 w-4" />,
+          description: "Gespeicherte Gespräche",
+        },
+        {
+          label: "Einstellungen",
+          href: "/settings",
+          icon: <Settings className="h-4 w-4" />,
+          description: "API, Daten & Darstellung",
+        },
+      ],
+    },
+    {
+      label: "Rechtliches",
+      items: [
+        { label: "Impressum", href: "/impressum" },
+        { label: "Datenschutz", href: "/datenschutz" },
+      ],
+    },
   ];
 
   // Lock background scroll while the drawer is open
@@ -138,109 +183,76 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
           {/* Header with Close Button */}
           <div className="flex items-center justify-between sticky top-0 bg-surface-1 z-10 py-4 px-4 sm:px-5 border-b border-surface-2">
             <Typography variant="body-lg" className="text-text-primary font-semibold">
-              Disa AI
+              <BrandWordmark showTagline={false} />
             </Typography>
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-[var(--spacing-3)] min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full text-text-primary bg-surface-2 hover:bg-surface-3 shadow-raise focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
+              className="p-[var(--spacing-3)] min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full text-text-primary bg-surface-2 hover:bg-surface-3 shadow-raise focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors tap-target-icon"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
 
-          {/* Navigation Section */}
+          {/* Navigation Section mit progressiver Disclosure */}
           <div className="space-y-6">
-            <div>
-              <Typography
-                variant="body-xs"
-                className="text-text-secondary uppercase tracking-[0.2em] mb-3 font-semibold"
-              >
-                Navigation
-              </Typography>
+            {secondaryNavigation.map((section) => (
+              <div key={section.label}>
+                <Typography
+                  variant="body-xs"
+                  className="text-text-secondary uppercase tracking-[0.2em] mb-3 font-semibold"
+                >
+                  {section.label}
+                </Typography>
 
-              <div className="space-y-2">
-                {PRIMARY_NAV_ITEMS.map((item) => {
-                  const isActive = isNavItemActive(item, location.pathname);
-                  const Icon = item.Icon;
-
-                  return (
-                    <Link key={item.id} to={item.path} onClick={onClose} className="block">
-                      <MaterialCard
-                        variant={isActive ? "inset" : "raised"}
-                        className="p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
+                <div className="space-y-2">
+                  {section.items.map((item) => {
+                    const isActive = location.pathname === item.href;
+                    return (
+                      <Link
+                        key={`${section.label}-${item.label}`}
+                        to={item.href}
+                        onClick={onClose}
+                        className="block"
                       >
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={cn(
-                              "flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg",
-                              isActive ? "bg-accent-primary/20" : "bg-surface-1",
-                            )}
-                          >
-                            <Icon
-                              className={cn(
-                                "h-4 w-4",
-                                isActive ? "text-accent-primary" : "text-text-secondary",
-                              )}
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <Typography
-                              variant="body-sm"
-                              className={cn(
-                                "font-medium mb-0.5",
-                                isActive ? "text-accent-primary" : "text-text-primary",
-                              )}
-                            >
-                              {item.label}
-                            </Typography>
-                            <Typography variant="body-xs" className="text-text-secondary">
-                              {item.description}
-                            </Typography>
-                          </div>
-                        </div>
-                      </MaterialCard>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Sekundäre Seiten */}
-            <div>
-              <Typography
-                variant="body-xs"
-                className="text-text-secondary uppercase tracking-[0.2em] mb-3 font-semibold"
-              >
-                Sekundäre Seiten
-              </Typography>
-
-              <div className="space-y-2">
-                {secondaryPages.map((page) => {
-                  const isActive = location.pathname === page.href;
-
-                  return (
-                    <Link key={page.href} to={page.href} onClick={onClose} className="block">
-                      <MaterialCard
-                        variant={isActive ? "inset" : "raised"}
-                        className="p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
-                      >
-                        <Typography
-                          variant="body-sm"
-                          className={cn(
-                            "font-medium",
-                            isActive ? "text-accent-primary" : "text-text-primary",
-                          )}
+                        <MaterialCard
+                          variant={isActive ? "inset" : "raised"}
+                          className="p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
                         >
-                          {page.label}
-                        </Typography>
-                      </MaterialCard>
-                    </Link>
-                  );
-                })}
+                          <div className="flex items-center gap-3">
+                            {"icon" in item && (
+                              <div
+                                className={cn(
+                                  "flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg",
+                                  isActive ? "bg-accent-primary/20" : "bg-surface-1",
+                                )}
+                              >
+                                {item.icon}
+                              </div>
+                            )}
+                            <div className="flex-1">
+                              <Typography
+                                variant="body-sm"
+                                className={cn(
+                                  "font-medium mb-0.5",
+                                  isActive ? "text-accent-primary" : "text-text-primary",
+                                )}
+                              >
+                                {item.label}
+                              </Typography>
+                              <Typography variant="body-xs" className="text-text-secondary">
+                                {"description" in item ? item.description : "\u00A0"}
+                              </Typography>
+                            </div>
+                          </div>
+                        </MaterialCard>
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
 
           {/* Footer */}
@@ -278,7 +290,7 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
       onClick={onClick}
       variant="secondary"
       size="icon"
-      className={cn("relative group", className)}
+      className={cn("relative group tap-target-icon", className)}
       aria-label="Menü öffnen"
     >
       {/* Hamburger Icon */}

@@ -222,6 +222,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
               }
               leading={<Star className="w-4 h-4" />}
+              className="tap-target-chip"
             >
               Favoriten
             </FilterChip>
@@ -231,6 +232,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 setFilters((prev) => ({ ...prev, showBuiltInOnly: !prev.showBuiltInOnly }))
               }
               leading={<Users className="w-4 h-4" />}
+              className="tap-target-chip"
             >
               Standard
             </FilterChip>
@@ -242,6 +244,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   hideMatureContent: !(prev.hideMatureContent ?? true),
                 }))
               }
+              className="tap-target-chip"
             >
               Jugendschutz 🔞
             </FilterChip>
@@ -266,6 +269,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   selected={selectedCategory === category}
                   onClick={() => handleCategorySelect(category)}
                   count={categoryCounts[category]}
+                  className="tap-target-chip"
                 >
                   {category}
                 </FilterChip>
@@ -307,7 +311,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               )}
               {searchQuery && (
                 <Badge variant="outline" className="text-xs">
-                  Suche: “{searchQuery}”
+                  Suche: "{searchQuery}"
                 </Badge>
               )}
               <Button
@@ -434,6 +438,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                               handleActivateRole(role);
                             }
                           }}
+                          className="tap-target"
                         >
                           {isActive ? "Deaktivieren" : "Aktivieren"}
                         </Button>
@@ -446,7 +451,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         e.stopPropagation();
                         toggleRoleExpansion(role.id);
                       }}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 -ml-2 min-h-[32px] touch-manipulation"
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 -ml-2 min-h-[32px] tap-target touch-manipulation"
                       aria-expanded={isExpanded}
                       aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
                     >
@@ -485,6 +490,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                             variant="ghost"
                             size="sm"
                             onClick={() => toggleRoleDetails(role.id)}
+                            className="tap-target"
                           >
                             Schließen
                           </Button>
@@ -495,6 +501,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                               void navigate("/chat");
                               toggleRoleDetails(role.id);
                             }}
+                            className="tap-target"
                           >
                             Im Chat öffnen
                           </Button>
@@ -505,6 +512,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                               handleActivateRole(role);
                               toggleRoleDetails(role.id);
                             }}
+                            className="tap-target"
                           >
                             Aktivieren
                           </Button>
@@ -646,7 +654,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             <Button
               size="sm"
               variant="ghost"
-              className="text-xs"
+              className="text-xs tap-target"
               onClick={() => setActiveRole(null)}
             >
               Zurücksetzen

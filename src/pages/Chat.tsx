@@ -292,23 +292,29 @@ export default function Chat() {
           </div>
 
           {!hasApiKey && (
-            <div className="flex gap-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-3 text-amber-900 shadow-inset">
-              <span aria-hidden className="text-lg">
-                ⚠️
+            <div className="flex gap-3 rounded-lg border-2 border-liquid-blue bg-liquid-surface px-4 py-4 text-text-primary shadow-inset">
+              <span aria-hidden className="text-xl">
+                <svg className="w-6 h-6 text-liquid-blue" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </span>
-              <div className="space-y-1 text-sm">
-                <p className="font-semibold">API-Key fehlt</p>
+              <div className="space-y-2 text-sm">
+                <p className="font-semibold text-liquid-blue">API-Key für volle Funktionalität</p>
                 <p className="leading-relaxed">
-                  Hinterlege einen OpenRouter-Key, sonst können Antworten ausbleiben oder gedrosselt
-                  werden.
+                  Für optimale Leistung hinterlege einen OpenRouter-Key. Ohne Key können Antworten
+                  ausbleiben oder gedrosselt werden.
                 </p>
                 <Button
-                  variant="secondary"
+                  variant="primary"
                   size="sm"
-                  className="border border-amber-300 bg-white text-amber-900 hover:bg-amber-100"
+                  className="bg-liquid-blue hover:bg-liquid-indigo text-white"
                   onClick={() => navigate("/settings/api-data")}
                 >
-                  API-Key hinterlegen
+                  API-Key jetzt hinterlegen
                 </Button>
               </div>
             </div>
@@ -322,8 +328,8 @@ export default function Chat() {
           <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)]">
             <QuickstartGrid
               onStart={startWithPreset}
-              title="Diskussionen"
-              description="Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert."
+              title="Schnellstart"
+              description="Wähle ein Preset für den schnellen Einstieg in deine Unterhaltung."
             />
           </div>
         </div>

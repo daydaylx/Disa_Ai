@@ -3,6 +3,11 @@ import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 
 import { RouteWrapper } from "./components/RouteWrapper";
 
+// Lazy-loaded Onboarding Components
+const WelcomeScreen = lazy(() =>
+  import("../features/onboarding").then((mod) => ({ default: mod.WelcomeScreen })),
+);
+
 // Lazy-loaded Routes für bessere Performance
 const ChatPage = lazy(() => import("../pages/Chat"));
 const ChatHistoryPage = lazy(() => import("../pages/ChatHistoryPage"));
@@ -18,6 +23,16 @@ const SettingsFiltersPage = lazy(() => import("../pages/SettingsFilters"));
 const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
 const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
+const OnboardingTour = lazy(() =>
+  import("../features/onboarding/GuidedTour").catch(() =>
+    import("../features/onboarding/WelcomeScreen").then((mod) => ({ default: mod.WelcomeScreen })),
+  ),
+);
+const CustomSetup = lazy(() =>
+  import("../features/onboarding/CustomSetup").catch(() =>
+    import("../features/onboarding/WelcomeScreen").then((mod) => ({ default: mod.WelcomeScreen })),
+  ),
+);
 
 export const appRouter = createBrowserRouter(
   [
@@ -154,6 +169,30 @@ export const appRouter = createBrowserRouter(
       element: (
         <RouteWrapper>
           <DatenschutzPage />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/welcome",
+      element: (
+        <RouteWrapper>
+          <WelcomeScreen />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/onboarding/tour",
+      element: (
+        <RouteWrapper>
+          <OnboardingTour />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/onboarding/custom",
+      element: (
+        <RouteWrapper>
+          <CustomSetup />
         </RouteWrapper>
       ),
     },
